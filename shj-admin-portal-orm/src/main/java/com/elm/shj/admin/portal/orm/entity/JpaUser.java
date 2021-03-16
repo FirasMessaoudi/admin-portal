@@ -1,0 +1,105 @@
+/*
+ * Copyright (c) 2017 ELM. All rights reserved.
+ */
+package com.elm.shj.admin.portal.orm.entity;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * The persistent class for the sha_user database table.
+ * 
+ * @author Aymen DHAOUI
+ * @since 1.0.0
+ */
+@Entity
+@Table(name = "sha_user")
+@NamedQuery(name = "JpaUser.findAll", query = "SELECT j FROM JpaUser j")
+@Data
+@NoArgsConstructor
+public class JpaUser implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(unique = true, nullable = false)
+	private long id;
+
+	private boolean activated;
+
+	@Column(name = "BLOCK_DATE")
+	private Date blockDate;
+
+	private boolean blocked;
+
+	@Column(name = "CHANGE_PASSWORD_REQUIRED")
+	private boolean changePasswordRequired;
+
+	@Column(name = "CREATION_DATE", nullable = false)
+	private Date creationDate;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "DATE_OF_BIRTH_GREGORIAN")
+	private Date dateOfBirthGregorian;
+
+	@Column(name = "DATE_OF_BIRTH_HIJRI")
+	private int dateOfBirthHijri;
+
+	private boolean deleted;
+
+	@Column(length = 255)
+	private String email;
+
+	@Column(name = "FAMILY_NAME", nullable = false, length = 100)
+	private String familyName;
+
+	@Column(name = "FATHER_NAME", length = 100)
+	private String fatherName;
+
+	@Column(name = "FIRST_NAME", nullable = false, length = 100)
+	private String firstName;
+
+	@Column(nullable = false, length = 1)
+	private String gender;
+
+	@Column(name = "GRAND_FATHER_NAME", length = 100)
+	private String grandFatherName;
+
+	@Column(name = "LAST_LOGIN_DATE")
+	private Date lastLoginDate;
+
+	@Column(name = "MOBILE_NUMBER", nullable = false)
+	private int mobileNumber;
+
+	@Column(nullable = false)
+	private long nin;
+
+	@Column(name = "NUMBER_OF_TRIES")
+	private int numberOfTries;
+
+	@Column(name = "PASSWORD_HASH", nullable = false, length = 255)
+	private String passwordHash;
+
+	@Column(name = "PREFERRED_LANGUAGE", length = 2)
+	private String preferredLanguage;
+
+	@Column(name = "UPDATE_DATE")
+	private Date updateDate;
+
+	@Column(name = "ACTION_DATE")
+	private Date actionDate;
+
+	@OneToOne
+	@JoinColumn(name = "role_id")
+	private JpaRole role;
+
+	@Column(name = "AVATAR")
+	private String avatar;
+
+	@Column(name = "TOKEN_EXPIRY_DATE")
+	private Date tokenExpiryDate;
+}

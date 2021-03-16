@@ -1,0 +1,44 @@
+
+.title__Page{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline !important;
+  @include my(4);
+}
+
+.sectionTitle{
+    color:#1E1655;
+    font-weight: 700;
+}
+
+
+.content__section{
+  background-color: #fff;
+  border-radius: $border-radius;
+  box-shadow: 0 5px 74px 55px rgba(73,90,103,0.02);
+  border: 0.84px solid #ECECEC;
+  @include p(4);
+  @include my(4);
+}
+
+.content__footer__action{
+    background-color: $gray-100;
+    border-top: 1px #eee solid;
+    border-radius: 0 0 $border-radius $border-radius;
+    display: flex;
+    justify-content: space-between;
+
+    @include mx(-4);
+    @include mb(-4);
+    @include mt(4);
+
+    padding: 2rem;
+  
+    @include media-breakpoint-down(sm) {
+      flex-direction: column;
+      .btn{
+        margin: 5px 0 !important;
+        width: 100%;
+      }
+    }
+  }

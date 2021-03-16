@@ -1,0 +1,24 @@
+@import 'variables';
+
+:host {
+  ::ng-deep router-outlet ~ * {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    position: absolute;
+    width: 100%;
+  }
+}
+
+.logo .title {
+  font-size: 1.5rem;
+  color: $dcc-primary;
+}
+
+.logo img {
+  height: 5rem;
+}
+
+.wrapper {
+  height: calc(100vh - 5.378rem) !important;
+}

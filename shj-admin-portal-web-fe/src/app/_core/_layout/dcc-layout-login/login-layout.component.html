@@ -1,0 +1,34 @@
+<div class="d-flex flex-column min-vh-100">
+
+  <!-- CONTENT (ROUTER OUTLET) -->
+  <div class="bg-svg">
+    <div class="row wrapper">
+      <div class="col-lg-6 col-xxl-5 flex-center">
+        <div class="descShape">
+
+          <div class="text-left my-3 row logo w-100">
+            <a href="javascript:void(0)" class="col-md-3" [routerLink]="['/']">
+              <img src="assets/images/logo-dcc.svg" alt="image"/>
+            </a>
+            <div class="col-md-9 row title text-left d-flex align-items-center">
+              {{'general.app_name' | translate}}
+            </div>
+          </div>
+
+          <p class="disc">
+            {{sideTextKey | translate }}
+          </p>
+          <button type="button" (click)="sideAction()" class="btn btn-outline-dcc-primary px-5">{{sideBtnKey | translate }}</button>
+        </div>
+      </div>
+      <div class="flex-center-column flex-grow-1">
+        <div class="z-index" [@scaleAnimation]="o.isActivated ? o.activatedRoute : ''">
+          <router-outlet #o="outlet" (activate)="onActivate($event)"></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <app-footer backgroundClass="bg-white" textClass="text-black-50" linkClass="text-secondary"></app-footer>
+</div>

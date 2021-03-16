@@ -1,0 +1,91 @@
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h2 class="sectionTitle">{{'user-management.user_details' | translate }}
+      <b class="text-dcc-primary">{{user?.firstName + " " + user?.familyName}}</b>
+    </h2>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="text-center px-4">
+        <img class="mr-4 rounded-circle mx-auto d-block" [src]="user?.avatar ? 'data:image/jpeg;base64,'+user?.avatar : url" />
+      </div>
+    </div>
+  </div>
+  <div class="content__section" *ngIf="!canSeeUserDetails">
+    {{'header.welcome' | translate}} <span class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
+  <div class="content__section" *ngIf="canSeeUserDetails">
+    <form enctype="multipart/form-data">
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+        <div class="form-group col">
+          <label class="col-form-label">{{'user-management.nin' | translate}}</label>
+          <span class="form-control-plaintext ">{{ user?.nin }}</span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'general.mobile_number' | translate}}</label>
+          <span class="form-control-plaintext ltr">
+            {{user?.mobileNumber | mobileFormat}}
+          </span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'general.email' | translate}}</label>
+          <span class="form-control-plaintext ">{{ user?.email }}</span>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{'user-management.full_name' | translate}}</label>
+          <span class="form-control-plaintext">{{ user?.firstName + ' ' + user?.familyName }}</span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'general.date_of_birth' | translate}}</label>
+          <span class="form-control-plaintext">{{ user?.dateOfBirthGregorian | dateFormat }}
+            <span *ngIf="user?.dateOfBirthGregorian">-</span>
+            {{ user?.dateOfBirthHijri | hijriFormat }}
+          </span>
+
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'user-management.gender' | translate}}</label>
+          <span class="form-control-plaintext "
+                [hidden]="user?.gender == 'M'">{{'user-management.female' | translate}}</span>
+          <span class="form-control-plaintext "
+                [hidden]="user?.gender == 'F'">{{'user-management.male' | translate}}</span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'user-management.account_status' | translate}}</label>
+          <div class="form-control-plaintext">
+          <span *ngIf="!user?.activated && !user?.blocked" class="badge badge-warning py-2 px-4 badge-pill">
+            {{'user-management.not_activated' | translate}}
+          </span>
+            <span *ngIf="user?.activated && !user?.blocked" class="badge badge-success py-2 px-4 badge-pill">
+            {{'user-management.activated' | translate}}
+          </span>
+            <span *ngIf="user?.blocked" class="badge badge-danger py-2 px-4 badge-pill">
+            {{'user-management.locked' | translate}}
+          </span>
+          </div>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'user-management.role' | translate}}</label>
+          <ng-container>
+            <span
+              class="form-control-plaintext font-weight-bold">{{ currentLanguage.startsWith("en") ? user?.role.nameEnglish : user?.role.nameArabic }}</span>
+          </ng-container>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'user-management.creation_date' | translate}}</label>
+          <span class="form-control-plaintext ">{{ user?.creationDate | dateFormat }}</span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'user-management.last_login' | translate}}</label>
+          <span class="form-control-plaintext ">{{ user?.lastLoginDate | dateFormat }}</span>
+        </div>
+      </div>
+    </form>
+
+    <div class="content__footer__action">
+      <button type="button" [routerLink]="['/users/list']" class="btn btn-outline-secondary btn-w100 px-5 mr-3">
+        {{ "general.btn_back" | translate }}
+      </button>
+    </div>
+
+  </div>
+</div>
