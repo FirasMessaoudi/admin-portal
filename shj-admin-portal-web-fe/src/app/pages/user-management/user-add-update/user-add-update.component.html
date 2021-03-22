@@ -154,7 +154,7 @@
           <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2">
 
             <div class="form-group col">
-              <label class="col-form-label">{{'general.email' | translate}}</label>
+              <label class="col-form-label">{{'general.email' | translate}}<span class="text-danger px-1">*</span></label>
               <input type="text" formControlName="email" [value]="user?.email" class="form-control" required placeholder="mail@company.com"
                      maxlength="50" [class.is-invalid]="f.email.errors && f.email.touched"/>
               <div *ngIf="f.email.errors && f.email.touched" class="invalid-feedback">

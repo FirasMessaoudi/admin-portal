@@ -232,4 +232,4 @@ ALTER TABLE shj_portal.sha_user ADD action_date smalldatetime NULL;
 -- Dropping unused column
 ALTER TABLE shj_portal.sha_user DROP CONSTRAINT sha_user_user_name_unique;
 ALTER TABLE shj_portal.sha_user DROP COLUMN user_name;
-
+GO
