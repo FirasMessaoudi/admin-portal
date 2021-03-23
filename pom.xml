@@ -85,6 +85,7 @@
         <sonar.coverage.jacoco.xmlReportPaths>
             ${basedir}/shj-admin-portal-orm/target/jacoco-ut/jacoco.xml,${basedir}/shj-admin-portal-services/target/jacoco-ut/jacoco.xml,${basedir}/shj-admin-portal-web/target/jacoco-ut/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
+        <java.version>13</java.version>
     </properties>
 
     <build>
@@ -96,6 +97,22 @@
                     <forkCount>3</forkCount>
                     <reuseForks>true</reuseForks>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <release>${java.version}</release>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <!-- update compiler plugin dependency on ASM for Java 11 compatibility -->
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>6.2.1</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
