@@ -104,7 +104,23 @@
             <artifactId>dcc-providers-filescan</artifactId>
         </dependency>
 
-        <!-- WEB DEPENDECIES -->
+        <!-- WEB DEPENDENCIES -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${openapi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-webmvc-core</artifactId>
+            <version>${openapi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-security</artifactId>
+            <version>${openapi.version}</version>
+        </dependency>
+        <!-- WEB DEPENDENCIES -->
         <dependency>
             <groupId>org.jvnet.ws.wadl</groupId>
             <artifactId>wadl-core</artifactId>
@@ -140,6 +156,12 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-client</artifactId>
             <version>${spring.security.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.nimbusds</groupId>
+                    <artifactId>oauth2-oidc-sdk</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -306,6 +328,7 @@
 
     <properties>
         <reactor.version>3.3.4.RELEASE</reactor.version>
+        <openapi.version>1.2.15</openapi.version>
     </properties>
 
 </project>
