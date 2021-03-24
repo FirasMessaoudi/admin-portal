@@ -234,6 +234,24 @@ ALTER TABLE shj_portal.sha_user DROP CONSTRAINT sha_user_user_name_unique;
 ALTER TABLE shj_portal.sha_user DROP COLUMN user_name;
 GO
 
+if not exists(select * from sys.tables where name = 'sha_audit_log')
+create table shj_portal.sha_audit_log
+(
+    id              int            not null primary key identity (1,1),
+    user_id_number  int            not null,
+    handler         varchar(100)   not null,
+    action          varchar(100)   not null,
+    params          nvarchar(1000) null,
+    host            varchar(100)   not null,
+    origin          nvarchar(256)  not null,
+    start_time      smalldatetime  not null,
+    processing_time int            not null,
+    channel         varchar(45)    null,
+    http_status     int            not null,
+    error_details   nvarchar(256)  null
+);
+GO
+
 if not exists (select * from sys.tables where name = 'sha_user_role')
 create table shj_portal.sha_user_role
 (

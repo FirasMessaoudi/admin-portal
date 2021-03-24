@@ -32,12 +32,10 @@ public class JpaUserRole implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @ManyToOne
     private JpaUser user;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", insertable = false, updatable = false)
     private JpaRole role;
 
     @Column(name = "is_main_role")
