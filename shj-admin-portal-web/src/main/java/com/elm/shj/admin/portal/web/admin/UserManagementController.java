@@ -47,6 +47,7 @@ import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -99,7 +100,7 @@ public class UserManagementController {
     public Page<UserDto> listUsers(Pageable pageable, Authentication authentication) {
         logger.debug("Handler for {}", "List Users");
         return userService.findAllNotDeleted(pageable, jwtTokenService.retrieveUserIdFromToken(((JwtToken) authentication).getToken()).orElse(0L),
-                jwtTokenService.retrieveUserRoleIdFromToken(((JwtToken) authentication).getToken()).orElse(0L))
+                jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()))
                 .map(UserManagementController::maskUserInfo);
     }
 
@@ -120,7 +121,7 @@ public class UserManagementController {
                 (nin <= 0 ? null : Long.toString(nin)),
                 (activated < 0 ? null : BooleanUtils.toBoolean(activated)),
                 jwtTokenService.retrieveUserIdFromToken(((JwtToken) authentication).getToken()).orElse(0L),
-                jwtTokenService.retrieveUserRoleIdFromToken(((JwtToken) authentication).getToken()).orElse(0L));
+                jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
         return new PageImpl<>(usersPage.getContent().stream().map(UserManagementController::maskUserInfo).collect(Collectors.toList()));
     }
 
@@ -319,7 +320,7 @@ public class UserManagementController {
         databaseUser.setGrandFatherName(user.getGrandFatherName());
         databaseUser.setMobileNumber(user.getMobileNumber());
         databaseUser.setNin(user.getNin());
-        databaseUser.setRole(user.getRole());
+        databaseUser.setUserRoles(user.getUserRoles());
         UserDto savedUser = maskUserInfo(userService.save(databaseUser));
 
         return ResponseEntity.ok(Objects.requireNonNull(savedUser));

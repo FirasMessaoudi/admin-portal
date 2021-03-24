@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {User} from "@shared/model";
+import {User, UserRole} from "@shared/model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Role} from "@model/role.model";
 import {AuthenticationService, DEFAULT_MAX_USER_AGE, UserService} from "@core/services";
@@ -110,7 +110,8 @@ export class UserAddUpdateComponent implements OnInit {
       grandFatherName: ['', DccValidators.charactersOnly()],
       fatherName: ['', DccValidators.charactersOnly()],
       activated: [false, Validators.required],
-      role: [null, Validators.required]
+      role: [null, Validators.required],
+      userRoles: [null]
     });
   }
 
@@ -128,7 +129,7 @@ export class UserAddUpdateComponent implements OnInit {
       grandFatherName: [this.user.grandFatherName, DccValidators.charactersOnly()],
       fatherName: [this.user.fatherName, DccValidators.charactersOnly()],
       activated: [this.user.activated, Validators.required],
-      role: [this.user.role, Validators.required]
+      userRoles: [this.user.userRoles, Validators.required]
     });
   }
 
@@ -171,6 +172,11 @@ export class UserAddUpdateComponent implements OnInit {
     if (this.userForm.invalid) {
       return;
     }
+    // construct user_role object from selected role
+    let userRole = new UserRole();
+    userRole.user = this.user;
+    userRole.role = this.userForm.controls.role.value;
+    this.userForm.controls.userRoles.setValue([userRole]);
     this.userService.saveOrUpdate(this.userForm.value).subscribe(res => {
       if (res.hasOwnProperty("errors") && res.errors) {
         this.toastr.warning(this.translate.instant("general.dialog_form_error_text"), this.translate.instant("general.dialog_edit_title"));

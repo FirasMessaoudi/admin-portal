@@ -3,12 +3,14 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * The persistent class for the sha_user database table.
@@ -19,7 +21,8 @@ import java.util.Date;
 @Entity
 @Table(name = "sha_user")
 @NamedQuery(name = "JpaUser.findAll", query = "SELECT j FROM JpaUser j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaUser implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -81,7 +84,7 @@ public class JpaUser implements Serializable {
 	@Column(name = "NUMBER_OF_TRIES")
 	private int numberOfTries;
 
-	@Column(name = "PASSWORD_HASH", nullable = false, length = 255)
+	@Column(name = "PASSWORD_HASH", nullable = false, length = 256)
 	private String passwordHash;
 
 	@Column(name = "PREFERRED_LANGUAGE", length = 2)
@@ -93,9 +96,8 @@ public class JpaUser implements Serializable {
 	@Column(name = "ACTION_DATE")
 	private Date actionDate;
 
-	@OneToOne
-	@JoinColumn(name = "role_id")
-	private JpaRole role;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+	private Set<JpaUserRole> userRoles;
 
 	@Column(name = "AVATAR")
 	private String avatar;

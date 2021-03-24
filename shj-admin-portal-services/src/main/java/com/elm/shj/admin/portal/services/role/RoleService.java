@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Service handling user role
@@ -35,8 +36,8 @@ public class RoleService extends GenericService<JpaRole, RoleDto, Long> {
      * @param pageable
      * @return
      */
-    public Page<RoleDto> findAll(Pageable pageable, long loggedInUserRoleId) {
-        if (loggedInUserRoleId == RoleRepository.SYSTEM_ADMIN_ROLE_ID)
+    public Page<RoleDto> findAll(Pageable pageable, Set<Long> loggedInUserRoleIds) {
+        if (loggedInUserRoleIds.contains(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID))
             return mapPage(roleRepository.findByDeletedFalse(pageable));
         // exclude system users in returned list
         return mapPage(roleRepository.findDistinctByDeletedFalseAndIdNot(pageable, RoleRepository.SYSTEM_ADMIN_ROLE_ID));
@@ -62,8 +63,8 @@ public class RoleService extends GenericService<JpaRole, RoleDto, Long> {
      * @param activated whether to look for active roles or not
      * @return the list of roles matching criteria
      */
-    public List<RoleDto> findAll(Boolean activated, long loggedInUserRoleId) {
-        if (loggedInUserRoleId == RoleRepository.SYSTEM_ADMIN_ROLE_ID)
+    public List<RoleDto> findAll(Boolean activated, Set<Long> loggedInUserRoleIds) {
+        if (loggedInUserRoleIds.contains(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID))
             return mapList(roleRepository.findByDeletedFalseAndActivated(activated));
         // exclude system admin role in returned list
         return mapList(roleRepository.findByDeletedFalseAndActivatedAndIdNot(activated, RoleRepository.SYSTEM_ADMIN_ROLE_ID));

@@ -175,9 +175,6 @@ INSERT INTO shj_portal.sha_role_authority(role_id, authority_id) VALUES (1, 12);
 INSERT INTO shj_portal.sha_role_authority(role_id, authority_id) VALUES (1, 13);
 GO
 
-UPDATE shj_portal.sha_user SET role_id = 1 WHERE id = 1;
-GO
-
 SET IDENTITY_INSERT shj_portal.sha_role ON;
 INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (2, N'مستخدم النظام', 'System User', 0, 1);
 -- new roles
@@ -325,4 +322,9 @@ INSERT INTO shj_portal.sha_role_authority(role_id, authority_id) VALUES (12, 31)
 GO
 
 UPDATE shj_portal.sha_user SET number_of_tries = 0 WHERE number_of_tries IS NULL;
+GO
+
+SET IDENTITY_INSERT shj_portal.sha_user_role ON;
+INSERT INTO shj_portal.sha_user_role(id, user_id, role_id, is_main_role) VALUES (1, 1, 1, 1);
+SET IDENTITY_INSERT shj_portal.sha_user_role OFF;
 GO

@@ -233,3 +233,19 @@ ALTER TABLE shj_portal.sha_user ADD action_date smalldatetime NULL;
 ALTER TABLE shj_portal.sha_user DROP CONSTRAINT sha_user_user_name_unique;
 ALTER TABLE shj_portal.sha_user DROP COLUMN user_name;
 GO
+
+if not exists (select * from sys.tables where name = 'sha_user_role')
+create table shj_portal.sha_user_role
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    user_id int NOT NULL,
+    role_id int NOT NULL,
+    is_main_role bit NOT NULL default 0,
+    creation_date smalldatetime not null default current_timestamp,
+    CONSTRAINT fk_sha_user_role_user FOREIGN KEY (user_id) REFERENCES shj_portal.sha_user (id),
+    CONSTRAINT fk_sha_user_role_role FOREIGN KEY (role_id) REFERENCES shj_portal.sha_role (id)
+);
+GO
+
+ALTER TABLE shj_portal.sha_user DROP CONSTRAINT fk_sha_user_role;
+ALTER TABLE shj_portal.sha_user DROP COLUMN role_id;

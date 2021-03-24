@@ -48,7 +48,7 @@ public class UserManagementControllerTest extends AbstractControllerTestSuite {
     public void setUp() throws Exception {
         initUserList();
         when(userService.save(Mockito.any(UserDto.class))).then((Answer<UserDto>) this::mockSaveUser);
-        when(userService.findAllNotDeleted(any(Pageable.class), anyLong(), anyLong())).thenReturn(new PageImpl<>(users));
+        when(userService.findAllNotDeleted(any(Pageable.class), anyLong(), any())).thenReturn(new PageImpl<>(users));
         mockSuccessfulLogin();
         triggerLogin();
     }
@@ -71,7 +71,7 @@ public class UserManagementControllerTest extends AbstractControllerTestSuite {
                 .andExpect(jsonPath("$.content[0].id", is((int) users.get(0).getId())));
 
 
-        verify(userService, times(1)).findAllNotDeleted(any(Pageable.class), anyLong(), anyLong());
+        verify(userService, times(1)).findAllNotDeleted(any(Pageable.class), anyLong(), any());
 
     }
 
@@ -241,12 +241,16 @@ public class UserManagementControllerTest extends AbstractControllerTestSuite {
         roleAuthority.setAuthority(authority);
         authority.setCode(AuthorityConstants.ADD_USER);
         role.setRoleAuthorities(new HashSet<>(Collections.singletonList(roleAuthority)));
+        UserRoleDto userRole = new UserRoleDto();
+        userRole.setUser(loggedInUser);
+        userRole.setRole(role);
+        userRole.setMainRole(true);
         for (long i = 0; i < 10; i++) {
             Long nin = new Long("123456789" + i);
             user = new UserDto();
             user.setId(i + 1);
             user.setNin(nin);
-            user.setRole(role);
+            user.setUserRoles(Collections.singleton(userRole));
             user.setPassword(TEST_USER_PASSWORD);
             user.setPasswordHash(passwordEncoder.encode(TEST_USER_PASSWORD));
             //user.setAuthorities(Arrays.asList(authority));

@@ -17,6 +17,7 @@ import javax.validation.constraints.Past;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Dto class for the user domain.
@@ -71,7 +72,7 @@ public class UserDto implements Serializable {
     private boolean blocked;
     private boolean changePasswordRequired;
     private Date creationDate;
-    private RoleDto role;
+    private Set<UserRoleDto> userRoles;
     private Date tokenExpiryDate;
 
     @Override

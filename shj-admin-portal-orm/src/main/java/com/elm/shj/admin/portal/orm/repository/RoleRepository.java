@@ -21,6 +21,7 @@ import java.util.List;
  */
 public interface RoleRepository extends JpaRepository<JpaRole, Long> {
 
+    long SYSTEM_ADMIN_USER_ROLE_ID = 1;
     long SYSTEM_ADMIN_ROLE_ID = 1;
     long SYSTEM_USER_ROLE_ID = 2;
 

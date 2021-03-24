@@ -166,13 +166,16 @@ public abstract class AbstractControllerTestSuite {
         roleAuthority.setAuthority(authority);
         authority.setCode(AuthorityConstants.USER_MANAGEMENT);
         role.setRoleAuthorities(new HashSet<>(Collections.singletonList(roleAuthority)));
-
+        UserRoleDto userRole = new UserRoleDto();
+        userRole.setUser(loggedInUser);
+        userRole.setRole(role);
+        userRole.setMainRole(true);
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         loggedInUser.setPasswordHash(encoder.encode(TEST_USER_PASSWORD));
         loggedInUser.setPassword(TEST_USER_PASSWORD);
         loggedInUser.setNin(new Long(TEST_USER_NIN));
-        loggedInUser.setRole(role);
+        loggedInUser.setUserRoles(Collections.singleton(userRole));
         loggedInUser.setActivated(true);
         Mockito.when(userService.findByNin(new Long(TEST_USER_NIN))).thenReturn(Optional.of(loggedInUser));
         Mockito.when(userService.hasToken(new Long(TEST_USER_NIN))).thenReturn(true);

@@ -1,4 +1,4 @@
-import {Role} from "@model/role.model";
+import {UserRole} from "@model/user-role.model";
 
 export class User {
   id: number;
@@ -22,5 +22,5 @@ export class User {
   changePasswordRequired: boolean;
   creationDate: Date;
   authorities: any;
-  role: Role;
+  userRoles: Array<UserRole>;
 }

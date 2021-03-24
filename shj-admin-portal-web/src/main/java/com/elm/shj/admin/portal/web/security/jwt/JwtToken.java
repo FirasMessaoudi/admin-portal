@@ -3,12 +3,13 @@
  */
 package com.elm.shj.admin.portal.web.security.jwt;
 
-import com.elm.shj.admin.portal.services.dto.RoleDto;
+import com.elm.shj.admin.portal.services.dto.UserRoleDto;
 import com.google.common.base.Objects;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * JWT Token used for Spring Security authentication process
@@ -21,7 +22,7 @@ public class JwtToken extends UsernamePasswordAuthenticationToken {
     private long tokenExpirationDate;
     private boolean passwordExpired;
     private Collection<GrantedAuthority> authorities;
-    private RoleDto role;
+    private Set<UserRoleDto> userRoles;
     private String firstName;
     private String lastName;
 
@@ -36,13 +37,14 @@ public class JwtToken extends UsernamePasswordAuthenticationToken {
 
     public JwtToken(final String token, final Object principal,
                     final Collection<? extends GrantedAuthority> grantedAuthorities,
-                    boolean passwordExpired, String firstName, String lastName, RoleDto role) {
+                    boolean passwordExpired, String firstName, String lastName, final Set<UserRoleDto> userRoles) {
         super(principal, token, grantedAuthorities);
         this.authorities = (Collection<GrantedAuthority>)grantedAuthorities;
         this.token = token;
         this.passwordExpired = passwordExpired;
-        this.role = role;
-        this.role.setRoleAuthorities(null);
+        this.userRoles = userRoles;
+        // TODO: check why this line of code is needed.
+        this.userRoles.stream().forEach(userRoleDto -> userRoleDto.getRole().setRoleAuthorities(null));
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -73,8 +75,8 @@ public class JwtToken extends UsernamePasswordAuthenticationToken {
         return this.lastName;
     }
 
-    public RoleDto getRole() {
-        return this.role;
+    public Set<UserRoleDto> getUserRoles() {
+        return this.userRoles;
     }
 
     @Override

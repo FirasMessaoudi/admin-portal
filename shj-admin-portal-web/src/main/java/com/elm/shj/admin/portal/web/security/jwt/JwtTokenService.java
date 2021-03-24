@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.web.security.jwt;
 
-import com.elm.shj.admin.portal.services.dto.AuthorityLookupDto;
 import com.elm.shj.admin.portal.services.dto.EChannel;
 import com.elm.shj.admin.portal.services.user.UserService;
 import io.jsonwebtoken.*;
@@ -48,7 +47,7 @@ public class JwtTokenService {
     private static final String AUTHORITIES_CLAIM_NAME = "authorities";
     private static final String USER_ID_CLAIM_NAME = "user.id";
     private static final String PWRD_EXPIRED_FLAG_CLAIM_NAME = "password.expired";
-    private static final String ROLE_ID_CLAIM_NAME = "role.id";
+    private static final String USER_ROLE_IDS_CLAIM_NAME = "user.role.ids";
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
     @Value("${jwt.secret.key}")
@@ -66,16 +65,15 @@ public class JwtTokenService {
     @Autowired
     private UserService userService;
 
-    public String generateToken(long idNumber, List<AuthorityLookupDto> authorities, long userId,
-                                boolean passwordExpired, long roleId, HttpServletRequest request) {
+    public String generateToken(long idNumber, List<String> grantedAuthorities, long userId,
+                                boolean passwordExpired, Set<Long> userRoleIds, HttpServletRequest request) {
         final Device device = DeviceUtils.getCurrentDevice(request);
         String audience = generateAudience(device).name().toLowerCase();
-        List<String> grantedAuthorities = Optional.ofNullable(authorities).orElse(new ArrayList<>()).stream().map(AuthorityLookupDto::getCode).collect(Collectors.toList());
         Map<String, Object> claims = new HashMap<>();
         claims.put(AUTHORITIES_CLAIM_NAME, grantedAuthorities);
         claims.put(USER_ID_CLAIM_NAME, userId);
         claims.put(PWRD_EXPIRED_FLAG_CLAIM_NAME, passwordExpired);
-        claims.put(ROLE_ID_CLAIM_NAME, roleId);
+        claims.put(USER_ROLE_IDS_CLAIM_NAME, userRoleIds);
         return Jwts.builder().setSubject(Long.toString(idNumber)).setExpiration(generateExpirationDate(device)).setIssuer(ISSUER)
                 .setAudience(audience).signWith(SIGNATURE_ALGORITHM, secretKey).setIssuedAt(new Date())
                 .addClaims(claims).compact();
@@ -215,13 +213,13 @@ public class JwtTokenService {
     }
 
     /**
-     * Gets the user role id from the token
+     * Gets the user role ids from the token
      * @param token
      * @return
      */
-    public Optional<Long> retrieveUserRoleIdFromToken(String token) {
+    public Optional<Set<Long>> retrieveUserRoleIdsFromToken(String token) {
         final Claims claims = this.retrieveAllClaimsFromToken(token);
-        return claims == null ? Optional.empty() : Optional.ofNullable(claims.get(ROLE_ID_CLAIM_NAME, Long.class));
+        return claims == null ? Optional.empty() : Optional.ofNullable(new HashSet<>(claims.get(USER_ROLE_IDS_CLAIM_NAME, List.class)));
     }
 
     /**

@@ -17,6 +17,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Collections;
+
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
@@ -54,17 +56,17 @@ class RoleServiceTest {
 
     @Test
     public void test_find_all_activated() {
-        serviceToTest.findAll(true, RoleRepository.SYSTEM_ADMIN_ROLE_ID);
+        serviceToTest.findAll(true, Collections.singleton(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID));
         verify(roleRepository).findByDeletedFalseAndActivated(eq(true));
-        serviceToTest.findAll(true, TEST_ROLE_ID);
+        serviceToTest.findAll(true, Collections.singleton(TEST_ROLE_ID));
         verify(roleRepository).findByDeletedFalseAndActivatedAndIdNot(eq(true), eq(RoleRepository.SYSTEM_ADMIN_ROLE_ID));
     }
 
     @Test
     public void test_find_all_paginated() {
-        serviceToTest.findAll(TEST_PAGE, RoleRepository.SYSTEM_ADMIN_ROLE_ID);
+        serviceToTest.findAll(TEST_PAGE, Collections.singleton(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID));
         verify(roleRepository).findByDeletedFalse(eq(TEST_PAGE));
-        serviceToTest.findAll(TEST_PAGE, TEST_ROLE_ID);
+        serviceToTest.findAll(TEST_PAGE, Collections.singleton(TEST_ROLE_ID));
         verify(roleRepository).findDistinctByDeletedFalseAndIdNot(eq(TEST_PAGE), eq(RoleRepository.SYSTEM_ADMIN_ROLE_ID));
     }
 

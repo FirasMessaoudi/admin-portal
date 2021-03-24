@@ -19,19 +19,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 
@@ -93,21 +90,21 @@ public class UserServiceTest {
 
     @Test
     public void test_find_all_non_deleted() {
-        serviceToTest.findAllNotDeleted(any(), anyLong(), RoleRepository.SYSTEM_ADMIN_ROLE_ID);
+        serviceToTest.findAllNotDeleted(any(), anyLong(), Collections.singleton(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID));
         verify(userRepository).findDistinctByDeletedFalseAndIdNot(any(), anyLong());
-        serviceToTest.findAllNotDeleted(any(), anyLong(), eq(5));
-        verify(userRepository).findByDeletedFalseAndIdNotAndRoleIdNot(any(), anyLong(), eq(RoleRepository.SYSTEM_ADMIN_ROLE_ID));
+        serviceToTest.findAllNotDeleted(any(), anyLong(), Collections.singleton(5L));
+        verify(userRepository).findByDeletedFalseAndIdNotAndUserRolesRoleIdNot(any(), anyLong(), eq(RoleRepository.SYSTEM_ADMIN_ROLE_ID));
     }
 
     @Test
     public void test_find_by_nin() {
         serviceToTest.findByNin(anyInt());
-        verify(userRepository).findByNinAndDeletedFalseAndActivatedTrueAndRoleDeletedFalseAndRoleActivatedTrue(anyLong());
+        verify(userRepository).findByNinAndDeletedFalseAndActivatedTrueAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(anyLong());
     }
 
     @Test
     public void test_find_by_nin_null() {
-        Mockito.when(userRepository.findByNinAndDeletedFalseAndActivatedTrueAndRoleDeletedFalseAndRoleActivatedTrue(anyLong())).thenReturn(null);
+        Mockito.when(userRepository.findByNinAndDeletedFalseAndActivatedTrueAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(anyLong())).thenReturn(null);
         Optional<UserDto> user = serviceToTest.findByNin(anyLong());
         assertEquals(Optional.empty(), user);
     }
@@ -116,7 +113,7 @@ public class UserServiceTest {
     public void test_find_by_nin_not_null() {
         JpaUser foundUser = new JpaUser();
         UserDto foundDto = new UserDto();
-        Mockito.when(userRepository.findByNinAndDeletedFalseAndActivatedTrueAndRoleDeletedFalseAndRoleActivatedTrue(anyLong())).thenReturn(foundUser);
+        Mockito.when(userRepository.findByNinAndDeletedFalseAndActivatedTrueAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(anyLong())).thenReturn(foundUser);
         Mockito.when(userDtoMapper.fromEntity(any(), eq(mappingContext))).thenReturn(foundDto);
         Optional<UserDto> user = serviceToTest.findByNin(anyLong());
         assertEquals(foundDto, user.get());
@@ -216,20 +213,20 @@ public class UserServiceTest {
 
     @Test
     public void test_searchByRoleStatusOrNin_not_admin() {
-        serviceToTest.searchByRoleStatusOrNin(TEST_PAGE, TEST_ROLE_ID, TEST_NIN.toString(), true, TEST_USER_ID, TEST_ROLE_ID);
+        serviceToTest.searchByRoleStatusOrNin(TEST_PAGE, TEST_ROLE_ID, TEST_NIN.toString(), true, TEST_USER_ID, Collections.singleton(TEST_ROLE_ID));
         verify(userRepository, times(1)).findByRoleOrNinOrStatus(TEST_PAGE, TEST_ROLE_ID, "%" + TEST_NIN.toString() + "%", true, TEST_USER_ID, RoleRepository.SYSTEM_ADMIN_ROLE_ID);
 
     }
 
     @Test
     public void test_searchByRoleStatusOrNin_admin() {
-        serviceToTest.searchByRoleStatusOrNin(TEST_PAGE, TEST_ROLE_ID, TEST_NIN.toString(), true, TEST_USER_ID, RoleRepository.SYSTEM_ADMIN_ROLE_ID);
+        serviceToTest.searchByRoleStatusOrNin(TEST_PAGE, TEST_ROLE_ID, TEST_NIN.toString(), true, TEST_USER_ID, Collections.singleton(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID));
         verify(userRepository, times(1)).findByRoleOrNinOrStatus(TEST_PAGE, TEST_ROLE_ID, "%" + TEST_NIN.toString() + "%", true, TEST_USER_ID, null);
     }
 
     @Test
     public void test_searchByRoleStatusOrNin_nin_null() {
-        serviceToTest.searchByRoleStatusOrNin(TEST_PAGE, TEST_ROLE_ID, null, true, TEST_USER_ID, RoleRepository.SYSTEM_ADMIN_ROLE_ID);
+        serviceToTest.searchByRoleStatusOrNin(TEST_PAGE, TEST_ROLE_ID, null, true, TEST_USER_ID, Collections.singleton(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID));
         verify(userRepository, times(1)).findByRoleOrNinOrStatus(TEST_PAGE, TEST_ROLE_ID, null, true, TEST_USER_ID, null);
     }
 

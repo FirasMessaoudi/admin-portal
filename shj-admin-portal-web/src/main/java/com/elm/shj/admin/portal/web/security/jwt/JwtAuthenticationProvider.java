@@ -6,8 +6,6 @@ package com.elm.shj.admin.portal.web.security.jwt;
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.dcc.foundation.providers.recaptcha.model.RecaptchaInfo;
 import com.elm.dcc.foundation.providers.recaptcha.service.RecaptchaService;
-import com.elm.shj.admin.portal.services.dto.AuthorityLookupDto;
-import com.elm.shj.admin.portal.services.dto.RoleAuthorityDto;
 import com.elm.shj.admin.portal.services.dto.UserDto;
 import com.elm.shj.admin.portal.services.dto.UserPasswordHistoryDto;
 import com.elm.shj.admin.portal.services.user.PasswordHistoryService;
@@ -31,11 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * JWT based Authentication provider used for Spring Security authentication process
@@ -143,15 +137,21 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             passwordExpiredFlag = passwordCreationDate.plusMonths(passwordAgeInMonths).isBefore(LocalDate.now()) || user.isChangePasswordRequired();
         }
 
+        List<String> grantedAuthorities = new ArrayList<>();
+        Set<Long> userRoleIds = new HashSet<>();
+        user.getUserRoles().forEach(userRoleDto -> {
+            userRoleIds.add(userRoleDto.getId());
+            userRoleDto.getRole().getRoleAuthorities().forEach(roleAuthorityDto -> {
+                grantedAuthorities.add(roleAuthorityDto.getAuthority().getCode());
+            });
+        });
         // generate the token
-        List<AuthorityLookupDto> authorityLookupDtoList = user.getRole().getRoleAuthorities().stream().map(RoleAuthorityDto::getAuthority).collect(Collectors.toList());
-        String token = jwtTokenService.generateToken(idNumber, authorityLookupDtoList, user.getId(), passwordExpiredFlag, user.getRole().getId(), request);
+        String token = jwtTokenService.generateToken(idNumber, grantedAuthorities, user.getId(), passwordExpiredFlag, userRoleIds, request);
         logger.debug("generated token for {} is {}", idNumber, token);
         // save user login info
         userService.updateUserLoginInfo(user.getId(), jwtTokenService.retrieveExpirationDateFromToken(token).orElse(new Date()));
 
-        List<String> grantedAuthorities = Optional.ofNullable(user.getRole().getRoleAuthorities()).orElse(new HashSet<>()).stream().map(roleAuthorityDto -> roleAuthorityDto.getAuthority().getCode()).collect(Collectors.toList());
-        return new JwtToken(token, authentication, AuthorityUtils.createAuthorityList(grantedAuthorities.toArray(new String[]{})), passwordExpiredFlag, user.getFirstName(), user.getFamilyName(), user.getRole());
+        return new JwtToken(token, authentication, AuthorityUtils.createAuthorityList(grantedAuthorities.toArray(new String[]{})), passwordExpiredFlag, user.getFirstName(), user.getFamilyName(), user.getUserRoles());
     }
 
     /**

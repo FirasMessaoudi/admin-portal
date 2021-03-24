@@ -16,9 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -49,17 +47,14 @@ public class JwtTokenServiceTest {
 
     @Test
     public void test_generate_token() {
-        AuthorityLookupDto authority = new AuthorityLookupDto();
-        authority.setCode(TEST_USER_AUTHORITY);
-
-        String generatedToken = classToTest.generateToken(TEST_USER_NIN, Collections.singletonList(authority),
-                TEST_USER_ID, false, TEST_USER_ROLE_ID, httpServletRequest);
+        String generatedToken = classToTest.generateToken(TEST_USER_NIN, Arrays.asList(TEST_USER_AUTHORITY),
+                TEST_USER_ID, false, Collections.singleton(TEST_USER_ROLE_ID), httpServletRequest);
         assertNotNull(generatedToken);
         Optional<List<String>> authoritiesFromToken = classToTest.retrieveAuthoritiesFromToken(generatedToken);
         assertTrue(authoritiesFromToken.isPresent());
         assertEquals(1, authoritiesFromToken.get().size());
         assertEquals(TEST_USER_AUTHORITY, authoritiesFromToken.get().get(0));
-        Optional<Long> userRoleIdFromToken = classToTest.retrieveUserRoleIdFromToken(generatedToken);
+        Optional<Set<Long>> userRoleIdFromToken = classToTest.retrieveUserRoleIdsFromToken(generatedToken);
         assertTrue(userRoleIdFromToken.isPresent());
         assertEquals(TEST_USER_ROLE_ID, userRoleIdFromToken.get());
     }

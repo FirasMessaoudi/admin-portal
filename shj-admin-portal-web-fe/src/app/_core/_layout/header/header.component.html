@@ -29,7 +29,11 @@
                   {{ currentUser?.firstName }} {{ currentUser?.lastName }}
                 </h5>
                 <h6 class="text-black-50 pt-1">
-                  {{ currentLanguage.startsWith('ar') ? currentUser?.role.nameArabic : currentUser?.role.nameEnglish }}
+                  <ng-container *ngFor="let userRole of currentUser?.userRoles">
+                    <ng-container *ngIf="userRole?.mainRole">
+                      {{ currentLanguage.startsWith('ar') ? userRole?.role.nameArabic : userRole?.role.nameEnglish }}
+                    </ng-container>
+                  </ng-container>
                 </h6>
               </div>
               <svg-icon styleClass="text-dcc-primary" icon="chevron-down"></svg-icon>

@@ -10,7 +10,6 @@ import com.elm.shj.admin.portal.orm.repository.RoleRepository;
 import com.elm.shj.admin.portal.orm.repository.UserRepository;
 import com.elm.shj.admin.portal.services.dto.UserDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
-import com.elm.shj.admin.portal.services.role.RoleService;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -57,21 +56,18 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
     @Autowired
     private EmailService emailService;
 
-    @Autowired
-    private RoleService roleService;
-
     /**
      * Finds all non deleted users.
      * @param pageable
      * @param loggedInUserId
-     * @param loggedInUserRoleId
+     * @param loggedInUserRoleIds
      * @return
      */
-    public Page<UserDto> findAllNotDeleted(Pageable pageable, long loggedInUserId, long loggedInUserRoleId) {
-        if (loggedInUserRoleId == RoleRepository.SYSTEM_ADMIN_ROLE_ID)
+    public Page<UserDto> findAllNotDeleted(Pageable pageable, long loggedInUserId, Set<Long> loggedInUserRoleIds) {
+        if (loggedInUserRoleIds.contains(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID))
             return mapPage(userRepository.findDistinctByDeletedFalseAndIdNot(pageable, loggedInUserId));
         // exclude system users in returned list
-        return mapPage(userRepository.findByDeletedFalseAndIdNotAndRoleIdNot(pageable, loggedInUserId, RoleRepository.SYSTEM_ADMIN_ROLE_ID));
+        return mapPage(userRepository.findByDeletedFalseAndIdNotAndUserRolesRoleIdNot(pageable, loggedInUserId, RoleRepository.SYSTEM_ADMIN_ROLE_ID));
     }
 
     /**
@@ -81,7 +77,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
      * @return the founded user or empty structure
      */
     public Optional<UserDto> findByNin(long nin) {
-        JpaUser user = userRepository.findByNinAndDeletedFalseAndActivatedTrueAndRoleDeletedFalseAndRoleActivatedTrue(nin);
+        JpaUser user = userRepository.findByNinAndDeletedFalseAndActivatedTrueAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(nin);
         return (user != null) ? Optional.of(getMapper().fromEntity(user, mappingContext)) : Optional.empty();
     }
 
@@ -91,12 +87,14 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
      * @param roleId    the user role id to find
      * @param nin       the user nin to find
      * @param activated the user account status
+     * @param loggedInUserRoleIds
      * @return the found users or <code>null</code>
      */
-    public Page<UserDto> searchByRoleStatusOrNin(Pageable pageable, Long roleId, String nin, Boolean activated, long loggedInUserId, long loggedInUserRoleId) {
+    public Page<UserDto> searchByRoleStatusOrNin(Pageable pageable, Long roleId, String nin, Boolean activated, long loggedInUserId, Set<Long> loggedInUserRoleIds) {
+        //TODO: need to review the exclude part.
         return mapPage(userRepository.findByRoleOrNinOrStatus(pageable, roleId, (nin == null ? null : "%" + nin + "%"), activated, loggedInUserId,
                 // exclude system users in returned list
-                (loggedInUserRoleId == RoleRepository.SYSTEM_ADMIN_ROLE_ID) ? null : RoleRepository.SYSTEM_ADMIN_ROLE_ID));
+                (loggedInUserRoleIds.contains(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID)) ? null : RoleRepository.SYSTEM_ADMIN_ROLE_ID));
     }
 
     /**
@@ -207,10 +205,6 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         user.setPassword(generatePassword());
         // encode the password
         user.setPasswordHash(passwordEncoder.encode(user.getPassword()));
-        //assign default role in case of self registration
-        if (selfRegistration) {
-            user.setRole(roleService.findNewUserDefaultRole());
-        }
         // set default values for new user
         user.setId(0);
         user.setBlockDate(null);
@@ -222,6 +216,12 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         user.setNumberOfTries(0);
         user.setUpdateDate(null);
         user.setCreationDate(new Date());
+        //update UserRole objects
+        user.getUserRoles().forEach(userRole -> {
+            userRole.setUser(user);
+            userRole.setCreationDate(new Date());
+            userRole.setId(0);
+        });
         // save user information
         UserDto savedUser = save(user);
         // user created successfully, send SMS notification which contains the temporary password

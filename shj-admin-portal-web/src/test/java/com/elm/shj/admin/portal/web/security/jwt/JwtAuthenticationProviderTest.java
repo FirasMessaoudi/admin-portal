@@ -10,13 +10,12 @@ import com.elm.shj.admin.portal.services.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -30,7 +29,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -92,16 +92,20 @@ public class JwtAuthenticationProviderTest {
         roleAuthority.setAuthority(authority);
         authority.setCode(AuthorityConstants.ADD_USER);
         role.setRoleAuthorities(new HashSet<>(Collections.singletonList(roleAuthority)));
+        UserRoleDto userRole = new UserRoleDto();
+        userRole.setRole(role);
+        userRole.setUser(userDto);
+        userRole.setMainRole(true);
         userDto.setNin(Long.parseLong(EXISTING_USER_NIN));
         userDto.setPasswordHash(BCrypt.hashpw(EXISTING_USER_PASS, BCrypt.gensalt()));
         userDto.setActivated(true);
-        userDto.setRole(role);
+        userDto.setUserRoles(Collections.singleton(userRole));
         when(userService.findByNin(anyLong())).thenReturn(Optional.of(userDto));
         doAnswer((Answer<Void>) invocation -> {
             // do nothing
             return null;
         }).when(userService).updateUserLoginInfo(any(Long.class), any(Date.class));
-        when(jwtTokenService.generateToken(anyLong(), any(), anyLong(), anyBoolean(), anyLong(), any())).thenReturn("DUMMY-GENERATED-TOKEN");
+        when(jwtTokenService.generateToken(anyLong(), any(), anyLong(), anyBoolean(), any(), any())).thenReturn("DUMMY-GENERATED-TOKEN");
 
         ServletRequestAttributes attributes = new ServletRequestAttributes(new MockHttpServletRequest());
         try(MockedStatic<RequestContextHolder> mockedStatic = mockStatic(RequestContextHolder.class)) {

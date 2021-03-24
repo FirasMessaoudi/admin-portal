@@ -2,6 +2,7 @@ export * from './user.model';
 export * from './user-status.model';
 export * from './page.model';
 export * from './role.model';
+export * from './user-role.model';
 export * from './role-authority.model';
 export * from './authority.model';
 export * from './enum/authority.enum';

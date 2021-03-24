@@ -25,9 +25,9 @@ public interface UserRepository extends JpaRepository<JpaUser, Long> {
 
     Page<JpaUser> findDistinctByDeletedFalseAndIdNot(Pageable pageable, long userId);
 
-    Page<JpaUser> findByDeletedFalseAndIdNotAndRoleIdNot(Pageable pageable, long userId, long roleId);
+    Page<JpaUser> findByDeletedFalseAndIdNotAndUserRolesRoleIdNot(Pageable pageable, long userId, long roleId);
 
-    JpaUser findByNinAndDeletedFalseAndActivatedTrueAndRoleDeletedFalseAndRoleActivatedTrue(long nin);
+    JpaUser findByNinAndDeletedFalseAndActivatedTrueAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(long nin);
 
     @Modifying
     @Query("update JpaUser user set user.deleted = true, user.actionDate = CURRENT_TIMESTAMP where user.id =:userId")
@@ -74,12 +74,13 @@ public interface UserRepository extends JpaRepository<JpaUser, Long> {
     void updateLoginInfo(@Param("numberOfTries") int numberOfTries, @Param("lastLoginDate") Date lastLoginDate,
                          @Param("updateDate") Date updateDate, @Param("tokenExpiryDate") Date tokenExpiryDate, @Param("userId") long userId);
 
-    @Query("select u from JpaUser u where u.deleted = false and " +
-            "(u.role.id = :roleId or :roleId is null) and " +
+
+    @Query("select u from JpaUser u left join u.userRoles ur where u.deleted = false and " +
+            "(ur.role.id = :roleId or :roleId is null) and " +
             "(concat('', u.nin) like :nin or :nin is null) and " +
             "(u.activated = :activated or :activated is null) and " +
             "u.id <> :loggedInUserId and " +
-            "(u.role.id <> :systemAdminRoleId or :systemAdminRoleId is null)")
+            "(ur.role.id <> :systemAdminRoleId or :systemAdminRoleId is null)")
     Page<JpaUser> findByRoleOrNinOrStatus(Pageable pageable, @Param("roleId") Long roleId, @Param("nin") String nin,
                                           @Param("activated") Boolean activated, @Param("loggedInUserId") long loggedInUserId,
                                           @Param("systemAdminRoleId") Long systemAdminRoleId);
@@ -103,7 +104,7 @@ public interface UserRepository extends JpaRepository<JpaUser, Long> {
     // -------- USERS BY AUTHORITY
     // --------------------------------
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ra.authority.nameArabic, 0, COUNT(DISTINCT u)) " +
-            "FROM JpaUser u LEFT JOIN JpaRoleAuthority ra ON u.role.id = ra.role.id " +
+            "FROM JpaUser u LEFT JOIN JpaUserRole ur ON ur.user.id = u.id LEFT JOIN JpaRoleAuthority ra ON ur.role.id = ra.role.id " +
             "WHERE u.deleted = false AND ra.authority.parent IS NULL " +
             "GROUP BY ra.authority.nameArabic")
     List<CountVo> countUsersByParentAuthority();

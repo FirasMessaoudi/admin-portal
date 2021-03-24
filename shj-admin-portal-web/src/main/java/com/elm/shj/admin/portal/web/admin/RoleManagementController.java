@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -50,14 +51,14 @@ public class RoleManagementController {
     @RolesAllowed({AuthorityConstants.ROLE_MANAGEMENT})
     public List<RoleDto> listAllRoles(Authentication authentication) {
         log.info("list active roles.");
-        return roleService.findAll((Boolean)null, jwtTokenService.retrieveUserRoleIdFromToken(((JwtToken) authentication).getToken()).orElse(0L));
+        return roleService.findAll((Boolean)null, jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
     }
 
     @GetMapping("/list/paginated")
     @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT)
     public Page<RoleDto> listPaginated(Pageable pageable, Authentication authentication) {
         log.info("list all roles.");
-        return roleService.findAll(pageable, jwtTokenService.retrieveUserRoleIdFromToken(((JwtToken) authentication).getToken()).orElse(0L));
+        return roleService.findAll(pageable, jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
     }
 
     @GetMapping("/search")
