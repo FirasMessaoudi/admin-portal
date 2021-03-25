@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaAuditLog;
 import com.elm.shj.admin.portal.services.dto.AuditLogDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service handling audit logs
@@ -17,4 +18,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuditLogService extends GenericService<JpaAuditLog, AuditLogDto, Long> {
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional
+    @Override
+    public AuditLogDto save(AuditLogDto dto) {
+        return super.save(dto);
+    }
 }

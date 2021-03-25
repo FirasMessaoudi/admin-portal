@@ -246,9 +246,9 @@ create table shj_portal.sha_audit_log
     origin          nvarchar(256)  not null,
     start_time      smalldatetime  not null,
     processing_time int            not null,
-    channel         varchar(45)    null,
+    channel         varchar(256)   null,
     http_status     int            not null,
-    error_details   nvarchar(256)  null
+    error_details   nvarchar(512)  null
 );
 GO
 

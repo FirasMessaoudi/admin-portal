@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.web.security.jwt;
 
 import com.elm.shj.admin.portal.services.dto.UserRoleDto;
 import com.google.common.base.Objects;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -103,5 +105,13 @@ public class JwtToken extends UsernamePasswordAuthenticationToken {
     @Override
     public int hashCode() {
         return Objects.hashCode(super.hashCode(), getToken(), getTokenExpirationDate());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 }

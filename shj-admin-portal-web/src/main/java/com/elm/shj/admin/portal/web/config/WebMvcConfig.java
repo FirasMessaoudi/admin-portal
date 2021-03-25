@@ -7,6 +7,7 @@ import org.apache.catalina.filters.RemoteIpFilter;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.Ordered;
@@ -28,6 +29,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @Configuration
+@EnableAspectJAutoProxy(exposeProxy = true)
 @EnableWebMvc
 @EnableSpringDataWebSupport
 public class WebMvcConfig implements WebMvcConfigurer {

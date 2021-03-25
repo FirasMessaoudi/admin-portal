@@ -3,10 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,8 +14,8 @@ import java.util.Date;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
-@Getter
-@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class AuditLogDto implements Serializable {
@@ -34,7 +31,7 @@ public class AuditLogDto implements Serializable {
     private String origin;
     private String channel;
     private Date startTime;
-    private int processingTime;
+    private long processingTime;
     private int httpStatus;
     private String errorDetails;
 }

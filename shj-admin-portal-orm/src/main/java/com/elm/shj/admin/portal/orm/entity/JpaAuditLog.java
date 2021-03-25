@@ -55,7 +55,7 @@ public class JpaAuditLog implements Serializable {
     private Date startTime;
 
     @Column(name = "processing_time", nullable = false)
-    private int processingTime;
+    private long processingTime;
 
     @Column(name = "http_status", nullable = false)
     private int httpStatus;
