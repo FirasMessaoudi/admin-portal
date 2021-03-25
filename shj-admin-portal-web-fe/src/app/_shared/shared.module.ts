@@ -22,6 +22,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {NgxCaptchaModule} from "ngx-captcha";
 import {DccCommonsNgPipesModule} from '@dcc-commons-ng/pipes';
 import {HijriGregorianDatepickerModule} from "@shared/modules/hijri-gregorian-datepicker/hijri-gregorian-datepicker.module";
+import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import {HijriGregorianDatepickerModule} from "@shared/modules/hijri-gregorian-da
     TranslateModule,
     NgxCaptchaModule,
     NgbDatepickerModule,
-    HijriGregorianDatepickerModule
+    HijriGregorianDatepickerModule,
+    NgMultiSelectDropDownModule
   ],
   providers: [DateAgoPipe, DatePipe, DateFormatPipe, HijriFormatPipe, NgxCaptchaModule],
   exports: [
@@ -65,7 +67,8 @@ import {HijriGregorianDatepickerModule} from "@shared/modules/hijri-gregorian-da
     HijriFormatPipe,
     DatePipe,
     IbanStatusPipe,
-    DccCommonsNgPipesModule
+    DccCommonsNgPipesModule,
+    NgMultiSelectDropDownModule
   ],
   entryComponents: [
     NgbdDatepickerIslamicumalqura,

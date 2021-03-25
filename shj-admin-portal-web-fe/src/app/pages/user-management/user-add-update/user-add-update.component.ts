@@ -14,6 +14,7 @@ import {DateType} from "@shared/modules/hijri-gregorian-datepicker/datepicker/co
 import {HijriGregorianDatepickerComponent} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datepicker.component";
 import {EAuthority} from "@model/enum/authority.enum";
 import {DccValidators, IdType} from "@shared/validators";
+import {IDropdownSettings} from "ng-multiselect-dropdown/multiselect.model";
 
 
 @Component({
@@ -36,6 +37,9 @@ export class UserAddUpdateComponent implements OnInit {
   dateString: string;
   selectedDateType: any;
 
+  selectedRoles = [];
+  dropdownSettings:IDropdownSettings = {};//TODO: check if it can be defined at the app level.
+
   @ViewChild('datePicker') dateOfBirthPicker: HijriGregorianDatepickerComponent;
 
 
@@ -54,9 +58,22 @@ export class UserAddUpdateComponent implements OnInit {
 
   ngOnInit(): void {
 
+    //TODO: use localized labels for select all and unselect all.
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: this.currentLanguage.startsWith("en") ? 'nameEnglish' : 'nameArabic',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
+
     this.roleService.listAll().subscribe(data => {
       this.roles = data;
     });
+
+    this.selectedRoles = [];
 
     // calendar default;
     let toDayGregorian = this.dateFormatterService.todayGregorian();
@@ -79,17 +96,16 @@ export class UserAddUpdateComponent implements OnInit {
     if (userId) {
       this.userService.find(userId).subscribe(user => {
         this.user = user;
-
+        this.user.userRoles.forEach(userRole => {
+          this.selectedRoles.push(userRole.role);
+        });
         if (this.user.dateOfBirthGregorian) {
           this.selectedDateOfBirth = this.dateFormatterService.fromDate(this.user.dateOfBirthGregorian);
           this.dateString = this.dateFormatterService.toString(this.dateFormatterService.toHijri(this.selectedDateOfBirth));
         }
-
         this.updateUserForm();
       });
     }
-
-
   }
 
   get f() {
@@ -129,6 +145,7 @@ export class UserAddUpdateComponent implements OnInit {
       grandFatherName: [this.user.grandFatherName, DccValidators.charactersOnly()],
       fatherName: [this.user.fatherName, DccValidators.charactersOnly()],
       activated: [this.user.activated, Validators.required],
+      role: [this.selectedRoles, Validators.required],
       userRoles: [this.user.userRoles, Validators.required]
     });
   }
@@ -172,11 +189,15 @@ export class UserAddUpdateComponent implements OnInit {
     if (this.userForm.invalid) {
       return;
     }
-    // construct user_role object from selected role
-    let userRole = new UserRole();
-    userRole.user = this.user;
-    userRole.role = this.userForm.controls.role.value;
-    this.userForm.controls.userRoles.setValue([userRole]);
+    let userRoles = [];
+    let userRole: UserRole;
+    this.userForm.controls.role.value.forEach(role => {
+      userRole = new UserRole();
+      userRole.user = this.user;
+      userRole.role = role;
+      userRoles.push(userRole);
+    });
+    this.f.userRoles.setValue(userRoles);
     this.userService.saveOrUpdate(this.userForm.value).subscribe(res => {
       if (res.hasOwnProperty("errors") && res.errors) {
         this.toastr.warning(this.translate.instant("general.dialog_form_error_text"), this.translate.instant("general.dialog_edit_title"));

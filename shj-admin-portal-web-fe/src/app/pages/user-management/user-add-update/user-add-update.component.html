@@ -165,27 +165,15 @@
 
             <div class="form-group col">
               <label class="col-form-label">{{ "user-management.role" | translate }}<span class="text-danger px-1">*</span></label>
-
-              <select formControlName="role" class="custom-select {{f.role.errors && f.role.touched ? 'is-invalid' : ''}}" required [class.text-danger]="f.role.value && !f.role.value.activated">
-                <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
-                <option *ngFor="let role of roles" [ngValue]="role" [class.text-danger]="!role?.activated" [class.text-black-50]="role?.activated">
-                  {{ currentLanguage.startsWith("en") ? role.nameEnglish : role.nameArabic }}
-                  <span *ngIf="!role?.activated">
-                    ({{'user-management.not_activated' | translate}})
-                  </span>
-                </option>
-              </select>
-
+              <ng-multiselect-dropdown formControlName="role" name="role" required [class.text-danger]="f.role.value && !f.role.value.activated"
+                                       [placeholder]="'general.select_option' | translate" [settings]="dropdownSettings" [data]="roles">
+              </ng-multiselect-dropdown>
               <div *ngIf="f.role.errors && f.role.touched" class="invalid-feedback">
                 <div *ngIf="f.role.errors.required">{{'general.field_validation_required' | translate}}</div>
                 <div *ngIf="f.role.errors.invalid" translate>{{f.role.errors['invalid']}}</div>
               </div>
             </div>
-
-
           </div>
-
-
 
         </div>
 
