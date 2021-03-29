@@ -182,8 +182,8 @@
 
             <div class="form-group col">
               <label class="col-form-label">{{ "user-management.additional_role" | translate }}</label>
-              <ng-multiselect-dropdown formControlName="additionalRoles" name="additionalRoles" [placeholder]="'general.select_option' | translate"
-                                       [settings]="dropdownSettings" [data]="additionalRoles" [disabled]="!mainRoleSelected">
+              <ng-multiselect-dropdown formControlName="additionalRoles" [placeholder]="'general.select_option' | translate"
+                                       [settings]="dropdownSettings" [data]="additionalRoles" [disabled]="!mainSelectedRole">
               </ng-multiselect-dropdown>
             </div>
 

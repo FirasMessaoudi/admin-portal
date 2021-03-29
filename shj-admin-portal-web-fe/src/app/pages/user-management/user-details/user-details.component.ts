@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder} from "@angular/forms";
-import {User} from '@app/_shared/model';
+import {Role, User} from '@app/_shared/model';
 import {AuthenticationService, UserService} from '@app/_core/services';
 import {ToastService} from '@shared/components/toast/toast-service';
 import {I18nService} from "@dcc-commons-ng/services";
@@ -48,7 +48,6 @@ export class UserDetailsComponent implements OnInit {
         this.userService.find(this.userId).subscribe(data => {
           if (data && data.id) {
             this.user = data;
-            this.user.mainRole = this.user.userRoles.find(userRole =>  userRole.mainRole == true).role;
           } else {
             this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.userId}),
               this.translate.instant('general.dialog_error_title'));
@@ -82,5 +81,13 @@ export class UserDetailsComponent implements OnInit {
 
   get canSeeUserDetails(): boolean {
     return this.authenticationService.hasAuthority(EAuthority.USER_MANAGEMENT);
+  }
+
+  get userMainRole() : Role {
+    if (this.user) {
+      let userRole = this.user.userRoles.find(userRole => userRole.mainRole);
+      if (userRole) return userRole.role;
+    }
+    return null;
   }
 }

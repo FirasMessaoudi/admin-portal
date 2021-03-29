@@ -1,5 +1,4 @@
 import {UserRole} from "@model/user-role.model";
-import {Role} from "@model/role.model";
 
 export class User {
   id: number;
@@ -24,5 +23,4 @@ export class User {
   creationDate: Date;
   authorities: any;
   userRoles: Array<UserRole>;
-  mainRole: Role;
 }

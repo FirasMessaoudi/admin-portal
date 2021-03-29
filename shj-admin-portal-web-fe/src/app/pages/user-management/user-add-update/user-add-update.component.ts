@@ -30,7 +30,6 @@ export class UserAddUpdateComponent implements OnInit {
   user: User = new User();
   roles: Role[];
   mainSelectedRole: Role;
-  mainRoleSelected: boolean;
   additionalRoles: Role[];
   userForm: FormGroup;
 
@@ -140,7 +139,6 @@ export class UserAddUpdateComponent implements OnInit {
   }
 
   onMainRoleChange(selectedRole: any) {
-    this.mainRoleSelected = true;
     this.mainSelectedRole = selectedRole;
     this.additionalRoles = [];
     this.roles.forEach(role => {
