@@ -81,10 +81,10 @@
           <td>{{user.firstName}} {{user.fatherName}} {{user.familyName}}</td>
           <td class="ltr">{{user.mobileNumber | mobileFormat}}</td>
           <td class="ltr">
-            <span class="d-inline badge badge-info py-1 px-3 badge-pill {{user.role?.activated ? '' : 'border border-warning border-3'}} ">
-              {{ currentLanguage.startsWith("en") ? user.role?.nameEnglish : user.role?.nameArabic }}
+            <span class="d-inline badge badge-info py-1 px-3 badge-pill {{user.mainRole?.activated ? '' : 'border border-warning border-3'}} ">
+              {{ currentLanguage.startsWith("en") ? user.mainRole?.nameEnglish : user.mainRole?.nameArabic }}
             </span>
-            <span class="d-inline badge badge-warning px-1 py-0 align-top status-pill" *ngIf="!user.role?.activated">
+            <span class="d-inline badge badge-warning px-1 py-0 align-top status-pill" *ngIf="!user.mainRole?.activated">
               {{'user-management.not_activated' | translate}}
             </span>
           </td>

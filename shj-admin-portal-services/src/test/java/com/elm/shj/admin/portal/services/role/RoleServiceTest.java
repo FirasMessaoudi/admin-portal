@@ -56,9 +56,9 @@ class RoleServiceTest {
 
     @Test
     public void test_find_all_activated() {
-        serviceToTest.findAll(true, Collections.singleton(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID));
+        serviceToTest.findActive(Collections.singleton(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID));
         verify(roleRepository).findByDeletedFalseAndActivated(eq(true));
-        serviceToTest.findAll(true, Collections.singleton(TEST_ROLE_ID));
+        serviceToTest.findActive(Collections.singleton(TEST_ROLE_ID));
         verify(roleRepository).findByDeletedFalseAndActivatedAndIdNot(eq(true), eq(RoleRepository.SYSTEM_ADMIN_ROLE_ID));
     }
 

@@ -113,6 +113,10 @@ export class UserListComponent implements OnInit, OnDestroy {
         if (this.page != null) {
           this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
           this.users = this.page.content;
+          this.users.forEach(user => {
+            let mainUserRole = user.userRoles.find(userRole => userRole.mainRole == true);
+            if(mainUserRole) user.mainRole = mainUserRole.role;
+          });
           //check logged in user actions authorities
           this.canEditUser = this.authenticationService.hasAuthority(EAuthority.EDIT_USER);
           this.canChangeUserStatus = this.authenticationService.hasAuthority(EAuthority.CHANGE_USER_STATUS);

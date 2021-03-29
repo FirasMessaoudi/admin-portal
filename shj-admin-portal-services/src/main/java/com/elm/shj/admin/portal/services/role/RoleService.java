@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaRole;
 import com.elm.shj.admin.portal.orm.repository.RoleRepository;
 import com.elm.shj.admin.portal.services.dto.RoleDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -22,9 +24,10 @@ import java.util.Set;
  * Service handling user role
  *
  * @author ahmad flaifel
- * @since 1.8.0
+ * @since 1.0.0
  */
 @Service
+@Slf4j
 public class RoleService extends GenericService<JpaRole, RoleDto, Long> {
 
     @Autowired
@@ -36,7 +39,7 @@ public class RoleService extends GenericService<JpaRole, RoleDto, Long> {
      * @param pageable
      * @return
      */
-    public Page<RoleDto> findAll(Pageable pageable, Set<Long> loggedInUserRoleIds) {
+    public Page<RoleDto> findAll(Pageable pageable, Set loggedInUserRoleIds) {
         if (loggedInUserRoleIds.contains(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID))
             return mapPage(roleRepository.findByDeletedFalse(pageable));
         // exclude system users in returned list
@@ -60,14 +63,28 @@ public class RoleService extends GenericService<JpaRole, RoleDto, Long> {
     /**
      * List active roles.
      *
-     * @param activated whether to look for active roles or not
+     * @param loggedInUserRoleIds
      * @return the list of roles matching criteria
      */
-    public List<RoleDto> findAll(Boolean activated, Set<Long> loggedInUserRoleIds) {
+    public List<RoleDto> findAll(Set<Long> loggedInUserRoleIds) {
         if (loggedInUserRoleIds.contains(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID))
-            return mapList(roleRepository.findByDeletedFalseAndActivated(activated));
-        // exclude system admin role in returned list
-        return mapList(roleRepository.findByDeletedFalseAndActivatedAndIdNot(activated, RoleRepository.SYSTEM_ADMIN_ROLE_ID));
+            return mapList(roleRepository.findByDeletedFalseAndActivated(true));
+        // exclude system admin and system user roles in returned list
+        return mapList(roleRepository.findByDeletedFalseAndActivatedTrueAndIdNotIn(RoleRepository.SYSTEM_ROLE_ID_LIST));
+    }
+
+    /**
+     * Find all active roles based for system admin user.
+     * @param loggedInUserRoleIds
+     * @return
+     */
+    public List<RoleDto> findActive(Set loggedInUserRoleIds) {
+        if (!loggedInUserRoleIds.contains(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID)) {
+            log.warn("only system admin user is allowed to list all active roles!");
+            return Collections.EMPTY_LIST;
+        }
+        // exclude system admin and system user roles from returned list
+        return mapList(roleRepository.findByDeletedFalseAndActivatedTrueAndIdNotIn(RoleRepository.SYSTEM_ROLE_ID_LIST));
     }
 
 

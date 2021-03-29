@@ -29,6 +29,9 @@ export class UserAddUpdateComponent implements OnInit {
 
   user: User = new User();
   roles: Role[];
+  mainSelectedRole: Role;
+  mainRoleSelected: boolean;
+  additionalRoles: Role[];
   userForm: FormGroup;
 
   selectedDateOfBirth: NgbDateStruct;
@@ -37,7 +40,7 @@ export class UserAddUpdateComponent implements OnInit {
   dateString: string;
   selectedDateType: any;
 
-  selectedRoles = [];
+  additionalSelectedRoles = [];
   dropdownSettings:IDropdownSettings = {};//TODO: check if it can be defined at the app level.
 
   @ViewChild('datePicker') dateOfBirthPicker: HijriGregorianDatepickerComponent;
@@ -66,14 +69,14 @@ export class UserAddUpdateComponent implements OnInit {
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
       itemsShowLimit: 3,
-      allowSearchFilter: true
+      allowSearchFilter: false
     };
 
-    this.roleService.listAll().subscribe(data => {
+    this.roleService.listActive().subscribe(data => {
       this.roles = data;
     });
 
-    this.selectedRoles = [];
+    this.additionalSelectedRoles = [];
 
     // calendar default;
     let toDayGregorian = this.dateFormatterService.todayGregorian();
@@ -97,7 +100,11 @@ export class UserAddUpdateComponent implements OnInit {
       this.userService.find(userId).subscribe(user => {
         this.user = user;
         this.user.userRoles.forEach(userRole => {
-          this.selectedRoles.push(userRole.role);
+          if (userRole.mainRole) {
+            this.mainSelectedRole = userRole.role;
+          } else {
+            this.additionalSelectedRoles.push(userRole.role);
+          }
         });
         if (this.user.dateOfBirthGregorian) {
           this.selectedDateOfBirth = this.dateFormatterService.fromDate(this.user.dateOfBirthGregorian);
@@ -127,7 +134,19 @@ export class UserAddUpdateComponent implements OnInit {
       fatherName: ['', DccValidators.charactersOnly()],
       activated: [false, Validators.required],
       role: [null, Validators.required],
+      additionalRoles: [[]],
       userRoles: [null]
+    });
+  }
+
+  onMainRoleChange(selectedRole: any) {
+    this.mainRoleSelected = true;
+    this.mainSelectedRole = selectedRole;
+    this.additionalRoles = [];
+    this.roles.forEach(role => {
+      if (role.id != selectedRole.id) {
+        this.additionalRoles.push(role);
+      }
     });
   }
 
@@ -145,7 +164,8 @@ export class UserAddUpdateComponent implements OnInit {
       grandFatherName: [this.user.grandFatherName, DccValidators.charactersOnly()],
       fatherName: [this.user.fatherName, DccValidators.charactersOnly()],
       activated: [this.user.activated, Validators.required],
-      role: [this.selectedRoles, Validators.required],
+      role: [this.mainSelectedRole, Validators.required],
+      // additionalRoles: [this.additionalSelectedRoles],
       userRoles: [this.user.userRoles, Validators.required]
     });
   }
@@ -179,6 +199,14 @@ export class UserAddUpdateComponent implements OnInit {
     }
   }
 
+  createUserRole(role: Role, mainRole: boolean): UserRole {
+    let userRole: UserRole = new UserRole();
+    userRole.user = this.user;
+    userRole.role = role;
+    userRole.mainRole = mainRole;
+    return userRole;
+  }
+
   saveOrUpdate() {
 
     Object.keys(this.userForm.controls).forEach(field => {
@@ -189,15 +217,15 @@ export class UserAddUpdateComponent implements OnInit {
     if (this.userForm.invalid) {
       return;
     }
+
     let userRoles = [];
-    let userRole: UserRole;
-    this.userForm.controls.role.value.forEach(role => {
-      userRole = new UserRole();
-      userRole.user = this.user;
-      userRole.role = role;
-      userRoles.push(userRole);
+    // create UserRole for the main selected role and additional roles (if any).
+    userRoles.push(this.createUserRole(this.mainSelectedRole, true));
+    this.userForm.controls.additionalRoles.value.forEach(role => {
+      userRoles.push(this.createUserRole(role, false));
     });
     this.f.userRoles.setValue(userRoles);
+
     this.userService.saveOrUpdate(this.userForm.value).subscribe(res => {
       if (res.hasOwnProperty("errors") && res.errors) {
         this.toastr.warning(this.translate.instant("general.dialog_form_error_text"), this.translate.instant("general.dialog_edit_title"));

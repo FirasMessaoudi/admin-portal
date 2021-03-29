@@ -65,8 +65,12 @@
         </div>
         <div class="form-group col">
           <label class="col-form-label">{{'user-management.role' | translate}}</label>
+          <span class="form-control-plaintext font-weight-bold">{{ currentLanguage.startsWith("en") ? user?.mainRole?.nameEnglish : user?.mainRole?.nameArabic }}</span>
+        </div>
+        <div class="form-group col" *ngIf="user?.userRoles?.length > 1">
+          <label class="col-form-label">{{'user-management.additional_role' | translate}}</label>
           <ng-container *ngFor="let userRole of user?.userRoles">
-            <span class="form-control-plaintext font-weight-bold">{{ currentLanguage.startsWith("en") ? userRole?.role?.nameEnglish : userRole?.role.nameArabic }}</span>
+            <span *ngIf="!userRole.mainRole" class="form-control-plaintext font-weight-bold">{{ currentLanguage.startsWith("en") ? userRole?.role?.nameEnglish : userRole?.role?.nameArabic }}</span>
           </ng-container>
         </div>
         <div class="form-group col">

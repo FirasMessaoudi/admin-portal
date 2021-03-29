@@ -48,6 +48,7 @@ export class UserDetailsComponent implements OnInit {
         this.userService.find(this.userId).subscribe(data => {
           if (data && data.id) {
             this.user = data;
+            this.user.mainRole = this.user.userRoles.find(userRole =>  userRole.mainRole == true).role;
           } else {
             this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.userId}),
               this.translate.instant('general.dialog_error_title'));

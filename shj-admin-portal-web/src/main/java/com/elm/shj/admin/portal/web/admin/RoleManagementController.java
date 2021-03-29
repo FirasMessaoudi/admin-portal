@@ -51,7 +51,19 @@ public class RoleManagementController {
     @RolesAllowed({AuthorityConstants.ROLE_MANAGEMENT})
     public List<RoleDto> listAllRoles(Authentication authentication) {
         log.info("list active roles.");
-        return roleService.findAll((Boolean)null, jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
+        return roleService.findAll(jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
+    }
+
+    /**
+     * List active non system roles.
+     * @param authentication the logged in user information
+     * @return the list of active roles
+     */
+    @GetMapping("/list/active")
+    @RolesAllowed({AuthorityConstants.USER_MANAGEMENT})
+    public List<RoleDto> listActiveRoles(Authentication authentication) {
+        log.info("list active roles.");
+        return roleService.findActive(jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
     }
 
     @GetMapping("/list/paginated")

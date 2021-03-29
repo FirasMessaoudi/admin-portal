@@ -58,7 +58,7 @@ class RoleManagementControllerTest extends AbstractControllerTestSuite {
         initRolesList();
         when(roleService.save(Mockito.any(RoleDto.class))).then((Answer<RoleDto>) this::mockSaveRole);
         when(roleService.findAll(any(Pageable.class), any())).thenReturn(new PageImpl<>(roles));
-        when(roleService.findAll(eq((Boolean)null), any())).thenReturn(roles);
+        when(roleService.findAll(any())).thenReturn(roles);
         when(roleService.searchByAuthorityOrName(any(), eq(TEST_AUTHORITY_ID), eq(TEST_ARABIC_NAME), eq(TEST_ENGLISH_NAME))).thenReturn(new PageImpl<>(roles));
         mockSuccessfulLogin();
         triggerLogin();
@@ -81,7 +81,7 @@ class RoleManagementControllerTest extends AbstractControllerTestSuite {
                 .andExpect(jsonPath("$.[0].id", is((int) roles.get(0).getId())));
 
 
-        verify(roleService, times(1)).findAll(eq((Boolean) null), any());
+        verify(roleService, times(1)).findAll(any());
     }
 
     @Test

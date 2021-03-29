@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,9 +22,10 @@ import java.util.List;
  */
 public interface RoleRepository extends JpaRepository<JpaRole, Long> {
 
-    long SYSTEM_ADMIN_USER_ROLE_ID = 1;
     long SYSTEM_ADMIN_ROLE_ID = 1;
     long SYSTEM_USER_ROLE_ID = 2;
+    int SYSTEM_ADMIN_USER_ROLE_ID = 1;
+    List<Long> SYSTEM_ROLE_ID_LIST = Arrays.asList(SYSTEM_ADMIN_ROLE_ID, SYSTEM_USER_ROLE_ID);
 
     Page<JpaRole> findByDeletedFalse(Pageable pageable);
 
@@ -33,6 +35,20 @@ public interface RoleRepository extends JpaRepository<JpaRole, Long> {
             "role.deleted = false and (role.activated = :activated or :activated is null) " +
             "and role.id <> :systemAdminRoleId ")
     List<JpaRole> findByDeletedFalseAndActivatedAndIdNot(@Param("activated") Boolean activated, @Param("systemAdminRoleId") long systemAdminRoleId);
+
+    /**
+     * Find not deleted and active roles not matching passed role ids.
+     * @param roleIds
+     * @return
+     */
+    List<JpaRole> findByDeletedFalseAndActivatedTrueAndIdNotIn(List<Long> roleIds);
+
+    /**
+     * Find not deleted and active roles matching passed role ids.
+     * @param includedRoleIds
+     * @return
+     */
+    List<JpaRole> findByDeletedFalseAndActivatedTrueAndIdIn(List<Long> includedRoleIds);
 
     @Query("select distinct role from JpaRole role where " +
             "role.deleted = false and (role.activated = :activated or :activated is null)")
