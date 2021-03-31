@@ -11,13 +11,13 @@ import {SharedModule} from "@shared/shared.module";
 
 @NgModule({
   declarations: [AppComponent],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        CoreModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-        SharedModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    CoreModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    SharedModule
+  ],
   exports: [],
   providers: [],
   bootstrap: [AppComponent]

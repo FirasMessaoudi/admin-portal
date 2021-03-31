@@ -111,7 +111,9 @@
     "total_roles": "Total Roles",
     "users_active": "Active",
     "users_inactive": "Inactive",
-    "users_deleted": "Deleted"
+    "users_deleted": "Deleted",
+    "welcome": "Welcome to:",
+    "legend": "Legend"
   },
 
   "role-management": {
