@@ -83,7 +83,8 @@
     "tooltip_activate": "Activate",
     "tooltip_deactivate": "Deactivate",
     "tooltip_reset_password": "Reset Password",
-    "select_option": "-- Please Select --"
+    "select_option": "-- Please Select --",
+    "gender": "Gender"
   },
 
   "header": {
@@ -358,5 +359,20 @@
     "filter_search-type_between-regions": "Between Regions",
     "filter_search-type_within-regions": "Within Regions",
     "filter_choose": "Please Choose"
+  },
+  "card-management": {
+    "title": "Card Management",
+    "cards_list": "Cards List",
+    "card_details": "Card Details",
+    "ritual_season": "Ritual Season",
+    "ritual_type": "Ritual Type",
+    "hamlah": "الحملة",
+    "motawef": "Al Motawef",
+    "applicant_id": "Rahman Guest ID",
+    "card_number": "Card Number",
+    "card_status": "Card Status",
+    "applicant_id_status": "Rahman Guest ID Status",
+    "nationality": "Nationality",
+    "passport_number": "Passport Number"
   }
 }

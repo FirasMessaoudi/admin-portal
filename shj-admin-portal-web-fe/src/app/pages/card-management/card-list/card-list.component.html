@@ -1,0 +1,120 @@
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h2 class="sectionTitle">{{ "card-management.cards_list" | translate }}</h2>
+    <button routerLink="/users/create" class="btn btn-outline-dcc-primary px-4" *ngIf="canAddCard">
+      {{ "general.btn_add" | translate }}
+    </button>
+  </div>
+  <div class="content__section" *ngIf="!canSeeCardsList">
+    {{'header.welcome' | translate}} <span class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
+
+  <div class="content__section" *ngIf="canSeeCardsList">
+    <div class="searchBox">
+      <form [formGroup]="searchForm" enctype="multipart/form-data" class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.ritual_season" | translate }}</label>
+          <select formControlName="ritualSeason" class="custom-select">
+            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option>2021</option>
+            <option>2020</option>
+            <option>2019</option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.ritual_type" | translate }}</label>
+          <select formControlName="ritualType" class="custom-select">
+            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option>عمرة داخلية</option>
+            <option>عمرة خارجية</option>
+            <option>حج داخلي</option>
+            <option>حج خارجي</option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.hamlah" | translate }}</label>
+          <select formControlName="hamlah" class="custom-select">
+            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option>سيف الاسلام</option>
+            <option>ضيوف الرحمن</option>
+            <option>المشاعر المقدسة</option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.motawef" | translate }}</label>
+          <select formControlName="motawef" class="custom-select">
+            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option>مطوف 1</option>
+            <option>مطوف 2</option>
+            <option>مطوف 3</option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.applicant_id" | translate }}</label>
+          <input type="text" formControlName="idNumber" class="form-control" value="225448784"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.card_number" | translate }}</label>
+          <input type="text" formControlName="cardNumber" class="form-control" value="5721023"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.card_status" | translate }}</label>
+          <select formControlName="cardStatus" class="custom-select">
+            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option>نشطة</option>
+            <option>موقوفة</option>
+            <option>منتهية</option>
+            <option>ملغية</option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.applicant_id_status" | translate }}</label>
+          <select formControlName="applicantIdStatus" class="custom-select">
+            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option>نشطة</option>
+            <option>غير نشطة</option>
+            <option>منتهية</option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "general.gender" | translate }}</label>
+          <select formControlName="gender" class="custom-select">
+            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option>ذكر</option>
+            <option>أنثى</option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.nationality" | translate }}</label>
+          <select formControlName="nationality" class="custom-select">
+            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option>سعودية</option>
+            <option>مصرية</option>
+            <option>تونسية</option>
+            <option>هندية</option>
+            <option>أردنية</option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.passport_number" | translate }}</label>
+          <input type="text" formControlName="passportNumber" class="form-control" value="2362845"/>
+        </div>
+
+
+      </form>
+    </div>
+  </div>
+
+
+</div>
