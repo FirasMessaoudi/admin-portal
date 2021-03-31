@@ -51,6 +51,12 @@ export class HeaderComponent implements OnInit {
         roles: [EAuthority.ROLE_MANAGEMENT],
         display: false,
         routerLink: '/roles/list',
+      },
+      {
+        title: 'card-management.title',
+        roles: [EAuthority.USER_MANAGEMENT],
+        display: false,
+        routerLink: '/cards/list',
       }
     ];
     // filtering access according to connected user authorities

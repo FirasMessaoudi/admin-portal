@@ -83,7 +83,8 @@
     "tooltip_activate": "تفعيل",
     "tooltip_deactivate": "تعطيل",
     "tooltip_reset_password": "إعادة تعيين كلمة المرور",
-    "select_option": "-- الرجاء الاختيار --"
+    "select_option": "-- الرجاء الاختيار --",
+    "gender": "الجنس"
   },
 
   "header": {
@@ -357,5 +358,20 @@
     "filter_search-type_between-regions": "بين المناطق",
     "filter_search-type_within-regions": "داخل المناطق",
     "filter_choose": "الرجاء الاختيار"
+  },
+  "card-management": {
+    "title": "إدارة البطاقات",
+    "cards_list": "قائمة البطاقات",
+    "card_details": "تفاصيل البطاقة",
+    "ritual_season": "سنة الشعيرة",
+    "ritual_type": "نوع الشعيرة",
+    "hamlah": "الحملة",
+    "motawef": "المطوف",
+    "applicant_id": "هوية ضيف الرحمن",
+    "card_number": "رقم البطاقة",
+    "card_status": "حالة البطاقة",
+    "applicant_id_status": "حالة هوية ضيف الرحمن",
+    "nationality": "الجنسية",
+    "passport_number": "رقم جواز السفر"
   }
 }
