@@ -9,6 +9,7 @@ target/
 *.log
 node_modules/
 dist/
+package-lock.json
 
 # Eclipse artifacts, including WTP generated manifests
 .classpath
