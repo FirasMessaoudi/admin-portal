@@ -44,6 +44,14 @@ export class CardListComponent implements OnInit {
     });
   }
 
+  search(): void {
+
+  }
+
+  cancelSearch() {
+    this.initForm();
+  }
+
   get canSeeCardsList(): boolean {
     //TODO: change it to CARD_MANAGEMENT
     return this.authenticationService.hasAuthority(EAuthority.USER_MANAGEMENT);

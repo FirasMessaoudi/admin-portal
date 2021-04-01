@@ -372,6 +372,10 @@
     "card_status": "حالة البطاقة",
     "applicant_id_status": "حالة هوية ضيف الرحمن",
     "nationality": "الجنسية",
-    "passport_number": "رقم جواز السفر"
+    "passport_number": "رقم جواز السفر",
+    "applicant_name": "الاسم",
+    "activate_cards": "تنشيط {{noCards}} بطاقة",
+    "export_to_excel": "تصدير إكسل",
+    "export_to_pdf": "تصدير PDF"
   }
 }
