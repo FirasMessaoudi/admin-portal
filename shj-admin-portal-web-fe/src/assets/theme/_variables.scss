@@ -1,14 +1,15 @@
-$gray-100: #FBFBFB;
+$gray-100: #F6F7F5;
 $gray-200: #DFE5EA;
+$gray-300: #D5D5DD;
 $input-color: #333;
 
-$component-active-bg:         #952d98;
+$component-active-bg: #14415A;
 $input-btn-padding-y:         .43rem;
 $input-btn-padding-x:         .86rem;
 $line-height-base:            1.72;
 $border-color:                #EAF1F6;
 $input-font-weight: 600;
-$border-radius:               .5rem;
+$border-radius:               0;
 $border-radius-lg:            .6rem;
 $paragraph-margin-bottom:   .7rem;
 $custom-control-indicator-checked-disabled-bg:  rgba(0, 159, 136, 0.3);
@@ -22,11 +23,26 @@ $custom-control-indicator-checked-disabled-bg:  rgba(0, 159, 136, 0.3);
     Bootstrap Override Variables
 ================================================================================*/
 // Main Theme Color
-$dcc-primary: rgba(149, 45, 152, 0.999); //#952d98
+$dcc-primary: rgba(59, 121, 55, 0.999); //#3B7937
+/* $primary: rgba(0, 159, 136, 0.999); //#14415A
+$secondary: rgba(14, 47, 64, 0.999); //#0E2F40 */
+$dcc-light-primary:#E1FBE9;
+$light-danger:#FFF1F1;
+$dcc-info: #F7FDFF;
+$dcc-light: rgba(237,237,237,0.52);
+
+
 
 $theme-colors: (
-  "dcc-primary": $dcc-primary
+  "dcc-primary": $dcc-primary,
+  "dcc-light-primary": $dcc-light-primary,
+  "light-danger": $light-danger,
+  "dcc-info": $dcc-info,
+  "gray-300":$gray-300,
+  "dcc-light": $dcc-light
 );
+
+
 /*=============================================================================
     Custom Variables
 ================================================================================*/
@@ -35,8 +51,7 @@ $link-hover-decoration:     none;
 $font-family-base:          "Elm-font", sans-serif;
 $line-height-base:            1.7;
 // Body
-$body-bg:                   #f1f2f5;
-$body-color:                #545e6f;
+$body-color:                #666666;
 
 // Grid breakpoints
 $grid-breakpoints: (

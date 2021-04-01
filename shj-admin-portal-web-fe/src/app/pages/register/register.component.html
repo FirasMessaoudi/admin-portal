@@ -9,10 +9,14 @@
   </button>
 </span>
 <div class="login__box">
+  
+  <div class="text-center">
+    <img class="my-4" src="assets/images/logo.png" alt="logo" />
+  </div>
+
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login-box__wrapper">
 
-    <h1 class="text-dcc-primary font-weight-bold mb-2">{{'register.header_title' | translate}}</h1>
-    <h4 class="text-secondary mb-4">{{'register.header_text' | translate}}</h4>
+    <h1 class="text-dcc-primary font-weight-bold mb-4">{{'register.header_title' | translate}}</h1>
     <div class="form-group form-row">
       <div class="col-md-6 col-sm-12">
         <label>{{'user-management.first_name' | translate}}<span class="text-danger px-1">*</span></label>

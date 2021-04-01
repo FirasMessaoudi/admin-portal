@@ -9,13 +9,17 @@
   </button>
 </span>
 <div class="login__box">
+
+  <div class="text-center">
+    <img class="my-4" src="assets/images/logo.png" alt="logo" />
+  </div>
+
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-box__wrapper">
 
     <div class="alert alert-danger" [hidden]="!error || loading">
       {{'login.invalid_username_or_password' | translate }}
     </div>
-    <h1 class="text-dcc-primary font-weight-bold mb-2">{{'login.header_title' | translate}}</h1>
-    <h4 class="text-secondary mb-4">{{'login.header_text' | translate}}</h4>
+    <h1 class="text-dcc-primary font-weight-bold mb-4">{{'login.header_title' | translate}}</h1>
     <div class="form-group">
       <label>{{'general.nin_or_iqama' | translate}}<span class="text-danger px-1">*</span></label>
       <input type="text" formControlName="username" class="form-control" required
