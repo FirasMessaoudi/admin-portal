@@ -1,7 +1,7 @@
 import {SharedModule} from '@app/_shared/shared.module';
 import {NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import * as layout from '@core/_layout';
@@ -22,6 +22,7 @@ import {DccCommonsNgServicesModule} from "@dcc-commons-ng/services";
 import {environment} from "@env/environment";
 import {LOGIN_URL, PUBLIC_URL_PATTERNS} from "@core/guards/authentication.guard";
 import {TranslateModule} from "@ngx-translate/core";
+import {DynamicMockInterceptor} from "@core/mock/dynamic-mock-interceptor";
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import {TranslateModule} from "@ngx-translate/core";
     DashboardService,
     RegisterService,
     AuthenticationService,
-    {provide: 'environment', useValue: environment}
+    {provide: 'environment', useValue: environment},
+    {provide: HTTP_INTERCEPTORS, useClass: DynamicMockInterceptor, multi: true}
   ]
 })
 export class CoreModule extends EnsureModuleLoadedOnceGuard {

@@ -183,8 +183,7 @@
   },
 
   "login": {
-    "header_title": "Welcome back.",
-    "header_text": "Please specify the login for your account",
+    "header_title": "Login",
     "side_info" : "The DCC template aims to unify efforts and standardize the way we implement our products in ELM.\n          It can reduce efforts related to common project activities like project structure, technology stack, error handling strategy, coding standards, ...\n          In our last survey, effort saved can go up to 20% of the total project effort.",
     "title": "Login",
     "btn_login": "Login",
@@ -195,7 +194,6 @@
 
   "register": {
     "header_title": "Create New Account",
-    "header_text": "Fill in your details to create your account.",
     "btn_register": "Register",
     "btn_back_to_login": "Back to Login",
     "link_legal_content": "I agree on",
@@ -373,6 +371,10 @@
     "card_status": "Card Status",
     "applicant_id_status": "Rahman Guest ID Status",
     "nationality": "Nationality",
-    "passport_number": "Passport Number"
+    "passport_number": "Passport Number",
+    "applicant_name": "Name",
+    "activate_cards": "Activate {{noCards}} cards",
+    "export_to_excel": "Export Excel",
+    "export_to_pdf": "Export PDF"
   }
 }

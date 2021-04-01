@@ -27,21 +27,7 @@
 }
 
 
-header{
-  &::before{
-    content: '';
-    width: 749px;
-    height: 123px;
-    position: absolute;
-    left: 100px;
-    background-image: url('/assets/images/header-line.svg');
 
-    @include media-breakpoint-down(md) {
-      display: none;
-    }
-  }
-
-}
 
 .logo .title {
   font-size: 1.5rem;
