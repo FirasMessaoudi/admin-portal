@@ -2,7 +2,7 @@
   <div class="title__Page">
     <h2 class="sectionTitle">{{ "card-management.cards_list" | translate }}</h2>
     <button routerLink="/users/create" class="btn btn-outline-dcc-primary px-4" *ngIf="canAddCard">
-      {{ "general.btn_add" | translate }}
+      {{ "card-management.add_exceptional_card" | translate }}
     </button>
   </div>
   <div class="content__section" *ngIf="!canSeeCardsList">
@@ -111,6 +111,21 @@
           <input type="text" formControlName="passportNumber" class="form-control" value="2362845"/>
         </div>
 
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.tafweej_number" | translate }}</label>
+          <input type="text" formControlName="tafweejNumber" class="form-control" value="2362845"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.id_type" | translate }}</label>
+          <select formControlName="idType" class="custom-select">
+            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option>هوية وطنية</option>
+            <option>إقامة</option>
+            <option>جواز سفر</option>
+          </select>
+        </div>
+
         <div class="form-group col align-self-end">
           <button type="submit" (click)="search()" class="btn btn-outline-dcc-primary px-5 mr-3">
             {{ "general.btn_search" | translate }}
@@ -124,105 +139,58 @@
       </form>
     </div>
 
-<!--    <div class="table-responsive my-4">-->
-<!--      <table class="table table-striped table-hover">-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--          <th scope="col" class="text-center">#</th>-->
-<!--          <th scope="col">{{'card-management.name' | translate}}</th>-->
-<!--          <th scope="col" class="text-center">{{'card-management.applicant_id' | translate}}</th>-->
-<!--          <th scope="col">{{'card-management.card_number' | translate}}</th>-->
-<!--          <th scope="col">{{'card-management.ritual_type' | translate}}</th>-->
-<!--          <th scope="col">{{'card-management.card_status' | translate}}</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr class="text-center">-->
-<!--          <td colspan="10">-->
-<!--            <svg-icon styleClass="display-1 text-light-gray" icon="empty-set" ></svg-icon>-->
-<!--            <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>-->
-<!--          </td>-->
-<!--        </tr>-->
-<!--        <tr *ngFor="let user of page?.content">-->
-<!--          <th class="text-center" scope="row">{{user.id}}</th>-->
-<!--          <td><a [routerLink]="['/users/details', user?.id]" class="text-dcc-primary font-weight-bold">{{user.nin}}</a></td>-->
-<!--          <td class="text-center" class="text-center">-->
-<!--            <svg-icon *ngIf="user.gender == 'F'" styleClass="female h3" icon="female"></svg-icon>-->
-<!--            <svg-icon *ngIf="user.gender == 'M'" styleClass="male h3" icon="male"></svg-icon>-->
-<!--          </td>-->
-<!--          <td>{{user.firstName}} {{user.fatherName}} {{user.familyName}}</td>-->
-<!--          <td class="ltr">{{user.mobileNumber | mobileFormat}}</td>-->
-<!--          <td class="ltr">-->
-<!--            <span class="d-inline badge badge-info py-1 px-3 badge-pill {{ userMainRole(user)?.activated ? '' : 'border border-warning border-3'}} ">-->
-<!--              {{ currentLanguage.startsWith("en") ? userMainRole(user)?.nameEnglish : userMainRole(user)?.nameArabic }}-->
-<!--            </span>-->
-<!--            <span class="d-inline badge badge-warning px-1 py-0 align-top status-pill" *ngIf="!userMainRole(user)?.activated">-->
-<!--              {{'user-management.not_activated' | translate}}-->
-<!--            </span>-->
-<!--          </td>-->
-<!--          <td style="text-align:center">-->
-<!--            <span *ngIf="!user?.activated && !user?.blocked" class="badge badge-warning py-2 px-4 badge-pill">-->
-<!--              {{'user-management.not_activated' | translate}}-->
-<!--            </span>-->
-<!--            <span *ngIf="user?.activated && !user?.blocked" class="badge badge-success py-2 px-4 badge-pill">-->
-<!--              {{'user-management.activated' | translate}}-->
-<!--            </span>-->
-<!--            <span *ngIf="user?.blocked" class="badge badge-danger py-2 px-4 badge-pill">-->
-<!--              {{'user-management.locked' | translate}}-->
-<!--            </span>-->
-<!--          </td>-->
-<!--          <td class="text-center" width="20%" style="text-align:center">-->
-<!--            <a [routerLink]="['/users/update', user?.id]" [queryParams]="{edit: true}" class="action mx-2" *ngIf="canEditUser" ngbTooltip="{{'general.tooltip_edit' | translate}}">-->
-<!--              <svg-icon styleClass="text-info h3" icon="edit"></svg-icon>-->
-<!--            </a>-->
-<!--            <a class="action mx-2" href="javascript:void(0)" *ngIf="user.nin != loggedInUsername && user.activated && canChangeUserStatus"-->
-<!--               (click)="deactivateUser(user.id)" ngbTooltip="{{'general.tooltip_deactivate' | translate}}">-->
-<!--              <svg-icon styleClass="text-warning h3" icon="user-slash"></svg-icon>-->
-<!--            </a>-->
-<!--            <a class="action mx-2" href="javascript:void(0)" *ngIf="user.nin != loggedInUsername && !user.activated && canChangeUserStatus"-->
-<!--               (click)="activateUser(user.id)" ngbTooltip="{{'general.tooltip_activate' | translate}}">-->
-<!--              <svg-icon styleClass="text-success h3" icon="user-check"></svg-icon>-->
-<!--            </a>-->
-<!--            <a class="action mx-2" href="javascript:void(0)" *ngIf="user.nin != loggedInUsername && canDeleteUser"-->
-<!--               (click)="deleteUser(user.id)" ngbTooltip="{{'general.tooltip_delete' | translate}}">-->
-<!--              <svg-icon styleClass="text-danger h3" icon="user-times"></svg-icon>-->
-<!--            </a>-->
-<!--            <a class="action mx-2" href="javascript:void(0)" *ngIf="user.nin != loggedInUsername && canResetUserPassword"-->
-<!--               (click)="resetUserPassword(user.nin)" ngbTooltip="{{'general.tooltip_reset_password' | translate}}">-->
-<!--              <svg-icon styleClass="text-warning h3" icon="user-lock"></svg-icon>-->
-<!--            </a>-->
-<!--            <a [routerLink]="['/users/details', user?.id]" class="action mx-2" ngbTooltip="{{'general.tooltip_view' | translate}}">-->
-<!--              <svg-icon styleClass="text-dcc-primary h3" icon="eye"></svg-icon>-->
-<!--            </a>-->
-<!--          </td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--      </table>-->
-<!--    </div>-->
-<!--    <nav aria-label="Page navigation example" *ngIf="page?.content">-->
-<!--      <ul class="pagination justify-content-center">-->
-<!--        <li class="page-item" [class.disabled]="page?.first">-->
-<!--          <a class="page-link" (click)="loadPage(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>-->
-<!--        </li>-->
+    <div class="table-responsive my-4">
+      <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th scope="col" class="text-center">#</th>
+          <th scope="col">{{'card-management.applicant_name' | translate}}</th>
+          <th scope="col" class="text-center">{{'card-management.applicant_id' | translate}}</th>
+          <th scope="col">{{'card-management.card_number' | translate}}</th>
+          <th scope="col">{{'card-management.ritual_type' | translate}}</th>
+          <th scope="col">{{'card-management.card_status' | translate}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="text-center">
+          <td colspan="10">
+            <svg-icon styleClass="display-1 text-light-gray" icon="empty-set" ></svg-icon>
+            <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+          </td>
+        </tr>
+        <tr *ngFor="let card of page?.content">
+          <th class="text-center" scope="row">{{card.id}}</th>
+          <td><a [routerLink]="['/cards/details', card?.id]" class="text-dcc-primary font-weight-bold">{{card.applicantRitual.applicant.fullNameAr}} {{card.applicantRitual.applicant.fullNameEn}}</a></td>
+          <td>{{card.applicantRitual.applicant.idNumber}}</td>
+          <td class="ltr">{{card.referenceNumber}}</td>
+          <td class="ltr">{{card.applicantRitual.typeCode.label}}</td>
+          <td class="ltr">{{card.statusCode.label}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <nav aria-label="Page navigation example" *ngIf="page?.content">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="page?.first">
+          <a class="page-link" (click)="loadPage(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>
+        </li>
 
-<!--        <li class="page-item" [class.disabled]="page?.first">-->
-<!--          <a class="page-link" (click)="loadPage(page?.number-1)" tabindex="-1">{{'general.nav_previous' | translate}}</a>-->
-<!--        </li>-->
-<!--        <li class="page-item active">-->
-<!--          <a class="page-link" (click)="loadPage(page.number)">{{(page?.number + 1) + ' / ' + page?.totalPages}}</a>-->
-<!--        </li>-->
-<!--        <li class="page-item" [class.disabled]="page?.last">-->
-<!--          <a class="page-link" (click)="loadPage(page?.number+1)">{{'general.nav_next' | translate}}</a>-->
-<!--        </li>-->
+        <li class="page-item" [class.disabled]="page?.first">
+          <a class="page-link" (click)="loadPage(page?.number-1)" tabindex="-1">{{'general.nav_previous' | translate}}</a>
+        </li>
+        <li class="page-item active">
+          <a class="page-link" (click)="loadPage(page.number)">{{(page?.number + 1) + ' / ' + page?.totalPages}}</a>
+        </li>
+        <li class="page-item" [class.disabled]="page?.last">
+          <a class="page-link" (click)="loadPage(page?.number+1)">{{'general.nav_next' | translate}}</a>
+        </li>
 
-<!--        <li class="page-item" [class.disabled]="page?.last">-->
-<!--          <a class="page-link" (click)="loadPage(page?.totalPages-1)">{{'general.nav_last' | translate}}</a>-->
-<!--        </li>-->
-<!--      </ul>-->
-<!--    </nav>-->
-
+        <li class="page-item" [class.disabled]="page?.last">
+          <a class="page-link" (click)="loadPage(page?.totalPages-1)">{{'general.nav_last' | translate}}</a>
+        </li>
+      </ul>
+    </nav>
 
   </div>
-
 
 </div>

@@ -2,8 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {TranslateService} from "@ngx-translate/core";
 import {I18nService} from "@dcc-commons-ng/services";
 import {AuthenticationService} from "@core/services";
-import {EAuthority} from "@shared/model";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {EAuthority, Page} from "@shared/model";
+import {FormBuilder, FormGroup} from "@angular/forms";
+import {Card} from "@model/card.model";
 
 @Component({
   selector: 'app-card-list',
@@ -12,6 +13,9 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 })
 export class CardListComponent implements OnInit {
 
+  cards: Array<Card>;
+  pageArray: Array<number>;
+  page: Page;
   canAddCard: boolean;
   searchForm: FormGroup;
 
@@ -22,6 +26,8 @@ export class CardListComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    // TODO: read it from authentication
+    this.canAddCard = true;
   }
 
   get f() {
@@ -40,8 +46,18 @@ export class CardListComponent implements OnInit {
       applicantIdStatus: [null],
       gender: [null],
       nationality: [null],
-      passportNumber: [null]
+      passportNumber: [null],
+      tafweejNumber: [null],
+      idType: [null]
     });
+  }
+
+  pageCounter(i: number): Array<number> {
+    return new Array(i);
+  }
+
+  get currentLanguage(): string {
+    return this.i18nService.language;
   }
 
   search(): void {
@@ -50,6 +66,10 @@ export class CardListComponent implements OnInit {
 
   cancelSearch() {
     this.initForm();
+  }
+
+  loadPage(page: number) {
+
   }
 
   get canSeeCardsList(): boolean {

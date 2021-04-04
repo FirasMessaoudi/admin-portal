@@ -360,6 +360,7 @@
   },
   "card-management": {
     "title": "Card Management",
+    "add_exceptional_card": "Add Card",
     "cards_list": "Cards List",
     "card_details": "Card Details",
     "ritual_season": "Ritual Season",
@@ -375,6 +376,8 @@
     "applicant_name": "Name",
     "activate_cards": "Activate {{noCards}} cards",
     "export_to_excel": "Export Excel",
-    "export_to_pdf": "Export PDF"
+    "export_to_pdf": "Export PDF",
+    "tafweej_number": "Tafweej Number",
+    "id_type": "ID Type"
   }
 }

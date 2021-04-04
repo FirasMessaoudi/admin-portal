@@ -359,6 +359,7 @@
   },
   "card-management": {
     "title": "إدارة البطاقات",
+    "add_exceptional_card": "اضافة بطاقة",
     "cards_list": "قائمة البطاقات",
     "card_details": "تفاصيل البطاقة",
     "ritual_season": "سنة الشعيرة",
@@ -374,6 +375,8 @@
     "applicant_name": "الاسم",
     "activate_cards": "تنشيط {{noCards}} بطاقة",
     "export_to_excel": "تصدير إكسل",
-    "export_to_pdf": "تصدير PDF"
+    "export_to_pdf": "تصدير PDF",
+    "tafweej_number": "رقم التفويج",
+    "id_type": "نوع الهوية"
   }
 }
