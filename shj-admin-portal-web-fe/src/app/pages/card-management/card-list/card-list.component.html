@@ -143,7 +143,7 @@
       <table class="table table-striped table-hover">
         <thead>
         <tr>
-          <th scope="col" class="text-center">#</th>
+          <th scope="col" class="text-center"><input type="checkbox" (click)="selectAllCards()" /> {{'general.select_all' | translate}}</th>
           <th scope="col">{{'card-management.applicant_name' | translate}}</th>
           <th scope="col" class="text-center">{{'card-management.applicant_id' | translate}}</th>
           <th scope="col">{{'card-management.card_number' | translate}}</th>
@@ -159,7 +159,7 @@
           </td>
         </tr>
         <tr *ngFor="let card of page?.content">
-          <th class="text-center" scope="row">{{card.id}}</th>
+          <th class="text-center" scope="row"><input type="checkbox" value="{{card.id}}"></th>
           <td><a [routerLink]="['/cards/details', card?.id]" class="text-dcc-primary font-weight-bold">{{card.applicantRitual.applicant.fullNameAr}} {{card.applicantRitual.applicant.fullNameEn}}</a></td>
           <td>{{card.applicantRitual.applicant.idNumber}}</td>
           <td class="ltr">{{card.referenceNumber}}</td>

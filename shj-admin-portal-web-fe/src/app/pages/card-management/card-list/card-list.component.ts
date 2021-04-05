@@ -72,6 +72,10 @@ export class CardListComponent implements OnInit {
 
   }
 
+  selectAllCards() {
+
+  }
+
   get canSeeCardsList(): boolean {
     //TODO: change it to CARD_MANAGEMENT
     return this.authenticationService.hasAuthority(EAuthority.USER_MANAGEMENT);

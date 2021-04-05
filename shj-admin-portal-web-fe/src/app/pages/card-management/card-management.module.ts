@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 
 import {CardManagementRoutingModule} from './card-management-routing.module';
 import {CardListComponent} from './card-list/card-list.component';
-import {CardDetailsComponent} from './card-details/card-details.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {SharedModule} from "@shared/shared.module";
@@ -11,7 +10,7 @@ import {TranslateModule} from "@ngx-translate/core";
 
 
 @NgModule({
-  declarations: [CardListComponent, CardDetailsComponent],
+  declarations: [CardListComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
