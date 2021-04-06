@@ -7,6 +7,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {SharedModule} from "@shared/shared.module";
 import {TranslateModule} from "@ngx-translate/core";
+import { CardDetailsModule } from './card-details/card-details.module';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {TranslateModule} from "@ngx-translate/core";
     NgbModule,
     SharedModule,
     CardManagementRoutingModule,
-    TranslateModule
+    TranslateModule,
+    CardDetailsModule
   ]
 })
 export class CardManagementModule { }
