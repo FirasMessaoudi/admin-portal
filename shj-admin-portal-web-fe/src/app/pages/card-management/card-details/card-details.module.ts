@@ -9,6 +9,7 @@ import {TafweejDetailsComponent} from './tafweej-details/tafweej-details.compone
 import {CardDetailsComponent} from './card-details.component';
 import {TranslateModule} from "@ngx-translate/core";
 import {SharedModule} from "@shared/shared.module";
+import {NgbCollapseModule} from "@ng-bootstrap/ng-bootstrap";
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {SharedModule} from "@shared/shared.module";
     CommonModule,
     CardDetailsRoutingModule,
     TranslateModule,
-    SharedModule
+    SharedModule,
+    NgbCollapseModule
   ]
 })
 export class CardDetailsModule { }
