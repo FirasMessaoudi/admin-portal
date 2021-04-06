@@ -1,1 +1,78 @@
-<p>card-details works!</p>
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h2 class="sectionTitle">{{'card-management.card_details' | translate }}
+      <b class="text-dcc-primary">{{card?.applicantRitual?.applicant?.fullNameAr + " " + card?.applicantRitual?.applicant?.fullNameEn}}</b>
+      <b class="text-dcc-primary"> {{'card-management.applicant_id' | translate }} {{card?.applicantRitual?.applicant?.idNumber}}</b>
+      <b class="text-dcc-primary"> {{'card-management.card_number' | translate }} {{card?.referenceNumber}} {{card?.statusCode?.label}}</b>
+    </h2>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="text-center px-4">
+        <img class="mr-4 rounded-circle mx-auto d-block" [src]="card?.applicantRitual?.applicant?.photo ? 'data:image/jpeg;base64,'+card?.applicantRitual?.applicant?.photo : url" />
+      </div>
+    </div>
+  </div>
+
+  <div class="content__section">
+    <form enctype="multipart/form-data">
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+        <div class="form-group col">
+          <label class="col-form-label">{{'card-management.applicant_original_name' | translate}}</label>
+          <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.fullNameOriginal }}</span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'general.date_of_birth' | translate}}</label>
+          <span class="form-control-plaintext">{{ card?.applicantRitual?.applicant?.dateOfBirthGregorian | dateFormat }}
+            <span *ngIf="card?.applicantRitual?.applicant?.dateOfBirthGregorian">-</span>
+            {{ card?.applicantRitual?.applicant?.dateOfBirthHijri | hijriFormat }}
+          </span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'card-management.ritual_type' | translate}}</label>
+          <span class="form-control-plaintext ">{{ card?.applicantRitual?.typeCode?.label }}</span>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{'card-management.gender' | translate}}</label>
+          <span class="form-control-plaintext "
+                [hidden]="card?.applicantRitual?.applicant?.gender == 'M'">{{'user-management.female' | translate}}</span>
+          <span class="form-control-plaintext "
+                [hidden]="card?.applicantRitual?.applicant?.gender == 'F'">{{'user-management.male' | translate}}</span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'card-management.nationality' | translate}}</label>
+          <span class="form-control-plaintext">{{ card?.applicantRitual?.applicant?.nationalityCode?.label}}</span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'card-management.passport_number' | translate}}</label>
+          <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.passportNumber }}</span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'card-management.marital_status' | translate}}</label>
+<!--          <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.maritalStatus }}</span>-->
+          <span class="form-control-plaintext ">متزوج</span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'card-management.id_type' | translate}}</label>
+          <span class="form-control-plaintext ">إقامة</span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'card-management.applicant_original_id' | translate}}</label>
+          <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.idNumberOriginal }}</span>
+        </div>
+        <div class="form-group col">
+          <label class="col-form-label">{{'card-management.applicant_languages' | translate}}</label>
+          <span class="form-control-plaintext ">العربية-English</span>
+        </div>
+      </div>
+    </form>
+
+    <div class="content__footer__action">
+      <button type="button" [routerLink]="['/cards/list']" class="btn btn-outline-secondary btn-w100 px-5 mr-3">
+        {{ "general.btn_back" | translate }}
+      </button>
+    </div>
+
+  </div>
+
+</div>
+

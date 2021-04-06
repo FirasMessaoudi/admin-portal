@@ -7,8 +7,8 @@ export class Applicant {
   idNumber: number;
   idNumberOriginal: string;
   passportNumber: string;
-  dateOfBirthGregorian: Date;
-  dateOfBirthHijri: Date;
+  dateOfBirthGregorian: any;
+  dateOfBirthHijri: any;
   fullNameAr: string;
   fullNameEn: string;
   fullNameOriginal: string;
