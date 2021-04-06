@@ -160,11 +160,11 @@
         </tr>
         <tr *ngFor="let card of page?.content">
           <th class="text-center" scope="row"><input type="checkbox" value="{{card.id}}"></th>
-          <td><a [routerLink]="['/cards/details', card?.id]" class="text-dcc-primary font-weight-bold">{{card.applicantRitual.applicant.fullNameAr}} {{card.applicantRitual.applicant.fullNameEn}}</a></td>
-          <td>{{card.applicantRitual.applicant.idNumber}}</td>
-          <td class="ltr">{{card.referenceNumber}}</td>
-          <td class="ltr">{{card.applicantRitual.typeCode.label}}</td>
-          <td class="ltr">{{card.statusCode.label}}</td>
+          <td><a [routerLink]="['/cards/details', card?.id]" class="text-dcc-primary font-weight-bold">{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</a></td>
+          <td>{{card?.applicantRitual?.applicant?.idNumber}}</td>
+          <td class="ltr">{{card?.referenceNumber}}</td>
+          <td class="ltr">{{card?.applicantRitual?.typeCode?.label}}</td>
+          <td class="ltr">{{card?.statusCode?.label}}</td>
         </tr>
         </tbody>
       </table>

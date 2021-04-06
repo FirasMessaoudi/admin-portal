@@ -14,6 +14,7 @@
 
   <div class="content__section">
     <form enctype="multipart/form-data">
+      <section>
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
         <div class="form-group col">
           <label class="col-form-label">{{'card-management.applicant_original_name' | translate}}</label>
@@ -64,6 +65,63 @@
           <span class="form-control-plaintext ">العربية-English</span>
         </div>
       </div>
+      </section>
+      <hr class="my-4 w-100">
+      <section>
+        <span class="form-control-plaintext ">{{'card-management.applicant_original_address' | translate}}</span>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+          <div class="form-group col">
+            <label class="col-form-label">{{'card-management.country' | translate}}</label>
+            <span class="form-control-plaintext ">الهند</span>
+          </div>
+          <div class="form-group col">
+            <label class="col-form-label">{{'card-management.city' | translate}}</label>
+            <span class="form-control-plaintext ">مومباي</span>
+          </div>
+          <div class="form-group col">
+            <label class="col-form-label">{{'card-management.district' | translate}}</label>
+            <span class="form-control-plaintext ">وبتفس</span>
+          </div>
+          <div class="form-group col">
+            <label class="col-form-label">{{'card-management.street' | translate}}</label>
+            <span class="form-control-plaintext ">شارع غاندي</span>
+          </div>
+          <div class="form-group col">
+            <label class="col-form-label">{{'card-management.building_number' | translate}}</label>
+            <span class="form-control-plaintext ">20</span>
+          </div>
+          <div class="form-group col">
+            <label class="col-form-label">{{'card-management.postal_code' | translate}}</label>
+            <span class="form-control-plaintext ">13425</span>
+          </div>
+        </div>
+      </section>
+      <hr class="my-4 w-100">
+      <section *ngIf="card?.applicantRitual?.applicant?.relativeApplicants?.length > 0">
+        <span class="form-control-plaintext ">{{'card-management.applicant_relatives' | translate}}</span>
+
+        <div class="table-responsive my-4">
+          <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+              <th scope="col">{{'card-management.applicant_name' | translate}}</th>
+              <th scope="col" class="text-center">{{'card-management.applicant_id' | translate}}</th>
+              <th scope="col">{{'card-management.applicant_relative_type' | translate}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let relative of card?.applicantRitual?.applicant?.relativeApplicants">
+              <td class="ltr">{{relative.applicant?.fullNameAr}} {{relative.applicant?.fullNameEn}}</td>
+              <td class="ltr">2367430625</td>
+              <td class="ltr">{{relative.relationshipCode.label}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+      </section>
     </form>
 
     <div class="content__footer__action">

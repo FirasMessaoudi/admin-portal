@@ -1,4 +1,5 @@
 import {Lookup} from "@model/lookup.model";
+import {ApplicantRelative} from "@model/applicant-relative.model";
 
 export class Applicant {
   id: number;
@@ -16,4 +17,5 @@ export class Applicant {
   photo: any;
   requestId: number;
   status: number;
+  relativeApplicants: ApplicantRelative[];
 }
