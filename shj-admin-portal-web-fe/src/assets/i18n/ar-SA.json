@@ -417,6 +417,11 @@
     "catering_type": "نوع الوجبة",
     "catering_description": "وصف الوجبة",
     "catering_location": "الموقع",
-    "transportation_method": "التنقل"
+    "transportation_method": "التنقل",
+    "transportation_type": "وسيلة النقل",
+    "transportation_time": "موعد التنقل",
+    "transportation_from_location": "مكان الانطلاق",
+    "transportation_to_location": "مكان الوصول",
+    "vehicle_number": "رقم المركبة"
   }
 }

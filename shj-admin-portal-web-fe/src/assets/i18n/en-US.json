@@ -418,6 +418,11 @@
     "catering_type": "Catering Type",
     "catering_description": "Catering Description",
     "catering_location": "Location",
-    "transportation_method": "Transportation"
+    "transportation_method": "Transportation",
+    "transportation_type": "Transportation Method",
+    "transportation_time": "Transportation Time",
+    "transportation_from_location": "From Location",
+    "transportation_to_location": "To Location",
+    "vehicle_number": "Vehicle Number"
   }
 }

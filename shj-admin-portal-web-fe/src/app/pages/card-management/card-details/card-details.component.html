@@ -204,9 +204,37 @@
             <tbody>
               <tr *ngFor="let catering of packageCaterings()">
                 <td class="ltr">{{ catering.type }}</td>
-                <td class="ltr">{{ catering.descriptionAr }}</td>
+                <td class="ltr" class="text-center">{{ catering.descriptionAr }}</td>
                 <td class="ltr">مزدلفة</td>
               </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="my-4 w-100">
+      <section *ngIf="card?.applicantRitual?.hamlahPackage?.packageHousings?.length > 0">
+        <span class="form-control-plaintext ">{{ 'card-management.transportation_method' | translate }}</span>
+
+        <div class="table-responsive my-4">
+          <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+              <th scope="col">{{'card-management.transportation_type' | translate}}</th>
+              <th scope="col" class="text-center">{{'card-management.transportation_time' | translate}}</th>
+              <th scope="col">{{'card-management.transportation_from_location' | translate}}</th>
+              <th scope="col">{{'card-management.transportation_to_location' | translate}}</th>
+              <th scope="col">{{'card-management.vehicle_number' | translate}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let transportation of card?.applicantRitual?.hamlahPackage?.packageTransportations">
+              <td class="ltr">{{ transportation.type }}</td>
+              <td class="ltr" class="text-center">{{ transportation.validityStart }}-{{ transportation.validityEnd }}</td>
+              <td class="ltr">{{ transportation.locationFrom }}</td>
+              <td class="ltr">{{ transportation.locationTo }}</td>
+              <td class="ltr">{{ transportation.vehicleNumber }}</td>
+            </tr>
             </tbody>
           </table>
         </div>

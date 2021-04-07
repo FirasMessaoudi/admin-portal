@@ -1,5 +1,6 @@
 import {Lookup} from "@model/lookup.model";
 import {PackageHousing} from "@model/package-housing.model";
+import {PackageTransportation} from "@model/package-transportation.model";
 
 export class HamlahPackage {
   id: number;
@@ -10,4 +11,5 @@ export class HamlahPackage {
   departureCity: string;
   countryId: number;
   packageHousings: PackageHousing[];
+  packageTransportations: PackageTransportation[];
 }
