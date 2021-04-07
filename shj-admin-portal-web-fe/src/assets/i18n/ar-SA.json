@@ -422,6 +422,15 @@
     "transportation_time": "موعد التنقل",
     "transportation_from_location": "مكان الانطلاق",
     "transportation_to_location": "مكان الوصول",
-    "vehicle_number": "رقم المركبة"
+    "vehicle_number": "رقم المركبة",
+    "blood_type": "فصيلة الدم",
+    "special_needs_assistance_needed": "من ذوي الاحتياجات الخاصة",
+    "have_chronic_diseases": "لديه أمراض مزمنة",
+    "vaccinated": "حاصل على التطعيمات",
+    "special_needs": "الاحتياجات الخاصة",
+    "chronic_diseases": "الأمراض المزمنة",
+    "vaccinations": "التطعيمات",
+    "vaccination_name": "اسم المطعوم",
+    "vaccination_date": "تاريخ المطعوم"
   }
 }

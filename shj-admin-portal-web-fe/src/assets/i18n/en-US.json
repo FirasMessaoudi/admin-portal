@@ -423,6 +423,15 @@
     "transportation_time": "Transportation Time",
     "transportation_from_location": "From Location",
     "transportation_to_location": "To Location",
-    "vehicle_number": "Vehicle Number"
+    "vehicle_number": "Vehicle Number",
+    "blood_type": "Blood Type",
+    "special_needs_assistance_needed": "Need Assistance",
+    "have_chronic_diseases": "Have Chronic Diseases",
+    "vaccinated": "Vaccinated",
+    "special_needs": "Special Needs",
+    "chronic_diseases": "Chronic Diseases",
+    "vaccinations": "Vaccinations",
+    "vaccination_name": "Vaccination Name",
+    "vaccination_date": "Vaccination Date"
   }
 }
