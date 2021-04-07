@@ -433,6 +433,10 @@
     "vaccinations": "Vaccinations",
     "vaccination_name": "Vaccination Name",
     "vaccination_date": "Vaccination Date",
-    "tafweej_step": "Tafweej Step"
+    "tafweej_step": "Tafweej Step",
+    "morshideen": "’Morshideen",
+    "morshid_id": "Morshid ID Number",
+    "morshid_name": "Morshid Name",
+    "morshid_contact_number": "Contact Number"
   }
 }
