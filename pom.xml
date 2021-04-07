@@ -19,6 +19,7 @@
         <module>shj-admin-portal-services</module>
         <module>shj-admin-portal-web</module>
         <module>shj-admin-portal-web-fe</module>
+        <module>shj-admin-portal-automation</module>
     </modules>
 
     <dependencyManagement>
@@ -86,6 +87,8 @@
             ${basedir}/shj-admin-portal-orm/target/jacoco-ut/jacoco.xml,${basedir}/shj-admin-portal-services/target/jacoco-ut/jacoco.xml,${basedir}/shj-admin-portal-web/target/jacoco-ut/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <java.version>13</java.version>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
     </properties>
 
     <build>
