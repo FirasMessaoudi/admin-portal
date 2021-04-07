@@ -412,8 +412,8 @@
     "location_name": "Location Name",
     "location_address": "Location Address",
     "location_type": "Location Type",
-    "housing_start_date": "Start Date",
-    "housing_end_date": "End Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
     "available_catering": "Catering",
     "catering_type": "Catering Type",
     "catering_description": "Catering Description",
@@ -421,8 +421,8 @@
     "transportation_method": "Transportation",
     "transportation_type": "Transportation Method",
     "transportation_time": "Transportation Time",
-    "transportation_from_location": "From Location",
-    "transportation_to_location": "To Location",
+    "from_location": "From Location",
+    "to_location": "To Location",
     "vehicle_number": "Vehicle Number",
     "blood_type": "Blood Type",
     "special_needs_assistance_needed": "Need Assistance",
@@ -432,6 +432,7 @@
     "chronic_diseases": "Chronic Diseases",
     "vaccinations": "Vaccinations",
     "vaccination_name": "Vaccination Name",
-    "vaccination_date": "Vaccination Date"
+    "vaccination_date": "Vaccination Date",
+    "tafweej_step": "Tafweej Step"
   }
 }

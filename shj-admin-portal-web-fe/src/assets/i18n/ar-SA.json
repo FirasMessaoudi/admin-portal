@@ -411,8 +411,8 @@
     "location_name": "اسم الموقع",
     "location_address": "عنوان الموقع",
     "location_type": "نوع الموقع",
-    "housing_start_date": "تاريخ البداية",
-    "housing_end_date": "تارخ النهاية",
+    "start_date": "تاريخ البداية",
+    "end_date": "تارخ النهاية",
     "available_catering": "الطعام",
     "catering_type": "نوع الوجبة",
     "catering_description": "وصف الوجبة",
@@ -420,8 +420,8 @@
     "transportation_method": "التنقل",
     "transportation_type": "وسيلة النقل",
     "transportation_time": "موعد التنقل",
-    "transportation_from_location": "مكان الانطلاق",
-    "transportation_to_location": "مكان الوصول",
+    "from_location": "مكان الانطلاق",
+    "to_location": "مكان الوصول",
     "vehicle_number": "رقم المركبة",
     "blood_type": "فصيلة الدم",
     "special_needs_assistance_needed": "من ذوي الاحتياجات الخاصة",
@@ -431,6 +431,7 @@
     "chronic_diseases": "الأمراض المزمنة",
     "vaccinations": "التطعيمات",
     "vaccination_name": "اسم المطعوم",
-    "vaccination_date": "تاريخ المطعوم"
+    "vaccination_date": "تاريخ المطعوم",
+    "tafweej_step": "خطوة التفويج"
   }
 }

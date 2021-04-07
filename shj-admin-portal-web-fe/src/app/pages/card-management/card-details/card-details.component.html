@@ -170,8 +170,8 @@
               <th scope="col" class="text-center">{{'card-management.location_name' | translate}}</th>
               <th scope="col">{{'card-management.location_address' | translate}}</th>
               <th scope="col">{{'card-management.location_type' | translate}}</th>
-              <th scope="col">{{'card-management.housing_start_date' | translate}}</th>
-              <th scope="col">{{'card-management.housing_end_date' | translate}}</th>
+              <th scope="col">{{'card-management.start_date' | translate}}</th>
+              <th scope="col">{{'card-management.end_date' | translate}}</th>
             </tr>
             </thead>
             <tbody>
@@ -222,8 +222,8 @@
             <tr>
               <th scope="col">{{'card-management.transportation_type' | translate}}</th>
               <th scope="col" class="text-center">{{'card-management.transportation_time' | translate}}</th>
-              <th scope="col">{{'card-management.transportation_from_location' | translate}}</th>
-              <th scope="col">{{'card-management.transportation_to_location' | translate}}</th>
+              <th scope="col">{{'card-management.from_location' | translate}}</th>
+              <th scope="col">{{'card-management.to_location' | translate}}</th>
               <th scope="col">{{'card-management.vehicle_number' | translate}}</th>
             </tr>
             </thead>
@@ -297,6 +297,44 @@
         </div>
       </section>
     </form>
+
+
+    <form enctype="multipart/form-data" *ngIf="tafweejDetailsTabActivated">
+      <section>
+        <span class="form-control-plaintext ">{{ 'card-management.tafweej_details' | translate }} {{'(رقم 257788)'}}</span>
+
+        <div class="table-responsive my-4">
+          <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+              <th scope="col">{{'card-management.tafweej_step' | translate}}</th>
+              <th scope="col">{{'card-management.from_location' | translate}}</th>
+              <th scope="col">{{'card-management.to_location' | translate}}</th>
+              <th scope="col">{{'card-management.start_date' | translate}}</th>
+              <th scope="col">{{'card-management.end_date' | translate}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="ltr">طواف الإفاضة</td>
+              <td class="ltr">موقع رمي الجمرات</td>
+              <td class="ltr">فندق دار الإيمان</td>
+              <td class="ltr">05-04-2021</td>
+              <td class="ltr">05-04-2021</td>
+            </tr>
+            <tr>
+              <td class="ltr">الوقوف في عرفات</td>
+              <td class="ltr">مخيم منى</td>
+              <td class="ltr">جبل عرفات</td>
+              <td class="ltr">04-04-2021</td>
+              <td class="ltr">04-04-2021</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </form>
+
   </div>
 
 </div>
