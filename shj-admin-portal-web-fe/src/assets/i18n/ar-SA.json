@@ -403,9 +403,9 @@
     "hamlah_type": "نوع الحملة",
     "hamlah_category": "فئة الحملة",
     "hamlah_contact_number": "رقم تواصل الحملة",
-    "housing_included": "شامل الإقامة",
-    "transportation_included": "شامل التنقل",
-    "catering_included": "شامل الطعام",
+    "housing_included": "شاملة المسكن",
+    "transportation_included": "شاملة التنقل",
+    "catering_included": "شاملة الوجبات",
     "housing_locations": "مواقع السكن",
     "location_number": "رمز الموقع",
     "location_name": "اسم الموقع",
@@ -433,9 +433,9 @@
     "vaccination_name": "نوع التطعيم",
     "vaccination_date": "تاريخ التطعيم",
     "tafweej_step": "خطوة التفويج",
-    "morshideen": "قادة المجموعة",
     "morshid_id": "رقم هوية المطوف",
     "morshid_name": "اسم المطوف",
+    "morshid_title": "دور المرشد",
     "morshid_contact_number": "رقم التواصل"
   }
 }

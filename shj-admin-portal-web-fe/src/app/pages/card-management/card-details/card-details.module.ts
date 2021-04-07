@@ -9,17 +9,18 @@ import {TafweejDetailsComponent} from './tafweej-details/tafweej-details.compone
 import {CardDetailsComponent} from './card-details.component';
 import {TranslateModule} from "@ngx-translate/core";
 import {SharedModule} from "@shared/shared.module";
-import {NgbCollapseModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbCollapseModule, NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 
 @NgModule({
   declarations: [MainDetailsComponent, HamlahDetailsComponent, HealthDetailsComponent, TafweejDetailsComponent, CardDetailsComponent],
-  imports: [
-    CommonModule,
-    CardDetailsRoutingModule,
-    TranslateModule,
-    SharedModule,
-    NgbCollapseModule
-  ]
+    imports: [
+        CommonModule,
+        CardDetailsRoutingModule,
+        TranslateModule,
+        SharedModule,
+        NgbCollapseModule,
+        NgbModule
+    ]
 })
 export class CardDetailsModule { }
