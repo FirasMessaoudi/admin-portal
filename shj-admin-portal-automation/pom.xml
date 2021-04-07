@@ -10,9 +10,8 @@
     <artifactId>shj-admin-portal-automation</artifactId>
     <name>shj-admin-portal-automation</name>
     <description>Automation Module</description>
-  
-  
- <dependencies>
+
+    <dependencies>
 
         <dependency>
             <groupId>com.elm.qa.framework</groupId>
@@ -86,10 +85,28 @@
                 </configuration>
             </plugin>
 
-         
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>13</source>
+                    <target>13</target>
+                </configuration>
+            </plugin>
 
         </plugins>
     </build>
-  
-  
+
+    <distributionManagement>
+        <repository>
+            <id>libs-release-local</id>
+            <url>https://nexus.elm.sa/repository/libs-release-local</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>libs-snapshot-local</id>
+            <url>https://nexus.elm.sa/repository/libs-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>
