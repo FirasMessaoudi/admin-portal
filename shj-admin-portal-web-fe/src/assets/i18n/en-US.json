@@ -450,6 +450,17 @@
     "new_request": "Create Printing Request",
     "no_batches": "No. Batches",
     "no_cards": "No. Cards",
-    "printing_date": "Printing Date"
+    "printing_date": "Printing Date",
+    "creation_date": "Creation Date",
+    "batch_no": "Batch No.",
+    "contains": "Contains",
+    "cards": "Card(s)",
+    "smart_cards_for_print": "Smart Cards To Be Printed",
+    "selected_smart_card": "Smart Card Was Selected",
+    "batch_collecting_method": "Batch Collecting Method",
+    "prepare_request": "Prepare Request",
+    "create_batch": "Create Batch",
+    "confirm_request": "Confirm Request",
+    "request_details": "Print Request Details"
   }
 }

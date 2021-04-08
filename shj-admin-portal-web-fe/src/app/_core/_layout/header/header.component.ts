@@ -62,7 +62,7 @@ export class HeaderComponent implements OnInit {
         title: 'printing-management.title',
         roles: [EAuthority.USER_MANAGEMENT],
         display: false,
-        routerLink: '/printing/list',
+        routerLink: '/print-requests/list',
       }
     ];
     // filtering access according to connected user authorities

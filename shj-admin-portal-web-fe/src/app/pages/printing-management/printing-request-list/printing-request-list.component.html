@@ -1,7 +1,7 @@
 <div class="content__wrapper">
   <div class="title__Page">
     <h2 class="sectionTitle">{{ "printing-management.title" | translate }}</h2>
-    <button routerLink="/printing/list" class="btn btn-outline-dcc-primary px-4" *ngIf="canCreateNewRequest">
+    <button routerLink="/print-requests/list" class="btn btn-outline-dcc-primary px-4" *ngIf="canCreateNewRequest">
       {{ "printing-management.new_request" | translate }}
     </button>
   </div>
@@ -83,12 +83,45 @@
             {{ "general.btn_clear" | translate }}
           </button>
         </div>
-
-
       </form>
     </div>
+
+    <div class="table-responsive my-4">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">{{'printing-management.request_number' | translate}}</th>
+            <th scope="col">{{'printing-management.no_batches' | translate}}</th>
+            <th scope="col">{{'printing-management.no_cards' | translate}}</th>
+            <th scope="col">{{'printing-management.printing_date' | translate}}</th>
+            <th scope="col">{{'printing-management.request_status' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="false" class="text-center">
+            <td colspan="10">
+              <svg-icon styleClass="display-1 text-light-gray" icon="empty-set" ></svg-icon>
+              <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+            </td>
+          </tr>
+          <tr>
+            <td><a [routerLink]="['/printing-requests/details']" class="text-dcc-primary font-weight-bold">{{'544820'}}</a></td>
+            <td>{{'5'}}</td>
+            <td class="ltr">{{'690'}}</td>
+            <td class="ltr">{{'24-03-2021'}}</td>
+            <td class="ltr">{{'تمت الطباعة'}}</td>
+          </tr>
+          <tr>
+            <td><a [routerLink]="['/printing-requests/details']" class="text-dcc-primary font-weight-bold">{{'544837'}}</a></td>
+            <td>{{'5'}}</td>
+            <td class="ltr">{{'247'}}</td>
+            <td class="ltr">{{'24-03-2021'}}</td>
+            <td class="ltr">{{'جاهز الطباعة'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
-
-
 
 </div>
