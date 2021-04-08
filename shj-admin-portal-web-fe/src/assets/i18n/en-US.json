@@ -438,5 +438,18 @@
     "morshid_name": "Morshid Name",
     "morshid_title": "’Morshid Title",
     "morshid_contact_number": "Contact Number"
+  },
+  "printing-management": {
+    "title": "Printing Management",
+    "request_number": "Request Number",
+    "printing_start_date": "Printing Start Date",
+    "printing_end_date": "Printing End Date",
+    "batch_number": "Batch Number",
+    "id_number": "Id Number",
+    "request_status": "Request Status",
+    "new_request": "Create Printing Request",
+    "no_batches": "No. Batches",
+    "no_cards": "No. Cards",
+    "printing_date": "Printing Date"
   }
 }

@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {TranslateService} from "@ngx-translate/core";
 import {I18nService} from "@dcc-commons-ng/services";
 import {AuthenticationService} from "@core/services";
 import {EAuthority, Page} from "@shared/model";
@@ -19,8 +18,7 @@ export class CardListComponent implements OnInit {
   canAddCard: boolean;
   searchForm: FormGroup;
 
-  constructor(private translate: TranslateService,
-              private i18nService: I18nService,
+  constructor(private i18nService: I18nService,
               private formBuilder: FormBuilder,
               private authenticationService: AuthenticationService) { }
 

@@ -1,1 +1,94 @@
-<p>printing-request-list works!</p>
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h2 class="sectionTitle">{{ "printing-management.title" | translate }}</h2>
+    <button routerLink="/users/create" class="btn btn-outline-dcc-primary px-4" *ngIf="canCreateNewRequest">
+      {{ "printing-management.new_request" | translate }}
+    </button>
+  </div>
+  <div class="content__section" *ngIf="!canSeePrintRequestsList">
+    {{'header.welcome' | translate}} <span class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
+
+
+  <div class="content__section" *ngIf="canSeePrintRequestsList">
+    <div class="searchBox">
+      <form class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "printing-management.request_number" | translate }}</label>
+          <input type="text" class="form-control" value="2148888"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "printing-management.printing_start_date" | translate }}</label>
+          <hijri-gregorian-datepicker [showLabel]="false"
+                                      name="dateOfBirthGregorian"
+                                      buttonClass="dcc-primary"
+                                      class="datepicker"
+                                      [isRequired]="true"
+                                      [GregLabel]="'general.cal_greg' | translate"
+                                      [hijriLabel] ="'general.cal_hijri' | translate"
+                                      [disabled]="false"
+                                      [readonly]="true"
+                                      #datePicker>
+          </hijri-gregorian-datepicker>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "printing-management.printing_end_date" | translate }}</label>
+          <hijri-gregorian-datepicker [showLabel]="false"
+                                      name="dateOfBirthGregorian"
+                                      buttonClass="dcc-primary"
+                                      class="datepicker"
+                                      [isRequired]="true"
+                                      [GregLabel]="'general.cal_greg' | translate"
+                                      [hijriLabel] ="'general.cal_hijri' | translate"
+                                      [disabled]="false"
+                                      [readonly]="true"
+                                      #datePicker>
+          </hijri-gregorian-datepicker>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "printing-management.batch_number" | translate }}</label>
+          <input type="text" class="form-control" value="5721023"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "printing-management.id_number" | translate }}</label>
+          <input type="text" class="form-control" value="1035145879"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "printing-management.card_number" | translate }}</label>
+          <input type="text" class="form-control" value="542187"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "printing-management.request_status" | translate }}</label>
+          <select class="custom-select">
+            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option>الكل</option>
+            <option>تمت الطباعة</option>
+            <option>جاهز للطباعة</option>
+          </select>
+        </div>
+
+        <div class="form-group col align-self-end">
+          <button type="submit" (click)="search()" class="btn btn-outline-dcc-primary px-5 mr-3">
+            {{ "general.btn_search" | translate }}
+          </button>
+
+          <button (click)="cancelSearch()" class="btn btn-outline-secondary">
+            {{ "general.btn_clear" | translate }}
+          </button>
+        </div>
+
+
+      </form>
+    </div>
+  </div>
+
+
+
+</div>
