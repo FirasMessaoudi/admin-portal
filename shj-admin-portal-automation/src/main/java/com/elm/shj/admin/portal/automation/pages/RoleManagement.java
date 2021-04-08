@@ -1,13 +1,18 @@
 package com.elm.shj.admin.portal.automation.pages;
 
 import com.elm.qa.framework.core.ActionX;
+import com.elm.qa.framework.core.DataManager;
 import com.elm.qa.framework.core.Global;
+import com.elm.qa.framework.utilities.Common;
 import com.elm.qa.framework.utilities.ReporterX;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Locale;
 
 import static com.elm.qa.framework.core.ActionX.Exists;
 import static com.elm.qa.framework.core.ActionX.SetValue;
@@ -35,19 +40,7 @@ public class RoleManagement {
     @FindBy(xpath = "//app-add-update-role//button[contains(text(),'Save')]")
     WebElement btnSave;
 
-    @FindBy(xpath = "//app-toasts//div[@class='toast-body']")
-    WebElement divSaveMsgContent;
-
-    @FindBy(xpath = "//app-toasts//div[contains(@class,'toast-header')]")
-    WebElement divSaveMsgTitle;
-
-    @FindBy(xpath = "//app-confirm-dialog//button[contains(@class,'btn-danger')]")
-    WebElement btnActionMsgConfirmNo;
-
-    @FindBy(xpath = "//app-confirm-dialog//button[contains(@class,'btn-primary')]")
-    WebElement btnActionMsgConfirmYes;
-
-    @FindBy(xpath = "//app-applicant-list//button[@routerlink='/roles/create']")
+    @FindBy(xpath = "//app-applicant-list//a[@routerlink='/roles/create']")
     WebElement btnAddNewRole;
 
 
@@ -62,60 +55,60 @@ public class RoleManagement {
 
     public void addNewRole(Hashtable<String,String> dataRow) throws Exception{
 
+        Home home = new Home();
+
         if (ActionX.Exists(btnAddNewRole, 3)) {
             btnAddNewRole.click();
         }
 
-        if(Exists(txtRoleArbName,30)){
+        if(Exists(txtRoleArbName,30)) {
 
             // preparing test data randomization
 
-            UtilitiesUI.prepareTestData(dataRow);
+//            UtilitiesUI.prepareTestData(dataRow);
 
             //filling  Data
 
-            SetValue(txtRoleArbName,dataRow.get("RoleArbName".toUpperCase()));
+            SetValue(txtRoleArbName, dataRow.get("RoleArbName".toUpperCase()));
 
-            SetValue(txtRoleEngName,dataRow.get("RoleEngName".toUpperCase()));
+            SetValue(txtRoleEngName, dataRow.get("RoleEngName".toUpperCase()));
 
-           if(dataRow.get("UserRoleActive".toUpperCase()).equalsIgnoreCase("yes")){
+            if (dataRow.get("UserRoleActive".toUpperCase()).equalsIgnoreCase("yes")) {
                 btnRoleActive.click();
             } else {
-               btnRoleNotActive.click();
+                btnRoleNotActive.click();
             }
 
             // Selecting list of Authorities
+            List<String> lstRows = Common.GetIterations(dataRow.get("RoleAuthorities".toUpperCase()),",");
+            Hashtable<String,String> lstAuthorities = DataManager.GetExcelDictionary("Select RowID,AuthorityName FROM RoleAuthorities");
+            for (String row: lstRows ) {
+                ReporterX.info("Select Authority : "+lstAuthorities.get(row));
+               try {
+                   Global.Test.Browser.
+                           findElements(By.xpath("//app-add-update-role//form//label[contains(text(),'" + lstAuthorities.get(row) + "') and contains(@class,'btn-outline-info')]")).get(0).click();
+               }catch (Exception e){}
 
+            }
+            ActionX.ScrollToElement(btnSave);
+            btnSave.click();
 
-
-
-
-
-
-
-//            btnSave.click();
-//            UtilitiesUI.waitForLoaderHidden(20);
-//
-//            //validate add item
-//            if(Exists(divSaveMsgTitle,30)){
-//                if(divSaveMsgTitle.getText().contains("نجاح")){
-//                    ReporterX.info("System Message : "+divSaveMsgContent.getText());
-//                    btnSaveMSGConfirmYes.click();
-//                    UtilitiesUI.waitForLoaderHidden(10);
-//                    ReporterX.pass("User [["+dataRow.get("UserFullName".toUpperCase())+"] was added.!");
-//                }else {
-//                    ReporterX.info("System Message : "+divSaveMsgContent.getText());
-//                    btnSaveMSGConfirmYes.click();
-//                    UtilitiesUI.waitForLoaderHidden(10);
-//                    ReporterX.fail("Failed to Add User ["+dataRow.get("UserFullName".toUpperCase())+"].!");
-//                }
-//            }else {
-//                ReporterX.fail("Failed to Add User ["+dataRow.get("UserFullName".toUpperCase())+"].!");
-//            }
+            //validate add item
+            if(Exists(home.divSaveMsgContent,30)){
+                if(home.divSaveMsgContent.getText().toLowerCase().contains("success")){
+                    ReporterX.info("Add User Role System Message : "+home.divSaveMsgContent.getText());
+                    ReporterX.pass("User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] was added.!");
+                }else {
+                    ReporterX.info("Add User Role System Message : "+home.divSaveMsgContent.getText());
+                    ReporterX.fail("Failed to Add User Role ["+dataRow.get("RoleEngName".toUpperCase())+"].!");
+                }
+            }else {
+                ReporterX.fail("Failed to Add User Role ["+dataRow.get("RoleEngName".toUpperCase())+"].!");
+            }
 
 
         }else {
-            ReporterX.fail("Add New User Page not Loaded.!!");
+            ReporterX.fail("Add New User Role Page not Loaded.!!");
         }
 
     }

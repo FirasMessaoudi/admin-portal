@@ -8,7 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 
-public class SystemNavigators {
+public class Navigators {
 
     // declaring elements
 
@@ -25,7 +25,7 @@ public class SystemNavigators {
     @FindBy(xpath = "//a[@ng-reflect-router-link='/roles/list']")
     WebElement lnkManageRoles;
 
-    @FindBy(xpath = "//app-applicant-list//button[@routerlink='/roles/create']")
+    @FindBy(xpath = "//app-applicant-list//a[@routerlink='/roles/create']")
     WebElement btnAddNewRole;
 
     @FindBy(xpath = "//app-add-update-role//input[@formcontrolname='nameArabic']")
@@ -44,7 +44,7 @@ public class SystemNavigators {
 
 
 
-    public SystemNavigators() {
+    public Navigators() {
         try {
             PageFactory.initElements(Global.Test.Browser, this);
         } catch (Exception ex) {

@@ -9,8 +9,19 @@ import org.openqa.selenium.support.PageFactory;
 public class Home {
 
     @FindBy(xpath = "//div[@id='spinner']")
-    WebElement divLoading;
+    public WebElement divLoading;
 
+    @FindBy(xpath = "//app-toasts//div[@class='toast-body']")
+    public WebElement divSaveMsgContent;
+
+    @FindBy(xpath = "//app-toasts//div[contains(@class,'toast-header')]")
+    public WebElement divSaveMsgTitle;
+
+    @FindBy(xpath = "//app-confirm-dialog//button[contains(@class,'btn-danger')]")
+    public WebElement btnActionMsgConfirmNo;
+
+    @FindBy(xpath = "//app-confirm-dialog//button[contains(@class,'btn-primary')]")
+    public WebElement btnActionMsgConfirmYes;
 
     public Home() {
         try {

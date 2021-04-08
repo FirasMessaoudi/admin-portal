@@ -41,6 +41,8 @@ public class SystemLogin {
     @FindBy(xpath = "//div[@aria-labelledby='userMenuLink']//a[contains(text(),'Logout')]")
     WebElement btnLogOut;
 
+    Home homePage = new Home();
+
 
     public SystemLogin() {
         try {
@@ -60,6 +62,7 @@ public class SystemLogin {
             if (Exists(txtUserName, 30)) {
                 SetValue(txtUserName,strUserName);
                 SetValue(txtPassword,strPassword);
+                Thread.sleep(1000);
                 //SetValue(txtCaptcha,catptach);
 
                 if (ActionX.WaitUntilEnabled(btnLogin, 2))
@@ -109,11 +112,11 @@ public class SystemLogin {
 
     public boolean LogOut() {
         boolean retRes = false;
-
         try {
-
-            UtilitiesUI.waitForLoaderHidden(10);
             if (Exists(lnkUserMenu, 2)) {
+                if(Exists(homePage.divSaveMsgContent))
+                        ActionX.WaitUntilHidden(homePage.divSaveMsgContent,7);
+                ActionX.ScrollToElement(lnkUserMenu);
                 lnkUserMenu.click();
                 if (Exists(btnLogOut, 2)) {
                     Thread.sleep(2000);

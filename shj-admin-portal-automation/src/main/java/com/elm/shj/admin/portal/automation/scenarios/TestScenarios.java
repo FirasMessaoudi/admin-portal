@@ -1,15 +1,14 @@
 package com.elm.shj.admin.portal.automation.scenarios;
 
 
+import com.elm.qa.framework.core.ActionX;
 import com.elm.qa.framework.runner.Executer;
 import com.elm.qa.framework.utilities.ReporterX;
-import com.elm.shj.admin.portal.automation.apis.FieldSupporter;
-import com.elm.shj.admin.portal.automation.apis.ShjApiManagement;
-import com.elm.shj.admin.portal.automation.pages.DatabaseQueryManagement;
+import com.elm.shj.admin.portal.automation.pages.Home;
+import com.elm.shj.admin.portal.automation.pages.RoleManagement;
 import com.elm.shj.admin.portal.automation.pages.SystemLogin;
-import com.elm.shj.admin.portal.automation.pages.SystemNavigators;
-import com.elm.shj.admin.portal.automation.pages.UserManagement;
-
+import com.elm.shj.admin.portal.automation.pages.Navigators;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 
@@ -17,15 +16,24 @@ public class TestScenarios {
 
     //Identifying objects:
     SystemLogin systemLogin = new SystemLogin();
-    DatabaseQueryManagement dbMgmt = new DatabaseQueryManagement();
-    SystemNavigators systemNavigators = new SystemNavigators();
-    UserManagement addUser = new UserManagement();
-    ShjApiManagement insProcMgmt = new ShjApiManagement();
-    FieldSupporter fieldSupporter = new FieldSupporter();
+    Navigators navigators = new Navigators();
+    RoleManagement roleManagement = new RoleManagement();
+    Home homePage = new Home();
 
 
 
-    //region Before Test
+
+    //region Before and After Execution
+
+    @AfterClass
+    public void doLogout(){
+        try{
+
+            systemLogin.LogOut();
+        }catch (Exception e){
+            ReporterX.error(e);
+        }
+    }
 
 //    @BeforeClass
 //    public void Initialization() {
@@ -89,11 +97,11 @@ public class TestScenarios {
         }
     }
     @Test
-    public void validateAddNewUser() {
+    public void ValidateAddUserRole() {
         try {
             systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
-            systemNavigators.goToUserManagement();
-            addUser.addNewUSer(Executer.TestDataRow);
+            navigators.goToRoleManagement();
+            roleManagement.addNewRole(Executer.TestDataRow);
 
         } catch (Exception ex) {
             ReporterX.error(ex);
