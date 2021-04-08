@@ -8,9 +8,9 @@ import {PrintingRequestAddUpdateComponent} from "@pages/printing-management/prin
 
 const routes: Routes = [
   {path: 'print-requests/list', component: PrintingRequestListComponent, canActivate: [AuthenticationGuard]},
-  {path: 'printing-requests/details', component: PrintingRequestDetailsComponent, canActivate: [AuthenticationGuard]},
-  {path: 'printing-requests/create', component: PrintingRequestAddUpdateComponent, canActivate: [AuthenticationGuard]},
-  {path: 'printing-requests/update/:id', component: PrintingRequestAddUpdateComponent, canActivate: [AuthenticationGuard]}
+  {path: 'print-requests/details', component: PrintingRequestDetailsComponent, canActivate: [AuthenticationGuard]},
+  {path: 'print-requests/create', component: PrintingRequestAddUpdateComponent, canActivate: [AuthenticationGuard]},
+  {path: 'print-requests/update/:id', component: PrintingRequestAddUpdateComponent, canActivate: [AuthenticationGuard]}
 ];
 
 @NgModule({

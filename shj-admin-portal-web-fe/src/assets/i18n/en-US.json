@@ -85,7 +85,9 @@
     "tooltip_reset_password": "Reset Password",
     "select_option": "-- Please Select --",
     "gender": "Gender",
-    "select_all": "Select All"
+    "select_all": "Select All",
+    "btn_next": "Next",
+    "btn_previous": "Previous"
   },
 
   "header": {
@@ -461,6 +463,8 @@
     "prepare_request": "Prepare Request",
     "create_batch": "Create Batch",
     "confirm_request": "Confirm Request",
-    "request_details": "Print Request Details"
+    "request_details": "Print Request Details",
+    "hamlah_number": "Hamlah Number",
+    "motawef_number":"Motawef Number"
   }
 }

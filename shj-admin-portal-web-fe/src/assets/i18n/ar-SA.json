@@ -85,7 +85,9 @@
     "tooltip_reset_password": "إعادة تعيين كلمة المرور",
     "select_option": "-- الرجاء الاختيار --",
     "gender": "الجنس",
-    "select_all": "اختيار الكل"
+    "select_all": "اختيار الكل",
+    "btn_next": "التالي",
+    "btn_previous": "السابق"
   },
 
   "header": {
@@ -460,6 +462,8 @@
     "prepare_request": "اعداد الطلب",
     "create_batch": "تكوين الحزم",
     "confirm_request": "تأكيد الطلب",
-    "request_details": "بيانات طلب الطباعة"
+    "request_details": "بيانات طلب الطباعة",
+    "hamlah_number": "رقم الحملة",
+    "motawef_number":"رقم المطوف"
   }
 }

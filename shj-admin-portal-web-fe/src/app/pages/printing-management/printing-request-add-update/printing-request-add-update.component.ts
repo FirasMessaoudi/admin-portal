@@ -12,4 +12,16 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  saveStepOne() {
+
+  }
+
+  saveStepTwo() {
+
+  }
+
+  confirm() {
+
+  }
+
 }

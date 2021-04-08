@@ -1,7 +1,7 @@
 <div class="content__wrapper">
   <div class="title__Page">
     <h2 class="sectionTitle">{{ "printing-management.title" | translate }}</h2>
-    <button routerLink="/print-requests/list" class="btn btn-outline-dcc-primary px-4" *ngIf="canCreateNewRequest">
+    <button routerLink="/print-requests/create" class="btn btn-outline-dcc-primary px-4" *ngIf="canCreateNewRequest">
       {{ "printing-management.new_request" | translate }}
     </button>
   </div>
@@ -105,14 +105,14 @@
             </td>
           </tr>
           <tr>
-            <td><a [routerLink]="['/printing-requests/details']" class="text-dcc-primary font-weight-bold">{{'544820'}}</a></td>
+            <td><a [routerLink]="['/print-requests/details']" class="text-dcc-primary font-weight-bold">{{'544820'}}</a></td>
             <td>{{'5'}}</td>
             <td class="ltr">{{'690'}}</td>
             <td class="ltr">{{'24-03-2021'}}</td>
             <td class="ltr">{{'تمت الطباعة'}}</td>
           </tr>
           <tr>
-            <td><a [routerLink]="['/printing-requests/details']" class="text-dcc-primary font-weight-bold">{{'544837'}}</a></td>
+            <td><a [routerLink]="['/print-requests/details']" class="text-dcc-primary font-weight-bold">{{'544837'}}</a></td>
             <td>{{'5'}}</td>
             <td class="ltr">{{'247'}}</td>
             <td class="ltr">{{'24-03-2021'}}</td>
