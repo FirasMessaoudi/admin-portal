@@ -465,6 +465,7 @@
     "confirm_request": "Confirm Request",
     "request_details": "Print Request Details",
     "hamlah_number": "Hamlah Number",
-    "motawef_number":"Motawef Number"
+    "motawef_number":"Motawef Number",
+    "hamlah": "Hamlah"
   }
 }

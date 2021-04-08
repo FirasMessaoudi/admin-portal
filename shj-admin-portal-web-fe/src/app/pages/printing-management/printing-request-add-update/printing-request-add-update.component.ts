@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-printing-request-add-update',
@@ -7,17 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PrintingRequestAddUpdateComponent implements OnInit {
 
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
 
   saveStepOne() {
-
+    this.cdr.detectChanges();
   }
 
   saveStepTwo() {
-
+    this.cdr.detectChanges();
   }
 
   confirm() {
