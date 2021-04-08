@@ -68,7 +68,8 @@ import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
     DatePipe,
     IbanStatusPipe,
     DccCommonsNgPipesModule,
-    NgMultiSelectDropDownModule
+    NgMultiSelectDropDownModule,
+    HijriGregorianDatepickerModule
   ],
   entryComponents: [
     NgbdDatepickerIslamicumalqura,

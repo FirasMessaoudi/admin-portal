@@ -85,7 +85,9 @@
     "tooltip_reset_password": "إعادة تعيين كلمة المرور",
     "select_option": "-- الرجاء الاختيار --",
     "gender": "الجنس",
-    "select_all": "اختيار الكل"
+    "select_all": "اختيار الكل",
+    "btn_next": "التالي",
+    "btn_previous": "السابق"
   },
 
   "header": {
@@ -437,5 +439,31 @@
     "morshid_name": "اسم المطوف",
     "morshid_title": "دور المرشد",
     "morshid_contact_number": "رقم التواصل"
+  },
+  "printing-management": {
+    "title": "إدارة الطباعة",
+    "request_number": "رقم الطلب",
+    "printing_start_date": "تاريخ بداية الطباعة",
+    "printing_end_date": "تاريخ نهاية الطباعة",
+    "batch_number": "رقم الحزمة",
+    "id_number": "رقم الهوية",
+    "request_status": "حالة الطلب",
+    "new_request": "إضافة طلب طباعة",
+    "no_batches": "عدد الحزم",
+    "no_cards": "عدد البطاقات",
+    "printing_date": "تاريخ الطباعة",
+    "creation_date": "تاريخ الانشاء",
+    "batch_no": "الحزمة رقم",
+    "contains": "تحتوي على",
+    "cards": "بطاقة",
+    "smart_cards_for_print": "بطاقة ذكية سيتم طباعتها",
+    "selected_smart_card": "بطاقة ذكية تم اختيارها",
+    "batch_collecting_method": "طريقة تجميع الحزمة",
+    "prepare_request": "اعداد الطلب",
+    "create_batch": "تكوين الحزم",
+    "confirm_request": "تأكيد الطلب",
+    "request_details": "بيانات طلب الطباعة",
+    "hamlah_number": "رقم الحملة",
+    "motawef_number":"رقم المطوف"
   }
 }

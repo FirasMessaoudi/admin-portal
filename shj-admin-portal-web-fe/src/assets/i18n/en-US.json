@@ -85,7 +85,9 @@
     "tooltip_reset_password": "Reset Password",
     "select_option": "-- Please Select --",
     "gender": "Gender",
-    "select_all": "Select All"
+    "select_all": "Select All",
+    "btn_next": "Next",
+    "btn_previous": "Previous"
   },
 
   "header": {
@@ -438,5 +440,31 @@
     "morshid_name": "Morshid Name",
     "morshid_title": "’Morshid Title",
     "morshid_contact_number": "Contact Number"
+  },
+  "printing-management": {
+    "title": "Printing Management",
+    "request_number": "Request Number",
+    "printing_start_date": "Printing Start Date",
+    "printing_end_date": "Printing End Date",
+    "batch_number": "Batch Number",
+    "id_number": "Id Number",
+    "request_status": "Request Status",
+    "new_request": "Create Printing Request",
+    "no_batches": "No. Batches",
+    "no_cards": "No. Cards",
+    "printing_date": "Printing Date",
+    "creation_date": "Creation Date",
+    "batch_no": "Batch No.",
+    "contains": "Contains",
+    "cards": "Card(s)",
+    "smart_cards_for_print": "Smart Cards To Be Printed",
+    "selected_smart_card": "Smart Card Was Selected",
+    "batch_collecting_method": "Batch Collecting Method",
+    "prepare_request": "Prepare Request",
+    "create_batch": "Create Batch",
+    "confirm_request": "Confirm Request",
+    "request_details": "Print Request Details",
+    "hamlah_number": "Hamlah Number",
+    "motawef_number":"Motawef Number"
   }
 }

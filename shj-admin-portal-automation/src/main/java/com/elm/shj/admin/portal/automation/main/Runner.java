@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import java.net.URL;
 
 
-public class runner {
+public class Runner {
 
     public static void main(String[] args) throws Exception {
         try {
