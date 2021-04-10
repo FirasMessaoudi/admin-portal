@@ -465,6 +465,7 @@
     "request_details": "بيانات طلب الطباعة",
     "hamlah_number": "رقم الحملة",
     "hamlah": "الحملة",
-    "motawef_number":"رقم المطوف"
+    "motawef_number":"رقم المطوف",
+    "btn_confirm_request": "تأكيد الطلب"
   }
 }
