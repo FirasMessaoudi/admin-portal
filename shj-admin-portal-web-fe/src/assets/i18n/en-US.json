@@ -454,6 +454,7 @@
     "no_cards": "No. Cards",
     "printing_date": "Printing Date",
     "creation_date": "Creation Date",
+    "confirm_printing_date": "Confirm Printing Date",
     "batch_no": "Batch No.",
     "contains": "Contains",
     "cards": "Card(s)",
