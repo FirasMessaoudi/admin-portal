@@ -31,6 +31,7 @@ public class AuthorityLookupDto implements Serializable {
     private Date creationDate;
     private Long parentId;
     @JsonBackReference
+    @ToString.Exclude
     private AuthorityLookupDto parent;
     @EqualsAndHashCode.Exclude
     private Set<AuthorityLookupDto> children;

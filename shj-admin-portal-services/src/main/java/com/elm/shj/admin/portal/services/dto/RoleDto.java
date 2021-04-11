@@ -33,6 +33,7 @@ public class RoleDto implements Serializable {
     private boolean deleted;
     private boolean activated;
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<RoleAuthorityDto> roleAuthorities;
     private Date creationDate;
     private Date updateDate;
