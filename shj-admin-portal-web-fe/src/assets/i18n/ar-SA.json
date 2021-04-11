@@ -466,6 +466,11 @@
     "hamlah_number": "رقم الحملة",
     "hamlah": "الحملة",
     "motawef_number":"رقم المطوف",
-    "btn_confirm_request": "تأكيد الطلب"
+    "btn_confirm_request": "تأكيد الطلب",
+    "print_request_summary": "تلخيص تفاصيل طلب الاطباعة",
+    "print_request_done_successfully": "تم تنفيذ طلب الطباعة بنجاح",
+    "print_request_number": "رقم طلب الطباعة هو",
+    "btn_view_print_request_details": "عرض تفاصيل الطلب",
+    "btn_back_to_printing_management": "عودة لإدارة الطباعة"
   }
 }

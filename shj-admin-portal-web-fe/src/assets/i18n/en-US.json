@@ -467,6 +467,11 @@
     "hamlah_number": "Hamlah Number",
     "motawef_number":"Motawef Number",
     "hamlah": "Hamlah",
-    "btn_confirm_request": "Confirm Request"
+    "btn_confirm_request": "Confirm Request",
+    "print_request_summary": "Print Request Summary",
+    "print_request_done_successfully": "Print Request Done Successfully",
+    "print_request_number": "Print Request Number",
+    "btn_view_print_request_details": "View Request Details",
+    "btn_back_to_printing_management": "Back to Printing Management"
   }
 }
