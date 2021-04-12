@@ -1,7 +1,6 @@
 package com.elm.shj.admin.portal.automation.scenarios;
 
 
-import com.elm.qa.framework.core.ActionX;
 import com.elm.qa.framework.runner.Executer;
 import com.elm.qa.framework.utilities.ReporterX;
 import com.elm.shj.admin.portal.automation.pages.Home;
@@ -82,7 +81,7 @@ public class TestScenarios {
 
     //endregion
 
-    //region Admin Scope
+    //region Role Management
 
     @Test
     public void ValidateSystemLogin() {
@@ -96,19 +95,68 @@ public class TestScenarios {
             ReporterX.error(ex);
         }
     }
+
     @Test
     public void ValidateAddUserRole() {
         try {
             systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
             navigators.goToRoleManagement();
-            roleManagement.addNewRole(Executer.TestDataRow);
+            roleManagement.addNewUserRole(Executer.TestDataRow);
 
         } catch (Exception ex) {
             ReporterX.error(ex);
         }
     }
 
-    //endregion // End Of Admin Scope
+    @Test
+    public void ValidateEditUserRole() {
+        try {
+            systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
+            navigators.goToRoleManagement();
+            roleManagement.editUserRole(Executer.TestDataRow);
+
+        } catch (Exception ex) {
+            ReporterX.error(ex);
+        }
+    }
+
+    @Test
+    public void ValidateDeactivateUserRole() {
+        try {
+            systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
+            navigators.goToRoleManagement();
+            roleManagement.deactivateUserRole(Executer.TestDataRow);
+
+        } catch (Exception ex) {
+            ReporterX.error(ex);
+        }
+    }
+
+    @Test
+    public void ValidateDeleteUserRole() {
+        try {
+            systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
+            navigators.goToRoleManagement();
+            roleManagement.deleteUserRole(Executer.TestDataRow);
+
+        } catch (Exception ex) {
+            ReporterX.error(ex);
+        }
+    }
+
+    @Test
+    public void ValidateViewDetailsUserRole() {
+        try {
+            systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
+            navigators.goToRoleManagement();
+            roleManagement.viewDetailsUserRole(Executer.TestDataRow);
+
+        } catch (Exception ex) {
+            ReporterX.error(ex);
+        }
+    }
+
+    //endregion // End Of Role Management
 
 
 
