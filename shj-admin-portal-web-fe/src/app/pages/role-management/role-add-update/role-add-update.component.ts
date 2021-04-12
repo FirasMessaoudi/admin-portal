@@ -114,6 +114,10 @@ export class RoleAddUpdateComponent implements OnInit {
     }
     this.role = this.roleForm.value;
     this.role.roleAuthorities = this.roleAuthorities.filter(ra => ra.selected);
+    if(this.role.roleAuthorities.length == 0) {
+      this.toastr.warning(this.translate.instant('role-management.add_role_no_authorities_error'), this.translate.instant('general.dialog_alert_title'));
+      return;
+    }
     // adding parent to if any child is selected
     this.role.roleAuthorities.forEach(selectedChild => {
       let parent:RoleAuthority = this.roleAuthorities.find(raParent => raParent.authority.id === selectedChild.authority.parentId);
