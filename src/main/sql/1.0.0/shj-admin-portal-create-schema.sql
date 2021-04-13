@@ -267,3 +267,16 @@ GO
 
 ALTER TABLE shj_portal.sha_user DROP CONSTRAINT fk_sha_user_role;
 ALTER TABLE shj_portal.sha_user DROP COLUMN role_id;
+GO
+
+if not exists (select * from sys.tables where name = 'sha_decision_rule')
+create table shj_portal.sha_decision_rule
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    dmn NVARCHAR(MAX) NOT NULL,
+    label_ar NVARCHAR(50) NOT NULL,
+    label_en VARCHAR(50) NOT NULL,
+    creation_date smalldatetime not null default current_timestamp,
+    update_date smalldatetime null
+);
+GO

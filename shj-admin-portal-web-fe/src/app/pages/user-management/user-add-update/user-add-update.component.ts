@@ -163,7 +163,6 @@ export class UserAddUpdateComponent implements OnInit {
       fatherName: [this.user.fatherName, DccValidators.charactersOnly()],
       activated: [this.user.activated, Validators.required],
       role: [this.mainSelectedRole, Validators.required],
-      // additionalRoles: [this.additionalSelectedRoles],
       userRoles: [this.user.userRoles, Validators.required]
     });
   }

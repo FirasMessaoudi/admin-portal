@@ -53,7 +53,7 @@ export class RoleService {
    * @return {Observable<Role>} The saved or updated role.
    */
   saveOrUpdate(role: Role): Observable<any> {
-    return this.http.post<any>('/core/api/roles/save-or-update', role).pipe(catchError((error: HttpErrorResponse) => {
+    return this.http.post<any>('/core/api/roles/'+ (role.id > 0 ? 'update' : 'create'), role).pipe(catchError((error: HttpErrorResponse) => {
         if (error.hasOwnProperty('error')) {
           return of(error.error);
         } else {

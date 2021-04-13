@@ -84,6 +84,7 @@
     "tooltip_deactivate": "Deactivate",
     "tooltip_reset_password": "Reset Password",
     "select_option": "-- Please Select --",
+    "name": "Name",
     "gender": "Gender",
     "select_all": "Select All",
     "btn_next": "Next",
@@ -475,5 +476,11 @@
     "print_request_number": "Print Request Number",
     "btn_view_print_request_details": "View Request Details",
     "btn_back_to_printing_management": "Back to Printing Management"
+  },
+  "rule-management": {
+    "title": "Decision Rule Management",
+    "rules_list": "Decision Rules List",
+    "rule_details": "Decision Rule ",
+    "rule_name": "ُDecision Rule Name"
   }
 }

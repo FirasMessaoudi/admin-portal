@@ -1,6 +1,5 @@
 {
-
-  "dcc.commons.validation.constraints":{
+  "dcc.commons.validation.constraints": {
     "nin": "الرجاء إدخال رقم هوية وطنية صحيح",
     "unique": "القيمة التي أدخلتها هي قيد الاستخدام",
     "password": "يجب أن تكون كلمة المرور مزيجًا من الأحرف السفلى / العليا / أرقام / الخاصة",
@@ -16,10 +15,8 @@
     "password-contains-username": "يجب أن لا تحتوي كلمة المرور على اسم المستخدم",
     "invalid": "القيمة التي أدخلتها غير صحيحة"
   },
-
   "general": {
     "app_name": "منتج علم",
-
     "dialog_alert_title": "تنبيه",
     "dialog_confirmation_title": "تأكيد",
     "dialog_confirmation_text": "هل انت متأكد؟",
@@ -71,7 +68,7 @@
     "mobile_number": "رقم الجوال",
     "password": "كلمة المرور",
     "field_pattern_not_matched": "المدخل غير مطابق",
-    "search" : "بحث",
+    "search": "بحث",
     "nin": "رقم الهوية",
     "cal_hijri": "هجري",
     "cal_greg": "ميلادي",
@@ -84,19 +81,18 @@
     "tooltip_deactivate": "تعطيل",
     "tooltip_reset_password": "إعادة تعيين كلمة المرور",
     "select_option": "-- الرجاء الاختيار --",
+    "name": "الإ سم",
     "gender": "الجنس",
     "select_all": "اختيار الكل",
     "btn_next": "التالي",
     "btn_previous": "السابق"
   },
-
   "header": {
     "welcome": "مرحبا",
     "change_password": "تغيير كلمة المرور",
     "my_profile": "ملفي الشخصي",
     "logout": "تسجيل الخروج"
   },
-
   "home": {
     "title": "الصفحة الرئيسية",
     "period": "الفترة",
@@ -119,7 +115,6 @@
     "welcome": "مرحبا بكم في",
     "legend": "لوحة تفسيرية"
   },
-
   "role-management": {
     "title": "إدارة الأدوار",
     "roles_list": "قائمة الأدوار",
@@ -144,7 +139,6 @@
     "dialog_delete_success_text": "تم حذف الدور بنجاح",
     "add_role_no_authorities_error": "يجب اختيار صلاحية واحدة على الأقل"
   },
-
   "user-management": {
     "title": "إدارة المستخدمين",
     "users_list": "قائمة المستخدمين",
@@ -185,17 +179,15 @@
     "dialog_reset_user_pass_confirm_text": "هل أنت متأكد أنك تريد اعادة تعيين كلمة مرور هذا العنصر؟",
     "dialog_reset_user_pass_title": "اعادة تعيين كلمة مرور المستخدم"
   },
-
   "login": {
     "header_title": "تسجيل الدخول",
-    "side_info" : "          يهدف نموذج DCC إلى توحيد الجهود وتوحيد طريقة تنفيذ منتجاتنا في علم.\n          يمكن أن يقلل من الجهود المتعلقة بأنشطة المشاريع الشائعة مثل هيكل المشروع، حزمة التكنولوجيا، استراتيجية معالجة الأخطاء، ومعايير الترميز...\n          في استطلاعنا الأخير ، يمكن أن يصل توفير الجهد إلى 20٪ من إجمالي جهد المشروع.\n",
+    "side_info": "          يهدف نموذج DCC إلى توحيد الجهود وتوحيد طريقة تنفيذ منتجاتنا في علم.\n          يمكن أن يقلل من الجهود المتعلقة بأنشطة المشاريع الشائعة مثل هيكل المشروع، حزمة التكنولوجيا، استراتيجية معالجة الأخطاء، ومعايير الترميز...\n          في استطلاعنا الأخير ، يمكن أن يصل توفير الجهد إلى 20٪ من إجمالي جهد المشروع.\n",
     "title": "تسجيل الدخول",
     "btn_login": "تسجيل الدخول",
     "btn_new_registration": "لاتمتلك حساب؟ قم بالتسجيل الآن.",
     "btn_forgot_password": "نسيت كلمة المرور؟",
     "invalid_username_or_password": "كلمة المرور او اسم المستخدم غير صحيحة"
   },
-
   "register": {
     "header_title": "إنشاء حساب جديد",
     "btn_register": "تسجيل",
@@ -205,7 +197,6 @@
     "link_legal_accept": "الرجاء قراءة وقبول الشروط والأحكام للمتابعة!",
     "terms_and_conditions_text": "للإطلاع على الشروط والأحكام الرجاء الظغط على <a target='_blank' href='{{url}}'>الرابط</a>"
   },
-
   "change-password": {
     "title": "تغيير كلمة المرور",
     "header_text": "لقد انتهت صلاحية كلمة المرور الخاصة بك ، يرجى إنشاء كلمة مرور جديدة.",
@@ -213,19 +204,16 @@
     "new_password": "كلمة المرور الجديدة",
     "new_password_confirm": "تأكيد كلمة المرور"
   },
-
   "reset-password": {
     "title": "إعادة تعيين كلمة المرور",
     "btn_reset_password": "استرجع كلمة المرور",
     "btn_back_to_login": "العودة لتسجيل الدخول"
   },
-
   "footer": {
     "copyright": "* نسخة تجريبية * جميع الحقوق محفوظة، شركة علم {{year}}",
     "terms_and_conditions": "الشروط و الأحكام",
     "channels": "تواصل معنا"
   },
-
   "support": {
     "header_title": "الدعم الفني",
     "header_text": "فريقنا جاهز لدعمك. للاتصال بفريق الدعم الفني، يرجى استخدام القنوات التالية:",
@@ -236,7 +224,6 @@
     "text-copied": "تم نسخ التفاصيل بنجاح!",
     "click-to-copy": "انقر للنسخ"
   },
-
   "incident-management": {
     "title": "البلاغات",
     "incidents_list": "قائمة البلاغات",
@@ -254,11 +241,9 @@
     "btn_processing": "معالجة الطلب",
     "processing_error": "خطأ اثناء محاولة معالجة البلاغ"
   },
-
   "crisis-management": {
     "title": "إدارة الأزمة"
   },
-
   "permit-management": {
     "title": "التصريحات المعلقة",
     "permits_list": "قائمة التصاريح",
@@ -301,7 +286,7 @@
     "more_request_details_error": "خطأ اثناء محاولة طلب المزيد من المعلومات",
     "permit_rejection_error": "خطأ اثناء محاولة رفض التصريح",
     "permit_approval_error": "خطأ اثناء محاولة الموافقة التصريح",
-    "requester_history_title" : "عرض التصاريح",
+    "requester_history_title": "عرض التصاريح",
     "request_more_details_title": "طلب مزيد من المعلومات للمتقدم",
     "request_more_details_reason": "سبب الطلب",
     "request_more_details_description": "تفاصيل الطلب",
@@ -321,7 +306,6 @@
     "from-region": "من منطقة",
     "to-region": "إلى منطقة"
   },
-
   "permit-appeal": {
     "title": "الإعتراضات"
   },
@@ -467,12 +451,18 @@
     "request_details": "بيانات طلب الطباعة",
     "hamlah_number": "رقم الحملة",
     "hamlah": "الحملة",
-    "motawef_number":"رقم المطوف",
+    "motawef_number": "رقم المطوف",
     "btn_confirm_request": "تأكيد الطلب",
     "print_request_summary": "تلخيص تفاصيل طلب الاطباعة",
     "print_request_done_successfully": "تم تنفيذ طلب الطباعة بنجاح",
     "print_request_number": "رقم طلب الطباعة هو",
     "btn_view_print_request_details": "عرض تفاصيل الطلب",
     "btn_back_to_printing_management": "عودة لإدارة الطباعة"
+  },
+  "rule-management": {
+    "title": "إدارة قواعد القرار",
+    "rules_list": "قائمة قواعد القرار",
+    "rule_details": "قاعدة القرار ",
+    "rule_name": "اسم قاعدة القرار"
   }
 }

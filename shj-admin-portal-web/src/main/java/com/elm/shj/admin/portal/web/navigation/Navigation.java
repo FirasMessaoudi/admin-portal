@@ -21,6 +21,8 @@ public class Navigation {
 	public static final String API_USERS = "/api/users";
 	// Roles
 	public static final String API_ROLES = "/api/roles";
+	// Rules
+	public static final String API_RULES = "/api/rules";
 	// Dashboard
 	public static final String API_DASHBOARD = "/api/dashboard";
 	// Error

@@ -57,7 +57,15 @@ export class SideNavComponent implements OnInit {
         display: false,
         icon: 'users',
         iconFa:'fa-w-20',
-        routerLink: '/users/list',
+        routerLink: '/print-requests/list',
+      },
+      {
+        title: 'rule-management.title',
+        roles: [EAuthority.USER_MANAGEMENT],
+        display: false,
+        icon: 'users',
+        iconFa:'fa-w-20',
+        routerLink: '/rules/list',
       }
     ];
     // filtering access according to connected user authorities

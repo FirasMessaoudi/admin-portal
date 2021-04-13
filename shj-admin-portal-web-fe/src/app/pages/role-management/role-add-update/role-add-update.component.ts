@@ -20,6 +20,7 @@ import {DccValidators} from "@shared/validators";
 export class RoleAddUpdateComponent implements OnInit {
 
   role: Role = new Role();
+  retrievedRole: Role;
   roleAuthorities: RoleAuthority[] = [];
   selectedAuthorities: Authority[] = [];
 
@@ -55,6 +56,7 @@ export class RoleAddUpdateComponent implements OnInit {
       let roleId = this.activeRoute.snapshot.params.id;
       if (roleId) {
         this.roleService.find(roleId).subscribe(role => {
+          this.retrievedRole = role;
           this.role = role;
           this.updateRoleForm();
         });
@@ -114,10 +116,6 @@ export class RoleAddUpdateComponent implements OnInit {
     }
     this.role = this.roleForm.value;
     this.role.roleAuthorities = this.roleAuthorities.filter(ra => ra.selected);
-    if(this.role.roleAuthorities.length == 0) {
-      this.toastr.warning(this.translate.instant('role-management.add_role_no_authorities_error'), this.translate.instant('general.dialog_alert_title'));
-      return;
-    }
     // adding parent to if any child is selected
     this.role.roleAuthorities.forEach(selectedChild => {
       let parent:RoleAuthority = this.roleAuthorities.find(raParent => raParent.authority.id === selectedChild.authority.parentId);
@@ -127,11 +125,20 @@ export class RoleAddUpdateComponent implements OnInit {
     });
     // removing parent to if none of its children is selected
     this.roleAuthorities.filter(ra => ra.authority.parentId === null).forEach(parent => {
-      if (this.role.roleAuthorities.find(raSelected => parent.authority.id == raSelected.authority.id) &&
+      if (parent.authority.code !== EAuthority.ADMIN_DASHBOARD && this.role.roleAuthorities.find(raSelected => parent.authority.id == raSelected.authority.id) &&
       !parent.authority.children.filter(ra => this.role.roleAuthorities.find(raSelected => ra.id == raSelected.authority.id)).length) {
         this.role.roleAuthorities = this.role.roleAuthorities.filter(raSelected => raSelected.authority.id !== parent.authority.id);
       }
     });
+    if(this.role.roleAuthorities.length == 0) {
+      this.toastr.warning(this.translate.instant('role-management.add_role_no_authorities_error'), this.translate.instant('general.dialog_alert_title'));
+      return;
+    }
+
+    if(this.retrievedRole) {
+      //fields that should not be changed while edit
+      this.role.creationDate = this.retrievedRole.creationDate;
+    }
 
     this.roleService.saveOrUpdate(this.role).subscribe(res => {
       if (res.hasOwnProperty('errors') && res.errors) {

@@ -223,7 +223,7 @@ public class RoleManagement {
 
     }
 
-    public void deactivateUserRole(Hashtable<String,String> dataRow) throws Exception{
+    public void changeStatusUserRole(Hashtable<String,String> dataRow) throws Exception{
         Home home = new Home();
         if(selectActionUserRole(dataRow,"Deactivate")){
             if(Exists(home.btnActionMsgConfirmYes,5)){
