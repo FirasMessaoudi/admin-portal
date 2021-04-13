@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.dcc.foundation.commons.validation.ArabicCharacters;
 import com.elm.dcc.foundation.commons.validation.LatinCharacters;
+import com.elm.dcc.foundation.commons.validation.Unique;
+import com.elm.shj.admin.portal.orm.entity.JpaRole;
 import lombok.*;
 
 import java.io.Serializable;
@@ -27,8 +29,10 @@ public class RoleDto implements Serializable {
 
     private long id;
     @ArabicCharacters(lettersOnly = true, numbersOnly = false)
+    @Unique(columnName = "nameArabic", entityClass = JpaRole.class, groups = {RoleDto.CreateRoleValidationGroup.class})
     private String nameArabic;
     @LatinCharacters(lettersOnly = true, numbersOnly = false)
+    @Unique(columnName = "nameEnglish", entityClass = JpaRole.class, groups = {RoleDto.CreateRoleValidationGroup.class})
     private String nameEnglish;
     private boolean deleted;
     private boolean activated;
@@ -37,4 +41,7 @@ public class RoleDto implements Serializable {
     private Set<RoleAuthorityDto> roleAuthorities;
     private Date creationDate;
     private Date updateDate;
+
+    public interface CreateRoleValidationGroup {
+    }
 }

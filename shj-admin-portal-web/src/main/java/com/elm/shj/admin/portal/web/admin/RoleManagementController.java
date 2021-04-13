@@ -20,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.groups.Default;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -96,20 +97,38 @@ public class RoleManagementController {
     }
 
     /**
-     * Creates or Updates and existing role
+     * Creates new role
      *
-     * @param role the role to update
-     * @return the created or updated role
+     * @param role the role to create
+     * @return the created role
      */
-    @PostMapping("/save-or-update")
-    @RolesAllowed(AuthorityConstants.EDIT_ROLE)
-    public ResponseEntity<RoleDto> saveOrUpdateRole(@RequestBody @Validated RoleDto role) {
-        log.debug("Handler for {}", "Save Or Update Role");
+    @PostMapping("/create")
+    @RolesAllowed(AuthorityConstants.ADD_ROLE)
+    public ResponseEntity<RoleDto> CreateRole(@RequestBody @Validated({RoleDto.CreateRoleValidationGroup.class, Default.class}) RoleDto role) {
+        log.debug("Handler for {}", "Create Role");
         role.getRoleAuthorities().forEach(roleAuthorityDto -> {
             roleAuthorityDto.setRole(role);
             roleAuthorityDto.setCreationDate(new Date());
         });
         role.setCreationDate(new Date());
+        return ResponseEntity.ok(roleService.save(role));
+    }
+
+    /**
+     * Updates an existing role
+     *
+     * @param role the role to update
+     * @return the updated role
+     */
+    @PostMapping("/update")
+    @RolesAllowed(AuthorityConstants.EDIT_ROLE)
+    public ResponseEntity<RoleDto> UpdateRole(@RequestBody @Validated RoleDto role) {
+        log.debug("Handler for {}", "Update Role");
+        role.getRoleAuthorities().forEach(roleAuthorityDto -> {
+            roleAuthorityDto.setRole(role);
+            roleAuthorityDto.setCreationDate(new Date());
+        });
+        role.setUpdateDate(new Date());
         return ResponseEntity.ok(roleService.save(role));
     }
 
