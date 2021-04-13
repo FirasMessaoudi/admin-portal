@@ -1,81 +1,65 @@
-<header class="bg-light shadow">
-  <div class="container">
-    <nav class="flex-center-between flex-column flex-md-row">
-      <div class="col-md-4 text-left my-3 row logo">
-        <a href="javascript:void(0)" class="col-md-3" [routerLink]="['/']">
-          <img src="assets/images/logo.png" alt="logo" />
-        </a>
-      </div>
-
-      <div class="d-flex">
-        <ul class="navbar-nav ml-auto justify-content-end">
-          <li class="dropdown flex-center">
-            <a
-              class="nav-link d-flex align-items-center dropdown-toggle noArrow"
-              tittle="معلوماتي"
-              href="javascript:void(0)"
-              id="userMenuLink"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <svg-icon styleClass="h1 text-dcc-primary" icon="user-circle"></svg-icon>
-              <div class="mx-3">
-                <h5 class="font-weight-bold text-dcc-primary m-0">
-                  {{ currentUser?.firstName }} {{ currentUser?.lastName }}
-                </h5>
-                <h6 class="text-black-50 pt-1">
-                  <ng-container *ngFor="let userRole of currentUser?.userRoles">
-                    <ng-container *ngIf="userRole?.mainRole">
-                      {{ currentLanguage.startsWith('ar') ? userRole?.role.nameArabic : userRole?.role.nameEnglish }}
-                    </ng-container>
-                  </ng-container>
-                </h6>
-              </div>
-              <svg-icon styleClass="text-dcc-primary" icon="chevron-down"></svg-icon>
-            </a>
-            <div class="dropdown-menu animate slideIn" aria-labelledby="userMenuLink">
-              <a class="dropdown-item" (click)="viewCurrentUserProfile()" [routerLink]="" routerLinkActive="router-link-active">
-                {{ "header.my_profile" | translate }}
-              </a>
-              <a class="dropdown-item" [routerLink]="['/change-password']" routerLinkActive="router-link-active">
-                {{ "header.change_password" | translate }}
-              </a>
-              <div class="dropdown-divider"></div>
-              <ng-container>
-                <a class="dropdown-item" href="javascript:void(0)"
-                  *ngIf="currentLanguage.startsWith('en')" (click)="setLanguage('ar-SA')">
-                  <span>عربي</span>
-                </a>
-                <a class="dropdown-item" href="javascript:void(0)"
-                  *ngIf="currentLanguage.startsWith('ar')" (click)="setLanguage('en-US')">
-                  <span>English</span>
-                </a>
+<header class="d-flex justify-content-end bg-light">
+  <ul class="d-inline-flex align-items-center bg-white shadow-sm my-3 mx-4">
+    <li class="dropdown flex-center">
+      <a
+        class="nav-link d-flex align-items-center dropdown-toggle noArrow"
+        tittle="معلوماتي"
+        href="javascript:void(0)"
+        id="userMenuLink"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <svg-icon styleClass="h1 text-gray-300" icon="user-circle"></svg-icon>
+        <div class="mx-3">
+          <h6 class="text-dcc-primary m-0">
+            {{ currentUser?.firstName }} {{ currentUser?.lastName }}
+          </h6>
+          <small class="text-black-50">
+            <ng-container *ngFor="let userRole of currentUser?.userRoles">
+              <ng-container *ngIf="userRole?.mainRole">
+                {{ currentLanguage.startsWith('ar') ? userRole?.role.nameArabic : userRole?.role.nameEnglish }}
               </ng-container>
-              <a class="dropdown-item" href="javascript:void(0)" (click)="logout()" >
-                {{ "header.logout" | translate }}
-              </a>
-            </div>
-          </li>
-        </ul>
+            </ng-container>
+          </small>
+        </div>
+      </a>
+      <div class="dropdown-menu animate slideIn" aria-labelledby="userMenuLink">
+        <a class="dropdown-item" (click)="viewCurrentUserProfile()" [routerLink]="" routerLinkActive="router-link-active">
+          {{ "header.my_profile" | translate }}
+        </a>
+        <a class="dropdown-item" [routerLink]="['/change-password']" routerLinkActive="router-link-active">
+          {{ "header.change_password" | translate }}
+        </a>
+        <div class="dropdown-divider"></div>
+        <ng-container>
+          <a class="dropdown-item" href="javascript:void(0)"
+            *ngIf="currentLanguage.startsWith('en')" (click)="setLanguage('ar-SA')">
+            <span>عربي</span>
+          </a>
+          <a class="dropdown-item" href="javascript:void(0)"
+            *ngIf="currentLanguage.startsWith('ar')" (click)="setLanguage('en-US')">
+            <span>English</span>
+          </a>
+        </ng-container>
       </div>
-    </nav>
-  </div>
+    </li>
+    <li class="position-relative">
+      <a class="nav-link" href="javascript:void(0)">
+        <svg-icon styleClass="fa-w-16 h4" icon="bell"></svg-icon>
+      </a>
+      <span class="notif bg-red">4</span>
+    </li>
+    <li class="position-relative">
+      <a class="nav-link" href="javascript:void(0)">
+        <svg-icon styleClass="fa-w-16 h4" icon="cog"></svg-icon>
+      </a>
+    </li>
+    <li class="position-relative">
+      <a class="nav-link" href="javascript:void(0)" (click)="logout()" title="{{'header.logout' | translate}}">
+        <svg-icon styleClass="fa-w-16 h4" icon="logout"></svg-icon>
+      </a>
+    </li>
+  </ul>
 </header>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dcc-primary p-0">
-  <div class="container">
-    <button class="navbar-toggler p-3 m-2 w-100" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" [ngbCollapse]="isMenuCollapsed">
-      <ul class="navbar-nav w-90 pr-0">
-        <li class="nav-item" *ngFor="let link of links">
-          <a class="nav-link stroke" *ngIf="link.display" routerLink="{{ link.routerLink }}" [class.active]="router.routerState.snapshot.url === link.routerLink">
-            {{ link.title | translate }}
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>

@@ -3,7 +3,6 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '@app/_core/services';
 import {I18nService} from "@dcc-commons-ng/services";
-import {EAuthority} from "@model/enum/authority.enum";
 
 @Component({
   selector: 'app-header',
@@ -14,7 +13,6 @@ export class HeaderComponent implements OnInit {
 
   currentUser: any;
   public isMenuCollapsed = false;
-  links: {}[];
 
   constructor(
     public router: Router,
@@ -33,56 +31,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.authenticationService.currentUser
-    this.links = [
-      {
-        title: 'home.title',
-        roles: [EAuthority.ADMIN_DASHBOARD],
-        display: false,
-        routerLink: '/',
-      },
-      {
-        title: 'user-management.title',
-        roles: [EAuthority.USER_MANAGEMENT],
-        display: false,
-        routerLink: '/users/list',
-      },
-      {
-        title: 'role-management.title',
-        roles: [EAuthority.ROLE_MANAGEMENT],
-        display: false,
-        routerLink: '/roles/list',
-      },
-      {
-        title: 'card-management.title',
-        roles: [EAuthority.USER_MANAGEMENT],
-        display: false,
-        routerLink: '/cards/list',
-      },
-      {
-        title: 'printing-management.title',
-        roles: [EAuthority.USER_MANAGEMENT],
-        display: false,
-        routerLink: '/print-requests/list',
-      }
-    ];
-    // filtering access according to connected user authorities
-    let user: any = this.authenticationService.currentUser;
 
-    if (user && user.authorities && (user.authorities instanceof Array)) {
-      // loop on links
-      this.links.forEach((link: any) => {
-        // loop on authorities
-        user.authorities.forEach((auth: any) => {
-          // loop on link roles
-          link.roles.forEach((role: any) => {
-
-            if (role == auth.authority) {
-              link['display'] = true;
-            }
-          });
-        });
-      });
-    }
   }
 
   logout() {

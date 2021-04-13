@@ -1,10 +1,24 @@
-<div class="d-flex flex-column min-vh-100">
-  <!-- HEADER & TOP NAVIGATION -->
-  <app-header></app-header>
+  <div class="d-flex flex-column min-vh-100">
+      <!-- CONTENT (ROUTER OUTLET) -->
+      <button class="btn navbar-toggler" (click)="toggleNavbar()">
+        <div class="cd-nav-trigger">
+          <span class="cd-nav-icon"></span>
+        </div>
+      </button>
+      <section class="d-flex flex-grow-1">
 
-    <!-- CONTENT (ROUTER OUTLET) -->
-    <section class="container flex-grow-1">
-      <router-outlet></router-outlet>
-    </section>
-</div>
+        <!-- SIDE NAVIGATION -->
+        <app-side-nav></app-side-nav>
+
+        <div class="flex-grow-1 w-100">
+
+          <!-- HEADER & SETTING -->
+          <app-header></app-header>
+
+          <!-- CONTENT (ROUTER OUTLET) -->
+          <router-outlet></router-outlet>
+
+        </div>
+      </section>
+  </div>
 

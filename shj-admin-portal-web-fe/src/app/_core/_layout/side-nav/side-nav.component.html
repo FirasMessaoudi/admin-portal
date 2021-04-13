@@ -1,0 +1,18 @@
+
+<nav class="sideBar">
+    <div class="logo flex-center pt-3 pb-5">
+      <a href="javascript:void(0)" [routerLink]="['/']">
+        <img src="assets/images/logo.png" alt="logo" />
+      </a>
+    </div>
+  
+  
+    <ul class="sideNav mt-4">
+      <li *ngFor="let link of links">
+        <a class="item" *ngIf="link.display" routerLink="{{ link.routerLink }}" [class.active]="router.routerState.snapshot.url === link.routerLink">
+          <svg-icon styleClass="mx-3 fa-w-18" icon="address-card"></svg-icon>
+          {{ link.title | translate }}
+        </a>
+      </li>
+    </ul>
+  </nav>
