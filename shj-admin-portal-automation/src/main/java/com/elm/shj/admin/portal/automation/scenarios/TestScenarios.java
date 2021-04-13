@@ -17,7 +17,7 @@ public class TestScenarios {
     SystemLogin systemLogin = new SystemLogin();
     Navigators navigators = new Navigators();
     RoleManagement roleManagement = new RoleManagement();
-    Home homePage = new Home();
+
 
 
 
@@ -121,11 +121,11 @@ public class TestScenarios {
     }
 
     @Test
-    public void ValidateDeactivateUserRole() {
+    public void ValidateChangeStatusUserRole() {
         try {
             systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
             navigators.goToRoleManagement();
-            roleManagement.deactivateUserRole(Executer.TestDataRow);
+            roleManagement.changeStatusUserRole(Executer.TestDataRow);
 
         } catch (Exception ex) {
             ReporterX.error(ex);
