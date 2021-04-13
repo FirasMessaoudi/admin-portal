@@ -141,7 +141,8 @@
     "dialog_delete_title": "حذف دور",
     "dialog_activate_success_text": "تم تفعيل الدور بنجاح",
     "dialog_deactivate_success_text": "تم تعطيل الدور بنجاح",
-    "dialog_delete_success_text": "تم حذف الدور بنجاح"
+    "dialog_delete_success_text": "تم حذف الدور بنجاح",
+    "add_role_no_authorities_error": "يجب اختيار صلاحية واحدة على الأقل"
   },
 
   "user-management": {

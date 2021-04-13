@@ -141,7 +141,8 @@
     "dialog_delete_title": "Delete Role",
     "dialog_activate_success_text": "Role has been successfully activated",
     "dialog_deactivate_success_text": "Role has been successfully deactivated",
-    "dialog_delete_success_text": "Role has been successfully deleted"
+    "dialog_delete_success_text": "Role has been successfully deleted",
+    "add_role_no_authorities_error": "At least one authority should be selected"
   },
 
   "user-management": {

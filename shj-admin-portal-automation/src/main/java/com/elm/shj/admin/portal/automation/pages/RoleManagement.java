@@ -5,14 +5,21 @@ import com.elm.qa.framework.core.DataManager;
 import com.elm.qa.framework.core.Global;
 import com.elm.qa.framework.utilities.Common;
 import com.elm.qa.framework.utilities.ReporterX;
+import org.joda.time.DateTime;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import static com.elm.qa.framework.core.ActionX.Exists;
 import static com.elm.qa.framework.core.ActionX.SetValue;
@@ -43,6 +50,23 @@ public class RoleManagement {
     @FindBy(xpath = "//app-applicant-list//a[@routerlink='/roles/create']")
     WebElement btnAddNewRole;
 
+    @FindBy(xpath = "//app-applicant-list//input[@formcontrolname='roleNameEn']")
+    WebElement txtRoleNameSearch;
+
+    @FindBy(xpath = "//app-applicant-list//input[@formcontrolname='authorityId']")
+    WebElement lstRoleAuthorityName;
+
+    @FindBy(xpath = "//app-applicant-list//button[contains(text(),'Search')]")
+    WebElement btnRoleSearch;
+
+    @FindBy(xpath = "//app-applicant-list//table//tbody")
+    WebElement tblRolesSearchResults;
+
+
+
+
+
+
 
     public RoleManagement() {
         try {
@@ -52,8 +76,81 @@ public class RoleManagement {
         }
     }
 
+    private void validateSuccess(Hashtable<String, String> dataRow, Home home) {
+        if(Exists(home.divSaveMsgContent,30)){
+            if(home.divSaveMsgContent.getText().toLowerCase().contains("success")){
+                ReporterX.info("User Role System Message : "+home.divSaveMsgContent.getText());
+                ReporterX.pass("User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Success.!");
+            }else {
+                ReporterX.info("User Role System Message : "+home.divSaveMsgContent.getText());
+                ReporterX.fail("User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Failed.!");
+            }
+        }else {
+            ReporterX.fail("User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Failed.!");
+        }
+    }
 
-    public void addNewRole(Hashtable<String,String> dataRow) throws Exception{
+    private boolean searchUserRole(Hashtable<String,String> dataRow) throws Exception{
+
+        if(Exists(txtRoleNameSearch,30)) {
+
+            // waiting
+            ActionX.Sync();
+            ActionX.WaitChildItemsCountGreaterThan(tblRolesSearchResults,By.tagName("tr"),0,5);
+
+            //filling  search Data
+            SetValue(txtRoleNameSearch, dataRow.get("RoleEngName".toUpperCase()));
+            btnRoleSearch.click();
+
+           //waiting load results
+            ActionX.Sync();
+            ActionX.WaitChildItemsCountLessThan(tblRolesSearchResults,By.tagName("tr"),2,5);
+
+        }else {
+            ReporterX.fail("Search User Role Page not Loaded.!!");
+        }
+
+        if(tblRolesSearchResults.findElements(By.tagName("tr")).size() > 0){
+            ReporterX.pass("User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Success.!");
+            return true;
+        }else {
+            ReporterX.fail("User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Failed.!");
+            return false;
+        }
+
+    }
+
+    private boolean selectActionUserRole(Hashtable<String,String> dataRow,String action) throws Exception{
+        boolean isSelected = false;
+       if( searchUserRole(dataRow)) {
+
+           switch (action) {
+               case "Edit":
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//a[@ng-reflect-ngb-tooltip='Edit']")).click();
+                   isSelected = true;
+                   break;
+               case "Deactivate":
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//a[@ng-reflect-ngb-tooltip='Deactivate']")).click();
+                   isSelected = true;
+                   break;
+               case "Delete":
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//a[@ng-reflect-ngb-tooltip='Delete']")).click();
+                   isSelected = true;
+                   break;
+               case "View":
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//a[@ng-reflect-ngb-tooltip='View']")).click();
+                   isSelected = true;
+                   break;
+               default:
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//a[@ng-reflect-ngb-tooltip='View']")).click();
+           }
+       }
+
+
+        return isSelected;
+    }
+
+    public void addNewUserRole(Hashtable<String,String> dataRow) throws Exception{
 
         Home home = new Home();
 
@@ -84,27 +181,17 @@ public class RoleManagement {
             Hashtable<String,String> lstAuthorities = DataManager.GetExcelDictionary("Select RowID,AuthorityName FROM RoleAuthorities");
             for (String row: lstRows ) {
                 ReporterX.info("Select Authority : "+lstAuthorities.get(row));
-               try {
-                   Global.Test.Browser.
-                           findElements(By.xpath("//app-add-update-role//form//label[contains(text(),'" + lstAuthorities.get(row) + "') and contains(@class,'btn-outline-info')]")).get(0).click();
-               }catch (Exception e){}
+                try {
+                    Global.Test.Browser.
+                            findElements(By.xpath("//app-add-update-role//form//label[contains(text(),'" + lstAuthorities.get(row) + "') and contains(@class,'btn-outline-info')]")).get(0).click();
+                }catch (Exception e){}
 
             }
             ActionX.ScrollToElement(btnSave);
             btnSave.click();
 
             //validate add item
-            if(Exists(home.divSaveMsgContent,30)){
-                if(home.divSaveMsgContent.getText().toLowerCase().contains("success")){
-                    ReporterX.info("Add User Role System Message : "+home.divSaveMsgContent.getText());
-                    ReporterX.pass("User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] was added.!");
-                }else {
-                    ReporterX.info("Add User Role System Message : "+home.divSaveMsgContent.getText());
-                    ReporterX.fail("Failed to Add User Role ["+dataRow.get("RoleEngName".toUpperCase())+"].!");
-                }
-            }else {
-                ReporterX.fail("Failed to Add User Role ["+dataRow.get("RoleEngName".toUpperCase())+"].!");
-            }
+            validateSuccess(dataRow, home);
 
 
         }else {
@@ -112,6 +199,57 @@ public class RoleManagement {
         }
 
     }
+
+    public void editUserRole(Hashtable<String,String> dataRow) throws Exception{
+
+        if(selectActionUserRole(dataRow,"Edit")){
+            addNewUserRole(dataRow);
+        }
+
+
+    }
+
+    public void deleteUserRole(Hashtable<String,String> dataRow) throws Exception{
+        Home home = new Home();
+        if(selectActionUserRole(dataRow,"Delete")){
+            if(Exists(home.btnActionMsgConfirmYes,5)){
+                home.btnActionMsgConfirmYes.click();
+                //validate delete item
+                validateSuccess(dataRow, home);
+            }
+        }
+
+
+
+    }
+
+    public void deactivateUserRole(Hashtable<String,String> dataRow) throws Exception{
+        Home home = new Home();
+        if(selectActionUserRole(dataRow,"Deactivate")){
+            if(Exists(home.btnActionMsgConfirmYes,5)){
+                home.btnActionMsgConfirmYes.click();
+                //validate delete item
+                validateSuccess(dataRow, home);
+            }
+        }
+    }
+
+    public void viewDetailsUserRole(Hashtable<String,String> dataRow) throws Exception{
+
+        if(selectActionUserRole(dataRow,"View")){
+            //wait for element details
+            WebDriverWait wait = new WebDriverWait(Global.Test.Browser, 5);
+            WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//app-user-details//span[contains(text(),'"+dataRow.get("RoleEngName".toUpperCase())+"')]")));
+
+            if(null != element){
+                ReporterX.pass("View User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Success.!");
+            }else {
+                ReporterX.fail("View User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Failed.!");
+            }
+        }
+    }
+
+
 
 
 

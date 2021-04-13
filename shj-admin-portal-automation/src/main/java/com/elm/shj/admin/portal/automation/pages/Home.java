@@ -23,6 +23,7 @@ public class Home {
     @FindBy(xpath = "//app-confirm-dialog//button[contains(@class,'btn-primary')]")
     public WebElement btnActionMsgConfirmYes;
 
+
     public Home() {
         try {
             PageFactory.initElements(Global.Test.Browser, this);
