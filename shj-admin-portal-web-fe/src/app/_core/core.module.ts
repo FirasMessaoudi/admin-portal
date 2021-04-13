@@ -5,8 +5,6 @@ import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import * as layout from '@core/_layout';
-import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
-
 import {UtilityService} from '@core/utilities/utility.service';
 import {EnsureModuleLoadedOnceGuard} from '@core/guards/ensure-module-loaded-once.guard';
 import {RouterModule} from '@angular/router';
@@ -38,12 +36,11 @@ import {TranslateModule} from "@ngx-translate/core";
     SvgIconModule,
     TranslateModule,
     ToggleDropdownModule,
-    NgbCollapseModule,
     SharedModule,
     DccCommonsNgServicesModule.forRoot(PUBLIC_URL_PATTERNS, LOGIN_URL, 'assets/i18n/'),
     TranslateModule
   ],
-  exports: [HttpClientModule, ReactiveFormsModule, SvgIconModule, ToggleDropdownModule, NgbCollapseModule],
+  exports: [HttpClientModule, ReactiveFormsModule, SvgIconModule, ToggleDropdownModule],
   providers: [
     UtilityService,
     UserService,

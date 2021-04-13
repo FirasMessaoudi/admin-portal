@@ -23,31 +23,41 @@ export class SideNavComponent implements OnInit {
         title: 'home.title',
         roles: [EAuthority.ADMIN_DASHBOARD],
         display: false,
+        icon: 'portrait',
+        iconFa:'fa-w-12',
         routerLink: '/',
-      },
-      {
-        title: 'user-management.title',
-        roles: [EAuthority.USER_MANAGEMENT],
-        display: false,
-        routerLink: '/users/list',
-      },
-      {
-        title: 'role-management.title',
-        roles: [EAuthority.ROLE_MANAGEMENT],
-        display: false,
-        routerLink: '/roles/list',
       },
       {
         title: 'card-management.title',
         roles: [EAuthority.USER_MANAGEMENT],
         display: false,
+        icon: 'address-card',
+        iconFa:'fa-w-18',
         routerLink: '/cards/list',
       },
       {
         title: 'printing-management.title',
         roles: [EAuthority.USER_MANAGEMENT],
         display: false,
+        icon: 'print',
+        iconFa:'fa-w-16',
         routerLink: '/print-requests/list',
+      },
+      {
+        title: 'role-management.title',
+        roles: [EAuthority.ROLE_MANAGEMENT],
+        display: false,
+        icon: 'file-alt',
+        iconFa:'fa-w-12',
+        routerLink: '/roles/list',
+      },
+      {
+        title: 'user-management.title',
+        roles: [EAuthority.USER_MANAGEMENT],
+        display: false,
+        icon: 'users',
+        iconFa:'fa-w-20',
+        routerLink: '/users/list',
       }
     ];
     // filtering access according to connected user authorities

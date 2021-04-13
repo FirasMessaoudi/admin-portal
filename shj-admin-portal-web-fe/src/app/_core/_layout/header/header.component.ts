@@ -13,7 +13,7 @@ export class HeaderComponent implements OnInit {
 
   currentUser: any;
   public isMenuCollapsed = false;
-
+  
   constructor(
     public router: Router,
     private i18nService: I18nService,

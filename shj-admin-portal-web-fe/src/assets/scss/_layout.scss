@@ -65,14 +65,22 @@
     padding-top: .75rem;
     padding-bottom: .75rem;
     border-bottom: 1px #E5E5E5 solid;
+    color: #707070;
 
+    .navIcon{
+      width: 45px;
+      text-align: center;
+      display: inline-block;
+    }
         &:hover, &.active{
             background-color: #FFF;
+            color: $dcc-primary;
         }
         &.active{
             border-right: 4px $dcc-primary solid;
-            color: $dcc-primary;
-            
+            .navIcon{
+              width: calc(45px - 4px);
+            } 
         }
     }
 }
@@ -109,3 +117,4 @@ span.notif {
     background-color: #2CD2BB;
   }
 }
+

@@ -17,7 +17,6 @@ export class CardListComponent implements OnInit {
   page: Page;
   canAddCard: boolean;
   searchForm: FormGroup;
-
   constructor(private i18nService: I18nService,
               private formBuilder: FormBuilder,
               private authenticationService: AuthenticationService) { }

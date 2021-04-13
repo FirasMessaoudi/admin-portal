@@ -10,7 +10,9 @@
     <ul class="sideNav mt-4">
       <li *ngFor="let link of links">
         <a class="item" *ngIf="link.display" routerLink="{{ link.routerLink }}" [class.active]="router.routerState.snapshot.url === link.routerLink">
-          <svg-icon styleClass="mx-3 fa-w-18" icon="address-card"></svg-icon>
+          <span class="navIcon">
+            <svg-icon styleClass="mx-3 {{ link.iconFa }}" icon="{{ link.icon }}"></svg-icon>
+          </span>
           {{ link.title | translate }}
         </a>
       </li>

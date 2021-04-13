@@ -212,3 +212,35 @@ ngb-datepicker-navigation-select>.custom-select{
     border: 0;
     box-shadow: none !important;
 }
+
+/* .px-4 rounded-pill */
+.tblView{
+    padding: .3rem 1.5rem;
+    display: block;
+    border-radius: 50rem;
+    visibility: hidden;
+}
+
+tr:hover .tblView{
+    visibility: visible;
+}
+
+.status{
+    display: inline-block;
+    min-width: 8px;
+    height: 8px;
+    border-radius: 50%;
+
+    &.done{
+        background-color: #2AC135;
+    }
+
+    &.ready{
+        background-color: #3793D6;
+    }
+
+    &.Suspended{
+        background-color: #D14646;
+    }
+    
+}

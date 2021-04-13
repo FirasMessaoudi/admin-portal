@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CdkTableModule } from '@angular/cdk/table';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbModalModule, NgbCarouselModule, NgbPaginationModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalModule, NgbCarouselModule, NgbPaginationModule, NgbNavModule, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     imports: [
@@ -12,7 +12,8 @@ import { NgbModalModule, NgbCarouselModule, NgbPaginationModule, NgbNavModule } 
         CdkTableModule,
         FormsModule,
         ReactiveFormsModule,
-        NgbPaginationModule
+        NgbPaginationModule,
+        NgbCollapseModule
     ],
     exports: [
         NgbCarouselModule,
@@ -21,7 +22,8 @@ import { NgbModalModule, NgbCarouselModule, NgbPaginationModule, NgbNavModule } 
         CdkTableModule,
         FormsModule,
         ReactiveFormsModule,
-        NgbPaginationModule
+        NgbPaginationModule,
+        NgbCollapseModule
     ],
 })
 export class NgBootstrapModule { }
