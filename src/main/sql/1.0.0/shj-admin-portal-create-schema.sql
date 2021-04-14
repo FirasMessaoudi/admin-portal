@@ -282,7 +282,6 @@ create table shj_portal.sha_decision_rule
 GO
 
 
------------------------------------------GENERATED MYSQL SCRIPT---------------------------------------------
 if not exists (select * from sys.tables where name = 'sha_country_lk')
 create table shj_portal.sha_country_lk
 (
@@ -324,8 +323,7 @@ create table shj_portal.sha_applicant
     request_id int,
     status INT NOT NULL,
     creation_date smalldatetime not null default current_timestamp,
-    update_time smalldatetime NULL,
-    CONSTRAINT fk_applicant_country_lk FOREIGN KEY (nationality_code) REFERENCES shj_portal.sha_country_lk (code)
+    update_time smalldatetime NULL
 ); GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_relative')
@@ -335,8 +333,7 @@ create table shj_portal.sha_applicant_relative
     relationship_code VARCHAR(20) NOT NULL,
     applicant_id int NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_applicant_relative_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id),
-    CONSTRAINT fk_applicant_relative_relationship_lk FOREIGN KEY (relationship_code) REFERENCES shj_portal.sha_relative_relationship_lk (code)
+    CONSTRAINT fk_applicant_relative_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id)
 ); GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_contact')
@@ -397,8 +394,7 @@ create table shj_portal.sha_applicant_ritual
     insurance_number VARCHAR(20) NOT NULL,
     border_number VARCHAR(20) NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_applicant_ritual_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id),
-    CONSTRAINT fk_applicant_ritual_ritual_type_lk FOREIGN KEY (type_code) REFERENCES shj_portal.sha_ritual_type_lk (code)
+    CONSTRAINT fk_applicant_ritual_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id)
 ); GO
 
 if not exists (select * from sys.tables where name = 'sha_card_batch')
@@ -432,8 +428,7 @@ create table shj_portal.sha_applicant_card
     status_code VARCHAR(20) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_card_applicant_ritual FOREIGN KEY (applicant_ritual_id) REFERENCES shj_portal.sha_applicant_ritual (id),
-    CONSTRAINT fk_applicant_card_batch FOREIGN KEY (batch_id) REFERENCES shj_portal.sha_card_batch (id),
-    CONSTRAINT fk_applicant_card_status FOREIGN KEY (status_code) REFERENCES shj_portal.sha_card_status_lk (code)
+    CONSTRAINT fk_applicant_card_batch FOREIGN KEY (batch_id) REFERENCES shj_portal.sha_card_batch (id)
 ); GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_health')
@@ -464,8 +459,7 @@ create table shj_portal.sha_applicant_health_special_needs
     applicant_health_id int NOT NULL,
     special_need_type_code VARCHAR(20) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_applicant_health_special_needs_health FOREIGN KEY (applicant_health_id) REFERENCES shj_portal.sha_applicant_health (id),
-    CONSTRAINT fk_applicant_health_special_needs_needs_type_lk FOREIGN KEY (special_need_type_code) REFERENCES shj_portal.sha_health_special_needs_type_lk (code)
+    CONSTRAINT fk_applicant_health_special_needs_health FOREIGN KEY (applicant_health_id) REFERENCES shj_portal.sha_applicant_health (id)
 ); GO
 
 if not exists (select * from sys.tables where name = 'sha_health_immunization_lk')
@@ -488,8 +482,7 @@ create table shj_portal.sha_applicant_health_immunization
     immunization_date smalldatetime NOT NULL,
     mandatory BIT NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_applicant_health_immunization_health FOREIGN KEY (applicant_health_id) REFERENCES shj_portal.sha_applicant_health (id),
-    CONSTRAINT fk_applicant_health_immunization_immunization_lk FOREIGN KEY (immunization_code) REFERENCES shj_portal.sha_health_immunization_lk (code)
+    CONSTRAINT fk_applicant_health_immunization_health FOREIGN KEY (applicant_health_id) REFERENCES shj_portal.sha_applicant_health (id)
 ); GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_health_disease')
