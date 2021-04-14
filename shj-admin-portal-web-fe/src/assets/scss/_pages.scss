@@ -244,3 +244,31 @@ tr:hover .tblView{
     }
     
 }
+
+.cardBox{
+    background-color: #F5F8F4;
+    border: 1px #C0D1B0 solid;
+    @include mb(3);
+    @include py(3);
+}
+.avatar{
+    border-radius: 50rem;
+    position: absolute;
+    padding: 5px;
+    background-color: #FFF;
+    border: 2px #D3E2C5 solid;
+
+    img{
+        width: 154px;
+        border-radius: 50rem;
+    }
+}
+
+
+.nav-tabs .nav-link{
+    border-width: 2px;
+    &:hover, &.active{
+        color: #3B7937;
+        border-color: transparent transparent #3B7937;
+    }
+}

@@ -5,7 +5,7 @@
   </section>
 
   <aw-wizard class="steps-custom" [navBarLayout]="'large-empty'">
-    <aw-wizard-step>
+    <aw-wizard-step [navigationSymbol]="{ symbol: '1' }">
       <ng-template awWizardStepTitle>
         <span>{{'printing-management.prepare_request' | translate}}</span>
       </ng-template>
@@ -17,7 +17,7 @@
         <button type="button" awNextStep (click)="saveStepOne()" [disabled]="false" class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'general.btn_next' | translate}}</button>
       </div>
     </aw-wizard-step>
-    <aw-wizard-step>
+    <aw-wizard-step [navigationSymbol]="{ symbol: '2' }">
       <ng-template awWizardStepTitle>
         <span>{{'printing-management.create_batch' | translate}}</span>
       </ng-template>
@@ -30,7 +30,7 @@
         <button type="button" awNextStep (click)="saveStepTwo()" [disabled]="false" class="btn btn-dcc-primary rounded-22 px-5 mr-3" translate>general.btn_next</button>
       </div>
     </aw-wizard-step>
-    <aw-wizard-step>
+    <aw-wizard-step [navigationSymbol]="{ symbol: '3' }">
       <ng-template awWizardStepTitle>
         <span>{{'printing-management.confirm_request' | translate}}</span>
       </ng-template>
@@ -43,7 +43,7 @@
         <button type="button" [disabled]="false" (click)="confirm()" class="btn btn-dcc-primary rounded-22 px-5 mr-3" awNextStep>{{'printing-management.btn_confirm_request' | translate}}</button>
       </div>
     </aw-wizard-step>
-    <aw-wizard-step>
+    <!-- <aw-wizard-step>
       <ng-template awWizardStepTitle>
         <span>{{'printing-management.print_request_summary' | translate}}</span>
       </ng-template>
@@ -54,6 +54,6 @@
         <button type="button" routerLink="/print-requests/details" class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'printing-management.btn_view_print_request_details' | translate}}</button>
         <button type="button" routerLink="/print-requests/list" class="btn btn-outline-secondary rounded-22 px-5 mr-3">{{'printing-management.btn_back_to_printing_management' | translate}}</button>
       </div>
-    </aw-wizard-step>
+    </aw-wizard-step> -->
   </aw-wizard>
 </div>

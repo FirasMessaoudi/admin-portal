@@ -1,16 +1,41 @@
 <div class="content__wrapper">
   <div class="title__Page">
-    <h3 class="sectionTitle">{{'card-management.card_details' | translate }}
-      <b class="text-dcc-primary">{{card?.applicantRitual?.applicant?.fullNameAr + " " + card?.applicantRitual?.applicant?.fullNameEn}}</b>
-      <b class="text-dcc-primary"> {{'card-management.applicant_id' | translate }} {{card?.applicantRitual?.applicant?.idNumber}}</b>
-      <b class="text-dcc-primary"> {{'card-management.card_number' | translate }} {{card?.referenceNumber}} {{card?.statusCode?.label}}</b>
+    <h3 class="sectionTitle">{{'card-management.card_details' | translate }}</h3>
+  </div>
+  <!-- <div class="title__Page">
+    <h3 class="sectionTitle">
+      <b class="text-dcc-primary"></b>
+      <b class="text-dcc-primary"> </b>
+      <b class="text-dcc-primary"> </b>
     </h3>
     <div class="d-flex justify-content-between align-items-center">
       <div class="text-center px-4">
-        <img class="mr-4 rounded-circle mx-auto d-block" [src]="card?.applicantRitual?.applicant?.photo ? 'data:image/jpeg;base64,'+card?.applicantRitual?.applicant?.photo : url" />
+        
       </div>
     </div>
+  </div> -->
+
+
+  <div class="row cardBox">
+    <div class="col">
+      <div>{{card?.applicantRitual?.applicant?.fullNameAr}}</div>
+      <div class="text-dark">{{card?.applicantRitual?.applicant?.fullNameEn}}</div>
+    </div>
+    <div class="col">
+      <div>{{'card-management.applicant_id' | translate }}</div>
+      <div class="text-dark">{{card?.applicantRitual?.applicant?.idNumber}}</div>
+    </div>
+    <div class="col">
+      <div>{{'card-management.card_number' | translate }}</div>
+      <div class="text-dark">{{card?.referenceNumber}} {{card?.statusCode?.label}}</div>
+    </div>
+    <div class="col">
+      <span class="avatar">
+        <img [src]="card?.applicantRitual?.applicant?.photo ? 'data:image/jpeg;base64,'+card?.applicantRitual?.applicant?.photo : url" />
+      </span>
+    </div>
   </div>
+
 
   <ngb-tabset [destroyOnHide]="false">
     <ngb-tab title="{{ 'card-management.main_details' | translate }}">
