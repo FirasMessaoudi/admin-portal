@@ -43,7 +43,7 @@
         <button type="button" [disabled]="false" (click)="confirm()" class="btn btn-dcc-primary rounded-22 px-5 mr-3" awNextStep>{{'printing-management.btn_confirm_request' | translate}}</button>
       </div>
     </aw-wizard-step>
-    <!-- <aw-wizard-step>
+    <aw-wizard-step>
       <ng-template awWizardStepTitle>
         <span>{{'printing-management.print_request_summary' | translate}}</span>
       </ng-template>
@@ -51,9 +51,9 @@
         <app-step-four></app-step-four>
       </div>
       <div class="bg-lighter mx-30 p-4 text-center">
-        <button type="button" routerLink="/print-requests/details" class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'printing-management.btn_view_print_request_details' | translate}}</button>
-        <button type="button" routerLink="/print-requests/list" class="btn btn-outline-secondary rounded-22 px-5 mr-3">{{'printing-management.btn_back_to_printing_management' | translate}}</button>
+        <button type="button" routerLink="/print-requests/details" class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3">{{'printing-management.btn_view_print_request_details' | translate}}</button>
+        <button type="button" routerLink="/print-requests/list" class="btn btn-secondary rounded-22 px-5 mr-3">{{'printing-management.btn_back_to_printing_management' | translate}}</button>
       </div>
-    </aw-wizard-step> -->
+    </aw-wizard-step>
   </aw-wizard>
 </div>

@@ -59,11 +59,6 @@ Steps (Wizard)
   }
   &.done .step-indicator{
     background-color: $wz-color-current;
-
-    &::after {
-      animation: done .7s ease-in-out;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{rgba( #fff, .999 )}' viewBox='0 0 846.66 846.66'%3E%3Cpath d='M106.54 367.44l197.91 169.09 429.01-417.71 98.59 101.36-521.39 507.67L14.6 474.89z'/%3E%3C/svg%3E");
-    }
   }
 
   &:not(:last-child):after{
