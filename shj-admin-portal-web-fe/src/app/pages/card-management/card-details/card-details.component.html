@@ -1,33 +1,25 @@
+
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="sectionTitle">{{'card-management.card_details' | translate }}</h3>
+    <button type="submit" class="btn btn-dcc-primary px-5 mr-3">
+      العمليات
+      <svg-icon styleClass="h4 ml-3" icon="bars"></svg-icon>
+    </button>
   </div>
-  <!-- <div class="title__Page">
-    <h3 class="sectionTitle">
-      <b class="text-dcc-primary"></b>
-      <b class="text-dcc-primary"> </b>
-      <b class="text-dcc-primary"> </b>
-    </h3>
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="text-center px-4">
-        
-      </div>
-    </div>
-  </div> -->
-
 
   <div class="row cardBox">
     <div class="col">
-      <div>{{card?.applicantRitual?.applicant?.fullNameAr}}</div>
-      <div class="text-dark">{{card?.applicantRitual?.applicant?.fullNameEn}}</div>
+      <div class="col-form-label">{{card?.applicantRitual?.applicant?.fullNameAr}}</div>
+      <div class="form-control-plaintext">{{card?.applicantRitual?.applicant?.fullNameEn}}</div>
     </div>
     <div class="col">
-      <div>{{'card-management.applicant_id' | translate }}</div>
-      <div class="text-dark">{{card?.applicantRitual?.applicant?.idNumber}}</div>
+      <div class="col-form-label">{{'card-management.applicant_id' | translate }}</div>
+      <div class="form-control-plaintext">{{card?.applicantRitual?.applicant?.idNumber}}</div>
     </div>
     <div class="col">
-      <div>{{'card-management.card_number' | translate }}</div>
-      <div class="text-dark">{{card?.referenceNumber}} {{card?.statusCode?.label}}</div>
+      <div class="col-form-label">{{'card-management.card_number' | translate }}</div>
+      <div class="form-control-plaintext">{{card?.referenceNumber}} {{card?.statusCode?.label}}</div>
     </div>
     <div class="col">
       <span class="avatar">
