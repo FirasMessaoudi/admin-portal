@@ -588,6 +588,5 @@ INSERT INTO shj_portal.sha_decision_rule (dmn, label_ar, label_en, creation_date
             </dmndi:DMNDiagram>
             </dmndi:DMNDI>
             </definitions>',
-            N'بيانات المتقدم', N'Applicant Data', N'2021-04-13 13:38:43', null);
-GO
+            N'بيانات المتقدم', N'Applicant Data', N'2021-04-13 13:38:43', null); GO
 

@@ -494,5 +494,4 @@ create table shj_portal.sha_applicant_health_disease
     disease_name_en VARCHAR(45) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_health_disease_health FOREIGN KEY (applicant_health_id) REFERENCES shj_portal.sha_applicant_health (id)
-);
-GO
+); GO

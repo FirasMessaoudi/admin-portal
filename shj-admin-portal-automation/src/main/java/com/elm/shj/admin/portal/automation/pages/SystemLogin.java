@@ -38,7 +38,7 @@ public class SystemLogin {
     @FindBy(xpath = "//div[@class='alert alert-danger']")
     WebElement divLoginErrMsg;
 
-    @FindBy(xpath = "//div[@aria-labelledby='userMenuLink']//a[contains(text(),'Logout')]")
+    @FindBy(xpath = "//app-header//ul//li[4]")
     WebElement btnLogOut;
 
     Home homePage = new Home();
@@ -113,16 +113,14 @@ public class SystemLogin {
     public boolean LogOut() {
         boolean retRes = false;
         try {
-            if (Exists(lnkUserMenu, 2)) {
-                if(Exists(homePage.divSaveMsgContent))
-                        ActionX.WaitUntilHidden(homePage.divSaveMsgContent,7);
-                ActionX.ScrollToElement(lnkUserMenu);
-                lnkUserMenu.click();
-                if (Exists(btnLogOut, 2)) {
-                    Thread.sleep(2000);
-                    btnLogOut.click();
-                }
+
+            if (Exists(btnLogOut, 2)) {
+                if (Exists(homePage.divSaveMsgContent,1))
+                    ActionX.WaitUntilHidden(homePage.divSaveMsgContent, 10);
+                ActionX.ScrollToElement(btnLogOut);
+                btnLogOut.click();
             }
+
             if (Exists(txtUserName, 60)) {
                 retRes = true;
             }
