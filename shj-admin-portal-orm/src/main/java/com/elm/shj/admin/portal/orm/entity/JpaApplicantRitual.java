@@ -63,7 +63,7 @@ public class JpaApplicantRitual implements Serializable {
     @Column(name = "insurance_number")
     private String insuranceNumber;
 
-    @Column(name = "visa_number")
+    @Column(name = "border_number")
     private String borderNumber;
 
     @Column(name = "creation_date", nullable = false)
