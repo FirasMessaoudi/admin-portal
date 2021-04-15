@@ -10,7 +10,7 @@ import {PackageCatering} from "@model/package-catering.model";
   styleUrls: ['./card-details.component.scss']
 })
 export class CardDetailsComponent implements OnInit {
-  
+
   card: Card;
   url: any = 'assets/images/default-avatar.png';
 
