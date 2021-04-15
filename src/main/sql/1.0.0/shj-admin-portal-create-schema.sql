@@ -323,7 +323,7 @@ create table shj_portal.sha_applicant
     request_id int,
     status INT NOT NULL,
     creation_date smalldatetime not null default current_timestamp,
-    update_time smalldatetime NULL
+    update_date smalldatetime NULL
 ); GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_relative')
