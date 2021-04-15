@@ -57,7 +57,7 @@ export class SideNavComponent implements OnInit {
         display: false,
         icon: 'users',
         iconFa:'fa-w-20',
-        routerLink: '/print-requests/list',
+        routerLink: '/users/list',
       },
       {
         title: 'rule-management.title',

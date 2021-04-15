@@ -65,6 +65,11 @@
                 <artifactId>shedlock-provider-jdbc-template</artifactId>
                 <version>${shedlock.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.ozlerhakan</groupId>
+                <artifactId>poiji</artifactId>
+                <version>${poiji.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -83,6 +88,7 @@
         <!-- versions -->
         <zxing.version>3.4.0</zxing.version>
         <shedlock.version>4.7.1</shedlock.version>
+        <poiji.version>3.0.3</poiji.version>
         <sonar.coverage.jacoco.xmlReportPaths>
             ${basedir}/shj-admin-portal-orm/target/jacoco-ut/jacoco.xml,${basedir}/shj-admin-portal-services/target/jacoco-ut/jacoco.xml,${basedir}/shj-admin-portal-web/target/jacoco-ut/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
