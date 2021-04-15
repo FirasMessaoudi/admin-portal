@@ -464,5 +464,17 @@
     "rules_list": "قائمة قواعد القرار",
     "rule_details": "قاعدة القرار ",
     "rule_name": "اسم قاعدة القرار"
+  },
+  "data-upload-management": {
+    "title": "إدارة رفع البيانات",
+    "requests_list": "قائمة طلبات رفع البيانات",
+    "request_details": " طلب رفع بيانات ",
+    "new_request": "رفع بيانات جديدة",
+    "transaction_number": "رقم الحركة",
+    "items_count": "عدد العناصر",
+    "channel": "القناة",
+    "segment": "الشريحة",
+    "request_status": "حالة الطلب",
+    "request_date": "تاريخ الطلب"
   }
 }

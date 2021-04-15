@@ -1,0 +1,26 @@
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+
+import {DataUploadRequestAddUpdateRoutingModule} from './data-upload-request-add-update-routing.module';
+import {StepOneComponent} from './step-one/step-one.component';
+import {StepTwoComponent} from './step-two/step-two.component';
+import {StepThreeComponent} from './step-three/step-three.component';
+import {SharedModule} from "@shared/shared.module";
+import {StepFourComponent} from './step-four/step-four.component';
+
+
+@NgModule({
+  declarations: [StepOneComponent, StepTwoComponent, StepThreeComponent, StepFourComponent],
+    exports: [
+        StepOneComponent,
+        StepTwoComponent,
+        StepThreeComponent,
+        StepFourComponent
+    ],
+  imports: [
+    CommonModule,
+    DataUploadRequestAddUpdateRoutingModule,
+    SharedModule
+  ]
+})
+export class DataUploadRequestAddUpdateModule { }

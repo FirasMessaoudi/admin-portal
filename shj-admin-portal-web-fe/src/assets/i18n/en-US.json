@@ -482,5 +482,17 @@
     "rules_list": "Decision Rules List",
     "rule_details": "Decision Rule ",
     "rule_name": "ُDecision Rule Name"
+  },
+  "data-upload-management": {
+    "title": "Data Upload Management",
+    "requests_list": "Data Upload Requests List",
+    "request_details": " Data Upload Request ",
+    "new_request": "Upload New Data",
+    "transaction_number": "Tx Number",
+    "items_count": "Items Count",
+    "channel": "Channel",
+    "segment": "Segment",
+    "request_status": "Request Status",
+    "request_date": "Request Date"
   }
 }

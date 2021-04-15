@@ -13,6 +13,7 @@ import {PUBLIC_ROUTES} from "@core/routes/public-routes";
 import {CARD_MANAGEMENT_ROUTES} from "@core/routes/card-management-routes";
 import {PRINTING_MANAGEMENT_ROUTES} from "@core/routes/printing-management-routes";
 import {RULE_MANAGEMENT_ROUTES} from "@core/routes/rule-management-routes";
+import {DATA_UPLOAD_MANAGEMENT_ROUTES} from "@core/routes/data-upload-management-routes";
 
 const routes: Routes = [
 
@@ -55,6 +56,12 @@ const routes: Routes = [
     component: AppLayoutComponent,
     canActivate: [AuthenticationGuard],
     children: PRINTING_MANAGEMENT_ROUTES
+  },
+  {
+    path: '',
+    component: AppLayoutComponent,
+    canActivate: [AuthenticationGuard],
+    children: DATA_UPLOAD_MANAGEMENT_ROUTES
   },
   {
     path: '',
