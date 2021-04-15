@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Dto class for the applicant domain.
@@ -35,6 +36,10 @@ public class ApplicantDto implements Serializable {
     private long maritalStatus;
     private String photo;
     private long requestId;
+    private List<ApplicantDigitalIdDto> digitalIds;
+    private List<ApplicantRelativeDto> relatives;
+    private List<ApplicantRitualDto> rituals;
+    private List<ApplicantContactDto> contacts;
     private long status;
     private Date creationDate;
     private Date updateDate;
