@@ -20,8 +20,8 @@ export class DataUploadRequestDetailsComponent implements OnInit {
     return this.i18nService.language;
   }
 
-  get canSeePrintRequestDetails(): boolean {
-    //TODO: change it to PRINTING_MANAGEMENT
+  get canSeeDataUploadRequestDetails(): boolean {
+    //TODO: change it to DATA_UPLOAD_MANAGEMENT
     return this.authenticationService.hasAuthority(EAuthority.USER_MANAGEMENT);
   }
 

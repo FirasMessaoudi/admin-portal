@@ -1,36 +1,36 @@
 <div class="content__wrapper">
   <div class="title__Page">
-    <h3 class="sectionTitle">{{'printing-management.request_details' | translate }}</h3>
+    <h3 class="sectionTitle">{{'data-upload-management.request_details' | translate }}</h3>
   </div>
-  <div class="content__section" *ngIf="!canSeePrintRequestDetails">
+  <div class="content__section" *ngIf="!canSeeDataUploadRequestDetails">
     {{'header.welcome' | translate}} <span class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
   </div>
 
-  <div class="content__section" *ngIf="canSeePrintRequestDetails">
+  <div class="content__section" *ngIf="canSeeDataUploadRequestDetails">
     <div class="cardBox row row-cols-1 row-cols-md-2 row-cols-lg-6">
       <div class="form-group col mb-lg-0">
-        <label class="col-form-label">{{'printing-management.request_number' | translate}}</label>
+        <label class="col-form-label">{{'data-upload-management.transaction_number' | translate}}</label>
         <span class="form-control-plaintext ">{{'587220'}}</span>
       </div>
       <div class="form-group col mb-lg-0">
-        <label class="col-form-label">{{'printing-management.no_batches' | translate}}</label>
-        <span class="form-control-plaintext ">{{'5'}}</span>
+        <label class="col-form-label">{{'data-upload-management.items_count' | translate}}</label>
+        <span class="form-control-plaintext ">{{'500'}}</span>
       </div>
       <div class="form-group col mb-lg-0">
-        <label class="col-form-label">{{'printing-management.no_cards' | translate}}</label>
-        <span class="form-control-plaintext ">{{'2350'}}</span>
+        <label class="col-form-label">{{'data-upload-management.segment' | translate}}</label>
+        <span class="form-control-plaintext ">{{'Applicant Data'}}</span>
       </div>
       <div class="form-group col mb-lg-0">
-        <label class="col-form-label">{{'printing-management.creation_date' | translate}}</label>
-        <span class="form-control-plaintext ">{{'23-03-2021'}}</span>
+        <label class="col-form-label">{{'data-upload-management.channel' | translate}}</label>
+        <span class="form-control-plaintext ">{{'Web Service'}}</span>
       </div>
       <div class="form-group col mb-lg-0">
-        <label class="col-form-label">{{'printing-management.confirm_printing_date' | translate}}</label>
+        <label class="col-form-label">{{'data-upload-management.request_date' | translate}}</label>
         <span class="form-control-plaintext ">{{'25-03-2021'}}</span>
       </div>
       <div class="form-group col mb-lg-0">
-        <label class="col-form-label">{{'printing-management.request_status' | translate}}</label>
-        <span class="form-control-plaintext "><span class="status mr-1 done"></span> {{'نشط'}}</span>
+        <label class="col-form-label">{{'data-upload-management.request_status' | translate}}</label>
+        <span class="form-control-plaintext "><span class="status mr-1 done"></span> {{'تمت المعالجة'}}</span>
       </div>
     </div>
 
@@ -51,10 +51,6 @@
               <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
             </td>
           </tr>
-
-          <th style="font-size: larger">
-            {{'printing-management.batch_no' | translate}} {{'1'}} {{'printing-management.contains' | translate}} {{'520'}} {{'printing-management.cards' | translate}}
-          </th>
           <tr>
             <td><a [routerLink]="['/cards/details/1']" class="text-dcc-primary font-weight-bold">{{'زبير عبد المجيد خان'}} {{'Zubair Abd Almajid Khan'}}</a></td>
             <td class="ltr">{{'2367430624'}}</td>
@@ -67,10 +63,6 @@
             <td class="ltr">{{'541582'}}</td>
             <td class="ltr">{{'5O8Y84'}}</td>
           </tr>
-
-          <th style="font-size: larger">
-            {{'printing-management.batch_no' | translate}} {{'2'}} {{'printing-management.contains' | translate}} {{'2125'}} {{'printing-management.cards' | translate}}
-          </th>
           <tr>
             <td><a [routerLink]="['/cards/details/1']" class="text-dcc-primary font-weight-bold">{{'محمد سليم أحمد'}} {{'Moh Salim Ahmad'}}</a></td>
             <td class="ltr">{{'2367430624'}}</td>
