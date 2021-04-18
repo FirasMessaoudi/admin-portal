@@ -32,14 +32,6 @@ export class UserService {
       }));
   }
 
-  allUsers(): Observable<any> {
-    //allUsers
-    return this.http.get<any>('/core/api/users/allUsers')
-      .pipe(map(data => {
-        return data;
-      }));
-  }
-
   /**
    * Finds user by his ID from the server.
    *

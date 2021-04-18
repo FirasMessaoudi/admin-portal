@@ -13,7 +13,6 @@ export class RoleService {
   constructor(private http: HttpClient) {
   }
 
-  //TODO: check if not used, delete it.
   listAll(): Observable<any> {
     return this.http.get("/core/api/roles/list/all");
   }
