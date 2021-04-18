@@ -23,6 +23,12 @@ public class Navigation {
 	public static final String API_ROLES = "/api/roles";
 	// Rules
 	public static final String API_RULES = "/api/rules";
+	// Applicants
+	public static final String API_APPLICANTS = "/api/applicants";
+	// Cards
+	public static final String API_CARDS = "/api/cards";
+	// Printing Requests
+	public static final String API_PRINTING_REQUESTS = "/api/print/requests";
 	// Dashboard
 	public static final String API_DASHBOARD = "/api/dashboard";
 	// Error
