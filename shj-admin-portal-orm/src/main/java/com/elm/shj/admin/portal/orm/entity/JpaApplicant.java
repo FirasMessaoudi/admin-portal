@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the sha_applicant database table.
@@ -66,6 +67,18 @@ public class JpaApplicant implements Serializable {
 
     @Column(name = "request_id")
     private long requestId;
+
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
+    private List<JpaApplicantDigitalId> digitalIds;
+
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
+    private List<JpaApplicantRelative> relatives;
+
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
+    private List<JpaApplicantRitual> rituals;
+
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
+    private List<JpaApplicantContact> contacts;
 
     private long status;
 

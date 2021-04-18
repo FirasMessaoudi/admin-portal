@@ -1,36 +1,36 @@
 <div class="content__wrapper">
   <div class="title__Page">
-    <h2 class="sectionTitle">{{'printing-management.request_details' | translate }}</h2>
+    <h3 class="sectionTitle">{{'printing-management.request_details' | translate }}</h3>
   </div>
   <div class="content__section" *ngIf="!canSeePrintRequestDetails">
     {{'header.welcome' | translate}} <span class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
   </div>
 
   <div class="content__section" *ngIf="canSeePrintRequestDetails">
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-6">
-      <div class="form-group col">
+    <div class="cardBox row row-cols-1 row-cols-md-2 row-cols-lg-6">
+      <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'printing-management.request_number' | translate}}</label>
         <span class="form-control-plaintext ">{{'587220'}}</span>
       </div>
-      <div class="form-group col">
+      <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'printing-management.no_batches' | translate}}</label>
         <span class="form-control-plaintext ">{{'5'}}</span>
       </div>
-      <div class="form-group col">
+      <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'printing-management.no_cards' | translate}}</label>
         <span class="form-control-plaintext ">{{'2350'}}</span>
       </div>
-      <div class="form-group col">
+      <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'printing-management.creation_date' | translate}}</label>
         <span class="form-control-plaintext ">{{'23-03-2021'}}</span>
       </div>
-      <div class="form-group col">
+      <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'printing-management.confirm_printing_date' | translate}}</label>
         <span class="form-control-plaintext ">{{'25-03-2021'}}</span>
       </div>
-      <div class="form-group col">
+      <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'printing-management.request_status' | translate}}</label>
-        <span class="form-control-plaintext ">{{'نشط'}}</span>
+        <span class="form-control-plaintext "><span class="status mr-1 done"></span> {{'نشط'}}</span>
       </div>
     </div>
 

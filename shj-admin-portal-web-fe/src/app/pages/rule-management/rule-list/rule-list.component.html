@@ -1,6 +1,6 @@
 <div class="content__wrapper">
   <div class="title__Page">
-    <h2 class="sectionTitle">{{'rule-management.rules_list' | translate}}</h2>
+    <h3 class="sectionTitle">{{'rule-management.rules_list' | translate}}</h3>
   </div>
   <div class="content__section">
 
@@ -10,8 +10,8 @@
         <tr>
           <th scope="col" class="text-center">#</th>
           <th scope="col">{{'rule-management.rule_name' | translate}}</th>
-          <th scope="col" class="text-center">{{'role-management.creation_date' | translate}}</th>
-          <th scope="col" class="text-center">{{'role-management.update_date' | translate}}</th>
+          <th scope="col">{{'role-management.creation_date' | translate}}</th>
+          <th scope="col">{{'role-management.update_date' | translate}}</th>
           <th scope="col" class="text-center">{{'general.actions' | translate}}</th>
         </tr>
         </thead>
@@ -25,8 +25,8 @@
         <tr *ngFor="let rule of page?.content">
           <td class="text-center" scope="row"><a [routerLink]="['/rules/edit', rule?.id]" class="text-dcc-primary font-weight-bold">{{rule.id}}</a></td>
           <td>{{ currentLanguage.startsWith("en") ? rule.labelEn : rule.labelAr }}</td>
-          <td width="15%">{{ rule?.creationDate | dateFormat }}</td>
-          <td width="15%">{{ rule?.updateDate | dateFormat }}</td>
+          <td width="15%" class="ltr">{{ rule?.creationDate | dateFormat }}</td>
+          <td width="15%" class="ltr">{{ rule?.updateDate | dateFormat }}</td>
           <td class="text-center" width="20%" style="text-align:center">
             <a [routerLink]="['/rules/edit', rule?.id]" class="action mx-2" ngbTooltip="{{'general.tooltip_view' | translate}}">
               <svg-icon styleClass="text-dcc-primary h3" icon="eye"></svg-icon>

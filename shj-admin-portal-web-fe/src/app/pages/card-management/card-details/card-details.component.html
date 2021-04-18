@@ -1,33 +1,31 @@
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="sectionTitle">{{'card-management.card_details' | translate }}</h3>
-  </div>
-  <!-- <div class="title__Page">
-    <h3 class="sectionTitle">
-      <b class="text-dcc-primary"></b>
-      <b class="text-dcc-primary"> </b>
-      <b class="text-dcc-primary"> </b>
-    </h3>
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="text-center px-4">
-        
+    <div ngbDropdown>
+      <button type="submit" class="btn btn-dcc-primary px-5 mr-3 noArrow" id="dropdownBasic1" ngbDropdownToggle>
+        العمليات
+        <svg-icon styleClass="h4 ml-3" icon="bars"></svg-icon>
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        <button ngbDropdownItem>Action - 1</button>
+        <button ngbDropdownItem>Another Action</button>
+        <button ngbDropdownItem>Something else is here</button>
       </div>
     </div>
-  </div> -->
-
+  </div>
 
   <div class="row cardBox">
     <div class="col">
-      <div>{{card?.applicantRitual?.applicant?.fullNameAr}}</div>
-      <div class="text-dark">{{card?.applicantRitual?.applicant?.fullNameEn}}</div>
+      <div class="col-form-label">{{card?.applicantRitual?.applicant?.fullNameAr}}</div>
+      <div class="form-control-plaintext">{{card?.applicantRitual?.applicant?.fullNameEn}}</div>
     </div>
     <div class="col">
-      <div>{{'card-management.applicant_id' | translate }}</div>
-      <div class="text-dark">{{card?.applicantRitual?.applicant?.idNumber}}</div>
+      <div class="col-form-label">{{'card-management.applicant_id' | translate }}</div>
+      <div class="form-control-plaintext">{{card?.applicantRitual?.applicant?.idNumber}}</div>
     </div>
     <div class="col">
-      <div>{{'card-management.card_number' | translate }}</div>
-      <div class="text-dark">{{card?.referenceNumber}} {{card?.statusCode?.label}}</div>
+      <div class="col-form-label">{{'card-management.card_number' | translate }}</div>
+      <div class="form-control-plaintext">{{card?.referenceNumber}} {{card?.statusCode?.label}}</div>
     </div>
     <div class="col">
       <span class="avatar">
@@ -37,362 +35,370 @@
   </div>
 
 
-  <ngb-tabset [destroyOnHide]="false">
-    <ngb-tab title="{{ 'card-management.main_details' | translate }}">
-      <ng-template ngbTabContent>
-        <section>
-          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.applicant_original_name' | translate}}</label>
-              <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.fullNameOriginal }}</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'general.date_of_birth' | translate}}</label>
-              <span class="form-control-plaintext">{{ card?.applicantRitual?.applicant?.dateOfBirthGregorian | dateFormat }}
-                <span *ngIf="card?.applicantRitual?.applicant?.dateOfBirthGregorian">-</span>
-                {{ card?.applicantRitual?.applicant?.dateOfBirthHijri | hijriFormat }}
-            </span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.ritual_type' | translate}}</label>
-              <span class="form-control-plaintext ">{{ card?.applicantRitual?.typeCode?.label }}</span>
-            </div>
 
-            <div class="form-group col">
-              <label class="col-form-label">{{'general.gender' | translate}}</label>
-              <span class="form-control-plaintext "
-                    [hidden]="card?.applicantRitual?.applicant?.gender == 'M'">{{'user-management.female' | translate}}</span>
-              <span class="form-control-plaintext "
-                    [hidden]="card?.applicantRitual?.applicant?.gender == 'F'">{{'user-management.male' | translate}}</span>
+    <ul ngbNav #nav="ngbNav" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>{{ 'card-management.main_details' | translate }}</a>
+        <ng-template ngbNavContent>
+          <section>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.applicant_original_name' | translate}}</label>
+                <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.fullNameOriginal }}</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'general.date_of_birth' | translate}}</label>
+                <span class="form-control-plaintext">{{ card?.applicantRitual?.applicant?.dateOfBirthGregorian | dateFormat }}
+                  <span *ngIf="card?.applicantRitual?.applicant?.dateOfBirthGregorian">-</span>
+                  {{ card?.applicantRitual?.applicant?.dateOfBirthHijri | hijriFormat }}
+              </span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.ritual_type' | translate}}</label>
+                <span class="form-control-plaintext ">{{ card?.applicantRitual?.typeCode?.label }}</span>
+              </div>
+  
+              <div class="form-group col">
+                <label class="col-form-label">{{'general.gender' | translate}}</label>
+                <span class="form-control-plaintext "
+                      [hidden]="card?.applicantRitual?.applicant?.gender == 'M'">{{'user-management.female' | translate}}</span>
+                <span class="form-control-plaintext "
+                      [hidden]="card?.applicantRitual?.applicant?.gender == 'F'">{{'user-management.male' | translate}}</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.nationality' | translate}}</label>
+                <span class="form-control-plaintext">{{ card?.applicantRitual?.applicant?.nationalityCode?.label}}</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.passport_number' | translate}}</label>
+                <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.passportNumber }}</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.marital_status' | translate}}</label>
+                <span class="form-control-plaintext ">متزوج</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.id_type' | translate}}</label>
+                <span class="form-control-plaintext ">إقامة</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.applicant_original_id' | translate}}</label>
+                <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.idNumberOriginal }}</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.applicant_languages' | translate}}</label>
+                <span class="form-control-plaintext ">العربية-English</span>
+              </div>
             </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.nationality' | translate}}</label>
-              <span class="form-control-plaintext">{{ card?.applicantRitual?.applicant?.nationalityCode?.label}}</span>
+          </section>
+          <hr class="my-4 w-100">
+          <section>
+            <span class="form-control-plaintext ">{{'card-management.applicant_original_address' | translate}}</span>
+  
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.country' | translate}}</label>
+                <span class="form-control-plaintext ">الهند</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.city' | translate}}</label>
+                <span class="form-control-plaintext ">مومباي</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.district' | translate}}</label>
+                <span class="form-control-plaintext ">وبتفس</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.street' | translate}}</label>
+                <span class="form-control-plaintext ">شارع غاندي</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.building_number' | translate}}</label>
+                <span class="form-control-plaintext ">20</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.postal_code' | translate}}</label>
+                <span class="form-control-plaintext ">13425</span>
+              </div>
             </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.passport_number' | translate}}</label>
-              <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.passportNumber }}</span>
+          </section>
+          <hr class="my-4 w-100">
+          <section *ngIf="card?.applicantRitual?.applicant?.relativeApplicants?.length > 0">
+            <span class="form-control-plaintext ">{{'card-management.applicant_relatives' | translate}}</span>
+  
+            <div class="table-responsive my-4">
+              <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                  <th scope="col">{{'card-management.applicant_name' | translate}}</th>
+                  <th scope="col">{{'card-management.applicant_id' | translate}}</th>
+                  <th scope="col">{{'card-management.applicant_relative_type' | translate}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let relative of card?.applicantRitual?.applicant?.relativeApplicants">
+                  <td class="ltr">{{relative.applicant?.fullNameAr}} {{relative.applicant?.fullNameEn}}</td>
+                  <td class="ltr">2367430625</td>
+                  <td class="ltr">{{relative.relationshipCode.label}}</td>
+                </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.marital_status' | translate}}</label>
-              <span class="form-control-plaintext ">متزوج</span>
+          </section>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2">
+        <a ngbNavLink>{{ 'card-management.hamlah_details' | translate }}</a>
+        <ng-template ngbNavContent>
+          <section>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.hamlah_number' | translate}}</label>
+                <span class="form-control-plaintext ">2578882</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.hamlah_name' | translate}}</label>
+                <span class="form-control-plaintext ">ٍسيف الإسلام</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.hamlah_type' | translate}}</label>
+                <span class="form-control-plaintext ">ٍسيف الإسلام</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.hamlah_category' | translate}}</label>
+                <span class="form-control-plaintext ">ب</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.hamlah_contact_number' | translate}}</label>
+                <span class="form-control-plaintext ">0598454754</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.housing_included' | translate}}</label>
+                <span class="form-control-plaintext ">نعم</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.transportation_included' | translate}}</label>
+                <span class="form-control-plaintext ">نعم</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.catering_included' | translate}}</label>
+                <span class="form-control-plaintext ">نعم</span>
+              </div>
             </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.id_type' | translate}}</label>
-              <span class="form-control-plaintext ">إقامة</span>
+          </section>
+          <hr class="my-4 w-100">
+          <section *ngIf="card?.applicantRitual?.hamlahPackage?.packageHousings?.length > 0">
+            <span class="form-control-plaintext ">{{ 'card-management.housing_locations' | translate }}</span>
+  
+            <div class="table-responsive my-4">
+              <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                  <th scope="col">{{'card-management.location_number' | translate}}</th>
+                  <th scope="col">{{'card-management.location_name' | translate}}</th>
+                  <th scope="col">{{'card-management.location_address' | translate}}</th>
+                  <th scope="col">{{'card-management.location_type' | translate}}</th>
+                  <th scope="col">{{'card-management.start_date' | translate}}</th>
+                  <th scope="col">{{'card-management.end_date' | translate}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let housing of card?.applicantRitual?.hamlahPackage?.packageHousings">
+                  <td class="ltr">{{ housing.code }}</td>
+                  <td class="ltr">{{ housing.labelAr }}</td>
+                  <td class="ltr">{{ housing.addressAr }}</td>
+                  <td class="ltr">{{ housing.type }}</td>
+                  <td class="ltr">{{ housing.validityStart }}</td>
+                  <td class="ltr">{{ housing.validityEnd }}</td>
+                </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.applicant_original_id' | translate}}</label>
-              <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.idNumberOriginal }}</span>
+          </section>
+  
+          <hr class="my-4 w-100">
+          <section>
+            <span class="form-control-plaintext ">{{ 'card-management.available_catering' | translate }}</span>
+  
+            <div class="table-responsive my-4">
+              <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                  <th scope="col">{{'card-management.catering_type' | translate}}</th>
+                  <th scope="col">{{'card-management.catering_description' | translate}}</th>
+                  <th scope="col">{{'card-management.catering_location' | translate}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let catering of packageCaterings()">
+                  <td class="ltr">{{ catering.type }}</td>
+                  <td class="ltr">{{ catering.descriptionAr }}</td>
+                  <td class="ltr">مزدلفة</td>
+                </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.applicant_languages' | translate}}</label>
-              <span class="form-control-plaintext ">العربية-English</span>
+          </section>
+  
+          <hr class="my-4 w-100">
+          <section *ngIf="card?.applicantRitual?.hamlahPackage?.packageHousings?.length > 0">
+            <span class="form-control-plaintext ">{{ 'card-management.transportation_method' | translate }}</span>
+  
+            <div class="table-responsive my-4">
+              <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                  <th scope="col">{{'card-management.transportation_type' | translate}}</th>
+                  <th scope="col">{{'card-management.transportation_time' | translate}}</th>
+                  <th scope="col">{{'card-management.from_location' | translate}}</th>
+                  <th scope="col">{{'card-management.to_location' | translate}}</th>
+                  <th scope="col">{{'card-management.vehicle_number' | translate}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let transportation of card?.applicantRitual?.hamlahPackage?.packageTransportations">
+                  <td class="ltr">{{ transportation.type }}</td>
+                  <td class="ltr">{{ transportation.validityStart }}-{{ transportation.validityEnd }}</td>
+                  <td class="ltr">{{ transportation.locationFrom }}</td>
+                  <td class="ltr">{{ transportation.locationTo }}</td>
+                  <td class="ltr">{{ transportation.vehicleNumber }}</td>
+                </tr>
+                </tbody>
+              </table>
             </div>
-          </div>
-        </section>
-        <hr class="my-4 w-100">
-        <section>
-          <span class="form-control-plaintext ">{{'card-management.applicant_original_address' | translate}}</span>
-
-          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.country' | translate}}</label>
-              <span class="form-control-plaintext ">الهند</span>
+          </section>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="3">
+        <a ngbNavLink>{{ 'card-management.health_details' | translate }}</a>
+        <ng-template ngbNavContent>
+          <section>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.blood_type' | translate}}</label>
+                <span class="form-control-plaintext ">A+</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.special_needs_assistance_needed' | translate}}</label>
+                <span class="form-control-plaintext ">نعم</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.have_chronic_diseases' | translate}}</label>
+                <span class="form-control-plaintext ">نعم</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.vaccinated' | translate}}</label>
+                <span class="form-control-plaintext ">نعم</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.special_needs' | translate}}</label>
+                <span class="form-control-plaintext ">كرسي متحرك-مساعد شخصي</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.chronic_diseases' | translate}}</label>
+                <span class="form-control-plaintext ">ضغط الدم-التهاب المفاصل</span>
+              </div>
             </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.city' | translate}}</label>
-              <span class="form-control-plaintext ">مومباي</span>
+          </section>
+          <hr class="my-4 w-100">
+          <section>
+            <span class="form-control-plaintext ">{{ 'card-management.vaccinations' | translate }}</span>
+  
+            <div class="table-responsive my-4">
+              <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                  <th scope="col">{{'card-management.vaccination_name' | translate}}</th>
+                  <th scope="col">{{'card-management.vaccination_date' | translate}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td class="ltr">فايزر كوفيد 19</td>
+                  <td class="ltr">15-03-2021</td>
+                </tr>
+                <tr>
+                  <td class="ltr">الحمى الشوكية</td>
+                  <td class="ltr">19-03-2021</td>
+                </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.district' | translate}}</label>
-              <span class="form-control-plaintext ">وبتفس</span>
+          </section>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="4">
+        <a ngbNavLink>{{ 'card-management.tafweej_details' | translate }}</a>
+        <ng-template ngbNavContent>
+          <section>
+            <span class="form-control-plaintext ">{{ 'card-management.tafweej_details' | translate }} {{'(رقم 257788)'}}</span>
+  
+            <div class="table-responsive my-4">
+              <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                  <th scope="col">{{'card-management.tafweej_step' | translate}}</th>
+                  <th scope="col">{{'card-management.from_location' | translate}}</th>
+                  <th scope="col">{{'card-management.to_location' | translate}}</th>
+                  <th scope="col">{{'card-management.start_date' | translate}}</th>
+                  <th scope="col">{{'card-management.end_date' | translate}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td class="ltr">طواف الإفاضة</td>
+                  <td class="ltr">موقع رمي الجمرات</td>
+                  <td class="ltr">فندق دار الإيمان</td>
+                  <td class="ltr">05-04-2021</td>
+                  <td class="ltr">05-04-2021</td>
+                </tr>
+                <tr>
+                  <td class="ltr">الوقوف في عرفات</td>
+                  <td class="ltr">مخيم منى</td>
+                  <td class="ltr">جبل عرفات</td>
+                  <td class="ltr">04-04-2021</td>
+                  <td class="ltr">04-04-2021</td>
+                </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.street' | translate}}</label>
-              <span class="form-control-plaintext ">شارع غاندي</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.building_number' | translate}}</label>
-              <span class="form-control-plaintext ">20</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.postal_code' | translate}}</label>
-              <span class="form-control-plaintext ">13425</span>
-            </div>
-          </div>
-        </section>
-        <hr class="my-4 w-100">
-        <section *ngIf="card?.applicantRitual?.applicant?.relativeApplicants?.length > 0">
-          <span class="form-control-plaintext ">{{'card-management.applicant_relatives' | translate}}</span>
-
+          </section>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="5">
+        <a ngbNavLink>{{ 'card-management.motawef_details' | translate }}</a>
+        <ng-template ngbNavContent>
           <div class="table-responsive my-4">
             <table class="table table-striped table-hover">
               <thead>
               <tr>
-                <th scope="col">{{'card-management.applicant_name' | translate}}</th>
-                <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-                <th scope="col">{{'card-management.applicant_relative_type' | translate}}</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let relative of card?.applicantRitual?.applicant?.relativeApplicants">
-                <td class="ltr">{{relative.applicant?.fullNameAr}} {{relative.applicant?.fullNameEn}}</td>
-                <td class="ltr">2367430625</td>
-                <td class="ltr">{{relative.relationshipCode.label}}</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </ng-template>
-    </ngb-tab>
-    <ngb-tab title="{{ 'card-management.hamlah_details' | translate }}">
-      <ng-template ngbTabContent>
-        <section>
-          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.hamlah_number' | translate}}</label>
-              <span class="form-control-plaintext ">2578882</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.hamlah_name' | translate}}</label>
-              <span class="form-control-plaintext ">ٍسيف الإسلام</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.hamlah_type' | translate}}</label>
-              <span class="form-control-plaintext ">ٍسيف الإسلام</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.hamlah_category' | translate}}</label>
-              <span class="form-control-plaintext ">ب</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.hamlah_contact_number' | translate}}</label>
-              <span class="form-control-plaintext ">0598454754</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.housing_included' | translate}}</label>
-              <span class="form-control-plaintext ">نعم</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.transportation_included' | translate}}</label>
-              <span class="form-control-plaintext ">نعم</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.catering_included' | translate}}</label>
-              <span class="form-control-plaintext ">نعم</span>
-            </div>
-          </div>
-        </section>
-        <hr class="my-4 w-100">
-        <section *ngIf="card?.applicantRitual?.hamlahPackage?.packageHousings?.length > 0">
-          <span class="form-control-plaintext ">{{ 'card-management.housing_locations' | translate }}</span>
-
-          <div class="table-responsive my-4">
-            <table class="table table-striped table-hover">
-              <thead>
-              <tr>
-                <th scope="col">{{'card-management.location_number' | translate}}</th>
-                <th scope="col">{{'card-management.location_name' | translate}}</th>
-                <th scope="col">{{'card-management.location_address' | translate}}</th>
-                <th scope="col">{{'card-management.location_type' | translate}}</th>
-                <th scope="col">{{'card-management.start_date' | translate}}</th>
-                <th scope="col">{{'card-management.end_date' | translate}}</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let housing of card?.applicantRitual?.hamlahPackage?.packageHousings">
-                <td class="ltr">{{ housing.code }}</td>
-                <td class="ltr">{{ housing.labelAr }}</td>
-                <td class="ltr">{{ housing.addressAr }}</td>
-                <td class="ltr">{{ housing.type }}</td>
-                <td class="ltr">{{ housing.validityStart }}</td>
-                <td class="ltr">{{ housing.validityEnd }}</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <hr class="my-4 w-100">
-        <section>
-          <span class="form-control-plaintext ">{{ 'card-management.available_catering' | translate }}</span>
-
-          <div class="table-responsive my-4">
-            <table class="table table-striped table-hover">
-              <thead>
-              <tr>
-                <th scope="col">{{'card-management.catering_type' | translate}}</th>
-                <th scope="col">{{'card-management.catering_description' | translate}}</th>
-                <th scope="col">{{'card-management.catering_location' | translate}}</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let catering of packageCaterings()">
-                <td class="ltr">{{ catering.type }}</td>
-                <td class="ltr">{{ catering.descriptionAr }}</td>
-                <td class="ltr">مزدلفة</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <hr class="my-4 w-100">
-        <section *ngIf="card?.applicantRitual?.hamlahPackage?.packageHousings?.length > 0">
-          <span class="form-control-plaintext ">{{ 'card-management.transportation_method' | translate }}</span>
-
-          <div class="table-responsive my-4">
-            <table class="table table-striped table-hover">
-              <thead>
-              <tr>
-                <th scope="col">{{'card-management.transportation_type' | translate}}</th>
-                <th scope="col">{{'card-management.transportation_time' | translate}}</th>
-                <th scope="col">{{'card-management.from_location' | translate}}</th>
-                <th scope="col">{{'card-management.to_location' | translate}}</th>
-                <th scope="col">{{'card-management.vehicle_number' | translate}}</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let transportation of card?.applicantRitual?.hamlahPackage?.packageTransportations">
-                <td class="ltr">{{ transportation.type }}</td>
-                <td class="ltr">{{ transportation.validityStart }}-{{ transportation.validityEnd }}</td>
-                <td class="ltr">{{ transportation.locationFrom }}</td>
-                <td class="ltr">{{ transportation.locationTo }}</td>
-                <td class="ltr">{{ transportation.vehicleNumber }}</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </ng-template>
-    </ngb-tab>
-    <ngb-tab title="{{ 'card-management.health_details' | translate }}">
-      <ng-template ngbTabContent>
-        <section>
-          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.blood_type' | translate}}</label>
-              <span class="form-control-plaintext ">A+</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.special_needs_assistance_needed' | translate}}</label>
-              <span class="form-control-plaintext ">نعم</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.have_chronic_diseases' | translate}}</label>
-              <span class="form-control-plaintext ">نعم</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.vaccinated' | translate}}</label>
-              <span class="form-control-plaintext ">نعم</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.special_needs' | translate}}</label>
-              <span class="form-control-plaintext ">كرسي متحرك-مساعد شخصي</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.chronic_diseases' | translate}}</label>
-              <span class="form-control-plaintext ">ضغط الدم-التهاب المفاصل</span>
-            </div>
-          </div>
-        </section>
-        <hr class="my-4 w-100">
-        <section>
-          <span class="form-control-plaintext ">{{ 'card-management.vaccinations' | translate }}</span>
-
-          <div class="table-responsive my-4">
-            <table class="table table-striped table-hover">
-              <thead>
-              <tr>
-                <th scope="col">{{'card-management.vaccination_name' | translate}}</th>
-                <th scope="col">{{'card-management.vaccination_date' | translate}}</th>
+                <th scope="col">{{'card-management.morshid_id' | translate}}</th>
+                <th scope="col">{{'card-management.morshid_name' | translate}}</th>
+                <th scope="col">{{'card-management.morshid_contact_number' | translate}}</th>
+                <th scope="col">{{'card-management.morshid_title' | translate}}</th>
               </tr>
               </thead>
               <tbody>
               <tr>
-                <td class="ltr">فايزر كوفيد 19</td>
-                <td class="ltr">15-03-2021</td>
+                <td class="ltr">{{ '1086541241' }}</td>
+                <td class="ltr">{{ 'عبد العزير الشهراني' }}</td>
+                <td class="ltr">{{ '0554321546' }}</td>
+                <td class="ltr">{{ 'مرشد عام' }}</td>
               </tr>
               <tr>
-                <td class="ltr">الحمى الشوكية</td>
-                <td class="ltr">19-03-2021</td>
+                <td class="ltr">{{ '1086541241' }}</td>
+                <td class="ltr">{{ 'محمد العنزي' }}</td>
+                <td class="ltr">{{ '0554321645' }}</td>
+                <td class="ltr">{{ 'مراقب صحي' }}</td>
               </tr>
               </tbody>
             </table>
           </div>
-        </section>
-      </ng-template>
-    </ngb-tab>
-    <ngb-tab title="{{ 'card-management.tafweej_details' | translate }}">
-      <ng-template ngbTabContent>
-        <section>
-          <span class="form-control-plaintext ">{{ 'card-management.tafweej_details' | translate }} {{'(رقم 257788)'}}</span>
-
-          <div class="table-responsive my-4">
-            <table class="table table-striped table-hover">
-              <thead>
-              <tr>
-                <th scope="col">{{'card-management.tafweej_step' | translate}}</th>
-                <th scope="col">{{'card-management.from_location' | translate}}</th>
-                <th scope="col">{{'card-management.to_location' | translate}}</th>
-                <th scope="col">{{'card-management.start_date' | translate}}</th>
-                <th scope="col">{{'card-management.end_date' | translate}}</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td class="ltr">طواف الإفاضة</td>
-                <td class="ltr">موقع رمي الجمرات</td>
-                <td class="ltr">فندق دار الإيمان</td>
-                <td class="ltr">05-04-2021</td>
-                <td class="ltr">05-04-2021</td>
-              </tr>
-              <tr>
-                <td class="ltr">الوقوف في عرفات</td>
-                <td class="ltr">مخيم منى</td>
-                <td class="ltr">جبل عرفات</td>
-                <td class="ltr">04-04-2021</td>
-                <td class="ltr">04-04-2021</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </ng-template>
-    </ngb-tab>
-    <ngb-tab title="{{ 'card-management.motawef_details' | translate }}">
-      <ng-template ngbTabContent>
-        <div class="table-responsive my-4">
-          <table class="table table-striped table-hover">
-            <thead>
-            <tr>
-              <th scope="col">{{'card-management.morshid_id' | translate}}</th>
-              <th scope="col">{{'card-management.morshid_name' | translate}}</th>
-              <th scope="col">{{'card-management.morshid_contact_number' | translate}}</th>
-              <th scope="col">{{'card-management.morshid_title' | translate}}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td class="ltr">{{ '1086541241' }}</td>
-              <td class="ltr">{{ 'عبد العزير الشهراني' }}</td>
-              <td class="ltr">{{ '0554321546' }}</td>
-              <td class="ltr">{{ 'مرشد عام' }}</td>
-            </tr>
-            <tr>
-              <td class="ltr">{{ '1086541241' }}</td>
-              <td class="ltr">{{ 'محمد العنزي' }}</td>
-              <td class="ltr">{{ '0554321645' }}</td>
-              <td class="ltr">{{ 'مراقب صحي' }}</td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </ng-template>
-    </ngb-tab>
-  </ngb-tabset>
+        </ng-template>
+      </li>
+    </ul>
+    
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
 
 </div>
 
