@@ -1,4 +1,4 @@
 @import "mixins";
 
-@include font-face("Elm-font", "../fonts/CairoRegular/Cairo-Regular");
-@include font-face("Elm-fontb", "../fonts/CairoSemiBold/Cairo-SemiBold", bold);
+@include font-face("Elm-font", "../fonts/DroidKufiRegular/DroidKufiRegular");
+@include font-face("Elm-fontb", "../fonts/DroidKufiBold/DroidKufiBold", bold);
