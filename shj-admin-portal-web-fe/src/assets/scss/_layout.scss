@@ -1,3 +1,30 @@
+.header-wrapper{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: $light;
+}
+.left-header{
+  flex-grow: 1;
+}
+.right-header{
+
+}
+
+.flip {
+  [dir="ltr"] & {
+    transform: rotateY(180deg);
+  }
+}
+
+.nav-menus{
+  display: inline-flex;
+  align-items: center;
+  background-color: #fff;
+  @include my(3);
+  @include mx(4);
+  box-shadow: $box-shadow-sm;
+}
 
 .title__Page{
   display: flex;
@@ -42,7 +69,7 @@
   }
 
 
-  .wrapper-expand .sideBar{
+  .wrapper-expand .sidebar-wrapper{
     background: #fff;
     z-index: 10;
     [dir="ltr"] &{ 
@@ -50,7 +77,7 @@
       right: auto; 
     }
   }
-  body .sideBar{  
+  body .sidebar-wrapper{  
     [dir="ltr"] &{ 
       @include media-breakpoint-down(md) {
         left: -260px;
@@ -77,7 +104,14 @@
             color: $dcc-primary;
         }
         &.active{
+
+            [dir='ltr'] & {
+              border-left: 4px $dcc-primary solid;
+          }
+          [dir='rtl'] & {
             border-right: 4px $dcc-primary solid;
+          }
+
             .navIcon{
               width: calc(45px - 4px);
             } 

@@ -1,65 +1,70 @@
-<header class="d-flex justify-content-end bg-light">
-  <ul class="d-inline-flex align-items-center bg-white shadow-sm my-3 mx-4">
-    <li class="dropdown flex-center">
-      <a
-        class="nav-link d-flex align-items-center dropdown-toggle noArrow"
-        tittle="معلوماتي"
-        href="javascript:void(0)"
-        id="userMenuLink"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-      >
-        <svg-icon styleClass="h1 text-gray-300" icon="user-circle"></svg-icon>
-        <div class="mx-3">
-          <h6 class="text-dcc-primary m-0">
-            {{ currentUser?.firstName }} {{ currentUser?.lastName }}
-          </h6>
-          <small class="text-black-50">
-            <ng-container *ngFor="let userRole of currentUser?.userRoles">
-              <ng-container *ngIf="userRole?.mainRole">
-                {{ currentLanguage.startsWith('ar') ? userRole?.role.nameArabic : userRole?.role.nameEnglish }}
+<header class="header-wrapper">
+  <div class="left-header">
+    <span> <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon> عودة</span>
+  </div>
+  <div class="nav-right">
+    <ul class="nav-menus">
+      <li class="dropdown flex-center">
+        <a
+          class="nav-link d-flex align-items-center dropdown-toggle noArrow"
+          tittle="معلوماتي"
+          href="javascript:void(0)"
+          id="userMenuLink"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <svg-icon styleClass="h1 text-gray-300" icon="user-circle"></svg-icon>
+          <div class="mx-3">
+            <h6 class="text-dcc-primary m-0">
+              {{ currentUser?.firstName }} {{ currentUser?.lastName }}
+            </h6>
+            <small class="text-black-50">
+              <ng-container *ngFor="let userRole of currentUser?.userRoles">
+                <ng-container *ngIf="userRole?.mainRole">
+                  {{ currentLanguage.startsWith('ar') ? userRole?.role.nameArabic : userRole?.role.nameEnglish }}
+                </ng-container>
               </ng-container>
-            </ng-container>
-          </small>
+            </small>
+          </div>
+        </a>
+        <div class="dropdown-menu animate slideIn" aria-labelledby="userMenuLink">
+          <a class="dropdown-item" (click)="viewCurrentUserProfile()" [routerLink]="" routerLinkActive="router-link-active">
+            {{ "header.my_profile" | translate }}
+          </a>
+          <a class="dropdown-item" [routerLink]="['/change-password']" routerLinkActive="router-link-active">
+            {{ "header.change_password" | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <ng-container>
+            <a class="dropdown-item" href="javascript:void(0)"
+              *ngIf="currentLanguage.startsWith('en')" (click)="setLanguage('ar-SA')">
+              <span>عربي</span>
+            </a>
+            <a class="dropdown-item" href="javascript:void(0)"
+              *ngIf="currentLanguage.startsWith('ar')" (click)="setLanguage('en-US')">
+              <span>English</span>
+            </a>
+          </ng-container>
         </div>
-      </a>
-      <div class="dropdown-menu animate slideIn" aria-labelledby="userMenuLink">
-        <a class="dropdown-item" (click)="viewCurrentUserProfile()" [routerLink]="" routerLinkActive="router-link-active">
-          {{ "header.my_profile" | translate }}
+      </li>
+      <li class="position-relative">
+        <a class="nav-link" href="javascript:void(0)" ngbTooltip="">
+          <svg-icon styleClass="fa-w-16 h4" icon="bell"></svg-icon>
         </a>
-        <a class="dropdown-item" [routerLink]="['/change-password']" routerLinkActive="router-link-active">
-          {{ "header.change_password" | translate }}
+        <span class="notif bg-red">4</span>
+      </li>
+      <li class="position-relative">
+        <a class="nav-link" href="javascript:void(0)" ngbTooltip="">
+          <svg-icon styleClass="fa-w-16 h4" icon="cog"></svg-icon>
         </a>
-        <div class="dropdown-divider"></div>
-        <ng-container>
-          <a class="dropdown-item" href="javascript:void(0)"
-            *ngIf="currentLanguage.startsWith('en')" (click)="setLanguage('ar-SA')">
-            <span>عربي</span>
-          </a>
-          <a class="dropdown-item" href="javascript:void(0)"
-            *ngIf="currentLanguage.startsWith('ar')" (click)="setLanguage('en-US')">
-            <span>English</span>
-          </a>
-        </ng-container>
-      </div>
-    </li>
-    <li class="position-relative">
-      <a class="nav-link" href="javascript:void(0)" ngbTooltip="">
-        <svg-icon styleClass="fa-w-16 h4" icon="bell"></svg-icon>
-      </a>
-      <span class="notif bg-red">4</span>
-    </li>
-    <li class="position-relative">
-      <a class="nav-link" href="javascript:void(0)" ngbTooltip="">
-        <svg-icon styleClass="fa-w-16 h4" icon="cog"></svg-icon>
-      </a>
-    </li>
-    <li class="position-relative">
-      <a class="nav-link" href="javascript:void(0)" (click)="logout()" ngbTooltip="{{'header.logout' | translate}}">
-        <svg-icon styleClass="fa-w-16 h4" icon="logout"></svg-icon>
-      </a>
-    </li>
-  </ul>
+      </li>
+      <li class="position-relative">
+        <a class="nav-link" href="javascript:void(0)" (click)="logout()" ngbTooltip="{{'header.logout' | translate}}">
+          <svg-icon styleClass="fa-w-16 h4 flip" icon="logout"></svg-icon>
+        </a>
+      </li>
+    </ul>
+  </div>
 </header>
 
