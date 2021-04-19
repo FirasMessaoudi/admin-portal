@@ -140,6 +140,10 @@ public class RoleManagement {
                    tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-tag-minus']//parent::a")).click();
                    isSelected = true;
                    break;
+               case "Activate":
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-tag-check']//parent::a")).click();
+                   isSelected = true;
+                   break;
                case "Delete":
                    tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-tag-times']//parent::a")).click();
                    isSelected = true;
@@ -238,13 +242,17 @@ public class RoleManagement {
 
     public void changeStatusUserRole(Hashtable<String,String> dataRow) throws Exception{
         Home home = new Home();
-        if(selectActionUserRole(dataRow,"Deactivate")){
-            if(Exists(home.btnActionMsgConfirmYes,5)){
-                home.btnActionMsgConfirmYes.click();
-                //validate delete item
-                validateSuccess(dataRow, home);
-            }
+        if (dataRow.get("UserRoleActive".toUpperCase()).equalsIgnoreCase("yes")) {
+            selectActionUserRole(dataRow,"Activate");
+        } else {
+            selectActionUserRole(dataRow,"Deactivate");
         }
+      if(Exists(home.btnActionMsgConfirmYes,5)) {
+          home.btnActionMsgConfirmYes.click();
+          //validate delete item
+          validateSuccess(dataRow, home);
+      }
+
     }
 
     public void viewDetailsUserRole(Hashtable<String,String> dataRow) throws Exception{
