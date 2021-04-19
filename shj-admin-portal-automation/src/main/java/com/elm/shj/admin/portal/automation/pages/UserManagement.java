@@ -3,17 +3,20 @@ package com.elm.shj.admin.portal.automation.pages;
 import com.elm.qa.framework.core.ActionX;
 import com.elm.qa.framework.core.Global;
 import com.elm.qa.framework.utilities.ReporterX;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.Hashtable;
 
-import static com.elm.qa.framework.core.ActionX.Exists;
-import static com.elm.qa.framework.core.ActionX.SetValue;
+import static com.elm.qa.framework.core.ActionX.*;
 
 public class UserManagement {
     // declaring elements
+    @FindBy(xpath = "//app-user-list//button[@routerlink='/users/create']")
+    WebElement btnAddNewUser;
+
     @FindBy(xpath = "//app-user-add-update//input[@formcontrolname='firstName']")
     WebElement txtUserFirstName;
 
@@ -32,16 +35,19 @@ public class UserManagement {
     @FindBy(xpath = "//app-user-add-update//input[@ng-reflect-name='dateOfBirthGregorian']")
     WebElement txtUserDOB;
 
-    @FindBy(xpath = "//app-user-add-update//button[contains(text(),'Gregorian')]")
+    @FindBy(xpath = "//app-user-add-update//div[@ng-reflect-selected='true']")
+    WebElement btnUserDobDay;
+
+    @FindBy(xpath = "//app-user-add-update//button[contains(text(),'Gregorian') or contains(text(),'ميلاد')]")
     WebElement btnClndrTypeGregorian;
 
-    @FindBy(xpath = "//app-user-add-update//button[contains(text(),'Hijri')]")
+    @FindBy(xpath = "//app-user-add-update//button[contains(text(),'Hijri') or contains(text(),'هجر')]")
     WebElement btnClndrTypeHijri;
 
-    @FindBy(xpath = "//app-user-add-update//input[@formcontrolname='gender' and @value='M']")
+    @FindBy(xpath = "//app-user-add-update//input[@formcontrolname='gender' and @value='M']//parent::label")
     WebElement btnUserGenderMale;
 
-    @FindBy(xpath = "//app-user-add-update//input[@formcontrolname='gender' and @value='F']")
+    @FindBy(xpath = "//app-user-add-update//input[@formcontrolname='gender' and @value='F']//parent::label")
     WebElement btnUserGenderFemale;
 
     @FindBy(xpath = "//app-user-add-update//input[@formcontrolname='email']")
@@ -50,10 +56,10 @@ public class UserManagement {
     @FindBy(xpath = "//app-user-add-update//input[@formcontrolname='mobileNumber']")
     WebElement txtUserMobileNumber;
 
-    @FindBy(xpath = "//app-user-add-update//div[@formcontrolname='activated']//label[contains(text(),'Active')]")
+    @FindBy(xpath = "//app-user-add-update//input[@name='radioActivated' and @ng-reflect-value='true']//parent::label")
     WebElement btnUserStatusActive;
 
-    @FindBy(xpath = "//app-user-add-update//div[@formcontrolname='activated']//label[contains(text(),'Not Activated')]")
+    @FindBy(xpath = "//app-user-add-update//input[@name='radioActivated' and @ng-reflect-value='false']//parent::label")
     WebElement btnUserStatusInActive;
 
     @FindBy(xpath = "//app-user-add-update//select[@formcontrolname='role']")
@@ -65,10 +71,10 @@ public class UserManagement {
     @FindBy(xpath = "(//app-user-add-update//ng-multiselect-dropdown[@formcontrolname='additionalRoles']//ul)[2]")
     WebElement ulUserAdditionalRole;
 
-    @FindBy(xpath = "//app-user-add-update//div[contains(@class,'footer__action')]//button[contains(text(),'Save')]")
+    @FindBy(xpath = "//app-user-add-update//div[contains(@class,'footer__action')]//button[contains(@class,'btn-outline-dcc-primary')]")
     WebElement btnSaveUser;
 
-    @FindBy(xpath = "//app-user-add-update//div[contains(@class,'footer__action')]//button[contains(text(),'Cancel')]")
+    @FindBy(xpath = "//app-user-add-update//div[contains(@class,'footer__action')]//button[contains(@class,'btn-outline-secondary')]")
     WebElement btnCancelSaveUSer;
 
 
@@ -86,8 +92,6 @@ public class UserManagement {
     @FindBy(xpath = "//div[@id='spinner']")
     WebElement divLoading;
 
-    @FindBy(xpath = "//isp-user-list//button[contains(text(),'إضافة مستخدم جديد')]")
-    WebElement btnAddNewUser;
 
 
     public UserManagement() {
@@ -98,54 +102,74 @@ public class UserManagement {
         }
     }
 
+    private void validateSuccess(Hashtable<String, String> dataRow) {
+        Home home = new Home();
+        if(Exists(home.divSaveMsgContent,30)){
+            String msg = home.divSaveMsgContent.getText().toLowerCase();
+            if(msg.contains("success") || msg.contains("نجاح") ){
+                ReporterX.info("User Manage, System Message : "+msg);
+                ReporterX.pass("User ["+dataRow.get("UserIdNumber".toUpperCase())+"] Success.!");
+            }else {
+                ReporterX.info("User Manage,System Message : "+msg);
+                ReporterX.fail("User ["+dataRow.get("UserIdNumber".toUpperCase())+"] Failed.!");
+            }
+        }else {
+            ReporterX.fail("User ["+dataRow.get("UserIdNumber".toUpperCase())+"] Failed.!");
+        }
+    }
 
-    public void addNewUSer(Hashtable<String,String> dataRow) throws Exception{
+
+    public void addNewUser(Hashtable<String,String> dataRow) throws Exception{
 
         if (ActionX.Exists(btnAddNewUser, 3)) {
             btnAddNewUser.click();
-            UtilitiesUI.waitForLoaderHidden(5);
         }
 
         if(Exists(txtUserFirstName,30)){
 
             // preparing test data randomization
 
-            UtilitiesUI.prepareTestData(dataRow);
+//            UtilitiesUI.prepareTestData(dataRow);
 
             //filling  Data
 
-
+            SetValue(txtUserFirstName,dataRow.get("FirstName".toUpperCase()));
+            SetValue(txtUserFatherName,dataRow.get("FatherName".toUpperCase()));
+            SetValue(txtUserGrandFatherName,dataRow.get("GrandFatherName".toUpperCase()));
+            SetValue(txtUserFamilyName,dataRow.get("FamilyName".toUpperCase()));
             SetValue(txtUserIdNumber,dataRow.get("UserIdNumber".toUpperCase()));
+            RemoveAttribute(txtUserDOB,"readonly");
+            SetValue(txtUserDOB,dataRow.get("UserDOB".toUpperCase()));
+            txtUserDOB.click();
+            Thread.sleep(1000);
+            btnUserDobDay.click();
+            if (dataRow.get("UserGender".toUpperCase()).equalsIgnoreCase("male")) {
+                btnUserGenderMale.click();
+            } else {
+                btnUserGenderFemale.click();
+            }
+            if (dataRow.get("UserStatus".toUpperCase()).equalsIgnoreCase("active")) {
+                btnUserStatusActive.click();
+            } else {
+                btnUserStatusInActive.click();
+            }
+            SetValue(txtUserMobileNumber,dataRow.get("MobileNumber".toUpperCase()));
+            Select(lstUserMainRole,dataRow.get("MainRole".toUpperCase()));
+            try{
+                lstUserAdditionalRole.click();
+                Thread.sleep(1000);
+                String xpath = "(//app-user-add-update//ng-multiselect-dropdown[@formcontrolname='additionalRoles']//ul)[2]//div[contains(text(),'"+dataRow.get("AdditionalRole".toUpperCase())+"')]";
+                Global.Test.Browser.findElements(By.xpath(xpath)).get(0).click();
+            }catch (Exception e){
 
-            SetValue(txtUserFirstName,dataRow.get("UserFullName".toUpperCase()));
-
-
+            }
             SetValue(txtUserEmail,dataRow.get("UserEmail".toUpperCase()));
 
-            SetValue(txtUserDOB,dataRow.get("UserDOB".toUpperCase()));
-
-
-
-
+            ActionX.ScrollToElement(btnSaveUser);
             btnSaveUser.click();
-            UtilitiesUI.waitForLoaderHidden(20);
 
             //validate add item
-            if(Exists(divSaveMsgTitle,30)){
-                if(divSaveMsgTitle.getText().contains("نجاح")){
-                    ReporterX.info("System Message : "+divSaveMsgContent.getText());
-                    btnSaveMSGConfirmYes.click();
-                    UtilitiesUI.waitForLoaderHidden(10);
-                    ReporterX.pass("User [["+dataRow.get("UserFullName".toUpperCase())+"] was added.!");
-                }else {
-                    ReporterX.info("System Message : "+divSaveMsgContent.getText());
-                    btnSaveMSGConfirmYes.click();
-                    UtilitiesUI.waitForLoaderHidden(10);
-                    ReporterX.fail("Failed to Add User ["+dataRow.get("UserFullName".toUpperCase())+"].!");
-                }
-            }else {
-                ReporterX.fail("Failed to Add User ["+dataRow.get("UserFullName".toUpperCase())+"].!");
-            }
+            validateSuccess(dataRow);
 
 
         }else {

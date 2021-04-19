@@ -3,10 +3,7 @@ package com.elm.shj.admin.portal.automation.scenarios;
 
 import com.elm.qa.framework.runner.Executer;
 import com.elm.qa.framework.utilities.ReporterX;
-import com.elm.shj.admin.portal.automation.pages.Home;
-import com.elm.shj.admin.portal.automation.pages.RoleManagement;
-import com.elm.shj.admin.portal.automation.pages.SystemLogin;
-import com.elm.shj.admin.portal.automation.pages.Navigators;
+import com.elm.shj.admin.portal.automation.pages.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
@@ -17,6 +14,7 @@ public class TestScenarios {
     SystemLogin systemLogin = new SystemLogin();
     Navigators navigators = new Navigators();
     RoleManagement roleManagement = new RoleManagement();
+    UserManagement userManagement = new UserManagement();
 
 
 
@@ -158,6 +156,23 @@ public class TestScenarios {
 
     //endregion // End Of Role Management
 
+    //region User Management
+
+    @Test
+    public void ValidateAddUser() {
+        try {
+            systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
+            navigators.goToUserManagement();
+            userManagement.addNewUser(Executer.TestDataRow);
+
+        } catch (Exception ex) {
+            ReporterX.error(ex);
+        }
+    }
+
+
+
+    //endregion // End Of User Management
 
 
 }

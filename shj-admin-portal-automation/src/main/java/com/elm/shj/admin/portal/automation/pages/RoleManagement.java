@@ -78,11 +78,12 @@ public class RoleManagement {
 
     private void validateSuccess(Hashtable<String, String> dataRow, Home home) {
         if(Exists(home.divSaveMsgContent,30)){
-            if(home.divSaveMsgContent.getText().toLowerCase().contains("success")){
-                ReporterX.info("User Role System Message : "+home.divSaveMsgContent.getText());
+            String msg = home.divSaveMsgContent.getText().toLowerCase();
+            if(msg.contains("success") || msg.contains("نجاح") ){
+                ReporterX.info("User Role System Message : "+msg);
                 ReporterX.pass("User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Success.!");
             }else {
-                ReporterX.info("User Role System Message : "+home.divSaveMsgContent.getText());
+                ReporterX.info("User Role System Message : "+msg);
                 ReporterX.fail("User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Failed.!");
             }
         }else {
