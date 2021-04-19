@@ -32,10 +32,10 @@ public class RoleManagement {
     @FindBy(xpath = "//app-add-update-role//input[@formcontrolname='nameEnglish']")
     WebElement txtRoleEngName;
 
-    @FindBy(xpath = "//app-add-update-role//div[@formcontrolname='activated']//label[contains(text(),'Not Activated')]")
+    @FindBy(xpath = "//app-add-update-role//div[@formcontrolname='activated']//input[@ng-reflect-value='false']//parent::label")
     WebElement btnRoleNotActive;
 
-    @FindBy(xpath = "//app-add-update-role//div[@formcontrolname='activated']//label[contains(text(),'Active')]")
+    @FindBy(xpath = "//app-add-update-role//div[@formcontrolname='activated']//input[@ng-reflect-value='true']//parent::label")
     WebElement btnRoleActive;
 
     @FindBy(xpath = "//app-add-update-role//form")
@@ -44,19 +44,19 @@ public class RoleManagement {
     @FindBy(xpath = "//app-add-update-role//form//label[contains(text(),'Edit Role')]")
     WebElement lblEditRole;
 
-    @FindBy(xpath = "//app-add-update-role//button[contains(text(),'Save')]")
+    @FindBy(xpath = "//app-add-update-role//button[contains(@class,'btn-outline-dcc-primary')]")
     WebElement btnSave;
 
     @FindBy(xpath = "//app-applicant-list//a[@routerlink='/roles/create']")
     WebElement btnAddNewRole;
 
-    @FindBy(xpath = "//app-applicant-list//input[@formcontrolname='roleNameEn']")
+    @FindBy(xpath = "//app-applicant-list//input[contains(@formcontrolname,'roleName')]")
     WebElement txtRoleNameSearch;
 
     @FindBy(xpath = "//app-applicant-list//input[@formcontrolname='authorityId']")
     WebElement lstRoleAuthorityName;
 
-    @FindBy(xpath = "//app-applicant-list//button[contains(text(),'Search')]")
+    @FindBy(xpath = "//app-applicant-list//button[contains(@class,'btn-outline-dcc-primary')]")
     WebElement btnRoleSearch;
 
     @FindBy(xpath = "//app-applicant-list//table//tbody")
@@ -92,7 +92,7 @@ public class RoleManagement {
     }
 
     private boolean searchUserRole(Hashtable<String,String> dataRow) throws Exception{
-
+        String roleName= "";
         if(Exists(txtRoleNameSearch,30)) {
 
             // waiting
@@ -100,7 +100,13 @@ public class RoleManagement {
             ActionX.WaitChildItemsCountGreaterThan(tblRolesSearchResults,By.tagName("tr"),0,5);
 
             //filling  search Data
-            SetValue(txtRoleNameSearch, dataRow.get("RoleEngName".toUpperCase()));
+
+            if(Global.Test.RunLang.equalsIgnoreCase("arb"))
+                roleName = dataRow.get("RoleArbName".toUpperCase());
+            else
+                roleName = dataRow.get("RoleEngName".toUpperCase());
+
+            SetValue(txtRoleNameSearch, roleName);
             btnRoleSearch.click();
 
            //waiting load results
@@ -112,10 +118,10 @@ public class RoleManagement {
         }
 
         if(tblRolesSearchResults.findElements(By.tagName("tr")).size() > 0){
-            ReporterX.pass("User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Success.!");
+            ReporterX.pass("User Role ["+roleName+"] Success.!");
             return true;
         }else {
-            ReporterX.fail("User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Failed.!");
+            ReporterX.fail("User Role ["+roleName+"] Failed.!");
             return false;
         }
 
@@ -127,23 +133,23 @@ public class RoleManagement {
 
            switch (action) {
                case "Edit":
-                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//a[@ng-reflect-ngb-tooltip='Edit']")).click();
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='edit']//parent::a")).click();
                    isSelected = true;
                    break;
                case "Deactivate":
-                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//a[@ng-reflect-ngb-tooltip='Deactivate']")).click();
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-tag-minus']//parent::a")).click();
                    isSelected = true;
                    break;
                case "Delete":
-                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//a[@ng-reflect-ngb-tooltip='Delete']")).click();
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-tag-times']//parent::a")).click();
                    isSelected = true;
                    break;
                case "View":
-                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//a[@ng-reflect-ngb-tooltip='View']")).click();
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='eye']//parent::a")).click();
                    isSelected = true;
                    break;
                default:
-                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//a[@ng-reflect-ngb-tooltip='View']")).click();
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='eye']//parent::a")).click();
            }
        }
 
@@ -179,7 +185,13 @@ public class RoleManagement {
 
             // Selecting list of Authorities
             List<String> lstRows = Common.GetIterations(dataRow.get("RoleAuthorities".toUpperCase()),",");
-            Hashtable<String,String> lstAuthorities = DataManager.GetExcelDictionary("Select RowID,AuthorityName FROM RoleAuthorities");
+            String query = "";
+            if(Global.Test.RunLang.equalsIgnoreCase("eng")){
+                query = "Select RowID,AuthorityName FROM RoleAuthorities";
+            }else{
+                query = "Select RowID,AuthorityNameArb FROM RoleAuthorities";
+            }
+            Hashtable<String,String> lstAuthorities = DataManager.GetExcelDictionary(query);
             for (String row: lstRows ) {
                 ReporterX.info("Select Authority : "+lstAuthorities.get(row));
                 try {
@@ -239,13 +251,19 @@ public class RoleManagement {
 
         if(selectActionUserRole(dataRow,"View")){
             //wait for element details
+            String roleName = "";
+            if(Global.Test.RunLang.equalsIgnoreCase("arb"))
+                roleName = dataRow.get("RoleArbName".toUpperCase());
+            else
+                roleName = dataRow.get("RoleEngName".toUpperCase());
+
             WebDriverWait wait = new WebDriverWait(Global.Test.Browser, 5);
-            WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//app-user-details//span[contains(text(),'"+dataRow.get("RoleEngName".toUpperCase())+"')]")));
+            WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//app-user-details//span[contains(text(),'"+roleName+"')]")));
 
             if(null != element){
-                ReporterX.pass("View User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Success.!");
+                ReporterX.pass("View User Role ["+roleName+"] Success.!");
             }else {
-                ReporterX.fail("View User Role ["+dataRow.get("RoleEngName".toUpperCase())+"] Failed.!");
+                ReporterX.fail("View User Role ["+roleName+"] Failed.!");
             }
         }
     }

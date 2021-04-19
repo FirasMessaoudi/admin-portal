@@ -38,8 +38,16 @@ public class SystemLogin {
     @FindBy(xpath = "//div[@class='alert alert-danger']")
     WebElement divLoginErrMsg;
 
+    @FindBy(xpath = "//ng-component//span[contains(text(),'عرب')]//parent::button")
+    WebElement btnSystemArabLanguage;
+
+    @FindBy(xpath = "//ng-component//span[contains(text(),'En')]//parent::button")
+    WebElement btnSystemEnLanguage;
+
     @FindBy(xpath = "//app-header//ul//li[4]")
     WebElement btnLogOut;
+
+
 
     Home homePage = new Home();
 
@@ -57,6 +65,19 @@ public class SystemLogin {
         boolean retRes = false;
         Faker fk = new Faker();
         try {
+
+            // Change System Language
+            if(Global.Test.RunLang.equalsIgnoreCase("arb")){
+                if(Exists(btnSystemArabLanguage,2)){
+                    btnSystemArabLanguage.click();
+                    ReporterX.info("System Language Switched to ** Arabic ** ");
+                }
+            }else {
+                if(Exists(btnSystemEnLanguage,2)){
+                    btnSystemEnLanguage.click();
+                    ReporterX.info("System Language Switched to ** English ** ");
+                }
+            }
 
             String catptach = fk.number().digits(6).toString();
             if (Exists(txtUserName, 30)) {
