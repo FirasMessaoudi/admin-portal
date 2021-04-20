@@ -40,6 +40,7 @@ public class JpaDecisionRule implements Serializable {
     private String dmn;
 
     @ManyToOne
+    @JoinColumn(name = "data_segment_id")
     private JpaDataSegment dataSegment;
 
     @Column(name = "creation_date", nullable = false)

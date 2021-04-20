@@ -330,8 +330,8 @@ SET IDENTITY_INSERT shj_portal.sha_user_role OFF;
 GO
 
 
-INSERT INTO shj_portal.sha_data_segment (root_class, label_ar, label_en, creation_date, update_date)
-VALUES ('com.elm.shj.admin.portal.services.dto.ApplicantDto', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38:43', null);
+INSERT INTO shj_portal.sha_data_segment (root_class, template_file_name, label_ar, label_en, creation_date, update_date)
+VALUES ('com.elm.shj.admin.portal.services.dto.ApplicantDto', 'applicant-data.xlsx', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38:43', null);
 
 
 INSERT INTO sha_data_segment_field_mapping (data_segment_id, header_name_ar, header_name_en, field_name, field_type, creation_date, update_date)
@@ -611,3 +611,14 @@ INSERT INTO shj_portal.sha_decision_rule (dmn, label_ar, label_en, data_segment_
             N'بيانات المتقدم', N'Applicant Data', 1, N'2021-04-13 13:38:43', null);
 GO
 
+INSERT INTO shj_portal.sha_config (conf_key, conf_value)
+VALUES ('sftp.client.protocol', 'sftp'),
+       ('sftp.client.host', '127.0.0.1'),
+       ('sftp.client.port', '22'),
+       ('sftp.client.username', ''),
+       ('sftp.client.password', ''),
+       ('sftp.client.root-folder', '/smart-hajj/data-uploads/'),
+       ('sftp.client.session-strict-host-key-checking', 'no'),
+       ('sftp.client.session-connect-timeout', '15000'),
+       ('sftp.client.channel-connected-timeout', '15000');
+GO

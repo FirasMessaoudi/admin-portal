@@ -29,6 +29,7 @@ public class DataSegmentDto implements Serializable {
     private String labelAr;
     private String labelEn;
     private String rootClass;
+    private String templateFileName;
     private Date creationDate;
     private Date updateDate;
 }

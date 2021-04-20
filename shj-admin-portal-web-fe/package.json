@@ -52,6 +52,7 @@
     "camunda-dmn-moddle": "^1.1.0",
     "chart.js": "^2.9.3",
     "chartjs-plugin-datalabels": "^0.7.0",
+    "file-saver": "^2.0.5",
     "dmn-js": "^10.1.0",
     "dmn-js-properties-panel": "^0.6.0",
     "hijri-date": "^0.2.2",
