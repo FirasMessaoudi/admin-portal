@@ -1,9 +1,26 @@
 .header-wrapper{
+
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  background: $light url(assets/images/header-svg.svg) no-repeat left top;
-  background-size: contain;
+  position: relative;
+  
+  &::before{
+    content: '';
+    position: absolute;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    background-size: contain;
+    background: $light url(assets/images/header-svg.svg) no-repeat left top;
+
+    [dir='ltr'] & {
+      transform: rotate(180deg);
+    }
+  }
+  
+
+
 }
 .left-header{
   flex-grow: 1;
