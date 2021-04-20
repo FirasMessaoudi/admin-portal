@@ -11,7 +11,7 @@ Steps (Wizard)
 =====================================================================*/
 
 .wizard-steps{
-  @include p(4);
+  @include py(4);
   background-color: #fff; 
   border-radius: 0 0 $border-radius $border-radius;
 }

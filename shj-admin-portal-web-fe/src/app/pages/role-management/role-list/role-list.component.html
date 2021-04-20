@@ -32,8 +32,8 @@
             </optgroup>
           </select>
         </div>
-        <div class="form-group col align-self-end">
-          <button type="submit" [disabled]="searchForm.invalid" (click)="search()" class="btn btn-outline-dcc-primary px-5 mr-3">
+        <div class="form-group col-12">
+          <button type="submit" [disabled]="searchForm.invalid" (click)="search()" class="btn btn-dcc-primary px-5 mr-3">
             {{ "general.btn_search" | translate }}
           </button>
         </div>
@@ -65,49 +65,58 @@
             <ng-container *ngFor="let roleAuthority of role.roleAuthorities" >
               <ng-container *ngIf="!roleAuthority.authority.parentId" >
 
-                <a class="badge badge-info py-1 px-2 badge-pill mx-1" href="javascript:void(0);" *ngIf="!roleAuthority.authority.parentId">
-                  {{ currentLanguage.startsWith("en") ? roleAuthority.authority.nameEnglish : roleAuthority.authority.nameArabic }}
 
-                  <span *ngIf="!roleAuthority.authority.parentId && (!roleAuthority.authority.children || !roleAuthority.authority.children.length)" class="badge badge-dcc-primary py-1 px-2 badge-pill mx-1">
+                <fieldset class="border px-3">
+                  <legend class="w-auto mb-0" *ngIf="!roleAuthority.authority.parentId">
+                    <span class="mx-3 sectionTitle h6">{{ currentLanguage.startsWith("en") ? roleAuthority.authority.nameEnglish : roleAuthority.authority.nameArabic }}</span>
+                  </legend>
+
+                  <span *ngIf="!roleAuthority.authority.parentId && (!roleAuthority.authority.children || !roleAuthority.authority.children.length)" class="badge m-2">
+                    <svg-icon styleClass="text-gray-300" icon="dot-circle"></svg-icon>
                     {{ currentLanguage.startsWith("en") ? roleAuthority.authority.nameEnglish : roleAuthority.authority.nameArabic }}
                   </span>
 
                   <ng-container *ngFor="let childRoleAuthority of role.roleAuthorities" >
-                    <span *ngIf="childRoleAuthority.authority.parentId === roleAuthority.authority.id" class="badge badge-dcc-primary py-1 px-2 badge-pill mx-1">
+                    <span *ngIf="childRoleAuthority.authority.parentId === roleAuthority.authority.id" class="badge m-2">
+                      <svg-icon styleClass="text-gray-300" icon="dot-circle"></svg-icon>
                       {{ currentLanguage.startsWith("en") ? childRoleAuthority.authority.nameEnglish : childRoleAuthority.authority.nameArabic }}
                     </span>
                   </ng-container>
-                </a>
+              </fieldset>
               </ng-container>
             </ng-container>
           </td>
           <td style="text-align:center">
-            <span *ngIf="role.activated" class="badge badge-success py-2 px-4 badge-pill">
+            <span *ngIf="role.activated" class="text-nowrap">
+              <span class="status mr-1 done"></span>
               {{'user-management.activated' | translate}}
             </span>
-            <span *ngIf="!role.activated" class="badge badge-warning py-2 px-4 badge-pill">
+            <span *ngIf="!role.activated" class="text-nowrap">
+              <span class="status mr-1 Suspended"></span>
               {{'user-management.not_activated' | translate}}
             </span>
           </td>
           <td class="text-center" width="20%" style="text-align:center">
-            <a [routerLink]="['/roles/update', role?.id]" [queryParams]="{edit: true}" class="action mx-2" *ngIf="role.id != loggedInUserRoleId && canEditRole" ngbTooltip="{{'general.tooltip_edit' | translate}}">
-              <svg-icon styleClass="text-info h3" icon="edit"></svg-icon>
-            </a>
-            <a class="action mx-2" href="javascript:void(0)" *ngIf="role.id != loggedInUserRoleId && role.activated && canChangeRoleStatus"
-               (click)="deactivateRole(role.id)" ngbTooltip="{{'general.tooltip_deactivate' | translate}}">
-              <svg-icon styleClass="text-warning h3" icon="user-tag-minus"></svg-icon>
-            </a>
-            <a class="action mx-2" href="javascript:void(0)" *ngIf="role.id != loggedInUserRoleId && !role.activated && canChangeRoleStatus"
-               (click)="activateRole(role.id)" ngbTooltip="{{'general.tooltip_activate' | translate}}">
-              <svg-icon styleClass="text-success h3" icon="user-tag-check"></svg-icon>
-            </a>
-            <a class="action mx-2" href="javascript:void(0)" *ngIf="role.id != loggedInUserRoleId && canDeleteRole"
-               (click)="deleteRole(role.id)" ngbTooltip="{{'general.tooltip_delete' | translate}}">
-              <svg-icon styleClass="text-danger h3" icon="user-tag-times"></svg-icon>
-            </a>
-            <a [routerLink]="['/roles/details', role?.id]" class="action mx-2" ngbTooltip="{{'general.tooltip_view' | translate}}">
-              <svg-icon styleClass="text-dcc-primary h3" icon="eye"></svg-icon>
-            </a>
+            <div class="text-nowrap">
+              <a [routerLink]="['/roles/update', role?.id]" [queryParams]="{edit: true}" class="action mx-2" *ngIf="role.id != loggedInUserRoleId && canEditRole" ngbTooltip="{{'general.tooltip_edit' | translate}}">
+                <svg-icon styleClass="text-info h3" icon="edit"></svg-icon>
+              </a>
+              <a class="action mx-2" href="javascript:void(0)" *ngIf="role.id != loggedInUserRoleId && role.activated && canChangeRoleStatus"
+                 (click)="deactivateRole(role.id)" ngbTooltip="{{'general.tooltip_deactivate' | translate}}">
+                <svg-icon styleClass="text-warning h3" icon="user-tag-minus"></svg-icon>
+              </a>
+              <a class="action mx-2" href="javascript:void(0)" *ngIf="role.id != loggedInUserRoleId && !role.activated && canChangeRoleStatus"
+                 (click)="activateRole(role.id)" ngbTooltip="{{'general.tooltip_activate' | translate}}">
+                <svg-icon styleClass="text-success h3" icon="user-tag-check"></svg-icon>
+              </a>
+              <a class="action mx-2" href="javascript:void(0)" *ngIf="role.id != loggedInUserRoleId && canDeleteRole"
+                 (click)="deleteRole(role.id)" ngbTooltip="{{'general.tooltip_delete' | translate}}">
+                <svg-icon styleClass="text-danger h3" icon="user-tag-times"></svg-icon>
+              </a>
+              <a [routerLink]="['/roles/details', role?.id]" class="action mx-2" ngbTooltip="{{'general.tooltip_view' | translate}}">
+                <svg-icon styleClass="text-dcc-primary h3" icon="eye"></svg-icon>
+              </a>
+            </div>
           </td>
           </tr>
         </tbody>

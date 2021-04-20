@@ -185,7 +185,12 @@
             </td>
           </tr>
           <tr *ngFor="let card of page?.content">
-            <th scope="row"><input type="checkbox" value="{{card.id}}"></th>
+            <td scope="row">
+              <div class="custom-control custom-checkbox my-2">
+                <input type="checkbox" class="custom-control-input" id="customCheck-02" value="{{card.id}}">
+                <label class="custom-control-label mx-3" for="customCheck-02"></label>
+              </div>
+            </td>
             <td><a [routerLink]="['/cards/details', card?.id]" class="text-dcc-primary font-weight-bold">{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</a></td>
             <td>{{card?.applicantRitual?.applicant?.idNumber}}</td>
             <td class="ltr">{{card?.referenceNumber}}</td>
