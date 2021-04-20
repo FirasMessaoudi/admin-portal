@@ -237,6 +237,9 @@ tr:hover .tblView{
     &.Suspended{
         background-color: #D14646;
     }
+    &.warning{
+        background-color: #ffc107;
+    }
     
 }
 
