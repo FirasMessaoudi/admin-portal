@@ -107,20 +107,16 @@ export class UserListComponent implements OnInit, OnDestroy {
   loadPage(page: number) {
     // load users for param page
     this.listSubscription = this.userService.list(page).subscribe(data => {
-
-      data.subscribe((d: any) => {
-        this.page = d;
-        if (this.page != null) {
-          this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
-          this.users = this.page.content;
-          //check logged in user actions authorities
-          this.canEditUser = this.authenticationService.hasAuthority(EAuthority.EDIT_USER);
-          this.canChangeUserStatus = this.authenticationService.hasAuthority(EAuthority.CHANGE_USER_STATUS);
-          this.canDeleteUser = this.authenticationService.hasAuthority(EAuthority.DELETE_USER);
-          this.canResetUserPassword = this.authenticationService.hasAuthority(EAuthority.RESET_PASSWORD);
-        }
-      });
-
+      this.page = data;
+      if (this.page != null) {
+        this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
+        this.users = this.page.content;
+        //check logged in user actions authorities
+        this.canEditUser = this.authenticationService.hasAuthority(EAuthority.EDIT_USER);
+        this.canChangeUserStatus = this.authenticationService.hasAuthority(EAuthority.CHANGE_USER_STATUS);
+        this.canDeleteUser = this.authenticationService.hasAuthority(EAuthority.DELETE_USER);
+        this.canResetUserPassword = this.authenticationService.hasAuthority(EAuthority.RESET_PASSWORD);
+      }
     });
   }
 
