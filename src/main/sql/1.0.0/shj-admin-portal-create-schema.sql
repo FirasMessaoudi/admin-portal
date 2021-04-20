@@ -269,19 +269,6 @@ ALTER TABLE shj_portal.sha_user DROP CONSTRAINT fk_sha_user_role;
 ALTER TABLE shj_portal.sha_user DROP COLUMN role_id;
 GO
 
-if not exists (select * from sys.tables where name = 'sha_decision_rule')
-create table shj_portal.sha_decision_rule
-(
-    id int PRIMARY KEY NOT NULL identity(1,1),
-    dmn NVARCHAR(MAX) NOT NULL,
-    label_ar NVARCHAR(50) NOT NULL,
-    label_en VARCHAR(50) NOT NULL,
-    creation_date smalldatetime not null default current_timestamp,
-    update_date smalldatetime null
-);
-GO
-
-
 if not exists (select * from sys.tables where name = 'sha_country_lk')
 create table shj_portal.sha_country_lk
 (
@@ -494,4 +481,46 @@ create table shj_portal.sha_applicant_health_disease
     disease_name_en VARCHAR(45) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_health_disease_health FOREIGN KEY (applicant_health_id) REFERENCES shj_portal.sha_applicant_health (id)
-); GO
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_data_segment')
+create table shj_portal.sha_data_segment
+(
+    id                  int PRIMARY KEY NOT NULL identity (1,1),
+    root_class   VARCHAR(100)     NOT NULL,
+    label_ar     NVARCHAR(100)    NOT NULL,
+    label_en     VARCHAR(100)     NOT NULL,
+    creation_date       smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date         smalldatetime   NULL,
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_data_segment_field_mapping')
+create table shj_portal.sha_data_segment_field_mapping
+(
+    id                  int PRIMARY KEY NOT NULL identity (1,1),
+    data_segment_id     int     NOT NULL,
+    header_name_ar     NVARCHAR(100)    NOT NULL,
+    header_name_en     VARCHAR(100)     NOT NULL,
+    field_name     VARCHAR(50)     NOT NULL,
+    field_type     VARCHAR(50)     NOT NULL,
+    creation_date       smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date         smalldatetime   NULL,
+    CONSTRAINT fk_data_segment_field_mapping_segment FOREIGN KEY (data_segment_id) REFERENCES shj_portal.sha_data_segment (id)
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_decision_rule')
+create table shj_portal.sha_decision_rule
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    dmn NVARCHAR(MAX) NOT NULL,
+    data_segment_id INT NOT NULL,
+    label_ar NVARCHAR(50) NOT NULL,
+    label_en VARCHAR(50) NOT NULL,
+    creation_date smalldatetime not null default current_timestamp,
+    update_date smalldatetime null,
+    CONSTRAINT fk_decision_rule_segment FOREIGN KEY (data_segment_id) REFERENCES shj_portal.sha_data_segment (id)
+);
+GO

@@ -5,10 +5,12 @@ package com.elm.shj.admin.portal.web.boot;
 
 
 import com.elm.dcc.foundation.commons.web.xss.XssFilter;
+import com.elm.shj.admin.portal.services.sftp.SftpProperties;
 import org.apache.catalina.filters.HttpHeaderSecurityFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.mobile.device.DeviceResolverRequestFilter;
 import org.springframework.web.context.WebApplicationContext;
@@ -24,6 +26,7 @@ import javax.servlet.ServletContext;
  * @since 1.0.0
  */
 @SpringBootApplication(scanBasePackages = {"com.elm.shj.admin.portal.web", "com.elm.dcc.foundation.providers", "com.elm.dcc.foundation.commons.web"})
+@EnableConfigurationProperties(SftpProperties.class)
 public class BootApplication extends SpringBootServletInitializer {
 
     private static Class<BootApplication> bootClass = BootApplication.class;

@@ -75,6 +75,11 @@
                 <artifactId>reactor-core</artifactId>
                 <version>${reactor.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.jcraft</groupId>
+                <artifactId>jsch</artifactId>
+                <version>${jsch.version}</version>
+            </dependency>
             <!-- JDK DEPENDENCIES -->
             <dependency>
                 <groupId>jakarta.xml.bind</groupId>
@@ -138,6 +143,7 @@
         <jakarta.xml.ws-api.version>2.3.3</jakarta.xml.ws-api.version>
         <jaxws-rt.version>2.3.3</jaxws-rt.version>
         <jaxb-impl.version>2.3.3</jaxb-impl.version>
+        <jsch.version>0.1.55</jsch.version>
         <sonar.coverage.jacoco.xmlReportPaths>
             ${basedir}/shj-admin-portal-orm/target/jacoco-ut/jacoco.xml,${basedir}/shj-admin-portal-services/target/jacoco-ut/jacoco.xml,${basedir}/shj-admin-portal-web/target/jacoco-ut/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>

@@ -11,17 +11,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_decision_rule database table.
+ * The persistent class for the sha_data_segment database table.
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_decision_rule")
-@NamedQuery(name = "JpaDecisionRule.findAll", query = "SELECT j FROM JpaDecisionRule j")
+@Table(name = "sha_data_segment")
+@NamedQuery(name = "JpaDataSegment.findAll", query = "SELECT j FROM JpaDataSegment j")
 @Data
 @NoArgsConstructor
-public class JpaDecisionRule implements Serializable {
+public class JpaDataSegment implements Serializable {
 
     private static final long serialVersionUID = 2532495233381225382L;
 
@@ -30,17 +30,14 @@ public class JpaDecisionRule implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "label_ar", nullable = false)
+    @Column(name = "label_ar")
     private String labelAr;
 
     @Column(name = "label_en", nullable = false)
     private String labelEn;
 
-    @Column(nullable = false)
-    private String dmn;
-
-    @ManyToOne
-    private JpaDataSegment dataSegment;
+    @Column(name = "root_class", nullable = false)
+    private String rootClass;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

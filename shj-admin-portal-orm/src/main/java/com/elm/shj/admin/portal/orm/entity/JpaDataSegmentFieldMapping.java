@@ -11,17 +11,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_decision_rule database table.
+ * The persistent class for the sha_data_segment_field_mapping database table.
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_decision_rule")
-@NamedQuery(name = "JpaDecisionRule.findAll", query = "SELECT j FROM JpaDecisionRule j")
+@Table(name = "sha_data_segment_field_mapping")
+@NamedQuery(name = "JpaDataSegmentFieldMapping.findAll", query = "SELECT j FROM JpaDataSegmentFieldMapping j")
 @Data
 @NoArgsConstructor
-public class JpaDecisionRule implements Serializable {
+public class JpaDataSegmentFieldMapping implements Serializable {
 
     private static final long serialVersionUID = 2532495233381225382L;
 
@@ -30,17 +30,17 @@ public class JpaDecisionRule implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "label_ar", nullable = false)
-    private String labelAr;
+    @Column(name = "header_name_ar")
+    private String headerNameAr;
 
-    @Column(name = "label_en", nullable = false)
-    private String labelEn;
+    @Column(name = "header_name_en", nullable = false)
+    private String headerNameEn;
 
-    @Column(nullable = false)
-    private String dmn;
+    @Column(name = "field_name", nullable = false)
+    private String fieldName;
 
-    @ManyToOne
-    private JpaDataSegment dataSegment;
+    @Column(name = "field_type", nullable = false)
+    private String fieldType;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
