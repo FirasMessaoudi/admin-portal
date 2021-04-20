@@ -17,13 +17,13 @@
 
   <div class="content__section" *ngIf="canSeeDataUploadRequestsList">
 
-    <div class="d-flex justify-content-end bg-dcc-light mt-7">
+    <div class="d-flex justify-content-end bg-dcc-light mt-7 actionBar">
       <div class="bg-white">
-        <a class="btn btn-dcc-light m-w-l" href="/">
+        <a class="btn btn-dcc-light btn-action m-w-l" href="/">
           <svg-icon styleClass="mx-3 fa-w-18" icon="file-excel"></svg-icon>
           تصدير اكسل
         </a>
-        <a class="btn btn-dcc-light m-w-l" href="/">
+        <a class="btn btn-dcc-light btn-action m-w-l" href="/">
           <svg-icon styleClass="mx-3 fa-w-18" icon="file-pdf"></svg-icon>
           تصدير PDF
         </a>
@@ -46,7 +46,7 @@
         <tbody>
           <tr *ngIf="false" class="text-center">
             <td colspan="10">
-              <svg-icon styleClass="display-1 text-light-gray" icon="empty-set" ></svg-icon>
+              <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set" ></svg-icon>
               <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
             </td>
           </tr>
@@ -61,7 +61,7 @@
               <span class="status mr-1 done"></span>
             </td>
             <td>
-              <button class="btn btn-sm btn-outline-dcc-primary tblView">
+              <button [routerLink]="['/data-upload-requests/details/1']" class="btn btn-sm btn-outline-dcc-primary tblView">
                 عرض
               </button>
             </td>
@@ -77,7 +77,7 @@
               <span class="status mr-1 ready"></span>
             </td>
             <td>
-              <button class="btn btn-sm btn-outline-dcc-primary tblView">
+              <button [routerLink]="['/data-upload-requests/details/1']" class="btn btn-sm btn-outline-dcc-primary tblView">
                 عرض
               </button>
             </td>
@@ -93,7 +93,7 @@
               <span class="status mr-1 Suspended"></span>
             </td>
             <td>
-              <button class="btn btn-sm btn-outline-dcc-primary tblView">
+              <button [routerLink]="['/data-upload-requests/details/1']" class="btn btn-sm btn-outline-dcc-primary tblView">
                 عرض
               </button>
             </td>

@@ -141,19 +141,19 @@
     </div>
 
 
-    <div class="d-flex justify-content-between bg-dcc-light mt-7">
+    <div class="d-flex justify-content-between bg-dcc-light mt-7 actionBar">
       <div class="bg-white">
-        <a class="btn btn-dcc-light m-w-r" href="">
+        <a class="btn btn-dcc-light btn-action m-w-r" href="">
           <svg-icon styleClass="mx-3 fa-w-18" icon="magic"></svg-icon>
           <span>تنشيط 25 بطاقة</span>
         </a>
       </div>
       <div class="bg-white">
-        <a class="btn btn-dcc-light m-w-l" href="/">
+        <a class="btn btn-dcc-light btn-action m-w-l" href="/">
           <svg-icon styleClass="mx-3 fa-w-18" icon="file-excel"></svg-icon>
           تصدير اكسل
         </a>
-        <a class="btn btn-dcc-light m-w-l" href="/">
+        <a class="btn btn-dcc-light btn-action m-w-l" href="/">
           <svg-icon styleClass="mx-3 fa-w-18" icon="file-pdf"></svg-icon>
           تصدير PDF
         </a>
@@ -180,7 +180,7 @@
         <tbody>
           <tr *ngIf="!page?.content" class="text-center">
             <td colspan="10">
-              <svg-icon styleClass="display-1 text-light-gray" icon="empty-set" ></svg-icon>
+              <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set" ></svg-icon>
               <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
             </td>
           </tr>
