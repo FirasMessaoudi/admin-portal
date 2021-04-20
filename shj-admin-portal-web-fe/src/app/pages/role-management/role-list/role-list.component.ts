@@ -88,7 +88,7 @@ export class RoleListComponent implements OnInit, OnDestroy {
 
   loadPage(page: number) {
     // load roles for param page
-    this.listSubscription = this.roleService.listPaginated().subscribe(data => {
+    this.listSubscription = this.roleService.listPaginated(page).subscribe(data => {
       this.page = data;
       if (this.page != null) {
         this.pageArray = Array.from(this.pageCounter(this.page.totalPages));

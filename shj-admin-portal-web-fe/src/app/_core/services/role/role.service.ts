@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpEvent} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpEvent, HttpParams} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {Role} from "@model/role.model";
 import {catchError} from "rxjs/internal/operators";
@@ -24,8 +24,10 @@ export class RoleService {
     return this.http.get("/core/api/roles/list/active");
   }
 
-  listPaginated(): Observable<any> {
-    return this.http.get("/core/api/roles/list/paginated");
+  listPaginated(pageNumber: any): Observable<any> {
+    let params = new HttpParams().set('page', pageNumber);
+
+    return this.http.get<any>("/core/api/roles/list/paginated", {params: params});
   }
 
   /**

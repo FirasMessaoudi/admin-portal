@@ -73,6 +73,7 @@ public interface RoleRepository extends JpaRepository<JpaRole, Long> {
 
     @Query("select distinct role from JpaRole role join role.roleAuthorities ra where " +
             "ra.role.id = role.id and " +
+            "ra.role.deleted = false and" +
             "(:authorityId = -1L or ra.authority.id = :authorityId or ra.authority.parentId = :authorityId) and " +
             "(:arabicName is null or lower(role.nameArabic) like :arabicName) and " +
             "(:englishName is null or lower(role.nameEnglish) like :englishName)")
