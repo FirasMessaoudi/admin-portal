@@ -56,7 +56,7 @@ public class RoleManagement {
     @FindBy(xpath = "//app-applicant-list//input[@formcontrolname='authorityId']")
     WebElement lstRoleAuthorityName;
 
-    @FindBy(xpath = "//app-applicant-list//button[contains(@class,'btn-outline-dcc-primary')]")
+    @FindBy(xpath = "//app-applicant-list//button[contains(@class,'btn-dcc-primary')]")
     WebElement btnRoleSearch;
 
     @FindBy(xpath = "//app-applicant-list//table//tbody")

@@ -82,7 +82,7 @@ public class UserManagement {
     @FindBy(xpath = "//app-user-list//input[@formcontrolname='nin']")
     WebElement txtUserNINSearch;
 
-    @FindBy(xpath = "//app-user-list//form//button[contains(@class,'btn-outline-dcc-primary')]")
+    @FindBy(xpath = "//app-user-list//form//button[contains(@class,'btn-dcc-primary')]")
     WebElement btnUserSearch;
 
     @FindBy(xpath = "//app-user-list//table//tbody")
