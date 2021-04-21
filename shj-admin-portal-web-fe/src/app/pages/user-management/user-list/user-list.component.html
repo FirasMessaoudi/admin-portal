@@ -2,7 +2,8 @@
   <div class="title__Page">
     <h3 class="sectionTitle">{{ "user-management.users_list" | translate }}</h3>
     <button routerLink="/users/create" class="btn btn-outline-dcc-primary px-4" *ngIf="canAddUser">
-      {{ "general.btn_add" | translate }}
+      <svg-icon styleClass="mr-2" icon="plus"></svg-icon>
+      <span>{{ "general.btn_add" | translate }}</span>
     </button>
   </div>
   <div class="content__section" *ngIf="!canSeeUsersList">
@@ -77,11 +78,12 @@
           <td>{{user.firstName}} {{user.fatherName}} {{user.familyName}}</td>
           <td class="ltr">{{user.mobileNumber | mobileFormat}}</td>
           <td class="ltr">
-            <span class="d-inline badge badge-info py-1 px-3 badge-pill {{ userMainRole(user)?.activated ? '' : 'border border-warning border-3'}} ">
+            <span class="d-none {{ userMainRole(user)?.activated ? '' : 'border border-warning border-3'}} ">
               {{ currentLanguage.startsWith("en") ? userMainRole(user)?.nameEnglish : userMainRole(user)?.nameArabic }}
             </span>
-            <span class="d-inline badge badge-warning px-1 py-0 align-top status-pill" *ngIf="!userMainRole(user)?.activated">
+            <span class="ltr" *ngIf="!userMainRole(user)?.activated">
               {{'user-management.not_activated' | translate}}
+              <span class="status mr-1 Suspended"></span>
             </span>
           </td>
           <td style="text-align:center">

@@ -330,27 +330,7 @@ SET IDENTITY_INSERT shj_portal.sha_user_role OFF;
 GO
 
 
-INSERT INTO shj_portal.sha_data_segment (root_class, template_file_name, label_ar, label_en, creation_date, update_date)
-VALUES ('com.elm.shj.admin.portal.services.dto.ApplicantDto', 'applicant-data.xlsx', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38:43', null);
-
-
-INSERT INTO sha_data_segment_field_mapping (data_segment_id, header_name_ar, header_name_en, field_name, field_type, creation_date, update_date)
-VALUES
- (1, N'رقم الهوية الوطنية / الإقامة', 'ID Number', 'idNumber', 'long', N'2021-04-13 13:38:43', null),
- (1, N'رقم الجواز', 'PassportNo', 'passportNumber', 'string', N'2021-04-13 13:38:43', null),
- (1, N'الاسم بالانجليزية', 'FullNameEn', 'fullNameEn', 'string', N'2021-04-13 13:38:43', null),
- (1, N'الاسم بالعربية', 'FullNameAr', 'fullNameAr', 'string', N'2021-04-13 13:38:43', null),
- (1, N'الإسم بلغة بلد الأصل', 'FullNameOriginalLang', 'fullNameOrigin', 'string', N'2021-04-13 13:38:43', null),
- (1, N'تاريخ الميلاد', 'DateOfBirth', 'dateOfBirthGregorian', 'date', N'2021-04-13 13:38:43', null),
- (1, N'تاريخ الميلاد بالهجري', 'DateOfBirthHijri', 'dateOfBirthHijri', 'long', N'2021-04-13 13:38:43', null),
- (1, N'الجنس', 'Gender', 'gender', 'string', N'2021-04-13 13:38:43', null),
- (1, N'الجنسية', 'Nationality', 'nationalityCode', 'string', N'2021-04-13 13:38:43', null),
- (1, N'رقم الهوية في بلد الأصل', 'NationalIDOriginalCountry', 'idNumberOriginal', 'string', N'2021-04-13 13:38:43', null),
- (1, N'الحالة الاجتماعية', 'Marital Status', 'maritalStatus', 'long', N'2021-04-13 13:38:43', null),
- (1, N'الصورة', 'Photo', 'photo', 'string', N'2021-04-13 13:38:43', null);
-
-
-INSERT INTO shj_portal.sha_decision_rule (dmn, label_ar, label_en, data_segment_id, creation_date, update_date) VALUES (
+INSERT INTO shj_portal.sha_decision_rule (dmn, label_ar, label_en, creation_date, update_date) VALUES (
                                                                                                        N'<?xml version="1.0" encoding="UTF-8"?>
             <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="dish" name="Dish" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="8.3.0">
             <inputData id="dayType_id" name="Type of day">
@@ -622,3 +602,17 @@ VALUES ('sftp.client.protocol', 'sftp'),
        ('sftp.client.session-connect-timeout', '15000'),
        ('sftp.client.channel-connected-timeout', '15000');
 GO
+-- insert ritual types
+SET IDENTITY_INSERT shj_portal.sha_ritual_type_lk ON;
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (1, 'EXTERNAL_HAJJ', 'ar', 'حجاج الخارج');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (2, 'EXTERNAL_HAJJ', 'en', 'External Hajj');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (3, 'INTERNAL_HAJJ', 'ar', 'حجاج الداخل');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (4, 'INTERNAL_HAJJ', 'en', 'Internal Hajj');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (5, 'COURTESY_HAJJ', 'ar', 'حجاج المجاملة');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (6, 'COURTESY_HAJJ', 'en', 'Courtesy Hajj');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (7, 'EXTERNAL_UMRAH', 'ar', 'عمرة الخارج');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (8, 'EXTERNAL_UMRAH', 'en', 'External Umrah');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (9, 'INTERNAL_UMRAH', 'ar', 'عمرة الداخل');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (10, 'INTERNAL_UMRAH', 'en', 'Internal Umrah');
+SET IDENTITY_INSERT shj_portal.sha_ritual_type_lk OFF;
+

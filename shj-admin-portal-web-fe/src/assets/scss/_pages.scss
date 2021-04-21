@@ -250,13 +250,17 @@ tr:hover .tblView{
     @include mx(0);
     @include py(3);
 }
+
 .avatar{
     border-radius: 50rem;
+    position: absolute;
     padding: 5px;
-    background-color: #FFF;
+    background-color: #f3f3f3;
+    border: 2px #D3E2C5 solid;
 
     img{
         width: 154px;
+        height: 154px;
         border-radius: 50rem;
     }
 }
@@ -267,6 +271,18 @@ tr:hover .tblView{
     &:hover, &.active{
         color: #3B7937;
         border-color: transparent transparent #3B7937;
+    }
+}
+
+.avatarBox{
+    background-color: #F5F8F4;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .avatar{
+        position: relative;
     }
 }
 
