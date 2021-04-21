@@ -9,7 +9,7 @@ export class ApplicantRitual {
   dateEndGregorian: Date;
   dateStartHijri: Date;
   dateEndHijri: Date;
-  typeCode: string;
+  typeCode: any;
   visaNumber: string;
   permitNumber: string;
   insuranceNumber: string;

@@ -5,5 +5,5 @@ export class Card {
   applicantRitual: ApplicantRitual;
   referenceNumber: number;
   batchId: number;
-  statusCode: string;
+  statusCode: any;
 }
