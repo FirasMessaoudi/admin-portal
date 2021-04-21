@@ -19,7 +19,7 @@ import {EAuthority} from "@model/enum/authority.enum";
 export class UserDetailsComponent implements OnInit {
   userId: number;
   user: User;
-  url: any = 'assets/images/default-avatar.png';
+  url: any = 'assets/images/default-avatar.svg';
   file: File;
   systemAdminUser: boolean;
 
