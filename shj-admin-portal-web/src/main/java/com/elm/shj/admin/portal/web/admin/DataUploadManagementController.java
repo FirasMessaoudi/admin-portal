@@ -14,10 +14,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.security.RolesAllowed;
 
@@ -60,6 +58,21 @@ public class DataUploadManagementController {
                     .body(tplFile);
         }
         return null;
+    }
+
+    /**
+     * Uploads a file for a specific data segment
+     *
+     * @param file      the file to upload
+     * @param segmentId the data segment id related to the file
+     * @return the total number of records detected by the system
+     */
+    @PostMapping("/{segmentId}")
+    public int uploadDataFile(@RequestParam("file") MultipartFile file, @PathVariable long segmentId) {
+        log.info("Uploading data file started [{}]", file.getOriginalFilename());
+        int totalRecordCount = dataUploadService.uploadDataFile(file, segmentId);
+        log.info("Uploading data file finished successfully [{}] and #{} will be processed", file.getOriginalFilename(), totalRecordCount);
+        return totalRecordCount;
     }
 
 }

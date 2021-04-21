@@ -14,7 +14,13 @@ import {DateAgoPipe} from '@shared/pipes/date/date-ago/date-ago.pipe';
 import {DateFormatPipe} from '@shared/pipes/date/date-format.pipe';
 import {HijriFormatPipe} from '@shared/pipes/date/hijri-format.pipe';
 
-import {NgbDatepickerModule, NgbModule, NgbToastModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDatepickerModule,
+  NgbModule,
+  NgbProgressbarModule,
+  NgbToastModule,
+  NgbTooltipModule
+} from '@ng-bootstrap/ng-bootstrap';
 import {ToastsContainer} from './components/toast';
 import {NgbdDatepickerIslamicumalqura} from './directives/datepicker-islamicumalqura';
 import {IbanStatusPipe} from "@shared/pipes/iban/iban-status.pipe";
@@ -59,6 +65,7 @@ import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
     TranslateModule,
     NgxCaptchaModule,
     NgbDatepickerModule,
+    NgbProgressbarModule,
     NgbTooltipModule,
     DateAgoPipe,
     ConfirmDialogComponent,
