@@ -6,6 +6,8 @@ package com.elm.shj.admin.portal.web.lookup;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.AuthorityLookupDto;
 import com.elm.shj.admin.portal.services.lookup.AuthorityLookupService;
+import com.elm.shj.admin.portal.services.lookup.LocalizedLookupVo;
+import com.elm.shj.admin.portal.services.lookup.RitualTypeLookupService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -29,9 +31,18 @@ public class LookupController {
     @Autowired
     private AuthorityLookupService authorityLookupService;
 
+    @Autowired
+    private RitualTypeLookupService ritualTypeLookupService;
+
     @GetMapping("/authority/list/parent")
     @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT)
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
         return authorityLookupService.findAllParentAuthorities();
+    }
+
+    @GetMapping("/ritual-type/list")
+    @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT) //TODO: change it
+    public List<LocalizedLookupVo> listRitualTypes(Authentication authentication) {
+        return ritualTypeLookupService.findAllLocalized();
     }
 }

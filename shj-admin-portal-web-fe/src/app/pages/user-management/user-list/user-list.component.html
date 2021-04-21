@@ -38,13 +38,9 @@
             </option>
           </select>
         </div>
-        <div class="form-group col align-self-end">
-          <button type="submit" (click)="search()" class="btn btn-outline-dcc-primary px-5 mr-3">
+        <div class="form-group col-12">
+          <button type="submit" (click)="search()" class="btn btn-dcc-primary px-5 mr-3">
             {{ "general.btn_search" | translate }}
-          </button>
-
-          <button (click)="cancelSearch()" class="btn btn-outline-secondary">
-            {{ "general.btn_clear" | translate }}
           </button>
         </div>
       </form>
@@ -67,7 +63,7 @@
         <tbody>
         <tr *ngIf="!page?.content" class="text-center">
           <td colspan="10">
-            <svg-icon styleClass="display-1 text-light-gray" icon="empty-set" ></svg-icon>
+            <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set" ></svg-icon>
             <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
           </td>
         </tr>
@@ -89,13 +85,16 @@
             </span>
           </td>
           <td style="text-align:center">
-            <span *ngIf="!user?.activated && !user?.blocked" class="badge badge-warning py-2 px-4 badge-pill">
+            <span *ngIf="!user?.activated && !user?.blocked" class="text-nowrap">
+              <span class="status mr-1 warning"></span>
               {{'user-management.not_activated' | translate}}
             </span>
-              <span *ngIf="user?.activated && !user?.blocked" class="badge badge-success py-2 px-4 badge-pill">
+              <span *ngIf="user?.activated && !user?.blocked" class="text-nowrap">
+              <span class="status mr-1 done"></span>
               {{'user-management.activated' | translate}}
             </span>
-              <span *ngIf="user?.blocked" class="badge badge-danger py-2 px-4 badge-pill">
+              <span *ngIf="user?.blocked" class="text-nowrap">
+                <span class="status mr-1 Suspended"></span>
               {{'user-management.locked' | translate}}
             </span>
           </td>

@@ -41,10 +41,12 @@
         <div class="form-group col">
           <label class="col-form-label">{{'role-management.role_status' | translate}}</label>
           <div class="form-control-plaintext">
-          <span *ngIf="!role?.activated" class="badge badge-danger py-2 px-4 badge-pill">
+          <span *ngIf="!role?.activated" class="text-nowrap">
+            <span class="status mr-1 Suspended"></span>
             {{'user-management.not_activated' | translate}}
           </span>
-            <span *ngIf="role?.activated" class="badge badge-success py-2 px-4 badge-pill">
+            <span *ngIf="role?.activated" class="text-nowrap">
+              <span class="status mr-1 done"></span>
             {{'user-management.activated' | translate}}
           </span>
           </div>

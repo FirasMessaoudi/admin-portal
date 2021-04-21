@@ -152,12 +152,6 @@
 
 
 .searchBox{
-    border-radius: $border-radius 0;
-    @include mt(-4);
-    @include mx(-4);
-    @include pt(4);
-    @include px(4);
-    background-color: #F8F8F8;
 }
 
 
@@ -243,6 +237,9 @@ tr:hover .tblView{
     &.Suspended{
         background-color: #D14646;
     }
+    &.warning{
+        background-color: #ffc107;
+    }
     
 }
 
@@ -250,6 +247,7 @@ tr:hover .tblView{
     background-color: #F5F8F4;
     border: 1px #C0D1B0 solid;
     @include mb(3);
+    @include mx(0);
     @include py(3);
 }
 .avatar{
@@ -284,3 +282,11 @@ tr:hover .tblView{
     background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23DEDEDEFF' stroke-width='2' stroke-dasharray='7%2c 14%2c 12%2c 10' stroke-dashoffset='12' stroke-linecap='square'/%3e%3c/svg%3e");
   }
 
+.actionBar{
+      height: 52px;
+}
+.btn-action{
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 100% !important;
+}

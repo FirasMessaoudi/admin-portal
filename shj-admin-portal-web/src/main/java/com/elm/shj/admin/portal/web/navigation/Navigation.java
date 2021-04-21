@@ -29,6 +29,8 @@ public class Navigation {
 	public static final String API_RULES = "/api/rules";
 	// Applicants
 	public static final String API_APPLICANTS = "/api/applicants";
+	// Applicant Cards
+	public static final String API_APPLICANT_CARDS = "/api/cards";
 	// Cards
 	public static final String API_CARDS = "/api/cards";
 	// Printing Requests

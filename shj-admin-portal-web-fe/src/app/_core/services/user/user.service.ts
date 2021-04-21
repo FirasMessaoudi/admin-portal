@@ -26,10 +26,7 @@ export class UserService {
   list(pageNumber: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
 
-    return this.http.get<any>('/core/api/users/list', {params: params})
-      .pipe(map(page => {
-        return of(page);
-      }));
+    return this.http.get<any>('/core/api/users/list', {params: params});
   }
 
   /**

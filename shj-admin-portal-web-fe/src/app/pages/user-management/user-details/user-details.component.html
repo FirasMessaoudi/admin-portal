@@ -52,13 +52,16 @@
         <div class="form-group col">
           <label class="col-form-label">{{'user-management.account_status' | translate}}</label>
           <div class="form-control-plaintext">
-          <span *ngIf="!user?.activated && !user?.blocked" class="badge badge-warning py-2 px-4 badge-pill">
+          <span *ngIf="!user?.activated && !user?.blocked" class="text-nowrap">
+            <span class="status mr-1 warning"></span>
             {{'user-management.not_activated' | translate}}
           </span>
-            <span *ngIf="user?.activated && !user?.blocked" class="badge badge-success py-2 px-4 badge-pill">
+            <span *ngIf="user?.activated && !user?.blocked" class="text-nowrap">
+              <span class="status mr-1 done"></span>
             {{'user-management.activated' | translate}}
           </span>
-            <span *ngIf="user?.blocked" class="badge badge-danger py-2 px-4 badge-pill">
+            <span *ngIf="user?.blocked" class="text-nowrap">
+              <span class="status mr-1 Suspended"></span>
             {{'user-management.locked' | translate}}
           </span>
           </div>
