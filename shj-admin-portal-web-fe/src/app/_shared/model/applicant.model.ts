@@ -4,7 +4,7 @@ import {ApplicantContact} from "@model/applicant-contact.model";
 export class Applicant {
   id: number;
   gender: string;
-  nationalityCode: string;
+  nationalityCode: any;
   idNumber: number;
   idNumberOriginal: string;
   passportNumber: string;
