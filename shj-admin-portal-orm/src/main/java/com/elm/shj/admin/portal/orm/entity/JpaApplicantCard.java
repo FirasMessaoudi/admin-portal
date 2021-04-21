@@ -31,6 +31,7 @@ public class JpaApplicantCard implements Serializable {
     private long id;
 
     @ManyToOne
+    @JoinColumn(name = "applicant_ritual_id")
     private JpaApplicantRitual applicantRitual;
 
     @Column(name = "reference_number")
