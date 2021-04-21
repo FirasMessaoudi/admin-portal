@@ -1,0 +1,45 @@
+/*
+ *  Copyright (c) 2021 ELM. All rights reserved.
+ */
+package com.elm.shj.admin.portal.orm.entity;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * The persistent class for the sha_applicant_health_disease database table.
+ *
+ * @author Slim Ben Hadj
+ * @since 1.0.0
+ */
+@Entity
+@Table(name = "sha_applicant_health_disease")
+@NamedQuery(name = "JpaApplicantHealthDisease.findAll", query = "SELECT j FROM JpaApplicantHealthDisease j")
+@Data
+@NoArgsConstructor
+public class JpaApplicantHealthDisease implements Serializable {
+
+    private static final long serialVersionUID = -3370781493008204778L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(unique = true, nullable = false)
+    private long id;
+
+    @ManyToOne
+    @JoinColumn(name = "applicant_health_id")
+    private JpaApplicantHealth applicantHealth;
+
+    @Column(name = "disease_name_ar", nullable = false)
+    private String DiseaseNameAr;
+
+    @Column(name = "disease_name_en", nullable = false)
+    private String disease_name_en;
+
+    @Column(name = "creation_date", nullable = false)
+    private Date creationDate;
+}
