@@ -170,6 +170,66 @@ public class TestScenarios {
         }
     }
 
+    @Test
+    public void ValidateEditUserData() {
+        try {
+            systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
+            navigators.goToUserManagement();
+            userManagement.editUser(Executer.TestDataRow);
+
+        } catch (Exception ex) {
+            ReporterX.error(ex);
+        }
+    }
+
+    @Test
+    public void ValidateChangeUserStatus() {
+        try {
+            systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
+            navigators.goToUserManagement();
+            userManagement.changeUserStatus(Executer.TestDataRow);
+
+        } catch (Exception ex) {
+            ReporterX.error(ex);
+        }
+    }
+
+    @Test
+    public void ValidateDeleteUser() {
+        try {
+            systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
+            navigators.goToUserManagement();
+            userManagement.deleteUser(Executer.TestDataRow);
+
+        } catch (Exception ex) {
+            ReporterX.error(ex);
+        }
+    }
+
+    @Test
+    public void ValidateViewUserDetails() {
+        try {
+            systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
+            navigators.goToUserManagement();
+            userManagement.viewUserDetails(Executer.TestDataRow);
+
+        } catch (Exception ex) {
+            ReporterX.error(ex);
+        }
+    }
+
+    @Test
+    public void ValidateResetUserPassword() {
+        try {
+            systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
+            navigators.goToUserManagement();
+            userManagement.resetUserPassword(Executer.TestDataRow);
+
+        } catch (Exception ex) {
+            ReporterX.error(ex);
+        }
+    }
+
 
 
     //endregion // End Of User Management

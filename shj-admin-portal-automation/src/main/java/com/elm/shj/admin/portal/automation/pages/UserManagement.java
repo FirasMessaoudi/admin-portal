@@ -7,6 +7,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Hashtable;
 
@@ -77,20 +79,14 @@ public class UserManagement {
     @FindBy(xpath = "//app-user-add-update//div[contains(@class,'footer__action')]//button[contains(@class,'btn-outline-secondary')]")
     WebElement btnCancelSaveUSer;
 
+    @FindBy(xpath = "//app-user-list//input[@formcontrolname='nin']")
+    WebElement txtUserNINSearch;
 
+    @FindBy(xpath = "//app-user-list//form//button[contains(@class,'btn-dcc-primary')]")
+    WebElement btnUserSearch;
 
-
-    @FindBy(xpath = "//div[@id='swal2-content']")
-    WebElement divSaveMsgContent;
-
-    @FindBy(xpath = "//h2[@id='swal2-title']")
-    WebElement divSaveMsgTitle;
-
-    @FindBy(xpath = "//div[@class='swal2-actions']//button[contains(text(),'موافقة')]")
-    WebElement btnSaveMSGConfirmYes;
-
-    @FindBy(xpath = "//div[@id='spinner']")
-    WebElement divLoading;
+    @FindBy(xpath = "//app-user-list//table//tbody")
+    WebElement tblUsersSearchResults;
 
 
 
@@ -116,6 +112,74 @@ public class UserManagement {
         }else {
             ReporterX.fail("User ["+dataRow.get("UserIdNumber".toUpperCase())+"] Failed.!");
         }
+    }
+
+    private boolean searchUser(Hashtable<String,String> dataRow) throws Exception{
+        String userNIN= "";
+        if(Exists(txtUserNINSearch,30)) {
+
+            // waiting
+            ActionX.Sync();
+            ActionX.WaitChildItemsCountGreaterThan(tblUsersSearchResults,By.tagName("tr"),0,5);
+            userNIN = dataRow.get("UserIdNumber".toUpperCase());
+
+            SetValue(txtUserNINSearch, userNIN);
+            btnUserSearch.click();
+
+            //waiting load results
+            ActionX.Sync();
+            ActionX.WaitChildItemsCountLessThan(tblUsersSearchResults,By.tagName("tr"),2,5);
+
+        }else {
+            ReporterX.fail("Search User Page not Loaded.!!");
+        }
+
+        if(tblUsersSearchResults.findElements(By.tagName("tr")).size() > 0){
+            ReporterX.pass("User ["+userNIN+"] Search Success.!");
+            return true;
+        }else {
+            ReporterX.fail("User ["+userNIN+"] Search Failed.!");
+            return false;
+        }
+
+    }
+
+    private boolean selectUserAction(Hashtable<String,String> dataRow, String action) throws Exception{
+        boolean isSelected = false;
+        if( searchUser(dataRow)) {
+
+            switch (action) {
+                case "Edit":
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='edit']//parent::a")).click();
+                    isSelected = true;
+                    break;
+                case "Deactivate":
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-slash']//parent::a")).click();
+                    isSelected = true;
+                    break;
+                case "Activate":
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-check']//parent::a")).click();
+                    isSelected = true;
+                    break;
+                case "Delete":
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-times']//parent::a")).click();
+                    isSelected = true;
+                    break;
+                case "View":
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='eye']//parent::a")).click();
+                    isSelected = true;
+                    break;
+                case "ResetPassword":
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-lock']//parent::a")).click();
+                    isSelected = true;
+                    break;
+                default:
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='eye']//parent::a")).click();
+            }
+        }
+
+
+        return isSelected;
     }
 
 
@@ -176,6 +240,70 @@ public class UserManagement {
             ReporterX.fail("Add New User Page not Loaded.!!");
         }
 
+    }
+
+    public void editUser(Hashtable<String,String> dataRow) throws Exception{
+
+        if(selectUserAction(dataRow,"Edit")){
+            addNewUser(dataRow);
+        }
+
+
+    }
+
+    public void deleteUser(Hashtable<String,String> dataRow) throws Exception{
+        Home home = new Home();
+        if(selectUserAction(dataRow,"Delete")){
+            if(Exists(home.btnActionMsgConfirmYes,5)){
+                home.btnActionMsgConfirmYes.click();
+                //validate delete item
+                validateSuccess(dataRow);
+            }
+        }
+    }
+
+    public void changeUserStatus(Hashtable<String,String> dataRow) throws Exception{
+        Home home = new Home();
+        if (dataRow.get("UserStatus".toUpperCase()).equalsIgnoreCase("active")) {
+            selectUserAction(dataRow,"Activate");
+        } else {
+            selectUserAction(dataRow,"Deactivate");
+        }
+        if(Exists(home.btnActionMsgConfirmYes,5)) {
+            home.btnActionMsgConfirmYes.click();
+            //validate delete item
+            validateSuccess(dataRow);
+        }
+
+    }
+
+    public void viewUserDetails(Hashtable<String,String> dataRow) throws Exception{
+
+        if(selectUserAction(dataRow,"View")){
+            //wait for element details
+            String userNIN = dataRow.get("UserIdNumber".toUpperCase());
+
+            WebDriverWait wait = new WebDriverWait(Global.Test.Browser, 5);
+            WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//app-user-details//span[contains(text(),'"+userNIN+"')]")));
+
+            if(null != element){
+                ReporterX.pass("View User Details ["+userNIN+"] Success.!");
+            }else {
+                ReporterX.fail("View User Details ["+userNIN+"] Failed.!");
+            }
+        }
+    }
+
+    public void resetUserPassword(Hashtable<String,String> dataRow) throws Exception{
+
+        Home home = new Home();
+        if(selectUserAction(dataRow,"ResetPassword")){
+            if(Exists(home.btnActionMsgConfirmYes,5)){
+                home.btnActionMsgConfirmYes.click();
+                //validate delete item
+                validateSuccess(dataRow);
+            }
+        }
     }
 
 

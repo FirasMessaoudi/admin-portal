@@ -1,10 +1,10 @@
-import {Lookup} from "@model/lookup.model";
 import {ApplicantRelative} from "@model/applicant-relative.model";
+import {ApplicantContact} from "@model/applicant-contact.model";
 
 export class Applicant {
   id: number;
   gender: string;
-  nationalityCode: Lookup;
+  nationalityCode: any;
   idNumber: number;
   idNumberOriginal: string;
   passportNumber: string;
@@ -16,6 +16,7 @@ export class Applicant {
   maritalStatus: number;
   photo: any;
   requestId: number;
+  relatives: ApplicantRelative[];
+  contacts: ApplicantContact[];
   status: number;
-  relativeApplicants: ApplicantRelative[];
 }
