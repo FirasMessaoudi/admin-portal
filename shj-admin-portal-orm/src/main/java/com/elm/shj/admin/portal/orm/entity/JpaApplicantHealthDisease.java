@@ -35,10 +35,10 @@ public class JpaApplicantHealthDisease implements Serializable {
     private JpaApplicantHealth applicantHealth;
 
     @Column(name = "disease_name_ar", nullable = false)
-    private String DiseaseNameAr;
+    private String diseaseNameAr;
 
     @Column(name = "disease_name_en", nullable = false)
-    private String disease_name_en;
+    private String diseaseNameEn;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
