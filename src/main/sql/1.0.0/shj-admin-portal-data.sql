@@ -588,5 +588,18 @@ INSERT INTO shj_portal.sha_decision_rule (dmn, label_ar, label_en, creation_date
             </dmndi:DMNDiagram>
             </dmndi:DMNDI>
             </definitions>',
-            N'بيانات المتقدم', N'Applicant Data', N'2021-04-13 13:38:43', null); GO
-
+            N'بيانات المتقدم', N'Applicant Data', N'2021-04-13 13:38:43', null);
+GO
+-- insert ritual types
+SET IDENTITY_INSERT shj_portal.sha_ritual_type_lk ON;
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (1, 'EXTERNAL_HAJJ', 'ar', 'حجاج الخارج');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (2, 'EXTERNAL_HAJJ', 'en', 'External Hajj');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (3, 'INTERNAL_HAJJ', 'ar', 'حجاج الداخل');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (4, 'INTERNAL_HAJJ', 'en', 'Internal Hajj');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (5, 'COURTESY_HAJJ', 'ar', 'حجاج المجاملة');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (6, 'COURTESY_HAJJ', 'en', 'Courtesy Hajj');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (7, 'EXTERNAL_UMRAH', 'ar', 'عمرة الخارج');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (8, 'EXTERNAL_UMRAH', 'en', 'External Umrah');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (9, 'INTERNAL_UMRAH', 'ar', 'عمرة الداخل');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (10, 'INTERNAL_UMRAH', 'en', 'Internal Umrah');
+SET IDENTITY_INSERT shj_portal.sha_ritual_type_lk OFF;
