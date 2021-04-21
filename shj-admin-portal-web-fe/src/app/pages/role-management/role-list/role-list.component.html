@@ -2,7 +2,8 @@
   <div class="title__Page">
     <h3 class="sectionTitle">{{ "role-management.roles_list" | translate }}</h3>
     <a routerLink="/roles/create" class="btn btn-outline-dcc-primary px-4" *ngIf="canAddRole">
-      {{ "general.btn_add" | translate }}
+      <svg-icon styleClass="mr-2" icon="plus"></svg-icon>
+      <span>{{ "general.btn_add" | translate }}</span>
     </a>
   </div>
   <div class="content__section" *ngIf="!canSeeRoleList">

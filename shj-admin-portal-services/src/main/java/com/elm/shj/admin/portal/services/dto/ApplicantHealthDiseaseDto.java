@@ -23,7 +23,7 @@ public class ApplicantHealthDiseaseDto implements Serializable {
 
     private long id;
     private ApplicantHealthDto applicantHealth;
-    private String DiseaseNameAr;
-    private String disease_name_en;
+    private String diseaseNameAr;
+    private String diseaseNameEn;
     private Date creationDate;
 }

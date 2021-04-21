@@ -54,8 +54,8 @@
 
       </div>
 
-      <div class="container-fluid clearfix p-0">
-        <div class="col-md-8 float-right p-0">
+      <div class="row">
+        <div class="col-md-9">
 
           <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2">
 
@@ -192,19 +192,19 @@
 
         </div>
 
-        <div class="col-md-4 float-right px-3">
-          <div class="w-75 p-0 mx-auto text-center">
-            <div class="mb-3 border border-secondary rounded-circle mx-auto w-100">
-              <img src="data:image/gif;base64," class="rounded-circle bg-secondary avatar" [class.o-25]="!user?.id"
-                   [ngStyle]="{'background-image': 'url(\'' + (this.user.avatar ? 'data:image/jpeg;base64,'+this.user.avatar : url) + '\')'}" />
+          <div class="col-md-3">
+            <div class="avatarBox">
+              <div class="avatar">
+                <img src="assets/images/space.png" [class.o-25]="!user?.id"
+                     [ngStyle]="{'background-image': 'url(\'' + (this.user.avatar ? 'data:image/jpeg;base64,'+this.user.avatar : url) + '\')'}" />
+              </div>
+              <label class="btn btn-secondary my-3" *ngIf="user?.id">
+                <input type="file" class="hidden" name="avatarFile" aria-describedby="inputGroupFileAddon01" (change)="loadAvatar($event);"/>
+                <a>{{'user-management.change_avatar' | translate}}</a>
+              </label>
+              <small class="text-black-50 my-3" *ngIf="!user?.id">{{ "user-management.avatar-no-edit-text" | translate }}</small>
             </div>
-            <label class="btn btn-secondary" *ngIf="user?.id">
-              <input type="file" class="hidden" name="avatarFile" aria-describedby="inputGroupFileAddon01" (change)="loadAvatar($event);"/>
-              <a>{{'user-management.change_avatar' | translate}}</a>
-            </label>
-            <small *ngIf="!user?.id">{{ "user-management.avatar-no-edit-text" | translate }}</small>
           </div>
-        </div>
 
       </div>
 
@@ -212,7 +212,7 @@
     </form>
 
 
-    <div class="content__footer__action clearfix">
+    <div class="content__footer__action">
       <button type="button" [routerLink]="['/users/list']" class="btn btn-outline-secondary btn-w100 px-5 mr-3">
         {{ "general.btn_cancel" | translate }}
       </button>

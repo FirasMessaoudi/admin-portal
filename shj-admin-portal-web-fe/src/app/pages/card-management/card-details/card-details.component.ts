@@ -12,7 +12,7 @@ import {PackageCatering} from "@model/package-catering.model";
 export class CardDetailsComponent implements OnInit {
 
   card: Card;
-  url: any = 'assets/images/default-avatar.png';
+  url: any = 'assets/images/default-avatar.svg';
 
   constructor(private translate: TranslateService,
               private i18nService: I18nService) { }
