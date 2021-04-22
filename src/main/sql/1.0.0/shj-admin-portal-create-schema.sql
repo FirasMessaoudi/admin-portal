@@ -13,7 +13,7 @@ create table shj_portal.sha_user
   (
     id 						int not null primary key identity(1,1),
     user_name 				nvarchar(50) not null,
-    nin 						int not null,
+    nin 						bigint not null,
     gender 					nvarchar(1) not null,
     mobile_number 			int not null,
     date_of_birth_gregorian 	date,
@@ -297,7 +297,7 @@ create table shj_portal.sha_applicant
     id int PRIMARY KEY NOT NULL identity(1,1),
     gender VARCHAR(1) NULL,
     nationality_code VARCHAR(20) NULL,
-    id_number INT NULL,
+    id_number BIGINT NULL,
     id_number_original VARCHAR(20) NULL,
     passport_number NVARCHAR(20) NULL,
     date_of_birth_gregorian DATE NOT NULL,
