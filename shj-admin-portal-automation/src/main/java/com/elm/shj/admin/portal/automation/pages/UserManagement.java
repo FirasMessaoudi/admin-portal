@@ -218,15 +218,27 @@ public class UserManagement {
                 btnUserStatusInActive.click();
             }
             SetValue(txtUserMobileNumber,dataRow.get("MobileNumber".toUpperCase()));
-            Select(lstUserMainRole,dataRow.get("MainRole".toUpperCase()));
+
+            // select role based on language.
+            String mainRole , additionalRole = "";
+            if(Global.Test.RunLang.equalsIgnoreCase("arb")) {
+                mainRole = dataRow.get("MainRoleArb".toUpperCase());
+                additionalRole = dataRow.get("AdditionalRoleArb".toUpperCase());
+            }else {
+                mainRole = dataRow.get("MainRole".toUpperCase());
+                additionalRole = dataRow.get("AdditionalRole".toUpperCase());
+            }
+
+            Select(lstUserMainRole,mainRole);
             try{
                 lstUserAdditionalRole.click();
                 Thread.sleep(1000);
-                String xpath = "(//app-user-add-update//ng-multiselect-dropdown[@formcontrolname='additionalRoles']//ul)[2]//div[contains(text(),'"+dataRow.get("AdditionalRole".toUpperCase())+"')]";
+                String xpath = "(//app-user-add-update//ng-multiselect-dropdown[@formcontrolname='additionalRoles']//ul)[2]//div[contains(text(),'"+additionalRole+"')]";
                 Global.Test.Browser.findElements(By.xpath(xpath)).get(0).click();
             }catch (Exception e){
 
             }
+
             SetValue(txtUserEmail,dataRow.get("UserEmail".toUpperCase()));
 
             ActionX.ScrollToElement(btnSaveUser);
