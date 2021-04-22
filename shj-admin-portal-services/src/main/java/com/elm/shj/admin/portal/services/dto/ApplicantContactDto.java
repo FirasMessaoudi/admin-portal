@@ -28,11 +28,11 @@ public class ApplicantContactDto implements Serializable {
     private String email;
     private int localMobileNumber;
     private int intlMobileNumber;
-    private String street_name;
+    private String streetName;
     private String districtName;
     private String cityName;
     private int buildingNumber;
-    private int postal_code;
+    private int postalCode;
     private Date creationDate;
     private Date updateDate;
 }
