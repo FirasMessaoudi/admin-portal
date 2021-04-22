@@ -540,11 +540,11 @@ if not exists (select * from sys.tables where name = 'sha_data_request')
 create table shj_portal.sha_data_request
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
-    reference_number NVARCHAR(30) NOT NULL,
-    channel NVARCHAR(10) NOT NULL,
+    reference_number NVARCHAR(48) NOT NULL,
+    channel NVARCHAR(20) NOT NULL,
     data_segment_id INT NOT NULL,
-    original_source_path NVARCHAR(100) NOT NULL,
-    error_file_path VARCHAR(100) NULL,
+    original_source_path NVARCHAR(256) NOT NULL,
+    error_file_path VARCHAR(256) NULL,
     status_id INT NOT NULL,
     creation_date smalldatetime not null default current_timestamp,
     update_date smalldatetime null,

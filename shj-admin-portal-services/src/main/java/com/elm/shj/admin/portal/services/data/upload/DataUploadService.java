@@ -3,14 +3,17 @@
  */
 package com.elm.shj.admin.portal.services.data.upload;
 
+import com.elm.shj.admin.portal.services.data.request.DataRequestService;
+import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -30,12 +33,26 @@ public class DataUploadService {
     private static final SimpleDateFormat FILE_NAME_POSTFIX_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
     private static final SimpleDateFormat FOLDER_NAME_FORMAT = new SimpleDateFormat("yyyy_MM_dd");
 
-    private SftpService sftpService;
+    private final SftpService sftpService;
+    private final DataRequestService dataRequestService;
+    private final DataSegmentService dataSegmentService;
 
+    /**
+     * Uploads data file and creates a new data request
+     *
+     * @param file      the file content to upload
+     * @param segmentId the data segment id
+     * @return
+     * @throws Exception in case of upload/transfer issue
+     */
+    @Transactional
     public int uploadDataFile(MultipartFile file, long segmentId) throws Exception {
-        UUID requestReference = UUID.randomUUID();
-
-        String [] fileNameParts = Objects.requireNonNull(file.getOriginalFilename()).split("\\.");
+        // generate request reference
+        String requestReference = UUID.randomUUID().toString();
+        // retrieve data segment
+        DataSegmentDto dataSegment = dataSegmentService.findOne(segmentId);
+        // generate file and folder names to be uploaded/created in SFTP
+        String[] fileNameParts = Objects.requireNonNull(file.getOriginalFilename()).split("\\.");
         String localFileName = fileNameParts[0] +
                 "_" +
                 FILE_NAME_POSTFIX_FORMAT.format(new Date()) +
@@ -46,6 +63,17 @@ public class DataUploadService {
                 requestReference +
                 "/" +
                 localFileName;
+        // create and save the data request
+        DataRequestDto dataRequest = DataRequestDto.builder()
+                .referenceNumber(requestReference)
+                .dataSegment(dataSegment)
+                .channel(EDataUploadChannel.SYSTEM.toString())
+                .originalSourcePath(sftpPath)
+                .status(DataRequestStatusLookupDto.builder().id(EDataRequestStatus.NEW.getId()).build())
+                .creationDate(new Date())
+                .build();
+        dataRequestService.save(dataRequest);
+        // upload the file in the SFTP
         sftpService.uploadFile(sftpPath, file.getInputStream());
         log.info("service: uploadFile");
         return 100;

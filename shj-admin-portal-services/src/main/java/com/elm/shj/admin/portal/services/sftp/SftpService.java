@@ -29,8 +29,7 @@ public class SftpService {
     // Set the prompt when logging in for the first time, optional values: (ask | yes | no)
     private static final String SESSION_CONFIG_STRICT_HOST_KEY_CHECKING = "StrictHostKeyChecking";
 
-    @NotNull
-    private SftpProperties config;
+    private final SftpProperties config;
 
     /**
      * upload files

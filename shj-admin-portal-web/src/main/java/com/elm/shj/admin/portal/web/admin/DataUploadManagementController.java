@@ -68,7 +68,7 @@ public class DataUploadManagementController {
      * @return the total number of records detected by the system
      */
     @PostMapping("/{segmentId}")
-    public int uploadDataFile(@RequestParam("file") MultipartFile file, @PathVariable long segmentId) {
+    public int uploadDataFile(@RequestParam("file") MultipartFile file, @PathVariable long segmentId) throws Exception {
         log.info("Uploading data file started [{}]", file.getOriginalFilename());
         int totalRecordCount = dataUploadService.uploadDataFile(file, segmentId);
         log.info("Uploading data file finished successfully [{}] and #{} will be processed", file.getOriginalFilename(), totalRecordCount);
