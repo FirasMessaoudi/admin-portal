@@ -591,6 +591,17 @@ INSERT INTO shj_portal.sha_decision_rule (dmn, label_ar, label_en, creation_date
             N'بيانات المتقدم', N'Applicant Data', 1, N'2021-04-13 13:38:43', null);
 GO
 
+-- add data request statuses
+SET IDENTITY_INSERT shj_portal.sha_data_request_status_lk ON;
+INSERT INTO shj_portal.sha_data_request_status_lk(id, label_ar, label_en, creation_date) VALUES
+(1, N'جديد', 'New', current_timestamp),
+(2, N'تحت المعالجة', 'Under Processing', current_timestamp),
+(3, N'تمت المعالجة', 'Processed', current_timestamp),
+(4, N'معالج مع أخطاء', 'Processed With Errors', current_timestamp),
+(5, N'ملغى', 'Cancelled', current_timestamp);
+SET IDENTITY_INSERT shj_portal.sha_data_request_status_lk OFF;
+
+-- add sftp config
 INSERT INTO shj_portal.sha_config (conf_key, conf_value)
 VALUES ('sftp.client.protocol', 'sftp'),
        ('sftp.client.host', '127.0.0.1'),

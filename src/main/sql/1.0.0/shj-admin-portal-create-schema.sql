@@ -525,3 +525,30 @@ create table shj_portal.sha_decision_rule
     CONSTRAINT fk_decision_rule_segment FOREIGN KEY (data_segment_id) REFERENCES shj_portal.sha_data_segment (id)
 );
 GO
+
+if not exists (select * from sys.tables where name = 'sha_data_request_status_lk')
+create table shj_portal.sha_data_request_status_lk
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    label_ar NVARCHAR(50) NOT NULL,
+    label_en VARCHAR(50) NOT NULL,
+    creation_date smalldatetime not null default current_timestamp
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_data_request')
+create table shj_portal.sha_data_request
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    reference_number NVARCHAR(30) NOT NULL,
+    channel NVARCHAR(10) NOT NULL,
+    data_segment_id INT NOT NULL,
+    original_source_path NVARCHAR(100) NOT NULL,
+    error_file_path VARCHAR(100) NULL,
+    status_id INT NOT NULL,
+    creation_date smalldatetime not null default current_timestamp,
+    update_date smalldatetime null,
+    CONSTRAINT fk_data_request_segment FOREIGN KEY (data_segment_id) REFERENCES shj_portal.sha_data_segment (id),
+    CONSTRAINT fk_data_request_status_lk FOREIGN KEY (status_id) REFERENCES shj_portal.sha_data_request_status_lk (id)
+);
+GO
