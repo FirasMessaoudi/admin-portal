@@ -332,6 +332,7 @@ create table shj_portal.sha_applicant_contact
     email VARCHAR(50) NULL,
     local_mobile_number INT NULL,
     intl_mobile_number INT NULL,
+    country_code VARCHAR(20) NOT NULL,
     street_name VARCHAR(30) NULL,
     district_name VARCHAR(30) NULL,
     city_name VARCHAR(30) NULL,

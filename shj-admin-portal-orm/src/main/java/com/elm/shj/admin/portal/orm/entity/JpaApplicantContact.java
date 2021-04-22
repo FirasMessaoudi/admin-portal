@@ -45,6 +45,9 @@ public class JpaApplicantContact implements Serializable {
     @Column(name = "intl_mobile_number")
     private int intlMobileNumber;
 
+    @Column(name = "country_code")
+    private String countryCode;
+
     @Column(name = "street_name")
     private String streetName;
 
