@@ -304,3 +304,23 @@ tr:hover .tblView{
     align-items: center !important;
     height: 100% !important;
 }
+
+
+.roleCheck{
+    background-image: url(assets/images/svg-icons/square.svg);
+    background-repeat: no-repeat;
+    padding: 0;
+    background-size: 20px;
+    padding-right: 2.2rem;
+    background-position: center right;
+    color: rgba(0, 0, 0, 0.5);
+
+    &.btn:hover{
+        box-shadow:none
+    }
+
+    &.active{
+        background-image: url(assets/images/svg-icons/check-square.svg);
+        color: #3B7937;
+    }
+}

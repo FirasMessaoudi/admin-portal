@@ -54,23 +54,26 @@
           <label class="col-form-label">{{'role-management.authorities' | translate}}<span class="text-danger px-1">*</span></label>
           <ng-container *ngFor="let roleAuthority of roleAuthorities" >
             <ng-container *ngIf="!roleAuthority.authority.parentId" >
-              <label class="col text-dark font-weight-bold">
-                {{ currentLanguage.startsWith("en") ? roleAuthority.authority.nameEnglish : roleAuthority.authority.nameArabic }}
-              </label>
-              <div class="form-control p-0 border-0 btn-group btn-group-toggle">
-                <label ngbButtonLabel class="btn btn-outline-info" *ngIf="!roleAuthority.authority.parentId && (!roleAuthority.authority.children || !roleAuthority.authority.children.length)">
-                  <svg-icon styleClass="text-white h3" icon="check-circle"></svg-icon>
-                  <input ngbButton type="checkbox" [(ngModel)]="roleAuthority.selected" [ngModelOptions]="{standalone: true}">
-                  {{ currentLanguage.startsWith("en") ? roleAuthority.authority.nameEnglish : roleAuthority.authority.nameArabic }}
-                </label>
-                <ng-container *ngFor="let childRoleAuthority of roleAuthorities" >
-                  <label ngbButtonLabel class="btn btn-outline-info" *ngIf="childRoleAuthority.authority.parentId === roleAuthority.authority.id">
-                    <svg-icon styleClass="text-white h3" icon="check-circle"></svg-icon>
-                    <input ngbButton type="checkbox" [(ngModel)]="childRoleAuthority.selected" [ngModelOptions]="{standalone: true}">
-                    {{ currentLanguage.startsWith("en") ? childRoleAuthority.authority.nameEnglish : childRoleAuthority.authority.nameArabic }}
+              <fieldset class="border py-3 my-2">
+                <legend class="w-auto">
+                  <span class="mx-3 sectionTitle h6">
+                    {{ currentLanguage.startsWith("en") ? roleAuthority.authority.nameEnglish : roleAuthority.authority.nameArabic }}
+                  </span>
+                </legend>
+                
+                  <label ngbButtonLabel class="roleCheck mx-3" *ngIf="!roleAuthority.authority.parentId && (!roleAuthority.authority.children || !roleAuthority.authority.children.length)">
+                    <input ngbButton type="checkbox" class="d-none" [(ngModel)]="roleAuthority.selected" [ngModelOptions]="{standalone: true}">
+                    {{ currentLanguage.startsWith("en") ? roleAuthority.authority.nameEnglish : roleAuthority.authority.nameArabic }}
                   </label>
-                </ng-container>
-              </div>
+
+                  <ng-container *ngFor="let childRoleAuthority of roleAuthorities" >
+                    <label ngbButtonLabel class="roleCheck mx-3" *ngIf="childRoleAuthority.authority.parentId === roleAuthority.authority.id">
+                      <input class="d-none"  ngbButton type="checkbox" [(ngModel)]="childRoleAuthority.selected" [ngModelOptions]="{standalone: true}">
+                        {{ currentLanguage.startsWith("en") ? childRoleAuthority.authority.nameEnglish : childRoleAuthority.authority.nameArabic }}
+                    </label>
+                  </ng-container>
+                </fieldset>
+              
             </ng-container>
           </ng-container>
         </div>
