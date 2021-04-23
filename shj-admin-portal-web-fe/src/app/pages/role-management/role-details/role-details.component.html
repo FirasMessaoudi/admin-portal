@@ -9,7 +9,7 @@
   </div>
   <div class="content__section" *ngIf="canSeeRoleDetails">
     <form enctype="multipart/form-data">
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
         <div class="form-group col">
           <label class="col-form-label">{{'role-management.role_name' | translate}}</label>
           <span
@@ -20,20 +20,24 @@
           <div class="form-control-plaintext ">
             <ng-container *ngFor="let roleAuthority of role?.roleAuthorities" >
               <ng-container *ngIf="!roleAuthority.authority.parentId" >
+                <fieldset class="border px-3" *ngIf="!roleAuthority.authority.parentId">
 
-                <a class="badge badge-info py-1 px-2 badge-pill mx-1" href="javascript:void(0);" *ngIf="!roleAuthority.authority.parentId">
-                  {{ currentLanguage.startsWith("en") ? roleAuthority.authority.nameEnglish : roleAuthority.authority.nameArabic }}
+                  <legend class="w-auto mb-0">
+                    <span class="mx-3 sectionTitle h6">{{ currentLanguage.startsWith("en") ? roleAuthority.authority.nameEnglish : roleAuthority.authority.nameArabic }}</span>
+                  </legend>
 
-                  <span *ngIf="!roleAuthority.authority.parentId && (!roleAuthority.authority.children || !roleAuthority.authority.children.length)" class="badge badge-dcc-primary py-1 px-2 badge-pill mx-1">
+                  <span *ngIf="!roleAuthority.authority.parentId && (!roleAuthority.authority.children || !roleAuthority.authority.children.length)" class="badge m-2 text-muted">
+                    <svg-icon styleClass="text-gray-300" icon="dot-circle"></svg-icon>
                     {{ currentLanguage.startsWith("en") ? roleAuthority.authority.nameEnglish : roleAuthority.authority.nameArabic }}
                   </span>
 
                   <ng-container *ngFor="let childRoleAuthority of role.roleAuthorities" >
-                    <span *ngIf="childRoleAuthority.authority.parentId === roleAuthority.authority.id" class="badge badge-dcc-primary py-1 px-2 badge-pill mx-1">
+                    <span *ngIf="childRoleAuthority.authority.parentId === roleAuthority.authority.id" class="badge m-2 text-muted">
+                      <svg-icon styleClass="text-gray-300" icon="dot-circle"></svg-icon>
                       {{ currentLanguage.startsWith("en") ? childRoleAuthority.authority.nameEnglish : childRoleAuthority.authority.nameArabic }}
                     </span>
                   </ng-container>
-                </a>
+                </fieldset>
               </ng-container>
             </ng-container>
           </div>
