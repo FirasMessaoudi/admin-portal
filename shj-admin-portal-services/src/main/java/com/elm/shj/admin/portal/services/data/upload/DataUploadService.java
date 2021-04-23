@@ -10,12 +10,14 @@ import com.elm.shj.admin.portal.services.sftp.SftpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,10 +34,12 @@ public class DataUploadService {
 
     private static final SimpleDateFormat FILE_NAME_POSTFIX_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
     private static final SimpleDateFormat FOLDER_NAME_FORMAT = new SimpleDateFormat("yyyy_MM_dd");
+    private static final String XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
     private final SftpService sftpService;
     private final DataRequestService dataRequestService;
     private final DataSegmentService dataSegmentService;
+    private final MessageSource messageSource;
 
     /**
      * Uploads data file and creates a new data request
@@ -72,10 +76,17 @@ public class DataUploadService {
                 .status(DataRequestStatusLookupDto.builder().id(EDataRequestStatus.NEW.getId()).build())
                 .creationDate(new Date())
                 .build();
-        dataRequestService.save(dataRequest);
+        DataRequestDto createdRequest = dataRequestService.save(dataRequest);
+        log.info("data request created successfully with #{}", createdRequest.getId());
         // upload the file in the SFTP
         sftpService.uploadFile(sftpPath, file.getInputStream());
-        log.info("service: uploadFile");
+        log.info("file uploaded successfully to: {}", sftpPath);
         return 100;
+    }
+
+    public void validateFile(MultipartFile file, DataSegmentDto dataSegment, String lang) {
+        if (!XLSX_CONTENT_TYPE.equals(file.getContentType())){
+            messageSource.getMessage("", null, Locale.forLanguageTag(lang));
+        }
     }
 }

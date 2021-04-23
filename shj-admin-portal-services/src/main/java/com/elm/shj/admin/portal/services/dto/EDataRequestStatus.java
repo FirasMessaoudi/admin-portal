@@ -11,7 +11,7 @@ package com.elm.shj.admin.portal.services.dto;
  */
 public enum EDataRequestStatus {
 
-    NEW(1), UNDER_PROCESSING(2), PROCESSED(3), PROCESSED_WITH_ERRORS(3), CANCELLED(5);
+    NEW(1), CONFIRMED(2), UNDER_PROCESSING(3), PROCESSED_SUCCESSFULLY(4), PROCESSED_WITH_ERRORS(5), CANCELLED(6);
 
     private final int id;
 

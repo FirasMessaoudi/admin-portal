@@ -595,10 +595,11 @@ GO
 SET IDENTITY_INSERT shj_portal.sha_data_request_status_lk ON;
 INSERT INTO shj_portal.sha_data_request_status_lk(id, label_ar, label_en, creation_date) VALUES
 (1, N'جديد', 'New', current_timestamp),
-(2, N'تحت المعالجة', 'Under Processing', current_timestamp),
-(3, N'تمت المعالجة', 'Processed', current_timestamp),
-(4, N'معالج مع أخطاء', 'Processed With Errors', current_timestamp),
-(5, N'ملغى', 'Cancelled', current_timestamp);
+(2, N'مؤكد', 'Confirmed', current_timestamp),
+(3, N'تحت المعالجة', 'Under Processing', current_timestamp),
+(4, N'معالج بنجاح', 'Processed Successfully', current_timestamp),
+(5, N'معالج مع أخطاء', 'Processed With Errors', current_timestamp),
+(6, N'ملغى', 'Cancelled', current_timestamp);
 SET IDENTITY_INSERT shj_portal.sha_data_request_status_lk OFF;
 
 -- add sftp config

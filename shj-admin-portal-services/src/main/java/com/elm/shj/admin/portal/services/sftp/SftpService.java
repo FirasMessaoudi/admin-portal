@@ -43,6 +43,7 @@ public class SftpService {
         log.info("Upload File Started, ftpServer [{}:{}], ftpPath [{}]", config.getHost(), config.getPort(), targetPath);
         ChannelSftp sftp = this.createSftp();
         try {
+            createDirs(config.getRootFolder(), sftp);
             sftp.cd(config.getRootFolder());
             log.info("Change path to {}", config.getRootFolder());
 
@@ -88,6 +89,7 @@ public class SftpService {
         ChannelSftp sftp = this.createSftp();
         OutputStream outputStream = null;
         try {
+            createDirs(config.getRootFolder(), sftp);
             sftp.cd(config.getRootFolder());
             log.info("Change path to {}", config.getRootFolder());
 
