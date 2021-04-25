@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {DataUploadService} from "@core/services/data/data-upload.service";
 import * as FileSaver from 'file-saver';
 import {Observable} from "rxjs";
 import {HttpEventType, HttpResponse} from "@angular/common/http";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {DataRequestService} from "@core/services/data/data-request.service";
+import {DataRequest, DataSegment} from "@shared/model";
 
 @Component({
   selector: 'app-step-one',
@@ -19,7 +20,7 @@ export class StepOneComponent implements OnInit {
   message = '';
   fileInfos: Observable<any>;
 
-  constructor(private dataUploadService: DataUploadService,
+  constructor(private dataRequestService: DataRequestService,
               private formBuilder: FormBuilder) {
   }
 
@@ -30,7 +31,7 @@ export class StepOneComponent implements OnInit {
   }
 
   downloadTemplate(dataSegmentId: any) {
-    this.dataUploadService.downloadTemplate(dataSegmentId).pipe(
+    this.dataRequestService.downloadTemplate(dataSegmentId).pipe(
     ).subscribe({
       next: (response: any) => {
         let fileName = 'file';
@@ -64,7 +65,11 @@ export class StepOneComponent implements OnInit {
   uploadDataFile() {
     this.progress = 0;
     this.currentFile = this.selectedFiles.item(0);
-    this.dataUploadService.uploadDataFile(this.currentFile, 1).subscribe(
+    let dataRequest: DataRequest = new DataRequest();
+    let dataSegment: DataSegment = new DataSegment();
+    dataSegment.id = 1;
+    dataRequest.dataSegment = dataSegment;
+    this.dataRequestService.create(dataRequest, this.currentFile).subscribe(
       event => {
         if (event.type === HttpEventType.UploadProgress) {
           this.progress = Math.round(100 * event.loaded / event.total);

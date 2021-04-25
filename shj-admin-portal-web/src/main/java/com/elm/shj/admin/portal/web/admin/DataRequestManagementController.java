@@ -3,9 +3,11 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.services.data.request.DataRequestService;
 import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
-import com.elm.shj.admin.portal.services.data.upload.DataUploadService;
+import com.elm.shj.admin.portal.services.data.validators.ContentType;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.dto.DataRequestDto;
 import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.extern.slf4j.Slf4j;
@@ -13,25 +15,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 
 /**
- * Main controller for data upload management page
+ * Main controller for data request management page
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
 @RestController
-@RequestMapping(Navigation.API_DATA_UPLOAD)
+@RequestMapping(Navigation.API_DATA_REQUEST)
 @Slf4j
-public class DataUploadManagementController {
+@Validated
+public class DataRequestManagementController {
 
     @Autowired
-    private DataUploadService dataUploadService;
+    private DataRequestService dataRequestService;
 
     @Autowired
     private DataSegmentService dataSegmentService;
@@ -61,18 +67,16 @@ public class DataUploadManagementController {
     }
 
     /**
-     * Uploads a file for a specific data segment
+     * Creates a new data request
      *
-     * @param file      the file to upload
-     * @param segmentId the data segment id related to the file
-     * @return the total number of records detected by the system
+     * @param dataRequest the data request
+     * @return the persisted request updated
      */
-    @PostMapping("/{segmentId}")
-    public int uploadDataFile(@RequestParam("file") MultipartFile file, @PathVariable long segmentId) throws Exception {
-        log.info("Uploading data file started [{}]", file.getOriginalFilename());
-        int totalRecordCount = dataUploadService.uploadDataFile(file, segmentId);
-        log.info("Uploading data file finished successfully [{}] and #{} will be processed", file.getOriginalFilename(), totalRecordCount);
-        return totalRecordCount;
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public DataRequestDto create(@RequestPart("request") @Valid DataRequestDto dataRequest,
+                                 @RequestPart("file") @ContentType(contentType = ContentType.XLSX_CONTENT_TYPE) MultipartFile file) throws Exception {
+        log.info("Creating data request for segment#{}", dataRequest.getDataSegment().getId());
+        return dataRequestService.save(dataRequest, file);
     }
 
 }

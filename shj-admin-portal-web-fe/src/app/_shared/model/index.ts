@@ -8,3 +8,5 @@ export * from './authority.model';
 export * from './enum/authority.enum';
 export * from './dashboard-vo.model';
 export * from './change-password.model';
+export * from './data-request.model';
+export * from './data-segment.model';

@@ -3,10 +3,14 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.elm.dcc.foundation.commons.validation.SafeFile;
+import com.elm.shj.admin.portal.services.data.validators.ContentType;
+import com.elm.shj.admin.portal.services.data.validators.DataSegmentFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,6 +25,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@DataSegmentFormat
 public class DataRequestDto implements Serializable {
 
     private static final long serialVersionUID = 123456193540474532L;
@@ -34,4 +39,8 @@ public class DataRequestDto implements Serializable {
     private DataRequestStatusLookupDto status;
     private Date creationDate;
     private Date updateDate;
+
+    // these fields are not persisted but used as part of
+    // the command in the data upload controller
+    private int itemCount;
 }

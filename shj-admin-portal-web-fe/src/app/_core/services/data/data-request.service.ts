@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpEvent, HttpHeaders, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {DataRequest} from "@shared/model";
 
 @Injectable({
   providedIn: 'root'
 })
-export class DataUploadService {
+export class DataRequestService {
 
   constructor(private http: HttpClient) {
   }
@@ -17,23 +18,25 @@ export class DataUploadService {
    * @return the template for the given segment
    */
   downloadTemplate(segmentId: number): Observable<any> {
-    return this.http.get('/core/api/data/upload/tpl/' + segmentId,{
+    return this.http.get('/core/api/data/upload/tpl/' + segmentId, {
       responseType: 'blob' as 'json',
       observe: 'response' as 'body'
     });
   }
 
   /**
-   * Uploads a file for a specific data segment
+   * Creates a new data request
    *
-   * @param file      the file to upload
-   * @param segmentId the data segment id related to the file
-   * @return the total number of records detected by the system
+   * @param dataRequest the data request
+   * @return the persisted request updated
    */
-  uploadDataFile(file: any, segmentId: number): Observable<HttpEvent<any>> {
-    let formData = new FormData();
-    formData.append('file', file);
-    const req = new HttpRequest('POST', '/core/api/data/upload/' + segmentId, formData, {
+  create(dataRequest: DataRequest, file: any): Observable<HttpEvent<any>> {
+    let formData: FormData = new FormData();
+    formData.append("request", new Blob([JSON.stringify(dataRequest)], {
+      type: 'application/json'
+    }));
+    formData.append("file", file);
+    const req = new HttpRequest('POST', '/core/api/data/request/create', formData, {
       headers: new HttpHeaders({ "Content-Type": "multipart/form-data" }),
       reportProgress: true,
       responseType: 'json'

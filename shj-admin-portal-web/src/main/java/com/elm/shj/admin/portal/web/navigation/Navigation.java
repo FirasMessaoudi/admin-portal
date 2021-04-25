@@ -23,8 +23,8 @@ public class Navigation {
 	public static final String API_ROLES = "/api/roles";
 	// Data Segments
 	public static final String API_DATA_SEGMENT = "/api/data/segment";
-	// Data Uploads
-	public static final String API_DATA_UPLOAD = "/api/data/upload";
+	// Data Requests
+	public static final String API_DATA_REQUEST = "/api/data/request";
 	// Rules
 	public static final String API_RULES = "/api/rules";
 	// Applicants

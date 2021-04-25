@@ -39,7 +39,7 @@ public class SftpService {
      * @return if the file was uploaded successfully
      * @throws Exception in case of operation failure
      */
-    public boolean uploadFile(String targetPath, InputStream inputStream) throws Exception {
+    public boolean uploadFile(String targetPath, InputStream inputStream) throws JSchException {
         log.info("Upload File Started, ftpServer [{}:{}], ftpPath [{}]", config.getHost(), config.getPort(), targetPath);
         ChannelSftp sftp = this.createSftp();
         try {
@@ -59,7 +59,7 @@ public class SftpService {
             return true;
         } catch (Exception e) {
             log.error("Upload file failure. TargetPath: {}", targetPath, e);
-            throw new Exception("Upload File failure from SFTP");
+            throw new JSchException("Upload File failure from SFTP");
         } finally {
             this.disconnect(sftp);
         }
@@ -175,7 +175,7 @@ public class SftpService {
      * @return the created connection
      * @throws Exception in case of operation failure
      */
-    private ChannelSftp createSftp() throws Exception {
+    private ChannelSftp createSftp() throws JSchException {
         JSch jsch = new JSch();
         log.info("Try to connect sftp[" + config.getUsername() + "@" + config.getHost() + "], use password[" + config.getPassword() + "]");
 
@@ -203,7 +203,7 @@ public class SftpService {
      * @return the created session
      * @throws Exception in case of operation failure
      */
-    private Session createSession(JSch jsch, String host, String username, Integer port) throws Exception {
+    private Session createSession(JSch jsch, String host, String username, Integer port) throws JSchException {
         Session session;
 
         if (port <= 0) {
@@ -213,7 +213,7 @@ public class SftpService {
         }
 
         if (session == null) {
-            throw new Exception(host + " session is null");
+            throw new JSchException(host + " session is null");
         }
 
         session.setConfig(SESSION_CONFIG_STRICT_HOST_KEY_CHECKING, config.getSessionStrictHostKeyChecking());

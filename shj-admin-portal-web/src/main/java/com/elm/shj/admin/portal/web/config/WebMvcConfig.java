@@ -16,6 +16,7 @@ import org.springframework.mobile.device.DeviceHandlerMethodArgumentResolver;
 import org.springframework.mobile.device.DeviceResolverHandlerInterceptor;
 import org.springframework.mobile.device.site.SitePreferenceHandlerMethodArgumentResolver;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -136,6 +137,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.setValidationMessageSource(messageSource());
         return validator;
+    }
+
+    /**
+     * Creates a MethodValidationPostProcessor instance to enable @Autowired in ConstraintValidator
+     *
+     * @return MethodValidationPostProcessor bean
+     */
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+        MethodValidationPostProcessor methodValidationPostProcessor = new MethodValidationPostProcessor();
+        methodValidationPostProcessor.setValidator(validator());
+        return methodValidationPostProcessor;
     }
 
     /**
