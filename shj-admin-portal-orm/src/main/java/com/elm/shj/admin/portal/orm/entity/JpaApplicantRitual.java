@@ -34,8 +34,8 @@ public class JpaApplicantRitual implements Serializable {
     @JoinColumn(name = "applicant_id")
     private JpaApplicant applicant;
 
-    @Column(name = "hamlah_package_id")
-    private long hamlahPackageId;
+    @Column(name = "hamlah_package_code")
+    private String hamlahPackageCode;
 
     @Column(name = "hijri_season")
     private int hijriSeason;

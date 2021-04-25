@@ -377,7 +377,7 @@ create table shj_portal.sha_applicant_ritual
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
     applicant_id int NOT NULL,
-    hamlah_package_id int NOT NULL,
+    hamlah_package_code VARCHAR(20) NULL,
     hijri_season INT NOT NULL,
     date_start_gregorian DATE NOT NULL,
     date_end_gregorian DATE NOT NULL,
