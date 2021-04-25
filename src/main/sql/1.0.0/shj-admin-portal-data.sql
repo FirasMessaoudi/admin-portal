@@ -329,10 +329,12 @@ INSERT INTO shj_portal.sha_user_role(id, user_id, role_id, is_main_role) VALUES 
 SET IDENTITY_INSERT shj_portal.sha_user_role OFF;
 GO
 
-INSERT INTO shj_portal.sha_data_segment (template_file_name, label_ar, label_en, creation_date, update_date)
-VALUES ('applicant-data.xlsx', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38:43', null);
+SET IDENTITY_INSERT shj_portal.sha_data_segment ON;
+INSERT INTO shj_portal.sha_data_segment (id, template_file_name, label_ar, label_en, creation_date, update_date)
+VALUES (1, 'applicant-data.xlsx', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38:43', null);
+SET IDENTITY_INSERT shj_portal.sha_data_segment OFF;
 
-INSERT INTO shj_portal.sha_decision_rule (dmn, label_ar, label_en, creation_date, update_date) VALUES (
+INSERT INTO shj_portal.sha_decision_rule (dmn, data_segment_id, label_ar, label_en, creation_date, update_date) VALUES (
                                                                                                        N'<?xml version="1.0" encoding="UTF-8"?>
             <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="dish" name="Dish" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="8.3.0">
             <inputData id="dayType_id" name="Type of day">
@@ -590,7 +592,7 @@ INSERT INTO shj_portal.sha_decision_rule (dmn, label_ar, label_en, creation_date
             </dmndi:DMNDiagram>
             </dmndi:DMNDI>
             </definitions>',
-            N'بيانات المتقدم', N'Applicant Data', 1, N'2021-04-13 13:38:43', null);
+            1, N'بيانات المتقدم', N'Applicant Data', N'2021-04-13 13:38:43', null);
 GO
 
 -- add data request statuses
@@ -629,4 +631,28 @@ INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (8, 'EXT
 INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (9, 'INTERNAL_UMRAH', 'ar', 'عمرة الداخل');
 INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (10, 'INTERNAL_UMRAH', 'en', 'Internal Umrah');
 SET IDENTITY_INSERT shj_portal.sha_ritual_type_lk OFF;
+GO
 
+SET IDENTITY_INSERT shj_portal.sha_relative_relationship_lk ON;
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (1, 'MOTHER', 'ar', 'أم');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (2, 'MOTHER', 'en', 'Mother');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (3, 'FATHER', 'ar', 'أب');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (4, 'FATHER', 'en', 'Father');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (5, 'WIFE', 'ar', 'زوجة');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (6, 'WIFE', 'en', 'Wife');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (7, 'HUSBAND', 'ar', 'زوج');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (8, 'HUSBAND', 'en', 'Husband');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (9, 'SON', 'ar', 'ابن');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (10, 'SON', 'en', 'Son');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (11, 'DAUGHTER', 'ar', 'ابنة');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (12, 'DAUGHTER', 'en', 'Daughter');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (13, 'BROTHER', 'ar', 'أخ');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (14, 'BROTHER', 'en', 'Brother');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (15, 'SISTER', 'ar', 'أخت');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (16, 'SISTER', 'en', 'Sister');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (17, 'RELATIVE', 'ar', 'قريب');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (18, 'RELATIVE', 'en', 'Relative');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (19, 'COMPANION', 'ar', 'مرافق');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (20, 'COMPANION', 'en', 'Companion');
+SET IDENTITY_INSERT shj_portal.sha_relative_relationship_lk OFF;
+GO
