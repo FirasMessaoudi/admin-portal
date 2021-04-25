@@ -498,21 +498,6 @@ create table shj_portal.sha_data_segment
 );
 GO
 
-if not exists (select * from sys.tables where name = 'sha_data_segment_field_mapping')
-create table shj_portal.sha_data_segment_field_mapping
-(
-    id                  int PRIMARY KEY NOT NULL identity (1,1),
-    data_segment_id     int     NOT NULL,
-    header_name_ar      NVARCHAR(100)    NOT NULL,
-    header_name_en      VARCHAR(100)     NOT NULL,
-    field_name          VARCHAR(50)     NOT NULL,
-    field_type          VARCHAR(50)     NOT NULL,
-    creation_date       smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    update_date         smalldatetime   NULL,
-    CONSTRAINT fk_data_segment_field_mapping_segment FOREIGN KEY (data_segment_id) REFERENCES shj_portal.sha_data_segment (id)
-);
-GO
-
 if not exists (select * from sys.tables where name = 'sha_decision_rule')
 create table shj_portal.sha_decision_rule
 (

@@ -30,6 +30,5 @@ drop table if exists shj_portal.sha_applicant_health;
 drop table if exists shj_portal.sha_applicant;
 drop table if exists shj_portal.sha_country_lk;
 drop table if exists shj_portal.sha_decision_rule;
-drop table if exists shj_portal.sha_data_segment_field_mapping;
 drop table if exists shj_portal.sha_data_segment;
 GO

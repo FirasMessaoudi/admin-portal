@@ -36,9 +36,6 @@ public class JpaDataSegment implements Serializable {
     @Column(name = "label_en", nullable = false)
     private String labelEn;
 
-    @Column(name = "root_class", nullable = false)
-    private String rootClass;
-
     @Column(name = "template_file_name", nullable = false)
     private String templateFileName;
 

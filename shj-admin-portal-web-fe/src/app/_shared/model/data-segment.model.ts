@@ -3,7 +3,6 @@ export class DataSegment {
   labelAr: string;
   labelEn: string;
   templateFileName: string;
-  rootClass: string;
   creationDate: Date;
   updateDate: Date;
 }

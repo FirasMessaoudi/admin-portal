@@ -329,6 +329,8 @@ INSERT INTO shj_portal.sha_user_role(id, user_id, role_id, is_main_role) VALUES 
 SET IDENTITY_INSERT shj_portal.sha_user_role OFF;
 GO
 
+INSERT INTO shj_portal.sha_data_segment (template_file_name, label_ar, label_en, creation_date, update_date)
+VALUES ('applicant-data.xlsx', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38:43', null);
 
 INSERT INTO shj_portal.sha_decision_rule (dmn, label_ar, label_en, creation_date, update_date) VALUES (
                                                                                                        N'<?xml version="1.0" encoding="UTF-8"?>
