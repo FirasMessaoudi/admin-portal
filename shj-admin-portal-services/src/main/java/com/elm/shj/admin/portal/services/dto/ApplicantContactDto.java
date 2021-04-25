@@ -27,7 +27,7 @@ public class ApplicantContactDto implements Serializable {
     private String languageList;
     private String email;
     private int localMobileNumber;
-    private int intlMobileNumber;
+    private long intlMobileNumber;
     private String countryCode;
     private String streetName;
     private String districtName;
