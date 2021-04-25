@@ -8,9 +8,10 @@ export class ApplicantContact {
   email: string;
   localMobileNumber: number;
   intlMobileNumber: number;
-  street_name: string;
+  countryCode: string;
+  streetName: string;
   districtName: string;
   cityName: string;
   buildingNumber: number;
-  postal_code: number;
+  postalCode: number;
 }

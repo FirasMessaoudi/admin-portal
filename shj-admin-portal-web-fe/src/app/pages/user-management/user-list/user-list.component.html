@@ -77,14 +77,16 @@
           </td>
           <td>{{user.firstName}} {{user.fatherName}} {{user.familyName}}</td>
           <td class="ltr">{{user.mobileNumber | mobileFormat}}</td>
-          <td class="ltr">
-            <span class="d-none {{ userMainRole(user)?.activated ? '' : 'border border-warning border-3'}} ">
-              {{ currentLanguage.startsWith("en") ? userMainRole(user)?.nameEnglish : userMainRole(user)?.nameArabic }}
-            </span>
-            <span class="ltr" *ngIf="!userMainRole(user)?.activated">
-              {{'user-management.not_activated' | translate}}
-              <span class="status mr-1 Suspended"></span>
-            </span>
+          <td>
+            <div class="badge m-2">
+              <svg-icon styleClass="text-gray-300" icon="dot-circle"></svg-icon>
+              <span class="{{ userMainRole(user)?.activated ? '' : ''}} ">
+                {{ currentLanguage.startsWith("en") ? userMainRole(user)?.nameEnglish : userMainRole(user)?.nameArabic }}
+              </span>
+              <span *ngIf="!userMainRole(user)?.activated">
+                {{'user-management.not_activated' | translate}}
+              </span>
+            </div>
           </td>
           <td style="text-align:center">
             <span *ngIf="!user?.activated && !user?.blocked" class="text-nowrap">

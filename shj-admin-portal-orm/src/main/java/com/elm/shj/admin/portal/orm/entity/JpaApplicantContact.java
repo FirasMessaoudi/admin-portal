@@ -45,8 +45,11 @@ public class JpaApplicantContact implements Serializable {
     @Column(name = "intl_mobile_number")
     private int intlMobileNumber;
 
+    @Column(name = "country_code")
+    private String countryCode;
+
     @Column(name = "street_name")
-    private String street_name;
+    private String streetName;
 
     @Column(name = "district_name")
     private String districtName;
@@ -58,7 +61,7 @@ public class JpaApplicantContact implements Serializable {
     private int buildingNumber;
 
     @Column(name = "postal_code")
-    private int postal_code;
+    private int postalCode;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
