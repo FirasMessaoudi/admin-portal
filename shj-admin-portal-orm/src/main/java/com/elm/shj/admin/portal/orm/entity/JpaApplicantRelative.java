@@ -34,7 +34,6 @@ public class JpaApplicantRelative implements Serializable {
     private String relationshipCode;
 
     @ManyToOne
-    @JoinColumn(name = "applicant_id")
     private JpaApplicant applicant;
 
     @Column(name = "creation_date", nullable = false)

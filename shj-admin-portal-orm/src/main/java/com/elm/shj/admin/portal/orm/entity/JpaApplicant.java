@@ -68,7 +68,7 @@ public class JpaApplicant implements Serializable {
     @Column(name = "request_id")
     private long requestId;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantDigitalId> digitalIds;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
