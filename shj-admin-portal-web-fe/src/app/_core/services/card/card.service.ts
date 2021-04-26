@@ -24,7 +24,7 @@ export class CardService {
    * @return {Observable<Card>} The card identified by cardId.
    */
   find(cardId: number): Observable<Card> {
-    return this.http.get<any>('/core/api/cards/find' + cardId).pipe(
+    return this.http.get<any>('/core/api/cards/find/' + cardId).pipe(
       catchError(
         (error: any, caught: Observable<HttpEvent<any>>) => {
           console.error(error);
