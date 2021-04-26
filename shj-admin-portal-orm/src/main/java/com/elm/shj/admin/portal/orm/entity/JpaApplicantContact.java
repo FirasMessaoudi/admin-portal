@@ -43,7 +43,7 @@ public class JpaApplicantContact implements Serializable {
     private int localMobileNumber;
 
     @Column(name = "intl_mobile_number")
-    private int intlMobileNumber;
+    private long intlMobileNumber;
 
     @Column(name = "country_code")
     private String countryCode;

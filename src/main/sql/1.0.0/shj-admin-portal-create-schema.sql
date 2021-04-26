@@ -278,7 +278,8 @@ create table shj_portal.sha_country_lk
     label NVARCHAR(50) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     constraint country_lk_unique unique (code ASC, lang ASC)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_relative_relationship_lk')
 create table shj_portal.sha_relative_relationship_lk
@@ -289,7 +290,8 @@ create table shj_portal.sha_relative_relationship_lk
     label NVARCHAR(50) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     constraint relative_relationship_lk_unique unique (code ASC, lang ASC)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant')
 create table shj_portal.sha_applicant
@@ -311,7 +313,8 @@ create table shj_portal.sha_applicant
     status INT NOT NULL,
     creation_date smalldatetime not null default current_timestamp,
     update_date smalldatetime NULL
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_relative')
 create table shj_portal.sha_applicant_relative
@@ -321,27 +324,29 @@ create table shj_portal.sha_applicant_relative
     applicant_id int NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_relative_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_contact')
 create table shj_portal.sha_applicant_contact
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
     applicant_id int NOT NULL,
-    language_list VARCHAR(50) NULL,
+    language_list NVARCHAR(50) NULL,
     email VARCHAR(50) NULL,
     local_mobile_number INT NULL,
-    intl_mobile_number INT NULL,
+    intl_mobile_number BIGINT NULL,
     country_code VARCHAR(20) NOT NULL,
-    street_name VARCHAR(30) NULL,
-    district_name VARCHAR(30) NULL,
-    city_name VARCHAR(30) NULL,
+    street_name NVARCHAR(30) NULL,
+    district_name NVARCHAR(30) NULL,
+    city_name NVARCHAR(30) NULL,
     building_number INT NULL,
     postal_code INT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_date smalldatetime NULL,
     CONSTRAINT fk_applicant_contact_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_digital_id')
 create table shj_portal.sha_applicant_digital_id
@@ -352,7 +357,8 @@ create table shj_portal.sha_applicant_digital_id
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_digital_id_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id),
     CONSTRAINT applicant_digital_id_unique unique (uin)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_ritual_type_lk')
 create table shj_portal.sha_ritual_type_lk
@@ -363,14 +369,15 @@ create table shj_portal.sha_ritual_type_lk
     label NVARCHAR(50) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     constraint ritual_type_lk_unique unique (code ASC, lang ASC)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_ritual')
 create table shj_portal.sha_applicant_ritual
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
     applicant_id int NOT NULL,
-    hamlah_package_id int NOT NULL,
+    hamlah_package_code VARCHAR(20) NULL,
     hijri_season INT NOT NULL,
     date_start_gregorian DATE NOT NULL,
     date_end_gregorian DATE NOT NULL,
@@ -383,7 +390,8 @@ create table shj_portal.sha_applicant_ritual
     border_number VARCHAR(20) NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_ritual_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_card_batch')
 create table shj_portal.sha_card_batch
@@ -392,7 +400,8 @@ create table shj_portal.sha_card_batch
     number VARCHAR(20) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT card_batch_unique unique (number)
-); GO
+);
+GO
 
 
 if not exists (select * from sys.tables where name = 'sha_card_status_lk')
@@ -404,7 +413,8 @@ create table shj_portal.sha_card_status_lk
     label NVARCHAR(50) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     constraint card_status_lk_unique unique (code ASC, lang ASC)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_card')
 create table shj_portal.sha_applicant_card
@@ -417,7 +427,8 @@ create table shj_portal.sha_applicant_card
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_card_applicant_ritual FOREIGN KEY (applicant_ritual_id) REFERENCES shj_portal.sha_applicant_ritual (id),
     CONSTRAINT fk_applicant_card_batch FOREIGN KEY (batch_id) REFERENCES shj_portal.sha_card_batch (id)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_health')
 create table shj_portal.sha_applicant_health
@@ -427,7 +438,8 @@ create table shj_portal.sha_applicant_health
     blood_type VARCHAR(3) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_health_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_health_special_needs_type_lk')
 create table shj_portal.sha_health_special_needs_type_lk
@@ -438,7 +450,8 @@ create table shj_portal.sha_health_special_needs_type_lk
     label NVARCHAR(50) NOT NULL,
     creation_date smalldatetime NULL DEFAULT CURRENT_TIMESTAMP,
     constraint health_special_needs_type_lk_unique unique (code ASC, lang ASC)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_health_special_needs')
 create table shj_portal.sha_applicant_health_special_needs
@@ -448,7 +461,8 @@ create table shj_portal.sha_applicant_health_special_needs
     special_need_type_code VARCHAR(20) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_health_special_needs_health FOREIGN KEY (applicant_health_id) REFERENCES shj_portal.sha_applicant_health (id)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_health_immunization_lk')
 create table shj_portal.sha_health_immunization_lk
@@ -459,7 +473,8 @@ create table shj_portal.sha_health_immunization_lk
     label NVARCHAR(50) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     constraint health_immunization_lk_unique unique (code ASC, lang ASC)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_health_immunization')
 create table shj_portal.sha_applicant_health_immunization
@@ -471,7 +486,8 @@ create table shj_portal.sha_applicant_health_immunization
     mandatory BIT NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_health_immunization_health FOREIGN KEY (applicant_health_id) REFERENCES shj_portal.sha_applicant_health (id)
-); GO
+);
+GO
 
 if not exists (select * from sys.tables where name = 'sha_applicant_health_disease')
 create table shj_portal.sha_applicant_health_disease

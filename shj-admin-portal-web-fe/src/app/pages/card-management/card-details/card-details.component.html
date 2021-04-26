@@ -187,7 +187,7 @@
             </div>
           </section>
           <hr class="my-4 w-100">
-          <section *ngIf="card?.applicantRitual?.hamlahPackage?.packageHousings?.length > 0">
+          <section *ngIf=hamlahPackage?.packageHousings?.length > 0">
             <span class="form-control-plaintext ">{{ 'card-management.housing_locations' | translate }}</span>
 
             <div class="table-responsive my-4">
@@ -203,7 +203,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let housing of card?.applicantRitual?.hamlahPackage?.packageHousings">
+                <tr *ngFor="let housing of hamlahPackage?.packageHousings">
                   <td class="ltr">{{ housing.code }}</td>
                   <td class="ltr">{{ housing.labelAr }}</td>
                   <td class="ltr">{{ housing.addressAr }}</td>
@@ -241,7 +241,7 @@
           </section>
 
           <hr class="my-4 w-100">
-          <section *ngIf="card?.applicantRitual?.hamlahPackage?.packageHousings?.length > 0">
+          <section *ngIf="hamlahPackage?.packageHousings?.length > 0">
             <span class="form-control-plaintext ">{{ 'card-management.transportation_method' | translate }}</span>
 
             <div class="table-responsive my-4">
@@ -256,7 +256,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let transportation of card?.applicantRitual?.hamlahPackage?.packageTransportations">
+                <tr *ngFor="let transportation of hamlahPackage?.packageTransportations">
                   <td class="ltr">{{ transportation.type }}</td>
                   <td class="ltr">{{ transportation.validityStart }}-{{ transportation.validityEnd }}</td>
                   <td class="ltr">{{ transportation.locationFrom }}</td>
