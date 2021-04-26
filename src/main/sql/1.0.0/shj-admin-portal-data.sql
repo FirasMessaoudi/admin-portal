@@ -672,3 +672,20 @@ INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) 
 INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (4, 'GOLF_CAR', 'en', 'Golf Car');
 SET IDENTITY_INSERT shj_portal.sha_health_special_needs_type_lk OFF;
 GO
+
+SET IDENTITY_INSERT shj_portal.sha_card_status_lk ON;
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (1, 'READY_TO_SEND', 'ar', 'جاهز للطباعة');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (2, 'READY_TO_SEND', 'en', 'Ready to Send');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (3, 'SENT_FOR_PRINT', 'ar', 'تم الإرسال للطباعة');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (4, 'SENT_FOR_PRINT', 'en', 'Sent for Print');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (5, 'PRINTED', 'ar', 'تمت الطباعة');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (6, 'PRINTED', 'en', 'Printed');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (7, 'DISTRIBUTED', 'ar', 'تم التوزيع');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (8, 'DISTRIBUTED', 'en', 'Distributed');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (9, 'ACTIVE', 'ar', 'تم التفعيل');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (10, 'ACTIVE', 'en', 'Active');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (11, 'SUSPENDED', 'ar', 'تم الإيقاف');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (12, 'SUSPENDED', 'en', 'Suspended');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (13, 'CANCELLED', 'ar', 'تم الإلغاء');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (14, 'CANCELLED', 'en', 'Cancelled');
+SET IDENTITY_INSERT shj_portal.sha_card_status_lk OFF;
