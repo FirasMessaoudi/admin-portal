@@ -3,7 +3,7 @@
     <h3 class="sectionTitle">
       {{ "printing-management.title" | translate }}
       <button class="btn btn-link shadow-none">
-        <svg-icon styleClass="h4" icon="search"></svg-icon>
+        <svg-icon styleClass="h4 pt-3" icon="search" (click)="isSearchbarCollapsed = !isSearchbarCollapsed"></svg-icon>
       </button>
     </h3>
     <button id="addPrintingRequest" routerLink="/print-requests/create" class="btn btn-outline-dcc-primary px-4" *ngIf="canCreateNewRequest">
@@ -16,7 +16,7 @@
 
 
   <div class="content__section" *ngIf="canSeePrintRequestsList">
-    <div class="searchBox">
+    <div class="searchBox" [ngbCollapse]="isSearchbarCollapsed">
       <form class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
 
         <div class="form-group col">

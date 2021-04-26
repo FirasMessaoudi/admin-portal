@@ -9,7 +9,8 @@ import {AuthenticationService} from "@core/services";
   styleUrls: ['./printing-request-details.component.scss']
 })
 export class PrintingRequestDetailsComponent implements OnInit {
-
+  public isPackageOne= false;
+  public isPackageTwo= false;
   constructor(private i18nService: I18nService,
               private authenticationService: AuthenticationService) { }
 
