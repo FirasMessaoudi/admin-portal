@@ -620,39 +620,72 @@ VALUES ('sftp.client.protocol', 'sftp'),
 GO
 -- insert ritual types
 SET IDENTITY_INSERT shj_portal.sha_ritual_type_lk ON;
-INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (1, 'EXTERNAL_HAJJ', 'ar', 'حجاج الخارج');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (1, 'EXTERNAL_HAJJ', 'ar', N'حجاج الخارج');
 INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (2, 'EXTERNAL_HAJJ', 'en', 'External Hajj');
-INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (3, 'INTERNAL_HAJJ', 'ar', 'حجاج الداخل');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (3, 'INTERNAL_HAJJ', 'ar', N'حجاج الداخل');
 INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (4, 'INTERNAL_HAJJ', 'en', 'Internal Hajj');
-INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (5, 'COURTESY_HAJJ', 'ar', 'حجاج المجاملة');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (5, 'COURTESY_HAJJ', 'ar', N'حجاج المجاملة');
 INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (6, 'COURTESY_HAJJ', 'en', 'Courtesy Hajj');
-INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (7, 'EXTERNAL_UMRAH', 'ar', 'عمرة الخارج');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (7, 'EXTERNAL_UMRAH', 'ar', N'عمرة الخارج');
 INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (8, 'EXTERNAL_UMRAH', 'en', 'External Umrah');
-INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (9, 'INTERNAL_UMRAH', 'ar', 'عمرة الداخل');
+INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (9, 'INTERNAL_UMRAH', 'ar', N'عمرة الداخل');
 INSERT INTO shj_portal.sha_ritual_type_lk(id, code, lang, label) VALUES (10, 'INTERNAL_UMRAH', 'en', 'Internal Umrah');
 SET IDENTITY_INSERT shj_portal.sha_ritual_type_lk OFF;
 GO
 
 SET IDENTITY_INSERT shj_portal.sha_relative_relationship_lk ON;
-INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (1, 'MOTHER', 'ar', 'أم');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (1, 'MOTHER', 'ar', N'أم');
 INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (2, 'MOTHER', 'en', 'Mother');
-INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (3, 'FATHER', 'ar', 'أب');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (3, 'FATHER', 'ar', N'أب');
 INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (4, 'FATHER', 'en', 'Father');
-INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (5, 'WIFE', 'ar', 'زوجة');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (5, 'WIFE', 'ar', N'زوجة');
 INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (6, 'WIFE', 'en', 'Wife');
-INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (7, 'HUSBAND', 'ar', 'زوج');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (7, 'HUSBAND', 'ar', N'زوج');
 INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (8, 'HUSBAND', 'en', 'Husband');
-INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (9, 'SON', 'ar', 'ابن');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (9, 'SON', 'ar', N'ابن');
 INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (10, 'SON', 'en', 'Son');
-INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (11, 'DAUGHTER', 'ar', 'ابنة');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (11, 'DAUGHTER', 'ar', N'ابنة');
 INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (12, 'DAUGHTER', 'en', 'Daughter');
-INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (13, 'BROTHER', 'ar', 'أخ');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (13, 'BROTHER', 'ar', N'أخ');
 INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (14, 'BROTHER', 'en', 'Brother');
-INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (15, 'SISTER', 'ar', 'أخت');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (15, 'SISTER', 'ar', N'أخت');
 INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (16, 'SISTER', 'en', 'Sister');
-INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (17, 'RELATIVE', 'ar', 'قريب');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (17, 'RELATIVE', 'ar', N'قريب');
 INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (18, 'RELATIVE', 'en', 'Relative');
-INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (19, 'COMPANION', 'ar', 'مرافق');
+INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (19, 'COMPANION', 'ar', N'مرافق');
 INSERT INTO shj_portal.sha_relative_relationship_lk (id, code, lang, label) VALUES (20, 'COMPANION', 'en', 'Companion');
 SET IDENTITY_INSERT shj_portal.sha_relative_relationship_lk OFF;
 GO
+
+SET IDENTITY_INSERT shj_portal.sha_health_immunization_lk ON;
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (1, 'COVID-19', 'ar', N'كورونا');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (2, 'COVID-19', 'en', 'Covid-19');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (3, 'MENINGITIS', 'ar', N'الحمى الشوكية');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (4, 'MENINGITIS', 'en', 'Meningitis');
+SET IDENTITY_INSERT shj_portal.sha_health_immunization_lk OFF;
+GO
+
+SET IDENTITY_INSERT shj_portal.sha_health_special_needs_type_lk ON;
+INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (1, 'WHEELCHAIR', 'ar', N'كرسي متحرك');
+INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (2, 'WHEELCHAIR', 'en', 'wheelchair');
+INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (3, 'GOLF_CAR', 'ar', N'عربة نقل');
+INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (4, 'GOLF_CAR', 'en', 'Golf Car');
+SET IDENTITY_INSERT shj_portal.sha_health_special_needs_type_lk OFF;
+GO
+
+SET IDENTITY_INSERT shj_portal.sha_card_status_lk ON;
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (1, 'READY_TO_SEND', 'ar', N'جاهز للطباعة');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (2, 'READY_TO_SEND', 'en', 'Ready to Send');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (3, 'SENT_FOR_PRINT', 'ar', N'تم الإرسال للطباعة');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (4, 'SENT_FOR_PRINT', 'en', 'Sent for Print');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (5, 'PRINTED', 'ar', N'تمت الطباعة');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (6, 'PRINTED', 'en', 'Printed');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (7, 'DISTRIBUTED', 'ar', N'تم التوزيع');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (8, 'DISTRIBUTED', 'en', 'Distributed');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (9, 'ACTIVE', 'ar', N'تم التفعيل');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (10, 'ACTIVE', 'en', 'Active');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (11, 'SUSPENDED', 'ar', N'تم الإيقاف');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (12, 'SUSPENDED', 'en', 'Suspended');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (13, 'CANCELLED', 'ar', N'تم الإلغاء');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (14, 'CANCELLED', 'en', 'Cancelled');
+SET IDENTITY_INSERT shj_portal.sha_card_status_lk OFF;

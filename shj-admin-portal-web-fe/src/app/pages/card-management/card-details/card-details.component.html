@@ -58,12 +58,12 @@
                 <span class="form-control-plaintext ">{{ card?.applicantRitual?.typeCode?.label }}</span>
               </div>
 
-              <div class="form-group col">
+              <div class="form-group col" [ngSwitch]="card?.applicantRitual?.applicant?.gender">
                 <label class="col-form-label">{{'general.gender' | translate}}</label>
-                <span class="form-control-plaintext "
-                      [hidden]="card?.applicantRitual?.applicant?.gender === 'M'">{{'user-management.female' | translate}}</span>
-                <span class="form-control-plaintext "
-                      [hidden]="card?.applicantRitual?.applicant?.gender === 'F'">{{'user-management.male' | translate}}</span>
+                <span class="form-control-plaintext"
+                     *ngSwitchCase="'F'">{{'user-management.female' | translate}}</span>
+                <span class="form-control-plaintext"
+                     *ngSwitchCase="'M'">{{'user-management.male' | translate}}</span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.nationality' | translate}}</label>
@@ -187,7 +187,7 @@
             </div>
           </section>
           <hr class="my-4 w-100">
-          <section *ngIf="card?.applicantRitual?.hamlahPackage?.packageHousings?.length > 0">
+          <section *ngIf=hamlahPackage?.packageHousings?.length > 0">
             <span class="form-control-plaintext ">{{ 'card-management.housing_locations' | translate }}</span>
 
             <div class="table-responsive my-4">
@@ -203,7 +203,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let housing of card?.applicantRitual?.hamlahPackage?.packageHousings">
+                <tr *ngFor="let housing of hamlahPackage?.packageHousings">
                   <td class="ltr">{{ housing.code }}</td>
                   <td class="ltr">{{ housing.labelAr }}</td>
                   <td class="ltr">{{ housing.addressAr }}</td>
@@ -241,7 +241,7 @@
           </section>
 
           <hr class="my-4 w-100">
-          <section *ngIf="card?.applicantRitual?.hamlahPackage?.packageHousings?.length > 0">
+          <section *ngIf="hamlahPackage?.packageHousings?.length > 0">
             <span class="form-control-plaintext ">{{ 'card-management.transportation_method' | translate }}</span>
 
             <div class="table-responsive my-4">
@@ -256,7 +256,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let transportation of card?.applicantRitual?.hamlahPackage?.packageTransportations">
+                <tr *ngFor="let transportation of hamlahPackage?.packageTransportations">
                   <td class="ltr">{{ transportation.type }}</td>
                   <td class="ltr">{{ transportation.validityStart }}-{{ transportation.validityEnd }}</td>
                   <td class="ltr">{{ transportation.locationFrom }}</td>
@@ -276,27 +276,44 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.blood_type' | translate}}</label>
-                <span class="form-control-plaintext ">A+</span>
+                <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.healths[0]?.bloodType}}</span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.special_needs_assistance_needed' | translate}}</label>
-                <span class="form-control-plaintext ">نعم</span>
+                <span class="form-control-plaintext"
+                      *ngIf="card?.applicantRitual?.applicant?.healths[0]?.specialNeeds?.length > 0">{{'general.label_yes' | translate}}</span>
+                <span class="form-control-plaintext"
+                      *ngIf="card?.applicantRitual?.applicant?.healths[0]?.specialNeeds?.length === 0">{{'general.label_no' | translate}}</span>
+
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.have_chronic_diseases' | translate}}</label>
-                <span class="form-control-plaintext ">نعم</span>
+                <span class="form-control-plaintext"
+                      *ngIf="card?.applicantRitual?.applicant?.healths[0]?.diseases?.length > 0">{{'general.label_yes' | translate}}</span>
+                <span class="form-control-plaintext"
+                      *ngIf="card?.applicantRitual?.applicant?.healths[0]?.diseases?.length === 0">{{'general.label_no' | translate}}</span>
+
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.vaccinated' | translate}}</label>
-                <span class="form-control-plaintext ">نعم</span>
+                <span class="form-control-plaintext"
+                      *ngIf="card?.applicantRitual?.applicant?.healths[0]?.immunizations?.length > 0">{{'general.label_yes' | translate}}</span>
+                <span class="form-control-plaintext"
+                      *ngIf="card?.applicantRitual?.applicant?.healths[0]?.immunizations?.length === 0">{{'general.label_no' | translate}}</span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.special_needs' | translate}}</label>
-                <span class="form-control-plaintext ">كرسي متحرك-مساعد شخصي</span>
+                <span class="form-control-plaintext">
+                  <span *ngFor="let need of card?.applicantRitual?.applicant?.healths[0]?.specialNeeds; let lastItem = last;">
+                    {{need.specialNeedTypeCode}}<span *ngIf="!lastItem">-</span></span>
+                  </span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.chronic_diseases' | translate}}</label>
-                <span class="form-control-plaintext ">ضغط الدم-التهاب المفاصل</span>
+                <span class="form-control-plaintext">
+                  <span *ngFor="let disease of card?.applicantRitual?.applicant?.healths[0]?.diseases; let lastItem = last;">
+                  {{disease.diseaseNameAr}}<span *ngIf="!lastItem">-</span></span>
+                </span>
               </div>
             </div>
           </section>
@@ -313,13 +330,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                  <td class="ltr">فايزر كوفيد 19</td>
-                  <td class="ltr">15-03-2021</td>
-                </tr>
-                <tr>
-                  <td class="ltr">الحمى الشوكية</td>
-                  <td class="ltr">19-03-2021</td>
+                <tr *ngFor="let immunization of card?.applicantRitual?.applicant?.healths[0]?.immunizations">
+                  <td class="ltr">{{immunization.immunizationCode}}</td>
+                  <td class="ltr">{{immunization.immunizationDate}}</td>
                 </tr>
                 </tbody>
               </table>

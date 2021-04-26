@@ -22,7 +22,6 @@ public class ApplicantHealthDiseaseDto implements Serializable {
     private static final long serialVersionUID = 5702724312215614750L;
 
     private long id;
-    private ApplicantHealthDto applicantHealth;
     private String diseaseNameAr;
     private String diseaseNameEn;
     private Date creationDate;

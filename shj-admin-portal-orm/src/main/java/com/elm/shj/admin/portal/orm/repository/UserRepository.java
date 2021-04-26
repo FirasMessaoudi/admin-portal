@@ -75,7 +75,7 @@ public interface UserRepository extends JpaRepository<JpaUser, Long> {
                          @Param("updateDate") Date updateDate, @Param("tokenExpiryDate") Date tokenExpiryDate, @Param("userId") long userId);
 
 
-    @Query("select u from JpaUser u left join u.userRoles ur where u.deleted = false and " +
+    @Query("select distinct u from JpaUser u left join u.userRoles ur where u.deleted = false and " +
             "(ur.role.id = :roleId or :roleId is null) and " +
             "(concat('', u.nin) like :nin or :nin is null) and " +
             "(u.activated = :activated or :activated is null) and " +

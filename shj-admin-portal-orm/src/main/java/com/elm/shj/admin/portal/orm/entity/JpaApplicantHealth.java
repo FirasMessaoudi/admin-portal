@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the sha_applicant_health database table.
@@ -30,13 +31,18 @@ public class JpaApplicantHealth implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "applicant_id")
-    private JpaApplicant applicant;
-
     @Column(name ="blood_type")
     private String bloodType;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
+
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<JpaApplicantHealthDisease> diseases;
+
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<JpaApplicantHealthDisease> specialNeeds;
+
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<JpaApplicantHealthDisease> immunizations;
 }

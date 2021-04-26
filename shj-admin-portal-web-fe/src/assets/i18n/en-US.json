@@ -19,7 +19,6 @@
 
   "general": {
     "app_name": "Elm Product",
-
     "dialog_alert_title": "Alert",
     "dialog_confirmation_title": "Confirmation",
     "dialog_confirmation_text": "Are you sure?",
@@ -90,7 +89,9 @@
     "gender": "Gender",
     "select_all": "Select All",
     "btn_next": "Next",
-    "btn_previous": "Previous"
+    "btn_previous": "Previous",
+    "label_yes": "Yes",
+    "label_no": "No"
   },
 
   "header": {
@@ -157,7 +158,7 @@
     "gender": "Gender",
     "grand_father_name": "Grandfather Name",
     "subtribe_name": "Subtribe Name",
-    "full_name": "name",
+    "full_name": "Name",
     "first_name": "First Name",
     "father_name": "Father Name",
     "last_name": "Last Name",
@@ -372,7 +373,7 @@
     "card_details": "Card Details",
     "ritual_season": "Ritual Season",
     "ritual_type": "Ritual Type",
-    "hamlah": "الحملة",
+    "hamlah": "Hamlah",
     "motawef": "Al Motawef",
     "applicant_id": "Rahman Guest ID",
     "card_number": "Card Serial Number",

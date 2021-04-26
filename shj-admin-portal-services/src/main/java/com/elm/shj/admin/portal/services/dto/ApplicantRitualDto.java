@@ -23,7 +23,7 @@ public class ApplicantRitualDto implements Serializable {
 
     private long id;
     private ApplicantDto applicant;
-    private long hamlahPackageId;
+    private String hamlahPackageCode;
     private int hijriSeason;
     private Date dateStartGregorian;
     private Date dateEndGregorian;

@@ -1,10 +1,9 @@
 import {Applicant} from "@model/applicant.model";
-import {HamlahPackage} from "@model/hamlah-package.model";
 
 export class ApplicantRitual {
   id: number;
   applicant: Applicant;
-  hamlahPackage: HamlahPackage;
+  hamlahPackageCode: string;
   hijriSeason: number;
   dateStartGregorian: Date;
   dateEndGregorian: Date;
