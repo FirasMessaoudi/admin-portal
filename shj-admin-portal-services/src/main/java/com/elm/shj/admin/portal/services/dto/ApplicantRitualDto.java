@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,7 +22,6 @@ public class ApplicantRitualDto implements Serializable {
     private static final long serialVersionUID = 8699536906254699723L;
 
     private long id;
-    @JsonBackReference
     private ApplicantDto applicant;
     private String hamlahPackageCode;
     private int hijriSeason;
