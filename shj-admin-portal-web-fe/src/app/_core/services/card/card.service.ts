@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {HttpClient, HttpEvent, HttpParams} from "@angular/common/http";
+import {Observable, of} from "rxjs";
+import {Card} from "@model/card.model";
+import {catchError} from "rxjs/internal/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -13,5 +15,22 @@ export class CardService {
   list(pageNumber: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
     return this.http.get<any>("/core/api/cards/list", {params: params});
+  }
+
+  /**
+   * Finds card by its ID from the server.
+   *
+   * @param cardId the card id
+   * @return {Observable<Card>} The card identified by cardId.
+   */
+  find(cardId: number): Observable<Card> {
+    return this.http.get<any>('/core/api/cards/find' + cardId).pipe(
+      catchError(
+        (error: any, caught: Observable<HttpEvent<any>>) => {
+          console.error(error);
+          return of(null);
+        }
+      )
+    );
   }
 }

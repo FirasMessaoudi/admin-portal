@@ -80,6 +80,9 @@ public class JpaApplicant implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantContact> contacts;
 
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<JpaApplicantHealth> healths;
+
     private long status;
 
     @Column(name = "creation_date", nullable = false)
