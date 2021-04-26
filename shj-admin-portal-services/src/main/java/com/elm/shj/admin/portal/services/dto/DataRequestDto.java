@@ -3,14 +3,11 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.dcc.foundation.commons.validation.SafeFile;
-import com.elm.shj.admin.portal.services.data.validators.ContentType;
-import com.elm.shj.admin.portal.services.data.validators.DataSegmentFormat;
+import com.elm.shj.admin.portal.services.data.validators.DataSegmentStructure;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,7 +22,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@DataSegmentFormat
+@DataSegmentStructure
 public class DataRequestDto implements Serializable {
 
     private static final long serialVersionUID = 123456193540474532L;

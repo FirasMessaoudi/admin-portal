@@ -1,10 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import * as FileSaver from 'file-saver';
 import {Observable} from "rxjs";
-import {HttpEventType, HttpResponse} from "@angular/common/http";
+import {HttpErrorResponse, HttpEventType, HttpResponse} from "@angular/common/http";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DataRequestService} from "@core/services/data/data-request.service";
 import {DataRequest, DataSegment} from "@shared/model";
+import {ToastService} from "@shared/components/toast";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-step-one',
@@ -17,10 +19,13 @@ export class StepOneComponent implements OnInit {
   selectedFiles: FileList;
   currentFile: File;
   progress = 0;
-  message = '';
+  errorMessage = '';
+  createdDataRequest: DataRequest;
   fileInfos: Observable<any>;
 
   constructor(private dataRequestService: DataRequestService,
+              private toastr: ToastService,
+              private translate: TranslateService,
               private formBuilder: FormBuilder) {
   }
 
@@ -64,6 +69,7 @@ export class StepOneComponent implements OnInit {
 
   uploadDataFile() {
     this.progress = 0;
+    this.errorMessage = null;
     this.currentFile = this.selectedFiles.item(0);
     let dataRequest: DataRequest = new DataRequest();
     let dataSegment: DataSegment = new DataSegment();
@@ -74,16 +80,22 @@ export class StepOneComponent implements OnInit {
         if (event.type === HttpEventType.UploadProgress) {
           this.progress = Math.round(100 * event.loaded / event.total);
         } else if (event instanceof HttpResponse) {
-          this.message = event.body.message;
+          this.createdDataRequest = event.body;
+          console.log(this.createdDataRequest);
+          this.toastr.success(this.translate.instant("general.dialog_add_success_text"), this.translate.instant("data-upload-management.choose_segment"));
         }
       },
       err => {
         this.progress = 0;
-        this.message = 'Could not upload the file!';
-        this.currentFile = undefined;
+        this.currentFile = null;
+        this.toastr.warning(this.translate.instant("general.dialog_form_error_text"), this.translate.instant("data-upload-management.choose_segment"));
+        let responseError = err.error;
+        if (responseError.hasOwnProperty("errors") && responseError.errors) {
+          this.errorMessage =  (responseError.errors["request"] ? this.translate.instant(responseError.errors["request"]) : responseError.errorMessage);
+        }
       });
 
-    this.selectedFiles = undefined;
+    this.selectedFiles = null;
   }
 
 }

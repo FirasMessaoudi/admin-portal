@@ -27,10 +27,13 @@
         <input type="file" class="custom-file-input" id="fileData" formControlName="fileData"
                [required]="true" (change)="selectFile($event)"
                accept=".xls,.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
-        <label class="custom-file-label" for="fileData"><i class="fas fa-search"></i> {{'data-upload-management.choose_file' | translate}}</label>
+        <label class="custom-file-label" for="fileData"><i class="fas fa-search"></i> {{(selectedFiles ? selectedFiles.item(0).name : 'data-upload-management.choose_file') | translate}}</label>
       </div>
     </div>
     <div class="mt-1">
+      <div *ngIf="errorMessage" class="border border-warning bg-warning py-1 px-2 mb-2">
+        {{errorMessage}}
+      </div>
       <div *ngIf="currentFile" class="progress text-center mb-2">
         <ngb-progressbar type="success" textType="white" [value]="progress" [showValue]="true"></ngb-progressbar>
       </div>

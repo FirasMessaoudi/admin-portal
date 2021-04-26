@@ -1,4 +1,14 @@
 {
+  "validation.constraints" : {
+    "data-segment": {
+      "missing": "Data Segment parameter is missing!",
+      "not-found": "The requested Data Segment was not found!",
+      "template-not-found": "The template file for the requested Data Segment was not found!",
+      "empty-file": "The uploaded file was empty!",
+      "invalid-data-structure": "Invalid structure for the selected data segment, please stick to the provided template.",
+      "excel-only": "Only Excel files are accepted!"
+    }
+  },
 
   "dcc.commons.validation.constraints":{
     "nin": "Please enter a valid ID number",

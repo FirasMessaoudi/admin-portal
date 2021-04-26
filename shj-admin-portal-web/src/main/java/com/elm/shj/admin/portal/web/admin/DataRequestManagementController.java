@@ -5,19 +5,16 @@ package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.data.request.DataRequestService;
 import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
-import com.elm.shj.admin.portal.services.data.validators.ContentType;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.DataRequestDto;
 import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,7 +30,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(Navigation.API_DATA_REQUEST)
 @Slf4j
-@Validated
 public class DataRequestManagementController {
 
     @Autowired
@@ -57,7 +53,7 @@ public class DataRequestManagementController {
             log.warn("Now data segment found with #{}", segmentId);
             return null;
         }
-        Resource tplFile = new ClassPathResource("/templates/excel/" + segmentId + "/" + dataSegment.getTemplateFileName());
+        Resource tplFile = dataSegmentService.loadTemplateFile(dataSegment);
         if (tplFile.exists()) {
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + tplFile.getFilename() + "\"")
@@ -74,7 +70,7 @@ public class DataRequestManagementController {
      */
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public DataRequestDto create(@RequestPart("request") @Valid DataRequestDto dataRequest,
-                                 @RequestPart("file") @ContentType(contentType = ContentType.XLSX_CONTENT_TYPE) MultipartFile file) throws Exception {
+                                 @RequestPart("file") MultipartFile file) throws Exception {
         log.info("Creating data request for segment#{}", dataRequest.getDataSegment().getId());
         return dataRequestService.save(dataRequest, file);
     }
