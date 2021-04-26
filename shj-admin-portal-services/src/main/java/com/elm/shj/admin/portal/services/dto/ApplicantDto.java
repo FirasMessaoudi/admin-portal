@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -38,6 +39,7 @@ public class ApplicantDto implements Serializable {
     private long requestId;
     private List<ApplicantDigitalIdDto> digitalIds;
     private List<ApplicantRelativeDto> relatives;
+    @JsonBackReference
     private List<ApplicantRitualDto> rituals;
     private List<ApplicantContactDto> contacts;
     private List<ApplicantHealthDto> healths;
