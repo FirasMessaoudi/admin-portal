@@ -31,7 +31,6 @@ public class JpaApplicantContact implements Serializable {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "applicant_id")
     private JpaApplicant applicant;
 
     @Column(name = "language_list")

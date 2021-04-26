@@ -30,6 +30,10 @@ public class JpaApplicantHealthDisease implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
+    @ManyToOne
+    @JoinColumn(name = "applicant_health_id")
+    private JpaApplicantHealth applicantHealth;
+
     @Column(name = "disease_name_ar", nullable = false)
     private String diseaseNameAr;
 

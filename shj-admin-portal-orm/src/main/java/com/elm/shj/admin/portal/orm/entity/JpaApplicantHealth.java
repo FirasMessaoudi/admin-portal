@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,18 +33,24 @@ public class JpaApplicantHealth implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
+    @ManyToOne
+    private JpaApplicant applicant;
+
     @Column(name ="blood_type")
     private String bloodType;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantHealth")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthDisease> diseases;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<JpaApplicantHealthDisease> specialNeeds;
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantHealth")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<JpaApplicantHealthSpecialNeeds> specialNeeds;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<JpaApplicantHealthDisease> immunizations;
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantHealth")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<JpaApplicantHealthImmunization> immunizations;
 }

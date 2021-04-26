@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +23,8 @@ public class ApplicantHealthSpecialNeedsDto implements Serializable {
     private static final long serialVersionUID = -2130894375076782343L;
 
     private long id;
+    @JsonBackReference
+    private ApplicantHealthDto applicantHealth;
     private String specialNeedTypeCode;
     private Date creationDate;
 }

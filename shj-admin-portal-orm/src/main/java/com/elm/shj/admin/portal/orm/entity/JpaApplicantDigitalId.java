@@ -33,7 +33,6 @@ public class JpaApplicantDigitalId implements Serializable {
     private String uin;
 
     @ManyToOne
-    @JoinColumn(name = "applicant_id")
     private JpaApplicant applicant;
 
     @Column(name = "creation_date", nullable = false)

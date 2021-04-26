@@ -5,6 +5,7 @@ import {AccordionModule} from './modules/accordion/accordion.module';
 
 // @ng-bootstrap
 import {NgBootstrapModule} from '@shared/ng-bootstrap.module';
+/* import {NgbModule} from '@ng-bootstrap/ng-bootstrap'; */
 
 // SVG Icons
 import {SvgIconModule} from '@app/_shared/components/svg-icon/svg-icon.module';
@@ -14,13 +15,7 @@ import {DateAgoPipe} from '@shared/pipes/date/date-ago/date-ago.pipe';
 import {DateFormatPipe} from '@shared/pipes/date/date-format.pipe';
 import {HijriFormatPipe} from '@shared/pipes/date/hijri-format.pipe';
 
-import {
-  NgbDatepickerModule,
-  NgbModule,
-  NgbProgressbarModule,
-  NgbToastModule,
-  NgbTooltipModule
-} from '@ng-bootstrap/ng-bootstrap';
+
 import {ToastsContainer} from './components/toast';
 import {NgbdDatepickerIslamicumalqura} from './directives/datepicker-islamicumalqura';
 import {IbanStatusPipe} from "@shared/pipes/iban/iban-status.pipe";
@@ -44,14 +39,11 @@ import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
   imports: [
     CommonModule,
     NgBootstrapModule,
-    NgbToastModule,
     ArchwizardModule,
     SvgIconModule,
     AccordionModule,
-    NgbModule,
     TranslateModule,
     NgxCaptchaModule,
-    NgbDatepickerModule,
     HijriGregorianDatepickerModule,
     NgMultiSelectDropDownModule
   ],
@@ -64,9 +56,6 @@ import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
     ArchwizardModule,
     TranslateModule,
     NgxCaptchaModule,
-    NgbDatepickerModule,
-    NgbProgressbarModule,
-    NgbTooltipModule,
     DateAgoPipe,
     ConfirmDialogComponent,
     ToastsContainer,
