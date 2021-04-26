@@ -87,7 +87,9 @@
     "gender": "الجنس",
     "select_all": "اختيار الكل",
     "btn_next": "التالي",
-    "btn_previous": "السابق"
+    "btn_previous": "السابق",
+    "label_yes": "نعم",
+    "label_no": "لا"
   },
   "header": {
     "welcome": "مرحبا",

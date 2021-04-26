@@ -40,6 +40,7 @@ public class ApplicantDto implements Serializable {
     private List<ApplicantRelativeDto> relatives;
     private List<ApplicantRitualDto> rituals;
     private List<ApplicantContactDto> contacts;
+    private List<ApplicantHealthDto> healths;
     private long status;
     private Date creationDate;
     private Date updateDate;

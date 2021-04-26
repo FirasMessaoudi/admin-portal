@@ -19,7 +19,6 @@
 
   "general": {
     "app_name": "Elm Product",
-
     "dialog_alert_title": "Alert",
     "dialog_confirmation_title": "Confirmation",
     "dialog_confirmation_text": "Are you sure?",
@@ -90,7 +89,9 @@
     "gender": "Gender",
     "select_all": "Select All",
     "btn_next": "Next",
-    "btn_previous": "Previous"
+    "btn_previous": "Previous",
+    "label_yes": "Yes",
+    "label_no": "No"
   },
 
   "header": {
