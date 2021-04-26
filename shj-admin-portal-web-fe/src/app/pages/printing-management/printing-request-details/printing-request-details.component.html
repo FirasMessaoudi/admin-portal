@@ -44,7 +44,6 @@
             <th scope="col">{{'card-management.passport_number' | translate}}</th>
           </tr>
         </thead>
-        <tbody>
           <tr *ngIf="false" class="text-center">
             <td colspan="10">
               <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set" ></svg-icon>
@@ -52,33 +51,45 @@
             </td>
           </tr>
 
-          <th style="font-size: larger">
-            {{'printing-management.batch_no' | translate}} {{'1'}} {{'printing-management.contains' | translate}} {{'520'}} {{'printing-management.cards' | translate}}
-          </th>
+          <thead>
+            <tr colspan="10">
+                <a class="packageBox" href="javascript:void(0)" (click)="isPackageOne = !isPackageOne" [ngClass]=" isPackageOne ? '' : 'active'">
+                  <span class="">{{'printing-management.batch_no' | translate}}<span class="packageNo">{{'1'}}</span></span>
+                  <span class="">{{'printing-management.contains' | translate}} <b>{{'520'}}</b> {{'printing-management.cards' | translate}}</span>
+                </a>
+            </tr>
+          </thead>
+          <tbody [ngbCollapse]="isPackageOne" class="collapse">
+              <tr>
+                <td><a [routerLink]="['/cards/details/1']">{{'زبير عبد المجيد خان'}} {{'Zubair Abd Almajid Khan'}}</a></td>
+                <td class="ltr">{{'2367430624'}}</td>
+                <td class="ltr">{{'541285'}}</td>
+                <td class="ltr">{{'5O85X8'}}</td>
+              </tr>
           <tr>
-            <td><a [routerLink]="['/cards/details/1']" class="text-dcc-primary font-weight-bold">{{'زبير عبد المجيد خان'}} {{'Zubair Abd Almajid Khan'}}</a></td>
-            <td class="ltr">{{'2367430624'}}</td>
-            <td class="ltr">{{'541285'}}</td>
-            <td class="ltr">{{'5O85X8'}}</td>
-          </tr>
-          <tr>
-            <td><a [routerLink]="['/cards/details/1']" class="text-dcc-primary font-weight-bold">{{'فاطمة زبير عبد المجيد خان'}} {{'Fatima Zubair Abd Almajid Khan'}}</a></td>
+            <td><a [routerLink]="['/cards/details/1']">{{'فاطمة زبير عبد المجيد خان'}} {{'Fatima Zubair Abd Almajid Khan'}}</a></td>
             <td class="ltr">{{'2367430426'}}</td>
             <td class="ltr">{{'541582'}}</td>
             <td class="ltr">{{'5O8Y84'}}</td>
           </tr>
-
-          <th style="font-size: larger">
-            {{'printing-management.batch_no' | translate}} {{'2'}} {{'printing-management.contains' | translate}} {{'2125'}} {{'printing-management.cards' | translate}}
-          </th>
+        </tbody>
+        <thead>
+          <tr colspan="10">
+              <a class="packageBox" href="javascript:void(0)" (click)="isPackageTwo = !isPackageTwo" [ngClass]=" isPackageTwo ? '' : 'active'">
+                <span class="">{{'printing-management.batch_no' | translate}}<span class="packageNo">{{'2'}}</span></span>
+                <span class="">{{'printing-management.contains' | translate}} <b>{{'2125'}}</b> {{'printing-management.cards' | translate}}</span>
+              </a>
+          </tr>
+        </thead>
+        <tbody [ngbCollapse]="isPackageTwo" class="collapse">
           <tr>
-            <td><a [routerLink]="['/cards/details/1']" class="text-dcc-primary font-weight-bold">{{'محمد سليم أحمد'}} {{'Moh Salim Ahmad'}}</a></td>
+            <td><a [routerLink]="['/cards/details/1']">{{'محمد سليم أحمد'}} {{'Moh Salim Ahmad'}}</a></td>
             <td class="ltr">{{'2367430624'}}</td>
             <td class="ltr">{{'541285'}}</td>
             <td class="ltr">{{'5O85X8'}}</td>
           </tr>
           <tr>
-            <td><a [routerLink]="['/cards/details/1']" class="text-dcc-primary font-weight-bold">{{'عبد الرزاق البدر'}} {{'Abd Alrazzaq Albadr'}}</a></td>
+            <td><a [routerLink]="['/cards/details/1']">{{'عبد الرزاق البدر'}} {{'Abd Alrazzaq Albadr'}}</a></td>
             <td class="ltr">{{'2367430426'}}</td>
             <td class="ltr">{{'541582'}}</td>
             <td class="ltr">{{'5O8Y84'}}</td>

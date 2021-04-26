@@ -9,7 +9,7 @@ import {FormGroup} from "@angular/forms";
   styleUrls: ['./printing-request-list.component.scss']
 })
 export class PrintingRequestListComponent implements OnInit {
-
+  public isSearchbarCollapsed= false;
   pageArray: Array<number>;
   page: Page;
   searchForm: FormGroup;

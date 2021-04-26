@@ -13,7 +13,7 @@ import {Subscription} from "rxjs";
   styleUrls: ['./card-list.component.scss']
 })
 export class CardListComponent implements OnInit {
-
+  public isSearchbarCollapsed= false;
   cards: Array<Card>;
   pageArray: Array<number>;
   page: Page;

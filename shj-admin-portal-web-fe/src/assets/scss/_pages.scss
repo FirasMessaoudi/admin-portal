@@ -325,3 +325,37 @@ tr:hover .tblView{
         color: #3B7937;
     }
 }
+
+
+.packageNo{
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    background-color: #EDF8EE;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50rem;
+    color: $dcc-primary;
+    @include mx(3)
+    
+}
+
+.packageBox
+{
+    display: block;
+    @include py(2);
+    @include px(3);
+    color: #000;
+    
+
+    &.active{
+        
+
+        [dir="rtl"] & {
+            border-right: 5px $dcc-primary solid;
+        }
+        [dir="ltr"] & {
+            border-left: 5px $dcc-primary solid;
+        }
+    }
+}
