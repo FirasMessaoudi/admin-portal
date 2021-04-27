@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import * as FileSaver from 'file-saver';
 import {Observable} from "rxjs";
 import {HttpEventType, HttpResponse} from "@angular/common/http";
@@ -7,6 +7,8 @@ import {DataRequestService} from "@core/services/data/data-request.service";
 import {DataRequest, DataSegment} from "@shared/model";
 import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
+import {DataSegmentService} from "@core/services";
+import {I18nService} from "@dcc-commons-ng/services";
 
 @Component({
   selector: 'app-step-one',
@@ -15,24 +17,42 @@ import {TranslateService} from "@ngx-translate/core";
 })
 export class StepOneComponent implements OnInit {
 
-  uploadForm: FormGroup;
-  selectedFiles: FileList;
-  currentFile: File;
+  dataRequestForm: FormGroup;
+  dataSegments: DataSegment[];
   progress = 0;
   errorMessage = '';
+  selectedDataSegment: DataSegment;
+  dataRequest: DataRequest;
   createdDataRequest: DataRequest;
   fileInfos: Observable<any>;
 
   constructor(private dataRequestService: DataRequestService,
+              private dataSegmentService: DataSegmentService,
               private toastr: ToastService,
+              private i18nService: I18nService,
               private translate: TranslateService,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private cd: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
-    this.uploadForm = this.formBuilder.group({
-      fileData: ['', [Validators.required]]
+    this.dataRequest = new DataRequest();
+    this.dataRequestForm = this.formBuilder.group({
+      fileData: [null, [Validators.required]],
+      dataSegment: [null, [Validators.required]],
     });
+    this.dataSegmentService.list().subscribe(data => {
+      this.dataSegments = data;
+    });
+  }
+
+  // convenience getter for easy access to form fields
+  get f() {
+    return this.dataRequestForm.controls;
+  }
+
+  get currentLanguage(): string {
+    return this.i18nService.language;
   }
 
   downloadTemplate(dataSegmentId: any) {
@@ -63,39 +83,51 @@ export class StepOneComponent implements OnInit {
     return result.replace(/"/g, '');
   }
 
-  selectFile(event) {
-    this.selectedFiles = event.target.files;
-  }
-
   uploadDataFile() {
+    // trigger all validations
+    Object.keys(this.dataRequestForm.controls).forEach(field => {
+      const control = this.dataRequestForm.get(field);
+      control.markAsTouched({onlySelf: true});
+    });
+
+    // stop here if form is invalid
+    if (this.dataRequestForm.invalid) {
+      return;
+    }
+
     this.progress = 0;
     this.errorMessage = null;
-    this.currentFile = this.selectedFiles.item(0);
-    let dataRequest: DataRequest = new DataRequest();
-    let dataSegment: DataSegment = new DataSegment();
-    dataSegment.id = 1;
-    dataRequest.dataSegment = dataSegment;
-    this.dataRequestService.create(dataRequest, this.currentFile).subscribe(
+    this.dataRequest.dataSegment = this.selectedDataSegment;
+    this.dataRequestService.create(this.dataRequest, this.f.fileData.value).subscribe(
       event => {
         if (event.type === HttpEventType.UploadProgress) {
           this.progress = Math.round(100 * event.loaded / event.total);
         } else if (event instanceof HttpResponse) {
           this.createdDataRequest = event.body;
           console.log(this.createdDataRequest);
-          this.toastr.success(this.translate.instant("general.dialog_add_success_text"), this.translate.instant("data-upload-management.choose_segment"));
+          this.toastr.success(this.translate.instant("general.dialog_add_success_text"), this.translate.instant("data-request-management.choose_segment"));
         }
       },
       err => {
         this.progress = 0;
-        this.currentFile = null;
-        this.toastr.warning(this.translate.instant("general.dialog_form_error_text"), this.translate.instant("data-upload-management.choose_segment"));
+        this.toastr.warning(this.translate.instant("general.dialog_form_error_text"), this.translate.instant("data-request-management.choose_segment"));
         let responseError = err.error;
         if (responseError.hasOwnProperty("errors") && responseError.errors) {
           this.errorMessage =  (responseError.errors["request"] ? this.translate.instant(responseError.errors["request"]) : responseError.errorMessage);
         }
       });
-
-    this.selectedFiles = null;
   }
 
+  onFileChange(event) {
+    if(event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      this.f.fileData.setValue(file);
+      // need to run CD since file load runs outside of zone
+      this.cd.markForCheck();
+    }
+  }
+
+  onSegmentChange(event: any) {
+    this.selectedDataSegment = event;
+  }
 }
