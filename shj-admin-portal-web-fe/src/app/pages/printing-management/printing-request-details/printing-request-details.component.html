@@ -52,11 +52,13 @@
           </tr>
 
           <thead>
-            <tr colspan="10">
+            <tr>
+              <td class="p-0" colspan="10">
                 <a class="packageBox" href="javascript:void(0)" (click)="isPackageOne = !isPackageOne" [ngClass]=" isPackageOne ? '' : 'active'">
                   <span class="">{{'printing-management.batch_no' | translate}}<span class="packageNo">{{'1'}}</span></span>
                   <span class="">{{'printing-management.contains' | translate}} <b>{{'520'}}</b> {{'printing-management.cards' | translate}}</span>
                 </a>
+              </td>
             </tr>
           </thead>
           <tbody [ngbCollapse]="isPackageOne" class="collapse">
@@ -74,11 +76,13 @@
           </tr>
         </tbody>
         <thead>
-          <tr colspan="10">
+          <tr>
+            <td class="p-0" colspan="10">
               <a class="packageBox" href="javascript:void(0)" (click)="isPackageTwo = !isPackageTwo" [ngClass]=" isPackageTwo ? '' : 'active'">
                 <span class="">{{'printing-management.batch_no' | translate}}<span class="packageNo">{{'2'}}</span></span>
                 <span class="">{{'printing-management.contains' | translate}} <b>{{'2125'}}</b> {{'printing-management.cards' | translate}}</span>
               </a>
+            </td>
           </tr>
         </thead>
         <tbody [ngbCollapse]="isPackageTwo" class="collapse">

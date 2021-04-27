@@ -312,9 +312,16 @@ tr:hover .tblView{
     background-repeat: no-repeat;
     padding: 0;
     background-size: 20px;
-    padding-right: 2.2rem;
-    background-position: center right;
     color: rgba(0, 0, 0, 0.5);
+
+    [dir="rtl"] & {
+        padding-right: 2.2rem;
+        background-position: center right;
+    }
+    [dir="ltr"] & {
+        padding-left: 2.2rem;
+        background-position: center left;
+    }
 
     &.btn:hover{
         box-shadow:none
@@ -324,6 +331,8 @@ tr:hover .tblView{
         background-image: url(assets/images/svg-icons/check-square.svg);
         color: #3B7937;
     }
+
+    
 }
 
 
@@ -340,22 +349,37 @@ tr:hover .tblView{
     
 }
 
-.packageBox
-{
-    display: block;
-    @include py(2);
-    @include px(3);
-    color: #000;
-    
-
-    &.active{
+.packageBox{
+        display: block;
+        @include py(2);
+        @include px(3);
+        color: #000;
+        background-image: url(assets/images/svg-icons/arrowcircle.svg);
+        background-repeat: no-repeat;
         
+        border-bottom: 2px #E4E4E4 solid;
+        border-top: 1px #E4E4E4 solid;
+
+        &:hover{
+            color: $dcc-primary;
+        }
 
         [dir="rtl"] & {
-            border-right: 5px $dcc-primary solid;
+            background-position: left 1.5rem center;
         }
         [dir="ltr"] & {
-            border-left: 5px $dcc-primary solid;
+            background-position: right 1.5rem center;
+        }
+
+        &.active{
+            
+            background-image: url(assets/images/svg-icons/arrowcircle-collapse.svg);
+
+            [dir="rtl"] & {
+                border-right: 5px $dcc-primary solid;
+            }
+            [dir="ltr"] & {
+                border-left: 5px $dcc-primary solid;
+            }
         }
     }
-}
