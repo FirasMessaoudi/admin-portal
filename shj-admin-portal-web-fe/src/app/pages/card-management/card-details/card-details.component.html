@@ -332,7 +332,7 @@
                 <tbody>
                 <tr *ngFor="let immunization of card?.applicantRitual?.applicant?.healths[0]?.immunizations">
                   <td class="ltr">{{immunization.immunizationCode}}</td>
-                  <td class="ltr">{{immunization.immunizationDate}}</td>
+                  <td class="ltr">{{immunization.immunizationDate | dateFormat}}</td>
                 </tr>
                 </tbody>
               </table>
