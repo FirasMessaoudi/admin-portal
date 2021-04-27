@@ -7,7 +7,7 @@
   <aw-wizard class="steps-custom" [navBarLayout]="'large-empty'">
     <aw-wizard-step [navigationSymbol]="{ symbol: '1' }">
       <ng-template awWizardStepTitle>
-        <span>{{'data-request-management.prepare_request' | translate}}</span>
+        <span>{{'data-request-management.choose_segment_and_upload' | translate}}</span>
       </ng-template>
       <div class="section">
         <app-step-one></app-step-one>
@@ -19,7 +19,7 @@
     </aw-wizard-step>
     <aw-wizard-step [navigationSymbol]="{ symbol: '2' }">
       <ng-template awWizardStepTitle>
-        <span>{{'data-request-management.create_batch' | translate}}</span>
+        <span>{{'data-request-management.consent_and_confirm' | translate}}</span>
       </ng-template>
       <div class="section">
         <app-step-two></app-step-two>
@@ -27,32 +27,6 @@
       <div class="bg-lighter mx-30 p-4 text-center">
         <button type="button" routerLink="/data-requests/list" class="btn btn-outline-secondary rounded-22 px-5 mr-3">{{'general.btn_cancel' | translate}}</button>
         <button type="button" class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3" awPreviousStep>{{'general.btn_previous' | translate}}</button>
-        <button type="button" awNextStep (click)="saveStepTwo()" [disabled]="false" class="btn btn-dcc-primary rounded-22 px-5 mr-3" translate>general.btn_next</button>
-      </div>
-    </aw-wizard-step>
-    <aw-wizard-step [navigationSymbol]="{ symbol: '3' }">
-      <ng-template awWizardStepTitle>
-        <span>{{'data-management.confirm_request' | translate}}</span>
-      </ng-template>
-      <div class="section">
-        <app-step-three></app-step-three>
-      </div>
-      <div class="bg-lighter mx-30 p-4 text-center">
-        <button type="button" routerLink="/print-requests/list" class="btn btn-outline-secondary rounded-22 px-5 mr-3">{{'general.btn_cancel' | translate}}</button>
-        <button type="button" class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3" awPreviousStep>{{'general.btn_previous' | translate}}</button>
-        <button type="button" [disabled]="false" (click)="confirm()" class="btn btn-dcc-primary rounded-22 px-5 mr-3" awNextStep>{{'printing-management.btn_confirm_request' | translate}}</button>
-      </div>
-    </aw-wizard-step>
-    <aw-wizard-step>
-      <ng-template awWizardStepTitle>
-        <span>{{'printing-management.print_request_summary' | translate}}</span>
-      </ng-template>
-      <div class="section">
-        <app-step-four></app-step-four>
-      </div>
-      <div class="bg-lighter mx-30 p-4 text-center">
-        <button type="button" routerLink="/print-requests/details" class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3">{{'printing-management.btn_view_print_request_details' | translate}}</button>
-        <button type="button" routerLink="/print-requests/list" class="btn btn-secondary rounded-22 px-5 mr-3">{{'printing-management.btn_back_to_printing_management' | translate}}</button>
         <button type="button" [disabled]="false" (click)="confirm()" class="btn btn-dcc-primary rounded-22 px-5 mr-3" routerLink="/data-requests/success" >{{'printing-management.btn_confirm_request' | translate}}</button>
       </div>
     </aw-wizard-step>

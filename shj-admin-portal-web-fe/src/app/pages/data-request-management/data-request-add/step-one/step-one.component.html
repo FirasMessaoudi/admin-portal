@@ -1,17 +1,20 @@
-<form [formGroup]="uploadForm" class="row row-cols-1 row-cols-md-3 row-cols-lg-3" enctype="multipart/form-data">
+<form [formGroup]="dataRequestForm" class="row row-cols-1 row-cols-md-3 row-cols-lg-3" enctype="multipart/form-data">
 
   <div class="form-group col">
-    <label class="col-form-label">{{'data-upload-management.choose_segment' | translate }}</label>
-    <select class="custom-select">
-      <option>{{'Applicant Data'}}</option>
-      <option>{{'Tafweej Data'}}</option>
-      <option>{{'Establishment Data'}}</option>
-      <option>{{'Applicant Health Data'}}</option>
+    <label class="col-form-label">{{'data-request-management.choose_segment' | translate }}</label>
+    <select formControlName="dataSegment" (ngModelChange)="onSegmentChange($event)" class="custom-select">
+      <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+      <option *ngFor="let dataSegment of dataSegments" [ngValue]="dataSegment">
+        {{ currentLanguage.startsWith("en") ? dataSegment.labelEn : dataSegment.labelAr }}
+      </option>
     </select>
+    <div *ngIf="f.dataSegment.invalid && f.dataSegment.touched" class="invalid-feedback">
+      <div *ngIf="f.dataSegment.errors.required">{{'general.field_validation_required' | translate}}</div>
+    </div>
   </div>
 
   <div class="form-group col">
-    <label class="col-form-label">{{'data-upload-management.download_template' | translate }}</label>
+    <label class="col-form-label">{{'data-request-management.download_template' | translate }}</label>
     <div class="col-form-control text-center">
       <button class="btn btn-outline-dcc-primary px-6 py-2 border w-100 d-flex flex-center-column" (click)="downloadTemplate(1)" >
         <img src="assets/images/excel.svg" style="width: 60px;" alt="" >
@@ -21,23 +24,22 @@
   </div>
 
   <div class="form-group col">
-    <label class="col-form-label">{{'data-upload-management.upload_filled_document' | translate }}</label>
+    <label class="col-form-label">{{'data-request-management.upload_filled_document' | translate }}</label>
     <div class="input-group">
       <div class="custom-file mb-2">
-        <input type="file" class="custom-file-input" id="fileData" formControlName="fileData"
-               [required]="true" (change)="selectFile($event)"
+        <input type="file" class="custom-file-input" id="fileData" [required]="true" (change)="onFileChange($event)"
                accept=".xls,.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
-        <label class="custom-file-label" for="fileData"><i class="fas fa-search"></i> {{(selectedFiles ? selectedFiles.item(0).name : 'data-upload-management.choose_file') | translate}}</label>
+        <label class="custom-file-label" for="fileData"><i class="fas fa-search"></i> {{(f.fileData && f.fileData.value ? f.fileData.value.name : 'data-request-management.choose_file') | translate}}</label>
       </div>
     </div>
     <div class="mt-1">
       <div *ngIf="errorMessage" class="border border-warning bg-warning py-1 px-2 mb-2">
         {{errorMessage}}
       </div>
-      <div *ngIf="currentFile" class="progress text-center mb-2">
+      <div *ngIf="progress > 0" class="progress text-center mb-2">
         <ngb-progressbar type="success" textType="white" [value]="progress" [showValue]="true"></ngb-progressbar>
       </div>
-      <button name="save_banner_image_button" type="button" (click)="uploadDataFile()" [disabled]="!selectedFiles"
+      <button name="save_banner_image_button" type="button" (click)="uploadDataFile()" [disabled]="dataRequestForm.invalid"
               class="btn btn-dcc-primary rounded-22 px-5">{{'general.btn_upload' | translate }}</button>
     </div>
   </div>
@@ -46,5 +48,5 @@
 
 <div class="bg-dcc-light p-3">
   <span class="h5 font-weight-bold text-dcc-primary mr-3">{{'6214'}}</span>
-  <span>{{'data-upload-management.items_to_process' | translate}}</span>
+  <span>{{'data-request-management.items_to_process' | translate}}</span>
 </div>

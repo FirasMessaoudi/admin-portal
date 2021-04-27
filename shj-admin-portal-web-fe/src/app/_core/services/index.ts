@@ -5,3 +5,5 @@ export * from './authentication/authentication.service';
 export * from '../guards/authentication.guard';
 export * from './dashboard/dashboard.service';
 export * from './card/card.service';
+export * from './data/data-segment.service';
+export * from './data/data-request.service';

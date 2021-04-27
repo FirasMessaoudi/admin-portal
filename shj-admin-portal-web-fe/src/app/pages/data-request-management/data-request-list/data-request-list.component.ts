@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {EAuthority, Page} from "@shared/model";
 import {AuthenticationService} from "@core/services";
 import {FormGroup} from "@angular/forms";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-printing-request-list',
@@ -15,7 +16,9 @@ export class DataRequestListComponent implements OnInit {
   searchForm: FormGroup;
   canCreateNewRequest: boolean;
 
-  constructor(private authenticationService: AuthenticationService) { }
+  constructor(private authenticationService: AuthenticationService,
+              private translate: TranslateService) {
+  }
 
   ngOnInit(): void {
     this.canCreateNewRequest = true;
