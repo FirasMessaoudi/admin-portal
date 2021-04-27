@@ -496,7 +496,7 @@
     "rule_details": "Decision Rule ",
     "rule_name": "Decision Rule Name"
   },
-  "data-upload-management": {
+  "data-request-management": {
     "title": "Data Upload Management",
     "requests_list": "Data Upload Requests List",
     "request_details": " Data Upload Request ",

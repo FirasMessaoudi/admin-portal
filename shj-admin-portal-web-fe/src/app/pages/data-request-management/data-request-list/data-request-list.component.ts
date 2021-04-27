@@ -5,10 +5,10 @@ import {FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-printing-request-list',
-  templateUrl: './data-upload-request-list.component.html',
-  styleUrls: ['./data-upload-request-list.component.scss']
+  templateUrl: './data-request-list.component.html',
+  styleUrls: ['./data-request-list.component.scss']
 })
-export class DataUploadRequestListComponent implements OnInit {
+export class DataRequestListComponent implements OnInit {
 
   pageArray: Array<number>;
   page: Page;

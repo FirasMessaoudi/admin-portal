@@ -480,7 +480,7 @@
     "rule_details": "قاعدة القرار ",
     "rule_name": "اسم قاعدة القرار"
   },
-  "data-upload-management": {
+  "data-request-management": {
     "title": "إدارة رفع البيانات",
     "requests_list": "قائمة طلبات رفع البيانات",
     "request_details": " طلب رفع بيانات ",

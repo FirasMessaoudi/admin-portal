@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import * as FileSaver from 'file-saver';
 import {Observable} from "rxjs";
-import {HttpErrorResponse, HttpEventType, HttpResponse} from "@angular/common/http";
+import {HttpEventType, HttpResponse} from "@angular/common/http";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DataRequestService} from "@core/services/data/data-request.service";
 import {DataRequest, DataSegment} from "@shared/model";

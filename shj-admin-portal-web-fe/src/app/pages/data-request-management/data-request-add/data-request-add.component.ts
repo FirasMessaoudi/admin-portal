@@ -1,11 +1,11 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-printing-request-add-update',
-  templateUrl: './data-upload-request-add-update.component.html',
-  styleUrls: ['./data-upload-request-add-update.component.scss']
+  selector: 'app-data-request-add-update',
+  templateUrl: './data-request-add.component.html',
+  styleUrls: ['./data-request-add.component.scss']
 })
-export class DataUploadRequestAddUpdateComponent implements OnInit {
+export class DataRequestAddComponent implements OnInit {
 
   constructor(private cdr: ChangeDetectorRef) { }
 

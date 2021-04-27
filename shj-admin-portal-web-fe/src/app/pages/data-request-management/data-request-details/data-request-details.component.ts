@@ -5,10 +5,10 @@ import {AuthenticationService} from "@core/services";
 
 @Component({
   selector: 'app-printing-request-details',
-  templateUrl: './data-upload-request-details.component.html',
-  styleUrls: ['./data-upload-request-details.component.scss']
+  templateUrl: './data-request-details.component.html',
+  styleUrls: ['./data-request-details.component.scss']
 })
-export class DataUploadRequestDetailsComponent implements OnInit {
+export class DataRequestDetailsComponent implements OnInit {
 
   constructor(private i18nService: I18nService,
               private authenticationService: AuthenticationService) { }
