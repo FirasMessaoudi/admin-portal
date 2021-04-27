@@ -3,6 +3,11 @@ import {Card} from "@model/card.model";
 import {TranslateService} from "@ngx-translate/core";
 import {I18nService} from "@dcc-commons-ng/services";
 import {PackageCatering} from "@model/package-catering.model";
+import {ActivatedRoute, Router} from "@angular/router";
+import {combineLatest} from "rxjs";
+import {map} from "rxjs/operators";
+import {CardService} from "@core/services";
+import {ToastService} from "@shared/components/toast";
 
 @Component({
   selector: 'app-card-details',
@@ -10,20 +15,50 @@ import {PackageCatering} from "@model/package-catering.model";
   styleUrls: ['./card-details.component.scss']
 })
 export class CardDetailsComponent implements OnInit {
-
+  cardId: number;
   card: Card;
   url: any = 'assets/images/default-avatar.svg';
   //TODO: to be deleted after wiring the backend to the frontend
   hamlahPackage: any;
 
-  constructor(private translate: TranslateService,
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private toastr: ToastService,
+              private cardService: CardService,
+              private translate: TranslateService,
               private i18nService: I18nService) { }
 
   ngOnInit(): void {
-    //TODO: dummy data
-    this.card = {"id":1, "applicantRitual":{"id":1, "applicant":{"id":1, "gender":"M", "nationalityCode":{"id":1, "code":null, "label":"الهندية", "lang":null}, "idNumber":2367430624, "idNumberOriginal":"9674215489", "passportNumber": "5O85X8", "dateOfBirthGregorian":1110488400000, "dateOfBirthHijri":14260201, "fullNameAr": "زبير عبد المجيد خان", "fullNameEn": "Zubair Abd Almajid Khan", "fullNameOriginal": "xyz", "maritalStatus":1, "photo": null, "requestId":1, "status": 1, "relatives":[{"id": 1, "applicant":{"id":11, "gender":"F", "nationalityCode":{"id":1, "code":null, "label":"الهندية", "lang":null}, "idNumber":2367430625, "idNumberOriginal":"9674215495", "passportNumber": "5O85X9", "dateOfBirthGregorian":1110488400000, "dateOfBirthHijri":14380209, "fullNameAr": "فاطمة زبير عبد المجيد خان", "fullNameEn": "Fatima Zubair Abd Almajid Khan", "fullNameOriginal": "xyz", "maritalStatus":2, "photo": null, "requestId":1, "status": 1, "relatives":[], "contacts":[], "healths": [{"id": 1, "bloodType": "A+", "creationDate": null, "diseases": [], "specialNeeds": [], "immunizations": [] }]}, "relationshipCode":{"id":1, "code":null, "label":"ابنة", "lang":null}}], "contacts":[], "healths": [{"id": 1, "bloodType": "A+", "creationDate": null, "diseases": [], "specialNeeds": [], "immunizations": []}]}, "hamlahPackageCode": "1" , "hijriSeason":1442, "dateStartGregorian":null, "dateEndGregorian":null, "dateStartHijri":null, "dateEndHijri":null, "typeCode":{"id":1, "code":null, "label":"حج داخلي", "lang":null}, "visaNumber": "521458", "permitNumber": "365214", "insuranceNumber": "215478", "borderNumber": "321458"},"referenceNumber":452187, "batchId":1, "statusCode":null};
+    combineLatest(this.route.params, this.route.queryParams).pipe(map(results => ({
+      params: results[0].id,
+      qParams: results[1]
+    }))).subscribe(results => {
+      this.cardId = +results.params; // (+) converts string 'id' to a number
+
+      if (this.cardId) {
+        // load user details
+        this.cardService.find(this.cardId).subscribe(data => {
+          if (data && data.id) {
+            this.card = data;
+          } else {
+            this.toastr.error(this.translate.instant('general.card_item_not_found', {itemId: this.cardId}),
+              this.translate.instant('general.dialog_error_title'));
+            this.goToList();
+          }
+        });
+      } else {
+        this.toastr.error(this.translate.instant('general.card_id_param_not_found'),
+          this.translate.instant('general.dialog_error_title'));
+        this.goToList();
+      }
+    });
     //TODO: dummy data
     this.hamlahPackage = {"id":1, "typeCode":{"id":1, "code":null, "label":"VIP", "lang":null}, "hamlahId":1, "campId":1, "price":6500, "departureCity":"Mombai", "countryId":1, "packageHousings":[{"id":1, "type":"مزدلفة", "code":"25475", "labelAr":"مخيم مشاعل النور", "labelEn":"", "validityStart":"01-04-2021", "validityEnd":"02-04-2021", "addressAr":"مزدلفة بجوار محطة القطار", "addressEn":"", "isDefault":true, "packageCaterings":[{"id":1, "type":"غداء", "meal":"", "descriptionAr":"بوفيه مفتوح", "descriptionEn":""}]}], "packageTransportations":[{"id":1, "type":"باص", "validityStart":"03-04-2021", "validityEnd":"04-04-2021", "locationFrom":"منى", "locationTo":"مزدلفة", "vehicleNumber":"ب ح ج 259"}]};
+
+  }
+
+  goToList() {
+    this.router.navigate(['/cards/list']);
   }
 
   get currentLanguage(): string {

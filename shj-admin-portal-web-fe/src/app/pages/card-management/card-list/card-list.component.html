@@ -2,8 +2,8 @@
   <div class="title__Page">
     <h3 class="sectionTitle">
       {{ "card-management.cards_list" | translate }}
-      <button class="btn btn-link shadow-none">
-        <svg-icon styleClass="h4" icon="search"></svg-icon>
+      <button class="btn btn-link shadow-none"  (click)="isSearchbarCollapsed = !isSearchbarCollapsed">
+        <svg-icon styleClass="h4 pt-3" icon="search"></svg-icon>
       </button>
     </h3>
     <button class="btn btn-outline-dcc-primary px-4" *ngIf="canAddCard">
@@ -15,7 +15,7 @@
   </div>
 
   <div class="content__section" *ngIf="canSeeCardsList">
-    <div class="searchBox">
+    <div class="searchBox collapse" [ngbCollapse]="isSearchbarCollapsed">
       <form [formGroup]="searchForm" enctype="multipart/form-data" class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
 
         <div class="form-group col">
