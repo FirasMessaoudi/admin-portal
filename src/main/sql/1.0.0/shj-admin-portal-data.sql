@@ -330,8 +330,8 @@ SET IDENTITY_INSERT shj_portal.sha_user_role OFF;
 GO
 
 SET IDENTITY_INSERT shj_portal.sha_data_segment ON;
-INSERT INTO shj_portal.sha_data_segment (id, root_class, template_file_name, label_ar, label_en, creation_date, update_date)
-VALUES (1,'abdelghany','applicant-data.xlsx', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38:43', null);
+INSERT INTO shj_portal.sha_data_segment (id, template_file_name, label_ar, label_en, creation_date, update_date)
+VALUES (1, 'applicant-data.xlsx', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38:43', null);
 SET IDENTITY_INSERT shj_portal.sha_data_segment OFF;
 
 INSERT INTO shj_portal.sha_decision_rule (dmn, data_segment_id, label_ar, label_en, creation_date, update_date) VALUES (
