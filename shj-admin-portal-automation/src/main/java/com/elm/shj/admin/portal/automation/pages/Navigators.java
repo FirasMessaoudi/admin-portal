@@ -42,6 +42,13 @@ public class Navigators {
     WebElement txtCardName;
 
 
+    @FindBy(xpath = "//a[@ng-reflect-router-link='/print-requests/list']")
+    WebElement lnkManagePrinting;
+
+    @FindBy(id="addPrintingRequest")
+    WebElement btnPrintingRequest;
+
+
 
 
     public Navigators() {
@@ -119,6 +126,30 @@ public class Navigators {
                 ReporterX.fail("go To User Management Failed.");
             }
             return _goToUsers;
+        } catch (Exception e) {
+            ReporterX.error(e);
+            return false;
+        }
+
+    }
+
+    public boolean goToPrintingManagement() {
+        boolean _goToPrinting = false;
+        try {
+            if (ActionX.Exists(btnPrintingRequest, 3))
+                _goToPrinting = true;
+            else if (ActionX.Exists(lnkManagePrinting, 3)) {
+                lnkManagePrinting.click();
+
+                if (ActionX.Exists(btnPrintingRequest, 3)) {
+
+                    ReporterX.info("Page << Printing Management >> Loaded .!!");
+                    _goToPrinting = true;
+                }
+            } else {
+                ReporterX.fail("go To Printing Management Failed.");
+            }
+            return _goToPrinting;
         } catch (Exception e) {
             ReporterX.error(e);
             return false;

@@ -7,6 +7,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Hashtable;
 
@@ -112,7 +114,28 @@ public class PrintingManagement {
         return isSelected;
     }
 
+    private WebElement getWebElement(String requestID) {
+        WebDriverWait wait = new WebDriverWait(Global.Test.Browser, 5);
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//app-printing-request-details//span[contains(text(),'"+ requestID +"')]")));
+        return element;
+    }
 
+
+    public void viewPrintingRequest(Hashtable<String,String> dataRow) throws Exception{
+        if(selectPrintingRequest(dataRow,"View")){
+            //wait for request details
+            String requestID = dataRow.get("RequestNumber".toUpperCase());
+
+            WebElement element = getWebElement(requestID);
+
+            if(null != element){
+                ReporterX.pass("View Printing Request Details ["+requestID+"] Success.!");
+            }else {
+                ReporterX.fail("View Printing Request Details ["+requestID+"] Failed.!");
+            }
+
+        }
+    }
 
 
 }

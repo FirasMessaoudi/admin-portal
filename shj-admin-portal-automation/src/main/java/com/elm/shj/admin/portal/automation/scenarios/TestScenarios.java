@@ -15,6 +15,7 @@ public class TestScenarios {
     Navigators navigators = new Navigators();
     RoleManagement roleManagement = new RoleManagement();
     UserManagement userManagement = new UserManagement();
+    PrintingManagement printingManagement = new PrintingManagement();
 
 
 
@@ -235,20 +236,25 @@ public class TestScenarios {
     //endregion // End Of User Management
 
 
+
+    //region Printing Management
+
+    @Test
+    public void ValidateViewPrintingRequest() {
+        try {
+            systemLogin.SignIn(Executer.TestDataRow.get("LoginRow".toUpperCase()));
+            navigators.goToPrintingManagement();
+            printingManagement.viewPrintingRequest(Executer.TestDataRow);
+
+        } catch (Exception ex) {
+            ReporterX.error(ex);
+        }
+    }
+
+    //endregion // End Of Printing Management
+
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
