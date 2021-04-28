@@ -7,17 +7,17 @@
     <div class="dashes p-3 my-3">
       <span>
         {{'data-request-management.request_number' | translate }}
-        <span class="h5 font-weight-bold text-dcc-primary mx-3">{{'5'}}</span>
+        <span class="h5 font-weight-bold text-dcc-primary mx-3">{{dataRequest?.referenceNumber}}</span>
       </span>
       <span>
         {{'data-request-management.items_count' | translate }}
-        <span class="h5 font-weight-bold text-dcc-primary mx-3">{{'2451'}}</span>
+        <span class="h5 font-weight-bold text-dcc-primary mx-3">{{dataRequest?.itemCount}}</span>
       </span>
     </div>
   </div>
 </div>
 
 <div class="bg-lighter mx-30 p-4 text-center">
-  <button type="button" routerLink="/print-requests/details" class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3">{{'data-request-management.btn_view_request_details' | translate}}</button>
-  <button type="button" routerLink="/print-requests/list" class="btn btn-secondary rounded-22 px-5 mr-3">{{'data-request-management.btn_back_to_request_management' | translate}}</button>
+  <button type="button" routerLink="/data-requests/details/1" class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3">{{'data-request-management.btn_view_request_details' | translate}}</button>
+  <button type="button" routerLink="/data-requests/list" class="btn btn-secondary rounded-22 px-5 mr-3">{{'data-request-management.btn_back_to_request_management' | translate}}</button>
 </div>
