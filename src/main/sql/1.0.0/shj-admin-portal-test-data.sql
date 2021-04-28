@@ -19,10 +19,10 @@ VALUES (1, N'العربية، English', 'app@elm.sa', 558572465, 962796322285, '
 GO
 
 -- insert applicant relatives
-INSERT INTO shj_portal.sha_applicant_relative (relationship_code, applicant_id)
-VALUES ('MOTHER', 1);
-INSERT INTO shj_portal.sha_applicant_relative (relationship_code, applicant_id)
-VALUES ('WIFE', 1);
+INSERT INTO shj_portal.sha_applicant_relative (relationship_code, applicant_id, applicant_relative_id)
+VALUES ('MOTHER', 1, 2);
+INSERT INTO shj_portal.sha_applicant_relative (relationship_code, applicant_id, applicant_relative_id)
+VALUES ('WIFE', 1, 3);
 GO
 
 -- insert applicant digital id

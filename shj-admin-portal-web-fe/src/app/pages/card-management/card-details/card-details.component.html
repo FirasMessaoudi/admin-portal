@@ -137,8 +137,8 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let relative of card?.applicantRitual?.applicant?.relatives">
-                  <td class="ltr">{{relative.applicant?.fullNameAr}} {{relative.applicant?.fullNameEn}}</td>
-                  <td class="ltr">{{relative.applicant?.idNumber}}</td>
+                  <td class="ltr">{{relative.applicantRelative?.fullNameAr}} {{relative.applicantRelative?.fullNameEn}}</td>
+                  <td class="ltr">{{relative.applicantRelative?.idNumber}}</td>
                   <td class="ltr">{{relative.relationshipCode.label}}</td>
                 </tr>
                 </tbody>

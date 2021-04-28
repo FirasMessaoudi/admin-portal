@@ -26,5 +26,6 @@ public class ApplicantRelativeDto implements Serializable {
     private String relationshipCode;
     @JsonBackReference
     private ApplicantDto applicant;
+    private ApplicantDto applicantRelative;
     private Date creationDate;
 }
