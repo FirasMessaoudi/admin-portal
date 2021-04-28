@@ -38,8 +38,8 @@ public class JpaApplicantRelative implements Serializable {
     private JpaApplicant applicant;
 
     @ManyToOne
-    @JoinColumn(name = "applicant_relative_id")
-    private JpaApplicant applicantRelative;
+    @JoinColumn(name = "relative_applicant_id")
+    private JpaApplicant relativeApplicant;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
