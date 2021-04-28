@@ -24,6 +24,7 @@ public class AuditLogService extends GenericService<JpaAuditLog, AuditLogDto, Lo
     @Transactional
     @Override
     public AuditLogDto save(AuditLogDto dto) {
-        return super.save(dto);
+//        return super.save(dto);
+        return dto;
     }
 }

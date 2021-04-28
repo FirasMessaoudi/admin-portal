@@ -94,7 +94,7 @@ public class PrintingManagement {
 
     }
 
-    private boolean selectUserAction(Hashtable<String,String> dataRow, String action) throws Exception{
+    private boolean selectPrintingRequest(Hashtable<String,String> dataRow, String action) throws Exception{
         boolean isSelected = false;
         if( searchPrintingRequest(dataRow)) {
 
