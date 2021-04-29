@@ -11,6 +11,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.Ordered;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.mobile.device.DeviceHandlerMethodArgumentResolver;
 import org.springframework.mobile.device.DeviceResolverHandlerInterceptor;
@@ -36,6 +38,8 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private static final String LANG_PARAM_NAME = "lang";
+    private static final int DEFAULT_PAGE_SIZE = 10;
+
 
     /**
      * {@inheritDoc}
@@ -53,6 +57,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(deviceHandlerMethodArgumentResolver());
         argumentResolvers.add(sitePreferenceHandlerMethodArgumentResolver());
+        // adding paging config
+        PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
+        resolver.setFallbackPageable(PageRequest.of(0, DEFAULT_PAGE_SIZE));
+        argumentResolvers.add(resolver);
+        WebMvcConfigurer.super.addArgumentResolvers(argumentResolvers);
     }
 
     /**
@@ -73,7 +82,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
-        source.setBasename("classpath:messages");
+        source.setBasename("messages");
         source.setDefaultEncoding("UTF-8");
         return source;
     }

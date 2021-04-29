@@ -1,8 +1,6 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {StepOneComponent} from "@pages/data-request-management/data-request-add/step-one/step-one.component";
 import {StepTwoComponent} from "@pages/data-request-management/data-request-add/step-two/step-two.component";
-import {SuccessComponent} from "@pages/data-request-management/data-request-add/success/success.component";
-import {Router} from "@angular/router";
 import {DataRequestStorage} from "@pages/data-request-management/data-request-add/data-request-storage";
 
 @Component({
@@ -19,7 +17,8 @@ export class DataRequestAddComponent implements OnInit {
   stepTwoComp: StepTwoComponent;
 
   constructor(private cdr: ChangeDetectorRef,
-              public dataRequestStorage: DataRequestStorage) { }
+              public dataRequestStorage: DataRequestStorage) {
+  }
 
   ngOnInit(): void {
   }

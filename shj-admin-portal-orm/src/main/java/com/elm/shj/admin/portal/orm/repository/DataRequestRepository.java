@@ -5,6 +5,9 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaDataRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * Repository for DataRequest Table.
@@ -13,4 +16,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0.0
  */
 public interface DataRequestRepository extends JpaRepository<JpaDataRequest, Long> {
+
+    @Modifying
+    @Query("update JpaDataRequest dr set dr.status.id = :dataRequestStatusId, dr.updateDate = CURRENT_TIMESTAMP where dr.id = :dataRequestId")
+    void updateStatus(@Param("dataRequestId") long dataRequestId, @Param("dataRequestStatusId") long dataRequestStatusId);
+
 }

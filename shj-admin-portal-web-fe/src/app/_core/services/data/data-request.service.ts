@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpEvent, HttpHeaders, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {DataRequest} from "@shared/model";
+import {HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest} from '@angular/common/http';
+import {Observable, of} from 'rxjs';
+import {DataRequest, Role} from "@shared/model";
+import {catchError} from "rxjs/internal/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,31 @@ import {DataRequest} from "@shared/model";
 export class DataRequestService {
 
   constructor(private http: HttpClient) {
+  }
+
+  /**
+   * list all data requests.
+   */
+  list(pageNumber: any): Observable<any> {
+    let params = new HttpParams().set('page', pageNumber);
+    return this.http.get("/core/api/data/request/list", {params: params});
+  }
+
+  /**
+   * Finds data request by its ID from the server.
+   *
+   *@param dataRequestId the data request id
+   * @return {Observable<DataRequest>} The data request identified by dataRequestId.
+   */
+  find(dataRequestId: number): Observable<DataRequest> {
+    return this.http.get<any>('/core/api/data/request/find/' + dataRequestId).pipe(
+      catchError(
+        (error: any, caught: Observable<HttpEvent<any>>) => {
+          console.error(error);
+          return of(null);
+        }
+      )
+    );
   }
 
   /**
@@ -37,11 +63,20 @@ export class DataRequestService {
     }));
     formData.append("file", file);
     const req = new HttpRequest('POST', '/core/api/data/request/create', formData, {
-      headers: new HttpHeaders({ "Content-Type": "multipart/form-data" }),
+      headers: new HttpHeaders({"Content-Type": "multipart/form-data"}),
       reportProgress: true,
       responseType: 'json'
     });
     return this.http.request(req);
+  }
+
+  /**
+   * Confirms a newly created data request
+   *
+   * @param dataRequestId the data request id to be confirmed
+   */
+  confirm(dataRequestId: number): Observable<any> {
+    return this.http.post('/core/api/data/request/confirm/' + dataRequestId, null);
   }
 
 }

@@ -9,9 +9,12 @@ import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.DataRequestDto;
 import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,16 +30,39 @@ import javax.validation.Valid;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
+@Slf4j
 @RestController
 @RequestMapping(Navigation.API_DATA_REQUEST)
-@Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DataRequestManagementController {
 
-    @Autowired
-    private DataRequestService dataRequestService;
+    private final DataRequestService dataRequestService;
+    private final DataSegmentService dataSegmentService;
 
-    @Autowired
-    private DataSegmentService dataSegmentService;
+    /**
+     * List all data requests.
+     *
+     * @return the list of data requests
+     */
+    @GetMapping("/list")
+    @RolesAllowed({AuthorityConstants.ROLE_MANAGEMENT})
+    public Page<DataRequestDto> list(Pageable pageable) {
+        log.info("list all data requests.");
+        return dataRequestService.findAll(pageable);
+    }
+
+    /**
+     * finds a data request by its ID
+     *
+     * @param dataRequestId the data request id to find
+     * @return the found data request or <code>null</code>
+     */
+    @GetMapping("/find/{dataRequestId}")
+    @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT)
+    public DataRequestDto findRole(@PathVariable long dataRequestId) {
+        log.debug("Finding data request #{}", dataRequestId);
+        return dataRequestService.findOne(dataRequestId);
+    }
 
     /**
      * Downloads a template for a specific segment
@@ -73,6 +99,17 @@ public class DataRequestManagementController {
                                  @RequestPart("file") MultipartFile file) throws Exception {
         log.info("Creating data request for segment#{}", dataRequest.getDataSegment().getId());
         return dataRequestService.save(dataRequest, file);
+    }
+
+    /**
+     * Confirms a newly created data request
+     *
+     * @param dataRequestId the data request id to be confirmed
+     */
+    @PostMapping(value = "/confirm/{dataRequestId}")
+    public void confirm(@PathVariable long dataRequestId) {
+        log.info("Confirming data request #{}", dataRequestId);
+        dataRequestService.confirm(dataRequestId);
     }
 
 }

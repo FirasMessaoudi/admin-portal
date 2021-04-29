@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.data.request;
 
 import com.elm.shj.admin.portal.orm.entity.JpaDataRequest;
+import com.elm.shj.admin.portal.orm.repository.DataRequestRepository;
 import com.elm.shj.admin.portal.services.dto.DataRequestDto;
 import com.elm.shj.admin.portal.services.dto.DataRequestStatusLookupDto;
 import com.elm.shj.admin.portal.services.dto.EDataRequestStatus;
@@ -95,5 +96,14 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
         createdRequest.setItemCount(200);
         // return the persisted object
         return createdRequest;
+    }
+
+    /**
+     * Confirms a newly created data request
+     *
+     * @param dataRequestId the data request id to be confirmed
+     */
+    public void confirm(long dataRequestId) {
+        ((DataRequestRepository)getRepository()).updateStatus(dataRequestId, EDataRequestStatus.CONFIRMED.getId());
     }
 }
