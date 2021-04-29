@@ -19,8 +19,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "sha_ritual_type_lk")
 @NamedQuery(name = "JpaRitualTypeLookup.findAll", query = "SELECT j FROM JpaRitualTypeLookup j")
-@Data
-@NoArgsConstructor
 public class JpaRitualTypeLookup extends JpaLocalizedLookup {
 
     private static final long serialVersionUID = -8272748979397418405L;
