@@ -1,8 +1,8 @@
 <header class="header-wrapper">
   <div class="left-header">
-    <a class="d-block" href="/">
+    <a class="d-block" (click)="goBack()" href="javascript:void(0);">
       <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
-       <span class="mx-2 px-1">عودة</span>
+      <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
     </a>
   </div>
   <div class="nav-right">
