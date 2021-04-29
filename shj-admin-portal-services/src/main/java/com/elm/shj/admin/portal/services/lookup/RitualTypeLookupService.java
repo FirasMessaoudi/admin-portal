@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.lookup;
 import com.elm.shj.admin.portal.orm.entity.JpaRitualTypeLookup;
 import com.elm.shj.admin.portal.services.dto.RitualTypeLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 @Service
+@Slf4j
 public class RitualTypeLookupService extends GenericService<JpaRitualTypeLookup, RitualTypeLookupDto, Long> {
 
     /**
