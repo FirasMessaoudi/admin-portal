@@ -41,13 +41,13 @@ export class CardDetailsComponent implements OnInit {
           if (data && data.id) {
             this.card = data;
           } else {
-            this.toastr.error(this.translate.instant('general.card_item_not_found', {itemId: this.cardId}),
+            this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.cardId}),
               this.translate.instant('general.dialog_error_title'));
             this.goToList();
           }
         });
       } else {
-        this.toastr.error(this.translate.instant('general.card_id_param_not_found'),
+        this.toastr.error(this.translate.instant('general.route_id_param_not_found'),
           this.translate.instant('general.dialog_error_title'));
         this.goToList();
       }
