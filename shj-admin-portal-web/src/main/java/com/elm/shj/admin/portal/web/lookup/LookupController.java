@@ -5,10 +5,11 @@ package com.elm.shj.admin.portal.web.lookup;
 
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.AuthorityLookupDto;
+import com.elm.shj.admin.portal.services.dto.RitualTypeLookupDto;
 import com.elm.shj.admin.portal.services.lookup.AuthorityLookupService;
-import com.elm.shj.admin.portal.services.lookup.LocalizedLookupVo;
 import com.elm.shj.admin.portal.services.lookup.RitualTypeLookupService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(Navigation.API_LOOKUP)
+@Slf4j
 public class LookupController {
 
     @Autowired
@@ -42,7 +44,8 @@ public class LookupController {
 
     @GetMapping("/ritual-type/list")
     @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT) //TODO: change it
-    public List<LocalizedLookupVo> listRitualTypes(Authentication authentication) {
-        return ritualTypeLookupService.findAllLocalized();
+    public List<RitualTypeLookupDto> listRitualTypes(Authentication authentication) {
+        log.info("list ritual types in controller...");
+        return ritualTypeLookupService.findAll();
     }
 }
