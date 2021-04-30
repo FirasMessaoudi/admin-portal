@@ -79,4 +79,28 @@ export class DataRequestService {
     return this.http.post('/core/api/data/request/confirm/' + dataRequestId, null);
   }
 
+  /**
+   * Returns the css class for the given status
+   *
+   * @param status the current data request status
+   */
+  buildStatusClass(status: any): string {
+    switch (status.id) {
+      case 1:
+        return "new";
+      case 2:
+        return "ready";
+      case 3:
+        return "warning";
+      case 4:
+        return "done";
+      case 5:
+        return "done-with-errors";
+      case 6:
+        return "Suspended";
+      default:
+        return "new";
+    }
+  }
+
 }

@@ -21,7 +21,7 @@ export class DataRequestListComponent implements OnInit {
   canCreateNewRequest: boolean;
 
   constructor(private authenticationService: AuthenticationService,
-              private dataRequestService: DataRequestService,
+              public dataRequestService: DataRequestService,
               private i18nService: I18nService,
               private translate: TranslateService) {
   }
@@ -37,25 +37,6 @@ export class DataRequestListComponent implements OnInit {
 
   get currentLanguage(): string {
     return this.i18nService.language;
-  }
-
-  statusClass(status: any): string {
-    switch (status.id) {
-      case 1:
-        return "new";
-      case 2:
-        return "ready";
-      case 3:
-        return "warning";
-      case 4:
-        return "done";
-      case 5:
-        return "done-with-errors";
-      case 6:
-        return "Suspended";
-      default:
-        return "new";
-    }
   }
 
   loadPage(page: number) {

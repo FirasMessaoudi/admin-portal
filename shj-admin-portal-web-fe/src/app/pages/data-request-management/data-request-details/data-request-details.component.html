@@ -30,7 +30,7 @@
       </div>
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'data-request-management.request_status' | translate}}</label>
-        <span class="form-control-plaintext "><span class="status mr-1 done"></span>{{currentLanguage.startsWith("en") ? dataRequest?.status.labelEn : dataRequest?.status.labelAr}}</span>
+        <span class="form-control-plaintext "><span class="status mr-1 {{dataRequestService.buildStatusClass(dataRequest?.status)}}"></span>{{currentLanguage.startsWith("en") ? dataRequest?.status.labelEn : dataRequest?.status.labelAr}}</span>
       </div>
     </div>
 

@@ -58,7 +58,7 @@
             <td class="ltr">{{dataRequest?.creationDate | dateTimeFormat}}</td>
             <td class="ltr">
               {{currentLanguage.startsWith("en") ? dataRequest?.status.labelEn : dataRequest?.status.labelAr}}
-              <span class="status mr-1 {{statusClass(dataRequest?.status)}}"></span>
+              <span class="status mr-1 {{dataRequestService.buildStatusClass(dataRequest?.status)}}"></span>
             </td>
             <td>
               <button [routerLink]="['/data-requests/details/' + dataRequest.id]" class="btn btn-sm btn-outline-dcc-primary tblView">

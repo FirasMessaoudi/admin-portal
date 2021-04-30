@@ -19,7 +19,7 @@ export class DataRequestDetailsComponent implements OnInit {
   constructor(private i18nService: I18nService,
               private activeRoute: ActivatedRoute,
               private router: Router,
-              private dataRequestService: DataRequestService,
+              public dataRequestService: DataRequestService,
               private toastr: ToastService,
               private translate: TranslateService,
               private authenticationService: AuthenticationService) {
