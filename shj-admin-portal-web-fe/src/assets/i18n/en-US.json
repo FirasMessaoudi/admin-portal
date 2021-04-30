@@ -523,6 +523,8 @@
     "upload_filled_document": "Upload filled file",
     "request_status": "Request Status",
     "request_date": "Request Date",
+    "channel_SYSTEM": "System",
+    "channel_WEB_SERVICE": "Web Service",
     "dialog_download_error_text": "Error while downloading the template file. Please try again...",
     "dialog_confirm_request_error_text": "Error while confirming your request. Please try again..."
   }

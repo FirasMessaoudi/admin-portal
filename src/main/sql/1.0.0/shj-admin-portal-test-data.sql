@@ -4,7 +4,7 @@ GO
 SET IDENTITY_INSERT shj_portal.sha_data_request ON;
 INSERT INTO shj_portal.sha_data_request (id, reference_number, channel, data_segment_id, original_source_path,
                                          error_file_path, status_id)
-VALUES (1, '345345', 'WEB-SERVICE', 1, 'dummy/path', NULL, 1);
+VALUES (1, '345345', 'WEB_SERVICE', 1, 'dummy/path', NULL, 1);
 SET IDENTITY_INSERT shj_portal.sha_data_request OFF;
 GO
 

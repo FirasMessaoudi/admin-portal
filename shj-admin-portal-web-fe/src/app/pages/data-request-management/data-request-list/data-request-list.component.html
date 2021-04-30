@@ -54,7 +54,7 @@
             <td><a [routerLink]="['/data-requests/details/' + dataRequest.id]" class="text-dcc-primary font-weight-bold">{{dataRequest.referenceNumber}}</a></td>
             <td>{{dataRequest.itemCount}}</td>
             <td class="ltr">{{currentLanguage.startsWith("en") ? dataRequest?.dataSegment.labelEn : dataRequest?.dataSegment.labelAr}}</td>
-            <td class="ltr">{{dataRequest?.channel}}</td>
+            <td class="ltr">{{'data-request-management.channel_'+dataRequest?.channel | translate}}</td>
             <td class="ltr">{{dataRequest?.creationDate | dateTimeFormat}}</td>
             <td class="ltr">
               {{currentLanguage.startsWith("en") ? dataRequest?.status.labelEn : dataRequest?.status.labelAr}}
