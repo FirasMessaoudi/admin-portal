@@ -14,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +50,7 @@ public class DataRequestManagementController {
     @RolesAllowed({AuthorityConstants.ROLE_MANAGEMENT})
     public Page<DataRequestDto> list(Pageable pageable) {
         log.info("list all data requests.");
-        return dataRequestService.findAll(pageable);
+        return dataRequestService.findAll(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("creationDate").descending()));
     }
 
     /**

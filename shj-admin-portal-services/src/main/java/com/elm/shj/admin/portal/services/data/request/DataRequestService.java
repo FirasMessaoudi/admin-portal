@@ -103,6 +103,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
      *
      * @param dataRequestId the data request id to be confirmed
      */
+    @Transactional
     public void confirm(long dataRequestId) {
         ((DataRequestRepository)getRepository()).updateStatus(dataRequestId, EDataRequestStatus.CONFIRMED.getId());
     }

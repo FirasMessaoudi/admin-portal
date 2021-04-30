@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {DataRequest, EAuthority, Page, User} from "@shared/model";
+import {DataRequest, EAuthority, Page} from "@shared/model";
 import {AuthenticationService, DataRequestService} from "@core/services";
 import {FormGroup} from "@angular/forms";
 import {TranslateService} from "@ngx-translate/core";
-import {ToastService} from "@shared/components/toast";
 import {Subscription} from "rxjs";
 import {I18nService} from "@dcc-commons-ng/services";
 
@@ -38,6 +37,25 @@ export class DataRequestListComponent implements OnInit {
 
   get currentLanguage(): string {
     return this.i18nService.language;
+  }
+
+  statusClass(status: any): string {
+    switch (status.id) {
+      case 1:
+        return "new";
+      case 2:
+        return "ready";
+      case 3:
+        return "warning";
+      case 4:
+        return "done";
+      case 5:
+        return "done-with-errors";
+      case 6:
+        return "Suspended";
+      default:
+        return "new";
+    }
   }
 
   loadPage(page: number) {

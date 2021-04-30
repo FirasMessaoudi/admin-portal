@@ -226,8 +226,16 @@ tr:hover .tblView{
     height: 8px;
     border-radius: 50%;
 
+    &.new{
+        background-color: #A9A9A9;
+    }
+
     &.done{
         background-color: #2AC135;
+    }
+
+    &.done-with-errors{
+        background-color: #A0C12A;
     }
 
     &.ready{
@@ -332,7 +340,7 @@ tr:hover .tblView{
         color: #3B7937;
     }
 
-    
+
 }
 
 
@@ -346,7 +354,7 @@ tr:hover .tblView{
     border-radius: 50rem;
     color: $dcc-primary;
     @include mx(3)
-    
+
 }
 
 .packageBox{
@@ -356,7 +364,7 @@ tr:hover .tblView{
         color: #000;
         background-image: url(assets/images/svg-icons/arrowcircle.svg);
         background-repeat: no-repeat;
-        
+
         border-bottom: 2px #E4E4E4 solid;
         border-top: 1px #E4E4E4 solid;
 
@@ -372,7 +380,7 @@ tr:hover .tblView{
         }
 
         &.active{
-            
+
             background-image: url(assets/images/svg-icons/arrowcircle-collapse.svg);
 
             [dir="rtl"] & {

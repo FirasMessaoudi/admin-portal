@@ -506,6 +506,8 @@
     "download_template": "تنزيل النموذج",
     "upload_filled_document": "رفع الملف بعد تعبئته",
     "request_status": "حالة الطلب",
-    "request_date": "تاريخ الطلب"
+    "request_date": "تاريخ الطلب",
+    "dialog_download_error_text": "حدث خطأ أثناء تنزيل ملف النموذج. يرجى المحاولة مرة أخرى ...",
+    "dialog_confirm_request_error_text": "حدث خطأ أثناء تأكيد طلبك. يرجى المحاولة مرة أخرى ..."
   }
 }

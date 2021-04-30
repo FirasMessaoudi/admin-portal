@@ -74,6 +74,7 @@ export class StepOneComponent implements OnInit {
       },
       error: (error) => {
         console.log('Error downloading the file.')
+        this.toastr.warning(this.translate.instant("data-request-management.dialog_download_error_text"), this.translate.instant("data-request-management.choose_segment"));
       }
     });
   }
