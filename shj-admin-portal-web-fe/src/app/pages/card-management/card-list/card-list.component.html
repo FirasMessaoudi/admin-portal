@@ -194,7 +194,7 @@
             <td><a [routerLink]="['/cards/details', card?.id]" class="text-dcc-primary font-weight-bold">{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</a></td>
             <td>{{card?.applicantRitual?.applicant?.idNumber}}</td>
             <td class="ltr">{{card?.referenceNumber}}</td>
-            <td class="ltr">{{card?.applicantRitual?.typeCode?.label}}</td>
+            <td class="ltr">{{lookupLabel(card?.applicantRitual?.typeCode)}}</td>
             <td class="ltr">{{card?.statusCode?.label}}</td>
           </tr>
         </tbody>

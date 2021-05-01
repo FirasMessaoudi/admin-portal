@@ -6,6 +6,7 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {Card} from "@model/card.model";
 import {CardService} from "@core/services/card/card.service";
 import {Subscription} from "rxjs";
+import {Lookup} from "@model/lookup.model";
 
 @Component({
   selector: 'app-card-list',
@@ -19,6 +20,7 @@ export class CardListComponent implements OnInit {
   page: Page;
   canAddCard: boolean;
   searchForm: FormGroup;
+  ritualTypes: Lookup[];
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
@@ -29,6 +31,12 @@ export class CardListComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+
+    this.cardService.findRitualTypes().subscribe(result => {
+      console.log('ritual types: ' + result);
+      this.ritualTypes = result;
+    });
+
     // TODO: read it from authentication
     this.canAddCard = true;
   }
@@ -70,6 +78,10 @@ export class CardListComponent implements OnInit {
 
   get currentLanguage(): string {
     return this.i18nService.language;
+  }
+
+  lookupLabel(code: string): string {
+    return this.ritualTypes.find(type => type.code === code && type.lang === this.i18nService.language.substring(0, 2)).label;
   }
 
   search(): void {
