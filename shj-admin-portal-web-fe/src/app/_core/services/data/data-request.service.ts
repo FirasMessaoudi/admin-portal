@@ -44,7 +44,22 @@ export class DataRequestService {
    * @return the template for the given segment
    */
   downloadTemplate(segmentId: number): Observable<any> {
-    return this.http.get('/core/api/data/upload/tpl/' + segmentId, {
+    return this.http.get('/core/api/data/request/tpl/' + segmentId, {
+      responseType: 'blob' as 'json',
+      observe: 'response' as 'body'
+    });
+  }
+
+
+  /**
+   * Downloads a template for a specific segment
+   *
+   * @param dataRequestId data request Id
+   * @param fileType file type to download
+   * @return the file for the given data request and file type
+   */
+  downloadFile(dataRequestId: number, fileType:String): Observable<any> {
+    return this.http.get('/core/api/data/request/' + dataRequestId + '/file/' + fileType, {
       responseType: 'blob' as 'json',
       observe: 'response' as 'body'
     });

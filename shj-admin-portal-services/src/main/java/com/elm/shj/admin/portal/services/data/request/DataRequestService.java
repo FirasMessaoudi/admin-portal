@@ -7,8 +7,8 @@ import com.elm.shj.admin.portal.orm.entity.JpaDataRequest;
 import com.elm.shj.admin.portal.orm.repository.DataRequestRepository;
 import com.elm.shj.admin.portal.services.dto.DataRequestDto;
 import com.elm.shj.admin.portal.services.dto.DataRequestStatusLookupDto;
-import com.elm.shj.admin.portal.services.dto.EDataRequestStatus;
 import com.elm.shj.admin.portal.services.dto.EDataRequestChannel;
+import com.elm.shj.admin.portal.services.dto.EDataRequestStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.jcraft.jsch.JSchException;
@@ -16,12 +16,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -55,6 +57,35 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
      */
     public Page<DataRequestDto> findAll(Pageable pageable) {
         return mapPage(getRepository().findAll(pageable));
+    }
+
+    /**
+     * fetches the original file of the data request
+     *
+     * @param dataRequestId the data request id
+     * @return the original file of the data request
+     */
+    public Resource fetchOriginalFile(long dataRequestId) throws Exception {
+        DataRequestDto dataRequest = findOne(dataRequestId);
+        if (dataRequest == null) {
+            return null;
+        }
+        return sftpService.downloadFile(dataRequest.getOriginalSourcePath());
+    }
+
+    /**
+     * fetches the errors file of the data request
+     *
+     * @param dataRequestId the data request id
+     * @return the errors file of the data request
+     */
+    public Resource fetchErrorsFile(long dataRequestId) throws Exception {
+        DataRequestDto dataRequest = findOne(dataRequestId);
+        if (dataRequest == null || dataRequest.getErrorFilePath() == null
+                || dataRequest.getStatus().getId() != EDataRequestStatus.PROCESSED_WITH_ERRORS.getId()) {
+            return null;
+        }
+        return sftpService.downloadFile(dataRequest.getOriginalSourcePath());
     }
 
     /**

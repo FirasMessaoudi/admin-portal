@@ -9,7 +9,6 @@ import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
 import {DataSegmentService} from "@core/services";
 import {I18nService} from "@dcc-commons-ng/services";
-import {Router} from "@angular/router";
 import {DataRequestStorage} from "@pages/data-request-management/data-request-add/data-request-storage";
 
 @Component({
@@ -117,13 +116,13 @@ export class StepOneComponent implements OnInit {
         this.toastr.warning(this.translate.instant("general.dialog_form_error_text"), this.translate.instant("data-request-management.choose_segment"));
         let responseError = err.error;
         if (responseError.hasOwnProperty("errors") && responseError.errors) {
-          this.errorMessage =  (responseError.errors["request"] ? this.translate.instant(responseError.errors["request"]) : responseError.errorMessage);
+          this.errorMessage = (responseError.errors["request"] ? this.translate.instant(responseError.errors["request"]) : responseError.errorMessage);
         }
       });
   }
 
   onFileChange(event) {
-    if(event.target.files && event.target.files.length) {
+    if (event.target.files && event.target.files.length) {
       const [file] = event.target.files;
       this.f.fileData.setValue(file);
       // need to run CD since file load runs outside of zone

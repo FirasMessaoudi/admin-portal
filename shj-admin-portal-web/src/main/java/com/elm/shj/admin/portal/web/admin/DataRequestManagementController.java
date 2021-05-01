@@ -41,6 +41,11 @@ public class DataRequestManagementController {
     private final DataRequestService dataRequestService;
     private final DataSegmentService dataSegmentService;
 
+    private enum EDataRequestFileType {
+        O, // Original
+        E // Errors
+    }
+
     /**
      * List all data requests.
      *
@@ -86,6 +91,38 @@ public class DataRequestManagementController {
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + tplFile.getFilename() + "\"")
                     .body(tplFile);
+        }
+        return null;
+    }
+
+    /**
+     * Downloads a template for a specific segment
+     *
+     * @param dataRequestId data request Id
+     * @param fileType file type to download
+     * @return the file for the given data request and file type
+     */
+    @GetMapping("/{dataRequestId}/file/{fileType}")
+    @RolesAllowed({AuthorityConstants.ROLE_MANAGEMENT})
+    public ResponseEntity<Resource> downloadFile(@PathVariable long dataRequestId, @PathVariable EDataRequestFileType fileType) throws Exception {
+        log.info("Downloading file for data request#{} and file type #{}", dataRequestId, fileType);
+        Resource file = null;
+        switch (fileType) {
+            case O:
+                file = dataRequestService.fetchOriginalFile(dataRequestId);
+                break;
+            case E:
+                file = dataRequestService.fetchErrorsFile(dataRequestId);
+                break;
+        }
+        if (file != null) {
+            String fileName = "file.xlsx";
+            if (file.getDescription() != null && file.getDescription().contains("[")) {
+                fileName = file.getDescription().split("\\[")[1].replaceAll("\\]", "");
+            }
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .body(file);
         }
         return null;
     }
