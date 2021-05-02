@@ -24,6 +24,7 @@ export class CardDetailsComponent implements OnInit {
   hamlahPackage: any;
 
   ritualTypes: Lookup[];
+  relativeRelationships: Lookup[];
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -66,6 +67,9 @@ export class CardDetailsComponent implements OnInit {
     this.cardService.findRitualTypes().subscribe(result => {
       this.ritualTypes = result;
     });
+    this.cardService.findRelativeRelationships().subscribe(result => {
+      this.relativeRelationships = result;
+    });
   }
 
   goToList() {
@@ -78,6 +82,10 @@ export class CardDetailsComponent implements OnInit {
 
   localizedRitualTypeLabel(code: string): string {
     if (code) return this.lookupService.localizedLabel(this.ritualTypes, code);
+  }
+
+  localizedRelativeRelationshipLabel(code: string): string {
+    if (code) return this.lookupService.localizedLabel(this.relativeRelationships, code);
   }
 
   packageCaterings(): PackageCatering[] {

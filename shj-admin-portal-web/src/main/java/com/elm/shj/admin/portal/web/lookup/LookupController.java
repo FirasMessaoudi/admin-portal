@@ -3,12 +3,10 @@
  */
 package com.elm.shj.admin.portal.web.lookup;
 
-import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
-import com.elm.shj.admin.portal.services.dto.AuthorityLookupDto;
-import com.elm.shj.admin.portal.services.dto.CardStatusLookupDto;
-import com.elm.shj.admin.portal.services.dto.RitualTypeLookupDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.AuthorityLookupService;
 import com.elm.shj.admin.portal.services.lookup.CardStatusLookupService;
+import com.elm.shj.admin.portal.services.lookup.RelativeRelationshipLookupService;
 import com.elm.shj.admin.portal.services.lookup.RitualTypeLookupService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +35,7 @@ public class LookupController {
     private final AuthorityLookupService authorityLookupService;
     private final RitualTypeLookupService ritualTypeLookupService;
     private final CardStatusLookupService cardStatusLookupService;
+    private final RelativeRelationshipLookupService relativeRelationshipLookupService;
 
 
     @GetMapping("/authority/list/parent")
@@ -57,5 +56,12 @@ public class LookupController {
     public List<CardStatusLookupDto> listCardStatuses(Authentication authentication) {
         log.debug("list card statuses...");
         return cardStatusLookupService.findAll();
+    }
+
+    @GetMapping("/relative-relationship/list")
+    @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT) //TODO: change it
+    public List<RelativeRelationshipLookupDto> listRelativeRelationships(Authentication authentication) {
+        log.debug("list relative relationships...");
+        return relativeRelationshipLookupService.findAll();
     }
 }

@@ -139,7 +139,7 @@
                 <tr *ngFor="let relative of card?.applicantRitual?.applicant?.relatives">
                   <td class="ltr">{{relative.relativeApplicant?.fullNameAr}} {{relative.relativeApplicant?.fullNameEn}}</td>
                   <td class="ltr">{{relative.relativeApplicant?.idNumber}}</td>
-                  <td class="ltr">{{relative.relationshipCode.label}}</td>
+                  <td class="ltr">{{localizedRelativeRelationshipLabel(relative.relationshipCode)}}</td>
                 </tr>
                 </tbody>
               </table>
