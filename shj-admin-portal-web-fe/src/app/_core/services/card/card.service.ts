@@ -42,4 +42,8 @@ export class CardService {
   findCardStatuses(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/card-status/list');
   }
+
+  findRelativeRelationships(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/relative-relationship/list');
+  }
 }
