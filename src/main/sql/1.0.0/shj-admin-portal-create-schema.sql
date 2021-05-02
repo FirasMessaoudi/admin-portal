@@ -322,10 +322,10 @@ create table shj_portal.sha_applicant_relative
     id int PRIMARY KEY NOT NULL identity(1,1),
     relationship_code VARCHAR(20) NOT NULL,
     applicant_id int NOT NULL,
-    applicant_relative_id int NOT NULL,
+    relative_applicant_id int NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_relative_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id),
-    CONSTRAINT fk_applicant_relative_applicant_self FOREIGN KEY (applicant_relative_id) REFERENCES shj_portal.sha_applicant (id)
+    CONSTRAINT fk_applicant_relative_applicant_self FOREIGN KEY (relative_applicant_id) REFERENCES shj_portal.sha_applicant (id)
 );
 GO
 

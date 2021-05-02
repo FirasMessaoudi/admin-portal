@@ -3,6 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '@app/_core/services';
 import {I18nService} from "@dcc-commons-ng/services";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-header',
@@ -13,8 +14,9 @@ export class HeaderComponent implements OnInit {
 
   currentUser: any;
   public isMenuCollapsed = false;
-  
+
   constructor(
+    private location: Location,
     public router: Router,
     private i18nService: I18nService,
     private authenticationService: AuthenticationService
@@ -45,9 +47,11 @@ export class HeaderComponent implements OnInit {
   }
 
   isSupervisor(): boolean {
-
     return true;
   }
 
 
+  goBack() {
+    this.location.back();
+  }
 }

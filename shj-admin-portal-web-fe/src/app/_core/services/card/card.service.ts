@@ -3,6 +3,7 @@ import {HttpClient, HttpEvent, HttpParams} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 import {Card} from "@model/card.model";
 import {catchError} from "rxjs/internal/operators";
+import {Lookup} from "@model/lookup.model";
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +33,9 @@ export class CardService {
         }
       )
     );
+  }
+
+  findRitualTypes(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/ritual-type/list');
   }
 }

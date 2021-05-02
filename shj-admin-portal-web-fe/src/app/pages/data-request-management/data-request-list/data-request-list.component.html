@@ -10,12 +10,12 @@
       <svg-icon styleClass="mr-2" icon="plus"></svg-icon> <span>{{ "data-request-management.new_request" | translate }}</span>
     </button>
   </div>
-  <div class="content__section" *ngIf="!canSeeDataUploadRequestsList">
+  <div class="content__section" *ngIf="!canSeeDataRequestsList">
     {{'header.welcome' | translate}} <span class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
   </div>
 
 
-  <div class="content__section" *ngIf="canSeeDataUploadRequestsList">
+  <div class="content__section" *ngIf="canSeeDataRequestsList">
 
     <div class="d-flex justify-content-end bg-dcc-light mt-7 actionBar">
       <div class="bg-white">
@@ -44,63 +44,58 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngIf="false" class="text-center">
+          <tr *ngIf="!page?.content" class="text-center">
             <td colspan="10">
               <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set" ></svg-icon>
               <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
             </td>
           </tr>
-          <tr>
-            <td><a [routerLink]="['/data-requests/details/1']" class="text-dcc-primary font-weight-bold">{{'544820'}}</a></td>
-            <td>{{'5'}}</td>
-            <td class="ltr">{{'Applicant Data'}}</td>
-            <td class="ltr">{{'Web Service'}}</td>
-            <td class="ltr">{{'24-03-2021'}}</td>
+          <tr *ngFor="let dataRequest of dataRequests">
+            <td><a [routerLink]="['/data-requests/details/' + dataRequest.id]" class="text-dcc-primary font-weight-bold">{{dataRequest.referenceNumber}}</a></td>
+            <td>{{dataRequest.itemCount}}</td>
+            <td class="ltr">{{currentLanguage.startsWith("en") ? dataRequest?.dataSegment.labelEn : dataRequest?.dataSegment.labelAr}}</td>
+            <td class="ltr">{{'data-request-management.channel_'+dataRequest?.channel | translate}}</td>
+            <td class="ltr">{{dataRequest?.creationDate | dateTimeFormat}}</td>
             <td class="ltr">
-              {{'تمت المعالجة'}}
-              <span class="status mr-1 done"></span>
+              {{currentLanguage.startsWith("en") ? dataRequest?.status.labelEn : dataRequest?.status.labelAr}}
+              <span class="status mr-1 {{dataRequestService.buildStatusClass(dataRequest?.status)}}"></span>
             </td>
             <td>
-              <button [routerLink]="['/data-requests/details/1']" class="btn btn-sm btn-outline-dcc-primary tblView">
-                عرض
+              <button [routerLink]="['/data-requests/details/' + dataRequest.id]" class="d-inline mx-2 btn btn-sm btn-outline-dcc-primary tblView">
+                {{'general.btn_view' | translate}}
               </button>
-            </td>
-          </tr>
-          <tr>
-            <td><a [routerLink]="['/data-requests/details/1']" class="text-dcc-primary font-weight-bold">{{'544837'}}</a></td>
-            <td>{{'5'}}</td>
-            <td class="ltr">{{'Establishment Data'}}</td>
-            <td class="ltr">{{'File Upload'}}</td>
-            <td class="ltr">{{'24-03-2021'}}</td>
-            <td class="ltr">
-              {{'تحت المعالجة'}}
-              <span class="status mr-1 ready"></span>
-            </td>
-            <td>
-              <button [routerLink]="['/data-requests/details/1']" class="btn btn-sm btn-outline-dcc-primary tblView">
-                عرض
+              <button (click)="downloadOriginalFile(dataRequest.id)" class="d-inline mx-2 btn btn-sm btn-outline-dcc-primary tblView">
+                {{'data-request-management.btn_download_original_file' | translate}}
               </button>
-            </td>
-          </tr>
-          <tr>
-            <td><a [routerLink]="['/data-requests/details/1']" class="text-dcc-primary font-weight-bold">{{'544837'}}</a></td>
-            <td>{{'5'}}</td>
-            <td class="ltr">{{'Hajj Company Data'}}</td>
-            <td class="ltr">{{'Web Service'}}</td>
-            <td class="ltr">{{'24-03-2021'}}</td>
-            <td class="ltr">
-              {{'معالج مع اخطاء'}}
-              <span class="status mr-1 Suspended"></span>
-            </td>
-            <td>
-              <button [routerLink]="['/data-requests/details/1']" class="btn btn-sm btn-outline-dcc-primary tblView">
-                عرض
+              <button (click)="downloadErrorsFile(dataRequest.id)" *ngIf="dataRequest.status.id === 5" class="d-inline mx-2 btn btn-sm btn-outline-dcc-primary tblView">
+                {{'data-request-management.btn_download_errors_file' | translate}}
               </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
+    <nav aria-label="Page navigation example" *ngIf="page?.content">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="page?.first">
+          <a class="page-link" href="javascript:void(0);" (click)="loadPage(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>
+        </li>
+
+        <li class="page-item" [class.disabled]="page?.first">
+          <a class="page-link" href="javascript:void(0);" (click)="loadPage(page?.number-1)" tabindex="-1">{{'general.nav_previous' | translate}}</a>
+        </li>
+        <li class="page-item active">
+          <a class="page-link" href="javascript:void(0);" (click)="loadPage(page.number)">{{(page?.number + 1) + ' / ' + page?.totalPages}}</a>
+        </li>
+        <li class="page-item" [class.disabled]="page?.last">
+          <a class="page-link" href="javascript:void(0);" (click)="loadPage(page?.number+1)">{{'general.nav_next' | translate}}</a>
+        </li>
+
+        <li class="page-item" [class.disabled]="page?.last">
+          <a class="page-link" href="javascript:void(0);" (click)="loadPage(page?.totalPages-1)">{{'general.nav_last' | translate}}</a>
+        </li>
+      </ul>
+    </nav>
 
   </div>
 

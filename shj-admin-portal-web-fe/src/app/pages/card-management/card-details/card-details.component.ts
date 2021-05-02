@@ -8,6 +8,7 @@ import {combineLatest} from "rxjs";
 import {map} from "rxjs/operators";
 import {CardService} from "@core/services";
 import {ToastService} from "@shared/components/toast";
+import {Lookup} from "@model/lookup.model";
 
 @Component({
   selector: 'app-card-details',
@@ -20,6 +21,7 @@ export class CardDetailsComponent implements OnInit {
   url: any = 'assets/images/default-avatar.svg';
   //TODO: to be deleted after wiring the backend to the frontend
   hamlahPackage: any;
+  ritualTypes: Lookup[];
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -29,6 +31,11 @@ export class CardDetailsComponent implements OnInit {
               private i18nService: I18nService) { }
 
   ngOnInit(): void {
+    this.cardService.findRitualTypes().subscribe(result => {
+      console.log('ritual types: ' + result);
+      this.ritualTypes = result;
+    });
+
     combineLatest(this.route.params, this.route.queryParams).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
@@ -41,13 +48,13 @@ export class CardDetailsComponent implements OnInit {
           if (data && data.id) {
             this.card = data;
           } else {
-            this.toastr.error(this.translate.instant('general.card_item_not_found', {itemId: this.cardId}),
+            this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.cardId}),
               this.translate.instant('general.dialog_error_title'));
             this.goToList();
           }
         });
       } else {
-        this.toastr.error(this.translate.instant('general.card_id_param_not_found'),
+        this.toastr.error(this.translate.instant('general.route_id_param_not_found'),
           this.translate.instant('general.dialog_error_title'));
         this.goToList();
       }
@@ -63,6 +70,10 @@ export class CardDetailsComponent implements OnInit {
 
   get currentLanguage(): string {
     return this.i18nService.language;
+  }
+
+  lookupLabel(code: string): string {
+    return this.ritualTypes.find(type => type.code === code && type.lang === this.i18nService.language).label;
   }
 
   packageCaterings(): PackageCatering[] {

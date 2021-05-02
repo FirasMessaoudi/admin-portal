@@ -9,6 +9,7 @@ import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
 import {DataSegmentService} from "@core/services";
 import {I18nService} from "@dcc-commons-ng/services";
+import {DataRequestStorage} from "@pages/data-request-management/data-request-add/data-request-storage";
 
 @Component({
   selector: 'app-step-one',
@@ -22,8 +23,6 @@ export class StepOneComponent implements OnInit {
   progress = 0;
   errorMessage = '';
   selectedDataSegment: DataSegment;
-  dataRequest: DataRequest;
-  createdDataRequest: DataRequest;
   fileInfos: Observable<any>;
 
   constructor(private dataRequestService: DataRequestService,
@@ -32,11 +31,12 @@ export class StepOneComponent implements OnInit {
               private i18nService: I18nService,
               private translate: TranslateService,
               private formBuilder: FormBuilder,
-              private cd: ChangeDetectorRef) {
+              private cdr: ChangeDetectorRef,
+              private dataRequestStorage: DataRequestStorage) {
   }
 
   ngOnInit(): void {
-    this.dataRequest = new DataRequest();
+    this.dataRequestStorage.storage = null;
     this.dataRequestForm = this.formBuilder.group({
       fileData: [null, [Validators.required]],
       dataSegment: [null, [Validators.required]],
@@ -73,6 +73,7 @@ export class StepOneComponent implements OnInit {
       },
       error: (error) => {
         console.log('Error downloading the file.')
+        this.toastr.warning(this.translate.instant("data-request-management.dialog_download_error_text"), this.translate.instant("data-request-management.choose_segment"));
       }
     });
   }
@@ -97,14 +98,16 @@ export class StepOneComponent implements OnInit {
 
     this.progress = 0;
     this.errorMessage = null;
-    this.dataRequest.dataSegment = this.selectedDataSegment;
-    this.dataRequestService.create(this.dataRequest, this.f.fileData.value).subscribe(
+    let dataRequest: DataRequest = new DataRequest();
+    dataRequest.dataSegment = this.selectedDataSegment;
+    this.dataRequestService.create(dataRequest, this.f.fileData.value).subscribe(
       event => {
         if (event.type === HttpEventType.UploadProgress) {
           this.progress = Math.round(100 * event.loaded / event.total);
         } else if (event instanceof HttpResponse) {
-          this.createdDataRequest = event.body;
-          console.log(this.createdDataRequest);
+          this.dataRequestStorage.storage = event.body;
+          console.log(this.dataRequestStorage.storage);
+          this.cdr.detectChanges();
           this.toastr.success(this.translate.instant("general.dialog_add_success_text"), this.translate.instant("data-request-management.choose_segment"));
         }
       },
@@ -113,17 +116,17 @@ export class StepOneComponent implements OnInit {
         this.toastr.warning(this.translate.instant("general.dialog_form_error_text"), this.translate.instant("data-request-management.choose_segment"));
         let responseError = err.error;
         if (responseError.hasOwnProperty("errors") && responseError.errors) {
-          this.errorMessage =  (responseError.errors["request"] ? this.translate.instant(responseError.errors["request"]) : responseError.errorMessage);
+          this.errorMessage = (responseError.errors["request"] ? this.translate.instant(responseError.errors["request"]) : responseError.errorMessage);
         }
       });
   }
 
   onFileChange(event) {
-    if(event.target.files && event.target.files.length) {
+    if (event.target.files && event.target.files.length) {
       const [file] = event.target.files;
       this.f.fileData.setValue(file);
       // need to run CD since file load runs outside of zone
-      this.cd.markForCheck();
+      this.cdr.markForCheck();
     }
   }
 

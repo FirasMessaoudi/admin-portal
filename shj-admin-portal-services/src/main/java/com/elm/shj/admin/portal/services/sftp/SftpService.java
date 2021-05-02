@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -37,7 +39,7 @@ public class SftpService {
      * @param targetPath  the target file path
      * @param inputStream a file input stream to be uploaded
      * @return if the file was uploaded successfully
-     * @throws Exception in case of operation failure
+     * @throws JSchException in case of operation failure
      */
     public boolean uploadFile(String targetPath, InputStream inputStream) throws JSchException {
         log.info("Upload File Started, ftpServer [{}:{}], ftpPath [{}]", config.getHost(), config.getPort(), targetPath);
@@ -84,21 +86,19 @@ public class SftpService {
      * @return the file reference
      * @throws Exception in case of operation failure
      */
-    public File downloadFile(String targetPath) throws Exception {
+    public Resource downloadFile(String targetPath) throws Exception {
         log.info("Download File Started, ftpServer [{}:{}], ftpPath [{}]", config.getHost(), config.getPort(), targetPath);
         ChannelSftp sftp = this.createSftp();
-        OutputStream outputStream = null;
+        ByteArrayOutputStream outputStream = null;
         try {
             createDirs(config.getRootFolder(), sftp);
             sftp.cd(config.getRootFolder());
             log.info("Change path to {}", config.getRootFolder());
-
-            File file = new File(targetPath.substring(targetPath.lastIndexOf("/") + 1));
-
-            outputStream = new FileOutputStream(file);
+            outputStream = new ByteArrayOutputStream();
             sftp.get(targetPath, outputStream);
             log.info("Download file success. TargetPath: {}", targetPath);
-            return file;
+            String fileName = targetPath.substring(targetPath.lastIndexOf("/") + 1);
+            return new ByteArrayResource(outputStream.toByteArray(), fileName);
         } catch (Exception e) {
             log.error("Download file failure. TargetPath: {}", targetPath, e);
             throw new Exception("Download File failure from SFTP");
@@ -173,7 +173,7 @@ public class SftpService {
      * Creates SFTP connection
      *
      * @return the created connection
-     * @throws Exception in case of operation failure
+     * @throws JSchException in case of operation failure
      */
     private ChannelSftp createSftp() throws JSchException {
         JSch jsch = new JSch();
@@ -201,7 +201,7 @@ public class SftpService {
      * @param username the username
      * @param port     the port
      * @return the created session
-     * @throws Exception in case of operation failure
+     * @throws JSchException in case of operation failure
      */
     private Session createSession(JSch jsch, String host, String username, Integer port) throws JSchException {
         Session session;
