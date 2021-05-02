@@ -7,6 +7,7 @@ import {Card} from "@model/card.model";
 import {CardService} from "@core/services/card/card.service";
 import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
+import {LookupService} from "@core/utilities/lookup.service";
 
 @Component({
   selector: 'app-card-list',
@@ -21,24 +22,31 @@ export class CardListComponent implements OnInit {
   canAddCard: boolean;
   searchForm: FormGroup;
   ritualTypes: Lookup[];
+  cardStatuses: Lookup[];
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
   constructor(private i18nService: I18nService,
               private formBuilder: FormBuilder,
               private authenticationService: AuthenticationService,
-              private cardService: CardService) { }
+              private cardService: CardService,
+              private lookupService: LookupService) { }
 
   ngOnInit(): void {
     this.initForm();
-
-    this.cardService.findRitualTypes().subscribe(result => {
-      console.log('ritual types: ' + result);
-      this.ritualTypes = result;
-    });
+    this.loadLookups();
 
     // TODO: read it from authentication
     this.canAddCard = true;
+  }
+
+  loadLookups() {
+    this.cardService.findRitualTypes().subscribe(result => {
+      this.ritualTypes = result;
+    });
+    this.cardService.findCardStatuses().subscribe(result => {
+      this.cardStatuses = result;
+    });
   }
 
   ngOnDestroy() {
@@ -80,10 +88,13 @@ export class CardListComponent implements OnInit {
     return this.i18nService.language;
   }
 
-  lookupLabel(code: string): string {
-    return this.ritualTypes.find(type => type.code === code && type.lang === this.i18nService.language.substring(0, 2)).label;
+  localizedRitualTypeLabel(code: string): string {
+    return this.lookupService.localizedLabel(this.ritualTypes, code);
   }
 
+  localizedCardStatusLabel(code: string): string {
+    return this.lookupService.localizedLabel(this.cardStatuses, code);
+  }
   search(): void {
     this.searchSubscription = this.cardService.list(0).subscribe(data => {
       this.cards = [];

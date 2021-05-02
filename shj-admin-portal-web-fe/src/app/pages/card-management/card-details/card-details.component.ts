@@ -9,6 +9,7 @@ import {map} from "rxjs/operators";
 import {CardService} from "@core/services";
 import {ToastService} from "@shared/components/toast";
 import {Lookup} from "@model/lookup.model";
+import {LookupService} from "@core/utilities/lookup.service";
 
 @Component({
   selector: 'app-card-details',
@@ -21,6 +22,7 @@ export class CardDetailsComponent implements OnInit {
   url: any = 'assets/images/default-avatar.svg';
   //TODO: to be deleted after wiring the backend to the frontend
   hamlahPackage: any;
+
   ritualTypes: Lookup[];
 
   constructor(private route: ActivatedRoute,
@@ -28,14 +30,11 @@ export class CardDetailsComponent implements OnInit {
               private toastr: ToastService,
               private cardService: CardService,
               private translate: TranslateService,
-              private i18nService: I18nService) { }
+              private i18nService: I18nService,
+              private lookupService: LookupService) { }
 
   ngOnInit(): void {
-    this.cardService.findRitualTypes().subscribe(result => {
-      console.log('ritual types: ' + result);
-      this.ritualTypes = result;
-    });
-
+    this.loadLookups();
     combineLatest(this.route.params, this.route.queryParams).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
@@ -61,7 +60,12 @@ export class CardDetailsComponent implements OnInit {
     });
     //TODO: dummy data
     this.hamlahPackage = {"id":1, "typeCode":{"id":1, "code":null, "label":"VIP", "lang":null}, "hamlahId":1, "campId":1, "price":6500, "departureCity":"Mombai", "countryId":1, "packageHousings":[{"id":1, "type":"مزدلفة", "code":"25475", "labelAr":"مخيم مشاعل النور", "labelEn":"", "validityStart":"01-04-2021", "validityEnd":"02-04-2021", "addressAr":"مزدلفة بجوار محطة القطار", "addressEn":"", "isDefault":true, "packageCaterings":[{"id":1, "type":"غداء", "meal":"", "descriptionAr":"بوفيه مفتوح", "descriptionEn":""}]}], "packageTransportations":[{"id":1, "type":"باص", "validityStart":"03-04-2021", "validityEnd":"04-04-2021", "locationFrom":"منى", "locationTo":"مزدلفة", "vehicleNumber":"ب ح ج 259"}]};
+  }
 
+  loadLookups() {
+    this.cardService.findRitualTypes().subscribe(result => {
+      this.ritualTypes = result;
+    });
   }
 
   goToList() {
@@ -72,8 +76,8 @@ export class CardDetailsComponent implements OnInit {
     return this.i18nService.language;
   }
 
-  lookupLabel(code: string): string {
-    return this.ritualTypes.find(type => type.code === code && type.lang === this.i18nService.language).label;
+  localizedRitualTypeLabel(code: string): string {
+    if (code) return this.lookupService.localizedLabel(this.ritualTypes, code);
   }
 
   packageCaterings(): PackageCatering[] {
