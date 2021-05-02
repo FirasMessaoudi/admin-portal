@@ -1,6 +1,7 @@
 import {ApplicantRelative} from "@model/applicant-relative.model";
 import {ApplicantContact} from "@model/applicant-contact.model";
 import {ApplicantHealth} from "@model/applicant-health.model";
+import {ApplicantDigitalId} from "@model/applicant-digital-id.model";
 
 export class Applicant {
   id: number;
@@ -17,6 +18,7 @@ export class Applicant {
   maritalStatus: number;
   photo: any;
   requestId: number;
+  digitalIds: ApplicantDigitalId[];
   relatives: ApplicantRelative[];
   contacts: ApplicantContact[];
   healths: ApplicantHealth[];
