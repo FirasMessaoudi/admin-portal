@@ -38,4 +38,8 @@ export class CardService {
   findRitualTypes(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/ritual-type/list');
   }
+
+  findCardStatuses(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/card-status/list');
+  }
 }

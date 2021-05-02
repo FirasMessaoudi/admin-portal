@@ -192,10 +192,10 @@
               </div>
             </td>
             <td><a [routerLink]="['/cards/details', card?.id]" class="text-dcc-primary font-weight-bold">{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</a></td>
-            <td>{{card?.applicantRitual?.applicant?.idNumber}}</td>
+            <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
             <td class="ltr">{{card?.referenceNumber}}</td>
-            <td class="ltr">{{lookupLabel(card?.applicantRitual?.typeCode)}}</td>
-            <td class="ltr">{{card?.statusCode?.label}}</td>
+            <td class="ltr">{{localizedRitualTypeLabel(card?.applicantRitual?.typeCode)}}</td>
+            <td class="ltr">{{localizedCardStatusLabel(card?.statusCode)}}</td>
           </tr>
         </tbody>
       </table>

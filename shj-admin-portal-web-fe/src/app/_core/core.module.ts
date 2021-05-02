@@ -20,6 +20,7 @@ import {DccCommonsNgServicesModule} from "@dcc-commons-ng/services";
 import {environment} from "@env/environment";
 import {LOGIN_URL, PUBLIC_URL_PATTERNS} from "@core/guards/authentication.guard";
 import {TranslateModule} from "@ngx-translate/core";
+import {LookupService} from "@core/utilities/lookup.service";
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import {TranslateModule} from "@ngx-translate/core";
     RegisterService,
     AuthenticationService,
     CardService,
+    LookupService,
     {provide: 'environment', useValue: environment}
   ]
 })

@@ -21,7 +21,7 @@
     </div>
     <div class="col">
       <div class="col-form-label">{{'card-management.applicant_id' | translate }}</div>
-      <div class="form-control-plaintext">{{card?.applicantRitual?.applicant?.idNumber}}</div>
+      <div class="form-control-plaintext">{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</div>
     </div>
     <div class="col">
       <div class="col-form-label">{{'card-management.card_number' | translate }}</div>
@@ -55,7 +55,7 @@
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.ritual_type' | translate}}</label>
-                <span class="form-control-plaintext ">{{ card?.applicantRitual?.typeCode?.label }}</span>
+                <span class="form-control-plaintext ">{{localizedRitualTypeLabel(card?.applicantRitual?.typeCode)}}</span>
               </div>
 
               <div class="form-group col" [ngSwitch]="card?.applicantRitual?.applicant?.gender">

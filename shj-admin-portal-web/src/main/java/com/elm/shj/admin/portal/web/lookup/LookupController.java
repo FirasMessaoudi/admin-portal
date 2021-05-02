@@ -5,10 +5,13 @@ package com.elm.shj.admin.portal.web.lookup;
 
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.AuthorityLookupDto;
+import com.elm.shj.admin.portal.services.dto.CardStatusLookupDto;
 import com.elm.shj.admin.portal.services.dto.RitualTypeLookupDto;
 import com.elm.shj.admin.portal.services.lookup.AuthorityLookupService;
+import com.elm.shj.admin.portal.services.lookup.CardStatusLookupService;
 import com.elm.shj.admin.portal.services.lookup.RitualTypeLookupService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -28,13 +31,13 @@ import java.util.List;
 @RestController
 @RequestMapping(Navigation.API_LOOKUP)
 @Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LookupController {
 
-    @Autowired
-    private AuthorityLookupService authorityLookupService;
+    private final AuthorityLookupService authorityLookupService;
+    private final RitualTypeLookupService ritualTypeLookupService;
+    private final CardStatusLookupService cardStatusLookupService;
 
-    @Autowired
-    private RitualTypeLookupService ritualTypeLookupService;
 
     @GetMapping("/authority/list/parent")
     @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT)
@@ -45,7 +48,14 @@ public class LookupController {
     @GetMapping("/ritual-type/list")
     @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT) //TODO: change it
     public List<RitualTypeLookupDto> listRitualTypes(Authentication authentication) {
-        log.info("list ritual types in controller...");
+        log.debug("list ritual types...");
         return ritualTypeLookupService.findAll();
+    }
+
+    @GetMapping("/card-status/list")
+    @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT) //TODO: change it
+    public List<CardStatusLookupDto> listCardStatuses(Authentication authentication) {
+        log.debug("list card statuses...");
+        return cardStatusLookupService.findAll();
     }
 }
