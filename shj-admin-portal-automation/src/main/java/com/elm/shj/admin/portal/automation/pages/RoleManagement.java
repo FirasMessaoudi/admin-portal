@@ -38,12 +38,6 @@ public class RoleManagement {
     @FindBy(xpath = "//app-add-update-role//div[@formcontrolname='activated']//input[@ng-reflect-value='true']//parent::label")
     WebElement btnRoleActive;
 
-    @FindBy(xpath = "//app-add-update-role//form")
-    WebElement frmRoleAuthorities;
-
-    @FindBy(xpath = "//app-add-update-role//form//label[contains(text(),'Edit Role')]")
-    WebElement lblEditRole;
-
     @FindBy(xpath = "//app-add-update-role//button[contains(@class,'btn-outline-dcc-primary')]")
     WebElement btnSave;
 
@@ -200,7 +194,7 @@ public class RoleManagement {
                 ReporterX.info("Select Authority : "+lstAuthorities.get(row));
                 try {
                     Global.Test.Browser.
-                            findElements(By.xpath("//app-add-update-role//form//label[contains(text(),'" + lstAuthorities.get(row) + "') and contains(@class,'btn-outline-info')]")).get(0).click();
+                            findElements(By.xpath("//app-add-update-role//form//label[contains(text(),'" + lstAuthorities.get(row) + "') and contains(@class,'roleCheck')]")).get(0).click();
                 }catch (Exception e){}
 
             }
