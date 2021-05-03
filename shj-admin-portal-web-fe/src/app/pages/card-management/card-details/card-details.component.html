@@ -55,7 +55,7 @@
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.ritual_type' | translate}}</label>
-                <span class="form-control-plaintext ">{{localizedRitualTypeLabel(card?.applicantRitual?.typeCode)}}</span>
+                <span class="form-control-plaintext ">{{card?.applicantRitual?.typeCode? lookupService.localizedLabel(ritualTypes, card?.applicantRitual?.typeCode) : ''}}</span>
               </div>
 
               <div class="form-group col" [ngSwitch]="card?.applicantRitual?.applicant?.gender">
@@ -139,7 +139,7 @@
                 <tr *ngFor="let relative of card?.applicantRitual?.applicant?.relatives">
                   <td class="ltr">{{relative.relativeApplicant?.fullNameAr}} {{relative.relativeApplicant?.fullNameEn}}</td>
                   <td class="ltr">{{relative.relativeApplicant?.idNumber}}</td>
-                  <td class="ltr">{{localizedRelativeRelationshipLabel(relative.relationshipCode)}}</td>
+                  <td class="ltr">{{relative.relationshipCode? lookupService.localizedLabel(relativeRelationships, relative.relationshipCode) : ''}}</td>
                 </tr>
                 </tbody>
               </table>

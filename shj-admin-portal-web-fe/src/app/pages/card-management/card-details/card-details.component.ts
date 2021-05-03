@@ -80,14 +80,6 @@ export class CardDetailsComponent implements OnInit {
     return this.i18nService.language;
   }
 
-  localizedRitualTypeLabel(code: string): string {
-    if (code) return this.lookupService.localizedLabel(this.ritualTypes, code);
-  }
-
-  localizedRelativeRelationshipLabel(code: string): string {
-    if (code) return this.lookupService.localizedLabel(this.relativeRelationships, code);
-  }
-
   packageCaterings(): PackageCatering[] {
     let packageCaterings: PackageCatering[] = [];
     //TODO: to be refactored after wiring the backend to the frontend

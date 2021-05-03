@@ -88,13 +88,6 @@ export class CardListComponent implements OnInit {
     return this.i18nService.language;
   }
 
-  localizedRitualTypeLabel(code: string): string {
-    return this.lookupService.localizedLabel(this.ritualTypes, code);
-  }
-
-  localizedCardStatusLabel(code: string): string {
-    return this.lookupService.localizedLabel(this.cardStatuses, code);
-  }
   search(): void {
     this.searchSubscription = this.cardService.list(0).subscribe(data => {
       this.cards = [];
