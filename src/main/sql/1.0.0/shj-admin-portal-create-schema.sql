@@ -274,8 +274,10 @@ create table shj_portal.sha_country_lk
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
     code VARCHAR(20) NOT NULL,
+    nic_code INT NOT NULL,
     lang VARCHAR(45) NOT NULL,
     label NVARCHAR(50) NOT NULL,
+    prefix_telephone_number varchar(17) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     constraint country_lk_unique unique (code ASC, lang ASC)
 );
