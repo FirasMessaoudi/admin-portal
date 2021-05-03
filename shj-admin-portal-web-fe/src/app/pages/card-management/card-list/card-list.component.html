@@ -6,7 +6,7 @@
         <svg-icon styleClass="h4 pt-3" icon="search"></svg-icon>
       </button>
     </h3>
-    <button class="btn btn-outline-dcc-primary px-4" *ngIf="canAddCard">
+    <button id="addExceptionalCard" class="btn btn-outline-dcc-primary px-4" *ngIf="canAddCard">
       <svg-icon styleClass="mr-2" icon="plus"></svg-icon> <span>{{ "card-management.add_exceptional_card" | translate }}</span>
     </button>
   </div>
@@ -132,7 +132,7 @@
         </div>
 
         <div class="form-group col-12">
-          <button type="submit" (click)="search()" class="btn btn-dcc-primary px-5 mr-3">
+          <button id="searchCard" type="submit" (click)="search()" class="btn btn-dcc-primary px-5 mr-3">
             {{ "general.btn_search" | translate }}
           </button>
         </div>
@@ -143,17 +143,17 @@
 
     <div class="d-flex justify-content-between bg-dcc-light mt-7 actionBar">
       <div class="bg-white">
-        <a class="btn btn-dcc-light btn-action m-w-r" href="">
+        <a id="activateCards" class="btn btn-dcc-light btn-action m-w-r" href="">
           <svg-icon styleClass="mx-3 fa-w-18" icon="magic"></svg-icon>
           <span>تنشيط 25 بطاقة</span>
         </a>
       </div>
       <div class="bg-white">
-        <a class="btn btn-dcc-light btn-action m-w-l" href="/">
+        <a id="exportExcel" class="btn btn-dcc-light btn-action m-w-l" href="/">
           <svg-icon styleClass="mx-3 fa-w-18" icon="file-excel"></svg-icon>
           تصدير اكسل
         </a>
-        <a class="btn btn-dcc-light btn-action m-w-l" href="/">
+        <a id="exportPDF" class="btn btn-dcc-light btn-action m-w-l" href="/">
           <svg-icon styleClass="mx-3 fa-w-18" icon="file-pdf"></svg-icon>
           تصدير PDF
         </a>
@@ -161,7 +161,7 @@
     </div>
 
     <div class="table-responsive mb-4">
-      <table class="table table-striped table-hover">
+      <table id="cardsSearchResult" class="table table-striped table-hover">
         <thead>
           <tr>
             <th scope="col">
@@ -191,7 +191,7 @@
                 <label class="custom-control-label mx-3" for="customCheck-02"></label>
               </div>
             </td>
-            <td><a [routerLink]="['/cards/details', card?.id]" class="text-dcc-primary font-weight-bold">{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</a></td>
+            <td><a id="cardDetails" [routerLink]="['/cards/details', card?.id]" class="text-dcc-primary font-weight-bold">{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</a></td>
             <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
             <td class="ltr">{{card?.referenceNumber}}</td>
             <td class="ltr">{{localizedRitualTypeLabel(card?.applicantRitual?.typeCode)}}</td>
