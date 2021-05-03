@@ -121,16 +121,6 @@
           <input type="text" formControlName="tafweejNumber" class="form-control" value="2362845"/>
         </div>
 
-        <div class="form-group col">
-          <label class="col-form-label">{{ "card-management.id_type" | translate }}</label>
-          <select formControlName="idType" class="custom-select">
-            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
-            <option>هوية وطنية</option>
-            <option>إقامة</option>
-            <option>جواز سفر</option>
-          </select>
-        </div>
-
         <div class="form-group col-12">
           <button id="searchCard" type="submit" (click)="search()" class="btn btn-dcc-primary px-5 mr-3">
             {{ "general.btn_search" | translate }}

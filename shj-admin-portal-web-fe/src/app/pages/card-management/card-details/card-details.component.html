@@ -77,13 +77,13 @@
                 <label class="col-form-label">{{'card-management.marital_status' | translate}}</label>
                 <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.maritalStatus}}</span>
               </div>
-              <div class="form-group col">
-                <label class="col-form-label">{{'card-management.id_type' | translate}}</label>
-                <span class="form-control-plaintext ">إقامة</span>
-              </div>
-              <div class="form-group col">
+              <div *ngIf="card?.applicantRitual?.applicant?.idNumberOriginal" class="form-group col">
                 <label class="col-form-label">{{'card-management.applicant_original_id' | translate}}</label>
-                <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.idNumberOriginal }}</span>
+                <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.idNumberOriginal}}</span>
+              </div>
+              <div *ngIf="card?.applicantRitual?.applicant?.idNumber" class="form-group col">
+                <label class="col-form-label">{{'general.nin_or_iqama' | translate}}</label>
+                <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.idNumber}}</span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.applicant_languages' | translate}}</label>
