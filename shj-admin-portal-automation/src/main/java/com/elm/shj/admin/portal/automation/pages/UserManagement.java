@@ -150,7 +150,7 @@ public class UserManagement {
 
             switch (action) {
                 case "Edit":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='edit']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-edit']//parent::a")).click();
                     isSelected = true;
                     break;
                 case "Deactivate":
