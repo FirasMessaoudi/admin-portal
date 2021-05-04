@@ -33,6 +33,7 @@ public class LookupController {
     private final RitualTypeLookupService ritualTypeLookupService;
     private final CardStatusLookupService cardStatusLookupService;
     private final RelativeRelationshipLookupService relativeRelationshipLookupService;
+    private final MaritalStatusLookupService maritalStatusLookupService;
     private final CountryLookupService countryLookupService;
 
     @GetMapping("/authority/list/parent")
@@ -60,6 +61,13 @@ public class LookupController {
     public List<RelativeRelationshipLookupDto> listRelativeRelationships(Authentication authentication) {
         log.debug("list relative relationships...");
         return relativeRelationshipLookupService.findAll();
+    }
+
+    @GetMapping("/marital-status/list")
+    @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT) //TODO: change it
+    public List<MaritalStatusLookupDto> listMaritalStatuses(Authentication authentication) {
+        log.debug("list marital statuses...");
+        return maritalStatusLookupService.findAll();
     }
 
     @GetMapping("/country/list")

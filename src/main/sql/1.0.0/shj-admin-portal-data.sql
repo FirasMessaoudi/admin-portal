@@ -804,3 +804,15 @@ INSERT INTO shj_portal.sha_country_lk(id, code, nic_code, label, lang, country_p
 INSERT INTO shj_portal.sha_country_lk(id, code, nic_code, label, lang, country_phone_prefix, creation_date) VALUES (370, 'NZ', 702, 'New Zealand', 'en', '64', current_timestamp);
 SET IDENTITY_INSERT shj_portal.sha_country_lk OFF;
 GO
+
+SET IDENTITY_INSERT shj_portal.sha_marital_status_lk ON;
+INSERT INTO shj_portal.sha_marital_status_lk (id, code, lang, label) VALUES (1, 'SINGLE', 'ar', N'أعزب');
+INSERT INTO shj_portal.sha_marital_status_lk (id, code, lang, label) VALUES (2, 'SINGLE', 'en', 'Single');
+INSERT INTO shj_portal.sha_marital_status_lk (id, code, lang, label) VALUES (3, 'MARRIED', 'ar', N'متزوج');
+INSERT INTO shj_portal.sha_marital_status_lk (id, code, lang, label) VALUES (4, 'MARRIED', 'en', 'Married');
+INSERT INTO shj_portal.sha_marital_status_lk (id, code, lang, label) VALUES (5, 'WIDOWED', 'ar', N'أرمل');
+INSERT INTO shj_portal.sha_marital_status_lk (id, code, lang, label) VALUES (6, 'WIDOWED', 'en', 'Widowed');
+INSERT INTO shj_portal.sha_marital_status_lk (id, code, lang, label) VALUES (7, 'DIVORCED', 'ar', N'مطلق');
+INSERT INTO shj_portal.sha_marital_status_lk (id, code, lang, label) VALUES (8, 'DIVORCED', 'en', 'Divorced');
+SET IDENTITY_INSERT shj_portal.sha_marital_status_lk OFF;
+GO
