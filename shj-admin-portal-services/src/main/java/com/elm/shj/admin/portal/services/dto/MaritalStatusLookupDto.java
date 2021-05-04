@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Dto class for the ritual type domain.
+ * Dto class for the marital status domain.
  *
  * @author ahmad flaifel
  * @since 1.0.0
@@ -20,9 +20,10 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RitualTypeLookupDto implements Serializable {
+@Data
+public class MaritalStatusLookupDto implements Serializable {
 
-    private static final long serialVersionUID = -1042347822036530816L;
+    private static final long serialVersionUID = 6978113421016404392L;
 
     private long id;
     private String code;

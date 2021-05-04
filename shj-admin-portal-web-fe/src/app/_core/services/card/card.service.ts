@@ -4,6 +4,8 @@ import {Observable, of} from "rxjs";
 import {Card} from "@model/card.model";
 import {catchError} from "rxjs/internal/operators";
 import {Lookup} from "@model/lookup.model";
+import {CountryLookup} from "@model/country-lookup.model";
+import {ApplicantHealthSpecialNeeds} from "@model/applicant-health-special-needs.model";
 
 @Injectable({
   providedIn: 'root'
@@ -45,5 +47,13 @@ export class CardService {
 
   findRelativeRelationships(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/relative-relationship/list');
+  }
+
+  findCountries(): Observable<CountryLookup[]> {
+    return this.http.get<any>('/core/api/lookup/country/list');
+  }
+
+  findHealthSpecialNeeds(): Observable<ApplicantHealthSpecialNeeds[]> {
+    return this.http.get<any>('/core/api/lookup/health-special-needs/list');
   }
 }

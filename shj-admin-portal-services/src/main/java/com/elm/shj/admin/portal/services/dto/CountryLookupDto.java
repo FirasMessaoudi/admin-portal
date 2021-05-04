@@ -4,29 +4,28 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Dto class for the ritual type domain.
+ * Dto class for the country domain.
  *
- * @author ahmad flaifel
+ * @author Slim Ben Hadj
  * @since 1.0.0
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-public class RitualTypeLookupDto implements Serializable {
+public class CountryLookupDto implements Serializable {
 
-    private static final long serialVersionUID = -1042347822036530816L;
+    private static final long serialVersionUID = -3015368529250122708L;
 
     private long id;
     private String code;
+    private String nicCode;
     private String lang;
     private String label;
+    private String countryPhonePrefix;
     private Date creationDate;
 }

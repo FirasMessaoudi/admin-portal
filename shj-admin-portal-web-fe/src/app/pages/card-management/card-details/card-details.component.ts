@@ -10,6 +10,8 @@ import {CardService} from "@core/services";
 import {ToastService} from "@shared/components/toast";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
+import {CountryLookup} from "@model/country-lookup.model";
+import {ApplicantHealthSpecialNeeds} from "@model/applicant-health-special-needs.model";
 
 @Component({
   selector: 'app-card-details',
@@ -25,6 +27,8 @@ export class CardDetailsComponent implements OnInit {
 
   ritualTypes: Lookup[];
   relativeRelationships: Lookup[];
+  countries: CountryLookup[];
+  healthSpecialNeeds: ApplicantHealthSpecialNeeds[];
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -69,6 +73,12 @@ export class CardDetailsComponent implements OnInit {
     });
     this.cardService.findRelativeRelationships().subscribe(result => {
       this.relativeRelationships = result;
+    });
+    this.cardService.findCountries().subscribe(result => {
+      this.countries = result;
+    });
+    this.cardService.findHealthSpecialNeeds().subscribe(result => {
+      this.healthSpecialNeeds = result;
     });
   }
 
