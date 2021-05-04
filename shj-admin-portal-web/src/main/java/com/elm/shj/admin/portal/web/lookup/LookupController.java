@@ -35,6 +35,7 @@ public class LookupController {
     private final RelativeRelationshipLookupService relativeRelationshipLookupService;
     private final MaritalStatusLookupService maritalStatusLookupService;
     private final CountryLookupService countryLookupService;
+    private final HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;
 
     @GetMapping("/authority/list/parent")
     @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT)
@@ -75,5 +76,12 @@ public class LookupController {
     public List<CountryLookupDto> listCountries(Authentication authentication) {
         log.debug("list countries...");
         return countryLookupService.findAll();
+    }
+
+    @GetMapping("/health-special-needs/list")
+    @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT) //TODO: change it
+    public List<HealthSpecialNeedsTypeLookupDto> listHealthSpecialNeeds(Authentication authentication) {
+        log.debug("list health special needs...");
+        return healthSpecialNeedsLookupService.findAll();
     }
 }

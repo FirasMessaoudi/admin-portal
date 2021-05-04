@@ -407,7 +407,7 @@ GO
 
 SET IDENTITY_INSERT shj_portal.sha_health_special_needs_type_lk ON;
 INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (1, 'WHEELCHAIR', 'ar', N'كرسي متحرك');
-INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (2, 'WHEELCHAIR', 'en', 'wheelchair');
+INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (2, 'WHEELCHAIR', 'en', 'Wheelchair');
 INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (3, 'GOLF_CAR', 'ar', N'عربة نقل');
 INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (4, 'GOLF_CAR', 'en', 'Golf Car');
 SET IDENTITY_INSERT shj_portal.sha_health_special_needs_type_lk OFF;

@@ -1,7 +1,6 @@
 import {I18nService} from "@dcc-commons-ng/services";
 import {Injectable} from "@angular/core";
 import {Lookup} from "@model/lookup.model";
-import {CountryLookup} from "@model/country-lookup.model";
 
 const defaultLang = 'ar';
 
@@ -18,10 +17,5 @@ export class LookupService {
     if (!item)
       item = lookupItems.find(type => type.code === code && type.lang.startsWith(defaultLang));
     return item.label;
-  }
-
-  localizedCountryLabel(lookupItems: CountryLookup[], code: string): string {
-    const countries = lookupItems.find(type => type.code === code && this.i18nService.language.startsWith(type.lang));
-    return countries ? countries.label : '';
   }
 }

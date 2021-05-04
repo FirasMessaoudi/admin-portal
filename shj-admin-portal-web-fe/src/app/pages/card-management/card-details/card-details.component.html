@@ -67,7 +67,7 @@
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.nationality' | translate}}</label>
-                <span class="form-control-plaintext">{{card?.applicantRitual?.applicant?.nationalityCode? lookupService().localizedCountryLabel(countries, card?.applicantRitual?.applicant?.nationalityCode) : ''}}</span>
+                <span class="form-control-plaintext">{{card?.applicantRitual?.applicant?.nationalityCode? lookupService().localizedLabel(countries, card?.applicantRitual?.applicant?.nationalityCode) : ''}}</span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.passport_number' | translate}}</label>
@@ -98,7 +98,7 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.country' | translate}}</label>
-                <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.countryCode ? lookupService().localizedCountryLabel(countries, card?.applicantRitual?.applicant?.contacts[0]?.countryCode) : ''}}</span>
+                <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.countryCode ? lookupService().localizedLabel(countries, card?.applicantRitual?.applicant?.contacts[0]?.countryCode) : ''}}</span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.city' | translate}}</label>
@@ -305,14 +305,14 @@
                 <label class="col-form-label">{{'card-management.special_needs' | translate}}</label>
                 <span class="form-control-plaintext">
                   <span *ngFor="let need of card?.applicantRitual?.applicant?.healths[0]?.specialNeeds; let lastItem = last;">
-                    {{need.specialNeedTypeCode}}<span *ngIf="!lastItem">-</span></span>
+                    {{need.specialNeedTypeCode ? lookupService().localizedLabel(healthSpecialNeeds, need.specialNeedTypeCode) : ''}}<span *ngIf="!lastItem">-</span></span>
                   </span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.chronic_diseases' | translate}}</label>
                 <span class="form-control-plaintext">
                   <span *ngFor="let disease of card?.applicantRitual?.applicant?.healths[0]?.diseases; let lastItem = last;">
-                  {{disease.diseaseNameAr}}<span *ngIf="!lastItem">-</span></span>
+                  {{currentLanguage.startsWith("en") ? disease.diseaseNameEn : disease.diseaseNameAr}}<span *ngIf="!lastItem">-</span></span>
                 </span>
               </div>
             </div>
