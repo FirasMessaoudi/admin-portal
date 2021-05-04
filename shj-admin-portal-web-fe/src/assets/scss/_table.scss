@@ -7,3 +7,15 @@
     border-color: #EAEEF1;
 }
 
+.page-item{
+    font-size: 80%;
+    
+    .page-link{
+        cursor: pointer;
+    }
+    &.disabled{
+        .page-link{
+            color: $gray-300 !important;
+        }
+    }
+}

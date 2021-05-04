@@ -44,7 +44,7 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.applicant_original_name' | translate}}</label>
-                <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.fullNameOriginal }}</span>
+                <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.fullNameOrigin }}</span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'general.date_of_birth' | translate}}</label>
@@ -55,7 +55,7 @@
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.ritual_type' | translate}}</label>
-                <span class="form-control-plaintext ">{{localizedRitualTypeLabel(card?.applicantRitual?.typeCode)}}</span>
+                <span class="form-control-plaintext ">{{card?.applicantRitual?.typeCode? lookupService().localizedLabel(ritualTypes, card?.applicantRitual?.typeCode) : ''}}</span>
               </div>
 
               <div class="form-group col" [ngSwitch]="card?.applicantRitual?.applicant?.gender">
@@ -67,7 +67,7 @@
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.nationality' | translate}}</label>
-                <span class="form-control-plaintext">{{ card?.applicantRitual?.applicant?.nationalityCode?.label}}</span>
+                <span class="form-control-plaintext">{{card?.applicantRitual?.applicant?.nationalityCode? lookupService().localizedLabel(countries, card?.applicantRitual?.applicant?.nationalityCode) : ''}}</span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.passport_number' | translate}}</label>
@@ -98,7 +98,7 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.country' | translate}}</label>
-                <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.countryCode}}</span>
+                <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.countryCode ? lookupService().localizedLabel(countries, card?.applicantRitual?.applicant?.contacts[0]?.countryCode) : ''}}</span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.city' | translate}}</label>
@@ -138,8 +138,8 @@
                 <tbody>
                 <tr *ngFor="let relative of card?.applicantRitual?.applicant?.relatives">
                   <td class="ltr">{{relative.relativeApplicant?.fullNameAr}} {{relative.relativeApplicant?.fullNameEn}}</td>
-                  <td class="ltr">{{relative.relativeApplicant?.idNumber}}</td>
-                  <td class="ltr">{{localizedRelativeRelationshipLabel(relative.relationshipCode)}}</td>
+                  <td class="ltr">{{relative.relativeApplicant?.digitalIds[0]?.uin}}</td>
+                  <td class="ltr">{{relative.relationshipCode? lookupService().localizedLabel(relativeRelationships, relative.relationshipCode) : ''}}</td>
                 </tr>
                 </tbody>
               </table>
@@ -305,14 +305,14 @@
                 <label class="col-form-label">{{'card-management.special_needs' | translate}}</label>
                 <span class="form-control-plaintext">
                   <span *ngFor="let need of card?.applicantRitual?.applicant?.healths[0]?.specialNeeds; let lastItem = last;">
-                    {{need.specialNeedTypeCode}}<span *ngIf="!lastItem">-</span></span>
+                    {{need.specialNeedTypeCode ? lookupService().localizedLabel(healthSpecialNeeds, need.specialNeedTypeCode) : ''}}<span *ngIf="!lastItem">-</span></span>
                   </span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.chronic_diseases' | translate}}</label>
                 <span class="form-control-plaintext">
                   <span *ngFor="let disease of card?.applicantRitual?.applicant?.healths[0]?.diseases; let lastItem = last;">
-                  {{disease.diseaseNameAr}}<span *ngIf="!lastItem">-</span></span>
+                  {{currentLanguage.startsWith("en") ? disease.diseaseNameEn : disease.diseaseNameAr}}<span *ngIf="!lastItem">-</span></span>
                 </span>
               </div>
             </div>

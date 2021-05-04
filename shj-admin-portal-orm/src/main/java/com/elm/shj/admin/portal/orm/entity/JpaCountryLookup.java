@@ -3,6 +3,10 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -16,7 +20,15 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "sha_country_lk")
 @NamedQuery(name = "JpaCountryLookup.findAll", query = "SELECT j FROM JpaCountryLookup j")
+@Getter
+@Setter
 public class JpaCountryLookup extends JpaLocalizedLookup {
 
     private static final long serialVersionUID = 722517589940056586L;
+
+    @Column(name = "nic_code")
+    private String nicCode;
+
+    @Column(name = "country_phone_prefix")
+    private String countryPhonePrefix;
 }

@@ -13,19 +13,19 @@ SET IDENTITY_INSERT shj_portal.sha_applicant ON;
 INSERT INTO shj_portal.sha_applicant (id, gender, nationality_code, id_number, id_number_original, passport_number,
                                       date_of_birth_gregorian, date_of_birth_hijri, full_name_ar, full_name_en,
                                       full_name_origin, marital_status, request_id, status)
-VALUES (1, 'M', 'SAUDI', 2541235487, '9184542873', '7O8512', convert(date, '05/11/1981', 103), 14400505,
+VALUES (1, 'M', 'SA', 2541235487, '9184542873', '7O8512', convert(date, '05/11/1981', 103), 14400505,
         N'عبد الله محمد عبد العزيز القحطاني', 'AbdAllah Moh AbdAlaziz AlQahtani', NULL, 1, 1, 1);
 
 INSERT INTO shj_portal.sha_applicant (id, gender, nationality_code, id_number, id_number_original, passport_number,
                                       date_of_birth_gregorian, date_of_birth_hijri, full_name_ar, full_name_en,
                                       full_name_origin, marital_status, request_id, status)
-VALUES (2, 'F', 'SAUDI', 2581275408, '9104542173', '712518', convert(date, '12/04/1986', 103), 14060721,
+VALUES (2, 'F', 'SA', 2581275408, '9104542173', '712518', convert(date, '12/04/1986', 103), 14060721,
         N'ميساء بنت عبد الله بن عيسى البشراوي', 'Maysaa AbdAllah Eissa AlBachraoui', NULL, 1, 1, 1);
 
 INSERT INTO shj_portal.sha_applicant (id, gender, nationality_code, id_number, id_number_original, passport_number,
                                       date_of_birth_gregorian, date_of_birth_hijri, full_name_ar, full_name_en,
                                       full_name_origin, marital_status, request_id, status)
-VALUES (3, 'F', 'SAUDI', 2401275409, '9304542120', '733518', convert(date, '01/06/1955', 103), 13741010,
+VALUES (3, 'F', 'SA', 2401275409, '9304542120', '733518', convert(date, '01/06/1955', 103), 13741010,
         N'وضحة بنت منصور بن عثمان العتيبي', 'Wadha Mansour Othman AlOtaibi', NULL, 1, 1, 1);
 
 SET IDENTITY_INSERT shj_portal.sha_applicant OFF;
@@ -35,7 +35,7 @@ GO
 INSERT INTO shj_portal.sha_applicant_contact (applicant_id, language_list, email, local_mobile_number,
                                               intl_mobile_number, country_code, street_name, district_name, city_name,
                                               building_number, postal_code)
-VALUES (1, N'العربية، English', 'app@elm.sa', 558572465, 962796322285, 'MOROCCO', N'شارع الأمير بندر', N'الغدير',
+VALUES (1, N'العربية، English', 'app@elm.sa', 558572465, 962796322285, 'SA', N'شارع الأمير بندر', N'الغدير',
         N'مدغشقر', 325, 32145);
 GO
 
@@ -49,6 +49,15 @@ GO
 -- insert applicant digital id
 INSERT INTO shj_portal.sha_applicant_digital_id (uin, applicant_id)
 VALUES ('521468547', 1);
+GO
+
+-- insert applicant relatives' digital ids
+INSERT INTO shj_portal.sha_applicant_digital_id (uin, applicant_id)
+VALUES ('529417044', 2);
+GO
+
+INSERT INTO shj_portal.sha_applicant_digital_id (uin, applicant_id)
+VALUES ('523096627', 3);
 GO
 
 -- insert applicant ritual

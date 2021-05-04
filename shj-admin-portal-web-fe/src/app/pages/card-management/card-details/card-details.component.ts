@@ -10,6 +10,8 @@ import {CardService} from "@core/services";
 import {ToastService} from "@shared/components/toast";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
+import {CountryLookup} from "@model/country-lookup.model";
+import {ApplicantHealthSpecialNeeds} from "@model/applicant-health-special-needs.model";
 
 @Component({
   selector: 'app-card-details',
@@ -25,6 +27,8 @@ export class CardDetailsComponent implements OnInit {
 
   ritualTypes: Lookup[];
   relativeRelationships: Lookup[];
+  countries: CountryLookup[];
+  healthSpecialNeeds: ApplicantHealthSpecialNeeds[];
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -32,7 +36,7 @@ export class CardDetailsComponent implements OnInit {
               private cardService: CardService,
               private translate: TranslateService,
               private i18nService: I18nService,
-              private lookupService: LookupService) { }
+              private lookupsService: LookupService) { }
 
   ngOnInit(): void {
     this.loadLookups();
@@ -70,6 +74,12 @@ export class CardDetailsComponent implements OnInit {
     this.cardService.findRelativeRelationships().subscribe(result => {
       this.relativeRelationships = result;
     });
+    this.cardService.findCountries().subscribe(result => {
+      this.countries = result;
+    });
+    this.cardService.findHealthSpecialNeeds().subscribe(result => {
+      this.healthSpecialNeeds = result;
+    });
   }
 
   goToList() {
@@ -80,12 +90,8 @@ export class CardDetailsComponent implements OnInit {
     return this.i18nService.language;
   }
 
-  localizedRitualTypeLabel(code: string): string {
-    if (code) return this.lookupService.localizedLabel(this.ritualTypes, code);
-  }
-
-  localizedRelativeRelationshipLabel(code: string): string {
-    if (code) return this.lookupService.localizedLabel(this.relativeRelationships, code);
+  lookupService(): LookupService {
+    return this.lookupsService;
   }
 
   packageCaterings(): PackageCatering[] {
