@@ -32,7 +32,7 @@ export class CardDetailsComponent implements OnInit {
               private cardService: CardService,
               private translate: TranslateService,
               private i18nService: I18nService,
-              private lookupService: LookupService) { }
+              private lookupsService: LookupService) { }
 
   ngOnInit(): void {
     this.loadLookups();
@@ -78,6 +78,10 @@ export class CardDetailsComponent implements OnInit {
 
   get currentLanguage(): string {
     return this.i18nService.language;
+  }
+
+  lookupService(): LookupService {
+    return this.lookupsService;
   }
 
   packageCaterings(): PackageCatering[] {

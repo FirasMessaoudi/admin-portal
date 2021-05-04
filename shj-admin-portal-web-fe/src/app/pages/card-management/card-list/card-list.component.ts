@@ -30,7 +30,7 @@ export class CardListComponent implements OnInit {
               private formBuilder: FormBuilder,
               private authenticationService: AuthenticationService,
               private cardService: CardService,
-              private lookupService: LookupService) { }
+              private lookupsService: LookupService) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -86,6 +86,10 @@ export class CardListComponent implements OnInit {
 
   get currentLanguage(): string {
     return this.i18nService.language;
+  }
+
+  lookupService(): LookupService {
+    return this.lookupsService;
   }
 
   search(): void {
