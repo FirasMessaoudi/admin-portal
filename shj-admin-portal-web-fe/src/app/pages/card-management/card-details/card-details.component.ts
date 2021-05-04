@@ -25,6 +25,7 @@ export class CardDetailsComponent implements OnInit {
 
   ritualTypes: Lookup[];
   relativeRelationships: Lookup[];
+  countries: any;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -69,6 +70,9 @@ export class CardDetailsComponent implements OnInit {
     });
     this.cardService.findRelativeRelationships().subscribe(result => {
       this.relativeRelationships = result;
+    });
+    this.cardService.findCountries().subscribe(result => {
+      this.countries = result;
     });
   }
 

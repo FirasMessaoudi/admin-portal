@@ -277,7 +277,7 @@ create table shj_portal.sha_country_lk
     nic_code INT NOT NULL,
     lang VARCHAR(45) NOT NULL,
     label NVARCHAR(50) NOT NULL,
-    telephone_number_prefix varchar(17) NOT NULL,
+    country_phone_prefix varchar(17) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     constraint country_lk_unique unique (code ASC, lang ASC)
 );

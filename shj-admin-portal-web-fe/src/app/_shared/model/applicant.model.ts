@@ -6,7 +6,7 @@ import {ApplicantDigitalId} from "@model/applicant-digital-id.model";
 export class Applicant {
   id: number;
   gender: string;
-  nationalityCode: any;
+  nationalityCode: string;
   idNumber: number;
   idNumberOriginal: string;
   passportNumber: string;
@@ -14,7 +14,7 @@ export class Applicant {
   dateOfBirthHijri: any;
   fullNameAr: string;
   fullNameEn: string;
-  fullNameOriginal: string;
+  fullNameOrigin: string;
   maritalStatus: number;
   photo: any;
   requestId: number;

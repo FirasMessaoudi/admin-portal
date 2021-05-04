@@ -4,10 +4,7 @@
 package com.elm.shj.admin.portal.web.lookup;
 
 import com.elm.shj.admin.portal.services.dto.*;
-import com.elm.shj.admin.portal.services.lookup.AuthorityLookupService;
-import com.elm.shj.admin.portal.services.lookup.CardStatusLookupService;
-import com.elm.shj.admin.portal.services.lookup.RelativeRelationshipLookupService;
-import com.elm.shj.admin.portal.services.lookup.RitualTypeLookupService;
+import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +33,7 @@ public class LookupController {
     private final RitualTypeLookupService ritualTypeLookupService;
     private final CardStatusLookupService cardStatusLookupService;
     private final RelativeRelationshipLookupService relativeRelationshipLookupService;
-
+    private final CountryLookupService countryLookupService;
 
     @GetMapping("/authority/list/parent")
     @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT)
@@ -63,5 +60,12 @@ public class LookupController {
     public List<RelativeRelationshipLookupDto> listRelativeRelationships(Authentication authentication) {
         log.debug("list relative relationships...");
         return relativeRelationshipLookupService.findAll();
+    }
+
+    @GetMapping("/country/list")
+    @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT) //TODO: change it
+    public List<CountryLookupDto> listCountries(Authentication authentication) {
+        log.debug("list countries...");
+        return countryLookupService.findAll();
     }
 }
