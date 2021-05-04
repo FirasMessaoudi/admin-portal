@@ -20,13 +20,13 @@
       {{'login.invalid_otp' | translate }}
     </div>
     <h1 class="text-dcc-primary font-weight-bold mb-4">{{'login.header_title' | translate}}</h1>
-    <div class="text-secondary mb-5">{{'login.otp_text' | translate}}  ({{mask}})</div>
-    <div class="row mx-auto w-75" style="direction: ltr !important;">
+    <div class="text-secondary mb-5">{{'login.otp_text' | translate}}  <div class="ltr d-inline-block">({{mask}})</div></div>
+    <div class="row mx-auto w-75 ltr">
       <div class="form-group col-sm-3" *ngFor="let input of formInputs;  index as i">
         <input #formRow type="text" formControlName="{{input}}" class="pin-input form-control text-center" maxlength="1" (keyup)="keyUpEvent($event, i)">
       </div>
     </div>
-    <div class="text-center text-secondary mt-5">{{'login.otp_remaining_time' | translate}}   {{timerContent}}</div>
+    <div class="text-center text-secondary mt-5">{{'login.otp_remaining_time' | translate}} <span class="font-weight-bold">{{timerContent}}</span></div>
 
 
     <div class="left-header mt-5 mb-0 pb-0">
