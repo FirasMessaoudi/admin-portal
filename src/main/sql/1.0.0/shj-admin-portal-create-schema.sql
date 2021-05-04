@@ -558,3 +558,15 @@ create table shj_portal.sha_data_request
     CONSTRAINT fk_data_request_status_lk FOREIGN KEY (status_id) REFERENCES shj_portal.sha_data_request_status_lk (id)
 );
 GO
+
+if not exists (select * from sys.tables where name = 'sha_marital_status_lk')
+create table shj_portal.sha_marital_status_lk
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    code VARCHAR(20) NOT NULL,
+    lang VARCHAR(45) NOT NULL,
+    label NVARCHAR(50) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint marital_status_lk_unique unique (code ASC, lang ASC)
+);
+GO
