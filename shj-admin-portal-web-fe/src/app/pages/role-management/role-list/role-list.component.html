@@ -100,22 +100,22 @@
           <td class="text-center" width="20%" style="text-align:center">
             <div class="text-nowrap">
               <a [routerLink]="['/roles/update', role?.id]" [queryParams]="{edit: true}" class="action mx-2" *ngIf="role.id != loggedInUserRoleId && canEditRole" ngbTooltip="{{'general.tooltip_edit' | translate}}">
-                <svg-icon styleClass="text-info h3" icon="edit"></svg-icon>
+                <svg-icon styleClass="fa-w-20 h5" icon="user-edit"></svg-icon>
               </a>
               <a class="action mx-2" href="javascript:void(0)" *ngIf="role.id != loggedInUserRoleId && role.activated && canChangeRoleStatus"
                  (click)="deactivateRole(role.id)" ngbTooltip="{{'general.tooltip_deactivate' | translate}}">
-                <svg-icon styleClass="text-warning h3" icon="user-tag-minus"></svg-icon>
+                <svg-icon styleClass="fa-w-20 h5" icon="user-slash"></svg-icon>
               </a>
               <a class="action mx-2" href="javascript:void(0)" *ngIf="role.id != loggedInUserRoleId && !role.activated && canChangeRoleStatus"
                  (click)="activateRole(role.id)" ngbTooltip="{{'general.tooltip_activate' | translate}}">
-                <svg-icon styleClass="text-success h3" icon="user-tag-check"></svg-icon>
+                <svg-icon styleClass="fa-w-20 h5" icon="user-check"></svg-icon>
               </a>
               <a class="action mx-2" href="javascript:void(0)" *ngIf="role.id != loggedInUserRoleId && canDeleteRole"
                  (click)="deleteRole(role.id)" ngbTooltip="{{'general.tooltip_delete' | translate}}">
-                <svg-icon styleClass="text-danger h3" icon="user-tag-times"></svg-icon>
+                <svg-icon styleClass="fa-w-20 h5" icon="user-times"></svg-icon>
               </a>
               <a [routerLink]="['/roles/details', role?.id]" class="action mx-2" ngbTooltip="{{'general.tooltip_view' | translate}}">
-                <svg-icon styleClass="text-dcc-primary h3" icon="eye"></svg-icon>
+                <svg-icon styleClass="fa-w-18 h5" icon="eye"></svg-icon>
               </a>
             </div>
           </td>
