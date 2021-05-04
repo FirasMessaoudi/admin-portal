@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaUserPasswordHistory;
 import com.elm.shj.admin.portal.orm.repository.PasswordHistoryRepository;
 import com.elm.shj.admin.portal.services.dto.UserPasswordHistoryDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -23,10 +24,10 @@ import java.util.Optional;
  * @since 1.3.0
  */
 @Service
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class PasswordHistoryService extends GenericService<JpaUserPasswordHistory, UserPasswordHistoryDto, Long> {
 
-    @Autowired
-    private PasswordHistoryRepository passwordHistoryRepository;
+    private final PasswordHistoryRepository passwordHistoryRepository;
 
     @Value("${dcc.validation.password.history.threshold}")
     private int passwordHistoryThreshold;

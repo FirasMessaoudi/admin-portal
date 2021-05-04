@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,10 +27,10 @@ import javax.annotation.security.RolesAllowed;
 @RestController
 @RequestMapping(Navigation.API_APPLICANTS)
 @Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantController {
 
-    @Autowired
-    private ApplicantService applicantService;
+    private final ApplicantService applicantService;
 
     @GetMapping("/list/all")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it

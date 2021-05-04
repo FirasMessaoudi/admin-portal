@@ -9,6 +9,7 @@ import com.elm.shj.admin.portal.services.role.RoleService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,11 @@ import java.util.List;
 @RestController
 @RequestMapping(Navigation.API_ROLES)
 @Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class RoleManagementController {
 
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private JwtTokenService jwtTokenService;
+    private final RoleService roleService;
+    private final JwtTokenService jwtTokenService;
 
     /**
      * List active roles.

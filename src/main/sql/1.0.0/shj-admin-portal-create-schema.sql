@@ -507,7 +507,6 @@ if not exists (select * from sys.tables where name = 'sha_data_segment')
 create table shj_portal.sha_data_segment
 (
     id                  int PRIMARY KEY NOT NULL identity (1,1),
-    --root_class          VARCHAR(100)     NOT NULL,
     template_file_name  NVARCHAR(100)    NOT NULL,
     label_ar            NVARCHAR(100)    NOT NULL,
     label_en            VARCHAR(100)     NOT NULL,

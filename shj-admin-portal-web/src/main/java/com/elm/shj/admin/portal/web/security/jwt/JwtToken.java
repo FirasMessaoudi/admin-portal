@@ -46,7 +46,7 @@ public class JwtToken extends UsernamePasswordAuthenticationToken {
         this.passwordExpired = passwordExpired;
         this.userRoles = userRoles;
         // TODO: check why this line of code is needed.
-        this.userRoles.stream().forEach(userRoleDto -> userRoleDto.getRole().setRoleAuthorities(null));
+        this.userRoles.forEach(userRoleDto -> userRoleDto.getRole().setRoleAuthorities(null));
         this.firstName = firstName;
         this.lastName = lastName;
     }

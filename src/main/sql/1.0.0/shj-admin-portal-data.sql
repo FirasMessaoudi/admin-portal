@@ -430,3 +430,10 @@ INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (13, 'C
 INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (14, 'CANCELLED', 'en', 'Cancelled');
 SET IDENTITY_INSERT shj_portal.sha_card_status_lk OFF;
 GO
+
+-- add otp config
+INSERT INTO shj_portal.sha_config (conf_key, conf_value)
+VALUES ('otp.expiry.minutes', '5'),
+       ('otp.pin.length', '4'),
+       ('otp.mock.enabled', 'true');
+GO

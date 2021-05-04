@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,10 +31,10 @@ import java.util.HashSet;
 @RestController
 @RequestMapping(Navigation.API_APPLICANT_CARDS)
 @Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantCardController {
 
-    @Autowired
-    private ApplicantCardService applicantCardService;
+    private final ApplicantCardService applicantCardService;
 
     @GetMapping("/list")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it

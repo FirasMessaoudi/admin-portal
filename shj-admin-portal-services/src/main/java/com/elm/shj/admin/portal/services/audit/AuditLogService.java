@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.audit;
 import com.elm.shj.admin.portal.orm.entity.JpaAuditLog;
 import com.elm.shj.admin.portal.services.dto.AuditLogDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,8 @@ public class AuditLogService extends GenericService<JpaAuditLog, AuditLogDto, Lo
     @Transactional
     @Override
     public AuditLogDto save(AuditLogDto dto) {
+        // truncate error details
+        dto.setErrorDetails(StringUtils.left(dto.getErrorDetails(), 512));
         return super.save(dto);
     }
 }

@@ -35,7 +35,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping(Navigation.API_DATA_REQUEST)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DataRequestManagementController {
 
     private final DataRequestService dataRequestService;

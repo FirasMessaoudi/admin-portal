@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaRole;
 import com.elm.shj.admin.portal.orm.repository.RoleRepository;
 import com.elm.shj.admin.portal.services.dto.RoleDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,10 @@ import java.util.Set;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class RoleService extends GenericService<JpaRole, RoleDto, Long> {
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
     /**
      * Find all roles.

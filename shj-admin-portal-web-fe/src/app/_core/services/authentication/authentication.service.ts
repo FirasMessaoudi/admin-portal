@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
-import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject, throwError} from 'rxjs';
 import {EAuthority} from "@model/enum/authority.enum";
 
 
@@ -16,10 +16,14 @@ const CURRENT_USER_KEY = 'currentUser';
 export class AuthenticationService {
 
   // Sprint 6
-  private authenticatedUserSubject: BehaviorSubject<any>;
   public authenticatedUser: Observable<any>;
+  private authenticatedUserSubject: BehaviorSubject<any>;
+  public otpData: Observable<any>;
+  private otpDataSubject: BehaviorSubject<any>;
 
   constructor(private http: HttpClient) {
+    this.otpDataSubject = new BehaviorSubject<any>({});
+    this.otpData = this.otpDataSubject.asObservable();
     const savedUser = sessionStorage.getItem(CURRENT_USER_KEY) || localStorage.getItem(CURRENT_USER_KEY);
     if (savedUser) {
       this._currentUser = JSON.parse(savedUser);
@@ -53,21 +57,21 @@ export class AuthenticationService {
 
     let params: String = recaptchaToken ? '?grt=' + recaptchaToken : '';
 
-    return this.http.post<any>('/core/api/auth/login' + params, {'idNumber': username, 'password': password})
-      .pipe(map(authentication => {
-        console.log(JSON.stringify(authentication));
-        let user: any = authentication;
+    return this.http.post<any>('/core/api/auth/login' + params, {'idNumber': username, 'password': password});
+  }
 
-        // login successful if there's a jwt token in the response
-        if (user && user.principal) {
-          this.setCurrentUser(user);
-          //
-          this.authenticatedUserSubject.next(user);
-          //
-        } else {
-          this.setCurrentUser();
-        }
-        return this.currentUser;
+  /**
+   * Validates the otp sent to the user.
+   * @param username the username.
+   * @param otp the entered otp.
+   * @return if entered otp is the same sent to the user.
+   */
+  validateOtp(username: string, otp: string): Observable<any> {
+
+    return this.http.post<any>('/core/api/auth/otp', {'idNumber': username, 'otp': otp})
+      .pipe(map(response => {
+        console.log(JSON.stringify(response));
+        return response;
       }), catchError((err: HttpErrorResponse) => {
         return throwError(err);
       }));
@@ -140,11 +144,26 @@ export class AuthenticationService {
     this.currentUser.preferredLanguage = language;
   }
 
+  updateSubject(user: any) {
+    if (user && user.principal) {
+      this.setCurrentUser(user);
+      //
+      this.authenticatedUserSubject.next(user);
+      //
+    } else {
+      this.setCurrentUser();
+    }
+  }
+
+  updateOtpSubject(user: any) {
+      this.otpDataSubject.next(user);
+  }
+
   /**
    * Check if logged in user has the passed authority enum in his role authorities.
    * @param authority
    */
-  hasAuthority(authority: EAuthority) : boolean {
+  hasAuthority(authority: EAuthority): boolean {
     return this.currentUser && this.currentUser.authorities && this.currentUser.authorities.filter(authorityObj => authorityObj.authority === authority.toString()).length > 0;
   }
 

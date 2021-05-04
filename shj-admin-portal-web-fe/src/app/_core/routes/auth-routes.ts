@@ -6,6 +6,10 @@ export const LOGIN_ROUTES: Routes = [
     loadChildren: () => import('@pages/login/login.module').then(m => m.LoginModule)
   },
   {
+    path: 'otp',
+    loadChildren: () => import('@pages/otp/otp.module').then(m => m.OtpModule)
+  },
+  {
     path: 'register',
     loadChildren: () => import('@pages/register/register.module').then(m => m.RegisterModule)
   },

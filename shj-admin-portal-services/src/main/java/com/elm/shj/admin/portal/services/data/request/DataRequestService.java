@@ -37,7 +37,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DataRequestService extends GenericService<JpaDataRequest, DataRequestDto, Long> {
 
     private static final SimpleDateFormat FILE_NAME_POSTFIX_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");

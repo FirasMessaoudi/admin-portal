@@ -11,9 +11,9 @@ import com.elm.shj.admin.portal.orm.repository.UserRepository;
 import com.elm.shj.admin.portal.services.dto.UserDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.google.common.collect.ImmutableMap;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -32,32 +32,24 @@ import java.util.*;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
+@Slf4j
 @Service
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserService extends GenericService<JpaUser, UserDto, Long> {
-
-    private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public static final String CREATE_USER_SMS_NOTIFICATION_KEY = "user.mngt.new.user.sms.notification";
     public static final String REGISTRATION_EMAIL_SUBJECT = "Welcome to ELM Product";
     public static final String REGISTRATION_EMAIL_TPL_NAME = "email-registration.ftl";
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
-    protected MessageSource messageSource;
-
-    @Autowired
-    private SmsGatewayService smsGatewayService;
-
-    @Autowired
-    private EmailService emailService;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final MessageSource messageSource;
+    private final SmsGatewayService smsGatewayService;
+    private final EmailService emailService;
 
     /**
      * Finds all non deleted users.
+     *
      * @param pageable
      * @param loggedInUserId
      * @param loggedInUserRoleIds
@@ -84,9 +76,9 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
     /**
      * finds users by role id, nin or account status
      *
-     * @param roleId    the user role id to find
-     * @param nin       the user nin to find
-     * @param activated the user account status
+     * @param roleId              the user role id to find
+     * @param nin                 the user nin to find
+     * @param activated           the user account status
      * @param loggedInUserRoleIds
      * @return the found users or <code>null</code>
      */
@@ -176,7 +168,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
      */
     public boolean hasToken(long idNumber) {
         Date tokenExpiryDate = userRepository.retrieveTokenExpiryDate(idNumber);
-        logger.info("Token Expiry Date {} found for {}", tokenExpiryDate, idNumber);
+        log.info("Token Expiry Date {} found for {}", tokenExpiryDate, idNumber);
         return tokenExpiryDate != null;
     }
 
@@ -226,11 +218,11 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         UserDto savedUser = save(user);
         // user created successfully, send SMS notification which contains the temporary password
         boolean smsSent = notifyRegisteredUser(user);
-        logger.debug("SMS notification status: {}", smsSent);
+        log.debug("SMS notification status: {}", smsSent);
         // Send Email notification which contains the username
         boolean emailSent = emailService.sendMailFromTemplate(Arrays.asList(user.getEmail()), null,
                 REGISTRATION_EMAIL_SUBJECT, REGISTRATION_EMAIL_TPL_NAME, ImmutableMap.of("user", user));
-        logger.debug("Email notification status: {}", emailSent);
+        log.debug("Email notification status: {}", emailSent);
 
         return savedUser;
     }
@@ -256,7 +248,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
             try {
                 user.setAvatar(Base64.getEncoder().encodeToString(user.getAvatarFile().getBytes()));
             } catch (IOException e) {
-                logger.error("Error while setting avatar bytes for user.", e);
+                log.error("Error while setting avatar bytes for user.", e);
             }
         }
         return super.save(user);
@@ -284,6 +276,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
 
     /**
      * Reset user password.
+     *
      * @param user
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
@@ -292,7 +285,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         user.setPassword(newPassword);
         // first notify user with the new password, if notification failed, password will not be changed
         if (!notifyRegisteredUser(user)) {
-            logger.error("Password reset cannot be done, unable to notify user with the new password.");
+            log.error("Password reset cannot be done, unable to notify user with the new password.");
             return;
         }
 

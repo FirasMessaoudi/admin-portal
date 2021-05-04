@@ -25,7 +25,7 @@ import java.util.Arrays;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class SftpService {
 
     // Set the prompt when logging in for the first time, optional values: (ask | yes | no)

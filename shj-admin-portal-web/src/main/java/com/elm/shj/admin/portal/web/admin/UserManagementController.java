@@ -15,6 +15,8 @@ import com.elm.shj.admin.portal.services.user.UserService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -58,9 +60,11 @@ import java.util.stream.Collectors;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
+@Slf4j
 @RestController
 @RequestMapping(Navigation.API_USERS)
 @Validated
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserManagementController {
 
     public static final String CONFIDENTIAL = "<CONFIDENTIAL>";
@@ -71,22 +75,11 @@ public class UserManagementController {
     private static final String PWRD_CONTAINS_USERNAME_ERROR_MESSAGE_KEY = "{dcc.commons.validation.constraints.password-contains-username}";
     private static final String CHANGE_PWRD_METHOD_NAME = "changeUserPassword";
     public static final String RECAPTCHA_TOKEN_NAME = "grt";
-
-    private final Logger logger = LoggerFactory.getLogger(UserManagementController.class);
-
-    @Autowired
+    
     private UserService userService;
-
-    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
     private PasswordHistoryService passwordHistoryService;
-
-    @Autowired
     private JwtTokenService jwtTokenService;
-
-    @Autowired
     private RecaptchaService recaptchaService;
 
     /**
@@ -98,7 +91,7 @@ public class UserManagementController {
     @GetMapping("/list")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT)
     public Page<UserDto> listUsers(Pageable pageable, Authentication authentication) {
-        logger.debug("Handler for {}", "List Users");
+        log.debug("Handler for {}", "List Users");
         return userService.findAllNotDeleted(pageable, jwtTokenService.retrieveUserIdFromToken(((JwtToken) authentication).getToken()).orElse(0L),
                 jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()))
                 .map(UserManagementController::maskUserInfo);
@@ -115,7 +108,7 @@ public class UserManagementController {
     @GetMapping("/search/{roleId}/{nin}/{activated}")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT)
     public Page<UserDto> search(Pageable pageable, @PathVariable long roleId, @PathVariable long nin, @PathVariable int activated, Authentication authentication) {
-        logger.debug("Handler for {}", "Search Users");
+        log.debug("Handler for {}", "Search Users");
         Page<UserDto> usersPage = userService.searchByRoleStatusOrNin(pageable,
                 (roleId <= 0 ? null : roleId),
                 (nin <= 0 ? null : Long.toString(nin)),
@@ -134,7 +127,7 @@ public class UserManagementController {
     @GetMapping("/find/{userId}")
     @RolesAllowed(AuthorityConstants.EDIT_USER)
     public UserDto findUser(@PathVariable long userId) {
-        logger.debug("Handler for {}", "Find User");
+        log.debug("Handler for {}", "Find User");
         return maskUserInfo(userService.findOne(userId));
     }
 
@@ -147,7 +140,7 @@ public class UserManagementController {
     @GetMapping("/find/nin/{nin}")
     @RolesAllowed(AuthorityConstants.EDIT_USER)
     public UserDto findByNin(@PathVariable Long nin) {
-        logger.debug("Find by nin {}", nin);
+        log.debug("Find by nin {}", nin);
         return maskUserInfo(userService.findByNin(nin).orElse(null));
     }
 
@@ -172,7 +165,7 @@ public class UserManagementController {
     public void resetUserPassword(@RequestBody @Valid ResetPasswordCmd command,
                                   @RequestParam(RECAPTCHA_TOKEN_NAME) String reCaptchaToken) {
         if (StringUtils.isBlank(reCaptchaToken)) {
-            logger.info("recaptcha response is not provided in the request...");
+            log.info("recaptcha response is not provided in the request...");
             throw new RecaptchaException("Invalid Captcha");
         }
 
@@ -205,7 +198,7 @@ public class UserManagementController {
         if (dateOfBirthMatched) {
             userService.resetPassword(user);
         } else {
-            logger.debug("invalid data for username {}", command.getIdNumber());
+            log.debug("invalid data for username {}", command.getIdNumber());
             throw new UsernameNotFoundException("invalid data");
         }
     }
@@ -217,7 +210,7 @@ public class UserManagementController {
      */
     @PostMapping("/change-password")
     public void changeUserPassword(@RequestBody @Valid ChangePasswordCmd command) throws MethodArgumentNotValidException, NoSuchMethodException {
-        logger.debug("Handler for {}", "Change User Password");
+        log.debug("Handler for {}", "Change User Password");
 
         if (!(SecurityContextHolder.getContext().getAuthentication() instanceof JwtToken)) {
             return;
@@ -291,7 +284,7 @@ public class UserManagementController {
     @PostMapping("/avatar/{userId}")
     @RolesAllowed(AuthorityConstants.EDIT_USER)
     public ResponseEntity<String> updateUserAvatar(@RequestParam("avatar") @SafeFile MultipartFile userAvatarFile, @PathVariable Long userId) throws IOException {
-        logger.debug("Handler for {}", "Update User Avatar");
+        log.debug("Handler for {}", "Update User Avatar");
         String encodedAvatarStr = userService.updateUserAvatar(userId, userAvatarFile.getBytes());
         return ResponseEntity.ok(encodedAvatarStr);
     }
@@ -305,7 +298,7 @@ public class UserManagementController {
     @PostMapping("/update")
     @RolesAllowed(AuthorityConstants.EDIT_USER)
     public ResponseEntity<UserDto> updateUser(@RequestBody @Validated({UserDto.UpdateUserValidationGroup.class, Default.class}) UserDto user) {
-        logger.debug("Handler for {}", "Update User");
+        log.debug("Handler for {}", "Update User");
 
         UserDto databaseUser = userService.findOne(user.getId());
 
@@ -335,12 +328,12 @@ public class UserManagementController {
     @PostMapping("/create")
     @RolesAllowed(AuthorityConstants.ADD_USER)
     public ResponseEntity<UserDto> createUser(@RequestBody @Validated({UserDto.CreateUserValidationGroup.class, Default.class}) UserDto user) {
-        logger.debug("Handler for {}", "Create User");
+        log.debug("Handler for {}", "Create User");
         UserDto savedUser = null;
         try {
             savedUser = userService.createUser(user, false);
         } catch (Exception e) {
-            logger.error("Error while creating user.", e);
+            log.error("Error while creating user.", e);
             return ResponseEntity.of(Optional.empty());
         }
         return ResponseEntity.ok(Objects.requireNonNull(savedUser));
@@ -355,7 +348,7 @@ public class UserManagementController {
     @PostMapping("/delete/{userId}")
     @RolesAllowed(AuthorityConstants.DELETE_USER)
     public ResponseEntity<String> deleteUser(@PathVariable long userId) {
-        logger.debug("Handler for {}", "delete user");
+        log.debug("Handler for {}", "delete user");
         userService.deleteUser(userId);
         return ResponseEntity.ok(StringUtils.EMPTY);
     }
@@ -369,7 +362,7 @@ public class UserManagementController {
     @PostMapping("/activate/{userId}")
     @RolesAllowed(AuthorityConstants.CHANGE_USER_STATUS)
     public ResponseEntity<String> activateUser(@PathVariable long userId) {
-        logger.debug("Handler for {}", "activate user");
+        log.debug("Handler for {}", "activate user");
         userService.activateUser(userId);
         return ResponseEntity.ok(StringUtils.EMPTY);
     }
@@ -383,7 +376,7 @@ public class UserManagementController {
     @PostMapping("/deactivate/{userId}")
     @RolesAllowed(AuthorityConstants.CHANGE_USER_STATUS)
     public ResponseEntity<String> deactivateUser(@PathVariable long userId) {
-        logger.debug("Handler for {}", "deactivate user");
+        log.debug("Handler for {}", "deactivate user");
         userService.deactivateUser(userId);
         return ResponseEntity.ok(StringUtils.EMPTY);
     }

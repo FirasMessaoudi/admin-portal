@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.DecisionRuleDto;
 import com.elm.shj.admin.portal.services.rule.RuleService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,10 +28,10 @@ import java.util.Date;
 @RestController
 @RequestMapping(Navigation.API_RULES)
 @Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class RuleManagementController {
 
-    @Autowired
-    private RuleService ruleService;
+    private final RuleService ruleService;
 
     /**
      * List all rules.

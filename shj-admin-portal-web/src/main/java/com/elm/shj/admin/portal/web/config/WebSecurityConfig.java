@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtAuthenticationProvider;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenFilter;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
+import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.header.Header;
@@ -58,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String HEADER_WRITER_PATTERN = "/*";
     // any URL does not require authentication should be added to this array
-    private static final String[] PUBLIC_URLS = {"/api/auth/login", "/api/users/reset-password", "/api/register", "/index.html", "/error", "/api-docs", "/swagger-ui.html", "/swagger-ui/**"};
+    private static final String[] PUBLIC_URLS = {"/api/auth/login", "/api/auth/otp", "/api/users/reset-password", "/api/register", "/index.html", "/error", "/api-docs", "/swagger-ui.html", "/swagger-ui/**"};
     // URLs that will be ignored by spring security should be added to this array
     private static final String[] IGNORED_URLS = {"/assets/**", "/cpm-error/**", "/*.png", "/*.jpg", "/*.jpeg",
             "/*.ttf", "/*.svg", "/*.woff", "/*.woff2", "/*.eot", "/*.ico", "/*.js", "/*.css", "/*.json"};
@@ -68,6 +70,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationProvider jwtAuthenticationProvider;
+
+    @Autowired
+    private OtpAuthenticationProvider otpAuthenticationProvider;
 
     @Value("${content.security.policy.img-src}")
     private String contentSecurityPolicyImgSrc;
@@ -103,7 +108,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.
-
+                // disabling the CSRF - Cross Site Request Forgery
                 csrf().csrfTokenRepository(csrfTokenRepository())
                 .requireCsrfProtectionMatcher((HttpServletRequest request) -> {
                     // request methods allowed to be without CSRF
@@ -149,12 +154,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().fullyAuthenticated().and()
                 // add the authentication provider
                 .authenticationProvider(jwtAuthenticationProvider)
+                .authenticationProvider(otpAuthenticationProvider)
                 // exception handling
                 .exceptionHandling()
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).and()
                 // no session will be created or used by spring security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                // disabling the CSRF - Cross Site Request Forgery
+                // adding custom filters
                 .addFilter(jwtTokenFilter())
                 // adding custom handler for cors exceptions
                 .addFilterBefore(corsExceptionTranslationFilter, ChannelProcessingFilter.class)
@@ -197,7 +203,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public JwtTokenFilter jwtTokenFilter() throws Exception {
-        return new JwtTokenFilter(authenticationManager());
+        return new JwtTokenFilter(authenticationManagerBean());
     }
 
     /**

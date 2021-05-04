@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
 
     this.recaptchaSiteKey = environment.recaptchaSiteKey;
-
+    this.authenticationService.updateSubject(null);
     this.createForm();
 
     // get return url from route parameters or default to '/'
@@ -82,12 +82,13 @@ export class LoginComponent implements OnInit {
         this.loading = false;
       }))
       .subscribe(user => {
-
         console.log(user);
-
         if (user.passwordExpired) {
           // redirect to change password page
           this.router.navigate(['/change-password'], {replaceUrl: true});
+        } else if (user.otpRequired) {
+          this.authenticationService.updateOtpSubject(user);
+          this.router.navigateByUrl('/otp', {replaceUrl: true});
         } else {
           this.router.navigate(['/'], {replaceUrl: true});
         }

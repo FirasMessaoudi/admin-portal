@@ -8,8 +8,10 @@ import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtAuthenticationProvider;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
+import com.elm.shj.admin.portal.web.security.otp.OtpToken;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -33,19 +35,17 @@ import java.util.Map;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
+@Slf4j
 @RestController
 @RequestMapping(Navigation.API_AUTH)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthenticationController {
 
     public static final int INVALID_RECAPTCHA_RESPONSE_CODE = 555;
 
-    private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
-
-    @Autowired
-    private JwtAuthenticationProvider authenticationProvider;
-
-    @Autowired
-    private JwtTokenService jwtTokenService;
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
+    private final OtpAuthenticationProvider otpAuthenticationProvider;
+    private final JwtTokenService jwtTokenService;
 
     @Value("${login.simultaneous.enabled}")
     private boolean simultaneousLoginEnabled;
@@ -57,13 +57,32 @@ public class AuthenticationController {
      * @return the generated token
      */
     @PostMapping("/login")
-    public ResponseEntity<JwtToken> login(@RequestBody Map<String, String> credentials, HttpServletRequest request, HttpServletResponse response) {
-        logger.debug("Login request handler");
-        JwtToken authentication;
+    public ResponseEntity<OtpToken> login(@RequestBody Map<String, String> credentials, HttpServletRequest request, HttpServletResponse response) {
+        log.debug("Login request handler");
+        OtpToken authentication;
         String idNumber = credentials.get("idNumber");
         try {
-            authentication = (JwtToken) authenticationProvider
+            authentication = (OtpToken) otpAuthenticationProvider
                     .authenticate(new UsernamePasswordAuthenticationToken(idNumber, credentials.get("password")));
+        } catch (RecaptchaException rex) {
+            return ResponseEntity.status(INVALID_RECAPTCHA_RESPONSE_CODE).body(null);
+        }
+
+        return ResponseEntity.ok(authentication);
+    }
+
+    /**
+     * Validates the otp sent by the user
+     *
+     * @return the generated token
+     */
+    @PostMapping("/otp")
+    public ResponseEntity<JwtToken> otp(@RequestBody Map<String, String> credentials, HttpServletResponse response) {
+        log.debug("OTP request handler");
+        JwtToken authentication;
+        try {
+            authentication = (JwtToken) jwtAuthenticationProvider
+                    .authenticate(new UsernamePasswordAuthenticationToken(credentials.get("idNumber"), credentials.get("otp")));
         } catch (RecaptchaException rex) {
             return ResponseEntity.status(INVALID_RECAPTCHA_RESPONSE_CODE).body(null);
         }
@@ -84,7 +103,7 @@ public class AuthenticationController {
     @PostMapping("/logout")
     public ResponseEntity<Boolean> logout(Authentication authentication, HttpServletResponse response) {
         Assert.notNull(authentication, "User should be logged-in in order to logout");
-        logger.debug("Logout request handler");
+        log.debug("Logout request handler");
         // if the authentication exists, then clear it
         if (!simultaneousLoginEnabled && authentication instanceof JwtToken) {
             jwtTokenService.invalidateToken(((JwtToken) authentication).getToken());

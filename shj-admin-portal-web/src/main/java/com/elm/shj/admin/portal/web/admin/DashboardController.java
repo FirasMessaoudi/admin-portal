@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.dashboard.DashboardVo;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,10 +27,10 @@ import javax.annotation.security.RolesAllowed;
 @RestController
 @RequestMapping(Navigation.API_DASHBOARD)
 @Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DashboardController {
 
-    @Autowired
-    private DashboardService dashboardService;
+    private final DashboardService dashboardService;
 
     public enum EPeriodType {
         D, // daily
