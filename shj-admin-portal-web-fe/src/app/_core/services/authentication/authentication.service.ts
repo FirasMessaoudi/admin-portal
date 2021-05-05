@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
-import {BehaviorSubject, Observable, of, Subject, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
 import {EAuthority} from "@model/enum/authority.enum";
 
 
@@ -15,9 +15,6 @@ const CURRENT_USER_KEY = 'currentUser';
 @Injectable()
 export class AuthenticationService {
 
-  // Sprint 6
-  public authenticatedUser: Observable<any>;
-  private authenticatedUserSubject: BehaviorSubject<any>;
   public otpData: Observable<any>;
   private otpDataSubject: BehaviorSubject<any>;
 
@@ -27,15 +24,7 @@ export class AuthenticationService {
     const savedUser = sessionStorage.getItem(CURRENT_USER_KEY) || localStorage.getItem(CURRENT_USER_KEY);
     if (savedUser) {
       this._currentUser = JSON.parse(savedUser);
-
-      //
-      this.authenticatedUserSubject = new BehaviorSubject<any>(JSON.parse(savedUser));
-      this.authenticatedUser = this.authenticatedUserSubject.asObservable();
     }
-  }
-
-  public get authenticatedUserValue(): any {
-    return this.authenticatedUserSubject.value;
   }
 
   private _currentUser: any | null;
@@ -86,8 +75,6 @@ export class AuthenticationService {
     this.http.post<any>('/core/api/auth/logout', null).subscribe(result => {
       if (result) {
         this.setCurrentUser();
-        //
-        this.authenticatedUserSubject.next(null);
       }
       return of(result);
     });
@@ -124,10 +111,6 @@ export class AuthenticationService {
       const savedUser = sessionStorage.getItem(CURRENT_USER_KEY) || localStorage.getItem(CURRENT_USER_KEY);
       if (savedUser) {
         this._currentUser = JSON.parse(savedUser);
-
-        //
-        this.authenticatedUserSubject = new BehaviorSubject<any>(JSON.parse(savedUser));
-        this.authenticatedUser = this.authenticatedUserSubject.asObservable();
       }
 
       //
@@ -147,9 +130,6 @@ export class AuthenticationService {
   updateSubject(user: any) {
     if (user && user.principal) {
       this.setCurrentUser(user);
-      //
-      this.authenticatedUserSubject.next(user);
-      //
     } else {
       this.setCurrentUser();
     }
