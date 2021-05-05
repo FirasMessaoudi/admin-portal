@@ -40,7 +40,7 @@
             <th scope="col">{{'data-request-management.channel' | translate}}</th>
             <th scope="col">{{'data-request-management.request_date' | translate}}</th>
             <th scope="col">{{'data-request-management.request_status' | translate}}</th>
-            <th scope="col">{{'general.actions' | translate}}</th>
+            <th scope="col" ></th>
           </tr>
         </thead>
         <tbody>
@@ -61,10 +61,10 @@
               <span class="status mr-1 {{dataRequestService.buildStatusClass(dataRequest?.status)}}"></span>
             </td>
             <td>
-              <button [routerLink]="['/data-requests/details/' + dataRequest.id]" class="d-inline mx-2 btn btn-sm btn-outline-dcc-primary ">
+              <button [routerLink]="['/data-requests/details/' + dataRequest.id]" class="d-inline mx-2 btn btn-sm btn-outline-dcc-primary tblView">
                 {{'general.btn_view' | translate}}
               </button>
-              <button (click)="downloadOriginalFile(dataRequest.id)" class="d-inline mx-2 btn btn-sm btn-outline-dcc-primary ">
+              <button (click)="downloadOriginalFile(dataRequest.id)" class="d-inline mx-2 btn btn-sm btn-outline-dcc-primary tblView">
                 {{'data-request-management.btn_download_original_file' | translate}}
               </button>
               <button (click)="downloadErrorsFile(dataRequest.id)" *ngIf="dataRequest.status.id === 5" class="d-inline mx-2 btn btn-sm btn-outline-dcc-primary ">
