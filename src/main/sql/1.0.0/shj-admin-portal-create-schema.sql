@@ -569,3 +569,15 @@ create table shj_portal.sha_marital_status_lk
     constraint marital_status_lk_unique unique (code ASC, lang ASC)
 );
 GO
+
+if not exists (select * from sys.tables where name = 'sha_language_lk')
+create table shj_portal.sha_language_lk
+(
+    id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+    code VARCHAR(20) NOT NULL,
+    lang VARCHAR(45) NOT NULL,
+    label NVARCHAR(50) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint language_lk_unique unique (code ASC, lang ASC)
+);
+GO

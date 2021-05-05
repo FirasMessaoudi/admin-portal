@@ -35,7 +35,7 @@ GO
 INSERT INTO shj_portal.sha_applicant_contact (applicant_id, language_list, email, local_mobile_number,
                                               intl_mobile_number, country_code, street_name, district_name, city_name,
                                               building_number, postal_code)
-VALUES (1, N'العربية، English', 'app@elm.sa', 558572465, 962796322285, 'SA', N'شارع الأمير بندر', N'الغدير',
+VALUES (1, 'AR,EN', 'app@elm.sa', 558572465, 962796322285, 'SA', N'شارع الأمير بندر', N'الغدير',
         N'مدغشقر', 325, 32145);
 GO
 
