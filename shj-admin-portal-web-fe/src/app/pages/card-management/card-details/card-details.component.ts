@@ -28,7 +28,7 @@ export class CardDetailsComponent implements OnInit {
   ritualTypes: Lookup[];
   relativeRelationships: Lookup[];
   countries: CountryLookup[];
-  healthSpecialNeeds: ApplicantHealthSpecialNeeds[];
+  healthSpecialNeeds: Lookup[];
 
   constructor(private route: ActivatedRoute,
               private router: Router,

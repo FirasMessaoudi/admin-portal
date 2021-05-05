@@ -53,7 +53,7 @@ export class CardService {
     return this.http.get<any>('/core/api/lookup/country/list');
   }
 
-  findHealthSpecialNeeds(): Observable<ApplicantHealthSpecialNeeds[]> {
+  findHealthSpecialNeeds(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/health-special-needs/list');
   }
 }
