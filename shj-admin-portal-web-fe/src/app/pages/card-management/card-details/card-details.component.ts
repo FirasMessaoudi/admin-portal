@@ -29,6 +29,7 @@ export class CardDetailsComponent implements OnInit {
   relativeRelationships: Lookup[];
   countries: CountryLookup[];
   healthSpecialNeeds: Lookup[];
+  maritalStatuses: Lookup[];
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -79,6 +80,9 @@ export class CardDetailsComponent implements OnInit {
     });
     this.cardService.findHealthSpecialNeeds().subscribe(result => {
       this.healthSpecialNeeds = result;
+    });
+    this.cardService.findMaritalStatuses().subscribe(result => {
+      this.maritalStatuses = result;
     });
   }
 

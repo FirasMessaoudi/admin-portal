@@ -62,8 +62,8 @@ public class JpaApplicant implements Serializable {
     @Column(name = "full_name_origin")
     private String fullNameOrigin;
 
-    @Column(name = "marital_status")
-    private long maritalStatus;
+    @Column(name = "marital_status_code")
+    private String maritalStatusCode;
 
     private String photo;
 

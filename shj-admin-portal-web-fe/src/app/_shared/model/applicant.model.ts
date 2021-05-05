@@ -15,7 +15,7 @@ export class Applicant {
   fullNameAr: string;
   fullNameEn: string;
   fullNameOrigin: string;
-  maritalStatus: number;
+  maritalStatusCode: string;
   photo: any;
   requestId: number;
   digitalIds: ApplicantDigitalId[];

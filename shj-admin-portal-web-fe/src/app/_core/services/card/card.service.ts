@@ -56,4 +56,8 @@ export class CardService {
   findHealthSpecialNeeds(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/health-special-needs/list');
   }
+
+  findMaritalStatuses(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/marital-status/list');
+  }
 }

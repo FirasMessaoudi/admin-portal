@@ -12,21 +12,21 @@ GO
 SET IDENTITY_INSERT shj_portal.sha_applicant ON;
 INSERT INTO shj_portal.sha_applicant (id, gender, nationality_code, id_number, id_number_original, passport_number,
                                       date_of_birth_gregorian, date_of_birth_hijri, full_name_ar, full_name_en,
-                                      full_name_origin, marital_status, request_id, status)
+                                      full_name_origin, marital_status_code, request_id, status)
 VALUES (1, 'M', 'SA', 2541235487, '9184542873', '7O8512', convert(date, '05/11/1981', 103), 14400505,
-        N'عبد الله محمد عبد العزيز القحطاني', 'AbdAllah Moh AbdAlaziz AlQahtani', NULL, 1, 1, 1);
+        N'عبد الله محمد عبد العزيز القحطاني', 'AbdAllah Moh AbdAlaziz AlQahtani', NULL, 'MARRIED', 1, 1);
 
 INSERT INTO shj_portal.sha_applicant (id, gender, nationality_code, id_number, id_number_original, passport_number,
                                       date_of_birth_gregorian, date_of_birth_hijri, full_name_ar, full_name_en,
-                                      full_name_origin, marital_status, request_id, status)
+                                      full_name_origin, marital_status_code, request_id, status)
 VALUES (2, 'F', 'SA', 2581275408, '9104542173', '712518', convert(date, '12/04/1986', 103), 14060721,
-        N'ميساء بنت عبد الله بن عيسى البشراوي', 'Maysaa AbdAllah Eissa AlBachraoui', NULL, 1, 1, 1);
+        N'ميساء بنت عبد الله بن عيسى البشراوي', 'Maysaa AbdAllah Eissa AlBachraoui', NULL, 'WIDOWED', 1, 1);
 
 INSERT INTO shj_portal.sha_applicant (id, gender, nationality_code, id_number, id_number_original, passport_number,
                                       date_of_birth_gregorian, date_of_birth_hijri, full_name_ar, full_name_en,
-                                      full_name_origin, marital_status, request_id, status)
+                                      full_name_origin, marital_status_code, request_id, status)
 VALUES (3, 'F', 'SA', 2401275409, '9304542120', '733518', convert(date, '01/06/1955', 103), 13741010,
-        N'وضحة بنت منصور بن عثمان العتيبي', 'Wadha Mansour Othman AlOtaibi', NULL, 1, 1, 1);
+        N'وضحة بنت منصور بن عثمان العتيبي', 'Wadha Mansour Othman AlOtaibi', NULL, 'MARRIED', 1, 1);
 
 SET IDENTITY_INSERT shj_portal.sha_applicant OFF;
 GO

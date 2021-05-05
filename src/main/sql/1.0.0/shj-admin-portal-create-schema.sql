@@ -309,7 +309,7 @@ create table shj_portal.sha_applicant
     full_name_ar NVARCHAR(100) NULL,
     full_name_en VARCHAR(50) NULL,
     full_name_origin NVARCHAR(100) NULL,
-    marital_status INT NOT NULL,
+    marital_status_code VARCHAR(20) NOT NULL,
     photo nvarchar(max) NULL,
     request_id int,
     status INT NOT NULL,

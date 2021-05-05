@@ -34,7 +34,7 @@ public class ApplicantDto implements Serializable {
     private String fullNameAr;
     private String fullNameEn;
     private String fullNameOrigin;
-    private long maritalStatus;
+    private String maritalStatusCode;
     private String photo;
     private long requestId;
     private List<ApplicantDigitalIdDto> digitalIds;

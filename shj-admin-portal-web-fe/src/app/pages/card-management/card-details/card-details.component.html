@@ -75,7 +75,7 @@
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.marital_status' | translate}}</label>
-                <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.maritalStatus}}</span>
+                <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.maritalStatusCode? lookupService().localizedLabel(maritalStatuses, card?.applicantRitual?.applicant?.maritalStatusCode) : ''}}</span>
               </div>
               <div *ngIf="card?.applicantRitual?.applicant?.idNumberOriginal" class="form-group col">
                 <label class="col-form-label">{{'card-management.applicant_original_id' | translate}}</label>
