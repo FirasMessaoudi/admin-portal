@@ -400,8 +400,14 @@ GO
 SET IDENTITY_INSERT shj_portal.sha_health_immunization_lk ON;
 INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (1, 'COVID-19', 'ar', N'كورونا');
 INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (2, 'COVID-19', 'en', 'Covid-19');
-INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (3, 'MENINGITIS', 'ar', N'الحمى الشوكية');
-INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (4, 'MENINGITIS', 'en', 'Meningitis');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (3, 'YELLOW_FEVER', 'ar', N'الحمى الصفراء');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (4, 'YELLOW_FEVER', 'en', 'Yellow Fever');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (5, 'NEISSERIA_MENINGITIS', 'ar', N'الحمى الشوكية النيسرية');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (6, 'NEISSERIA_MENINGITIS', 'en', 'Neisseria Meningitis');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (7, 'POLIOMYELITIS', 'ar', N'شلل الأطفال');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (8, 'POLIOMYELITIS', 'en', 'Poliomyelitis');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (9, 'SEASONAL_FLU', 'ar', N'الإنفلونزا الموسمية');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (10, 'SEASONAL_FLU', 'en', 'Seasonal Flu');
 SET IDENTITY_INSERT shj_portal.sha_health_immunization_lk OFF;
 GO
 
@@ -410,6 +416,8 @@ INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) 
 INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (2, 'WHEELCHAIR', 'en', 'Wheelchair');
 INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (3, 'GOLF_CAR', 'ar', N'عربة نقل');
 INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (4, 'GOLF_CAR', 'en', 'Golf Car');
+INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (5, 'DEAF_DUMB', 'ar', N'صم وبكم');
+INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (6, 'DEAF_DUMB', 'en', 'Deaf and Dumb');
 SET IDENTITY_INSERT shj_portal.sha_health_special_needs_type_lk OFF;
 GO
 
