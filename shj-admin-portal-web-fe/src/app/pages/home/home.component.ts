@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthenticationService, DashboardService} from '@app/_core/services';
 import {EAuthority} from "@model/enum/authority.enum";
 import {DashboardVo} from "@model/dashboard-vo.model";
 import {ChartsConfig} from "@pages/home/charts.config";
+import {Subscription} from "rxjs";
 
 export enum PeriodType {
   DAILY = 1,
@@ -16,7 +17,7 @@ export enum PeriodType {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   PeriodType = PeriodType;
 
@@ -30,6 +31,12 @@ export class HomeComponent implements OnInit {
   chartsConfig: ChartsConfig = new ChartsConfig();
   private currentMonthNumberOfDays: number;
 
+
+  private loadSubscription: Subscription;
+  private loadPeriodDSubscription: Subscription;
+  private loadPeriodWSubscription: Subscription;
+  private loadPeriodMSubscription: Subscription;
+
   constructor(
     private router: Router,
     private dashboardService: DashboardService,
@@ -37,7 +44,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.dashboardService.loadData().subscribe(data => {
+    this.loadSubscription = this.dashboardService.loadData().subscribe(data => {
       this.data = data;
       this.chartsConfig.polarAreaChartLabels = new Array(data.usersByParentAuthorityCountVoList.length).fill('')
         .map((v: any, i: number) => data.usersByParentAuthorityCountVoList[i].label);
@@ -56,6 +63,21 @@ export class HomeComponent implements OnInit {
     this.chartsConfig.barChartLabels = [...this.dayHours];
   }
 
+  ngOnDestroy() {
+    if (this.loadSubscription) {
+      this.loadSubscription.unsubscribe();
+    }
+    if (this.loadPeriodDSubscription) {
+      this.loadPeriodDSubscription.unsubscribe();
+    }
+    if (this.loadPeriodWSubscription) {
+      this.loadPeriodWSubscription.unsubscribe();
+    }
+    if (this.loadPeriodMSubscription) {
+      this.loadPeriodMSubscription.unsubscribe();
+    }
+  }
+
   downloadChartImage(event: any, chartEl: any) {
     const anchor = event.target;
     // get the png image
@@ -69,7 +91,7 @@ export class HomeComponent implements OnInit {
       case PeriodType.DAILY:
         console.log('DAILY.......');
 
-        this.dashboardService.loadPeriodData('D').subscribe((data: DashboardVo) => {
+        this.loadPeriodDSubscription = this.dashboardService.loadPeriodData('D').subscribe((data: DashboardVo) => {
           console.log(data);
           this.updateBarChartData(24, data);
           this.chartsConfig.barChartLabels = [...this.dayHours];
@@ -82,7 +104,7 @@ export class HomeComponent implements OnInit {
       case PeriodType.WEEKLY:
         console.log('WEEKLY.......');
 
-        this.dashboardService.loadPeriodData('W').subscribe((data: DashboardVo) => {
+        this.loadPeriodWSubscription = this.dashboardService.loadPeriodData('W').subscribe((data: DashboardVo) => {
           console.log(data);
           this.updateBarChartData(7, data);
           this.chartsConfig.barChartLabels = [...this.weekDays];
@@ -95,7 +117,7 @@ export class HomeComponent implements OnInit {
       case PeriodType.MONTHLY:
         console.log('MONTHLY.......');
 
-        this.dashboardService.loadPeriodData('M').subscribe((data: DashboardVo) => {
+        this.loadPeriodMSubscription = this.dashboardService.loadPeriodData('M').subscribe((data: DashboardVo) => {
           console.log(data);
           this.updateBarChartData(this.currentMonthNumberOfDays, data);
           this.chartsConfig.barChartLabels = [...this.monthDays];

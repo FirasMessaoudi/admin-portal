@@ -9,6 +9,7 @@ import com.elm.dcc.foundation.providers.recaptcha.service.RecaptchaService;
 import com.elm.shj.admin.portal.services.dto.UserDto;
 import com.elm.shj.admin.portal.services.user.UserService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +25,16 @@ import javax.validation.groups.Default;
  * @author ahmad flaifel
  * @since 1.8.0
  */
+@Slf4j
 @RestController
 @RequestMapping(Navigation.API_REGISTRATION)
-@Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class RegistrationController {
 
     public static final String RECAPTCHA_TOKEN_NAME = "grt";
 
-    @Autowired
-    private RecaptchaService recaptchaService;
-
-    @Autowired
-    private UserService userService;
+    private final RecaptchaService recaptchaService;
+    private final UserService userService;
 
     @PostMapping
     public void registerUser(@RequestBody @Validated({UserDto.CreateUserValidationGroup.class, Default.class}) UserDto user,
