@@ -61,15 +61,17 @@
               <span class="status mr-1 {{dataRequestService.buildStatusClass(dataRequest?.status)}}"></span>
             </td>
             <td>
-              <button [routerLink]="['/data-requests/details/' + dataRequest.id]" class="d-inline mx-2 btn btn-sm btn-outline-dcc-primary tblView">
-                {{'general.btn_view' | translate}}
-              </button>
-              <button (click)="downloadOriginalFile(dataRequest.id)" class="d-inline mx-2 btn btn-sm btn-outline-dcc-primary tblView">
-                {{'data-request-management.btn_download_original_file' | translate}}
-              </button>
-              <button (click)="downloadErrorsFile(dataRequest.id)" *ngIf="dataRequest.status.id === 5" class="d-inline mx-2 btn btn-sm btn-outline-dcc-primary ">
-                {{'data-request-management.btn_download_errors_file' | translate}}
-              </button>
+              <div class="text-nowrap">
+                <a class="action mx-2" href="javascript:void(0)" [routerLink]="['/data-requests/details/' + dataRequest.id]" ngbTooltip="{{'general.btn_view' | translate}}">
+                  <svg-icon styleClass="fa-w-18 h5" icon="eye"></svg-icon>
+                </a>
+                <a class="action mx-2" href="javascript:void(0)" (click)="downloadOriginalFile(dataRequest.id)" ngbTooltip="{{'data-request-management.btn_download_original_file' | translate}}">
+                  <svg-icon styleClass="fa-w-20 h5" icon="cloud-download"></svg-icon>
+                </a>
+                <a class="action mx-2" href="javascript:void(0)" (click)="downloadErrorsFile(dataRequest.id)" *ngIf="dataRequest.status.id === 5" ngbTooltip="{{'data-request-management.btn_download_errors_file' | translate}}">
+                  <svg-icon styleClass="fa-w-16 h5 text-danger" icon="exclamation-circle"></svg-icon>
+                </a>
+              </div>
             </td>
           </tr>
         </tbody>
