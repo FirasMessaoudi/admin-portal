@@ -35,7 +35,9 @@ export class LoginComponent implements OnInit {
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.isAuthenticated()) {
-      this.router.navigate(['/']);
+      // FIXME the timer is expiring before the token expiry cookie
+      // removing it for now to fix redirecting issue
+      // this.router.navigate(['/']);
     }
   }
 

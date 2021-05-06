@@ -21,7 +21,7 @@ export class AuthenticationService {
   constructor(private http: HttpClient) {
     this.otpDataSubject = new BehaviorSubject<any>({});
     this.otpData = this.otpDataSubject.asObservable();
-    const savedUser = sessionStorage.getItem(CURRENT_USER_KEY) || localStorage.getItem(CURRENT_USER_KEY);
+    const savedUser = localStorage.getItem(CURRENT_USER_KEY);
     if (savedUser) {
       this._currentUser = JSON.parse(savedUser);
     }
@@ -108,7 +108,7 @@ export class AuthenticationService {
       localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
       //
       /** Ahmed **/
-      const savedUser = sessionStorage.getItem(CURRENT_USER_KEY) || localStorage.getItem(CURRENT_USER_KEY);
+      const savedUser = localStorage.getItem(CURRENT_USER_KEY);
       if (savedUser) {
         this._currentUser = JSON.parse(savedUser);
       }
