@@ -19,17 +19,17 @@
   border: 3px solid transparent;
 }
 .preloader div:first-child {
-  border-bottom-color: #2A6EBB;
+  border-bottom-color: #3D3D3B;
   -webkit-animation: spin-one 1s linear infinite;
   animation: spin-one 1s linear infinite;
 }
 .preloader div:nth-child(2) {
-  border-right-color: #44C8F5;
+  border-right-color: #D6B067;
   -webkit-animation: spin-two 1s linear infinite;
   animation: spin-two 1s linear infinite;
 }
 .preloader div:nth-child(3) {
-  border-top-color: #952D98;
+  border-top-color: #3B7937;
   -webkit-animation: spin-three 1s linear infinite;
   animation: spin-three 1s linear infinite;
 }

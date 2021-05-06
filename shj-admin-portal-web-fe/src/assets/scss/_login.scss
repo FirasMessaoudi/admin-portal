@@ -99,6 +99,9 @@
     @include px(5);
     @include mb(4);
     background-color: #fff;
+    background-image: url(assets/images/login-pattern.svg);
+    background-repeat: no-repeat;
+    background-position: bottom right;
     border-radius: $border-radius;
     box-shadow: 0 5px 74px 55px rgba(73, 90, 103, 0.02);
 }
