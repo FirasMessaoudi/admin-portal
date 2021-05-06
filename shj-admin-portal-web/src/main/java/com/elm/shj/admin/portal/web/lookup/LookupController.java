@@ -23,9 +23,9 @@ import java.util.List;
  * @author ahmad flaifel
  * @since 1.3.0
  */
+@Slf4j
 @RestController
 @RequestMapping(Navigation.API_LOOKUP)
-@Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LookupController {
 

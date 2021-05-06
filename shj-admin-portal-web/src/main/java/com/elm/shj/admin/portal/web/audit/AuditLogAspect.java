@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.web.audit;
 import com.elm.shj.admin.portal.services.audit.AuditLogService;
 import com.elm.shj.admin.portal.services.dto.AuditLogDto;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.aspectj.lang.JoinPoint;
@@ -32,13 +33,13 @@ import java.util.Date;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class AuditLogAspect {
 
-    @Autowired
-    private AuditLogService auditLogService;
+    private final AuditLogService auditLogService;
 
     /**
      * Pointcut for rest controllers

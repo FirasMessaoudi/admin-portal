@@ -110,7 +110,7 @@
             <th scope="col">{{'printing-management.no_cards' | translate}}</th>
             <th scope="col">{{'printing-management.printing_date' | translate}}</th>
             <th scope="col">{{'printing-management.request_status' | translate}}</th>
-            <th scope="col">{{'general.actions' | translate}}</th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
@@ -130,7 +130,7 @@
               <span class="status mr-1 done"></span>
             </td>
             <td>
-              <button [routerLink]="['/print-requests/details']" class="btn btn-sm btn-outline-dcc-primary">
+              <button [routerLink]="['/print-requests/details']" class="btn btn-sm btn-outline-dcc-primary tblView">
                 عرض
               </button>
             </td>
@@ -145,7 +145,7 @@
               <span class="status mr-1 ready"></span>
             </td>
             <td>
-              <button [routerLink]="['/print-requests/details']" class="btn btn-sm btn-outline-dcc-primary">
+              <button [routerLink]="['/print-requests/details']" class="btn btn-sm btn-outline-dcc-primary tblView">
                 عرض
               </button>
             </td>
@@ -160,7 +160,7 @@
               <span class="status mr-1 Suspended"></span>
             </td>
             <td>
-              <button [routerLink]="['/print-requests/details']" class="btn btn-sm btn-outline-dcc-primary">
+              <button [routerLink]="['/print-requests/details']" class="btn btn-sm btn-outline-dcc-primary tblView">
                 عرض
               </button>
             </td>

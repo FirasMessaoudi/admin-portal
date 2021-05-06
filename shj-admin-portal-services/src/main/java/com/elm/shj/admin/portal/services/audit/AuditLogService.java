@@ -27,6 +27,8 @@ public class AuditLogService extends GenericService<JpaAuditLog, AuditLogDto, Lo
     public AuditLogDto save(AuditLogDto dto) {
         // truncate error details
         dto.setErrorDetails(StringUtils.left(dto.getErrorDetails(), 512));
+        // truncate params
+        dto.setParams(StringUtils.left(dto.getParams(), 1000));
         return super.save(dto);
     }
 }

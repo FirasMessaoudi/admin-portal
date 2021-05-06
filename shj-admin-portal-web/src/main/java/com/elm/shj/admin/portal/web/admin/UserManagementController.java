@@ -76,11 +76,11 @@ public class UserManagementController {
     private static final String CHANGE_PWRD_METHOD_NAME = "changeUserPassword";
     public static final String RECAPTCHA_TOKEN_NAME = "grt";
     
-    private UserService userService;
-    private BCryptPasswordEncoder passwordEncoder;
-    private PasswordHistoryService passwordHistoryService;
-    private JwtTokenService jwtTokenService;
-    private RecaptchaService recaptchaService;
+    private final UserService userService;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordHistoryService passwordHistoryService;
+    private final JwtTokenService jwtTokenService;
+    private final RecaptchaService recaptchaService;
 
     /**
      * Lists all non deleted users with role level less than or equal logged in user and exclude web service user

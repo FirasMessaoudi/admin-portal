@@ -11,7 +11,7 @@ import {ToastService} from "@shared/components/toast";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {CountryLookup} from "@model/country-lookup.model";
-import {ApplicantHealthSpecialNeeds} from "@model/applicant-health-special-needs.model";
+import {Language} from "@model/enum/language.enum";
 
 @Component({
   selector: 'app-card-details',
@@ -30,6 +30,7 @@ export class CardDetailsComponent implements OnInit {
   countries: CountryLookup[];
   healthSpecialNeeds: Lookup[];
   maritalStatuses: Lookup[];
+  languageNativeName = Language;
 
   constructor(private route: ActivatedRoute,
               private router: Router,

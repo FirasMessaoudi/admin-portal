@@ -400,8 +400,14 @@ GO
 SET IDENTITY_INSERT shj_portal.sha_health_immunization_lk ON;
 INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (1, 'COVID-19', 'ar', N'كورونا');
 INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (2, 'COVID-19', 'en', 'Covid-19');
-INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (3, 'MENINGITIS', 'ar', N'الحمى الشوكية');
-INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (4, 'MENINGITIS', 'en', 'Meningitis');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (3, 'YELLOW_FEVER', 'ar', N'الحمى الصفراء');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (4, 'YELLOW_FEVER', 'en', 'Yellow Fever');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (5, 'NEISSERIA_MENINGITIS', 'ar', N'الحمى الشوكية النيسرية');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (6, 'NEISSERIA_MENINGITIS', 'en', 'Neisseria Meningitis');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (7, 'POLIOMYELITIS', 'ar', N'شلل الأطفال');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (8, 'POLIOMYELITIS', 'en', 'Poliomyelitis');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (9, 'SEASONAL_FLU', 'ar', N'الإنفلونزا الموسمية');
+INSERT INTO shj_portal.sha_health_immunization_lk(id, code, lang, label) VALUES (10, 'SEASONAL_FLU', 'en', 'Seasonal Flu');
 SET IDENTITY_INSERT shj_portal.sha_health_immunization_lk OFF;
 GO
 
@@ -410,6 +416,8 @@ INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) 
 INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (2, 'WHEELCHAIR', 'en', 'Wheelchair');
 INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (3, 'GOLF_CAR', 'ar', N'عربة نقل');
 INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (4, 'GOLF_CAR', 'en', 'Golf Car');
+INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (5, 'DEAF_DUMB', 'ar', N'صم وبكم');
+INSERT INTO shj_portal.sha_health_special_needs_type_lk (id, code, lang, label) VALUES (6, 'DEAF_DUMB', 'en', 'Deaf and Dumb');
 SET IDENTITY_INSERT shj_portal.sha_health_special_needs_type_lk OFF;
 GO
 
@@ -823,3 +831,42 @@ INSERT INTO shj_portal.sha_marital_status_lk (id, code, lang, label) VALUES (7, 
 INSERT INTO shj_portal.sha_marital_status_lk (id, code, lang, label) VALUES (8, 'DIVORCED', 'en', 'Divorced');
 SET IDENTITY_INSERT shj_portal.sha_marital_status_lk OFF;
 GO
+
+SET IDENTITY_INSERT shj_portal.sha_language_lk ON;
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (1, 'AR', 'ar', N'العربية');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (2, 'AR', 'en', 'Arabic');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (3, 'AR', 'fr', 'Arabe');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (4, 'AR', 'ur', N'عربی');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (5, 'AR', 'fa', N'عربی');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (6, 'AR', 'tr', N'Arapça');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (7, 'EN', 'ar', N'الإنجليزية');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (8, 'EN', 'en', 'English');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (9, 'EN', 'fr', 'Anglais');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (10, 'EN', 'ur', N'انگریزی');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (11, 'EN', 'fa', N'انگلیسی');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (12, 'EN', 'tr', N'İngilizce');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (13, 'FR', 'ar', N'الفرنسية');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (14, 'FR', 'en', 'French');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (15, 'FR', 'fr', N'Français');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (16, 'FR', 'ur', N'فرانسیسی');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (17, 'FR', 'fa', N'فرانسوی');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (18, 'FR', 'tr', N'Fransızca');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (19, 'UR', 'ar', N'الأردية');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (20, 'UR', 'en', 'Urdu');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (21, 'UR', 'fr', 'Ourdou');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (22, 'UR', 'ur', N'اردو');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (23, 'UR', 'fa', N'اردو');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (24, 'UR', 'tr', 'Urduca');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (25, 'FA', 'ar', N'الفارسية');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (26, 'FA', 'en', 'Persian');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (27, 'FA', 'fr', 'Persan');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (28, 'FA', 'ur', N'فارسی');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (29, 'FA', 'fa', N'فارسی');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (30, 'FA', 'tr', N'Farsça');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (31, 'TR', 'ar', N'التركية');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (32, 'TR', 'en', 'Turkish');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (33, 'TR', 'fr', 'Turc');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (34, 'TR', 'ur', N'ترکی');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (35, 'TR', 'fa', N'ترکی');
+INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (36, 'TR', 'tr', N'Türkçe');
+SET IDENTITY_INSERT shj_portal.sha_language_lk OFF;

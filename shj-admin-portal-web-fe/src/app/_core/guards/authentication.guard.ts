@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
 import {Observable} from "rxjs";
-import {AuthenticationService} from '../services/authentication/authentication.service';
+import {AuthenticationService} from '@core/services';
 
 
 export const PUBLIC_URL_PATTERNS: Array<string> = ['/login', '/otp', '/register', '/reset-password', '/support'];
