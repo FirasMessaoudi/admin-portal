@@ -103,10 +103,10 @@ public interface UserRepository extends JpaRepository<JpaUser, Long> {
     // --------------------------------
     // -------- USERS BY AUTHORITY
     // --------------------------------
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ra.authority.nameArabic, 0, COUNT(DISTINCT u)) " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ra.authority.labelAr, 0, COUNT(DISTINCT u)) " +
             "FROM JpaUser u LEFT JOIN JpaUserRole ur ON ur.user.id = u.id LEFT JOIN JpaRoleAuthority ra ON ur.role.id = ra.role.id " +
             "WHERE u.deleted = false AND ra.authority.parent IS NULL " +
-            "GROUP BY ra.authority.nameArabic")
+            "GROUP BY ra.authority.labelAr")
     List<CountVo> countUsersByParentAuthority();
     // --------------------------------
     // -------- HOURLY USERS BY STATUS

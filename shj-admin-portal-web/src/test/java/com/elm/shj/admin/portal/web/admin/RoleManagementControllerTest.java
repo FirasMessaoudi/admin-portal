@@ -103,8 +103,8 @@ class RoleManagementControllerTest extends AbstractControllerTestSuite {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("page", TEST_PAGE.toString());
         params.add("authorityId", ""+TEST_AUTHORITY_ID);
-        params.add("arabicName", TEST_ARABIC_NAME);
-        params.add("englishName", TEST_ENGLISH_NAME);
+        params.add("labelAr", TEST_ARABIC_NAME);
+        params.add("labelEn", TEST_ENGLISH_NAME);
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf()).params(params)).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.totalElements", is(roles.size())))

@@ -25,8 +25,8 @@ public class AuthorityLookupDto implements Serializable {
     private static final long serialVersionUID = 4794323197461223130L;
 
     private long id;
-    private String nameArabic;
-    private String nameEnglish;
+    private String labelAr;
+    private String labelEn;
     private String code;
     private Date creationDate;
     private Long parentId;

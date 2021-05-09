@@ -23,12 +23,12 @@
           <select formControlName="authorityId" class="custom-select">
             <option [ngValue]="-1" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
 
-            <optgroup [attr.label]="currentLanguage.startsWith('en') ? authority.nameEnglish : authority.nameArabic" *ngFor="let authority of authorities">
+            <optgroup [attr.label]="currentLanguage.startsWith('en') ? authority.labelEn : authority.labelAr" *ngFor="let authority of authorities">
               <option [ngValue]="authority.id">
-                {{ currentLanguage.startsWith("en") ? authority.nameEnglish : authority.nameArabic }}
+                {{ currentLanguage.startsWith("en") ? authority.labelEn : authority.labelAr }}
               </option>
               <option *ngFor="let childAuthority of authority.children" [ngValue]="childAuthority.id">
-                {{ currentLanguage.startsWith("en") ? childAuthority.nameEnglish : childAuthority.nameArabic }}
+                {{ currentLanguage.startsWith("en") ? childAuthority.labelEn : childAuthority.labelAr }}
               </option>
             </optgroup>
           </select>
@@ -69,18 +69,18 @@
 
                 <fieldset class="border px-3">
                   <legend class="w-auto mb-0" *ngIf="!roleAuthority.authority.parentId">
-                    <span class="mx-3 sectionTitle h6">{{ currentLanguage.startsWith("en") ? roleAuthority.authority.nameEnglish : roleAuthority.authority.nameArabic }}</span>
+                    <span class="mx-3 sectionTitle h6">{{ currentLanguage.startsWith("en") ? roleAuthority.authority.labelEn : roleAuthority.authority.labelAr }}</span>
                   </legend>
 
                   <span *ngIf="!roleAuthority.authority.parentId && (!roleAuthority.authority.children || !roleAuthority.authority.children.length)" class="badge m-2 text-muted">
                     <svg-icon styleClass="text-gray-300" icon="dot-circle"></svg-icon>
-                    {{ currentLanguage.startsWith("en") ? roleAuthority.authority.nameEnglish : roleAuthority.authority.nameArabic }}
+                    {{ currentLanguage.startsWith("en") ? roleAuthority.authority.labelEn : roleAuthority.authority.labelAr }}
                   </span>
 
                   <ng-container *ngFor="let childRoleAuthority of role.roleAuthorities" >
                     <span *ngIf="childRoleAuthority.authority.parentId === roleAuthority.authority.id" class="badge m-2 text-muted">
                       <svg-icon styleClass="text-gray-300" icon="dot-circle"></svg-icon>
-                      {{ currentLanguage.startsWith("en") ? childRoleAuthority.authority.nameEnglish : childRoleAuthority.authority.nameArabic }}
+                      {{ currentLanguage.startsWith("en") ? childRoleAuthority.authority.labelEn : childRoleAuthority.authority.labelAr }}
                     </span>
                   </ng-container>
               </fieldset>
