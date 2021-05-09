@@ -31,4 +31,10 @@ drop table if exists shj_portal.sha_applicant;
 drop table if exists shj_portal.sha_country_lk;
 drop table if exists shj_portal.sha_decision_rule;
 drop table if exists shj_portal.sha_data_segment;
+drop table if exists shj_portal.sha_print_request_batch_applicant;
+drop table if exists shj_portal.sha_print_request_batch;
+drop table if exists shj_portal.sha_print_request_applicant;
+drop table if exists shj_portal.sha_print_request;
+drop table if exists shj_portal.sha_print_batch_type_lk;
+drop table if exists shj_portal.sha_print_request_status_lk;
 GO

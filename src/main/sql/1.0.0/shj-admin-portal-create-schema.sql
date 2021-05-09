@@ -581,3 +581,72 @@ create table shj_portal.sha_language_lk
     constraint language_lk_unique unique (code ASC, lang ASC)
 );
 GO
+-- PRINT REQUEST TABLES
+if not exists (select * from sys.tables where name = 'sha_print_request_status_lk')
+create table shj_portal.sha_print_request_status_lk
+(
+    id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+    code VARCHAR(20) NOT NULL,
+    lang VARCHAR(45) NOT NULL,
+    label NVARCHAR(50) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint print_request_status_lk_unique unique (code ASC, lang ASC)
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_print_batch_type_lk')
+create table shj_portal.sha_print_batch_type_lk
+(
+    id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+    code VARCHAR(20) NOT NULL,
+    lang VARCHAR(45) NOT NULL,
+    label NVARCHAR(50) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint print_batch_type_lk_unique unique (code ASC, lang ASC)
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_print_request')
+create table shj_portal.sha_print_request
+(
+    id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+    status_code VARCHAR(20) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_print_request_applicant')
+create table shj_portal.sha_print_request_applicant
+(
+    id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+    print_request_id INT NOT NULL,
+    applicant_id INT NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint fk_print_request_applicant_print_request foreign key (print_request_id) references shj_portal.sha_print_request (id),
+    constraint fk_print_request_applicant_applicant foreign key (applicant_id) references shj_portal.sha_applicant (id)
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_print_request_batch')
+create table shj_portal.sha_print_request_batch
+(
+    id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+    print_request_id INT NOT NULL,
+    sequence_number INT NOT NULL,
+    batch_types VARCHAR(100),
+    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint fk_print_request_batch_print_request foreign key (print_request_id) references shj_portal.sha_print_request (id)
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_print_request_batch_applicant')
+create table shj_portal.sha_print_request_batch_applicant
+(
+    id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+    print_request_batch_id INT NOT NULL,
+    applicant_id INT NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint fk_print_request_batch_applicant_print_request foreign key (print_request_batch_id) references shj_portal.sha_print_request (id),
+    constraint fk_print_request_batch_applicant_applicant foreign key (applicant_id) references shj_portal.sha_applicant (id)
+);
+GO
