@@ -37,7 +37,7 @@
     "@angular/router": "~9.1.6",
     "@angular/service-worker": "~9.1.6",
     "@dcc-commons-ng/pipes": "^2.0.0",
-    "@dcc-commons-ng/services": "^2.0.6",
+    "@dcc-commons-ng/services": "^2.0.8",
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "@ngx-rocket/scripts": "^4.0.0",
     "@ngx-translate/core": "^12.1.2",
