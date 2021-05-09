@@ -25,7 +25,7 @@ public class ApplicantHealthDiseaseDto implements Serializable {
     private long id;
     @JsonBackReference
     private ApplicantHealthDto applicantHealth;
-    private String diseaseNameAr;
-    private String diseaseNameEn;
+    private String labelAr;
+    private String labelEn;
     private Date creationDate;
 }

@@ -91,7 +91,7 @@ VALUES (1, 'MENINGITIS', convert(date, '27/05/2021', 103), 0);
 GO
 
 -- insert applicant health disease
-INSERT INTO shj_portal.sha_applicant_health_disease (applicant_health_id, disease_name_ar, disease_name_en)
+INSERT INTO shj_portal.sha_applicant_health_disease (applicant_health_id, label_ar, label_en)
 VALUES (1, N'ضغط الدم', 'Hypertension');
 GO
 

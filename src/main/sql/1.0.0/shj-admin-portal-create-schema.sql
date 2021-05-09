@@ -188,8 +188,8 @@ if not exists (select * from sys.tables where name = 'sha_authority_lk')
 create table shj_portal.sha_authority_lk
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
-    name_arabic nvarchar(50) NOT NULL,
-    name_english nvarchar(50) NOT NULL,
+    label_ar nvarchar(50) NOT NULL,
+    label_en nvarchar(50) NOT NULL,
     code nvarchar(50) NOT NULL,
     parent_id int,
     creation_date smalldatetime not null default current_timestamp
@@ -200,8 +200,8 @@ if not exists (select * from sys.tables where name = 'sha_role')
 create table shj_portal.sha_role
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
-    name_arabic nvarchar(50) NOT NULL,
-    name_english nvarchar(50) NOT NULL,
+    label_ar nvarchar(50) NOT NULL,
+    label_en nvarchar(50) NOT NULL,
     deleted bit NOT NULL default 0,
     activated bit NOT NULL default 0,
     creation_date smalldatetime not null default current_timestamp,
@@ -498,8 +498,8 @@ create table shj_portal.sha_applicant_health_disease
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
     applicant_health_id int NOT NULL,
-    disease_name_ar NVARCHAR(100) NOT NULL,
-    disease_name_en VARCHAR(45) NOT NULL,
+    label_ar NVARCHAR(100) NOT NULL,
+    label_en VARCHAR(45) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_health_disease_health FOREIGN KEY (applicant_health_id) REFERENCES shj_portal.sha_applicant_health (id)
 );

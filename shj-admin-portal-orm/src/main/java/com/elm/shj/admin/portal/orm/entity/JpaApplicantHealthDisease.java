@@ -34,11 +34,11 @@ public class JpaApplicantHealthDisease implements Serializable {
     @JoinColumn(name = "applicant_health_id")
     private JpaApplicantHealth applicantHealth;
 
-    @Column(name = "disease_name_ar", nullable = false)
-    private String diseaseNameAr;
+    @Column(name = "label_ar", nullable = false)
+    private String labelAr;
 
-    @Column(name = "disease_name_en", nullable = false)
-    private String diseaseNameEn;
+    @Column(name = "label_en", nullable = false)
+    private String labelEn;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

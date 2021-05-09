@@ -316,7 +316,7 @@
                 <label class="col-form-label">{{'card-management.chronic_diseases' | translate}}</label>
                 <span class="form-control-plaintext">
                   <span *ngFor="let disease of card?.applicantRitual?.applicant?.healths[0]?.diseases; let lastItem = last;">
-                  {{currentLanguage.startsWith("en") ? disease.diseaseNameEn : disease.diseaseNameAr}}<span *ngIf="!lastItem">-</span></span>
+                  {{currentLanguage.startsWith("en") ? disease.labelEn : disease.labelAr}}<span *ngIf="!lastItem">-</span></span>
                 </span>
               </div>
             </div>

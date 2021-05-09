@@ -118,45 +118,45 @@ GO
 
 -- insert authorities
 SET IDENTITY_INSERT shj_portal.sha_authority_lk ON;
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (1, N'لوحة المعلومات', 'Admin Dashboard', 'ADMIN_DASHBOARD', NULL);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (2, N'إدارة المستخدمين', 'User Management', 'USER_MANAGEMENT', NULL);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (3, N'إضافة مستخدم', 'Add User', 'ADD_USER', 2);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (4, N'تعديل مستخدم', 'Edit User', 'EDIT_USER', 2);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (5, N'تغيير حالة مستخدم', 'Change User Status', 'CHANGE_USER_STATUS', 2);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (6, N'إعادة تعيين كلمة المرور', 'Reset Password', 'RESET_PASSWORD', 2);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (7, N'حذف مستخدم', 'Delete User', 'DELETE_USER', 2);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (8, N'إدارة الأدوار', 'Role Management', 'ROLE_MANAGEMENT', NULL);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (9, N'إضافة دور', 'Add Role', 'ADD_ROLE', 8);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (10, N'تعديل دور', 'Edit Role', 'EDIT_ROLE', 8);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (11, N'حذف دور', 'Delete Role', 'DELETE_ROLE', 8);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (12, N'تغيير حالة دور', 'Change Role Status', 'CHANGE_ROLE_STATUS', 8);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (13, N'إعادة تعيين كلمة مرور المستخدم', 'Reset User Password', 'RESET_USER_PASSWORD', 2);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (1, N'لوحة المعلومات', 'Admin Dashboard', 'ADMIN_DASHBOARD', NULL);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (2, N'إدارة المستخدمين', 'User Management', 'USER_MANAGEMENT', NULL);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (3, N'إضافة مستخدم', 'Add User', 'ADD_USER', 2);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (4, N'تعديل مستخدم', 'Edit User', 'EDIT_USER', 2);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (5, N'تغيير حالة مستخدم', 'Change User Status', 'CHANGE_USER_STATUS', 2);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (6, N'إعادة تعيين كلمة المرور', 'Reset Password', 'RESET_PASSWORD', 2);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (7, N'حذف مستخدم', 'Delete User', 'DELETE_USER', 2);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (8, N'إدارة الأدوار', 'Role Management', 'ROLE_MANAGEMENT', NULL);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (9, N'إضافة دور', 'Add Role', 'ADD_ROLE', 8);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (10, N'تعديل دور', 'Edit Role', 'EDIT_ROLE', 8);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (11, N'حذف دور', 'Delete Role', 'DELETE_ROLE', 8);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (12, N'تغيير حالة دور', 'Change Role Status', 'CHANGE_ROLE_STATUS', 8);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (13, N'إعادة تعيين كلمة مرور المستخدم', 'Reset User Password', 'RESET_USER_PASSWORD', 2);
 -- new authorities
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (14, N'إدارة المعرفات الرقمية', 'Manage Digital ID', 'MANAGE_DIGITAL_ID', NULL);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (15, N'عرض معلومات ضيف الرحمن', 'View Applicant Profile', 'VIEW_APPLICANT_PROFILE', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (16, N'تعديل معلومات ضيف الرحمن', 'Update Applicant Profile', 'UPDATE_APPLICANT_PROFILE', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (17, N'تفعيل بطاقة تعريف ضيف الرحمن', 'Activate Applicant Card', 'ACTIVATE_APPLICANT_CARD', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (18, N'إلغاء بطاقة تعريف ضيف الرحمن', 'Cancel Applicant Card', 'CANCEL_APPLICANT_CARD', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (19, N'إيقاف بطاقة تعريف ضيف الرحمن', 'Suspend Applicant Card', 'SUSPEND_APPLICANT_CARD', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (20, N'إعادة إصدار بطاقة تعريف ضيف الرحمن', 'Reissue Applicant Card', 'REISSUE_APPLICANT_CARD', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (21, N'إضافة رقم تعريف ضيف الرحمن', 'Add Digital ID', 'ADD_DIGITAL_ID', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (22, N'إنشاء معلومات ضيف الرحمن', 'Add Applicant Profile', 'ADD_APPLICANT_PROFILE', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (23, N'موافقة إنشاء معلومات ضيف الرحمن', 'Approve Applicant Profile', 'APPROVE_APPLICANT_PROFILE', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (24, N'إدارة طلبات الطباعة', 'Manage Printing Requests', 'MANAGE_PRINTING_REQUEST', NULL);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (25, N'عرض تفاصيل طلب الطباعة', 'View Printing Request Details', 'VIEW_PRINTING_REQUEST_DETAILS', 24);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (26, N'إضافة طلب طباعة', 'Add Printing Request', 'ADD_PRINTING_REQUEST', 24);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (27, N'إدارة الطلبات', 'Manage Requests', 'MANAGE_REQUESTS', NULL);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (28, N'عرض تفاصيل الطلب', 'View Request Details', 'VIEW_REQUEST_DETAILS', 27);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (29, N'إنشاء طلب جديد', 'Create New Request', 'CREATE_NEW_REQUEST', 27);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (30, N'عرض الملف الشخصي', 'View My Profile', 'VIEW_MY_PROFILE', 2);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (31, N'تعديل الملف الشخصي', 'Update My Profile', 'UPDATE_MY_PROFILE', 2);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (32, N'تسجيل حملة', 'Register Hamlah', 'REGISTER_HAMLAH', NULL);
-INSERT INTO shj_portal.sha_authority_lk(id, name_arabic, name_english, code, parent_id) VALUES (33, N'استعلام طلب تسجيل حملة', 'Enquiry Hamlah Registration', 'ENQUIRY_HAMLAH_REGISTRATION', 32);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (14, N'إدارة المعرفات الرقمية', 'Manage Digital ID', 'MANAGE_DIGITAL_ID', NULL);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (15, N'عرض معلومات ضيف الرحمن', 'View Applicant Profile', 'VIEW_APPLICANT_PROFILE', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (16, N'تعديل معلومات ضيف الرحمن', 'Update Applicant Profile', 'UPDATE_APPLICANT_PROFILE', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (17, N'تفعيل بطاقة تعريف ضيف الرحمن', 'Activate Applicant Card', 'ACTIVATE_APPLICANT_CARD', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (18, N'إلغاء بطاقة تعريف ضيف الرحمن', 'Cancel Applicant Card', 'CANCEL_APPLICANT_CARD', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (19, N'إيقاف بطاقة تعريف ضيف الرحمن', 'Suspend Applicant Card', 'SUSPEND_APPLICANT_CARD', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (20, N'إعادة إصدار بطاقة تعريف ضيف الرحمن', 'Reissue Applicant Card', 'REISSUE_APPLICANT_CARD', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (21, N'إضافة رقم تعريف ضيف الرحمن', 'Add Digital ID', 'ADD_DIGITAL_ID', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (22, N'إنشاء معلومات ضيف الرحمن', 'Add Applicant Profile', 'ADD_APPLICANT_PROFILE', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (23, N'موافقة إنشاء معلومات ضيف الرحمن', 'Approve Applicant Profile', 'APPROVE_APPLICANT_PROFILE', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (24, N'إدارة طلبات الطباعة', 'Manage Printing Requests', 'MANAGE_PRINTING_REQUEST', NULL);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (25, N'عرض تفاصيل طلب الطباعة', 'View Printing Request Details', 'VIEW_PRINTING_REQUEST_DETAILS', 24);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (26, N'إضافة طلب طباعة', 'Add Printing Request', 'ADD_PRINTING_REQUEST', 24);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (27, N'إدارة الطلبات', 'Manage Requests', 'MANAGE_REQUESTS', NULL);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (28, N'عرض تفاصيل الطلب', 'View Request Details', 'VIEW_REQUEST_DETAILS', 27);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (29, N'إنشاء طلب جديد', 'Create New Request', 'CREATE_NEW_REQUEST', 27);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (30, N'عرض الملف الشخصي', 'View My Profile', 'VIEW_MY_PROFILE', 2);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (31, N'تعديل الملف الشخصي', 'Update My Profile', 'UPDATE_MY_PROFILE', 2);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (32, N'تسجيل حملة', 'Register Hamlah', 'REGISTER_HAMLAH', NULL);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (33, N'استعلام طلب تسجيل حملة', 'Enquiry Hamlah Registration', 'ENQUIRY_HAMLAH_REGISTRATION', 32);
 SET IDENTITY_INSERT shj_portal.sha_authority_lk OFF;
 GO
 
 SET IDENTITY_INSERT shj_portal.sha_role ON;
-INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (1, N'مشرف النظام', 'System Admin', 0, 1);
+INSERT INTO shj_portal.sha_role(id, label_ar, label_en, deleted, activated) VALUES (1, N'مشرف النظام', 'System Admin', 0, 1);
 SET IDENTITY_INSERT shj_portal.sha_role OFF;
 GO
 
@@ -176,18 +176,18 @@ INSERT INTO shj_portal.sha_role_authority(role_id, authority_id) VALUES (1, 13);
 GO
 
 SET IDENTITY_INSERT shj_portal.sha_role ON;
-INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (2, N'مستخدم النظام', 'System User', 0, 1);
+INSERT INTO shj_portal.sha_role(id, label_ar, label_en, deleted, activated) VALUES (2, N'مستخدم النظام', 'System User', 0, 1);
 -- new roles
-INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (3, N'مشرف التسجيل', 'Enrollment Officer Supervisor', 0, 1);
-INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (4, N'موظف التسجيل', 'Enrollment Officer', 0, 1);
-INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (5, N'مشرف مركز الخدمة', 'Service Center Agent Supervisor', 0, 1);
-INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (6, N'موظف مركز الخدمة', 'Service Center Agent', 0, 1);
-INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (7, N'مشرف الطباعة', 'Printing Supervisor', 0, 1);
-INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (8, N'موظف الطباعة', 'Printing User', 0, 1);
-INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (9, N'مشرف الحملة', 'Hamlah Owner', 0, 1);
-INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (10, N'موظف الحملة', 'Hamlah User', 0, 1);
-INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (11, N'مشرف المعرفات الرقمية', 'Digital ID Issuer Supervisor', 0, 1);
-INSERT INTO shj_portal.sha_role(id, name_arabic, name_english, deleted, activated) VALUES (12, N'موظف المعرفات الرقمية', 'Digital ID Issuer', 0, 1);
+INSERT INTO shj_portal.sha_role(id, label_ar, label_en, deleted, activated) VALUES (3, N'مشرف التسجيل', 'Enrollment Officer Supervisor', 0, 1);
+INSERT INTO shj_portal.sha_role(id, label_ar, label_en, deleted, activated) VALUES (4, N'موظف التسجيل', 'Enrollment Officer', 0, 1);
+INSERT INTO shj_portal.sha_role(id, label_ar, label_en, deleted, activated) VALUES (5, N'مشرف مركز الخدمة', 'Service Center Agent Supervisor', 0, 1);
+INSERT INTO shj_portal.sha_role(id, label_ar, label_en, deleted, activated) VALUES (6, N'موظف مركز الخدمة', 'Service Center Agent', 0, 1);
+INSERT INTO shj_portal.sha_role(id, label_ar, label_en, deleted, activated) VALUES (7, N'مشرف الطباعة', 'Printing Supervisor', 0, 1);
+INSERT INTO shj_portal.sha_role(id, label_ar, label_en, deleted, activated) VALUES (8, N'موظف الطباعة', 'Printing User', 0, 1);
+INSERT INTO shj_portal.sha_role(id, label_ar, label_en, deleted, activated) VALUES (9, N'مشرف الحملة', 'Hamlah Owner', 0, 1);
+INSERT INTO shj_portal.sha_role(id, label_ar, label_en, deleted, activated) VALUES (10, N'موظف الحملة', 'Hamlah User', 0, 1);
+INSERT INTO shj_portal.sha_role(id, label_ar, label_en, deleted, activated) VALUES (11, N'مشرف المعرفات الرقمية', 'Digital ID Issuer Supervisor', 0, 1);
+INSERT INTO shj_portal.sha_role(id, label_ar, label_en, deleted, activated) VALUES (12, N'موظف المعرفات الرقمية', 'Digital ID Issuer', 0, 1);
 SET IDENTITY_INSERT shj_portal.sha_role OFF;
 GO
 
@@ -331,7 +331,7 @@ GO
 
 SET IDENTITY_INSERT shj_portal.sha_data_segment ON;
 INSERT INTO shj_portal.sha_data_segment (id, template_file_name, label_ar, label_en, creation_date, update_date)
-VALUES (1, 'applicant-data.xlsx', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38:43', null);
+VALUES (1, 'applicant-data.xlsx', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38', null);
 SET IDENTITY_INSERT shj_portal.sha_data_segment OFF;
 GO
 
