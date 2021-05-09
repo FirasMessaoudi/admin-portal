@@ -1,7 +1,7 @@
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="sectionTitle">{{'role-management.role_details' | translate }}
-      <b class="text-dcc-primary">{{ currentLanguage.startsWith("en") ? role?.nameEnglish : role?.nameArabic }}</b>
+      <b class="text-dcc-primary">{{ currentLanguage.startsWith("en") ? role?.labelEn : role?.labelAr }}</b>
     </h3>
   </div>
   <div class="content__section" *ngIf="!canSeeRoleDetails">
@@ -13,7 +13,7 @@
         <div class="form-group col">
           <label class="col-form-label">{{'role-management.role_name' | translate}}</label>
           <span
-            class="form-control-plaintext ">{{ currentLanguage.startsWith("en") ? role?.nameEnglish : role?.nameArabic }}</span>
+            class="form-control-plaintext ">{{ currentLanguage.startsWith("en") ? role?.labelEn : role?.labelAr }}</span>
         </div>
         <div class="form-group col col-lg-8 col-md-8">
           <label class="col-form-label">{{'role-management.authorities' | translate}}</label>

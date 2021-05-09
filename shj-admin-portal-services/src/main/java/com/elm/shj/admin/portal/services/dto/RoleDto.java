@@ -29,11 +29,11 @@ public class RoleDto implements Serializable {
 
     private long id;
     @ArabicCharacters(lettersOnly = true, numbersOnly = false)
-    @Unique(columnName = "nameArabic", entityClass = JpaRole.class, groups = {RoleDto.CreateRoleValidationGroup.class})
-    private String nameArabic;
+    @Unique(columnName = "labelAr", entityClass = JpaRole.class, groups = {RoleDto.CreateRoleValidationGroup.class})
+    private String labelAr;
     @LatinCharacters(lettersOnly = true, numbersOnly = false)
-    @Unique(columnName = "nameEnglish", entityClass = JpaRole.class, groups = {RoleDto.CreateRoleValidationGroup.class})
-    private String nameEnglish;
+    @Unique(columnName = "labelEn", entityClass = JpaRole.class, groups = {RoleDto.CreateRoleValidationGroup.class})
+    private String labelEn;
     private boolean deleted;
     private boolean activated;
     @EqualsAndHashCode.Exclude

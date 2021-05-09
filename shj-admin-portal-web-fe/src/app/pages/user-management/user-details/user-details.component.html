@@ -26,7 +26,7 @@
             <label class="col-form-label">{{'general.email' | translate}}</label>
             <span class="form-control-plaintext ">{{ user?.email }}</span>
           </div>
-  
+
           <div class="form-group col">
             <label class="col-form-label">{{'user-management.full_name' | translate}}</label>
             <span class="form-control-plaintext">{{ user?.firstName + ' ' + user?.familyName }}</span>
@@ -37,7 +37,7 @@
               <span *ngIf="user?.dateOfBirthGregorian">-</span>
               {{ user?.dateOfBirthHijri | hijriFormat }}
             </span>
-  
+
           </div>
           <div class="form-group col">
             <label class="col-form-label">{{'user-management.gender' | translate}}</label>
@@ -65,12 +65,12 @@
           </div>
           <div class="form-group col">
             <label class="col-form-label">{{'user-management.role' | translate}}</label>
-            <span class="form-control-plaintext font-weight-bold">{{ currentLanguage.startsWith("en") ? userMainRole?.nameEnglish : userMainRole?.nameArabic }}</span>
+            <span class="form-control-plaintext font-weight-bold">{{ currentLanguage.startsWith("en") ? userMainRole?.labelEn : userMainRole?.labelAr }}</span>
           </div>
           <div class="form-group col" *ngIf="user?.userRoles?.length > 1">
             <label class="col-form-label">{{'user-management.additional_role' | translate}}</label>
             <ng-container *ngFor="let userRole of user?.userRoles">
-              <span *ngIf="!userRole.mainRole" class="form-control-plaintext font-weight-bold">{{ currentLanguage.startsWith("en") ? userRole?.role?.nameEnglish : userRole?.role?.nameArabic }}</span>
+              <span *ngIf="!userRole.mainRole" class="form-control-plaintext font-weight-bold">{{ currentLanguage.startsWith("en") ? userRole?.role?.labelEn : userRole?.role?.labelAr }}</span>
             </ng-container>
           </div>
           <div class="form-group col">

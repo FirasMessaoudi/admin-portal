@@ -14,20 +14,20 @@
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
         <div class="form-group col">
           <label class="col-form-label">{{'role-management.role_name_ar' | translate}}<span class="text-danger px-1">*</span></label>
-          <input type="text" formControlName="nameArabic" class="form-control" required [class.is-invalid]="f.nameArabic.invalid && f.nameArabic.touched" maxlength="25"/>
-          <div *ngIf="f.nameArabic.invalid && f.nameArabic.touched" class="invalid-feedback">
-            <div *ngIf="f.nameArabic.errors.required">{{'general.field_validation_required' | translate}}</div>
-            <div *ngIf="f.nameArabic.errors.invalid">{{f.nameArabic.errors['invalid'] | translate}}</div>
-            <div *ngIf="f.nameArabic.errors['invalid-characters']">{{f.nameArabic.errors['invalid-characters'] | translate}}</div>
+          <input type="text" formControlName="labelAr" class="form-control" required [class.is-invalid]="f.labelAr.invalid && f.labelAr.touched" maxlength="25"/>
+          <div *ngIf="f.labelAr.invalid && f.labelAr.touched" class="invalid-feedback">
+            <div *ngIf="f.labelAr.errors.required">{{'general.field_validation_required' | translate}}</div>
+            <div *ngIf="f.labelAr.errors.invalid">{{f.labelAr.errors['invalid'] | translate}}</div>
+            <div *ngIf="f.labelAr.errors['invalid-characters']">{{f.labelAr.errors['invalid-characters'] | translate}}</div>
           </div>
         </div>
         <div class="form-group col">
           <label class="col-form-label">{{'role-management.role_name_en' | translate}}<span class="text-danger px-1">*</span></label>
-          <input type="text" formControlName="nameEnglish" class="form-control" required [class.is-invalid]="f.nameEnglish.invalid && f.nameEnglish.touched" maxlength="25"/>
-          <div *ngIf="f.nameEnglish.invalid && f.nameEnglish.touched" class="invalid-feedback">
-            <div *ngIf="f.nameEnglish.errors.required">{{'general.field_validation_required' | translate}}</div>
-            <div *ngIf="f.nameEnglish.errors.invalid">{{f.nameEnglish.errors['invalid'] | translate}}</div>
-            <div *ngIf="f.nameEnglish.errors['invalid-characters']">{{f.nameEnglish.errors['invalid-characters'] | translate}}</div>
+          <input type="text" formControlName="labelEn" class="form-control" required [class.is-invalid]="f.labelEn.invalid && f.labelEn.touched" maxlength="25"/>
+          <div *ngIf="f.labelEn.invalid && f.labelEn.touched" class="invalid-feedback">
+            <div *ngIf="f.labelEn.errors.required">{{'general.field_validation_required' | translate}}</div>
+            <div *ngIf="f.labelEn.errors.invalid">{{f.labelEn.errors['invalid'] | translate}}</div>
+            <div *ngIf="f.labelEn.errors['invalid-characters']">{{f.labelEn.errors['invalid-characters'] | translate}}</div>
           </div>
         </div>
         <div class="form-group col">

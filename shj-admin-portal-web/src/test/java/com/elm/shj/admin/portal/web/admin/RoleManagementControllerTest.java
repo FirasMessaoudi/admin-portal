@@ -126,8 +126,8 @@ class RoleManagementControllerTest extends AbstractControllerTestSuite {
     void test_saveOrUpdateRole_success() throws Exception {
         String url = Navigation.API_ROLES + "/save-or-update";
         RoleDto role = new RoleDto();
-        role.setNameArabic(TEST_ARABIC_NAME);
-        role.setNameEnglish(TEST_ENGLISH_NAME);
+        role.setLabelAr(TEST_ARABIC_NAME);
+        role.setLabelEn(TEST_ENGLISH_NAME);
         AuthorityLookupDto authority = new AuthorityLookupDto();
         RoleAuthorityDto roleAuthority = new RoleAuthorityDto();
         roleAuthority.setAuthority(authority);

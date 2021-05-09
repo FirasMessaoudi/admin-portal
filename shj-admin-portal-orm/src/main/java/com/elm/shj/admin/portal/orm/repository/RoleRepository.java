@@ -75,9 +75,9 @@ public interface RoleRepository extends JpaRepository<JpaRole, Long> {
             "ra.role.id = role.id and " +
             "ra.role.deleted = false and" +
             "(:authorityId = -1L or ra.authority.id = :authorityId or ra.authority.parentId = :authorityId) and " +
-            "(:arabicName is null or lower(role.nameArabic) like :arabicName) and " +
-            "(:englishName is null or lower(role.nameEnglish) like :englishName)")
+            "(:labelAr is null or lower(role.labelAr) like :labelAr) and " +
+            "(:labelEn is null or lower(role.labelEn) like :labelEn)")
     Page<JpaRole> findByAuthorityOrName(Pageable pageable, @Param("authorityId") Long authorityId,
-                                        @Param("arabicName") String arabicName,
-                                        @Param("englishName") String englishName);
+                                        @Param("labelAr") String arabicName,
+                                        @Param("labelEn") String englishName);
 }

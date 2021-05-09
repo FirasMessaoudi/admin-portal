@@ -22,7 +22,7 @@
           <select formControlName="role" (ngModelChange)="onRoleChange($event)" class="custom-select" [class.text-danger]="f.role.value && !f.role.value.activated">
             <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
             <option *ngFor="let role of roles" [ngValue]="role" [class.text-danger]="!role?.activated" [class.text-black-50]="role?.activated">
-              {{ currentLanguage.startsWith("en") ? role.nameEnglish : role.nameArabic }}
+              {{ currentLanguage.startsWith("en") ? role.labelEn : role.labelAr }}
               <span *ngIf="!role?.activated">
                 ({{'user-management.not_activated' | translate}})
               </span>

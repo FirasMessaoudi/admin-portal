@@ -1,7 +1,7 @@
 export class Role {
   id: number;
-  nameArabic: string;
-  nameEnglish: string;
+  labelAr: string;
+  labelEn: string;
   deleted: boolean;
   activated: boolean;
   roleAuthorities: Array<any>;

@@ -61,7 +61,7 @@
         </tr>
         <tr *ngFor="let role of page?.content">
           <td class="text-center" scope="row"><a [routerLink]="['/roles/details', role?.id]" class="text-dcc-primary font-weight-bold">{{role.id}}</a></td>
-          <td width="15%">{{ currentLanguage.startsWith("en") ? role.nameEnglish : role.nameArabic }}</td>
+          <td width="15%">{{ currentLanguage.startsWith("en") ? role.labelEn : role.labelAr }}</td>
           <td>
             <ng-container *ngFor="let roleAuthority of role.roleAuthorities" >
               <ng-container *ngIf="!roleAuthority.authority.parentId" >

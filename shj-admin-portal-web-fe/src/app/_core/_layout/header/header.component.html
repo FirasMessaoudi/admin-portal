@@ -25,7 +25,7 @@
             <small class="text-black-50">
               <ng-container *ngFor="let userRole of currentUser?.userRoles">
                 <ng-container *ngIf="userRole?.mainRole">
-                  {{ currentLanguage.startsWith('ar') ? userRole?.role.nameArabic : userRole?.role.nameEnglish }}
+                  {{ currentLanguage.startsWith('ar') ? userRole?.role.labelAr : userRole?.role.labelEn }}
                 </ng-container>
               </ng-container>
             </small>

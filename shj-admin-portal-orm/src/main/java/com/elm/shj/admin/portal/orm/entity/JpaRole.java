@@ -32,11 +32,11 @@ public class JpaRole implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "name_arabic", nullable = false)
-    private String nameArabic;
+    @Column(name = "label_ar", nullable = false)
+    private String labelAr;
 
-    @Column(name = "name_english", nullable = false)
-    private String nameEnglish;
+    @Column(name = "label_en", nullable = false)
+    private String labelEn;
 
     private boolean deleted;
 
