@@ -5,13 +5,17 @@ import com.elm.qa.framework.core.DataManager;
 import com.elm.qa.framework.core.Global;
 
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import static com.elm.qa.framework.core.ActionX.Exists;
 import static com.elm.qa.framework.core.ActionX.SetValue;
 
 import com.elm.qa.framework.faker.Faker;
 import com.elm.qa.framework.utilities.ReporterX;
+import com.sun.xml.xsom.impl.scd.Iterators;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -31,6 +35,9 @@ public class SystemLogin {
 
     @FindBy(xpath = "//button[@class='btn btn-dcc-primary btn-block']")
     WebElement btnLogin;
+
+    @FindBy(id = "otpInputsRow")
+    WebElement divOtpInputs;
 
     @FindBy(id = "userMenuLink")
     WebElement lnkUserMenu;
@@ -60,6 +67,25 @@ public class SystemLogin {
         }
     }
     //'*********** LOGIN Test Functions ******************************
+
+    private void setOTP(String strOTP) throws Exception {
+        if(Exists(divOtpInputs,10)){
+            char[]  otpDigits = strOTP.toCharArray();
+            List<WebElement> txtOTPDigits = divOtpInputs.findElements(By.tagName("input"));
+
+            if(otpDigits.length >= txtOTPDigits.size()){
+                for (int i=0;i<txtOTPDigits.size();i++){
+                    txtOTPDigits.get(i).sendKeys(String.valueOf(otpDigits[i]));
+                    Thread.sleep(500);
+                }
+            }else {
+                ReporterX.info("The provided OTP ("+strOTP+") length is too small ... ");
+            }
+        }else {
+            ReporterX.info("The OTP Page not loaded ");
+        }
+
+    }
 
     public boolean Login(String strUserName, String strPassword) {
         boolean retRes = false;
@@ -105,15 +131,27 @@ public class SystemLogin {
                     Global.Test.IsLogedIn = false;
                     retRes = false;
 
-                }else if (Exists(lnkUserMenu, 30)) {
+                }else if (Exists(divOtpInputs, 30)) {
 
-                    ReporterX.info("User ( " + strUserName + " ) Is Loged In Successfully.!");
-                    retRes = true;
-                    Global.Test.LogedInUser = strUserName;
-                    Global.Test.IsLogedIn = true;
+                   setOTP("1234");
+
+                    if (Exists(lnkUserMenu, 30)) {
+
+                        ReporterX.info("User ( " + strUserName + " ) LogIn Successfully.!");
+                        retRes = true;
+                        Global.Test.LogedInUser = strUserName;
+                        Global.Test.IsLogedIn = true;
+
+                    }else {
+                        ReporterX.fail("User ( " + strUserName + " ) LogIn Failed.!");
+                        Global.Test.LogedInUser = "";
+                        Global.Test.IsLogedIn = false;
+                        retRes = false;
+
+                    }
 
                 } else {
-                    ReporterX.fail("User ( " + strUserName + " ) LogIn Failed.!");
+                    ReporterX.fail("User ( " + strUserName + " ) LogIn Failed for OTP .!");
                     Global.Test.LogedInUser = "";
                     Global.Test.IsLogedIn = false;
                     retRes = false;
@@ -191,6 +229,7 @@ public class SystemLogin {
                         if (LogOut()) {
                             retRes = Login(loginRow.get("userID".toUpperCase()), loginRow.get("Password".toUpperCase()));
 
+
                         } else {
                             ReporterX.fail("Failed to do LogOut.");
                             retRes = false;
@@ -198,6 +237,7 @@ public class SystemLogin {
                     }
                 } else {
                     retRes = Login(loginRow.get("userID".toUpperCase()), loginRow.get("Password".toUpperCase()));
+
 
 
                 }
