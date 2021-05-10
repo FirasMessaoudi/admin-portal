@@ -11,6 +11,7 @@ import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
+import java.util.Objects;
 
 /**
  * Main controller for data request management page
@@ -117,8 +119,8 @@ public class DataRequestManagementController {
         }
         if (file != null) {
             String fileName = "file.xlsx";
-            if (file.getDescription() != null && file.getDescription().contains("[")) {
-                fileName = file.getDescription().split("\\[")[1].replaceAll("\\]", "");
+            if (Objects.requireNonNull(file.getDescription()).contains("[")) {
+                fileName = file.getDescription().split("\\[")[1].replaceAll("]", "");
             }
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
@@ -146,7 +148,7 @@ public class DataRequestManagementController {
      * @param dataRequestId the data request id to be confirmed
      */
     @PostMapping(value = "/confirm/{dataRequestId}")
-    public void confirm(@PathVariable long dataRequestId) {
+    public void confirm(@PathVariable long dataRequestId) throws Exception {
         log.info("Confirming data request #{}", dataRequestId);
         dataRequestService.confirm(dataRequestId);
     }
