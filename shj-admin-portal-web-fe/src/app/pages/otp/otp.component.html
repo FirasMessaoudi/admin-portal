@@ -20,17 +20,17 @@
       {{'login.invalid_otp' | translate }}
     </div>
     <h3 class="text-dcc-primary font-weight-bold mb-4">{{'login.header_title' | translate}}</h3>
-    <div class="text-secondary mb-5">{{'login.otp_text' | translate}}  <div class="ltr d-inline-block">({{mask}})</div></div>
-    <div class="row mx-auto w-75 ltr">
+    <div id="otpNoteMsg" class="text-secondary mb-5">{{'login.otp_text' | translate}}  <div class="ltr d-inline-block">({{mask}})</div></div>
+    <div id="otpInputsRow" class="row mx-auto w-75 ltr">
       <div class="form-group col-sm-3" *ngFor="let input of formInputs;  index as i">
         <input #formRow type="text" formControlName="{{input}}" class="pin-input form-control text-center" maxlength="1" (keyup)="keyUpEvent($event, i)">
       </div>
     </div>
-    <div class="text-center text-secondary">{{'login.otp_remaining_time' | translate}} <span class="font-weight-bold">{{timerContent}}</span></div>
+    <div id="otpTimerMsg" class="text-center text-secondary">{{'login.otp_remaining_time' | translate}} <span class="font-weight-bold">{{timerContent}}</span></div>
 
 
     <div class="left-header mt-5 mb-0 pb-0">
-      <a class="d-block" (click)="goBack()" href="javascript:void(0);">
+      <a id="otpBackLogin" class="d-block" (click)="goBack()" href="javascript:void(0);">
         <svg-icon styleClass="flip" icon="arrow-right"></svg-icon>
         <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
       </a>
@@ -38,7 +38,7 @@
 
     <div class="form-group d-none">
 
-      <button class="btn btn-dcc-primary btn-block" [disabled]="otpForm.invalid || loading">
+      <button id="otpLogin" class="btn btn-dcc-primary btn-block" [disabled]="otpForm.invalid || loading">
         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
         {{'login.btn_login' | translate}}
       </button>
