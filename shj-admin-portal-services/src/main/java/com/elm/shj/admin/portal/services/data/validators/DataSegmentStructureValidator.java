@@ -118,6 +118,8 @@ public class DataSegmentStructureValidator implements ConstraintValidator<DataSe
             Cell cell = cellIterator.next();
             headerColumns.add(cell.getStringCellValue());
         }
+        // close workbook
+        workbook.close();
         // return the result
         return headerColumns;
     }
