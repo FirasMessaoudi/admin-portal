@@ -64,7 +64,7 @@ export class UserAddUpdateComponent implements OnInit {
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
-      textField: this.currentLanguage.startsWith("en") ? 'nameEnglish' : 'nameArabic',
+      textField: this.currentLanguage.startsWith("en") ? 'labelEn' : 'labelAr',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
       itemsShowLimit: 3,
