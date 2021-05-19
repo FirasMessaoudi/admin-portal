@@ -5,9 +5,8 @@ package com.elm.shj.admin.portal.services.data.request;
 
 import com.elm.shj.admin.portal.orm.entity.JpaDataRequest;
 import com.elm.shj.admin.portal.orm.repository.DataRequestRepository;
-import com.elm.shj.admin.portal.services.data.mapper.ApplicantRowMapper;
-import com.elm.shj.admin.portal.services.data.processor.DataProcessorService;
 import com.elm.shj.admin.portal.services.data.processor.DataProcessorResult;
+import com.elm.shj.admin.portal.services.data.processor.DataProcessorService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
@@ -87,7 +86,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
                 || dataRequest.getStatus().getId() != EDataRequestStatus.PROCESSED_WITH_ERRORS.getId()) {
             return null;
         }
-        return sftpService.downloadFile(dataRequest.getOriginalSourcePath());
+        return sftpService.downloadFile(dataRequest.getErrorFilePath());
     }
 
     /**
@@ -164,7 +163,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
             // retrieve the original file to start processing
             Resource originalFile = sftpService.downloadFile(dataRequest.getOriginalSourcePath());
             // process the file
-            DataProcessorResult<ApplicantDto> parserResult = dataRequestProcessor.processRequestFile(originalFile, new ApplicantRowMapper());
+            DataProcessorResult<ApplicantDto> parserResult = dataRequestProcessor.processRequestFile(originalFile, dataRequest.getDataSegment());
             // in case of error, generate the error file and save it in the SFTP
             if (parserResult.isWithErrors()) {
                 // generate error file
@@ -175,9 +174,10 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
                     fileName = originalFile.getDescription().split("\\[")[1].replaceAll("]", "");
                 }
                 // save the file in the sftp folder
-                sftpService.uploadFile(generateSftpFilePath(fileName, dataRequest.getReferenceNumber(), true), errorFile.getInputStream());
+                String errorFilePath = generateSftpFilePath(fileName, dataRequest.getReferenceNumber(), true);
+                sftpService.uploadFile(errorFilePath, errorFile.getInputStream());
                 // update the data request status
-                ((DataRequestRepository) getRepository()).updateStatus(dataRequestId, EDataRequestStatus.PROCESSED_WITH_ERRORS.getId());
+                ((DataRequestRepository) getRepository()).updateProcessingStatus(dataRequestId, EDataRequestStatus.PROCESSED_WITH_ERRORS.getId(), errorFilePath);
             } else {
                 // update the data request status
                 ((DataRequestRepository) getRepository()).updateStatus(dataRequestId, EDataRequestStatus.PROCESSED_SUCCESSFULLY.getId());

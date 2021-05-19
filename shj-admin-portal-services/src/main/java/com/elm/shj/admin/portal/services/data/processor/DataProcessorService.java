@@ -5,7 +5,11 @@ package com.elm.shj.admin.portal.services.data.processor;
 
 import com.elm.shj.admin.portal.services.data.mapper.AbstractRowMapper;
 import com.elm.shj.admin.portal.services.data.mapper.ApplicantRowMapper;
+import com.elm.shj.admin.portal.services.data.mapper.DataSegmentMappingRegistry;
+import com.elm.shj.admin.portal.services.data.validators.AbstractDataValidator;
+import com.elm.shj.admin.portal.services.data.validators.ApplicantExistsValidator;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
+import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
@@ -37,35 +41,38 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DataProcessorService {
 
+    private final DataSegmentMappingRegistry dataSegmentMappingRegistry;
     private final MessageSource messageSource;
+    private final ApplicantExistsValidator applicantExistsValidator;
 
     /**
      * Processes the data request file using the provided mapper to extract items of type <T>
      *
      * @param requestFile the request file resource
-     * @param mapper      the mapper used to process items
+     * @param dataSegment the request data segment
      * @param <T>         the type of the items to be parsed
      * @return the result of the processing
      * @throws IOException in case of any IO failure
      */
-    public <T> DataProcessorResult<T> processRequestFile(Resource requestFile, AbstractRowMapper<T> mapper) throws IOException {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public <T> DataProcessorResult<T> processRequestFile(Resource requestFile, DataSegmentDto dataSegment) throws IOException {
+        AbstractRowMapper mapper = dataSegmentMappingRegistry.mapperOf(dataSegment);
         // load workbook
         XSSFWorkbook workbook = new XSSFWorkbook(requestFile.getInputStream());
         // read first sheet
         XSSFSheet sheet = workbook.getSheetAt(0);
         // read first row
         int headerRowNum = sheet.getFirstRowNum();
-        ApplicantRowMapper rowMapper = new ApplicantRowMapper();
         List<DataValidationResult> dataValidationResults = new ArrayList<>();
         StreamSupport.stream(Spliterators.spliteratorUnknownSize(sheet.rowIterator(), Spliterator.ORDERED), false).forEach(row -> {
             // skip header row
             if (row.getRowNum() != headerRowNum && !isBlankRow(row)) {
                 // loop over mapped validators map
-                rowMapper.mapValidators(row).forEach((cell, validators) -> {
+                mapper.mapValidators(row).forEach((cell, validators) -> {
                     // loop over validators
-                    validators.forEach(validator -> {
-                        log.debug("validating row#" + row.getRowNum() + " cell#" + cell.getColumnIndex());
-                        dataValidationResults.add(validator.validate(cell));
+                    ((List<AbstractDataValidator>)validators).forEach(validator -> {
+                        log.debug("validating row#" + row.getRowNum() + " cell#" + ((Cell)cell).getColumnIndex());
+                        dataValidationResults.add(validator.validate((Cell)cell));
                     });
                 });
             }
@@ -77,7 +84,7 @@ public class DataProcessorService {
                 .filter(DataValidationResult::isValid)
                 .map(dvr -> dvr.getCell().getRow().getRowNum())
                 .collect(Collectors.toSet())
-                .forEach(successRowNum -> parsedItems.add(mapper.mapRow(sheet.getRow(successRowNum))));
+                .forEach(successRowNum -> parsedItems.add((T) mapper.mapRow(sheet.getRow(successRowNum))));
 
         DataProcessorResult<T> result = new DataProcessorResult<>();
         result.setDataValidationResults(dataValidationResults);

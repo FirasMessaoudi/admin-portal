@@ -8,8 +8,10 @@ import com.elm.shj.admin.portal.services.data.validators.GregorianDateDataValida
 import com.elm.shj.admin.portal.services.data.validators.HijriDateDataValidator;
 import com.elm.shj.admin.portal.services.dto.ApplicantContactDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.EDataSegment;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.StreamSupport;
@@ -20,6 +22,7 @@ import java.util.stream.StreamSupport;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
+@Component
 public class ApplicantRowMapper extends AbstractRowMapper<ApplicantDto> {
 
     /**
@@ -31,12 +34,12 @@ public class ApplicantRowMapper extends AbstractRowMapper<ApplicantDto> {
         // applicant.setRowNumber(row.getRowNum());
         applicant.setIdNumber((long) row.getCell(row.getFirstCellNum()).getNumericCellValue());
         applicant.setPassportNumber(row.getCell(row.getFirstCellNum() + 1).getStringCellValue());
-        // applicant.setBorderNumber(row.getCell(row.getFirstCellNum() + 2).getStringCellValue());
-        applicant.setFullNameEn(row.getCell(row.getFirstCellNum() + 3).getStringCellValue());
-        applicant.setFullNameAr(row.getCell(row.getFirstCellNum() + 4).getStringCellValue());
-        applicant.setFullNameOrigin(row.getCell(row.getFirstCellNum() + 5).getStringCellValue());
-        applicant.setDateOfBirthGregorian(row.getCell(row.getFirstCellNum() + 6).getDateCellValue());
-        applicant.setDateOfBirthHijri((int) row.getCell(row.getFirstCellNum() + 7).getNumericCellValue());
+        applicant.setDateOfBirthGregorian(row.getCell(row.getFirstCellNum() + 2).getDateCellValue());
+        applicant.setDateOfBirthHijri((int) row.getCell(row.getFirstCellNum() + 3).getNumericCellValue());
+        // applicant.setBorderNumber(row.getCell(row.getFirstCellNum() + 4).getStringCellValue());
+        applicant.setFullNameEn(row.getCell(row.getFirstCellNum() + 5).getStringCellValue());
+        applicant.setFullNameAr(row.getCell(row.getFirstCellNum() + 6).getStringCellValue());
+        applicant.setFullNameOrigin(row.getCell(row.getFirstCellNum() + 7).getStringCellValue());
         applicant.setGender(row.getCell(row.getFirstCellNum() + 8).getStringCellValue());
         applicant.setNationalityCode(row.getCell(row.getFirstCellNum() + 9).getStringCellValue());
         applicant.setIdNumberOriginal(row.getCell(row.getFirstCellNum() + 10).getStringCellValue());
@@ -77,9 +80,17 @@ public class ApplicantRowMapper extends AbstractRowMapper<ApplicantDto> {
         StreamSupport.stream(Spliterators.spliteratorUnknownSize(row.cellIterator(), Spliterator.ORDERED), false)
                 .forEach(cell -> validatorMappings.put(cell, new ArrayList<>()));
 
-        validatorMappings.get(row.getCell(row.getFirstCellNum() + 6)).add(new GregorianDateDataValidator(true));
-        validatorMappings.get(row.getCell(row.getFirstCellNum() + 7)).add(new HijriDateDataValidator(true));
+        validatorMappings.get(row.getCell(row.getFirstCellNum() + 2)).add(new GregorianDateDataValidator(false, row.getCell(row.getFirstCellNum() + 3)));
+        validatorMappings.get(row.getCell(row.getFirstCellNum() + 3)).add(new HijriDateDataValidator(false, row.getCell(row.getFirstCellNum() + 2)));
 
         return validatorMappings;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public EDataSegment getDataSegmentId() {
+        return EDataSegment.APPLICANT_DATA;
     }
 }

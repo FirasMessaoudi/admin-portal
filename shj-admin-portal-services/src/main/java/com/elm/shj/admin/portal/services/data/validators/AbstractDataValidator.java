@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.data.validators;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 
 import java.util.ArrayList;
 
@@ -16,12 +17,15 @@ import java.util.ArrayList;
 public abstract class AbstractDataValidator {
 
     protected static final String REQUIRED_FIELD_MSG = "data.validation.field.required";
+    protected static final String DEPENDENT_FIELD_MSG = "data.validation.field.dependent";
     protected static final String INVALID_FIELD_TYPE_MSG = "data.validation.field.type.invalid";
 
     protected boolean mandatory;
+    protected Cell dependentField;
 
-    protected AbstractDataValidator(boolean mandatory) {
+    protected AbstractDataValidator(boolean mandatory, Cell dependentField) {
         this.mandatory = mandatory;
+        this.dependentField = dependentField;
     }
 
     /**
@@ -38,15 +42,18 @@ public abstract class AbstractDataValidator {
                 if (mandatory) {
                     validationResult.setValid(false);
                     validationResult.getErrorMessages().add(REQUIRED_FIELD_MSG);
+                } else if (dependentField != null && dependentField.getCellType() == CellType.BLANK) {
+                    validationResult.setValid(false);
+                    validationResult.getErrorMessages().add(DEPENDENT_FIELD_MSG);
                 } else {
                     validationResult.setValid(true);
                 }
                 break;
-                // in case of string cell content, check content against expected format
+            // in case of string cell content, check content against expected format
             case STRING:
                 doValidateString(cell, validationResult);
                 break;
-                // in other cases, add invalid type message
+            // in other cases, add invalid type message
             case BOOLEAN:
                 doValidateBoolean(cell, validationResult);
                 break;

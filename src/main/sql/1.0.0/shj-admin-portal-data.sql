@@ -331,7 +331,13 @@ GO
 
 SET IDENTITY_INSERT shj_portal.sha_data_segment ON;
 INSERT INTO shj_portal.sha_data_segment (id, template_file_name, label_ar, label_en, creation_date, update_date)
-VALUES (1, 'applicant-data.xlsx', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38', null);
+VALUES
+       (1, 'applicant-data.xlsx', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38', null),
+       (2, 'applicant-relatives-data.xlsx', N'بيانات أقارب ضيف الرحمان', 'Applicant Relatives Data', N'2021-04-13 13:38', null),
+       (3, 'applicant-health-data.xlsx', N'البيانات الصحية لضيف الرحمان', 'Applicant Health Data', N'2021-04-13 13:38', null),
+       (4, 'applicant-vaccination-data.xlsx', N'بيانات تطعيمات ضيف الرحمان', 'Applicant Vaccination Data', N'2021-04-13 13:38', null),
+       (5, 'applicant-disease-data.xlsx', N'بيانات أمراض ضيف الرحمان', 'Applicant Disease Data', N'2021-04-13 13:38', null),
+       (6, 'applicant-special-needs-data.xlsx', N'بيانات الاحتياجات الخاصة لضيف الرحمان', 'Applicant Special Needs Data', N'2021-04-13 13:38', null);
 SET IDENTITY_INSERT shj_portal.sha_data_segment OFF;
 GO
 

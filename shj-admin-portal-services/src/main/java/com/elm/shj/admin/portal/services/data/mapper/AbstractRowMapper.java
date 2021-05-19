@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.data.mapper;
 
 import com.elm.shj.admin.portal.services.data.validators.AbstractDataValidator;
+import com.elm.shj.admin.portal.services.dto.EDataSegment;
 import lombok.Data;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -13,7 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Abstract Row Mapper
+ * Abstract Row Mapper for specific POJO
+ * @param <T> the POJO type
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
@@ -36,5 +38,12 @@ public abstract class AbstractRowMapper<T> {
      * @return the row validators mapping
      */
     public abstract Map<Cell, List<AbstractDataValidator>> mapValidators(Row row);
+
+    /**
+     * Returns the data segment enum corresponding the the current mapper
+     *
+     * @return the data segment enum
+     */
+    public abstract EDataSegment getDataSegmentId();
 
 }

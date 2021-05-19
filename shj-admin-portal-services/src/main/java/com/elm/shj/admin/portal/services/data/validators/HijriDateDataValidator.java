@@ -22,14 +22,14 @@ public class HijriDateDataValidator extends AbstractDataValidator {
     private final int minDate;
     private final int maxDate;
 
-    public HijriDateDataValidator(boolean mandatory) {
-        super(mandatory);
+    public HijriDateDataValidator(boolean mandatory, Cell dependentField) {
+        super(mandatory, dependentField);
         this.minDate = DEFAULT_MIN_DATE;
         this.maxDate = DEFAULT_MAX_DATE;
     }
 
-    public HijriDateDataValidator(boolean mandatory, int minDate, int maxDate) {
-        super(mandatory);
+    public HijriDateDataValidator(boolean mandatory, Cell dependentField, int minDate, int maxDate) {
+        super(mandatory, dependentField);
         this.minDate = minDate;
         this.maxDate = maxDate;
     }

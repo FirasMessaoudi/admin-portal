@@ -30,22 +30,22 @@ public class GregorianDateDataValidator extends AbstractDataValidator {
     private final Date minDate;
     private final Date maxDate;
 
-    public GregorianDateDataValidator(boolean mandatory) {
-        super(mandatory);
+    public GregorianDateDataValidator(boolean mandatory, Cell dependentField) {
+        super(mandatory, dependentField);
         this.dateFormatter = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
         this.minDate = DEFAULT_MIN_DATE;
         this.maxDate = DEFAULT_MAX_DATE;
     }
 
-    public GregorianDateDataValidator(String dateFormat, boolean mandatory) {
-        super(mandatory);
+    public GregorianDateDataValidator(boolean mandatory, Cell dependentField, String dateFormat) {
+        super(mandatory, dependentField);
         this.dateFormatter = new SimpleDateFormat(dateFormat);
         this.minDate = DEFAULT_MIN_DATE;
         this.maxDate = DEFAULT_MAX_DATE;
     }
 
-    public GregorianDateDataValidator(String dateFormat, boolean mandatory, Date minDate, Date maxDate) {
-        super(mandatory);
+    public GregorianDateDataValidator(boolean mandatory, Cell dependentField, String dateFormat, Date minDate, Date maxDate) {
+        super(mandatory, dependentField);
         this.dateFormatter = new SimpleDateFormat(dateFormat);
         this.minDate = minDate;
         this.maxDate = maxDate;
