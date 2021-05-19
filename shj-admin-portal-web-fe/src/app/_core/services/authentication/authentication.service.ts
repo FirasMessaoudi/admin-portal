@@ -86,7 +86,7 @@ export class AuthenticationService {
    * @return {boolean} True if the user is authenticated.
    */
   isAuthenticated(): boolean {
-    return !!localStorage.getItem(CURRENT_USER_KEY);
+    return this._currentUser;
   }
 
   /**
@@ -106,14 +106,6 @@ export class AuthenticationService {
     this._currentUser = currentUser || null;
     if (currentUser) {
       localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
-      //
-      /** Ahmed **/
-      const savedUser = localStorage.getItem(CURRENT_USER_KEY);
-      if (savedUser) {
-        this._currentUser = JSON.parse(savedUser);
-      }
-
-      //
     } else {
       localStorage.removeItem(CURRENT_USER_KEY);
     }
