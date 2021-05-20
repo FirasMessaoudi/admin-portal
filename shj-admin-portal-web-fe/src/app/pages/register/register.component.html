@@ -9,7 +9,7 @@
   </button>
 </span>
 <div class="login__box">
-  
+
   <div class="text-center">
     <img class="my-4" src="assets/images/logo.png" alt="logo" />
   </div>
@@ -133,7 +133,7 @@
                              (success)="onCaptchaSuccess($event)">
     </ngx-invisible-recaptcha>
 
-    <div class="form-group">
+    <div class="form-group mb-0 pb-0">
 
       <div class="pb-4">
         <div class="custom-control custom-checkbox">
@@ -149,9 +149,14 @@
         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
         {{'register.btn_register' | translate}}
       </button>
-      <a [routerLink]="['/login']" class="text-dcc-primary d-block mt-3">
-        {{'register.btn_back_to_login' | translate}}
-      </a>
+
+      <div class="left-header mt-5 mb-0 pb-0">
+        <a id="otpBackLogin" class="d-block" [routerLink]="['/login']" href="javascript:void(0);">
+          <svg-icon styleClass="flip" icon="arrow-right"></svg-icon>
+          <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+        </a>
+      </div>
+
     </div>
   </form>
 </div>
