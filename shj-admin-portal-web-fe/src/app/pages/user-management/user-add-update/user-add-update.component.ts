@@ -105,11 +105,32 @@ export class UserAddUpdateComponent implements OnInit {
             this.additionalSelectedRoles.push(userRole.role);
           }
         });
+
+        this.userForm.patchValue( {
+          id: this.user.id,
+          mobileNumber: this.user.mobileNumber,
+          nin: {value: this.user.nin, disabled: true},
+          gender: this.user.gender ? this.user.gender : 'M',
+          dateOfBirthGregorian: this.user.dateOfBirthGregorian,
+          dateOfBirthHijri: this.user.dateOfBirthHijri,
+          email: this.user.email,
+          familyName: this.user.familyName,
+          firstName: this.user.firstName,
+          grandFatherName: this.user.grandFatherName,
+          fatherName: this.user.fatherName,
+          activated: this.user.activated,
+          role: this.mainSelectedRole,
+          additionalRoles: this.additionalSelectedRoles,
+          userRoles: this.user.userRoles
+        });
+
+        this.f.role.setValue(this.mainSelectedRole);
+
         if (this.user.dateOfBirthGregorian) {
           this.selectedDateOfBirth = this.dateFormatterService.fromDate(this.user.dateOfBirthGregorian);
           this.dateString = this.dateFormatterService.toString(this.dateFormatterService.toHijri(this.selectedDateOfBirth));
         }
-        this.updateUserForm();
+
       });
     }
   }
@@ -119,36 +140,6 @@ export class UserAddUpdateComponent implements OnInit {
   }
 
   initUserForm() {
-    this.userForm = this.formBuilder.group({
-      id: [-1, Validators.required],
-      mobileNumber: ['', [DccValidators.mobileNumber(), Validators.required]],
-      nin: ['', [DccValidators.ninOrIqama(IdType.NIN_OR_IQAMA), Validators.required]],
-      gender: ['M', Validators.required],
-      dateOfBirthGregorian: ['' , Validators.required],
-      dateOfBirthHijri: ['' , Validators.required],
-      email: ['' , Validators.required],
-      familyName: ['' , [DccValidators.charactersOnly(), Validators.required]],
-      firstName: ['' , [DccValidators.charactersOnly(), Validators.required]],
-      grandFatherName: ['', DccValidators.charactersOnly()],
-      fatherName: ['', DccValidators.charactersOnly()],
-      activated: [false, Validators.required],
-      role: [null, Validators.required],
-      additionalRoles: [[]],
-      userRoles: [null]
-    });
-  }
-
-  onMainRoleChange(selectedRole: any) {
-    this.mainSelectedRole = selectedRole;
-    this.additionalRoles = [];
-    this.roles.forEach(role => {
-      if (role.id != selectedRole.id) {
-        this.additionalRoles.push(role);
-      }
-    });
-  }
-
-  updateUserForm() {
     this.userForm = this.formBuilder.group({
       id: [this.user.id, Validators.required],
       mobileNumber: [this.user.mobileNumber, [DccValidators.mobileNumber(), Validators.required]],
@@ -162,9 +153,16 @@ export class UserAddUpdateComponent implements OnInit {
       grandFatherName: [this.user.grandFatherName, DccValidators.charactersOnly()],
       fatherName: [this.user.fatherName, DccValidators.charactersOnly()],
       activated: [this.user.activated, Validators.required],
-      role: [this.mainSelectedRole, Validators.required],
+      role: [null, Validators.required],
+      additionalRoles: [[]],
       userRoles: [this.user.userRoles, Validators.required]
     });
+  }
+
+  onMainRoleChange(selectedRole: any) {
+    console.log('in main role change ::' + JSON.stringify(selectedRole));
+    this.mainSelectedRole = selectedRole;
+    this.additionalRoles = this.roles ? this.roles.filter(role => role.id != selectedRole.id) : [];
   }
 
   get currentLanguage(): string {
