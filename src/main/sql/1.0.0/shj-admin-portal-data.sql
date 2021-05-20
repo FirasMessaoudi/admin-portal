@@ -876,3 +876,20 @@ INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (34, 'TR',
 INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (35, 'TR', 'fa', N'ترکی');
 INSERT INTO shj_portal.sha_language_lk (id, code, lang, label) VALUES (36, 'TR', 'tr', N'Türkçe');
 SET IDENTITY_INSERT shj_portal.sha_language_lk OFF;
+GO
+
+SET IDENTITY_INSERT shj_portal.sha_print_request_status_lk ON;
+INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (1, 'NEW', 'ar', N'جديد');
+INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (2, 'NEW', 'en', 'New');
+INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (3, 'CONFIRMED', 'ar', N'مؤكد');
+INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (4, 'CONFIRMED', 'en', 'Confirmed');
+INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (5, 'UNDER_PROCESSING', 'ar', N'تحت المعالجة');
+INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (6, 'UNDER_PROCESSING', 'en', 'Under processing');
+INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (7, 'PROCESSED', 'ar', N'تم التجميع');
+INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (8, 'PROCESSED', 'en', 'Batched');
+INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (9, 'SENT_TO_PRINTING', 'ar', N'تم الإرسال للطباعة');
+INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (10, 'SENT_TO_PRINTING', 'en', 'Sent to printing');
+INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (11, 'CANCELLED', 'ar', N'ملغى');
+INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (12, 'CANCELLED', 'en', 'Cancelled');
+SET IDENTITY_INSERT shj_portal.sha_print_request_status_lk OFF;
+GO
