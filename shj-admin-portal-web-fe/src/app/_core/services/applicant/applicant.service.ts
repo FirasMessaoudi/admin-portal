@@ -1,18 +1,20 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Authority} from "@shared/model";
 
 /**
  * Provides a base for applicant operations.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ApplicantService {
 
   constructor(private http: HttpClient) {
   }
 
-  listRitualTypes(): Observable<Authority[]> {
-    return this.http.get<any>('/core/api/lookup/ritual-type/list');
+  list(pageNumber: any): Observable<any> {
+    let params = new HttpParams().set('page', pageNumber);
+    return this.http.get<any>("/core/api/applicants/list/all", {params: params});
   }
 }
