@@ -15,7 +15,7 @@ export class DateFormatterService {
 
     fromDate(date: Date): NgbDateStruct {
       let newDate = new Date(date);
-      return new NgbDate(newDate.getUTCFullYear(), newDate.getUTCMonth() + 1, newDate.getUTCDate() + 1);
+      return new NgbDate(newDate.getFullYear(), newDate.getMonth() + 1, newDate.getDate());
     }
 
     toDate(dateStruct: NgbDateStruct): Date {
