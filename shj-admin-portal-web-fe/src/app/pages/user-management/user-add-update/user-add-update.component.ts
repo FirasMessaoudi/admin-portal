@@ -29,7 +29,6 @@ export class UserAddUpdateComponent implements OnInit {
 
   user: User = new User();
   roles: Role[];
-  mainSelectedRole: Role;
   additionalRoles: Role[];
   userForm: FormGroup;
 
@@ -39,7 +38,6 @@ export class UserAddUpdateComponent implements OnInit {
   dateString: string;
   selectedDateType: any;
 
-  additionalSelectedRoles = [];
   dropdownSettings:IDropdownSettings = {};//TODO: check if it can be defined at the app level.
 
   @ViewChild('datePicker') dateOfBirthPicker: HijriGregorianDatepickerComponent;
@@ -71,11 +69,7 @@ export class UserAddUpdateComponent implements OnInit {
       allowSearchFilter: false
     };
 
-    this.roleService.listActive().subscribe(data => {
-      this.roles = data;
-    });
 
-    this.additionalSelectedRoles = [];
 
     // calendar default;
     let toDayGregorian = this.dateFormatterService.todayGregorian();
@@ -98,13 +92,6 @@ export class UserAddUpdateComponent implements OnInit {
     if (userId) {
       this.userService.find(userId).subscribe(user => {
         this.user = user;
-        this.user.userRoles.forEach(userRole => {
-          if (userRole.mainRole) {
-            this.mainSelectedRole = userRole.role;
-          } else {
-            this.additionalSelectedRoles.push(userRole.role);
-          }
-        });
 
         this.userForm.patchValue( {
           id: this.user.id,
@@ -119,12 +106,13 @@ export class UserAddUpdateComponent implements OnInit {
           grandFatherName: this.user.grandFatherName,
           fatherName: this.user.fatherName,
           activated: this.user.activated,
-          role: this.mainSelectedRole,
-          additionalRoles: this.additionalSelectedRoles,
+          role: this.user.userRoles.filter(ur => ur.mainRole).map(ur => ur.role)[0],
+          additionalRoles: this.user.userRoles.filter(ur => !ur.mainRole).map(ur => ur.role),
           userRoles: this.user.userRoles
         });
 
         this.f.nin.disable();
+        this.loadRoles(this.f.role.value);
 
         if (this.user.dateOfBirthGregorian) {
           this.selectedDateOfBirth = this.dateFormatterService.fromDate(this.user.dateOfBirthGregorian);
@@ -132,7 +120,16 @@ export class UserAddUpdateComponent implements OnInit {
         }
 
       });
+    } else {
+      this.loadRoles(null);
     }
+  }
+
+  loadRoles(mainRole) {
+    this.roleService.listActive().subscribe(data => {
+      this.roles = data;
+      this.additionalRoles = mainRole ? data.filter(r => r.id != mainRole.id) :  data;
+    });
   }
 
   get f() {
@@ -160,19 +157,13 @@ export class UserAddUpdateComponent implements OnInit {
   }
 
   onMainRoleChange(selectedRole: any) {
-    console.log('in main role change ::' + JSON.stringify(selectedRole));
-    this.mainSelectedRole = selectedRole;
-    this.additionalRoles = this.roles ? this.roles.filter(role => role.id != selectedRole.id) : [];
+    console.log('in main role change ::' + selectedRole.id);
+    this.additionalRoles = this.roles ? this.roles.filter(role => role.id !== selectedRole.id) : [];
+    console.log(JSON.stringify(this.additionalRoles.map(r => r.id).join("-")));
   }
 
   get currentLanguage(): string {
     return this.i18nService.language;
-  }
-
-  public getUserFullName() {
-    return `${this.user.firstName != null ? this.user.firstName : ""} ${this.user.fatherName != null ? this.user.fatherName : ""} ${
-      this.user.grandFatherName != null ? this.user.grandFatherName : ""
-    } ${this.user.familyName != null ? this.user.familyName : ""}`;
   }
 
   loadAvatar(event: any) {
@@ -215,7 +206,7 @@ export class UserAddUpdateComponent implements OnInit {
 
     let userRoles = [];
     // create UserRole for the main selected role and additional roles (if any).
-    userRoles.push(this.createUserRole(this.mainSelectedRole, true));
+    userRoles.push(this.createUserRole(this.f.role.value, true));
     this.userForm.controls.additionalRoles.value.forEach(role => {
       userRoles.push(this.createUserRole(role, false));
     });
@@ -257,5 +248,9 @@ export class UserAddUpdateComponent implements OnInit {
 
   get canSeeAddUpdateUser(): boolean {
     return this.authenticationService.hasAuthority(EAuthority.ADD_USER) || this.authenticationService.hasAuthority(EAuthority.EDIT_USER);
+  }
+
+  compareById(itemOne, itemTwo) {
+    return itemOne && itemTwo && itemOne.id == itemTwo.id;
   }
 }
