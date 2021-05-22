@@ -96,7 +96,7 @@ public class JpaUser implements Serializable {
 	@Column(name = "ACTION_DATE")
 	private Date actionDate;
 
-	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
 	private Set<JpaUserRole> userRoles;
 
 	@Column(name = "AVATAR")

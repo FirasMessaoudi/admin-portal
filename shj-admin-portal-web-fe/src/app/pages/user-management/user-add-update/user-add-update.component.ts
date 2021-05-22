@@ -124,7 +124,7 @@ export class UserAddUpdateComponent implements OnInit {
           userRoles: this.user.userRoles
         });
 
-        this.f.role.setValue(this.mainSelectedRole);
+        this.f.nin.disable();
 
         if (this.user.dateOfBirthGregorian) {
           this.selectedDateOfBirth = this.dateFormatterService.fromDate(this.user.dateOfBirthGregorian);
@@ -220,7 +220,7 @@ export class UserAddUpdateComponent implements OnInit {
       userRoles.push(this.createUserRole(role, false));
     });
     this.f.userRoles.setValue(userRoles);
-
+    this.userForm.value.nin = this.f.nin.value.value;
     this.userService.saveOrUpdate(this.userForm.value).subscribe(res => {
       if (res.hasOwnProperty("errors") && res.errors) {
         this.toastr.warning(this.translate.instant("general.dialog_form_error_text"), this.translate.instant("general.dialog_edit_title"));

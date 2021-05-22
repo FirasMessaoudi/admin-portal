@@ -43,4 +43,9 @@ public class JpaUserRole implements Serializable {
 
     @Column(name = "CREATION_DATE", nullable = false)
     private Date creationDate;
+
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+    }
 }
