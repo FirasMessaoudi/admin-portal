@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {AuthenticationService, UserService} from "@core/services";
 import {ChangePasswordCmd} from "@shared/model";
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Location} from '@angular/common'
 import {I18nService} from "@dcc-commons-ng/services";
 
 @Component({
@@ -19,7 +19,9 @@ export class ChangePasswordComponent implements OnInit {
               private i18nService: I18nService,
               private formBuilder: FormBuilder,
               private userService: UserService,
-              private authenticationService: AuthenticationService) { }
+              private location: Location,
+              private authenticationService: AuthenticationService) {
+  }
 
   ngOnInit() {
     this.createForm();
@@ -51,20 +53,20 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   changePassword() {
-    let changePasswordCmd:ChangePasswordCmd = new ChangePasswordCmd();
+    let changePasswordCmd: ChangePasswordCmd = new ChangePasswordCmd();
     changePasswordCmd.oldPassword = this.changePasswordForm.controls['oldPassword'].value;
     changePasswordCmd.newPassword = this.changePasswordForm.controls['newPassword'].value;
     changePasswordCmd.newPasswordConfirm = this.changePasswordForm.controls['newPasswordConfirm'].value;
     this.userService.changePassword(changePasswordCmd).subscribe(response => {
       if (response && (response.hasOwnProperty("errors") && response.errors)) {
-          Object.keys(this.changePasswordForm.controls).forEach(field => {
-            console.log("looking for validation errors for : " + field);
-            if (response.errors[field]) {
-              const control = this.changePasswordForm.get(field);
-              control.setErrors({invalid: response.errors[field].replace(/\{/, '').replace(/\}/, '')});
-              control.markAsTouched({onlySelf: true});
-            }
-          });
+        Object.keys(this.changePasswordForm.controls).forEach(field => {
+          console.log("looking for validation errors for : " + field);
+          if (response.errors[field]) {
+            const control = this.changePasswordForm.get(field);
+            control.setErrors({invalid: response.errors[field].replace(/\{/, '').replace(/\}/, '')});
+            control.markAsTouched({onlySelf: true});
+          }
+        });
       } else {
         this.logout();
       }
@@ -74,5 +76,9 @@ export class ChangePasswordComponent implements OnInit {
   logout() {
     this.authenticationService.logout();
     this.router.navigate(['/login']);
+  }
+
+  goBack() {
+    this.location.back();
   }
 }
