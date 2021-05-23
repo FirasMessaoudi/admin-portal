@@ -81,7 +81,7 @@
             <div class="badge m-2">
               <svg-icon styleClass="text-gray-300" icon="dot-circle"></svg-icon>
               <span class="{{ userMainRole(user)?.activated ? '' : ''}} ">
-                {{ currentLanguage.startsWith("en") ? userMainRole(user)?.nameEnglish : userMainRole(user)?.nameArabic }}
+                {{ currentLanguage.startsWith("en") ? userMainRole(user)?.labelEn : userMainRole(user)?.labelAr }}
               </span>
               <span *ngIf="!userMainRole(user)?.activated">
                 {{'user-management.not_activated' | translate}}
