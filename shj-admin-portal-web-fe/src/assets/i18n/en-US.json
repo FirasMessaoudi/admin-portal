@@ -19,6 +19,7 @@
     "mobile-number": "Please enter a valid Mobile number",
     "iqama-number": "Please enter a valid Iqama number",
     "nin-or-iqama-number": "Please enter a valid NIN/Iqama number",
+    "nin.or.iqama": "Please enter a valid NIN/Iqama number",
     "arabic-characters": "Please enter arabic letters only",
     "latin-characters": "Please enter latin letters only",
     "characters-only": "Please enter letters only",

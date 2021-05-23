@@ -59,7 +59,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         if (loggedInUserRoleIds.contains(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID))
             return mapPage(userRepository.findDistinctByDeletedFalseAndIdNot(pageable, loggedInUserId));
         // exclude system users in returned list
-        return mapPage(userRepository.findByDeletedFalseAndIdNotAndUserRolesRoleIdNot(pageable, loggedInUserId, RoleRepository.SYSTEM_ADMIN_ROLE_ID));
+        return mapPage(userRepository.findDistinctByDeletedFalseAndIdNotAndUserRolesRoleIdNot(pageable, loggedInUserId, RoleRepository.SYSTEM_ADMIN_ROLE_ID));
     }
 
     /**

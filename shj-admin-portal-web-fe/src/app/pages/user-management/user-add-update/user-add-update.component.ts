@@ -138,28 +138,33 @@ export class UserAddUpdateComponent implements OnInit {
 
   initUserForm() {
     this.userForm = this.formBuilder.group({
-      id: [this.user.id, Validators.required],
-      mobileNumber: [this.user.mobileNumber, [DccValidators.mobileNumber(), Validators.required]],
-      nin: [this.user.nin, [DccValidators.ninOrIqama(IdType.NIN_OR_IQAMA), Validators.required]],
-      gender: [this.user.gender ? this.user.gender : 'M', Validators.required],
-      dateOfBirthGregorian: [this.user.dateOfBirthGregorian, Validators.required],
-      dateOfBirthHijri: [this.user.dateOfBirthHijri, Validators.required],
-      email: [this.user.email, Validators.required],
-      familyName: [this.user.familyName, [DccValidators.charactersOnly(), Validators.required]],
-      firstName: [this.user.firstName,  [DccValidators.charactersOnly(), Validators.required]],
-      grandFatherName: [this.user.grandFatherName, DccValidators.charactersOnly()],
-      fatherName: [this.user.fatherName, DccValidators.charactersOnly()],
-      activated: [this.user.activated, Validators.required],
+      id: [-1, Validators.required],
+      mobileNumber: [null, [DccValidators.mobileNumber(), Validators.required]],
+      nin: [null, [DccValidators.ninOrIqama(IdType.NIN_OR_IQAMA), Validators.required]],
+      gender: ['M', Validators.required],
+      dateOfBirthGregorian: [null, Validators.required],
+      dateOfBirthHijri: [null, Validators.required],
+      email: ['', Validators.required],
+      familyName: ['', [DccValidators.charactersOnly(), Validators.required]],
+      firstName: ['',  [DccValidators.charactersOnly(), Validators.required]],
+      grandFatherName: ['', DccValidators.charactersOnly()],
+      fatherName: ['', DccValidators.charactersOnly()],
+      activated: [false, Validators.required],
       role: [null, Validators.required],
       additionalRoles: [[]],
-      userRoles: [this.user.userRoles, Validators.required]
+      userRoles: [[], Validators.required]
     });
   }
 
   onMainRoleChange(selectedRole: any) {
-    console.log('in main role change ::' + selectedRole.id);
     this.additionalRoles = this.roles ? this.roles.filter(role => role.id !== selectedRole.id) : [];
-    console.log(JSON.stringify(this.additionalRoles.map(r => r.id).join("-")));
+    let userRoles = [];
+    // create UserRole for the main selected role and additional roles (if any).
+    userRoles.push(this.createUserRole(this.f.role.value, true));
+    this.userForm.controls.additionalRoles.value.forEach(role => {
+      userRoles.push(this.createUserRole(role, false));
+    });
+    this.f.userRoles.setValue(userRoles);
   }
 
   get currentLanguage(): string {
@@ -204,15 +209,10 @@ export class UserAddUpdateComponent implements OnInit {
       return;
     }
 
-    let userRoles = [];
-    // create UserRole for the main selected role and additional roles (if any).
-    userRoles.push(this.createUserRole(this.f.role.value, true));
-    this.userForm.controls.additionalRoles.value.forEach(role => {
-      userRoles.push(this.createUserRole(role, false));
-    });
-    this.f.userRoles.setValue(userRoles);
-    this.userForm.value.nin = this.f.nin.value.value;
-    this.userService.saveOrUpdate(this.userForm.value).subscribe(res => {
+    let userData = Object.assign({}, this.userForm.value)
+    userData.nin = this.user.id > 0 ? this.f.nin.value.value : this.f.nin.value;
+
+    this.userService.saveOrUpdate(userData).subscribe(res => {
       if (res.hasOwnProperty("errors") && res.errors) {
         this.toastr.warning(this.translate.instant("general.dialog_form_error_text"), this.translate.instant("general.dialog_edit_title"));
         Object.keys(this.userForm.controls).forEach(field => {
