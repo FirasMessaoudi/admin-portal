@@ -304,6 +304,7 @@ public class UserManagementController {
 
         // sets form fields to database user instance
         databaseUser.setDateOfBirthGregorian(user.getDateOfBirthGregorian());
+        databaseUser.setDateOfBirthHijri(user.getDateOfBirthHijri());
         databaseUser.setActivated(user.isActivated());
         databaseUser.setEmail(user.getEmail());
         databaseUser.setFamilyName(user.getFamilyName());
