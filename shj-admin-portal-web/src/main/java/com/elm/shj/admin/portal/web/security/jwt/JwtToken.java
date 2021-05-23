@@ -27,6 +27,7 @@ public class JwtToken extends UsernamePasswordAuthenticationToken {
     private Set<UserRoleDto> userRoles;
     private String firstName;
     private String lastName;
+    private long id;
 
     public JwtToken(final String token, final Object principal,
                     final Collection<? extends GrantedAuthority> grantedAuthorities,
@@ -39,7 +40,7 @@ public class JwtToken extends UsernamePasswordAuthenticationToken {
 
     public JwtToken(final String token, final Object principal,
                     final Collection<? extends GrantedAuthority> grantedAuthorities,
-                    boolean passwordExpired, String firstName, String lastName, final Set<UserRoleDto> userRoles) {
+                    boolean passwordExpired, String firstName, String lastName, long id, final Set<UserRoleDto> userRoles) {
         super(principal, token, grantedAuthorities);
         this.authorities = (Collection<GrantedAuthority>)grantedAuthorities;
         this.token = token;
@@ -49,6 +50,7 @@ public class JwtToken extends UsernamePasswordAuthenticationToken {
         this.userRoles.forEach(userRoleDto -> userRoleDto.getRole().setRoleAuthorities(null));
         this.firstName = firstName;
         this.lastName = lastName;
+        this.id = id;
     }
 
     public void setToken(String token) {
@@ -79,6 +81,10 @@ public class JwtToken extends UsernamePasswordAuthenticationToken {
 
     public Set<UserRoleDto> getUserRoles() {
         return this.userRoles;
+    }
+
+    public long getId() {
+        return id;
     }
 
     @Override

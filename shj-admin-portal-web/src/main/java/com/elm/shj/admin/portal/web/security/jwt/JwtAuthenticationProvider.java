@@ -95,7 +95,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         // save user login info
         userService.updateUserLoginInfo(user.getId(), jwtTokenService.retrieveExpirationDateFromToken(token).orElse(new Date()));
 
-        return new JwtToken(token, authentication, AuthorityUtils.createAuthorityList(grantedAuthorities.toArray(new String[]{})), passwordExpiredFlag, user.getFirstName(), user.getFamilyName(), user.getUserRoles());
+        return new JwtToken(token, authentication, AuthorityUtils.createAuthorityList(grantedAuthorities.toArray(new String[]{})), passwordExpiredFlag, user.getFirstName(), user.getFamilyName(), user.getId(), user.getUserRoles());
     }
 
     /**

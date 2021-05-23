@@ -32,7 +32,7 @@
           </div>
         </a>
         <div class="dropdown-menu animate slideIn" aria-labelledby="userMenuLink">
-          <a class="dropdown-item" (click)="viewCurrentUserProfile()" [routerLink]="" routerLinkActive="router-link-active">
+          <a class="dropdown-item" (click)="viewCurrentUserProfile()" href="javascript:void(0)" routerLinkActive="router-link-active">
             {{ "header.my_profile" | translate }}
           </a>
           <a class="dropdown-item" [routerLink]="['/change-password']" routerLinkActive="router-link-active">
