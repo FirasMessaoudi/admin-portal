@@ -20,6 +20,14 @@ export class CardService {
   }
 
   /**
+   * list ready to print cards.
+   */
+  listReadyToPrint(pageNumber: any): Observable<any> {
+    let params = new HttpParams().set('page', pageNumber);
+    return this.http.get("/core/api/cards/list/ready-to-print", {params: pageNumber});
+  }
+
+  /**
    * Finds card by its ID from the server.
    *
    * @param cardId the card id

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {Subscription} from "rxjs";
 import {Page} from "@shared/model";
-import {ApplicantService} from "@core/services/applicant/applicant.service";
-import {Applicant} from "@model/applicant.model";
+import {CardService} from "@core/services";
+import {Card} from "@model/card.model";
 
 @Component({
   selector: 'app-step-one',
@@ -12,16 +12,16 @@ import {Applicant} from "@model/applicant.model";
 })
 export class StepOneComponent implements OnInit {
   closeResult = '';
-  applicants: Array<Applicant>;
+  cards: Array<Card> = [];
   pageArray: Array<number>;
   page: Page;
-  selectedApplicants: Number[] = [];
-  addedApplicants: Number[] = [];
+  selectedCards: Number[] = [];
+  addedCards: Number[] = [];
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
   constructor(private modalService: NgbModal,
-              private applicantService: ApplicantService) { }
+              private cardService: CardService) { }
 
   ngOnInit(): void {
     this.loadPage(0);
@@ -37,11 +37,11 @@ export class StepOneComponent implements OnInit {
   }
 
   loadPage(page: number) {
-    this.listSubscription = this.applicantService.list(page).subscribe(data => {
+    this.listSubscription = this.cardService.listReadyToPrint(page).subscribe(data => {
       this.page = data;
       if (this.page != null) {
         this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
-        this.applicants = this.page.content;
+        this.cards = this.page.content;
       }
     })
   }
@@ -59,13 +59,13 @@ export class StepOneComponent implements OnInit {
   }
 
   search(): void {
-    this.searchSubscription = this.applicantService.list(0).subscribe(data => {
-      this.applicants = [];
+    this.searchSubscription = this.cardService.listReadyToPrint(0).subscribe(data => {
+      this.cards = [];
       this.pageArray = [];
       this.page = data;
       if (this.page != null) {
         this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
-        this.applicants = this.page.content;
+        this.cards = this.page.content;
       }
     });
   }
@@ -83,36 +83,37 @@ export class StepOneComponent implements OnInit {
     this.modalService.open(content, { size: 'xl' });
   }
 
-  selectAllApplicants(event) {
-    this.selectedApplicants = event.target.checked ? this.applicants.map(applicant => applicant.id) : [];
+  selectAllCards(event) {
+    this.selectedCards = event.target.checked ?
+      this.selectedCards.concat(this.cards.map(applicant => applicant.id)) : [];
   }
 
-  selectOneApplicant(event, id) {
-    const selectedIndex = this.selectedApplicants.indexOf(id);
-    let newSelectedApplicants = [];
+  selectOneCard(event, id) {
+    const selectedIndex = this.selectedCards.indexOf(id);
+    let newSelectedCards = [];
 
     if (selectedIndex === -1) {
-      newSelectedApplicants = newSelectedApplicants.concat(this.selectedApplicants, id);
+      newSelectedCards = newSelectedCards.concat(this.selectedCards, id);
     } else if (selectedIndex === 0) {
-      newSelectedApplicants = newSelectedApplicants.concat(this.selectedApplicants.slice(1));
-    } else if (selectedIndex === this.selectedApplicants.length - 1) {
-      newSelectedApplicants = newSelectedApplicants.concat(this.selectedApplicants.slice(0, -1));
+      newSelectedCards = newSelectedCards.concat(this.selectedCards.slice(1));
+    } else if (selectedIndex === this.selectedCards.length - 1) {
+      newSelectedCards = newSelectedCards.concat(this.selectedCards.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelectedApplicants = newSelectedApplicants.concat(
-        this.selectedApplicants.slice(0, selectedIndex),
-        this.selectedApplicants.slice(selectedIndex + 1)
+      newSelectedCards = newSelectedCards.concat(
+        this.selectedCards.slice(0, selectedIndex),
+        this.selectedCards.slice(selectedIndex + 1)
       );
     }
-    this.selectedApplicants = newSelectedApplicants;
+    this.selectedCards = newSelectedCards;
   }
 
   save() {
-    this.addedApplicants = this.selectedApplicants;
+    this.addedCards = this.selectedCards;
     this.modalService.dismissAll();
     this.resetSelectedApplicants();
   }
 
   resetSelectedApplicants() {
-    this.selectedApplicants = [];
+    this.selectedCards = [];
   }
 }

@@ -7,7 +7,6 @@ import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
-import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.HashSet;
 
 /**
  * Main controller for applicant card management pages
@@ -41,6 +39,19 @@ public class ApplicantCardController {
     public Page<ApplicantCardDto> listApplicantCards(Pageable pageable, Authentication authentication) {
         log.debug("List applicant cards...");
         return applicantCardService.findAll(pageable);
+    }
+
+    /**
+     * List cards with status ready to print
+     *
+     * @param authentication the logged in user information
+     * @return the list of ready to print cards
+     */
+    @GetMapping("/list/ready-to-print")
+    @RolesAllowed({AuthorityConstants.USER_MANAGEMENT})
+    public Page<ApplicantCardDto> listReadyToPrintCards(Pageable pageable, Authentication authentication) {
+        log.info("list ready to print cards.");
+        return applicantCardService.findReadyToPrint(pageable);
     }
 
     /**
