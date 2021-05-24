@@ -1,8 +1,8 @@
-<div class="dashes flex-center-column my-5 p-5" *ngIf="addedCards.length === 0">
+<div class="dashes flex-center-column my-5 p-5" *ngIf="selectedCards.length === 0">
 
   <img class="my-5" src="assets/images/add-cards.jpg" alt='{{ "printing-management.new_request" | translate }}'>
 
-  <button id="addPrintingRequest" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
+  <button id="addPrintingRequest-01" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
     {{ "printing-management.new_request" | translate }}
   </button>
 
@@ -79,11 +79,11 @@
             <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
           </td>
         </tr>
-        <tr *ngFor="let card of page?.content">
+        <tr *ngFor="let card of cards">
           <td scope="row">
             <div class="custom-control custom-checkbox my-2">
               <input type="checkbox" class="custom-control-input" id="applicantCheck-{{card.id}}"
-                     [checked]="selectedCards?.indexOf(card.id) !== -1"
+                     [checked]="selectedCards.includes(card)"
                      (change)="selectOneCard($event, card.id)">
               <label class="custom-control-label mx-3" for="applicantCheck-{{card.id}}"></label>
             </div>
@@ -147,7 +147,7 @@
           <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
         </td>
       </tr>
-      <tr *ngFor="let card of page?.content">
+      <tr *ngFor="let card of addedCards">
         <td>{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</td>
         <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
         <td>{{card?.referenceNumber}}</td>
@@ -186,7 +186,7 @@
       <span>{{'printing-management.selected_smart_card' | translate}}</span>
     </div>
 
-    <button id="addPrintingRequest" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
+    <button id="addPrintingRequest-02" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
       {{ "printing-management.new_request" | translate }}
     </button>
 

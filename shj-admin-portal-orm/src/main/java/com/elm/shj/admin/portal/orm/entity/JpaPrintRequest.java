@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -34,9 +36,11 @@ public class JpaPrintRequest implements Serializable {
     @Column(name = "status_code", nullable = false)
     private String statusCode;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "printRequest")
     private List<JpaPrintRequestApplicant> printRequestApplicants;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "printRequest")
     private List<JpaPrintRequestBatch> printRequestBatches;
 

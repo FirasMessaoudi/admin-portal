@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
+import {Observable, of} from "rxjs";
+import {catchError} from "rxjs/internal/operators";
 
 /**
  * Provides a base for printing operations.
@@ -18,4 +19,15 @@ export class PrintService {
     return this.http.get<any>("/core/api/print/requests/list", {params: params});
   }
 
+  save(applicantsIds: Number[]): Observable<any> {
+    return this.http.post<any>("/core/api/print/requests/create", applicantsIds).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.hasOwnProperty('error')) {
+          return of(error.error);
+        } else {
+          console.error('An error happen while resetting user password : ' + error);
+          return of(error);
+        }
+      }));
+  }
 }

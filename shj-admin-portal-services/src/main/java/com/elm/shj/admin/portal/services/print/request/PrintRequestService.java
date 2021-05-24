@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.print.request;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.PrintRequestApplicantDto;
 import com.elm.shj.admin.portal.services.dto.PrintRequestDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import java.util.List;
 public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRequestDto, Long> {
 
     private final ApplicantService applicantService;
+    private final PrintRequestApplicantService printRequestApplicantService;
 
     /**
      * Find all print requests.
@@ -41,16 +44,20 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         return mapPage(getRepository().findAll(pageable));
     }
 
+    @Transactional
     public PrintRequestDto createPrintRequest(List<Long> applicantsIds) {
         PrintRequestDto printRequest = new PrintRequestDto();
         printRequest.setStatusCode("NEW");
-        applicantsIds.forEach(id -> {
+        printRequest.setCreationDate(new Date());
+        PrintRequestDto printRequestDto = save(printRequest);
+        for (long id : applicantsIds) {
             PrintRequestApplicantDto printRequestApplicant = new PrintRequestApplicantDto();
-            printRequestApplicant.setApplicant(applicantService.findOne(id));
+            ApplicantDto applicantDto = applicantService.findOne(id);
+            printRequestApplicant.setApplicant(applicantDto);
             printRequestApplicant.setCreationDate(new Date());
-            printRequest.getPrintRequestApplicants().add(printRequestApplicant);
-        });
-        save(printRequest);
+            printRequestApplicant.setPrintRequest(printRequestDto);
+            printRequestApplicantService.save(printRequestApplicant);
+        }
         return printRequest;
     }
 }

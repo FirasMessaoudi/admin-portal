@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +23,7 @@ public class PrintRequestApplicantDto implements Serializable {
     private static final long serialVersionUID = -5235991770935109142L;
 
     private long id;
+    @JsonBackReference
     private PrintRequestDto printRequest;
     private ApplicantDto applicant;
     private Date creationDate;

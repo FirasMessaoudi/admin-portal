@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {Subscription} from "rxjs";
 import {Page} from "@shared/model";
@@ -15,13 +15,18 @@ export class StepOneComponent implements OnInit {
   cards: Array<Card> = [];
   pageArray: Array<number>;
   page: Page;
-  selectedCards: Number[] = [];
-  addedCards: Number[] = [];
+  selectedCards: any = [];
+  addedCards: any = [];
+
+  @Output()
+  public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();
+
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
   constructor(private modalService: NgbModal,
-              private cardService: CardService) { }
+              private cardService: CardService) {
+  }
 
   ngOnInit(): void {
     this.loadPage(0);
@@ -51,7 +56,7 @@ export class StepOneComponent implements OnInit {
   }
 
   open(content) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
@@ -79,41 +84,28 @@ export class StepOneComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
+
   openLg(content) {
-    this.modalService.open(content, { size: 'xl' });
+    this.modalService.open(content, {size: 'xl'});
   }
 
   selectAllCards(event) {
-    this.selectedCards = event.target.checked ?
-      this.selectedCards.concat(this.cards.map(applicant => applicant.id)) : [];
+    this.selectedCards = event.target.checked ? [...this.cards] : [];
   }
 
   selectOneCard(event, id) {
-    const selectedIndex = this.selectedCards.indexOf(id);
-    let newSelectedCards = [];
+    const selectedIndex = this.cards.findIndex(card => card.id === id);
 
-    if (selectedIndex === -1) {
-      newSelectedCards = newSelectedCards.concat(this.selectedCards, id);
-    } else if (selectedIndex === 0) {
-      newSelectedCards = newSelectedCards.concat(this.selectedCards.slice(1));
-    } else if (selectedIndex === this.selectedCards.length - 1) {
-      newSelectedCards = newSelectedCards.concat(this.selectedCards.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelectedCards = newSelectedCards.concat(
-        this.selectedCards.slice(0, selectedIndex),
-        this.selectedCards.slice(selectedIndex + 1)
-      );
+    if (event.target.checked) {
+      this.selectedCards.push(this.cards[selectedIndex]);
+    } else {
+      this.selectedCards.splice(this.selectedCards.findIndex(card => card.id === id), 1);
     }
-    this.selectedCards = newSelectedCards;
   }
 
   save() {
     this.addedCards = this.selectedCards;
+    this.onAddCards.emit(this.selectedCards);
     this.modalService.dismissAll();
-    this.resetSelectedApplicants();
-  }
-
-  resetSelectedApplicants() {
-    this.selectedCards = [];
   }
 }
