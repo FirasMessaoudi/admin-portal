@@ -158,13 +158,6 @@ export class UserAddUpdateComponent implements OnInit {
 
   onMainRoleChange(selectedRole: any) {
     this.additionalRoles = this.roles ? this.roles.filter(role => role.id !== selectedRole.id) : [];
-    let userRoles = [];
-    // create UserRole for the main selected role and additional roles (if any).
-    userRoles.push(this.createUserRole(this.f.role.value, true));
-    this.userForm.controls.additionalRoles.value.forEach(role => {
-      userRoles.push(this.createUserRole(role, false));
-    });
-    this.f.userRoles.setValue(userRoles);
   }
 
   get currentLanguage(): string {
@@ -208,6 +201,14 @@ export class UserAddUpdateComponent implements OnInit {
     if (this.userForm.invalid) {
       return;
     }
+
+    let userRoles = [];
+    // create UserRole for the main selected role and additional roles (if any).
+    userRoles.push(this.createUserRole(this.f.role.value, true));
+    this.userForm.controls.additionalRoles.value.forEach(role => {
+      userRoles.push(this.createUserRole(role, false));
+    });
+    this.f.userRoles.setValue(userRoles);
 
     let userData = Object.assign({}, this.userForm.value)
     userData.nin = this.user.id > 0 ? this.f.nin.value.value : this.f.nin.value;

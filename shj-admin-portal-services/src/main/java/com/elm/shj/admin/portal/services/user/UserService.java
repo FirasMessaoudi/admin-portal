@@ -241,7 +241,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
      * {@inheritDoc}
      */
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public UserDto save(UserDto user) {
         // convert avatar file to encoded bytes
         if (user.getAvatarFile() != null && !user.getAvatarFile().isEmpty()) {
