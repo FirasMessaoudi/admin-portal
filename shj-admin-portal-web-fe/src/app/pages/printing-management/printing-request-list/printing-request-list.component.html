@@ -121,7 +121,7 @@
             </td>
           </tr>
           <tr *ngFor="let request of printRequests">
-            <td><a name="requestID" [routerLink]="['/print-requests/details']" class="text-dcc-primary font-weight-bold">{{request.id}}</a></td>
+            <td><a name="requestID" [routerLink]="['/print-requests/details']" class="text-dcc-primary font-weight-bold">{{request.referenceNumber}}</a></td>
             <td>{{request.printRequestBatches?.length}}</td>
             <td class="ltr">{{request.printRequestApplicants?.length}}</td>
             <td class="ltr">{{'24-03-2021'}}</td>

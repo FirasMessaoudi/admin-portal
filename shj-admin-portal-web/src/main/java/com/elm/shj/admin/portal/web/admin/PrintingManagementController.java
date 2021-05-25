@@ -12,14 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Main controller for printing management pages
@@ -37,30 +34,23 @@ public class PrintingManagementController {
 
     @GetMapping("/list")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
-    public Page<PrintRequestDto> listPrintRequests(Pageable pageable, Authentication authentication) {
+    public Page<PrintRequestDto> list(Pageable pageable, Authentication authentication) {
         log.debug("List print requests...");
         return printRequestService.findAll(pageable);
     }
 
     @GetMapping("/list/new")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
-    public Page<PrintRequestDto> listNewPrintRequests(Pageable pageable, Authentication authentication) {
-        log.debug("List print requests...");
+    public Page<PrintRequestDto> listNew(Pageable pageable, Authentication authentication) {
+        log.debug("List print requests with status new...");
         return printRequestService.findNew(pageable);
     }
 
     @PostMapping("/create")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
-    public ResponseEntity<PrintRequestDto> createPrintRequest(@RequestBody List<Long> applicantsIds) {
-        log.debug("Handler for {}", "Create print request");
-        PrintRequestDto printRequest;
-        try {
-            printRequest = printRequestService.createPrintRequest(applicantsIds);
-        } catch (Exception e) {
-            log.error("Error while creating print request.", e);
-            return ResponseEntity.of(Optional.empty());
-        }
-        return ResponseEntity.ok(Objects.requireNonNull(printRequest));
+    public PrintRequestDto create(@RequestBody List<Long> applicantsIds) {
+        log.debug("Creating print request");
+        return printRequestService.save(applicantsIds);
     }
 
 }

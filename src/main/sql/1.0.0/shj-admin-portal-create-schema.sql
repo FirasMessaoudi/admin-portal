@@ -610,6 +610,7 @@ if not exists (select * from sys.tables where name = 'sha_print_request')
 create table shj_portal.sha_print_request
 (
     id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+    reference_number VARCHAR(20) NOT NULL,
     status_code VARCHAR(20) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

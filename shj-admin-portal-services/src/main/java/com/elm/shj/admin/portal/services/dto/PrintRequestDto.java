@@ -23,6 +23,7 @@ public class PrintRequestDto implements Serializable {
     private static final long serialVersionUID = -5860349238491983581L;
 
     private long id;
+    private String referenceNumber;
     private String statusCode;
     private List<PrintRequestApplicantDto> printRequestApplicants;
     private List<PrintRequestBatchDto> printRequestBatches;

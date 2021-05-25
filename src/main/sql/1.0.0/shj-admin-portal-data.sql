@@ -428,8 +428,8 @@ SET IDENTITY_INSERT shj_portal.sha_health_special_needs_type_lk OFF;
 GO
 
 SET IDENTITY_INSERT shj_portal.sha_card_status_lk ON;
-INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (1, 'READY_TO_SEND', 'ar', N'جاهز للطباعة');
-INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (2, 'READY_TO_SEND', 'en', 'Ready to Send');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (1, 'READY_TO_PRINT', 'ar', N'جاهز للطباعة');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (2, 'READY_TO_PRINT', 'en', 'Ready to Print');
 INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (3, 'SENT_FOR_PRINT', 'ar', N'تم الإرسال للطباعة');
 INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (4, 'SENT_FOR_PRINT', 'en', 'Sent for Print');
 INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (5, 'PRINTED', 'ar', N'تمت الطباعة');
@@ -442,6 +442,8 @@ INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (11, 'S
 INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (12, 'SUSPENDED', 'en', 'Suspended');
 INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (13, 'CANCELLED', 'ar', N'تم الإلغاء');
 INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (14, 'CANCELLED', 'en', 'Cancelled');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (15, 'WAITING_TO_SEND', 'ar', N'جاري الإرسال للطباعة');
+INSERT INTO shj_portal.sha_card_status_lk (id, code, lang, label) VALUES (16, 'WAITING_TO_SEND', 'en', 'Waiting to Send');
 SET IDENTITY_INSERT shj_portal.sha_card_status_lk OFF;
 GO
 
@@ -892,4 +894,18 @@ INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUE
 INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (11, 'CANCELLED', 'ar', N'ملغى');
 INSERT INTO shj_portal.sha_print_request_status_lk (id, code, lang, label) VALUES (12, 'CANCELLED', 'en', 'Cancelled');
 SET IDENTITY_INSERT shj_portal.sha_print_request_status_lk OFF;
+GO
+
+SET IDENTITY_INSERT shj_portal.sha_print_batch_type_lk ON;
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (1, 'GROUP_LEADER', 'ar', N'رئيس المجموعة');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (2, 'GROUP_LEADER', 'en', 'Group Leader');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (3, 'HAMLAH', 'ar', N'الحملة');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (4, 'HAMLAH', 'en', 'Hamlah');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (5, 'FAWJ_NUMBER', 'ar', N'رقم الفوج');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (6, 'FAWJ_NUMBER', 'en', 'Fawj Number');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (7, 'NATIONALITY', 'ar', N'الجنسية');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (8, 'NATIONALITY', 'en', 'Nationality');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (9, 'MOTAWIF', 'ar', N'مؤسسة الطوافة');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (10, 'MOTAWIF', 'en', 'Motawif');
+SET IDENTITY_INSERT shj_portal.sha_print_batch_type_lk OFF;
 GO
