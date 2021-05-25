@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,17 +11,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Dto class for the relative relationship domain.
+ * Dto class for the print request status domain.
  *
- * @author ahmad flaifel
+ * @author Slim Ben Hadj
  * @since 1.0.0
  */
 @Getter
 @Setter
 @NoArgsConstructor
-public class RelativeRelationshipLookupDto implements Serializable {
+public class PrintRequestStatusLookupDto implements Serializable {
 
-    private static final long serialVersionUID = 2688907762206928697L;
+    private static final long serialVersionUID = -5285406270559206854L;
 
     private long id;
     private String code;

@@ -42,6 +42,13 @@ public class PrintingManagementController {
         return printRequestService.findAll(pageable);
     }
 
+    @GetMapping("/list/new")
+    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    public Page<PrintRequestDto> listNewPrintRequests(Pageable pageable, Authentication authentication) {
+        log.debug("List print requests...");
+        return printRequestService.findNew(pageable);
+    }
+
     @PostMapping("/create")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
     public ResponseEntity<PrintRequestDto> createPrintRequest(@RequestBody List<Long> applicantsIds) {

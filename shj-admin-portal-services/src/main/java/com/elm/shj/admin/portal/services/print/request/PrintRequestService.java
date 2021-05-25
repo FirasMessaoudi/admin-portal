@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.print.request;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
+import com.elm.shj.admin.portal.orm.repository.PrintRequestRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.PrintRequestApplicantDto;
@@ -32,6 +33,7 @@ import java.util.List;
 public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRequestDto, Long> {
 
     private final ApplicantService applicantService;
+    private final PrintRequestRepository printRequestRepository;
     private final PrintRequestApplicantService printRequestApplicantService;
 
     /**
@@ -44,18 +46,22 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         return mapPage(getRepository().findAll(pageable));
     }
 
+    public Page<PrintRequestDto> findNew(Pageable pageable) {
+        return mapPage(printRequestRepository.findByStatusCode("NEW", pageable));
+    }
+
     @Transactional
     public PrintRequestDto createPrintRequest(List<Long> applicantsIds) {
         PrintRequestDto printRequest = new PrintRequestDto();
         printRequest.setStatusCode("NEW");
         printRequest.setCreationDate(new Date());
-        PrintRequestDto printRequestDto = save(printRequest);
+        printRequest = save(printRequest);
         for (long id : applicantsIds) {
             PrintRequestApplicantDto printRequestApplicant = new PrintRequestApplicantDto();
             ApplicantDto applicantDto = applicantService.findOne(id);
             printRequestApplicant.setApplicant(applicantDto);
             printRequestApplicant.setCreationDate(new Date());
-            printRequestApplicant.setPrintRequest(printRequestDto);
+            printRequestApplicant.setPrintRequest(printRequest);
             printRequestApplicantService.save(printRequestApplicant);
         }
         return printRequest;
