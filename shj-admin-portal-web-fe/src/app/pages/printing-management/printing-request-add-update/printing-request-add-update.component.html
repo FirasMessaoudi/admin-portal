@@ -14,7 +14,7 @@
       </div>
       <div class="bg-lighter mx-30 p-4 text-center">
         <button type="button" routerLink="/print-requests/list" class="btn btn-outline-secondary rounded-22 px-5 mr-3">{{'general.btn_cancel' | translate}}</button>
-        <button type="button" awNextStep (click)="saveStepOne()" [disabled]="selectedCards.length < 1" class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'general.btn_next' | translate}}</button>
+        <button type="button" awNextStep (click)="saveStepOne()" [disabled]="selectedCards.length === 0" class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'general.btn_next' | translate}}</button>
       </div>
     </aw-wizard-step>
     <aw-wizard-step [navigationSymbol]="{ symbol: '2' }">
@@ -22,12 +22,12 @@
         <span>{{'printing-management.create_batch' | translate}}</span>
       </ng-template>
       <div class="section">
-        <app-step-two></app-step-two>
+        <app-step-two (onSelectBatchTypes)="setSelectedBatchTypes($event)"  [printRequest]="printRequest"></app-step-two>
       </div>
       <div class="bg-lighter mx-30 p-4 text-center">
         <button type="button" routerLink="/print-requests/list" class="btn btn-outline-secondary rounded-22 px-5 mr-3">{{'general.btn_cancel' | translate}}</button>
         <button type="button" class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3" awPreviousStep>{{'general.btn_previous' | translate}}</button>
-        <button type="button" awNextStep (click)="saveStepTwo()" [disabled]="false" class="btn btn-dcc-primary rounded-22 px-5 mr-3" translate>general.btn_next</button>
+        <button type="button" awNextStep (click)="saveStepTwo()" [disabled]="!printRequest" class="btn btn-dcc-primary rounded-22 px-5 mr-3" translate>general.btn_next</button>
       </div>
     </aw-wizard-step>
     <aw-wizard-step [navigationSymbol]="{ symbol: '3' }">

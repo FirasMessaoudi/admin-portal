@@ -597,12 +597,12 @@ GO
 if not exists (select * from sys.tables where name = 'sha_print_batch_type_lk')
 create table shj_portal.sha_print_batch_type_lk
 (
-    id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
-    code VARCHAR(20) NOT NULL,
-    lang VARCHAR(45) NOT NULL,
-    label NVARCHAR(50) NOT NULL,
-    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    constraint print_batch_type_lk_unique unique (code ASC, lang ASC)
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    label_ar nvarchar(50) NOT NULL,
+    label_en nvarchar(50) NOT NULL,
+    code nvarchar(50) NOT NULL,
+    creation_date smalldatetime not null default current_timestamp
+    constraint print_batch_type_lk_unique unique (code ASC)
 );
 GO
 
@@ -610,6 +610,7 @@ if not exists (select * from sys.tables where name = 'sha_print_request')
 create table shj_portal.sha_print_request
 (
     id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+    reference_number VARCHAR(20) NOT NULL,
     status_code VARCHAR(20) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

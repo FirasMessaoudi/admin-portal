@@ -114,54 +114,24 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngIf="false" class="text-center">
+          <tr *ngIf="printRequests.length === 0" class="text-center">
             <td colspan="10">
               <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set" ></svg-icon>
               <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
             </td>
           </tr>
-          <tr>
-            <td><a name="requestID" [routerLink]="['/print-requests/details']" class="text-dcc-primary font-weight-bold">{{'544820'}}</a></td>
-            <td>{{'5'}}</td>
-            <td class="ltr">{{'690'}}</td>
+          <tr *ngFor="let request of printRequests">
+            <td><a name="requestID" [routerLink]="['/print-requests/details']" class="text-dcc-primary font-weight-bold">{{request.referenceNumber}}</a></td>
+            <td>{{request.printRequestBatches?.length}}</td>
+            <td class="ltr">{{request.printRequestApplicants?.length}}</td>
             <td class="ltr">{{'24-03-2021'}}</td>
             <td class="ltr">
-              {{'تمت الطباعة'}}
+              {{request.statusCode ? lookupService().localizedLabel(printRequestStatuses, request.statusCode) : ""}}
               <span class="status mr-1 done"></span>
             </td>
             <td>
               <button [routerLink]="['/print-requests/details']" class="btn btn-sm btn-outline-dcc-primary tblView">
-                عرض
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><a [routerLink]="['/print-requests/details']" class="text-dcc-primary font-weight-bold">{{'544837'}}</a></td>
-            <td>{{'5'}}</td>
-            <td class="ltr">{{'247'}}</td>
-            <td class="ltr">{{'24-03-2021'}}</td>
-            <td class="ltr">
-              {{'جاهز الطباعة'}}
-              <span class="status mr-1 ready"></span>
-            </td>
-            <td>
-              <button [routerLink]="['/print-requests/details']" class="btn btn-sm btn-outline-dcc-primary tblView">
-                عرض
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><a [routerLink]="['/print-requests/details']" class="text-dcc-primary font-weight-bold">{{'544837'}}</a></td>
-            <td>{{'5'}}</td>
-            <td class="ltr">{{'247'}}</td>
-            <td class="ltr">{{'24-03-2021'}}</td>
-            <td class="ltr">
-              {{'جاهز الطباعة'}}
-              <span class="status mr-1 Suspended"></span>
-            </td>
-            <td>
-              <button [routerLink]="['/print-requests/details']" class="btn btn-sm btn-outline-dcc-primary tblView">
-                عرض
+                {{"general.btn_view" | translate}}
               </button>
             </td>
           </tr>

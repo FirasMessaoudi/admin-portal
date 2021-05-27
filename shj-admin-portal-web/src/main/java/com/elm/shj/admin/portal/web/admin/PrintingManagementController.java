@@ -12,14 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Main controller for printing management pages
@@ -35,25 +32,50 @@ public class PrintingManagementController {
 
     private final PrintRequestService printRequestService;
 
+    /**
+     * Lists all print requests
+     *
+     * @param pageable the page configuration for the pagination
+     * @return the list of print requests
+     */
     @GetMapping("/list")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
-    public Page<PrintRequestDto> listPrintRequests(Pageable pageable, Authentication authentication) {
+    public Page<PrintRequestDto> list(Pageable pageable, Authentication authentication) {
         log.debug("List print requests...");
         return printRequestService.findAll(pageable);
     }
 
+    /**
+     * finds a print request by his ID
+     *
+     * @param printRequestId the request id to find
+     * @return the found user or <code>null</code>
+     */
+    @GetMapping("/find/{printRequestId}")
+    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    public PrintRequestDto find(@PathVariable long printRequestId) {
+        log.debug("Handler for {}", "Find Print Request");
+        return printRequestService.findOne(printRequestId);
+    }
+
+    /**
+     * Add new print request
+     *
+     * @param applicantsIds TODO Complete documentation
+     * @return the created request
+     */
     @PostMapping("/create")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
-    public ResponseEntity<PrintRequestDto> createPrintRequest(@RequestBody List<Long> applicantsIds) {
-        log.debug("Handler for {}", "Create print request");
-        PrintRequestDto printRequest;
-        try {
-            printRequest = printRequestService.createPrintRequest(applicantsIds);
-        } catch (Exception e) {
-            log.error("Error while creating print request.", e);
-            return ResponseEntity.of(Optional.empty());
-        }
-        return ResponseEntity.ok(Objects.requireNonNull(printRequest));
+    public PrintRequestDto create(@RequestBody List<Long> applicantsIds) {
+        log.debug("Creating print request");
+        return printRequestService.save(applicantsIds);
+    }
+
+    @PostMapping("/{printRequestId}/batch")
+    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    public PrintRequestDto batch(@PathVariable long printRequestId, @RequestBody List<String> printBatchTypes) {
+        log.debug("Batching print request");
+        return printRequestService.processBatching(printRequestId, printBatchTypes);
     }
 
 }

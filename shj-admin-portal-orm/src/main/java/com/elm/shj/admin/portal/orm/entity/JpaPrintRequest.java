@@ -33,6 +33,9 @@ public class JpaPrintRequest implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
+    @Column(name = "reference_number")
+    private String referenceNumber;
+
     @Column(name = "status_code", nullable = false)
     private String statusCode;
 

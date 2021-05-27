@@ -36,6 +36,8 @@ public class LookupController {
     private final MaritalStatusLookupService maritalStatusLookupService;
     private final CountryLookupService countryLookupService;
     private final HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;
+    private final PrintRequestStatusLookupService printRequestStatusLookupService;
+    private final PrintBatchTypeLookupService printBatchTypeLookupService;
 
     @GetMapping("/authority/list/parent")
     @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT)
@@ -83,5 +85,19 @@ public class LookupController {
     public List<HealthSpecialNeedsTypeLookupDto> listHealthSpecialNeeds(Authentication authentication) {
         log.debug("list health special needs...");
         return healthSpecialNeedsLookupService.findAll();
+    }
+
+    @GetMapping("/print-request-status/list")
+    @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT) //TODO: change it
+    public List<PrintRequestStatusLookupDto> listPrintRequestStatuses(Authentication authentication) {
+        log.debug("list print request statuses...");
+        return printRequestStatusLookupService.findAll();
+    }
+
+    @GetMapping("/print-batch-type/list")
+    @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT) //TODO: change it
+    public List<PrintBatchTypeLookupDto> listPrintRequestBatchTypes(Authentication authentication) {
+        log.debug("list print batch types...");
+        return printBatchTypeLookupService.findAll();
     }
 }

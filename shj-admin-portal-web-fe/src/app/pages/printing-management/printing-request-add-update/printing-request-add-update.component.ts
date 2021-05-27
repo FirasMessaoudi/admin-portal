@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Card} from "@model/card.model";
 import {PrintService} from "@core/services/print/print.service";
+import {PrintRequest} from "@model/print-request.model";
 
 @Component({
   selector: 'app-printing-request-add-update',
@@ -10,9 +11,12 @@ import {PrintService} from "@core/services/print/print.service";
 export class PrintingRequestAddUpdateComponent implements OnInit {
 
   constructor(private cdr: ChangeDetectorRef,
-              private printService: PrintService) { }
+              private printService: PrintService) {
+  }
 
   selectedCards: Card[] = [];
+  printRequest: PrintRequest;
+  selectedBatchTypes: string[] = [];
 
   ngOnInit(): void {
   }
@@ -20,12 +24,20 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
   saveStepOne() {
     this.cdr.detectChanges();
     this.printService.save(this.selectedCards.map(card => card.applicantRitual.applicant.id)).subscribe(
-      res => console.log(res)
+      res => {
+        this.printService.find(res.id).subscribe(
+          result => this.printRequest = result
+        );
+      }
     );
   }
 
   saveStepTwo() {
     this.cdr.detectChanges();
+    console.log(this.selectedBatchTypes);
+    this.printService.batch(this.printRequest.id, this.selectedBatchTypes).subscribe(
+      res => console.log(res)
+    )
   }
 
   confirm() {
@@ -34,5 +46,9 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
 
   setSelectedCards(cards) {
     this.selectedCards = cards;
+  }
+
+  setSelectedBatchTypes(batchTypes) {
+    this.selectedBatchTypes = batchTypes;
   }
 }
