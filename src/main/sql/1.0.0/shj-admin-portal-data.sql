@@ -897,15 +897,10 @@ SET IDENTITY_INSERT shj_portal.sha_print_request_status_lk OFF;
 GO
 
 SET IDENTITY_INSERT shj_portal.sha_print_batch_type_lk ON;
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (1, 'GROUP_LEADER', 'ar', N'رئيس المجموعة');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (2, 'GROUP_LEADER', 'en', 'Group Leader');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (3, 'HAMLAH', 'ar', N'الحملة');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (4, 'HAMLAH', 'en', 'Hamlah');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (5, 'FAWJ_NUMBER', 'ar', N'رقم الفوج');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (6, 'FAWJ_NUMBER', 'en', 'Fawj Number');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (7, 'NATIONALITY', 'ar', N'الجنسية');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (8, 'NATIONALITY', 'en', 'Nationality');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (9, 'MOTAWIF', 'ar', N'مؤسسة الطوافة');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, code, lang, label) VALUES (10, 'MOTAWIF', 'en', 'Motawif');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code) VALUES (1, N'رئيس المجموعة', 'Group Leader', 'GROUP_LEADER');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code) VALUES (2, N'الحملة', 'Hamlah', 'HAMLAH');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code) VALUES (3, N'رقم الفوج', 'Fawj Number', 'FAWJ_NUMBER');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code) VALUES (4, N'الجنسية', 'Nationality', 'NATIONALITY');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code) VALUES (5, N'مؤسسة الطوافة', 'Motawif', 'MOTAWIF');
 SET IDENTITY_INSERT shj_portal.sha_print_batch_type_lk OFF;
 GO

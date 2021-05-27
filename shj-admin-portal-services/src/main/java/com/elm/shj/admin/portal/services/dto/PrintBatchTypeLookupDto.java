@@ -3,9 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,16 +14,17 @@ import java.util.Date;
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
-@Getter
-@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class PrintBatchTypeLookupDto implements Serializable {
 
     private static final long serialVersionUID = -3472461540347274275L;
 
     private long id;
+    private String labelAr;
+    private String labelEn;
     private String code;
-    private String lang;
-    private String label;
     private Date creationDate;
 }

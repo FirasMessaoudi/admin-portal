@@ -5,10 +5,13 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the sha_print_request_batch database table.
@@ -39,6 +42,9 @@ public class JpaPrintRequestBatch implements Serializable {
 
     @Column(name = "batch_types")
     private String batchTypes;
+
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "printRequestBatch")
+    private List<JpaPrintRequestBatchApplicant> printRequestBatchApplicants;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

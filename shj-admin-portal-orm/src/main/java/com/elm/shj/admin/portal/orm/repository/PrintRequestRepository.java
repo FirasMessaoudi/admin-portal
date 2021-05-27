@@ -15,5 +15,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0.0
  */
 public interface PrintRequestRepository extends JpaRepository<JpaPrintRequest, Long> {
-    Page<JpaPrintRequest> findByStatusCode(String statusCode, Pageable pageable);
 }

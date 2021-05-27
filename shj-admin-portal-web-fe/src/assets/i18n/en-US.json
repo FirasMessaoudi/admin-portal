@@ -493,7 +493,8 @@
     "print_request_done_successfully": "Print Request Done Successfully",
     "print_request_number": "Print Request Number",
     "btn_view_print_request_details": "View Request Details",
-    "btn_back_to_printing_management": "Back to Printing Management"
+    "btn_back_to_printing_management": "Back to Printing Management",
+    "add_cards": "Add {{noCards}} card(s)"
   },
   "rule-management": {
     "title": "Decision Rule Management",

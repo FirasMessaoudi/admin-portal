@@ -32,6 +32,12 @@ public class PrintingManagementController {
 
     private final PrintRequestService printRequestService;
 
+    /**
+     * Lists all print requests
+     *
+     * @param pageable the page configuration for the pagination
+     * @return the list of print requests
+     */
     @GetMapping("/list")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
     public Page<PrintRequestDto> list(Pageable pageable, Authentication authentication) {
@@ -39,18 +45,37 @@ public class PrintingManagementController {
         return printRequestService.findAll(pageable);
     }
 
-    @GetMapping("/list/new")
+    /**
+     * finds a print request by his ID
+     *
+     * @param printRequestId the request id to find
+     * @return the found user or <code>null</code>
+     */
+    @GetMapping("/find/{printRequestId}")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
-    public Page<PrintRequestDto> listNew(Pageable pageable, Authentication authentication) {
-        log.debug("List print requests with status new...");
-        return printRequestService.findNew(pageable);
+    public PrintRequestDto find(@PathVariable long printRequestId) {
+        log.debug("Handler for {}", "Find Print Request");
+        return printRequestService.findOne(printRequestId);
     }
 
+    /**
+     * Add new print request
+     *
+     * @param applicantsIds TODO Complete documentation
+     * @return the created request
+     */
     @PostMapping("/create")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
     public PrintRequestDto create(@RequestBody List<Long> applicantsIds) {
         log.debug("Creating print request");
         return printRequestService.save(applicantsIds);
+    }
+
+    @PostMapping("/{printRequestId}/batch")
+    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    public PrintRequestDto batch(@PathVariable long printRequestId, @RequestBody List<String> printBatchTypes) {
+        log.debug("Batching print request");
+        return printRequestService.processBatching(printRequestId, printBatchTypes);
     }
 
 }

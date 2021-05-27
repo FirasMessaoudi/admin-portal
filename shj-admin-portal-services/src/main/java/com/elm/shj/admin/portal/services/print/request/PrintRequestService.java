@@ -4,12 +4,8 @@
 package com.elm.shj.admin.portal.services.print.request;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
-import com.elm.shj.admin.portal.orm.repository.PrintRequestRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.EDataRequestChannel;
-import com.elm.shj.admin.portal.services.dto.PrintRequestApplicantDto;
-import com.elm.shj.admin.portal.services.dto.PrintRequestDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +17,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +38,6 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
 
     private final ApplicantService applicantService;
-    private final PrintRequestRepository printRequestRepository;
     private final PrintRequestApplicantService printRequestApplicantService;
 
     /**
@@ -52,31 +50,29 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         return mapPage(getRepository().findAll(pageable));
     }
 
-    public Page<PrintRequestDto> findNew(Pageable pageable) {
-        return mapPage(printRequestRepository.findByStatusCode("NEW", pageable));
-    }
-
     @Transactional
     public PrintRequestDto save(List<Long> applicantsIds) {
         // create and save the print request
-        PrintRequestDto printRequest = new PrintRequestDto();
-        // generate request reference
-        String printRequestReference = generateReferenceNumber();
-        printRequest.setReferenceNumber(printRequestReference);
-        printRequest.setStatusCode("NEW");
-        printRequest.setCreationDate(new Date());
+        PrintRequestDto printRequest = PrintRequestDto.builder()
+                .referenceNumber(generateReferenceNumber())
+                .statusCode("NEW")
+                .creationDate(new Date())
+                .build();
         // persist the request
-        System.out.println(printRequest);
         printRequest = super.save(printRequest);
         log.info("printRequest created successfully with #{}", printRequest.getId());
-        for (long id : applicantsIds) {
-            PrintRequestApplicantDto printRequestApplicant = new PrintRequestApplicantDto();
-            ApplicantDto applicantDto = applicantService.findOne(id);
-            printRequestApplicant.setApplicant(applicantDto);
-            printRequestApplicant.setCreationDate(new Date());
-            printRequestApplicant.setPrintRequest(printRequest);
-            printRequestApplicantService.save(printRequestApplicant);
-        }
+        List<PrintRequestApplicantDto> printRequestApplicants = new ArrayList<>();
+        PrintRequestDto finalPrintRequest = printRequest;
+        applicantsIds.forEach(id -> {
+            ApplicantDto applicant = applicantService.findOne(id);
+            printRequestApplicants.add(
+                    PrintRequestApplicantDto.builder()
+                            .applicant(applicant)
+                            .printRequest(finalPrintRequest)
+                            .creationDate(new Date())
+                            .build());
+        });
+        printRequestApplicantService.saveAll(printRequestApplicants);
         // return the persisted object
         return printRequest;
     }
@@ -93,4 +89,15 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
                 .build();
         return generator.generate(REQUEST_REF_NUMBER_LENGTH - 6) + REF_NUMBER_FORMAT.format(new Date());
     }
+
+    public PrintRequestDto processBatching(long requestId, List<String> batchTypes) {
+        // Retrieve the print request
+        PrintRequestDto printRequest = findOne(requestId);
+        PrintRequestBatchDto requestBatch = PrintRequestBatchDto.builder()
+                .printRequest(printRequest)
+                .creationDate(new Date())
+                .build();
+        return printRequest;
+    }
 }
+

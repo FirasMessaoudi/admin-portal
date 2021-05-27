@@ -477,7 +477,8 @@
     "print_request_done_successfully": "تم تنفيذ طلب الطباعة بنجاح",
     "print_request_number": "رقم طلب الطباعة هو",
     "btn_view_print_request_details": "عرض تفاصيل الطلب",
-    "btn_back_to_printing_management": "عودة لإدارة الطباعة"
+    "btn_back_to_printing_management": "عودة لإدارة الطباعة",
+    "add_cards": "إضافة {{noCards}} بطاقة"
   },
   "rule-management": {
     "title": "إدارة قواعد القرار",
