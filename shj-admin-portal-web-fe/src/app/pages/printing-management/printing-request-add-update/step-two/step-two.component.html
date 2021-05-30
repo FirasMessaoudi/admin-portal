@@ -27,7 +27,6 @@
       <tr>
         <th scope="col">{{'card-management.applicant_name' | translate}}</th>
         <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-        <th scope="col">{{'card-management.card_number' | translate}}</th>
         <th scope="col">{{'card-management.passport_number' | translate}}</th>
       </tr>
       </thead>
@@ -40,8 +39,7 @@
       </tr>
       <tr *ngFor="let printRequestApplicant of printRequest?.printRequestApplicants">
         <td>{{printRequestApplicant.applicant?.fullNameAr}} {{printRequestApplicant.applicant?.fullNameEn}}</td>
-        <td>{{'1021457854'}}</td>
-        <td class="ltr">{{'3215417'}}</td>
+        <td>{{printRequestApplicant.applicant?.digitalIds[0]?.uin}}</td>
         <td class="ltr">{{printRequestApplicant.applicant?.passportNumber}}</td>
       </tr>
       </tbody>

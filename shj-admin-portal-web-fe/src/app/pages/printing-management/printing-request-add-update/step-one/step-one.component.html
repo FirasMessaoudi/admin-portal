@@ -3,7 +3,7 @@
   <img class="my-5" src="assets/images/add-cards.jpg" alt='{{ "printing-management.new_request" | translate }}'>
 
   <button id="addPrintingRequest-01" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
-    {{ "printing-management.new_request" | translate }}
+    {{ "printing-management.add_card" | translate }}
   </button>
 
 </div>
@@ -68,7 +68,6 @@
           </th>
           <th scope="col">{{'card-management.applicant_name' | translate}}</th>
           <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-          <th scope="col">{{'card-management.card_number' | translate}}</th>
           <th scope="col">{{'card-management.passport_number' | translate}}</th>
         </tr>
         </thead>
@@ -90,7 +89,6 @@
           </td>
           <td>{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</td>
           <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
-          <td>{{card?.referenceNumber}}</td>
           <td class="ltr">{{card?.applicantRitual?.applicant?.passportNumber}}</td>
         </tr>
         </tbody>
@@ -136,7 +134,6 @@
       <tr>
         <th scope="col">{{'card-management.applicant_name' | translate}}</th>
         <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-        <th scope="col">{{'card-management.card_number' | translate}}</th>
         <th scope="col">{{'card-management.passport_number' | translate}}</th>
       </tr>
       </thead>
@@ -150,7 +147,6 @@
       <tr *ngFor="let card of addedCards">
         <td>{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</td>
         <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
-        <td>{{card?.referenceNumber}}</td>
         <td class="ltr">{{card?.applicantRitual?.applicant?.passportNumber}}</td>
       </tr>
       </tbody>
@@ -187,7 +183,7 @@
     </div>
 
     <button id="addPrintingRequest-02" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
-      {{ "printing-management.new_request" | translate }}
+      {{ "printing-management.add_card" | translate }}
     </button>
 
   </div>
