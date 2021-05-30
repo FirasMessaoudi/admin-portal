@@ -3,10 +3,13 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
+import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -26,9 +29,16 @@ public class ApplicantHealthDto implements Serializable {
     private long id;
     @JsonBackReference
     private ApplicantDto applicant;
+    @CellIndex(index = 4)
     private String bloodType;
+    //@CellIndex(index = 5)
+    //private String insurancePolicyNumber;
     private Date creationDate;
     private List<ApplicantHealthDiseaseDto> diseases;
     private List<ApplicantHealthSpecialNeedsDto> specialNeeds;
     private List<ApplicantHealthImmunizationDto> immunizations;
+    // used in data requests either through file upload or integration
+    @Valid
+    @NestedCells
+    private ApplicantBasicInfoDto applicantBasicInfo;
 }

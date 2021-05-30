@@ -3,10 +3,16 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.elm.dcc.foundation.commons.validation.ArabicCharacters;
+import com.elm.dcc.foundation.commons.validation.LatinCharacters;
+import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
+import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
+import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,7 +31,20 @@ public class ApplicantHealthDiseaseDto implements Serializable {
     private long id;
     @JsonBackReference
     private ApplicantHealthDto applicantHealth;
+
+    @NullOrNotBlank(min = 3, max = 50)
+    @ArabicCharacters(lettersOnly = true, numbersOnly = true, message = "validation.data.constraints.msg.018")
+    @CellIndex(index = 4)
     private String labelAr;
+
+    @NullOrNotBlank(min = 3, max = 50)
+    @LatinCharacters(lettersOnly = true, numbersOnly = true, message = "validation.data.constraints.msg.019")
+    @CellIndex(index = 5)
     private String labelEn;
+
     private Date creationDate;
+    // used in data requests either through file upload or integration
+    @Valid
+    @NestedCells
+    private ApplicantBasicInfoDto applicantBasicInfo;
 }

@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
+package com.elm.shj.admin.portal.services.dto;
+
+import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
+import com.elm.shj.admin.portal.services.data.validators.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * Dto class for the applicant basic info - Used in data requests either through file upload or integration.
+ *
+ * @author Aymen DHAOUI
+ * @since 1.0.0
+ */
+@FieldDependency.List({
+        @FieldDependency(first = "idNumber", second = "passportNumber"),
+        @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri")
+})
+@Builder
+@Data
+public class ApplicantBasicInfoDto implements Serializable {
+
+    private static final long serialVersionUID = -5830783311245682596L;
+
+    private long rowNum;
+
+    @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
+    @CellIndex(index = 0)
+    private long idNumber;
+
+    @UniquePerRequest
+    @PassportNumber
+    @CellIndex(index = 1)
+    private String passportNumber;
+
+    @GregorianDate(minOffset = -120, maxOffset = -10)
+    @CellIndex(index = 2)
+    private Date dateOfBirthGregorian;
+
+    @HijriDate(minOffset = -140, maxOffset = -11)
+    @CellIndex(index = 3)
+    private long dateOfBirthHijri;
+}

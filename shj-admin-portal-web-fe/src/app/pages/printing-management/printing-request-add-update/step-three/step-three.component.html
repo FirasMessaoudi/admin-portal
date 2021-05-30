@@ -15,11 +15,12 @@
   <table id="selectedApplicantsCards" class="table table-striped table-hover"
          *ngFor="let requestBatch of printRequest?.printRequestBatches, let i=index">
     <thead>
+    <th style="font-size: larger">
+      {{'printing-management.batch_no' | translate}} {{i + 1}} {{'printing-management.contains' | translate}} {{requestBatch?.printRequestBatchApplicants?.length}} {{'printing-management.cards' | translate}}
+    </th>
     <tr>
       <th scope="col">{{'card-management.applicant_name' | translate}}</th>
-      <th scope="col"></th>
       <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-      <th scope="col">{{'card-management.card_number' | translate}}</th>
       <th scope="col">{{'card-management.passport_number' | translate}}</th>
     </tr>
     </thead>
@@ -31,15 +32,10 @@
       </td>
     </tr>
 
-    <th style="font-size: larger">
-      {{'printing-management.batch_no' | translate}} {{i + 1}} {{'printing-management.contains' | translate}} {{requestBatch?.printRequestBatchApplicants?.length}} {{'printing-management.cards' | translate}}
-    </th>
     <tr *ngFor="let batchApplicant of requestBatch?.printRequestBatchApplicants">
       <td><a [routerLink]="['/cards/details/1']"
              class="text-dcc-primary font-weight-bold">{{batchApplicant?.applicant?.fullNameAr}} {{batchApplicant?.applicant?.fullNameEn}}</a>
       </td>
-      <td>{{'5'}}</td>
-      <td class="ltr">{{'2367430624'}}</td>
       <td class="ltr">{{batchApplicant?.applicant?.digitalIds[0]?.uin}}</td>
       <td class="ltr">{{batchApplicant?.applicant?.passportNumber}}</td>
     </tr>

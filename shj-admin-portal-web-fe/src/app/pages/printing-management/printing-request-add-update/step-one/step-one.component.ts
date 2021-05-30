@@ -15,8 +15,8 @@ export class StepOneComponent implements OnInit {
   cards: Array<Card> = [];
   pageArray: Array<number>;
   page: Page;
-  selectedCards: any = [];
-  addedCards: any = [];
+  selectedCards: Array<Card> = [];
+  addedCards: Array<Card> = [];
 
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();

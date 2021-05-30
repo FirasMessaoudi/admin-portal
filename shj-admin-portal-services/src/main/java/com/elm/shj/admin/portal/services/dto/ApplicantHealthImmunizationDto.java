@@ -3,10 +3,14 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
+import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
+import com.elm.shj.admin.portal.services.data.validators.GregorianDate;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,8 +29,20 @@ public class ApplicantHealthImmunizationDto implements Serializable {
     private long id;
     @JsonBackReference
     private ApplicantHealthDto applicantHealth;
+
+    @CellIndex(index = 4)
     private String immunizationCode;
+
+    @GregorianDate(minOffset = -3, maxOffset = 0)
+    @CellIndex(index = 6)
     private Date immunizationDate;
+
+    @CellIndex(index = 5)
     private boolean mandatory;
+
     private Date creationDate;
+    // used in data requests either through file upload or integration
+    @Valid
+    @NestedCells
+    private ApplicantBasicInfoDto applicantBasicInfo;
 }

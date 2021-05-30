@@ -3,6 +3,12 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import org.apache.commons.collections.CollectionUtils;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Enum for data segments
  *
@@ -16,7 +22,8 @@ public enum EDataSegment {
     APPLICANT_HEALTH_DATA(3),
     APPLICANT_IMMUNIZATION_DATA(4),
     APPLICANT_DISEASE_DATA(5),
-    APPLICANT_SPECIAL_NEEDS_DATA(6);
+    APPLICANT_SPECIAL_NEEDS_DATA(6),
+    APPLICANT_RITUAL_DATA(7);
 
     private final long id;
 
@@ -26,5 +33,10 @@ public enum EDataSegment {
 
     public long getId() {
         return this.id;
+    }
+
+    public static EDataSegment fromId(long id) {
+        List<EDataSegment> result = Arrays.stream(EDataSegment.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
+        return (EDataSegment)CollectionUtils.get(result, 0);
     }
 }

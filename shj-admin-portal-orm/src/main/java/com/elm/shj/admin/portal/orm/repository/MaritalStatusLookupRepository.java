@@ -13,4 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0.0
  */
 public interface MaritalStatusLookupRepository extends JpaRepository<JpaMaritalStatusLookup, Long> {
+
+    boolean existsByCode(String maritalStatusCode);
 }

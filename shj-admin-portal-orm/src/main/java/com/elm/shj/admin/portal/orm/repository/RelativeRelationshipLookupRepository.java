@@ -13,4 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0.0
  */
 public interface RelativeRelationshipLookupRepository extends JpaRepository<JpaRelativeRelationshipLookup, Long> {
+
+    boolean existsByCode(String relationshipCode);
+
 }

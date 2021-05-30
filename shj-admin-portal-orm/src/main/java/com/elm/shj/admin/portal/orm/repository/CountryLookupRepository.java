@@ -13,4 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0.0
  */
 public interface CountryLookupRepository extends JpaRepository<JpaCountryLookup, Long> {
+
+    boolean existsByCountryPhonePrefix(String countryPhonePrefix);
+
 }
