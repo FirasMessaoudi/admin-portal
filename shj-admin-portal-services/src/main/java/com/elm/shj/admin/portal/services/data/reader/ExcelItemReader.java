@@ -3,31 +3,25 @@
  */
 package com.elm.shj.admin.portal.services.data.reader;
 
-import com.elm.shj.admin.portal.services.data.mapper.ApplicantMapper;
-import com.elm.shj.admin.portal.services.data.mapper.IRowMapper;
-import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
+import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
+import com.elm.shj.admin.portal.services.data.validators.UniquePerRequest;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.ReflectionUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.*;
+import java.lang.reflect.AnnotatedParameterizedType;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Item reader that reads from Excel file
@@ -40,40 +34,81 @@ public class ExcelItemReader<T> {
 
     private final DateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
     private final NumberFormat numberFormat = NumberFormat.getInstance();
-    private final IRowMapper<T> rowMapper;
-    private Class<T> typeClass;
+    private final Map<Integer, String> fieldMapping = new HashMap<>();
+    private final Class<T> typeClass;
+    private final Map<Field, List<Object>> uniqueFields = new HashMap<>();
 
-    @SuppressWarnings("unchecked")
-    public ExcelItemReader(IRowMapper<T> rowMapper) {
-        this.rowMapper = rowMapper;
-        try {
-            this.typeClass = (Class<T>) Class.forName(((ParameterizedType) rowMapper.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0].getTypeName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+    public ExcelItemReader(Class<T> typeClass) {
+        this.typeClass = typeClass;
 
-    public static void main(String[] args) throws IOException, InvalidFormatException {
-        ExcelItemReader<ApplicantDto> excelItemReader = new ExcelItemReader<>(new ApplicantMapper());
+        initMapping(typeClass, null);
 
-        // load workbook
-        XSSFWorkbook workbook = new XSSFWorkbook(new File("F:\\dev\\apps\\sftp\\data\\smart-hajj\\data-uploads\\2021_05_10\\DS-OMX9HG531\\applicant-data_20210510_000133.xlsx"));
-        // read first sheet
-        XSSFSheet sheet = workbook.getSheetAt(0);
-        // read first row
-        int headerRowNum = sheet.getFirstRowNum();
-        List<DataValidationResult> dataValidationResults = new ArrayList<>();
-        StreamSupport.stream(Spliterators.spliteratorUnknownSize(sheet.rowIterator(), Spliterator.ORDERED), false).forEach(row -> {
-            // skip header row
-            if (row.getRowNum() != headerRowNum) {
-                try {
-                    excelItemReader.read(row);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        Arrays.stream(typeClass.getDeclaredFields()).filter(f ->
+                f.isAnnotationPresent(NestedCells.class)
+        ).forEach(f -> {
+            String className;
+            if (f.getType().isAssignableFrom(List.class) || f.getType().isAssignableFrom(Set.class) || f.getType().isArray()) {
+                className = ((AnnotatedParameterizedType) f.getAnnotatedType()).getAnnotatedActualTypeArguments()[0].getType().getTypeName();
+            } else {
+                className = f.getType().getName();
+            }
+            try {
+                initMapping(Class.forName(className), f.getName());
+            } catch (ClassNotFoundException e) {
+                ReflectionUtils.handleReflectionException(e);
             }
         });
 
+    }
+
+    /**
+     * Finds the cell mapped for the given property name
+     *
+     * @param row          the row the fetch the cell from
+     * @param propertyName the property name mapped with the cell
+     * @return the cell mapped for the given property name
+     */
+    @SuppressWarnings("ConstantConditions")
+    public Cell findCellByPropertyName(Row row, String propertyName) {
+        if (fieldMapping.values().stream().anyMatch(n -> n.equals(propertyName))) {
+            return row.getCell(row.getFirstCellNum() + getKey(fieldMapping, propertyName));
+        }
+        return null;
+    }
+
+    /**
+     * Utility class to get the key based on the value from a given map
+     *
+     * @param map   the map
+     * @param value the value to search the key for
+     * @param <K>   the key type
+     * @param <V>   the value type
+     * @return the key for the given value if found or else null
+     */
+    private <K, V> K getKey(Map<K, V> map, V value) {
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            if (entry.getValue().equals(value)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Adds mapping for fields of the type passed in parameter
+     *
+     * @param clazz           the type to map from
+     * @param parentFieldName if the mapping is for a nested field
+     */
+    private void initMapping(Class<?> clazz, String parentFieldName) {
+
+        uniqueFields.putAll(Arrays.stream(clazz.getDeclaredFields()).filter(f ->
+                f.isAnnotationPresent(CellIndex.class) && f.isAnnotationPresent(UniquePerRequest.class)
+        ).collect(Collectors.toMap((f) -> f, (f) -> new ArrayList<>())));
+
+        fieldMapping.putAll(Arrays.stream(clazz.getDeclaredFields()).filter(f ->
+                f.isAnnotationPresent(CellIndex.class)
+        ).collect(Collectors.toMap((f) -> f.getAnnotation(CellIndex.class).index(), (f) -> (StringUtils.isNoneBlank(parentFieldName) ? parentFieldName + "[0]." : "") + f.getName())));
     }
 
     /**
@@ -84,12 +119,11 @@ public class ExcelItemReader<T> {
      */
     @SuppressWarnings("rawtypes")
     public T read(Row row) throws ReflectiveOperationException {
-        Map<Integer, String> mapping = rowMapper.mapRow(row);
         // create new instance of the type to be populated
         T type = createInstance(typeClass);
-        Set<Field> nestedFields = mapping.values().stream().filter(f -> f.contains(".")).map(f -> {
+        Set<Field> nestedFields = fieldMapping.values().stream().filter(f -> f.contains(".")).map(f -> {
             try {
-                return typeClass.getDeclaredField(f.split("\\.")[0]);
+                return typeClass.getDeclaredField(f.split("\\[0]\\.")[0]);
             } catch (NoSuchFieldException e) {
                 return null;
             }
@@ -112,14 +146,14 @@ public class ExcelItemReader<T> {
         });
 
         // set fields from cell values based on field types
-        mapping.forEach((cellIndex, fieldName) -> {
+        fieldMapping.forEach((cellIndex, fieldName) -> {
             Field nestedField, fieldToProcess;
             Object target = type;
             try {
                 // start by nested fields
                 if (fieldName.contains(".")) {
-                    String nestedFieldName = fieldName.split("\\.")[0];
-                    String nestedFieldAttributeName = fieldName.split("\\.")[1];
+                    String nestedFieldName = fieldName.split("\\[0]\\.")[0];
+                    String nestedFieldAttributeName = fieldName.split("\\[0]\\.")[1];
                     nestedField = typeClass.getDeclaredField(nestedFieldName);
                     fieldToProcess = ReflectionUtils.findField(Class.forName(((AnnotatedParameterizedType) nestedField.getAnnotatedType()).getAnnotatedActualTypeArguments()[0].getType().getTypeName()), nestedFieldAttributeName);
                     ReflectionUtils.makeAccessible(nestedField);
@@ -135,7 +169,16 @@ public class ExcelItemReader<T> {
                 }
                 assert fieldToProcess != null;
                 ReflectionUtils.makeAccessible(fieldToProcess);
-                fieldToProcess.set(target, readCellValue(row.getCell(row.getFirstCellNum() + cellIndex), fieldToProcess));
+                Cell cell = row.getCell(row.getFirstCellNum() + cellIndex);
+                Object value = readCellValue(cell, fieldToProcess);
+                fieldToProcess.set(target, value);
+                if (uniqueFields.containsKey(fieldToProcess)) {
+                    if (uniqueFields.get(fieldToProcess).contains(value)) {
+                        throw ExcelItemReaderException.builder().cell(cell).errorType(ExcelItemReaderException.EExcelItemReaderErrorType.DUPLICATE_VALUE).build();
+                    } else {
+                        uniqueFields.get(fieldToProcess).add(value);
+                    }
+                }
             } catch (ReflectiveOperationException e) {
                 ReflectionUtils.handleReflectionException(e);
             }
@@ -262,34 +305,51 @@ public class ExcelItemReader<T> {
         if (value == null) {
             return clazz.isPrimitive() ? 0 : null;
         } else if (value instanceof Number) {
-            if (clazz.isPrimitive()) {
-                switch (clazz.getName().charAt(0)) {
-                    case 'b':
-                        return ((Number) value).byteValue();
-                    case 's':
-                        return ((Number) value).shortValue();
-                    case 'i':
-                        return ((Number) value).intValue();
-                    case 'l':
-                        return ((Number) value).longValue();
-                    case 'f':
-                        return ((Number) value).floatValue();
-                    case 'd':
-                        return ((Number) value).doubleValue();
-                    default:
-                        return 0;
-                }
-            } else {
-                return value;
-            }
+            return castToFieldType(clazz, value);
         } else if (value instanceof String) {
             try {
-                return numberFormat.parse((String) value);
+                ParsePosition pp = new ParsePosition(0);
+                Number result = numberFormat.parse((String) value, pp);
+                if (pp.getIndex() != ((String) value).length()) {
+                    throw new ParseException(null, 0);
+                }
+                return castToFieldType(clazz, result);
             } catch (ParseException e) {
                 throw ExcelItemReaderException.builder().cell(cell).errorType(ExcelItemReaderException.EExcelItemReaderErrorType.INVALID_NUMBER_FORMAT).build();
             }
         } else {
             throw ExcelItemReaderException.builder().cell(cell).errorType(ExcelItemReaderException.EExcelItemReaderErrorType.INVALID_NUMBER_FORMAT).build();
+        }
+    }
+
+    /**
+     * Casts the value based on the field type class
+     *
+     * @param clazz the field type class
+     * @param value the value to be casted
+     * @param <N>   the field generic type as number
+     * @return the casted value based on the field type class
+     */
+    private <N extends Number> Object castToFieldType(Class<N> clazz, Object value) {
+        if (clazz.isPrimitive()) {
+            switch (clazz.getName().charAt(0)) {
+                case 'b':
+                    return ((Number) value).byteValue();
+                case 's':
+                    return ((Number) value).shortValue();
+                case 'i':
+                    return ((Number) value).intValue();
+                case 'l':
+                    return ((Number) value).longValue();
+                case 'f':
+                    return ((Number) value).floatValue();
+                case 'd':
+                    return ((Number) value).doubleValue();
+                default:
+                    return 0;
+            }
+        } else {
+            return value;
         }
     }
 
@@ -306,6 +366,7 @@ public class ExcelItemReader<T> {
         } else if (value instanceof Date) {
             return (Date) value;
         } else if (value instanceof String) {
+            dateFormat.setLenient(false);
             try {
                 return dateFormat.parse((String) value);
             } catch (ParseException e) {

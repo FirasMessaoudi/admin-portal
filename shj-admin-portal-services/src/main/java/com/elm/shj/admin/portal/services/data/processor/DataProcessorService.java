@@ -3,11 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.data.processor;
 
-import com.elm.shj.admin.portal.services.data.mapper.AbstractRowMapper;
-import com.elm.shj.admin.portal.services.data.mapper.ApplicantRowMapper;
-import com.elm.shj.admin.portal.services.data.mapper.DataSegmentMappingRegistry;
-import com.elm.shj.admin.portal.services.data.validators.AbstractDataValidator;
-import com.elm.shj.admin.portal.services.data.validators.ApplicantExistsValidator;
+import com.elm.shj.admin.portal.services.data.reader.ExcelItemReader;
+import com.elm.shj.admin.portal.services.data.reader.ExcelItemReaderException;
+import com.elm.shj.admin.portal.services.data.reader.ExcelItemReaderFactory;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +19,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
-import javax.script.ScriptException;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
@@ -41,9 +41,9 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DataProcessorService {
 
-    private final DataSegmentMappingRegistry dataSegmentMappingRegistry;
     private final MessageSource messageSource;
-    private final ApplicantExistsValidator applicantExistsValidator;
+    private final Validator validator;
+    private final ExcelItemReaderFactory excelItemReaderFactory;
 
     /**
      * Processes the data request file using the provided mapper to extract items of type <T>
@@ -56,7 +56,8 @@ public class DataProcessorService {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public <T> DataProcessorResult<T> processRequestFile(Resource requestFile, DataSegmentDto dataSegment) throws IOException {
-        AbstractRowMapper mapper = dataSegmentMappingRegistry.mapperOf(dataSegment);
+        // create suitable reader;
+        ExcelItemReader<T> excelItemReader = excelItemReaderFactory.create(dataSegment);
         // load workbook
         XSSFWorkbook workbook = new XSSFWorkbook(requestFile.getInputStream());
         // read first sheet
@@ -64,28 +65,30 @@ public class DataProcessorService {
         // read first row
         int headerRowNum = sheet.getFirstRowNum();
         List<DataValidationResult> dataValidationResults = new ArrayList<>();
+        List<T> parsedItems = new ArrayList<>();
         StreamSupport.stream(Spliterators.spliteratorUnknownSize(sheet.rowIterator(), Spliterator.ORDERED), false).forEach(row -> {
             // skip header row
             if (row.getRowNum() != headerRowNum && !isBlankRow(row)) {
-                // loop over mapped validators map
-                mapper.mapValidators(row).forEach((cell, validators) -> {
-                    // loop over validators
-                    ((List<AbstractDataValidator>)validators).forEach(validator -> {
-                        log.debug("validating row#" + row.getRowNum() + " cell#" + ((Cell)cell).getColumnIndex());
-                        dataValidationResults.add(validator.validate((Cell)cell));
-                    });
-                });
+                try {
+                    // read item
+                    T item = excelItemReader.read(row);
+                    // run validations
+                    Set<ConstraintViolation<T>> violations = validator.validate(item);
+                    if (violations.isEmpty()) {
+                        // if no validation errors than add item
+                        parsedItems.add(item);
+                    } else {
+                        // otherwise add errors
+                        violations.forEach(v -> dataValidationResults.add(DataValidationResult.builder().valid(false).cell(excelItemReader.findCellByPropertyName(row, v.getPropertyPath().toString())).errorMessages(Collections.singletonList(v.getMessage())).valid(false).build()));
+                    }
+                } catch (ExcelItemReaderException eire) {
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(eire.getCell()).errorMessages(Collections.singletonList(eire.getErrorType().getMessage())).valid(false).build());
+                } catch (Exception e) {
+                    ReflectionUtils.handleReflectionException(e);
+                }
             }
         });
-
-        List<T> parsedItems = new ArrayList<>();
-        // loop over successful rows and map the row
-        dataValidationResults.stream()
-                .filter(DataValidationResult::isValid)
-                .map(dvr -> dvr.getCell().getRow().getRowNum())
-                .collect(Collectors.toSet())
-                .forEach(successRowNum -> parsedItems.add((T) mapper.mapRow(sheet.getRow(successRowNum))));
-
+        // return result
         DataProcessorResult<T> result = new DataProcessorResult<>();
         result.setDataValidationResults(dataValidationResults);
         result.setParsedItems(parsedItems);
@@ -204,13 +207,6 @@ public class DataProcessorService {
             }
         });
         return isBlank.get();
-    }
-
-    public static void main(String[] args) throws ScriptException, IOException {
-        /*ScriptEngineManager mgr = new ScriptEngineManager();
-        ScriptEngine engine = mgr.getEngineByName("JavaScript");
-        String foo = "(40+2) > 80";
-        System.out.println(engine.eval(foo));*/
     }
 
 }

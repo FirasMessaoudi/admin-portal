@@ -5,7 +5,6 @@ package com.elm.shj.admin.portal.services.data.reader;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 
 /**
@@ -16,11 +15,23 @@ import org.apache.poi.ss.usermodel.Cell;
  */
 @Data
 @Builder
-@RequiredArgsConstructor
 public class ExcelItemReaderException extends RuntimeException {
 
     public enum EExcelItemReaderErrorType {
-        INVALID_DATE_FORMAT, INVALID_NUMBER_FORMAT, INVALID_BOOLEAN_FORMAT
+        INVALID_DATE_FORMAT("validation.data.constraints.msg.123"),
+        INVALID_NUMBER_FORMAT("validation.data.constraints.msg.123"),
+        INVALID_BOOLEAN_FORMAT("validation.data.constraints.msg.123"),
+        DUPLICATE_VALUE("validation.data.constraints.msg.129");
+
+        String message;
+
+        EExcelItemReaderErrorType(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
     }
 
     private Cell cell;
