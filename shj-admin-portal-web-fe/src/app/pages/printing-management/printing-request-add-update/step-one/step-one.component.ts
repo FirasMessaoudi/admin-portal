@@ -15,8 +15,8 @@ export class StepOneComponent implements OnInit {
   cards: Array<Card> = [];
   pageArray: Array<number>;
   page: Page;
-  selectedCards: any = [];
-  addedCards: any = [];
+  selectedCards: Array<Card> = [];
+  addedCards: Array<Card> = [];
 
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();
@@ -29,7 +29,6 @@ export class StepOneComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadPage(0);
   }
 
   ngOnDestroy() {
@@ -42,7 +41,7 @@ export class StepOneComponent implements OnInit {
   }
 
   loadPage(page: number) {
-    this.listSubscription = this.cardService.listReadyToPrint(page).subscribe(data => {
+    this.listSubscription = this.cardService.listReadyToPrint(this.addedCards.map(card => card.id), page).subscribe(data => {
       this.page = data;
       if (this.page != null) {
         this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
@@ -64,7 +63,7 @@ export class StepOneComponent implements OnInit {
   }
 
   search(): void {
-    this.searchSubscription = this.cardService.listReadyToPrint(0).subscribe(data => {
+    this.searchSubscription = this.cardService.listReadyToPrint(this.addedCards.map(card => card.id), 0).subscribe(data => {
       this.cards = [];
       this.pageArray = [];
       this.page = data;
@@ -104,8 +103,10 @@ export class StepOneComponent implements OnInit {
   }
 
   save() {
-    this.addedCards = this.selectedCards;
-    this.onAddCards.emit(this.selectedCards);
+    this.addedCards = this.addedCards.concat(this.selectedCards);
+    this.onAddCards.emit(this.addedCards);
+    this.cards = [];
+    this.selectedCards = [];
     this.modalService.dismissAll();
   }
 }

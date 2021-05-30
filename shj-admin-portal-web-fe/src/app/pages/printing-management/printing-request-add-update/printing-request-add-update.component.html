@@ -10,11 +10,11 @@
         <span>{{'printing-management.prepare_request' | translate}}</span>
       </ng-template>
       <div class="section">
-        <app-step-one (onAddCards)="setSelectedCards($event)"></app-step-one>
+        <app-step-one (onAddCards)="setAddedCards($event)"></app-step-one>
       </div>
       <div class="bg-lighter mx-30 p-4 text-center">
         <button type="button" routerLink="/print-requests/list" class="btn btn-outline-secondary rounded-22 px-5 mr-3">{{'general.btn_cancel' | translate}}</button>
-        <button type="button" awNextStep (click)="saveStepOne()" [disabled]="selectedCards.length === 0" class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'general.btn_next' | translate}}</button>
+        <button type="button" awNextStep (click)="saveStepOne()" [disabled]="addedCards.length === 0" class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'general.btn_next' | translate}}</button>
       </div>
     </aw-wizard-step>
     <aw-wizard-step [navigationSymbol]="{ symbol: '2' }">
@@ -35,7 +35,7 @@
         <span>{{'printing-management.confirm_request' | translate}}</span>
       </ng-template>
       <div class="section">
-        <app-step-three></app-step-three>
+        <app-step-three [printRequest]="printRequest"></app-step-three>
       </div>
       <div class="bg-lighter mx-30 p-4 text-center">
         <button type="button" routerLink="/print-requests/list" class="btn btn-outline-secondary rounded-22 px-5 mr-3">{{'general.btn_cancel' | translate}}</button>

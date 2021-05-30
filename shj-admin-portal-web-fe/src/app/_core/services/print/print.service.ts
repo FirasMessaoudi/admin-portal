@@ -4,6 +4,7 @@ import {Observable, of} from "rxjs";
 import {catchError} from "rxjs/internal/operators";
 import {Lookup} from "@model/lookup.model";
 import {PrintBatchType} from "@model/print-batch-type.model";
+import {PrintRequest} from "@model/print-request.model";
 
 /**
  * Provides a base for printing operations.
@@ -69,7 +70,19 @@ export class PrintService {
         if (error.hasOwnProperty('error')) {
           return of(error.error);
         } else {
-          console.error('An error happen while batching the print request : ' + error);
+          console.error('An error happen while batching print request : ' + error);
+          return of(error);
+        }
+      }));
+  }
+
+  confirm(printRequest: PrintRequest) {
+    return this.http.post<any>("/core/api/print/requests/" + printRequest.id + "/confirm", printRequest).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.hasOwnProperty('error')) {
+          return of(error.error);
+        } else {
+          console.error('An error happen while confirming print request : ' + error);
           return of(error);
         }
       }));

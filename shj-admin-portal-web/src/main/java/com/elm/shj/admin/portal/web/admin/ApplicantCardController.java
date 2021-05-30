@@ -13,12 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.List;
 
 /**
  * Main controller for applicant card management pages
@@ -49,9 +47,11 @@ public class ApplicantCardController {
      */
     @GetMapping("/list/ready-to-print")
     @RolesAllowed({AuthorityConstants.USER_MANAGEMENT})
-    public Page<ApplicantCardDto> listReadyToPrintCards(Pageable pageable, Authentication authentication) {
+    public Page<ApplicantCardDto> listReadyToPrintCards(@RequestParam List<Long> excludedCardsIds,
+                                                        Pageable pageable,
+                                                        Authentication authentication) {
         log.info("list ready to print cards.");
-        return applicantCardService.findReadyToPrint(pageable);
+        return applicantCardService.findReadyToPrint(excludedCardsIds, pageable);
     }
 
     /**

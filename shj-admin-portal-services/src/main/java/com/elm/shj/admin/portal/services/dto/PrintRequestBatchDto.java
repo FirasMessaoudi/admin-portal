@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Dto class for the print request batch domain.
@@ -31,5 +32,6 @@ public class PrintRequestBatchDto implements Serializable {
     private PrintRequestDto printRequest;
     private int sequenceNumber;
     private String batchTypes;
+    private List<PrintRequestApplicantDto> printRequestBatchApplicants;
     private Date creationDate;
 }
