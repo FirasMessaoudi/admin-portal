@@ -22,9 +22,14 @@ export class CardService {
   /**
    * list ready to print cards.
    */
-  listReadyToPrint(pageNumber: any): Observable<any> {
+  listReadyToPrint(excludedCardsIds, pageNumber: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
-    return this.http.get("/core/api/cards/list/ready-to-print", {params: pageNumber});
+    console.log(excludedCardsIds.length);
+    if (excludedCardsIds.length > 0) {
+      params = params.append('excludedCardsIds', excludedCardsIds);
+      console.log(params);
+    }
+    return this.http.get("/core/api/cards/list/ready-to-print", {params: params});
   }
 
   /**

@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Service handling applicant card
  *
@@ -43,7 +45,12 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @param pageable the current page information
      * @return the list of ready to print applicants cards
      */
-    public Page<ApplicantCardDto> findReadyToPrint(Pageable pageable) {
-        return mapPage(applicantCardRepository.findByStatusCode("READY_TO_PRINT", pageable));
+    public Page<ApplicantCardDto> findReadyToPrint(List<Long> excludedCardsIds, Pageable pageable) {
+        if (excludedCardsIds.size() == 0) {
+            return mapPage(applicantCardRepository.findByStatusCode("READY_TO_PRINT", pageable));
+        } else {
+            return mapPage(applicantCardRepository
+                    .findByStatusCodeAndIdNotIn("READY_TO_PRINT", excludedCardsIds, pageable));
+        }
     }
 }

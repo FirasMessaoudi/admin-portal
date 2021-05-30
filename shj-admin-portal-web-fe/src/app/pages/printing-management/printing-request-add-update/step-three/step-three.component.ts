@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {PrintRequest} from "@model/print-request.model";
 
 @Component({
   selector: 'app-step-three',
@@ -6,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./step-three.component.scss']
 })
 export class StepThreeComponent implements OnInit {
+
+  @Input()
+  printRequest: PrintRequest;
 
   constructor() { }
 

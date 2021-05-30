@@ -14,7 +14,7 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
               private printService: PrintService) {
   }
 
-  selectedCards: Card[] = [];
+  addedCards: Card[] = [];
   printRequest: PrintRequest;
   selectedBatchTypes: string[] = [];
 
@@ -23,7 +23,7 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
 
   saveStepOne() {
     this.cdr.detectChanges();
-    this.printService.save(this.selectedCards.map(card => card.applicantRitual.applicant.id)).subscribe(
+    this.printService.save(this.addedCards.map(card => card.applicantRitual.applicant.id)).subscribe(
       res => {
         this.printService.find(res.id).subscribe(
           result => this.printRequest = result
@@ -36,7 +36,7 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
     this.cdr.detectChanges();
     console.log(this.selectedBatchTypes);
     this.printService.batch(this.printRequest.id, this.selectedBatchTypes).subscribe(
-      res => console.log(res)
+      result => this.printRequest = result
     )
   }
 
@@ -44,8 +44,8 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
 
   }
 
-  setSelectedCards(cards) {
-    this.selectedCards = cards;
+  setAddedCards(cards) {
+    this.addedCards = cards;
   }
 
   setSelectedBatchTypes(batchTypes) {

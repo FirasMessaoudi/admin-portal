@@ -19,9 +19,8 @@ import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service handling print request
@@ -93,11 +92,32 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     public PrintRequestDto processBatching(long requestId, List<String> batchTypes) {
         // Retrieve the print request
         PrintRequestDto printRequest = findOne(requestId);
-        PrintRequestBatchDto requestBatch = PrintRequestBatchDto.builder()
-                .printRequest(printRequest)
-                .creationDate(new Date())
-                .build();
-        return printRequest;
+
+        //TODO TAKE INTO ACCOUNT SEARCH CRITERIA
+        if (batchTypes.contains(EPrintBatchType.NATIONALITY.name())) {
+            printRequest.getPrintRequestBatches().clear();
+
+            Map<List<Object>, List<PrintRequestApplicantDto>> groupedRequestApplicants = printRequest.getPrintRequestApplicants()
+                    .stream().collect(Collectors.groupingBy(requestApplicant -> Arrays.asList(requestApplicant.getApplicant().getNationalityCode())));
+
+            groupedRequestApplicants.forEach((key, value) -> {
+                PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
+                        .creationDate(new Date())
+                        .batchTypes("NATIONALITY")
+                        .printRequestBatchApplicants(value)
+                        .build();
+                printRequest.getPrintRequestBatches().add(printRequestBatch);
+            });
+            return printRequest;
+        } else {
+            PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
+                    .creationDate(new Date())
+                    .batchTypes("NATIONALITY")
+                    .printRequestBatchApplicants(printRequest.getPrintRequestApplicants())
+                    .build();
+            printRequest.getPrintRequestBatches().add(printRequestBatch);
+            return printRequest;
+        }
     }
 }
 
