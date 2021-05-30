@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.lookup.MaritalStatusLookupService;
 import com.elm.shj.admin.portal.services.lookup.RelativeRelationshipLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 

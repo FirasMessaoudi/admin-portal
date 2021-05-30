@@ -152,7 +152,7 @@ export class UserAddUpdateComponent implements OnInit {
       activated: [false, Validators.required],
       role: [null, Validators.required],
       additionalRoles: [[]],
-      userRoles: [[], Validators.required]
+      userRoles: [[]]
     });
   }
 
@@ -198,17 +198,20 @@ export class UserAddUpdateComponent implements OnInit {
       control.markAsTouched({onlySelf: true});
     });
 
-    if (this.userForm.invalid) {
-      return;
-    }
-
     let userRoles = [];
     // create UserRole for the main selected role and additional roles (if any).
     userRoles.push(this.createUserRole(this.f.role.value, true));
     this.userForm.controls.additionalRoles.value.forEach(role => {
       userRoles.push(this.createUserRole(role, false));
     });
-    this.f.userRoles.setValue(userRoles);
+
+    this.userForm.patchValue( {
+      userRoles: userRoles
+    });
+
+    if (this.userForm.invalid || !userRoles.length) {
+      return;
+    }
 
     let userData = Object.assign({}, this.userForm.value)
     userData.nin = this.user.id > 0 ? this.f.nin.value.value : this.f.nin.value;
