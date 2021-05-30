@@ -18,7 +18,7 @@ import static com.elm.qa.framework.core.ActionX.SetValue;
 public class PrintingManagement {
 
 
-    @FindBy(id="addPrintingRequest")
+    @FindBy(id="createPrintingRequest")
     WebElement btnPrintingRequest;
 
     @FindBy(id="requestNumber")

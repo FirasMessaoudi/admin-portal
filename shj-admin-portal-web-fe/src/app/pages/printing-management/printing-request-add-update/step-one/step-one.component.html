@@ -2,7 +2,7 @@
 
   <img class="my-5" src="assets/images/add-cards.jpg" alt='{{ "printing-management.new_request" | translate }}'>
 
-  <button id="addPrintingRequest-01" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
+  <button name="addCards" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
     {{ "printing-management.new_request" | translate }}
   </button>
 
@@ -17,26 +17,26 @@
   </div>
   <div class="modal-body">
 
-    <form class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+    <form name="searchCard" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       <div class="form-group col">
         <label class="col-form-label">{{'printing-management.id_number' | translate }}</label>
-        <input type="text" class="form-control"/>
+        <input id="idNumber" type="text" class="form-control"/>
       </div>
       <div class="form-group col">
         <label class="col-form-label">{{'printing-management.hamlah_number' | translate }}</label>
-        <input type="text" class="form-control"/>
+        <input id="hamlahNumber" type="text" class="form-control"/>
       </div>
       <div class="form-group col">
         <label class="col-form-label">{{'printing-management.motawef_number' | translate }}</label>
-        <input type="text" class="form-control"/>
+        <input id="motawefNumber" type="text" class="form-control"/>
       </div>
       <div class="form-group col">
         <label class="col-form-label">{{'card-management.passport_number' | translate }}</label>
-        <input type="text" class="form-control"/>
+        <input id="passportNumber" type="text" class="form-control"/>
       </div>
       <div class="form-group col">
         <label class="col-form-label">{{'card-management.nationality' | translate }}</label>
-        <select class="custom-select">
+        <select id="Nationality" class="custom-select">
           <option>{{'سعودية'}}</option>
           <option>{{'مصرية'}}</option>
           <option>{{'تونسية'}}</option>
@@ -60,7 +60,7 @@
         <tr>
           <th scope="col">
             <div class="custom-control custom-checkbox my-2">
-              <input type="checkbox" class="custom-control-input" id="selectedApplicantCheck-01"
+              <input name="selectAllCards" type="checkbox" class="custom-control-input" id="selectedApplicantCheck-01"
                      [checked]="cards.length > 0 && selectedCards.length === cards.length"
                      (change)="selectAllCards($event)">
               <label class="custom-control-label mx-3" for="selectedApplicantCheck-01"></label>
@@ -122,7 +122,7 @@
 
   </div>
   <div class="modal-footer justify-content-end">
-    <button type="button" class="btn btn-dcc-primary px-5 ml-3"
+    <button name="addSelectedCards" type="button" class="btn btn-dcc-primary px-5 ml-3"
             *ngIf="selectedCards?.length"
             (click)="save()">{{'printing-management.add_cards' | translate : {noCards: selectedCards.length} }}
     </button>
@@ -186,7 +186,7 @@
       <span>{{'printing-management.selected_smart_card' | translate}}</span>
     </div>
 
-    <button id="addPrintingRequest-02" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
+    <button id="addCards" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
       {{ "printing-management.new_request" | translate }}
     </button>
 

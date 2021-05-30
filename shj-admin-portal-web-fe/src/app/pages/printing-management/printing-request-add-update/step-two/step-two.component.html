@@ -12,8 +12,8 @@
 
         <div class="form-control-plaintext text-dcc-primary">
           <div *ngFor="let type of batchTypes" class="custom-control custom-checkbox custom-control-inline">
-            <input type="checkbox" class="custom-control-input" id="customCheck-{{type.id}}" (change)="selectBatchType($event, type.code)">
-            <label class="custom-control-label mx-3" for="customCheck-{{type.id}}">{{currentLanguage.startsWith("en") ? type.labelEn : type.labelAr}}</label>
+            <input type="checkbox" class="custom-control-input" id="batchType-{{clearSpaces(type.labelEn)}}" (change)="selectBatchType($event, type.code)">
+            <label class="custom-control-label mx-3" for="batchType-{{clearSpaces(type.labelEn)}}">{{currentLanguage.startsWith("en") ? type.labelEn : type.labelAr}}</label>
           </div>
         </div>
 
@@ -22,7 +22,7 @@
   </section>
 
   <div class="table-responsive my-4">
-    <table class="table table-striped table-hover">
+    <table id="selectedApplicantsCards" class="table table-striped table-hover">
       <thead>
       <tr>
         <th scope="col">{{'card-management.applicant_name' | translate}}</th>

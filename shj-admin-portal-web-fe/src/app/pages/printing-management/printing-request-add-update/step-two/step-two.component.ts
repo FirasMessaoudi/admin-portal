@@ -31,6 +31,10 @@ export class StepTwoComponent implements OnInit {
     return this.i18nService.language;
   }
 
+  clearSpaces(s) {
+    return s.replace(/\s/g, '');
+  }
+
   selectBatchType(event, code) {
     const selectedIndex = this.selectedBatchTypes.indexOf(code);
     if (event.target.checked) {

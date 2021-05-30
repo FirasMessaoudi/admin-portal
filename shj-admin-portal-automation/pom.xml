@@ -6,6 +6,7 @@
         <artifactId>shj-admin-portal</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
+
     <groupId>com.elm.shj.admin.portal.automation</groupId>
     <artifactId>shj-admin-portal-automation</artifactId>
     <packaging>jar</packaging>
