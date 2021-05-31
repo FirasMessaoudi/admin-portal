@@ -50,11 +50,13 @@ public class IdNumberValidator implements ConstraintValidator<IdNumber, Object> 
             context.buildConstraintViolationWithTemplate(MSG_122).addConstraintViolation();
             return false;
         }
-        // (length =16 and GCC) or ( length =10 and start with (1 or 2))
-        else if (ninOrIqama && !value.toString().matches(NIN_OR_IQAMA_REGEX)) {
+        // ( length =10 and start with (1 or 2))
+        else if (ninOrIqama && value.toString().length() == 10 && !value.toString().matches(NIN_OR_IQAMA_REGEX)) {
             // return default message
             return false;
-        } else {
+        }
+        // (length 11 to 16 => GCC)
+        else {
             return true;
         }
     }
