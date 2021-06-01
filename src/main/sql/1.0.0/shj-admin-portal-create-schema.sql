@@ -425,8 +425,8 @@ create table shj_portal.sha_applicant_card
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
     applicant_ritual_id int NOT NULL,
-    reference_number VARCHAR(20) NOT NULL,
-    batch_id int NOT NULL,
+    reference_number VARCHAR(20) NULL,
+    batch_id int NULL,
     status_code VARCHAR(20) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_card_applicant_ritual FOREIGN KEY (applicant_ritual_id) REFERENCES shj_portal.sha_applicant_ritual (id),

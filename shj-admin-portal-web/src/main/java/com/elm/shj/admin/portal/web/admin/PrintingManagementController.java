@@ -42,7 +42,7 @@ public class PrintingManagementController {
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
     public Page<PrintRequestDto> list(Pageable pageable, Authentication authentication) {
         log.debug("List print requests...");
-        return printRequestService.findAll(pageable);
+        return printRequestService.findOtherThanNew(pageable);
     }
 
     /**

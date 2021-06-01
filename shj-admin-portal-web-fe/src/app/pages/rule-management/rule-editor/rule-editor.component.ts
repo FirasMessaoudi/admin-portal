@@ -38,7 +38,7 @@ export class RuleEditorComponent implements OnInit {
 
   ngOnInit() {
 
-    combineLatest(this.route.params, this.route.queryParams).pipe(map(results => ({
+    combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
     }))).subscribe(results => {

@@ -45,4 +45,9 @@ public class JpaApplicantCard implements Serializable {
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
+
+    @PrePersist
+    public void prePersist() {
+        this.creationDate = new Date();
+    }
 }

@@ -56,7 +56,7 @@ export class RoleDetailsComponent implements OnInit {
     this.editMode = false;
     this.loadAuthorities();
     this.initForm();
-    combineLatest(this.route.params, this.route.queryParams).pipe(map(results => ({
+    combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
     }))).subscribe(results => {

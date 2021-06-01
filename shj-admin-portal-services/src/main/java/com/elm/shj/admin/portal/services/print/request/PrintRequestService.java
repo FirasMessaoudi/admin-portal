@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.print.request;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
+import com.elm.shj.admin.portal.orm.repository.PrintRequestRepository;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -34,6 +35,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     private static final SimpleDateFormat REF_NUMBER_FORMAT = new SimpleDateFormat("SSS");
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
 
+    private final PrintRequestRepository printRequestRepository;
     private final ApplicantCardService cardService;
     private final PrintRequestCardService printRequestCardService;
 
@@ -47,13 +49,23 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         return mapPage(getRepository().findAll(pageable));
     }
 
+    /**
+     * Find all print requests except those with status NEW.
+     *
+     * @param pageable the current page information
+     * @return the list of print requests
+     */
+    public Page<PrintRequestDto> findOtherThanNew(Pageable pageable) {
+        return mapPage(printRequestRepository.findByStatusCodeNot(EPrintRequestStatus.NEW.name(), pageable));
+    }
+
+
     @Transactional
     public PrintRequestDto save(List<Long> cardsIds) {
         // create and save the print request
         PrintRequestDto printRequest = PrintRequestDto.builder()
                 .referenceNumber(generateReferenceNumber())
-                .statusCode("NEW")
-                .creationDate(new Date())
+                .statusCode(EPrintRequestStatus.NEW.name())
                 .build();
         // persist the request
         printRequest = super.save(printRequest);
@@ -66,7 +78,6 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
                     PrintRequestCardDto.builder()
                             .card(card)
                             .printRequest(finalPrintRequest)
-                            .creationDate(new Date())
                             .build());
         });
         printRequestCardService.saveAll(printRequestCards);
@@ -100,22 +111,19 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
 
             groupedRequestCards.forEach((key, value) -> {
                 PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
-                        .creationDate(new Date())
-                        .batchTypes("NATIONALITY")
+                        .batchTypes(EPrintBatchType.NATIONALITY.name())
                         .printRequestBatchCards(value.stream().map(
                                 requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList()))
                         .build();
                 printRequest.getPrintRequestBatches().add(printRequestBatch);
             });
-            return printRequest;
         } else {
             PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
-                    .creationDate(new Date())
                     .printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList()))
                     .build();
             printRequest.getPrintRequestBatches().add(printRequestBatch);
-            return printRequest;
         }
+        return printRequest;
     }
 
     public PrintRequestDto confirm(PrintRequestDto printRequest) {
@@ -126,6 +134,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
                 batchCard.setPrintRequestBatch(batch);
             });
         });
+        printRequest.setStatusCode(EPrintRequestStatus.CONFIRMED.name());
         return super.save(printRequest);
     }
 }

@@ -45,5 +45,4 @@ public class JpaPrintRequestBatchCard implements Serializable {
     public void prePersist() {
         creationDate = new Date();
     }
-
 }

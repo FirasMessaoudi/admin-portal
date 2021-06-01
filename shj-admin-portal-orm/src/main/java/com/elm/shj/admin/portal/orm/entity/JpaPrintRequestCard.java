@@ -40,4 +40,9 @@ public class JpaPrintRequestCard implements Serializable {
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
+
+    @PrePersist
+    public void prePersist() {
+        this.creationDate = new Date();
+    }
 }
