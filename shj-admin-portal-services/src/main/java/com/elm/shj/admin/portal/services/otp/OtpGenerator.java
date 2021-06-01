@@ -15,8 +15,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 
 /**
- * @author adhaoui
- * @since 1.5.0
+ * OTP number generator
+ *
+ * @author Aymen DHAOUI
+ * @since 1.0.0
  */
 @Service
 class OtpGenerator {
