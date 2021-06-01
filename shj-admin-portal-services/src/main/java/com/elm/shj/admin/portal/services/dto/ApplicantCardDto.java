@@ -24,7 +24,7 @@ public class ApplicantCardDto implements Serializable {
     private long id;
     private ApplicantRitualDto applicantRitual;
     private String referenceNumber;
-    private long batchId;
+    private Long batchId;
     private String statusCode;
     private Date creationDate;
 }

@@ -38,7 +38,7 @@ public class JpaApplicantCard implements Serializable {
     private String referenceNumber;
 
     @Column(name = "batch_id")
-    private long batchId;
+    private Long batchId;
 
     @Column(name = "status_code")
     private String statusCode;
