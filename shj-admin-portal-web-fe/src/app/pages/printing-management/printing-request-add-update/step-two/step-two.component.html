@@ -2,7 +2,7 @@
   <section class="border detailSection py-3 ">
 
       <div class="dash-b px-4 pb-3 mb-3">
-        <span class="h5 font-weight-bold text-dcc-primary mr-3">{{printRequest?.printRequestApplicants?.length}}</span>
+        <span class="h5 font-weight-bold text-dcc-primary mr-3">{{printRequest?.printRequestCards?.length}}</span>
         <span>{{'printing-management.smart_cards_for_print' | translate }}</span>
       </div>
 
@@ -37,10 +37,10 @@
           <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
         </td>
       </tr>
-      <tr *ngFor="let printRequestApplicant of printRequest?.printRequestApplicants">
-        <td>{{printRequestApplicant.applicant?.fullNameAr}} {{printRequestApplicant.applicant?.fullNameEn}}</td>
-        <td>{{printRequestApplicant.applicant?.digitalIds[0]?.uin}}</td>
-        <td class="ltr">{{printRequestApplicant.applicant?.passportNumber}}</td>
+      <tr *ngFor="let printRequestCard of printRequest?.printRequestCards">
+        <td>{{printRequestCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{printRequestCard?.card?.applicantRitual?.applicant?.fullNameEn}}</td>
+        <td>{{printRequestCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
+        <td class="ltr">{{printRequestCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
       </tr>
       </tbody>
     </table>

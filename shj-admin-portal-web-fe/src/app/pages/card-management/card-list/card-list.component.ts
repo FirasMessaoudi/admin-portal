@@ -3,7 +3,7 @@ import {I18nService} from "@dcc-commons-ng/services";
 import {AuthenticationService} from "@core/services";
 import {EAuthority, Page} from "@shared/model";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {Card} from "@model/card.model";
+import {ApplicantCard} from "@model/card.model";
 import {CardService} from "@core/services/card/card.service";
 import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
@@ -16,7 +16,7 @@ import {LookupService} from "@core/utilities/lookup.service";
 })
 export class CardListComponent implements OnInit {
   public isSearchbarCollapsed= false;
-  cards: Array<Card>;
+  cards: Array<ApplicantCard>;
   pageArray: Array<number>;
   page: Page;
   canAddCard: boolean;

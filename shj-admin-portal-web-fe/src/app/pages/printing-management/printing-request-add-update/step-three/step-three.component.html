@@ -5,7 +5,7 @@
     </span>
   <span>
       {{'printing-management.contains' | translate}}
-    <span name="noCards" class="h5 font-weight-bold text-dcc-primary mx-3">{{printRequest?.printRequestApplicants?.length}}</span>
+    <span name="noCards" class="h5 font-weight-bold text-dcc-primary mx-3">{{printRequest?.printRequestCards?.length}}</span>
     {{'printing-management.cards' | translate}}
     </span>
 </div>
@@ -16,7 +16,7 @@
          *ngFor="let requestBatch of printRequest?.printRequestBatches, let i=index">
     <thead>
     <th style="font-size: larger">
-      {{'printing-management.batch_no' | translate}} {{i + 1}} {{'printing-management.contains' | translate}} {{requestBatch?.printRequestBatchApplicants?.length}} {{'printing-management.cards' | translate}}
+      {{'printing-management.batch_no' | translate}} {{i + 1}} {{'printing-management.contains' | translate}} {{requestBatch?.printRequestBatchCards?.length}} {{'printing-management.cards' | translate}}
     </th>
     <tr>
       <th scope="col">{{'card-management.applicant_name' | translate}}</th>
@@ -32,12 +32,12 @@
       </td>
     </tr>
 
-    <tr *ngFor="let batchApplicant of requestBatch?.printRequestBatchApplicants">
+    <tr *ngFor="let batchCard of requestBatch?.printRequestBatchCards">
       <td><a [routerLink]="['/cards/details/1']"
-             class="text-dcc-primary font-weight-bold">{{batchApplicant?.applicant?.fullNameAr}} {{batchApplicant?.applicant?.fullNameEn}}</a>
+             class="text-dcc-primary font-weight-bold">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}</a>
       </td>
-      <td class="ltr">{{batchApplicant?.applicant?.digitalIds[0]?.uin}}</td>
-      <td class="ltr">{{batchApplicant?.applicant?.passportNumber}}</td>
+      <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
+      <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
     </tr>
     </tbody>
   </table>

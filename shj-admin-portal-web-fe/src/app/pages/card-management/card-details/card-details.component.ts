@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Card} from "@model/card.model";
 import {TranslateService} from "@ngx-translate/core";
 import {I18nService} from "@dcc-commons-ng/services";
 import {PackageCatering} from "@model/package-catering.model";
@@ -12,6 +11,7 @@ import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {CountryLookup} from "@model/country-lookup.model";
 import {Language} from "@model/enum/language.enum";
+import {ApplicantCard} from "@model/card.model";
 
 @Component({
   selector: 'app-card-details',
@@ -20,7 +20,7 @@ import {Language} from "@model/enum/language.enum";
 })
 export class CardDetailsComponent implements OnInit {
   cardId: number;
-  card: Card;
+  card: ApplicantCard;
   url: any = 'assets/images/default-avatar.svg';
   //TODO: to be deleted after wiring the backend to the frontend
   hamlahPackage: any;
