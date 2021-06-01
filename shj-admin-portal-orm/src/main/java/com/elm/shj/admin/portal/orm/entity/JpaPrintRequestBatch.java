@@ -44,7 +44,7 @@ public class JpaPrintRequestBatch implements Serializable {
     private String batchTypes;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "printRequestBatch")
-    private List<JpaPrintRequestBatchApplicant> printRequestBatchApplicants;
+    private List<JpaPrintRequestBatchCard> printRequestBatchCards;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

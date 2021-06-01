@@ -3,14 +3,14 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestCard;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Repository for print request applicant table.
+ * Repository for print request card table.
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
-public interface PrintRequestApplicantRepository extends JpaRepository<JpaPrintRequestApplicant, Long> {
+public interface PrintRequestCardRepository extends JpaRepository<JpaPrintRequestCard, Long> {
 }

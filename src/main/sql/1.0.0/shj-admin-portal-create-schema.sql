@@ -616,15 +616,15 @@ create table shj_portal.sha_print_request
 );
 GO
 
-if not exists (select * from sys.tables where name = 'sha_print_request_applicant')
-create table shj_portal.sha_print_request_applicant
+if not exists (select * from sys.tables where name = 'sha_print_request_card')
+create table shj_portal.sha_print_request_card
 (
     id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
     print_request_id INT NOT NULL,
-    applicant_id INT NOT NULL,
+    card_id INT NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    constraint fk_print_request_applicant_print_request foreign key (print_request_id) references shj_portal.sha_print_request (id),
-    constraint fk_print_request_applicant_applicant foreign key (applicant_id) references shj_portal.sha_applicant (id)
+    constraint fk_print_request_card_print_request foreign key (print_request_id) references shj_portal.sha_print_request (id),
+    constraint fk_print_request_card_applicant_card foreign key (card_id) references shj_portal.sha_applicant_card (id)
 );
 GO
 
@@ -640,14 +640,14 @@ create table shj_portal.sha_print_request_batch
 );
 GO
 
-if not exists (select * from sys.tables where name = 'sha_print_request_batch_applicant')
-create table shj_portal.sha_print_request_batch_applicant
+if not exists (select * from sys.tables where name = 'sha_print_request_batch_card')
+create table shj_portal.sha_print_request_batch_card
 (
     id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
     print_request_batch_id INT NOT NULL,
-    applicant_id INT NOT NULL,
+    card_id INT NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    constraint fk_print_request_batch_applicant_print_request foreign key (print_request_batch_id) references shj_portal.sha_print_request_batch (id),
-    constraint fk_print_request_batch_applicant_applicant foreign key (applicant_id) references shj_portal.sha_applicant (id)
+    constraint fk_print_request_batch_card_print_request_batch foreign key (print_request_batch_id) references shj_portal.sha_print_request_batch (id),
+    constraint fk_print_request_batch_card_card foreign key (card_id) references shj_portal.sha_applicant_card (id)
 );
 GO

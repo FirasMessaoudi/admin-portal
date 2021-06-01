@@ -109,7 +109,7 @@ GO
 
 -- insert applicant card
 INSERT INTO shj_portal.sha_applicant_card (applicant_ritual_id, reference_number, batch_id, status_code)
-VALUES (1, '362145', 1, 'SENT_FOR_PRINT');
+VALUES (1, '362145', 1, 'READY_TO_PRINT');
 GO
 
 -- insert decision rule

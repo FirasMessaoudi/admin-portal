@@ -4,8 +4,7 @@
 package com.elm.shj.admin.portal.services.print.request;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
-import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatchApplicant;
-import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +34,9 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     private static final SimpleDateFormat REF_NUMBER_FORMAT = new SimpleDateFormat("SSS");
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
 
-    private final ApplicantService applicantService;
+    private final ApplicantCardService cardService;
     private final PrintRequestBatchService printRequestBatchService;
-    private final PrintRequestApplicantService printRequestApplicantService;
+    private final PrintRequestCardService printRequestCardService;
 
     /**
      * Find all print requests.
@@ -50,7 +49,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     }
 
     @Transactional
-    public PrintRequestDto save(List<Long> applicantsIds) {
+    public PrintRequestDto save(List<Long> cardsIds) {
         // create and save the print request
         PrintRequestDto printRequest = PrintRequestDto.builder()
                 .referenceNumber(generateReferenceNumber())
@@ -60,18 +59,18 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         // persist the request
         printRequest = super.save(printRequest);
         log.info("printRequest created successfully with #{}", printRequest.getId());
-        List<PrintRequestApplicantDto> printRequestApplicants = new ArrayList<>();
+        List<PrintRequestCardDto> printRequestCards = new ArrayList<>();
         PrintRequestDto finalPrintRequest = printRequest;
-        applicantsIds.forEach(id -> {
-            ApplicantDto applicant = applicantService.findOne(id);
-            printRequestApplicants.add(
-                    PrintRequestApplicantDto.builder()
-                            .applicant(applicant)
+        cardsIds.forEach(id -> {
+            ApplicantCardDto card = cardService.findOne(id);
+            printRequestCards.add(
+                    PrintRequestCardDto.builder()
+                            .card(card)
                             .printRequest(finalPrintRequest)
                             .creationDate(new Date())
                             .build());
         });
-        printRequestApplicantService.saveAll(printRequestApplicants);
+        printRequestCardService.saveAll(printRequestCards);
         // return the persisted object
         return printRequest;
     }
@@ -97,15 +96,15 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         if (batchTypes.contains(EPrintBatchType.NATIONALITY.name())) {
             printRequest.getPrintRequestBatches().clear();
 
-            Map<List<Object>, List<PrintRequestApplicantDto>> groupedRequestApplicants = printRequest.getPrintRequestApplicants()
-                    .stream().collect(Collectors.groupingBy(requestApplicant -> Arrays.asList(requestApplicant.getApplicant().getNationalityCode())));
+            Map<List<Object>, List<PrintRequestCardDto>> groupedRequestCards = printRequest.getPrintRequestCards()
+                    .stream().collect(Collectors.groupingBy(requestCard -> Arrays.asList(requestCard.getCard().getApplicantRitual().getApplicant().getNationalityCode())));
 
-            groupedRequestApplicants.forEach((key, value) -> {
+            groupedRequestCards.forEach((key, value) -> {
                 PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
                         .creationDate(new Date())
                         .batchTypes("NATIONALITY")
-                        .printRequestBatchApplicants(value.stream().map(
-                                requestApplicant -> PrintRequestBatchApplicantDto.builder().applicant(requestApplicant.getApplicant()).build()).collect(Collectors.toList()))
+                        .printRequestBatchCards(value.stream().map(
+                                requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList()))
                         .build();
                 printRequest.getPrintRequestBatches().add(printRequestBatch);
             });
@@ -113,7 +112,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         } else {
             PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
                     .creationDate(new Date())
-                    .printRequestBatchApplicants(printRequest.getPrintRequestApplicants().stream().map(requestApplicant -> PrintRequestBatchApplicantDto.builder().applicant(requestApplicant.getApplicant()).build()).collect(Collectors.toList()))
+                    .printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList()))
                     .build();
             printRequest.getPrintRequestBatches().add(printRequestBatch);
             return printRequest;
@@ -123,9 +122,9 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     public PrintRequestDto confirm(PrintRequestDto printRequest) {
         printRequest.getPrintRequestBatches().forEach(batch -> {
             batch.setPrintRequest(printRequest);
-            batch.getPrintRequestBatchApplicants().forEach(batchApplicant -> {
-                batchApplicant.setApplicant(batchApplicant.getApplicant());
-                batchApplicant.setPrintRequestBatch(batch);
+            batch.getPrintRequestBatchCards().forEach(batchCard -> {
+                batchCard.setCard(batchCard.getCard());
+                batchCard.setPrintRequestBatch(batch);
             });
         });
         return super.save(printRequest);

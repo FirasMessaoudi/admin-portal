@@ -3,8 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.print.request;
 
-import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatchApplicant;
-import com.elm.shj.admin.portal.services.dto.PrintRequestBatchApplicantDto;
+import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatchCard;
+import com.elm.shj.admin.portal.services.dto.PrintRequestBatchCardDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,5 +20,5 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class PrintRequestBatchApplicantService extends GenericService<JpaPrintRequestBatchApplicant, PrintRequestBatchApplicantDto, Long> {
+public class PrintRequestBatchApplicantService extends GenericService<JpaPrintRequestBatchCard, PrintRequestBatchCardDto, Long> {
 }

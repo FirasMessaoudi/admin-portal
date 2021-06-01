@@ -30,6 +30,6 @@ public class PrintRequestBatchDto implements Serializable {
     private PrintRequestDto printRequest;
     private int sequenceNumber;
     private String batchTypes;
-    private List<PrintRequestBatchApplicantDto> printRequestBatchApplicants;
+    private List<PrintRequestBatchCardDto> printRequestBatchCards;
     private Date creationDate;
 }

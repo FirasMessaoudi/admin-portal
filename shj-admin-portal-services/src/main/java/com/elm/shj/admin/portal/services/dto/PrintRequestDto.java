@@ -27,7 +27,7 @@ public class PrintRequestDto implements Serializable {
     private long id;
     private String referenceNumber;
     private String statusCode;
-    private List<PrintRequestApplicantDto> printRequestApplicants;
+    private List<PrintRequestCardDto> printRequestCards;
     private List<PrintRequestBatchDto> printRequestBatches;
     private Date creationDate;
 }

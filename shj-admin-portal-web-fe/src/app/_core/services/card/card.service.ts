@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpEvent, HttpParams} from "@angular/common/http";
 import {Observable, of} from "rxjs";
-import {Card} from "@model/card.model";
+import {ApplicantCard} from "@model/card.model";
 import {catchError} from "rxjs/internal/operators";
 import {Lookup} from "@model/lookup.model";
 import {CountryLookup} from "@model/country-lookup.model";
@@ -34,9 +34,9 @@ export class CardService {
    * Finds card by its ID from the server.
    *
    * @param cardId the card id
-   * @return {Observable<Card>} The card identified by cardId.
+   * @return {Observable<ApplicantCard>} The card identified by cardId.
    */
-  find(cardId: number): Observable<Card> {
+  find(cardId: number): Observable<ApplicantCard> {
     return this.http.get<any>('/core/api/cards/find/' + cardId).pipe(
       catchError(
         (error: any, caught: Observable<HttpEvent<any>>) => {

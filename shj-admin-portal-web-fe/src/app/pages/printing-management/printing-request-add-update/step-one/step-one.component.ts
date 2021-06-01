@@ -3,7 +3,7 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {Subscription} from "rxjs";
 import {Page} from "@shared/model";
 import {CardService} from "@core/services";
-import {Card} from "@model/card.model";
+import {ApplicantCard} from "@model/card.model";
 
 @Component({
   selector: 'app-step-one',
@@ -12,11 +12,11 @@ import {Card} from "@model/card.model";
 })
 export class StepOneComponent implements OnInit {
   closeResult = '';
-  cards: Array<Card> = [];
+  cards: Array<ApplicantCard> = [];
   pageArray: Array<number>;
   page: Page;
-  selectedCards: Array<Card> = [];
-  addedCards: Array<Card> = [];
+  selectedCards: Array<ApplicantCard> = [];
+  addedCards: Array<ApplicantCard> = [];
 
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();

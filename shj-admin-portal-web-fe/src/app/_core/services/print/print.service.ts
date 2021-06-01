@@ -44,8 +44,8 @@ export class PrintService {
     );
   }
 
-  save(applicantsIds: Number[]): Observable<any> {
-    return this.http.post<any>("/core/api/print/requests/create", applicantsIds).pipe(
+  save(cardsIds: Number[]): Observable<any> {
+    return this.http.post<any>("/core/api/print/requests/create", cardsIds).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.hasOwnProperty('error')) {
           return of(error.error);

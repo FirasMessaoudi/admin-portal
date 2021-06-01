@@ -4,13 +4,16 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Dto class for the print request batch applicant domain.
+ * Dto class for the print request card domain.
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
@@ -18,15 +21,14 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class PrintRequestBatchApplicantDto implements Serializable {
+@Data
+public class PrintRequestCardDto implements Serializable {
 
-    private static final long serialVersionUID = 3116078220007424027L;
+    private static final long serialVersionUID = -5235991770935109142L;
 
     private long id;
     @JsonBackReference
-    private PrintRequestBatchDto printRequestBatch;
-    private ApplicantDto applicant;
+    private PrintRequestDto printRequest;
+    private ApplicantCardDto card;
     private Date creationDate;
 }

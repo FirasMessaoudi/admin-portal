@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {Card} from "@model/card.model";
+import {ApplicantCard} from "@model/card.model";
 import {PrintService} from "@core/services/print/print.service";
 import {PrintRequest} from "@model/print-request.model";
 
@@ -14,7 +14,7 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
               private printService: PrintService) {
   }
 
-  addedCards: Card[] = [];
+  addedCards: ApplicantCard[] = [];
   printRequest: PrintRequest;
   selectedBatchTypes: string[] = [];
 
@@ -23,7 +23,7 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
 
   saveStepOne() {
     this.cdr.detectChanges();
-    this.printService.save(this.addedCards.map(card => card.applicantRitual.applicant.id)).subscribe(
+    this.printService.save(this.addedCards.map(card => card.id)).subscribe(
       res => {
         this.printService.find(res.id).subscribe(
           result => this.printRequest = result

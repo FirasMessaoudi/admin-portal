@@ -11,17 +11,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_print_request_batch_applicant database table.
+ * The persistent class for the sha_print_request_batch_card database table.
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_print_request_batch_applicant")
-@NamedQuery(name = "JpaPrintRequestBatchApplicant.findAll", query = "SELECT j FROM JpaPrintRequestApplicant j")
+@Table(name = "sha_print_request_batch_card")
+@NamedQuery(name = "JpaPrintRequestBatchCard.findAll", query = "SELECT j FROM JpaPrintRequestCard j")
 @Data
 @NoArgsConstructor
-public class JpaPrintRequestBatchApplicant implements Serializable {
+public class JpaPrintRequestBatchCard implements Serializable {
 
     private static final long serialVersionUID = -5699265677788262901L;
 
@@ -35,8 +35,8 @@ public class JpaPrintRequestBatchApplicant implements Serializable {
     private JpaPrintRequestBatch printRequestBatch;
 
     @ManyToOne
-    @JoinColumn(name = "applicant_id")
-    private JpaApplicant applicant;
+    @JoinColumn(name = "card_id")
+    private JpaApplicantCard card;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

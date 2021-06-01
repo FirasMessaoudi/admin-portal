@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatchApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatchCard;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -12,5 +12,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
-public interface PrintRequestBatchApplicantRepository extends JpaRepository<JpaPrintRequestBatchApplicant, Long> {
+public interface PrintRequestBatchCardRepository extends JpaRepository<JpaPrintRequestBatchCard, Long> {
 }

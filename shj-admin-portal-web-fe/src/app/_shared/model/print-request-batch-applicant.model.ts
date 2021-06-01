@@ -1,9 +1,9 @@
 import {PrintRequestBatch} from "@model/print-request-batch.model";
-import {Applicant} from "@model/applicant.model";
+import {ApplicantCard} from "@model/card.model";
 
-export class PrintRequestBatchApplicant {
+export class PrintRequestBatchCard {
   id: number
   printRequestBatch: PrintRequestBatch;
-  applicant: Applicant;
+  card: ApplicantCard;
   creationDate: Date;
 }

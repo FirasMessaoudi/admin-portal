@@ -4,15 +4,15 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
-import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatchApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatchCard;
 import org.mapstruct.Mapper;
 
 /**
- * Mapper for {@link PrintRequestBatchDto} class
+ * Mapper for {@link PrintRequestBatchCardDto} class
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
 @Mapper(componentModel = "spring")
-public abstract class PrintRequestBatchApplicantDtoMapper implements IGenericMapper<PrintRequestBatchApplicantDto, JpaPrintRequestBatchApplicant> {
+public abstract class PrintRequestBatchCardDtoMapper implements IGenericMapper<PrintRequestBatchCardDto, JpaPrintRequestBatchCard> {
 }
