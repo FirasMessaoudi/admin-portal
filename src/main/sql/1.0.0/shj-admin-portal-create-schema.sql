@@ -647,7 +647,7 @@ create table shj_portal.sha_print_request_batch_applicant
     print_request_batch_id INT NOT NULL,
     applicant_id INT NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    constraint fk_print_request_batch_applicant_print_request foreign key (print_request_batch_id) references shj_portal.sha_print_request (id),
+    constraint fk_print_request_batch_applicant_print_request foreign key (print_request_batch_id) references shj_portal.sha_print_request_batch (id),
     constraint fk_print_request_batch_applicant_applicant foreign key (applicant_id) references shj_portal.sha_applicant (id)
 );
 GO

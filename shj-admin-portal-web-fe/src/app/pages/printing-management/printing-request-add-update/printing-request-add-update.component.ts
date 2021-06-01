@@ -34,14 +34,16 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
 
   saveStepTwo() {
     this.cdr.detectChanges();
-    console.log(this.selectedBatchTypes);
     this.printService.batch(this.printRequest.id, this.selectedBatchTypes).subscribe(
       result => this.printRequest = result
     )
   }
 
   confirm() {
-
+    console.log("printing request confirm")
+    this.printService.confirm(this.printRequest).subscribe(
+      result => console.log(result)
+    )
   }
 
   setAddedCards(cards) {

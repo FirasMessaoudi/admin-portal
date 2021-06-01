@@ -3,10 +3,9 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,7 +21,8 @@ import java.util.List;
 @Entity
 @Table(name = "sha_print_request_batch")
 @NamedQuery(name = "JpaPrintRequestBatch.findAll", query = "SELECT j FROM JpaPrintRequestBatch j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaPrintRequestBatch implements Serializable {
 
@@ -43,9 +43,14 @@ public class JpaPrintRequestBatch implements Serializable {
     @Column(name = "batch_types")
     private String batchTypes;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "printRequestBatch")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "printRequestBatch")
     private List<JpaPrintRequestBatchApplicant> printRequestBatchApplicants;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
+
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+    }
 }

@@ -4,10 +4,7 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,7 +19,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class PrintRequestBatchDto implements Serializable {
 
     private static final long serialVersionUID = -2689417211511498736L;
@@ -32,6 +30,6 @@ public class PrintRequestBatchDto implements Serializable {
     private PrintRequestDto printRequest;
     private int sequenceNumber;
     private String batchTypes;
-    private List<PrintRequestApplicantDto> printRequestBatchApplicants;
+    private List<PrintRequestBatchApplicantDto> printRequestBatchApplicants;
     private Date creationDate;
 }

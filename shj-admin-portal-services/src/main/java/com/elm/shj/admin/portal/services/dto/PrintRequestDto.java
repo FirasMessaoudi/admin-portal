@@ -3,10 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,7 +18,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class PrintRequestDto implements Serializable {
 
     private static final long serialVersionUID = -5860349238491983581L;

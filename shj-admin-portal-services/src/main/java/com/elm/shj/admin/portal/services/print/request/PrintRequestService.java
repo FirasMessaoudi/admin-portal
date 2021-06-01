@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.print.request;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
+import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatchApplicant;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -35,6 +36,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
 
     private final ApplicantService applicantService;
+    private final PrintRequestBatchService printRequestBatchService;
     private final PrintRequestApplicantService printRequestApplicantService;
 
     /**
@@ -102,7 +104,8 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
                 PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
                         .creationDate(new Date())
                         .batchTypes("NATIONALITY")
-                        .printRequestBatchApplicants(value)
+                        .printRequestBatchApplicants(value.stream().map(
+                                requestApplicant -> PrintRequestBatchApplicantDto.builder().applicant(requestApplicant.getApplicant()).build()).collect(Collectors.toList()))
                         .build();
                 printRequest.getPrintRequestBatches().add(printRequestBatch);
             });
@@ -110,12 +113,22 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         } else {
             PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
                     .creationDate(new Date())
-                    .batchTypes("NATIONALITY")
-                    .printRequestBatchApplicants(printRequest.getPrintRequestApplicants())
+                    .printRequestBatchApplicants(printRequest.getPrintRequestApplicants().stream().map(requestApplicant -> PrintRequestBatchApplicantDto.builder().applicant(requestApplicant.getApplicant()).build()).collect(Collectors.toList()))
                     .build();
             printRequest.getPrintRequestBatches().add(printRequestBatch);
             return printRequest;
         }
+    }
+
+    public PrintRequestDto confirm(PrintRequestDto printRequest) {
+        printRequest.getPrintRequestBatches().forEach(batch -> {
+            batch.setPrintRequest(printRequest);
+            batch.getPrintRequestBatchApplicants().forEach(batchApplicant -> {
+                batchApplicant.setApplicant(batchApplicant.getApplicant());
+                batchApplicant.setPrintRequestBatch(batch);
+            });
+        });
+        return super.save(printRequest);
     }
 }
 

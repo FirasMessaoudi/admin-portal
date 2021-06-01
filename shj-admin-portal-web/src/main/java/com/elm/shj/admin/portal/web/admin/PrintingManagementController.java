@@ -78,4 +78,11 @@ public class PrintingManagementController {
         return printRequestService.processBatching(printRequestId, printBatchTypes);
     }
 
+    @PostMapping("/{printRequestId}/confirm")
+    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    public PrintRequestDto confirm(@RequestBody PrintRequestDto printRequest) {
+        log.debug("Confirming print request");
+        return printRequestService.confirm(printRequest);
+    }
+
 }

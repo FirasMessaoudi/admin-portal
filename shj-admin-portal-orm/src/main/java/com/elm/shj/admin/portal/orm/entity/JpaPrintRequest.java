@@ -44,7 +44,7 @@ public class JpaPrintRequest implements Serializable {
     private List<JpaPrintRequestApplicant> printRequestApplicants;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "printRequest")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true, mappedBy = "printRequest")
     private List<JpaPrintRequestBatch> printRequestBatches;
 
     @Column(name = "creation_date", nullable = false)
