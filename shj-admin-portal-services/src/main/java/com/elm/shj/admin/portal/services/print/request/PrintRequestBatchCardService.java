@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Service handling print request batch applicant
+ * Service handling print request batch card
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
@@ -20,5 +20,5 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class PrintRequestBatchApplicantService extends GenericService<JpaPrintRequestBatchCard, PrintRequestBatchCardDto, Long> {
+public class PrintRequestBatchCardService extends GenericService<JpaPrintRequestBatchCard, PrintRequestBatchCardDto, Long> {
 }

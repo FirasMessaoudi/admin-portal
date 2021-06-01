@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Service handling print request applicant
+ * Service handling print request card
  *
  * @author Slim Ben Hadj
  * @since 1.0.0

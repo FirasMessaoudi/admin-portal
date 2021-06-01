@@ -35,7 +35,6 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
 
     private final ApplicantCardService cardService;
-    private final PrintRequestBatchService printRequestBatchService;
     private final PrintRequestCardService printRequestCardService;
 
     /**
