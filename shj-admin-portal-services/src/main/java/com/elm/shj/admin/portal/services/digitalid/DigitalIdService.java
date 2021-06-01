@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,8 +70,8 @@ public class DigitalIdService {
         // generate date of birth digits
         String dobDigits = YEAR_FORMATTER.format(applicant.getDateOfBirthGregorian());
         // generate serial digits
-        String latestSerial = applicantDigitalIdRepository.fetchUinByUinLike(genderDigit + countryDigits + dobDigits + "%");
-        String serialDigits = StringUtils.leftPad(latestSerial == null ? "1" : Long.valueOf(latestSerial + 1).toString(), 7, "0");
+        List<String> latestSerialList = applicantDigitalIdRepository.fetchUinByUinLike(genderDigit + countryDigits + dobDigits + "%");
+        String serialDigits = StringUtils.leftPad(CollectionUtils.isEmpty(latestSerialList) ? "1" : String.valueOf(Long.parseLong(latestSerialList.get(0)) + 1), 7, "0");
         // generate checksum digit
         String partialSmartId = genderDigit + countryDigits + dobDigits + serialDigits;
         String checkDigit = calculateCheckDigit(partialSmartId);

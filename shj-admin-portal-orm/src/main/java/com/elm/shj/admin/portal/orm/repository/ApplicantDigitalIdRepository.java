@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 /**
  * Repository for ApplicantDigitalId Table.
  *
@@ -16,7 +18,7 @@ import org.springframework.data.repository.query.Param;
  */
 public interface ApplicantDigitalIdRepository extends JpaRepository<JpaApplicantDigitalId, Long> {
 
-    @Query("select substring(d.uin, 7, 13) from JpaApplicantDigitalId d where d.uin like :uin order by substring(d.uin, 7, 13) desc")
-    String fetchUinByUinLike(@Param("uin") String uin);
+    @Query("select substring(d.uin, 7, 7) from JpaApplicantDigitalId d where d.uin like :uin order by substring(d.uin, 7, 7) desc")
+    List<String> fetchUinByUinLike(@Param("uin") String uin);
 
 }
