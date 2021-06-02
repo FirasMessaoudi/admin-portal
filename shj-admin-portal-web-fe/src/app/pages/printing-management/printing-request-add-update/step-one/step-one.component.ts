@@ -134,7 +134,7 @@ export class StepOneComponent implements OnInit {
   }
 
   addCards() {
-    this.addedCards = this.addedCards.concat(this.selectedCards);
+    this.addedCards = [...this.addedCards, ...this.selectedCards];
     this.onAddCards.emit(this.addedCards);
     this.cards = [];
     this.selectedCards = [];
@@ -143,5 +143,9 @@ export class StepOneComponent implements OnInit {
 
   lookupService(): LookupService {
     return this.lookupsService;
+  }
+
+  undoAddCard(cardId: number) {
+    this.addedCards.splice(this.addedCards.findIndex(card => card.id === cardId), 1);
   }
 }

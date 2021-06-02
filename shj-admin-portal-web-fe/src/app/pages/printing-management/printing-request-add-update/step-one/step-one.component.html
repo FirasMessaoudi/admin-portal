@@ -133,6 +133,7 @@
         <th scope="col">{{'card-management.applicant_name' | translate}}</th>
         <th scope="col">{{'card-management.applicant_id' | translate}}</th>
         <th scope="col">{{'card-management.passport_number' | translate}}</th>
+        <th scope="col" class="text-center">{{'general.actions' | translate}}</th>
       </tr>
       </thead>
       <tbody>
@@ -146,29 +147,37 @@
         <td>{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</td>
         <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
         <td class="ltr">{{card?.applicantRitual?.applicant?.passportNumber}}</td>
+        <td class="text-center" width="20%" style="text-align:center">
+          <div class="text-nowrap">
+            <a class="action mx-2" href="javascript:void(0)"
+               (click)="undoAddCard(card?.id)" ngbTooltip="{{'general.tooltip_delete' | translate}}">
+              <svg-icon styleClass="fa-w-20 h5" icon="user-times"></svg-icon>
+            </a>
+          </div>
+        </td>
       </tr>
       </tbody>
     </table>
   </div>
 
-  <nav aria-label="Page navigation example" *ngIf="page?.content">
+  <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
-      <li class="page-item" [class.disabled]="page?.first">
-        <a class="page-link" (click)="loadPage(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>
+      <li class="page-item" [class.disabled]="false">
+        <a class="page-link" tabindex="-1">{{'general.nav_first' | translate}}</a>
       </li>
 
-      <li class="page-item" [class.disabled]="page?.first">
-        <a class="page-link" (click)="loadPage(page?.number-1)" tabindex="-1">{{'general.nav_previous' | translate}}</a>
+      <li class="page-item" [class.disabled]="false">
+        <a class="page-link" tabindex="-1">{{'general.nav_previous' | translate}}</a>
       </li>
       <li class="page-item active">
-        <a class="page-link" (click)="loadPage(page.number)">{{(page?.number + 1) + ' / ' + page?.totalPages}}</a>
+        <a class="page-link">{{2 + ' / ' + 5}}</a>
       </li>
-      <li class="page-item" [class.disabled]="page?.last">
-        <a class="page-link" (click)="loadPage(page?.number+1)">{{'general.nav_next' | translate}}</a>
+      <li class="page-item" [class.disabled]="false">
+        <a class="page-link">{{'general.nav_next' | translate}}</a>
       </li>
 
-      <li class="page-item" [class.disabled]="page?.last">
-        <a class="page-link" (click)="loadPage(page?.totalPages-1)">{{'general.nav_last' | translate}}</a>
+      <li class="page-item" [class.disabled]="false">
+        <a class="page-link">{{'general.nav_last' | translate}}</a>
       </li>
     </ul>
   </nav>
