@@ -35,9 +35,7 @@
     </tr>
 
     <tr *ngFor="let batchCard of requestBatch?.printRequestBatchCards">
-      <td><a [routerLink]="['/cards/details/1']"
-             class="text-dcc-primary font-weight-bold">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}</a>
-      </td>
+      <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}</td>
       <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
       <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
     </tr>

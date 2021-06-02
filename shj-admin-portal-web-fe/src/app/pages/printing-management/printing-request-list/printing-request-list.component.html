@@ -21,7 +21,7 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.request_number" | translate }}</label>
-          <input id="requestNumber" type="text" class="form-control" value="2148888"/>
+          <input id="requestNumber" type="text" class="form-control" value=""/>
         </div>
 
         <div class="form-group col">
@@ -56,17 +56,17 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.batch_number" | translate }}</label>
-          <input id="batchNumber" type="text" class="form-control" value="5721023"/>
+          <input id="batchNumber" type="text" class="form-control" value=""/>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.id_number" | translate }}</label>
-          <input id="idNumber" type="text" class="form-control" value="1035145879"/>
+          <input id="idNumber" type="text" class="form-control" value=""/>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "card-management.card_number" | translate }}</label>
-          <input id="cardNumber" type="text" class="form-control" value="542187"/>
+          <input id="cardNumber" type="text" class="form-control" value=""/>
         </div>
 
         <div class="form-group col">
@@ -124,7 +124,7 @@
             <td><a name="requestID" [routerLink]="['/print-requests/details', request.id]" class="text-dcc-primary font-weight-bold">{{request.referenceNumber}}</a></td>
             <td>{{request.printRequestBatches?.length}}</td>
             <td class="ltr">{{request.printRequestCards?.length}}</td>
-            <td class="ltr">{{'24-03-2021'}}</td>
+            <td class="ltr"></td>
             <td class="ltr">
               {{request.statusCode ? lookupService().localizedLabel(printRequestStatuses, request.statusCode) : ""}}
               <span class="status mr-1 done"></span>

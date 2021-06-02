@@ -4,6 +4,9 @@ import {Subscription} from "rxjs";
 import {Page} from "@shared/model";
 import {CardService} from "@core/services";
 import {ApplicantCard} from "@model/card.model";
+import {CountryLookup} from "@model/country-lookup.model";
+import {LookupService} from "@core/utilities/lookup.service";
+import {Lookup} from "@model/lookup.model";
 
 @Component({
   selector: 'app-step-one',
@@ -17,6 +20,8 @@ export class StepOneComponent implements OnInit {
   page: Page;
   selectedCards: Array<ApplicantCard> = [];
   addedCards: Array<ApplicantCard> = [];
+  nationalities: CountryLookup[];
+  localizedNationalities: Lookup[];
 
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();
@@ -25,10 +30,15 @@ export class StepOneComponent implements OnInit {
   private searchSubscription: Subscription;
 
   constructor(private modalService: NgbModal,
-              private cardService: CardService) {
+              private cardService: CardService,
+              private lookupsService: LookupService) {
   }
 
   ngOnInit(): void {
+    this.cardService.findCountries().subscribe(result => {
+      this.nationalities = result;
+      this.localizedNationalities = this.lookupsService.localizedItems(this.nationalities);
+    });
   }
 
   ngOnDestroy() {
@@ -108,5 +118,9 @@ export class StepOneComponent implements OnInit {
     this.cards = [];
     this.selectedCards = [];
     this.modalService.dismissAll();
+  }
+
+  lookupService(): LookupService {
+    return this.lookupsService;
   }
 }

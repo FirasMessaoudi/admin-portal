@@ -18,4 +18,11 @@ export class LookupService {
       item = lookupItems.find(type => type.code === code && type.lang.startsWith(defaultLang));
     return item.label;
   }
+
+  localizedItems(lookupItems: Lookup[]) : Lookup[] {
+    let items: Lookup[] = lookupItems.filter(value => this.i18nService.language.startsWith(value.lang));
+    if (!items)
+      items = lookupItems.filter(value => value.lang.startsWith(defaultLang));
+    return items;
+  }
 }
