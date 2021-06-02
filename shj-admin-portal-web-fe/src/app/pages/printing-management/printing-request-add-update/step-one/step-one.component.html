@@ -120,7 +120,7 @@
   <div class="modal-footer justify-content-end">
     <button type="button" class="btn btn-dcc-primary px-5 ml-3"
             *ngIf="selectedCards?.length"
-            (click)="save()">{{'printing-management.add_cards' | translate : {noCards: selectedCards.length} }}
+            (click)="addCards()">{{'printing-management.add_cards' | translate : {noCards: selectedCards.length} }}
     </button>
   </div>
 </ng-template>

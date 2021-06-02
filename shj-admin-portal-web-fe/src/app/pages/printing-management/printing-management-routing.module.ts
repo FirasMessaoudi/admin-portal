@@ -11,6 +11,7 @@ const routes: Routes = [
   {path: 'print-requests/list', component: PrintingRequestListComponent, canActivate: [AuthenticationGuard]},
   {path: 'print-requests/details/:id', component: PrintingRequestDetailsComponent, canActivate: [AuthenticationGuard]},
   {path: 'print-requests/create', component: PrintingRequestAddUpdateComponent, canActivate: [AuthenticationGuard]},
+  {path: 'print-requests/success', component: SuccessComponent, canActivate: [AuthenticationGuard]},
   {path: 'print-requests/update/:id', component: PrintingRequestAddUpdateComponent, canActivate: [AuthenticationGuard]}
 ];
 

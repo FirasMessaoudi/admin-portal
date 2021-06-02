@@ -5,10 +5,13 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the sha_applicant_card database table.
@@ -39,6 +42,10 @@ public class JpaApplicantCard implements Serializable {
 
     @Column(name = "batch_id")
     private Long batchId;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "card")
+    private List<JpaPrintRequestCard> printRequestCards;
 
     @Column(name = "status_code")
     private String statusCode;

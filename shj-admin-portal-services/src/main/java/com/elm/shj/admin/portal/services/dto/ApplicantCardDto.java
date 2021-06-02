@@ -3,11 +3,14 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestCard;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Dto class for the applicant card domain.
@@ -25,6 +28,8 @@ public class ApplicantCardDto implements Serializable {
     private ApplicantRitualDto applicantRitual;
     private String referenceNumber;
     private Long batchId;
+    @JsonBackReference
+    private List<JpaPrintRequestCard> printRequestCards;
     private String statusCode;
     private Date creationDate;
 }
