@@ -27,7 +27,7 @@
       </div>
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'printing-management.confirm_printing_date' | translate}}</label>
-        <span class="form-control-plaintext "></span>
+        <span class="form-control-plaintext ">{{printRequest?.printingDate | dateFormat}}</span>
       </div>
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'printing-management.request_status' | translate}}</label>
@@ -70,8 +70,8 @@
           <tbody [ngbCollapse]="isCollapsed[i]" class="collapse">
           <tr *ngFor="let batchCard of batch.printRequestBatchCards">
             <td class="nameCol">
-              <a
-                [routerLink]="['/cards/details', batchCard?.card?.id]">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}</a>
+              <a [routerLink]="['/cards/details', batchCard?.card?.id]" target="_blank" class="text-dcc-primary font-weight-bold">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
+              </a>
             </td>
             <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
             <td class="ltr">{{batchCard?.card?.referenceNumber}}</td>
