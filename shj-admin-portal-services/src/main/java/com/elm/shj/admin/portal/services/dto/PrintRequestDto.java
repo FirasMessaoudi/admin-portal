@@ -30,5 +30,5 @@ public class PrintRequestDto implements Serializable {
     private List<PrintRequestCardDto> printRequestCards;
     private List<PrintRequestBatchDto> printRequestBatches;
     private Date creationDate;
-    private Date printingDate;
+    private Date updateDate;
 }

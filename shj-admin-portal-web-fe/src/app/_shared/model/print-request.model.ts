@@ -8,5 +8,5 @@ export class PrintRequest {
   printRequestCards: PrintRequestBatchCard[];
   printRequestBatches: PrintRequestBatch[];
   creationDate: Date;
-  printingDate: Date;
+  updateDate: Date;
 }
