@@ -4,13 +4,13 @@
     <h3 class="text-dcc-primary mb-3">{{'printing-management.new_request' | translate}}</h3>
   </section>
 
-  <aw-wizard *ngIf="!success" class="steps-custom" [navBarLayout]="'large-empty'">
+  <aw-wizard class="steps-custom" [navBarLayout]="'large-empty'">
     <aw-wizard-step name="prepareRequest" [navigationSymbol]="{ symbol: '1' }">
       <ng-template awWizardStepTitle>
         <span>{{'printing-management.prepare_request' | translate}}</span>
       </ng-template>
       <div class="section">
-        <app-step-one (onAddCards)="setAddedCards($event)"></app-step-one>
+        <app-step-one (onAddCards)="setAddedCards($event)" (onSetPrintRequest)="setPrintRequest($event)" ></app-step-one>
       </div>
       <div class="bg-lighter mx-30 p-4 text-center">
         <button name="btnCancel" type="button" routerLink="/print-requests/list" class="btn btn-outline-secondary rounded-22 px-5 mr-3">{{'general.btn_cancel' | translate}}</button>
@@ -22,7 +22,7 @@
         <span>{{'printing-management.create_batch' | translate}}</span>
       </ng-template>
       <div class="section">
-        <app-step-two (onSelectBatchTypes)="setSelectedBatchTypes($event)"  [printRequest]="printRequest"></app-step-two>
+        <app-step-two (onSelectBatchTypes)="setSelectedBatchTypes($event)" (onSetPrintRequest)="setPrintRequest($event)" [printRequest]="printRequest"></app-step-two>
       </div>
       <div class="bg-lighter mx-30 p-4 text-center">
         <button name="btnCancel" type="button" routerLink="/print-requests/list" class="btn btn-outline-secondary rounded-22 px-5 mr-3">{{'general.btn_cancel' | translate}}</button>
@@ -44,5 +44,4 @@
       </div>
     </aw-wizard-step>
   </aw-wizard>
-  <app-success *ngIf="success" [printRequest]="printRequest"></app-success>
 </div>

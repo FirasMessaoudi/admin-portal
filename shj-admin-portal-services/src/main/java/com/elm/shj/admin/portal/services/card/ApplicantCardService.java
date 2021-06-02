@@ -6,6 +6,8 @@ package com.elm.shj.admin.portal.services.card;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
+import com.elm.shj.admin.portal.services.dto.ECardStatus;
+import com.elm.shj.admin.portal.services.dto.EPrintRequestStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,10 +49,10 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      */
     public Page<ApplicantCardDto> findReadyToPrint(List<Long> excludedCardsIds, Pageable pageable) {
         if (excludedCardsIds.size() == 0) {
-            return mapPage(applicantCardRepository.findByStatusCode("READY_TO_PRINT", pageable));
+            return mapPage(applicantCardRepository.findPrintingCards(pageable));
         } else {
             return mapPage(applicantCardRepository
-                    .findByStatusCodeAndIdNotIn("READY_TO_PRINT", excludedCardsIds, pageable));
+                    .findPrintingCards(excludedCardsIds, pageable));
         }
     }
 }

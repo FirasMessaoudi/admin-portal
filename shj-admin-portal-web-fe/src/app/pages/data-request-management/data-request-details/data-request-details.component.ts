@@ -29,7 +29,7 @@ export class DataRequestDetailsComponent implements OnInit {
     this.dataRequestId = this.activeRoute.snapshot.params.id;
 
     if (this.dataRequestId) {
-      // load user details
+      // load data request details
       this.dataRequestService.find(this.dataRequestId).subscribe(data => {
         if (data && data.id) {
           this.dataRequest = data;

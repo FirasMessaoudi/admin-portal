@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Subscription} from "rxjs";
 import {Page} from "@shared/model";
 import {CardService} from "@core/services";
@@ -7,6 +7,8 @@ import {ApplicantCard} from "@model/card.model";
 import {CountryLookup} from "@model/country-lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {Lookup} from "@model/lookup.model";
+import {PrintService} from "@core/services/print/print.service";
+import {PrintRequestStorage} from "@pages/printing-management/printing-request-add-update/print-request-storage";
 
 @Component({
   selector: 'app-step-one',
@@ -26,15 +28,21 @@ export class StepOneComponent implements OnInit {
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();
 
+  @Output()
+  public onSetPrintRequest: EventEmitter<any> = new EventEmitter<any>();
+
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
   constructor(private modalService: NgbModal,
               private cardService: CardService,
-              private lookupsService: LookupService) {
+              private printService: PrintService,
+              private lookupsService: LookupService,
+              private printRequestStorage: PrintRequestStorage) {
   }
 
   ngOnInit(): void {
+    this.printRequestStorage.storage = null;
     this.cardService.findCountries().subscribe(result => {
       this.nationalities = result;
       this.localizedNationalities = this.lookupsService.localizedItems(this.nationalities);
@@ -113,7 +121,20 @@ export class StepOneComponent implements OnInit {
   }
 
   save() {
-    this.addedCards = this.addedCards.concat(this.selectedCards);
+    this.printService.save(this.addedCards.map(card => card.id)).subscribe(
+      res => {
+        this.printService.find(res.id).subscribe(
+          result => {
+            this.printRequestStorage.storage = result;
+            this.onSetPrintRequest.emit(result);
+          }
+        );
+      }
+    );
+  }
+
+  addCards() {
+    this.addedCards = [...this.addedCards, ...this.selectedCards];
     this.onAddCards.emit(this.addedCards);
     this.cards = [];
     this.selectedCards = [];
@@ -122,5 +143,9 @@ export class StepOneComponent implements OnInit {
 
   lookupService(): LookupService {
     return this.lookupsService;
+  }
+
+  undoAddCard(cardId: number) {
+    this.addedCards.splice(this.addedCards.findIndex(card => card.id === cardId), 1);
   }
 }

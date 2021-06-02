@@ -1,8 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PrintService} from "@core/services/print/print.service";
 import {I18nService} from "@dcc-commons-ng/services";
-import {PrintRequest} from "@model/print-request.model";
 import {PrintBatchType} from "@model/print-batch-type.model";
+import {PrintRequestStorage} from "@pages/printing-management/printing-request-add-update/print-request-storage";
+import {PrintRequest} from "@model/print-request.model";
 
 @Component({
   selector: 'app-step-two',
@@ -17,10 +18,14 @@ export class StepTwoComponent implements OnInit {
   selectedBatchTypes: string[] = [];
 
   @Output()
+  public onSetPrintRequest: EventEmitter<any> = new EventEmitter<any>();
+
+  @Output()
   public onSelectBatchTypes: EventEmitter<any[]> = new EventEmitter<any[]>();
 
   constructor(private printService: PrintService,
-              private i18nService: I18nService) {
+              private i18nService: I18nService,
+              private printRequestStorage: PrintRequestStorage) {
   }
 
   ngOnInit(): void {
@@ -49,5 +54,14 @@ export class StepTwoComponent implements OnInit {
     this.printService.findPrintBatchTypes().subscribe(result => {
       this.batchTypes = result;
     })
+  }
+
+  batch() {
+    this.printService.batch(this.printRequest.id, this.selectedBatchTypes).subscribe(
+      result => {
+        this.printRequestStorage.storage = result;
+        this.onSetPrintRequest.emit(result)
+      }
+    )
   }
 }

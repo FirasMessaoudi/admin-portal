@@ -479,7 +479,8 @@
     "btn_view_print_request_details": "عرض تفاصيل الطلب",
     "btn_back_to_printing_management": "عودة لإدارة الطباعة",
     "add_cards": "إضافة {{noCards}} بطاقة",
-    "add_card": "إضافة بطاقة"
+    "add_card": "إضافة بطاقة",
+    "dialog_confirm_request_error_text": "حدث خطأ أثناء تأكيد طلبك. يرجى المحاولة مرة أخرى ..."
   },
   "rule-management": {
     "title": "إدارة قواعد القرار",

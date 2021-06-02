@@ -6,12 +6,15 @@
         <svg-icon styleClass="h4 pt-3" icon="search" (click)="isSearchbarCollapsed = !isSearchbarCollapsed"></svg-icon>
       </button>
     </h3>
-    <button id="createPrintingRequest" routerLink="/print-requests/create" class="btn btn-outline-dcc-primary px-4" *ngIf="canCreateNewRequest">
-      <svg-icon styleClass="mr-2" icon="plus"></svg-icon> <span>{{ "printing-management.new_request" | translate }}</span>
+    <button id="createPrintingRequest" routerLink="/print-requests/create" class="btn btn-outline-dcc-primary px-4"
+            *ngIf="canCreateNewRequest">
+      <svg-icon styleClass="mr-2" icon="plus"></svg-icon>
+      <span>{{ "printing-management.new_request" | translate }}</span>
     </button>
   </div>
   <div class="content__section" *ngIf="!canSeePrintRequestsList">
-    {{'header.welcome' | translate}} <span class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
   </div>
 
 
@@ -32,7 +35,7 @@
                                       class="datepicker"
                                       [isRequired]="false"
                                       [GregLabel]="'general.cal_greg' | translate"
-                                      [hijriLabel] ="'general.cal_hijri' | translate"
+                                      [hijriLabel]="'general.cal_hijri' | translate"
                                       [disabled]="false"
                                       [readonly]="true"
                                       #datePicker>
@@ -47,7 +50,7 @@
                                       class="datepicker"
                                       [isRequired]="false"
                                       [GregLabel]="'general.cal_greg' | translate"
-                                      [hijriLabel] ="'general.cal_hijri' | translate"
+                                      [hijriLabel]="'general.cal_hijri' | translate"
                                       [disabled]="false"
                                       [readonly]="true"
                                       #datePicker>
@@ -104,37 +107,39 @@
     <div class="table-responsive mلا-4">
       <table id="printingRequests" class="table table-striped table-hover">
         <thead>
-          <tr>
-            <th scope="col">{{'printing-management.request_number' | translate}}</th>
-            <th scope="col">{{'printing-management.no_batches' | translate}}</th>
-            <th scope="col">{{'printing-management.no_cards' | translate}}</th>
-            <th scope="col">{{'printing-management.printing_date' | translate}}</th>
-            <th scope="col">{{'printing-management.request_status' | translate}}</th>
-            <th scope="col"></th>
-          </tr>
+        <tr>
+          <th scope="col">{{'printing-management.request_number' | translate}}</th>
+          <th scope="col">{{'printing-management.no_batches' | translate}}</th>
+          <th scope="col">{{'printing-management.no_cards' | translate}}</th>
+          <th scope="col">{{'printing-management.printing_date' | translate}}</th>
+          <th scope="col">{{'printing-management.request_status' | translate}}</th>
+          <th scope="col"></th>
+        </tr>
         </thead>
         <tbody>
-          <tr *ngIf="printRequests.length === 0" class="text-center">
-            <td colspan="10">
-              <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set" ></svg-icon>
-              <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
-            </td>
-          </tr>
-          <tr *ngFor="let request of printRequests">
-            <td><a name="requestID" [routerLink]="['/print-requests/details', request.id]" class="text-dcc-primary font-weight-bold">{{request.referenceNumber}}</a></td>
-            <td>{{request.printRequestBatches?.length}}</td>
-            <td class="ltr">{{request.printRequestCards?.length}}</td>
-            <td class="ltr"></td>
-            <td class="ltr">
-              {{request.statusCode ? lookupService().localizedLabel(printRequestStatuses, request.statusCode) : ""}}
-              <span class="status mr-1 done"></span>
-            </td>
-            <td>
-              <button [routerLink]="['/print-requests/details', request.id]" class="btn btn-sm btn-outline-dcc-primary tblView">
-                {{"general.btn_view" | translate}}
-              </button>
-            </td>
-          </tr>
+        <tr *ngIf="printRequests.length === 0" class="text-center">
+          <td colspan="10">
+            <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
+            <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+          </td>
+        </tr>
+        <tr *ngFor="let request of printRequests">
+          <td><a name="requestID" [routerLink]="['/print-requests/details', request.id]"
+                 class="text-dcc-primary font-weight-bold">{{request.referenceNumber}}</a></td>
+          <td>{{request.printRequestBatches?.length}}</td>
+          <td class="ltr">{{request.printRequestCards?.length}}</td>
+          <td class="ltr">{{request.updateDate | dateFormat}}</td>
+          <td class="ltr">
+            {{request.statusCode ? lookupService().localizedLabel(printRequestStatuses, request.statusCode) : ""}}
+            <span class="status mr-1 done"></span>
+          </td>
+          <td>
+            <button [routerLink]="['/print-requests/details', request.id]"
+                    class="btn btn-sm btn-outline-dcc-primary tblView">
+              {{"general.btn_view" | translate}}
+            </button>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>

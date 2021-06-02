@@ -495,7 +495,8 @@
     "btn_view_print_request_details": "View Request Details",
     "btn_back_to_printing_management": "Back to Printing Management",
     "add_cards": "Add {{noCards}} card(s)",
-    "add_card": "Add card"
+    "add_card": "Add card",
+    "dialog_confirm_request_error_text": "Error while confirming your request. Please try again..."
   },
   "rule-management": {
     "title": "Decision Rule Management",

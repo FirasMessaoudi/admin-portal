@@ -50,6 +50,9 @@ public class JpaPrintRequest implements Serializable {
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
+    @Column(name = "update_date")
+    private Date updateDate;
+
     @PrePersist
     public void prePersist() {
         this.creationDate = new Date();

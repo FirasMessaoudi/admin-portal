@@ -1,7 +1,9 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {ApplicantCard} from "@model/card.model";
-import {PrintService} from "@core/services/print/print.service";
 import {PrintRequest} from "@model/print-request.model";
+import {StepOneComponent} from "@pages/printing-management/printing-request-add-update/step-one/step-one.component";
+import {StepTwoComponent} from "@pages/printing-management/printing-request-add-update/step-two/step-two.component";
+import {StepThreeComponent} from "@pages/printing-management/printing-request-add-update/step-three/step-three.component";
 
 @Component({
   selector: 'app-printing-request-add-update',
@@ -10,41 +12,42 @@ import {PrintRequest} from "@model/print-request.model";
 })
 export class PrintingRequestAddUpdateComponent implements OnInit {
 
-  constructor(private cdr: ChangeDetectorRef,
-              private printService: PrintService) {
-  }
-
   addedCards: ApplicantCard[] = [];
   printRequest: PrintRequest;
   selectedBatchTypes: string[] = [];
-  success: boolean = false;
+
+  @ViewChild(StepOneComponent, {static: false})
+  stepOneComp: StepOneComponent;
+
+  @ViewChild(StepTwoComponent, {static: false})
+  stepTwoComp: StepTwoComponent;
+
+  @ViewChild(StepThreeComponent, {static: false})
+  stepThreeComp: StepThreeComponent;
+
+  constructor(private cdr: ChangeDetectorRef) {
+  }
 
   ngOnInit(): void {
   }
 
   saveStepOne() {
+    this.stepOneComp.save();
     this.cdr.detectChanges();
-    this.printService.save(this.addedCards.map(card => card.id)).subscribe(
-      res => {
-        this.printService.find(res.id).subscribe(
-          result => this.printRequest = result
-        );
-      }
-    );
   }
 
   saveStepTwo() {
+    this.stepTwoComp.batch();
     this.cdr.detectChanges();
-    this.printService.batch(this.printRequest.id, this.selectedBatchTypes).subscribe(
-      result => this.printRequest = result
-    )
   }
 
   confirm() {
-    console.log("printing request confirm")
-    this.printService.confirm(this.printRequest).subscribe(
-      () => this.success = true
-    )
+    this.stepThreeComp.confirm();
+    this.cdr.detectChanges();
+  }
+
+  setPrintRequest(printRequest) {
+    this.printRequest = printRequest;
   }
 
   setAddedCards(cards) {
