@@ -28,17 +28,14 @@ public class PassportNumberValidator implements ConstraintValidator<PassportNumb
         // allow null
         if (value == null) {
             return true;
-        } else if (!value.toString().matches(LETTERS_AND_NUMBERS_REGEX)) {
+        } else // return default message
+            if (!value.toString().matches(LETTERS_AND_NUMBERS_REGEX)) {
             // build new violation message and add it
             context.buildConstraintViolationWithTemplate(MSG_121).addConstraintViolation();
             return false;
         }
         // Allowed chars only number and english && length between ( 5 , 30)
-        else if (value.toString().length() < 5 || value.toString().length() > 30) {
-            // return default message
-            return false;
-        }
-        return false;
+        else return value.toString().length() >= 5 && value.toString().length() <= 30;
     }
 
 }

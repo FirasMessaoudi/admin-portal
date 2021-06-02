@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
+package com.elm.shj.admin.portal.services.data.validators;
+
+import org.apache.commons.lang3.StringUtils;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+
+/**
+ * Validator for {@link OnlyCharacters} annotation
+ *
+ * @author Aymen DHAOUI
+ * @since 1.0.0
+ */
+public class OnlyCharactersValidator implements ConstraintValidator<OnlyCharacters, Object> {
+
+    private static final String ARABIC_LETTERS_REGEX = "^[\\p{IsArabic}\\s-_]+$";
+    private static final String LATIN_LETTERS_REGEX = "^[\\p{IsLatin}\\s-_]+$";
+    private static final String MSG_122 = "validation.data.constraints.msg.122";
+    private static final String MSG_018 = "validation.data.constraints.msg.018";
+    private static final String MSG_019 = "validation.data.constraints.msg.019";
+
+    private boolean arabic;
+    private boolean allowEmpty;
+    private int min;
+    private int max;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initialize(final OnlyCharacters constraintAnnotation) {
+        arabic = constraintAnnotation.arabic();
+        allowEmpty = constraintAnnotation.allowEmpty();
+        min = constraintAnnotation.min();
+        max = constraintAnnotation.max();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
+        if (value == null || StringUtils.isBlank(value.toString())) {
+            return this.allowEmpty;
+        } else if (value.toString().length() < min && value.toString().length() > max) {
+            // build new violation message and add it
+            context.buildConstraintViolationWithTemplate(MSG_122).addConstraintViolation();
+            return false;
+        } else if (!value.toString().matches(arabic ? ARABIC_LETTERS_REGEX : LATIN_LETTERS_REGEX)) {
+            // build new violation message and add it
+            context.buildConstraintViolationWithTemplate(arabic ? MSG_018 : MSG_019).addConstraintViolation();
+            return false;
+        }
+        return true;
+    }
+
+}
