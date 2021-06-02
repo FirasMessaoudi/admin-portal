@@ -17,6 +17,7 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
   addedCards: ApplicantCard[] = [];
   printRequest: PrintRequest;
   selectedBatchTypes: string[] = [];
+  success: boolean = false;
 
   ngOnInit(): void {
   }
@@ -42,7 +43,7 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
   confirm() {
     console.log("printing request confirm")
     this.printService.confirm(this.printRequest).subscribe(
-      result => console.log(result)
+      () => this.success = true
     )
   }
 

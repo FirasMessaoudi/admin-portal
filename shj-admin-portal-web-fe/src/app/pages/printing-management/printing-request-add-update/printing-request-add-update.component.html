@@ -4,7 +4,7 @@
     <h3 class="text-dcc-primary mb-3">{{'printing-management.new_request' | translate}}</h3>
   </section>
 
-  <aw-wizard class="steps-custom" [navBarLayout]="'large-empty'">
+  <aw-wizard *ngIf="!success" class="steps-custom" [navBarLayout]="'large-empty'">
     <aw-wizard-step name="prepareRequest" [navigationSymbol]="{ symbol: '1' }">
       <ng-template awWizardStepTitle>
         <span>{{'printing-management.prepare_request' | translate}}</span>
@@ -40,8 +40,9 @@
       <div class="bg-lighter mx-30 p-4 text-center">
         <button name="btnCancel" type="button" routerLink="/print-requests/list" class="btn btn-outline-secondary rounded-22 px-5 mr-3">{{'general.btn_cancel' | translate}}</button>
         <button name="btnPrevious" type="button" class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3" awPreviousStep>{{'general.btn_previous' | translate}}</button>
-        <button name="btnNext" type="button" [disabled]="false" (click)="confirm()" class="btn btn-dcc-primary rounded-22 px-5 mr-3" [routerLink]="['/print-requests/success', printRequest?.id]" >{{'printing-management.btn_confirm_request' | translate}}</button>
+        <button name="btnNext" type="button" [disabled]="false" (click)="confirm()" class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'printing-management.btn_confirm_request' | translate}}</button>
       </div>
     </aw-wizard-step>
   </aw-wizard>
+  <app-success *ngIf="success" [printRequest]="printRequest"></app-success>
 </div>
