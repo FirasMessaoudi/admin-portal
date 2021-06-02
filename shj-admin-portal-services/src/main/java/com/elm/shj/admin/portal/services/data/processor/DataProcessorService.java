@@ -180,17 +180,23 @@ public class DataProcessorService {
         style.setBorderTop(BorderStyle.THIN);
         style.setTopBorderColor(IndexedColors.RED.getIndex());
 
-        Drawing<?> drawing = sheet.createDrawingPatriarch();
+
         CreationHelper factory = wb.getCreationHelper();
-        ClientAnchor anchor = factory.createClientAnchor();
-        anchor.setCol1(cell.getColumnIndex());
-        anchor.setCol2(cell.getColumnIndex() + 3);
-        anchor.setRow1(cell.getRow().getRowNum());
-        anchor.setRow2(cell.getRow().getRowNum() + 4);
-        Comment cellComment = drawing.createCellComment(anchor);
-        cellComment.setString(factory.createRichTextString(messageSource.getMessage(comment, null, Locale.forLanguageTag("en")) + "\n" + messageSource.getMessage(comment, null, Locale.forLanguageTag("ar"))));
-        cell.setCellComment(cellComment);
-        cell.setCellStyle(style);
+        String commentText = messageSource.getMessage(comment, null, Locale.forLanguageTag("en")) + "\n" + messageSource.getMessage(comment, null, Locale.forLanguageTag("ar"));
+        if(cell.getCellComment() != null && cell.getCellComment().getString() != null) {
+            cell.getCellComment().setString(factory.createRichTextString(commentText + "\n--------------------\n" + cell.getCellComment().getString().getString()));
+        } else {
+            Drawing<?> drawing = sheet.createDrawingPatriarch();
+            ClientAnchor anchor = factory.createClientAnchor();
+            anchor.setCol1(cell.getColumnIndex());
+            anchor.setCol2(cell.getColumnIndex() + 3);
+            anchor.setRow1(cell.getRow().getRowNum());
+            anchor.setRow2(cell.getRow().getRowNum() + 6);
+            Comment cellComment = drawing.createCellComment(anchor);
+            cellComment.setString(factory.createRichTextString(commentText));
+            cell.setCellComment(cellComment);
+            cell.setCellStyle(style);
+        }
     }
 
     /**
