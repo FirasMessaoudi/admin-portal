@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.data.reader;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
+import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.data.validators.UniquePerRequest;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.BooleanUtils;
@@ -37,6 +38,7 @@ public class ExcelItemReader<T> {
     private final Map<Integer, String> fieldMapping = new HashMap<>();
     private final Class<T> typeClass;
     private final Map<Field, List<Object>> uniqueFields = new HashMap<>();
+    private final List<DataValidationResult> dataReadingErrors = new ArrayList<>();
 
     public ExcelItemReader(Class<T> typeClass) {
         this.typeClass = typeClass;
@@ -59,6 +61,10 @@ public class ExcelItemReader<T> {
             }
         });
 
+    }
+
+    public List<DataValidationResult> getDataReadingErrors() {
+        return dataReadingErrors;
     }
 
     /**
@@ -174,7 +180,7 @@ public class ExcelItemReader<T> {
                 fieldToProcess.set(target, value);
                 if (uniqueFields.containsKey(fieldToProcess)) {
                     if (uniqueFields.get(fieldToProcess).contains(value)) {
-                        throw ExcelItemReaderException.builder().cell(cell).errorType(ExcelItemReaderException.EExcelItemReaderErrorType.DUPLICATE_VALUE).build();
+                        dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.DUPLICATE_VALUE.getMessage())).valid(false).build());
                     } else {
                         uniqueFields.get(fieldToProcess).add(value);
                     }
@@ -290,7 +296,8 @@ public class ExcelItemReader<T> {
         } else if (value instanceof String) {
             return BooleanUtils.toBoolean((String) value);
         } else {
-            throw ExcelItemReaderException.builder().cell(cell).errorType(ExcelItemReaderException.EExcelItemReaderErrorType.INVALID_BOOLEAN_FORMAT).build();
+            dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_BOOLEAN_FORMAT.getMessage())).valid(false).build());
+            return false;
         }
     }
 
@@ -315,10 +322,12 @@ public class ExcelItemReader<T> {
                 }
                 return castToFieldType(clazz, result);
             } catch (ParseException e) {
-                throw ExcelItemReaderException.builder().cell(cell).errorType(ExcelItemReaderException.EExcelItemReaderErrorType.INVALID_NUMBER_FORMAT).build();
+                dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_NUMBER_FORMAT.getMessage())).valid(false).build());
+                return -1;
             }
         } else {
-            throw ExcelItemReaderException.builder().cell(cell).errorType(ExcelItemReaderException.EExcelItemReaderErrorType.INVALID_NUMBER_FORMAT).build();
+            dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_NUMBER_FORMAT.getMessage())).valid(false).build());
+            return -1;
         }
     }
 
@@ -370,10 +379,12 @@ public class ExcelItemReader<T> {
             try {
                 return dateFormat.parse((String) value);
             } catch (ParseException e) {
-                throw ExcelItemReaderException.builder().cell(cell).errorType(ExcelItemReaderException.EExcelItemReaderErrorType.INVALID_DATE_FORMAT).build();
+                dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_DATE_FORMAT.getMessage())).valid(false).build());
+                return null;
             }
         } else {
-            throw ExcelItemReaderException.builder().cell(cell).errorType(ExcelItemReaderException.EExcelItemReaderErrorType.INVALID_DATE_FORMAT).build();
+            dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_DATE_FORMAT.getMessage())).valid(false).build());
+            return null;
         }
     }
 

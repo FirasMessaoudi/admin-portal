@@ -4,7 +4,6 @@
 package com.elm.shj.admin.portal.services.data.processor;
 
 import com.elm.shj.admin.portal.services.data.reader.ExcelItemReader;
-import com.elm.shj.admin.portal.services.data.reader.ExcelItemReaderException;
 import com.elm.shj.admin.portal.services.data.reader.ExcelItemReaderFactory;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
@@ -72,6 +71,8 @@ public class DataProcessorService {
                 try {
                     // read item
                     T item = excelItemReader.read(row);
+                    // add all reading errors
+                    dataValidationResults.addAll(excelItemReader.getDataReadingErrors());
                     // run validations
                     Set<ConstraintViolation<T>> violations = validator.validate(item);
                     if (violations.isEmpty()) {
@@ -81,8 +82,6 @@ public class DataProcessorService {
                         // otherwise add errors
                         violations.forEach(v -> dataValidationResults.add(DataValidationResult.builder().valid(false).cell(excelItemReader.findCellByPropertyName(row, v.getPropertyPath().toString())).errorMessages(Collections.singletonList(v.getMessage())).valid(false).build()));
                     }
-                } catch (ExcelItemReaderException eire) {
-                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(eire.getCell()).errorMessages(Collections.singletonList(eire.getErrorType().getMessage())).valid(false).build());
                 } catch (Exception e) {
                     ReflectionUtils.handleReflectionException(e);
                 }
