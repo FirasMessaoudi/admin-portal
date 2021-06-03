@@ -23,6 +23,7 @@ export class StepOneComponent implements OnInit {
   progress = 0;
   errorMessage = '';
   selectedDataSegment: DataSegment;
+  createdDataRequest: DataRequest
   fileInfos: Observable<any>;
 
   constructor(private dataRequestService: DataRequestService,
@@ -106,6 +107,7 @@ export class StepOneComponent implements OnInit {
           this.progress = Math.round(100 * event.loaded / event.total);
         } else if (event instanceof HttpResponse) {
           this.dataRequestStorage.storage = event.body;
+          this.createdDataRequest = event.body;
           console.log(this.dataRequestStorage.storage);
           this.cdr.detectChanges();
           this.toastr.success(this.translate.instant("general.dialog_add_success_text"), this.translate.instant("data-request-management.choose_segment"));

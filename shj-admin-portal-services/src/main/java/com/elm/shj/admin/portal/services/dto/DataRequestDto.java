@@ -39,5 +39,5 @@ public class DataRequestDto implements Serializable {
 
     // these fields are not persisted but used as part of
     // the command in the data upload controller
-    private int itemCount;
+    private long itemCount;
 }

@@ -103,6 +103,13 @@ public class DataSegmentStructureValidator implements ConstraintValidator<DataSe
         return true;
     }
 
+    /**
+     * Reads the header columns
+     *
+     * @param is          the input stream coming with the request
+     * @return the header column names
+     * @throws IOException if any exception happens during reading the stream coming with the request
+     */
     private List<String> readHeaderColumns(InputStream is) throws IOException {
         ArrayList<String> headerColumns = new ArrayList<>();
         // load workbook

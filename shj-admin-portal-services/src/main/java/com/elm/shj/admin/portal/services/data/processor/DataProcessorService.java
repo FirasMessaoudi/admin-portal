@@ -204,7 +204,7 @@ public class DataProcessorService {
      * @param row the row to check
      * @return if the row is blank
      */
-    private boolean isBlankRow(Row row) {
+    public boolean isBlankRow(Row row) {
         AtomicBoolean isBlank = new AtomicBoolean(true);
         StreamSupport.stream(Spliterators.spliteratorUnknownSize(row.cellIterator(), Spliterator.ORDERED), false).forEach(cell -> {
             if (cell.getCellType() != CellType.BLANK) {

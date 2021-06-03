@@ -16,7 +16,7 @@
   <div class="form-group col">
     <label class="col-form-label">{{'data-request-management.download_template' | translate }}</label>
     <div class="col-form-control text-center">
-      <button class="btn btn-outline-dcc-primary px-6 py-2 border w-100 d-flex flex-center-column" (click)="downloadTemplate(1)" [disabled]="!selectedDataSegment" >
+      <button class="btn btn-outline-dcc-primary px-6 py-2 border w-100 d-flex flex-center-column" (click)="downloadTemplate(selectedDataSegment.id)" [disabled]="!selectedDataSegment" >
         <img src="assets/images/excel.svg" style="width: 60px;" alt="" >
         {{'general.btn_download' | translate}}
       </button>
@@ -46,7 +46,7 @@
 
 </form>
 
-<div class="bg-dcc-light p-3">
-  <span class="h5 font-weight-bold text-dcc-primary mr-3">{{'6214'}}</span>
+<div class="bg-dcc-light p-3" *ngIf="createdDataRequest">
+  <span class="h5 font-weight-bold text-dcc-primary mr-3">{{createdDataRequest?.itemCount}}</span>
   <span>{{'data-request-management.items_to_process' | translate}}</span>
 </div>

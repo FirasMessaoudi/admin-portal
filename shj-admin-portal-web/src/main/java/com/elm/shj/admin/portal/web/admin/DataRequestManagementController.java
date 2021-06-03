@@ -11,7 +11,6 @@ import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -139,7 +138,9 @@ public class DataRequestManagementController {
     public DataRequestDto create(@RequestPart("request") @Valid DataRequestDto dataRequest,
                                  @RequestPart("file") MultipartFile file) throws Exception {
         log.info("Creating data request for segment#{}", dataRequest.getDataSegment().getId());
-        return dataRequestService.save(dataRequest, file);
+        DataRequestDto savedDataRequest = dataRequestService.save(dataRequest, file);
+        savedDataRequest.setItemCount(dataRequestService.readItemsCount(file));
+        return savedDataRequest;
     }
 
     /**

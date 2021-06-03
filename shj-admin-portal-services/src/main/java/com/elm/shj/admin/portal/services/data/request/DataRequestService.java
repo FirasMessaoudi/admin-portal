@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.RandomStringGenerator;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 /**
  * Service handling data requests
@@ -150,6 +153,28 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
                 .filteredBy(t -> t >= '0' && t <= '9', t -> t >= 'A' && t <= 'Z')
                 .build();
         return (channel == EDataRequestChannel.WEB_SERVICE ? REQUEST_REF_NUMBER_WS_PREFIX : REQUEST_REF_NUMBER_SYSTEM_PREFIX) + "-" + generator.generate(REQUEST_REF_NUMBER_LENGTH - 6) + REF_NUMBER_FORMAT.format(new Date());
+    }
+
+    /**
+     * Reads the items counts in file coming with the request
+     *
+     * @param file the input stream coming with the request
+     * @return the items count in the file
+     * @throws IOException if any exception happens during reading the stream coming with the request
+     */
+    public long readItemsCount(MultipartFile file) throws IOException {
+        /// load workbook
+        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+        // read first sheet
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        // get blank rows count
+        long blankRows = StreamSupport.stream(Spliterators.spliteratorUnknownSize(sheet.rowIterator(), Spliterator.ORDERED), false).filter(dataRequestProcessor::isBlankRow).count();
+        // return non blank rows count
+        long nonBlankRows = sheet.getLastRowNum() - sheet.getFirstRowNum() - blankRows;
+        // close workbook
+        workbook.close();
+        // return result
+        return nonBlankRows;
     }
 
     /**
