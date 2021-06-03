@@ -21,10 +21,16 @@ import java.util.List;
 public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard, Long> {
 
     //TODO Convert sql statement to jpql statement
-    @Query(nativeQuery = true, value = "SELECT * FROM shj_portal.sha_applicant_card card WHERE card.id NOT IN (SELECT c.id FROM shj_portal.sha_applicant_card c LEFT JOIN shj_portal.sha_print_request_card prc ON c.id = prc.card_id LEFT JOIN shj_portal.sha_print_request pr ON prc.print_request_id = pr.id WHERE pr.status_code != :printRequestStatus OR c.status_code != :cardStatus)")
-    Page<JpaApplicantCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus, Pageable pageable);
-
-    //TODO Convert sql statement to jpql statement
-    @Query(nativeQuery = true, value = "SELECT * FROM shj_portal.sha_applicant_card card WHERE card.id NOT IN (SELECT c.id FROM shj_portal.sha_applicant_card c LEFT JOIN shj_portal.sha_print_request_card prc ON c.id = prc.card_id LEFT JOIN shj_portal.sha_print_request pr ON prc.print_request_id = pr.id WHERE pr.status_code != :printRequestStatus OR c.status_code != :cardStatus) AND card.id NOT IN :excludedCardsIds")
-    Page<JpaApplicantCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus, @Param("excludedCardsIds") List<Long> excludedCardsIds, Pageable pageable);
+    @Query(nativeQuery = true, value = "SELECT * FROM shj_portal.sha_applicant_card card " +
+            "LEFT JOIN shj_portal.sha_applicant_ritual ar ON card.applicant_ritual_id = ar.id " +
+            "LEFT JOIN shj_portal.sha_applicant a ON ar.applicant_id = a.id WHERE card.id NOT IN " +
+            "(SELECT c.id FROM shj_portal.sha_applicant_card c LEFT JOIN shj_portal.sha_print_request_card prc ON " +
+            "c.id = prc.card_id LEFT JOIN shj_portal.sha_print_request pr ON prc.print_request_id = pr.id WHERE " +
+            "pr.status_code != :printRequestStatus OR c.status_code != :cardStatus) " +
+            "AND card.id NOT IN :excludedCardsIds AND (a.id_number LIKE :idNumber OR :idNumber IS NULL) " +
+            "AND (a.passport_number = :passportNumber OR :passportNumber IS NULL) AND (a.nationality_code = :nationalityCode OR :nationalityCode IS NULL)")
+    Page<JpaApplicantCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus,
+                                             @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber,
+                                             @Param("nationalityCode") String nationalityCode,
+                                             @Param("excludedCardsIds") List<Long> excludedCardsIds, Pageable pageable);
 }

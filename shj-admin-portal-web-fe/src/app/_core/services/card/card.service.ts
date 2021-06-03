@@ -30,6 +30,16 @@ export class CardService {
     return this.http.get("/core/api/cards/list/ready-to-print", {params: params});
   }
 
+  searchCardsToPrint(excludedCardsIds, pageNumber: any, idNumber: any, hamlahNumber: any, motawefNumber: any, passportNumber: any, nationality: any): Observable<any> {
+    let params = new HttpParams().set('page', pageNumber);
+    if (excludedCardsIds.length > 0) {
+      params = params.append('excludedCardsIds', excludedCardsIds);
+    }
+    return this.http.get('/core/api/cards/list/ready-to-print/' + (idNumber ? idNumber : -1) + '/' +
+      (hamlahNumber ? hamlahNumber : -1) + '/' + (motawefNumber ? motawefNumber : -1) + '/' +
+      (passportNumber ? passportNumber : -1) + '/' + (nationality ? nationality : -1), {params: params});
+  }
+
   /**
    * Finds card by its ID from the server.
    *

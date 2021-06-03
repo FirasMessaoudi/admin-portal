@@ -9,6 +9,7 @@ import {LookupService} from "@core/utilities/lookup.service";
 import {Lookup} from "@model/lookup.model";
 import {PrintService} from "@core/services/print/print.service";
 import {PrintRequestStorage} from "@pages/printing-management/printing-request-add-update/print-request-storage";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-step-one',
@@ -26,6 +27,7 @@ export class StepOneComponent implements OnInit {
   addedCardsPageSize: number = 10;
   nationalities: CountryLookup[];
   localizedNationalities: Lookup[];
+  searchForm: FormGroup;
 
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();
@@ -40,10 +42,12 @@ export class StepOneComponent implements OnInit {
               private cardService: CardService,
               private printService: PrintService,
               private lookupsService: LookupService,
-              private printRequestStorage: PrintRequestStorage) {
+              private printRequestStorage: PrintRequestStorage,
+              private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
+    this.initForm();
     this.printRequestStorage.storage = null;
     this.cardService.findCountries().subscribe(result => {
       this.nationalities = result;
@@ -70,6 +74,16 @@ export class StepOneComponent implements OnInit {
     })
   }
 
+  private initForm(): void {
+    this.searchForm = this.formBuilder.group({
+      idNumber: [null],
+      hamlahNumber: [null],
+      motawefNumber: [null],
+      passportNumber: [null],
+      nationality: [null]
+    });
+  }
+
   pageCounter(i: number): Array<number> {
     return new Array(i);
   }
@@ -83,7 +97,9 @@ export class StepOneComponent implements OnInit {
   }
 
   search(): void {
-    this.searchSubscription = this.cardService.listReadyToPrint(this.addedCards.map(card => card.id), 0).subscribe(data => {
+    this.searchSubscription = this.cardService.searchCardsToPrint(this.addedCards.map(card => card.id), 0,
+      this.searchForm.value.idNumber, this.searchForm.value.hamlahNumber, this.searchForm.value.motawefNumber,
+      this.searchForm.value.passportNumber, this.searchForm.value.nationality).subscribe(data => {
       this.cards = [];
       this.pageArray = [];
       this.page = data;

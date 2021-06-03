@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -42,17 +43,21 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     }
 
     /**
-     * Find applicants cards with status ready to print.
-     *
-     * @param pageable the current page information
+     * Find applicants cards with status ready to print and search parameters.
+     * @param excludedCardsIds
+     * @param pageable
+     * @param idNumber
+     * @param hamlahNumber
+     * @param motawefNumber
+     * @param passportNumber
+     * @param nationalityCode
      * @return the list of ready to print applicants cards
      */
-    public Page<ApplicantCardDto> findReadyToPrint(List<Long> excludedCardsIds, Pageable pageable) {
-        if (excludedCardsIds.size() == 0) {
-            return mapPage(applicantCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(), EPrintRequestStatus.NEW.name(), pageable));
-        } else {
-            return mapPage(applicantCardRepository
-                    .findPrintingCards(ECardStatus.READY_TO_PRINT.name(), EPrintRequestStatus.NEW.name(), excludedCardsIds, pageable));
-        }
+    public Page<ApplicantCardDto> findReadyToPrint(List<Long> excludedCardsIds, Pageable pageable, String idNumber,
+                                                   String hamlahNumber, String motawefNumber, String passportNumber,
+                                                   String nationalityCode) {
+        return mapPage(applicantCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(),
+                EPrintRequestStatus.NEW.name(), idNumber, passportNumber, nationalityCode,
+                excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
     }
 }

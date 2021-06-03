@@ -17,28 +17,28 @@
   </div>
   <div class="modal-body">
 
-    <form name="searchCard" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+    <form [formGroup]="searchForm" name="searchCard" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       <div class="form-group col">
         <label class="col-form-label">{{'printing-management.id_number' | translate }}</label>
-        <input id="idNumber" type="text" class="form-control"/>
+        <input id="idNumber" formControlName="idNumber" type="text" class="form-control"/>
       </div>
       <div class="form-group col">
         <label class="col-form-label">{{'printing-management.hamlah_number' | translate }}</label>
-        <input id="hamlahNumber" type="text" class="form-control"/>
+        <input id="hamlahNumber" formControlName="hamlahNumber" type="text" class="form-control"/>
       </div>
       <div class="form-group col">
         <label class="col-form-label">{{'printing-management.motawef_number' | translate }}</label>
-        <input id="motawefNumber" type="text" class="form-control"/>
+        <input id="motawefNumber" formControlName="motawefNumber" type="text" class="form-control"/>
       </div>
       <div class="form-group col">
         <label class="col-form-label">{{'card-management.passport_number' | translate }}</label>
-        <input id="passportNumber" type="text" class="form-control"/>
+        <input id="passportNumber" formControlName="passportNumber" type="text" class="form-control"/>
       </div>
       <div class="form-group col">
         <label class="col-form-label">{{'card-management.nationality' | translate }}</label>
-        <select id="nationality" class="custom-select">
-          <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
-          <option *ngFor="let nationality of localizedNationalities">
+        <select id="nationality" class="custom-select" formControlName="nationality">
+          <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+          <option *ngFor="let nationality of localizedNationalities" [ngValue]="nationality.code">
             {{nationality.label}}
           </option>
         </select>
