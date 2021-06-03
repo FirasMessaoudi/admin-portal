@@ -71,4 +71,8 @@ export class StepTwoComponent implements OnInit {
   setCurrentPage(page: number) {
     this.currentPage = page;
   }
+
+  getTotalPages(total, size): number {
+    return Math.floor((total + size) / size);
+  }
 }

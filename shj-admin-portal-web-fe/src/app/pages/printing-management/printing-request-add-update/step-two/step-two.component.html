@@ -57,13 +57,13 @@
          tabindex="-1">{{'general.nav_previous' | translate}}</a>
     </li>
     <li class="page-item active">
-      <a class="page-link">{{currentPage + ' / ' + (printRequest?.printRequestCards.length % pageSize + 1)}}</a>
+      <a class="page-link">{{currentPage + ' / ' + getTotalPages(printRequest?.printRequestCards.length, pageSize)}}</a>
     </li>
-    <li class="page-item" [class.disabled]="currentPage === (printRequest?.printRequestCards.length % pageSize + 1)">
+    <li class="page-item" [class.disabled]="currentPage === getTotalPages(printRequest?.printRequestCards.length, pageSize)">
       <a class="page-link" (click)="setCurrentPage(currentPage + 1)">{{'general.nav_next' | translate}}</a>
     </li>
-    <li class="page-item" [class.disabled]="currentPage === (printRequest?.printRequestCards.length % pageSize + 1)">
-      <a class="page-link" (click)="setCurrentPage(printRequest?.printRequestCards.length % pageSize + 1)">{{'general.nav_last' | translate}}</a>
+    <li class="page-item" [class.disabled]="currentPage === getTotalPages(printRequest?.printRequestCards.length, pageSize)">
+      <a class="page-link" (click)="setCurrentPage(getTotalPages(printRequest?.printRequestCards.length, pageSize))">{{'general.nav_last' | translate}}</a>
     </li>
   </ul>
 </nav>

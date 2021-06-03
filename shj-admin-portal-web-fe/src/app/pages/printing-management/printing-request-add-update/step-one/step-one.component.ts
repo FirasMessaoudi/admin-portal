@@ -167,4 +167,8 @@ export class StepOneComponent implements OnInit {
   setCurrentPage(page: number) {
     this.addedCardsCurrentPage = page;
   }
+
+  getTotalPages(total, size): number {
+    return Math.floor((total + size) / size);
+  }
 }

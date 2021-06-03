@@ -168,13 +168,13 @@
            tabindex="-1">{{'general.nav_previous' | translate}}</a>
       </li>
       <li class="page-item active">
-        <a class="page-link">{{addedCardsCurrentPage + ' / ' + (addedCards.length % addedCardsPageSize + 1)}}</a>
+        <a class="page-link">{{addedCardsCurrentPage + ' / ' + getTotalPages(addedCards.length, addedCardsPageSize)}}</a>
       </li>
-      <li class="page-item" [class.disabled]="addedCardsCurrentPage === (addedCards.length % addedCardsPageSize + 1)">
+      <li class="page-item" [class.disabled]="addedCardsCurrentPage === getTotalPages(addedCards.length, addedCardsPageSize)">
         <a class="page-link" (click)="setCurrentPage(addedCardsCurrentPage + 1)">{{'general.nav_next' | translate}}</a>
       </li>
-      <li class="page-item" [class.disabled]="addedCardsCurrentPage === (addedCards.length % addedCardsPageSize + 1)">
-        <a class="page-link" (click)="setCurrentPage(addedCards.length % addedCardsPageSize + 1)">{{'general.nav_last' | translate}}</a>
+      <li class="page-item" [class.disabled]="addedCardsCurrentPage === getTotalPages(addedCards.length, addedCardsPageSize)">
+        <a class="page-link" (click)="setCurrentPage(getTotalPages(addedCards.length, addedCardsPageSize))">{{'general.nav_last' | translate}}</a>
       </li>
     </ul>
   </nav>
