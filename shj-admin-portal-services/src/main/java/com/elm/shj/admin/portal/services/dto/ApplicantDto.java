@@ -78,13 +78,11 @@ public class ApplicantDto implements Serializable {
     @CellIndex(index = 3)
     private long dateOfBirthHijri;
 
-    @NullOrNotBlank(min = 6, max = 150)
-    @ArabicCharacters(lettersOnly = true, numbersOnly = false, message = "validation.data.constraints.msg.018")
+    @OnlyCharacters(min = 6, max = 150, arabic = true)
     @CellIndex(index = 6)
     private String fullNameAr;
 
-    @Length(min = 10, max = 150, message = "validation.data.constraints.msg.122")
-    @LatinCharacters(lettersOnly = true, numbersOnly = false, message = "validation.data.constraints.msg.019")
+    @OnlyCharacters(min = 10, max = 150, allowEmpty = false)
     @CellIndex(index = 5)
     private String fullNameEn;
 
