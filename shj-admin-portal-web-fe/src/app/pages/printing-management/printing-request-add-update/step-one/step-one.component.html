@@ -59,7 +59,7 @@
           <th scope="col">
             <div class="custom-control custom-checkbox my-2">
               <input name="selectAllCards" type="checkbox" class="custom-control-input" id="selectedApplicantCheck-01"
-                     [checked]="cards.length > 0 && selectedCards.length === cards.length"
+                     [checked]="isAllChecked()"
                      (change)="selectAllCards($event)">
               <label class="custom-control-label mx-3" for="selectedApplicantCheck-01"></label>
             </div>
@@ -80,7 +80,7 @@
           <td scope="row">
             <div class="custom-control custom-checkbox my-2">
               <input type="checkbox" class="custom-control-input" id="applicantCheck-{{card.id}}"
-                     [checked]="selectedCards.includes(card)"
+                     [checked]="isChecked(card)"
                      (change)="selectOneCard($event, card.id)">
               <label class="custom-control-label mx-3" for="applicantCheck-{{card.id}}"></label>
             </div>
@@ -98,7 +98,6 @@
         <li class="page-item" [class.disabled]="page?.first">
           <a class="page-link" (click)="loadPage(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>
         </li>
-
         <li class="page-item" [class.disabled]="page?.first">
           <a class="page-link" (click)="loadPage(page?.number-1)"
              tabindex="-1">{{'general.nav_previous' | translate}}</a>
@@ -109,7 +108,6 @@
         <li class="page-item" [class.disabled]="page?.last">
           <a class="page-link" (click)="loadPage(page?.number+1)">{{'general.nav_next' | translate}}</a>
         </li>
-
         <li class="page-item" [class.disabled]="page?.last">
           <a class="page-link" (click)="loadPage(page?.totalPages-1)">{{'general.nav_last' | translate}}</a>
         </li>
@@ -143,7 +141,7 @@
           <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
         </td>
       </tr>
-      <tr *ngFor="let card of addedCards">
+      <tr *ngFor="let card of addedCards | slice: (addedCardsCurrentPage * addedCardsPageSize) - addedCardsPageSize :addedCardsCurrentPage * addedCardsPageSize">
         <td>{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</td>
         <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
         <td class="ltr">{{card?.applicantRitual?.applicant?.passportNumber}}</td>
@@ -162,22 +160,21 @@
 
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
-      <li class="page-item" [class.disabled]="false">
-        <a class="page-link" tabindex="-1">{{'general.nav_first' | translate}}</a>
+      <li class="page-item" [class.disabled]="addedCardsCurrentPage === 1">
+        <a class="page-link" (click)="setCurrentPage(1)" tabindex="-1">{{'general.nav_first' | translate}}</a>
       </li>
-
-      <li class="page-item" [class.disabled]="false">
-        <a class="page-link" tabindex="-1">{{'general.nav_previous' | translate}}</a>
+      <li class="page-item" [class.disabled]="addedCardsCurrentPage === 1">
+        <a class="page-link" (click)="setCurrentPage(addedCardsCurrentPage - 1)"
+           tabindex="-1">{{'general.nav_previous' | translate}}</a>
       </li>
       <li class="page-item active">
-        <a class="page-link">{{2 + ' / ' + 5}}</a>
+        <a class="page-link">{{addedCardsCurrentPage + ' / ' + (addedCards.length % addedCardsPageSize + 1)}}</a>
       </li>
-      <li class="page-item" [class.disabled]="false">
-        <a class="page-link">{{'general.nav_next' | translate}}</a>
+      <li class="page-item" [class.disabled]="addedCardsCurrentPage === (addedCards.length % addedCardsPageSize + 1)">
+        <a class="page-link" (click)="setCurrentPage(addedCardsCurrentPage + 1)">{{'general.nav_next' | translate}}</a>
       </li>
-
-      <li class="page-item" [class.disabled]="false">
-        <a class="page-link">{{'general.nav_last' | translate}}</a>
+      <li class="page-item" [class.disabled]="addedCardsCurrentPage === (addedCards.length % addedCardsPageSize + 1)">
+        <a class="page-link" (click)="setCurrentPage(addedCards.length % addedCardsPageSize + 1)">{{'general.nav_last' | translate}}</a>
       </li>
     </ul>
   </nav>

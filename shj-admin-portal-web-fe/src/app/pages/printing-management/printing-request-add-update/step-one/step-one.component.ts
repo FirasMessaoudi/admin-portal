@@ -22,6 +22,8 @@ export class StepOneComponent implements OnInit {
   page: Page;
   selectedCards: Array<ApplicantCard> = [];
   addedCards: Array<ApplicantCard> = [];
+  addedCardsCurrentPage: number = 1;
+  addedCardsPageSize: number = 10;
   nationalities: CountryLookup[];
   localizedNationalities: Lookup[];
 
@@ -107,7 +109,8 @@ export class StepOneComponent implements OnInit {
   }
 
   selectAllCards(event) {
-    this.selectedCards = event.target.checked ? [...this.cards] : [];
+    this.selectedCards = event.target.checked ?
+      [...new Set([...this.cards, ...this.selectedCards])] : []
   }
 
   selectOneCard(event, id) {
@@ -147,5 +150,21 @@ export class StepOneComponent implements OnInit {
 
   undoAddCard(cardId: number) {
     this.addedCards.splice(this.addedCards.findIndex(card => card.id === cardId), 1);
+  }
+
+  isChecked(card) {
+    return this.selectedCards.some(c => c.id === card.id);
+  }
+
+  isAllChecked() {
+    return this.selectedCards.length === this.cards.length;
+  }
+
+  numberOfPages(){
+    return Math.ceil(this.addedCards.length / this.addedCardsPageSize);
+  };
+
+  setCurrentPage(page: number) {
+    this.addedCardsCurrentPage = page;
   }
 }

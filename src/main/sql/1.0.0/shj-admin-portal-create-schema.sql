@@ -612,6 +612,7 @@ create table shj_portal.sha_print_request
     id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
     reference_number VARCHAR(20) NOT NULL,
     status_code VARCHAR(20) NOT NULL,
+    update_date smalldatetime NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 GO

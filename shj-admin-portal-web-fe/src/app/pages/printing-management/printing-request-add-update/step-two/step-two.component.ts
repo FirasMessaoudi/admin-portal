@@ -14,8 +14,11 @@ export class StepTwoComponent implements OnInit {
 
   @Input()
   printRequest: PrintRequest;
+
   batchTypes: PrintBatchType[];
   selectedBatchTypes: string[] = [];
+  currentPage: number = 1;
+  pageSize: number = 10;
 
   @Output()
   public onSetPrintRequest: EventEmitter<any> = new EventEmitter<any>();
@@ -63,5 +66,9 @@ export class StepTwoComponent implements OnInit {
         this.onSetPrintRequest.emit(result)
       }
     )
+  }
+
+  setCurrentPage(page: number) {
+    this.currentPage = page;
   }
 }

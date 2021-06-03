@@ -49,10 +49,10 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      */
     public Page<ApplicantCardDto> findReadyToPrint(List<Long> excludedCardsIds, Pageable pageable) {
         if (excludedCardsIds.size() == 0) {
-            return mapPage(applicantCardRepository.findPrintingCards(pageable));
+            return mapPage(applicantCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(), EPrintRequestStatus.NEW.name(), pageable));
         } else {
             return mapPage(applicantCardRepository
-                    .findPrintingCards(excludedCardsIds, pageable));
+                    .findPrintingCards(ECardStatus.READY_TO_PRINT.name(), EPrintRequestStatus.NEW.name(), excludedCardsIds, pageable));
         }
     }
 }

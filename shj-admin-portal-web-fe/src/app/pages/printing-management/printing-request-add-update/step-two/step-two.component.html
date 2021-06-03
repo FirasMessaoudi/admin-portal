@@ -39,7 +39,7 @@
         <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
       </td>
     </tr>
-    <tr *ngFor="let printRequestCard of printRequest?.printRequestCards">
+    <tr *ngFor="let printRequestCard of printRequest?.printRequestCards | slice: (currentPage * pageSize) - pageSize :currentPage * pageSize">
       <td>{{printRequestCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{printRequestCard?.card?.applicantRitual?.applicant?.fullNameEn}}</td>
       <td>{{printRequestCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
       <td class="ltr">{{printRequestCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
@@ -49,22 +49,21 @@
 </div>
 <nav aria-label="Page navigation example">
   <ul class="pagination justify-content-center">
-    <li class="page-item" [class.disabled]="false">
-      <a class="page-link" tabindex="-1">{{'general.nav_first' | translate}}</a>
+    <li class="page-item" [class.disabled]="currentPage === 1">
+      <a class="page-link" (click)="setCurrentPage(1)" tabindex="-1">{{'general.nav_first' | translate}}</a>
     </li>
-
-    <li class="page-item" [class.disabled]="false">
-      <a class="page-link" tabindex="-1">{{'general.nav_previous' | translate}}</a>
+    <li class="page-item" [class.disabled]="currentPage === 1">
+      <a class="page-link" (click)="setCurrentPage(currentPage - 1)"
+         tabindex="-1">{{'general.nav_previous' | translate}}</a>
     </li>
     <li class="page-item active">
-      <a class="page-link">{{2 + ' / ' + 5}}</a>
+      <a class="page-link">{{currentPage + ' / ' + (printRequest?.printRequestCards.length % pageSize + 1)}}</a>
     </li>
-    <li class="page-item" [class.disabled]="false">
-      <a class="page-link">{{'general.nav_next' | translate}}</a>
+    <li class="page-item" [class.disabled]="currentPage === (printRequest?.printRequestCards.length % pageSize + 1)">
+      <a class="page-link" (click)="setCurrentPage(currentPage + 1)">{{'general.nav_next' | translate}}</a>
     </li>
-
-    <li class="page-item" [class.disabled]="false">
-      <a class="page-link">{{'general.nav_last' | translate}}</a>
+    <li class="page-item" [class.disabled]="currentPage === (printRequest?.printRequestCards.length % pageSize + 1)">
+      <a class="page-link" (click)="setCurrentPage(printRequest?.printRequestCards.length % pageSize + 1)">{{'general.nav_last' | translate}}</a>
     </li>
   </ul>
 </nav>
