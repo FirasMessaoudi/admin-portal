@@ -49,4 +49,14 @@ public class JpaApplicantHealthDisease implements Serializable {
     @ManyToOne
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecordId;
+
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updateDate = new Date();
+    }
 }

@@ -51,4 +51,14 @@ public class JpaDataRequestRecord implements Serializable {
     @Column(name = "update_date")
     private Date updateDate;
 
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updateDate = new Date();
+    }
+
 }

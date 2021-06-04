@@ -37,4 +37,9 @@ public class JpaApplicantDigitalId implements Serializable {
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
+
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+    }
 }

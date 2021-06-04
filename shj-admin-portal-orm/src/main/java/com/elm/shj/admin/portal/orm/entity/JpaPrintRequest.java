@@ -55,6 +55,11 @@ public class JpaPrintRequest implements Serializable {
 
     @PrePersist
     public void prePersist() {
-        this.creationDate = new Date();
+        creationDate = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updateDate = new Date();
     }
 }

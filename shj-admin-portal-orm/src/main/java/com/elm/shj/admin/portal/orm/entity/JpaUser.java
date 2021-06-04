@@ -104,4 +104,14 @@ public class JpaUser implements Serializable {
 
 	@Column(name = "TOKEN_EXPIRY_DATE")
 	private Date tokenExpiryDate;
+
+	@PrePersist
+	public void prePersist() {
+		creationDate = new Date();
+	}
+
+	@PreUpdate
+	public void preUpdate() {
+		updateDate = new Date();
+	}
 }

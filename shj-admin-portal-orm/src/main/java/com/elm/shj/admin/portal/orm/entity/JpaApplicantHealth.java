@@ -66,4 +66,14 @@ public class JpaApplicantHealth implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantHealth")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthImmunization> immunizations;
+
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updateDate = new Date();
+    }
 }
