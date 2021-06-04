@@ -28,7 +28,8 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
             "c.id = prc.card_id LEFT JOIN shj_portal.sha_print_request pr ON prc.print_request_id = pr.id WHERE " +
             "pr.status_code != :printRequestStatus OR c.status_code != :cardStatus) " +
             "AND card.id NOT IN :excludedCardsIds AND (a.id_number LIKE :idNumber OR :idNumber IS NULL) " +
-            "AND (a.passport_number = :passportNumber OR :passportNumber IS NULL) AND (a.nationality_code = :nationalityCode OR :nationalityCode IS NULL)")
+            "AND (a.passport_number LIKE :passportNumber OR :passportNumber IS NULL) " +
+            "AND (a.nationality_code = :nationalityCode OR :nationalityCode IS NULL)")
     Page<JpaApplicantCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus,
                                              @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber,
                                              @Param("nationalityCode") String nationalityCode,
