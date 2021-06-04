@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the sha_data_request database table.
@@ -41,9 +42,19 @@ public class JpaDataRequest implements Serializable {
 
     private String channel;
 
+    @Column(name = "item_count")
+    private long itemCount;
+
+    @Column(name = "error_count")
+    private long errorCount;
+
     @ManyToOne
     @JoinColumn(name = "data_segment_id")
     private JpaDataSegment dataSegment;
+
+    @OneToMany
+    @JoinColumn(name = "last_update_data_request_id")
+    private List<JpaDataRequestRecord> records;
 
     @ManyToOne
     @JoinColumn(name = "status_id")

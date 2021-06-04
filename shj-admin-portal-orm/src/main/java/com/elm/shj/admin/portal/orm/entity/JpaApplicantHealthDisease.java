@@ -42,4 +42,11 @@ public class JpaApplicantHealthDisease implements Serializable {
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
+
+    @Column(name = "update_date", nullable = false)
+    private Date updateDate;
+
+    @ManyToOne
+    @JoinColumn(name = "data_request_record_id")
+    private JpaDataRequestRecord dataRequestRecordId;
 }

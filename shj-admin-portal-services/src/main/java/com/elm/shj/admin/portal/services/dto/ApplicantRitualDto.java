@@ -28,8 +28,8 @@ public class ApplicantRitualDto implements Serializable {
     private ApplicantDto applicant;
     @CellIndex(index = 4)
     private String hamlahPackageCode;
-    //@CellIndex(index = 5)
-    //private String tafweejNumber;
+    @CellIndex(index = 5)
+    private String tafweejCode;
     @CellIndex(index = 6)
     private int hijriSeason;
     @CellIndex(index = 7)
@@ -50,14 +50,15 @@ public class ApplicantRitualDto implements Serializable {
     private String insuranceNumber;
     @CellIndex(index = 15)
     private String borderNumber;
-    //@CellIndex(index = 16)
-    //private String zone;
-    //@CellIndex(index = 17)
-    //private String group;
-    //@CellIndex(index = 18)
-    //private String unit;
+    @CellIndex(index = 16)
+    private String zoneCode;
+    @CellIndex(index = 17)
+    private String groupCode;
+    @CellIndex(index = 18)
+    private String unitCode;
     private Date creationDate;
-
+    private Date updateDate;
+    private DataRequestRecordDto dataRequestRecord;
 
     // used in data requests either through file upload or integration
     @Valid

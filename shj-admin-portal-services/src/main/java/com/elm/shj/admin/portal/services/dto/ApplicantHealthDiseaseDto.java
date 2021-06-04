@@ -39,6 +39,9 @@ public class ApplicantHealthDiseaseDto implements Serializable {
     private String labelEn;
 
     private Date creationDate;
+    private Date updateDate;
+    private DataRequestRecordDto dataRequestRecord;
+
     // used in data requests either through file upload or integration
     @Valid
     @NestedCells

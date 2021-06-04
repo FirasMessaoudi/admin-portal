@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Dto class for the DecisionRule domain.
+ * Dto class for the DataRequestRecord domain.
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
@@ -23,19 +23,16 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @DataSegmentStructure
-public class DataRequestDto implements Serializable {
+public class DataRequestRecordDto implements Serializable {
 
     private static final long serialVersionUID = 123456193540474532L;
 
     private long id;
-    private String referenceNumber;
-    private String originalSourcePath;
-    private String errorFilePath;
-    private String channel;
-    private DataSegmentDto dataSegment;
-    private DataRequestStatusLookupDto status;
+    private Long createDataRequestId;
+    private Long lastUpdateDataRequestId;
+    private Long createDataRequestRowNum;
+    private Long lastUpdateDataRequestRowNum;
+    private long itemId;
     private Date creationDate;
     private Date updateDate;
-    private long itemCount;
-    private long errorCount;
 }

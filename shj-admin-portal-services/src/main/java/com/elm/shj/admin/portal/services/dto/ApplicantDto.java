@@ -3,15 +3,12 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.dcc.foundation.commons.validation.ArabicCharacters;
-import com.elm.dcc.foundation.commons.validation.LatinCharacters;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -36,14 +33,6 @@ public class ApplicantDto implements Serializable {
     private static final long serialVersionUID = 4276580006724069703L;
 
     private long id;
-
-    //private long rowNum;
-    // @CellIndex(index = 11)
-    //private String biometricDataFinger;
-    // @CellIndex(index = 12)
-    //private String biometricDataFace;
-    // @CellIndex(index = 14)
-    //private String educationLevel;
 
     @Gender
     @CellIndex(index = 7)
@@ -95,7 +84,16 @@ public class ApplicantDto implements Serializable {
     @CellIndex(index = 10)
     private String photo;
 
-    private long requestId;
+    @CellIndex(index = 11)
+    private String biometricDataFinger;
+
+    @CellIndex(index = 12)
+    private String biometricDataFace;
+
+    @CellIndex(index = 14)
+    private String educationLevelCode;
+
+    private DataRequestRecordDto dataRequestRecord;
     private List<ApplicantDigitalIdDto> digitalIds;
     private List<ApplicantRelativeDto> relatives;
     @JsonBackReference

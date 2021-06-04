@@ -67,8 +67,18 @@ public class JpaApplicant implements Serializable {
 
     private String photo;
 
-    @Column(name = "request_id")
-    private long requestId;
+    @Column(name = "biometric_data_finger")
+    private String biometricDataFinger;
+
+    @Column(name = "biometric_data_face")
+    private String biometricDataFace;
+
+    @Column(name = "education_level_code")
+    private String educationLevelCode;
+
+    @ManyToOne
+    @JoinColumn(name = "data_request_record_id")
+    private JpaDataRequestRecord dataRequestRecordId;
 
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantDigitalId> digitalIds;

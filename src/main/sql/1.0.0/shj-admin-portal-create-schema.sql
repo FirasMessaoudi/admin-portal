@@ -290,8 +290,10 @@ create table shj_portal.sha_relative_relationship_lk
     code VARCHAR(20) NOT NULL,
     lang VARCHAR(45) NOT NULL,
     label NVARCHAR(50) NOT NULL,
-    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    constraint relative_relationship_lk_unique unique (code ASC, lang ASC)
+    data_request_record_id int NULL,
+    update_date smalldatetime NULL,
+    CONSTRAINT fk_applicant_relative_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shj_portal.sha_data_request_record (id),
+    CONSTRAINT relative_relationship_lk_unique unique (code ASC, lang ASC)
 );
 GO
 
@@ -311,10 +313,14 @@ create table shj_portal.sha_applicant
     full_name_origin NVARCHAR(150) NULL,
     marital_status_code VARCHAR(20) NOT NULL,
     photo varchar(max) NULL,
-    request_id int,
+    biometric_data_finger varchar(max) NULL,
+    biometric_data_face varchar(max) NULL,
+    education_level_code varchar(20) NULL,
+    data_request_record_id int NULL,
     status INT NOT NULL,
     creation_date smalldatetime not null default current_timestamp,
-    update_date smalldatetime NULL
+    update_date smalldatetime NULL,
+    CONSTRAINT fk_applicant_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shj_portal.sha_data_request_record (id)
 );
 GO
 
@@ -382,6 +388,7 @@ create table shj_portal.sha_applicant_ritual
     id int PRIMARY KEY NOT NULL identity(1,1),
     applicant_id int NOT NULL,
     hamlah_package_code VARCHAR(20) NULL,
+    tafweej_code VARCHAR(20) NULL,
     hijri_season INT NOT NULL,
     date_start_gregorian DATE NOT NULL,
     date_end_gregorian DATE NOT NULL,
@@ -392,7 +399,13 @@ create table shj_portal.sha_applicant_ritual
     permit_number VARCHAR(20) NOT NULL,
     insurance_number VARCHAR(20) NOT NULL,
     border_number VARCHAR(20) NULL,
+    zone_code VARCHAR(20) NULL,
+    group_code VARCHAR(20) NULL,
+    unit_code VARCHAR(20) NULL,
+    data_request_record_id int NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date smalldatetime   NULL,
+    CONSTRAINT fk_ritual_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shj_portal.sha_data_request_record (id),
     CONSTRAINT fk_applicant_ritual_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id)
 );
 GO
@@ -440,7 +453,12 @@ create table shj_portal.sha_applicant_health
     id int PRIMARY KEY NOT NULL identity(1,1),
     applicant_id int NOT NULL,
     blood_type VARCHAR(3) NOT NULL,
+    insurance_policy_number VARCHAR(50) NULL,
+    has_special_needs bit default 0,
+    data_request_record_id int NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date smalldatetime NULL,
+    CONSTRAINT fk_applicant_health_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shj_portal.sha_data_request_record (id),
     CONSTRAINT fk_applicant_health_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id)
 );
 GO
@@ -488,7 +506,10 @@ create table shj_portal.sha_applicant_health_immunization
     immunization_code VARCHAR(20) NOT NULL,
     immunization_date smalldatetime NOT NULL,
     mandatory BIT NOT NULL,
+    data_request_record_id int NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date smalldatetime NULL,
+    CONSTRAINT fk_applicant_health_immunization_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shj_portal.sha_data_request_record (id),
     CONSTRAINT fk_applicant_health_immunization_health FOREIGN KEY (applicant_health_id) REFERENCES shj_portal.sha_applicant_health (id)
 );
 GO
@@ -500,7 +521,10 @@ create table shj_portal.sha_applicant_health_disease
     applicant_health_id int NOT NULL,
     label_ar NVARCHAR(100) NOT NULL,
     label_en VARCHAR(45) NOT NULL,
+    data_request_record_id int NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date smalldatetime NULL,
+    CONSTRAINT fk_applicant_health_disease_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shj_portal.sha_data_request_record (id),
     CONSTRAINT fk_applicant_health_disease_health FOREIGN KEY (applicant_health_id) REFERENCES shj_portal.sha_applicant_health (id)
 );
 GO
@@ -548,6 +572,8 @@ create table shj_portal.sha_data_request
     reference_number NVARCHAR(48) NOT NULL,
     channel NVARCHAR(20) NOT NULL,
     data_segment_id INT NOT NULL,
+    item_count INT NULL,
+    error_count INT NULL DEFAULT 0,
     original_source_path NVARCHAR(256) NOT NULL,
     error_file_path VARCHAR(256) NULL,
     status_id INT NOT NULL,
@@ -555,6 +581,22 @@ create table shj_portal.sha_data_request
     update_date smalldatetime null,
     CONSTRAINT fk_data_request_segment FOREIGN KEY (data_segment_id) REFERENCES shj_portal.sha_data_segment (id),
     CONSTRAINT fk_data_request_status_lk FOREIGN KEY (status_id) REFERENCES shj_portal.sha_data_request_status_lk (id)
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_data_request_record')
+create table shj_portal.sha_data_request_record
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    create_data_request_id int NULL,
+    last_update_data_request_id int NULL,
+    create_data_request_row_num int NULL,
+    last_update_data_request_row_num int NULL,
+    item_id int NOT NULL,
+    creation_date smalldatetime not null default current_timestamp,
+    update_date smalldatetime NULL,
+    CONSTRAINT fk_data_record_data_request_create FOREIGN KEY (create_data_request_id) REFERENCES shj_portal.sha_data_request (id),
+    CONSTRAINT fk_data_record_data_request_update FOREIGN KEY (last_update_data_request_id) REFERENCES shj_portal.sha_data_request (id)
 );
 GO
 

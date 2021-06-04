@@ -39,8 +39,21 @@ public class JpaApplicantHealth implements Serializable {
     @Column(name ="blood_type")
     private String bloodType;
 
+    @Column(name ="has_special_needs")
+    private boolean hasSpecialNeeds;
+
+    @Column(name ="insurance_policy_number")
+    private String insurancePolicyNumber;
+
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
+
+    @Column(name = "update_date", nullable = false)
+    private Date updateDate;
+
+    @ManyToOne
+    @JoinColumn(name = "data_request_record_id")
+    private JpaDataRequestRecord dataRequestRecordId;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantHealth")
     @LazyCollection(LazyCollectionOption.FALSE)

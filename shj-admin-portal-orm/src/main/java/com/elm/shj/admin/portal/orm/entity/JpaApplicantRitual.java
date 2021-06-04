@@ -36,6 +36,18 @@ public class JpaApplicantRitual implements Serializable {
     @Column(name = "hamlah_package_code")
     private String hamlahPackageCode;
 
+    @Column(name = "tafweej_code")
+    private String tafweejCode;
+
+    @Column(name = "zone_code")
+    private String zoneCode;
+
+    @Column(name = "group_code")
+    private String groupCode;
+
+    @Column(name = "unit_code")
+    private String unitCode;
+
     @Column(name = "hijri_season")
     private int hijriSeason;
 
@@ -68,4 +80,11 @@ public class JpaApplicantRitual implements Serializable {
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
+
+    @Column(name = "update_date", nullable = false)
+    private Date updateDate;
+
+    @ManyToOne
+    @JoinColumn(name = "data_request_record_id")
+    private JpaDataRequestRecord dataRequestRecordId;
 }
