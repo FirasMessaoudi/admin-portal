@@ -38,7 +38,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface FieldDependency {
 
-    String message() default "validation.data.constraints.msg.120";
+    String message() default "validation.data.constraints.msg.20002";
 
     Class<?>[] groups() default {};
 

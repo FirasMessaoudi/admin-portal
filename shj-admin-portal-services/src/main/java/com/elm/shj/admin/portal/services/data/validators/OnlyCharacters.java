@@ -25,7 +25,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface OnlyCharacters {
 
-    String message() default "validation.data.constraints.msg.018";
+    String message() default "validation.data.constraints.msg.20013";
 
     Class<?>[] groups() default {};
 

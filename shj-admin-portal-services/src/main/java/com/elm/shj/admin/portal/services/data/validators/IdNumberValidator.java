@@ -14,8 +14,8 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class IdNumberValidator implements ConstraintValidator<IdNumber, Object> {
 
-    private static final String MSG_121 = "validation.data.constraints.msg.121";
-    private static final String MSG_122 = "validation.data.constraints.msg.122";
+    private static final String MSG_20003 = "validation.data.constraints.msg.20003";
+    private static final String MSG_20004 = "validation.data.constraints.msg.20004";
     private static final String NUMBERS_ONLY_REGEX = "^\\d*$";
     private static final String NIN_OR_IQAMA_REGEX = "[1-2]\\d{9}";
 
@@ -43,11 +43,11 @@ public class IdNumberValidator implements ConstraintValidator<IdNumber, Object> 
             return true;
         } else if (!value.toString().matches(NUMBERS_ONLY_REGEX)) {
             // build new violation message and add it
-            context.buildConstraintViolationWithTemplate(MSG_121).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(MSG_20003).addConstraintViolation();
             return false;
         } else if (value.toString().length() < minLength || value.toString().length() > maxLength) {
             // build new violation message and add it
-            context.buildConstraintViolationWithTemplate(MSG_122).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(MSG_20004).addConstraintViolation();
             return false;
         }
         // ( length =10 and start with (1 or 2))

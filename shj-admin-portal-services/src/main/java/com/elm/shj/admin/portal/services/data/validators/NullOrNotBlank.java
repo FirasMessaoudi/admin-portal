@@ -25,7 +25,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface NullOrNotBlank {
 
-    String message() default "validation.data.constraints.msg.122";
+    String message() default "validation.data.constraints.msg.20004";
 
     Class<?>[] groups() default {};
 

@@ -25,7 +25,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface MaritalStatusCode {
 
-    String message() default "validation.data.constraints.msg.124";
+    String message() default "validation.data.constraints.msg.20006";
 
     Class<?>[] groups() default {};
 

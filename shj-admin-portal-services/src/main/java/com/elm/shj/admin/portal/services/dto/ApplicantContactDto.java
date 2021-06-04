@@ -38,7 +38,7 @@ public class ApplicantContactDto implements Serializable {
     private String languageList;
 
     @NullOrNotBlank(min = 5, max = 50)
-    @Email(message = "validation.data.constraints.msg.121")
+    @Email(message = "validation.data.constraints.msg.20003")
     @CellIndex(index = 16)
     private String email;
 

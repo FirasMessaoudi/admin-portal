@@ -22,7 +22,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface UniquePerRequest {
 
-    String message() default "validation.data.constraints.msg.128";
+    String message() default "validation.data.constraints.msg.20010";
 
     Class<?>[] groups() default {};
 

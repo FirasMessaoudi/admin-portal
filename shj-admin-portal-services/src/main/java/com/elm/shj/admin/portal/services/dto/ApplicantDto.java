@@ -80,7 +80,7 @@ public class ApplicantDto implements Serializable {
     @CellIndex(index = 13)
     private String maritalStatusCode;
 
-    @NotNull(message = "validation.data.constraints.msg.119")
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @CellIndex(index = 10)
     private String photo;
 

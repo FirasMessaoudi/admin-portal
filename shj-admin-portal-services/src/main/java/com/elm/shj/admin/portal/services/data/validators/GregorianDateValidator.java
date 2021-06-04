@@ -18,8 +18,8 @@ import java.util.Date;
  */
 public class GregorianDateValidator implements ConstraintValidator<GregorianDate, Object> {
 
-    private static final String MSG_126 = "validation.data.constraints.msg.126";
-    private static final String MSG_119 = "validation.data.constraints.msg.119";
+    private static final String MSG_20008 = "validation.data.constraints.msg.20008";
+    private static final String MSG_20001 = "validation.data.constraints.msg.20001";
 
     private Date min;
     private Date max;
@@ -47,12 +47,12 @@ public class GregorianDateValidator implements ConstraintValidator<GregorianDate
         if (dateValue == null) {
             if(!allowNull) {
                 // build new violation message and add it
-                context.buildConstraintViolationWithTemplate(MSG_119).addConstraintViolation();
+                context.buildConstraintViolationWithTemplate(MSG_20001).addConstraintViolation();
             }
             return allowNull;
         } else if (dateValue.before(min) || dateValue.after(max)) {
             // build new violation message and add it
-            context.buildConstraintViolationWithTemplate(MSG_126).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(MSG_20008).addConstraintViolation();
             return false;
         }
 

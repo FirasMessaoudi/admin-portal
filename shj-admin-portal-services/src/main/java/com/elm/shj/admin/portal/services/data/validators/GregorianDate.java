@@ -25,7 +25,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface GregorianDate {
 
-    String message() default "validation.data.constraints.msg.123";
+    String message() default "validation.data.constraints.msg.20005";
 
     Class<?>[] groups() default {};
 

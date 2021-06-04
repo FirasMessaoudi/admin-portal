@@ -20,7 +20,7 @@ import java.time.temporal.ChronoField;
  */
 public class HijriDateValidator implements ConstraintValidator<HijriDate, Object> {
 
-    private static final String MSG_126 = "validation.data.constraints.msg.126";
+    private static final String MSG_20008 = "validation.data.constraints.msg.20008";
 
     private HijrahDate min;
     private HijrahDate max;
@@ -62,7 +62,7 @@ public class HijriDateValidator implements ConstraintValidator<HijriDate, Object
             return false;
         } else if (hijriValue.isBefore(min) || hijriValue.isAfter(max)) {
             // build new violation message and add it
-            context.buildConstraintViolationWithTemplate(MSG_126).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(MSG_20008).addConstraintViolation();
             return false;
         }
 

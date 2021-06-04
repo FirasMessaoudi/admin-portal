@@ -16,7 +16,7 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class PassportNumberValidator implements ConstraintValidator<PassportNumber, Object> {
 
-    private static final String MSG_121 = "validation.data.constraints.msg.121";
+    private static final String MSG_20003 = "validation.data.constraints.msg.20003";
     private static final String LETTERS_AND_NUMBERS_REGEX = "^[\\p{IsLatin}\\s\\p{N}]+$";
 
     /**
@@ -31,7 +31,7 @@ public class PassportNumberValidator implements ConstraintValidator<PassportNumb
         } else // return default message
             if (!value.toString().matches(LETTERS_AND_NUMBERS_REGEX)) {
             // build new violation message and add it
-            context.buildConstraintViolationWithTemplate(MSG_121).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(MSG_20003).addConstraintViolation();
             return false;
         }
         // Allowed chars only number and english && length between ( 5 , 30)

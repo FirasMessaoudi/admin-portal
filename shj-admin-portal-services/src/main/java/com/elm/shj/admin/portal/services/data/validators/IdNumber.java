@@ -25,7 +25,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface IdNumber {
 
-    String message() default "validation.data.constraints.msg.072";
+    String message() default "validation.data.constraints.msg.20012";
 
     Class<?>[] groups() default {};
 
