@@ -32,7 +32,6 @@ public class ExcelItemReaderFactory {
         readersRegistry.put(EDataSegment.APPLICANT_HEALTH_DATA, ApplicantHealthDto.class);
         readersRegistry.put(EDataSegment.APPLICANT_IMMUNIZATION_DATA, ApplicantHealthImmunizationDto.class);
         readersRegistry.put(EDataSegment.APPLICANT_DISEASE_DATA, ApplicantHealthDiseaseDto.class);
-        readersRegistry.put(EDataSegment.APPLICANT_SPECIAL_NEEDS_DATA, ApplicantHealthSpecialNeedsDto.class);
         readersRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, ApplicantRitualDto.class);
     }
 
