@@ -33,8 +33,12 @@ public class ApplicantHealthDto implements Serializable {
     private String bloodType;
     //@CellIndex(index = 5)
     //private String insurancePolicyNumber;
+    //@CellIndex(index = 6)
+    //private boolean hasSpecialNeeds;
     private Date creationDate;
     private List<ApplicantHealthDiseaseDto> diseases;
+    @Valid
+    @NestedCells
     private List<ApplicantHealthSpecialNeedsDto> specialNeeds;
     private List<ApplicantHealthImmunizationDto> immunizations;
     // used in data requests either through file upload or integration

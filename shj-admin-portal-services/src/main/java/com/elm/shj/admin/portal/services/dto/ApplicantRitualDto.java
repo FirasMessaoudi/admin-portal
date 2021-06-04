@@ -3,9 +3,12 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
+import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,16 +26,41 @@ public class ApplicantRitualDto implements Serializable {
 
     private long id;
     private ApplicantDto applicant;
+    @CellIndex(index = 4)
     private String hamlahPackageCode;
+    //@CellIndex(index = 5)
+    //private String tafweejNumber;
+    @CellIndex(index = 6)
     private int hijriSeason;
+    @CellIndex(index = 7)
     private Date dateStartGregorian;
+    @CellIndex(index = 8)
     private Date dateEndGregorian;
+    @CellIndex(index = 8)
     private int dateStartHijri;
+    @CellIndex(index = 10)
     private int dateEndHijri;
+    @CellIndex(index = 11)
     private String typeCode;
+    @CellIndex(index = 12)
     private String visaNumber;
+    @CellIndex(index = 13)
     private String permitNumber;
+    @CellIndex(index = 14)
     private String insuranceNumber;
+    @CellIndex(index = 15)
     private String borderNumber;
+    //@CellIndex(index = 16)
+    //private String zone;
+    //@CellIndex(index = 17)
+    //private String group;
+    //@CellIndex(index = 18)
+    //private String unit;
     private Date creationDate;
+
+
+    // used in data requests either through file upload or integration
+    @Valid
+    @NestedCells
+    private ApplicantBasicInfoDto applicantBasicInfo;
 }

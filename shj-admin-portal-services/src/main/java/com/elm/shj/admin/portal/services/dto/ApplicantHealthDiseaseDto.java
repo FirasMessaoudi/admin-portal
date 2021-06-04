@@ -3,11 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.dcc.foundation.commons.validation.ArabicCharacters;
-import com.elm.dcc.foundation.commons.validation.LatinCharacters;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
-import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
+import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,13 +30,11 @@ public class ApplicantHealthDiseaseDto implements Serializable {
     @JsonBackReference
     private ApplicantHealthDto applicantHealth;
 
-    @NullOrNotBlank(min = 3, max = 50)
-    @ArabicCharacters(lettersOnly = true, numbersOnly = true, message = "validation.data.constraints.msg.018")
+    @OnlyCharacters(min = 3, max = 50, arabic = true)
     @CellIndex(index = 4)
     private String labelAr;
 
-    @NullOrNotBlank(min = 3, max = 50)
-    @LatinCharacters(lettersOnly = true, numbersOnly = true, message = "validation.data.constraints.msg.019")
+    @OnlyCharacters(min = 3, max = 50, allowEmpty = false)
     @CellIndex(index = 5)
     private String labelEn;
 

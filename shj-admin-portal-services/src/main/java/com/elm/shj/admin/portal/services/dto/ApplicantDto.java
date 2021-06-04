@@ -38,22 +38,19 @@ public class ApplicantDto implements Serializable {
     private long id;
 
     //private long rowNum;
-    //@PassportNumber
-    //@CellIndex(index = 4)
-    //private String borderNumber;
-    // @CellIndex(index = 12)
+    // @CellIndex(index = 11)
     //private String biometricDataFinger;
-    // @CellIndex(index = 13)
+    // @CellIndex(index = 12)
     //private String biometricDataFace;
-    // @CellIndex(index = 15)
+    // @CellIndex(index = 14)
     //private String educationLevel;
 
     @Gender
-    @CellIndex(index = 8)
+    @CellIndex(index = 7)
     private String gender;
 
     @CountryCode
-    @CellIndex(index = 9)
+    @CellIndex(index = 8)
     private String nationalityCode;
 
     @UniquePerRequest
@@ -62,7 +59,7 @@ public class ApplicantDto implements Serializable {
     private long idNumber;
 
     @IdNumber(minLength = 5, maxLength = 30)
-    @CellIndex(index = 10)
+    @CellIndex(index = 9)
     private String idNumberOriginal;
 
     @UniquePerRequest
@@ -79,23 +76,23 @@ public class ApplicantDto implements Serializable {
     private long dateOfBirthHijri;
 
     @OnlyCharacters(min = 6, max = 150, arabic = true)
-    @CellIndex(index = 6)
+    @CellIndex(index = 5)
     private String fullNameAr;
 
     @OnlyCharacters(min = 10, max = 150, allowEmpty = false)
-    @CellIndex(index = 5)
+    @CellIndex(index = 4)
     private String fullNameEn;
 
     @NullOrNotBlank(min = 10, max = 150)
-    @CellIndex(index = 7)
+    @CellIndex(index = 6)
     private String fullNameOrigin;
 
     @MaritalStatusCode
-    @CellIndex(index = 14)
+    @CellIndex(index = 13)
     private String maritalStatusCode;
 
     @NotNull(message = "validation.data.constraints.msg.119")
-    @CellIndex(index = 11)
+    @CellIndex(index = 10)
     private String photo;
 
     private long requestId;

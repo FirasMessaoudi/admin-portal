@@ -34,44 +34,44 @@ public class ApplicantContactDto implements Serializable {
     private long id;
     @JsonBackReference
     private ApplicantDto applicant;
-    @CellIndex(index = 16)
+    @CellIndex(index = 15)
     private String languageList;
 
     @NullOrNotBlank(min = 5, max = 50)
     @Email(message = "validation.data.constraints.msg.121")
-    @CellIndex(index = 17)
+    @CellIndex(index = 16)
     private String email;
 
     @NullOrNotBlank(min = 5, max = 16)
-    @CellIndex(index = 18)
+    @CellIndex(index = 17)
     private int localMobileNumber;
 
     @NullOrNotBlank(min = 5, max = 30)
-    @CellIndex(index = 19)
+    @CellIndex(index = 18)
     private long intlMobileNumber;
 
     @CountryCode
-    @CellIndex(index = 20)
+    @CellIndex(index = 19)
     private String countryCode;
 
     @NullOrNotBlank(min = 3, max = 100)
-    @CellIndex(index = 23)
+    @CellIndex(index = 22)
     private String streetName;
 
     @NullOrNotBlank(min = 3, max = 50)
-    @CellIndex(index = 22)
+    @CellIndex(index = 21)
     private String districtName;
 
     @NullOrNotBlank(min = 3, max = 50)
-    @CellIndex(index = 21)
+    @CellIndex(index = 20)
     private String cityName;
 
     @NullOrNotBlank(min = 5, max = 30)
-    @CellIndex(index = 24)
+    @CellIndex(index = 23)
     private int buildingNumber;
 
     @NullOrNotBlank(min = 5, max = 30)
-    @CellIndex(index = 25)
+    @CellIndex(index = 24)
     private int postalCode;
     private Date creationDate;
     private Date updateDate;

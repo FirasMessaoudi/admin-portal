@@ -29,7 +29,7 @@ public class ApplicantHealthSpecialNeedsDto implements Serializable {
     @JsonBackReference
     private ApplicantHealthDto applicantHealth;
 
-    @CellIndex(index = 4)
+    @CellIndex(index = 7)
     private String specialNeedTypeCode;
 
     private Date creationDate;

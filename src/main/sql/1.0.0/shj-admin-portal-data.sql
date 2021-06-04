@@ -337,8 +337,7 @@ VALUES
        (3, 'applicant-health-data.xlsx', N'البيانات الصحية لضيف الرحمان', 'Applicant Health Data', N'2021-04-13 13:38', null),
        (4, 'applicant-vaccination-data.xlsx', N'بيانات تطعيمات ضيف الرحمان', 'Applicant Vaccination Data', N'2021-04-13 13:38', null),
        (5, 'applicant-disease-data.xlsx', N'بيانات أمراض ضيف الرحمان', 'Applicant Disease Data', N'2021-04-13 13:38', null),
-       (6, 'applicant-special-needs-data.xlsx', N'بيانات الاحتياجات الخاصة لضيف الرحمان', 'Applicant Special Needs Data', N'2021-04-13 13:38', null),
-       (7, 'applicant-ritual-data.xlsx', N'بيانات الشعيرة لضيف الرحمان', 'Applicant Ritual Data', N'2021-05-13 13:38', null);
+       (6, 'applicant-ritual-data.xlsx', N'بيانات الشعيرة لضيف الرحمان', 'Applicant Ritual Data', N'2021-05-13 13:38', null);
 SET IDENTITY_INSERT shj_portal.sha_data_segment OFF;
 GO
 
