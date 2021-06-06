@@ -64,16 +64,6 @@ export class StepOneComponent implements OnInit {
     }
   }
 
-  loadPage(page: number) {
-    this.listSubscription = this.cardService.listReadyToPrint(this.addedCards.map(card => card.id), page).subscribe(data => {
-      this.page = data;
-      if (this.page != null) {
-        this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
-        this.cards = this.page.content;
-      }
-    })
-  }
-
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
       idNumber: [null],

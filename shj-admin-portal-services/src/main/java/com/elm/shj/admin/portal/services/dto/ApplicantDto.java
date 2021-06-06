@@ -45,7 +45,7 @@ public class ApplicantDto implements Serializable {
     @UniquePerRequest
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     @CellIndex(index = 0)
-    private long idNumber;
+    private Long idNumber;
 
     @IdNumber(minLength = 5, maxLength = 30)
     @CellIndex(index = 9)

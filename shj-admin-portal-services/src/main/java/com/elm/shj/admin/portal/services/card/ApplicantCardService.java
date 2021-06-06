@@ -53,11 +53,11 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @param nationalityCode
      * @return the list of ready to print applicants cards
      */
-    public Page<ApplicantCardDto> findReadyToPrint(List<Long> excludedCardsIds, Pageable pageable, String idNumber,
+    public Page<ApplicantCardDto> findReadyToPrint(List<Long> excludedCardsIds, Pageable pageable, Long idNumber,
                                                    String hamlahNumber, String motawefNumber, String passportNumber,
                                                    String nationalityCode) {
         return mapPage(applicantCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(),
-                EPrintRequestStatus.NEW.name(), idNumber, passportNumber, nationalityCode,
+                EPrintRequestStatus.NEW.name(),  idNumber, passportNumber, nationalityCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
     }
 }
