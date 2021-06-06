@@ -478,8 +478,8 @@
     "print_request_number": "رقم طلب الطباعة هو",
     "btn_view_print_request_details": "عرض تفاصيل الطلب",
     "btn_back_to_printing_management": "عودة لإدارة الطباعة",
-    "add_cards": "إضافة {{noCards}} بطاقة",
-    "add_card": "إضافة بطاقة",
+    "add_no_cards": "إضافة {{noCards}} بطاقة",
+    "add_cards": "إضافة بطاقة",
     "dialog_confirm_request_error_text": "حدث خطأ أثناء تأكيد طلبك. يرجى المحاولة مرة أخرى ..."
   },
   "rule-management": {

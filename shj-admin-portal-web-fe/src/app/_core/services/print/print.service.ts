@@ -22,11 +22,6 @@ export class PrintService {
     return this.http.get<any>("/core/api/print/requests/list", {params: params});
   }
 
-  listNew(pageNumber: any): Observable<any> {
-    let params = new HttpParams().set('page', pageNumber);
-    return this.http.get<any>("/core/api/print/requests/list/new", {params: params});
-  }
-
   /**
    * Finds print request by his ID from the server.
    *

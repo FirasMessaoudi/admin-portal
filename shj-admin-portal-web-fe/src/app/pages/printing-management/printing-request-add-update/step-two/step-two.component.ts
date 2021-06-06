@@ -73,6 +73,6 @@ export class StepTwoComponent implements OnInit {
   }
 
   getTotalPages(total, size): number {
-    return Math.floor((total + size) / size);
+    return Math.floor((total + size - 1) / size);
   }
 }

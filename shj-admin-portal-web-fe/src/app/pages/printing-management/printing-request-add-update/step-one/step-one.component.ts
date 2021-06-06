@@ -96,8 +96,8 @@ export class StepOneComponent implements OnInit {
     });
   }
 
-  search(): void {
-    this.searchSubscription = this.cardService.searchCardsToPrint(this.addedCards.map(card => card.id), 0,
+  search(pageNumber: number): void {
+    this.searchSubscription = this.cardService.searchCardsToPrint(this.addedCards.map(card => card.id), pageNumber,
       this.searchForm.value.idNumber, this.searchForm.value.hamlahNumber, this.searchForm.value.motawefNumber,
       this.searchForm.value.passportNumber, this.searchForm.value.nationality).subscribe(data => {
       this.cards = [];
@@ -173,10 +173,11 @@ export class StepOneComponent implements OnInit {
   }
 
   isAllChecked() {
-    return this.selectedCards.length === this.cards.length;
+    if (this.cards.length > 0)
+      return this.selectedCards.length === this.cards.length;
   }
 
-  numberOfPages(){
+  numberOfPages() {
     return Math.ceil(this.addedCards.length / this.addedCardsPageSize);
   };
 
@@ -185,6 +186,6 @@ export class StepOneComponent implements OnInit {
   }
 
   getTotalPages(total, size): number {
-    return Math.floor((total + size) / size);
+    return Math.floor((total + size - 1) / size);
   }
 }
