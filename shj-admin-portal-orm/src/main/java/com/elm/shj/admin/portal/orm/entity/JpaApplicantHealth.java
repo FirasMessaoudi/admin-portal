@@ -40,7 +40,7 @@ public class JpaApplicantHealth implements Serializable {
     private String bloodType;
 
     @Column(name ="has_special_needs")
-    private boolean hasSpecialNeeds;
+    private Boolean hasSpecialNeeds;
 
     @Column(name ="insurance_policy_number")
     private String insurancePolicyNumber;

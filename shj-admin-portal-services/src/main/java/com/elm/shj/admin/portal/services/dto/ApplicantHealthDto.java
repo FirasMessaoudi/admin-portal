@@ -34,7 +34,7 @@ public class ApplicantHealthDto implements Serializable {
     @CellIndex(index = 5)
     private String insurancePolicyNumber;
     @CellIndex(index = 6)
-    private boolean hasSpecialNeeds;
+    private Boolean hasSpecialNeeds;
     private Date creationDate;
     private Date updateDate;
     private DataRequestRecordDto dataRequestRecord;
