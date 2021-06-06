@@ -452,7 +452,7 @@ create table shj_portal.sha_applicant_health
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
     applicant_id int NOT NULL,
-    blood_type VARCHAR(3) NOT NULL,
+    blood_type VARCHAR(3) NULL,
     insurance_policy_number VARCHAR(50) NULL,
     has_special_needs bit default 0,
     data_request_record_id int NULL,
