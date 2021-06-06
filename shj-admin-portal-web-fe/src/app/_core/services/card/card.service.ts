@@ -19,18 +19,7 @@ export class CardService {
     return this.http.get<any>("/core/api/cards/list", {params: params});
   }
 
-  /**
-   * list ready to print cards.
-   */
-  listReadyToPrint(excludedCardsIds, pageNumber: any): Observable<any> {
-    let params = new HttpParams().set('page', pageNumber);
-    if (excludedCardsIds.length > 0) {
-      params = params.append('excludedCardsIds', excludedCardsIds);
-    }
-    return this.http.get("/core/api/cards/list/ready-to-print", {params: params});
-  }
-
-  searchCardsToPrint(excludedCardsIds, pageNumber: any, idNumber: any, hamlahNumber: any, motawefNumber: any, passportNumber: any, nationality: any): Observable<any> {
+  searchCardsToPrint(excludedCardsIds, pageNumber: any, idNumber: number, hamlahNumber: any, motawefNumber: any, passportNumber: any, nationality: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
     if (excludedCardsIds.length > 0) {
       params = params.append('excludedCardsIds', excludedCardsIds);

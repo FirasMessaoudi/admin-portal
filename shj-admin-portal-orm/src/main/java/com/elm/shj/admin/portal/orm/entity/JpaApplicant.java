@@ -39,7 +39,7 @@ public class JpaApplicant implements Serializable {
     private String nationalityCode;
 
     @Column(name = "id_number")
-    private long idNumber;
+    private Long idNumber;
 
     @Column(name = "id_number_original")
     private String idNumberOriginal;
