@@ -164,7 +164,7 @@ export class StepOneComponent implements OnInit {
 
   isAllChecked() {
     if (this.cards.length > 0)
-      return this.selectedCards.length === this.cards.length;
+      return this.cards.map(c => c.id).every(id => this.selectedCards.map(c => c.id).includes(id));
   }
 
   numberOfPages() {

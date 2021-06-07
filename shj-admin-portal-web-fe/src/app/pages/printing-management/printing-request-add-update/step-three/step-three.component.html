@@ -25,25 +25,30 @@
     <ng-template [ngIf]="true" *ngFor="let requestBatch of printRequest?.printRequestBatches, let i=index">
       <th style="font-size: larger">
         {{'printing-management.batch_no' | translate}} {{i + 1}} {{'printing-management.contains' | translate}} {{requestBatch?.printRequestBatchCards?.length}} {{'printing-management.cards' | translate}}
+        <span class="badge m-2 text-muted" *ngIf="requestBatch.batchTypeKey">
+          {{currentLanguage.startsWith("en") ? getBatchType(requestBatch.batchTypeKey).labelEn : getBatchType(requestBatch.batchTypeKey).labelAr}}:
+          {{requestBatch.batchTypeValue ? lookupService().localizedLabel(countries, requestBatch.batchTypeValue) : ''}}
+        </span>
       </th>
-    <tbody>
-    <tr *ngIf="false" class="text-center">
-      <td colspan="10">
-        <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
-        <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
-      </td>
-    </tr>
+      <tbody>
+      <tr *ngIf="false" class="text-center">
+        <td colspan="10">
+          <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
+          <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+        </td>
+      </tr>
 
-    <tr *ngFor="let batchCard of requestBatch?.printRequestBatchCards">
-      <td>
-        <a [routerLink]="['/cards/details', batchCard?.card?.id]" target="_blank" class="text-dcc-primary font-weight-bold">
-          {{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
-        </a>
-      </td>
-      <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
-      <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
-    </tr>
-    </tbody>
+      <tr *ngFor="let batchCard of requestBatch?.printRequestBatchCards">
+        <td>
+          <a [routerLink]="['/cards/details', batchCard?.card?.id]" target="_blank"
+             class="text-dcc-primary font-weight-bold">
+            {{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
+          </a>
+        </td>
+        <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
+        <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
+      </tr>
+      </tbody>
     </ng-template>
   </table>
 </div>

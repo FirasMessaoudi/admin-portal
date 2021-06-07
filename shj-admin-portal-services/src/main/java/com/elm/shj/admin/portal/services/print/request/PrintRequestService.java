@@ -59,7 +59,6 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         return mapPage(printRequestRepository.findByStatusCodeNot(EPrintRequestStatus.NEW.name(), pageable));
     }
 
-
     @Transactional
     public PrintRequestDto save(List<Long> cardsIds) {
         // create and save the print request
@@ -92,8 +91,8 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
      */
     public String generateReferenceNumber() {
         RandomStringGenerator generator = new RandomStringGenerator.Builder()
-                .withinRange('0', 'z')
-                .filteredBy(t -> t >= '0' && t <= '9', t -> t >= 'A' && t <= 'Z')
+                .withinRange('0', '9')
+                .filteredBy(t -> t >= '0' && t <= '9')
                 .build();
         return generator.generate(REQUEST_REF_NUMBER_LENGTH - 6) + REF_NUMBER_FORMAT.format(new Date());
     }
@@ -106,12 +105,13 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         if (batchTypes.contains(EPrintBatchType.NATIONALITY.name())) {
             printRequest.getPrintRequestBatches().clear();
 
-            Map<List<Object>, List<PrintRequestCardDto>> groupedRequestCards = printRequest.getPrintRequestCards()
+            Map<List<String>, List<PrintRequestCardDto>> groupedRequestCards = printRequest.getPrintRequestCards()
                     .stream().collect(Collectors.groupingBy(requestCard -> Arrays.asList(requestCard.getCard().getApplicantRitual().getApplicant().getNationalityCode())));
 
             groupedRequestCards.forEach((key, value) -> {
                 PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
-                        .batchTypes(EPrintBatchType.NATIONALITY.name())
+                        .batchTypeKey(EPrintBatchType.NATIONALITY.name())
+                        .batchTypeValue(key.get(0))
                         .printRequestBatchCards(value.stream().map(
                                 requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList()))
                         .build();

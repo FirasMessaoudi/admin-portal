@@ -5,7 +5,8 @@ export class PrintRequestBatch {
   id: number;
   printRequest: PrintRequest;
   sequenceNumber: number;
-  batchTypes: string;
+  batchTypeKey: string;
+  batchTypeValue: string;
   printRequestBatchCards: PrintRequestBatchCard[];
   creationDate: Date;
 }

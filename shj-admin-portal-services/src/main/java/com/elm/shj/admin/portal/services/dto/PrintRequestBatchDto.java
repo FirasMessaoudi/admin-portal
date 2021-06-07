@@ -29,7 +29,8 @@ public class PrintRequestBatchDto implements Serializable {
     @JsonBackReference
     private PrintRequestDto printRequest;
     private int sequenceNumber;
-    private String batchTypes;
+    private String batchTypeKey;
+    private String batchTypeValue;
     private List<PrintRequestBatchCardDto> printRequestBatchCards;
     private Date creationDate;
 }

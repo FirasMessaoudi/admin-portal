@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {I18nService} from "@dcc-commons-ng/services";
 import {EAuthority} from "@shared/model";
-import {AuthenticationService} from "@core/services";
+import {AuthenticationService, CardService} from "@core/services";
 import {combineLatest} from "rxjs";
 import {map} from "rxjs/operators";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -11,6 +11,8 @@ import {PrintService} from "@core/services/print/print.service";
 import {PrintRequest} from "@model/print-request.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {Lookup} from "@model/lookup.model";
+import {PrintBatchType} from "@model/print-batch-type.model";
+import {CountryLookup} from "@model/country-lookup.model";
 
 @Component({
   selector: 'app-printing-request-details',
@@ -23,6 +25,8 @@ export class PrintingRequestDetailsComponent implements OnInit {
   printRequestId: number;
   printRequest: PrintRequest;
   printRequestStatuses: Lookup[];
+  batchTypes: PrintBatchType[];
+  countries: CountryLookup[];
 
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,
@@ -31,6 +35,7 @@ export class PrintingRequestDetailsComponent implements OnInit {
               private translate: TranslateService,
               private printService: PrintService,
               private lookupsService: LookupService,
+              private cardService: CardService,
               private authenticationService: AuthenticationService) { }
 
   ngOnInit(): void {
@@ -81,6 +86,16 @@ export class PrintingRequestDetailsComponent implements OnInit {
     this.printService.findPrintRequestStatuses().subscribe(result => {
       this.printRequestStatuses = result;
     });
+    this.printService.findPrintBatchTypes().subscribe(result => {
+      this.batchTypes = result;
+    });
+    this.cardService.findCountries().subscribe(result => {
+      this.countries = result;
+    });
+  }
+
+  getBatchType(batchType) {
+    return this.batchTypes.find(b => b.code === batchType);
   }
 
 }

@@ -40,8 +40,11 @@ public class JpaPrintRequestBatch implements Serializable {
     @Column(name = "sequence_number", nullable = false)
     private int sequenceNumber;
 
-    @Column(name = "batch_types")
-    private String batchTypes;
+    @Column(name = "batch_type_key")
+    private String batchTypeKey;
+
+    @Column(name = "batch_type_value")
+    private String batchTypeValue;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "printRequestBatch")
     private List<JpaPrintRequestBatchCard> printRequestBatchCards;

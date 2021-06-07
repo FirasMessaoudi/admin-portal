@@ -23,7 +23,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a WHERE card.id " +
             "NOT IN (SELECT card2.id FROM JpaApplicantCard card2 LEFT JOIN card2.printRequestCards prc LEFT JOIN prc.printRequest pr " +
             "WHERE pr.statusCode <> :printRequestStatus or card2.statusCode <> :cardStatus) AND card.id NOT IN :excludedCardsIds "+
-            "AND (TRIM(a.idNumber) LIKE :idNumber OR :idNumber IS NULL) " +
+            "AND (a.idNumber = :idNumber OR :idNumber IS NULL) " +
             "AND (a.passportNumber LIKE :passportNumber OR :passportNumber IS NULL) " +
             "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
     Page<JpaApplicantCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus,
