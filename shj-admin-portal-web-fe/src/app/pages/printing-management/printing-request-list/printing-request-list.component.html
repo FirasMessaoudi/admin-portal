@@ -24,7 +24,7 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.request_number" | translate }}</label>
-          <input id="requestNumber" type="text" class="form-control" value=""/>
+          <input disabled id="requestNumber" type="text" class="form-control"/>
         </div>
 
         <div class="form-group col">
@@ -36,7 +36,7 @@
                                       [isRequired]="false"
                                       [GregLabel]="'general.cal_greg' | translate"
                                       [hijriLabel]="'general.cal_hijri' | translate"
-                                      [disabled]="false"
+                                      [disabled]="true"
                                       [readonly]="true"
                                       #datePicker>
           </hijri-gregorian-datepicker>
@@ -51,7 +51,7 @@
                                       [isRequired]="false"
                                       [GregLabel]="'general.cal_greg' | translate"
                                       [hijriLabel]="'general.cal_hijri' | translate"
-                                      [disabled]="false"
+                                      [disabled]="true"
                                       [readonly]="true"
                                       #datePicker>
           </hijri-gregorian-datepicker>
@@ -59,23 +59,23 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.batch_number" | translate }}</label>
-          <input id="batchNumber" type="text" class="form-control" value=""/>
+          <input disabled id="batchNumber" type="text" class="form-control"/>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.id_number" | translate }}</label>
-          <input id="idNumber" type="text" class="form-control" value=""/>
+          <input disabled id="idNumber" type="text" class="form-control"/>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "card-management.card_number" | translate }}</label>
-          <input id="cardNumber" type="text" class="form-control" value=""/>
+          <input disabled id="cardNumber" type="text" class="form-control"/>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.request_status" | translate }}</label>
           <select id="requestStatus" class="custom-select">
-            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
             <option>الكل</option>
             <option>تمت الطباعة</option>
             <option>جاهز للطباعة</option>
