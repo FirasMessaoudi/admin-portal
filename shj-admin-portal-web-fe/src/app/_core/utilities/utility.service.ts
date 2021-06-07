@@ -7,8 +7,6 @@ import {Router} from "@angular/router";
 })
 export class UtilityService {
 
-  public backUrl: string;
-
   constructor(private router: Router) {}
 
   scrollToTop() {

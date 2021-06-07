@@ -4,7 +4,6 @@ import {Router} from '@angular/router';
 import {AuthenticationService} from '@app/_core/services';
 import {I18nService} from "@dcc-commons-ng/services";
 import {Location} from "@angular/common";
-import {UtilityService} from "@core/utilities/utility.service";
 
 @Component({
   selector: 'app-header',
@@ -18,8 +17,7 @@ export class HeaderComponent implements OnInit {
   constructor(private location: Location,
     public router: Router,
     private i18nService: I18nService,
-    private authenticationService: AuthenticationService,
-    private utilityService: UtilityService) {}
+    private authenticationService: AuthenticationService) {}
 
   get currentLanguage(): string {
     return this.i18nService.language;
@@ -27,10 +25,6 @@ export class HeaderComponent implements OnInit {
 
   setLanguage(language: string) {
     this.i18nService.language = language;
-  }
-
-  setBackUrl(url: string) {
-    this.utilityService.backUrl = url;
   }
 
   ngOnInit() {
@@ -53,9 +47,6 @@ export class HeaderComponent implements OnInit {
   }
 
   goBack() {
-    if(this.utilityService.backUrl)
-      this.router.navigate([this.utilityService.backUrl]);
-    else
       this.location.back();
   }
 }
