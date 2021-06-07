@@ -21,6 +21,7 @@ import {environment} from "@env/environment";
 import {LOGIN_URL, PUBLIC_URL_PATTERNS} from "@core/guards/authentication.guard";
 import {TranslateModule} from "@ngx-translate/core";
 import {LookupService} from "@core/utilities/lookup.service";
+import {HeaderComponent} from "@core/_layout";
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import {LookupService} from "@core/utilities/lookup.service";
     AuthenticationService,
     CardService,
     LookupService,
+    HeaderComponent,
     {provide: 'environment', useValue: environment}
   ]
 })

@@ -1,11 +1,14 @@
-import { Injectable } from "@angular/core";
-import { FormGroup } from "@angular/forms";
-import { Router } from "@angular/router";
+import {Injectable} from "@angular/core";
+import {FormGroup} from "@angular/forms";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: "root"
 })
 export class UtilityService {
+
+  public backUrl: string;
+
   constructor(private router: Router) {}
 
   scrollToTop() {

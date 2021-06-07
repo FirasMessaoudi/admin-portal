@@ -8,6 +8,7 @@ import {CardService} from "@core/services/card/card.service";
 import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
+import {HeaderComponent} from "@core/_layout";
 
 @Component({
   selector: 'app-card-list',
@@ -30,9 +31,11 @@ export class CardListComponent implements OnInit {
               private formBuilder: FormBuilder,
               private authenticationService: AuthenticationService,
               private cardService: CardService,
-              private lookupsService: LookupService) { }
+              private lookupsService: LookupService,
+              private headerComponent: HeaderComponent) { }
 
   ngOnInit(): void {
+    this.headerComponent.setBackUrl('/cards/list');
     this.initForm();
     this.loadLookups();
 
