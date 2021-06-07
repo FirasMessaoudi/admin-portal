@@ -68,6 +68,7 @@ export class CardListComponent implements OnInit {
       ritualType: [null],
       hamlah: [null],
       motawef: [null],
+      uin: [null],
       idNumber: [null],
       cardNumber: [null],
       cardStatus: [null],
