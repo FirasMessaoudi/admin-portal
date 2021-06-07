@@ -519,8 +519,8 @@ create table shj_portal.sha_applicant_health_disease
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
     applicant_health_id int NOT NULL,
-    label_ar NVARCHAR(100) NOT NULL,
-    label_en VARCHAR(45) NOT NULL,
+    label_ar NVARCHAR(50) NOT NULL,
+    label_en VARCHAR(50) NOT NULL,
     data_request_record_id int NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_date smalldatetime NULL,
