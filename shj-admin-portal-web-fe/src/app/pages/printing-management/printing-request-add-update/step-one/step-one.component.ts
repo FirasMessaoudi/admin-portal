@@ -66,6 +66,7 @@ export class StepOneComponent implements OnInit {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
+      uin: [null],
       idNumber: [null],
       hamlahNumber: [null],
       motawefNumber: [null],
@@ -88,8 +89,8 @@ export class StepOneComponent implements OnInit {
 
   search(pageNumber: number): void {
     this.searchSubscription = this.cardService.searchCardsToPrint(this.addedCards.map(card => card.id), pageNumber,
-      this.searchForm.value.idNumber, this.searchForm.value.hamlahNumber, this.searchForm.value.motawefNumber,
-      this.searchForm.value.passportNumber, this.searchForm.value.nationality).subscribe(data => {
+      this.searchForm.value.uin, this.searchForm.value.idNumber, this.searchForm.value.hamlahNumber,
+      this.searchForm.value.motawefNumber, this.searchForm.value.passportNumber, this.searchForm.value.nationality).subscribe(data => {
       this.cards = [];
       this.pageArray = [];
       this.page = data;
