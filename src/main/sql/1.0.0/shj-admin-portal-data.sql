@@ -897,10 +897,20 @@ SET IDENTITY_INSERT shj_portal.sha_print_request_status_lk OFF;
 GO
 
 SET IDENTITY_INSERT shj_portal.sha_print_batch_type_lk ON;
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code) VALUES (1, N'رئيس المجموعة', 'Group Leader', 'GROUP_LEADER');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code) VALUES (2, N'الحملة', 'Hamlah', 'HAMLAH');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code) VALUES (3, N'رقم الفوج', 'Fawj Number', 'FAWJ_NUMBER');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code) VALUES (4, N'الجنسية', 'Nationality', 'NATIONALITY');
-INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code) VALUES (5, N'مؤسسة الطوافة', 'Motawif', 'MOTAWIF');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code)
+VALUES (1, N'رئيس المجموعة', 'Group Leader', 'GROUP_LEADER');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code)
+VALUES (2, N'الحملة', 'Hamlah', 'HAMLAH');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code)
+VALUES (3, N'رقم الفوج', 'Fawj Number', 'FAWJ_NUMBER');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code)
+VALUES (4, N'الجنسية', 'Nationality', 'NATIONALITY');
+INSERT INTO shj_portal.sha_print_batch_type_lk (id, label_ar, label_en, code)
+VALUES (5, N'مؤسسة الطوافة', 'Motawif', 'MOTAWIF');
 SET IDENTITY_INSERT shj_portal.sha_print_batch_type_lk OFF;
+GO
+
+-- add applicant data override config
+INSERT INTO shj_portal.sha_config (conf_key, conf_value)
+VALUES ('data.request.applicant.override', 'false');
 GO

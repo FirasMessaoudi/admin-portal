@@ -20,6 +20,8 @@ import java.util.Date;
  * @author ahmad flaifel
  * @since 1.0.0
  */
+@WithRelative
+@WithApplicant
 @NoArgsConstructor
 @Data
 public class ApplicantRelativeDto implements Serializable {
@@ -60,5 +62,5 @@ public class ApplicantRelativeDto implements Serializable {
 
     @HijriDate(minOffset = -140, maxOffset = -11)
     @CellIndex(index = 7)
-    private int relativeDateOfBirthHijri;
+    private long relativeDateOfBirthHijri;
 }

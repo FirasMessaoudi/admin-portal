@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
+import com.elm.shj.admin.portal.services.data.validators.WithApplicant;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import java.util.Date;
  * @author ahmad flaifel
  * @since 1.0.0
  */
+@WithApplicant
 @NoArgsConstructor
 @Data
 public class ApplicantRitualDto implements Serializable {

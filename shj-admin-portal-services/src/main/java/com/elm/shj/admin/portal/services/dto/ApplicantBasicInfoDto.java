@@ -5,7 +5,6 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.*;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +21,7 @@ import java.util.Date;
         @FieldDependency(first = "idNumber", second = "passportNumber"),
         @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri")
 })
-@Builder
+@NoArgsConstructor
 @Data
 public class ApplicantBasicInfoDto implements Serializable {
 
@@ -32,9 +31,8 @@ public class ApplicantBasicInfoDto implements Serializable {
 
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     @CellIndex(index = 0)
-    private long idNumber;
+    private Long idNumber;
 
-    @UniquePerRequest
     @PassportNumber
     @CellIndex(index = 1)
     private String passportNumber;
@@ -45,5 +43,23 @@ public class ApplicantBasicInfoDto implements Serializable {
 
     @HijriDate(minOffset = -140, maxOffset = -11)
     @CellIndex(index = 3)
-    private long dateOfBirthHijri;
+    private Long dateOfBirthHijri;
+
+    public static ApplicantBasicInfoDto fromRelative(ApplicantRelativeDto applicantRelative) {
+        ApplicantBasicInfoDto applicantBasicInfo = new ApplicantBasicInfoDto();
+        applicantBasicInfo.setIdNumber(applicantRelative.getRelativeIdNumber());
+        applicantBasicInfo.setPassportNumber(applicantRelative.getRelativePassportNumber());
+        applicantBasicInfo.setDateOfBirthGregorian(applicantRelative.getRelativeDateOfBirthGregorian());
+        applicantBasicInfo.setDateOfBirthHijri(applicantRelative.getRelativeDateOfBirthHijri());
+        return applicantBasicInfo;
+    }
+
+    public static ApplicantBasicInfoDto fromApplicant(ApplicantDto applicant) {
+        ApplicantBasicInfoDto applicantBasicInfo = new ApplicantBasicInfoDto();
+        applicantBasicInfo.setIdNumber(applicant.getIdNumber());
+        applicantBasicInfo.setPassportNumber(applicant.getPassportNumber());
+        applicantBasicInfo.setDateOfBirthGregorian(applicant.getDateOfBirthGregorian());
+        applicantBasicInfo.setDateOfBirthHijri(applicant.getDateOfBirthHijri());
+        return applicantBasicInfo;
+    }
 }

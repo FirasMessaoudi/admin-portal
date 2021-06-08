@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.data.validators.UniquePerRequest;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
+@Slf4j
 public class ExcelItemReader<T> {
     private static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
 
@@ -63,6 +65,10 @@ public class ExcelItemReader<T> {
 
     }
 
+    public Class<T> getTypeClass() {
+        return typeClass;
+    }
+
     public List<DataValidationResult> getDataReadingErrors() {
         return dataReadingErrors;
     }
@@ -79,7 +85,7 @@ public class ExcelItemReader<T> {
         if (fieldMapping.values().stream().anyMatch(n -> n.equals(propertyName))) {
             return row.getCell(row.getFirstCellNum() + getKey(fieldMapping, propertyName));
         }
-        return null;
+        return row.getCell(row.getFirstCellNum());
     }
 
     /**
@@ -161,14 +167,16 @@ public class ExcelItemReader<T> {
                     String nestedFieldName = fieldName.split("\\[0]\\.")[0];
                     String nestedFieldAttributeName = fieldName.split("\\[0]\\.")[1];
                     nestedField = typeClass.getDeclaredField(nestedFieldName);
-                    fieldToProcess = ReflectionUtils.findField(Class.forName(((AnnotatedParameterizedType) nestedField.getAnnotatedType()).getAnnotatedActualTypeArguments()[0].getType().getTypeName()), nestedFieldAttributeName);
                     ReflectionUtils.makeAccessible(nestedField);
                     if (nestedField.getType().isAssignableFrom(List.class)) {
                         target = ((List) Objects.requireNonNull(ReflectionUtils.getField(nestedField, type))).get(0);
+                        fieldToProcess = ReflectionUtils.findField(Class.forName(((AnnotatedParameterizedType) nestedField.getAnnotatedType()).getAnnotatedActualTypeArguments()[0].getType().getTypeName()), nestedFieldAttributeName);
                     } else if (nestedField.getType().isArray()) {
                         target = Array.get(ReflectionUtils.getField(nestedField, type), 0);
+                        fieldToProcess = ReflectionUtils.findField(Class.forName(((AnnotatedParameterizedType) nestedField.getAnnotatedType()).getAnnotatedActualTypeArguments()[0].getType().getTypeName()), nestedFieldAttributeName);
                     } else {
                         target = ReflectionUtils.getField(nestedField, type);
+                        fieldToProcess = ReflectionUtils.findField(nestedField.getType(), nestedFieldAttributeName);
                     }
                 } else {
                     fieldToProcess = ReflectionUtils.findField(typeClass, fieldName);
@@ -217,48 +225,41 @@ public class ExcelItemReader<T> {
      * @return the cell value based on the field type
      */
     private Object readCellValue(Cell cell, Field field) {
-        if (field.getType().isAssignableFrom(String.class)) {
-            return readCellValueAsString(cell);
-        } else if (field.getType().isAssignableFrom(Date.class)) {
-            return readCellValueAsDate(cell);
-        } else if (field.getType().isPrimitive()) {
-            switch (field.getType().getName().charAt(0)) {
-                case 'b':
-                    return readCellValueAsNumber(cell, byte.class);
-                case 's':
-                    return readCellValueAsNumber(cell, short.class);
-                case 'i':
-                    return readCellValueAsNumber(cell, int.class);
-                case 'l':
-                    return readCellValueAsNumber(cell, long.class);
-                case 'f':
-                    return readCellValueAsNumber(cell, float.class);
-                case 'd':
-                    return readCellValueAsNumber(cell, double.class);
-                default:
-                    return -1;
-            }
-        } else if (field.getType().isAssignableFrom(Number.class)) {
-            switch (field.getType().getName().charAt(0)) {
-                case 'B':
-                    return readCellValueAsNumber(cell, Byte.class);
-                case 'S':
+        switch (field.getType().getSimpleName().charAt(0)) {
+            case 'b':
+            case 'B':
+                if (field.getType().getSimpleName().charAt(1) == 'y')
+                    return readCellValueAsNumber(cell, field.getType().getSimpleName().charAt(0) == 'B' ? Byte.class : byte.class);
+                else if (field.getType().getSimpleName().charAt(1) == 'o')
+                    return readCellValueAsBoolean(cell);
+            case 's':
+                return readCellValueAsNumber(cell, short.class);
+            case 'i':
+                return readCellValueAsNumber(cell, int.class);
+            case 'l':
+                return readCellValueAsNumber(cell, long.class);
+            case 'f':
+                return readCellValueAsNumber(cell, float.class);
+            case 'd':
+                return readCellValueAsNumber(cell, double.class);
+            case 'S':
+                if (field.getType().getSimpleName().charAt(1) == 'h')
                     return readCellValueAsNumber(cell, Short.class);
-                case 'I':
-                    return readCellValueAsNumber(cell, Integer.class);
-                case 'L':
-                    return readCellValueAsNumber(cell, Long.class);
-                case 'F':
-                    return readCellValueAsNumber(cell, Float.class);
-                case 'D':
+                else if (field.getType().getSimpleName().charAt(1) == 't')
+                    return readCellValueAsString(cell);
+            case 'I':
+                return readCellValueAsNumber(cell, Integer.class);
+            case 'L':
+                return readCellValueAsNumber(cell, Long.class);
+            case 'F':
+                return readCellValueAsNumber(cell, Float.class);
+            case 'D':
+                if (field.getType().getSimpleName().charAt(1) == 'o')
                     return readCellValueAsNumber(cell, Double.class);
-                default:
-                    return -1;
-            }
-        } else if (field.getType().isAssignableFrom(Boolean.class)) {
-            return readCellValueAsBoolean(cell);
-        } else {
-            return null;
+                else if (field.getType().getSimpleName().charAt(1) == 'a')
+                    return readCellValueAsDate(cell);
+            default:
+                return null;
         }
     }
 
@@ -310,7 +311,7 @@ public class ExcelItemReader<T> {
     public <N extends Number> Object readCellValueAsNumber(Cell cell, Class<N> clazz) {
         Object value = readRawCellValue(cell);
         if (value == null) {
-            return clazz.isPrimitive() ? 0 : null;
+            return clazz.isPrimitive() ? castToFieldType(clazz, -1) : null;
         } else if (value instanceof Number) {
             return castToFieldType(clazz, value);
         } else if (value instanceof String) {
@@ -323,11 +324,11 @@ public class ExcelItemReader<T> {
                 return castToFieldType(clazz, result);
             } catch (ParseException e) {
                 dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_NUMBER_FORMAT.getMessage())).valid(false).build());
-                return -1;
+                return castToFieldType(clazz, -1);
             }
         } else {
             dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_NUMBER_FORMAT.getMessage())).valid(false).build());
-            return -1;
+            return castToFieldType(clazz, -1);
         }
     }
 
@@ -340,25 +341,21 @@ public class ExcelItemReader<T> {
      * @return the casted value based on the field type class
      */
     private <N extends Number> Object castToFieldType(Class<N> clazz, Object value) {
-        if (clazz.isPrimitive()) {
-            switch (clazz.getName().charAt(0)) {
-                case 'b':
-                    return ((Number) value).byteValue();
-                case 's':
-                    return ((Number) value).shortValue();
-                case 'i':
-                    return ((Number) value).intValue();
-                case 'l':
-                    return ((Number) value).longValue();
-                case 'f':
-                    return ((Number) value).floatValue();
-                case 'd':
-                    return ((Number) value).doubleValue();
-                default:
-                    return 0;
-            }
-        } else {
-            return value;
+        switch (clazz.getSimpleName().toLowerCase().charAt(0)) {
+            case 'b':
+                return ((Number) value).byteValue();
+            case 's':
+                return ((Number) value).shortValue();
+            case 'i':
+                return ((Number) value).intValue();
+            case 'l':
+                return ((Number) value).longValue();
+            case 'f':
+                return ((Number) value).floatValue();
+            case 'd':
+                return ((Number) value).doubleValue();
+            default:
+                return 0;
         }
     }
 

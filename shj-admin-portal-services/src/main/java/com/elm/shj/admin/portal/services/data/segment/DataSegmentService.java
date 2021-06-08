@@ -6,6 +6,9 @@ package com.elm.shj.admin.portal.services.data.segment;
 import com.elm.shj.admin.portal.orm.entity.JpaDataSegment;
 import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -19,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
+@Slf4j
 @Service
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DataSegmentService extends GenericService<JpaDataSegment, DataSegmentDto, Long> {
 
     /**

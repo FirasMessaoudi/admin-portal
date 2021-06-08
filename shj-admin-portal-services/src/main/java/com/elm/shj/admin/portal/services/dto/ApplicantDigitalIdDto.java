@@ -4,8 +4,9 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,11 +17,15 @@ import java.util.Date;
  * @author ahmad flaifel
  * @since 1.0.0
  */
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Data
 public class ApplicantDigitalIdDto implements Serializable {
 
     private static final long serialVersionUID = -1067949632316606990L;
+
+    public ApplicantDigitalIdDto() {
+    }
 
     private long id;
     private String uin;

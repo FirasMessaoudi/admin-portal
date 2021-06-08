@@ -5,11 +5,13 @@ package com.elm.shj.admin.portal.services.data.request;
 
 import com.elm.shj.admin.portal.orm.entity.JpaDataRequest;
 import com.elm.shj.admin.portal.orm.repository.DataRequestRepository;
-import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.data.processor.DataProcessorResult;
 import com.elm.shj.admin.portal.services.data.processor.DataProcessorService;
-import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.data.writer.ItemWriter;
+import com.elm.shj.admin.portal.services.dto.DataRequestDto;
+import com.elm.shj.admin.portal.services.dto.DataRequestStatusLookupDto;
+import com.elm.shj.admin.portal.services.dto.EDataRequestChannel;
+import com.elm.shj.admin.portal.services.dto.EDataRequestStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.jcraft.jsch.JSchException;
@@ -30,7 +32,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.StreamSupport;
 
 /**
@@ -53,8 +58,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
 
     private final SftpService sftpService;
     private final DataProcessorService dataRequestProcessor;
-    private final ApplicantService applicantService;
-    private final DigitalIdService digitalIdService;
+    private final ItemWriter itemWriter;
 
     /**
      * Find all data requests.
@@ -109,7 +113,6 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
         dataRequest.setReferenceNumber(requestReference);
         dataRequest.setOriginalSourcePath(sftpPath);
         dataRequest.setStatus(DataRequestStatusLookupDto.builder().id(EDataRequestStatus.NEW.getId()).build());
-        dataRequest.setCreationDate(new Date());
         // persist the request
         DataRequestDto createdRequest = super.save(dataRequest);
         log.info("data request created successfully with #{}", createdRequest.getId());
@@ -182,7 +185,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
      *
      * @param dataRequestId the data request id to be processed
      */
-    private void processRequest(long dataRequestId) throws Exception {
+    private <T> void processRequest(long dataRequestId) throws Exception {
         // retrieve the data request
         DataRequestDto dataRequest = findOne(dataRequestId);
         // initial validation
@@ -191,23 +194,9 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
             // retrieve the original file to start processing
             Resource originalFile = sftpService.downloadFile(dataRequest.getOriginalSourcePath());
             // process the file
-            DataProcessorResult<ApplicantDto> parserResult = dataRequestProcessor.processRequestFile(originalFile, dataRequest.getDataSegment());
-            // generate digital ids
-            parserResult.getParsedItems().forEach(applicant -> {
-                ApplicantDigitalIdDto applicantDigitalIdDto = new ApplicantDigitalIdDto();
-                applicantDigitalIdDto.setApplicant(applicant);
-                applicantDigitalIdDto.setUin(digitalIdService.generate(applicant));
-                applicantDigitalIdDto.setCreationDate(new Date());
-                applicant.setDigitalIds(Collections.singletonList(applicantDigitalIdDto));
-            });
-            parserResult.getParsedItems().forEach(applicant -> {
-                applicant.getContacts().forEach(applicantContact -> {
-                    applicantContact.setCreationDate(new Date());
-                    applicantContact.setApplicant(applicant);
-                });
-            });
+            DataProcessorResult<T> parserResult = dataRequestProcessor.processRequestFile(originalFile, dataRequest.getDataSegment());
             // save all parsed items
-            parserResult.getParsedItems().forEach(applicantService::save);
+            itemWriter.write(parserResult.getParsedItems(), dataRequest.getDataSegment(), dataRequestId);
             // in case of error, generate the error file and save it in the SFTP
             if (parserResult.isWithErrors()) {
                 // generate error file
@@ -221,7 +210,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
                 String errorFilePath = generateSftpFilePath(fileName, dataRequest.getReferenceNumber(), true);
                 sftpService.uploadFile(errorFilePath, errorFile.getInputStream());
                 // update the data request status
-                ((DataRequestRepository) getRepository()).updateProcessingStatus(dataRequestId, EDataRequestStatus.PROCESSED_WITH_ERRORS.getId(), errorFilePath);
+                ((DataRequestRepository) getRepository()).updateProcessingStatus(dataRequestId, EDataRequestStatus.PROCESSED_WITH_ERRORS.getId(), errorFilePath, parserResult.getDataValidationResults().size());
             } else {
                 // update the data request status
                 ((DataRequestRepository) getRepository()).updateStatus(dataRequestId, EDataRequestStatus.PROCESSED_SUCCESSFULLY.getId());
