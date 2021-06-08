@@ -358,40 +358,41 @@ tr:hover .tblView{
 }
 
 .packageBox{
-        display: block;
-        @include py(2);
-        @include px(3);
-        color: #000;
-        background-image: url(assets/images/svg-icons/arrowcircle.svg);
-        background-repeat: no-repeat;
+  display: block;
+  @include py(2);
+  @include px(3);
+  color: #000;
+  background-image: url(assets/images/svg-icons/arrowcircle.svg);
+  background-size: 22px;
+  background-repeat: no-repeat;
 
-        border-bottom: 2px #E4E4E4 solid;
-        border-top: 1px #E4E4E4 solid;
+  border-bottom: 2px #E4E4E4 solid;
+  border-top: 1px #E4E4E4 solid;
 
-        &:hover{
-            color: $dcc-primary;
-        }
+  &:hover{
+    color: $dcc-primary;
+  }
 
-        [dir="rtl"] & {
-            background-position: left 1.5rem center;
-        }
-        [dir="ltr"] & {
-            background-position: right 1.5rem center;
-        }
+  [dir="rtl"] & {
+    background-position: left 1.5rem center;
+  }
+  [dir="ltr"] & {
+    background-position: right 1.5rem center;
+  }
 
-        &.active{
+  &.active{
 
-            background-image: url(assets/images/svg-icons/arrowcircle-collapse.svg);
-
-            [dir="rtl"] & {
-                border-right: 5px $dcc-primary solid;
-            }
-            [dir="ltr"] & {
-                border-left: 5px $dcc-primary solid;
-            }
-        }
+    background-image: url(assets/images/svg-icons/arrowcircle-collapse.svg);
+    background-size: 22px;
+    [dir="rtl"] & {
+      border-right: 5px $dcc-primary solid;
     }
+    [dir="ltr"] & {
+      border-left: 5px $dcc-primary solid;
+    }
+  }
+}
 
 .nameCol{
-    width: 40%;
+  width: 40%;
 }
