@@ -40,8 +40,8 @@ public class JpaPrintRequestBatch implements Serializable {
     @Column(name = "sequence_number", nullable = false)
     private int sequenceNumber;
 
-    @Column(name = "batch_type_key")
-    private String batchTypeKey;
+    @Column(name = "batch_type_code")
+    private String batchTypeCode;
 
     @Column(name = "batch_type_value")
     private String batchTypeValue;

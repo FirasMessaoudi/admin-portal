@@ -25,7 +25,7 @@
         <label class="col-form-label">{{'printing-management.creation_date' | translate}}</label>
         <span class="form-control-plaintext ">{{printRequest?.creationDate | dateFormat}}</span>
       </div>
-      <div *ngIf="printRequest?.statusCode === 'SENT_TO_PRINTING'" class="form-group col mb-lg-0">
+      <div *ngIf="printRequest?.statusCode !== printRequestStatus.NEW" class="form-group col mb-lg-0">
         <label class="col-form-label">{{'printing-management.confirm_printing_date' | translate}}</label>
         <span class="form-control-plaintext ">{{printRequest?.updateDate | dateFormat}}</span>
       </div>
@@ -63,10 +63,11 @@
                 class="packageNo">{{i + 1}}</span></span>
                 <span class="">{{'printing-management.contains' | translate}}
                   <b>{{batch.printRequestBatchCards?.length}}</b> {{'printing-management.cards' | translate}}</span>
-                <span class="badge m-2 text-muted" *ngIf="batch.batchTypeKey">
-                  {{currentLanguage.startsWith("en") ? getBatchType(batch.batchTypeKey).labelEn : getBatchType(batch.batchTypeKey).labelAr}}:
-                  {{batch.batchTypeValue ? lookupService().localizedLabel(countries, batch.batchTypeValue):''}}
-              </span>
+                <span class="badge m-2 text-muted" *ngFor="let requestBatch of batch.batchTypeCode.split(','); let i = index; let lastBatch = last;">
+                  {{currentLanguage.startsWith("en") ? getBatchType(batch.batchTypeCode.split(',')[i]).labelEn : getBatchType(batch.batchTypeCode.split(',')[i]).labelAr}}:
+                  {{batch.batchTypeCode.split(',')[i] === batchType.NATIONALITY ? lookupService().localizedLabel(countries, batch.batchTypeValue.split(',')[i]) : batch.batchTypeValue.split(',')[i]}}
+                  <span *ngIf="!lastBatch">,</span>
+                </span>
               </a>
             </td>
           </tr>

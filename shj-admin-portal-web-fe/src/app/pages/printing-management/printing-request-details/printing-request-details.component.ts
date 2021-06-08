@@ -13,6 +13,8 @@ import {LookupService} from "@core/utilities/lookup.service";
 import {Lookup} from "@model/lookup.model";
 import {PrintBatchType} from "@model/print-batch-type.model";
 import {CountryLookup} from "@model/country-lookup.model";
+import {BatchType} from "@model/enum/batch-type.enum";
+import {PrintRequestStatus} from "@model/enum/print-request-status.enum";
 
 @Component({
   selector: 'app-printing-request-details',
@@ -27,6 +29,8 @@ export class PrintingRequestDetailsComponent implements OnInit {
   printRequestStatuses: Lookup[];
   batchTypes: PrintBatchType[];
   countries: CountryLookup[];
+  batchType = BatchType;
+  printRequestStatus = PrintRequestStatus;
 
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,

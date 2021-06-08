@@ -10,6 +10,7 @@ import {PrintBatchType} from "@model/print-batch-type.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {CardService} from "@core/services";
 import {CountryLookup} from "@model/country-lookup.model";
+import {BatchType} from "@model/enum/batch-type.enum";
 
 @Component({
   selector: 'app-step-three',
@@ -20,6 +21,7 @@ export class StepThreeComponent implements OnInit {
 
   batchTypes: PrintBatchType[];
   countries: CountryLookup[];
+  batchType = BatchType;
 
   @Input()
   printRequest: PrintRequest;

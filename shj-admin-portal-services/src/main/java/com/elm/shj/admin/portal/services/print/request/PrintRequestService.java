@@ -18,7 +18,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -97,32 +100,44 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         return generator.generate(REQUEST_REF_NUMBER_LENGTH - 6) + REF_NUMBER_FORMAT.format(new Date());
     }
 
-    public PrintRequestDto processBatching(long requestId, List<String> batchTypes) {
+    public PrintRequestDto processBatching(long requestId, List<EPrintBatchType> selectedBatchTypes) {
         // Retrieve the print request
         PrintRequestDto printRequest = findOne(requestId);
 
-        //TODO TAKE INTO ACCOUNT SEARCH CRITERIA
-        if (batchTypes.contains(EPrintBatchType.NATIONALITY.name())) {
-            printRequest.getPrintRequestBatches().clear();
-
+        if (selectedBatchTypes.size() > 0) {
+            // Group printing cards by selected batch types
             Map<List<String>, List<PrintRequestCardDto>> groupedRequestCards = printRequest.getPrintRequestCards()
-                    .stream().collect(Collectors.groupingBy(requestCard -> Arrays.asList(requestCard.getCard().getApplicantRitual().getApplicant().getNationalityCode())));
+                    .stream().collect(Collectors.groupingBy(requestCard -> {
+                        List<String> groupingByCriteriaList = new ArrayList<>();
+                        selectedBatchTypes.forEach(type -> {
+                            if (type.equals(EPrintBatchType.NATIONALITY)) {
+                                groupingByCriteriaList.add(requestCard.getCard().getApplicantRitual().getApplicant().getNationalityCode());
+                            }
+                            //TODO ADD THE REMAINING CRITERIA
+                        });
+                        return groupingByCriteriaList;
+                    }));
 
+            // Create print request batches
             groupedRequestCards.forEach((key, value) -> {
                 PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
-                        .batchTypeKey(EPrintBatchType.NATIONALITY.name())
-                        .batchTypeValue(key.get(0))
+                        // Save batching criteria as comma-separated string
+                        .batchTypeCode(selectedBatchTypes.stream().map(EPrintBatchType::name).collect(Collectors.joining(",")))
+                        // Save batching values as comma-separated string
+                        .batchTypeValue(String.join(",", key))
                         .printRequestBatchCards(value.stream().map(
                                 requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList()))
                         .build();
                 printRequest.getPrintRequestBatches().add(printRequestBatch);
             });
         } else {
+            // No batching criteria selected save all printing cards as one batch
             PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
                     .printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList()))
                     .build();
             printRequest.getPrintRequestBatches().add(printRequestBatch);
         }
+        // Return nested object
         return printRequest;
     }
 

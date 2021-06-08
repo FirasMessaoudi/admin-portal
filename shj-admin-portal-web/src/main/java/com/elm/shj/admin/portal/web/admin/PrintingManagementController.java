@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.dto.EPrintBatchType;
 import com.elm.shj.admin.portal.services.dto.PrintRequestDto;
 import com.elm.shj.admin.portal.services.print.request.PrintRequestService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -73,7 +74,7 @@ public class PrintingManagementController {
 
     @PostMapping("/{printRequestId}/batch")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
-    public PrintRequestDto batch(@PathVariable long printRequestId, @RequestBody List<String> printBatchTypes) {
+    public PrintRequestDto batch(@PathVariable long printRequestId, @RequestBody List<EPrintBatchType> printBatchTypes) {
         log.debug("Batching print request");
         return printRequestService.processBatching(printRequestId, printBatchTypes);
     }

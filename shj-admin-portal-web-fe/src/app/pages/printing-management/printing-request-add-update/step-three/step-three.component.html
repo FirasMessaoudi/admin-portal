@@ -25,9 +25,11 @@
     <ng-template [ngIf]="true" *ngFor="let requestBatch of printRequest?.printRequestBatches, let i=index">
       <th style="font-size: larger">
         {{'printing-management.batch_no' | translate}} {{i + 1}} {{'printing-management.contains' | translate}} {{requestBatch?.printRequestBatchCards?.length}} {{'printing-management.cards' | translate}}
-        <span class="badge m-2 text-muted" *ngIf="requestBatch.batchTypeKey">
-          {{currentLanguage.startsWith("en") ? getBatchType(requestBatch.batchTypeKey).labelEn : getBatchType(requestBatch.batchTypeKey).labelAr}}:
-          {{requestBatch.batchTypeValue ? lookupService().localizedLabel(countries, requestBatch.batchTypeValue) : ''}}
+        <span class="badge m-2 text-muted"
+              *ngFor="let batch of requestBatch.batchTypeCode.split(','); let i = index; let lastBatch = last;">
+          {{currentLanguage.startsWith("en") ? getBatchType(requestBatch.batchTypeCode.split(',')[i]).labelEn : getBatchType(requestBatch.batchTypeCode.split(',')[i]).labelAr}}:
+          {{requestBatch.batchTypeCode.split(',')[i] === batchType.NATIONALITY ? lookupService().localizedLabel(countries, requestBatch.batchTypeValue.split(',')[i]) : requestBatch.batchTypeValue.split(',')[i]}}
+          <span *ngIf="!lastBatch">,</span>
         </span>
       </th>
       <tbody>
