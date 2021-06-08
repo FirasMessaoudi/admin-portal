@@ -26,7 +26,7 @@
         <span class="form-control-plaintext ">{{printRequest?.creationDate | dateFormat}}</span>
       </div>
       <div *ngIf="printRequest?.statusCode !== printRequestStatus.NEW" class="form-group col mb-lg-0">
-        <label class="col-form-label">{{'printing-management.confirm_printing_date' | translate}}</label>
+        <label class="col-form-label">{{'printing-management.request_confirmation_date' | translate}}</label>
         <span class="form-control-plaintext ">{{printRequest?.updateDate | dateFormat}}</span>
       </div>
       <div class="form-group col mb-lg-0">
