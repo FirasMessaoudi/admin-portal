@@ -64,19 +64,19 @@ export class CardListComponent implements OnInit {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
-      ritualSeason: [null],
-      ritualType: [null],
-      hamlah: [null],
-      motawef: [null],
+      ritualSeason: {value: null, disabled: true},
+      ritualType: {value: null, disabled: true},
+      hamlah: {value: null, disabled: true},
+      motawef: {value: null, disabled: true},
       uin: [null],
       idNumber: [null],
-      cardNumber: [null],
-      cardStatus: [null],
-      applicantIdStatus: [null],
-      gender: [null],
-      nationality: [null],
-      passportNumber: [null],
-      tafweejNumber: [null],
+      cardNumber: {value: null, disabled: true},
+      cardStatus: {value: null, disabled: true},
+      applicantIdStatus: {value: null, disabled: true},
+      gender: {value: null, disabled: true},
+      nationality: {value: null, disabled: true},
+      passportNumber: {value: null, disabled: true},
+      tafweejNumber: {value: null, disabled: true},
       idType: [null]
     });
   }

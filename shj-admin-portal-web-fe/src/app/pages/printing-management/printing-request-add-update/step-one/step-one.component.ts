@@ -67,8 +67,8 @@ export class StepOneComponent implements OnInit {
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
       idNumber: [null],
-      hamlahNumber: [null],
-      motawefNumber: [null],
+      hamlahNumber: {value: null, disabled: true},
+      motawefNumber: {value: null, disabled: true},
       passportNumber: [null],
       nationality: [null]
     });
@@ -156,6 +156,7 @@ export class StepOneComponent implements OnInit {
 
   undoAddCard(cardId: number) {
     this.addedCards.splice(this.addedCards.findIndex(card => card.id === cardId), 1);
+    if (this.addedCards.length % this.addedCardsPageSize === 0) this.addedCardsCurrentPage--;
   }
 
   isChecked(card) {
