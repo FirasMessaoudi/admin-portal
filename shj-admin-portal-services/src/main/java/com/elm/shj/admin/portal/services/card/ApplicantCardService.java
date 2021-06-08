@@ -46,6 +46,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * Find applicants cards with status ready to print and search parameters.
      * @param excludedCardsIds
      * @param pageable
+     * @param uin
      * @param idNumber
      * @param hamlahNumber
      * @param motawefNumber
@@ -53,11 +54,12 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @param nationalityCode
      * @return the list of ready to print applicants cards
      */
-    public Page<ApplicantCardDto> findReadyToPrint(List<Long> excludedCardsIds, Pageable pageable, Long idNumber,
+    public Page<ApplicantCardDto> findReadyToPrint(List<Long> excludedCardsIds, Pageable pageable, String uin, Long idNumber,
                                                    String hamlahNumber, String motawefNumber, String passportNumber,
                                                    String nationalityCode) {
+        log.debug("Find ready to print cards...");
         return mapPage(applicantCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(),
-                EPrintRequestStatus.NEW.name(),  idNumber, passportNumber, nationalityCode,
+                EPrintRequestStatus.NEW.name(), uin, idNumber, passportNumber, nationalityCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
     }
 }

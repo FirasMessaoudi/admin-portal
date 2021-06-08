@@ -20,14 +20,14 @@ import java.util.List;
  */
 public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard, Long> {
 
-    @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a WHERE card.id " +
+    @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi WHERE card.id " +
             "NOT IN (SELECT card2.id FROM JpaApplicantCard card2 LEFT JOIN card2.printRequestCards prc LEFT JOIN prc.printRequest pr " +
             "WHERE pr.statusCode <> :printRequestStatus or card2.statusCode <> :cardStatus) AND card.id NOT IN :excludedCardsIds "+
-            "AND (a.idNumber = :idNumber OR :idNumber IS NULL) " +
-            "AND (a.passportNumber LIKE :passportNumber OR :passportNumber IS NULL) " +
+            "AND (adi.uin LIKE %:uin% OR :uin IS NULL) AND (a.idNumber = :idNumber OR :idNumber IS NULL) " +
+            "AND (a.passportNumber LIKE %:passportNumber% OR :passportNumber IS NULL) " +
             "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
     Page<JpaApplicantCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus,
-                                             @Param("idNumber") Long idNumber, @Param("passportNumber") String passportNumber,
-                                             @Param("nationalityCode") String nationalityCode,
+                                             @Param("uin") String uin, @Param("idNumber") Long idNumber,
+                                             @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode,
                                              @Param("excludedCardsIds") List<Long> excludedCardsIds, Pageable pageable);
 }
