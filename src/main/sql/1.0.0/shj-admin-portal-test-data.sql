@@ -80,7 +80,7 @@ VALUES (10, 'M', 'KW', 2414874109, '286031405648', '000276654', convert(date, '0
 INSERT INTO shj_portal.sha_applicant (id, gender, nationality_code, id_number, id_number_original, passport_number,
                                       date_of_birth_gregorian, date_of_birth_hijri, full_name_ar, full_name_en,
                                       full_name_origin, marital_status_code, photo, request_id, status)
-VALUES (11, 'M', 'IR', 2719262501, '00690123', 'A7121953', convert(date, '09/01/1960', 103), 13790710,
+VALUES (11, 'M', 'IQ', 2719262501, '00690123', 'A7121953', convert(date, '09/01/1960', 103), 13790710,
         N'أحمد محمد العنزي', 'Ahmed Mohammed Al-Anizi',  N'أحمد محمد العنزي', 'DIVORCED', NULL, 1, 1);
 
 INSERT INTO shj_portal.sha_applicant (id, gender, nationality_code, id_number, id_number_original, passport_number,

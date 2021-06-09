@@ -28,6 +28,7 @@ export class StepOneComponent implements OnInit {
   nationalities: CountryLookup[];
   localizedNationalities: Lookup[];
   searchForm: FormGroup;
+  isAllSelected = false;
 
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();
@@ -88,9 +89,9 @@ export class StepOneComponent implements OnInit {
   }
 
   search(pageNumber: number): void {
-    this.searchSubscription = this.cardService.searchCardsToPrint(this.addedCards.map(card => card.id), pageNumber,
-      this.searchForm.value.uin, this.searchForm.value.idNumber, this.searchForm.value.hamlahNumber,
-      this.searchForm.value.motawefNumber, this.searchForm.value.passportNumber, this.searchForm.value.nationality).subscribe(data => {
+    this.searchSubscription = this.cardService.searchCardsToPrint(this.searchForm.value.uin, this.searchForm.value.idNumber,
+      this.searchForm.value.hamlahNumber, this.searchForm.value.motawefNumber, this.searchForm.value.passportNumber,
+      this.searchForm.value.nationality, this.addedCards.map(card => card.id), pageNumber).subscribe(data => {
       this.cards = [];
       this.pageArray = [];
       this.page = data;
@@ -115,9 +116,32 @@ export class StepOneComponent implements OnInit {
     this.modalService.open(content, {size: 'xl'});
   }
 
-  selectAllCards(event) {
-    this.selectedCards = event.target.checked ?
-      [...new Set([...this.cards, ...this.selectedCards])] : []
+  selectCardsInThePage(event) {
+    if (event.target.checked) {
+      this.cards.forEach(card => {
+        if (!this.selectedCards.map(c => c.id).includes(card.id)) {
+          this.selectedCards.push(card);
+        }
+      })
+    } else {
+      this.cards.forEach(card => {
+        this.selectedCards.splice(this.selectedCards.findIndex(c => c.id === card.id), 1);
+      })
+    }
+  }
+
+  selectAllCards() {
+    this.isAllSelected = true;
+    this.searchSubscription = this.cardService.searchAllCardsToPrint(this.searchForm.value.uin, this.searchForm.value.idNumber,
+      this.searchForm.value.hamlahNumber, this.searchForm.value.motawefNumber, this.searchForm.value.passportNumber,
+      this.searchForm.value.nationality, this.addedCards.map(card => card.id)).subscribe(data => {
+      this.selectedCards = data;
+    });
+  }
+
+  deselectAllCards() {
+    this.isAllSelected = false;
+    this.selectedCards = [];
   }
 
   selectOneCard(event, id) {

@@ -36,30 +36,39 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * Find all applicants cards.
      *
      * @param pageable the current page information
-     * @return the list of applicants cards
+     * @return the list of applicants' cards
      */
     public Page<ApplicantCardDto> findAll(Pageable pageable) {
         return mapPage(getRepository().findAll(pageable));
     }
 
     /**
-     * Find applicants cards with status ready to print and search parameters.
-     * @param excludedCardsIds
-     * @param pageable
+     * Find printing cards with search parameters.
+     *
      * @param uin
      * @param idNumber
      * @param hamlahNumber
      * @param motawefNumber
      * @param passportNumber
      * @param nationalityCode
-     * @return the list of ready to print applicants cards
+     * @param excludedCardsIds
+     * @param pageable         the current page information
+     * @return the list of printing cards
      */
-    public Page<ApplicantCardDto> findReadyToPrint(List<Long> excludedCardsIds, Pageable pageable, String uin, Long idNumber,
-                                                   String hamlahNumber, String motawefNumber, String passportNumber,
-                                                   String nationalityCode) {
-        log.debug("Find ready to print cards...");
+    public Page<ApplicantCardDto> findPrintingCards(String uin, Long idNumber, String hamlahNumber, String motawefNumber,
+                                                    String passportNumber, String nationalityCode, List<Long> excludedCardsIds,
+                                                    Pageable pageable) {
+        log.debug("Find printing cards...");
         return mapPage(applicantCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(),
                 EPrintRequestStatus.NEW.name(), uin, idNumber, passportNumber, nationalityCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
+    }
+
+    public List<ApplicantCardDto> findAllPrintingCards(String uin, Long idNumber, String hamlahNumber, String motawefNumber,
+                                                       String passportNumber, String nationalityCode, List<Long> excludedCardsIds) {
+        log.debug("Find all printing cards...");
+        return mapList(applicantCardRepository.findAllPrintingCards(ECardStatus.READY_TO_PRINT.name(),
+                EPrintRequestStatus.NEW.name(), uin, idNumber, passportNumber, nationalityCode,
+                excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds));
     }
 }

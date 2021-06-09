@@ -19,15 +19,26 @@ export class CardService {
     return this.http.get<any>("/core/api/cards/list", {params: params});
   }
 
-  searchCardsToPrint(excludedCardsIds, pageNumber: any, uin: any, idNumber: number, hamlahNumber: any,
-                     motawefNumber: any,passportNumber: any, nationality: any): Observable<any> {
+  searchCardsToPrint(uin: any, idNumber: number, hamlahNumber: any, motawefNumber: any, passportNumber: any,
+                     nationality: any, excludedCardsIds, pageNumber: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
     if (excludedCardsIds.length > 0) {
       params = params.append('excludedCardsIds', excludedCardsIds);
     }
-    return this.http.get('/core/api/cards/list/ready-to-print/' + (uin? uin: -1) + '/' + (idNumber? idNumber: -1) + '/' +
-      (hamlahNumber? hamlahNumber: -1) + '/' + (motawefNumber? motawefNumber: -1) + '/' +
-      (passportNumber? passportNumber: -1) + '/' + (nationality? nationality: -1), {params: params});
+    return this.http.get('/core/api/cards/list/ready-to-print/' + (uin ? uin : -1) + '/' + (idNumber ? idNumber : -1) + '/' +
+      (hamlahNumber ? hamlahNumber : -1) + '/' + (motawefNumber ? motawefNumber : -1) + '/' +
+      (passportNumber ? passportNumber : -1) + '/' + (nationality ? nationality : -1), {params: params});
+  }
+
+  searchAllCardsToPrint(uin: any, idNumber: number, hamlahNumber: any, motawefNumber: any, passportNumber: any,
+                        nationality: any, excludedCardsIds): Observable<any> {
+    let params = new HttpParams();
+    if (excludedCardsIds.length > 0) {
+      params = params.append('excludedCardsIds', excludedCardsIds);
+    }
+    return this.http.get('/core/api/cards/list/ready-to-print/all/' + (uin ? uin : -1) + '/' + (idNumber ? idNumber : -1) + '/' +
+      (hamlahNumber ? hamlahNumber : -1) + '/' + (motawefNumber ? motawefNumber : -1) + '/' +
+      (passportNumber ? passportNumber : -1) + '/' + (nationality ? nationality : -1), {params: params});
   }
 
   /**
