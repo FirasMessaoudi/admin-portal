@@ -3,6 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -39,26 +41,21 @@ public class IdNumberValidator implements ConstraintValidator<IdNumber, Object> 
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
         // allow null
-        if (value == null) {
+        if (value == null || StringUtils.isBlank(value.toString())) {
             return true;
         } else if (!value.toString().matches(NUMBERS_ONLY_REGEX)) {
             // build new violation message and add it
             context.buildConstraintViolationWithTemplate(MSG_20003).addConstraintViolation();
             return false;
-        } else if (value.toString().length() < minLength || value.toString().length() > maxLength) {
-            // build new violation message and add it
-            context.buildConstraintViolationWithTemplate(MSG_20004).addConstraintViolation();
-            return false;
-        }
-        // ( length =10 and start with (1 or 2))
-        else if (ninOrIqama && value.toString().length() == 10 && !value.toString().matches(NIN_OR_IQAMA_REGEX)) {
-            // return default message
-            return false;
-        }
-        // (length 11 to 16 => GCC)
-        else {
-            return true;
-        }
+        } else // return default message
+            // (length 11 to 16 => GCC)
+            if (value.toString().length() < minLength || value.toString().length() > maxLength) {
+                // build new violation message and add it
+                context.buildConstraintViolationWithTemplate(MSG_20004).addConstraintViolation();
+                return false;
+            }
+            // ( length =10 and start with (1 or 2))
+            else return !ninOrIqama || value.toString().length() != 10 || value.toString().matches(NIN_OR_IQAMA_REGEX);
     }
 
 }

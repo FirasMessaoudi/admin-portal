@@ -64,7 +64,7 @@ public class DataProcessorService {
         // read first row
         int headerRowNum = sheet.getFirstRowNum();
         List<DataValidationResult> dataValidationResults = new ArrayList<>();
-        List<T> parsedItems = new ArrayList<>();
+        List<AbstractMap.SimpleEntry<Row, T>> parsedItems = new ArrayList<>();
         StreamSupport.stream(Spliterators.spliteratorUnknownSize(sheet.rowIterator(), Spliterator.ORDERED), false).forEach(row -> {
             // skip header row
             if (row.getRowNum() != headerRowNum && !isBlankRow(row)) {
@@ -77,7 +77,7 @@ public class DataProcessorService {
                     Set<ConstraintViolation<T>> violations = validator.validate(item);
                     if (violations.isEmpty()) {
                         // if no validation errors than add item
-                        parsedItems.add(item);
+                        parsedItems.add(new AbstractMap.SimpleEntry<>(row, item));
                     } else {
                         // otherwise add errors
                         violations.forEach(v -> dataValidationResults.add(DataValidationResult.builder().valid(false).cell(excelItemReader.findCellByPropertyName(row, v.getPropertyPath().toString())).errorMessages(Collections.singletonList(v.getMessage())).valid(false).build()));
@@ -182,7 +182,7 @@ public class DataProcessorService {
 
         CreationHelper factory = wb.getCreationHelper();
         String commentText = messageSource.getMessage(comment, null, Locale.forLanguageTag("en")) + "\n" + messageSource.getMessage(comment, null, Locale.forLanguageTag("ar"));
-        if(cell.getCellComment() != null && cell.getCellComment().getString() != null) {
+        if (cell.getCellComment() != null && cell.getCellComment().getString() != null) {
             cell.getCellComment().setString(factory.createRichTextString(commentText + "\n--------------------\n" + cell.getCellComment().getString().getString()));
         } else {
             Drawing<?> drawing = sheet.createDrawingPatriarch();

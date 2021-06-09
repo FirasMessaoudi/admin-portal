@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
+import com.elm.shj.admin.portal.services.data.validators.WithApplicant;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.Date;
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
+@WithApplicant
 @NoArgsConstructor
 @Data
 public class ApplicantHealthDiseaseDto implements Serializable {
@@ -31,11 +33,11 @@ public class ApplicantHealthDiseaseDto implements Serializable {
     private ApplicantHealthDto applicantHealth;
 
     @OnlyCharacters(min = 3, max = 50, arabic = true)
-    @CellIndex(index = 4)
+    @CellIndex(index = 5)
     private String labelAr;
 
     @OnlyCharacters(min = 3, max = 50, allowEmpty = false)
-    @CellIndex(index = 5)
+    @CellIndex(index = 4)
     private String labelEn;
 
     private Date creationDate;

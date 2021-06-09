@@ -22,7 +22,7 @@ public interface DataRequestRepository extends JpaRepository<JpaDataRequest, Lon
     void updateStatus(@Param("dataRequestId") long dataRequestId, @Param("dataRequestStatusId") long dataRequestStatusId);
 
     @Modifying
-    @Query("update JpaDataRequest dr set dr.status.id = :dataRequestStatusId, dr.errorFilePath = :errorFilePath, dr.updateDate = CURRENT_TIMESTAMP where dr.id = :dataRequestId")
-    void updateProcessingStatus(@Param("dataRequestId") long dataRequestId, @Param("dataRequestStatusId") long dataRequestStatusId, @Param("errorFilePath") String errorFilePath);
+    @Query("update JpaDataRequest dr set dr.status.id = :dataRequestStatusId, dr.errorFilePath = :errorFilePath, dr.errorCount = :errorCount, dr.updateDate = CURRENT_TIMESTAMP where dr.id = :dataRequestId")
+    void updateProcessingStatus(@Param("dataRequestId") long dataRequestId, @Param("dataRequestStatusId") long dataRequestStatusId, @Param("errorFilePath") String errorFilePath, @Param("errorCount") long errorCount);
 
 }

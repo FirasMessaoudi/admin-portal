@@ -51,7 +51,7 @@ public class JpaApplicant implements Serializable {
     private Date dateOfBirthGregorian;
 
     @Column(name = "date_of_birth_hijri")
-    private long dateOfBirthHijri;
+    private Long dateOfBirthHijri;
 
     @Column(name = "full_name_ar")
     private String fullNameAr;
@@ -78,7 +78,7 @@ public class JpaApplicant implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "data_request_record_id")
-    private JpaDataRequestRecord dataRequestRecordId;
+    private JpaDataRequestRecord dataRequestRecord;
 
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantDigitalId> digitalIds;
@@ -95,9 +95,8 @@ public class JpaApplicant implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantContact> contacts;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
-    private List<JpaApplicantHealth> healths;
+    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
+    private JpaApplicantHealth applicantHealth;
 
     private long status;
 

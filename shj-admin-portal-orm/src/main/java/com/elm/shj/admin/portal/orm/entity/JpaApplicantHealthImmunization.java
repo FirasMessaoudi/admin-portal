@@ -30,7 +30,7 @@ public class JpaApplicantHealthImmunization implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "applicant_health_id")
     private JpaApplicantHealth applicantHealth;
 
@@ -50,7 +50,7 @@ public class JpaApplicantHealthImmunization implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "data_request_record_id")
-    private JpaDataRequestRecord dataRequestRecordId;
+    private JpaDataRequestRecord dataRequestRecord;
 
     @PrePersist
     public void prePersist() {

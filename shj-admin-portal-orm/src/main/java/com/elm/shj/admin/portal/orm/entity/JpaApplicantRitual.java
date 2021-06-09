@@ -86,7 +86,7 @@ public class JpaApplicantRitual implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "data_request_record_id")
-    private JpaDataRequestRecord dataRequestRecordId;
+    private JpaDataRequestRecord dataRequestRecord;
 
     @PrePersist
     public void prePersist() {

@@ -33,7 +33,7 @@ public class JpaApplicantHealth implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @ManyToOne
+    @OneToOne
     private JpaApplicant applicant;
 
     @Column(name ="blood_type")
@@ -53,7 +53,7 @@ public class JpaApplicantHealth implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "data_request_record_id")
-    private JpaDataRequestRecord dataRequestRecordId;
+    private JpaDataRequestRecord dataRequestRecord;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantHealth")
     @LazyCollection(LazyCollectionOption.FALSE)

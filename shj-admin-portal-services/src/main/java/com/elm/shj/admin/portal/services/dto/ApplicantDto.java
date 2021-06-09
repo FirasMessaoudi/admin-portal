@@ -22,6 +22,7 @@ import java.util.List;
  * @author ahmad flaifel
  * @since 1.0.0
  */
+@UniqueApplicant
 @FieldDependency.List({
         @FieldDependency(first = "idNumber", second = "passportNumber"),
         @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri")
@@ -62,7 +63,7 @@ public class ApplicantDto implements Serializable {
 
     @HijriDate(minOffset = -140, maxOffset = -11)
     @CellIndex(index = 3)
-    private long dateOfBirthHijri;
+    private Long dateOfBirthHijri;
 
     @OnlyCharacters(min = 6, max = 150, arabic = true)
     @CellIndex(index = 5)
@@ -101,7 +102,7 @@ public class ApplicantDto implements Serializable {
     @NestedCells
     @Valid
     private List<ApplicantContactDto> contacts;
-    private List<ApplicantHealthDto> healths;
+    private ApplicantHealthDto applicantHealth;
     private long status;
     private Date creationDate;
     private Date updateDate;

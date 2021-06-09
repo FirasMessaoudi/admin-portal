@@ -42,6 +42,12 @@ public class HijriDateValidator implements ConstraintValidator<HijriDate, Object
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
         Long dateValue = (Long) value;
+
+        // allow empty entries
+        if (value == null || StringUtils.isBlank(value.toString())) {
+            return true;
+        }
+
         HijrahDate hijriValue = null;
         if (StringUtils.length("" + dateValue) == 8) {
             int year = Integer.parseInt(dateValue.toString().substring(0, 4));
@@ -57,7 +63,7 @@ public class HijriDateValidator implements ConstraintValidator<HijriDate, Object
             }
         }
 
-        if (dateValue == null || hijriValue == null) {
+        if (hijriValue == null) {
             // return default message;
             return false;
         } else if (hijriValue.isBefore(min) || hijriValue.isAfter(max)) {

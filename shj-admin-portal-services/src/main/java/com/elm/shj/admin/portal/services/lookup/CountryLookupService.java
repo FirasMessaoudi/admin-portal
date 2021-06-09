@@ -22,13 +22,13 @@ public class CountryLookupService extends GenericService<JpaCountryLookup, Count
 
 
     /**
-     * Checks if a country exists by its phone prefix
+     * Checks if a country exists by its code
      *
-     * @param countryPhonePrefix the phone prefix of the country to look for
+     * @param countryPhonePrefix the code of the country to look for
      * @return if the country is found
      */
-    public boolean existsByPhonePrefix(String countryPhonePrefix) {
-        return ((CountryLookupRepository) getRepository()).existsByCountryPhonePrefix(countryPhonePrefix);
+    public boolean existsByCode(String countryPhonePrefix) {
+        return ((CountryLookupRepository) getRepository()).existsByCode(countryPhonePrefix);
     }
 
 }

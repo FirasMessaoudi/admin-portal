@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
+import com.elm.shj.admin.portal.services.data.validators.WithApplicant;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
+@WithApplicant
 @NoArgsConstructor
 @Data
 public class ApplicantHealthDto implements Serializable {
