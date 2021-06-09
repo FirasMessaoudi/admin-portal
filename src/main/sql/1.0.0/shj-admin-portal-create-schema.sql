@@ -283,17 +283,74 @@ create table shj_portal.sha_country_lk
 );
 GO
 
-if not exists (select * from sys.tables where name = 'sha_relative_relationship_lk')
-create table shj_portal.sha_relative_relationship_lk
+if not exists (select * from sys.tables where name = 'sha_data_segment')
+create table shj_portal.sha_data_segment
+(
+    id                  int PRIMARY KEY NOT NULL identity (1,1),
+    template_file_name  NVARCHAR(100)    NOT NULL,
+    label_ar            NVARCHAR(100)    NOT NULL,
+    label_en            VARCHAR(100)     NOT NULL,
+    creation_date       smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date         smalldatetime   NULL,
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_decision_rule')
+create table shj_portal.sha_decision_rule
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
-    code VARCHAR(20) NOT NULL,
-    lang VARCHAR(45) NOT NULL,
-    label NVARCHAR(50) NOT NULL,
-    data_request_record_id int NULL,
+    dmn NVARCHAR(MAX) NOT NULL,
+    data_segment_id INT NOT NULL,
+    label_ar NVARCHAR(50) NOT NULL,
+    label_en VARCHAR(50) NOT NULL,
+    creation_date smalldatetime not null default current_timestamp,
+    update_date smalldatetime null,
+    CONSTRAINT fk_decision_rule_segment FOREIGN KEY (data_segment_id) REFERENCES shj_portal.sha_data_segment (id)
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_data_request_status_lk')
+create table shj_portal.sha_data_request_status_lk
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    label_ar NVARCHAR(50) NOT NULL,
+    label_en VARCHAR(50) NOT NULL,
+    creation_date smalldatetime not null default current_timestamp
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_data_request')
+create table shj_portal.sha_data_request
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    reference_number NVARCHAR(48) NOT NULL,
+    channel NVARCHAR(20) NOT NULL,
+    data_segment_id INT NOT NULL,
+    item_count INT NULL,
+    error_count INT NULL DEFAULT 0,
+    original_source_path NVARCHAR(256) NOT NULL,
+    error_file_path VARCHAR(256) NULL,
+    status_id INT NOT NULL,
+    creation_date smalldatetime not null default current_timestamp,
+    update_date smalldatetime null,
+    CONSTRAINT fk_data_request_segment FOREIGN KEY (data_segment_id) REFERENCES shj_portal.sha_data_segment (id),
+    CONSTRAINT fk_data_request_status_lk FOREIGN KEY (status_id) REFERENCES shj_portal.sha_data_request_status_lk (id)
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_data_request_record')
+create table shj_portal.sha_data_request_record
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    create_data_request_id int NULL,
+    last_update_data_request_id int NULL,
+    create_data_request_row_num int NULL,
+    last_update_data_request_row_num int NULL,
+    item_id int NOT NULL,
+    creation_date smalldatetime not null default current_timestamp,
     update_date smalldatetime NULL,
-    CONSTRAINT fk_applicant_relative_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shj_portal.sha_data_request_record (id),
-    CONSTRAINT relative_relationship_lk_unique unique (code ASC, lang ASC)
+    CONSTRAINT fk_data_record_data_request_create FOREIGN KEY (create_data_request_id) REFERENCES shj_portal.sha_data_request (id),
+    CONSTRAINT fk_data_record_data_request_update FOREIGN KEY (last_update_data_request_id) REFERENCES shj_portal.sha_data_request (id)
 );
 GO
 
@@ -331,9 +388,11 @@ create table shj_portal.sha_applicant_relative
     relationship_code VARCHAR(20) NOT NULL,
     applicant_id int NOT NULL,
     relative_applicant_id int NOT NULL,
+    data_request_record_id int NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_applicant_relative_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id),
-    CONSTRAINT fk_applicant_relative_applicant_self FOREIGN KEY (relative_applicant_id) REFERENCES shj_portal.sha_applicant (id)
+    CONSTRAINT fk_applicant_relative_applicant_self FOREIGN KEY (relative_applicant_id) REFERENCES shj_portal.sha_applicant (id),
+    CONSTRAINT fk_applicant_relative_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shj_portal.sha_data_request_record (id)
 );
 GO
 
@@ -529,74 +588,17 @@ create table shj_portal.sha_applicant_health_disease
 );
 GO
 
-if not exists (select * from sys.tables where name = 'sha_data_segment')
-create table shj_portal.sha_data_segment
-(
-    id                  int PRIMARY KEY NOT NULL identity (1,1),
-    template_file_name  NVARCHAR(100)    NOT NULL,
-    label_ar            NVARCHAR(100)    NOT NULL,
-    label_en            VARCHAR(100)     NOT NULL,
-    creation_date       smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    update_date         smalldatetime   NULL,
-);
-GO
-
-if not exists (select * from sys.tables where name = 'sha_decision_rule')
-create table shj_portal.sha_decision_rule
+if not exists (select * from sys.tables where name = 'sha_relative_relationship_lk')
+create table shj_portal.sha_relative_relationship_lk
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
-    dmn NVARCHAR(MAX) NOT NULL,
-    data_segment_id INT NOT NULL,
-    label_ar NVARCHAR(50) NOT NULL,
-    label_en VARCHAR(50) NOT NULL,
-    creation_date smalldatetime not null default current_timestamp,
-    update_date smalldatetime null,
-    CONSTRAINT fk_decision_rule_segment FOREIGN KEY (data_segment_id) REFERENCES shj_portal.sha_data_segment (id)
-);
-GO
-
-if not exists (select * from sys.tables where name = 'sha_data_request_status_lk')
-create table shj_portal.sha_data_request_status_lk
-(
-    id int PRIMARY KEY NOT NULL identity(1,1),
-    label_ar NVARCHAR(50) NOT NULL,
-    label_en VARCHAR(50) NOT NULL,
-    creation_date smalldatetime not null default current_timestamp
-);
-GO
-
-if not exists (select * from sys.tables where name = 'sha_data_request')
-create table shj_portal.sha_data_request
-(
-    id int PRIMARY KEY NOT NULL identity(1,1),
-    reference_number NVARCHAR(48) NOT NULL,
-    channel NVARCHAR(20) NOT NULL,
-    data_segment_id INT NOT NULL,
-    item_count INT NULL,
-    error_count INT NULL DEFAULT 0,
-    original_source_path NVARCHAR(256) NOT NULL,
-    error_file_path VARCHAR(256) NULL,
-    status_id INT NOT NULL,
-    creation_date smalldatetime not null default current_timestamp,
-    update_date smalldatetime null,
-    CONSTRAINT fk_data_request_segment FOREIGN KEY (data_segment_id) REFERENCES shj_portal.sha_data_segment (id),
-    CONSTRAINT fk_data_request_status_lk FOREIGN KEY (status_id) REFERENCES shj_portal.sha_data_request_status_lk (id)
-);
-GO
-
-if not exists (select * from sys.tables where name = 'sha_data_request_record')
-create table shj_portal.sha_data_request_record
-(
-    id int PRIMARY KEY NOT NULL identity(1,1),
-    create_data_request_id int NULL,
-    last_update_data_request_id int NULL,
-    create_data_request_row_num int NULL,
-    last_update_data_request_row_num int NULL,
-    item_id int NOT NULL,
-    creation_date smalldatetime not null default current_timestamp,
+    code VARCHAR(20) NOT NULL,
+    lang VARCHAR(45) NOT NULL,
+    label NVARCHAR(50) NOT NULL,
+    data_request_record_id int NULL,
     update_date smalldatetime NULL,
-    CONSTRAINT fk_data_record_data_request_create FOREIGN KEY (create_data_request_id) REFERENCES shj_portal.sha_data_request (id),
-    CONSTRAINT fk_data_record_data_request_update FOREIGN KEY (last_update_data_request_id) REFERENCES shj_portal.sha_data_request (id)
+    CONSTRAINT fk_applicant_relative_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shj_portal.sha_data_request_record (id),
+    CONSTRAINT relative_relationship_lk_unique unique (code ASC, lang ASC)
 );
 GO
 
