@@ -24,11 +24,11 @@ public class CountryLookupService extends GenericService<JpaCountryLookup, Count
     /**
      * Checks if a country exists by its code
      *
-     * @param countryPhonePrefix the code of the country to look for
+     * @param countryCode the code of the country to look for
      * @return if the country is found
      */
-    public boolean existsByCode(String countryPhonePrefix) {
-        return ((CountryLookupRepository) getRepository()).existsByCode(countryPhonePrefix);
+    public boolean existsByCode(String countryCode) {
+        return ((CountryLookupRepository) getRepository()).existsByCode(countryCode);
     }
 
 }
