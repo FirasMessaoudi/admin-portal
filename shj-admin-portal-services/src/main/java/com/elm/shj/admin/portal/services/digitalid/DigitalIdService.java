@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.services.digitalid;
 
 import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.CountryLookupDto;
+import com.elm.shj.admin.portal.services.lookup.CountryLookupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -16,7 +18,6 @@ import org.springframework.util.Assert;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -44,6 +45,7 @@ public class DigitalIdService {
             ));
 
     private final ApplicantDigitalIdRepository applicantDigitalIdRepository;
+    private final CountryLookupService countryLookupService;
 
     /**
      * Generates smart id for specific applicant
@@ -66,7 +68,9 @@ public class DigitalIdService {
         // generate gender digit
         String genderDigit = String.valueOf(GENDER_DIGITS.get(applicant.getGender().toUpperCase()).get(ThreadLocalRandom.current().nextInt(0, 4)));
         // generate country digits
-        String countryDigits = StringUtils.leftPad(StringUtils.right(applicant.getNationalityCode().replaceAll("-", "").replaceAll(",", ""), 3), 3, "0");
+        // retrieve country
+        CountryLookupDto countryLookupDto = countryLookupService.findByCode(applicant.getNationalityCode());
+        String countryDigits = StringUtils.leftPad(StringUtils.right(countryLookupDto.getCountryPhonePrefix().replaceAll("-", "").replaceAll(",", ""), 3), 3, "0");
         // generate date of birth digits
         String dobDigits = YEAR_FORMATTER.format(applicant.getDateOfBirthGregorian());
         // generate serial digits

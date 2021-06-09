@@ -186,7 +186,7 @@ public class ExcelItemReader<T> {
                 Cell cell = row.getCell(row.getFirstCellNum() + cellIndex);
                 Object value = readCellValue(cell, fieldToProcess);
                 fieldToProcess.set(target, value);
-                if (uniqueFields.containsKey(fieldToProcess)) {
+                if (value != null && StringUtils.isNotBlank(value.toString()) && uniqueFields.containsKey(fieldToProcess)) {
                     if (uniqueFields.get(fieldToProcess).contains(value)) {
                         dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.DUPLICATE_VALUE.getMessage())).valid(false).build());
                     } else {

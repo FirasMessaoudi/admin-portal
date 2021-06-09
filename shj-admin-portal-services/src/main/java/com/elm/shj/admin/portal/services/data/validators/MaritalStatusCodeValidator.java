@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.data.validators;
 
 import com.elm.shj.admin.portal.services.lookup.MaritalStatusLookupService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
@@ -25,7 +26,7 @@ public class MaritalStatusCodeValidator implements ConstraintValidator<MaritalSt
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value != null && maritalStatusLookupService.existsByCode(value.toString());
+        return value == null || StringUtils.isBlank(value.toString()) || maritalStatusLookupService.existsByCode(value.toString().toUpperCase());
     }
 
 }

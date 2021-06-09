@@ -7,6 +7,7 @@ import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,7 @@ public class ItemWriter {
     private final CycleAvoidingMappingContext mappingContext;
     private final ApplicationContext context;
     private final ApplicantService applicantService;
+    private final DigitalIdService digitalIdService;
     private final DataRequestRecordRepository dataRequestRecordRepository;
 
     /**
@@ -144,6 +146,8 @@ public class ItemWriter {
             if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
                 applicant.getContacts().forEach(sn -> sn.setApplicant(applicant));
             }
+            // generate digital id before save
+            applicant.setDigitalIds(Collections.singletonList(ApplicantDigitalIdDto.builder().applicant(applicant).uin(digitalIdService.generate(applicant)).build()));
         }
         // Special treatment for ApplicantHealthDto and special needs as they come in the same sheet
         if (item != null && item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {

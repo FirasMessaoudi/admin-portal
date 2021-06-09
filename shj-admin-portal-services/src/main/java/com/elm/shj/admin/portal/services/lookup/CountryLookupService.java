@@ -31,4 +31,13 @@ public class CountryLookupService extends GenericService<JpaCountryLookup, Count
         return ((CountryLookupRepository) getRepository()).existsByCode(countryCode);
     }
 
+    /**
+     * finds if a country by its code
+     *
+     * @param countryCode the code of the country to look for
+     * @return the found country
+     */
+    public CountryLookupDto findByCode(String countryCode) {
+        return getMapper().fromEntity(((CountryLookupRepository) getRepository()).findFirstByCode(countryCode), mappingContext);
+    }
 }
