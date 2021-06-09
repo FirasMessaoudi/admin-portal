@@ -3,18 +3,15 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.dcc.foundation.commons.validation.LatinCharacters;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.CountryCode;
+import com.elm.shj.admin.portal.services.data.validators.LanguageCodeList;
 import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -34,6 +31,8 @@ public class ApplicantContactDto implements Serializable {
     private long id;
     @JsonBackReference
     private ApplicantDto applicant;
+
+    @LanguageCodeList
     @CellIndex(index = 15)
     private String languageList;
 
@@ -44,11 +43,11 @@ public class ApplicantContactDto implements Serializable {
 
     @NullOrNotBlank(min = 5, max = 16)
     @CellIndex(index = 17)
-    private int localMobileNumber;
+    private Integer localMobileNumber;
 
     @NullOrNotBlank(min = 5, max = 30)
     @CellIndex(index = 18)
-    private long intlMobileNumber;
+    private Long intlMobileNumber;
 
     @CountryCode
     @CellIndex(index = 19)
@@ -68,11 +67,11 @@ public class ApplicantContactDto implements Serializable {
 
     @NullOrNotBlank(min = 5, max = 30)
     @CellIndex(index = 23)
-    private int buildingNumber;
+    private String buildingNumber;
 
     @NullOrNotBlank(min = 5, max = 30)
     @CellIndex(index = 24)
-    private int postalCode;
+    private String postalCode;
     private Date creationDate;
     private Date updateDate;
 }

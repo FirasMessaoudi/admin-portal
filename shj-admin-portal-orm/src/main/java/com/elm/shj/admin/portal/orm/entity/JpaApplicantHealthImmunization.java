@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -55,10 +56,16 @@ public class JpaApplicantHealthImmunization implements Serializable {
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
+        upperCase();
     }
 
     @PreUpdate
     public void preUpdate() {
         updateDate = new Date();
+        upperCase();
+    }
+
+    private void upperCase() {
+        immunizationCode = StringUtils.upperCase(immunizationCode);
     }
 }
