@@ -390,6 +390,7 @@ create table shj_portal.sha_applicant_relative
     relative_applicant_id int NOT NULL,
     data_request_record_id int NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date smalldatetime NULL,
     CONSTRAINT fk_applicant_relative_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id),
     CONSTRAINT fk_applicant_relative_applicant_self FOREIGN KEY (relative_applicant_id) REFERENCES shj_portal.sha_applicant (id),
     CONSTRAINT fk_applicant_relative_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shj_portal.sha_data_request_record (id)
