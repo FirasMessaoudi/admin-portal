@@ -70,7 +70,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     @Override
     public ApplicantDto save(ApplicantDto applicant) {
         // generate digital id before save
-        applicant.setDigitalIds(Collections.singletonList(ApplicantDigitalIdDto.builder().applicant(applicant).uin(digitalIdService.generate(applicant)).build()));
+        applicant.setDigitalIds(Collections.singletonList(ApplicantDigitalIdDto.builder().applicant(applicant).uin(digitalIdService.generate(applicant, null)).build()));
         // persist the record
         return super.save(applicant);
     }

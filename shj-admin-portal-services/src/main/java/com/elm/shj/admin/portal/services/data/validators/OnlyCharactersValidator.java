@@ -45,7 +45,7 @@ public class OnlyCharactersValidator implements ConstraintValidator<OnlyCharacte
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
         if (value == null || StringUtils.isBlank(value.toString())) {
             return this.allowEmpty;
-        } else if (value.toString().length() < min && value.toString().length() > max) {
+        } else if (value.toString().length() < min || value.toString().length() > max) {
             // build new violation message and add it
             context.buildConstraintViolationWithTemplate(MSG_20004).addConstraintViolation();
             return false;
