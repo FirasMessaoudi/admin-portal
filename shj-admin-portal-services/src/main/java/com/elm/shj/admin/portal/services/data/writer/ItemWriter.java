@@ -7,6 +7,7 @@ import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,7 @@ public class ItemWriter {
     private final CycleAvoidingMappingContext mappingContext;
     private final ApplicationContext context;
     private final ApplicantService applicantService;
+    private final DigitalIdService digitalIdService;
     private final DataRequestRecordRepository dataRequestRecordRepository;
 
     /**
@@ -82,7 +84,7 @@ public class ItemWriter {
     @SuppressWarnings({"rawtypes", "unchecked"})
     public <T, S> void write(List<AbstractMap.SimpleEntry<Row, T>> items, DataSegmentDto dataSegment, long dataRequestId) {
         // update applicant related attributes
-        items.forEach(this::updateNestedApplicantInfo);
+        items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
         // save all items and build data records
         List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
         List<S> savedItems = new ArrayList<>();
@@ -128,11 +130,10 @@ public class ItemWriter {
     /**
      * Updates related applicant properties
      *
-     * @param entry the entry to update
+     * @param item the item to update
      */
-    private <T> void updateNestedApplicantInfo(AbstractMap.SimpleEntry<Row, T> entry) {
-        T item = Objects.requireNonNull(entry).getValue();
-
+    @SuppressWarnings("unchecked")
+    private <T> void updateNestedApplicantInfo(T item, List<T> bulkList) {
         // Special treatment for ApplicantDto and contact info as they come in the same sheet
         if (item != null && item.getClass().isAssignableFrom(ApplicantDto.class)) {
             ApplicantDto applicant = (ApplicantDto) item;
@@ -144,6 +145,8 @@ public class ItemWriter {
             if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
                 applicant.getContacts().forEach(sn -> sn.setApplicant(applicant));
             }
+            // generate digital id before save
+            applicant.setDigitalIds(Collections.singletonList(ApplicantDigitalIdDto.builder().applicant(applicant).uin(digitalIdService.generate(applicant, (List<ApplicantDto>) bulkList)).build()));
         }
         // Special treatment for ApplicantHealthDto and special needs as they come in the same sheet
         if (item != null && item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {

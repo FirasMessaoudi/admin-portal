@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -39,10 +40,10 @@ public class JpaApplicantContact implements Serializable {
     private String email;
 
     @Column(name = "local_mobile_number")
-    private int localMobileNumber;
+    private Integer localMobileNumber;
 
     @Column(name = "intl_mobile_number")
-    private long intlMobileNumber;
+    private Long intlMobileNumber;
 
     @Column(name = "country_code")
     private String countryCode;
@@ -57,10 +58,10 @@ public class JpaApplicantContact implements Serializable {
     private String cityName;
 
     @Column(name = "building_number")
-    private int buildingNumber;
+    private String buildingNumber;
 
     @Column(name = "postal_code")
-    private int postalCode;
+    private String postalCode;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
@@ -68,13 +69,21 @@ public class JpaApplicantContact implements Serializable {
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 
+
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
+        upperCase();
     }
 
     @PreUpdate
     public void preUpdate() {
         updateDate = new Date();
+        upperCase();
+    }
+
+    private void upperCase() {
+        countryCode = StringUtils.upperCase(countryCode);
+        languageList = StringUtils.upperCase(languageList);
     }
 }

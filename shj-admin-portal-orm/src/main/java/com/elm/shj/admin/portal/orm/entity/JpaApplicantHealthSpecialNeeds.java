@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -40,8 +41,19 @@ public class JpaApplicantHealthSpecialNeeds implements Serializable {
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
+
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
+        upperCase();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        upperCase();
+    }
+
+    private void upperCase() {
+        specialNeedTypeCode = StringUtils.upperCase(specialNeedTypeCode);
     }
 }

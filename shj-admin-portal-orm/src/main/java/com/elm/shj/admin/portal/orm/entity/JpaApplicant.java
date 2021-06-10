@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -109,10 +110,20 @@ public class JpaApplicant implements Serializable {
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
+        upperCase();
     }
 
     @PreUpdate
     public void preUpdate() {
         updateDate = new Date();
+        upperCase();
+    }
+
+    private void upperCase() {
+        maritalStatusCode = StringUtils.upperCase(maritalStatusCode);
+        gender = StringUtils.upperCase(gender);
+        nationalityCode = StringUtils.upperCase(nationalityCode);
+        educationLevelCode = StringUtils.upperCase(educationLevelCode);
+        educationLevelCode = StringUtils.upperCase(educationLevelCode);
     }
 }

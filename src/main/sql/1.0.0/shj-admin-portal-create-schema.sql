@@ -400,20 +400,20 @@ GO
 if not exists (select * from sys.tables where name = 'sha_applicant_contact')
 create table shj_portal.sha_applicant_contact
 (
-    id int PRIMARY KEY NOT NULL identity(1,1),
-    applicant_id int NOT NULL,
-    language_list NVARCHAR(50) NULL,
-    email VARCHAR(50) NULL,
-    local_mobile_number INT NULL,
-    intl_mobile_number BIGINT NULL,
-    country_code VARCHAR(20) NOT NULL,
-    street_name NVARCHAR(100) NULL,
-    district_name NVARCHAR(50) NULL,
-    city_name NVARCHAR(50) NULL,
-    building_number INT NULL,
-    postal_code INT NULL,
-    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    update_date smalldatetime NULL,
+    id                  int PRIMARY KEY NOT NULL identity (1,1),
+    applicant_id        int             NOT NULL,
+    language_list       NVARCHAR(50)    NULL,
+    email               VARCHAR(50)     NULL,
+    local_mobile_number INT             NULL,
+    intl_mobile_number  BIGINT          NULL,
+    country_code        VARCHAR(20)     NOT NULL,
+    street_name         NVARCHAR(100)   NULL,
+    district_name       NVARCHAR(50)    NULL,
+    city_name           NVARCHAR(50)    NULL,
+    building_number     VARCHAR(30)     NULL,
+    postal_code         VARCHAR(30)     NULL,
+    creation_date       smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date         smalldatetime   NULL,
     CONSTRAINT fk_applicant_contact_applicant FOREIGN KEY (applicant_id) REFERENCES shj_portal.sha_applicant (id)
 );
 GO

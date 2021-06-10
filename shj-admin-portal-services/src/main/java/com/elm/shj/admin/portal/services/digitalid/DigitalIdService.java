@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.services.digitalid;
 
 import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.CountryLookupDto;
+import com.elm.shj.admin.portal.services.lookup.CountryLookupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -16,11 +18,12 @@ import org.springframework.util.Assert;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalLong;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import static java.util.stream.Collectors.*;
 
@@ -44,6 +47,7 @@ public class DigitalIdService {
             ));
 
     private final ApplicantDigitalIdRepository applicantDigitalIdRepository;
+    private final CountryLookupService countryLookupService;
 
     /**
      * Generates smart id for specific applicant
@@ -55,10 +59,11 @@ public class DigitalIdService {
      * ==================================================================================================================================
      * </pre>
      *
-     * @param applicant the applicant to generate smart id for
+     * @param applicant      the applicant to generate smart id for
+     * @param bulkApplicants the applicant list in case of bulk creation
      * @return the generated smart id
      */
-    public String generate(ApplicantDto applicant) {
+    public String generate(ApplicantDto applicant, List<ApplicantDto> bulkApplicants) {
         // check inputs
         Assert.isTrue(Arrays.asList("M", "F").contains(applicant.getGender().toUpperCase()), "Invalid Applicant Gender!");
         Assert.notNull(applicant.getDateOfBirthGregorian(), "Invalid Applicant Date of Birth!");
@@ -66,14 +71,25 @@ public class DigitalIdService {
         // generate gender digit
         String genderDigit = String.valueOf(GENDER_DIGITS.get(applicant.getGender().toUpperCase()).get(ThreadLocalRandom.current().nextInt(0, 4)));
         // generate country digits
-        String countryDigits = StringUtils.leftPad(StringUtils.right(applicant.getNationalityCode().replaceAll("-", "").replaceAll(",", ""), 3), 3, "0");
+        // retrieve country
+        CountryLookupDto countryLookupDto = countryLookupService.findByCode(applicant.getNationalityCode());
+        String countryDigits = StringUtils.leftPad(StringUtils.right(countryLookupDto.getCountryPhonePrefix().replaceAll("-", "").replaceAll(",", ""), 3), 3, "0");
         // generate date of birth digits
         String dobDigits = YEAR_FORMATTER.format(applicant.getDateOfBirthGregorian());
         // generate serial digits
-        List<String> latestSerialList = applicantDigitalIdRepository.fetchUinByUinLike(genderDigit + countryDigits + dobDigits + "%");
-        String serialDigits = StringUtils.leftPad(CollectionUtils.isEmpty(latestSerialList) ? "1" : String.valueOf(Long.parseLong(latestSerialList.get(0)) + 1), 7, "0");
+        String uinPrefix = genderDigit + countryDigits + dobDigits;
+        List<String> latestSerialList = applicantDigitalIdRepository.fetchUinByUinLike(uinPrefix + "%");
+        long nextSequence = CollectionUtils.isEmpty(latestSerialList) ? 1 : Long.parseLong(latestSerialList.get(0)) + 1;
+        if (CollectionUtils.isNotEmpty(bulkApplicants)) {
+            OptionalLong maxBulkUin = bulkApplicants.stream()
+                    .filter(a -> CollectionUtils.isNotEmpty(a.getDigitalIds()) && a.getDigitalIds().get(0).getUin().startsWith(uinPrefix))
+                    .flatMapToLong(a -> LongStream.of(Long.parseLong(a.getDigitalIds().get(0).getUin().substring(6, 13))))
+                    .max();
+            nextSequence = Math.max(nextSequence, (maxBulkUin.orElse(0) + 1));
+        }
+        String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 7, "0");
         // generate checksum digit
-        String partialSmartId = genderDigit + countryDigits + dobDigits + serialDigits;
+        String partialSmartId = uinPrefix + serialDigits;
         String checkDigit = calculateCheckDigit(partialSmartId);
         // return smart id
         return partialSmartId + checkDigit;

@@ -18,7 +18,7 @@ public class IdNumberValidator implements ConstraintValidator<IdNumber, Object> 
 
     private static final String MSG_20003 = "validation.data.constraints.msg.20003";
     private static final String MSG_20004 = "validation.data.constraints.msg.20004";
-    private static final String NUMBERS_ONLY_REGEX = "^\\d*$";
+    private static final String NUMBERS_ONLY_REGEX = "^[0-9_-]*$";
     private static final String NIN_OR_IQAMA_REGEX = "[1-2]\\d{9}";
 
     private int minLength;

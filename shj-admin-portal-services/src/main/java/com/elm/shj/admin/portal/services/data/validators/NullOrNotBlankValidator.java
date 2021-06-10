@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -33,7 +33,7 @@ public class NullOrNotBlankValidator implements ConstraintValidator<NullOrNotBla
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value == null || (NumberUtils.isDigits(value.toString()) && NumberUtils.toInt(value.toString(), -1) >= 0) || (value.toString().length() >= min && value.toString().length() <= max);
+        return value == null || StringUtils.isBlank(value.toString()) || (value.toString().length() >= min && value.toString().length() <= max);
     }
 
 }

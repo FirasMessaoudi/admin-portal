@@ -3,30 +3,30 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.lookup.MaritalStatusLookupService;
-import org.apache.commons.lang3.StringUtils;
+import com.elm.shj.admin.portal.services.lookup.LanguageLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Arrays;
 
 /**
- * Validator for {@link MaritalStatusCode} annotation
+ * Validator for {@link LanguageCodeList} annotation
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
-public class MaritalStatusCodeValidator implements ConstraintValidator<MaritalStatusCode, Object> {
+public class LanguageCodeListValidator implements ConstraintValidator<LanguageCodeList, Object> {
 
     @Autowired
-    private MaritalStatusLookupService maritalStatusLookupService;
+    private LanguageLookupService languageLookupService;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value == null || StringUtils.isBlank(value.toString()) || maritalStatusLookupService.existsByCode(value.toString().toUpperCase());
+        return value == null || Arrays.stream(value.toString().split(",")).allMatch(c -> languageLookupService.existsByCode(c.toUpperCase()));
     }
 
 }

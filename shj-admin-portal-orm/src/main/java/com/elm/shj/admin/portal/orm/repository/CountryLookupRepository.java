@@ -16,4 +16,5 @@ public interface CountryLookupRepository extends JpaRepository<JpaCountryLookup,
 
     boolean existsByCode(String code);
 
+    JpaCountryLookup findFirstByCode(String countryCode);
 }
