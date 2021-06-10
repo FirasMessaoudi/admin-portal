@@ -10,7 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * Repository for Applicant Card Table.
@@ -18,7 +20,7 @@ import java.util.List;
  * @author ahmad flaifel
  * @since 1.0.0
  */
-public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard, Long> {
+public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard, Long>   {
 
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi WHERE card.id " +
             "NOT IN (SELECT card2.id FROM JpaApplicantCard card2 LEFT JOIN card2.printRequestCards prc LEFT JOIN prc.printRequest pr " +
@@ -31,6 +33,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
                                              @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds,
                                              Pageable pageable);
 
+
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi WHERE card.id " +
             "NOT IN (SELECT card2.id FROM JpaApplicantCard card2 LEFT JOIN card2.printRequestCards prc LEFT JOIN prc.printRequest pr " +
             "WHERE pr.statusCode <> :printRequestStatus OR card2.statusCode <> :cardStatus) AND card.id NOT IN :excludedCardsIds " +
@@ -40,4 +43,14 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
     List<JpaApplicantCard> findAllPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus,
                                                 @Param("uin") String uin, @Param("idNumber") Long idNumber, @Param("passportNumber") String passportNumber,
                                                 @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds);
+
+
+    /*this method is used to filter Applicant Cards Based on Search Criteria */
+    @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi " +
+                                                            "WHERE (adi.uin LIKE %:uin% OR :uin IS NULL) AND (a.idNumber = :idNumber OR :idNumber IS NULL)  ")
+     Page<JpaApplicantCard> getApplicantCardsSearchResult(@Param("uin") String uin, @Param("idNumber") Long idNumber,Pageable pageable);
+
+   //   Page<JpaApplicantCard> findByApplicantRitualApplicantDigitalIdsUinOrApplicantRitualApplicantIdNumber(String uin,  Long idNumber, Pageable pageable);
+
+
 }

@@ -8,6 +8,7 @@ import {CardService} from "@core/services/card/card.service";
 import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
+import {ApplicantCardSearch} from "@model/applicant-card-search.model";
 
 @Component({
   selector: 'app-card-list',
@@ -15,7 +16,7 @@ import {LookupService} from "@core/utilities/lookup.service";
   styleUrls: ['./card-list.component.scss']
 })
 export class CardListComponent implements OnInit {
-  public isSearchbarCollapsed= false;
+  public isSearchbarCollapsed = false;
   cards: Array<ApplicantCard>;
   pageArray: Array<number>;
   page: Page;
@@ -23,6 +24,7 @@ export class CardListComponent implements OnInit {
   searchForm: FormGroup;
   ritualTypes: Lookup[];
   cardStatuses: Lookup[];
+  searchCriteria: ApplicantCardSearch = {uin: '', idNumber: '',cardStatus:''};
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
@@ -30,7 +32,8 @@ export class CardListComponent implements OnInit {
               private formBuilder: FormBuilder,
               private authenticationService: AuthenticationService,
               private cardService: CardService,
-              private lookupsService: LookupService) { }
+              private lookupsService: LookupService) {
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -93,9 +96,16 @@ export class CardListComponent implements OnInit {
     return this.lookupsService;
   }
 
+/*
+  this method is used to search applicant cards based upon user entered search criteria
+  in applicant card management page
+*/
   search(): void {
-    this.searchSubscription = this.cardService.list(0).subscribe(data => {
-      this.cards = [];
+    this.searchCriteria.uin = this.searchForm.value.uin;
+    this.searchCriteria.idNumber = this.searchForm.value.idNumber;
+    this.searchCriteria.cardStatus= this.searchForm.value.cardStatus;
+     this.searchSubscription = this.cardService.getSearchResult(0, this.searchCriteria).subscribe(data => {
+     this.cards = [];
       this.pageArray = [];
       this.page = data;
       if (this.page != null) {
@@ -110,7 +120,7 @@ export class CardListComponent implements OnInit {
   }
 
   loadPage(page: number) {
-    this.listSubscription = this.cardService.list(page).subscribe(data => {
+    this.listSubscription = this.cardService.getSearchResult(page, this.searchCriteria).subscribe(data => {
       this.page = data;
       if (this.page != null) {
         this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
