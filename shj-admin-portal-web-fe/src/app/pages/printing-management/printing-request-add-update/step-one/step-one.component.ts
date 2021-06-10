@@ -56,6 +56,13 @@ export class StepOneComponent implements OnInit {
     });
   }
 
+  /**
+   * Reload nationalities to accept language change for example.
+   */
+  reloadNationalities() {
+    this.localizedNationalities = this.lookupsService.localizedItems(this.nationalities);
+  }
+
   ngOnDestroy() {
     if (this.listSubscription) {
       this.listSubscription.unsubscribe();

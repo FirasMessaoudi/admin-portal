@@ -5,6 +5,7 @@ import {catchError} from "rxjs/internal/operators";
 import {Lookup} from "@model/lookup.model";
 import {PrintBatchType} from "@model/print-batch-type.model";
 import {PrintRequest} from "@model/print-request.model";
+import {PrintRequestFilter} from "@model/print-request-filter.model";
 
 /**
  * Provides a base for printing operations.
@@ -17,9 +18,25 @@ export class PrintService {
   constructor(private http: HttpClient) {
   }
 
+  /**
+   * list paginated print requests without filter.
+   *
+   * @param pageNumber
+   */
   list(pageNumber: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
     return this.http.get<any>("/core/api/print/requests/list", {params: params});
+  }
+
+  /**
+   * list paginated filtered print requests.
+   *
+   * @param pageNumber
+   * @param filter
+   */
+  listFiltered(pageNumber: any, filter: PrintRequestFilter): Observable<any> {
+    let params = new HttpParams().set('page', pageNumber);
+    return this.http.post<any>("/core/api/print/requests/list", filter, {params: params});
   }
 
   /**

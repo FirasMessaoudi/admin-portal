@@ -20,7 +20,7 @@
 
   <div class="content__section" *ngIf="canSeePrintRequestsList">
     <div class="searchBox" [ngbCollapse]="isSearchbarCollapsed">
-      <form class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+      <form [formGroup]="searchForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.request_number" | translate }}</label>
@@ -74,11 +74,11 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.request_status" | translate }}</label>
-          <select id="requestStatus" class="custom-select">
+          <select id="requestStatus" formControlName="statusCode" class="custom-select" (click)="reloadPrintRequestStatuses()">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option>الكل</option>
-            <option>تمت الطباعة</option>
-            <option>جاهز للطباعة</option>
+            <option *ngFor="let requestStatus of localizedPrintRequestStatuses" [ngValue]="requestStatus.code">
+              {{requestStatus.label}}
+            </option>
           </select>
         </div>
 

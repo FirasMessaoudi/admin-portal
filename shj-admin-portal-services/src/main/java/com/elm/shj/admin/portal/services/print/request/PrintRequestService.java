@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.print.request;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
+import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestRepository;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -60,6 +61,19 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
      */
     public Page<PrintRequestDto> findOtherThanNew(Pageable pageable) {
         return mapPage(printRequestRepository.findByStatusCodeNot(EPrintRequestStatus.NEW.name(), pageable));
+    }
+
+    /**
+     * Find paginated print requests based on filter excluding incomplete requests (status: NEW).
+     *
+     * @param pageable requested page of result.
+     * @param filterVo filter value object
+     * @return
+     */
+    public Page<PrintRequestDto> findByFilter(PrintRequestFilterVo filterVo, Pageable pageable) {
+        // at the time being, filter has only status code.
+        return mapPage(printRequestRepository.findByStatusCodeAndStatusCodeNot(filterVo.getStatusCode(),
+                EPrintRequestStatus.NEW.name(), pageable));
     }
 
     @Transactional

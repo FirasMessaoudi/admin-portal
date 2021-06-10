@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {EAuthority, Page} from "@shared/model";
 import {AuthenticationService} from "@core/services";
-import {FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {PrintService} from "@core/services/print/print.service";
 import {Subscription} from "rxjs";
 import {PrintRequest} from "@model/print-request.model";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
+import {I18nService} from "@dcc-commons-ng/services";
 
 @Component({
   selector: 'app-printing-request-list',
@@ -21,22 +22,28 @@ export class PrintingRequestListComponent implements OnInit {
   searchForm: FormGroup;
   canCreateNewRequest: boolean;
   printRequestStatuses: Lookup[];
+  localizedPrintRequestStatuses: Lookup[];
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
   constructor(private authenticationService: AuthenticationService,
               private printService: PrintService,
-              private lookupsService: LookupService) { }
+              private lookupsService: LookupService,
+              private i18nService: I18nService,
+              private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.canCreateNewRequest = true;
+    this.initForm();
     this.loadLookups();
     this.loadPage(0);
   }
 
   private initForm(): void {
-
+    this.searchForm = this.formBuilder.group({
+      statusCode: [null]
+    });
   }
 
   ngOnDestroy() {
@@ -51,11 +58,23 @@ export class PrintingRequestListComponent implements OnInit {
   loadLookups() {
     this.printService.findPrintRequestStatuses().subscribe(result => {
       this.printRequestStatuses = result;
+      this.localizedPrintRequestStatuses = this.lookupsService.localizedItems(this.printRequestStatuses);
     });
   }
 
   lookupService(): LookupService {
     return this.lookupsService;
+  }
+
+  get currentLanguage(): string {
+    return this.i18nService.language;
+  }
+
+  /**
+   * Reload print request statuses to accept language change for example.
+   */
+  reloadPrintRequestStatuses() {
+    this.localizedPrintRequestStatuses = this.lookupsService.localizedItems(this.printRequestStatuses);
   }
 
   get canSeePrintRequestsList(): boolean {
@@ -78,7 +97,11 @@ export class PrintingRequestListComponent implements OnInit {
   }
 
   search(): void {
-    this.searchSubscription = this.printService.list(0).subscribe(data => {
+    if (!this.searchForm.value.statusCode) {
+      this.loadPage(0);
+      return;
+    }
+    this.searchSubscription = this.printService.listFiltered(0, this.searchForm.value).subscribe(data => {
       this.printRequests = [];
       this.pageArray = [];
       this.page = data;

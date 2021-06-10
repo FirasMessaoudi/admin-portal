@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.EPrintBatchType;
 import com.elm.shj.admin.portal.services.dto.PrintRequestDto;
@@ -34,16 +35,29 @@ public class PrintingManagementController {
     private final PrintRequestService printRequestService;
 
     /**
-     * Lists all print requests
+     * List paginated print requests.
      *
      * @param pageable the page configuration for the pagination
-     * @return the list of print requests
+     * @return paginated print requests.
      */
     @GetMapping("/list")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
     public Page<PrintRequestDto> list(Pageable pageable, Authentication authentication) {
-        log.debug("List print requests...");
+        log.debug("List print requests based on search criteria...");
         return printRequestService.findOtherThanNew(pageable);
+    }
+
+    /**
+     * List paginated print requests based on search criteria.
+     *
+     * @param pageable the page configuration for the pagination
+     * @return the list of print requests
+     */
+    @PostMapping("/list")
+    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    public Page<PrintRequestDto> list(@RequestBody PrintRequestFilterVo filterVo, Pageable pageable, Authentication authentication) {
+        log.debug("List print requests based on search criteria...");
+        return printRequestService.findByFilter(filterVo, pageable);
     }
 
     /**

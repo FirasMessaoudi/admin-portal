@@ -15,5 +15,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0.0
  */
 public interface PrintRequestRepository extends JpaRepository<JpaPrintRequest, Long> {
+
     Page<JpaPrintRequest> findByStatusCodeNot(String statusCode, Pageable pageable);
+
+    /**
+     * Find all print requests with a status code.
+     *
+     * @param statusCode
+     * @param pageable
+     * @return Page of print requests
+     */
+    Page<JpaPrintRequest> findByStatusCodeAndStatusCodeNot(String statusCode, String excludedStatusCode, Pageable pageable);
 }
