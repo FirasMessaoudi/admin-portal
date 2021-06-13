@@ -5,12 +5,13 @@ package com.elm.shj.admin.portal.services.card;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
+import com.elm.shj.admin.portal.services.dto.ECardStatus;
+import com.elm.shj.admin.portal.services.dto.EPrintRequestStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
                                                     Pageable pageable) {
         log.debug("Find printing cards...");
         return mapPage(applicantCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(),
-                EPrintRequestStatus.NEW.name(), uin, idNumber, passportNumber, nationalityCode,
+                EPrintRequestStatus.NEW.name(), '%' + uin + '%', idNumber , '%' + passportNumber + '%', nationalityCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
     }
 
@@ -67,7 +68,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
                                                        String passportNumber, String nationalityCode, List<Long> excludedCardsIds) {
         log.debug("Find all printing cards...");
         return mapList(applicantCardRepository.findAllPrintingCards(ECardStatus.READY_TO_PRINT.name(),
-                EPrintRequestStatus.NEW.name(), uin, idNumber, passportNumber, nationalityCode,
+                EPrintRequestStatus.NEW.name(), '%' + uin + '%', idNumber, '%' + passportNumber + '%', nationalityCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds));
     }
 
@@ -77,15 +78,15 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      *
      * @param uin
      * @param idNumber
-     * @param pageable         the current page information
+     * @param pageable the current page information
      * @return the list of applicant cards
      */
-    public Page<ApplicantCardDto> getApplicantCardsSearchResult(String uin, Long idNumber,String cardStatus,Pageable pageable) {
-        if (uin==null && idNumber == null ) {
+    public Page<ApplicantCardDto> getApplicantCardsSearchResult(String uin, Long idNumber, String cardStatus, Pageable pageable) {
+        if (uin == null && idNumber == null) {
             return mapPage(getRepository().findAll(pageable));
         } else {
 
-              return mapPage(applicantCardRepository.getApplicantCardsSearchResult(uin, idNumber, pageable));
+            return mapPage(applicantCardRepository.getApplicantCardsSearchResult(uin, idNumber, pageable));
 
         }
     }

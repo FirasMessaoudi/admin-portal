@@ -99,6 +99,7 @@
     "name": "الإ سم",
     "gender": "الجنس",
     "select_all": "اختيار الكل",
+    "deselect_all": "إلغاء اختيار الكل",
     "btn_next": "التالي",
     "btn_previous": "السابق",
     "label_yes": "نعم",
