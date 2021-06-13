@@ -23,8 +23,8 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi WHERE card.id " +
             "NOT IN (SELECT card2.id FROM JpaApplicantCard card2 LEFT JOIN card2.printRequestCards prc LEFT JOIN prc.printRequest pr " +
             "WHERE pr.statusCode <> :printRequestStatus or card2.statusCode <> :cardStatus) AND card.id NOT IN :excludedCardsIds " +
-            "AND (adi.uin LIKE :uin OR :uin = '%NULL%') AND (a.idNumber = :idNumber OR :idNumber IS NULL) " +
-            "AND (a.passportNumber LIKE :passportNumber OR :passportNumber = '%NULL%') " +
+            "AND (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (TRIM(a.idNumber) LIKE '%'+TRIM(:idNumber)+'%' OR :idNumber IS NULL) " +
+            "AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL) " +
             "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
     Page<JpaApplicantCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus,
                                              @Param("uin") String uin, @Param("idNumber") Long idNumber, @Param("passportNumber") String passportNumber,
@@ -35,8 +35,8 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi WHERE card.id " +
             "NOT IN (SELECT card2.id FROM JpaApplicantCard card2 LEFT JOIN card2.printRequestCards prc LEFT JOIN prc.printRequest pr " +
             "WHERE pr.statusCode <> :printRequestStatus OR card2.statusCode <> :cardStatus) AND card.id NOT IN :excludedCardsIds " +
-            "AND (adi.uin LIKE :uin OR :uin = '%NULL%') AND (a.idNumber = :idNumber OR :idNumber IS NULL) " +
-            "AND (a.passportNumber LIKE :passportNumber OR :passportNumber = '%NULL%') " +
+            "AND (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (TRIM(a.idNumber) LIKE '%'+TRIM(:idNumber)+'%' OR :idNumber IS NULL) " +
+            "AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL) " +
             "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
     List<JpaApplicantCard> findAllPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus,
                                                 @Param("uin") String uin, @Param("idNumber") Long idNumber, @Param("passportNumber") String passportNumber,
@@ -45,7 +45,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
 
     /*this method is used to filter Applicant Cards Based on Search Criteria */
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi " +
-            "WHERE (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (a.idNumber = :idNumber OR :idNumber IS NULL) AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL)   ")
+            "WHERE (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (TRIM(a.idNumber) LIKE '%'+TRIM(:idNumber)+'%' OR :idNumber IS NULL) AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL)   ")
     Page<JpaApplicantCard> searchApplicantCards(@Param("uin") String uin, @Param("idNumber") Long idNumber, @Param("passportNumber") String passportNumber, Pageable pageable);
 
 //      Page<JpaApplicantCard> findByApplicantRitualApplicantDigitalIdsUinLikeOrApplicantRitualApplicantIdNumberOrApplicantRitualApplicantPassportNumberLike(String uin,  Long idNumber,String passportNumber, Pageable pageable);

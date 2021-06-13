@@ -60,7 +60,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
                                                     Pageable pageable) {
         log.debug("Find printing cards...");
         return mapPage(applicantCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(),
-                EPrintRequestStatus.NEW.name(), '%' + uin + '%', idNumber , '%' + passportNumber + '%', nationalityCode,
+                EPrintRequestStatus.NEW.name(), uin, idNumber, passportNumber, nationalityCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
     }
 
@@ -68,7 +68,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
                                                        String passportNumber, String nationalityCode, List<Long> excludedCardsIds) {
         log.debug("Find all printing cards...");
         return mapList(applicantCardRepository.findAllPrintingCards(ECardStatus.READY_TO_PRINT.name(),
-                EPrintRequestStatus.NEW.name(), '%' + uin + '%', idNumber, '%' + passportNumber + '%', nationalityCode,
+                EPrintRequestStatus.NEW.name(), uin, idNumber, passportNumber, nationalityCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds));
     }
 
