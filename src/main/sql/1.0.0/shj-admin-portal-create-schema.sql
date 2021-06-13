@@ -658,6 +658,7 @@ create table shj_portal.sha_print_request
     reference_number VARCHAR(20) NOT NULL,
     status_code VARCHAR(20) NOT NULL,
     update_date smalldatetime NULL,
+    confirmation_date smalldatetime,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 GO
@@ -680,8 +681,8 @@ create table shj_portal.sha_print_request_batch
     id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
     print_request_id INT NOT NULL,
     sequence_number INT NOT NULL,
-    batch_type_code VARCHAR(255),
-    batch_type_value VARCHAR(255),
+    batch_type_codes VARCHAR(255),
+    batch_type_values VARCHAR(255),
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     constraint fk_print_request_batch_print_request foreign key (print_request_id) references shj_portal.sha_print_request (id)
 );
