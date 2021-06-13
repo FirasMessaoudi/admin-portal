@@ -502,6 +502,7 @@ create table shj_portal.sha_applicant_card
     batch_id int NULL,
     status_code VARCHAR(20) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date smalldatetime NULL,
     CONSTRAINT fk_applicant_card_applicant_ritual FOREIGN KEY (applicant_ritual_id) REFERENCES shj_portal.sha_applicant_ritual (id),
     CONSTRAINT fk_applicant_card_batch FOREIGN KEY (batch_id) REFERENCES shj_portal.sha_card_batch (id)
 );
