@@ -188,7 +188,7 @@ export class StepOneComponent implements OnInit {
 
   undoAddCard(cardId: number) {
     this.addedCards.splice(this.addedCards.findIndex(card => card.id === cardId), 1);
-    if (this.addedCards.length % this.addedCardsPageSize === 0) this.addedCardsCurrentPage--;
+    if (this.addedCardsCurrentPage !== 1 && this.addedCards.length % this.addedCardsPageSize === 0) this.addedCardsCurrentPage--;
   }
 
   isChecked(card) {
