@@ -31,10 +31,10 @@ export class CardService {
       (passportNumber ? passportNumber : -1) + '/' + (nationality ? nationality : -1), {params: params});
   }
 
-  searchApplicantCards(pageNumber: any, applicantCardSearchCriteria: ApplicantCardSearchCriteria): Observable<any> {
+  listApplicantCards(pageNumber: any, applicantCardSearchCriteria: ApplicantCardSearchCriteria): Observable<any> {
     let params = new HttpParams().set('applicantCardSearchCriteria', JSON.stringify(applicantCardSearchCriteria))
       .set('page', pageNumber);
-    return this.http.get<any>("/core/api/cards/search-applicant-cards", {params: params});
+    return this.http.get<any>("/core/api/cards/list-applicant-cards", {params: params});
   }
 
   searchAllCardsToPrint(uin: any, idNumber: number, hamlahNumber: any, motawefNumber: any, passportNumber: any,

@@ -42,7 +42,7 @@ public class ApplicantCardController {
         return applicantCardService.findAll(pageable);
     }
 
-    @GetMapping("/search-applicant-cards")
+    @GetMapping("/list-applicant-cards")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
     public Page<ApplicantCardDto> searchApplicantCards(@RequestParam(value = "applicantCardSearchCriteria") String applicantCardSearchCriteria,
                                                        @RequestParam(value = "page") int page, Pageable pageable, Authentication authentication) throws IOException {

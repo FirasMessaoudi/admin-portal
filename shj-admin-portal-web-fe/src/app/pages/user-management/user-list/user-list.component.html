@@ -134,22 +134,23 @@
     </div>
     <nav aria-label="Page navigation example" *ngIf="page?.content">
       <ul class="pagination justify-content-center">
-        <li class="page-item" [class.disabled]="false">
-          <a class="page-link" tabindex="-1">{{'general.nav_first' | translate}}</a>
+        <li class="page-item" [class.disabled]="page?.first">
+          <a class="page-link" (click)="loadPage(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>
         </li>
 
-        <li class="page-item" [class.disabled]="false">
-          <a class="page-link" tabindex="-1">{{'general.nav_previous' | translate}}</a>
+        <li class="page-item" [class.disabled]="page?.first">
+          <a class="page-link" (click)="loadPage(page?.number-1)"
+             tabindex="-1">{{'general.nav_previous' | translate}}</a>
         </li>
         <li class="page-item active">
-          <a class="page-link">{{2 + ' / ' + 5}}</a>
+          <a class="page-link" [class.disabled]="true">{{(page?.number + 1) + ' / ' + page?.totalPages}}</a>
         </li>
-        <li class="page-item" [class.disabled]="false">
-          <a class="page-link">{{'general.nav_next' | translate}}</a>
+        <li class="page-item" [class.disabled]="page?.last">
+          <a class="page-link" (click)="loadPage(page?.number+1)"> {{'general.nav_next' | translate}}</a>
         </li>
 
-        <li class="page-item" [class.disabled]="false">
-          <a class="page-link">{{'general.nav_last' | translate}}</a>
+        <li class="page-item" [class.disabled]="page?.last">
+          <a class="page-link" (click)="loadPage(page?.totalPages-1)">{{'general.nav_last' | translate}}</a>
         </li>
       </ul>
     </nav>
