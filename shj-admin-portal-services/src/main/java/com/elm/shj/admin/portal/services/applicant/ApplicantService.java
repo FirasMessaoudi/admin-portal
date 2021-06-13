@@ -7,7 +7,6 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantDigitalIdDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+import java.util.List;
 
 /**
  * Service handling applicant
@@ -41,6 +40,15 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      */
     public Page<ApplicantDto> findAll(Pageable pageable) {
         return mapPage(getRepository().findAll(pageable));
+    }
+
+    /**
+     * Find all applicants without digital IDs
+     *
+     * @return the list of applicants
+     */
+    public List<ApplicantDto> findAllWithoutDigitalId() {
+        return mapList(((ApplicantRepository) getRepository()).findAllApplicantsWithoutDigitalId());
     }
 
     /**
@@ -69,8 +77,6 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     @Transactional
     @Override
     public ApplicantDto save(ApplicantDto applicant) {
-        // generate digital id before save
-        applicant.setDigitalIds(Collections.singletonList(ApplicantDigitalIdDto.builder().applicant(applicant).uin(digitalIdService.generate(applicant, null)).build()));
         // persist the record
         return super.save(applicant);
     }

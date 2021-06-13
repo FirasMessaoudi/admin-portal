@@ -3,27 +3,31 @@
  */
 package com.elm.shj.admin.portal.services.digitalid;
 
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
+import com.elm.shj.admin.portal.services.dto.ApplicantDigitalIdDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.CountryLookupDto;
+import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.lookup.CountryLookupService;
+import com.elm.shj.admin.portal.services.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.OptionalLong;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 
 import static java.util.stream.Collectors.*;
 
@@ -36,10 +40,10 @@ import static java.util.stream.Collectors.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class DigitalIdService {
+public class DigitalIdService extends GenericService<JpaApplicantDigitalId, ApplicantDigitalIdDto, Long> {
 
     private static final DateFormat YEAR_FORMATTER = new SimpleDateFormat("yy");
-    private static final Map<String, List<Integer>> GENDER_DIGITS = IntStream.range(1, 9)
+    private static final Map<String, List<Integer>> GENDER_DIGITS = IntStream.range(1, 10)
             .boxed()
             .collect(groupingBy(
                     i -> i % 2 == 0 ? "F" : "M",
@@ -59,34 +63,27 @@ public class DigitalIdService {
      * ==================================================================================================================================
      * </pre>
      *
-     * @param applicant      the applicant to generate smart id for
-     * @param bulkApplicants the applicant list in case of bulk creation
+     * @param applicant the applicant to generate smart id for
      * @return the generated smart id
      */
-    public String generate(ApplicantDto applicant, List<ApplicantDto> bulkApplicants) {
+    public String generate(ApplicantDto applicant) {
         // check inputs
         Assert.isTrue(Arrays.asList("M", "F").contains(applicant.getGender().toUpperCase()), "Invalid Applicant Gender!");
         Assert.notNull(applicant.getDateOfBirthGregorian(), "Invalid Applicant Date of Birth!");
         Assert.hasText(applicant.getNationalityCode(), "Invalid Applicant Nationality!");
         // generate gender digit
-        String genderDigit = String.valueOf(GENDER_DIGITS.get(applicant.getGender().toUpperCase()).get(ThreadLocalRandom.current().nextInt(0, 4)));
+        String genderDigit = String.valueOf(GENDER_DIGITS.get(applicant.getGender().toUpperCase()).get(ThreadLocalRandom.current().nextInt(0, "F".equalsIgnoreCase(applicant.getGender()) ? 4 : 5)));
         // generate country digits
         // retrieve country
         CountryLookupDto countryLookupDto = countryLookupService.findByCode(applicant.getNationalityCode());
         String countryDigits = StringUtils.leftPad(StringUtils.right(countryLookupDto.getCountryPhonePrefix().replaceAll("-", "").replaceAll(",", ""), 3), 3, "0");
         // generate date of birth digits
-        String dobDigits = YEAR_FORMATTER.format(applicant.getDateOfBirthGregorian());
+        Date dobGregorian = applicant.getDateOfBirthGregorian() != null ? applicant.getDateOfBirthGregorian() : DateUtils.toGregorian(applicant.getDateOfBirthHijri());
+        String dobDigits = YEAR_FORMATTER.format(dobGregorian);
         // generate serial digits
         String uinPrefix = genderDigit + countryDigits + dobDigits;
-        List<String> latestSerialList = applicantDigitalIdRepository.fetchUinByUinLike(uinPrefix + "%");
+        List<String> latestSerialList = applicantDigitalIdRepository.fetchUinByUinLike(uinPrefix);
         long nextSequence = CollectionUtils.isEmpty(latestSerialList) ? 1 : Long.parseLong(latestSerialList.get(0)) + 1;
-        if (CollectionUtils.isNotEmpty(bulkApplicants)) {
-            OptionalLong maxBulkUin = bulkApplicants.stream()
-                    .filter(a -> CollectionUtils.isNotEmpty(a.getDigitalIds()) && a.getDigitalIds().get(0).getUin().startsWith(uinPrefix))
-                    .flatMapToLong(a -> LongStream.of(Long.parseLong(a.getDigitalIds().get(0).getUin().substring(6, 13))))
-                    .max();
-            nextSequence = Math.max(nextSequence, (maxBulkUin.orElse(0) + 1));
-        }
         String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 7, "0");
         // generate checksum digit
         String partialSmartId = uinPrefix + serialDigits;
@@ -145,4 +142,9 @@ public class DigitalIdService {
         return digit.substring(digit.length() - 1);
     }
 
+    @Transactional
+    @Override
+    public ApplicantDigitalIdDto save(ApplicantDigitalIdDto dto) {
+        return super.save(dto);
+    }
 }

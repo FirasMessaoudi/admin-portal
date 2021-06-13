@@ -9,6 +9,7 @@ import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
@@ -145,8 +146,7 @@ public class ItemWriter {
             if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
                 applicant.getContacts().forEach(sn -> sn.setApplicant(applicant));
             }
-            // generate digital id before save
-            applicant.setDigitalIds(Collections.singletonList(ApplicantDigitalIdDto.builder().applicant(applicant).uin(digitalIdService.generate(applicant, (List<ApplicantDto>) bulkList)).build()));
+            // digital id will bw generated automatically by the scheduler
         }
         // Special treatment for ApplicantHealthDto and special needs as they come in the same sheet
         if (item != null && item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
@@ -159,6 +159,12 @@ public class ItemWriter {
         if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
             ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
             applicantRelative.setRelativeApplicant(applicantService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative)));
+        }
+        // Special treatment for ApplicantRitualDto and special needs as they come in the same sheet
+        if (item != null && item.getClass().isAssignableFrom(ApplicantRitualDto.class)) {
+            ApplicantRitualDto applicantRitual = (ApplicantRitualDto) item;
+            long ritualDateStartHijri = applicantRitual.getDateStartHijri() != null ? applicantRitual.getDateStartHijri() : DateUtils.toHijri(applicantRitual.getDateStartGregorian());
+            applicantRitual.setHijriSeason(Integer.parseInt(Long.toString(ritualDateStartHijri).substring(0, 4)));
         }
 
         Field applicantBasicInfoField = ReflectionUtils.findField(item.getClass(), "applicantBasicInfo");

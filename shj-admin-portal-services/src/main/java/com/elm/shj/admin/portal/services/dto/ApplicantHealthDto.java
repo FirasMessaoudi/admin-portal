@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
+import com.elm.shj.admin.portal.services.data.validators.BloodType;
+import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.elm.shj.admin.portal.services.data.validators.WithApplicant;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
@@ -31,10 +33,15 @@ public class ApplicantHealthDto implements Serializable {
     private long id;
     @JsonBackReference
     private ApplicantDto applicant;
+
+    @BloodType
     @CellIndex(index = 4)
     private String bloodType;
+
+    @NullOrNotBlank(min = 3, max = 50)
     @CellIndex(index = 5)
     private String insurancePolicyNumber;
+
     @CellIndex(index = 6)
     private Boolean hasSpecialNeeds;
     private Date creationDate;

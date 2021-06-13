@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestCard;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,8 +20,10 @@ import java.util.List;
  * @author ahmad flaifel
  * @since 1.0.0
  */
-@NoArgsConstructor
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApplicantCardDto implements Serializable {
 
     private static final long serialVersionUID = -5830783313676682718L;

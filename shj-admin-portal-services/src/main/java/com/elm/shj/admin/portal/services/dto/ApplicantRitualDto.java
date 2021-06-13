@@ -5,7 +5,7 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
-import com.elm.shj.admin.portal.services.data.validators.WithApplicant;
+import com.elm.shj.admin.portal.services.data.validators.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -32,32 +32,53 @@ public class ApplicantRitualDto implements Serializable {
     private String hamlahPackageCode;
     @CellIndex(index = 5)
     private String tafweejCode;
-    @CellIndex(index = 6)
+
     private int hijriSeason;
-    @CellIndex(index = 7)
+
+    @GregorianDate(minOffset = 0, maxOffset = 1)
+    @CellIndex(index = 6)
     private Date dateStartGregorian;
-    @CellIndex(index = 8)
+
+    @GregorianDate(minOffset = 0, maxOffset = 1)
+    @CellIndex(index = 7)
     private Date dateEndGregorian;
+
+    @HijriDate(minOffset = 0, maxOffset = 1)
     @CellIndex(index = 8)
-    private int dateStartHijri;
+    private Long dateStartHijri;
+
+    @HijriDate(minOffset = 0, maxOffset = 1)
+    @CellIndex(index = 9)
+    private Long dateEndHijri;
+
+    @RitualTypeCode
     @CellIndex(index = 10)
-    private int dateEndHijri;
-    @CellIndex(index = 11)
     private String typeCode;
-    @CellIndex(index = 12)
+
+    @VisaOrPermitNumber(allowEmpty = false)
+    @CellIndex(index = 11)
     private String visaNumber;
-    @CellIndex(index = 13)
+
+    @VisaOrPermitNumber(allowEmpty = false)
+    @CellIndex(index = 12)
     private String permitNumber;
-    @CellIndex(index = 14)
+    @CellIndex(index = 13)
     private String insuranceNumber;
-    @CellIndex(index = 15)
+
+    @BorderNumber
+    @CellIndex(index = 14)
     private String borderNumber;
-    @CellIndex(index = 16)
+
+    @CellIndex(index = 15)
     private String zoneCode;
-    @CellIndex(index = 17)
+    @CellIndex(index = 16)
     private String groupCode;
-    @CellIndex(index = 18)
+    @CellIndex(index = 17)
     private String unitCode;
+    @CellIndex(index = 18)
+    private String busNumber;
+    @CellIndex(index = 19)
+    private String seatNumber;
     private Date creationDate;
     private Date updateDate;
     private DataRequestRecordDto dataRequestRecord;

@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -70,10 +71,16 @@ public class JpaApplicantHealth implements Serializable {
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
+        upperCase();
     }
 
     @PreUpdate
     public void preUpdate() {
         updateDate = new Date();
+        upperCase();
+    }
+
+    private void upperCase() {
+        bloodType = StringUtils.upperCase(bloodType);
     }
 }

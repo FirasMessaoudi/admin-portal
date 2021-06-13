@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
+import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class ApplicantHealthSpecialNeedsDto implements Serializable {
     @JsonBackReference
     private ApplicantHealthDto applicantHealth;
 
+    @NullOrNotBlank(min = 3, max = 20)
     @CellIndex(index = 7)
     private String specialNeedTypeCode;
 

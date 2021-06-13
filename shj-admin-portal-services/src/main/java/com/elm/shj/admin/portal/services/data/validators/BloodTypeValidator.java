@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class BloodTypeValidator implements ConstraintValidator<BloodType, Object> {
 
-    private final static List<String> BLOOD_TYPES = Arrays.asList("O−", "O+", "A−", "A+", "B−", "B+", "AB−", "AB+");
+    private final static List<String> BLOOD_TYPES = Arrays.asList("O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+");
 
     /**
      * {@inheritDoc}

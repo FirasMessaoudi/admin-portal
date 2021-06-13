@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.lookup;
 
 import com.elm.shj.admin.portal.orm.entity.JpaRitualTypeLookup;
+import com.elm.shj.admin.portal.orm.repository.RitualTypeLookupRepository;
 import com.elm.shj.admin.portal.services.dto.RitualTypeLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,5 +35,25 @@ public class RitualTypeLookupService extends GenericService<JpaRitualTypeLookup,
             localizedRitualTypes.add(LocalizedLookupVo.builder().code(s).localizedLabels(ritualTypeList.stream().collect(Collectors.toMap(RitualTypeLookupDto::getLang, RitualTypeLookupDto::getLabel))).build());
         });
         return localizedRitualTypes;
+    }
+
+    /**
+     * Checks if a country exists by its code
+     *
+     * @param ritualTypeCode the code of the country to look for
+     * @return if the country is found
+     */
+    public boolean existsByCode(String ritualTypeCode) {
+        return ((RitualTypeLookupRepository) getRepository()).existsByCode(ritualTypeCode);
+    }
+
+    /**
+     * finds if a country by its code
+     *
+     * @param ritualTypeCode the code of the country to look for
+     * @return the found country
+     */
+    public RitualTypeLookupDto findByCode(String ritualTypeCode) {
+        return getMapper().fromEntity(((RitualTypeLookupRepository) getRepository()).findFirstByCode(ritualTypeCode), mappingContext);
     }
 }

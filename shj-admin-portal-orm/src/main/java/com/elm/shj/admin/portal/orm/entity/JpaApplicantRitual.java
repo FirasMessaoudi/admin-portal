@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -58,10 +59,10 @@ public class JpaApplicantRitual implements Serializable {
     private Date dateEndGregorian;
 
     @Column(name = "date_start_hijri")
-    private int dateStartHijri;
+    private Long dateStartHijri;
 
     @Column(name = "date_end_hijri")
-    private int dateEndHijri;
+    private Long dateEndHijri;
 
     @Column(name = "type_code")
     private String typeCode;
@@ -91,10 +92,16 @@ public class JpaApplicantRitual implements Serializable {
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
+        upperCase();
     }
 
     @PreUpdate
     public void preUpdate() {
         updateDate = new Date();
+        upperCase();
+    }
+
+    private void upperCase() {
+        typeCode = StringUtils.upperCase(typeCode);
     }
 }

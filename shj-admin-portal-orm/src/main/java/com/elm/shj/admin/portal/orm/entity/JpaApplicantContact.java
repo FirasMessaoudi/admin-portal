@@ -69,7 +69,6 @@ public class JpaApplicantContact implements Serializable {
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 
-
     @PrePersist
     public void prePersist() {
         creationDate = new Date();

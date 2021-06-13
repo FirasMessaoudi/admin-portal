@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Repository for Applicant Table.
@@ -30,4 +31,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long> {
             "(a.passportNumber = :passportNumber and a.dateOfBirthGregorian = :dateOfBirthGregorian)")
     boolean existsByBasicInfo(@Param("idNumber") Long idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                               @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
+
+    @Query("select a from JpaApplicant a where a.id not in (select ad.applicant.id from JpaApplicantDigitalId ad)")
+    List<JpaApplicant> findAllApplicantsWithoutDigitalId();
 }
