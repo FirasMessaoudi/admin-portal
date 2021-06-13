@@ -5,7 +5,7 @@ import {ApplicantCard} from "@model/card.model";
 import {catchError} from "rxjs/internal/operators";
 import {Lookup} from "@model/lookup.model";
 import {CountryLookup} from "@model/country-lookup.model";
-import {ApplicantCardSearch} from "@model/applicant-card-search.model";
+import {ApplicantCardSearchCriteria} from "@model/applicant-card-search-criteria.model";
 
 @Injectable({
   providedIn: 'root'
@@ -31,11 +31,10 @@ export class CardService {
       (passportNumber ? passportNumber : -1) + '/' + (nationality ? nationality : -1), {params: params});
   }
 
-  getSearchResult(pageNumber:any,searchCriteria:ApplicantCardSearch): Observable<any> {
-    let params = new HttpParams().set('page', pageNumber)
-                                 .set('searchCriteria',JSON.stringify(searchCriteria) ) ;
-                                  // .set('idNumber',searchCriteria.idNumber);
-     return this.http.get<any>("/core/api/cards/searchResult", {params: params});
+  searchApplicantCards(pageNumber: any, applicantCardSearchCriteria: ApplicantCardSearchCriteria): Observable<any> {
+    let params = new HttpParams().set('applicantCardSearchCriteria', JSON.stringify(applicantCardSearchCriteria))
+      .set('page', pageNumber);
+    return this.http.get<any>("/core/api/cards/search-applicant-cards", {params: params});
   }
 
   searchAllCardsToPrint(uin: any, idNumber: number, hamlahNumber: any, motawefNumber: any, passportNumber: any,

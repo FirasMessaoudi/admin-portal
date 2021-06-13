@@ -10,7 +10,6 @@ import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -77,15 +76,15 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      *
      * @param uin
      * @param idNumber
-     * @param pageable         the current page information
+     * @param pageable the current page information
      * @return the list of applicant cards
      */
-    public Page<ApplicantCardDto> getApplicantCardsSearchResult(String uin, Long idNumber,String cardStatus,Pageable pageable) {
-        if (uin==null && idNumber == null ) {
+    public Page<ApplicantCardDto> searchApplicantCards(String uin, Long idNumber, String passportNumber, Pageable pageable) {
+        if (uin == null && idNumber == null && passportNumber == null) {
             return mapPage(getRepository().findAll(pageable));
         } else {
 
-              return mapPage(applicantCardRepository.getApplicantCardsSearchResult(uin, idNumber, pageable));
+            return mapPage(applicantCardRepository.searchApplicantCards(uin, idNumber, passportNumber, pageable));
 
         }
     }

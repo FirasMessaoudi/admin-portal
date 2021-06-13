@@ -5,12 +5,12 @@ package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantCardSearchCriteriaDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.io.IOException;
 import java.util.*;
 /**
  * Main controller for applicant card management pages
@@ -41,18 +42,21 @@ public class ApplicantCardController {
         return applicantCardService.findAll(pageable);
     }
 
-    @GetMapping("/searchResult")
+    @GetMapping("/search-applicant-cards")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
-    public Page<ApplicantCardDto> getApplicantCardsSearchResult(@RequestParam Map<String,String> searchParams, Pageable pageable, Authentication authentication) {
+    public Page<ApplicantCardDto> searchApplicantCards(@RequestParam(value = "applicantCardSearchCriteria") String applicantCardSearchCriteria,
+                                                       @RequestParam(value = "page") int page, Pageable pageable, Authentication authentication) throws IOException {
 
-         log.info("list search result cards.");
-         JsonObject searchCriteriaAsJson = new JsonParser().parse(searchParams.get("searchCriteria")).getAsJsonObject();
-        int pageNumber= Integer.valueOf(searchParams.get("page"));
-        String uin = !searchCriteriaAsJson.get("uin").isJsonNull() ? searchCriteriaAsJson.get("uin").getAsString().trim() : null ;
-         String idNum=!searchCriteriaAsJson.get("idNumber").isJsonNull()  ?searchCriteriaAsJson.get("idNumber").getAsString().trim():null;
-        String cardStatus = searchCriteriaAsJson.has("cardStatus")?!searchCriteriaAsJson.get("cardStatus").isJsonNull() ? searchCriteriaAsJson.get("cardStatus").getAsString().trim() : null:null ;
-        return applicantCardService.getApplicantCardsSearchResult( uin==null||uin.equals("") ?null:uin, idNum==null||idNum.equals("") ?null: Long.valueOf(idNum),
-                cardStatus==null||cardStatus.equals("") ?null:cardStatus, PageRequest.of(pageNumber, 10));
+        log.info("list search result cards.");
+        final ApplicantCardSearchCriteriaDto searchCriteria =
+                new ObjectMapper().readValue(applicantCardSearchCriteria, ApplicantCardSearchCriteriaDto.class);
+
+
+        String uin = searchCriteria.getUin() != null && !searchCriteria.getUin().trim().equals("") ? searchCriteria.getUin().trim() : null;
+        Long idNum = searchCriteria.getIdNumber() != null && !searchCriteria.getIdNumber().trim().equals("") ? Long.valueOf(searchCriteria.getIdNumber().trim()) : null;
+        String passportNumber = searchCriteria.getPassportNumber() != null && !searchCriteria.getPassportNumber().trim().equals("") ? searchCriteria.getPassportNumber().trim() : null;
+
+        return applicantCardService.searchApplicantCards(uin, idNum, passportNumber, PageRequest.of(page, pageable.getPageSize()));
 
     }
 

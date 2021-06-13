@@ -8,7 +8,7 @@ import {CardService} from "@core/services/card/card.service";
 import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
-import {ApplicantCardSearch} from "@model/applicant-card-search.model";
+import {ApplicantCardSearchCriteria} from "@model/applicant-card-search-criteria.model";
 
 @Component({
   selector: 'app-card-list',
@@ -24,7 +24,7 @@ export class CardListComponent implements OnInit {
   searchForm: FormGroup;
   ritualTypes: Lookup[];
   cardStatuses: Lookup[];
-  searchCriteria: ApplicantCardSearch = {uin: '', idNumber: '',cardStatus:''};
+
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
@@ -78,9 +78,9 @@ export class CardListComponent implements OnInit {
       applicantIdStatus: {value: null, disabled: true},
       gender: {value: null, disabled: true},
       nationality: {value: null, disabled: true},
-      passportNumber: {value: null, disabled: true},
+      passportNumber: [null],
       tafweejNumber: {value: null, disabled: true},
-      idType: [null]
+      idType: {value: null, disabled: true}
     });
   }
 
@@ -101,11 +101,10 @@ export class CardListComponent implements OnInit {
   in applicant card management page
 */
   search(): void {
-    this.searchCriteria.uin = this.searchForm.value.uin;
-    this.searchCriteria.idNumber = this.searchForm.value.idNumber;
-    this.searchCriteria.cardStatus= this.searchForm.value.cardStatus;
-     this.searchSubscription = this.cardService.getSearchResult(0, this.searchCriteria).subscribe(data => {
-     this.cards = [];
+
+
+    this.searchSubscription = this.cardService.searchApplicantCards(0, this.searchForm.value).subscribe(data => {
+      this.cards = [];
       this.pageArray = [];
       this.page = data;
       if (this.page != null) {
@@ -120,7 +119,7 @@ export class CardListComponent implements OnInit {
   }
 
   loadPage(page: number) {
-    this.listSubscription = this.cardService.getSearchResult(page, this.searchCriteria).subscribe(data => {
+    this.listSubscription = this.cardService.searchApplicantCards(page, this.searchForm.value).subscribe(data => {
       this.page = data;
       if (this.page != null) {
         this.pageArray = Array.from(this.pageCounter(this.page.totalPages));

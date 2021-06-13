@@ -9,10 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-
 import java.util.List;
-import java.util.Map;
 
 /**
  * Repository for Applicant Card Table.
@@ -47,10 +44,10 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
 
     /*this method is used to filter Applicant Cards Based on Search Criteria */
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi " +
-                                                            "WHERE (adi.uin LIKE %:uin% OR :uin IS NULL) AND (a.idNumber = :idNumber OR :idNumber IS NULL)  ")
-     Page<JpaApplicantCard> getApplicantCardsSearchResult(@Param("uin") String uin, @Param("idNumber") Long idNumber,Pageable pageable);
+            "WHERE (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (a.idNumber = :idNumber OR :idNumber IS NULL) AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL)   ")
+    Page<JpaApplicantCard> searchApplicantCards(@Param("uin") String uin, @Param("idNumber") Long idNumber, @Param("passportNumber") String passportNumber, Pageable pageable);
 
-   //   Page<JpaApplicantCard> findByApplicantRitualApplicantDigitalIdsUinOrApplicantRitualApplicantIdNumber(String uin,  Long idNumber, Pageable pageable);
+//      Page<JpaApplicantCard> findByApplicantRitualApplicantDigitalIdsUinLikeOrApplicantRitualApplicantIdNumberOrApplicantRitualApplicantPassportNumberLike(String uin,  Long idNumber,String passportNumber, Pageable pageable);
 
 
 }

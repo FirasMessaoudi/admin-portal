@@ -168,6 +168,7 @@
             <th scope="col">{{'card-management.applicant_name' | translate}}</th>
             <th scope="col">{{'card-management.applicant_id' | translate}}</th>
             <th scope="col">{{ "general.nin" | translate }}</th>
+            <th scope="col">{{ "card-management.passport_number" | translate }}</th>
             <th scope="col">{{'card-management.card_number' | translate}}</th>
             <th scope="col">{{'card-management.ritual_type' | translate}}</th>
             <th scope="col">{{'card-management.card_status' | translate}}</th>
@@ -192,6 +193,7 @@
             <td><a id="cardDetails" [routerLink]="['/cards/details', card?.id]" class="text-dcc-primary font-weight-bold">{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</a></td>
             <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
             <td class="ltr"> {{card?.applicantRitual?.applicant?.idNumber}}</td>
+            <td class="ltr"> {{card?.applicantRitual?.applicant?.passportNumber}}</td>
             <td class="ltr">{{card?.referenceNumber}}</td>
             <td class="ltr">{{card?.applicantRitual?.typeCode? lookupService().localizedLabel(ritualTypes, card?.applicantRitual?.typeCode) : ''}}</td>
             <td class="ltr">{{lookupService().localizedLabel(cardStatuses, card?.statusCode)}}</td>
