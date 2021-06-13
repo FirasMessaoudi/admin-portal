@@ -100,6 +100,7 @@
     "name": "Name",
     "gender": "Gender",
     "select_all": "Select All",
+    "deselect_all": "Deselect All",
     "btn_next": "Next",
     "btn_previous": "Previous",
     "label_yes": "Yes",

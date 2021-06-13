@@ -28,7 +28,7 @@ export class StepOneComponent implements OnInit {
   nationalities: CountryLookup[];
   localizedNationalities: Lookup[];
   searchForm: FormGroup;
-  isAllSelected = false;
+  isAllSelected: boolean;
 
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();
