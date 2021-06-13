@@ -136,9 +136,9 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
             groupedRequestCards.forEach((key, value) -> {
                 PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
                         // Save batching criteria as comma-separated string
-                        .batchTypeCode(selectedBatchTypes.stream().map(EPrintBatchType::name).collect(Collectors.joining(",")))
+                        .batchTypeCodes(selectedBatchTypes.stream().map(EPrintBatchType::name).collect(Collectors.joining(",")))
                         // Save batching values as comma-separated string
-                        .batchTypeValue(String.join(",", key))
+                        .batchTypeValues(String.join(",", key))
                         .printRequestBatchCards(value.stream().map(
                                 requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList()))
                         .build();
@@ -164,6 +164,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
             });
         });
         printRequest.setStatusCode(EPrintRequestStatus.CONFIRMED.name());
+        printRequest.setConfirmationDate(new Date());
         return super.save(printRequest);
     }
 }
