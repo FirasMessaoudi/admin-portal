@@ -5,7 +5,9 @@ package com.elm.shj.admin.portal.services.card;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
+import com.elm.shj.admin.portal.services.dto.ECardStatus;
+import com.elm.shj.admin.portal.services.dto.EPrintRequestStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +60,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
                                                     Pageable pageable) {
         log.debug("Find printing cards...");
         return mapPage(applicantCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(),
-                EPrintRequestStatus.NEW.name(), uin, idNumber, passportNumber, nationalityCode,
+                EPrintRequestStatus.NEW.name(), '%' + uin + '%', idNumber , '%' + passportNumber + '%', nationalityCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
     }
 
@@ -66,7 +68,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
                                                        String passportNumber, String nationalityCode, List<Long> excludedCardsIds) {
         log.debug("Find all printing cards...");
         return mapList(applicantCardRepository.findAllPrintingCards(ECardStatus.READY_TO_PRINT.name(),
-                EPrintRequestStatus.NEW.name(), uin, idNumber, passportNumber, nationalityCode,
+                EPrintRequestStatus.NEW.name(), '%' + uin + '%', idNumber, '%' + passportNumber + '%', nationalityCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds));
     }
 
