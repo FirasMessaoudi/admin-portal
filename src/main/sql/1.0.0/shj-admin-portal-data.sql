@@ -913,4 +913,7 @@ GO
 -- add applicant data override config
 INSERT INTO shj_portal.sha_config (conf_key, conf_value)
 VALUES ('data.request.applicant.override', 'false');
+INSERT INTO shj_portal.sha_config (conf_key, conf_value)
+VALUES ('scheduler.generate.digital.ids.cron', '0 0/15 * * * *');
 GO
+

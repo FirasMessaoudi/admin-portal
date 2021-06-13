@@ -691,11 +691,22 @@ GO
 if not exists (select * from sys.tables where name = 'sha_print_request_batch_card')
 create table shj_portal.sha_print_request_batch_card
 (
-    id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
-    print_request_batch_id INT NOT NULL,
-    card_id INT NOT NULL,
-    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id                     INT PRIMARY KEY NOT NULL IDENTITY (1,1),
+    print_request_batch_id INT             NOT NULL,
+    card_id                INT             NOT NULL,
+    creation_date          smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     constraint fk_print_request_batch_card_print_request_batch foreign key (print_request_batch_id) references shj_portal.sha_print_request_batch (id),
     constraint fk_print_request_batch_card_card foreign key (card_id) references shj_portal.sha_applicant_card (id)
 );
 GO
+
+if not exists(select *
+              from sys.tables
+              where name = 'sha_scheduled_tasks_lock')
+create table shj_portal.sha_scheduled_tasks_lock
+(
+    name       varchar(255) NOT NULL,
+    lock_until datetime     NULL,
+    locked_at  datetime     NULL,
+    locked_by  varchar(255) NOT NULL,
+)

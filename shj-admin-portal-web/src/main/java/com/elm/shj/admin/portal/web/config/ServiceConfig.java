@@ -32,12 +32,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableTransactionManagement
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @ComponentScan(basePackages = {"com.elm.shj.admin.portal.services", "com.elm.dcc.foundation.commons.core.mapper"})
-@EnableSchedulerLock(defaultLockAtMostFor = "120s")
+@EnableSchedulerLock(defaultLockAtMostFor = "180s")
 public class ServiceConfig {
 
     @Bean
     public LockProvider lockProvider(@Autowired DataSource dataSource) {
-        return new JdbcTemplateLockProvider(dataSource, "shj_admin_scheduled_tasks_lock");
+        return new JdbcTemplateLockProvider(dataSource, "sha_scheduled_tasks_lock");
     }
 
     @Bean
