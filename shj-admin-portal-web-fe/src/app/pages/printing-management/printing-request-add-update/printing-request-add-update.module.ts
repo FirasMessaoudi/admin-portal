@@ -9,6 +9,7 @@ import {SharedModule} from "@shared/shared.module";
 import {StepFourComponent} from './step-four/step-four.component';
 import {SuccessComponent} from './success/success.component';
 import {PrintRequestStorage} from "@pages/printing-management/printing-request-add-update/print-request-storage";
+import {NgbCollapseModule, NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import {PrintRequestStorage} from "@pages/printing-management/printing-request-a
   imports: [
     CommonModule,
     PrintingRequestAddUpdateRoutingModule,
-    SharedModule
+    SharedModule,
+    NgbModule
   ],
   providers: [PrintRequestStorage]
 })
