@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.util.ReflectionUtils;
@@ -20,7 +21,6 @@ import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
 import java.text.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -403,16 +403,12 @@ public class ExcelItemReader<T> {
                 }
                 return null;
             case NUMERIC:
-                String value = cell.toString();
-                /*
-                 * In POI we cannot know which cell is date or number because both
-                 * cells have numeric type To fix this problem we need to call
-                 * toString if it's number cell we can parse it but if it's date
-                 * cell we cannot parse the value with number parser
-                 */
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue();
+                }
                 try {
-                    numberFormat.parse(value);
-                    return new BigDecimal(value);
+                    numberFormat.setGroupingUsed(false);
+                    return numberFormat.parse(cell.toString());
                 } catch (Exception e) {
                     return cell.getDateCellValue();
                 }
