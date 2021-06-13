@@ -49,4 +49,5 @@ drop table if exists shj_portal.sha_data_request_status_lk;
 drop table if exists shj_portal.sha_language_lk
 drop table if exists shj_portal.sha_marital_status_lk
 drop table if exists shj_portal.sha_ritual_type_lk
+drop table if exists shj_portal.sha_scheduled_tasks_lock
 GO
