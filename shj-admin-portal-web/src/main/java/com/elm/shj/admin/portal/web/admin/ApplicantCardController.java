@@ -53,7 +53,7 @@ public class ApplicantCardController {
 
 
         String uin = searchCriteria.getUin() != null && !searchCriteria.getUin().trim().equals("") ? searchCriteria.getUin().trim() : null;
-        Long idNum = searchCriteria.getIdNumber() != null && !searchCriteria.getIdNumber().trim().equals("") ? Long.valueOf(searchCriteria.getIdNumber().trim()) : null;
+        String idNum = searchCriteria.getIdNumber() != null && !searchCriteria.getIdNumber().trim().equals("") ? searchCriteria.getIdNumber().trim() : null;
         String passportNumber = searchCriteria.getPassportNumber() != null && !searchCriteria.getPassportNumber().trim().equals("") ? searchCriteria.getPassportNumber().trim() : null;
 
         return applicantCardService.searchApplicantCards(uin, idNum, passportNumber, PageRequest.of(page, pageable.getPageSize()));

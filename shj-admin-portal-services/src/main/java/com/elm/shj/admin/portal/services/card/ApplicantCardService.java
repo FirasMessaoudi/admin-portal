@@ -81,7 +81,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @param pageable the current page information
      * @return the list of applicant cards
      */
-    public Page<ApplicantCardDto> searchApplicantCards(String uin, Long idNumber, String passportNumber, Pageable pageable) {
+    public Page<ApplicantCardDto> searchApplicantCards(String uin, String idNumber, String passportNumber, Pageable pageable) {
         if (uin == null && idNumber == null && passportNumber == null) {
             return mapPage(getRepository().findAll(pageable));
         } else {
