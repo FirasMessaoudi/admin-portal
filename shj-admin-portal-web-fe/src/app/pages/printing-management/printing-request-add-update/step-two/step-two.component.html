@@ -29,6 +29,7 @@
     <tr>
       <th scope="col">{{'card-management.applicant_name' | translate}}</th>
       <th scope="col">{{'card-management.applicant_id' | translate}}</th>
+      <th scope="col">{{'printing-management.id_number' | translate}}</th>
       <th scope="col">{{'card-management.passport_number' | translate}}</th>
     </tr>
     </thead>
@@ -42,6 +43,7 @@
     <tr *ngFor="let printRequestCard of printRequest?.printRequestCards | slice: (currentPage * pageSize) - pageSize :currentPage * pageSize">
       <td>{{printRequestCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{printRequestCard?.card?.applicantRitual?.applicant?.fullNameEn}}</td>
       <td>{{printRequestCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
+      <td>{{printRequestCard?.card?.applicantRitual?.applicant?.idNumber}}</td>
       <td class="ltr">{{printRequestCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
     </tr>
     </tbody>

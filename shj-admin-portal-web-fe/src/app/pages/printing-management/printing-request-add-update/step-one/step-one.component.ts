@@ -165,7 +165,7 @@ export class StepOneComponent implements OnInit {
   }
 
   create() {
-    this.printService.create(this.addedCards.map(card => card.id)).subscribe(
+    this.printService.preapre(this.addedCards.map(card => card.id)).subscribe(
       result => {
         if (result.hasOwnProperty("errors") && result.errors) {
           console.log("Error");

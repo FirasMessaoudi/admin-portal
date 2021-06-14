@@ -73,7 +73,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     }
 
     @Transactional
-    public PrintRequestDto save(List<Long> cardsIds) {
+    public PrintRequestDto prepare(List<Long> cardsIds) {
         // create and save the print request
         PrintRequestDto printRequest = new PrintRequestDto();
         printRequest.setReferenceNumber(generateReferenceNumber());

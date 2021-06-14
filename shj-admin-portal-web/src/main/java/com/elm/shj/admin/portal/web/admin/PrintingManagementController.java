@@ -79,11 +79,11 @@ public class PrintingManagementController {
      * @param cardsIds TODO Complete documentation
      * @return the created request
      */
-    @PostMapping("/create")
+    @PostMapping("/prepare")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
-    public PrintRequestDto create(@RequestBody List<Long> cardsIds) {
-        log.debug("Creating print request");
-        return printRequestService.save(cardsIds);
+    public PrintRequestDto prepare(@RequestBody List<Long> cardsIds) {
+        log.debug("Preparing print request");
+        return printRequestService.prepare(cardsIds);
     }
 
     @PostMapping("/batch")
