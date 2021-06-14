@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {PrintService} from "@core/services/print/print.service";
+import {PrintService} from "@core/services/printing/print.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {PrintBatchType} from "@model/print-batch-type.model";
 import {PrintRequestStorage} from "@pages/printing-management/printing-request-add-update/print-request-storage";
