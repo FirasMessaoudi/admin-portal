@@ -15,10 +15,7 @@ export class CardService {
   constructor(private http: HttpClient) {
   }
 
-  list(pageNumber: any): Observable<any> {
-    let params = new HttpParams().set('page', pageNumber);
-    return this.http.get<any>("/core/api/cards/list", {params: params});
-  }
+
 
   searchCardsToPrint(uin: any, idNumber: number, hamlahNumber: any, motawefNumber: any, passportNumber: any,
                      nationality: any, excludedCardsIds, pageNumber: any): Observable<any> {
@@ -31,7 +28,7 @@ export class CardService {
       (passportNumber ? passportNumber : -1) + '/' + (nationality ? nationality : -1), {params: params});
   }
 
-  listApplicantCards(pageNumber: any, applicantCardSearchCriteria: ApplicantCardSearchCriteria): Observable<any> {
+  list(pageNumber: any, applicantCardSearchCriteria: ApplicantCardSearchCriteria): Observable<any> {
     let params = new HttpParams().set('applicantCardSearchCriteria', JSON.stringify(applicantCardSearchCriteria))
       .set('page', pageNumber);
     return this.http.get<any>("/core/api/cards/list-applicant-cards", {params: params});

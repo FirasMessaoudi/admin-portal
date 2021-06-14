@@ -106,7 +106,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   loadPage(page: number) {
     // load users for param page
-    this.listSubscription = this.userService.list(page).subscribe(data => {
+    this.listSubscription = this.userService.list(page, this.searchForm?.value).subscribe(data => {
       this.page = data;
       if (this.page != null) {
         this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
@@ -206,8 +206,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   search(): void {
-    this.searchSubscription = this.userService.search(0, this.searchForm.value.role,
-      this.searchForm.value.nin, this.searchForm.value.status).subscribe(data => {
+    this.searchSubscription = this.userService.list(0, this.searchForm?.value).subscribe(data => {
       this.users = [];
       this.pageArray = [];
       this.page = data;

@@ -18,16 +18,7 @@ export class UserService {
   constructor(private http: HttpClient) {
   }
 
-  /**
-   * Lists all users.
-   *
-   * @return {Observable<Page>} The users list.
-   */
-  list(pageNumber: any): Observable<any> {
-    let params = new HttpParams().set('page', pageNumber);
 
-    return this.http.get<any>('/core/api/users/list', {params: params});
-  }
 
   /**
    * Finds user by his ID from the server.
@@ -46,11 +37,10 @@ export class UserService {
     );
   }
 
-  search(pageNumber: any, role: Role, nin: any, status: UserStatus): Observable<any> {
-
+  list(pageNumber: any, searchCriteria?: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
 
-    return this.http.get('/core/api/users/search/' + (role? role.id : -1)+'/' + (nin? nin : -1)+'/' + (status? (status.activated ? 1: 0) : -1), {params: params});
+    return this.http.get('/core/api/users/list/' + (searchCriteria?.role ? searchCriteria?.role.id : -1) + '/' + (searchCriteria?.nin ? searchCriteria?.nin : '-1') + '/' + (searchCriteria?.status ? (searchCriteria?.status.activated ? 1 : 0) : -1), {params: params});
   }
 
   /**

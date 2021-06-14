@@ -103,7 +103,7 @@ export class CardListComponent implements OnInit {
   search(): void {
 
 
-    this.searchSubscription = this.cardService.listApplicantCards(0, this.searchForm.value).subscribe(data => {
+    this.searchSubscription = this.cardService.list(0, this.searchForm.value).subscribe(data => {
       this.cards = [];
       this.pageArray = [];
       this.page = data;
@@ -119,7 +119,7 @@ export class CardListComponent implements OnInit {
   }
 
   loadPage(page: number) {
-    this.listSubscription = this.cardService.listApplicantCards(page, this.searchForm.value).subscribe(data => {
+    this.listSubscription = this.cardService.list(page, this.searchForm.value).subscribe(data => {
       this.page = data;
       if (this.page != null) {
         this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
