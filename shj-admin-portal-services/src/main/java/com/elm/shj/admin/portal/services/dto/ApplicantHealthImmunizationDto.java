@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.GregorianDate;
+import com.elm.shj.admin.portal.services.data.validators.ImmunizationCode;
 import com.elm.shj.admin.portal.services.data.validators.WithApplicant;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
@@ -32,6 +33,7 @@ public class ApplicantHealthImmunizationDto implements Serializable {
     @JsonBackReference
     private ApplicantHealthDto applicantHealth;
 
+    @ImmunizationCode
     @CellIndex(index = 4)
     private String immunizationCode;
 
