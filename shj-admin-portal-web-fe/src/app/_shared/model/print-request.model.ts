@@ -9,4 +9,5 @@ export class PrintRequest {
   printRequestBatches: PrintRequestBatch[];
   creationDate: Date;
   updateDate: Date;
+  confirmationDate: Date;
 }

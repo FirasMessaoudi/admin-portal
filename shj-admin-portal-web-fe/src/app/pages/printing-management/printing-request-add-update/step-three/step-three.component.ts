@@ -56,11 +56,14 @@ export class StepThreeComponent implements OnInit {
   confirm() {
     console.log("confirm batching");
     this.printService.confirm(this.printRequest).subscribe(result => {
-      this.printRequestStorage.storage = result;
-      this.router.navigate(['/print-requests/success']).then(r => {
-      });
-    }, _ => {
-      this.toastr.warning(this.translate.instant("print-request-management.dialog_confirm_request_error_text"), this.translate.instant("general.dialog_error_title"));
+      if (result.hasOwnProperty("errors") && result.errors) {
+        console.log("Error");
+        this.toastr.warning(this.translate.instant("printing-management.dialog_confirm_request_error_text"), this.translate.instant("general.dialog_error_title"));
+      } else {
+        this.printRequestStorage.storage = result;
+        this.router.navigate(['/print-requests/success']).then(r => {
+        });
+      }
     });
   }
 

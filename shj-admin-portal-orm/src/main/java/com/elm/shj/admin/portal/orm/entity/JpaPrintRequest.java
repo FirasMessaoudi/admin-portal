@@ -40,7 +40,7 @@ public class JpaPrintRequest implements Serializable {
     private String statusCode;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "printRequest")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true, mappedBy = "printRequest")
     private List<JpaPrintRequestCard> printRequestCards;
 
     @LazyCollection(LazyCollectionOption.FALSE)

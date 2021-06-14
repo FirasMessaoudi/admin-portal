@@ -75,27 +75,13 @@ public class UserManagementController {
     private static final String PWRD_CONTAINS_USERNAME_ERROR_MESSAGE_KEY = "{dcc.commons.validation.constraints.password-contains-username}";
     private static final String CHANGE_PWRD_METHOD_NAME = "changeUserPassword";
     public static final String RECAPTCHA_TOKEN_NAME = "grt";
-    
+
     private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final PasswordHistoryService passwordHistoryService;
     private final JwtTokenService jwtTokenService;
     private final RecaptchaService recaptchaService;
 
-    /**
-     * Lists all non deleted users with role level less than or equal logged in user and exclude web service user
-     *
-     * @param pageable the page configuration for the pagination
-     * @return the list of non deleted users
-     */
-    @GetMapping("/list")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT)
-    public Page<UserDto> listUsers(Pageable pageable, Authentication authentication) {
-        log.debug("Handler for {}", "List Users");
-        return userService.findAllNotDeleted(pageable, jwtTokenService.retrieveUserIdFromToken(((JwtToken) authentication).getToken()).orElse(0L),
-                jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()))
-                .map(UserManagementController::maskUserInfo);
-    }
 
     /**
      * finds users by role id, nin or account status
@@ -105,17 +91,22 @@ public class UserManagementController {
      * @param activated the user account status (1: true, 0: false, <0: all)
      * @return the found users or <code>null</code>
      */
-    @GetMapping("/search/{roleId}/{nin}/{activated}")
+    @GetMapping("/list/{roleId}/{nin}/{activated}")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT)
-    public Page<UserDto> search(Pageable pageable, @PathVariable long roleId, @PathVariable long nin, @PathVariable int activated, Authentication authentication) {
+    public Page<UserDto> search(Pageable pageable, @PathVariable long roleId, @PathVariable String nin, @PathVariable int activated, Authentication authentication) {
         log.debug("Handler for {}", "Search Users");
+        if (roleId <= 0 && Long.parseLong(nin) == -1 && activated < 0) {
+            return userService.findAllNotDeleted(pageable, jwtTokenService.retrieveUserIdFromToken(((JwtToken) authentication).getToken()).orElse(0L),
+                    jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()))
+                    .map(UserManagementController::maskUserInfo);
+        }
         Page<UserDto> usersPage = userService.searchByRoleStatusOrNin(pageable,
                 (roleId <= 0 ? null : roleId),
-                (nin <= 0 ? null : Long.toString(nin)),
+                (nin == null || nin.trim().equals("") ? null : nin.trim()),
                 (activated < 0 ? null : BooleanUtils.toBoolean(activated)),
                 jwtTokenService.retrieveUserIdFromToken(((JwtToken) authentication).getToken()).orElse(0L),
                 jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
-        return new PageImpl<>(usersPage.getContent().stream().map(UserManagementController::maskUserInfo).collect(Collectors.toList()));
+        return usersPage.map(UserManagementController::maskUserInfo);
     }
 
     /**
@@ -146,6 +137,7 @@ public class UserManagementController {
 
     /**
      * Reset user password by admin as part of user management
+     *
      * @param idNumber
      */
     @GetMapping("/reset-user-password/{idNumber}")

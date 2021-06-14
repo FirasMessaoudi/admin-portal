@@ -24,9 +24,10 @@ export class CardListComponent implements OnInit {
   searchForm: FormGroup;
   ritualTypes: Lookup[];
   cardStatuses: Lookup[];
-
+  masterSelected: boolean;
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
+
 
   constructor(private i18nService: I18nService,
               private formBuilder: FormBuilder,
@@ -38,7 +39,7 @@ export class CardListComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.loadLookups();
-
+    this.masterSelected = false;
     // TODO: read it from authentication
     this.canAddCard = true;
   }
@@ -103,7 +104,7 @@ export class CardListComponent implements OnInit {
   search(): void {
 
 
-    this.searchSubscription = this.cardService.listApplicantCards(0, this.searchForm.value).subscribe(data => {
+    this.searchSubscription = this.cardService.list(0, this.searchForm.value).subscribe(data => {
       this.cards = [];
       this.pageArray = [];
       this.page = data;
@@ -119,7 +120,7 @@ export class CardListComponent implements OnInit {
   }
 
   loadPage(page: number) {
-    this.listSubscription = this.cardService.listApplicantCards(page, this.searchForm.value).subscribe(data => {
+    this.listSubscription = this.cardService.list(page, this.searchForm.value).subscribe(data => {
       this.page = data;
       if (this.page != null) {
         this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
@@ -128,9 +129,12 @@ export class CardListComponent implements OnInit {
     })
   }
 
-  selectAllCards() {
-
+  checkUncheckAllCards() {
+    for (var i = 0; i < this.page.content.length; i++) {
+      this.page.content[i].isSelected = this.masterSelected;
+    }
   }
+
 
   get canSeeCardsList(): boolean {
     //TODO: change it to CARD_MANAGEMENT
