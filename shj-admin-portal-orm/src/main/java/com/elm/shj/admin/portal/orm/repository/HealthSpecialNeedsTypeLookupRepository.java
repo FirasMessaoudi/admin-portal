@@ -13,4 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0.0
  */
 public interface HealthSpecialNeedsTypeLookupRepository extends JpaRepository<JpaHealthSpecialNeedsTypeLookup, Long> {
+
+    boolean existsByCode(String specialNeedsCode);
 }

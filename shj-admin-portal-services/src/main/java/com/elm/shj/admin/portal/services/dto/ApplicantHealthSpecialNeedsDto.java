@@ -4,13 +4,14 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
-import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
+import com.elm.shj.admin.portal.services.data.validators.SpecialNeedsCodeList;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,8 +21,10 @@ import java.util.Date;
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
-@NoArgsConstructor
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApplicantHealthSpecialNeedsDto implements Serializable {
 
     private static final long serialVersionUID = -2130894375076782343L;
@@ -30,13 +33,10 @@ public class ApplicantHealthSpecialNeedsDto implements Serializable {
     @JsonBackReference
     private ApplicantHealthDto applicantHealth;
 
-    @NullOrNotBlank(min = 3, max = 20)
+    @NullOrNotBlank(min = 3, max = 128)
+    @SpecialNeedsCodeList
     @CellIndex(index = 7)
     private String specialNeedTypeCode;
 
     private Date creationDate;
-    // used in data requests either through file upload or integration
-    @Valid
-    @NestedCells
-    private ApplicantBasicInfoDto applicantBasicInfo;
 }

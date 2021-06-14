@@ -132,17 +132,17 @@ INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id)
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (12, N'تغيير حالة دور', 'Change Role Status', 'CHANGE_ROLE_STATUS', 8);
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (13, N'إعادة تعيين كلمة مرور المستخدم', 'Reset User Password', 'RESET_USER_PASSWORD', 2);
 -- new authorities
-INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (14, N'إدارة المعرفات الرقمية', 'Manage Digital ID', 'MANAGE_DIGITAL_ID', NULL);
-INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (15, N'عرض معلومات ضيف الرحمن', 'View Applicant Profile', 'VIEW_APPLICANT_PROFILE', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (16, N'تعديل معلومات ضيف الرحمن', 'Update Applicant Profile', 'UPDATE_APPLICANT_PROFILE', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (17, N'تفعيل بطاقة تعريف ضيف الرحمن', 'Activate Applicant Card', 'ACTIVATE_APPLICANT_CARD', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (18, N'إلغاء بطاقة تعريف ضيف الرحمن', 'Cancel Applicant Card', 'CANCEL_APPLICANT_CARD', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (19, N'إيقاف بطاقة تعريف ضيف الرحمن', 'Suspend Applicant Card', 'SUSPEND_APPLICANT_CARD', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (20, N'إعادة إصدار بطاقة تعريف ضيف الرحمن', 'Reissue Applicant Card', 'REISSUE_APPLICANT_CARD', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (21, N'إضافة رقم تعريف ضيف الرحمن', 'Add Digital ID', 'ADD_DIGITAL_ID', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (14, N'إدارة البطاقات', 'Card Management', 'CARD_MANAGEMENT', NULL);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (15, N'عرض تفاصيل البطاقة', 'View Card Details', 'VIEW_CARD_DETAILS', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (16, N'تعديل البطاقة', 'Update Card', 'UPDATE_CARD', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (17, N'تفعيل البطاقة', 'Activate Card', 'ACTIVATE_CARD', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (18, N'إلغاء البطاقة', 'Cancel Card', 'CANCEL_CARD', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (19, N'إيقاف البطاقة', 'Suspend Card', 'SUSPEND_CARD', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (20, N'إعادة إصدار البطاقة', 'Reissue Card', 'REISSUE_CARD', 14);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (21, N'إضافة بطاقة', 'Add Card', 'ADD_CARD', 14);
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (22, N'إنشاء معلومات ضيف الرحمن', 'Add Applicant Profile', 'ADD_APPLICANT_PROFILE', 14);
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (23, N'موافقة إنشاء معلومات ضيف الرحمن', 'Approve Applicant Profile', 'APPROVE_APPLICANT_PROFILE', 14);
-INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (24, N'إدارة طلبات الطباعة', 'Manage Printing Requests', 'MANAGE_PRINTING_REQUEST', NULL);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (24, N'إدارة طلبات الطباعة', 'Printing Request Management', 'PRINTING_REQUEST_MANAGEMENT', NULL);
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (25, N'عرض تفاصيل طلب الطباعة', 'View Printing Request Details', 'VIEW_PRINTING_REQUEST_DETAILS', 24);
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (26, N'إضافة طلب طباعة', 'Add Printing Request', 'ADD_PRINTING_REQUEST', 24);
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (27, N'إدارة الطلبات', 'Manage Requests', 'MANAGE_REQUESTS', NULL);
