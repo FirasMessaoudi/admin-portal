@@ -13,4 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0.0
  */
 public interface HealthImmunizationLookupRepository extends JpaRepository<JpaHealthImmunizationLookup, Long> {
+
+    boolean existsByCode(String immunizationCode);
 }
