@@ -21,6 +21,6 @@ export class Applicant {
   digitalIds: ApplicantDigitalId[];
   relatives: ApplicantRelative[];
   contacts: ApplicantContact[];
-  healths: ApplicantHealth[];
+  applicantHealth: ApplicantHealth;
   status: number;
 }

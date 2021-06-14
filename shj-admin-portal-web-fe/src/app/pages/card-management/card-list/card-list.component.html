@@ -161,7 +161,8 @@
           <tr>
             <th scope="col">
               <div class="custom-control custom-checkbox my-2">
-                <input type="checkbox" class="custom-control-input" id="customCheck-01" (click)="selectAllCards()">
+                <input type="checkbox" [(ngModel)]="masterSelected" class="custom-control-input" id="customCheck-01"
+                       (change)="checkUncheckAllCards()">
                 <label class="custom-control-label mx-3" for="customCheck-01"></label>
               </div>
             </th>
@@ -176,18 +177,19 @@
         </thead>
         <tbody>
 
-          <tr *ngIf="!page?.content" class="text-center">
-            <td colspan="10">
-              <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set" ></svg-icon>
-              <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
-            </td>
-          </tr>
+        <tr *ngIf="!page?.content || page?.totalElements==0" class="text-center">
+          <td colspan="10">
+            <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
+            <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+          </td>
+        </tr>
           <tr *ngFor="let card of page?.content">
 
             <td scope="row">
               <div class="custom-control custom-checkbox my-2">
-                <input type="checkbox" class="custom-control-input" id="customCheck-02" value="{{card.id}}">
-                <label class="custom-control-label mx-3" for="customCheck-02"></label>
+                <input type="checkbox" class="custom-control-input" [(ngModel)]="card.isSelected"
+                       id="customCheck-{{card.id}}" value="{{card.id}}">
+                <label class="custom-control-label mx-3" for="customCheck-{{card.id}}"></label>
               </div>
             </td>
             <td><a id="cardDetails" [routerLink]="['/cards/details', card?.id]" class="text-dcc-primary font-weight-bold">{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</a></td>
@@ -201,17 +203,18 @@
         </tbody>
       </table>
     </div>
-    <nav aria-label="Page navigation example" *ngIf="page?.content">
+    <nav aria-label="Page navigation example" *ngIf="page?.content && page?.totalElements>0">
       <ul class="pagination justify-content-center">
         <li class="page-item" [class.disabled]="page?.first">
           <a class="page-link" (click)="loadPage(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>
         </li>
 
         <li class="page-item" [class.disabled]="page?.first">
-          <a class="page-link" (click)="loadPage(page?.number-1)" tabindex="-1">{{'general.nav_previous' | translate}}</a>
+          <a class="page-link" (click)="loadPage(page?.number-1)"
+             tabindex="-1">{{'general.nav_previous' | translate}}</a>
         </li>
         <li class="page-item active">
-          <a class="page-link" [class.disabled]="true" >{{(page?.number + 1) + ' / ' + page?.totalPages}}</a>
+          <a class="page-link" [class.disabled]="true">{{(page?.number + 1) + ' / ' + page?.totalPages}}</a>
         </li>
         <li class="page-item" [class.disabled]="page?.last">
           <a class="page-link" (click)="loadPage(page?.number+1)">{{'general.nav_next' | translate}}</a>
