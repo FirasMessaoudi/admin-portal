@@ -143,6 +143,7 @@
                 <tr *ngFor="let relative of card?.applicantRitual?.applicant?.relatives">
                   <td class="ltr">{{relative.relativeApplicant?.fullNameAr}} {{relative.relativeApplicant?.fullNameEn}}</td>
                   <td class="ltr">{{relative.relativeApplicant?.digitalIds[0]?.uin}}</td>
+
                   <td class="ltr">{{relative.relationshipCode? lookupService().localizedLabel(relativeRelationships, relative.relationshipCode) : ''}}</td>
                 </tr>
                 </tbody>
@@ -280,43 +281,49 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.blood_type' | translate}}</label>
-                <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.healths[0]?.bloodType}}</span>
+
+                <span
+                  class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.applicantHealth?.bloodType}}</span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.special_needs_assistance_needed' | translate}}</label>
                 <span class="form-control-plaintext"
-                      *ngIf="card?.applicantRitual?.applicant?.healths[0]?.specialNeeds?.length > 0">{{'general.label_yes' | translate}}</span>
+                      *ngIf="card?.applicantRitual?.applicant?.applicantHealth?.specialNeeds?.length > 0">{{'general.label_yes' | translate}}</span>
                 <span class="form-control-plaintext"
-                      *ngIf="card?.applicantRitual?.applicant?.healths[0]?.specialNeeds?.length === 0">{{'general.label_no' | translate}}</span>
+                      *ngIf="card?.applicantRitual?.applicant?.applicantHealth?.specialNeeds?.length === 0">{{'general.label_no' | translate}}</span>
 
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.have_chronic_diseases' | translate}}</label>
                 <span class="form-control-plaintext"
-                      *ngIf="card?.applicantRitual?.applicant?.healths[0]?.diseases?.length > 0">{{'general.label_yes' | translate}}</span>
+                      *ngIf="card?.applicantRitual?.applicant?.applicantHealth?.diseases?.length > 0">{{'general.label_yes' | translate}}</span>
                 <span class="form-control-plaintext"
-                      *ngIf="card?.applicantRitual?.applicant?.healths[0]?.diseases?.length === 0">{{'general.label_no' | translate}}</span>
+                      *ngIf="card?.applicantRitual?.applicant?.applicantHealth?.diseases?.length === 0">{{'general.label_no' | translate}}</span>
 
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.vaccinated' | translate}}</label>
                 <span class="form-control-plaintext"
-                      *ngIf="card?.applicantRitual?.applicant?.healths[0]?.immunizations?.length > 0">{{'general.label_yes' | translate}}</span>
+                      *ngIf="card?.applicantRitual?.applicant?.applicantHealth?.immunizations?.length > 0">{{'general.label_yes' | translate}}</span>
                 <span class="form-control-plaintext"
-                      *ngIf="card?.applicantRitual?.applicant?.healths[0]?.immunizations?.length === 0">{{'general.label_no' | translate}}</span>
+                      *ngIf="card?.applicantRitual?.applicant?.applicantHealth?.immunizations?.length === 0">{{'general.label_no' | translate}}</span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.special_needs' | translate}}</label>
                 <span class="form-control-plaintext">
-                  <span *ngFor="let need of card?.applicantRitual?.applicant?.healths[0]?.specialNeeds; let lastItem = last;">
-                    {{need.specialNeedTypeCode ? lookupService().localizedLabel(healthSpecialNeeds, need.specialNeedTypeCode) : ''}}<span *ngIf="!lastItem">-</span></span>
+                  <span
+                    *ngFor="let need of card?.applicantRitual?.applicant?.applicantHealth?.specialNeeds; let lastItem = last;">
+                    {{need.specialNeedTypeCode ? lookupService().localizedLabel(healthSpecialNeeds, need.specialNeedTypeCode) : ''}}
+                    <span *ngIf="!lastItem">-</span></span>
                   </span>
               </div>
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.chronic_diseases' | translate}}</label>
                 <span class="form-control-plaintext">
-                  <span *ngFor="let disease of card?.applicantRitual?.applicant?.healths[0]?.diseases; let lastItem = last;">
-                  {{currentLanguage.startsWith("en") ? disease.labelEn : disease.labelAr}}<span *ngIf="!lastItem">-</span></span>
+                  <span
+                    *ngFor="let disease of card?.applicantRitual?.applicant?.applicantHealth?.diseases; let lastItem = last;">
+                  {{currentLanguage.startsWith("en") ? disease.labelEn : disease.labelAr}}<span
+                    *ngIf="!lastItem">-</span></span>
                 </span>
               </div>
             </div>
@@ -334,7 +341,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let immunization of card?.applicantRitual?.applicant?.healths[0]?.immunizations">
+                <tr *ngFor="let immunization of card?.applicantRitual?.applicant?.applicantHealth?.immunizations">
                   <td class="ltr">{{immunization.immunizationCode}}</td>
                   <td class="ltr">{{immunization.immunizationDate | dateFormat}}</td>
                 </tr>
