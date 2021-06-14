@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {ApplicantCard} from "@model/card.model";
 import {PrintRequest} from "@model/print-request.model";
 import {StepOneComponent} from "@pages/printing-management/printing-request-add-update/step-one/step-one.component";
@@ -15,6 +15,7 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
   addedCards: ApplicantCard[] = [];
   printRequest: PrintRequest;
   selectedBatchTypes: string[] = [];
+  isLoading: boolean;
 
   @ViewChild(StepOneComponent, {static: false})
   stepOneComp: StepOneComponent;
@@ -56,5 +57,9 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
 
   setSelectedBatchTypes(batchTypes) {
     this.selectedBatchTypes = batchTypes;
+  }
+
+  setLoading(event) {
+    this.isLoading = event;
   }
 }

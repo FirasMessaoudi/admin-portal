@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PrintRequest} from "@model/print-request.model";
 import {PrintService} from "@core/services/printing/print.service";
 import {Router} from "@angular/router";
@@ -25,6 +25,9 @@ export class StepThreeComponent implements OnInit {
 
   @Input()
   printRequest: PrintRequest;
+
+  @Output()
+  public onChangeLoading: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private printService: PrintService,
               private router: Router,
@@ -55,11 +58,14 @@ export class StepThreeComponent implements OnInit {
 
   confirm() {
     console.log("confirm batching");
+    this.onChangeLoading.emit(true);
     this.printService.confirm(this.printRequest).subscribe(result => {
       if (result.hasOwnProperty("errors") && result.errors) {
+        this.onChangeLoading.emit(false);
         console.log("Error");
         this.toastr.warning(this.translate.instant("printing-management.dialog_confirm_request_error_text"), this.translate.instant("general.dialog_error_title"));
       } else {
+        this.onChangeLoading.emit(false);
         this.printRequestStorage.storage = result;
         this.router.navigate(['/print-requests/success']).then(r => {
         });
