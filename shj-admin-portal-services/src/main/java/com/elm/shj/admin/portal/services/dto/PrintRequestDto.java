@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.dto;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class PrintRequestDto implements Serializable {
     private long id;
     private String referenceNumber;
     private String statusCode;
-    private List<PrintRequestCardDto> printRequestCards;
-    private List<PrintRequestBatchDto> printRequestBatches;
+    private List<PrintRequestCardDto> printRequestCards = new ArrayList<>();
+    private List<PrintRequestBatchDto> printRequestBatches = new ArrayList<>();
     private Date creationDate;
     private Date updateDate;
     private Date confirmationDate;

@@ -32,7 +32,7 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
   }
 
   saveStepOne() {
-    this.stepOneComp.save();
+    this.stepOneComp.create();
     this.cdr.detectChanges();
   }
 

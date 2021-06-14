@@ -4,6 +4,8 @@ import {I18nService} from "@dcc-commons-ng/services";
 import {PrintBatchType} from "@model/print-batch-type.model";
 import {PrintRequestStorage} from "@pages/printing-management/printing-request-add-update/print-request-storage";
 import {PrintRequest} from "@model/print-request.model";
+import {ToastService} from "@shared/components/toast";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-step-two',
@@ -28,10 +30,13 @@ export class StepTwoComponent implements OnInit {
 
   constructor(private printService: PrintService,
               private i18nService: I18nService,
+              private toastr: ToastService,
+              private translate: TranslateService,
               private printRequestStorage: PrintRequestStorage) {
   }
 
   ngOnInit(): void {
+    this.printRequestStorage.storage = null;
     this.loadLookups();
   }
 
@@ -60,10 +65,15 @@ export class StepTwoComponent implements OnInit {
   }
 
   batch() {
-    this.printService.batch(this.printRequest.id, this.selectedBatchTypes).subscribe(
+    this.printService.batch(this.printRequest, this.selectedBatchTypes).subscribe(
       result => {
-        this.printRequestStorage.storage = result;
-        this.onSetPrintRequest.emit(result)
+        if (result.hasOwnProperty("errors") && result.errors) {
+          console.log("Error");
+          this.toastr.warning(this.translate.instant("printing-management.dialog_confirm_request_error_text"), this.translate.instant("general.dialog_error_title"));
+        } else {
+          this.onSetPrintRequest.emit(result);
+          this.printRequestStorage.storage = result;
+        }
       }
     )
   }

@@ -2,7 +2,7 @@
   <div class="title__Page">
     <h3 class="sectionTitle">{{'card-management.card_details' | translate }}</h3>
     <div ngbDropdown>
-      <button type="submit" class="btn btn-dcc-primary px-5 mr-3 noArrow" id="dropdownBasic1" ngbDropdownToggle>
+      <button disabled type="submit" class="btn btn-dcc-primary px-5 mr-3 noArrow" id="dropdownBasic1" ngbDropdownToggle>
         العمليات
         <svg-icon styleClass="h4 ml-3" icon="bars"></svg-icon>
       </button>
@@ -152,7 +152,7 @@
         </ng-template>
       </li>
       <li [ngbNavItem]="2">
-        <a ngbNavLink>{{ 'card-management.hamlah_details' | translate }}</a>
+        <a ngbNavLink>{{'card-management.hamlah_details' | translate}}</a>
         <ng-template ngbNavContent>
           <section>
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
@@ -191,7 +191,7 @@
             </div>
           </section>
           <hr class="my-4 w-100">
-          <section *ngIf=hamlahPackage?.packageHousings?.length > 0">
+          <section *ngIf="hamlahPackage?.packageHousings?.length > 0">
             <span class="form-control-plaintext ">{{ 'card-management.housing_locations' | translate }}</span>
 
             <div class="table-responsive my-4">
