@@ -152,7 +152,10 @@ public class ItemWriter {
         if (item != null && item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
             ApplicantHealthDto applicantHealth = (ApplicantHealthDto) item;
             if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
-                applicantHealth.getSpecialNeeds().forEach(sn -> sn.setApplicantHealth(applicantHealth));
+                // get the special needs and if it is a list then create a list of special needs dtos
+                applicantHealth.setSpecialNeeds(Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
+                        ApplicantHealthSpecialNeedsDto.builder().applicantHealth(applicantHealth).specialNeedTypeCode(sn).build()
+                ).collect(Collectors.toList()));
             }
         }
         // special treatment for applicant relative
