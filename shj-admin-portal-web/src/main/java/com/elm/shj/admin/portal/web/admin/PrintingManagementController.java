@@ -7,7 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.EPrintBatchType;
 import com.elm.shj.admin.portal.services.dto.PrintRequestDto;
-import com.elm.shj.admin.portal.services.print.request.PrintRequestService;
+import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {PrintRequest} from "@model/print-request.model";
-import {PrintService} from "@core/services/print/print.service";
+import {PrintService} from "@core/services/printing/print.service";
 import {Router} from "@angular/router";
 import {ToastService} from "@shared/components/toast";
 import {I18nService} from "@dcc-commons-ng/services";
