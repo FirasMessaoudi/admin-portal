@@ -86,14 +86,14 @@ public class PrintingManagementController {
         return printRequestService.save(cardsIds);
     }
 
-    @PostMapping("/{printRequestId}/batch")
+    @PostMapping("/batch")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
-    public PrintRequestDto batch(@PathVariable long printRequestId, @RequestBody List<EPrintBatchType> printBatchTypes) {
+    public PrintRequestDto batch(@RequestBody PrintRequestDto printRequest, @RequestParam List<EPrintBatchType> types) {
         log.debug("Batching print request");
-        return printRequestService.processBatching(printRequestId, printBatchTypes);
+        return printRequestService.processBatching(printRequest, types);
     }
 
-    @PostMapping("/{printRequestId}/confirm")
+    @PostMapping("/confirm")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
     public PrintRequestDto confirm(@RequestBody PrintRequestDto printRequest) {
         log.debug("Confirming print request");

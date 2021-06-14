@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -41,7 +38,6 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
 
     private final PrintRequestRepository printRequestRepository;
     private final ApplicantCardService cardService;
-    private final PrintRequestCardService printRequestCardService;
 
     /**
      * Find all print requests.
@@ -79,24 +75,18 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     @Transactional
     public PrintRequestDto save(List<Long> cardsIds) {
         // create and save the print request
-        PrintRequestDto printRequest = PrintRequestDto.builder()
-                .referenceNumber(generateReferenceNumber())
-                .statusCode(EPrintRequestStatus.NEW.name())
-                .build();
-        // persist the request
-        printRequest = super.save(printRequest);
-        log.info("printRequest created successfully with #{}", printRequest.getId());
-        List<PrintRequestCardDto> printRequestCards = new ArrayList<>();
-        PrintRequestDto finalPrintRequest = printRequest;
+        PrintRequestDto printRequest = new PrintRequestDto();
+        printRequest.setReferenceNumber(generateReferenceNumber());
+        printRequest.setStatusCode(EPrintRequestStatus.NEW.name());
+
         cardsIds.forEach(id -> {
             ApplicantCardDto card = cardService.findOne(id);
-            printRequestCards.add(
-                    PrintRequestCardDto.builder()
-                            .card(card)
-                            .printRequest(finalPrintRequest)
-                            .build());
+            PrintRequestCardDto printRequestCard = new PrintRequestCardDto();
+            printRequestCard.setCard(card);
+            printRequestCard.setPrintRequest(printRequest);
+            printRequest.getPrintRequestCards().add(printRequestCard);
         });
-        printRequestCardService.saveAll(printRequestCards);
+
         // return the persisted object
         return printRequest;
     }
@@ -114,9 +104,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         return generator.generate(REQUEST_REF_NUMBER_LENGTH - 6) + REF_NUMBER_FORMAT.format(new Date());
     }
 
-    public PrintRequestDto processBatching(long requestId, List<EPrintBatchType> selectedBatchTypes) {
-        // Retrieve the print request
-        PrintRequestDto printRequest = findOne(requestId);
+    public PrintRequestDto processBatching(PrintRequestDto printRequest, List<EPrintBatchType> selectedBatchTypes) {
 
         if (selectedBatchTypes.size() > 0) {
             // Group printing cards by selected batch types
@@ -156,13 +144,20 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     }
 
     public PrintRequestDto confirm(PrintRequestDto printRequest) {
-        printRequest.getPrintRequestBatches().forEach(batch -> {
-            batch.setPrintRequest(printRequest);
-            batch.getPrintRequestBatchCards().forEach(batchCard -> {
+
+        printRequest.getPrintRequestCards().forEach(requestCard -> {
+            requestCard.setPrintRequest(printRequest);
+            requestCard.setCard(requestCard.getCard());
+        });
+
+        printRequest.getPrintRequestBatches().forEach(requestBatch -> {
+            requestBatch.setPrintRequest(printRequest);
+            requestBatch.getPrintRequestBatchCards().forEach(batchCard -> {
                 batchCard.setCard(batchCard.getCard());
-                batchCard.setPrintRequestBatch(batch);
+                batchCard.setPrintRequestBatch(requestBatch);
             });
         });
+
         printRequest.setStatusCode(EPrintRequestStatus.CONFIRMED.name());
         printRequest.setConfirmationDate(new Date());
         return super.save(printRequest);

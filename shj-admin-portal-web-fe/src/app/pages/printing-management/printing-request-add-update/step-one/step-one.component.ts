@@ -10,6 +10,9 @@ import {Lookup} from "@model/lookup.model";
 import {PrintService} from "@core/services/print/print.service";
 import {PrintRequestStorage} from "@pages/printing-management/printing-request-add-update/print-request-storage";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {ToastService} from "@shared/components/toast";
+import {I18nService} from "@dcc-commons-ng/services";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-step-one',
@@ -41,15 +44,15 @@ export class StepOneComponent implements OnInit {
 
   constructor(private modalService: NgbModal,
               private cardService: CardService,
+              private toastr: ToastService,
+              private translate: TranslateService,
               private printService: PrintService,
               private lookupsService: LookupService,
-              private printRequestStorage: PrintRequestStorage,
               private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
     this.initForm();
-    this.printRequestStorage.storage = null;
     this.cardService.findCountries().subscribe(result => {
       this.nationalities = result;
       this.localizedNationalities = this.lookupsService.localizedItems(this.nationalities);
@@ -161,15 +164,15 @@ export class StepOneComponent implements OnInit {
     }
   }
 
-  save() {
-    this.printService.save(this.addedCards.map(card => card.id)).subscribe(
-      res => {
-        this.printService.find(res.id).subscribe(
-          result => {
-            this.printRequestStorage.storage = result;
-            this.onSetPrintRequest.emit(result);
-          }
-        );
+  create() {
+    this.printService.create(this.addedCards.map(card => card.id)).subscribe(
+      result => {
+        if (result.hasOwnProperty("errors") && result.errors) {
+          console.log("Error");
+          this.toastr.warning(this.translate.instant("printing-management.dialog_confirm_request_error_text"), this.translate.instant("general.dialog_error_title"));
+        } else {
+          this.onSetPrintRequest.emit(result);
+        }
       }
     );
   }

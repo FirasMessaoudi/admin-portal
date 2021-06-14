@@ -27,7 +27,7 @@
       </div>
       <div *ngIf="printRequest?.statusCode !== printRequestStatus.NEW" class="form-group col mb-lg-0">
         <label class="col-form-label">{{'printing-management.request_confirmation_date' | translate}}</label>
-        <span class="form-control-plaintext ">{{printRequest?.updateDate | dateFormat}}</span>
+        <span class="form-control-plaintext ">{{printRequest?.confirmationDate | dateFormat}}</span>
       </div>
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'printing-management.request_status' | translate}}</label>
@@ -63,9 +63,9 @@
                 class="packageNo">{{i + 1}}</span></span>
                 <span class="">{{'printing-management.contains' | translate}}
                   <b>{{batch.printRequestBatchCards?.length}}</b> {{'printing-management.cards' | translate}}</span>
-                <span class="badge m-2 text-muted" *ngFor="let requestBatch of batch.batchTypeCodes.split(','); let i = index; let lastBatch = last;">
-                  {{currentLanguage.startsWith("en") ? getBatchType(batch.batchTypeCodes.split(',')[i]).labelEn : getBatchType(batch.batchTypeCodes.split(',')[i]).labelAr}}:
-                  {{batch.batchTypeCodes.split(',')[i] === batchType.NATIONALITY ? lookupService().localizedLabel(countries, batch.batchTypeValues.split(',')[i]) : batch.batchTypeValues.split(',')[i]}}
+                <span class="badge m-2 text-muted" *ngFor="let requestBatch of batch.batchTypeCodes?.split(','); let i = index; let lastBatch = last;">
+                  {{currentLanguage.startsWith("en") ? getBatchType(batch.batchTypeCodes?.split(',')[i]).labelEn : getBatchType(batch.batchTypeCodes?.split(',')[i]).labelAr}}:
+                  {{batch.batchTypeCodes?.split(',')[i] === batchType.NATIONALITY ? lookupService().localizedLabel(countries, batch.batchTypeValues?.split(',')[i]) : batch.batchTypeValues?.split(',')[i]}}
                   <span *ngIf="!lastBatch">,</span>
                 </span>
               </a>

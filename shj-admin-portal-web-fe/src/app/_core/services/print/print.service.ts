@@ -56,13 +56,13 @@ export class PrintService {
     );
   }
 
-  save(cardsIds: Number[]): Observable<any> {
+  create(cardsIds: Number[]): Observable<any> {
     return this.http.post<any>("/core/api/print/requests/create", cardsIds).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.hasOwnProperty('error')) {
           return of(error.error);
         } else {
-          console.error('An error happen while saving the print request : ' + error);
+          console.error('An error happen while creating print request : ' + error);
           return of(error);
         }
       }));
@@ -76,8 +76,12 @@ export class PrintService {
     return this.http.get<any>('/core/api/lookup/print-batch-type/list');
   }
 
-  batch(requestId: number, printBatchTypes: string[]): Observable<any> {
-    return this.http.post<any>("/core/api/print/requests/" + requestId + "/batch", printBatchTypes).pipe(
+  batch(printRequest: PrintRequest, batchTypes): Observable<any> {
+    let params = new HttpParams();
+    if (batchTypes.length > 0) {
+      params = params.append("types", batchTypes.join(","));
+    }
+    return this.http.post<any>("/core/api/print/requests/batch", printRequest, {params: params}).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.hasOwnProperty('error')) {
           return of(error.error);
@@ -89,7 +93,7 @@ export class PrintService {
   }
 
   confirm(printRequest: PrintRequest) {
-    return this.http.post<any>("/core/api/print/requests/" + printRequest.id + "/confirm", printRequest).pipe(
+    return this.http.post<any>("/core/api/print/requests/confirm", printRequest).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.hasOwnProperty('error')) {
           return of(error.error);
