@@ -293,9 +293,21 @@ public class ExcelItemReader<T> {
         if (value == null) {
             return null;
         } else if (value instanceof Number) {
-            return BooleanUtils.toBoolean((Integer) value);
+            if (!Arrays.asList("0", "1").contains("" + value)) {
+                dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_BOOLEAN_FORMAT.getMessage())).valid(false).build());
+                return false;
+            }
+            return BooleanUtils.toBoolean("1".equals(value.toString()) ? 1 : 0);
         } else if (value instanceof String) {
-            return BooleanUtils.toBoolean((String) value);
+            if (Arrays.asList("0", "1").contains("" + value)) {
+                return BooleanUtils.toBoolean(Integer.parseInt(value.toString()));
+            }
+            Boolean bool = BooleanUtils.toBooleanObject((String) value);
+            if (bool == null) {
+                dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_BOOLEAN_FORMAT.getMessage())).valid(false).build());
+                return false;
+            }
+            return bool;
         } else {
             dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_BOOLEAN_FORMAT.getMessage())).valid(false).build());
             return false;
