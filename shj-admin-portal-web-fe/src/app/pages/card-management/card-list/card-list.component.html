@@ -2,11 +2,11 @@
   <div class="title__Page">
     <h3 class="sectionTitle">
       {{ "card-management.cards_list" | translate }}
-      <button class="btn btn-link shadow-none"  (click)="isSearchbarCollapsed = !isSearchbarCollapsed">
+      <button class="btn btn-link shadow-none" (click)="isSearchbarCollapsed = !isSearchbarCollapsed">
         <svg-icon styleClass="h4 pt-3" icon="search"></svg-icon>
       </button>
     </h3>
-    <button id="addExceptionalCard" class="btn btn-outline-dcc-primary px-4" *ngIf="canAddCard">
+    <button disabled id="addExceptionalCard" class="btn btn-outline-dcc-primary px-4" *ngIf="canAddCard">
       <svg-icon styleClass="mr-2" icon="plus"></svg-icon> <span>{{ "card-management.add_exceptional_card" | translate }}</span>
     </button>
   </div>
