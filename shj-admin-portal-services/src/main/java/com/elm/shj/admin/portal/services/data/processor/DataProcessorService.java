@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.services.data.processor;
 
 import com.elm.shj.admin.portal.services.data.reader.ExcelItemReader;
 import com.elm.shj.admin.portal.services.data.reader.ExcelItemReaderFactory;
+import com.elm.shj.admin.portal.services.data.validators.CheckFirst;
+import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
 import lombok.RequiredArgsConstructor;
@@ -75,6 +77,8 @@ public class DataProcessorService {
                     dataValidationResults.addAll(excelItemReader.getDataReadingErrors());
                     // run validations
                     Set<ConstraintViolation<T>> violations = validator.validate(item);
+                    violations.addAll(validator.validate(item, CheckFirst.class));
+                    violations.addAll(validator.validate(item, CheckSecond.class));
                     if (violations.isEmpty()) {
                         // if no validation errors than add item
                         parsedItems.add(new AbstractMap.SimpleEntry<>(row, item));
