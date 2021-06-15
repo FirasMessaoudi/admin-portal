@@ -86,7 +86,8 @@
         <div class="col-md-3">
           <div class="avatarBox">
             <div class="avatar">
-              <img [src]="user?.avatar ? 'assets/images/space.png'+user?.avatar : url" />
+
+              <img [src]="user?.avatar ? 'data:image/jpeg;base64,'+user?.avatar : url"/>
             </div>
           </div>
         </div>
