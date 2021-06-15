@@ -32,10 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
@@ -127,8 +125,6 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
             throw new IllegalArgumentException("Unable to upload file to SFTP");
         }
         log.info("file uploaded successfully to: {}", sftpPath);
-        // discovering items
-        createdRequest.setItemCount(200);
         // return the persisted object
         return createdRequest;
     }
@@ -210,7 +206,8 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
                 String errorFilePath = generateSftpFilePath(fileName, dataRequest.getReferenceNumber(), true);
                 sftpService.uploadFile(errorFilePath, errorFile.getInputStream());
                 // update the data request status
-                ((DataRequestRepository) getRepository()).updateProcessingStatus(dataRequestId, EDataRequestStatus.PROCESSED_WITH_ERRORS.getId(), errorFilePath, parserResult.getDataValidationResults().size());
+                Set<Integer> rowsWithErrors = parserResult.getDataValidationResults().stream().filter(dvr -> !dvr.isValid()).map(dvr -> dvr.getCell().getRow().getRowNum()).collect(Collectors.toSet());
+                ((DataRequestRepository) getRepository()).updateProcessingStatus(dataRequestId, EDataRequestStatus.PROCESSED_WITH_ERRORS.getId(), errorFilePath, rowsWithErrors.size());
             } else {
                 // update the data request status
                 ((DataRequestRepository) getRepository()).updateStatus(dataRequestId, EDataRequestStatus.PROCESSED_SUCCESSFULLY.getId());

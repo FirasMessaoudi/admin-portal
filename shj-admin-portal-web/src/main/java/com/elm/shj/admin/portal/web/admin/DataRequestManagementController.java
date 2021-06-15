@@ -138,9 +138,8 @@ public class DataRequestManagementController {
     public DataRequestDto create(@RequestPart("request") @Valid DataRequestDto dataRequest,
                                  @RequestPart("file") MultipartFile file) throws Exception {
         log.info("Creating data request for segment#{}", dataRequest.getDataSegment().getId());
-        DataRequestDto savedDataRequest = dataRequestService.save(dataRequest, file);
-        savedDataRequest.setItemCount(dataRequestService.readItemsCount(file));
-        return savedDataRequest;
+        dataRequest.setItemCount(dataRequestService.readItemsCount(file));
+        return dataRequestService.save(dataRequest, file);
     }
 
     /**
