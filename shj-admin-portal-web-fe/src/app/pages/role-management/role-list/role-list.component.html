@@ -21,7 +21,7 @@
           <label class="col-form-label">{{ "role-management.authority" | translate }}</label>
 
           <select formControlName="authorityId" class="custom-select">
-            <option [ngValue]="-1" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option [ngValue]="-1">{{"general.select_option" | translate}}</option>
 
             <optgroup [attr.label]="currentLanguage.startsWith('en') ? authority.labelEn : authority.labelAr" *ngFor="let authority of authorities">
               <option [ngValue]="authority.id">

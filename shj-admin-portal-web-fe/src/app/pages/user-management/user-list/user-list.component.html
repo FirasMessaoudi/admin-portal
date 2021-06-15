@@ -20,7 +20,7 @@
           <label class="col-form-label">{{ "user-management.role" | translate }}</label>
 
           <select formControlName="role" (ngModelChange)="onRoleChange($event)" class="custom-select" [class.text-danger]="f.role.value && !f.role.value.activated">
-            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option [ngValue]="null">{{"general.select_option" | translate}}</option>
             <option *ngFor="let role of roles" [ngValue]="role" [class.text-danger]="!role?.activated" [class.text-black-50]="role?.activated">
               {{ currentLanguage.startsWith("en") ? role.labelEn : role.labelAr }}
               <span *ngIf="!role?.activated">
@@ -33,7 +33,7 @@
           <label class="col-form-label">{{ "user-management.account_status" | translate }}</label>
 
           <select formControlName="status" class="custom-select">
-            <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+            <option [ngValue]="null">{{"general.select_option" | translate}}</option>
             <option *ngFor="let status of userStatuses" [ngValue]="status">
               {{ currentLanguage.startsWith("en") ? status.nameEnglish : status.nameArabic }}
             </option>

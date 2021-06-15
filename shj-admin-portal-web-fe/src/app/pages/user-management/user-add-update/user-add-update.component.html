@@ -168,7 +168,7 @@
               <select formControlName="role" class="form-control custom-select {{f.role.errors && f.role.touched ? 'is-invalid' : ''}}"
                       required [class.text-danger]="f.role.value && !f.role.value.activated" (ngModelChange)="onMainRoleChange($event)"
               [compareWith]="compareById">
-                <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+                <option [ngValue]="null">{{"general.select_option" | translate}}</option>
                 <option *ngFor="let role of roles" [class.text-danger]="!role?.activated" [class.text-black-50]="role?.activated" [ngValue]="role">
                   {{ currentLanguage.startsWith("en") ? role.labelEn : role.labelAr }}
                   <span *ngIf="!role?.activated">({{'user-management.not_activated' | translate}})</span>

@@ -3,7 +3,7 @@
   <div class="form-group col">
     <label class="col-form-label">{{'data-request-management.choose_segment' | translate }}</label>
     <select formControlName="dataSegment" (ngModelChange)="onSegmentChange($event)" class="custom-select">
-      <option [ngValue]="null" disabled selected class="hidden">{{"general.select_option" | translate}}</option>
+      <option [ngValue]="null">{{"general.select_option" | translate}}</option>
       <option *ngFor="let dataSegment of dataSegments" [ngValue]="dataSegment">
         {{ currentLanguage.startsWith("en") ? dataSegment.labelEn : dataSegment.labelAr }}
       </option>
