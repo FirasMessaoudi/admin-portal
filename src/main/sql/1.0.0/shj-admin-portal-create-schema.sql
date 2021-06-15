@@ -597,9 +597,7 @@ create table shj_portal.sha_relative_relationship_lk
     code VARCHAR(20) NOT NULL,
     lang VARCHAR(45) NOT NULL,
     label NVARCHAR(50) NOT NULL,
-    data_request_record_id int NULL,
     update_date smalldatetime NULL,
-    CONSTRAINT fk_applicant_relative_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shj_portal.sha_data_request_record (id),
     CONSTRAINT relative_relationship_lk_unique unique (code ASC, lang ASC)
 );
 GO
