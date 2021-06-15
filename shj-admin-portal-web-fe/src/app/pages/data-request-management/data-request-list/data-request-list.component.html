@@ -36,6 +36,7 @@
           <tr>
             <th scope="col">{{'data-request-management.transaction_number' | translate}}</th>
             <th scope="col">{{'data-request-management.items_count' | translate}}</th>
+            <th scope="col">{{'data-request-management.error_items_count' | translate}}</th>
             <th scope="col">{{'data-request-management.segment' | translate}}</th>
             <th scope="col">{{'data-request-management.channel' | translate}}</th>
             <th scope="col">{{'data-request-management.request_date' | translate}}</th>
@@ -53,6 +54,7 @@
           <tr *ngFor="let dataRequest of dataRequests">
             <td><a [routerLink]="['/data-requests/details/' + dataRequest.id]" class="text-dcc-primary font-weight-bold">{{dataRequest.referenceNumber}}</a></td>
             <td>{{dataRequest.itemCount}}</td>
+            <td>{{dataRequest.errorCount}}</td>
             <td class="ltr">{{currentLanguage.startsWith("en") ? dataRequest?.dataSegment.labelEn : dataRequest?.dataSegment.labelAr}}</td>
             <td class="ltr">{{'data-request-management.channel_'+dataRequest?.channel | translate}}</td>
             <td class="ltr">{{dataRequest?.creationDate | dateTimeFormat}}</td>

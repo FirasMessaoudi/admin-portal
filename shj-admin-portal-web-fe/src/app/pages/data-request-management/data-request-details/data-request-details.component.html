@@ -13,10 +13,6 @@
         <span class="form-control-plaintext ">{{dataRequest?.referenceNumber}}</span>
       </div>
       <div class="form-group col mb-lg-0">
-        <label class="col-form-label">{{'data-request-management.items_count' | translate}}</label>
-        <span class="form-control-plaintext ">{{dataRequest?.itemCount}}</span>
-      </div>
-      <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'data-request-management.segment' | translate}}</label>
         <span class="form-control-plaintext ">{{currentLanguage.startsWith("en") ? dataRequest?.dataSegment.labelEn : dataRequest?.dataSegment.labelAr}}</span>
       </div>
@@ -34,50 +30,33 @@
       </div>
     </div>
 
-    <div class="table-responsive my-4">
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th scope="col">{{'card-management.applicant_name' | translate}}</th>
-            <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-            <th scope="col">{{'card-management.card_number' | translate}}</th>
-            <th scope="col">{{'card-management.passport_number' | translate}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="false" class="text-center">
-            <td colspan="10">
-              <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set" ></svg-icon>
-              <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
-            </td>
-          </tr>
-          <tr>
-            <td><a [routerLink]="['/cards/details/1']" class="text-dcc-primary font-weight-bold">{{'زبير عبد المجيد خان'}} {{'Zubair Abd Almajid Khan'}}</a></td>
-            <td class="ltr">{{'2367430624'}}</td>
-            <td class="ltr">{{'541285'}}</td>
-            <td class="ltr">{{'5O85X8'}}</td>
-          </tr>
-          <tr>
-            <td><a [routerLink]="['/cards/details/1']" class="text-dcc-primary font-weight-bold">{{'فاطمة زبير عبد المجيد خان'}} {{'Fatima Zubair Abd Almajid Khan'}}</a></td>
-            <td class="ltr">{{'2367430426'}}</td>
-            <td class="ltr">{{'541582'}}</td>
-            <td class="ltr">{{'5O8Y84'}}</td>
-          </tr>
-          <tr>
-            <td><a [routerLink]="['/cards/details/1']" class="text-dcc-primary font-weight-bold">{{'محمد سليم أحمد'}} {{'Moh Salim Ahmad'}}</a></td>
-            <td class="ltr">{{'2367430624'}}</td>
-            <td class="ltr">{{'541285'}}</td>
-            <td class="ltr">{{'5O85X8'}}</td>
-          </tr>
-          <tr>
-            <td><a [routerLink]="['/cards/details/1']" class="text-dcc-primary font-weight-bold">{{'عبد الرزاق البدر'}} {{'Abd Alrazzaq Albadr'}}</a></td>
-            <td class="ltr">{{'2367430426'}}</td>
-            <td class="ltr">{{'541582'}}</td>
-            <td class="ltr">{{'5O8Y84'}}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="dashes mx-1 row row-cols-1 row-cols-md-2 row-cols-lg-6">
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{'data-request-management.items_count' | translate}}</label>
+        <span class="form-control-plaintext ">{{dataRequest?.itemCount}}</span>
+      </div>
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{'data-request-management.error_items_count' | translate}}</label>
+        <span class="form-control-plaintext ">{{dataRequest?.errorCount}}</span>
+      </div>
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{'data-request-management.btn_download_original_file' | translate}}</label>
+        <span class="form-control-plaintext ">
+          <a class="action mx-2" href="javascript:void(0)" (click)="downloadOriginalFile(dataRequest.id)" ngbTooltip="{{'data-request-management.btn_download_original_file' | translate}}">
+            <svg-icon styleClass="fa-w-20 h5" icon="cloud-download"></svg-icon>
+          </a>
+        </span>
+      </div>
+      <div class="form-group col mb-lg-0" *ngIf="dataRequest.status.id === 5">
+        <label class="col-form-label">{{'data-request-management.btn_download_errors_file' | translate}}</label>
+        <span class="form-control-plaintext ">
+          <a class="action mx-2" href="javascript:void(0)" (click)="downloadErrorsFile(dataRequest.id)" ngbTooltip="{{'data-request-management.btn_download_errors_file' | translate}}">
+          <svg-icon styleClass="fa-w-16 h5 text-danger" icon="exclamation-circle"></svg-icon>
+        </a>
+        </span>
+      </div>
     </div>
+
 
 
   </div>

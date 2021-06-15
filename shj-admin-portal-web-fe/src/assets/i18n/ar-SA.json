@@ -406,6 +406,7 @@
     "new_request": "رفع بيانات جديدة",
     "transaction_number": "رقم الحركة",
     "items_count": "عدد العناصر",
+    "error_items_count": "عدد العناصر مع أخطاء",
     "items_to_process": "عنصر ستتم معالجته",
     "channel": "القناة",
     "segment": "الشريحة",

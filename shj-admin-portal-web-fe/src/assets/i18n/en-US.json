@@ -417,6 +417,7 @@
     "new_request": "Upload New Data",
     "transaction_number": "Tx Number",
     "items_count": "Items Count",
+    "error_items_count": "Error Items Count",
     "items_to_process": "Items to be processed",
     "channel": "Channel",
     "segment": "Segment",

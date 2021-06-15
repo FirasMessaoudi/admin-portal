@@ -54,6 +54,14 @@ export class DataRequestDetailsComponent implements OnInit {
     return this.i18nService.language;
   }
 
+  downloadOriginalFile(dataRequestId: number) {
+    this.dataRequestService.downloadAndSave(dataRequestId, 'O');
+  }
+
+  downloadErrorsFile(dataRequestId: number) {
+    this.dataRequestService.downloadAndSave(dataRequestId, 'E');
+  }
+
   get canSeeDataRequestDetails(): boolean {
     //TODO: change it to DATA_REQUEST_MANAGEMENT
     return this.authenticationService.hasAuthority(EAuthority.USER_MANAGEMENT);
