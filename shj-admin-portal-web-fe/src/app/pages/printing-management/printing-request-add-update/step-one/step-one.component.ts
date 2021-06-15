@@ -8,10 +8,8 @@ import {CountryLookup} from "@model/country-lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {Lookup} from "@model/lookup.model";
 import {PrintService} from "@core/services/printing/print.service";
-import {PrintRequestStorage} from "@pages/printing-management/printing-request-add-update/print-request-storage";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ToastService} from "@shared/components/toast";
-import {I18nService} from "@dcc-commons-ng/services";
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
@@ -32,6 +30,7 @@ export class StepOneComponent implements OnInit {
   localizedNationalities: Lookup[];
   searchForm: FormGroup;
   isAllSelected: boolean;
+  isLoading: boolean;
 
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();
@@ -99,9 +98,11 @@ export class StepOneComponent implements OnInit {
   }
 
   search(pageNumber: number): void {
+    this.isLoading = true;
     this.searchSubscription = this.cardService.searchCardsToPrint(this.searchForm.value.uin, this.searchForm.value.idNumber,
       this.searchForm.value.hamlahNumber, this.searchForm.value.motawefNumber, this.searchForm.value.passportNumber,
       this.searchForm.value.nationality, this.addedCards.map(card => card.id), pageNumber).subscribe(data => {
+      this.isLoading = false;
       this.cards = [];
       this.pageArray = [];
       this.page = data;
