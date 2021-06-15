@@ -28,8 +28,12 @@ public class ApplicantRitualDto implements Serializable {
 
     private long id;
     private ApplicantDto applicant;
+
+    @OnlyCharacters(min = 1, max = 16, allowNumbers = true)
     @CellIndex(index = 4)
     private String hamlahPackageCode;
+
+    @OnlyCharacters(min = 0, max = 16, allowNumbers = true)
     @CellIndex(index = 5)
     private String tafweejCode;
 
@@ -62,6 +66,8 @@ public class ApplicantRitualDto implements Serializable {
     @VisaOrPermitNumber(allowEmpty = false)
     @CellIndex(index = 12)
     private String permitNumber;
+
+    @OnlyCharacters(min = 5, max = 50, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 13)
     private String insuranceNumber;
 
@@ -75,8 +81,12 @@ public class ApplicantRitualDto implements Serializable {
     private String groupCode;
     @CellIndex(index = 17)
     private String unitCode;
+
+    @OnlyCharacters(min = 3, max = 20, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 18)
     private String busNumber;
+
+    @OnlyCharacters(min = 1, max = 6, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 19)
     private String seatNumber;
     private Date creationDate;

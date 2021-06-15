@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -53,23 +54,28 @@ public class ApplicantContactDto implements Serializable {
     @CellIndex(index = 19)
     private String countryCode;
 
+    @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
     @NullOrNotBlank(min = 3, max = 100)
     @CellIndex(index = 22)
     private String streetName;
 
+    @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
     @NullOrNotBlank(min = 3, max = 50)
     @CellIndex(index = 21)
     private String districtName;
 
+    @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
     @NullOrNotBlank(min = 3, max = 50)
     @CellIndex(index = 20)
     private String cityName;
 
+    @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
     @NullOrNotBlank(min = 5, max = 30)
     @CellIndex(index = 23)
     private String buildingNumber;
 
-    @NullOrNotBlank(min = 5, max = 30)
+    @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
+    @NullOrNotBlank(min = 3, max = 30)
     @CellIndex(index = 24)
     private String postalCode;
     private Date creationDate;
