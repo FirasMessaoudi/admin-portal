@@ -671,3 +671,45 @@ VALUES (N'<?xml version="1.0" encoding="UTF-8"?>
                                 </definitions>',
         1, N'بيانات المتقدم', N'Applicant Data', N'2021-04-13 13:38:43', null);
 GO
+
+SET IDENTITY_INSERT shj_portal.sha_ritual_zone ON;
+INSERT INTO shj_portal.sha_ritual_zone (id, code, lang, label) VALUES (1, 'A', 'ar', N'منطقة أ');
+INSERT INTO shj_portal.sha_ritual_zone (id, code, lang, label) VALUES (2, 'A', 'en', 'Zone A');
+INSERT INTO shj_portal.sha_ritual_zone (id, code, lang, label) VALUES (3, 'B', 'ar', N'منطقة ب');
+INSERT INTO shj_portal.sha_ritual_zone (id, code, lang, label) VALUES (4, 'B', 'en', 'Zone B');
+INSERT INTO shj_portal.sha_ritual_zone (id, code, lang, label) VALUES (5, 'C', 'ar', N'منطقة ج');
+INSERT INTO shj_portal.sha_ritual_zone (id, code, lang, label) VALUES (6, 'C', 'en', 'Zone C');
+INSERT INTO shj_portal.sha_ritual_zone (id, code, lang, label) VALUES (7, 'D', 'ar', N'منطقة د');
+INSERT INTO shj_portal.sha_ritual_zone (id, code, lang, label) VALUES (8, 'D', 'en', 'Zone D');
+INSERT INTO shj_portal.sha_ritual_zone (id, code, lang, label) VALUES (9, 'E', 'ar', N'منطقة ه');
+INSERT INTO shj_portal.sha_ritual_zone (id, code, lang, label) VALUES (10, 'E', 'en', 'Zone E');
+SET IDENTITY_INSERT shj_portal.sha_ritual_zone OFF;
+GO
+
+SET IDENTITY_INSERT shj_portal.sha_ritual_group ON;
+INSERT INTO shj_portal.sha_ritual_group (id, code, lang, label) VALUES (1, '1', 'ar', N'مجموعة 1');
+INSERT INTO shj_portal.sha_ritual_group (id, code, lang, label) VALUES (2, '1', 'en', 'Group 1');
+INSERT INTO shj_portal.sha_ritual_group (id, code, lang, label) VALUES (3, '2', 'ar', N'مجموعة 2');
+INSERT INTO shj_portal.sha_ritual_group (id, code, lang, label) VALUES (4, '2', 'en', 'Group 2');
+INSERT INTO shj_portal.sha_ritual_group (id, code, lang, label) VALUES (5, '3', 'ar', N'مجموعة 3');
+INSERT INTO shj_portal.sha_ritual_group (id, code, lang, label) VALUES (6, '3', 'en', 'Group 3');
+INSERT INTO shj_portal.sha_ritual_group (id, code, lang, label) VALUES (7, '4', 'ar', N'مجموعة 4');
+INSERT INTO shj_portal.sha_ritual_group (id, code, lang, label) VALUES (8, '4', 'en', 'Group 4');
+INSERT INTO shj_portal.sha_ritual_group (id, code, lang, label) VALUES (9, '5', 'ar', N'مجموعة 5');
+INSERT INTO shj_portal.sha_ritual_group (id, code, lang, label) VALUES (10, '5', 'en', 'Group 5');
+SET IDENTITY_INSERT shj_portal.sha_ritual_group OFF;
+GO
+
+SET IDENTITY_INSERT shj_portal.sha_ritual_unit ON;
+INSERT INTO shj_portal.sha_ritual_unit (id, code, lang, label) VALUES (1, '1', 'ar', N'وحدة تنفيذية 1');
+INSERT INTO shj_portal.sha_ritual_unit (id, code, lang, label) VALUES (2, '1', 'en', 'Unit 1');
+INSERT INTO shj_portal.sha_ritual_unit (id, code, lang, label) VALUES (3, '2', 'ar', N'وحدة تنفيذية 2');
+INSERT INTO shj_portal.sha_ritual_unit (id, code, lang, label) VALUES (4, '2', 'en', 'Unit 2');
+INSERT INTO shj_portal.sha_ritual_unit (id, code, lang, label) VALUES (5, '3', 'ar', N'وحدة تنفيذية 3');
+INSERT INTO shj_portal.sha_ritual_unit (id, code, lang, label) VALUES (6, '3', 'en', 'Unit 3');
+INSERT INTO shj_portal.sha_ritual_unit (id, code, lang, label) VALUES (7, '4', 'ar', N'وحدة تنفيذية 4');
+INSERT INTO shj_portal.sha_ritual_unit (id, code, lang, label) VALUES (8, '4', 'en', 'Unit 4');
+INSERT INTO shj_portal.sha_ritual_unit (id, code, lang, label) VALUES (9, '5', 'ar', N'وحدة تنفيذية 5');
+INSERT INTO shj_portal.sha_ritual_unit (id, code, lang, label) VALUES (10, '5', 'en', 'Unit 5');
+SET IDENTITY_INSERT shj_portal.sha_ritual_unit OFF;
+GO
