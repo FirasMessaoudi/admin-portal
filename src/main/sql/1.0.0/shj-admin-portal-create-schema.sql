@@ -701,13 +701,51 @@ create table shj_portal.sha_print_request_batch_card
 );
 GO
 
-if not exists(select *
-              from sys.tables
-              where name = 'sha_scheduled_tasks_lock')
+if not exists(select * from sys.tables where name = 'sha_scheduled_tasks_lock')
 create table shj_portal.sha_scheduled_tasks_lock
 (
     name       varchar(255) NOT NULL,
     lock_until datetime     NULL,
     locked_at  datetime     NULL,
     locked_by  varchar(255) NOT NULL,
-)
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_ritual_zone')
+create table shj_portal.sha_ritual_zone
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    code VARCHAR(20) NOT NULL,
+    lang VARCHAR(45) NOT NULL,
+    label NVARCHAR(50) NOT NULL,
+    season_id INT NULL,
+    creation_date smalldatetime NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint ritual_zone_unique unique (code ASC, lang ASC)
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_ritual_unit')
+create table shj_portal.sha_ritual_unit
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    code VARCHAR(20) NOT NULL,
+    lang VARCHAR(45) NOT NULL,
+    label NVARCHAR(50) NOT NULL,
+    season_id INT NULL,
+    creation_date smalldatetime NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint ritual_unit_unique unique (code ASC, lang ASC)
+);
+GO
+
+if not exists (select * from sys.tables where name = 'sha_ritual_group')
+create table shj_portal.sha_ritual_group
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    code VARCHAR(20) NOT NULL,
+    lang VARCHAR(45) NOT NULL,
+    label NVARCHAR(50) NOT NULL,
+    season_id INT NULL,
+    creation_date smalldatetime NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint ritual_group_unique unique (code ASC, lang ASC)
+);
+GO

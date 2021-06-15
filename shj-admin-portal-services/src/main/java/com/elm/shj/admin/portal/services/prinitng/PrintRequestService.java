@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021 ELM. All rights reserved.
  */
-package com.elm.shj.admin.portal.services.print.request;
+package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
 import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
@@ -73,7 +73,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     }
 
     @Transactional
-    public PrintRequestDto save(List<Long> cardsIds) {
+    public PrintRequestDto prepare(List<Long> cardsIds) {
         // create and save the print request
         PrintRequestDto printRequest = new PrintRequestDto();
         printRequest.setReferenceNumber(generateReferenceNumber());
@@ -87,7 +87,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
             printRequest.getPrintRequestCards().add(printRequestCard);
         });
 
-        // return the persisted object
+        // return the print request
         return printRequest;
     }
 
@@ -127,16 +127,12 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
                         .batchTypeCodes(selectedBatchTypes.stream().map(EPrintBatchType::name).collect(Collectors.joining(",")))
                         // Save batching values as comma-separated string
                         .batchTypeValues(String.join(",", key))
-                        .printRequestBatchCards(value.stream().map(
-                                requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList()))
-                        .build();
+                        .printRequestBatchCards(value.stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
                 printRequest.getPrintRequestBatches().add(printRequestBatch);
             });
         } else {
             // No batching criteria selected save all printing cards as one batch
-            PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
-                    .printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList()))
-                    .build();
+            PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder().printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
             printRequest.getPrintRequestBatches().add(printRequestBatch);
         }
         // Return nested object

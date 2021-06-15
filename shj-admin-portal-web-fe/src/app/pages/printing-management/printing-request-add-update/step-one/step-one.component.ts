@@ -7,7 +7,7 @@ import {ApplicantCard} from "@model/card.model";
 import {CountryLookup} from "@model/country-lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {Lookup} from "@model/lookup.model";
-import {PrintService} from "@core/services/print/print.service";
+import {PrintService} from "@core/services/printing/print.service";
 import {PrintRequestStorage} from "@pages/printing-management/printing-request-add-update/print-request-storage";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ToastService} from "@shared/components/toast";
@@ -165,7 +165,7 @@ export class StepOneComponent implements OnInit {
   }
 
   create() {
-    this.printService.create(this.addedCards.map(card => card.id)).subscribe(
+    this.printService.preapre(this.addedCards.map(card => card.id)).subscribe(
       result => {
         if (result.hasOwnProperty("errors") && result.errors) {
           console.log("Error");

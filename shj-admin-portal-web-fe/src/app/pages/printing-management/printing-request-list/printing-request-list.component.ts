@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {EAuthority, Page} from "@shared/model";
 import {AuthenticationService} from "@core/services";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {PrintService} from "@core/services/print/print.service";
+import {PrintService} from "@core/services/printing/print.service";
 import {Subscription} from "rxjs";
 import {PrintRequest} from "@model/print-request.model";
 import {Lookup} from "@model/lookup.model";

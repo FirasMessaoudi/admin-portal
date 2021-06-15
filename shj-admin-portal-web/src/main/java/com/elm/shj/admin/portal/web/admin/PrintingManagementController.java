@@ -7,7 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.EPrintBatchType;
 import com.elm.shj.admin.portal.services.dto.PrintRequestDto;
-import com.elm.shj.admin.portal.services.print.request.PrintRequestService;
+import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,11 +79,11 @@ public class PrintingManagementController {
      * @param cardsIds TODO Complete documentation
      * @return the created request
      */
-    @PostMapping("/create")
+    @PostMapping("/prepare")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
-    public PrintRequestDto create(@RequestBody List<Long> cardsIds) {
-        log.debug("Creating print request");
-        return printRequestService.save(cardsIds);
+    public PrintRequestDto prepare(@RequestBody List<Long> cardsIds) {
+        log.debug("Preparing print request");
+        return printRequestService.prepare(cardsIds);
     }
 
     @PostMapping("/batch")

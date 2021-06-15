@@ -56,13 +56,13 @@ export class PrintService {
     );
   }
 
-  create(cardsIds: Number[]): Observable<any> {
-    return this.http.post<any>("/core/api/print/requests/create", cardsIds).pipe(
+  preapre(cardsIds: Number[]): Observable<any> {
+    return this.http.post<any>("/core/api/print/requests/prepare", cardsIds).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.hasOwnProperty('error')) {
           return of(error.error);
         } else {
-          console.error('An error happen while creating print request : ' + error);
+          console.error('An error happen while preparing print request : ' + error);
           return of(error);
         }
       }));

@@ -162,6 +162,7 @@
       <tr>
         <th scope="col">{{'card-management.applicant_name' | translate}}</th>
         <th scope="col">{{'card-management.applicant_id' | translate}}</th>
+        <th scope="col">{{'printing-management.id_number' | translate}}</th>
         <th scope="col">{{'card-management.passport_number' | translate}}</th>
         <th scope="col" class="text-center"></th>
       </tr>
@@ -177,6 +178,7 @@
         *ngFor="let card of addedCards | slice: (addedCardsCurrentPage * addedCardsPageSize) - addedCardsPageSize :addedCardsCurrentPage * addedCardsPageSize">
         <td>{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</td>
         <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
+        <td>{{card?.applicantRitual?.applicant?.idNumber}}</td>
         <td class="ltr">{{card?.applicantRitual?.applicant?.passportNumber}}</td>
         <td>
           <button (click)="undoAddCard(card?.id)"

@@ -7,7 +7,7 @@ import {map} from "rxjs/operators";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
-import {PrintService} from "@core/services/print/print.service";
+import {PrintService} from "@core/services/printing/print.service";
 import {PrintRequest} from "@model/print-request.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {Lookup} from "@model/lookup.model";

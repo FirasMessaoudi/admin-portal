@@ -42,6 +42,7 @@
         <tr>
           <th class="nameCol" scope="col">{{'card-management.applicant_name' | translate}}</th>
           <th scope="col">{{'card-management.applicant_id' | translate}}</th>
+          <th scope="col">{{'printing-management.id_number' | translate}}</th>
           <th scope="col">{{'card-management.card_number' | translate}}</th>
           <th scope="col">{{'card-management.passport_number' | translate}}</th>
         </tr>
@@ -80,6 +81,7 @@
               </a>
             </td>
             <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
+            <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.idNumber}}</td>
             <td class="ltr">{{batchCard?.card?.referenceNumber}}</td>
             <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
           </tr>
