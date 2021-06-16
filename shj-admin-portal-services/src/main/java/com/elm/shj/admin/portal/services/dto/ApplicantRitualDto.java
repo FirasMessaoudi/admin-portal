@@ -75,10 +75,13 @@ public class ApplicantRitualDto implements Serializable {
     @CellIndex(index = 14)
     private String borderNumber;
 
+    @ZoneCode
     @CellIndex(index = 15)
     private String zoneCode;
+    @GroupCode
     @CellIndex(index = 16)
     private String groupCode;
+    @UnitCode
     @CellIndex(index = 17)
     private String unitCode;
 
