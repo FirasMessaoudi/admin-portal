@@ -56,19 +56,21 @@
 
     </form>
 
-    <div class="table-responsive my-4">
 
-      <div ngbDropdown>
-        <button [disabled]="cards?.length === 0" type="submit" class="btn btn-dcc-primary px-5 mr-3 noArrow" id="dropdownBasic1" ngbDropdownToggle>
-          {{'general.actions' | translate}}
-          <svg-icon styleClass="h4 ml-3" icon="bars"></svg-icon>
-        </button>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-          <button ngbDropdownItem [disabled]="selectedCards?.length === page?.totalElements" (click)="selectAllCards()">{{'general.select_all' | translate}} ({{page?.totalElements}})</button>
-          <button ngbDropdownItem [disabled]="selectedCards?.length === 0" (click)="deselectAllCards()">{{'general.deselect_all' | translate}}</button>
+    <div class="table-responsive my-4">
+      <div class="d-flex justify-content-end">
+
+        <div ngbDropdown>
+          <button [disabled]="cards?.length === 0" type="submit" class="btn btn-dcc-light  px-5 noArrow" id="dropdownBasic1" ngbDropdownToggle>
+            {{'general.actions' | translate}}
+            <svg-icon styleClass="h6 ml-3" icon="bars"></svg-icon>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button ngbDropdownItem [disabled]="selectedCards?.length === page?.totalElements" (click)="selectAllCards()">{{'general.select_all' | translate}} ({{page?.totalElements}})</button>
+            <button ngbDropdownItem [disabled]="selectedCards?.length === 0" (click)="deselectAllCards()">{{'general.deselect_all' | translate}}</button>
+          </div>
         </div>
       </div>
-
       <table id="selectedApplicantsSearchResult" class="table table-striped table-hover">
         <thead>
         <tr>
