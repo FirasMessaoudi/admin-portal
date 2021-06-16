@@ -78,8 +78,7 @@ export class PrintingRequestListComponent implements OnInit {
   }
 
   get canSeePrintRequestsList(): boolean {
-    //TODO: change it to PRINTING_MANAGEMENT
-    return this.authenticationService.hasAuthority(EAuthority.USER_MANAGEMENT);
+    return this.authenticationService.hasAuthority(EAuthority.PRINTING_REQUEST_MANAGEMENT);
   }
 
   loadPage(page: number) {
@@ -110,10 +109,6 @@ export class PrintingRequestListComponent implements OnInit {
         this.printRequests = this.page.content;
       }
     });
-  }
-
-  cancelSearch() {
-    this.initForm();
   }
 
 }
