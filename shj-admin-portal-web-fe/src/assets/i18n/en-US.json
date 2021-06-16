@@ -99,8 +99,8 @@
     "select_option": "-- Please Select --",
     "name": "Name",
     "gender": "Gender",
-    "select_all": "Select All",
-    "deselect_all": "Deselect All",
+    "select": "Select",
+    "deselect": "Deselect",
     "btn_next": "Next",
     "btn_previous": "Previous",
     "label_yes": "Yes",
@@ -392,6 +392,8 @@
     "btn_back_to_printing_management": "Back to Printing Management",
     "add_no_cards": "Add {{noCards}} card(s)",
     "add_cards": "Add card",
+    "cards_from_all_pages": "card(s) from all pages",
+    "cards_selected_on_the_current_page": "{{noCards}} card(s) have been selected on the current page",
     "dialog_confirm_request_error_text": "Error while confirming your request. Please try again..."
   },
   "rule-management": {

@@ -31,6 +31,8 @@ export class StepOneComponent implements OnInit {
   searchForm: FormGroup;
   isAllSelected: boolean;
   isLoading: boolean;
+  isSelectAllClicked: boolean;
+  isSelectLoading: boolean;
 
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();
@@ -128,6 +130,7 @@ export class StepOneComponent implements OnInit {
   }
 
   selectCardsInThePage(event) {
+    this.isSelectAllClicked = true;
     if (event.target.checked) {
       this.cards.forEach(card => {
         if (!this.selectedCards.map(c => c.id).includes(card.id)) {
@@ -139,13 +142,18 @@ export class StepOneComponent implements OnInit {
         this.selectedCards.splice(this.selectedCards.findIndex(c => c.id === card.id), 1);
       })
     }
+
+    this.isAllSelected = this.selectedCards.length === this.page.totalElements;
   }
 
   selectAllCards() {
-    this.isAllSelected = true;
+    this.isSelectLoading = true;
     this.searchSubscription = this.cardService.searchAllCardsToPrint(this.searchForm.value.uin, this.searchForm.value.idNumber,
       this.searchForm.value.hamlahNumber, this.searchForm.value.motawefNumber, this.searchForm.value.passportNumber,
       this.searchForm.value.nationality, this.addedCards.map(card => card.id)).subscribe(data => {
+      this.isSelectLoading = false;
+      this.isSelectAllClicked = true;
+      this.isAllSelected = true;
       this.selectedCards = data;
     });
   }
@@ -163,7 +171,10 @@ export class StepOneComponent implements OnInit {
     } else {
       this.selectedCards.splice(this.selectedCards.findIndex(card => card.id === id), 1);
     }
+
+    this.isAllSelected = this.selectedCards.length === this.page.totalElements;
   }
+
 
   create() {
     this.printService.preapre(this.addedCards.map(card => card.id)).subscribe(
@@ -207,6 +218,14 @@ export class StepOneComponent implements OnInit {
   numberOfPages() {
     return Math.ceil(this.addedCards.length / this.addedCardsPageSize);
   };
+
+  numberOfSelectedCardsInCurrentPage(): number {
+    let counter = 0;
+    this.selectedCards.map(c => c.id).forEach(id => {
+      if (this.cards.map(c => c.id).includes(id)) counter++
+    });
+    return counter;
+  }
 
   setCurrentPage(page: number) {
     this.addedCardsCurrentPage = page;

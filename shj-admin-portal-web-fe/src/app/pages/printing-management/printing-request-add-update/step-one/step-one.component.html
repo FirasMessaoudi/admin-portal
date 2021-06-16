@@ -49,7 +49,8 @@
       </div>
 
       <div class="form-group col-12">
-        <button id="searchCard" type="submit" [disabled]="isLoading" (click)="search(0)" class="btn btn-dcc-primary px-5 mr-3">
+        <button id="searchCard" type="submit" [disabled]="isLoading" (click)="search(0)"
+                class="btn btn-dcc-primary px-5 mr-3">
           {{ "general.btn_search" | translate }}
         </button>
       </div>
@@ -58,17 +59,22 @@
 
 
     <div class="table-responsive my-4">
-      <div class="d-flex justify-content-end">
-
-        <div ngbDropdown>
-          <button [disabled]="cards?.length === 0" type="submit" class="btn btn-dcc-light  px-5 noArrow" id="dropdownBasic1" ngbDropdownToggle>
-            {{'general.actions' | translate}}
-            <svg-icon styleClass="h6 ml-3" icon="bars"></svg-icon>
-          </button>
-          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-            <button ngbDropdownItem [disabled]="selectedCards?.length === page?.totalElements" (click)="selectAllCards()">{{'general.select_all' | translate}} ({{page?.totalElements}})</button>
-            <button ngbDropdownItem [disabled]="selectedCards?.length === 0" (click)="deselectAllCards()">{{'general.deselect_all' | translate}}</button>
-          </div>
+      <div class="d-flex">
+        <div class="pb-3 px-4 border-bottom w-100" [ngStyle]="{'visibility': isSelectAllClicked ? 'visible': 'hidden'}">
+          <span>{{'printing-management.cards_selected_on_the_current_page' | translate: {noCards: numberOfSelectedCardsInCurrentPage()} }}</span>
+          <!--<span>تم اختيار عدد<span class="font-weight-bold text-dcc-primary px-2">{{numberOfSelectedCardsInCurrentPage()}}</span>من البطاقات في الصفحة الحالية</span>-->
+          <a class="text-dcc-primary btn btn-link mx-3" (click)="selectAllCards()"
+             [ngStyle]="{'display': isSelectAllClicked && !isAllSelected ? 'inline-flex': 'none'}"
+             [ngClass]="{'disabled': isSelectLoading}"
+             href="javascript:void(0)">{{'general.select' | translate}}<span
+            class="font-weight-bold  text-dcc-primary px-2">{{page?.totalElements}}</span>{{'printing-management.cards_from_all_pages' | translate}}
+          </a>
+          <a class="text-dcc-primary btn btn-link mx-3" (click)="deselectAllCards()"
+             [ngStyle]="{'display': isSelectAllClicked && isAllSelected ? 'inline-flex': 'none'}"
+             [ngClass]="{'disabled': isSelectLoading}"
+             href="javascript:void(0)">{{'general.deselect' | translate}}<span
+            class="font-weight-bold  text-dcc-primary px-2">{{page?.totalElements}}</span>{{'printing-management.cards_from_all_pages' | translate}}
+          </a>
         </div>
       </div>
       <table id="selectedApplicantsSearchResult" class="table table-striped table-hover">

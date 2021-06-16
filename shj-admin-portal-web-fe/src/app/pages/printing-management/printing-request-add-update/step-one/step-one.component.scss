@@ -1,0 +1,5 @@
+.btn.btn-link {
+  &:hover, &:focus, &:active {
+    box-shadow: none;
+  }
+}

@@ -98,8 +98,8 @@
     "select_option": "-- الرجاء الاختيار --",
     "name": "الإ سم",
     "gender": "الجنس",
-    "select_all": "اختيار الكل",
-    "deselect_all": "إلغاء اختيار الكل",
+    "select": "اختيار",
+    "deselect": "إلغاء اختيار",
     "btn_next": "التالي",
     "btn_previous": "السابق",
     "label_yes": "نعم",
@@ -381,6 +381,8 @@
     "btn_back_to_printing_management": "عودة لإدارة الطباعة",
     "add_no_cards": "إضافة {{noCards}} بطاقة",
     "add_cards": "إضافة بطاقة",
+    "cards_from_all_pages": "بطاقة من جميع الصفحات",
+    "cards_selected_on_the_current_page": "تم اختيار {{noCards}} من البطاقات في الصفحة الحالية",
     "dialog_confirm_request_error_text": "حدث خطأ أثناء تأكيد طلبك. يرجى المحاولة مرة أخرى ..."
   },
   "rule-management": {
