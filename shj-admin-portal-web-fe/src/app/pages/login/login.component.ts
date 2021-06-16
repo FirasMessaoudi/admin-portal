@@ -7,6 +7,7 @@ import {I18nService} from "@dcc-commons-ng/services";
 import {ReCaptcha2Component, ReCaptchaV3Service} from "ngx-captcha";
 import {environment} from "@env/environment";
 import {DccValidators, IdType} from "@shared/validators";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -25,13 +26,13 @@ export class LoginComponent implements OnInit {
   @ViewChild('reCaptchaEl')
   captchaElem: ReCaptcha2Component;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private i18nService: I18nService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private reCaptchaV3Service: ReCaptchaV3Service,
-    private authenticationService: AuthenticationService
+  constructor(private modalService: NgbModal,
+              private formBuilder: FormBuilder,
+              private i18nService: I18nService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private reCaptchaV3Service: ReCaptchaV3Service,
+              private authenticationService: AuthenticationService
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.isAuthenticated()) {
@@ -53,6 +54,7 @@ export class LoginComponent implements OnInit {
 
     this.recaptchaSiteKey = environment.recaptchaSiteKey;
     this.authenticationService.updateSubject(null);
+    this.modalService.dismissAll();
     this.createForm();
 
     // get return url from route parameters or default to '/'
