@@ -234,4 +234,8 @@ export class StepOneComponent implements OnInit {
   getTotalPages(total, size): number {
     return Math.floor((total + size - 1) / size);
   }
+
+  splitString(str: string, separator: string): string[] {
+    return str.split(separator);
+  }
 }
