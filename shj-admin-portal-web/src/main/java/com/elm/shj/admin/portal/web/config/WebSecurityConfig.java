@@ -54,7 +54,7 @@ import java.util.regex.Pattern;
  */
 @Configurable
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @ComponentScan(basePackages = {"com.elm.shj.admin.portal.web", "com.elm.dcc.foundation.commons.web"})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 

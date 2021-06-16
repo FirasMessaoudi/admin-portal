@@ -713,3 +713,18 @@ INSERT INTO shj_portal.sha_ritual_unit (id, code, lang, label) VALUES (9, '5', '
 INSERT INTO shj_portal.sha_ritual_unit (id, code, lang, label) VALUES (10, '5', 'en', 'Unit 5');
 SET IDENTITY_INSERT shj_portal.sha_ritual_unit OFF;
 GO
+
+-- insert printing user
+SET IDENTITY_INSERT shj_portal.sha_user ON;
+insert into shj_portal.sha_user (id, nin, gender, mobile_number, date_of_birth_gregorian, date_of_birth_hijri, password_hash,
+                                 email, first_name, father_name, grand_father_name, family_name, activated, deleted, blocked,
+                                 number_of_tries, preferred_language, change_password_required, creation_date)
+values (9001, 1234567881, 'M', 512345678, convert(date, '14/02/1972', 103), '14400505', '$2a$10$A81/FuMFJWcxaJhUcL8isuVeKKa.hk7GVzTVTyf7xe/XoMVWuKckK',
+        'sgh@elm.sa', N'سعيد', N'عبد الرحمن','', N'العتيبي', 'true', 'false', 'false', 0, 'en', 'false', current_timestamp);
+SET IDENTITY_INSERT shj_portal.sha_user OFF;
+GO
+INSERT INTO shj_portal.sha_user_password_history (user_id, old_password_hash) values (9001, '$2a$10$MLt2QkqgBSo5WdVu5UJXjunvi0t/h.BKDJQWzO2tyrQKBysLmc9ou');
+GO
+-- assign role for printing user
+INSERT INTO shj_portal.sha_user_role (user_id, role_id, is_main_role) VALUES (9001, 8, 1);
+GO

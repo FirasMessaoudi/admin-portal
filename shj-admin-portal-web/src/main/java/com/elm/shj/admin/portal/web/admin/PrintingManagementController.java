@@ -14,10 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 /**
@@ -41,7 +41,7 @@ public class PrintingManagementController {
      * @return paginated print requests.
      */
     @GetMapping("/list")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    @PreAuthorize("hasAuthority('"+AuthorityConstants.PRINTING_REQUEST_MANAGEMENT+"')")
     public Page<PrintRequestDto> list(Pageable pageable, Authentication authentication) {
         log.debug("List print requests based on search criteria...");
         return printRequestService.findOtherThanNew(pageable);
@@ -54,7 +54,7 @@ public class PrintingManagementController {
      * @return the list of print requests
      */
     @PostMapping("/list")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    @PreAuthorize("hasAuthority('"+AuthorityConstants.PRINTING_REQUEST_MANAGEMENT+"')")
     public Page<PrintRequestDto> list(@RequestBody PrintRequestFilterVo filterVo, Pageable pageable, Authentication authentication) {
         log.debug("List print requests based on search criteria...");
         return printRequestService.findByFilter(filterVo, pageable);
@@ -67,7 +67,7 @@ public class PrintingManagementController {
      * @return the found user or <code>null</code>
      */
     @GetMapping("/find/{printRequestId}")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    @PreAuthorize("hasAuthority('"+AuthorityConstants.VIEW_PRINTING_REQUEST_DETAILS+"')")
     public PrintRequestDto find(@PathVariable long printRequestId) {
         log.debug("Handler for {}", "Find Print Request");
         return printRequestService.findOne(printRequestId);
@@ -80,21 +80,21 @@ public class PrintingManagementController {
      * @return the created request
      */
     @PostMapping("/prepare")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
     public PrintRequestDto prepare(@RequestBody List<Long> cardsIds) {
         log.debug("Preparing print request");
         return printRequestService.prepare(cardsIds);
     }
 
     @PostMapping("/batch")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
     public PrintRequestDto batch(@RequestBody PrintRequestDto printRequest, @RequestParam List<EPrintBatchType> types) {
         log.debug("Batching print request");
         return printRequestService.processBatching(printRequest, types);
     }
 
     @PostMapping("/confirm")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
     public PrintRequestDto confirm(@RequestBody PrintRequestDto printRequest) {
         log.debug("Confirming print request");
         return printRequestService.confirm(printRequest);
