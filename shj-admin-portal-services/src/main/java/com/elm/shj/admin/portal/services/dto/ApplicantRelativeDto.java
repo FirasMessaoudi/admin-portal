@@ -49,7 +49,7 @@ public class ApplicantRelativeDto implements Serializable {
     // used in data requests either through file upload or integration
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     @CellIndex(index = 4)
-    private long relativeIdNumber;
+    private String relativeIdNumber;
 
     @UniquePerRequest
     @PassportNumber

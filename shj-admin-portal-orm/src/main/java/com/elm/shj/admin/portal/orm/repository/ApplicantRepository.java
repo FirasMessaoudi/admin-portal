@@ -22,14 +22,14 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long> {
     @Query(value = "select a from JpaApplicant a where " +
             "(a.idNumber = :idNumber and a.dateOfBirthHijri = :dateOfBirthHijri) or " +
             "(a.passportNumber = :passportNumber and a.dateOfBirthGregorian = :dateOfBirthGregorian)")
-    JpaApplicant findByBasicInfo(@Param("idNumber") Long idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
+    JpaApplicant findByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                                  @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
     @Query(value = "select case when count(a)> 0 then true else false end " +
             "from JpaApplicant a where " +
             "(a.idNumber = :idNumber and a.dateOfBirthHijri = :dateOfBirthHijri) or " +
             "(a.passportNumber = :passportNumber and a.dateOfBirthGregorian = :dateOfBirthGregorian)")
-    boolean existsByBasicInfo(@Param("idNumber") Long idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
+    boolean existsByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                               @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
     @Query("select a from JpaApplicant a where a.id not in (select ad.applicant.id from JpaApplicantDigitalId ad)")

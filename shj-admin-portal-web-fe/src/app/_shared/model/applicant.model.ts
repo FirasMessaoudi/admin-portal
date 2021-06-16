@@ -7,7 +7,7 @@ export class Applicant {
   id: number;
   gender: string;
   nationalityCode: string;
-  idNumber: number;
+  idNumber: string;
   idNumberOriginal: string;
   passportNumber: string;
   dateOfBirthGregorian: any;

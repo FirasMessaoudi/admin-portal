@@ -55,7 +55,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @param pageable         the current page information
      * @return the list of printing cards
      */
-    public Page<ApplicantCardDto> findPrintingCards(String uin, Long idNumber, String hamlahNumber, String motawefNumber,
+    public Page<ApplicantCardDto> findPrintingCards(String uin, String idNumber, String hamlahNumber, String motawefNumber,
                                                     String passportNumber, String nationalityCode, List<Long> excludedCardsIds,
                                                     Pageable pageable) {
         log.debug("Find printing cards...");
@@ -64,7 +64,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
     }
 
-    public List<ApplicantCardDto> findAllPrintingCards(String uin, Long idNumber, String hamlahNumber, String motawefNumber,
+    public List<ApplicantCardDto> findAllPrintingCards(String uin, String idNumber, String hamlahNumber, String motawefNumber,
                                                        String passportNumber, String nationalityCode, List<Long> excludedCardsIds) {
         log.debug("Find all printing cards...");
         return mapList(applicantCardRepository.findAllPrintingCards(ECardStatus.READY_TO_PRINT.name(),

@@ -40,10 +40,10 @@ public class JpaApplicantContact implements Serializable {
     private String email;
 
     @Column(name = "local_mobile_number")
-    private Integer localMobileNumber;
+    private String localMobileNumber;
 
     @Column(name = "intl_mobile_number")
-    private Long intlMobileNumber;
+    private String intlMobileNumber;
 
     @Column(name = "country_code")
     private String countryCode;

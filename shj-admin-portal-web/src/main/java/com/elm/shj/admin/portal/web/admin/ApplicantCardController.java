@@ -79,25 +79,25 @@ public class ApplicantCardController {
     @GetMapping("/list/ready-to-print/{uin}/{idNumber}/{hamlahNumber}/{motawefNumber}/{passportNumber}/{nationality}")
     @RolesAllowed({AuthorityConstants.USER_MANAGEMENT}) //TODO: Change it
     public Page<ApplicantCardDto> listReadyToPrintCards(@RequestParam List<Long> excludedCardsIds, Pageable pageable,
-                                                        @PathVariable String uin, @PathVariable Long idNumber, @PathVariable String hamlahNumber,
+                                                        @PathVariable String uin, @PathVariable String idNumber, @PathVariable String hamlahNumber,
                                                         @PathVariable String motawefNumber, @PathVariable String passportNumber,
                                                         @PathVariable String nationality, Authentication authentication) {
         log.info("list printing cards.");
         return applicantCardService.findPrintingCards("-1".equals(uin) ? null : uin,
-                idNumber <= 0 ? null : idNumber, "-1".equals(hamlahNumber) ? null : hamlahNumber,
+                "-1".equals(idNumber) ? null : idNumber, "-1".equals(hamlahNumber) ? null : hamlahNumber,
                 "-1".equals(motawefNumber) ? null : motawefNumber, "-1".equals(passportNumber) ? null : passportNumber,
                 "-1".equals(nationality) ? null : nationality, excludedCardsIds, pageable);
     }
 
     @GetMapping("/list/ready-to-print/all/{uin}/{idNumber}/{hamlahNumber}/{motawefNumber}/{passportNumber}/{nationality}")
     @RolesAllowed({AuthorityConstants.USER_MANAGEMENT}) //TODO: Change it
-    public List<ApplicantCardDto> listReadyToPrintCards(@PathVariable String uin, @PathVariable Long idNumber, @PathVariable String hamlahNumber,
+    public List<ApplicantCardDto> listReadyToPrintCards(@PathVariable String uin, @PathVariable String idNumber, @PathVariable String hamlahNumber,
                                                         @PathVariable String motawefNumber, @PathVariable String passportNumber,
                                                         @PathVariable String nationality, @RequestParam List<Long> excludedCardsIds,
                                                         Authentication authentication) {
         log.info("list all printing cards.");
         return applicantCardService.findAllPrintingCards("-1".equals(uin) ? null : uin,
-                idNumber <= 0 ? null : idNumber, "-1".equals(hamlahNumber) ? null : hamlahNumber,
+                "-1".equals(idNumber) ? null : idNumber, "-1".equals(hamlahNumber) ? null : hamlahNumber,
                 "-1".equals(motawefNumber) ? null : motawefNumber, "-1".equals(passportNumber) ? null : passportNumber,
                 "-1".equals(nationality) ? null : nationality, excludedCardsIds);
     }

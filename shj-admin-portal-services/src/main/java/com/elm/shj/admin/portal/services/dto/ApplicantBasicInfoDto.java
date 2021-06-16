@@ -31,7 +31,7 @@ public class ApplicantBasicInfoDto implements Serializable {
 
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true, groups = CheckSecond.class)
     @CellIndex(index = 0)
-    private Long idNumber;
+    private String idNumber;
 
     @PassportNumber(groups = CheckSecond.class)
     @CellIndex(index = 1)

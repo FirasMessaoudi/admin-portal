@@ -44,11 +44,11 @@ public class ApplicantContactDto implements Serializable {
 
     @NullOrNotBlank(min = 5, max = 16)
     @CellIndex(index = 17)
-    private Integer localMobileNumber;
+    private String localMobileNumber;
 
     @NullOrNotBlank(min = 5, max = 30)
     @CellIndex(index = 18)
-    private Long intlMobileNumber;
+    private String intlMobileNumber;
 
     @CountryCode
     @CellIndex(index = 19)

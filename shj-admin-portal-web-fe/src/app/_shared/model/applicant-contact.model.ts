@@ -6,8 +6,8 @@ export class ApplicantContact {
   applicant: Applicant;
   languageList: string;
   email: string;
-  localMobileNumber: number;
-  intlMobileNumber: number;
+  localMobileNumber: string;
+  intlMobileNumber: string;
   countryCode: string;
   streetName: string;
   districtName: string;
