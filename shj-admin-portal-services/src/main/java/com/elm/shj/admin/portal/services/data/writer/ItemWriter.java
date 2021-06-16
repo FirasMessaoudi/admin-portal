@@ -5,9 +5,9 @@ package com.elm.shj.admin.portal.services.data.writer;
 
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
-import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +48,7 @@ public class ItemWriter {
     private final CycleAvoidingMappingContext mappingContext;
     private final ApplicationContext context;
     private final ApplicantService applicantService;
-    private final DigitalIdService digitalIdService;
+    private final ApplicantHealthRepository applicantHealthRepository;
     private final DataRequestRecordRepository dataRequestRecordRepository;
 
     /**
@@ -196,6 +196,8 @@ public class ItemWriter {
                     // make fields accessible
                     ReflectionUtils.makeAccessible(applicantHealthField);
                     applicantHealth.setApplicant(applicant);
+                    IGenericMapper<ApplicantHealthDto, JpaApplicantHealth> mapper = findMapper(ApplicantHealthDto.class);
+                    applicantHealth = mapper.fromEntity(applicantHealthRepository.save(mapper.toEntity(applicantHealth, mappingContext)), mappingContext);
                     // set the found applicant health into the object
                     applicantHealthField.set(item, applicantHealth);
                 }

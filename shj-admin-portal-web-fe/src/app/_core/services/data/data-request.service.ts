@@ -1,15 +1,20 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
-import {DataRequest, Role} from "@shared/model";
+import {DataRequest} from "@shared/model";
+import * as FileSaver from 'file-saver';
 import {catchError} from "rxjs/internal/operators";
+import {ToastService} from "@shared/components/toast";
+import {TranslateService} from "@ngx-translate/core";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataRequestService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private toastr: ToastService,
+              private translate: TranslateService) {
   }
 
   /**
@@ -64,6 +69,36 @@ export class DataRequestService {
       observe: 'response' as 'body'
     });
   }
+
+  /**
+   * Downloads a file for a specific request and saves it
+   *
+   * @param dataRequestId data request Id
+   * @param fileType file type to download
+   */
+  downloadAndSave(dataRequestId: number, filetype: string) {
+    this.downloadFile(dataRequestId, filetype).pipe(
+    ).subscribe({
+      next: (response: any) => {
+        let fileName = 'file';
+        const contentDisposition = response.headers.get('Content-Disposition');
+        if (contentDisposition) {
+          const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          const matches = fileNameRegex.exec(contentDisposition);
+          if (matches != null && matches[1]) {
+            fileName = matches[1].replace(/['"]/g, '');
+          }
+        }
+        const fileContent = response.body;
+        FileSaver.saveAs(fileContent, fileName);
+      },
+      error: (error) => {
+        console.log('Error downloading the file.')
+        this.toastr.warning(this.translate.instant("data-request-management.dialog_download_error_text"), this.translate.instant("data-request-management.requests_list"));
+      }
+    });
+  }
+
 
   /**
    * Creates a new data request

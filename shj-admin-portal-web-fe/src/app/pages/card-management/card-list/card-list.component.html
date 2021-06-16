@@ -7,11 +7,13 @@
       </button>
     </h3>
     <button disabled id="addExceptionalCard" class="btn btn-outline-dcc-primary px-4" *ngIf="canAddCard">
-      <svg-icon styleClass="mr-2" icon="plus"></svg-icon> <span>{{ "card-management.add_exceptional_card" | translate }}</span>
+      <svg-icon styleClass="mr-2" icon="plus"></svg-icon>
+      <span>{{ "card-management.add_exceptional_card" | translate }}</span>
     </button>
   </div>
   <div class="content__section" *ngIf="!canSeeCardsList">
-    {{'header.welcome' | translate}} <span class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
   </div>
 
   <div class="content__section" *ngIf="canSeeCardsList">
@@ -158,52 +160,55 @@
     <div class="table-responsive mb-4">
       <table id="cardsSearchResult" class="table table-striped table-hover">
         <thead>
-          <tr>
-            <th scope="col">
-              <div class="custom-control custom-checkbox my-2">
-                <input type="checkbox" [(ngModel)]="masterSelected" class="custom-control-input" id="customCheck-01"
-                       (change)="checkUncheckAllCards()">
-                <label class="custom-control-label mx-3" for="customCheck-01"></label>
-              </div>
-            </th>
-            <th scope="col">{{'card-management.applicant_name' | translate}}</th>
-            <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-            <th scope="col">{{ "general.nin" | translate }}</th>
-            <th scope="col">{{ "card-management.passport_number" | translate }}</th>
-            <th scope="col">{{'card-management.card_number' | translate}}</th>
-            <th scope="col">{{'card-management.ritual_type' | translate}}</th>
-            <th scope="col">{{'card-management.card_status' | translate}}</th>
-          </tr>
+        <tr>
+          <th scope="col">
+            <div class="custom-control custom-checkbox my-2">
+              <input type="checkbox" [(ngModel)]="masterSelected" class="custom-control-input" id="customCheck-01"
+                     (change)="checkUncheckAllCards()">
+              <label class="custom-control-label mx-3" for="customCheck-01"></label>
+            </div>
+          </th>
+          <th scope="col">{{'card-management.applicant_name' | translate}}</th>
+          <th scope="col">{{'card-management.applicant_id' | translate}}</th>
+          <th scope="col">{{ "general.nin" | translate }}</th>
+          <th scope="col">{{ "card-management.passport_number" | translate }}</th>
+          <th scope="col">{{'card-management.card_number' | translate}}</th>
+          <th scope="col">{{'card-management.ritual_type' | translate}}</th>
+          <th scope="col">{{'card-management.card_status' | translate}}</th>
+        </tr>
         </thead>
         <tbody>
 
-        <tr *ngIf="!page?.content || page?.totalElements==0" class="text-center">
+        <tr *ngIf="!page?.content || page?.totalElements === 0" class="text-center">
           <td colspan="10">
             <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
             <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
           </td>
         </tr>
-          <tr *ngFor="let card of page?.content">
+        <tr *ngFor="let card of page?.content">
 
-            <td scope="row">
-              <div class="custom-control custom-checkbox my-2">
-                <input type="checkbox" class="custom-control-input" [(ngModel)]="card.isSelected"
-                       id="customCheck-{{card.id}}" value="{{card.id}}">
-                <label class="custom-control-label mx-3" for="customCheck-{{card.id}}"></label>
-              </div>
-            </td>
-            <td><a id="cardDetails" [routerLink]="['/cards/details', card?.id]" class="text-dcc-primary font-weight-bold">{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</a></td>
-            <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
-            <td class="ltr"> {{card?.applicantRitual?.applicant?.idNumber}}</td>
-            <td class="ltr"> {{card?.applicantRitual?.applicant?.passportNumber}}</td>
-            <td class="ltr">{{card?.referenceNumber}}</td>
-            <td class="ltr">{{card?.applicantRitual?.typeCode? lookupService().localizedLabel(ritualTypes, card?.applicantRitual?.typeCode) : ''}}</td>
-            <td class="ltr">{{lookupService().localizedLabel(cardStatuses, card?.statusCode)}}</td>
-          </tr>
+          <td scope="row">
+            <div class="custom-control custom-checkbox my-2">
+              <input type="checkbox" class="custom-control-input" [(ngModel)]="card.isSelected"
+                     id="customCheck-{{card.id}}" value="{{card.id}}">
+              <label class="custom-control-label mx-3" for="customCheck-{{card.id}}"></label>
+            </div>
+          </td>
+          <td><a id="cardDetails" [routerLink]="['/cards/details', card?.id]"
+                 class="text-dcc-primary font-weight-bold">{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</a>
+          </td>
+          <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
+          <td class="ltr">{{card?.applicantRitual?.applicant?.idNumber}}</td>
+          <td class="ltr">{{card?.applicantRitual?.applicant?.passportNumber}}</td>
+          <td class="ltr">{{card?.referenceNumber}}</td>
+          <td
+            class="ltr">{{card?.applicantRitual?.typeCode ? lookupService().localizedLabel(ritualTypes, card?.applicantRitual?.typeCode) : ''}}</td>
+          <td class="ltr">{{lookupService().localizedLabel(cardStatuses, card?.statusCode)}}</td>
+        </tr>
         </tbody>
       </table>
     </div>
-    <nav aria-label="Page navigation example" *ngIf="page?.content && page?.totalElements>0">
+    <nav aria-label="Page navigation example" *ngIf="page?.content && page?.totalElements > 0">
       <ul class="pagination justify-content-center">
         <li class="page-item" [class.disabled]="page?.first">
           <a class="page-link" (click)="loadPage(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>

@@ -30,7 +30,7 @@ public class JpaApplicantHealthDisease implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "applicant_health_id")
     private JpaApplicantHealth applicantHealth;
 

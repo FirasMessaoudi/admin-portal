@@ -106,6 +106,8 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
 
     public PrintRequestDto processBatching(PrintRequestDto printRequest, List<EPrintBatchType> selectedBatchTypes) {
 
+        printRequest.getPrintRequestBatches().clear();
+
         if (selectedBatchTypes.size() > 0) {
             // Group printing cards by selected batch types
             Map<List<String>, List<PrintRequestCardDto>> groupedRequestCards = printRequest.getPrintRequestCards()

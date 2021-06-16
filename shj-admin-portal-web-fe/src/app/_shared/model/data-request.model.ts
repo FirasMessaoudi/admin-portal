@@ -11,4 +11,5 @@ export class DataRequest {
   creationDate: Date;
   updateDate: Date;
   itemCount: number;
+  errorCount: number;
 }

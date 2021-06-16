@@ -42,6 +42,16 @@ public @interface OnlyCharacters {
     boolean allowEmpty() default true;
 
     /**
+     * @return if to allow number values
+     */
+    boolean allowNumbers() default false;
+
+    /**
+     * @return if to allow special characters (-_./)
+     */
+    boolean allowSpecialChars() default false;
+
+    /**
      * @return The min field length
      */
     int min();

@@ -18,8 +18,8 @@ import java.util.Date;
  * @since 1.0.0
  */
 @FieldDependency.List({
-        @FieldDependency(first = "idNumber", second = "passportNumber"),
-        @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri")
+        @FieldDependency(first = "idNumber", second = "passportNumber", groups = CheckFirst.class),
+        @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri", groups = CheckFirst.class)
 })
 @NoArgsConstructor
 @Data
@@ -29,19 +29,19 @@ public class ApplicantBasicInfoDto implements Serializable {
 
     private long rowNum;
 
-    @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
+    @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true, groups = CheckSecond.class)
     @CellIndex(index = 0)
     private Long idNumber;
 
-    @PassportNumber
+    @PassportNumber(groups = CheckSecond.class)
     @CellIndex(index = 1)
     private String passportNumber;
 
-    @GregorianDate(minOffset = -120, maxOffset = -10)
+    @GregorianDate(minOffset = -120, maxOffset = -10, groups = CheckSecond.class)
     @CellIndex(index = 2)
     private Date dateOfBirthGregorian;
 
-    @HijriDate(minOffset = -140, maxOffset = -11)
+    @HijriDate(minOffset = -140, maxOffset = -11, groups = CheckSecond.class)
     @CellIndex(index = 3)
     private Long dateOfBirthHijri;
 
