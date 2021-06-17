@@ -88,7 +88,7 @@ export class RoleListComponent implements OnInit, OnDestroy {
 
   loadPage(page: number) {
     // load roles for param page
-    this.listSubscription = this.roleService.listPaginated(page).subscribe(data => {
+    this.listSubscription = this.roleService.listByCriteria(page, this.searchForm?.value).subscribe(data => {
       this.page = data;
       if (this.page != null) {
         this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
@@ -111,8 +111,7 @@ export class RoleListComponent implements OnInit, OnDestroy {
 
   search() {
 
-    this.searchSubscription = this.roleService.search(this.searchForm.value.authorityId,
-      this.searchForm.value.roleNameAr, this.searchForm.value.roleNameEn).subscribe(data => {
+    this.searchSubscription = this.roleService.listByCriteria(0, this.searchForm?.value).subscribe(data => {
       this.roles = [];
       this.pageArray = [];
       this.page = data;

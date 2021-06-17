@@ -105,8 +105,12 @@ export class RoleService {
     );
   }
 
-  search(authorityId: any, roleNameAr: any, roleNameEn: any): Observable<any> {
-    return this.http.get('/core/api/roles/search?authorityId=' + (authorityId? authorityId : -1)
-      + '&arabicName=' + (roleNameAr ? roleNameAr : '') + '&englishName=' + (roleNameEn ? roleNameEn : ''));
+  listByCriteria(pageNumber: any, searchCriteria?: any): Observable<any> {
+
+    let params = new HttpParams().set('page', pageNumber)
+      .set('authorityId', (searchCriteria?.authorityId ? searchCriteria?.authorityId : -1))
+      .set('arabicName', (searchCriteria?.roleNameAr ? searchCriteria?.roleNameAr : ''))
+      .set('englishName', (searchCriteria?.roleNameEn ? searchCriteria?.roleNameEn : ''));
+    return this.http.get('/core/api/roles/search', {params: params});
   }
 }
