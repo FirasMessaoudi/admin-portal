@@ -59,11 +59,14 @@
 
 
     <div class="table-responsive my-4">
-      <div class="d-flex">
-        <div class="pb-3 px-4 border-bottom w-100" [ngStyle]="{'visibility': isSelectAllClicked ? 'visible': 'hidden'}">
+      <div  [ngStyle]="{'visibility': isSelectAllClicked ? 'visible': 'hidden'}"class="d-flex align-items-center pb-3 px-4 border-bottom w-100">
+        <div class="selectAll_label">
+
           <span>{{splitString('printing-management.cards_selected_on_the_current_page' | translate, ' X ')[0]}}</span>
           <span class="font-weight-bold text-dcc-primary px-2">{{numberOfSelectedCardsInCurrentPage()}}</span>
           <span>{{splitString('printing-management.cards_selected_on_the_current_page' | translate, ' X ')[1]}}</span>
+        </div>
+        <div>
           <a class="text-dcc-primary btn btn-link mx-3" (click)="selectAllCards()"
              [ngStyle]="{'display': isSelectAllClicked && !isAllSelected ? 'inline-flex': 'none'}"
              [ngClass]="{'disabled': isSelectLoading}"
