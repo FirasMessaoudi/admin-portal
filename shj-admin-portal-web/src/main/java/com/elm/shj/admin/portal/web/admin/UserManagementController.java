@@ -102,7 +102,7 @@ public class UserManagementController {
         }
         Page<UserDto> usersPage = userService.searchByRoleStatusOrNin(pageable,
                 (roleId <= 0 ? null : roleId),
-                (nin == null || nin.trim().equals("") ? null : nin.trim()),
+                (Long.parseLong(nin) == -1 ? null : nin.trim()),
                 (activated < 0 ? null : BooleanUtils.toBoolean(activated)),
                 jwtTokenService.retrieveUserIdFromToken(((JwtToken) authentication).getToken()).orElse(0L),
                 jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
