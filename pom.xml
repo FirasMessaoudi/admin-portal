@@ -148,12 +148,22 @@
         <!-- @OVERRIDE this property per each project -->
         <repository.name>dcc-foundation</repository.name>
 
+        <!-- upgrades from basic template -->
+        <fasterxml.jackson.version>2.12.2</fasterxml.jackson.version>
+        <spring.version>5.3.8</spring.version>
+        <spring.boot.version>2.5.1</spring.boot.version>
+        <spring.boot.mobile.version>1.5.22.RELEASE</spring.boot.mobile.version>
+        <spring-ws.version>3.1.1</spring-ws.version>
+        <spring.security.version>5.5.0</spring.security.version>
+        <spring.data.version>2.5.1</spring.data.version>
+        <hibernate.version>5.5.2.Final</hibernate.version>
+        <hibernate.validator.version>6.2.0.Final</hibernate.validator.version>
         <!-- versions -->
         <zxing.version>3.4.0</zxing.version>
         <shedlock.version>4.7.1</shedlock.version>
         <poiji.version>3.0.3</poiji.version>
         <reactor.version>3.3.4.RELEASE</reactor.version>
-        <openapi.version>1.2.15</openapi.version>
+        <openapi.version>1.5.9</openapi.version>
         <jakarta.xml.bind-api.version>2.3.3</jakarta.xml.bind-api.version>
         <jakarta.xml.ws-api.version>2.3.3</jakarta.xml.ws-api.version>
         <jaxws-rt.version>2.3.3</jaxws-rt.version>
@@ -162,9 +172,10 @@
         <sonar.coverage.jacoco.xmlReportPaths>
             ${basedir}/shj-admin-portal-orm/target/jacoco-ut/jacoco.xml,${basedir}/shj-admin-portal-services/target/jacoco-ut/jacoco.xml,${basedir}/shj-admin-portal-web/target/jacoco-ut/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
-        <java.version>11</java.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <java.version>13</java.version>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>

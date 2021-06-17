@@ -22,6 +22,7 @@ import org.springframework.validation.beanvalidation.MethodValidationPostProcess
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.util.UrlPathHelper;
 
 import java.util.List;
 
@@ -171,5 +172,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(localeChangeInterceptor);
 
         registry.addInterceptor(deviceResolverHandlerInterceptor());
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        UrlPathHelper pathHelper = new UrlPathHelper();
+        pathHelper.setAlwaysUseFullPath(true);
+        configurer.setUrlPathHelper(pathHelper);
     }
 }
