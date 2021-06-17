@@ -37,7 +37,7 @@ export class SideNavComponent implements OnInit {
       },
       {
         title: 'printing-management.title',
-        roles: [EAuthority.USER_MANAGEMENT],
+        roles: [EAuthority.PRINTING_REQUEST_MANAGEMENT],
         display: false,
         icon: 'print',
         iconFa:'fa-w-16',
