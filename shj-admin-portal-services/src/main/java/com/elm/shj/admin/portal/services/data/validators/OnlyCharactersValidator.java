@@ -16,11 +16,11 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class OnlyCharactersValidator implements ConstraintValidator<OnlyCharacters, Object> {
 
-    private static final String ARABIC_LETTERS_REGEX = "^[\\p{IsArabic}\\s-_]+$";
-    private static final String LATIN_LETTERS_REGEX = "^[\\p{IsLatin}\\s-_]+$";
-    private static final String LATIN_LETTERS_SPECIAL_REGEX = "^[\\p{IsLatin}\\s-_\\.\\/]+$";
-    private static final String LATIN_LETTERS_NUMBERS_REGEX = "^[\\p{IsLatin}\\p{N}\\s-_]+$";
-    private static final String LATIN_LETTERS_NUMBERS_SPECIAL_REGEX = "^[\\p{IsLatin}\\p{N}\\s-_\\.\\/]+$";
+    private static final String REGEX_TPL = "^[${CHARSET}${NUMBERS}${SPECIALS}\\s-_]+$";
+    private static final String ARABIC_LETTERS_REGEX = "\\p{IsArabic}";
+    private static final String LATIN_LETTERS_REGEX = "\\p{IsLatin}";
+    private static final String SPECIAL_REGEX = "\\.\\/";
+    private static final String NUMBERS_REGEX = "\\p{N}";
     private static final String MSG_20004 = "validation.data.constraints.msg.20004";
     private static final String MSG_20013 = "validation.data.constraints.msg.20013";
     private static final String MSG_20014 = "validation.data.constraints.msg.20014";
@@ -50,7 +50,9 @@ public class OnlyCharactersValidator implements ConstraintValidator<OnlyCharacte
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        String regex = arabic ? (ARABIC_LETTERS_REGEX) : (allowNumbers ? (allowSpecialChars ? LATIN_LETTERS_NUMBERS_SPECIAL_REGEX : LATIN_LETTERS_NUMBERS_REGEX) : (allowSpecialChars ? LATIN_LETTERS_SPECIAL_REGEX : LATIN_LETTERS_REGEX));
+        String regex = REGEX_TPL.replace("${CHARSET}", arabic ? ARABIC_LETTERS_REGEX : LATIN_LETTERS_REGEX)
+                .replace("${NUMBERS}", allowNumbers ? NUMBERS_REGEX : "")
+                .replace("${SPECIALS}", allowSpecialChars ? SPECIAL_REGEX : "");
         if (value == null || StringUtils.isBlank(value.toString())) {
             return this.allowEmpty;
         } else if (value.toString().length() < min || value.toString().length() > max) {
