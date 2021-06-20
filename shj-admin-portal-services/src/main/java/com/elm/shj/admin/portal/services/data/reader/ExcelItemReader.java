@@ -82,9 +82,15 @@ public class ExcelItemReader<T> {
      */
     @SuppressWarnings("ConstantConditions")
     public Cell findCellByPropertyName(Row row, String propertyName) {
+        // check perfect match
+        if (fieldMapping.values().stream().anyMatch(n -> n.equals(propertyName))) {
+            return row.getCell(row.getFirstCellNum() + getKey(fieldMapping, propertyName));
+        }
+        // otherwise try arrays
         if (fieldMapping.values().stream().anyMatch(n -> n.replace("[0]", "").equals(propertyName))) {
             return row.getCell(row.getFirstCellNum() + getKey(fieldMapping, propertyName.replace(".", "[0].")));
         }
+        // otherwise return root
         return row.getCell(row.getFirstCellNum());
     }
 
