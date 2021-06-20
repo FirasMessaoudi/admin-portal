@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +44,7 @@ public class ApplicantCardController {
     @GetMapping("/list-applicant-cards")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
     public Page<ApplicantCardDto> searchApplicantCards(@RequestParam(value = "applicantCardSearchCriteria") String applicantCardSearchCriteria,
-                                                       @RequestParam(value = "page") int page, Pageable pageable, Authentication authentication) throws IOException {
+                                                       Pageable pageable, Authentication authentication) throws IOException {
 
         log.info("list search result cards.");
         final ApplicantCardSearchCriteriaDto searchCriteria =
@@ -56,7 +55,7 @@ public class ApplicantCardController {
         String idNum = searchCriteria.getIdNumber() != null && !searchCriteria.getIdNumber().trim().equals("") ? searchCriteria.getIdNumber().trim() : null;
         String passportNumber = searchCriteria.getPassportNumber() != null && !searchCriteria.getPassportNumber().trim().equals("") ? searchCriteria.getPassportNumber().trim() : null;
 
-        return applicantCardService.searchApplicantCards(uin, idNum, passportNumber, PageRequest.of(page, pageable.getPageSize()));
+        return applicantCardService.searchApplicantCards(uin, idNum, passportNumber, pageable);
 
     }
 

@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -78,9 +77,9 @@ public class RoleManagementController {
     @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT)
     public Page<RoleDto> search(Pageable pageable, @RequestParam(required = false) Long authorityId,
                                 @RequestParam(required = false) String arabicName,
-                                @RequestParam(required = false) String englishName, @RequestParam(value = "page") int pageNumber) {
+                                @RequestParam(required = false) String englishName) {
         log.info("Search roles by authority and name");
-        return roleService.searchByAuthorityOrName(PageRequest.of(pageNumber, pageable.getPageSize()), authorityId, arabicName, englishName);
+        return roleService.searchByAuthorityOrName(pageable, authorityId, arabicName, englishName);
     }
 
     /**
