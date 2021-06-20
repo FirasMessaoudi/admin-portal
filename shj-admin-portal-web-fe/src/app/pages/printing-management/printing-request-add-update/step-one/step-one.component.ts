@@ -194,6 +194,7 @@ export class StepOneComponent implements OnInit {
     this.onAddCards.emit(this.addedCards);
     this.cards = [];
     this.selectedCards = [];
+    this.isSelectAllClicked = false;
     this.modalService.dismissAll();
   }
 
