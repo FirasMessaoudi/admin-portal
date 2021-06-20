@@ -41,4 +41,9 @@ public @interface HijriDate {
      */
     int maxOffset() default -11;
 
+    /**
+     * @return if to allow empty values
+     */
+    boolean allowEmpty() default true;
+
 }
