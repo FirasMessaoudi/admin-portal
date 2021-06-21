@@ -78,6 +78,10 @@ export class PrintingRequestDetailsComponent implements OnInit {
     return this.authenticationService.hasAuthority(EAuthority.VIEW_PRINTING_REQUEST_DETAILS);
   }
 
+  get canSeeCardDetails(): boolean {
+    return this.authenticationService.hasAuthority(EAuthority.VIEW_CARD_DETAILS);
+  }
+
   goToList() {
     this.router.navigate(['/print-requests/list']);
   }
