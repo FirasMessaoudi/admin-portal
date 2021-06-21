@@ -74,8 +74,8 @@ export class PrintingRequestDetailsComponent implements OnInit {
   }
 
   get canSeePrintRequestDetails(): boolean {
-    //TODO: change it to PRINTING_MANAGEMENT
-    return this.authenticationService.hasAuthority(EAuthority.USER_MANAGEMENT);
+
+    return this.authenticationService.hasAuthority(EAuthority.VIEW_PRINTING_REQUEST_DETAILS);
   }
 
   goToList() {
