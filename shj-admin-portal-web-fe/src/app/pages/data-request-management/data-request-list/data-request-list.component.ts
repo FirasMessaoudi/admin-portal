@@ -56,13 +56,11 @@ export class DataRequestListComponent implements OnInit {
   }
 
   get canSeeDataRequestsList(): boolean {
-    //TODO: change it to DATA_UPLOAD_MANAGEMENT
-    return this.authenticationService.hasAuthority(EAuthority.MANAGE_REQUESTS);
+    return this.authenticationService.hasAuthority(EAuthority.DATA_REQUEST_MANAGEMENT);
   }
 
   get canCreateNewRequest(): boolean {
-
-    return this.authenticationService.hasAuthority(EAuthority.CREATE_NEW_REQUEST);
+    return this.authenticationService.hasAuthority(EAuthority.CREATE_DATA_REQUEST);
   }
 
   cancelSearch() {
