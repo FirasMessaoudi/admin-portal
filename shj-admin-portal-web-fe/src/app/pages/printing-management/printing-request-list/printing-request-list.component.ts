@@ -20,7 +20,6 @@ export class PrintingRequestListComponent implements OnInit {
   page: Page;
   printRequests: Array<PrintRequest>= [];
   searchForm: FormGroup;
-  canCreateNewRequest: boolean;
   printRequestStatuses: Lookup[];
   localizedPrintRequestStatuses: Lookup[];
 
@@ -34,7 +33,7 @@ export class PrintingRequestListComponent implements OnInit {
               private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.canCreateNewRequest = true;
+
     this.initForm();
     this.loadLookups();
     this.loadPage(0);
@@ -79,6 +78,10 @@ export class PrintingRequestListComponent implements OnInit {
 
   get canSeePrintRequestsList(): boolean {
     return this.authenticationService.hasAuthority(EAuthority.PRINTING_REQUEST_MANAGEMENT);
+  }
+
+  get canCreateNewRequest(): boolean {
+    return this.authenticationService.hasAuthority(EAuthority.ADD_PRINTING_REQUEST);
   }
 
   loadPage(page: number) {
