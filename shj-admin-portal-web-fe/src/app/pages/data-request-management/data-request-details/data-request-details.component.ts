@@ -63,7 +63,7 @@ export class DataRequestDetailsComponent implements OnInit {
   }
 
   get canSeeDataRequestDetails(): boolean {
-    return this.authenticationService.hasAuthority(EAuthority.VIEW_REQUEST_DETAILS);
+    return this.authenticationService.hasAuthority(EAuthority.VIEW_DATA_REQUEST_DETAILS);
   }
 
 }
