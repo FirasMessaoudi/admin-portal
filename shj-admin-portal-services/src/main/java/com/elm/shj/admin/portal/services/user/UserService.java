@@ -40,6 +40,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
     public static final String CREATE_USER_SMS_NOTIFICATION_KEY = "user.mngt.new.user.sms.notification";
     public static final String REGISTRATION_EMAIL_SUBJECT = "Welcome to ELM Product";
     public static final String REGISTRATION_EMAIL_TPL_NAME = "email-registration.ftl";
+    public static final String RESET_PASSWORD_EMAIL_TPL_NAME = "email-reset-password.ftl";
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -288,6 +289,10 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
             log.error("Password reset cannot be done, unable to notify user with the new password.");
             return;
         }
+        // Send Email notification
+        boolean emailSent = emailService.sendMailFromTemplate(Arrays.asList(user.getEmail()), null,
+                REGISTRATION_EMAIL_SUBJECT, RESET_PASSWORD_EMAIL_TPL_NAME, ImmutableMap.of("user", user));
+        log.debug("Email notification status: {}", emailSent);
 
         String updatedPwd = passwordEncoder.encode(newPassword);
         userRepository.resetPwd(user.getId(), updatedPwd, true);
