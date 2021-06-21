@@ -29,7 +29,7 @@ public class ApplicantRitualDto implements Serializable {
     private long id;
     private ApplicantDto applicant;
 
-    @OnlyCharacters(min = 1, max = 16, allowNumbers = true)
+    @OnlyCharacters(min = 1, max = 16, allowNumbers = true, allowEmpty = false)
     @CellIndex(index = 4)
     private String hamlahPackageCode;
 
@@ -47,11 +47,11 @@ public class ApplicantRitualDto implements Serializable {
     @CellIndex(index = 7)
     private Date dateEndGregorian;
 
-    @HijriDate(minOffset = 0, maxOffset = 1)
+    @HijriDate(minOffset = 0, maxOffset = 1, allowEmpty = false)
     @CellIndex(index = 8)
     private Long dateStartHijri;
 
-    @HijriDate(minOffset = 0, maxOffset = 1)
+    @HijriDate(minOffset = 0, maxOffset = 1, allowEmpty = false)
     @CellIndex(index = 9)
     private Long dateEndHijri;
 
@@ -67,7 +67,7 @@ public class ApplicantRitualDto implements Serializable {
     @CellIndex(index = 12)
     private String permitNumber;
 
-    @OnlyCharacters(min = 5, max = 50, allowNumbers = true, allowSpecialChars = true)
+    @OnlyCharacters(min = 5, max = 50, allowEmpty = false, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 13)
     private String insuranceNumber;
 
