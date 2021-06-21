@@ -289,17 +289,13 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
             log.error("Password reset cannot be done, unable to notify user with the new password.");
             return;
         }
-        // Send Email notification
-        boolean emailSent = emailService.sendMailFromTemplate(Arrays.asList(user.getEmail()), null,
-                REGISTRATION_EMAIL_SUBJECT, RESET_PASSWORD_EMAIL_TPL_NAME, ImmutableMap.of("user", user));
-        log.debug("Email notification status: {}", emailSent);
 
         String updatedPwd = passwordEncoder.encode(newPassword);
         userRepository.resetPwd(user.getId(), updatedPwd, true);
     }
 
     /**
-     * Send SMS for registered user.
+     * Send SMS and Email for registered user.
      *
      * @param user
      * @return
@@ -308,6 +304,14 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         String[] smsNotificationArgs = new String[]{user.getPassword()};
         String locale = isCitizen(user.getNin()) ? "ar" : "en";
         String createdUserSms = messageSource.getMessage(CREATE_USER_SMS_NOTIFICATION_KEY, smsNotificationArgs, Locale.forLanguageTag(locale));
-        return smsGatewayService.sendMessage(user.getMobileNumber().longValue(), createdUserSms);
+
+        // Send Email notification
+        boolean emailSent = emailService.sendMailFromTemplate(Arrays.asList(user.getEmail()), null,
+                REGISTRATION_EMAIL_SUBJECT, RESET_PASSWORD_EMAIL_TPL_NAME, ImmutableMap.of("user", user));
+        log.debug("Email notification status: {}", emailSent);
+
+        boolean smsSent = smsGatewayService.sendMessage(user.getMobileNumber().longValue(), createdUserSms);
+
+        return smsSent || emailSent;
     }
 }
