@@ -52,7 +52,7 @@ public class DataRequestManagementController {
      * @return the list of data requests
      */
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.MANAGE_REQUESTS + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.DATA_REQUEST_MANAGEMENT + "')")
     public Page<DataRequestDto> list(Pageable pageable) {
         log.info("list all data requests.");
         return dataRequestService.findAll(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("creationDate").descending()));
@@ -65,7 +65,7 @@ public class DataRequestManagementController {
      * @return the found data request or <code>null</code>
      */
     @GetMapping("/find/{dataRequestId}")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.VIEW_REQUEST_DETAILS + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.VIEW_DATA_REQUEST_DETAILS + "')")
     public DataRequestDto findRole(@PathVariable long dataRequestId) {
         log.debug("Finding data request #{}", dataRequestId);
         return dataRequestService.findOne(dataRequestId);
@@ -78,7 +78,7 @@ public class DataRequestManagementController {
      * @return the template for the given segment
      */
     @GetMapping("/tpl/{segmentId}")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.CREATE_NEW_REQUEST + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.CREATE_DATA_REQUEST + "')")
     public ResponseEntity<Resource> downloadTemplate(@PathVariable long segmentId) {
         DataSegmentDto dataSegment = dataSegmentService.findOne(segmentId);
         log.info("Downloading template for data segment#{}", segmentId);
@@ -103,7 +103,7 @@ public class DataRequestManagementController {
      * @return the file for the given data request and file type
      */
     @GetMapping("/{dataRequestId}/file/{fileType}")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.VIEW_REQUEST_DETAILS + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.VIEW_DATA_REQUEST_DETAILS + "')")
     public ResponseEntity<Resource> downloadFile(@PathVariable long dataRequestId, @PathVariable EDataRequestFileType fileType) throws Exception {
         log.info("Downloading file for data request#{} and file type #{}", dataRequestId, fileType);
         Resource file = null;
@@ -134,7 +134,7 @@ public class DataRequestManagementController {
      * @return the persisted request updated
      */
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.CREATE_NEW_REQUEST + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.CREATE_DATA_REQUEST + "')")
     public DataRequestDto create(@RequestPart("request") @Valid DataRequestDto dataRequest,
                                  @RequestPart("file") MultipartFile file) throws Exception {
         log.info("Creating data request for segment#{}", dataRequest.getDataSegment().getId());
@@ -148,7 +148,7 @@ public class DataRequestManagementController {
      * @param dataRequestId the data request id to be confirmed
      */
     @PostMapping(value = "/confirm/{dataRequestId}")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.CREATE_NEW_REQUEST + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.CREATE_DATA_REQUEST + "')")
     public void confirm(@PathVariable long dataRequestId) throws Exception {
         log.info("Confirming data request #{}", dataRequestId);
         dataRequestService.confirm(dataRequestId);

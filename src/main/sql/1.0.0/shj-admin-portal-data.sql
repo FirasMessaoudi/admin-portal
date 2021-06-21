@@ -145,9 +145,9 @@ INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id)
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (24, N'إدارة طلبات الطباعة', 'Printing Request Management', 'PRINTING_REQUEST_MANAGEMENT', NULL);
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (25, N'عرض تفاصيل طلب الطباعة', 'View Printing Request Details', 'VIEW_PRINTING_REQUEST_DETAILS', 24);
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (26, N'إضافة طلب طباعة', 'Add Printing Request', 'ADD_PRINTING_REQUEST', 24);
-INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (27, N'إدارة الطلبات', 'Manage Requests', 'MANAGE_REQUESTS', NULL);
-INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (28, N'عرض تفاصيل الطلب', 'View Request Details', 'VIEW_REQUEST_DETAILS', 27);
-INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (29, N'إنشاء طلب جديد', 'Create New Request', 'CREATE_NEW_REQUEST', 27);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (27, N'إدارة طلبات البيانات', 'Data Request Management', 'DATA_REQUEST_MANAGEMENT', NULL);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (28, N'عرض تفاصيل طلب البيانات', 'View Data Request Details', 'VIEW_DATA_REQUEST_DETAILS', 27);
+INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (29, N'إنشاء طلب بيانات', 'Create Data Request', 'CREATE_DATA_REQUEST', 27);
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (30, N'عرض الملف الشخصي', 'View My Profile', 'VIEW_MY_PROFILE', 2);
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (31, N'تعديل الملف الشخصي', 'Update My Profile', 'UPDATE_MY_PROFILE', 2);
 INSERT INTO shj_portal.sha_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (32, N'تسجيل حملة', 'Register Hamlah', 'REGISTER_HAMLAH', NULL);

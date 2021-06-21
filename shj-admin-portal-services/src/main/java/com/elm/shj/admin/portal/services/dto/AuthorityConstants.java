@@ -40,10 +40,10 @@ public final class AuthorityConstants {
     public static final String REISSUE_CARD = "REISSUE_CARD";
     public static final String ADD_CARD = "ADD_CARD";
 
-    //Upload Data Management
-    public static final String MANAGE_REQUESTS = "MANAGE_REQUESTS";
-    public static final String VIEW_REQUEST_DETAILS = "VIEW_REQUEST_DETAILS";
-    public static final String CREATE_NEW_REQUEST = "CREATE_NEW_REQUEST";
+    //Data Request Management
+    public static final String DATA_REQUEST_MANAGEMENT = "DATA_REQUEST_MANAGEMENT";
+    public static final String VIEW_DATA_REQUEST_DETAILS = "VIEW_DATA_REQUEST_DETAILS";
+    public static final String CREATE_DATA_REQUEST = "CREATE_DATA_REQUEST";
 
     private AuthorityConstants() {
         // creating instances is not allowed

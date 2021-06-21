@@ -128,7 +128,7 @@ public class UserManagement {
 
             //waiting load results
             ActionX.Sync();
-            ActionX.WaitChildItemsCountLessThan(tblUsersSearchResults,By.tagName("tr"),2,5);
+//            ActionX.WaitChildItemsCountLessThan(tblUsersSearchResults,By.tagName("tr"),2,5);
 
         }else {
             ReporterX.fail("Search User Page not Loaded.!!");

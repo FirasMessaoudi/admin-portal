@@ -69,7 +69,7 @@ export class SideNavComponent implements OnInit {
       },
       {
         title: 'data-request-management.title',
-        roles: [EAuthority.MANAGE_REQUESTS],
+        roles: [EAuthority.DATA_REQUEST_MANAGEMENT],
         display: false,
         icon: 'users',
         iconFa: 'fa-w-20',
