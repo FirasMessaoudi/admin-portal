@@ -24,6 +24,7 @@ public class HijriDateValidator implements ConstraintValidator<HijriDate, Object
 
     private HijrahDate min;
     private HijrahDate max;
+    private boolean allowEmpty;
 
     /**
      * {@inheritDoc}
@@ -34,6 +35,7 @@ public class HijriDateValidator implements ConstraintValidator<HijriDate, Object
         HijrahDate todayHijri = HijrahDate.now();
         min = HijrahDate.now().with(ChronoField.YEAR, todayHijri.get(ChronoField.YEAR) + constraintAnnotation.minOffset());
         max = HijrahDate.now().with(ChronoField.YEAR, todayHijri.get(ChronoField.YEAR) + constraintAnnotation.maxOffset());
+        allowEmpty = constraintAnnotation.allowEmpty();
     }
 
     /**
@@ -45,7 +47,7 @@ public class HijriDateValidator implements ConstraintValidator<HijriDate, Object
 
         // allow empty entries
         if (value == null || StringUtils.isBlank(value.toString())) {
-            return true;
+            return allowEmpty;
         }
 
         HijrahDate hijriValue = null;
