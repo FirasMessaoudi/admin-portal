@@ -19,7 +19,6 @@ export class DataRequestListComponent implements OnInit {
   page: Page;
   listSubscription: Subscription;
   searchForm: FormGroup;
-  canCreateNewRequest: boolean;
 
   constructor(private authenticationService: AuthenticationService,
               public dataRequestService: DataRequestService,
@@ -29,7 +28,7 @@ export class DataRequestListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.canCreateNewRequest = true;
+
     this.loadPage(0);
   }
 
@@ -55,9 +54,15 @@ export class DataRequestListComponent implements OnInit {
   pageCounter(i: number): Array<number> {
     return new Array(i);
   }
+
   get canSeeDataRequestsList(): boolean {
     //TODO: change it to DATA_UPLOAD_MANAGEMENT
-    return this.authenticationService.hasAuthority(EAuthority.USER_MANAGEMENT);
+    return this.authenticationService.hasAuthority(EAuthority.MANAGE_REQUESTS);
+  }
+
+  get canCreateNewRequest(): boolean {
+
+    return this.authenticationService.hasAuthority(EAuthority.CREATE_NEW_REQUEST);
   }
 
   cancelSearch() {
