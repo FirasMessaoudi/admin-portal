@@ -1,13 +1,18 @@
-USE MASTER
+USE
+MASTER
 GO
-CREATE LOGIN "shj_portal_user" WITH PASSWORD=N'Aa123456789', DEFAULT_DATABASE="shj_portal", DEFAULT_LANGUAGE=US_ENGLISH
+CREATE
+LOGIN "shc_user" WITH PASSWORD=N'Aa123456789', DEFAULT_DATABASE="shc_portal", DEFAULT_LANGUAGE=US_ENGLISH
 GO
-ALTER LOGIN "shj_portal_user" ENABLE
+ALTER
+LOGIN "shc_user" ENABLE
 GO
 
-USE shj_portal
+USE shc_portal
 GO
-CREATE USER "shj_portal_user" FOR LOGIN "shj_portal_user" WITH DEFAULT_SCHEMA="shj_portal"
+CREATE
+USER "shc_user" FOR LOGIN "shc_user" WITH DEFAULT_SCHEMA="shc_portal"
 GO
-ALTER ROLE [db_owner] ADD MEMBER [shj_portal_user]
+ALTER
+ROLE [db_owner] ADD MEMBER [shc_user]
 GO

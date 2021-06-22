@@ -12,13 +12,13 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * The persistent class for the sha_data_request database table.
+ * The persistent class for the shc_data_request database table.
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_data_request")
+@Table(name = "shc_data_request")
 @NamedQuery(name = "JpaDataRequest.findAll", query = "SELECT j FROM JpaDataRequest j")
 @Data
 @NoArgsConstructor

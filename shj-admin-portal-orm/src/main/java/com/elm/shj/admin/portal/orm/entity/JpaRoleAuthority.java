@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_role_authority database table.
+ * The persistent class for the shc_role_authority database table.
  *
  * @author ahmad flaifel
  * @since 1.8.0
  */
 @Entity
-@Table(name = "sha_role_authority")
+@Table(name = "shc_role_authority")
 @NamedQuery(name = "JpaRoleAuthority.findAll", query = "SELECT j FROM JpaRoleAuthority j")
 @Data
 @NoArgsConstructor

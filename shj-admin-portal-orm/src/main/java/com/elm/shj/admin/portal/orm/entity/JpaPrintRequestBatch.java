@@ -13,13 +13,13 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * The persistent class for the sha_print_request_batch database table.
+ * The persistent class for the shc_print_request_batch database table.
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_print_request_batch")
+@Table(name = "shc_print_request_batch")
 @NamedQuery(name = "JpaPrintRequestBatch.findAll", query = "SELECT j FROM JpaPrintRequestBatch j")
 @Getter
 @Setter

@@ -10,13 +10,13 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_print_batch_type_lk database table.
+ * The persistent class for the shc_print_batch_type_lk database table.
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_print_batch_type_lk")
+@Table(name = "shc_print_batch_type_lk")
 @NamedQuery(name = "JpaPrintBatchTypeLookup.findAll", query = "SELECT j FROM JpaPrintBatchTypeLookup j")
 @Data
 @NoArgsConstructor
