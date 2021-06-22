@@ -21,7 +21,7 @@
     <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;">
         <tr>
             <td align="center" bgcolor="#78ab46" style="padding: 40px 0 30px 0;">
-                <a href="http://10.33.20.210">نظام هوية ضيف الرحمن<br/>Smart ID Platform</a>
+                <a href="http://10.33.20.210:8080/shj-admin/">نظام هوية ضيف الرحمن<br/>Smart ID Platform</a>
             </td>
         </tr>
         <tr>
