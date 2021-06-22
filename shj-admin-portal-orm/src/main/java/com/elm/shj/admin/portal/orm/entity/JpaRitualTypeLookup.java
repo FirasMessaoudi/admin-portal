@@ -8,13 +8,13 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- * The persistent class for the sha_ritual_type_lk database table.
+ * The persistent class for the shc_ritual_type_lk database table.
  *
  * @author ahmad flaifel
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_ritual_type_lk")
+@Table(name = "shc_ritual_type_lk")
 @NamedQuery(name = "JpaRitualTypeLookup.findAll", query = "SELECT j FROM JpaRitualTypeLookup j")
 public class JpaRitualTypeLookup extends JpaLocalizedLookup {
 

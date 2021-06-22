@@ -12,13 +12,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_user_role database table.
+ * The persistent class for the shc_user_role database table.
  *
  * @author ahmad flaifel
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_user_role")
+@Table(name = "shc_user_role")
 @NamedQuery(name = "JpaUserRole.findAll", query = "SELECT j FROM JpaUserRole j")
 @Getter
 @Setter

@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_audit_log database table.
+ * The persistent class for the shc_audit_log database table.
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_audit_log")
+@Table(name = "shc_audit_log")
 @NamedQuery(name = "JpaAuditLog.findAll", query = "SELECT j FROM JpaAuditLog j")
 @Data
 @NoArgsConstructor

@@ -13,13 +13,13 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * The persistent class for the sha_user database table.
- * 
+ * The persistent class for the shc_user database table.
+ *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_user")
+@Table(name = "shc_user")
 @NamedQuery(name = "JpaUser.findAll", query = "SELECT j FROM JpaUser j")
 @Getter
 @Setter

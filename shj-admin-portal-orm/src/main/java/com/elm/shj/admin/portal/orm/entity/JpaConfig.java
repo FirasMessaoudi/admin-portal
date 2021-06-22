@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_config database table.
+ * The persistent class for the shc_config database table.
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_config")
+@Table(name = "shc_config")
 @NamedQuery(name = "JpaConfig.findAll", query = "SELECT j FROM JpaConfig j")
 @Data
 @NoArgsConstructor

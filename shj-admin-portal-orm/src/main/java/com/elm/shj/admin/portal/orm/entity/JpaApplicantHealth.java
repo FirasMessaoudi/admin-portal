@@ -15,13 +15,13 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * The persistent class for the sha_applicant_health database table.
+ * The persistent class for the shc_applicant_health database table.
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_applicant_health")
+@Table(name = "shc_applicant_health")
 @NamedQuery(name = "JpaApplicantHealth.findAll", query = "SELECT j FROM JpaApplicantHealth j")
 @Data
 @NoArgsConstructor

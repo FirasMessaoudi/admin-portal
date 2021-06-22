@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_ritual_group database table.
+ * The persistent class for the shc_ritual_group database table.
  *
  * @author ahmad flaifel
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_ritual_group")
+@Table(name = "shc_ritual_group")
 @NamedQuery(name = "JpaRitualGroup.findAll", query = "SELECT j FROM JpaRitualGroup j")
 @Data
 @NoArgsConstructor

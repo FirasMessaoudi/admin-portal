@@ -12,13 +12,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_applicant_contact database table.
+ * The persistent class for the shc_applicant_contact database table.
  *
  * @author ahmad flaifel
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_applicant_contact")
+@Table(name = "shc_applicant_contact")
 @NamedQuery(name = "JpaApplicantContact.findAll", query = "SELECT j FROM JpaApplicantContact j")
 @Data
 @NoArgsConstructor

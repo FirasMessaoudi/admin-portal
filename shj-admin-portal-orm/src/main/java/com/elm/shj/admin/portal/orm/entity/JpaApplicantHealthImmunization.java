@@ -12,13 +12,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_applicant_health_immunization database table.
+ * The persistent class for the shc_applicant_health_immunization database table.
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_applicant_health_immunization")
+@Table(name = "shc_applicant_health_immunization")
 @NamedQuery(name = "JpaApplicantHealthImmunization.findAll", query = "SELECT j FROM JpaApplicantHealthImmunization j")
 @Data
 @NoArgsConstructor

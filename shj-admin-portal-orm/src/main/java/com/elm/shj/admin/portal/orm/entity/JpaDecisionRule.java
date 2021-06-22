@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_decision_rule database table.
+ * The persistent class for the shc_decision_rule database table.
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_decision_rule")
+@Table(name = "shc_decision_rule")
 @NamedQuery(name = "JpaDecisionRule.findAll", query = "SELECT j FROM JpaDecisionRule j")
 @Data
 @NoArgsConstructor

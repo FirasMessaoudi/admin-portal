@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_data_request_record database table.
+ * The persistent class for the shc_data_request_record database table.
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_data_request_record")
+@Table(name = "shc_data_request_record")
 @NamedQuery(name = "JpaDataRequestRecord.findAll", query = "SELECT j FROM JpaDataRequestRecord j")
 @Data
 @NoArgsConstructor
