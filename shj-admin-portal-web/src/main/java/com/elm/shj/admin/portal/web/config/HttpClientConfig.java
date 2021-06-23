@@ -58,7 +58,7 @@ public class HttpClientConfig {
 
     private static final int MAX_TOTAL_CONNECTIONS = 50;
     private static final int DEFAULT_KEEP_ALIVE_TIME_MILLIS = 20 * 1000;
-    private static final int CLOSE_IDLE_CONNECTION_WAIT_TIME_SECS = 30;
+    private static final int CLOSE_IDLE_CONNECTION_WAIT_TIME_SECS = 180;
 
     @Bean
     public PoolingHttpClientConnectionManager poolingConnectionManager() {
