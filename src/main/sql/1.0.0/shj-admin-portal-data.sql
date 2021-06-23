@@ -624,7 +624,7 @@ VALUES ('sftp.client.protocol', 'sftp'),
        ('sftp.client.port', '22'),
        ('sftp.client.username', 'sftp-user'),
        ('sftp.client.password', 'Aa123456'),
-       ('sftp.client.root-folder', '/smart-hajj/data-uploads/'),
+       ('sftp.client.root-folder', '/data/smart-hajj/data-uploads/'),
        ('sftp.client.session-strict-host-key-checking', 'no'),
        ('sftp.client.session-connect-timeout', '15000'),
        ('sftp.client.channel-connected-timeout', '15000');
