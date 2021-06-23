@@ -34,6 +34,7 @@ public class ApplicantCardScheduler {
     @Scheduled(cron = "${scheduler.generate.card.applicant.ritual.cron}")
     @SchedulerLock(name = "generate-applicant-ritual-cards-task")
     public void generateIdsForNewApplicants() {
+        log.debug("Generate applicants cards scheduler started...");
         LockAssert.assertLocked();
         applicantRitualService.findAllWithoutCards().forEach(applicantRitual -> {
             // generate and save the card

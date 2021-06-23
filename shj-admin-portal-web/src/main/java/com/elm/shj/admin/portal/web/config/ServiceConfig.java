@@ -47,7 +47,7 @@ public class ServiceConfig {
         executor.setMaxPoolSize(100);
         executor.setQueueCapacity(250);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        executor.setThreadNamePrefix("shj_admin_exec-");
+        executor.setThreadNamePrefix("shc_admin_exec-");
         executor.initialize();
         return executor;
     }

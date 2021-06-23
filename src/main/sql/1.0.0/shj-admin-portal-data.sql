@@ -36,7 +36,7 @@ INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('elm.providers.yakeen.mock.enabled', 'true');
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
-VALUES ('elm.providers.email.host', '192.168.0.200');
+VALUES ('elm.providers.email.host', '192.168.0.160');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('elm.providers.email.port', 25);
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
@@ -90,11 +90,11 @@ VALUES ('elm.providers.filescan.read.timeout', 10000);
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('elm.providers.filescan.connection.timeout', 10000);
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
-VALUES ('elm.providers.filescan.rest.url', 'http://localhost:8080/shc_portal-engines-filescan/scan-file');
+VALUES ('elm.providers.filescan.rest.url', 'http://localhost:8080/dcc-engines-filescan/scan-file');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
-VALUES ('elm.providers.filescan.username', 'shc_portalfilescan-username');
+VALUES ('elm.providers.filescan.username', 'dccfilescan-username');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
-VALUES ('elm.providers.filescan.password', 'shc_portalfilescan-password');
+VALUES ('elm.providers.filescan.password', 'dccfilescan-password');
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('elm.engines.filescan.host', '192.168.46.145');
@@ -132,7 +132,7 @@ GO
 USE shc_portal
 GO
 UPDATE shc_portal.shc_config
-SET conf_value='http://192.168.2.149:8080/shc_portal-engines-filescan/scan-file'
+SET conf_value='http://192.168.2.149:8080/dcc-engines-filescan/scan-file'
 where conf_key = 'elm.providers.filescan.rest.url';
 GO
 UPDATE shc_portal.shc_user

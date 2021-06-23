@@ -622,7 +622,7 @@ create table shc_portal.shc_relative_relationship_lk
     code        VARCHAR(20)     NOT NULL,
     lang        VARCHAR(45)     NOT NULL,
     label       NVARCHAR(50) NOT NULL,
-    update_date smalldatetime NULL,
+    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT relative_relationship_lk_unique unique (code ASC, lang ASC)
 );
 GO
