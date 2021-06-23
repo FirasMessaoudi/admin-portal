@@ -780,3 +780,9 @@ GO
 -- assign role for printing user
 INSERT INTO shc_portal.shc_user_role (user_id, role_id, is_main_role) VALUES (9001, 8, 1);
 GO
+
+-- assign main roles for the system admin user
+INSERT INTO shc_portal.shc_user_role (user_id, role_id) VALUES (1, 5);
+INSERT INTO shc_portal.shc_user_role (user_id, role_id) VALUES (1, 7);
+INSERT INTO shc_portal.shc_user_role (user_id, role_id) VALUES (1, 11);
+GO
