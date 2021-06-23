@@ -74,7 +74,7 @@ public class LookupController {
     }
 
     @GetMapping("/country/list")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "')")
+    @PreAuthorize("hasAnyAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "', '" + AuthorityConstants.PRINTING_REQUEST_MANAGEMENT + "')")
     public List<CountryLookupDto> listCountries(Authentication authentication) {
         log.debug("list countries...");
         return countryLookupService.findAll();
