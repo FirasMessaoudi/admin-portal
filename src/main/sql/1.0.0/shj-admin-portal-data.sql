@@ -300,9 +300,22 @@ INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
 VALUES (1, 12);
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
 VALUES (1, 13);
-GO
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
+VALUES (3, 13);
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
+VALUES (5, 13);
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
+VALUES (7, 13);
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
+VALUES (9, 13);
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
+VALUES (11, 13);
+SET
+IDENTITY_INSERT shc_portal.shc_role_authority OFF;
 
-SET IDENTITY_INSERT shc_portal.shc_role ON;
+
+SET
+IDENTITY_INSERT shc_portal.shc_role ON;
 INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
 VALUES (2, N'مستخدم النظام', 'System User', 0, 1);
 -- new roles
