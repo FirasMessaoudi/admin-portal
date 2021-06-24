@@ -9,6 +9,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {DatePipe} from "@angular/common";
 import {RoleService} from "@core/services/role/role.service";
 import {EAuthority} from "@model/enum/authority.enum";
+import {NavigationService} from "@core/utilities/navigation.service";
 
 @Component({
   selector: "app-user-details",
@@ -32,6 +33,7 @@ export class UserDetailsComponent implements OnInit {
               private userService: UserService,
               private roleService: RoleService,
               private authentication: AuthenticationService,
+              private navigation: NavigationService,
               public datePipe: DatePipe,
               private authenticationService: AuthenticationService) {
   }
@@ -41,24 +43,24 @@ export class UserDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-      this.userId = this.activeRoute.snapshot.params.id;
+    this.userId = this.activeRoute.snapshot.params.id;
 
-      if (this.userId) {
-        // load user details
-        this.userService.find(this.userId).subscribe(data => {
-          if (data && data.id) {
-            this.user = data;
-          } else {
-            this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.userId}),
-              this.translate.instant('general.dialog_error_title'));
-            this.goToList();
-          }
-        });
-      } else {
-        this.toastr.error(this.translate.instant('general.route_id_param_not_found'),
-          this.translate.instant('general.dialog_error_title'));
-        this.goToList();
-      }
+    if (this.userId) {
+      // load user details
+      this.userService.find(this.userId).subscribe(data => {
+        if (data && data.id) {
+          this.user = data;
+        } else {
+          this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.userId}),
+            this.translate.instant('general.dialog_error_title'));
+          this.goToList();
+        }
+      });
+    } else {
+      this.toastr.error(this.translate.instant('general.route_id_param_not_found'),
+        this.translate.instant('general.dialog_error_title'));
+      this.goToList();
+    }
   }
 
   goToList() {
@@ -84,11 +86,19 @@ export class UserDetailsComponent implements OnInit {
     return this.authenticationService.hasAnyAuthority(requiredAuthorities);
   }
 
-  get userMainRole() : Role {
+  get userMainRole(): Role {
     if (this.user) {
       let userRole = this.user.userRoles.find(userRole => userRole.mainRole);
       if (userRole) return userRole.role;
     }
     return null;
+  }
+
+  back(): void {
+    console.log(this.navigation.getPreviousUrl());
+    if (this.navigation.getPreviousUrl() === '/users/list') {
+      this.navigation.back();
+    }
+    this.router.navigateByUrl('/');
   }
 }
