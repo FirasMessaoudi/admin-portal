@@ -43,7 +43,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
 
     public static final String CREATE_USER_SMS_NOTIFICATION_KEY = "user.mngt.new.user.sms.notification";
     public static final String RESET_PASSWORD_SMS_NOTIFICATION_KEY = "reset.password.sms.notification";
-    public static final String REGISTRATION_EMAIL_SUBJECT = "Welcome to Smart ID Platform مرحبا بك في منصة شعائر";
+    public static final String REGISTRATION_EMAIL_SUBJECT = "Welcome to Shaaer Platform مرحبا بك في منصة شعائر";
     public static final String REGISTRATION_EMAIL_TPL_NAME = "email-registration.ftl";
     public static final String RESET_PASSWORD_EMAIL_SUBJECT = "Reset User Password إعادة تعيين كلمة السر";
     public static final String RESET_PASSWORD_EMAIL_TPL_NAME = "email-reset-password.ftl";
