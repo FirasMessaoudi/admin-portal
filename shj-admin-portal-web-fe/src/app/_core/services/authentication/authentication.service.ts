@@ -145,9 +145,10 @@ export class AuthenticationService {
    */
   hasAnyAuthority(authoritiesToCheck: EAuthority[]): boolean {
     let authorityExist = false;
-    authoritiesToCheck.forEach(authority => {
+    for (let authority of authoritiesToCheck) {
       authorityExist = this.currentUser && this.currentUser.authorities && this.currentUser.authorities.filter(authorityObj => authorityObj.authority === authority.toString()).length > 0;
-    });
+      if (authorityExist) break;
+    }
     return authorityExist;
   }
 
