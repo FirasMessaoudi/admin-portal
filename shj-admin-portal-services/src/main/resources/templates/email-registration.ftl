@@ -27,10 +27,10 @@
         <tr>
             <td bgcolor="#eaeaea" style="padding: 40px 30px 40px 30px;">
                 <p dir="rtl"> عزيزي ${user.firstName}،</p>
-                <p dir="rtl"> مرحبا بك في منصة هوية ضيف الرحمن يمكن الدخول على المنصة باستعمال اسم المستخدم${user.nin} وكلمة المرور المؤقتة المرسلة على جوالك. </p>
+                <p dir="rtl"> مرحبا بك في منصة هوية ضيف الرحمن يمكن الدخول على المنصة باستعمال اسم المستخدم <#setting number_format="0" />${user.nin}<#setting number_format="" /> وكلمة المرور المؤقتة المرسلة على جوالك.</p>
                 </br>
                 <p>Dear ${user.firstName},</p>
-                <p>Welcome to Smart ID platform you can login to the system using the following username ${user.nin} and the temporary password sent to your mobile.</p>
+                <p>Welcome to Smart ID platform you can login to the system using the following username <#setting number_format="0" />${user.nin}<#setting number_format="" /> and the temporary password sent to your mobile.</p>
             </td>
         </tr>
         <tr>
