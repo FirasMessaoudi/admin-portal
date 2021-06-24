@@ -8,14 +8,18 @@ import com.elm.dcc.foundation.providers.sms.service.SmsGatewayService;
 import com.elm.shj.admin.portal.orm.entity.JpaUser;
 import com.elm.shj.admin.portal.orm.repository.RoleRepository;
 import com.elm.shj.admin.portal.orm.repository.UserRepository;
+import com.elm.shj.admin.portal.services.dto.RoleDto;
 import com.elm.shj.admin.portal.services.dto.UserDto;
+import com.elm.shj.admin.portal.services.dto.UserRoleDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.role.RoleService;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -43,6 +47,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
     public static final String REGISTRATION_EMAIL_TPL_NAME = "email-registration.ftl";
     public static final String RESET_PASSWORD_EMAIL_SUBJECT = "Reset User Password إعادة تعيين كلمة السر";
     public static final String RESET_PASSWORD_EMAIL_TPL_NAME = "email-reset-password.ftl";
+    private static final long SYSTEM_USER_ROLE_ID = 2L;
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -211,6 +216,20 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         user.setNumberOfTries(0);
         user.setUpdateDate(null);
         user.setCreationDate(new Date());
+        if (selfRegistration) {
+            RoleDto rDTO = new RoleDto();
+            rDTO.setId(SYSTEM_USER_ROLE_ID);
+            UserRoleDto userRoleDto = constructNewUserRoleDTO(user, rDTO);
+            Set userRoles = new HashSet<UserRoleDto>();
+            userRoles.add(userRoleDto);
+            user.setUserRoles(userRoles);
+        } else {
+            user.getUserRoles().forEach(userRole -> {
+                userRole.setUser(user);
+                userRole.setCreationDate(new Date());
+                userRole.setId(0);
+            });
+        }
         //update UserRole objects
         user.getUserRoles().forEach(userRole -> {
             userRole.setUser(user);
@@ -289,6 +308,16 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
 
         String updatedPwd = passwordEncoder.encode(newPassword);
         userRepository.resetPwd(user.getId(), updatedPwd, true);
+    }
+
+
+    protected UserRoleDto constructNewUserRoleDTO(UserDto user, RoleDto rDTO) {
+        UserRoleDto userRoleDto = new UserRoleDto();
+        userRoleDto.setUser(user);
+        userRoleDto.setRole(rDTO);
+        userRoleDto.setMainRole(true);
+
+        return userRoleDto;
     }
 
     /**
