@@ -63,7 +63,7 @@ public class RoleManagementController {
     @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_MANAGEMENT + "')")
     public List<RoleDto> listActiveRoles(Authentication authentication) {
         log.info("list active roles.");
-        return roleService.findActive(jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
+        return roleService.findActive();
     }
 
     @GetMapping("/list/paginated")
