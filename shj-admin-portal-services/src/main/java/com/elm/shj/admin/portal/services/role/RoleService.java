@@ -80,10 +80,10 @@ public class RoleService extends GenericService<JpaRole, RoleDto, Long> {
      * @return
      */
     public List<RoleDto> findActive(Set loggedInUserRoleIds) {
-        if (!loggedInUserRoleIds.contains(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID)) {
-            log.warn("only system admin user is allowed to list all active roles!");
-            return Collections.EMPTY_LIST;
-        }
+//        if (!loggedInUserRoleIds.contains(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID)) {
+//            log.warn("only system admin user is allowed to list all active roles!");
+//            return Collections.EMPTY_LIST;
+//        }
         // exclude system admin and system user roles from returned list
         return mapList(roleRepository.findByDeletedFalseAndActivatedTrueAndIdNotIn(RoleRepository.SYSTEM_ROLE_ID_LIST));
     }
