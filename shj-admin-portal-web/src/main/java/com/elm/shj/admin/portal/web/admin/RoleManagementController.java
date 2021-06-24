@@ -48,7 +48,7 @@ public class RoleManagementController {
      * @return the list of roles matching criteria
      */
     @GetMapping("/list/all")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.ROLE_MANAGEMENT + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_MANAGEMENT + "')")
     public List<RoleDto> listAllRoles(Authentication authentication) {
         log.info("list active roles.");
         return roleService.findAll(jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
@@ -63,7 +63,7 @@ public class RoleManagementController {
     @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_MANAGEMENT + "')")
     public List<RoleDto> listActiveRoles(Authentication authentication) {
         log.info("list active roles.");
-        return roleService.findActive(jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
+        return roleService.findActive();
     }
 
     @GetMapping("/list/paginated")

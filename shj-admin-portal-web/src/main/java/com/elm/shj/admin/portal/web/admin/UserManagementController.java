@@ -65,10 +65,12 @@ public class UserManagementController {
 
     public static final String CONFIDENTIAL = "<CONFIDENTIAL>";
     public static final String NEW_PWRD_FIELD_NAME = "newPassword";
+    public static final String OLD_PWRD_FIELD_NAME = "oldPassword";
     public static final String RESET_PWD_SMS_NOTIFICATION_KEY = "reset.password.sms.notification";
     public static final String CREATE_USER_SMS_NOTIFICATION_KEY = "user.mngt.new.user.sms.notification";
     private static final String PWRD_HISTORY_ERROR_MESSAGE_KEY = "{dcc.commons.validation.constraints.password-history}";
     private static final String PWRD_CONTAINS_USERNAME_ERROR_MESSAGE_KEY = "{dcc.commons.validation.constraints.password-contains-username}";
+    private static final String OLD_PWRD_ERROR_MESSAGE_KEY = "{dcc.commons.validation.constraints.invalid}";
     private static final String CHANGE_PWRD_METHOD_NAME = "changeUserPassword";
     public static final String RECAPTCHA_TOKEN_NAME = "grt";
 
@@ -209,7 +211,8 @@ public class UserManagementController {
         long loggedInUserIdNumber = Long.parseLong(loggedInUserIdNumberStr);
         String oldPasswordHash = userService.retrievePasswordHash(loggedInUserIdNumber);
         if (!BCrypt.checkpw(command.getOldPassword(), oldPasswordHash)) {
-            throw new BadCredentialsException("Old password does not match");
+//            throw new BadCredentialsException("Old password does not match");
+            rejectInvalidOldPassword(command, OLD_PWRD_ERROR_MESSAGE_KEY);
         }
         // current password cannot be used as new password
         if (command.getNewPassword().equals(command.getOldPassword())) {
@@ -257,6 +260,24 @@ public class UserManagementController {
         BindingResult beanPropertyBindingResult =
                 new BeanPropertyBindingResult(command, command.getClass().getName());
         beanPropertyBindingResult.rejectValue(NEW_PWRD_FIELD_NAME, StringUtils.EMPTY, null, errorMessageKey);
+        MethodParameter methodParameter = new MethodParameter(this.getClass().getMethod(CHANGE_PWRD_METHOD_NAME,
+                command.getClass()), 0);
+        throw new MethodArgumentNotValidException(methodParameter, beanPropertyBindingResult);
+    }
+
+    /**
+     * Reject invalid old password value and throw an exception
+     *
+     * @param command         {@link ChangePasswordCmd}
+     * @param errorMessageKey Error message key defined in localization message file
+     * @throws MethodArgumentNotValidException
+     * @throws NoSuchMethodException
+     */
+    private void rejectInvalidOldPassword(ChangePasswordCmd command, String errorMessageKey) throws MethodArgumentNotValidException,
+            NoSuchMethodException {
+        BindingResult beanPropertyBindingResult =
+                new BeanPropertyBindingResult(command, command.getClass().getName());
+        beanPropertyBindingResult.rejectValue(OLD_PWRD_FIELD_NAME, StringUtils.EMPTY, null, errorMessageKey);
         MethodParameter methodParameter = new MethodParameter(this.getClass().getMethod(CHANGE_PWRD_METHOD_NAME,
                 command.getClass()), 0);
         throw new MethodArgumentNotValidException(methodParameter, beanPropertyBindingResult);
