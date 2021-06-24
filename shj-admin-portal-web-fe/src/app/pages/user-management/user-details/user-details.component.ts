@@ -80,7 +80,8 @@ export class UserDetailsComponent implements OnInit {
   }
 
   get canSeeUserDetails(): boolean {
-    return this.authenticationService.hasAuthority(EAuthority.USER_MANAGEMENT);
+    let requiredAuthorities: EAuthority [] = new Array(EAuthority.USER_MANAGEMENT, EAuthority.VIEW_MY_PROFILE);
+    return this.authenticationService.hasAnyAuthority(requiredAuthorities);
   }
 
   get userMainRole() : Role {

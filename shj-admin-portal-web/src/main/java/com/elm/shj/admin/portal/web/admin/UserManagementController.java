@@ -112,7 +112,7 @@ public class UserManagementController {
      * @return the found user or <code>null</code>
      */
     @GetMapping("/find/{userId}")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.EDIT_USER + "')")
+    @PreAuthorize("hasAnyAuthority('" + AuthorityConstants.EDIT_USER + "', '" + AuthorityConstants.VIEW_MY_PROFILE + "')")
     public UserDto findUser(@PathVariable long userId) {
         log.debug("Handler for {}", "Find User");
         return maskUserInfo(userService.findOne(userId));

@@ -24,6 +24,9 @@ public final class AuthorityConstants {
     public static final String DELETE_ROLE = "DELETE_ROLE";
     public static final String CHANGE_ROLE_STATUS = "CHANGE_ROLE_STATUS";
     public static final String RESET_USER_PASSWORD = "RESET_USER_PASSWORD";
+    public static final String UPDATE_MY_PROFILE = "UPDATE_MY_PROFILE";
+    public static final String VIEW_MY_PROFILE = "VIEW_MY_PROFILE";
+
 
     //Printing Request Management
     public static final String PRINTING_REQUEST_MANAGEMENT = "PRINTING_REQUEST_MANAGEMENT";
