@@ -59,6 +59,8 @@ export class SideNavComponent implements OnInit {
         iconFa:'fa-w-20',
         routerLink: '/users/list',
       },
+/*
+      TODO Uncomment the following block
       {
         title: 'rule-management.title',
         roles: [EAuthority.USER_MANAGEMENT],
@@ -66,7 +68,7 @@ export class SideNavComponent implements OnInit {
         icon: 'users',
         iconFa:'fa-w-20',
         routerLink: '/rules/list',
-      },
+      },*/
       {
         title: 'data-request-management.title',
         roles: [EAuthority.DATA_REQUEST_MANAGEMENT],
