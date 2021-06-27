@@ -14,8 +14,21 @@
       <form [formGroup]="searchForm" enctype="multipart/form-data" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
         <div class="form-group col">
           <label class="col-form-label">{{ "role-management.role_name" | translate }}</label>
-          <input type="text" formControlName="roleNameAr" class="form-control" *ngIf="currentLanguage.startsWith('ar')"/>
-          <input type="text" formControlName="roleNameEn" class="form-control" *ngIf="currentLanguage.startsWith('en')"/>
+          <input type="text" formControlName="roleNameAr" class="form-control" *ngIf="currentLanguage.startsWith('ar')"
+                 maxlength="50" [class.is-invalid]="f.roleNameAr.invalid && f.roleNameAr.touched"/>
+          <input type="text" formControlName="roleNameEn" class="form-control" *ngIf="currentLanguage.startsWith('en')"
+                 maxlength="50" [class.is-invalid]="f.roleNameEn.invalid && f.roleNameEn.touched"/>
+          <div *ngIf="f.roleNameEn.invalid && f.roleNameEn.touched" class="invalid-feedback">
+            <div *ngIf="f.roleNameEn.errors.invalid">{{f.roleNameEn.errors['invalid'] | translate}}</div>
+            <div
+              *ngIf="f.roleNameEn.errors['characters-only']">{{f.roleNameEn.errors['characters-only'] | translate}}</div>
+          </div>
+          <div *ngIf="f.roleNameAr.invalid && f.roleNameAr.touched" class="invalid-feedback">
+
+            <div *ngIf="f.roleNameAr.errors.invalid">{{f.roleNameAr.errors['invalid'] | translate}}</div>
+            <div
+              *ngIf="f.roleNameAr.errors['characters-only']">{{f.roleNameAr.errors['characters-only'] | translate}}</div>
+          </div>
         </div>
         <div class="form-group col">
           <label class="col-form-label">{{ "role-management.authority" | translate }}</label>

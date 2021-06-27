@@ -76,8 +76,8 @@ export class RoleAddUpdateComponent implements OnInit {
 
   initRoleForm() {
     this.roleForm = this.formBuilder.group({
-      labelAr: ['', [Validators.required, DccValidators.arabicCharacters(false), Validators.maxLength(60), Validators.minLength(3)]],
-      labelEn: ['', [Validators.required, DccValidators.latinCharacters(false), Validators.maxLength(60), Validators.minLength(3)]],
+      labelAr: ['', [Validators.required, DccValidators.arabicCharacters(true), Validators.maxLength(60), Validators.minLength(3)]],
+      labelEn: ['', [Validators.required, DccValidators.latinCharacters(true), Validators.maxLength(60), Validators.minLength(3)]],
       activated: [false, Validators.required]
     });
   }
@@ -85,8 +85,8 @@ export class RoleAddUpdateComponent implements OnInit {
   updateRoleForm() {
     this.roleForm = this.formBuilder.group({
       id: [this.role.id],
-      labelAr: [this.role.labelAr, [Validators.required, Validators.maxLength(60), Validators.minLength(3)]],
-      labelEn: [this.role.labelEn, [Validators.required, Validators.maxLength(60), Validators.minLength(3)]],
+      labelAr: [this.role.labelAr, [Validators.required, DccValidators.arabicCharacters(true), Validators.maxLength(60), Validators.minLength(3)]],
+      labelEn: [this.role.labelEn, [Validators.required, DccValidators.latinCharacters(true), Validators.maxLength(60), Validators.minLength(3)]],
       activated: [this.role.activated, Validators.required]
     });
     this.roleAuthorities.forEach(ra => {

@@ -15,9 +15,11 @@
         <div class="form-group col">
           <label class="col-form-label">{{'role-management.role_name_ar' | translate}}<span class="text-danger px-1">*</span></label>
           <input type="text" formControlName="labelAr" class="form-control" required [class.is-invalid]="f.labelAr.invalid && f.labelAr.touched" maxlength="25"/>
+
           <div *ngIf="f.labelAr.invalid && f.labelAr.touched" class="invalid-feedback">
             <div *ngIf="f.labelAr.errors.required">{{'general.field_validation_required' | translate}}</div>
             <div *ngIf="f.labelAr.errors.invalid">{{f.labelAr.errors['invalid'] | translate}}</div>
+
             <div *ngIf="f.labelAr.errors['invalid-characters']">{{f.labelAr.errors['invalid-characters'] | translate}}</div>
           </div>
         </div>

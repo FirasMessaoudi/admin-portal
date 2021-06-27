@@ -159,7 +159,7 @@
                      maxlength="50" [class.is-invalid]="f.email.errors && f.email.touched"/>
               <div *ngIf="f.email.errors && f.email.touched" class="invalid-feedback">
                 <div *ngIf="f.email.errors.required">{{'general.field_validation_required' | translate}}</div>
-                <div *ngIf="f.email.errors.invalid" translate>{{f.email.errors['invalid']}}</div>
+                <div *ngIf="f.email.errors.email">{{ 'dcc.commons.validation.constraints.invalid'| translate}}</div>
               </div>
             </div>
 

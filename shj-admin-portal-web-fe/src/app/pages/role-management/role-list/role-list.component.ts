@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Page} from '@app/_shared/model';
 import {RoleService} from "@core/services/role/role.service";
 import {Subscription} from "rxjs";
@@ -10,6 +10,7 @@ import {ToastService} from "@shared/components/toast/toast-service";
 import {TranslateService} from "@ngx-translate/core";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 import {EAuthority} from "@model/enum/authority.enum";
+import {DccValidators} from "@shared/validators";
 
 @Component({
   selector: 'app-applicant-list',
@@ -81,8 +82,8 @@ export class RoleListComponent implements OnInit, OnDestroy {
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
       authorityId: [-1],
-      roleNameAr: [null],
-      roleNameEn: [null]
+      roleNameAr: ['', [DccValidators.charactersOnly()]],
+      roleNameEn: ['', [DccValidators.charactersOnly()]]
     });
   }
 
@@ -164,6 +165,10 @@ export class RoleListComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  get f() {
+    return this.searchForm.controls;
   }
 
   get canSeeRoleList(): boolean {

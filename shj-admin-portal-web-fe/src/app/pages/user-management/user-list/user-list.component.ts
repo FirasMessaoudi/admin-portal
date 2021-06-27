@@ -96,7 +96,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.searchForm = this.formBuilder.group({
       status: [null],
       role: [null],
-      nin: ['', [Validators.pattern(this.ninPatt)]]
+      nin: ['', [Validators.min(0)]]
     });
   }
 
