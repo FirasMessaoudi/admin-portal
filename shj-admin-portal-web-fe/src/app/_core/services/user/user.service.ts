@@ -39,7 +39,6 @@ export class UserService {
 
   list(pageNumber: any, searchCriteria?: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
-
     return this.http.get('/core/api/users/list/' + (searchCriteria?.role ? searchCriteria?.role.id : -1) + '/' + (searchCriteria?.nin ? searchCriteria?.nin : '-1') + '/' + (searchCriteria?.status ? (searchCriteria?.status.activated ? 1 : 0) : -1), {params: params});
   }
 

@@ -66,8 +66,6 @@ public class UserManagementController {
     public static final String CONFIDENTIAL = "<CONFIDENTIAL>";
     public static final String NEW_PWRD_FIELD_NAME = "newPassword";
     public static final String OLD_PWRD_FIELD_NAME = "oldPassword";
-    public static final String RESET_PWD_SMS_NOTIFICATION_KEY = "reset.password.sms.notification";
-    public static final String CREATE_USER_SMS_NOTIFICATION_KEY = "user.mngt.new.user.sms.notification";
     private static final String PWRD_HISTORY_ERROR_MESSAGE_KEY = "{dcc.commons.validation.constraints.password-history}";
     private static final String PWRD_CONTAINS_USERNAME_ERROR_MESSAGE_KEY = "{dcc.commons.validation.constraints.password-contains-username}";
     private static final String OLD_PWRD_ERROR_MESSAGE_KEY = "{dcc.commons.validation.constraints.invalid}";

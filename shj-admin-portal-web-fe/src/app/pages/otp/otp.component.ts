@@ -4,7 +4,6 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '@app/_core/services/authentication/authentication.service';
 import {I18nService} from "@dcc-commons-ng/services";
 import {finalize} from "rxjs/operators";
-import {interval, Subscription} from "rxjs";
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -19,7 +18,7 @@ export class OtpComponent implements OnInit, AfterViewInit {
   otpForm: FormGroup;
   loading = false;
   timerContent: string = '';
-  timerSubscription: Subscription;
+  timerInterval: any;
   formInputs = ['input1', 'input2', 'input3', 'input4'];
   @ViewChildren('formRow') rows: any;
 
@@ -76,10 +75,8 @@ export class OtpComponent implements OnInit, AfterViewInit {
         this.otpForm.markAsPristine();
         this.loading = false;
       })).subscribe(user => {
+        clearInterval(this.timerInterval);
       console.log(user);
-      if (this.timerSubscription) {
-        this.timerSubscription.unsubscribe();
-      }
       // login successful if there's a jwt token in the response
       this.authenticationService.updateSubject(user);
       if (user.passwordExpired) {
@@ -88,6 +85,7 @@ export class OtpComponent implements OnInit, AfterViewInit {
         this.router.navigate(['/change-password'], {replaceUrl: true});
       } else {
         console.log('redirect to / page');
+        clearInterval(this.timerInterval);
         this.router.navigate(['/'], {replaceUrl: true});
       }
     }, error => {
@@ -125,9 +123,7 @@ export class OtpComponent implements OnInit, AfterViewInit {
   }
 
   goBack() {
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
-    }
+    clearInterval(this.timerInterval);
     this.router.navigate(['/login']);
   }
 
@@ -136,7 +132,7 @@ export class OtpComponent implements OnInit, AfterViewInit {
     let minutes;
     let seconds;
 
-    this.timerSubscription = interval(1000).subscribe(x => {
+    this.timerInterval = setInterval(() => {
       minutes = Math.floor(timer / 60);
       seconds = Math.floor(timer % 60);
 
@@ -149,6 +145,6 @@ export class OtpComponent implements OnInit, AfterViewInit {
       if (--timer < 0) {
         this.goBack();
       }
-    })
+    }, 1000);
   }
 }
