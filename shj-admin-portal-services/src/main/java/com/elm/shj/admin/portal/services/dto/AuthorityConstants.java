@@ -24,6 +24,9 @@ public final class AuthorityConstants {
     public static final String DELETE_ROLE = "DELETE_ROLE";
     public static final String CHANGE_ROLE_STATUS = "CHANGE_ROLE_STATUS";
     public static final String RESET_USER_PASSWORD = "RESET_USER_PASSWORD";
+    public static final String UPDATE_MY_PROFILE = "UPDATE_MY_PROFILE";
+    public static final String VIEW_MY_PROFILE = "VIEW_MY_PROFILE";
+
 
     //Printing Request Management
     public static final String PRINTING_REQUEST_MANAGEMENT = "PRINTING_REQUEST_MANAGEMENT";
@@ -39,6 +42,11 @@ public final class AuthorityConstants {
     public static final String SUSPEND_CARD = "SUSPEND_CARD";
     public static final String REISSUE_CARD = "REISSUE_CARD";
     public static final String ADD_CARD = "ADD_CARD";
+
+    //Data Request Management
+    public static final String DATA_REQUEST_MANAGEMENT = "DATA_REQUEST_MANAGEMENT";
+    public static final String VIEW_DATA_REQUEST_DETAILS = "VIEW_DATA_REQUEST_DETAILS";
+    public static final String CREATE_DATA_REQUEST = "CREATE_DATA_REQUEST";
 
     private AuthorityConstants() {
         // creating instances is not allowed

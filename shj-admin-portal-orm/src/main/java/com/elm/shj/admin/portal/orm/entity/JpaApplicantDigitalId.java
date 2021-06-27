@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_applicant_digital_id database table.
+ * The persistent class for the shc_applicant_digital_id database table.
  *
  * @author ahmad flaifel
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_applicant_digital_id")
+@Table(name = "shc_applicant_digital_id")
 @NamedQuery(name = "JpaApplicantDigitalId.findAll", query = "SELECT j FROM JpaApplicantDigitalId j")
 @Data
 @NoArgsConstructor

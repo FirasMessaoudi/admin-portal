@@ -37,7 +37,7 @@ public class ServiceConfig {
 
     @Bean
     public LockProvider lockProvider(@Autowired DataSource dataSource) {
-        return new JdbcTemplateLockProvider(dataSource, "sha_scheduled_tasks_lock");
+        return new JdbcTemplateLockProvider(dataSource, "shc_scheduled_tasks_lock");
     }
 
     @Bean
@@ -47,7 +47,7 @@ public class ServiceConfig {
         executor.setMaxPoolSize(100);
         executor.setQueueCapacity(250);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        executor.setThreadNamePrefix("shj_admin_exec-");
+        executor.setThreadNamePrefix("shc_admin_exec-");
         executor.initialize();
         return executor;
     }

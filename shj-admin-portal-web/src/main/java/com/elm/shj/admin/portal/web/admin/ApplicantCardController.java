@@ -14,10 +14,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.security.RolesAllowed;
 import java.io.IOException;
 import java.util.*;
 /**
@@ -35,14 +34,14 @@ public class ApplicantCardController {
     private final ApplicantCardService applicantCardService;
 
     @GetMapping("/list")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "')")
     public Page<ApplicantCardDto> listApplicantCards(Pageable pageable, Authentication authentication) {
         log.debug("List applicant cards...");
         return applicantCardService.findAll(pageable);
     }
 
     @GetMapping("/list-applicant-cards")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "')")
     public Page<ApplicantCardDto> searchApplicantCards(@RequestParam(value = "applicantCardSearchCriteria") String applicantCardSearchCriteria,
                                                        Pageable pageable, Authentication authentication) throws IOException {
 
@@ -76,7 +75,7 @@ public class ApplicantCardController {
      * @return the list of printing cards
      */
     @GetMapping("/list/ready-to-print/{uin}/{idNumber}/{hamlahNumber}/{motawefNumber}/{passportNumber}/{nationality}")
-    @RolesAllowed({AuthorityConstants.USER_MANAGEMENT}) //TODO: Change it
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
     public Page<ApplicantCardDto> listReadyToPrintCards(@RequestParam List<Long> excludedCardsIds, Pageable pageable,
                                                         @PathVariable String uin, @PathVariable String idNumber, @PathVariable String hamlahNumber,
                                                         @PathVariable String motawefNumber, @PathVariable String passportNumber,
@@ -89,7 +88,7 @@ public class ApplicantCardController {
     }
 
     @GetMapping("/list/ready-to-print/all/{uin}/{idNumber}/{hamlahNumber}/{motawefNumber}/{passportNumber}/{nationality}")
-    @RolesAllowed({AuthorityConstants.USER_MANAGEMENT}) //TODO: Change it
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
     public List<ApplicantCardDto> listReadyToPrintCards(@PathVariable String uin, @PathVariable String idNumber, @PathVariable String hamlahNumber,
                                                         @PathVariable String motawefNumber, @PathVariable String passportNumber,
                                                         @PathVariable String nationality, @RequestParam List<Long> excludedCardsIds,
@@ -108,7 +107,7 @@ public class ApplicantCardController {
      * @return the found card or <code>null</code>
      */
     @GetMapping("/find/{cardId}")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.VIEW_CARD_DETAILS + "')")
     public ApplicantCardDto findApplicantCard(@PathVariable long cardId) {
         log.debug("Handler for {}", "Find Applicant Card");
         return applicantCardService.findOne(cardId);

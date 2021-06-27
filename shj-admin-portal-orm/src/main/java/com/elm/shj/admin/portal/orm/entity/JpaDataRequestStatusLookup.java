@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_data_request_status_lk database table.
+ * The persistent class for the shc_data_request_status_lk database table.
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_data_request_status_lk")
+@Table(name = "shc_data_request_status_lk")
 @NamedQuery(name = "JpaDataRequestStatusLookup.findAll", query = "SELECT j FROM JpaDataRequestStatusLookup j")
 @Data
 @NoArgsConstructor

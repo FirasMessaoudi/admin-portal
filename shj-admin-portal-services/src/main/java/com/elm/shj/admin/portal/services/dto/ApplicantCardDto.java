@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestCard;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +32,7 @@ public class ApplicantCardDto implements Serializable {
     private String referenceNumber;
     private Long batchId;
     @JsonBackReference
-    private List<JpaPrintRequestCard> printRequestCards;
+    private List<PrintRequestCardDto> printRequestCards;
     private String statusCode;
     private Date creationDate;
 }

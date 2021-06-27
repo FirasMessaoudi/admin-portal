@@ -1,8 +1,19 @@
-<div class="content__wrapper">
+<div class="content__wrapper" *ngIf="!canSeeCardDetails">
+  <div class="title__Page">
+    <h3 class="sectionTitle">{{'card-management.card_details' | translate }}</h3>
+  </div>
+  <div class="content__section">
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
+</div>
+
+<div class="content__wrapper" *ngIf="canSeeCardDetails">
   <div class="title__Page">
     <h3 class="sectionTitle">{{'card-management.card_details' | translate }}</h3>
     <div ngbDropdown>
-      <button disabled type="submit" class="btn btn-dcc-primary px-5 mr-3 noArrow" id="dropdownBasic1" ngbDropdownToggle>
+      <button disabled type="submit" class="btn btn-dcc-primary px-5 mr-3 noArrow" id="dropdownBasic1"
+              ngbDropdownToggle>
         العمليات
         <svg-icon styleClass="h4 ml-3" icon="bars"></svg-icon>
       </button>
@@ -152,7 +163,7 @@
           </section>
         </ng-template>
       </li>
-      <li [ngbNavItem]="2">
+      <li [ngbNavItem]="2" [disabled]="true">
         <a ngbNavLink>{{'card-management.hamlah_details' | translate}}</a>
         <ng-template ngbNavContent>
           <section>
@@ -351,11 +362,12 @@
           </section>
         </ng-template>
       </li>
-      <li [ngbNavItem]="4">
+      <li [ngbNavItem]="4" [disabled]="true">
         <a ngbNavLink>{{ 'card-management.tafweej_details' | translate }}</a>
         <ng-template ngbNavContent>
           <section>
-            <span class="form-control-plaintext ">{{ 'card-management.tafweej_details' | translate }} {{'(رقم 257788)'}}</span>
+            <span
+              class="form-control-plaintext ">{{ 'card-management.tafweej_details' | translate }} {{'(رقم 257788)'}}</span>
 
             <div class="table-responsive my-4">
               <table class="table table-striped table-hover">
@@ -389,7 +401,8 @@
           </section>
         </ng-template>
       </li>
-      <li [ngbNavItem]="5">
+
+      <li [ngbNavItem]="5" [disabled]="true">
         <a ngbNavLink>{{ 'card-management.motawef_details' | translate }}</a>
         <ng-template ngbNavContent>
           <div class="table-responsive my-4">

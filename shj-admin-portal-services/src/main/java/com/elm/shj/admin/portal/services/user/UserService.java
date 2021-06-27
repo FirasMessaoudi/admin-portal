@@ -8,14 +8,18 @@ import com.elm.dcc.foundation.providers.sms.service.SmsGatewayService;
 import com.elm.shj.admin.portal.orm.entity.JpaUser;
 import com.elm.shj.admin.portal.orm.repository.RoleRepository;
 import com.elm.shj.admin.portal.orm.repository.UserRepository;
+import com.elm.shj.admin.portal.services.dto.RoleDto;
 import com.elm.shj.admin.portal.services.dto.UserDto;
+import com.elm.shj.admin.portal.services.dto.UserRoleDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.role.RoleService;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -38,8 +42,12 @@ import java.util.*;
 public class UserService extends GenericService<JpaUser, UserDto, Long> {
 
     public static final String CREATE_USER_SMS_NOTIFICATION_KEY = "user.mngt.new.user.sms.notification";
-    public static final String REGISTRATION_EMAIL_SUBJECT = "Welcome to ELM Product";
+    public static final String RESET_PASSWORD_SMS_NOTIFICATION_KEY = "reset.password.sms.notification";
+    public static final String REGISTRATION_EMAIL_SUBJECT = "Welcome to Shaaer Platform مرحبا بك في منصة شعائر";
     public static final String REGISTRATION_EMAIL_TPL_NAME = "email-registration.ftl";
+    public static final String RESET_PASSWORD_EMAIL_SUBJECT = "Reset User Password إعادة تعيين كلمة السر";
+    public static final String RESET_PASSWORD_EMAIL_TPL_NAME = "email-reset-password.ftl";
+    private static final long SYSTEM_USER_ROLE_ID = 2L;
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -208,6 +216,20 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         user.setNumberOfTries(0);
         user.setUpdateDate(null);
         user.setCreationDate(new Date());
+        if (selfRegistration) {
+            RoleDto rDTO = new RoleDto();
+            rDTO.setId(SYSTEM_USER_ROLE_ID);
+            UserRoleDto userRoleDto = constructNewUserRoleDTO(user, rDTO);
+            Set userRoles = new HashSet<UserRoleDto>();
+            userRoles.add(userRoleDto);
+            user.setUserRoles(userRoles);
+        } else {
+            user.getUserRoles().forEach(userRole -> {
+                userRole.setUser(user);
+                userRole.setCreationDate(new Date());
+                userRole.setId(0);
+            });
+        }
         //update UserRole objects
         user.getUserRoles().forEach(userRole -> {
             userRole.setUser(user);
@@ -216,13 +238,8 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         });
         // save user information
         UserDto savedUser = save(user);
-        // user created successfully, send SMS notification which contains the temporary password
-        boolean smsSent = notifyRegisteredUser(user);
-        log.debug("SMS notification status: {}", smsSent);
-        // Send Email notification which contains the username
-        boolean emailSent = emailService.sendMailFromTemplate(Arrays.asList(user.getEmail()), null,
-                REGISTRATION_EMAIL_SUBJECT, REGISTRATION_EMAIL_TPL_NAME, ImmutableMap.of("user", user));
-        log.debug("Email notification status: {}", emailSent);
+        // user created successfully, send SMS notification which contains the temporary password and Email which contains the NIN
+        boolean notificationSent = notifyRegisteredUser(user);
 
         return savedUser;
     }
@@ -284,7 +301,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         String newPassword = generatePassword();
         user.setPassword(newPassword);
         // first notify user with the new password, if notification failed, password will not be changed
-        if (!notifyRegisteredUser(user)) {
+        if (!notifyUserOnPasswordReset(user)) {
             log.error("Password reset cannot be done, unable to notify user with the new password.");
             return;
         }
@@ -293,16 +310,57 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         userRepository.resetPwd(user.getId(), updatedPwd, true);
     }
 
+
+    protected UserRoleDto constructNewUserRoleDTO(UserDto user, RoleDto rDTO) {
+        UserRoleDto userRoleDto = new UserRoleDto();
+        userRoleDto.setUser(user);
+        userRoleDto.setRole(rDTO);
+        userRoleDto.setMainRole(true);
+
+        return userRoleDto;
+    }
+
     /**
-     * Send SMS for registered user.
+     * Send SMS and Email for user on password reset.
+     *
+     * @param user
+     * @return
+     */
+    public boolean notifyUserOnPasswordReset(UserDto user) {
+        // Send SMS notification
+        String[] smsNotificationArgs = new String[]{user.getPassword()};
+        String locale = isCitizen(user.getNin()) ? "ar" : "en";
+        String createdUserSms = messageSource.getMessage(RESET_PASSWORD_SMS_NOTIFICATION_KEY, smsNotificationArgs, Locale.forLanguageTag(locale));
+        boolean smsSent = smsGatewayService.sendMessage(user.getMobileNumber().longValue(), createdUserSms);
+        log.debug("SMS notification status: {}", smsSent);
+
+        // Send Email notification
+        boolean emailSent = emailService.sendMailFromTemplate(Arrays.asList(user.getEmail()), null,
+                RESET_PASSWORD_EMAIL_SUBJECT, RESET_PASSWORD_EMAIL_TPL_NAME, ImmutableMap.of("user", user));
+        log.debug("Email notification status: {}", emailSent);
+
+        return smsSent || emailSent;
+    }
+
+    /**
+     * Send SMS and Email for registered user.
      *
      * @param user
      * @return
      */
     public boolean notifyRegisteredUser(UserDto user) {
+        // Send SMS notification
         String[] smsNotificationArgs = new String[]{user.getPassword()};
         String locale = isCitizen(user.getNin()) ? "ar" : "en";
         String createdUserSms = messageSource.getMessage(CREATE_USER_SMS_NOTIFICATION_KEY, smsNotificationArgs, Locale.forLanguageTag(locale));
-        return smsGatewayService.sendMessage(user.getMobileNumber().longValue(), createdUserSms);
+        boolean smsSent = smsGatewayService.sendMessage(user.getMobileNumber().longValue(), createdUserSms);
+        log.debug("SMS notification status: {}", smsSent);
+
+        // Send Email notification
+        boolean emailSent = emailService.sendMailFromTemplate(Arrays.asList(user.getEmail()), null,
+                REGISTRATION_EMAIL_SUBJECT, REGISTRATION_EMAIL_TPL_NAME, ImmutableMap.of("user", user));
+        log.debug("Email notification status: {}", emailSent);
+
+        return smsSent || emailSent;
     }
 }

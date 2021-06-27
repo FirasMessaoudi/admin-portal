@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_print_request_batch_card database table.
+ * The persistent class for the shc_print_request_batch_card database table.
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_print_request_batch_card")
+@Table(name = "shc_print_request_batch_card")
 @NamedQuery(name = "JpaPrintRequestBatchCard.findAll", query = "SELECT j FROM JpaPrintRequestCard j")
 @Data
 @NoArgsConstructor

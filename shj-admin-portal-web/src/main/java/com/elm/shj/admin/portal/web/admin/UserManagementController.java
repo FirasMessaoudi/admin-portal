@@ -19,14 +19,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,7 +41,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
@@ -52,7 +49,6 @@ import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Main controller for admin user management page
@@ -69,10 +65,12 @@ public class UserManagementController {
 
     public static final String CONFIDENTIAL = "<CONFIDENTIAL>";
     public static final String NEW_PWRD_FIELD_NAME = "newPassword";
+    public static final String OLD_PWRD_FIELD_NAME = "oldPassword";
     public static final String RESET_PWD_SMS_NOTIFICATION_KEY = "reset.password.sms.notification";
     public static final String CREATE_USER_SMS_NOTIFICATION_KEY = "user.mngt.new.user.sms.notification";
     private static final String PWRD_HISTORY_ERROR_MESSAGE_KEY = "{dcc.commons.validation.constraints.password-history}";
     private static final String PWRD_CONTAINS_USERNAME_ERROR_MESSAGE_KEY = "{dcc.commons.validation.constraints.password-contains-username}";
+    private static final String OLD_PWRD_ERROR_MESSAGE_KEY = "{dcc.commons.validation.constraints.invalid}";
     private static final String CHANGE_PWRD_METHOD_NAME = "changeUserPassword";
     public static final String RECAPTCHA_TOKEN_NAME = "grt";
 
@@ -92,7 +90,7 @@ public class UserManagementController {
      * @return the found users or <code>null</code>
      */
     @GetMapping("/list/{roleId}/{nin}/{activated}")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_MANAGEMENT + "')")
     public Page<UserDto> search(Pageable pageable, @PathVariable long roleId, @PathVariable String nin, @PathVariable int activated, Authentication authentication) {
         log.debug("Handler for {}", "Search Users");
         if (roleId <= 0 && Long.parseLong(nin) == -1 && activated < 0) {
@@ -116,7 +114,7 @@ public class UserManagementController {
      * @return the found user or <code>null</code>
      */
     @GetMapping("/find/{userId}")
-    @RolesAllowed(AuthorityConstants.EDIT_USER)
+    @PreAuthorize("hasAnyAuthority('" + AuthorityConstants.EDIT_USER + "', '" + AuthorityConstants.VIEW_MY_PROFILE + "')")
     public UserDto findUser(@PathVariable long userId) {
         log.debug("Handler for {}", "Find User");
         return maskUserInfo(userService.findOne(userId));
@@ -129,7 +127,7 @@ public class UserManagementController {
      * @return the found user or <code>null</code>>
      */
     @GetMapping("/find/nin/{nin}")
-    @RolesAllowed(AuthorityConstants.EDIT_USER)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.EDIT_USER + "')")
     public UserDto findByNin(@PathVariable Long nin) {
         log.debug("Find by nin {}", nin);
         return maskUserInfo(userService.findByNin(nin).orElse(null));
@@ -141,7 +139,7 @@ public class UserManagementController {
      * @param idNumber
      */
     @GetMapping("/reset-user-password/{idNumber}")
-    @RolesAllowed(AuthorityConstants.RESET_USER_PASSWORD)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.RESET_USER_PASSWORD + "')")
     public void resetUserPassword(@PathVariable Long idNumber) {
         UserDto user = userService.findByNin(idNumber).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + idNumber));
         userService.resetPassword(user);
@@ -153,7 +151,7 @@ public class UserManagementController {
      * @return the found user or <code>null</code>
      */
     @PostMapping("/reset-password")
-    @RolesAllowed(AuthorityConstants.RESET_PASSWORD)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.RESET_PASSWORD + "')")
     public void resetUserPassword(@RequestBody @Valid ResetPasswordCmd command,
                                   @RequestParam(RECAPTCHA_TOKEN_NAME) String reCaptchaToken) {
         if (StringUtils.isBlank(reCaptchaToken)) {
@@ -213,7 +211,8 @@ public class UserManagementController {
         long loggedInUserIdNumber = Long.parseLong(loggedInUserIdNumberStr);
         String oldPasswordHash = userService.retrievePasswordHash(loggedInUserIdNumber);
         if (!BCrypt.checkpw(command.getOldPassword(), oldPasswordHash)) {
-            throw new BadCredentialsException("Old password does not match");
+//            throw new BadCredentialsException("Old password does not match");
+            rejectInvalidOldPassword(command, OLD_PWRD_ERROR_MESSAGE_KEY);
         }
         // current password cannot be used as new password
         if (command.getNewPassword().equals(command.getOldPassword())) {
@@ -267,6 +266,24 @@ public class UserManagementController {
     }
 
     /**
+     * Reject invalid old password value and throw an exception
+     *
+     * @param command         {@link ChangePasswordCmd}
+     * @param errorMessageKey Error message key defined in localization message file
+     * @throws MethodArgumentNotValidException
+     * @throws NoSuchMethodException
+     */
+    private void rejectInvalidOldPassword(ChangePasswordCmd command, String errorMessageKey) throws MethodArgumentNotValidException,
+            NoSuchMethodException {
+        BindingResult beanPropertyBindingResult =
+                new BeanPropertyBindingResult(command, command.getClass().getName());
+        beanPropertyBindingResult.rejectValue(OLD_PWRD_FIELD_NAME, StringUtils.EMPTY, null, errorMessageKey);
+        MethodParameter methodParameter = new MethodParameter(this.getClass().getMethod(CHANGE_PWRD_METHOD_NAME,
+                command.getClass()), 0);
+        throw new MethodArgumentNotValidException(methodParameter, beanPropertyBindingResult);
+    }
+
+    /**
      * Upload user avatar
      *
      * @param userAvatarFile the user avatar file
@@ -274,7 +291,7 @@ public class UserManagementController {
      * @return the encoded user avatar
      */
     @PostMapping("/avatar/{userId}")
-    @RolesAllowed(AuthorityConstants.EDIT_USER)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.EDIT_USER + "')")
     public ResponseEntity<String> updateUserAvatar(@RequestParam("avatar") @SafeFile MultipartFile userAvatarFile, @PathVariable Long userId) throws IOException {
         log.debug("Handler for {}", "Update User Avatar");
         String encodedAvatarStr = userService.updateUserAvatar(userId, userAvatarFile.getBytes());
@@ -288,7 +305,7 @@ public class UserManagementController {
      * @return the updated user
      */
     @PostMapping("/update")
-    @RolesAllowed(AuthorityConstants.EDIT_USER)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.EDIT_USER + "')")
     public ResponseEntity<UserDto> updateUser(@RequestBody @Validated({UserDto.UpdateUserValidationGroup.class, Default.class}) UserDto user) {
         log.debug("Handler for {}", "Update User");
 
@@ -319,7 +336,7 @@ public class UserManagementController {
      * @return the created user
      */
     @PostMapping("/create")
-    @RolesAllowed(AuthorityConstants.ADD_USER)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_USER + "')")
     public ResponseEntity<UserDto> createUser(@RequestBody @Validated({UserDto.CreateUserValidationGroup.class, Default.class}) UserDto user) {
         log.debug("Handler for {}", "Create User");
         UserDto savedUser = null;
@@ -339,7 +356,7 @@ public class UserManagementController {
      * @return the {@link ResponseEntity} with status
      */
     @PostMapping("/delete/{userId}")
-    @RolesAllowed(AuthorityConstants.DELETE_USER)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.DELETE_USER + "')")
     public ResponseEntity<String> deleteUser(@PathVariable long userId) {
         log.debug("Handler for {}", "delete user");
         userService.deleteUser(userId);
@@ -353,7 +370,7 @@ public class UserManagementController {
      * @return
      */
     @PostMapping("/activate/{userId}")
-    @RolesAllowed(AuthorityConstants.CHANGE_USER_STATUS)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.CHANGE_USER_STATUS + "')")
     public ResponseEntity<String> activateUser(@PathVariable long userId) {
         log.debug("Handler for {}", "activate user");
         userService.activateUser(userId);
@@ -367,7 +384,7 @@ public class UserManagementController {
      * @return
      */
     @PostMapping("/deactivate/{userId}")
-    @RolesAllowed(AuthorityConstants.CHANGE_USER_STATUS)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.CHANGE_USER_STATUS + "')")
     public ResponseEntity<String> deactivateUser(@PathVariable long userId) {
         log.debug("Handler for {}", "deactivate user");
         userService.deactivateUser(userId);

@@ -8,13 +8,13 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- * The persistent class for the sha_marital_status_lk database table.
+ * The persistent class for the shc_marital_status_lk database table.
  *
  * @author ahmad flaifel
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_marital_status_lk")
+@Table(name = "shc_marital_status_lk")
 @NamedQuery(name = "JpaMaritalStatusLookup.findAll", query = "SELECT j FROM JpaMaritalStatusLookup j")
 public class JpaMaritalStatusLookup extends JpaLocalizedLookup {
 

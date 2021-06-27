@@ -24,18 +24,20 @@ import {NgxCaptchaModule} from "ngx-captcha";
 import {DccCommonsNgPipesModule} from '@dcc-commons-ng/pipes';
 import {HijriGregorianDatepickerModule} from "@shared/modules/hijri-gregorian-datepicker/hijri-gregorian-datepicker.module";
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
+import {BackButtonDirective} from "@shared/directives/back-button.directive";
 
 
 @NgModule({
-  declarations: [
-    ToastsContainer,
-    ConfirmDialogComponent,
-    DateAgoPipe,
-    NgbdDatepickerIslamicumalqura,
-    DateFormatPipe,
-    HijriFormatPipe,
-    IbanStatusPipe
-  ],
+    declarations: [
+        ToastsContainer,
+        ConfirmDialogComponent,
+        DateAgoPipe,
+        NgbdDatepickerIslamicumalqura,
+        DateFormatPipe,
+        HijriFormatPipe,
+        IbanStatusPipe,
+        BackButtonDirective
+    ],
   imports: [
     CommonModule,
     NgBootstrapModule,
@@ -48,25 +50,26 @@ import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
     NgMultiSelectDropDownModule
   ],
   providers: [DateAgoPipe, DatePipe, DateFormatPipe, HijriFormatPipe, NgxCaptchaModule],
-  exports: [
-    NgbdDatepickerIslamicumalqura,
-    AccordionModule,
-    SvgIconModule,
-    NgBootstrapModule,
-    ArchwizardModule,
-    TranslateModule,
-    NgxCaptchaModule,
-    DateAgoPipe,
-    ConfirmDialogComponent,
-    ToastsContainer,
-    DateFormatPipe,
-    HijriFormatPipe,
-    DatePipe,
-    IbanStatusPipe,
-    DccCommonsNgPipesModule,
-    NgMultiSelectDropDownModule,
-    HijriGregorianDatepickerModule
-  ],
+    exports: [
+        NgbdDatepickerIslamicumalqura,
+        AccordionModule,
+        SvgIconModule,
+        NgBootstrapModule,
+        ArchwizardModule,
+        TranslateModule,
+        NgxCaptchaModule,
+        DateAgoPipe,
+        ConfirmDialogComponent,
+        ToastsContainer,
+        DateFormatPipe,
+        HijriFormatPipe,
+        DatePipe,
+        IbanStatusPipe,
+        DccCommonsNgPipesModule,
+        NgMultiSelectDropDownModule,
+        HijriGregorianDatepickerModule,
+        BackButtonDirective
+    ],
   entryComponents: [
     NgbdDatepickerIslamicumalqura,
     ConfirmDialogComponent

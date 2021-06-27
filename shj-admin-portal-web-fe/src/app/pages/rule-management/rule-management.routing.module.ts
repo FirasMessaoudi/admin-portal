@@ -5,8 +5,10 @@ import {RuleListComponent} from "@pages/rule-management/rule-list/rule-list.comp
 import {RuleEditorComponent} from "@pages/rule-management/rule-editor/rule-editor.component";
 
 const routes: Routes = [
+/* TODO Uncomment the following block
   {path: 'rules/edit/:id', component: RuleEditorComponent, canActivate: [AuthenticationGuard]},
   {path: 'rules/list', component: RuleListComponent, canActivate: [AuthenticationGuard]}
+  */
 ];
 
 @NgModule({

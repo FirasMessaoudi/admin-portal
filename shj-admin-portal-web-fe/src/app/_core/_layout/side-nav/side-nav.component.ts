@@ -29,10 +29,10 @@ export class SideNavComponent implements OnInit {
       },
       {
         title: 'card-management.title',
-        roles: [EAuthority.USER_MANAGEMENT],
+        roles: [EAuthority.CARD_MANAGEMENT],
         display: false,
         icon: 'address-card',
-        iconFa:'fa-w-18',
+        iconFa: 'fa-w-18',
         routerLink: '/cards/list',
       },
       {
@@ -59,6 +59,8 @@ export class SideNavComponent implements OnInit {
         iconFa:'fa-w-20',
         routerLink: '/users/list',
       },
+/*
+      TODO Uncomment the following block
       {
         title: 'rule-management.title',
         roles: [EAuthority.USER_MANAGEMENT],
@@ -66,13 +68,13 @@ export class SideNavComponent implements OnInit {
         icon: 'users',
         iconFa:'fa-w-20',
         routerLink: '/rules/list',
-      },
+      },*/
       {
         title: 'data-request-management.title',
-        roles: [EAuthority.USER_MANAGEMENT],
+        roles: [EAuthority.DATA_REQUEST_MANAGEMENT],
         display: false,
         icon: 'users',
-        iconFa:'fa-w-20',
+        iconFa: 'fa-w-20',
         routerLink: '/data-requests/list',
       }
     ];

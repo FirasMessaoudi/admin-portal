@@ -10,12 +10,11 @@ import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.security.RolesAllowed;
 
 
 /**
@@ -39,7 +38,7 @@ public class DashboardController {
     }
 
     @GetMapping
-    @RolesAllowed(AuthorityConstants.ADMIN_DASHBOARD)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
     public DashboardVo loadDashboardData() {
         log.info("Handling loadDashboardData endpoint.");
         return dashboardService.loadDashboardData();
@@ -52,7 +51,7 @@ public class DashboardController {
      * @return dashboard statistics for the selected period
      */
     @GetMapping("/period/{periodType}")
-    @RolesAllowed(AuthorityConstants.ADMIN_DASHBOARD)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
     public DashboardVo loadPeriodicallyDashboardData(@PathVariable("periodType") EPeriodType periodType) {
         log.info("Handling loadPeriodDashboardData endpoint.");
         switch (periodType) {

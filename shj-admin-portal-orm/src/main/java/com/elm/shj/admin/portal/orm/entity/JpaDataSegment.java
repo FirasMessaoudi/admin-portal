@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_data_segment database table.
+ * The persistent class for the shc_data_segment database table.
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_data_segment")
+@Table(name = "shc_data_segment")
 @NamedQuery(name = "JpaDataSegment.findAll", query = "SELECT j FROM JpaDataSegment j")
 @Data
 @NoArgsConstructor

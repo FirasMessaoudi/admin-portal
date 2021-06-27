@@ -12,13 +12,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_applicant_ritual database table.
+ * The persistent class for the shc_applicant_ritual database table.
  *
  * @author ahmad flaifel
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_applicant_ritual")
+@Table(name = "shc_applicant_ritual")
 @NamedQuery(name = "JpaApplicantRitual.findAll", query = "SELECT j FROM JpaApplicantRitual j")
 @Data
 @NoArgsConstructor

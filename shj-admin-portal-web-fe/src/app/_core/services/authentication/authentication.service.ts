@@ -139,4 +139,17 @@ export class AuthenticationService {
     return this.currentUser && this.currentUser.authorities && this.currentUser.authorities.filter(authorityObj => authorityObj.authority === authority.toString()).length > 0;
   }
 
+  /**
+   * Check if logged in user has any of the passed authorities in his role authorities.
+   * @param authoritiesToCheck
+   */
+  hasAnyAuthority(authoritiesToCheck: EAuthority[]): boolean {
+    let authorityExist = false;
+    for (let authority of authoritiesToCheck) {
+      authorityExist = this.currentUser && this.currentUser.authorities && this.currentUser.authorities.filter(authorityObj => authorityObj.authority === authority.toString()).length > 0;
+      if (authorityExist) break;
+    }
+    return authorityExist;
+  }
+
 }

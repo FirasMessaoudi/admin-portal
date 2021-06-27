@@ -13,13 +13,13 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * The persistent class for the sha_authority_lk database table.
+ * The persistent class for the shc_authority_lk database table.
  *
  * @author ahmad flaifel
  * @since 1.8.0
  */
 @Entity
-@Table(name = "sha_authority_lk")
+@Table(name = "shc_authority_lk")
 @NamedQuery(name = "JpaAuthorityLookup.findAll", query = "SELECT j FROM JpaAuthorityLookup j")
 @Data
 @NoArgsConstructor

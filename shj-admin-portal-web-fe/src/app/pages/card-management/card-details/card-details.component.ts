@@ -5,13 +5,14 @@ import {PackageCatering} from "@model/package-catering.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {combineLatest} from "rxjs";
 import {map} from "rxjs/operators";
-import {CardService} from "@core/services";
+import {AuthenticationService, CardService} from "@core/services";
 import {ToastService} from "@shared/components/toast";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {CountryLookup} from "@model/country-lookup.model";
 import {Language} from "@model/enum/language.enum";
 import {ApplicantCard} from "@model/card.model";
+import {EAuthority} from "@shared/model";
 
 @Component({
   selector: 'app-card-details',
@@ -38,7 +39,8 @@ export class CardDetailsComponent implements OnInit {
               private cardService: CardService,
               private translate: TranslateService,
               private i18nService: I18nService,
-              private lookupsService: LookupService) { }
+              private lookupsService: LookupService, private authenticationService: AuthenticationService) {
+  }
 
   ngOnInit(): void {
     this.loadLookups();
@@ -97,6 +99,11 @@ export class CardDetailsComponent implements OnInit {
 
   lookupService(): LookupService {
     return this.lookupsService;
+  }
+
+  get canSeeCardDetails(): boolean {
+
+    return this.authenticationService.hasAuthority(EAuthority.VIEW_CARD_DETAILS);
   }
 
   packageCaterings(): PackageCatering[] {

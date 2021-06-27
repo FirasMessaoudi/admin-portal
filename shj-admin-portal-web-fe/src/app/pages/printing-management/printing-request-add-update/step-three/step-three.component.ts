@@ -8,9 +8,10 @@ import {TranslateService} from "@ngx-translate/core";
 import {PrintRequestStorage} from "@pages/printing-management/printing-request-add-update/print-request-storage";
 import {PrintBatchType} from "@model/print-batch-type.model";
 import {LookupService} from "@core/utilities/lookup.service";
-import {CardService} from "@core/services";
+import {AuthenticationService, CardService} from "@core/services";
 import {CountryLookup} from "@model/country-lookup.model";
 import {BatchType} from "@model/enum/batch-type.enum";
+import {EAuthority} from "@shared/model";
 
 @Component({
   selector: 'app-step-three',
@@ -36,11 +37,17 @@ export class StepThreeComponent implements OnInit {
               private translate: TranslateService,
               private lookupsService: LookupService,
               private cardService: CardService,
-              private printRequestStorage: PrintRequestStorage) {
+              private printRequestStorage: PrintRequestStorage,
+              private authenticationService: AuthenticationService) {
+
   }
 
   ngOnInit(): void {
     this.loadLookups();
+  }
+
+  get canSeeCardDetails(): boolean {
+    return this.authenticationService.hasAuthority(EAuthority.VIEW_CARD_DETAILS);
   }
 
   loadLookups() {

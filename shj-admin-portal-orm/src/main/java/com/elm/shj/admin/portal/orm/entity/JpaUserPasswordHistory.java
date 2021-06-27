@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_user_password_history database table.
+ * The persistent class for the shc_user_password_history database table.
  *
  * @author Ahmad Flaifel
  * @since 1.3.0
  */
 @Entity
-@Table(name = "sha_user_password_history")
+@Table(name = "shc_user_password_history")
 @NamedQuery(name = "JpaUserPasswordHistory.findAll", query = "SELECT j FROM JpaUserPasswordHistory j")
 @Data
 @NoArgsConstructor

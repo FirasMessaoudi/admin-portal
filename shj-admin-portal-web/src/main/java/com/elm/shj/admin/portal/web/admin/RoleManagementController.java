@@ -16,11 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.groups.Default;
 import java.util.Date;
 import java.util.HashSet;
@@ -48,7 +48,7 @@ public class RoleManagementController {
      * @return the list of roles matching criteria
      */
     @GetMapping("/list/all")
-    @RolesAllowed({AuthorityConstants.ROLE_MANAGEMENT})
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_MANAGEMENT + "')")
     public List<RoleDto> listAllRoles(Authentication authentication) {
         log.info("list active roles.");
         return roleService.findAll(jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
@@ -60,21 +60,21 @@ public class RoleManagementController {
      * @return the list of active roles
      */
     @GetMapping("/list/active")
-    @RolesAllowed({AuthorityConstants.USER_MANAGEMENT})
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_MANAGEMENT + "')")
     public List<RoleDto> listActiveRoles(Authentication authentication) {
         log.info("list active roles.");
-        return roleService.findActive(jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
+        return roleService.findActive();
     }
 
     @GetMapping("/list/paginated")
-    @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ROLE_MANAGEMENT + "')")
     public Page<RoleDto> listPaginated(Pageable pageable, Authentication authentication) {
         log.info("list all roles.");
         return roleService.findAll(pageable, jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()));
     }
 
     @GetMapping("/search")
-    @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ROLE_MANAGEMENT + "')")
     public Page<RoleDto> search(Pageable pageable, @RequestParam(required = false) Long authorityId,
                                 @RequestParam(required = false) String arabicName,
                                 @RequestParam(required = false) String englishName) {
@@ -89,7 +89,7 @@ public class RoleManagementController {
      * @return the found role or <code>null</code>
      */
     @GetMapping("/find/{roleId}")
-    @RolesAllowed(AuthorityConstants.ROLE_MANAGEMENT)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ROLE_MANAGEMENT + "')")
     public RoleDto findRole(@PathVariable long roleId) {
         log.debug("Handler for {}", "Find Role");
         return roleService.findOne(roleId);
@@ -102,7 +102,7 @@ public class RoleManagementController {
      * @return the created role
      */
     @PostMapping("/create")
-    @RolesAllowed(AuthorityConstants.ADD_ROLE)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_ROLE + "')")
     public ResponseEntity<RoleDto> CreateRole(@RequestBody @Validated({RoleDto.CreateRoleValidationGroup.class, Default.class}) RoleDto role) {
         log.debug("Handler for {}", "Create Role");
         role.getRoleAuthorities().forEach(roleAuthorityDto -> {
@@ -120,7 +120,7 @@ public class RoleManagementController {
      * @return the updated role
      */
     @PostMapping("/update")
-    @RolesAllowed(AuthorityConstants.EDIT_ROLE)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.EDIT_ROLE + "')")
     public ResponseEntity<RoleDto> UpdateRole(@RequestBody @Validated RoleDto role) {
         log.debug("Handler for {}", "Update Role");
         role.getRoleAuthorities().forEach(roleAuthorityDto -> {
@@ -138,7 +138,7 @@ public class RoleManagementController {
      * @return the {@link ResponseEntity} with status
      */
     @PostMapping("/delete/{roleId}")
-    @RolesAllowed(AuthorityConstants.DELETE_ROLE)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.DELETE_ROLE + "')")
     public ResponseEntity<String> deleteRole(@PathVariable long roleId) {
         log.debug("Handler for {}", "delete role");
         roleService.deleteRole(roleId);
@@ -152,7 +152,7 @@ public class RoleManagementController {
      * @return
      */
     @PostMapping("/activate/{roleId}")
-    @RolesAllowed(AuthorityConstants.CHANGE_ROLE_STATUS)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.CHANGE_ROLE_STATUS + "')")
     public ResponseEntity<String> activateRole(@PathVariable long roleId) {
         log.debug("Handler for {}", "activate role");
         roleService.activateRole(roleId);
@@ -166,7 +166,7 @@ public class RoleManagementController {
      * @return
      */
     @PostMapping("/deactivate/{roleId}")
-    @RolesAllowed(AuthorityConstants.CHANGE_ROLE_STATUS)
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.CHANGE_ROLE_STATUS + "')")
     public ResponseEntity<String> deactivateRole(@PathVariable long roleId) {
         log.debug("Handler for {}", "deactivate role");
         roleService.deactivateRole(roleId);

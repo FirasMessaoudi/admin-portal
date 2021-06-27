@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the sha_ritual_zone database table.
+ * The persistent class for the shc_ritual_zone database table.
  *
  * @author ahmad flaifel
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_ritual_zone")
+@Table(name = "shc_ritual_zone")
 @NamedQuery(name = "JpaRitualZone.findAll", query = "SELECT j FROM JpaRitualZone j")
 @Data
 @NoArgsConstructor

@@ -12,13 +12,13 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- * The persistent class for the sha_country_lk database table.
+ * The persistent class for the shc_country_lk database table.
  *
  * @author ahmad flaifel
  * @since 1.0.0
  */
 @Entity
-@Table(name = "sha_country_lk")
+@Table(name = "shc_country_lk")
 @NamedQuery(name = "JpaCountryLookup.findAll", query = "SELECT j FROM JpaCountryLookup j")
 @Getter
 @Setter

@@ -20,7 +20,6 @@ export class CardListComponent implements OnInit {
   cards: Array<ApplicantCard>;
   pageArray: Array<number>;
   page: Page;
-  canAddCard: boolean;
   searchForm: FormGroup;
   ritualTypes: Lookup[];
   cardStatuses: Lookup[];
@@ -41,7 +40,7 @@ export class CardListComponent implements OnInit {
     this.loadLookups();
     this.masterSelected = false;
     // TODO: read it from authentication
-    this.canAddCard = true;
+
   }
 
   loadLookups() {
@@ -137,8 +136,11 @@ export class CardListComponent implements OnInit {
 
 
   get canSeeCardsList(): boolean {
-    //TODO: change it to CARD_MANAGEMENT
-    return this.authenticationService.hasAuthority(EAuthority.USER_MANAGEMENT);
+    return this.authenticationService.hasAuthority(EAuthority.CARD_MANAGEMENT);
+  }
+
+  get canAddCard(): boolean {
+    return this.authenticationService.hasAuthority(EAuthority.ADD_CARD);
   }
 
 }

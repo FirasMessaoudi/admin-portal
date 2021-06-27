@@ -43,10 +43,13 @@
 
       <tr *ngFor="let batchCard of requestBatch?.printRequestBatchCards">
         <td>
-          <a [routerLink]="['/cards/details', batchCard?.card?.id]" target="_blank"
+          <a *ngIf="canSeeCardDetails" [routerLink]="['/cards/details', batchCard?.card?.id]" target="_blank"
              class="text-dcc-primary font-weight-bold">
             {{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
           </a>
+          <p *ngIf="!canSeeCardDetails"
+          >  {{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
+          </p>
         </td>
         <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
         <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.idNumber}}</td>
