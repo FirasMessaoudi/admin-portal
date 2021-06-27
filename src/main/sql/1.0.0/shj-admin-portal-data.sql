@@ -312,7 +312,7 @@ INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
 VALUES (11, 13);
 SET
 IDENTITY_INSERT shc_portal.shc_role_authority OFF;
-
+GO
 
 SET
 IDENTITY_INSERT shc_portal.shc_role ON;

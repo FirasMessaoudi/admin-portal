@@ -25,6 +25,7 @@
     "characters-only": "Please enter letters only",
     "password-history": "New password should not be same as previous passwords",
     "password-contains-username": "Password should not contains your username",
+    "password-confirmation-mismatch": "Confirm password does not match password, please check",
     "invalid": "The value you have entered is invalid"
   },
 
