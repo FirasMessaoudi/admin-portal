@@ -144,6 +144,7 @@ export class AuthenticationService {
    * @param authoritiesToCheck
    */
   hasAnyAuthority(authoritiesToCheck: EAuthority[]): boolean {
+    // return this.currentUser && this.currentUser.authorities && this.currentUser.authorities.map(authorityObj => authorityObj.authority).some(authoritiesToCheck);
     let authorityExist = false;
     for (let authority of authoritiesToCheck) {
       authorityExist = this.currentUser && this.currentUser.authorities && this.currentUser.authorities.filter(authorityObj => authorityObj.authority === authority.toString()).length > 0;
