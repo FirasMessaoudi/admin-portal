@@ -49,6 +49,7 @@
     "dialog_file_upload_error_text": "Cannot upload avatar, file maybe infected.",
     "dialog_file_upload_success_text": "Avatar has been successfully updated",
     "table_emtpy_text": "No Results Found",
+    "no_data_found_matching_given_criteria": "There's no data found match search criteria",
     "btn_ok": "Ok",
     "btn_more": "More details...",
     "btn_close": "Close",
@@ -232,7 +233,8 @@
     "header_text": "Your password has expired, please create a new one.",
     "old_password": "Old Password",
     "new_password": "New Password",
-    "new_password_confirm": "Confirm New Password"
+    "new_password_confirm": "Confirm New Password",
+    "new-password-confirm-mismatch": "Confirm password does not match password, please check"
   },
 
   "reset-password": {

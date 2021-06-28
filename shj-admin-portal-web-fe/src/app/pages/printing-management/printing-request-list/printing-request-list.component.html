@@ -120,7 +120,7 @@
         <tr *ngIf="printRequests.length === 0" class="text-center">
           <td colspan="10">
             <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
-            <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+            <p class="text-light-gray mb-3">{{ "general.no_data_found_matching_given_criteria" | translate }}</p>
           </td>
         </tr>
         <tr *ngFor="let request of printRequests">

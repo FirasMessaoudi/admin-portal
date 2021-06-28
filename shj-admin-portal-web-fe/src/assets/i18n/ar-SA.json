@@ -25,7 +25,6 @@
     "characters-only": "الرجاء إدخال كلمات فقط",
     "password-history": "يجب أن تختلف كلمة المرور الجديدة عن كلمات المرور السابقة",
     "password-contains-username": "يجب أن لا تحتوي كلمة المرور على اسم المستخدم",
-    "password-confirmation-mismatch": "تأكيد كلمة المرور لا يتفق مع كلمة المرور من فضلك تأكد",
     "invalid": "القيمة التي أدخلتها غير صحيحة"
   },
   "general": {
@@ -48,6 +47,7 @@
     "dialog_file_upload_error_text": "لا يمكن تعديل الصورة, الملف المرفق غير سليم",
     "dialog_file_upload_success_text": "تم تعديل الصورة بنجاح",
     "table_emtpy_text": "لا يوجد بيانات",
+    "no_data_found_matching_given_criteria": "لا يوجد بيانات يمكن عرضها",
     "btn_ok": "موافق",
     "btn_more": "المزيد من التفاصيل...",
     "btn_close": "إغلاق",
@@ -224,7 +224,9 @@
     "header_text": "لقد انتهت صلاحية كلمة المرور الخاصة بك ، يرجى إنشاء كلمة مرور جديدة.",
     "old_password": "كلمة المرور القديمة",
     "new_password": "كلمة المرور الجديدة",
-    "new_password_confirm": "تأكيد كلمة المرور"
+    "new_password_confirm": "تأكيد كلمة المرور",
+    "new-password-confirm-mismatch": "تأكيد كلمة المرور لا يتفق مع كلمة المرور من فضلك تأكد"
+
   },
   "reset-password": {
     "title": "إعادة تعيين كلمة المرور",
