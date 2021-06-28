@@ -33,6 +33,7 @@ public class DigitalIdScheduler {
     @Scheduled(cron = "${scheduler.generate.digital.ids.cron}")
     @SchedulerLock(name = "generate-digital-ids-task")
     public void generateIdsForNewApplicants() {
+        log.debug("Generate applicants digital ids scheduler started...");
         LockAssert.assertLocked();
         applicantService.findAllWithoutDigitalId().forEach(applicant -> {
             // generate and save digital id for each applicant

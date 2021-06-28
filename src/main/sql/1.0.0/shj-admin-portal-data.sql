@@ -36,7 +36,7 @@ INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('elm.providers.yakeen.mock.enabled', 'true');
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
-VALUES ('elm.providers.email.host', '192.168.0.160');
+VALUES ('elm.providers.email.host', '192.168.0.200');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('elm.providers.email.port', 25);
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)

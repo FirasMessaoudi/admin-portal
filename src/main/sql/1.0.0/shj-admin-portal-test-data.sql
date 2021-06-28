@@ -707,8 +707,7 @@ INSERT INTO shc_portal.shc_ritual_zone (id, code, lang, label)
 VALUES (9, 'E', 'ar', N'منطقة ه');
 INSERT INTO shc_portal.shc_ritual_zone (id, code, lang, label)
 VALUES (10, 'E', 'en', 'Zone E');
-SET
-IDENTITY_INSERT shc_portal.shc_ritual_zone OFF;
+SET IDENTITY_INSERT shc_portal.shc_ritual_zone OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_ritual_group ON;

@@ -37,7 +37,7 @@ public class ServiceConfig {
 
     @Bean
     public LockProvider lockProvider(@Autowired DataSource dataSource) {
-        return new JdbcTemplateLockProvider(dataSource, "shc_scheduled_tasks_lock");
+        return new JdbcTemplateLockProvider(dataSource, "shc_portal.shc_scheduled_tasks_lock");
     }
 
     @Bean
