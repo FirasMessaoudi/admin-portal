@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.login;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
+import com.elm.shj.admin.portal.web.error.UserAlreadyLoggedInException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtAuthenticationProvider;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,6 +44,7 @@ import java.util.Map;
 public class AuthenticationController {
 
     public static final int INVALID_RECAPTCHA_RESPONSE_CODE = 555;
+    private static final int USER_ALREADY_LOGGEDIN_RESPONSE_CODE = 406;
 
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final OtpAuthenticationProvider otpAuthenticationProvider;
@@ -66,6 +69,9 @@ public class AuthenticationController {
                     .authenticate(new UsernamePasswordAuthenticationToken(idNumber, credentials.get("password")));
         } catch (RecaptchaException rex) {
             return ResponseEntity.status(INVALID_RECAPTCHA_RESPONSE_CODE).body(null);
+        } catch (UserAlreadyLoggedInException uaEX) {
+            return ResponseEntity.status(USER_ALREADY_LOGGEDIN_RESPONSE_CODE).body(null);
+
         }
 
         return ResponseEntity.ok(authentication);

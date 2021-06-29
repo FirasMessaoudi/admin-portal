@@ -17,7 +17,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 export class LoginComponent implements OnInit {
   returnUrl: string;
 
-  error: string;
+  error: any;
   loginForm: FormGroup;
   loading = false;
   showCaptcha = false;

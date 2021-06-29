@@ -9,6 +9,7 @@ import com.elm.dcc.foundation.providers.recaptcha.service.RecaptchaService;
 import com.elm.shj.admin.portal.services.dto.UserDto;
 import com.elm.shj.admin.portal.services.otp.OtpService;
 import com.elm.shj.admin.portal.services.user.UserService;
+import com.elm.shj.admin.portal.web.error.UserAlreadyLoggedInException;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -109,7 +110,7 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
                 LocalDateTime oldTokenExpiryDateTime = oldTokenExpiryDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
                 if (oldTokenExpiryDateTime.isAfter(LocalDateTime.now())) {
                     // old token is still active, simultaneous login is not allowed
-                    throw new BadCredentialsException("User is already logged in");
+                    throw new UserAlreadyLoggedInException("User is already logged in");
                 }
             }
         }

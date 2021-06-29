@@ -207,15 +207,16 @@
 
   "login": {
     "header_title": "Login",
-    "side_info" : "The DCC template aims to unify efforts and standardize the way we implement our products in ELM.\n          It can reduce efforts related to common project activities like project structure, technology stack, error handling strategy, coding standards, ...\n          In our last survey, effort saved can go up to 20% of the total project effort.",
+    "side_info": "The DCC template aims to unify efforts and standardize the way we implement our products in ELM.\n          It can reduce efforts related to common project activities like project structure, technology stack, error handling strategy, coding standards, ...\n          In our last survey, effort saved can go up to 20% of the total project effort.",
     "title": "Login",
     "btn_login": "Login",
     "btn_new_registration": "Don't have an account? Register now.",
     "btn_forgot_password": "Forgot Password",
-    "invalid_username_or_password":"Invalid username or password!",
+    "invalid_username_or_password": "Invalid username or password!",
+    "user_already_logged_in": "User Is Already Logged In",
     "otp_remaining_time": "Remaining time:",
     "otp_text": "Please enter the code that have been sent to the mobile number you have registered with",
-    "invalid_otp":"Invalid OTP! Please try again..."
+    "invalid_otp": "Invalid OTP! Please try again..."
   },
 
   "register": {

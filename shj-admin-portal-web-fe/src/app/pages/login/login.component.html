@@ -17,8 +17,10 @@
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-box__wrapper">
 
     <div class="alert alert-danger" [hidden]="!error || loading">
-      {{'login.invalid_username_or_password' | translate }}
+      <span *ngIf="error?.status!=406">{{'login.invalid_username_or_password' | translate }}</span>
+      <span *ngIf="error?.status==406">{{'login.user_already_logged_in' | translate }}</span>
     </div>
+    
     <h1 class="text-dcc-primary font-weight-bold mb-4">{{'login.header_title' | translate}}</h1>
     <div class="form-group">
       <label>{{'general.nin_or_iqama' | translate}}<span class="text-danger px-1">*</span></label>
