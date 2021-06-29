@@ -785,3 +785,7 @@ INSERT INTO shc_portal.shc_user_role (user_id, role_id) VALUES (1, 5);
 INSERT INTO shc_portal.shc_user_role (user_id, role_id) VALUES (1, 7);
 INSERT INTO shc_portal.shc_user_role (user_id, role_id) VALUES (1, 11);
 GO
+
+-- remove user management authorities for non system admin users
+DELETE FROM shc_portal.shc_role_authority WHERE authority_id IN (2, 3, 4, 5, 7, 13) AND role_id IN (3, 5, 7, 9, 11);
+GO

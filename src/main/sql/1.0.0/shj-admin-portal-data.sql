@@ -48,7 +48,7 @@ VALUES ('elm.providers.email.from.address', 'no-reply@elm.sa');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('elm.providers.email.from.name', 'Elm Product');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
-VALUES ('elm.providers.email.smtp.auth', 'true');
+VALUES ('elm.providers.email.smtp.auth', 'false');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('elm.providers.email.mock.enabled', 'false');
 
