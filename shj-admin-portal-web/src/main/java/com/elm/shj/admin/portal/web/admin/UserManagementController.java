@@ -149,7 +149,6 @@ public class UserManagementController {
      * @return the found user or <code>null</code>
      */
     @PostMapping("/reset-password")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.RESET_PASSWORD + "')")
     public void resetUserPassword(@RequestBody @Valid ResetPasswordCmd command,
                                   @RequestParam(RECAPTCHA_TOKEN_NAME) String reCaptchaToken) {
         if (StringUtils.isBlank(reCaptchaToken)) {
@@ -197,6 +196,7 @@ public class UserManagementController {
      * @return the found user or <code>null</code>
      */
     @PostMapping("/change-password")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.RESET_PASSWORD + "')")
     public void changeUserPassword(@RequestBody @Valid ChangePasswordCmd command) throws MethodArgumentNotValidException, NoSuchMethodException {
         log.debug("Handler for {}", "Change User Password");
 
