@@ -209,7 +209,6 @@ public class UserManagementController {
         long loggedInUserIdNumber = Long.parseLong(loggedInUserIdNumberStr);
         String oldPasswordHash = userService.retrievePasswordHash(loggedInUserIdNumber);
         if (!BCrypt.checkpw(command.getOldPassword(), oldPasswordHash)) {
-//            throw new BadCredentialsException("Old password does not match");
             rejectInvalidOldPassword(command, OLD_PWRD_ERROR_MESSAGE_KEY);
         }
         // current password cannot be used as new password
