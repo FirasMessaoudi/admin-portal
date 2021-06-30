@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {AuthenticationService} from '@app/_core/services';
 import {I18nService} from "@dcc-commons-ng/services";
 import {Location} from "@angular/common";
+import {NavigationService} from "@core/utilities/navigation.service";
 
 @Component({
   selector: 'app-header',
@@ -13,11 +14,13 @@ import {Location} from "@angular/common";
 export class HeaderComponent implements OnInit {
 
   currentUser: any;
+  renderGoBackLink: boolean;
 
   constructor(private location: Location,
-    public router: Router,
-    private i18nService: I18nService,
-    private authenticationService: AuthenticationService) {}
+              public router: Router,
+              private i18nService: I18nService,
+              private authenticationService: AuthenticationService, private navigationService: NavigationService) {
+  }
 
   get currentLanguage(): string {
     return this.i18nService.language;
@@ -29,6 +32,9 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.authenticationService.currentUser
+    this.navigationService.canGoBack.subscribe(value => {
+      this.renderGoBackLink = value;
+    })
 
   }
 
@@ -47,6 +53,6 @@ export class HeaderComponent implements OnInit {
   }
 
   goBack() {
-      this.location.back();
+    this.location.back();
   }
 }

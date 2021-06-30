@@ -1,10 +1,13 @@
 import {NavigationEnd, Router} from "@angular/router";
 import {Location} from '@angular/common'
 import {Injectable} from "@angular/core";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({providedIn: 'root'})
 export class NavigationService {
   private history: string[] = []
+  private behaviorSubject = new BehaviorSubject<boolean>(false);
+  canGoBack = this.behaviorSubject.asObservable();
 
   constructor(private router: Router, private location: Location) {
     this.router.events.subscribe((event) => {
@@ -20,6 +23,10 @@ export class NavigationService {
 
   public getPreviousUrl(): string {
     return this.history[this.history.length - 2] || '/';
+  }
+
+  showGoBackLink(value: boolean): void {
+    this.behaviorSubject.next(value);
   }
 
   back(): void {

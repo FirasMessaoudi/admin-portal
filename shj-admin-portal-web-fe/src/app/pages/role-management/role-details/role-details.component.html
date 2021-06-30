@@ -51,7 +51,7 @@
           </span>
             <span *ngIf="role?.activated" class="text-nowrap">
               <span class="status mr-1 done"></span>
-            {{'user-management.activated' | translate}}
+              {{'user-management.activated' | translate}}
           </span>
           </div>
         </div>
@@ -68,11 +68,6 @@
       </div>
     </form>
 
-    <div class="content__footer__action">
-      <button type="button" [routerLink]="['/roles/list']" class="btn btn-outline-secondary btn-w100 px-5 mr-3">
-        {{ "general.btn_back" | translate }}
-      </button>
-    </div>
 
   </div>
 </div>

@@ -1,17 +1,18 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {I18nService} from "@dcc-commons-ng/services";
 import {DataRequest, EAuthority} from "@shared/model";
 import {AuthenticationService, DataRequestService} from "@core/services";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
+import {NavigationService} from "@core/utilities/navigation.service";
 
 @Component({
   selector: 'app-printing-request-details',
   templateUrl: './data-request-details.component.html',
   styleUrls: ['./data-request-details.component.scss']
 })
-export class DataRequestDetailsComponent implements OnInit {
+export class DataRequestDetailsComponent implements OnInit, OnDestroy {
 
   dataRequestId: number;
   dataRequest: DataRequest;
@@ -22,12 +23,14 @@ export class DataRequestDetailsComponent implements OnInit {
               public dataRequestService: DataRequestService,
               private toastr: ToastService,
               private translate: TranslateService,
-              private authenticationService: AuthenticationService) {
+              private authenticationService: AuthenticationService,
+              private navigationService: NavigationService
+  ) {
   }
 
   ngOnInit(): void {
     this.dataRequestId = this.activeRoute.snapshot.params.id;
-
+    this.navigationService.showGoBackLink(true);
     if (this.dataRequestId) {
       // load data request details
       this.dataRequestService.find(this.dataRequestId).subscribe(data => {
@@ -47,7 +50,8 @@ export class DataRequestDetailsComponent implements OnInit {
   }
 
   goToList() {
-    this.router.navigate(['/data-requests/list']).then(r => {});
+    this.router.navigate(['/data-requests/list']).then(r => {
+    });
   }
 
   get currentLanguage(): string {
@@ -66,4 +70,7 @@ export class DataRequestDetailsComponent implements OnInit {
     return this.authenticationService.hasAuthority(EAuthority.VIEW_DATA_REQUEST_DETAILS);
   }
 
+  ngOnDestroy() {
+    this.navigationService.showGoBackLink(false);
+  }
 }

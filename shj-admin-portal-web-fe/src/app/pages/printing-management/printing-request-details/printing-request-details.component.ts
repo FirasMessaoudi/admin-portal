@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {I18nService} from "@dcc-commons-ng/services";
 import {EAuthority} from "@shared/model";
 import {AuthenticationService, CardService} from "@core/services";
@@ -15,13 +15,14 @@ import {PrintBatchType} from "@model/print-batch-type.model";
 import {CountryLookup} from "@model/country-lookup.model";
 import {BatchType} from "@model/enum/batch-type.enum";
 import {PrintRequestStatus} from "@model/enum/print-request-status.enum";
+import {NavigationService} from "@core/utilities/navigation.service";
 
 @Component({
   selector: 'app-printing-request-details',
   templateUrl: './printing-request-details.component.html',
   styleUrls: ['./printing-request-details.component.scss']
 })
-export class PrintingRequestDetailsComponent implements OnInit {
+export class PrintingRequestDetailsComponent implements OnInit, OnDestroy {
   public isCollapsed: boolean[] = [];
 
   printRequestId: number;
@@ -40,10 +41,14 @@ export class PrintingRequestDetailsComponent implements OnInit {
               private printService: PrintService,
               private lookupsService: LookupService,
               private cardService: CardService,
-              private authenticationService: AuthenticationService) { }
+              private authenticationService: AuthenticationService,
+              private navigationService: NavigationService
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadLookups();
+    this.navigationService.showGoBackLink(true);
     combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
@@ -84,6 +89,10 @@ export class PrintingRequestDetailsComponent implements OnInit {
 
   goToList() {
     this.router.navigate(['/print-requests/list']);
+  }
+
+  ngOnDestroy() {
+    this.navigationService.showGoBackLink(false);
   }
 
   lookupService(): LookupService {

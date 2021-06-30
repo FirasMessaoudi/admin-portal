@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder} from "@angular/forms";
 import {Role, User} from '@app/_shared/model';
@@ -17,7 +17,7 @@ import {NavigationService} from "@core/utilities/navigation.service";
   styleUrls: ["./user-details.component.scss"],
   providers: [DatePipe]
 })
-export class UserDetailsComponent implements OnInit {
+export class UserDetailsComponent implements OnInit, OnDestroy {
   userId: number;
   user: User;
   url: any = 'assets/images/default-avatar.svg';
@@ -35,7 +35,8 @@ export class UserDetailsComponent implements OnInit {
               private authentication: AuthenticationService,
               private navigation: NavigationService,
               public datePipe: DatePipe,
-              private authenticationService: AuthenticationService) {
+              private authenticationService: AuthenticationService,
+              private navigationService: NavigationService) {
   }
 
   get currentLanguage(): string {
@@ -44,6 +45,7 @@ export class UserDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.userId = this.activeRoute.snapshot.params.id;
+    this.navigationService.showGoBackLink(true);
 
     if (this.userId) {
       // load user details
@@ -61,6 +63,10 @@ export class UserDetailsComponent implements OnInit {
         this.translate.instant('general.dialog_error_title'));
       this.goToList();
     }
+  }
+
+  ngOnDestroy() {
+    this.navigationService.showGoBackLink(false);
   }
 
   goToList() {
@@ -94,11 +100,5 @@ export class UserDetailsComponent implements OnInit {
     return null;
   }
 
-  back(): void {
-    console.log(this.navigation.getPreviousUrl());
-    if (this.navigation.getPreviousUrl() === '/users/list') {
-      this.navigation.back();
-    }
-    this.router.navigateByUrl('/');
-  }
+
 }

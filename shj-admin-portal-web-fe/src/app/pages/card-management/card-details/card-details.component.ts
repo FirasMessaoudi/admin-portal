@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService} from "@ngx-translate/core";
 import {I18nService} from "@dcc-commons-ng/services";
 import {PackageCatering} from "@model/package-catering.model";
@@ -13,13 +13,14 @@ import {CountryLookup} from "@model/country-lookup.model";
 import {Language} from "@model/enum/language.enum";
 import {ApplicantCard} from "@model/card.model";
 import {EAuthority} from "@shared/model";
+import {NavigationService} from "@core/utilities/navigation.service";
 
 @Component({
   selector: 'app-card-details',
   templateUrl: './card-details.component.html',
   styleUrls: ['./card-details.component.scss']
 })
-export class CardDetailsComponent implements OnInit {
+export class CardDetailsComponent implements OnInit, OnDestroy {
   cardId: number;
   card: ApplicantCard;
   url: any = 'assets/images/default-avatar.svg';
@@ -39,11 +40,15 @@ export class CardDetailsComponent implements OnInit {
               private cardService: CardService,
               private translate: TranslateService,
               private i18nService: I18nService,
-              private lookupsService: LookupService, private authenticationService: AuthenticationService) {
+              private lookupsService: LookupService,
+              private authenticationService: AuthenticationService,
+              private navigationService: NavigationService
+  ) {
   }
 
   ngOnInit(): void {
     this.loadLookups();
+    this.navigationService.showGoBackLink(true);
     combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
@@ -104,6 +109,10 @@ export class CardDetailsComponent implements OnInit {
   get canSeeCardDetails(): boolean {
 
     return this.authenticationService.hasAuthority(EAuthority.VIEW_CARD_DETAILS);
+  }
+
+  ngOnDestroy() {
+    this.navigationService.showGoBackLink(false);
   }
 
   packageCaterings(): PackageCatering[] {

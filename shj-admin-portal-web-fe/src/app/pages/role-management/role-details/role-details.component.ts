@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {combineLatest} from "rxjs";
@@ -12,6 +12,7 @@ import {Role} from "@model/role.model";
 import {Authority} from "@model/authority.model";
 import {EAuthority} from "@model/enum/authority.enum";
 import {AuthenticationService} from "@core/services";
+import {NavigationService} from "@core/utilities/navigation.service";
 
 @Component({
   selector: "app-user-details",
@@ -19,7 +20,7 @@ import {AuthenticationService} from "@core/services";
   styleUrls: ["./role-details.component.scss"],
   providers: [DatePipe]
 })
-export class RoleDetailsComponent implements OnInit {
+export class RoleDetailsComponent implements OnInit, OnDestroy {
   roleId: number;
   role: Role;
   roleDetailsForm: FormGroup;
@@ -33,7 +34,8 @@ export class RoleDetailsComponent implements OnInit {
               private formBuilder: FormBuilder,
               private i18nService: I18nService,
               private roleService: RoleService,
-              private authenticationService: AuthenticationService) {
+              private authenticationService: AuthenticationService,
+              private navigationService: NavigationService) {
   }
 
   // convenience getter for easy access to form fields
@@ -53,6 +55,7 @@ export class RoleDetailsComponent implements OnInit {
 
   ngOnInit() {
     //this.systemAdminUser = this.authenticationService.currentUser.authorities.some((authority: []) => authority['authority'] == UserRoles.CPM_ADMIN);
+    this.navigationService.showGoBackLink(true);
     this.editMode = false;
     this.loadAuthorities();
     this.initForm();
@@ -197,5 +200,9 @@ export class RoleDetailsComponent implements OnInit {
 
   get canSeeRoleDetails(): boolean {
     return this.authenticationService.hasAuthority(EAuthority.ROLE_MANAGEMENT);
+  }
+
+  ngOnDestroy() {
+    this.navigationService.showGoBackLink(false);
   }
 }
