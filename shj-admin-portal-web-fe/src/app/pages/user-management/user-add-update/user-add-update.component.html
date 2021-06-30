@@ -62,7 +62,7 @@
             <div class="form-group col">
               <label class="col-form-label">{{'user-management.nin' | translate}}<span class="text-danger px-1">*</span></label>
               <input type="text" formControlName="nin" [value]="user?.nin" class="form-control" required
-                     [class.is-invalid]="f.nin.invalid && f.nin.touched" maxlength="10" [disabled]="user?.id > 0 ? 'disabled' : ''"/>
+                     [class.is-invalid]="f.nin.invalid && f.nin.touched" maxlength="10" [disabled]="user?.id > 0"/>
               <div *ngIf="f.nin.invalid && f.nin.touched" class="invalid-feedback">
                 <div *ngIf="f.nin.errors.required">{{'general.field_validation_required' | translate}}</div>
                 <div *ngIf="f.nin.errors.invalid">{{f.nin.errors['invalid'] | translate}}</div>
@@ -182,7 +182,7 @@
             </div>
 
             <div class="form-group col">
-              <label class="col-form-label">{{ "user-management.additional_role" | translate }}</label>
+              <label class="col-form-label">{{"user-management.additional_role" | translate }}</label>
               <ng-multiselect-dropdown formControlName="additionalRoles" [placeholder]="'general.select_option' | translate"
                                        [settings]="dropdownSettings" [data]="additionalRoles" [disabled]="!f.role.value">
               </ng-multiselect-dropdown>
@@ -203,7 +203,7 @@
                 <input type="file" class="hidden" name="avatarFile" aria-describedby="inputGroupFileAddon01" (change)="loadAvatar($event);"/>
                 <a>{{'user-management.change_avatar' | translate}}</a>
               </label>
-              <small class="text-black-50 my-3" *ngIf="!user?.id">{{ "user-management.avatar-no-edit-text" | translate }}</small>
+              <small class="text-black-50 my-3" *ngIf="!user?.id">{{"user-management.avatar-no-edit-text" | translate }}</small>
             </div>
           </div>
 

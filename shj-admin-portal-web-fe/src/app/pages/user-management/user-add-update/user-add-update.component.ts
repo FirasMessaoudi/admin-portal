@@ -15,6 +15,7 @@ import {HijriGregorianDatepickerComponent} from "@shared/modules/hijri-gregorian
 import {EAuthority} from "@model/enum/authority.enum";
 import {DccValidators, IdType} from "@shared/validators";
 import {IDropdownSettings} from "ng-multiselect-dropdown/multiselect.model";
+import {EAction} from "@model/enum/action.enum";
 
 
 @Component({
@@ -32,13 +33,15 @@ export class UserAddUpdateComponent implements OnInit {
   additionalRoles: Role[];
   userForm: FormGroup;
 
+  action = EAction;
+
   selectedDateOfBirth: NgbDateStruct;
   maxDateOfBirthGregorian: NgbDateStruct;
   maxDateOfBirthHijri: NgbDateStruct;
   dateString: string;
   selectedDateType: any;
 
-  dropdownSettings:IDropdownSettings = {};//TODO: check if it can be defined at the app level.
+  dropdownSettings: IDropdownSettings = {};//TODO: check if it can be defined at the app level.
 
   @ViewChild('datePicker') dateOfBirthPicker: HijriGregorianDatepickerComponent;
 
@@ -70,7 +73,6 @@ export class UserAddUpdateComponent implements OnInit {
     };
 
 
-
     // calendar default;
     let toDayGregorian = this.dateFormatterService.todayGregorian();
     let toDayHijri = this.dateFormatterService.todayHijri();
@@ -93,7 +95,7 @@ export class UserAddUpdateComponent implements OnInit {
       this.userService.find(userId).subscribe(user => {
         this.user = user;
 
-        this.userForm.patchValue( {
+        this.userForm.patchValue({
           id: this.user.id,
           mobileNumber: this.user.mobileNumber,
           nin: {value: this.user.nin, disabled: true},
@@ -128,7 +130,7 @@ export class UserAddUpdateComponent implements OnInit {
   loadRoles(mainRole) {
     this.roleService.listActive().subscribe(data => {
       this.roles = data;
-      this.additionalRoles = mainRole ? data.filter(r => r.id != mainRole.id) :  data;
+      this.additionalRoles = mainRole ? data.filter(r => r.id != mainRole.id) : data;
     });
   }
 
@@ -198,6 +200,8 @@ export class UserAddUpdateComponent implements OnInit {
       control.markAsTouched({onlySelf: true});
     });
 
+    let action = this.user.id > 0 ? this.action.UPDATE : this.action.SAVE;
+
     let userRoles = [];
     // create UserRole for the main selected role and additional roles (if any).
     userRoles.push(this.createUserRole(this.f.role.value, true));
@@ -205,7 +209,7 @@ export class UserAddUpdateComponent implements OnInit {
       userRoles.push(this.createUserRole(role, false));
     });
 
-    this.userForm.patchValue( {
+    this.userForm.patchValue({
       userRoles: userRoles
     });
 
@@ -229,7 +233,11 @@ export class UserAddUpdateComponent implements OnInit {
         });
       } else {
         this.user = res;
-        this.toastr.success(this.translate.instant("general.dialog_edit_success_text"), this.translate.instant("general.dialog_edit_title"));
+        if (action === this.action.SAVE) {
+          this.toastr.success(this.translate.instant("user-management.dialog_add_user_success_text"), this.translate.instant("general.dialog_add_title"));
+        } else {
+          this.toastr.success(this.translate.instant("general.dialog_edit_success_text"), this.translate.instant("general.dialog_edit_title"));
+        }
         this.goToList();
       }
     });
@@ -240,7 +248,7 @@ export class UserAddUpdateComponent implements OnInit {
   }
 
   onDateOfBirthChange(event) {
-    if(event) {
+    if (event) {
       let dateStruct = this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : this.dateFormatterService.toGregorian(event);
       let dateStructGreg = this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? event : this.dateFormatterService.toGregorian(event);
       let dateStructHijri = this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : event;

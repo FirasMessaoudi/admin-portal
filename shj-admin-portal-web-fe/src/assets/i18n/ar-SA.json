@@ -184,6 +184,7 @@
     "region": "المنطقة",
     "role": "الدور الرئيسي",
     "additional_role": "الأدوار الاضافية",
+    "dialog_add_user_success_text": "تم إضافة المستخدم بنجاح",
     "dialog_activate_confirm_text": "هل أنت متأكد أنك تريد تفعيل هذا المستخدم؟",
     "dialog_deactivate_confirm_text": "هل أنت متأكد أنك تريد تعطيل هذا المستخدم؟",
     "dialog_delete_confirm_text": "هل أنت متأكد أنك تريد حذف هذا المستخدم؟",
