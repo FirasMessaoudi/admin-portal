@@ -48,7 +48,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadLookups();
-    this.navigationService.showGoBackLink(true);
+    this.navigationService.showGoBackLink({renderGoBackLink: true, goBackURL: ''});
     combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
@@ -112,7 +112,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.navigationService.showGoBackLink(false);
+    this.navigationService.showGoBackLink({renderGoBackLink: false, goBackURL: ''});
   }
 
   packageCaterings(): PackageCatering[] {

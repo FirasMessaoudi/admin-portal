@@ -45,7 +45,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userId = this.activeRoute.snapshot.params.id;
-    this.navigationService.showGoBackLink(true);
+    this.navigationService.showGoBackLink({renderGoBackLink: true, goBackURL: ''});
 
     if (this.userId) {
       // load user details
@@ -66,7 +66,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.navigationService.showGoBackLink(false);
+    this.navigationService.showGoBackLink({renderGoBackLink: false, goBackURL: ''});
   }
 
   goToList() {

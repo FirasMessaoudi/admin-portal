@@ -6,7 +6,7 @@ import {BehaviorSubject} from "rxjs";
 @Injectable({providedIn: 'root'})
 export class NavigationService {
   private history: string[] = []
-  private behaviorSubject = new BehaviorSubject<boolean>(false);
+  private behaviorSubject = new BehaviorSubject<any>({renderGoBackLink: false, goBackURL: ''});
   canGoBack = this.behaviorSubject.asObservable();
 
   constructor(private router: Router, private location: Location) {
@@ -25,8 +25,8 @@ export class NavigationService {
     return this.history[this.history.length - 2] || '/';
   }
 
-  showGoBackLink(value: boolean): void {
-    this.behaviorSubject.next(value);
+  showGoBackLink(value: any): void {
+    this.behaviorSubject.next({renderGoBackLink: value.renderGoBackLink, goBackURL: value.goBackURL});
   }
 
   back(): void {

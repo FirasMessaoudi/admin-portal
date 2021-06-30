@@ -15,7 +15,7 @@ export class HeaderComponent implements OnInit {
 
   currentUser: any;
   renderGoBackLink: boolean;
-
+  goBackURL: string;
   constructor(private location: Location,
               public router: Router,
               private i18nService: I18nService,
@@ -33,7 +33,9 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.currentUser = this.authenticationService.currentUser
     this.navigationService.canGoBack.subscribe(value => {
-      this.renderGoBackLink = value;
+      this.renderGoBackLink = value.renderGoBackLink;
+      this.goBackURL = value.goBackURL;
+
     })
 
   }
@@ -53,6 +55,11 @@ export class HeaderComponent implements OnInit {
   }
 
   goBack() {
-    this.location.back();
+
+    if (this.goBackURL == '') {
+      this.location.back();
+    } else {
+      this.router.navigateByUrl(this.goBackURL);
+    }
   }
 }

@@ -30,7 +30,7 @@ export class DataRequestDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.dataRequestId = this.activeRoute.snapshot.params.id;
-    this.navigationService.showGoBackLink(true);
+    this.navigationService.showGoBackLink({renderGoBackLink: true, goBackURL: '/data-requests/list'});
     if (this.dataRequestId) {
       // load data request details
       this.dataRequestService.find(this.dataRequestId).subscribe(data => {
@@ -71,6 +71,6 @@ export class DataRequestDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.navigationService.showGoBackLink(false);
+    this.navigationService.showGoBackLink({renderGoBackLink: false, goBackURL: ''});
   }
 }

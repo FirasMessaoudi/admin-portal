@@ -55,7 +55,7 @@ export class RoleDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     //this.systemAdminUser = this.authenticationService.currentUser.authorities.some((authority: []) => authority['authority'] == UserRoles.CPM_ADMIN);
-    this.navigationService.showGoBackLink(true);
+    this.navigationService.showGoBackLink({renderGoBackLink: true, goBackURL: ''});
     this.editMode = false;
     this.loadAuthorities();
     this.initForm();
@@ -203,6 +203,6 @@ export class RoleDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.navigationService.showGoBackLink(false);
+    this.navigationService.showGoBackLink({renderGoBackLink: false, goBackURL: ''});
   }
 }
