@@ -66,9 +66,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngIf="!page?.content" class="text-center">
+        <tr *ngIf="!page?.content || page?.totalElements === 0" class="text-center">
           <td colspan="10">
-            <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set" ></svg-icon>
+            <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
             <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
           </td>
         </tr>
@@ -133,7 +133,7 @@
       </table>
     </div>
 
-    <nav aria-label="Page navigation example" *ngIf="page?.content">
+    <nav aria-label="Page navigation example" *ngIf="page?.content && page?.totalElements > 0">
       <ul class="pagination justify-content-center">
         <li class="page-item" [class.disabled]="page?.first">
           <a
