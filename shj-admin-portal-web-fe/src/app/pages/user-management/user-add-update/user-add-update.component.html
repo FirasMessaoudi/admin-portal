@@ -2,7 +2,7 @@
 
   <div class="title__Page">
     <h3 class="sectionTitle">{{'user-management.user_form' | translate }}
-      <b class="text-dcc-primary" *ngIf="user?.id > 0">#{{user?.id}}</b>
+      <b class="text-dcc-primary" *ngIf="user?.id > 0">{{user?.firstName}} {{user?.familyName}}</b>
     </h3>
   </div>
   <div class="content__section" *ngIf="!canSeeAddUpdateUser">
