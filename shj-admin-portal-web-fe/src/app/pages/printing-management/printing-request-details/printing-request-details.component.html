@@ -45,6 +45,7 @@
           <th scope="col">{{'printing-management.id_number' | translate}}</th>
           <th scope="col">{{'card-management.card_number' | translate}}</th>
           <th scope="col">{{'card-management.passport_number' | translate}}</th>
+          <th scope="col">{{'card-management.card_status' | translate}}</th>
         </tr>
         </thead>
         <tr *ngIf="false" class="text-center">
@@ -87,6 +88,7 @@
             <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.idNumber}}</td>
             <td class="ltr">{{batchCard?.card?.referenceNumber}}</td>
             <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
+            <td class="ltr">{{lookupService().localizedLabel(cardStatuses, batchCard?.card?.statusCode)}}</td>
           </tr>
           </tbody>
         </ng-template>

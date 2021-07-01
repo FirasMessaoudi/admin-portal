@@ -30,6 +30,7 @@ export class PrintingRequestDetailsComponent implements OnInit, OnDestroy {
   printRequestStatuses: Lookup[];
   batchTypes: PrintBatchType[];
   countries: CountryLookup[];
+  cardStatuses: Lookup[];
   batchType = BatchType;
   printRequestStatus = PrintRequestStatus;
 
@@ -108,6 +109,9 @@ export class PrintingRequestDetailsComponent implements OnInit, OnDestroy {
     });
     this.cardService.findCountries().subscribe(result => {
       this.countries = result;
+    });
+    this.cardService.findCardStatuses().subscribe(result => {
+      this.cardStatuses = result;
     });
   }
 
