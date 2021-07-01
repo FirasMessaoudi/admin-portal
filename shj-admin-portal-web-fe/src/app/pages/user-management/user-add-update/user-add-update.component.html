@@ -65,7 +65,7 @@
                      [class.is-invalid]="f.nin.invalid && f.nin.touched" maxlength="10" [disabled]="user?.id > 0"/>
               <div *ngIf="f.nin.invalid && f.nin.touched" class="invalid-feedback">
                 <div *ngIf="f.nin.errors.required">{{'general.field_validation_required' | translate}}</div>
-                <div *ngIf="f.nin.errors.invalid">{{f.nin.errors['invalid'] | translate}}</div>
+                <div *ngIf="f.nin.errors.invalid">{{'dcc.commons.validation.constraints.unique' | translate}}</div>
                 <div *ngIf="f.nin.errors['invalid-nin-or-iqama']">{{f.nin.errors['invalid-nin-or-iqama'] | translate}}</div>
               </div>
             </div>
@@ -159,7 +159,7 @@
                      maxlength="50" [class.is-invalid]="f.email.errors && f.email.touched"/>
               <div *ngIf="f.email.errors && f.email.touched" class="invalid-feedback">
                 <div *ngIf="f.email.errors.required">{{'general.field_validation_required' | translate}}</div>
-                <div *ngIf="f.email.errors.email">{{ 'dcc.commons.validation.constraints.invalid'| translate}}</div>
+                <div *ngIf="f.email.errors.email">{{'dcc.commons.validation.constraints.invalid' | translate}}</div>
               </div>
             </div>
 

@@ -18,7 +18,7 @@
 
           <div *ngIf="f.labelAr.invalid && f.labelAr.touched" class="invalid-feedback">
             <div *ngIf="f.labelAr.errors.required">{{'general.field_validation_required' | translate}}</div>
-            <div *ngIf="f.labelAr.errors.invalid">{{f.labelAr.errors['invalid'] | translate}}</div>
+            <div *ngIf="f.labelAr.errors.invalid">{{'dcc.commons.validation.constraints.unique' | translate}}</div>
 
             <div *ngIf="f.labelAr.errors['invalid-characters']">{{f.labelAr.errors['invalid-characters'] | translate}}</div>
           </div>
@@ -28,7 +28,7 @@
           <input type="text" formControlName="labelEn" class="form-control" required [class.is-invalid]="f.labelEn.invalid && f.labelEn.touched" maxlength="25"/>
           <div *ngIf="f.labelEn.invalid && f.labelEn.touched" class="invalid-feedback">
             <div *ngIf="f.labelEn.errors.required">{{'general.field_validation_required' | translate}}</div>
-            <div *ngIf="f.labelEn.errors.invalid">{{f.labelEn.errors['invalid'] | translate}}</div>
+            <div *ngIf="f.labelEn.errors.invalid">{{'dcc.commons.validation.constraints.unique' | translate}}</div>
             <div *ngIf="f.labelEn.errors['invalid-characters']">{{f.labelEn.errors['invalid-characters'] | translate}}</div>
           </div>
         </div>
