@@ -118,7 +118,11 @@
               <label class="custom-control-label mx-3" for="applicantCheck-{{card.id}}"></label>
             </div>
           </td>
-          <td>{{card?.applicantRitual?.applicant?.fullNameAr}} {{card?.applicantRitual?.applicant?.fullNameEn}}</td>
+          <td *ngIf="currentLanguage.startsWith('ar')">{{card?.applicantRitual?.applicant?.fullNameAr}}
+            <br>{{card?.applicantRitual?.applicant?.fullNameEn}}</td>
+          <td *ngIf="currentLanguage.startsWith('en')">{{card?.applicantRitual?.applicant?.fullNameEn}}
+            <br>{{card?.applicantRitual?.applicant?.fullNameAr}}</td>
+
           <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
           <td>{{card?.applicantRitual?.applicant?.idNumber}}</td>
           <td class="ltr">{{card?.applicantRitual?.applicant?.passportNumber}}</td>
