@@ -18,7 +18,7 @@
     <div class="col-form-control text-center">
       <button class="btn btn-outline-dcc-primary px-6 py-2 border w-100 d-flex flex-center-column" (click)="downloadTemplate(selectedDataSegment.id)" [disabled]="!selectedDataSegment" >
         <img src="assets/images/excel.svg" style="width: 60px;" alt="" >
-        {{'general.btn_download' | translate}}
+
       </button>
     </div>
   </div>
@@ -32,6 +32,7 @@
         <label class="custom-file-label" for="fileData"><i class="fas fa-search"></i> {{(f.fileData && f.fileData.value ? f.fileData.value.name : 'data-request-management.choose_file') | translate}}</label>
       </div>
     </div>
+
     <div class="mt-1">
       <div *ngIf="errorMessage" class="border border-warning bg-warning py-1 px-2 mb-2">
         {{errorMessage}}

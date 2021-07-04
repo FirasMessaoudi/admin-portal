@@ -11,6 +11,7 @@ import {PrintService} from "@core/services/printing/print.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
+import {I18nService} from "@dcc-commons-ng/services";
 
 @Component({
   selector: 'app-step-one',
@@ -49,7 +50,8 @@ export class StepOneComponent implements OnInit {
               private translate: TranslateService,
               private printService: PrintService,
               private lookupsService: LookupService,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private i18nService: I18nService) {
   }
 
   ngOnInit(): void {
@@ -65,6 +67,10 @@ export class StepOneComponent implements OnInit {
    */
   reloadNationalities() {
     this.localizedNationalities = this.lookupsService.localizedItems(this.nationalities);
+  }
+
+  get currentLanguage(): string {
+    return this.i18nService.language;
   }
 
   ngOnDestroy() {

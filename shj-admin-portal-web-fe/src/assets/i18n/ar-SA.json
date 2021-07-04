@@ -197,7 +197,9 @@
     "avatar-no-edit-text": "-- يمكنك تعديل صورة ملف المستخدم بعد إنشاء الحساب --",
     "dialog_reset_user_pass_success_text": "تم اعادة تعيين كلمة مرور المستخدم بنجاح",
     "dialog_reset_user_pass_confirm_text": "هل أنت متأكد أنك تريد اعادة تعيين كلمة مرور هذا العنصر؟",
-    "dialog_reset_user_pass_title": "اعادة تعيين كلمة مرور المستخدم"
+    "dialog_reset_user_pass_title": "اعادة تعيين كلمة مرور المستخدم",
+    "select_all": "تحديد الكل",
+    "deselect_all": "الغاء تحديد الكل"
   },
   "login": {
     "header_title": "تسجيل الدخول",

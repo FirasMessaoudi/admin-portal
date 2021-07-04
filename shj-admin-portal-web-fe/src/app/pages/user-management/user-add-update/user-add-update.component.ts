@@ -66,8 +66,8 @@ export class UserAddUpdateComponent implements OnInit {
       singleSelection: false,
       idField: 'id',
       textField: this.currentLanguage.startsWith("en") ? 'labelEn' : 'labelAr',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
+      selectAllText: this.translate.instant("user-management.select_all"),
+      unSelectAllText: this.translate.instant("user-management.deselect_all"),
       itemsShowLimit: 3,
       allowSearchFilter: false
     };
