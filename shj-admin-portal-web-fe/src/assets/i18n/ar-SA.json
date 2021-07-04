@@ -46,7 +46,7 @@
     "dialog_error_title": "خطأ",
     "dialog_file_upload_error_text": "لا يمكن تعديل الصورة, الملف المرفق غير سليم",
     "dialog_file_upload_success_text": "تم تعديل الصورة بنجاح",
-    "table_emtpy_text": "لا يوجد بيانات",
+    "table_emtpy_text": "لا يوجد بيانات يمكن عرضها",
     "no_data_found_matching_given_criteria": "لا يوجد بيانات يمكن عرضها",
     "btn_ok": "موافق",
     "btn_more": "المزيد من التفاصيل...",
