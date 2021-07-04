@@ -4,7 +4,7 @@
   justify-content: flex-end;
   align-items: center;
   position: relative;
-  
+
   &::before{
     content: '';
     position: absolute;
@@ -18,7 +18,7 @@
       transform: rotate(180deg);
     }
   }
-  
+
 
 
 }
@@ -73,7 +73,7 @@
     @include mt(4);
 
     padding: 2rem;
-  
+
     @include media-breakpoint-down(sm) {
       flex-direction: column;
       .btn{
@@ -87,19 +87,19 @@
   .wrapper-expand .sidebar-wrapper{
     background: #fff;
     z-index: 10;
-    [dir="ltr"] &{ 
+    [dir="ltr"] &{
       left: 0;
-      right: auto; 
+      right: auto;
     }
   }
-  body .sidebar-wrapper{  
-    [dir="ltr"] &{ 
+  body .sidebar-wrapper{
+    [dir="ltr"] &{
       @include media-breakpoint-down(md) {
         left: -260px;
       }
     }
   }
-  
+
   .sideNav{
 
     .item{
@@ -129,7 +129,7 @@
 
             .navIcon{
               width: calc(45px - 4px);
-            } 
+            }
         }
     }
 }
@@ -167,3 +167,10 @@ span.notif {
   }
 }
 
+.button_back{
+  position: absolute;
+  @include media-breakpoint-up(lg) {
+    top: 33px;
+  }
+  top: 55px;
+}
