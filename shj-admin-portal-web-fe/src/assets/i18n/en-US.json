@@ -203,7 +203,9 @@
     "avatar-no-edit-text": "-- You can edit user profile's photo after the account is created --",
     "dialog_reset_user_pass_success_text": "User password has been successfully reset",
     "dialog_reset_user_pass_confirm_text": "Are you sure you want to reset this user password?",
-    "dialog_reset_user_pass_title": "Reset User Password"
+    "dialog_reset_user_pass_title": "Reset User Password",
+    "select_all": "Select All",
+    "deselect_all": "Deselect All"
   },
 
   "login": {
