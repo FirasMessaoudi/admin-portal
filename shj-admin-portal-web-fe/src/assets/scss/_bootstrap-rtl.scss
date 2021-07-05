@@ -1,6 +1,6 @@
 .rtl,
 [dir="rtl"] {
-  
+
   body{
     text-align: right;
     direction: rtl;
@@ -37,7 +37,7 @@
     margin-left: initial;
     margin-right: -$btn-border-width;
   }
-  
+
   .btn-group > .btn:not(:last-child):not(.dropdown-toggle), .btn-group > .btn-group:not(:last-child) > .btn{
     border-radius: 0 $border-radius $border-radius 0;
   }
@@ -90,16 +90,16 @@
   }
 
   .custom-switch {
-    padding-right: $custom-switch-width + $custom-control-gutter; 
+    padding-right: $custom-switch-width + $custom-control-gutter;
     padding-left: inherit;
 
     .custom-control-label {
       &::before {
-        right: -($custom-switch-width + $custom-control-gutter); 
+        right: -($custom-switch-width + $custom-control-gutter);
       }
 
       &::after {
-        right: calc(#{-($custom-switch-width + $custom-control-gutter)} + #{$custom-control-indicator-border-width * 2}); 
+        right: calc(#{-($custom-switch-width + $custom-control-gutter)} + #{$custom-control-indicator-border-width * 2});
       }
     }
 
@@ -315,4 +315,15 @@
       }
     }
   }
+  .was-validated .form-control:invalid, .form-control.is-invalid {
+    background-position: left calc(0.43em + 0.215rem) center;
+
+    padding-left: calc(1.72em + 0.86rem);
+    padding-right: 0.86rem;
+
+  }
 }
+
+
+
+
