@@ -43,9 +43,7 @@ export class AuthenticationService {
    * @return {Observable<Credentials>} The user credentials.
    */
   login(username: string, password: string, recaptchaToken: string): Observable<any> {
-
     let params: String = recaptchaToken ? '?grt=' + recaptchaToken : '';
-
     return this.http.post<any>('/core/api/auth/login' + params, {'idNumber': username, 'password': password});
   }
 
@@ -56,7 +54,6 @@ export class AuthenticationService {
    * @return if entered otp is the same sent to the user.
    */
   validateOtp(username: string, otp: string): Observable<any> {
-
     return this.http.post<any>('/core/api/auth/otp', {'idNumber': username, 'otp': otp})
       .pipe(map(response => {
         console.log(JSON.stringify(response));

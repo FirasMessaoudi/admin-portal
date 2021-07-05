@@ -16,6 +16,7 @@ import {EAuthority} from "@model/enum/authority.enum";
 import {DccValidators, IdType} from "@shared/validators";
 import {IDropdownSettings} from "ng-multiselect-dropdown/multiselect.model";
 import {EAction} from "@model/enum/action.enum";
+import {NavigationService} from "@core/utilities/navigation.service";
 
 
 @Component({
@@ -55,7 +56,8 @@ export class UserAddUpdateComponent implements OnInit {
               private authenticationService: AuthenticationService,
               private translate: TranslateService,
               private toastr: ToastService,
-              private dateFormatterService: DateFormatterService) {
+              private dateFormatterService: DateFormatterService,
+              private navigationService: NavigationService) {
   }
 
 
@@ -264,5 +266,9 @@ export class UserAddUpdateComponent implements OnInit {
 
   compareById(itemOne, itemTwo) {
     return itemOne && itemTwo && itemOne.id == itemTwo.id;
+  }
+
+  goBack() {
+    this.navigationService.back();
   }
 }

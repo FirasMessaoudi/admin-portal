@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.GregorianDate;
 import com.elm.shj.admin.portal.services.data.validators.ImmunizationCode;
+import com.elm.shj.admin.portal.services.data.validators.Mandatory;
 import com.elm.shj.admin.portal.services.data.validators.WithApplicant;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
@@ -42,6 +43,7 @@ public class ApplicantHealthImmunizationDto implements Serializable {
     private Date immunizationDate;
 
     @CellIndex(index = 6)
+    @Mandatory
     private boolean mandatory;
 
     private Date creationDate;

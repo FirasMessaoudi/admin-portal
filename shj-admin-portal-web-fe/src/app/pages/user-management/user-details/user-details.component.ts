@@ -17,7 +17,7 @@ import {NavigationService} from "@core/utilities/navigation.service";
   styleUrls: ["./user-details.component.scss"],
   providers: [DatePipe]
 })
-export class UserDetailsComponent implements OnInit, OnDestroy {
+export class UserDetailsComponent implements OnInit {
   userId: number;
   user: User;
   url: any = 'assets/images/default-avatar.svg';
@@ -45,8 +45,6 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userId = this.activeRoute.snapshot.params.id;
-    this.navigationService.showGoBackLink({renderGoBackLink: true, goBackURL: ''});
-
     if (this.userId) {
       // load user details
       this.userService.find(this.userId).subscribe(data => {
@@ -65,8 +63,8 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    this.navigationService.showGoBackLink({renderGoBackLink: false, goBackURL: ''});
+  goBack() {
+    this.navigationService.back();
   }
 
   goToList() {

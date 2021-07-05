@@ -20,7 +20,7 @@ import {NavigationService} from "@core/utilities/navigation.service";
   styleUrls: ["./role-details.component.scss"],
   providers: [DatePipe]
 })
-export class RoleDetailsComponent implements OnInit, OnDestroy {
+export class RoleDetailsComponent implements OnInit {
   roleId: number;
   role: Role;
   roleDetailsForm: FormGroup;
@@ -55,7 +55,6 @@ export class RoleDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     //this.systemAdminUser = this.authenticationService.currentUser.authorities.some((authority: []) => authority['authority'] == UserRoles.CPM_ADMIN);
-    this.navigationService.showGoBackLink({renderGoBackLink: true, goBackURL: ''});
     this.editMode = false;
     this.loadAuthorities();
     this.initForm();
@@ -202,7 +201,7 @@ export class RoleDetailsComponent implements OnInit, OnDestroy {
     return this.authenticationService.hasAuthority(EAuthority.ROLE_MANAGEMENT);
   }
 
-  ngOnDestroy() {
-    this.navigationService.showGoBackLink({renderGoBackLink: false, goBackURL: ''});
+  goBack() {
+    this.navigationService.back();
   }
 }
