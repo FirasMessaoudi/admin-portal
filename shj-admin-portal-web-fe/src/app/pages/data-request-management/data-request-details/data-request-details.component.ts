@@ -12,7 +12,7 @@ import {NavigationService} from "@core/utilities/navigation.service";
   templateUrl: './data-request-details.component.html',
   styleUrls: ['./data-request-details.component.scss']
 })
-export class DataRequestDetailsComponent implements OnInit, OnDestroy {
+export class DataRequestDetailsComponent implements OnInit {
 
   dataRequestId: number;
   dataRequest: DataRequest;
@@ -30,7 +30,6 @@ export class DataRequestDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.dataRequestId = this.activeRoute.snapshot.params.id;
-    this.navigationService.showGoBackLink({renderGoBackLink: true, goBackURL: '/data-requests/list'});
     if (this.dataRequestId) {
       // load data request details
       this.dataRequestService.find(this.dataRequestId).subscribe(data => {
@@ -70,7 +69,7 @@ export class DataRequestDetailsComponent implements OnInit, OnDestroy {
     return this.authenticationService.hasAuthority(EAuthority.VIEW_DATA_REQUEST_DETAILS);
   }
 
-  ngOnDestroy() {
-    this.navigationService.showGoBackLink({renderGoBackLink: false, goBackURL: ''});
+  goBack() {
+    this.navigationService.back();
   }
 }

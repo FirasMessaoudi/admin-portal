@@ -22,7 +22,7 @@ import {NavigationService} from "@core/utilities/navigation.service";
   templateUrl: './printing-request-details.component.html',
   styleUrls: ['./printing-request-details.component.scss']
 })
-export class PrintingRequestDetailsComponent implements OnInit, OnDestroy {
+export class PrintingRequestDetailsComponent implements OnInit {
   public isCollapsed: boolean[] = [];
 
   printRequestId: number;
@@ -49,7 +49,6 @@ export class PrintingRequestDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadLookups();
-    this.navigationService.showGoBackLink({renderGoBackLink: true, goBackURL: ''});
     combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
@@ -92,8 +91,8 @@ export class PrintingRequestDetailsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/print-requests/list']);
   }
 
-  ngOnDestroy() {
-    this.navigationService.showGoBackLink({renderGoBackLink: false, goBackURL: ''});
+  goBack() {
+    this.navigationService.back();
   }
 
   lookupService(): LookupService {
