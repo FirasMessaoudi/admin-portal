@@ -9,6 +9,7 @@ import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {ApplicantCardSearchCriteria} from "@model/applicant-card-search-criteria.model";
+import {NavigationService} from "@core/utilities/navigation.service";
 
 @Component({
   selector: 'app-card-list',
@@ -30,9 +31,10 @@ export class CardListComponent implements OnInit {
 
   constructor(private i18nService: I18nService,
               private formBuilder: FormBuilder,
-              private authenticationService: AuthenticationService,
+              private navigationService: NavigationService,
               private cardService: CardService,
-              private lookupsService: LookupService) {
+              private lookupsService: LookupService,
+              private authenticationService: AuthenticationService) {
   }
 
   ngOnInit(): void {
@@ -143,4 +145,7 @@ export class CardListComponent implements OnInit {
     return this.authenticationService.hasAuthority(EAuthority.ADD_CARD);
   }
 
+  goBack() {
+    this.navigationService.back();
+  }
 }
