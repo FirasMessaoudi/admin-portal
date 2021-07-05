@@ -26,13 +26,13 @@ import static com.elm.qa.framework.core.ActionX.SetValue;
 
 public class RoleManagement {
     // declaring elements
-    @FindBy(xpath = "//app-add-update-role//input[@formcontrolname='nameArabic']")
+    @FindBy(xpath = "//app-add-update-role//input[@formcontrolname='labelAr']")
     WebElement txtRoleArbName;
 
-    @FindBy(xpath = "//app-add-update-role//input[@formcontrolname='nameEnglish']")
+    @FindBy(xpath = "//app-add-update-role//input[@formcontrolname='labelEn']")
     WebElement txtRoleEngName;
 
-    @FindBy(xpath = "//app-add-update-role//div[@formcontrolname='activated']//input[@ng-reflect-value='false']//parent::label")
+    @FindBy(xpath = "//app-add-update-role//div[@formcontrolname='activated']//input[@ng-reflect-value='']//parent::label")
     WebElement btnRoleNotActive;
 
     @FindBy(xpath = "//app-add-update-role//div[@formcontrolname='activated']//input[@ng-reflect-value='true']//parent::label")
@@ -47,7 +47,7 @@ public class RoleManagement {
     @FindBy(xpath = "//app-applicant-list//input[contains(@formcontrolname,'roleName')]")
     WebElement txtRoleNameSearch;
 
-    @FindBy(xpath = "//app-applicant-list//input[@formcontrolname='authorityId']")
+    @FindBy(xpath = "//app-applicant-list//select[@formcontrolname='authorityId']")
     WebElement lstRoleAuthorityName;
 
     @FindBy(xpath = "//app-applicant-list//button[contains(@class,'btn-dcc-primary')]")

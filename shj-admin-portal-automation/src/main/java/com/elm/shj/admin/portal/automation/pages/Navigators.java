@@ -12,7 +12,7 @@ public class Navigators {
 
     // declaring elements
 
-    @FindBy(xpath = "//a[@ng-reflect-router-link='/users/list']")
+    @FindBy(xpath = "//a[@href='#/users/list']")
     WebElement lnkManageUsers;
 
     @FindBy(xpath = "//app-user-list//button[@routerlink='/users/create']")
@@ -22,17 +22,17 @@ public class Navigators {
     WebElement txtUserFirstName;
 
 
-    @FindBy(xpath = "//a[@ng-reflect-router-link='/roles/list']")
+    @FindBy(xpath = "//a[@href='#/roles/list']")
     WebElement lnkManageRoles;
 
     @FindBy(xpath = "//app-applicant-list//a[@routerlink='/roles/create']")
     WebElement btnAddNewRole;
 
-    @FindBy(xpath = "//app-add-update-role//input[@formcontrolname='nameArabic']")
+    @FindBy(xpath = "//app-add-update-role//input[@formcontrolname='labelAr']")
     WebElement txtRoleArbName;
 
 
-    @FindBy(xpath = "//a[@ng-reflect-router-link='/cards/list']")
+    @FindBy(xpath = "//a[@href='#/cards/list']")
     WebElement lnkManageCards;
 
     @FindBy(xpath = "//app-user-list//button[@routerlink='/users/create']")
@@ -42,11 +42,15 @@ public class Navigators {
     WebElement txtCardName;
 
 
-    @FindBy(xpath = "//a[@ng-reflect-router-link='/print-requests/list']")
+    @FindBy(xpath = "//a[@href='#/print-requests/list']")
     WebElement lnkManagePrinting;
 
     @FindBy(id="addPrintingRequest")
     WebElement btnPrintingRequest;
+
+
+    @FindBy(xpath = "//a[@href='#/data-requests/list']")
+    WebElement lnkDataUploads;
 
 
 
