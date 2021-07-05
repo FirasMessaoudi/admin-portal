@@ -1,18 +1,20 @@
-import {AfterViewInit, Component, OnInit, ViewChildren, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChildren, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '@app/_core/services/authentication/authentication.service';
 import {I18nService} from "@dcc-commons-ng/services";
 import {finalize} from "rxjs/operators";
+import {Subscription} from "rxjs";
 
 @Component({
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'otp.component.html',
   styleUrls: ['otp.component.scss']
 })
-export class OtpComponent implements OnInit, AfterViewInit {
+export class OtpComponent implements OnInit, AfterViewInit, OnDestroy {
 
   otpData: any;
+  otpDataSubscription: Subscription;
   mask: string;
   error: string;
   otpForm: FormGroup;
@@ -47,7 +49,7 @@ export class OtpComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.createForm();
-    this.authenticationService.otpData.subscribe(data => {
+    this.otpDataSubscription = this.authenticationService.otpData.subscribe(data => {
       if (!data || !data.otpExpiryMinutes) {
         this.goBack();
       }
@@ -55,6 +57,10 @@ export class OtpComponent implements OnInit, AfterViewInit {
       this.startTimer(data.otpExpiryMinutes);
       this.mask = data.mobileNumber;
     });
+  }
+
+  ngOnDestroy() {
+    this.otpDataSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -68,7 +74,6 @@ export class OtpComponent implements OnInit, AfterViewInit {
       pin += control.value;
     });
     console.log(pin);
-
     this.loading = true;
     this.authenticationService.validateOtp(this.otpData.name, pin)
       .pipe(finalize(() => {
@@ -76,18 +81,18 @@ export class OtpComponent implements OnInit, AfterViewInit {
         this.loading = false;
       })).subscribe(user => {
         clearInterval(this.timerInterval);
-      console.log(user);
-      // login successful if there's a jwt token in the response
-      this.authenticationService.updateSubject(user);
-      if (user.passwordExpired) {
-        console.log('redirect to change password page');
-        // redirect to change password page
-        this.router.navigate(['/change-password'], {replaceUrl: true});
-      } else {
-        console.log('redirect to / page');
-        clearInterval(this.timerInterval);
-        this.router.navigate(['/'], {replaceUrl: true});
-      }
+        console.log(user);
+        // login successful if there's a jwt token in the response
+        this.authenticationService.updateSubject(user);
+        if (user.passwordExpired) {
+          console.log('redirect to change password page');
+          // redirect to change password page
+          this.router.navigate(['/change-password'], {replaceUrl: true});
+        } else {
+          console.log('redirect to / page');
+          clearInterval(this.timerInterval);
+          this.router.navigate(['/'], {replaceUrl: true});
+        }
     }, error => {
       console.log(error);
       this.error = error;
