@@ -11,6 +11,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {EAuthority} from "@model/enum/authority.enum";
 import {AuthenticationService} from "@core/services";
 import {DccValidators} from "@shared/validators";
+import {NavigationService} from "@core/utilities/navigation.service";
 
 @Component({
   selector: 'app-add-update-role',
@@ -34,7 +35,8 @@ export class RoleAddUpdateComponent implements OnInit {
               private activeRoute: ActivatedRoute,
               private translate: TranslateService,
               private toastr: ToastService,
-              private authenticationService: AuthenticationService) {
+              private authenticationService: AuthenticationService,
+              private navigationService: NavigationService) {
   }
 
   ngOnInit(): void {
@@ -160,6 +162,10 @@ export class RoleAddUpdateComponent implements OnInit {
 
   toggleAuthority(roleAuthority: RoleAuthority) {
     roleAuthority.selected = !roleAuthority.selected;
+  }
+
+  goBack() {
+    this.navigationService.back();
   }
 
   get canSeeAddUpdateRole(): boolean {

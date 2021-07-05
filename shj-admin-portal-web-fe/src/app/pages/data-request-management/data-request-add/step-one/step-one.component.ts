@@ -10,6 +10,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {DataSegmentService} from "@core/services";
 import {I18nService} from "@dcc-commons-ng/services";
 import {DataRequestStorage} from "@pages/data-request-management/data-request-add/data-request-storage";
+import {NavigationService} from "@core/utilities/navigation.service";
 
 @Component({
   selector: 'app-step-one',
@@ -33,7 +34,9 @@ export class StepOneComponent implements OnInit {
               private translate: TranslateService,
               private formBuilder: FormBuilder,
               private cdr: ChangeDetectorRef,
-              private dataRequestStorage: DataRequestStorage) {
+              private dataRequestStorage: DataRequestStorage,
+              private navigationService: NavigationService
+  ) {
   }
 
   ngOnInit(): void {
@@ -121,6 +124,10 @@ export class StepOneComponent implements OnInit {
           this.errorMessage = (responseError.errors["request"] ? this.translate.instant(responseError.errors["request"]) : responseError.errorMessage);
         }
       });
+  }
+
+  goBack() {
+    this.navigationService.back();
   }
 
   onFileChange(event) {
