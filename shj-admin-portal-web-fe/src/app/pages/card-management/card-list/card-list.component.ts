@@ -38,9 +38,11 @@ export class CardListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.initForm();
     this.loadLookups();
     this.masterSelected = false;
+    this.loadPage(0);
     // TODO: read it from authentication
 
   }
