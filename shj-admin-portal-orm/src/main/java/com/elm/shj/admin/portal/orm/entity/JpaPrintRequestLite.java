@@ -14,7 +14,7 @@ import java.util.Date;
  * The light entity version for the shc_print_request database table.
  *
  * @author Slim Ben Hadj
- * @since 1.0.0
+ * @since 1.1.0
  */
 @Entity
 @Table(name = "shc_print_request")

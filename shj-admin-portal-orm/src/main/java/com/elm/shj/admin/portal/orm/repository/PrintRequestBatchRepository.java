@@ -13,5 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0.0
  */
 public interface PrintRequestBatchRepository extends JpaRepository<JpaPrintRequestBatch, Long> {
-    int countAllByPrintRequest_Id(long printRequestId);
+    int countAllByPrintRequestId(long printRequestId);
 }

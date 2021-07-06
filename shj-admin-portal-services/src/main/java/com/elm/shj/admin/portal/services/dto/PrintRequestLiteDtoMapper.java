@@ -11,7 +11,7 @@ import org.mapstruct.Mapper;
  * Mapper for {@link PrintRequestLiteDto} class
  *
  * @author Slim Ben Hadj
- * @since 1.0.0
+ * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
 public abstract class PrintRequestLiteDtoMapper implements IGenericMapper<PrintRequestLiteDto, JpaPrintRequestLite> {
