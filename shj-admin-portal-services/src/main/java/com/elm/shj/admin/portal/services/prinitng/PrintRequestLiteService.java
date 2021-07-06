@@ -17,8 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-
 /**
  * Service handling print request lite
  *
@@ -41,10 +39,10 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequestLite,
      * @return the list of print requests
      */
     public Page<PrintRequestLiteDto> findAll(Pageable pageable) {
-        Page<PrintRequestLiteDto> litePrintRequests = mapPage(printRequestLiteRepository.getAll(pageable));
+        Page<PrintRequestLiteDto> litePrintRequests = mapPage(getRepository().findAll(pageable));
         litePrintRequests.forEach(p -> {
-            p.setCardsCount(printRequestCardRepository.countAllByPrintRequest_Id(p.getId()));
-            p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequest_Id(p.getId()));
+            p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
+            p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
         });
         return litePrintRequests;
     }
@@ -56,13 +54,12 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequestLite,
      * @param filterVo filter value object
      * @return
      */
-    @Transactional
     public Page<PrintRequestLiteDto> findByFilter(PrintRequestFilterVo filterVo, Pageable pageable) {
         // at the time being, filter has only status code.
         Page<PrintRequestLiteDto> litePrintRequests = mapPage(printRequestLiteRepository.findByStatusCode(filterVo.getStatusCode(), pageable));
         litePrintRequests.forEach(p -> {
-            p.setCardsCount(printRequestCardRepository.countAllByPrintRequest_Id(p.getId()));
-            p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequest_Id(p.getId()));
+            p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
+            p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
         });
         return litePrintRequests;
     }

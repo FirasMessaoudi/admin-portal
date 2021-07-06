@@ -17,9 +17,6 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface PrintRequestLiteRepository extends JpaRepository<JpaPrintRequestLite, Long> {
 
-    @Query("SELECT p from JpaPrintRequestLite p")
-    Page<JpaPrintRequestLite> getAll(Pageable pageable);
-
     /**
      * Find all print requests with a status code.
      *

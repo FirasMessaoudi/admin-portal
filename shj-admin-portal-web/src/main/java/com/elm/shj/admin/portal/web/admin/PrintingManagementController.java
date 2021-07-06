@@ -20,7 +20,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -44,7 +43,6 @@ public class PrintingManagementController {
      * @param pageable the page configuration for the pagination
      * @return paginated print requests.
      */
-    @Transactional
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('"+AuthorityConstants.PRINTING_REQUEST_MANAGEMENT+"')")
     public Page<PrintRequestLiteDto> list(Pageable pageable, Authentication authentication) {
