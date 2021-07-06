@@ -23,7 +23,7 @@ import javax.transaction.Transactional;
  * Service handling print request lite
  *
  * @author Slim Ben Hadj
- * @since 1.0.0
+ * @since 1.1.0
  */
 @Service
 @Slf4j
