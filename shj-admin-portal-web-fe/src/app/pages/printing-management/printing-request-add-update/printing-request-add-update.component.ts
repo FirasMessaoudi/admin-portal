@@ -16,7 +16,7 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
   printRequest: PrintRequest;
   selectedBatchTypes: string[] = [];
   isLoading: boolean;
-
+  renderNxtButton = false;
   @ViewChild(StepOneComponent, {static: false})
   stepOneComp: StepOneComponent;
 
@@ -53,6 +53,7 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
 
   setAddedCards(cards) {
     this.addedCards = cards;
+    this.renderNxtButton = cards.length > 0;
   }
 
   setSelectedBatchTypes(batchTypes) {
@@ -62,4 +63,5 @@ export class PrintingRequestAddUpdateComponent implements OnInit {
   setLoading(event) {
     this.isLoading = event;
   }
+
 }

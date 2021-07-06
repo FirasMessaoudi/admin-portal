@@ -12,6 +12,7 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
 import {I18nService} from "@dcc-commons-ng/services";
+import {NavigationService} from "@core/utilities/navigation.service";
 
 @Component({
   selector: 'app-step-one',
@@ -41,6 +42,9 @@ export class StepOneComponent implements OnInit {
   @Output()
   public onSetPrintRequest: EventEmitter<any> = new EventEmitter<any>();
 
+  @Output()
+  public onDeleteAllCards: EventEmitter<any> = new EventEmitter<any>();
+
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
@@ -51,7 +55,9 @@ export class StepOneComponent implements OnInit {
               private printService: PrintService,
               private lookupsService: LookupService,
               private formBuilder: FormBuilder,
-              private i18nService: I18nService) {
+              private i18nService: I18nService,
+              private navigationService: NavigationService
+  ) {
   }
 
   ngOnInit(): void {
@@ -211,6 +217,8 @@ export class StepOneComponent implements OnInit {
   undoAddCard(cardId: number) {
     this.addedCards.splice(this.addedCards.findIndex(card => card.id === cardId), 1);
     if (this.addedCardsCurrentPage !== 1 && this.addedCards.length % this.addedCardsPageSize === 0) this.addedCardsCurrentPage--;
+    if (this.addedCards.length == 0)
+      this.onDeleteAllCards.emit(false);
   }
 
   isChecked(card) {
@@ -240,6 +248,10 @@ export class StepOneComponent implements OnInit {
 
   getTotalPages(total, size): number {
     return Math.floor((total + size - 1) / size);
+  }
+
+  goBack() {
+    this.navigationService.back();
   }
 
   splitString(str: string, separator: string): string[] {

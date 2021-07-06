@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
 import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
+import com.elm.shj.admin.portal.orm.repository.PrintRequestLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestRepository;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -19,7 +20,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -40,36 +44,14 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     private final ApplicantCardService cardService;
 
     /**
-     * Find all print requests.
-     *
-     * @param pageable the current page information
-     * @return the list of print requests
-     */
-    public Page<PrintRequestDto> findAll(Pageable pageable) {
-        return mapPage(getRepository().findAll(pageable));
-    }
-
-    /**
      * Find all print requests except those with status NEW.
      *
      * @param pageable the current page information
      * @return the list of print requests
      */
+    @Transactional
     public Page<PrintRequestDto> findOtherThanNew(Pageable pageable) {
-        return mapPage(printRequestRepository.findByStatusCodeNot(EPrintRequestStatus.NEW.name(), pageable));
-    }
-
-    /**
-     * Find paginated print requests based on filter excluding incomplete requests (status: NEW).
-     *
-     * @param pageable requested page of result.
-     * @param filterVo filter value object
-     * @return
-     */
-    public Page<PrintRequestDto> findByFilter(PrintRequestFilterVo filterVo, Pageable pageable) {
-        // at the time being, filter has only status code.
-        return mapPage(printRequestRepository.findByStatusCodeAndStatusCodeNot(filterVo.getStatusCode(),
-                EPrintRequestStatus.NEW.name(), pageable));
+        return mapPage(printRequestRepository.findAll(pageable));
     }
 
     @Transactional

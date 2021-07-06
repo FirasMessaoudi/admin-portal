@@ -20,7 +20,7 @@ import {NavigationService} from "@core/utilities/navigation.service";
   templateUrl: './card-details.component.html',
   styleUrls: ['./card-details.component.scss']
 })
-export class CardDetailsComponent implements OnInit, OnDestroy {
+export class CardDetailsComponent implements OnInit {
   cardId: number;
   card: ApplicantCard;
   url: any = 'assets/images/default-avatar.svg';
@@ -33,7 +33,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
   healthSpecialNeeds: Lookup[];
   maritalStatuses: Lookup[];
   languageNativeName = Language;
-
+  renderBackLink = false;
   constructor(private route: ActivatedRoute,
               private router: Router,
               private toastr: ToastService,
@@ -48,7 +48,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadLookups();
-    this.navigationService.showGoBackLink({renderGoBackLink: true, goBackURL: ''});
+    this.renderBackLink = this.navigationService.getHistory().length !== 1;
     combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
@@ -111,8 +111,8 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
     return this.authenticationService.hasAuthority(EAuthority.VIEW_CARD_DETAILS);
   }
 
-  ngOnDestroy() {
-    this.navigationService.showGoBackLink({renderGoBackLink: false, goBackURL: ''});
+  goBack() {
+    this.navigationService.back();
   }
 
   packageCaterings(): PackageCatering[] {

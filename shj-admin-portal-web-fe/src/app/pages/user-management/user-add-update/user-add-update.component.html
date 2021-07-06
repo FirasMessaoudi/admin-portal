@@ -1,3 +1,7 @@
+<a class="d-block button_back" href="javascript:void(0);" (click)="goBack()">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
 <div class="content__wrapper">
 
   <div class="title__Page">
@@ -6,7 +10,8 @@
     </h3>
   </div>
   <div class="content__section" *ngIf="!canSeeAddUpdateUser">
-    {{'header.welcome' | translate}} <span class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
   </div>
   <div class="content__section" *ngIf="canSeeAddUpdateUser">
     <form [formGroup]="userForm" (ngSubmit)="saveOrUpdate()" enctype="multipart/form-data">
@@ -167,7 +172,7 @@
               <label class="col-form-label">{{ "user-management.role" | translate }}<span class="text-danger px-1">*</span></label>
               <select formControlName="role" class="form-control custom-select {{f.role.errors && f.role.touched ? 'is-invalid' : ''}}"
                       required [class.text-danger]="f.role.value && !f.role.value.activated" (ngModelChange)="onMainRoleChange($event)"
-              [compareWith]="compareById">
+                      [compareWith]="compareById">
                 <option [ngValue]="null">{{"general.select_option" | translate}}</option>
                 <option *ngFor="let role of roles" [class.text-danger]="!role?.activated" [class.text-black-50]="role?.activated" [ngValue]="role">
                   {{ currentLanguage.startsWith("en") ? role.labelEn : role.labelAr }}
@@ -193,19 +198,19 @@
 
         </div>
 
-          <div class="col-md-3">
-            <div class="avatarBox">
-              <div class="avatar">
-                <img src="assets/images/space.png" [class.o-25]="!user?.id"
-                     [ngStyle]="{'background-image': 'url(\'' + (this.user.avatar ? 'data:image/jpeg;base64,'+this.user.avatar : url) + '\')'}" />
-              </div>
-              <label class="btn btn-secondary my-3" *ngIf="user?.id">
-                <input type="file" class="hidden" name="avatarFile" aria-describedby="inputGroupFileAddon01" (change)="loadAvatar($event);"/>
-                <a>{{'user-management.change_avatar' | translate}}</a>
-              </label>
-              <small class="text-black-50 my-3" *ngIf="!user?.id">{{"user-management.avatar-no-edit-text" | translate }}</small>
+        <div class="col-md-3">
+          <div class="avatarBox">
+            <div class="avatar">
+              <img src="assets/images/space.png" [class.o-25]="!user?.id"
+                   [ngStyle]="{'background-image': 'url(\'' + (this.user.avatar ? 'data:image/jpeg;base64,'+this.user.avatar : url) + '\')'}" />
             </div>
+            <label class="btn btn-secondary my-3" *ngIf="user?.id">
+              <input type="file" class="hidden" name="avatarFile" aria-describedby="inputGroupFileAddon01" (change)="loadAvatar($event);"/>
+              <a>{{'user-management.change_avatar' | translate}}</a>
+            </label>
+            <small class="text-black-50 my-3" *ngIf="!user?.id">{{"user-management.avatar-no-edit-text" | translate }}</small>
           </div>
+        </div>
 
       </div>
 
@@ -214,9 +219,7 @@
 
 
     <div class="content__footer__action">
-      <button type="button" [routerLink]="['/users/list']" class="btn btn-outline-secondary btn-w100 px-5 mr-3">
-        {{ "general.btn_cancel" | translate }}
-      </button>
+
       <button type="button" (click)="saveOrUpdate()" class="btn btn-outline-dcc-primary px-5 mr-3" [disabled]="userForm.invalid">
         {{ "general.btn_save" | translate }}
       </button>

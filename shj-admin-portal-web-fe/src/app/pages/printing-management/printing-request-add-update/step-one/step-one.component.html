@@ -1,3 +1,7 @@
+<a class="d-block button_back" href="javascript:void(0);" (click)="goBack()">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
 <div class="dashes flex-center-column my-5 p-5" *ngIf="addedCards.length === 0">
 
   <img class="my-5" src="assets/images/add-cards.jpg" alt='{{ "printing-management.new_request" | translate }}'>
@@ -63,7 +67,7 @@
 
 
     <div class="table-responsive my-4">
-      <div  [ngStyle]="{'visibility': isSelectAllClicked ? 'visible': 'hidden'}"class="d-flex align-items-center pb-3 px-4 border-bottom w-100">
+      <div [ngStyle]="{'visibility': isSelectAllClicked ? 'visible': 'hidden'}" class="d-flex align-items-center pb-3 px-4 border-bottom w-100">
         <div class="selectAll_label">
 
           <span>{{splitString('printing-management.cards_selected_on_the_current_page' | translate, ' X ')[0]}}</span>
@@ -87,50 +91,50 @@
       </div>
 
       <div class="table_scroll">
-      <table id="selectedApplicantsSearchResult" class="table table-striped table-hover">
-        <thead>
-        <tr>
-          <th scope="col">
-            <div class="custom-control custom-checkbox my-2">
-              <input name="selectAllCards" type="checkbox" class="custom-control-input" id="selectedApplicantCheck-01"
-                     [checked]="isAllChecked()"
-                     (change)="selectCardsInThePage($event)">
-              <label class="custom-control-label mx-3" for="selectedApplicantCheck-01"></label>
-            </div>
-          </th>
-          <th scope="col">{{'card-management.applicant_name' | translate}}</th>
-          <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-          <th scope="col">{{'printing-management.id_number' | translate}}</th>
-          <th scope="col">{{'card-management.passport_number' | translate}}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngIf="!page?.content || cards.length === 0" class="text-center">
-          <td colspan="10">
-            <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
-            <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
-          </td>
-        </tr>
-        <tr *ngFor="let card of cards">
-          <td scope="row">
-            <div class="custom-control custom-checkbox my-2">
-              <input type="checkbox" class="custom-control-input" id="applicantCheck-{{card.id}}"
-                     [checked]="isChecked(card)"
-                     (change)="selectOneCard($event, card.id)">
-              <label class="custom-control-label mx-3" for="applicantCheck-{{card.id}}"></label>
-            </div>
-          </td>
-          <td *ngIf="currentLanguage.startsWith('ar')">{{card?.applicantRitual?.applicant?.fullNameAr}}
-            <br>{{card?.applicantRitual?.applicant?.fullNameEn}}</td>
-          <td *ngIf="currentLanguage.startsWith('en')">{{card?.applicantRitual?.applicant?.fullNameEn}}
-            <br>{{card?.applicantRitual?.applicant?.fullNameAr}}</td>
+        <table id="selectedApplicantsSearchResult" class="table table-striped table-hover">
+          <thead>
+          <tr>
+            <th scope="col">
+              <div class="custom-control custom-checkbox my-2">
+                <input name="selectAllCards" type="checkbox" class="custom-control-input" id="selectedApplicantCheck-01"
+                       [checked]="isAllChecked()"
+                       (change)="selectCardsInThePage($event)">
+                <label class="custom-control-label mx-3" for="selectedApplicantCheck-01"></label>
+              </div>
+            </th>
+            <th scope="col">{{'card-management.applicant_name' | translate}}</th>
+            <th scope="col">{{'card-management.applicant_id' | translate}}</th>
+            <th scope="col">{{'printing-management.id_number' | translate}}</th>
+            <th scope="col">{{'card-management.passport_number' | translate}}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngIf="!page?.content || cards.length === 0" class="text-center">
+            <td colspan="10">
+              <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
+              <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+            </td>
+          </tr>
+          <tr *ngFor="let card of cards">
+            <td scope="row">
+              <div class="custom-control custom-checkbox my-2">
+                <input type="checkbox" class="custom-control-input" id="applicantCheck-{{card.id}}"
+                       [checked]="isChecked(card)"
+                       (change)="selectOneCard($event, card.id)">
+                <label class="custom-control-label mx-3" for="applicantCheck-{{card.id}}"></label>
+              </div>
+            </td>
+            <td *ngIf="currentLanguage.startsWith('ar')">{{card?.applicantRitual?.applicant?.fullNameAr}}
+              <br>{{card?.applicantRitual?.applicant?.fullNameEn}}</td>
+            <td *ngIf="currentLanguage.startsWith('en')">{{card?.applicantRitual?.applicant?.fullNameEn}}
+              <br>{{card?.applicantRitual?.applicant?.fullNameAr}}</td>
 
-          <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
-          <td>{{card?.applicantRitual?.applicant?.idNumber}}</td>
-          <td class="ltr">{{card?.applicantRitual?.applicant?.passportNumber}}</td>
-        </tr>
-        </tbody>
-      </table>
+            <td>{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
+            <td>{{card?.applicantRitual?.applicant?.idNumber}}</td>
+            <td class="ltr">{{card?.applicantRitual?.applicant?.passportNumber}}</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -161,6 +165,10 @@
             *ngIf="selectedCards?.length"
             (click)="addCards()">{{'printing-management.add_no_cards' | translate : {noCards: selectedCards.length} }}
     </button>
+  </div>
+  <!-- Loading spinner placeholder -->
+  <div *ngIf="isLoading || isSelectLoading" class="preloader" @fade>
+    <div></div><div></div><div></div>
   </div>
 </ng-template>
 

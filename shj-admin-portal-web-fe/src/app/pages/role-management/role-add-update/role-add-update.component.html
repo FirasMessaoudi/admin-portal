@@ -1,3 +1,7 @@
+<a class="d-block button_back" href="javascript:void(0);" (click)="goBack()">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="sectionTitle">{{'role-management.role_form' | translate }}
@@ -5,7 +9,8 @@
     </h3>
   </div>
   <div class="content__section" *ngIf="!canSeeAddUpdateRole">
-    {{'header.welcome' | translate}} <span class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
   </div>
   <div class="content__section" *ngIf="canSeeAddUpdateRole">
     <form [formGroup]="roleForm" (ngSubmit)="saveOrUpdateRole()">
@@ -63,18 +68,18 @@
                   </span>
                 </legend>
 
-                  <label ngbButtonLabel class="roleCheck mx-3" *ngIf="!roleAuthority.authority.parentId && (!roleAuthority.authority.children || !roleAuthority.authority.children.length)">
-                    <input ngbButton type="checkbox" class="d-none" [(ngModel)]="roleAuthority.selected" [ngModelOptions]="{standalone: true}">
-                    {{ currentLanguage.startsWith("en") ? roleAuthority.authority.labelEn : roleAuthority.authority.labelAr }}
-                  </label>
+                <label ngbButtonLabel class="roleCheck mx-3" *ngIf="!roleAuthority.authority.parentId && (!roleAuthority.authority.children || !roleAuthority.authority.children.length)">
+                  <input ngbButton type="checkbox" class="d-none" [(ngModel)]="roleAuthority.selected" [ngModelOptions]="{standalone: true}">
+                  {{ currentLanguage.startsWith("en") ? roleAuthority.authority.labelEn : roleAuthority.authority.labelAr }}
+                </label>
 
-                  <ng-container *ngFor="let childRoleAuthority of roleAuthorities" >
-                    <label ngbButtonLabel class="roleCheck mx-3" *ngIf="childRoleAuthority.authority.parentId === roleAuthority.authority.id">
-                      <input class="d-none"  ngbButton type="checkbox" [(ngModel)]="childRoleAuthority.selected" [ngModelOptions]="{standalone: true}">
-                        {{ currentLanguage.startsWith("en") ? childRoleAuthority.authority.labelEn : childRoleAuthority.authority.labelAr }}
-                    </label>
-                  </ng-container>
-                </fieldset>
+                <ng-container *ngFor="let childRoleAuthority of roleAuthorities" >
+                  <label ngbButtonLabel class="roleCheck mx-3" *ngIf="childRoleAuthority.authority.parentId === roleAuthority.authority.id">
+                    <input class="d-none" ngbButton type="checkbox" [(ngModel)]="childRoleAuthority.selected" [ngModelOptions]="{standalone: true}">
+                    {{ currentLanguage.startsWith("en") ? childRoleAuthority.authority.labelEn : childRoleAuthority.authority.labelAr }}
+                  </label>
+                </ng-container>
+              </fieldset>
 
             </ng-container>
           </ng-container>
@@ -86,9 +91,7 @@
 
 
     <div class="content__footer__action">
-      <button type="button" [routerLink]="['/roles/list']" class="btn btn-outline-secondary btn-w100 px-5 mr-3">
-        {{ "general.btn_cancel" | translate }}
-      </button>
+
       <button type="button" (click)="saveOrUpdateRole()" class="btn btn-outline-dcc-primary px-5 mr-3">
         {{ "general.btn_save" | translate }}
       </button>
