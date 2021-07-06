@@ -3,15 +3,14 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * The persistent class for the shc_print_request database table.
@@ -22,7 +21,8 @@ import java.util.List;
 @Entity
 @Table(name = "shc_print_request")
 @NamedQuery(name = "JpaPrintRequest.findAll", query = "SELECT j FROM JpaPrintRequest j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaPrintRequest implements Serializable {
 
@@ -39,13 +39,11 @@ public class JpaPrintRequest implements Serializable {
     @Column(name = "status_code", nullable = false)
     private String statusCode;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true, mappedBy = "printRequest")
-    private List<JpaPrintRequestCard> printRequestCards;
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, mappedBy = "printRequest")
+    private Set<JpaPrintRequestCard> printRequestCards;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true, mappedBy = "printRequest")
-    private List<JpaPrintRequestBatch> printRequestBatches;
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, mappedBy = "printRequest")
+    private Set<JpaPrintRequestBatch> printRequestBatches;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

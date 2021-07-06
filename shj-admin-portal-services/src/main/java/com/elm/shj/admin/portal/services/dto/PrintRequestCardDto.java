@@ -4,10 +4,7 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,7 +18,8 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class PrintRequestCardDto implements Serializable {
 
     private static final long serialVersionUID = -5235991770935109142L;

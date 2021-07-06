@@ -8,6 +8,7 @@ import {PrintRequest} from "@model/print-request.model";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
+import {PrintRequestLite} from "@model/print-request-card-lite.model";
 
 @Component({
   selector: 'app-printing-request-list',
@@ -18,7 +19,7 @@ export class PrintingRequestListComponent implements OnInit {
   public isSearchbarCollapsed= false;
   pageArray: Array<number>;
   page: Page;
-  printRequests: Array<PrintRequest>= [];
+  printRequests: Array<PrintRequestLite>= [];
   searchForm: FormGroup;
   printRequestStatuses: Lookup[];
   localizedPrintRequestStatuses: Lookup[];

@@ -13,4 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0.0
  */
 public interface PrintRequestCardRepository extends JpaRepository<JpaPrintRequestCard, Long> {
+    int countAllByPrintRequest_Id(long printRequestId);
 }
