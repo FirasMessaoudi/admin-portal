@@ -7,30 +7,29 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
- * Dto class for the print request domain.
+ * Dto class for the print request lite domain.
  *
  * @author Slim Ben Hadj
- * @since 1.0.0
+ * @since 1.1.0
  */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class PrintRequestDto implements Serializable {
+public class PrintRequestLiteDto implements Serializable {
 
-    private static final long serialVersionUID = -5860349238491983581L;
+    private static final long serialVersionUID = 6135830787465871921L;
 
     private long id;
     private String referenceNumber;
     private String statusCode;
-    private Set<PrintRequestCardDto> printRequestCards = new HashSet<>();
-    private Set<PrintRequestBatchDto> printRequestBatches = new HashSet<>();
     private Date creationDate;
+    private int cardsCount;
+    private int batchesCount;
     private Date updateDate;
     private Date confirmationDate;
+
 }

@@ -7,7 +7,9 @@ import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.Valid;
 import java.io.Serializable;
@@ -21,7 +23,8 @@ import java.util.Date;
  */
 @WithApplicant
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class ApplicantRitualDto implements Serializable {
 
     private static final long serialVersionUID = 8699536906254699723L;

@@ -4,8 +4,6 @@
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -15,15 +13,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0.0
  */
 public interface PrintRequestRepository extends JpaRepository<JpaPrintRequest, Long> {
-
-    Page<JpaPrintRequest> findByStatusCodeNot(String statusCode, Pageable pageable);
-
-    /**
-     * Find all print requests with a status code.
-     *
-     * @param statusCode
-     * @param pageable
-     * @return Page of print requests
-     */
-    Page<JpaPrintRequest> findByStatusCodeAndStatusCodeNot(String statusCode, String excludedStatusCode, Pageable pageable);
 }

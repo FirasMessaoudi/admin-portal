@@ -126,8 +126,8 @@
         <tr *ngFor="let request of printRequests">
           <td><a name="requestID" [routerLink]="['/print-requests/details', request.id]"
                  class="text-dcc-primary font-weight-bold">{{request.referenceNumber}}</a></td>
-          <td>{{request.printRequestBatches?.length}}</td>
-          <td class="ltr">{{request.printRequestCards?.length}}</td>
+          <td>{{request.batchesCount}}</td>
+          <td class="ltr">{{request.cardsCount}}</td>
           <td class="ltr">{{request.confirmationDate | dateFormat}}</td>
           <td class="ltr">
             {{request.statusCode ? lookupService().localizedLabel(printRequestStatuses, request.statusCode) : ""}}
