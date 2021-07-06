@@ -150,31 +150,31 @@ public class UserManagement {
 
             switch (action) {
                 case "Edit":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-edit']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-edit']//parent::a")).click();
                     isSelected = true;
                     break;
                 case "Deactivate":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-slash']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-slash']//parent::a")).click();
                     isSelected = true;
                     break;
                 case "Activate":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-check']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-check']//parent::a")).click();
                     isSelected = true;
                     break;
                 case "Delete":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-times']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-times']//parent::a")).click();
                     isSelected = true;
                     break;
                 case "View":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='eye']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='eye']//parent::a")).click();
                     isSelected = true;
                     break;
                 case "ResetPassword":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-lock']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-lock']//parent::a")).click();
                     isSelected = true;
                     break;
                 default:
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='eye']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='eye']//parent::a")).click();
             }
         }
 

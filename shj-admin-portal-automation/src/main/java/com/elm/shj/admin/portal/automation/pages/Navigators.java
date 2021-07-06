@@ -35,7 +35,7 @@ public class Navigators {
     @FindBy(xpath = "//a[@href='#/cards/list']")
     WebElement lnkManageCards;
 
-    @FindBy(xpath = "//app-user-list//button[@routerlink='/users/create']")
+    @FindBy(xpath = "//app-card-list//button[@id='addExceptionalCard']")
     WebElement btnAddNewCard;
 
     @FindBy(xpath = "//app-user-add-update//input[@formcontrolname='firstName']")
@@ -45,7 +45,7 @@ public class Navigators {
     @FindBy(xpath = "//a[@href='#/print-requests/list']")
     WebElement lnkManagePrinting;
 
-    @FindBy(id="addPrintingRequest")
+    @FindBy(id="createPrintingRequest")
     WebElement btnPrintingRequest;
 
 
