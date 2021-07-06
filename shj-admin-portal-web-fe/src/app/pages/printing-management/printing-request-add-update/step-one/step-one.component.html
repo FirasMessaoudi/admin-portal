@@ -110,11 +110,13 @@
           </thead>
           <tbody>
           <tr *ngIf="loading()" class="text-center">
-            <div class="preloader" @fade>
-              <div></div><div></div><div></div>
-            </div>
+            <td colspan="10" style="height: 200px;">
+             <div class="preloader inner_page" @fade>
+               <div></div><div></div><div></div>
+             </div>
+            </td>
           </tr>
-          <tr *ngIf="!page?.content || cards.length === 0 && !loading()" class="text-center">
+          <tr *ngIf="!page?.content  && !loading()  || cards.length === 0 && !loading()" class="text-center">
             <td colspan="10">
               <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
               <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
