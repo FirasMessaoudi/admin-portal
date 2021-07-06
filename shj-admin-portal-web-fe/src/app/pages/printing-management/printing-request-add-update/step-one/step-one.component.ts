@@ -267,4 +267,8 @@ export class StepOneComponent implements OnInit {
   splitString(str: string, separator: string): string[] {
     return str.split(separator);
   }
+
+  loading(): boolean {
+    return this.isLoading || this.isSelectLoading;
+  }
 }
