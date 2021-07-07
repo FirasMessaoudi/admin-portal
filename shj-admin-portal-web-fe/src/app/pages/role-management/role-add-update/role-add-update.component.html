@@ -41,10 +41,10 @@
           <label class="col-form-label">{{'role-management.role_status' | translate}}<span class="text-danger px-1">*</span></label>
 
           <div class="form-control p-0 border-0 btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="activated">
-            <label ngbButtonLabel class="btn" [class.btn-outline-secondary]="!roleForm.value['activated']" [class.btn-success]="roleForm.value['activated']">
+            <label ngbButtonLabel class="btn" [class.btn-select]="!roleForm.value['activated']" [class.btn-success]="roleForm.value['activated']">
               <input ngbButton type="radio" [value]="true"> {{'user-management.activated' | translate}}
             </label>
-            <label ngbButtonLabel class="btn" [class.btn-outline-secondary]="roleForm.value['activated']" [class.btn-danger]="!roleForm.value['activated']">
+            <label ngbButtonLabel class="btn" [class.btn-select]="roleForm.value['activated']" [class.btn-danger]="!roleForm.value['activated']">
               <input ngbButton type="radio" [value]="false"> {{'user-management.not_activated' | translate}}
             </label>
           </div>

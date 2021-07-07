@@ -174,3 +174,15 @@ span.notif {
   }
   top: 55px;
 }
+
+body a{
+  &:hover{
+  color:rgba(46, 95, 43, 0.999);
+  }
+}
+
+body .btn-select{
+  background: #f6f7f5;
+  color: #3b7937;
+  border: 0;
+}
