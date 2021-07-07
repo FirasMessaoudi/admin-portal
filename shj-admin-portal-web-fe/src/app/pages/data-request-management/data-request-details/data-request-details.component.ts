@@ -16,6 +16,7 @@ export class DataRequestDetailsComponent implements OnInit {
 
   dataRequestId: number;
   dataRequest: DataRequest;
+  isLoading: boolean;
 
   constructor(private i18nService: I18nService,
               private activeRoute: ActivatedRoute,
@@ -31,11 +32,14 @@ export class DataRequestDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.dataRequestId = this.activeRoute.snapshot.params.id;
     if (this.dataRequestId) {
+      this.isLoading = true;
       // load data request details
       this.dataRequestService.find(this.dataRequestId).subscribe(data => {
         if (data && data.id) {
+          this.isLoading = false;
           this.dataRequest = data;
         } else {
+          this.isLoading = false;
           this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.dataRequestId}),
             this.translate.instant('general.dialog_error_title'));
           this.goToList();

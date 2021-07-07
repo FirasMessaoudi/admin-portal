@@ -11,7 +11,7 @@
     class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
   </div>
 
-  <div class="content__section" *ngIf="canSeeDataRequestDetails">
+  <div class="content__section" *ngIf="canSeeDataRequestDetails && !isLoading">
     <div class="cardBox row row-cols-1 row-cols-md-2 row-cols-lg-6">
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'data-request-management.transaction_number' | translate}}</label>
@@ -19,11 +19,13 @@
       </div>
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'data-request-management.segment' | translate}}</label>
-        <span class="form-control-plaintext ">{{currentLanguage.startsWith("en") ? dataRequest?.dataSegment.labelEn : dataRequest?.dataSegment.labelAr}}</span>
+        <span
+          class="form-control-plaintext ">{{currentLanguage.startsWith("en") ? dataRequest?.dataSegment.labelEn : dataRequest?.dataSegment.labelAr}}</span>
       </div>
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'data-request-management.channel' | translate}}</label>
-        <span class="form-control-plaintext ">{{dataRequest?.channel? ('data-request-management.channel_'+dataRequest?.channel | translate) : ''}}</span>
+        <span
+          class="form-control-plaintext ">{{dataRequest?.channel ? ('data-request-management.channel_' + dataRequest?.channel | translate) : ''}}</span>
       </div>
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'data-request-management.request_date' | translate}}</label>
@@ -31,7 +33,8 @@
       </div>
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'data-request-management.request_status' | translate}}</label>
-        <span class="form-control-plaintext "><span class="status mr-1 {{dataRequestService.buildStatusClass(dataRequest?.status)}}"></span>{{currentLanguage.startsWith("en") ? dataRequest?.status.labelEn : dataRequest?.status.labelAr}}</span>
+        <span class="form-control-plaintext "><span
+          class="status mr-1 {{dataRequestService.buildStatusClass(dataRequest?.status)}}"></span>{{currentLanguage.startsWith("en") ? dataRequest?.status.labelEn : dataRequest?.status.labelAr}}</span>
       </div>
     </div>
 
@@ -47,7 +50,8 @@
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'data-request-management.btn_download_original_file' | translate}}</label>
         <span class="form-control-plaintext ">
-          <a class="action mx-2" href="javascript:void(0)" (click)="downloadOriginalFile(dataRequest.id)" ngbTooltip="{{'data-request-management.btn_download_original_file' | translate}}">
+          <a class="action mx-2" href="javascript:void(0)" (click)="downloadOriginalFile(dataRequest.id)"
+             ngbTooltip="{{'data-request-management.btn_download_original_file' | translate}}">
             <svg-icon styleClass="fa-w-20 h5" icon="cloud-download"></svg-icon>
           </a>
         </span>
@@ -55,14 +59,20 @@
       <div class="form-group col mb-lg-0" *ngIf="dataRequest.status.id === 5">
         <label class="col-form-label">{{'data-request-management.btn_download_errors_file' | translate}}</label>
         <span class="form-control-plaintext ">
-          <a class="action mx-2" href="javascript:void(0)" (click)="downloadErrorsFile(dataRequest.id)" ngbTooltip="{{'data-request-management.btn_download_errors_file' | translate}}">
+          <a class="action mx-2" href="javascript:void(0)" (click)="downloadErrorsFile(dataRequest.id)"
+             ngbTooltip="{{'data-request-management.btn_download_errors_file' | translate}}">
           <svg-icon styleClass="fa-w-16 h5 text-danger" icon="exclamation-circle"></svg-icon>
         </a>
         </span>
       </div>
     </div>
+  </div>
 
-
+  <!-- Loading spinner placeholder -->
+  <div *ngIf="isLoading" class="preloader">
+    <div></div>
+    <div></div>
+    <div></div>
   </div>
 
 </div>
