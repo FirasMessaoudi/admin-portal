@@ -4,7 +4,7 @@
   }
 }
 
-.selectAll_label span{
+.selectAll_label span {
   line-height: 1.72;
   padding-top: 0.43rem;
   padding-bottom: 0.43rem;
@@ -12,3 +12,13 @@
 }
 
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

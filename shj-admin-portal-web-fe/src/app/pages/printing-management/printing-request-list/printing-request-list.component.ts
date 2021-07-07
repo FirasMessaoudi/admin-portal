@@ -16,7 +16,7 @@ import {PrintRequestLite} from "@model/print-request-card-lite.model";
   styleUrls: ['./printing-request-list.component.scss']
 })
 export class PrintingRequestListComponent implements OnInit {
-  public isSearchbarCollapsed= false;
+  public isSearchbarCollapsed = true;
   pageArray: Array<number>;
   page: Page;
   printRequests: Array<PrintRequestLite>= [];

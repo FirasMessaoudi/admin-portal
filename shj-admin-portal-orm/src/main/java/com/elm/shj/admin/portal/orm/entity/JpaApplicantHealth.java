@@ -4,7 +4,9 @@
 package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -23,7 +25,8 @@ import java.util.List;
 @Entity
 @Table(name = "shc_applicant_health")
 @NamedQuery(name = "JpaApplicantHealth.findAll", query = "SELECT j FROM JpaApplicantHealth j")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 public class JpaApplicantHealth implements Serializable {
 
