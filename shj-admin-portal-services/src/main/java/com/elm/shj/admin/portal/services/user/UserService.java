@@ -12,14 +12,12 @@ import com.elm.shj.admin.portal.services.dto.RoleDto;
 import com.elm.shj.admin.portal.services.dto.UserDto;
 import com.elm.shj.admin.portal.services.dto.UserRoleDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
-import com.elm.shj.admin.portal.services.role.RoleService;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -77,7 +75,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
      * @return the founded user or empty structure
      */
     public Optional<UserDto> findByNin(long nin) {
-        JpaUser user = userRepository.findByNinAndDeletedFalseAndActivatedTrueAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(nin);
+        JpaUser user = userRepository.findByNinAndDeletedFalseAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(nin);
         return (user != null) ? Optional.of(getMapper().fromEntity(user, mappingContext)) : Optional.empty();
     }
 

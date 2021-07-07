@@ -13,17 +13,27 @@
 </div>
 
 
-<div name="printingBatches" class="table-responsive my-4">
-  <table id="selectedApplicantsCards" class="table table-striped table-hover">
-    <thead>
-    <tr>
-      <th scope="col">{{'card-management.applicant_name' | translate}}</th>
-      <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-      <th scope="col">{{'printing-management.id_number' | translate}}</th>
-      <th scope="col">{{'card-management.passport_number' | translate}}</th>
-    </tr>
-    </thead>
-    <ng-template [ngIf]="true" *ngFor="let requestBatch of printRequest?.printRequestBatches, let i=index">
+<div name="printingBatches" class="table-responsive parent_dev my-4">
+  <div class="table_scroll">
+    <table id="selectedApplicantsCards" class="table table-striped table-hover">
+      <thead>
+      <tr>
+        <th scope="col">{{'card-management.applicant_name' | translate}}</th>
+        <th scope="col">{{'card-management.applicant_id' | translate}}</th>
+        <th scope="col">{{'printing-management.id_number' | translate}}</th>
+        <th scope="col">{{'card-management.passport_number' | translate}}</th>
+      </tr>
+      </thead>
+      <tr *ngIf="isLoading" class="text-center">
+        <td colspan="10" style="height: 200px;">
+          <div class="preloader inner_page">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </td>
+      </tr>
+      <ng-template [ngIf]="!isLoading" *ngFor="let requestBatch of printRequest?.printRequestBatches, let i=index">
       <th style="font-size: larger">
         {{'printing-management.batch_no' | translate}}
         <span class="packageNo">{{i + 1}}</span> {{'printing-management.contains' | translate}}
@@ -59,7 +69,8 @@
         <td class="ltr">{{batchCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
       </tr>
       </tbody>
-    </ng-template>
-  </table>
+      </ng-template>
+    </table>
+  </div>
 </div>
 

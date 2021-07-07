@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {I18nService} from "@dcc-commons-ng/services";
 import {AuthenticationService} from "@core/services";
 import {EAuthority, Page} from "@shared/model";
@@ -8,7 +8,6 @@ import {CardService} from "@core/services/card/card.service";
 import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
-import {ApplicantCardSearchCriteria} from "@model/applicant-card-search-criteria.model";
 import {NavigationService} from "@core/utilities/navigation.service";
 
 @Component({
@@ -16,7 +15,7 @@ import {NavigationService} from "@core/utilities/navigation.service";
   templateUrl: './card-list.component.html',
   styleUrls: ['./card-list.component.scss']
 })
-export class CardListComponent implements OnInit {
+export class CardListComponent implements OnInit, OnDestroy {
   public isSearchbarCollapsed = false;
   cards: Array<ApplicantCard>;
   pageArray: Array<number>;
@@ -38,13 +37,10 @@ export class CardListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.initForm();
     this.loadLookups();
     this.masterSelected = false;
     this.loadPage(0);
-    // TODO: read it from authentication
-
   }
 
   loadLookups() {
@@ -105,8 +101,6 @@ export class CardListComponent implements OnInit {
   in applicant card management page
 */
   search(): void {
-
-
     this.searchSubscription = this.cardService.list(0, this.searchForm.value).subscribe(data => {
       this.cards = [];
       this.pageArray = [];
@@ -116,10 +110,6 @@ export class CardListComponent implements OnInit {
         this.cards = this.page.content;
       }
     });
-  }
-
-  cancelSearch() {
-    this.initForm();
   }
 
   loadPage(page: number) {

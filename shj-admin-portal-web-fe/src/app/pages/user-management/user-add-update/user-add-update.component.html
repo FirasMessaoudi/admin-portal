@@ -111,7 +111,7 @@
               <label class="col-form-label">{{'user-management.gender' | translate}}<span class="text-danger px-1">*</span></label>
 
               <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
-                <label ngbButtonLabel class="btn" [class.btn-primary]="userForm.value['gender'] === 'M'">
+                <label ngbButtonLabel class="btn" [class.btn-dcc-primary]="userForm.value['gender'] === 'M'">
                   <input ngbButton type="radio" formControlName="gender" [value]="'M'"> {{'user-management.male' | translate}}
                 </label>
                 <label ngbButtonLabel class="btn" [class.btn-dcc-primary]="userForm.value['gender'] === 'F'">
@@ -130,7 +130,7 @@
               <label class="col-form-label">{{'user-management.account_status' | translate}}<span class="text-danger px-1">*</span></label>
 
               <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioActivated" formControlName="activated">
-                <label ngbButtonLabel class="btn" [class.btn-success]="userForm.value['activated']">
+                <label ngbButtonLabel class="btn" [class.btn-dcc-primary]="userForm.value['activated']">
                   <input ngbButton type="radio" [value]="true"> {{'user-management.activated' | translate}}
                 </label>
                 <label ngbButtonLabel class="btn" [class.btn-danger]="!userForm.value['activated']">

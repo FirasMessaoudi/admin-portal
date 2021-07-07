@@ -11,7 +11,8 @@
       </ng-template>
       <div class="section">
         <app-step-one (onDeleteAllCards)="renderNxtButton=false" (onAddCards)="setAddedCards($event)"
-                      (onSetPrintRequest)="setPrintRequest($event)"></app-step-one>
+                      (onSetPrintRequest)="setPrintRequest($event)"
+                      (onChangeLoading)="setLoading($event)"></app-step-one>
       </div>
       <div class="bg-lighter mx-30 p-4 text-center">
         <button name="btnNext" type="button" *ngIf="renderNxtButton" awNextStep (click)="saveStepOne()"
@@ -24,11 +25,16 @@
         <span>{{'printing-management.create_batch' | translate}}</span>
       </ng-template>
       <div class="section">
-        <app-step-two (onSelectBatchTypes)="setSelectedBatchTypes($event)" (onSetPrintRequest)="setPrintRequest($event)" [printRequest]="printRequest"></app-step-two>
+        <app-step-two (onSelectBatchTypes)="setSelectedBatchTypes($event)" (onSetPrintRequest)="setPrintRequest($event)"
+                      (onChangeLoading)="setLoading($event)" [printRequest]="printRequest"
+                      [isLoading]="isLoading"></app-step-two>
       </div>
       <div class="bg-lighter mx-30 p-4 text-center">
-        <button name="btnPrevious" type="button" class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3" awPreviousStep>{{'general.btn_previous' | translate}}</button>
-        <button name="btnNext" type="button" awNextStep (click)="saveStepTwo()" [disabled]="!printRequest" class="btn btn-dcc-primary rounded-22 px-5 mr-3" translate>general.btn_next</button>
+        <button name="btnPrevious" type="button" class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3"
+                awPreviousStep>{{'general.btn_previous' | translate}}</button>
+        <button name="btnNext" type="button" awNextStep (click)="saveStepTwo()" [disabled]="!printRequest"
+                class="btn btn-dcc-primary rounded-22 px-5 mr-3" translate>general.btn_next
+        </button>
       </div>
     </aw-wizard-step>
     <aw-wizard-step name="confirmRequest" [navigationSymbol]="{ symbol: '3' }">
@@ -36,17 +42,17 @@
         <span>{{'printing-management.confirm_request' | translate}}</span>
       </ng-template>
       <div class="section">
-        <app-step-three [printRequest]="printRequest" (onChangeLoading)="setLoading($event)"></app-step-three>
+        <app-step-three [printRequest]="printRequest" [isLoading]="isLoading"
+                        (onChangeLoading)="setLoading($event)"></app-step-three>
       </div>
       <div class="bg-lighter mx-30 p-4 text-center">
 
-      <button name="btnPrevious" type="button" [disabled]="isLoading" class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3" awPreviousStep>{{'general.btn_previous' | translate}}</button>
-        <button name="btnNext" type="button" [disabled]="isLoading || printRequest?.printRequestBatches?.length === 0" (click)="confirm()" class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'printing-management.btn_confirm_request' | translate}}</button>
-      </div>
-
-      <!-- Loading spinner placeholder -->
-      <div *ngIf="isLoading" class="preloader" @fade>
-        <div></div><div></div><div></div>
+        <button name="btnPrevious" type="button" [disabled]="isLoading"
+                class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3"
+                awPreviousStep>{{'general.btn_previous' | translate}}</button>
+        <button name="btnNext" type="button" [disabled]="isLoading || printRequest?.printRequestBatches?.length === 0"
+                (click)="confirm()"
+                class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'printing-management.btn_confirm_request' | translate}}</button>
       </div>
     </aw-wizard-step>
   </aw-wizard>

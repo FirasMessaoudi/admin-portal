@@ -392,7 +392,7 @@ create table shc_portal.shc_applicant
     full_name_ar            NVARCHAR(150) NULL,
     full_name_en            VARCHAR(150) NULL,
     full_name_origin        NVARCHAR(150) NULL,
-    marital_status_code     VARCHAR(20)     NOT NULL,
+    marital_status_code     VARCHAR(20) NULL,
     photo                   varchar(max
 ) NULL,
     biometric_data_finger varchar(max) NULL,

@@ -27,6 +27,9 @@ export class StepThreeComponent implements OnInit {
   @Input()
   printRequest: PrintRequest;
 
+  @Input()
+  isLoading: boolean;
+
   @Output()
   public onChangeLoading: EventEmitter<any> = new EventEmitter<any>();
 
