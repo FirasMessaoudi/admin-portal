@@ -9,6 +9,7 @@ import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.DataRequestDto;
 import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
+import com.elm.shj.admin.portal.web.security.otp.OtpToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.Valid;
 import java.util.Objects;
 
@@ -38,6 +40,7 @@ import java.util.Objects;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DataRequestManagementController {
 
+    private static final int EMPTY_FILE_UPLOADED_RESPONSE_CODE = 560;
     private final DataRequestService dataRequestService;
     private final DataSegmentService dataSegmentService;
 
@@ -99,7 +102,7 @@ public class DataRequestManagementController {
      * Downloads a template for a specific segment
      *
      * @param dataRequestId data request Id
-     * @param fileType file type to download
+     * @param fileType      file type to download
      * @return the file for the given data request and file type
      */
     @GetMapping("/{dataRequestId}/file/{fileType}")
@@ -135,11 +138,18 @@ public class DataRequestManagementController {
      */
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('" + AuthorityConstants.CREATE_DATA_REQUEST + "')")
-    public DataRequestDto create(@RequestPart("request") @Valid DataRequestDto dataRequest,
-                                 @RequestPart("file") MultipartFile file) throws Exception {
+    public ResponseEntity<DataRequestDto> create(@RequestPart("request") @Valid DataRequestDto dataRequest,
+                                                 @RequestPart("file") MultipartFile file) throws Exception {
         log.info("Creating data request for segment#{}", dataRequest.getDataSegment().getId());
-        dataRequest.setItemCount(dataRequestService.readItemsCount(file));
-        return dataRequestService.save(dataRequest, file);
+
+        if (dataRequestService.readItemsCount(file) == 0) {
+            return ResponseEntity.status(EMPTY_FILE_UPLOADED_RESPONSE_CODE).body(null);
+
+        } else {
+            dataRequest.setItemCount(dataRequestService.readItemsCount(file));
+            return ResponseEntity.ok(dataRequestService.save(dataRequest, file));
+        }
+
     }
 
     /**
