@@ -16,7 +16,7 @@ import {NavigationService} from "@core/utilities/navigation.service";
   styleUrls: ['./card-list.component.scss']
 })
 export class CardListComponent implements OnInit, OnDestroy {
-  public isSearchbarCollapsed = false;
+  public isSearchbarCollapsed = true;
   cards: Array<ApplicantCard>;
   pageArray: Array<number>;
   page: Page;

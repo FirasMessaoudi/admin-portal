@@ -44,3 +44,29 @@
 [dir='rtl'] .ngb-dp-arrow {
   max-width: 25px;
 }
+
+
+.ngb-dp-weekday{
+  color: #666!important;
+}
+.ngb-dp-week  .btn-light.bg-primary {
+  background-color: $dcc-primary !important;
+}
+
+
+.multiselect-item-checkbox input[type=checkbox]:checked
++ div:before {
+
+  background: $dcc-primary !important;
+}
+
+ .multiselect-item-checkbox input[type=checkbox] + div:before {
+   color: $dcc-primary !important;
+   border: 2px solid $dcc-primary !important;
+ }
+
+
+.multiselect-dropdown .dropdown-btn .selected-item {
+  border: 1px solid $dcc-primary !important;
+
+  background:$dcc-primary !important;}

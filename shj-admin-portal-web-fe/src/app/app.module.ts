@@ -1,4 +1,4 @@
-import {BrowserModule} from '@angular/platform-browser';
+import {BrowserModule, Title} from '@angular/platform-browser';
 import {Injector, NgModule} from '@angular/core';
 
 import {CoreModule} from '@core/core.module';
@@ -8,7 +8,6 @@ import {AppComponent} from './app.component';
 import {environment} from 'environments/environment';
 import {SharedModule} from "@shared/shared.module";
 import { PrintingManagementModule } from './pages/printing-management/printing-management.module';
-
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,7 +20,7 @@ import { PrintingManagementModule } from './pages/printing-management/printing-m
     PrintingManagementModule
   ],
   exports: [],
-  providers: [],
+  providers: [Title],
   bootstrap: [AppComponent]
 })
 export class AppModule {

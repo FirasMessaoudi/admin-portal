@@ -1,0 +1,26 @@
+.rtl,
+[dir="rtl"]{
+
+  .multiselect-dropdown .dropdown-btn,
+  .dropdown-list li{
+    text-align: right !important;
+  }
+
+  .multiselect-dropdown .dropdown-btn .dropdown-multiselect__caret{
+    left: 1px !important;
+    right: auto !important;
+  }
+  .multiselect-item-checkbox input[type=checkbox] + div:before{
+    right: 0 !important;
+  }
+  .multiselect-item-checkbox  input[type=checkbox] + div{
+    padding-right: 2rem !important;
+    padding-left: 0 !important;
+  }
+
+  .multiselect-item-checkbox  input[type=checkbox] + div:after{
+    right: 4px !important;
+    left: auto !important;
+  }
+
+}
