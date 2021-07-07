@@ -8,6 +8,8 @@ import {ReCaptcha2Component, ReCaptchaV3Service} from "ngx-captcha";
 import {environment} from "@env/environment";
 import {DccValidators, IdType} from "@shared/validators";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -32,7 +34,9 @@ export class LoginComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private reCaptchaV3Service: ReCaptchaV3Service,
-              private authenticationService: AuthenticationService
+              private authenticationService: AuthenticationService,
+              private titleService: Title,
+              private translate: TranslateService
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.isAuthenticated()) {
@@ -48,6 +52,11 @@ export class LoginComponent implements OnInit {
 
   setLanguage(language: string) {
     this.i18nService.language = language;
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.translate.get('general.app_title').subscribe((res: string) => {
+        this.titleService.setTitle(res);
+      });
+    });
   }
 
   ngOnInit() {
@@ -59,6 +68,8 @@ export class LoginComponent implements OnInit {
 
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.titleService.setTitle(this.translate.instant('general.app_title'));
+
   }
 
   // convenience getter for easy access to form fields
