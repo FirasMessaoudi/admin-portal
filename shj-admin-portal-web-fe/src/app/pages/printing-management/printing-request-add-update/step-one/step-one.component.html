@@ -109,7 +109,14 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngIf="!page?.content || cards.length === 0" class="text-center">
+          <tr *ngIf="loading()" class="text-center">
+            <td colspan="10" style="height: 200px;">
+             <div class="preloader inner_page" @fade>
+               <div></div><div></div><div></div>
+             </div>
+            </td>
+          </tr>
+          <tr *ngIf="!page?.content  && !loading()  || cards.length === 0 && !loading()" class="text-center">
             <td colspan="10">
               <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
               <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
@@ -165,10 +172,6 @@
             *ngIf="selectedCards?.length"
             (click)="addCards()">{{'printing-management.add_no_cards' | translate : {noCards: selectedCards.length} }}
     </button>
-  </div>
-  <!-- Loading spinner placeholder -->
-  <div *ngIf="isLoading || isSelectLoading" class="preloader" @fade>
-    <div></div><div></div><div></div>
   </div>
 </ng-template>
 

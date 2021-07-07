@@ -43,6 +43,11 @@
       <button name="btnPrevious" type="button" [disabled]="isLoading" class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3" awPreviousStep>{{'general.btn_previous' | translate}}</button>
         <button name="btnNext" type="button" [disabled]="isLoading || printRequest?.printRequestBatches?.length === 0" (click)="confirm()" class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'printing-management.btn_confirm_request' | translate}}</button>
       </div>
+
+      <!-- Loading spinner placeholder -->
+      <div *ngIf="isLoading" class="preloader" @fade>
+        <div></div><div></div><div></div>
+      </div>
     </aw-wizard-step>
   </aw-wizard>
 </div>

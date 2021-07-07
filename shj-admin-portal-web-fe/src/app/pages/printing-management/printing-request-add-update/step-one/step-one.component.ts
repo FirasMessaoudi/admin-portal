@@ -13,11 +13,21 @@ import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
 import {I18nService} from "@dcc-commons-ng/services";
 import {NavigationService} from "@core/utilities/navigation.service";
+import {animate, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-step-one',
   templateUrl: './step-one.component.html',
-  styleUrls: ['./step-one.component.scss']
+  styleUrls: ['./step-one.component.scss'],
+  animations: [
+    trigger('fade', [
+      transition(':leave', [
+        animate('300ms ease-out',
+          style({opacity: 0})
+        )]
+      )
+    ])
+  ]
 })
 export class StepOneComponent implements OnInit {
   closeResult = '';
@@ -256,5 +266,9 @@ export class StepOneComponent implements OnInit {
 
   splitString(str: string, separator: string): string[] {
     return str.split(separator);
+  }
+
+  loading(): boolean {
+    return this.isLoading || this.isSelectLoading;
   }
 }
