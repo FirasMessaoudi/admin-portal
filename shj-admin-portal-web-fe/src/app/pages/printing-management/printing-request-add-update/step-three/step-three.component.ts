@@ -20,6 +20,7 @@ import {EAuthority} from "@shared/model";
 })
 export class StepThreeComponent implements OnInit {
 
+  public isCollapsed: boolean[] = [];
   batchTypes: PrintBatchType[];
   countries: CountryLookup[];
   batchType = BatchType;
