@@ -24,7 +24,16 @@
         <th scope="col">{{'card-management.passport_number' | translate}}</th>
       </tr>
       </thead>
-      <ng-template [ngIf]="true" *ngFor="let requestBatch of printRequest?.printRequestBatches, let i=index">
+      <tr *ngIf="isLoading" class="text-center">
+        <td colspan="10" style="height: 200px;">
+          <div class="preloader inner_page">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </td>
+      </tr>
+      <ng-template [ngIf]="!isLoading" *ngFor="let requestBatch of printRequest?.printRequestBatches, let i=index">
       <th style="font-size: larger">
         {{'printing-management.batch_no' | translate}}
         <span class="packageNo">{{i + 1}}</span> {{'printing-management.contains' | translate}}

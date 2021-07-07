@@ -1,24 +1,14 @@
-import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {ApplicantCard} from "@model/card.model";
 import {PrintRequest} from "@model/print-request.model";
 import {StepOneComponent} from "@pages/printing-management/printing-request-add-update/step-one/step-one.component";
 import {StepTwoComponent} from "@pages/printing-management/printing-request-add-update/step-two/step-two.component";
 import {StepThreeComponent} from "@pages/printing-management/printing-request-add-update/step-three/step-three.component";
-import {animate, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-printing-request-add-update',
   templateUrl: './printing-request-add-update.component.html',
-  styleUrls: ['./printing-request-add-update.component.scss'],
-  animations: [
-    trigger('fade', [
-      transition(':leave', [
-        animate('300ms ease-out',
-          style({opacity: 0})
-        )]
-      )
-    ])
-  ]
+  styleUrls: ['./printing-request-add-update.component.scss']
 })
 export class PrintingRequestAddUpdateComponent implements OnInit {
 

@@ -17,6 +17,9 @@ export class StepTwoComponent implements OnInit {
   @Input()
   printRequest: PrintRequest;
 
+  @Input()
+  isLoading: boolean;
+
   batchTypes: PrintBatchType[];
   selectedBatchTypes: string[] = [];
   currentPage: number = 1;
@@ -27,6 +30,9 @@ export class StepTwoComponent implements OnInit {
 
   @Output()
   public onSelectBatchTypes: EventEmitter<any[]> = new EventEmitter<any[]>();
+
+  @Output()
+  public onChangeLoading: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private printService: PrintService,
               private i18nService: I18nService,
@@ -65,6 +71,7 @@ export class StepTwoComponent implements OnInit {
   }
 
   batch() {
+    this.onChangeLoading.emit(true);
     this.printService.batch(this.printRequest, this.selectedBatchTypes).subscribe(
       result => {
         if (result.hasOwnProperty("errors") && result.errors) {
@@ -72,6 +79,7 @@ export class StepTwoComponent implements OnInit {
           this.toastr.warning(this.translate.instant("printing-management.dialog_confirm_request_error_text"), this.translate.instant("general.dialog_error_title"));
         } else {
           this.onSetPrintRequest.emit(result);
+          this.onChangeLoading.emit(false);
           this.printRequestStorage.storage = result;
         }
       }
