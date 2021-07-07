@@ -185,11 +185,11 @@
                 <div *ngIf="f.role.errors.invalid" translate>{{f.role.errors['invalid']}}</div>
               </div>
             </div>
-<!--[disabled]="!f.role.value"-->
+
             <div class="form-group col">
               <label class="col-form-label">{{"user-management.additional_role" | translate }}</label>
               <ng-multiselect-dropdown formControlName="additionalRoles" [placeholder]="'general.select_option' | translate"
-                                       [settings]="dropdownSettings" [data]="additionalRoles" >
+                                       [settings]="dropdownSettings" [data]="additionalRoles" [disabled]="!f.role.value">
               </ng-multiselect-dropdown>
             </div>
 
