@@ -13,21 +13,11 @@ import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
 import {I18nService} from "@dcc-commons-ng/services";
 import {NavigationService} from "@core/utilities/navigation.service";
-import {animate, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-step-one',
   templateUrl: './step-one.component.html',
-  styleUrls: ['./step-one.component.scss'],
-  animations: [
-    trigger('fade', [
-      transition(':leave', [
-        animate('300ms ease-out',
-          style({opacity: 0})
-        )]
-      )
-    ])
-  ]
+  styleUrls: ['./step-one.component.scss']
 })
 export class StepOneComponent implements OnInit {
   closeResult = '';
@@ -54,6 +44,9 @@ export class StepOneComponent implements OnInit {
 
   @Output()
   public onDeleteAllCards: EventEmitter<any> = new EventEmitter<any>();
+
+  @Output()
+  public onChangeLoading: EventEmitter<any> = new EventEmitter<any>();
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
@@ -199,12 +192,14 @@ export class StepOneComponent implements OnInit {
 
 
   create() {
+    this.onChangeLoading.emit(true);
     this.printService.preapre(this.addedCards.map(card => card.id)).subscribe(
       result => {
         if (result.hasOwnProperty("errors") && result.errors) {
           console.log("Error");
           this.toastr.warning(this.translate.instant("printing-management.dialog_confirm_request_error_text"), this.translate.instant("general.dialog_error_title"));
         } else {
+          this.onChangeLoading.emit(false);
           this.onSetPrintRequest.emit(result);
         }
       }

@@ -40,12 +40,23 @@
         <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
       </td>
     </tr>
+    <tr *ngIf="isLoading" class="text-center">
+      <td colspan="10" style="height: 200px;">
+        <div class="preloader inner_page">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </td>
+    </tr>
+    <ng-container *ngIf="!isLoading">
     <tr *ngFor="let printRequestCard of printRequest?.printRequestCards | slice: (currentPage * pageSize) - pageSize :currentPage * pageSize">
       <td>{{printRequestCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{printRequestCard?.card?.applicantRitual?.applicant?.fullNameEn}}</td>
       <td>{{printRequestCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
       <td>{{printRequestCard?.card?.applicantRitual?.applicant?.idNumber}}</td>
       <td class="ltr">{{printRequestCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
     </tr>
+    </ng-container>
     </tbody>
   </table>
 </div>
