@@ -27,7 +27,7 @@ public interface UserRepository extends JpaRepository<JpaUser, Long> {
 
     Page<JpaUser> findDistinctByDeletedFalseAndIdNotAndUserRolesRoleIdNot(Pageable pageable, long userId, long roleId);
 
-    JpaUser findByNinAndDeletedFalseAndActivatedTrueAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(long nin);
+    JpaUser findByNinAndDeletedFalseAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(long nin);
 
     @Modifying
     @Query("update JpaUser user set user.deleted = true, user.actionDate = CURRENT_TIMESTAMP where user.id =:userId")

@@ -84,7 +84,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     QuicklinkModule,
-    RouterModule.forRoot(routes, {preloadingStrategy: QuicklinkStrategy, useHash: true})
+    RouterModule.forRoot(routes, {preloadingStrategy: QuicklinkStrategy, useHash: true, scrollPositionRestoration: 'enabled'})
   ],
   exports: [RouterModule]
 })

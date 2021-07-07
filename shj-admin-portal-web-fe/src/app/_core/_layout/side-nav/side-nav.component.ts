@@ -73,8 +73,8 @@ export class SideNavComponent implements OnInit {
         title: 'data-request-management.title',
         roles: [EAuthority.DATA_REQUEST_MANAGEMENT],
         display: false,
-        icon: 'users',
-        iconFa: 'fa-w-20',
+        icon: 'file-upload',
+        iconFa: 'fa-w-12',
         routerLink: '/data-requests/list',
       }
     ];

@@ -7,6 +7,8 @@ import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.EPrintBatchType;
 import com.elm.shj.admin.portal.services.dto.PrintRequestDto;
+import com.elm.shj.admin.portal.services.dto.PrintRequestLiteDto;
+import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ import java.util.List;
 public class PrintingManagementController {
 
     private final PrintRequestService printRequestService;
+    private final PrintRequestLiteService printRequestLiteService;
 
     /**
      * List paginated print requests.
@@ -42,9 +45,9 @@ public class PrintingManagementController {
      */
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('"+AuthorityConstants.PRINTING_REQUEST_MANAGEMENT+"')")
-    public Page<PrintRequestDto> list(Pageable pageable, Authentication authentication) {
+    public Page<PrintRequestLiteDto> list(Pageable pageable, Authentication authentication) {
         log.debug("List print requests based on search criteria...");
-        return printRequestService.findOtherThanNew(pageable);
+        return printRequestLiteService.findAll(pageable);
     }
 
     /**
@@ -55,9 +58,9 @@ public class PrintingManagementController {
      */
     @PostMapping("/list")
     @PreAuthorize("hasAuthority('"+AuthorityConstants.PRINTING_REQUEST_MANAGEMENT+"')")
-    public Page<PrintRequestDto> list(@RequestBody PrintRequestFilterVo filterVo, Pageable pageable, Authentication authentication) {
+    public Page<PrintRequestLiteDto> list(@RequestBody PrintRequestFilterVo filterVo, Pageable pageable, Authentication authentication) {
         log.debug("List print requests based on search criteria...");
-        return printRequestService.findByFilter(filterVo, pageable);
+        return printRequestLiteService.findByFilter(filterVo, pageable);
     }
 
     /**

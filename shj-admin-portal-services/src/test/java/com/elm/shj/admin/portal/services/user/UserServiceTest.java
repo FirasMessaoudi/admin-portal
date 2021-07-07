@@ -99,12 +99,12 @@ public class UserServiceTest {
     @Test
     public void test_find_by_nin() {
         serviceToTest.findByNin(anyInt());
-        verify(userRepository).findByNinAndDeletedFalseAndActivatedTrueAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(anyLong());
+        verify(userRepository).findByNinAndDeletedFalseAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(anyLong());
     }
 
     @Test
     public void test_find_by_nin_null() {
-        Mockito.when(userRepository.findByNinAndDeletedFalseAndActivatedTrueAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(anyLong())).thenReturn(null);
+        Mockito.when(userRepository.findByNinAndDeletedFalseAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(anyLong())).thenReturn(null);
         Optional<UserDto> user = serviceToTest.findByNin(anyLong());
         assertEquals(Optional.empty(), user);
     }
@@ -113,7 +113,7 @@ public class UserServiceTest {
     public void test_find_by_nin_not_null() {
         JpaUser foundUser = new JpaUser();
         UserDto foundDto = new UserDto();
-        Mockito.when(userRepository.findByNinAndDeletedFalseAndActivatedTrueAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(anyLong())).thenReturn(foundUser);
+        Mockito.when(userRepository.findByNinAndDeletedFalseAndUserRolesRoleDeletedFalseAndUserRolesRoleActivatedTrue(anyLong())).thenReturn(foundUser);
         Mockito.when(userDtoMapper.fromEntity(any(), eq(mappingContext))).thenReturn(foundDto);
         Optional<UserDto> user = serviceToTest.findByNin(anyLong());
         assertEquals(foundDto, user.get());
