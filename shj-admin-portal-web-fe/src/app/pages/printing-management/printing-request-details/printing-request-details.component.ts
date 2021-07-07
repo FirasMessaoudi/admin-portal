@@ -33,6 +33,7 @@ export class PrintingRequestDetailsComponent implements OnInit {
   cardStatuses: Lookup[];
   batchType = BatchType;
   printRequestStatus = PrintRequestStatus;
+  isLoading: boolean;
 
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,
@@ -56,9 +57,11 @@ export class PrintingRequestDetailsComponent implements OnInit {
       this.printRequestId = +results.params; // (+) converts string 'id' to a number
 
       if (this.printRequestId) {
+        this.isLoading = true;
         // load user details
         this.printService.find(this.printRequestId).subscribe(data => {
           if (data && data.id) {
+            this.isLoading = false;
             this.printRequest = data;
           } else {
             this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.printRequestId}),
