@@ -9,6 +9,7 @@ import com.elm.dcc.foundation.providers.recaptcha.service.RecaptchaService;
 import com.elm.shj.admin.portal.services.dto.UserDto;
 import com.elm.shj.admin.portal.services.otp.OtpService;
 import com.elm.shj.admin.portal.services.user.UserService;
+import com.elm.shj.admin.portal.web.error.DeactivatedUserException;
 import com.elm.shj.admin.portal.web.error.UserAlreadyLoggedInException;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +71,7 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
         // check if user is active
         if (!user.isActivated()) {
             log.info("User {} is deactivated.", user.getNin());
-            throw new BadCredentialsException("invalid credentials.");
+            throw new DeactivatedUserException("User is not active.");
         }
 
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();

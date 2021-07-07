@@ -20,7 +20,7 @@
 
   <div class="content__section" *ngIf="canSeePrintRequestsList">
     <div class="searchBox" [ngbCollapse]="isSearchbarCollapsed">
-      <form [formGroup]="searchForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+      <form [formGroup]="searchForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.request_number" | translate }}</label>
@@ -91,7 +91,7 @@
     </div>
 
 
-    <div class="d-flex justify-content-end bg-dcc-light mt-7 actionBar">
+    <div class="d-flex justify-content-end bg-dcc-light mt-5 actionBar">
       <div class="bg-white">
         <a id="exportToExcel" class="btn btn-dcc-light btn-action m-w-l" href="/">
           <svg-icon styleClass="mx-3 fa-w-18" icon="file-excel"></svg-icon>

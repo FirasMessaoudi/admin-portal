@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.login;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
+import com.elm.shj.admin.portal.web.error.DeactivatedUserException;
 import com.elm.shj.admin.portal.web.error.UserAlreadyLoggedInException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtAuthenticationProvider;
@@ -16,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
@@ -44,7 +43,8 @@ import java.util.Map;
 public class AuthenticationController {
 
     public static final int INVALID_RECAPTCHA_RESPONSE_CODE = 555;
-    private static final int USER_ALREADY_LOGGEDIN_RESPONSE_CODE = 406;
+    private static final int USER_ALREADY_LOGGED_IN_RESPONSE_CODE = 556;
+    private static final int USER_IS_NOT_ACTIVE_RESPONSE_CODE = 557;
 
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final OtpAuthenticationProvider otpAuthenticationProvider;
@@ -60,7 +60,7 @@ public class AuthenticationController {
      * @return the generated token
      */
     @PostMapping("/login")
-    public ResponseEntity<OtpToken> login(@RequestBody Map<String, String> credentials, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<OtpToken> login(@RequestBody Map<String, String> credentials) {
         log.debug("Login request handler");
         OtpToken authentication;
         String idNumber = credentials.get("idNumber");
@@ -70,8 +70,9 @@ public class AuthenticationController {
         } catch (RecaptchaException rex) {
             return ResponseEntity.status(INVALID_RECAPTCHA_RESPONSE_CODE).body(null);
         } catch (UserAlreadyLoggedInException uaEX) {
-            return ResponseEntity.status(USER_ALREADY_LOGGEDIN_RESPONSE_CODE).body(null);
-
+            return ResponseEntity.status(USER_ALREADY_LOGGED_IN_RESPONSE_CODE).body(null);
+        } catch (DeactivatedUserException due) {
+            return ResponseEntity.status(USER_IS_NOT_ACTIVE_RESPONSE_CODE).body(null);
         }
 
         return ResponseEntity.ok(authentication);
