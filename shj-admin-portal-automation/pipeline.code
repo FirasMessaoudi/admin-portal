@@ -1,0 +1,2 @@
+@Library('pipeline@feature/DEVOPS-641-migrate-auto-testing') _
+pipeline_automation_testing {}
