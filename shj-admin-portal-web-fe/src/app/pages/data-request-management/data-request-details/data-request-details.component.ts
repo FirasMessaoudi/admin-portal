@@ -74,6 +74,6 @@ export class DataRequestDetailsComponent implements OnInit {
   }
 
   goBack() {
-    this.navigationService.back();
+   this.goToList();
   }
 }

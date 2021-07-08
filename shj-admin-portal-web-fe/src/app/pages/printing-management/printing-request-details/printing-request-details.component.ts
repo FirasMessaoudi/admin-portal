@@ -95,7 +95,7 @@ export class PrintingRequestDetailsComponent implements OnInit {
   }
 
   goBack() {
-    this.navigationService.back();
+    this.goToList();
   }
 
   lookupService(): LookupService {
