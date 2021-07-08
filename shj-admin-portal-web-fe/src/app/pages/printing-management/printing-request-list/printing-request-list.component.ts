@@ -4,7 +4,6 @@ import {AuthenticationService} from "@core/services";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {PrintService} from "@core/services/printing/print.service";
 import {Subscription} from "rxjs";
-import {PrintRequest} from "@model/print-request.model";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
@@ -86,13 +85,17 @@ export class PrintingRequestListComponent implements OnInit {
   }
 
   loadPage(page: number) {
-    this.listSubscription = this.printService.list(page).subscribe(data => {
-      this.page = data;
-      if (this.page != null) {
-        this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
-        this.printRequests = this.page.content;
-      }
-    })
+    if (!this.searchForm.value.statusCode) {
+      this.listSubscription = this.printService.list(page).subscribe(data => {
+        this.fillPageWithData(data);
+      })
+    } else {
+      this.searchSubscription = this.printService.listFiltered(page, this.searchForm.value).subscribe(data => {
+        this.fillPageWithData(data);
+
+      });
+    }
+
   }
 
   pageCounter(i: number): Array<number> {
@@ -107,12 +110,17 @@ export class PrintingRequestListComponent implements OnInit {
     this.searchSubscription = this.printService.listFiltered(0, this.searchForm.value).subscribe(data => {
       this.printRequests = [];
       this.pageArray = [];
-      this.page = data;
-      if (this.page != null) {
-        this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
-        this.printRequests = this.page.content;
-      }
+      this.fillPageWithData(data);
     });
+  }
+
+
+  fillPageWithData(pageData: any) {
+    this.page = pageData;
+    if (this.page != null) {
+      this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
+      this.printRequests = this.page.content;
+    }
   }
 
 }
