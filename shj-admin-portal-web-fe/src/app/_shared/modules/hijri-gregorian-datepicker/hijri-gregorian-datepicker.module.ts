@@ -6,7 +6,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbModule, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from './datepicker/date-formatter.service';
 import { CustomNgbDateParserFormatter } from './datepicker/CustomNgbDateParserFormatter';
-import { ProvideParentFormDirective } from './datepicker/provide-parent-form.directive';
+import {ProvideParentFormDirective} from './datepicker/provide-parent-form.directive';
+import {TranslateModule} from "@ngx-translate/core";
 
 // https://eslamelmadny.github.io/HijriGregorianDatepicker/
 // https://github.com/EslamElmadny/HijriGregorianDatepicker
@@ -18,10 +19,11 @@ import { ProvideParentFormDirective } from './datepicker/provide-parent-form.dir
     ProvideParentFormDirective
   ],
   imports: [
-    CommonModule ,
+    CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    TranslateModule
   ],
   providers: [
     {provide: NgbDateParserFormatter, useClass: CustomNgbDateParserFormatter},

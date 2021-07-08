@@ -1,0 +1,10 @@
+.table_scroll {
+  max-height: calc( 100vh - 400px);
+  overflow: auto;
+}
+
+.table_header_col--fixed{
+  color: #5B6067;
+  padding: 1.2rem;
+  font-weight: bold;
+}

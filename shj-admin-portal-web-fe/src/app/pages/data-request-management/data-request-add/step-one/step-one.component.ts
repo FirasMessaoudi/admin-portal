@@ -120,7 +120,7 @@ export class StepOneComponent implements OnInit {
         this.progress = 0;
         this.toastr.warning(this.translate.instant("general.dialog_form_error_text"), this.translate.instant("data-request-management.choose_segment"));
         let responseError = err.error;
-        if (responseError.hasOwnProperty("errors") && responseError.errors) {
+        if (responseError && responseError.errors && responseError.hasOwnProperty("errors")) {
           this.errorMessage = (responseError.errors["request"] ? this.translate.instant(responseError.errors["request"]) : responseError.errorMessage);
         }
       });
