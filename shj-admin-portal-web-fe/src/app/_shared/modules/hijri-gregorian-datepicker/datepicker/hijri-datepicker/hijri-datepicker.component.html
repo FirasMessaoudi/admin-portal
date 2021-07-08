@@ -1,16 +1,16 @@
 
 <input
-    class="form-control hijriInput"
-    [(ngModel)]="selectedDate"
-    [placeholder]="placeHolder ? placeHolder : 'DD/MM/YYYY'"
-    ngbDatepicker
-    (click)="d.toggle()"
-    (dateSelect)="changeDate()"
-    #d="ngbDatepicker"
-    [readonly]="readonly"
-    [minDate]="min"
-    [maxDate]="max"
-    [required]="isRequired"
+  class="form-control hijriInput" appNgbDatepickerI18nTitle
+  [(ngModel)]="selectedDate"
+  [placeholder]="placeHolder ? placeHolder : 'DD/MM/YYYY'"
+  ngbDatepicker
+  (click)="d.toggle()"
+  (dateSelect)="changeDate()"
+  #d="ngbDatepicker"
+  [readonly]="readonly"
+  [minDate]="min"
+  [maxDate]="max"
+  [required]="isRequired"
     [name]="name"
     (blur)="onBlur()"
     [footerTemplate]="footerTemplate"

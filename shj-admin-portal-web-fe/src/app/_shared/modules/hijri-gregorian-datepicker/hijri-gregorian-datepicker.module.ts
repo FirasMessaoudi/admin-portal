@@ -8,6 +8,7 @@ import { DateFormatterService } from './datepicker/date-formatter.service';
 import { CustomNgbDateParserFormatter } from './datepicker/CustomNgbDateParserFormatter';
 import {ProvideParentFormDirective} from './datepicker/provide-parent-form.directive';
 import {TranslateModule} from "@ngx-translate/core";
+import {NgbDatepickerI18nTitleDirective} from './ngb-datepicker-i18n-title.directive';
 
 // https://eslamelmadny.github.io/HijriGregorianDatepicker/
 // https://github.com/EslamElmadny/HijriGregorianDatepicker
@@ -16,7 +17,8 @@ import {TranslateModule} from "@ngx-translate/core";
   declarations: [
     HijriGregorianDatepickerComponent,
     HijriDatepickerComponent,
-    ProvideParentFormDirective
+    ProvideParentFormDirective,
+    NgbDatepickerI18nTitleDirective
   ],
   imports: [
     CommonModule,

@@ -107,7 +107,9 @@
     "btn_next": "Next",
     "btn_previous": "Previous",
     "label_yes": "Yes",
-    "label_no": "No"
+    "label_no": "No",
+    "select-year": "Select year",
+    "select-month": "Select month"
   },
 
   "header": {

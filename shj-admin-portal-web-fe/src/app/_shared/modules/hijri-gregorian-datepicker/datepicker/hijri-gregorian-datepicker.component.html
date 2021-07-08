@@ -4,21 +4,21 @@
 
       <div class="input-group">
 
-        <input  class="form-control m-0"
-                  [placeholder]="placeHolder ? placeHolder : 'DD/MM/YYYY'"
-                  [name]="name"
-                  *ngIf="selectedDateType == DateType.Gregorian"
-                  [(ngModel)]="selectedDate"
-                  ngbDatepicker (click)="d.toggle()"
-                  (dateSelect)="dateSelected()"
-                  autocomplete="off"
-                  [readonly]="readonly"
-                  [minDate]="minGreg"
-                  [maxDate]="maxGreg"
-                  [required]="isRequired"
-                  [disabled]="disabled"
-                  [footerTemplate]="footerTemplate"
-                  #d="ngbDatepicker">
+        <input class="form-control m-0"
+               [placeholder]="placeHolder ? placeHolder : 'DD/MM/YYYY'"
+               [name]="name"
+               *ngIf="selectedDateType == DateType.Gregorian"
+               [(ngModel)]="selectedDate"
+               ngbDatepicker (click)="d.toggle()"
+               (dateSelect)="dateSelected()"
+               autocomplete="off"
+               [readonly]="readonly"
+               [minDate]="minGreg"
+               [maxDate]="maxGreg"
+               [required]="isRequired"
+               [disabled]="disabled"
+               [footerTemplate]="footerTemplate" appNgbDatepickerI18nTitle
+               #d="ngbDatepicker">
 
           <ng-template #footerTemplate>
             <hr class="my-0">
