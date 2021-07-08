@@ -2,7 +2,7 @@
     <span>
       {{'printing-management.no_batches' | translate }}
       <span name="noBatches"
-            class="h5 font-weight-bold text-dcc-primary mx-3">{{printRequest?.printRequestBatches?.length}}</span>
+            class="h5 font-weight-bold text-dcc-primary mx-3">{{printRequest?.printRequestBatches?.length ? printRequest?.printRequestBatches?.length : 1}}</span>
     </span>
   <span>
       {{'printing-management.contains' | translate}}

@@ -41,10 +41,12 @@
     </div>
 
     <div class="mt-5 d-flex">
-      <div class="table_header_col--fixed" style="width: 55%">{{'card-management.applicant_name' | translate}}</div>
-      <div class="table_header_col--fixed" style="width: 15%">{{'card-management.applicant_id' | translate}}</div>
-      <div class="table_header_col--fixed" style="width: 15%">{{'printing-management.id_number' | translate}}</div>
-      <div class="table_header_col--fixed" style="width: 15%">{{'card-management.passport_number' | translate}}</div>
+      <div class="table_header_col--fixed" style="width: 50%">{{'card-management.applicant_name' | translate}}</div>
+      <div class="table_header_col--fixed" style="width: 10%">{{'card-management.applicant_id' | translate}}</div>
+      <div class="table_header_col--fixed" style="width: 10%">{{'printing-management.id_number' | translate}}</div>
+      <div class="table_header_col--fixed" style="width: 10%">{{'card-management.card_number' | translate}}</div>
+      <div class="table_header_col--fixed" style="width: 10%">{{'card-management.passport_number' | translate}}</div>
+      <div class="table_header_col--fixed" style="width: 10%">{{'card-management.card_status' | translate}}</div>
     </div>
     <div class="table-responsive mb-4 table_scroll">
       <table id="selectedApplicantsCards" class="table table-striped table-hover">
@@ -86,19 +88,22 @@
           </thead>
           <tbody [ngbCollapse]="isCollapsed[i]" class="collapse">
           <tr *ngFor="let batchCard of batch.printRequestBatchCards">
-            <td class="nameCol" style="width: 55%">
+            <td class="nameCol" style="width: 50%">
               <a *ngIf="canSeeCardDetails" [routerLink]="['/cards/details', batchCard?.card?.id]" target="_blank"
-                 class="text-dcc-primary font-weight-bold">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
+                 class="text-dcc-primary font-weight-bold">
+                <span *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}<br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}</span>
+                <span *ngIf="currentLanguage.startsWith('en')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}<br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}</span>
               </a>
-              <p *ngIf="!canSeeCardDetails"
-                 class=" font-weight-bold">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
+              <p *ngIf="!canSeeCardDetails" class=" font-weight-bold">
+                <span *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}<br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}</span>
+                <span *ngIf="currentLanguage.startsWith('en')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}<br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}</span>
               </p>
             </td>
-            <td class="ltr" style="width: 15%">{{batchCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
-            <td class="ltr" style="width: 15%">{{batchCard?.card?.applicantRitual?.applicant?.idNumber}}</td>
-            <td class="ltr" style="width: 15%">{{batchCard?.card?.referenceNumber}}</td>
-            <td class="ltr" style="width: 15%">{{batchCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
-            <td class="ltr" style="width: 15%">{{lookupService().localizedLabel(cardStatuses, batchCard?.card?.statusCode)}}</td>
+            <td class="ltr" style="width: 10%">{{batchCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
+            <td class="ltr" style="width: 10%">{{batchCard?.card?.applicantRitual?.applicant?.idNumber}}</td>
+            <td class="ltr" style="width: 10%">{{batchCard?.card?.referenceNumber}}</td>
+            <td class="ltr" style="width: 10%">{{batchCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
+            <td class="ltr" style="width: 10%">{{lookupService().localizedLabel(cardStatuses, batchCard?.card?.statusCode)}}</td>
           </tr>
           </tbody>
         </ng-template>
