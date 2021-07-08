@@ -11,7 +11,7 @@
 <!--            <outputDirectory>/Configuration</outputDirectory>-->
 <!--        </fileSet>-->
         <fileSet>
-            <directory>${project.build.directory}/test-assets</directory>
+            <directory>${project.build.outputDirectory}/test-assets</directory>
             <outputDirectory>/test-assets</outputDirectory>
             <excludes>
                 <exclude>**/~$*.xlsx</exclude>

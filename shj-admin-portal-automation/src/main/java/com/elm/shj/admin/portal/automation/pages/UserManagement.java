@@ -34,10 +34,10 @@ public class UserManagement {
     @FindBy(xpath = "//app-user-add-update//input[@formcontrolname='nin']")
     WebElement txtUserIdNumber;
 
-    @FindBy(xpath = "//app-user-add-update//input[@ng-reflect-name='dateOfBirthGregorian']")
+    @FindBy(xpath = "//app-user-add-update//*[@name='dateOfBirthGregorian']//input")
     WebElement txtUserDOB;
 
-    @FindBy(xpath = "//app-user-add-update//div[@ng-reflect-selected='true']")
+    @FindBy(xpath = "//app-user-add-update//div[@ngbdatepickerdayview and contains(@class,'bg-primary')]")
     WebElement btnUserDobDay;
 
     @FindBy(xpath = "//app-user-add-update//button[contains(text(),'Gregorian') or contains(text(),'ميلاد')]")
@@ -58,10 +58,10 @@ public class UserManagement {
     @FindBy(xpath = "//app-user-add-update//input[@formcontrolname='mobileNumber']")
     WebElement txtUserMobileNumber;
 
-    @FindBy(xpath = "//app-user-add-update//input[@name='radioActivated' and @ng-reflect-value='true']//parent::label")
+    @FindBy(xpath = "//app-user-add-update//input[@name='radioActivated' and @value='true']//parent::label")
     WebElement btnUserStatusActive;
 
-    @FindBy(xpath = "//app-user-add-update//input[@name='radioActivated' and @ng-reflect-value='false']//parent::label")
+    @FindBy(xpath = "//app-user-add-update//input[@name='radioActivated' and @value='']//parent::label")
     WebElement btnUserStatusInActive;
 
     @FindBy(xpath = "//app-user-add-update//select[@formcontrolname='role']")
@@ -150,31 +150,31 @@ public class UserManagement {
 
             switch (action) {
                 case "Edit":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-edit']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-edit']//parent::a")).click();
                     isSelected = true;
                     break;
                 case "Deactivate":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-slash']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-slash']//parent::a")).click();
                     isSelected = true;
                     break;
                 case "Activate":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-check']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-check']//parent::a")).click();
                     isSelected = true;
                     break;
                 case "Delete":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-times']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-times']//parent::a")).click();
                     isSelected = true;
                     break;
                 case "View":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='eye']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='eye']//parent::a")).click();
                     isSelected = true;
                     break;
                 case "ResetPassword":
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-lock']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-lock']//parent::a")).click();
                     isSelected = true;
                     break;
                 default:
-                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='eye']//parent::a")).click();
+                    tblUsersSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='eye']//parent::a")).click();
             }
         }
 

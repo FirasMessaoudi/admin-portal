@@ -26,16 +26,16 @@ import static com.elm.qa.framework.core.ActionX.SetValue;
 
 public class RoleManagement {
     // declaring elements
-    @FindBy(xpath = "//app-add-update-role//input[@formcontrolname='nameArabic']")
+    @FindBy(xpath = "//app-add-update-role//input[@formcontrolname='labelAr']")
     WebElement txtRoleArbName;
 
-    @FindBy(xpath = "//app-add-update-role//input[@formcontrolname='nameEnglish']")
+    @FindBy(xpath = "//app-add-update-role//input[@formcontrolname='labelEn']")
     WebElement txtRoleEngName;
 
-    @FindBy(xpath = "//app-add-update-role//div[@formcontrolname='activated']//input[@ng-reflect-value='false']//parent::label")
+    @FindBy(xpath = "//app-add-update-role//div[@formcontrolname='activated']//input[@value='']//parent::label")
     WebElement btnRoleNotActive;
 
-    @FindBy(xpath = "//app-add-update-role//div[@formcontrolname='activated']//input[@ng-reflect-value='true']//parent::label")
+    @FindBy(xpath = "//app-add-update-role//div[@formcontrolname='activated']//input[@value='true']//parent::label")
     WebElement btnRoleActive;
 
     @FindBy(xpath = "//app-add-update-role//button[contains(@class,'btn-outline-dcc-primary')]")
@@ -47,7 +47,7 @@ public class RoleManagement {
     @FindBy(xpath = "//app-applicant-list//input[contains(@formcontrolname,'roleName')]")
     WebElement txtRoleNameSearch;
 
-    @FindBy(xpath = "//app-applicant-list//input[@formcontrolname='authorityId']")
+    @FindBy(xpath = "//app-applicant-list//select[@formcontrolname='authorityId']")
     WebElement lstRoleAuthorityName;
 
     @FindBy(xpath = "//app-applicant-list//button[contains(@class,'btn-dcc-primary')]")
@@ -127,27 +127,27 @@ public class RoleManagement {
 
            switch (action) {
                case "Edit":
-                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='edit']//parent::a")).click();
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-edit']//parent::a")).click();
                    isSelected = true;
                    break;
                case "Deactivate":
-                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-tag-minus']//parent::a")).click();
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-slash']//parent::a")).click();
                    isSelected = true;
                    break;
                case "Activate":
-                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-tag-check']//parent::a")).click();
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-check']//parent::a")).click();
                    isSelected = true;
                    break;
                case "Delete":
-                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='user-tag-times']//parent::a")).click();
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='user-times']//parent::a")).click();
                    isSelected = true;
                    break;
                case "View":
-                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='eye']//parent::a")).click();
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='eye']//parent::a")).click();
                    isSelected = true;
                    break;
                default:
-                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@ng-reflect-icon='eye']//parent::a")).click();
+                   tblRolesSearchResults.findElements(By.tagName("tr")).get(0).findElement(By.xpath("//svg-icon[@icon='eye']//parent::a")).click();
            }
        }
 

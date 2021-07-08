@@ -73,9 +73,9 @@ public class PrintingManagement {
             ActionX.Sync();
             ActionX.WaitChildItemsCountGreaterThan(tblPrintingRequests, By.tagName("tr"),1,5);
 
-            requestNumber = dataRow.get("RequestNumber".toUpperCase());
-
-            SetValue(txtRequestNumber, requestNumber);
+//            requestNumber = dataRow.get("RequestNumber".toUpperCase());
+//
+//            SetValue(txtRequestNumber, requestNumber);
             btnSearch.click();
 
             //waiting load results
