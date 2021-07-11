@@ -877,9 +877,9 @@ VALUES (37, 'EG', 207, N'مصر', 'ar', '20');
 INSERT INTO shc_portal.shc_country_lk(id, code, nic_code, label, lang, country_phone_prefix)
 VALUES (38, 'EG', 207, 'Egypt', 'en', '20');
 INSERT INTO shc_portal.shc_country_lk(id, code, nic_code, label, lang, country_phone_prefix)
-VALUES (39, 'EH', 208, N'المغرب', 'ar', '212');
+VALUES (39, 'MA', 208, N'المغرب', 'ar', '212');
 INSERT INTO shc_portal.shc_country_lk(id, code, nic_code, label, lang, country_phone_prefix)
-VALUES (40, 'EH', 208, 'Morocco', 'en', '212');
+VALUES (40, 'MA', 208, 'Morocco', 'en', '212');
 INSERT INTO shc_portal.shc_country_lk(id, code, nic_code, label, lang, country_phone_prefix)
 VALUES (41, 'MR', 209, N'موريتانيا', 'ar', '222');
 INSERT INTO shc_portal.shc_country_lk(id, code, nic_code, label, lang, country_phone_prefix)
