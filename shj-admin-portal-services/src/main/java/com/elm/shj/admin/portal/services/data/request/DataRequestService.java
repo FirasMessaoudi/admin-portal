@@ -27,6 +27,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,8 +66,20 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
      * @param pageable the current page information
      * @return the list of data requests
      */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public Page<DataRequestDto> findAll(Pageable pageable) {
         return mapPage(getRepository().findAll(pageable));
+    }
+
+    /**
+     * finds a data request by its ID
+     *
+     * @param dataRequestId the data request id to find
+     * @return the found data request or <code>null</code>
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public DataRequestDto findById(long dataRequestId) {
+        return findOne(dataRequestId);
     }
 
     /**
@@ -137,8 +151,13 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
     @Async
     @Transactional
     public void confirm(long dataRequestId) throws Exception {
-        ((DataRequestRepository) getRepository()).updateStatus(dataRequestId, EDataRequestStatus.CONFIRMED.getId());
+        updateUnderProcessing(dataRequestId);
         processRequest(dataRequestId);
+    }
+
+    @Transactional(propagation = Propagation.NESTED)
+    public void updateUnderProcessing(long dataRequestId) {
+        ((DataRequestRepository) getRepository()).updateStatus(dataRequestId, EDataRequestStatus.UNDER_PROCESSING.getId());
     }
 
     /**
@@ -181,12 +200,12 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
      *
      * @param dataRequestId the data request id to be processed
      */
-    private <T> void processRequest(long dataRequestId) throws Exception {
+    @Transactional
+    public <T> void processRequest(long dataRequestId) throws Exception {
         // retrieve the data request
         DataRequestDto dataRequest = findOne(dataRequestId);
         // initial validation
-        if (dataRequest != null && dataRequest.getOriginalSourcePath() != null
-                && dataRequest.getStatus().getId() == EDataRequestStatus.CONFIRMED.getId()) {
+        if (dataRequest != null && dataRequest.getOriginalSourcePath() != null) {
             // retrieve the original file to start processing
             Resource originalFile = sftpService.downloadFile(dataRequest.getOriginalSourcePath());
             // process the file
