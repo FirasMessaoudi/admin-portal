@@ -34,6 +34,15 @@ export class NgbDatepickerI18nTitleDirective {
     selectYear.setAttribute('title', this.translate.instant('general.select-year'));
     selectYear.setAttribute('aria-label', this.translate.instant('general.select-year'));
 
+    // @ts-ignore
+    const previousMonth = this.datepicker._cRef.location.nativeElement.querySelector('button[title="Previous month"]');
+    previousMonth.setAttribute('title', this.translate.instant('general.previous-month'));
+    previousMonth.setAttribute('aria-label', this.translate.instant('general.previous-month'));
+
+    // @ts-ignore
+    const nextMonth = this.datepicker._cRef.location.nativeElement.querySelector('button[title="Next month"]');
+    nextMonth.setAttribute('title', this.translate.instant('general.next-month'));
+    nextMonth.setAttribute('aria-label', this.translate.instant('general.next-month'));
 
   }
 }

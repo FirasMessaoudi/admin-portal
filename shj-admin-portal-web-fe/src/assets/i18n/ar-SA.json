@@ -107,7 +107,9 @@
     "label_yes": "نعم",
     "label_no": "لا",
     "select-year": "إختر السنة",
-    "select-month": "إختر الشهر"
+    "select-month": "إختر الشهر",
+    "previous-month": "الشهر السابق",
+    "next-month": "الشهر التالي"
   },
   "header": {
     "welcome": "مرحبا",
