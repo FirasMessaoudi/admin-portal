@@ -86,7 +86,7 @@
             </th>
           </tr>
           </thead>
-          <tbody [ngbCollapse]="isCollapsed[i]" class="collapse">
+          <tbody [ngbCollapse]="!isCollapsed[i]" class="collapse">
           <tr *ngFor="let batchCard of batch.printRequestBatchCards">
             <td class="nameCol" style="width: 50%">
               <a *ngIf="canSeeCardDetails" [routerLink]="['/cards/details', batchCard?.card?.id]" target="_blank"
