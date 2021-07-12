@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
@@ -52,6 +53,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
     private final MessageSource messageSource;
     private final SmsGatewayService smsGatewayService;
     private final EmailService emailService;
+    private final HttpServletRequest request;
 
     /**
      * Finds all non deleted users.
@@ -354,9 +356,13 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         boolean smsSent = smsGatewayService.sendMessage(user.getMobileNumber().longValue(), createdUserSms);
         log.debug("SMS notification status: {}", smsSent);
 
+        String appUrl = request.getScheme() + "://" + request.getHeader("host");
+        String logoURL = appUrl + "/assets/images/logo.png";
+        String headerURL = appUrl + "/assets/images/header.png";
+        String dotsPatternURL = appUrl + "/assets/images/dots-pattern.png";
         // Send Email notification
         boolean emailSent = emailService.sendMailFromTemplate(Arrays.asList(user.getEmail()), null,
-                REGISTRATION_EMAIL_SUBJECT, REGISTRATION_EMAIL_TPL_NAME, ImmutableMap.of("user", user));
+                REGISTRATION_EMAIL_SUBJECT, REGISTRATION_EMAIL_TPL_NAME, ImmutableMap.of("user", user, "logoURL", logoURL, "headerURL", headerURL, "dotsPatternURL", dotsPatternURL));
         log.debug("Email notification status: {}", emailSent);
 
         return smsSent || emailSent;
