@@ -32,6 +32,9 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long> {
     boolean existsByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                               @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
+    @Query(value = "SELECT a FROM JpaApplicant a JOIN a.digitalIds adi WHERE adi.id = :uin")
+    JpaApplicant findByUin(@Param("uin") String uin);
+
     @Query("select a from JpaApplicant a where a.id not in (select ad.applicant.id from JpaApplicantDigitalId ad)")
     List<JpaApplicant> findAllApplicantsWithoutDigitalId();
 }

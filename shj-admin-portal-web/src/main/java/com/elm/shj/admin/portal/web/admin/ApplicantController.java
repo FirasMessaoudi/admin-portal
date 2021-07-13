@@ -12,11 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 
 /**
  * Main controller for applicant management pages
@@ -39,4 +40,32 @@ public class ApplicantController {
         return applicantService.findAll(pageable);
     }
 
+    /**
+     * finds an applicant based on cross-check factor
+     *
+     * @return the found applicant or <code>null</code>
+     */
+    @PostMapping("/validate")
+    public ApplicantDto validate(@RequestBody @Valid ValidateApplicantCmd command) {
+
+        ApplicantDto applicant = applicantService.findByUin(command.getUin()).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + command.getUin()));
+
+        boolean dateOfBirthMatched;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        // decide which date of birth to use
+        if (command.getDateOfBirthGregorian() != null) {
+            String applicantDateFormatted = sdf.format(applicant.getDateOfBirthGregorian());
+            String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
+            dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
+        } else {
+            dateOfBirthMatched = command.getDateOfBirthHijri() == applicant.getDateOfBirthHijri();
+        }
+        if (dateOfBirthMatched) {
+            return applicant;
+        } else {
+            log.debug("invalid data for uin {}", command.getUin());
+            throw new UsernameNotFoundException("invalid data");
+        }
+    }
 }

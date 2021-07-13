@@ -296,7 +296,7 @@ public class UserManagementController {
     }
 
     /**
-     * Updates and existing user
+     * Updates an existing user
      *
      * @param user the user to update
      * @return the updated user
