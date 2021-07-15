@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.web.admin;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.dto.UserDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +42,18 @@ public class ApplicantController {
     public Page<ApplicantDto> listApplicants(Pageable pageable) {
         log.debug("List applicants...");
         return applicantService.findAll(pageable);
+    }
+
+    /**
+     * finds an applicant by his ID
+     *
+     * @param applicantId the applicant id to find
+     * @return the found user or <code>null</code>
+     */
+    @GetMapping("/find/{applicantId}")
+    public ApplicantDto findApplicant(@PathVariable long applicantId) {
+        log.debug("Handler for {}", "Find applicant");
+        return applicantService.findOne(applicantId);
     }
 
     /**
@@ -77,8 +91,8 @@ public class ApplicantController {
      * @return the updated applicant
      */
     @PostMapping("/{applicantId}/update")
-    public ResponseEntity<ApplicantDto> updateUser(@PathVariable long applicantId,
-                                                   @RequestBody @Valid UpdateApplicantCmd command) {
+    public ResponseEntity<ApplicantDto> update(@PathVariable long applicantId,
+                                               @RequestBody @Valid UpdateApplicantCmd command) {
         log.debug("Handler for {}", "Update applicant");
 
         ApplicantDto databaseApplicant = applicantService.findOne(applicantId);
