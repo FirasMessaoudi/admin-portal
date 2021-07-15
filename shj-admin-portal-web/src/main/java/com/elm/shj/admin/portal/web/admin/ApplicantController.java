@@ -12,12 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 
 /**
  * Main controller for applicant management pages
@@ -67,5 +69,26 @@ public class ApplicantController {
             log.debug("invalid data for uin {}", command.getUin());
             throw new UsernameNotFoundException("invalid data");
         }
+    }
+
+    /**
+     * Updates an existing applicant
+     *
+     * @return the updated applicant
+     */
+    @PostMapping("/{applicantId}/update")
+    public ResponseEntity<ApplicantDto> updateUser(@PathVariable long applicantId,
+                                                   @RequestBody @Valid UpdateApplicantCmd command) {
+        log.debug("Handler for {}", "Update applicant");
+
+        ApplicantDto databaseApplicant = applicantService.findOne(applicantId);
+
+        // sets form fields to database applicant instance
+        databaseApplicant.getContacts().get(0).setEmail(command.getEmail());
+        databaseApplicant.getContacts().get(0).setLocalMobileNumber(command.getLocalMobileNumber());
+
+        ApplicantDto savedApplicant = applicantService.save(databaseApplicant);
+
+        return ResponseEntity.ok(Objects.requireNonNull(savedApplicant));
     }
 }
