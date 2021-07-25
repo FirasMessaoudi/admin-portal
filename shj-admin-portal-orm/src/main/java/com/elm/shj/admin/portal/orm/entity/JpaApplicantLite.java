@@ -1,3 +1,6 @@
+/*
+ *  Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
@@ -51,12 +54,4 @@ public class JpaApplicantLite implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantContact> contacts;
-
-    private long status;
-
-    @Column(name = "creation_date", nullable = false)
-    private Date creationDate;
-
-    @Column(name = "UPDATE_DATE")
-    private Date updateDate;
 }

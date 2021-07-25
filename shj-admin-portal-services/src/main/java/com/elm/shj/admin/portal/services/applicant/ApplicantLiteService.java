@@ -35,6 +35,11 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
      */
     public Optional<ApplicantLiteDto> findByUin(String uin) {
         JpaApplicantLite applicant = applicantLiteRepository.findByUin(uin);
-        return (applicant != null) ? Optional.of(getMapper().fromEntity(applicant, mappingContext)) : Optional.empty();
+        if (applicant != null) {
+            ApplicantLiteDto applicantLiteDto = getMapper().fromEntity(applicant, mappingContext);
+            applicantLiteDto.setEmail(applicant.getContacts().get(0).getEmail());
+            applicantLiteDto.setLocalMobileNumber(applicant.getContacts().get(0).getLocalMobileNumber());
+            return Optional.of(applicantLiteDto);
+        } else return Optional.empty();
     }
 }
