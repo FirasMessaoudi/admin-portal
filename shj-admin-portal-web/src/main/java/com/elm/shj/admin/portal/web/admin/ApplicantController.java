@@ -3,10 +3,11 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
-import com.elm.shj.admin.portal.services.dto.UserDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +36,7 @@ import java.util.Objects;
 public class ApplicantController {
 
     private final ApplicantService applicantService;
+    private final ApplicantLiteService applicantLiteService;
 
     @GetMapping("/list/all")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
@@ -61,10 +62,10 @@ public class ApplicantController {
      *
      * @return the found applicant or <code>null</code>
      */
-    @PostMapping("/validate")
-    public ApplicantDto validate(@RequestBody @Valid ValidateApplicantCmd command) {
+    @PostMapping("/verify")
+    public ApplicantLiteDto validate(@RequestBody @Valid ValidateApplicantCmd command) {
 
-        ApplicantDto applicant = applicantService.findByUin(command.getUin()).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + command.getUin()));
+        ApplicantLiteDto applicant = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + command.getUin()));
 
         boolean dateOfBirthMatched;
 
