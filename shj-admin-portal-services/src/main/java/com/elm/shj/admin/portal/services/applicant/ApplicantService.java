@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service handling applicant
@@ -31,6 +33,7 @@ import java.util.List;
 public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto, Long> {
 
     private final DigitalIdService digitalIdService;
+    private final ApplicantRepository applicantRepository;
 
     /**
      * Find all applicants.
@@ -69,6 +72,17 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      */
     public boolean existsByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
         return ((ApplicantRepository) getRepository()).existsByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
+    }
+
+    /**
+     * Finds an applicant by his uin
+     *
+     * @param uin the uin of applicant to find
+     * @return the found applicant or empty structure
+     */
+    public Optional<ApplicantDto> findByUin(String uin) {
+        JpaApplicant applicant = applicantRepository.findByUin(uin);
+        return (applicant != null) ? Optional.of(getMapper().fromEntity(applicant, mappingContext)) : Optional.empty();
     }
 
     /**

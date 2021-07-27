@@ -91,19 +91,21 @@ public class ApplicantController {
      *
      * @return the updated applicant
      */
-    @PostMapping("/update/{applicantId}")
-    public ResponseEntity<ApplicantDto> update(@PathVariable long applicantId,
+    @PostMapping("/update/{uin}")
+    public ResponseEntity<ApplicantLiteDto> update(@PathVariable String uin,
                                                @RequestBody @Valid UpdateApplicantCmd command) {
         log.debug("Handler for {}", "Update applicant");
 
-        ApplicantDto databaseApplicant = applicantService.findOne(applicantId);
+        ApplicantDto databaseApplicant = applicantService.findByUin(uin).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + uin));
 
         // sets form fields to database applicant instance
         databaseApplicant.getContacts().get(0).setEmail(command.getEmail());
         databaseApplicant.getContacts().get(0).setLocalMobileNumber(command.getLocalMobileNumber());
 
-        ApplicantDto savedApplicant = applicantService.save(databaseApplicant);
+        applicantService.save(databaseApplicant);
 
-        return ResponseEntity.ok(Objects.requireNonNull(savedApplicant));
+        ApplicantLiteDto applicantLite = applicantLiteService.findByUin(uin).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + uin));
+
+        return ResponseEntity.ok(Objects.requireNonNull(applicantLite));
     }
 }
