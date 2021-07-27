@@ -93,7 +93,7 @@ public class JpaApplicant implements Serializable {
     private List<JpaApplicantRitual> rituals;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantContact> contacts;
 
     @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")

@@ -91,7 +91,7 @@ public class ApplicantController {
      *
      * @return the updated applicant
      */
-    @PostMapping("/{applicantId}/update")
+    @PostMapping("/update/{applicantId}")
     public ResponseEntity<ApplicantDto> update(@PathVariable long applicantId,
                                                @RequestBody @Valid UpdateApplicantCmd command) {
         log.debug("Handler for {}", "Update applicant");

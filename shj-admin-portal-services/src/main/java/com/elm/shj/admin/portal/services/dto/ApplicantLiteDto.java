@@ -21,6 +21,7 @@ public class ApplicantLiteDto implements Serializable {
 
     private static final long serialVersionUID = 2708176152525069666L;
 
+    private long id;
     private Date dateOfBirthGregorian;
     private Long dateOfBirthHijri;
     private String fullNameAr;

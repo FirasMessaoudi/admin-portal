@@ -37,4 +37,5 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long> {
 
     @Query("select a from JpaApplicant a where a.id not in (select ad.applicant.id from JpaApplicantDigitalId ad)")
     List<JpaApplicant> findAllApplicantsWithoutDigitalId();
-}
+
+    }
