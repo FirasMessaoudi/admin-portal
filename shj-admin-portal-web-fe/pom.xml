@@ -56,6 +56,7 @@
               <environmentVariables>
                 <PUPPETEER_SKIP_CHROMIUM_DOWNLOAD>true</PUPPETEER_SKIP_CHROMIUM_DOWNLOAD>
               </environmentVariables>
+              <skip>${skipFrontendBuild}</skip>
             </configuration>
           </execution>
           <execution>
@@ -70,6 +71,7 @@
                 <argument>run-script</argument>
                 <argument>build:${env}</argument>
               </arguments>
+              <skip>${skipFrontendBuild}</skip>
             </configuration>
           </execution>
         </executions>
