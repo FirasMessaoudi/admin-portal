@@ -20,10 +20,12 @@ public class UpdateApplicantCmd implements Serializable {
 
     private static final long serialVersionUID = -7437270089118787394L;
 
+    private String uin;
+
     @NullOrNotBlank(min = 5, max = 50)
     @Email(message = "validation.data.constraints.msg.20003")
     private String email;
 
     @NullOrNotBlank(min = 5, max = 16)
-    private String localMobileNumber;
+    private String mobileNumber;
 }

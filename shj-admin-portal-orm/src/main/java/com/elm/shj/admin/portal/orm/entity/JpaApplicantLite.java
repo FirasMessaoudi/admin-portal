@@ -17,7 +17,7 @@ import java.util.List;
  * The light entity version for the shc_applicant database table.
  *
  * @author Slim Ben Hadj
- * @since 1.0.0
+ * @since 1.1.0
  */
 @Entity
 @Table(name = "shc_applicant")

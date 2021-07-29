@@ -10,7 +10,6 @@ import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -39,7 +38,11 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
         if (applicant != null) {
             ApplicantLiteDto applicantLiteDto = getMapper().fromEntity(applicant, mappingContext);
             applicantLiteDto.setEmail(applicant.getContacts().get(0).getEmail());
-            applicantLiteDto.setLocalMobileNumber(applicant.getContacts().get(0).getLocalMobileNumber());
+            if (applicant.getContacts().get(0).getLocalMobileNumber() != null) {
+                applicantLiteDto.setMobileNumber(applicant.getContacts().get(0).getLocalMobileNumber());
+            } else {
+                applicantLiteDto.setMobileNumber(applicant.getContacts().get(0).getIntlMobileNumber());
+            }
             return Optional.of(applicantLiteDto);
         } else return Optional.empty();
     }

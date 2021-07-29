@@ -35,6 +35,9 @@ import java.util.Objects;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantController {
 
+    public final static String ISO8601_DATE_PATTERN = "yyyy-MM-dd";
+    public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([503649187])([0-9]{7})$";
+
     private final ApplicantService applicantService;
     private final ApplicantLiteService applicantLiteService;
 
@@ -46,15 +49,15 @@ public class ApplicantController {
     }
 
     /**
-     * finds an applicant by his ID
+     * finds an applicant by his UIN
      *
-     * @param applicantId the applicant id to find
-     * @return the found user or <code>null</code>
+     * @param uin the applicant's uin to find
+     * @return the found applicant or <code>null</code>
      */
-    @GetMapping("/find/{applicantId}")
-    public ApplicantDto findApplicant(@PathVariable long applicantId) {
-        log.debug("Handler for {}", "Find applicant");
-        return applicantService.findOne(applicantId);
+    @GetMapping("/find/{uin}")
+    public ApplicantDto findApplicant(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find applicant by uin");
+        return applicantService.findByUin(uin).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + uin));
     }
 
     /**
@@ -63,13 +66,13 @@ public class ApplicantController {
      * @return the found applicant or <code>null</code>
      */
     @PostMapping("/verify")
-    public ApplicantLiteDto validate(@RequestBody @Valid ValidateApplicantCmd command) {
+    public ApplicantLiteDto verify(@RequestBody @Valid ValidateApplicantCmd command) {
 
         ApplicantLiteDto applicant = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + command.getUin()));
 
         boolean dateOfBirthMatched;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
         // decide which date of birth to use
         if (command.getDateOfBirthGregorian() != null) {
             String applicantDateFormatted = sdf.format(applicant.getDateOfBirthGregorian());
@@ -91,20 +94,24 @@ public class ApplicantController {
      *
      * @return the updated applicant
      */
-    @PostMapping("/update/{uin}")
-    public ResponseEntity<ApplicantLiteDto> update(@PathVariable String uin,
-                                               @RequestBody @Valid UpdateApplicantCmd command) {
+    @PostMapping("/update")
+    public ResponseEntity<ApplicantLiteDto> update(@RequestBody @Valid UpdateApplicantCmd command) {
         log.debug("Handler for {}", "Update applicant");
 
-        ApplicantDto databaseApplicant = applicantService.findByUin(uin).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + uin));
+        ApplicantDto databaseApplicant = applicantService.findByUin(command.getUin()).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + command.getUin()));
 
         // sets form fields to database applicant instance
         databaseApplicant.getContacts().get(0).setEmail(command.getEmail());
-        databaseApplicant.getContacts().get(0).setLocalMobileNumber(command.getLocalMobileNumber());
+
+        if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
+            databaseApplicant.getContacts().get(0).setLocalMobileNumber(command.getMobileNumber());
+        } else {
+            databaseApplicant.getContacts().get(0).setIntlMobileNumber(command.getMobileNumber());
+        }
 
         applicantService.save(databaseApplicant);
 
-        ApplicantLiteDto applicantLite = applicantLiteService.findByUin(uin).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + uin));
+        ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + command.getUin()));
 
         return ResponseEntity.ok(Objects.requireNonNull(applicantLite));
     }
