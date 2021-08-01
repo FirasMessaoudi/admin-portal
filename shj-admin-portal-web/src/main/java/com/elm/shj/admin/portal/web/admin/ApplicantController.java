@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Main controller for applicant management pages
@@ -37,6 +38,7 @@ public class ApplicantController {
 
     public final static String ISO8601_DATE_PATTERN = "yyyy-MM-dd";
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([503649187])([0-9]{7})$";
+    private static final int APPLICANT_NOT_FOUND_RESPONSE_CODE = 561;
 
     private final ApplicantService applicantService;
     private final ApplicantLiteService applicantLiteService;
@@ -57,7 +59,7 @@ public class ApplicantController {
     @GetMapping("/find/{uin}")
     public ApplicantDto findApplicant(@PathVariable String uin) {
         log.debug("Handler for {}", "Find applicant by uin");
-        return applicantService.findByUin(uin).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + uin));
+        return applicantService.findByUin(uin).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + uin));
     }
 
     /**
@@ -66,53 +68,60 @@ public class ApplicantController {
      * @return the found applicant or <code>null</code>
      */
     @PostMapping("/verify")
-    public ApplicantLiteDto verify(@RequestBody @Valid ValidateApplicantCmd command) {
+    public ResponseEntity<ApplicantLiteDto> verify(@RequestBody @Valid ValidateApplicantCmd command) {
 
-        ApplicantLiteDto applicant = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + command.getUin()));
+        Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(command.getUin());
+        if (applicant.isPresent()) {
+            boolean dateOfBirthMatched;
 
-        boolean dateOfBirthMatched;
-
-        SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
-        // decide which date of birth to use
-        if (command.getDateOfBirthGregorian() != null) {
-            String applicantDateFormatted = sdf.format(applicant.getDateOfBirthGregorian());
-            String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
-            dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
+            SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
+            // decide which date of birth to use
+            if (command.getDateOfBirthGregorian() != null) {
+                String applicantDateFormatted = sdf.format(applicant.get().getDateOfBirthGregorian());
+                String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
+                dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
+            } else {
+                dateOfBirthMatched = command.getDateOfBirthHijri() == applicant.get().getDateOfBirthHijri();
+            }
+            if (dateOfBirthMatched) {
+                return ResponseEntity.ok(applicant.get());
+            } else {
+                log.error("invalid data for uin {}", command.getUin());
+                return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
+            }
         } else {
-            dateOfBirthMatched = command.getDateOfBirthHijri() == applicant.getDateOfBirthHijri();
-        }
-        if (dateOfBirthMatched) {
-            return applicant;
-        } else {
-            log.debug("invalid data for uin {}", command.getUin());
-            throw new UsernameNotFoundException("invalid data");
+            log.error("invalid data for uin {}", command.getUin());
+            return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
         }
     }
 
-    /**
-     * Updates an existing applicant
-     *
-     * @return the updated applicant
-     */
-    @PostMapping("/update")
-    public ResponseEntity<ApplicantLiteDto> update(@RequestBody @Valid UpdateApplicantCmd command) {
-        log.debug("Handler for {}", "Update applicant");
+        /**
+         * Updates an existing applicant
+         *
+         * @return the updated applicant
+         */
+        @PostMapping("/update")
+        public ResponseEntity<ApplicantLiteDto> update (@RequestBody @Valid UpdateApplicantCmd command){
+            log.debug("Handler for {}", "Update applicant");
 
-        ApplicantDto databaseApplicant = applicantService.findByUin(command.getUin()).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + command.getUin()));
+            Optional<ApplicantDto> databaseApplicant = applicantService.findByUin(command.getUin());
+            if (databaseApplicant.isPresent()) {
+                // sets form fields to database applicant instance
+                databaseApplicant.get().getContacts().get(0).setEmail(command.getEmail());
 
-        // sets form fields to database applicant instance
-        databaseApplicant.getContacts().get(0).setEmail(command.getEmail());
+                if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
+                    databaseApplicant.get().getContacts().get(0).setLocalMobileNumber(command.getMobileNumber());
+                } else {
+                    databaseApplicant.get().getContacts().get(0).setIntlMobileNumber(command.getMobileNumber());
+                }
+                applicantService.save(databaseApplicant.get());
 
-        if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
-            databaseApplicant.getContacts().get(0).setLocalMobileNumber(command.getMobileNumber());
-        } else {
-            databaseApplicant.getContacts().get(0).setIntlMobileNumber(command.getMobileNumber());
+                ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + command.getUin()));
+
+                return ResponseEntity.ok(Objects.requireNonNull(applicantLite));
+            } else {
+                log.error("invalid data for uin {}", command.getUin());
+                return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
+            }
         }
-
-        applicantService.save(databaseApplicant);
-
-        ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + command.getUin()));
-
-        return ResponseEntity.ok(Objects.requireNonNull(applicantLite));
     }
-}
