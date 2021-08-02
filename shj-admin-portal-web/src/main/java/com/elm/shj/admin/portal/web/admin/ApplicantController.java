@@ -62,7 +62,7 @@ public class ApplicantController {
     @GetMapping("/find/main-data/{uin}")
     public ApplicantMainDataDto findApplicantMainData(@PathVariable String uin) {
         log.debug("Handler for {}", "Find applicant by uin");
-        return applicantMainDataService.findByUin(uin).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + uin));
+        return applicantMainDataService.findByUin(uin).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + uin));
     }
 
     /**
@@ -110,33 +110,33 @@ public class ApplicantController {
         }
     }
 
-        /**
-         * Updates an existing applicant
-         *
-         * @return the updated applicant
-         */
-        @PostMapping("/update")
-        public ResponseEntity<ApplicantLiteDto> update (@RequestBody @Validated UpdateApplicantCmd command){
-            log.debug("Handler for {}", "Update applicant");
+    /**
+     * Updates an existing applicant
+     *
+     * @return the updated applicant
+     */
+    @PostMapping("/update")
+    public ResponseEntity<ApplicantLiteDto> update(@RequestBody @Validated UpdateApplicantCmd command) {
+        log.debug("Handler for {}", "Update applicant");
 
-            Optional<ApplicantDto> databaseApplicant = applicantService.findByUin(command.getUin());
-            if (databaseApplicant.isPresent()) {
-                // sets form fields to database applicant instance
-                databaseApplicant.get().getContacts().get(0).setEmail(command.getEmail());
+        Optional<ApplicantDto> databaseApplicant = applicantService.findByUin(command.getUin());
+        if (databaseApplicant.isPresent()) {
+            // sets form fields to database applicant instance
+            databaseApplicant.get().getContacts().get(0).setEmail(command.getEmail());
 
-                if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
-                    databaseApplicant.get().getContacts().get(0).setLocalMobileNumber(command.getMobileNumber());
-                } else {
-                    databaseApplicant.get().getContacts().get(0).setIntlMobileNumber(command.getMobileNumber());
-                }
-                applicantService.save(databaseApplicant.get());
-
-                ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + command.getUin()));
-
-                return ResponseEntity.ok(Objects.requireNonNull(applicantLite));
+            if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
+                databaseApplicant.get().getContacts().get(0).setLocalMobileNumber(command.getMobileNumber());
             } else {
-                log.error("invalid data for uin {}", command.getUin());
-                return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
+                databaseApplicant.get().getContacts().get(0).setIntlMobileNumber(command.getMobileNumber());
             }
+            applicantService.save(databaseApplicant.get());
+
+            ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + command.getUin()));
+
+            return ResponseEntity.ok(Objects.requireNonNull(applicantLite));
+        } else {
+            log.error("invalid data for uin {}", command.getUin());
+            return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
         }
     }
+}
