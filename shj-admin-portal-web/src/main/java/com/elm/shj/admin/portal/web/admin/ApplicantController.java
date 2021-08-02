@@ -72,9 +72,16 @@ public class ApplicantController {
      * @return the found applicant or <code>null</code>
      */
     @GetMapping("/find/{uin}")
-    public ApplicantDto findApplicant(@PathVariable String uin) {
+    public ResponseEntity<ApplicantLiteDto> findApplicant(@PathVariable String uin) {
         log.debug("Handler for {}", "Find applicant by uin");
-        return applicantService.findByUin(uin).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + uin));
+        Optional<ApplicantDto> applicant = applicantService.findByUin(uin);
+        if (applicant.isPresent()) {
+            ApplicantLiteDto applicantLite = applicantLiteService.findByUin(uin).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + uin));
+            return ResponseEntity.ok(applicantLite);
+        } else {
+            log.error("invalid data for uin {}", uin);
+            return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
+        }
     }
 
     /**
