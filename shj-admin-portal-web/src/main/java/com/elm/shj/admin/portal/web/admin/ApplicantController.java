@@ -16,10 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,7 +37,7 @@ import java.util.Optional;
 public class ApplicantController {
 
     public final static String ISO8601_DATE_PATTERN = "yyyy-MM-dd";
-    public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([503649187])([0-9]{7})$";
+    public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
     private static final int APPLICANT_NOT_FOUND_RESPONSE_CODE = 561;
 
     private final ApplicantService applicantService;
@@ -68,7 +68,7 @@ public class ApplicantController {
      * @return the found applicant or <code>null</code>
      */
     @PostMapping("/verify")
-    public ResponseEntity<ApplicantLiteDto> verify(@RequestBody @Valid ValidateApplicantCmd command) {
+    public ResponseEntity<ApplicantLiteDto> verify(@RequestBody @Validated ValidateApplicantCmd command) {
 
         Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(command.getUin());
         if (applicant.isPresent()) {
@@ -101,7 +101,7 @@ public class ApplicantController {
          * @return the updated applicant
          */
         @PostMapping("/update")
-        public ResponseEntity<ApplicantLiteDto> update (@RequestBody @Valid UpdateApplicantCmd command){
+        public ResponseEntity<ApplicantLiteDto> update (@RequestBody @Validated UpdateApplicantCmd command){
             log.debug("Handler for {}", "Update applicant");
 
             Optional<ApplicantDto> databaseApplicant = applicantService.findByUin(command.getUin());
