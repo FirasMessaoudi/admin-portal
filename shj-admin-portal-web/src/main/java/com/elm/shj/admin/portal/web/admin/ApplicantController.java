@@ -4,9 +4,11 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
@@ -40,12 +42,25 @@ public class ApplicantController {
 
     private final ApplicantService applicantService;
     private final ApplicantLiteService applicantLiteService;
+    private final ApplicantMainDataService applicantMainDataService;
 
     @GetMapping("/list/all")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
     public Page<ApplicantDto> listApplicants(Pageable pageable) {
         log.debug("List applicants...");
         return applicantService.findAll(pageable);
+    }
+
+    /**
+     * finds an applicant by his UIN
+     *
+     * @param uin the applicant's uin to find
+     * @return the found applicant or <code>null</code>
+     */
+    @GetMapping("/find/main-data/{uin}")
+    public ApplicantMainDataDto findApplicantMainData(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find applicant by uin");
+        return applicantMainDataService.findByUin(uin).orElseThrow(() -> new UsernameNotFoundException("No applicant found with uin " + uin));
     }
 
     /**

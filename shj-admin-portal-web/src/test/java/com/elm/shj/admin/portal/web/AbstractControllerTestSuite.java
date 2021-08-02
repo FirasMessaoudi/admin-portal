@@ -6,6 +6,9 @@ package com.elm.shj.admin.portal.web;
 import com.elm.dcc.foundation.commons.validation.UniqueValidator;
 import com.elm.dcc.foundation.providers.filescan.service.FileScanService;
 import com.elm.dcc.foundation.providers.recaptcha.service.RecaptchaService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.AuthorityLookupService;
@@ -107,6 +110,15 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected RecaptchaService recaptchaService;
+
+    @MockBean
+    protected ApplicantService applicantService;
+
+    @MockBean
+    protected ApplicantLiteService applicantLiteService;
+
+    @MockBean
+    protected ApplicantMainDataService applicantMainDataService;
 
     protected Cookie tokenCookie;
 
