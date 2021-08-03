@@ -34,4 +34,8 @@ public class ApplicantMainDataDto implements Serializable {
     private List<ApplicantRelativeDto> relatives;
     private List<ApplicantContactDto> contacts;
     private long status;
+    private String ritualTypeCode;
+    private String cardReferenceNumber;
+    private String cardStatusCode;
+    private String uin;
 }
