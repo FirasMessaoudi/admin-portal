@@ -40,6 +40,7 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
     private static final String GENERAL_ERROR_TEXT_KEY_NAME = "The server encountered an error processing the request. Please try again later.";
     private static final String UNIQUE_CONSTRAINT_VALIDATION_MSG_KEY = "dcc.commons.validation.constraints.unique";
     private static final String INVALID_CONSTRAINT_VALIDATION_MSG_KEY = "dcc.commons.validation.constraints.invalid";
+    private static final int APPLICANT_NOT_FOUND_RESPONSE_CODE = 561;
 
     /**
      * {@inheritDoc}
@@ -58,7 +59,7 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
             errorsMap.put(error.getObjectName(), error.getDefaultMessage());
         }
 
-        ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.BAD_REQUEST, GENERAL_ERROR_TEXT_KEY_NAME, errorsMap);
+        ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.BAD_REQUEST.value(), GENERAL_ERROR_TEXT_KEY_NAME, errorsMap);
 
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
@@ -74,7 +75,7 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put(GENERAL_ERROR_KEY_NAME, ex.getParameterName() + " parameter is missing");
 
-        ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.BAD_REQUEST, GENERAL_ERROR_TEXT_KEY_NAME, errors);
+        ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.BAD_REQUEST.value(), GENERAL_ERROR_TEXT_KEY_NAME, errors);
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
@@ -91,7 +92,7 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
         }
 
         ApiErrorResponse apiError =
-                new ApiErrorResponse(HttpStatus.BAD_REQUEST, GENERAL_ERROR_TEXT_KEY_NAME, errors);
+                new ApiErrorResponse(HttpStatus.BAD_REQUEST.value(), GENERAL_ERROR_TEXT_KEY_NAME, errors);
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
@@ -107,7 +108,7 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
         errors.put(GENERAL_ERROR_KEY_NAME, ex.getName() + " should be of type " + ((requiredType == null) ? StringUtils.EMPTY : requiredType.getName()));
 
         ApiErrorResponse apiError =
-                new ApiErrorResponse(HttpStatus.BAD_REQUEST, GENERAL_ERROR_TEXT_KEY_NAME, errors);
+                new ApiErrorResponse(HttpStatus.BAD_REQUEST.value(), GENERAL_ERROR_TEXT_KEY_NAME, errors);
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
@@ -119,7 +120,7 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
         logger.error(ex.getMessage(), ex);
         Map<String, String> errors = new HashMap<>();
         errors.put(GENERAL_ERROR_KEY_NAME, "No handler found for " + ex.getHttpMethod() + " " + ex.getRequestURL());
-        ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.NOT_FOUND, GENERAL_ERROR_TEXT_KEY_NAME, errors);
+        ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.NOT_FOUND.value(), GENERAL_ERROR_TEXT_KEY_NAME, errors);
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
@@ -139,7 +140,7 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put(GENERAL_ERROR_KEY_NAME, builder.toString());
 
-        ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.METHOD_NOT_ALLOWED,
+        ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.METHOD_NOT_ALLOWED.value(),
                 GENERAL_ERROR_TEXT_KEY_NAME, errors);
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
@@ -157,7 +158,7 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put(GENERAL_ERROR_KEY_NAME, builder.substring(0, builder.length() - 2));
 
-        ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+        ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
                 GENERAL_ERROR_TEXT_KEY_NAME, errors);
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), apiError.getStatus());
@@ -172,7 +173,7 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put(GENERAL_ERROR_KEY_NAME, GENERAL_ERROR_TEXT_KEY_NAME);
         ApiErrorResponse apiError = new ApiErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR, GENERAL_ERROR_TEXT_KEY_NAME, errors);
+                HttpStatus.INTERNAL_SERVER_ERROR.value(), GENERAL_ERROR_TEXT_KEY_NAME, errors);
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), apiError.getStatus());
     }
@@ -183,8 +184,21 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put(GENERAL_ERROR_KEY_NAME, GENERAL_ERROR_TEXT_KEY_NAME);
         ApiErrorResponse apiError = new ApiErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR, GENERAL_ERROR_TEXT_KEY_NAME, errors);
+                HttpStatus.INTERNAL_SERVER_ERROR.value(), GENERAL_ERROR_TEXT_KEY_NAME, errors);
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+
+    @ExceptionHandler({ApplicantNotFoundException.class})
+    public ResponseEntity<Object> handleApplicantNotFoundException(
+            ApplicantNotFoundException ex, WebRequest request) {
+        logger.error(ex.getMessage(), ex);
+        Map<String, String> errors = new HashMap<>();
+        errors.put(GENERAL_ERROR_KEY_NAME,ex.getMessage());
+
+        ApiErrorResponse apiError =
+                new ApiErrorResponse(APPLICANT_NOT_FOUND_RESPONSE_CODE, GENERAL_ERROR_TEXT_KEY_NAME, errors);
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 }

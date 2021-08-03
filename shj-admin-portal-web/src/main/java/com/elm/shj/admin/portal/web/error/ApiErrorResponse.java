@@ -15,18 +15,18 @@ import java.util.Map;
  */
 public class ApiErrorResponse {
 
-    private HttpStatus status;
+    private int status;
     private String message;
     private Map<String, String> errors;
 
-    public ApiErrorResponse(HttpStatus status, String message, Map<String, String> errors) {
+    public ApiErrorResponse(int status, String message, Map<String, String> errors) {
         super();
         this.status = status;
         this.message = message;
         this.errors = errors;
     }
 
-    public HttpStatus getStatus() {
+    public int getStatus() {
         return status;
     }
 
@@ -34,7 +34,7 @@ public class ApiErrorResponse {
         return this.errors;
     }
 
-    public void setStatus(HttpStatus status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
