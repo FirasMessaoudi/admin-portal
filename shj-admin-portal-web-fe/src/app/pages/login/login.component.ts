@@ -100,7 +100,6 @@ export class LoginComponent implements OnInit {
         console.log(user);
         if (user.passwordExpired) {
           console.log('redirect to change password page');
-          // redirect to change password page
           this.router.navigate(['/change-password'], {replaceUrl: true});
         } else if (user.otpRequired) {
           console.log('redirect to otp page');
