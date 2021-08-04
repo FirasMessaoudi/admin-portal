@@ -40,7 +40,6 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
     private static final String GENERAL_ERROR_TEXT_KEY_NAME = "The server encountered an error processing the request. Please try again later.";
     private static final String UNIQUE_CONSTRAINT_VALIDATION_MSG_KEY = "dcc.commons.validation.constraints.unique";
     private static final String INVALID_CONSTRAINT_VALIDATION_MSG_KEY = "dcc.commons.validation.constraints.invalid";
-    private static final int APPLICANT_NOT_FOUND_RESPONSE_CODE = 561;
 
     /**
      * {@inheritDoc}
@@ -189,16 +188,4 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
                 apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-
-    @ExceptionHandler({ApplicantNotFoundException.class})
-    public ResponseEntity<Object> handleApplicantNotFoundException(
-            ApplicantNotFoundException ex, WebRequest request) {
-        logger.error(ex.getMessage(), ex);
-        Map<String, String> errors = new HashMap<>();
-        errors.put(GENERAL_ERROR_KEY_NAME,ex.getMessage());
-
-        ApiErrorResponse apiError =
-                new ApiErrorResponse(APPLICANT_NOT_FOUND_RESPONSE_CODE, GENERAL_ERROR_TEXT_KEY_NAME, errors);
-        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
-    }
 }

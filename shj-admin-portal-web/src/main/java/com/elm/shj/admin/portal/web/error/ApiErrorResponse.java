@@ -3,8 +3,6 @@
  */
 package com.elm.shj.admin.portal.web.error;
 
-import org.springframework.http.HttpStatus;
-
 import java.util.Map;
 
 /**

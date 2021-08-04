@@ -10,6 +10,7 @@ import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.web.error.ApiErrorResponse;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.annotation.security.RolesAllowed;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -72,16 +77,9 @@ public class ApplicantController {
      * @return the found applicant or <code>null</code>
      */
     @GetMapping("/find/{uin}")
-    public ResponseEntity<ApplicantLiteDto> findApplicant(@PathVariable String uin) {
+    public ApplicantLiteDto findApplicant(@PathVariable String uin) {
         log.debug("Handler for {}", "Find applicant by uin");
-        Optional<ApplicantDto> applicant = applicantService.findByUin(uin);
-        if (applicant.isPresent()) {
-            ApplicantLiteDto applicantLite = applicantLiteService.findByUin(uin).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + uin));
-            return ResponseEntity.ok(applicantLite);
-        } else {
-            log.error("invalid data for uin {}", uin);
-            return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
-        }
+        return applicantLiteService.findByUin(uin).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + uin));
     }
 
     /**
@@ -145,5 +143,18 @@ public class ApplicantController {
             log.error("invalid data for uin {}", command.getUin());
             return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
         }
+    }
+
+
+    @ExceptionHandler({ApplicantNotFoundException.class})
+    public ResponseEntity<Object> handleApplicantNotFoundException(
+            ApplicantNotFoundException ex, WebRequest request) {
+        log.error(ex.getMessage(), ex);
+        Map<String, String> errors = new HashMap<>();
+        errors.put("uin","not found");
+
+        ApiErrorResponse apiError =
+                new ApiErrorResponse(APPLICANT_NOT_FOUND_RESPONSE_CODE, ex.getMessage(), errors);
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 }
