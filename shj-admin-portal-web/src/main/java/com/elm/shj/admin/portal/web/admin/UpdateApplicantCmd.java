@@ -29,6 +29,6 @@ public class UpdateApplicantCmd implements Serializable {
     private String email;
 
     @NotNull
-    @Size(min = 5, max = 30)
+    @Size(min = 5, max = 20)
     private String mobileNumber;
 }
