@@ -38,10 +38,10 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
         JpaApplicantMainData applicant = applicantMainDataRepository.findByUin(uin);
         if (applicant != null) {
             ApplicantMainDataDto applicantMainDataDto = getMapper().fromEntity(applicant, mappingContext);
-            if (!applicant.getDigitalIds().isEmpty()) {
-                applicantMainDataDto.setUin(applicant.getDigitalIds().get(0).getUin());
-            }
-            if (!applicant.getRelatives().isEmpty()) {
+
+            applicantMainDataDto.setUin(uin);
+
+            if (!applicant.getRituals().isEmpty()) {
                 JpaApplicantRitual jpaApplicantRitual = applicant.getRituals().get(0);
                 applicantMainDataDto.setRitualTypeCode(jpaApplicantRitual.getTypeCode());
 

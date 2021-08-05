@@ -46,6 +46,7 @@ public class ApplicantController {
     public final static String ISO8601_DATE_PATTERN = "yyyy-MM-dd";
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
     private static final int APPLICANT_NOT_FOUND_RESPONSE_CODE = 561;
+    private static final String APPLICANT_NOT_FOUND_ERROR_MSG = "not found";
 
     private final ApplicantService applicantService;
     private final ApplicantLiteService applicantLiteService;
@@ -67,7 +68,14 @@ public class ApplicantController {
     @GetMapping("/find/main-data/{uin}")
     public ApplicantMainDataDto findApplicantMainData(@PathVariable String uin) {
         log.debug("Handler for {}", "Find applicant by uin");
-        return applicantMainDataService.findByUin(uin).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + uin));
+
+        return applicantMainDataService.findByUin(uin).orElseThrow(
+                () -> {
+                    Map<String, String> errors = new HashMap<>();
+                    errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
+
+                    return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
+                });
     }
 
     /**
@@ -79,7 +87,13 @@ public class ApplicantController {
     @GetMapping("/find/{uin}")
     public ApplicantLiteDto findApplicant(@PathVariable String uin) {
         log.debug("Handler for {}", "Find applicant by uin");
-        return applicantLiteService.findByUin(uin).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + uin));
+
+        return applicantLiteService.findByUin(uin).orElseThrow(() -> {
+            Map<String, String> errors = new HashMap<>();
+            errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
+
+            return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
+        });
     }
 
     /**
@@ -150,11 +164,9 @@ public class ApplicantController {
     public ResponseEntity<Object> handleApplicantNotFoundException(
             ApplicantNotFoundException ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
-        Map<String, String> errors = new HashMap<>();
-        errors.put("uin","not found");
 
         ApiErrorResponse apiError =
-                new ApiErrorResponse(APPLICANT_NOT_FOUND_RESPONSE_CODE, ex.getMessage(), errors);
+                new ApiErrorResponse(APPLICANT_NOT_FOUND_RESPONSE_CODE, ex.getMessage(), ex.getErrors());
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 }

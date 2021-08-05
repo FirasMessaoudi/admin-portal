@@ -6,6 +6,8 @@ package com.elm.shj.admin.portal.web.error;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.Map;
+
 /**
  * Custom exception for not found applicants.
  *
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ApplicantNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = -2055467894820483788L;
+
+    Map<String, String> errors;
 
     public ApplicantNotFoundException() {
         // empty
@@ -30,12 +34,30 @@ public class ApplicantNotFoundException extends RuntimeException {
     }
 
     /**
+     * Constructor with message and errors
+     * @param message
+     * @param errors
+     */
+    public ApplicantNotFoundException(String message, Map<String, String> errors) {
+        super(message);
+        this.errors = errors;
+    }
+
+    /**
      * Constructor with message and details
      * @param message the exception message
      * @param th the thrown exception
      */
     public ApplicantNotFoundException(String message, Throwable th) {
         super(message, th);
+    }
+
+    public Map<String, String> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(Map<String, String> errors) {
+        this.errors = errors;
     }
 }
 
