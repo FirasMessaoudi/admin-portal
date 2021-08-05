@@ -244,7 +244,8 @@
     "old_password": "Old Password",
     "new_password": "New Password",
     "new_password_confirm": "Confirm New Password",
-    "new-password-confirm-mismatch": "Confirm password does not match password, please check"
+    "new-password-confirm-mismatch": "Confirm password does not match password, please check",
+    "success_text": "Password has been changed Successfully, please login with the new password"
   },
 
   "reset-password": {

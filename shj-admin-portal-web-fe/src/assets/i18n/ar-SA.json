@@ -235,7 +235,8 @@
     "old_password": "كلمة المرور القديمة",
     "new_password": "كلمة المرور الجديدة",
     "new_password_confirm": "تأكيد كلمة المرور",
-    "new-password-confirm-mismatch": "تأكيد كلمة المرور لا يتفق مع كلمة المرور من فضلك تأكد"
+    "new-password-confirm-mismatch": "تأكيد كلمة المرور لا يتفق مع كلمة المرور من فضلك تأكد",
+    "success_text": "تم تعديل كلمة المرور بنجاح , الرجاء تسجيل الدخول بكلمة السر الجديدة"
 
   },
   "reset-password": {
