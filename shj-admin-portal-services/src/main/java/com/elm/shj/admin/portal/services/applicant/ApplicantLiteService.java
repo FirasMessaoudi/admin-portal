@@ -38,11 +38,12 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
         if (applicant != null) {
             ApplicantLiteDto applicantLiteDto = getMapper().fromEntity(applicant, mappingContext);
             applicantLiteDto.setEmail(applicant.getContacts().get(0).getEmail());
-            if (applicant.getContacts().get(0).getLocalMobileNumber() != null) {
+            if (applicant.getContacts().get(0).getLocalMobileNumber() != null && applicant.getContacts().get(0).getLocalMobileNumber().length() != 0) {
                 applicantLiteDto.setMobileNumber(applicant.getContacts().get(0).getLocalMobileNumber());
             } else {
                 applicantLiteDto.setMobileNumber(applicant.getContacts().get(0).getIntlMobileNumber());
             }
+            applicantLiteDto.setCountryCode(applicant.getContacts().get(0).getCountryCode());
             return Optional.of(applicantLiteDto);
         } else return Optional.empty();
     }
