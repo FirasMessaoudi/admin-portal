@@ -8,8 +8,10 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Update Applicant MVC Command
@@ -31,4 +33,6 @@ public class UpdateApplicantCmd implements Serializable {
     @NotNull
     @Size(min = 5, max = 20)
     private String mobileNumber;
+
+    private int dateOfBirthHijri;
 }
