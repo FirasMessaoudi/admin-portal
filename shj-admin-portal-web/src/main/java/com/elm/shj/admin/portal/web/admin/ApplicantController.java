@@ -105,6 +105,10 @@ public class ApplicantController {
     public ResponseEntity<ApplicantLiteDto> verify(@RequestBody @Validated ValidateApplicantCmd command) {
 
         Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(command.getUin());
+
+        Map<String, String> errors = new HashMap<>();
+        errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
+
         if (applicant.isPresent()) {
             boolean dateOfBirthMatched;
 
@@ -119,14 +123,8 @@ public class ApplicantController {
             }
             if (dateOfBirthMatched) {
                 return ResponseEntity.ok(applicant.get());
-            } else {
-                log.error("invalid data for uin {}", command.getUin());
-                return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
-            }
-        } else {
-            log.error("invalid data for uin {}", command.getUin());
-            return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
-        }
+            } else throw new ApplicantNotFoundException("No applicant found with uin " + command.getUin(), errors);
+        } else throw new ApplicantNotFoundException("No applicant found with uin " + command.getUin(), errors);
     }
 
     /**
