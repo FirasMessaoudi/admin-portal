@@ -155,9 +155,19 @@ public class ApplicantController {
      */
     @PostMapping("/update")
     public ResponseEntity<ApplicantLiteDto> update(@RequestBody @Validated UpdateApplicantCmd command) {
-        log.debug("Handler for {}", "Update applicant");
-
         Optional<ApplicantDto> databaseApplicant = applicantService.findByUin(command.getUin());
+        if (databaseApplicant.isPresent()) {
+            boolean dateOfBirthMatched = false;
+
+
+            dateOfBirthMatched = command.getDateOfBirthHijri() == databaseApplicant.get().getDateOfBirthHijri();
+
+            if (!dateOfBirthMatched) {
+                log.error("invalid data for uin {} and date of birth {}", command.getUin(), command.getDateOfBirthHijri());
+                return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
+            }
+
+        }
         if (databaseApplicant.isPresent()) {
             // sets form fields to database applicant instance
             databaseApplicant.get().getContacts().get(0).setEmail(command.getEmail());
