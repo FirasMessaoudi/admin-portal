@@ -3,9 +3,11 @@ package com.elm.shj.admin.portal.web.admin;
 import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -14,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Test class for controller {@link UserManagementController}
+ * Test class for controller {@link ApplicantController}
  *
  * @author Ahmed Elsayed
  * @since 1.1.0
@@ -39,6 +41,21 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
         String url = Navigation.API_APPLICANTS + "/find/main-data/" + UIN_USER_EXIST;
         ApplicantMainDataDto applicantMainDataDto = new ApplicantMainDataDto();
         Mockito.when(this.applicantMainDataService.findByUin(Mockito.any())).thenReturn(Optional.of(applicantMainDataDto));
+        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void test_find_applicant_ritual_seasons_success() throws Exception {
+        String url = Navigation.API_APPLICANTS + "/find/ritual/seasons/" + UIN_USER_EXIST;
+
+        List<Integer> seasons = new ArrayList<>();
+        seasons.add(1442);
+
+        ApplicantMainDataDto applicantMainDataDto = new ApplicantMainDataDto();
+        Mockito.when(this.applicantMainDataService.findByUin(Mockito.any())).thenReturn(Optional.of(applicantMainDataDto));
+        Mockito.when(this.applicantRitualService.findHijriSeasonsByUin(Mockito.any())).thenReturn(seasons);
+
         mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
 
     }

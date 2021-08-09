@@ -66,3 +66,13 @@ values (1,1010101040,'1987-02-18','عبدالغنى عبدالعزيز عبدا�
 
 insert into shc_applicant_digital_id (id, uin, applicant_id, creation_date)
 values (1,59737700000059,1,N'2004-08-12');
+
+insert into shc_applicant_ritual ( id,applicant_id, hijri_season,
+                                   date_start_gregorian, date_end_gregorian, date_start_hijri, date_end_hijri, type_code,
+                                   permit_number, insurance_number,creation_date,UPDATE_DATE)
+values (1,1,1442,'2020-08-10','2020-08-31',14421012,14421012,'INTERNAL_UMRAH','1234567891225678912345678912345678912345678912365','1234567891225678912345678912345678912345678912365','2021-08-03 17:36:00','2021-08-03 17:36:00');
+
+insert into shc_applicant_ritual ( id,applicant_id, hijri_season,
+                                   date_start_gregorian, date_end_gregorian, date_start_hijri, date_end_hijri, type_code,
+                                   permit_number, insurance_number,creation_date,UPDATE_DATE)
+values (2,1,1443,'2021-08-10','2021-08-31',14431012,14431012,'INTERNAL_HAJJ','1234567891225678912345678912345678912345678912365','1234567891225678912345678912345678912345678912365','2021-08-03 17:36:00','2021-08-03 17:36:00');
