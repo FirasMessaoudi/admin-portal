@@ -10,6 +10,7 @@ import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.error.ApiErrorResponse;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -26,10 +27,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import javax.annotation.security.RolesAllowed;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Main controller for applicant management pages
@@ -51,6 +49,7 @@ public class ApplicantController {
     private final ApplicantService applicantService;
     private final ApplicantLiteService applicantLiteService;
     private final ApplicantMainDataService applicantMainDataService;
+    private final ApplicantRitualService applicantRitualService;
 
     @GetMapping("/list/all")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
@@ -76,6 +75,28 @@ public class ApplicantController {
 
                     return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
                 });
+    }
+
+
+    /**
+     * finds an applicant seasons by his UIN
+     *
+     * @param uin the applicant's uin to find
+     * @return the found applicant seasons list
+     */
+    @GetMapping("/find/ritual/seasons/{uin}")
+    public List<Integer> findApplicantRitualSeasons(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find applicant by uin");
+
+        applicantMainDataService.findByUin(uin).orElseThrow(
+                () -> {
+                    Map<String, String> errors = new HashMap<>();
+                    errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
+
+                    return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
+                });
+        return applicantRitualService.findHijriSeasonsByUin(uin);
+
     }
 
     /**

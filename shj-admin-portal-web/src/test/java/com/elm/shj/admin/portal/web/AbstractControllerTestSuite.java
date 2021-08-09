@@ -4,20 +4,41 @@
 package com.elm.shj.admin.portal.web;
 
 import com.elm.dcc.foundation.commons.validation.UniqueValidator;
+import com.elm.dcc.foundation.providers.email.config.EmailConfig;
+import com.elm.dcc.foundation.providers.filescan.config.FileScanConfig;
 import com.elm.dcc.foundation.providers.filescan.service.FileScanService;
+import com.elm.dcc.foundation.providers.recaptcha.config.RecaptchaConfig;
 import com.elm.dcc.foundation.providers.recaptcha.service.RecaptchaService;
+import com.elm.dcc.foundation.providers.sms.config.SmsGatewayConfig;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.audit.AuditLogService;
+import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
+import com.elm.shj.admin.portal.services.data.request.DataRequestService;
+import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
+import com.elm.shj.admin.portal.services.data.writer.ItemWriter;
+import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
-import com.elm.shj.admin.portal.services.lookup.AuthorityLookupService;
+import com.elm.shj.admin.portal.services.group.RitualGroupService;
+import com.elm.shj.admin.portal.services.lookup.*;
+import com.elm.shj.admin.portal.services.otp.OtpService;
+import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
+import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.role.RoleService;
+import com.elm.shj.admin.portal.services.rule.RuleService;
+import com.elm.shj.admin.portal.services.unit.RitualUnitService;
 import com.elm.shj.admin.portal.services.user.PasswordHistoryService;
 import com.elm.shj.admin.portal.services.user.UserService;
+import com.elm.shj.admin.portal.services.zone.RitualZoneService;
+import com.elm.shj.admin.portal.web.audit.AuditLogAspect;
 import com.elm.shj.admin.portal.web.boot.BootApplication;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
+import com.elm.shj.admin.portal.web.security.jwt.JwtAuthenticationProvider;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
+import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -31,6 +52,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -61,6 +83,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = BootApplication.class)
+@ComponentScan({"com.elm.shj.admin.portal.web", "com.elm.shj.admin.portal.services", "com.elm.dcc.foundation.providers", "com.elm.dcc.foundation.commons.web"})
 @WebMvcTest
 @ActiveProfiles("test")
 public abstract class AbstractControllerTestSuite {
@@ -119,6 +142,100 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected ApplicantMainDataService applicantMainDataService;
+
+    @MockBean
+    protected ApplicantRitualService applicantRitualService;
+
+    @MockBean
+    protected ApplicantCardService applicantCardService;
+
+    @MockBean
+    protected DataRequestService dataRequestService;
+
+    @MockBean
+    protected DataSegmentService dataSegmentService;
+
+    @MockBean
+    protected PrintRequestService printRequestService;
+
+    @MockBean
+    protected RuleService ruleService;
+
+    @MockBean
+    protected PrintRequestLiteService printRequestLiteService;
+
+    @MockBean
+    protected JwtAuthenticationProvider jwtAuthenticationProvider;
+
+    @MockBean
+    protected OtpAuthenticationProvider otpAuthenticationProvider;
+
+    @MockBean
+    protected AuditLogAspect auditLogAspect;
+
+    @MockBean
+    protected RitualTypeLookupService ritualTypeLookupService;
+
+    @MockBean
+    protected CardStatusLookupService cardStatusLookupService;
+
+    @MockBean
+    protected RelativeRelationshipLookupService relativeRelationshipLookupService;
+
+    @MockBean
+    protected MaritalStatusLookupService maritalStatusLookupService;
+
+    @MockBean
+    protected CountryLookupService countryLookupService;
+
+    @MockBean
+    protected HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;
+
+    @MockBean
+    protected PrintRequestStatusLookupService printRequestStatusLookupService;
+
+    @MockBean
+    protected PrintBatchTypeLookupService printBatchTypeLookupService;
+
+    @MockBean
+    protected AuditLogService auditLogService;
+
+    @MockBean
+    protected ItemWriter itemWriter;
+
+
+    @MockBean
+    protected DigitalIdService digitalIdService;
+
+    @MockBean
+    protected RitualGroupService ritualGroupService;
+
+    @MockBean
+    protected HealthImmunizationLookupService healthImmunizationLookupService;
+    @MockBean
+    protected LanguageLookupService languageLookupService;
+
+    @MockBean
+    protected OtpService otpService;
+
+    @MockBean
+    protected RitualUnitService ritualUnitService;
+
+    @MockBean
+    protected RitualZoneService ritualZoneService;
+
+    @MockBean
+    protected EmailConfig emailConfig;
+
+
+    @MockBean
+    protected SmsGatewayConfig smsGatewayConfig;
+    @MockBean
+    protected RecaptchaConfig recaptchaConfig;
+
+    @MockBean
+    protected FileScanConfig fileScanConfig;
+
 
     protected Cookie tokenCookie;
 

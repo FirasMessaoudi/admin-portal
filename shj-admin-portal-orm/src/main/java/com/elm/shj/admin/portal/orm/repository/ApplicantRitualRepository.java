@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -19,4 +20,7 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
 
     @Query("select ar from JpaApplicantRitual ar where ar.id not in (select ac.applicantRitual.id from JpaApplicantCard ac)")
     List<JpaApplicantRitual> findAllApplicantRitualsWithoutCard();
+
+    @Query("select distinct ar.hijriSeason from JpaApplicantRitual ar join ar.applicant a join a.digitalIds di where di.uin=:uin order by ar.hijriSeason desc ")
+    List<Integer> findApplicantRitualHijriSeasonsByUin(@Param("uin") String uin);
 }

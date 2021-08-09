@@ -25,6 +25,8 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantRitualService extends GenericService<JpaApplicantRitual, ApplicantRitualDto, Long> {
 
+    private final ApplicantRitualRepository applicantRitualRepository;
+
     /**
      * Find all applicants without digital IDs
      *
@@ -32,5 +34,14 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
      */
     public List<ApplicantRitualDto> findAllWithoutCards() {
         return mapList(((ApplicantRitualRepository) getRepository()).findAllApplicantRitualsWithoutCard());
+    }
+
+    /**
+     * Find hijriSeasons by uin
+     *
+     * @return the list of hijriSeasons
+     */
+    public List<Integer> findHijriSeasonsByUin(String uin) {
+        return applicantRitualRepository.findApplicantRitualHijriSeasonsByUin(uin);
     }
 }
