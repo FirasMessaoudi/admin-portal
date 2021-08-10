@@ -18,10 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 
@@ -85,8 +83,8 @@ public class ApplicantController {
      * @param uin the applicant's uin to find
      * @return the found applicant seasons list
      */
-    @GetMapping("/find/ritual-seasons")
-    public List<Integer> findApplicantRitualSeasons(@RequestHeader("uin") String uin) {
+    @GetMapping("/find/ritual-seasons/uin/{uin}")
+    public List<Integer> findApplicantRitualSeasons(@PathVariable String uin) {
         log.debug("Handler for {}", "Find applicant by uin");
 
         applicantService.findByUin(uin).orElseThrow(
@@ -107,8 +105,8 @@ public class ApplicantController {
      * @param season season number
      * @return the found applicant seasons list
      */
-    @GetMapping("/find/ritual-lite")
-    public List<ApplicantRitualLiteDto> findApplicantRitualByUinAndSeasons(@RequestHeader("uin") String uin, @RequestHeader("season") int season) {
+    @GetMapping("/find/ritual-lite/uin/{uin}/season/{season}")
+    public List<ApplicantRitualLiteDto> findApplicantRitualByUinAndSeasons(@PathVariable String uin, @PathVariable int season) {
         log.debug("Handler for {}", "Find applicant ritual by uin and season id");
 
         applicantService.findByUin(uin).orElseThrow(
@@ -219,13 +217,5 @@ public class ApplicantController {
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler({MissingRequestHeaderException.class})
-    public ResponseEntity<Object> handleMissingRequestHeaderException(
-            MissingRequestHeaderException ex, WebRequest request) {
-        log.error(ex.getMessage(), ex);
 
-        ApiErrorResponse apiError =
-                new ApiErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
-        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
-    }
 }

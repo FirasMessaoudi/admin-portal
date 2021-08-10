@@ -49,7 +49,7 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
 
     @Test
     public void test_find_applicant_ritual_seasons_success() throws Exception {
-        String url = Navigation.API_APPLICANTS + "/find/ritual-seasons";
+        String url = Navigation.API_APPLICANTS + "/find/ritual-seasons/uin/"+EXIST_USER_UIN;
 
         List<Integer> seasons = new ArrayList<>();
         seasons.add(1442);
@@ -58,13 +58,13 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
         Mockito.when(this.applicantService.findByUin(Mockito.any())).thenReturn(Optional.of(applicantDto));
         Mockito.when(this.applicantRitualService.findHijriSeasonsByUin(Mockito.any())).thenReturn(seasons);
 
-        mockMvc.perform(get(url).header("uin", EXIST_USER_UIN).with(csrf())).andDo(print()).andExpect(status().isOk());
+        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
 
     }
 
     @Test
     public void test_find_applicant_ritual_by_uin_and_seasons_success() throws Exception {
-        String url = Navigation.API_APPLICANTS + "/find/ritual-lite";
+        String url = Navigation.API_APPLICANTS + "/find/ritual-lite/uin/"+EXIST_USER_UIN+"/season/1442";
 
         List<ApplicantRitualLiteDto> applicantRitualLites = new ArrayList<>();
         applicantRitualLites.add(new ApplicantRitualLiteDto());
@@ -73,7 +73,7 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
         Mockito.when(this.applicantService.findByUin(Mockito.any())).thenReturn(Optional.of(applicantDto));
         Mockito.when(this.applicantRitualLiteService.findApplicantRitualByUinAndSeason(EXIST_USER_UIN, 1442)).thenReturn(applicantRitualLites);
 
-        mockMvc.perform(get(url).header("uin", EXIST_USER_UIN).header("season", 1442).with(csrf())).andDo(print()).andExpect(status().isOk());
+        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
 
     }
 }
