@@ -104,17 +104,10 @@ public class ApplicantController {
      * @param uin the applicant's uin to find
      * @return the found applicant seasons list
      */
-    @GetMapping("/find/ritual-seasons/uin/{uin}")
+    @GetMapping("/find/ritual-seasons/{uin}")
     public List<Integer> findApplicantRitualSeasons(@PathVariable String uin) {
         log.debug("Handler for {}", "Find applicant by uin");
 
-        applicantService.findByUin(uin).orElseThrow(
-                () -> {
-                    Map<String, String> errors = new HashMap<>();
-                    errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
-
-                    return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
-                });
         return applicantRitualService.findHijriSeasonsByUin(uin);
 
     }
@@ -126,19 +119,11 @@ public class ApplicantController {
      * @param season season number
      * @return the found applicant seasons list
      */
-    @GetMapping("/find/ritual-lite/uin/{uin}/season/{season}")
+    @GetMapping("/find/ritual-lite/{uin}/{season}")
     public List<ApplicantRitualLiteDto> findApplicantRitualByUinAndSeasons(@PathVariable String uin, @PathVariable int season) {
         log.debug("Handler for {}", "Find applicant ritual by uin and season id");
 
-        applicantService.findByUin(uin).orElseThrow(
-                () -> {
-                    Map<String, String> errors = new HashMap<>();
-                    errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
-
-                    return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
-                });
         return applicantRitualLiteService.findApplicantRitualByUinAndSeason(uin, season);
-
     }
 
     /**

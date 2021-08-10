@@ -17,8 +17,8 @@ import java.util.List;
 /**
  * Service handling applicant rituals
  *
- * @author Aymen elsayed
- * @since 1.0.0
+ * @author Ahmed elsayed
+ * @since 1.1.0
  */
 @Service
 @Slf4j

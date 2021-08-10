@@ -49,7 +49,7 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
 
     @Test
     public void test_find_applicant_ritual_seasons_success() throws Exception {
-        String url = Navigation.API_APPLICANTS + "/find/ritual-seasons/uin/"+EXIST_USER_UIN;
+        String url = Navigation.API_APPLICANTS + "/find/ritual-seasons/"+EXIST_USER_UIN;
 
         List<Integer> seasons = new ArrayList<>();
         seasons.add(1442);
@@ -64,7 +64,7 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
 
     @Test
     public void test_find_applicant_ritual_by_uin_and_seasons_success() throws Exception {
-        String url = Navigation.API_APPLICANTS + "/find/ritual-lite/uin/"+EXIST_USER_UIN+"/season/1442";
+        String url = Navigation.API_APPLICANTS + "/find/ritual-lite/"+EXIST_USER_UIN+"/1442";
 
         List<ApplicantRitualLiteDto> applicantRitualLites = new ArrayList<>();
         applicantRitualLites.add(new ApplicantRitualLiteDto());
