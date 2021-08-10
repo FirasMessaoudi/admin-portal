@@ -1,6 +1,5 @@
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantMainData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

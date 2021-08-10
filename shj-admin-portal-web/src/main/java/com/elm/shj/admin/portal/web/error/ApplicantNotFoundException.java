@@ -3,8 +3,6 @@
  */
 package com.elm.shj.admin.portal.web.error;
 
-import org.springframework.web.bind.annotation.ResponseStatus;
-
 import java.util.Map;
 
 /**
@@ -13,7 +11,6 @@ import java.util.Map;
  * @author Slim Ben Hadj
  * @since 1.1.0
  */
-@ResponseStatus(reason = "Applicant Not Found")
 public class ApplicantNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = -2055467894820483788L;

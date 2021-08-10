@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.services.applicant.ApplicantHealthService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
@@ -49,6 +50,7 @@ public class ApplicantController {
     private final ApplicantMainDataService applicantMainDataService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantRitualLiteService applicantRitualLiteService;
+    private final ApplicantHealthService applicantHealthService;
 
     @GetMapping("/list/all")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
@@ -65,9 +67,28 @@ public class ApplicantController {
      */
     @GetMapping("/find/main-data/{uin}")
     public ApplicantMainDataDto findApplicantMainData(@PathVariable String uin) {
-        log.debug("Handler for {}", "Find applicant by uin");
+        log.debug("Handler for {}", "Find applicant main data by uin");
 
         return applicantMainDataService.findByUin(uin).orElseThrow(
+                () -> {
+                    Map<String, String> errors = new HashMap<>();
+                    errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
+
+                    return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
+                });
+    }
+
+    /**
+     * finds applicant's health details by his UIN
+     *
+     * @param uin the applicant's uin
+     * @return the applicant health details or <code>null</code>
+     */
+    @GetMapping("/health/{uin}")
+    public ApplicantHealthDto findApplicantHealthDetails(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find applicant health details by uin");
+
+        return applicantHealthService.findByUin(uin).orElseThrow(
                 () -> {
                     Map<String, String> errors = new HashMap<>();
                     errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
