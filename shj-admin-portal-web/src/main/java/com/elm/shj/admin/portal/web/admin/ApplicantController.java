@@ -6,10 +6,8 @@ package com.elm.shj.admin.portal.web.admin;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
-import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.error.ApiErrorResponse;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
@@ -20,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 
@@ -50,6 +50,7 @@ public class ApplicantController {
     private final ApplicantLiteService applicantLiteService;
     private final ApplicantMainDataService applicantMainDataService;
     private final ApplicantRitualService applicantRitualService;
+    private final ApplicantRitualLiteService applicantRitualLiteService;
 
     @GetMapping("/list/all")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
@@ -84,11 +85,11 @@ public class ApplicantController {
      * @param uin the applicant's uin to find
      * @return the found applicant seasons list
      */
-    @GetMapping("/find/ritual/seasons/{uin}")
-    public List<Integer> findApplicantRitualSeasons(@PathVariable String uin) {
+    @GetMapping("/find/ritual-seasons")
+    public List<Integer> findApplicantRitualSeasons(@RequestHeader("uin") String uin) {
         log.debug("Handler for {}", "Find applicant by uin");
 
-        applicantMainDataService.findByUin(uin).orElseThrow(
+        applicantService.findByUin(uin).orElseThrow(
                 () -> {
                     Map<String, String> errors = new HashMap<>();
                     errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
@@ -96,6 +97,28 @@ public class ApplicantController {
                     return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
                 });
         return applicantRitualService.findHijriSeasonsByUin(uin);
+
+    }
+
+    /**
+     * finds an applicant ritual lite by his UIN and season number
+     *
+     * @param uin    the applicant's uin to find
+     * @param season season number
+     * @return the found applicant seasons list
+     */
+    @GetMapping("/find/ritual-lite")
+    public List<ApplicantRitualLiteDto> findApplicantRitualByUinAndSeasons(@RequestHeader("uin") String uin, @RequestHeader("season") int season) {
+        log.debug("Handler for {}", "Find applicant ritual by uin and season id");
+
+        applicantService.findByUin(uin).orElseThrow(
+                () -> {
+                    Map<String, String> errors = new HashMap<>();
+                    errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
+
+                    return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
+                });
+        return applicantRitualLiteService.findApplicantRitualByUinAndSeason(uin, season);
 
     }
 
@@ -196,6 +219,16 @@ public class ApplicantController {
 
         ApiErrorResponse apiError =
                 new ApiErrorResponse(APPLICANT_NOT_FOUND_RESPONSE_CODE, ex.getMessage(), ex.getErrors());
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+    @ExceptionHandler({MissingRequestHeaderException.class})
+    public ResponseEntity<Object> handleMissingRequestHeaderException(
+            MissingRequestHeaderException ex, WebRequest request) {
+        log.error(ex.getMessage(), ex);
+
+        ApiErrorResponse apiError =
+                new ApiErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 }

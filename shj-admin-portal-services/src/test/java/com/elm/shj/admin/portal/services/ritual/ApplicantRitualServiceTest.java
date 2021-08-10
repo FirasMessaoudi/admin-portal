@@ -27,7 +27,7 @@ import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 public class ApplicantRitualServiceTest {
 
-    private final static String UIN_USER_EXIST = "59737700000059";
+    private final static String EXIST_USER_UIN = "59737700000059";
 
     @Mock
     private MapperRegistry mapperRegistry;
@@ -51,8 +51,8 @@ public class ApplicantRitualServiceTest {
 
         List<Integer> seasons = new ArrayList<>();
         seasons.add(1442);
-        Mockito.when(applicantRitualRepository.findApplicantRitualHijriSeasonsByUin(UIN_USER_EXIST)).thenReturn(seasons);
-        List<Integer> outSeasons = applicantRitualService.findHijriSeasonsByUin(UIN_USER_EXIST);
+        Mockito.when(applicantRitualRepository.findApplicantRitualHijriSeasonsByUin(EXIST_USER_UIN)).thenReturn(seasons);
+        List<Integer> outSeasons = applicantRitualService.findHijriSeasonsByUin(EXIST_USER_UIN);
 
         Assert.assertNotNull(outSeasons);
         Assert.assertEquals(1, outSeasons.size());
