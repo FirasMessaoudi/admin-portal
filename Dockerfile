@@ -39,7 +39,7 @@ COPY . .
 COPY --from=frontend-build  /code/build/dist/ shj-admin-portal-web-fe/dist/
 RUN --mount=type=cache,target=/root/.m2/repository \
   mvn -s settings.xml -Pprod package -DskipTests -DskipFrontendBuild
-RUN mv target/*war app.war
+RUN mv shj-admin-portal-web/target/*war app.war
 
 # FROM nexus.elm.sa/elm-core/tomcat-wkhtmltopdf-ffmpeg:9.0.14-jre-8-alpine-coresnapshot9 as runtime
 # COPY --from=build /code/build/app.war /usr/local/tomcat/webapps/ROOT.war
@@ -51,7 +51,8 @@ RUN mv target/*war app.war
 #USER 1001
 
 ### STAGE DEPLOY ###
-#FROM ${REGISTRY}/openshift/java:13-RHEL7 as runtime
-#WORKDIR /usr/src
-#COPY --from=build --chown=1001:0 /code/build/app.war .
-#ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.war"]
+FROM ${REGISTRY}/openjdk:13-jdk-alpine as runtime
+# FROM ${REGISTRY}/bitnami/tomcat:9.0.50 as runtime
+WORKDIR /usr/src
+COPY --from=build --chown=1001:0 /code/build/app.war .
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.war"]
