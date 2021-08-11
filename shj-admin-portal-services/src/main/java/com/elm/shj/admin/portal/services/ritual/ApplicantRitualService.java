@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.ritual;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service handling applicant rituals
@@ -44,4 +46,15 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
     public List<Integer> findHijriSeasonsByUin(String uin) {
         return applicantRitualRepository.findApplicantRitualHijriSeasonsByUin(uin);
     }
+
+    /**
+     * Find findApplicantRitualCardDetails  by uin
+     *
+     * @return the   card details
+     */
+    public Optional<ApplicantCardDetails> findApplicantRitualCardDetailsByUin(String uin) {
+        return applicantRitualRepository.findApplicantRitualCardDetailsByUin(uin);
+    }
+
+
 }
