@@ -1,1 +1,13 @@
-node_modules/
+.idea
+Jenkinsfile
+Dockerfile
+docker-compose.yaml
+.env
+**/target
+*.log
+target
+.gitignore
+shj-admin-portal-web-fe/node_modules
+shj-admin-portal-web-fe/dist
+catalina.base_IS_UNDEFINED
+archived
