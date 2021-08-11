@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository for Applicant Card Table.
@@ -49,4 +51,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
     Page<JpaApplicantCard> searchApplicantCards(@Param("uin") String uin, @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, Pageable pageable);
 
     JpaApplicantCard findByApplicantRitualId(long id);
+
+    @Query("select  new com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails(ar.hamlahPackageCode,ar.tafweejCode,ar.zoneCode, ar.groupCode,ar.unitCode,ar.hijriSeason,a.fullNameAr,a.fullNameEn,a.photo)  from JpaApplicantRitual ar join ar.applicant a join a.digitalIds di where di.uin=:uin ")
+    Optional<ApplicantCardDetails> findCardDetailsByUin(@Param("uin") String uin);
 }

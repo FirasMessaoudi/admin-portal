@@ -29,6 +29,5 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
     @Query("select  ar from JpaApplicantRitual ar join ar.applicant a join a.digitalIds di where di.uin=:uin and ar.hijriSeason=:season order by ar.dateStartHijri desc ")
     List<JpaApplicantRitual> findApplicantRitualByUinAndSeason(@Param("uin") String uin, @Param("season") int season);
 
-    @Query("select  new com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails(ar.hamlahPackageCode,ar.tafweejCode,ar.zoneCode, ar.groupCode,ar.unitCode,ar.hijriSeason) from JpaApplicantRitual ar join ar.applicant a join a.digitalIds di where di.uin=:uin ")
-    Optional<ApplicantCardDetails> findApplicantRitualCardDetailsByUin(@Param("uin") String uin);
+
 }

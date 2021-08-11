@@ -10,6 +10,8 @@ import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,6 +77,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return ((ApplicantRepository) getRepository()).existsByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
     }
 
+
     /**
      * Finds an applicant by his uin
      *
@@ -84,7 +88,6 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         JpaApplicant applicant = applicantRepository.findByUin(uin);
         return (applicant != null) ? Optional.of(getMapper().fromEntity(applicant, mappingContext)) : Optional.empty();
     }
-
     /**
      * {@inheritDoc}
      */
