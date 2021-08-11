@@ -10,6 +10,7 @@ import com.elm.dcc.foundation.providers.filescan.service.FileScanService;
 import com.elm.dcc.foundation.providers.recaptcha.config.RecaptchaConfig;
 import com.elm.dcc.foundation.providers.recaptcha.service.RecaptchaService;
 import com.elm.dcc.foundation.providers.sms.config.SmsGatewayConfig;
+import com.elm.shj.admin.portal.services.applicant.ApplicantHealthService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
@@ -121,6 +122,9 @@ public abstract class AbstractControllerTestSuite {
     protected ApplicantRitualLiteService applicantRitualLiteService;
 
     @MockBean
+    protected ApplicantHealthService applicantHealthService;
+
+    @MockBean
     protected DashboardService dashboardService;
 
     @Autowired
@@ -207,7 +211,6 @@ public abstract class AbstractControllerTestSuite {
     @MockBean
     protected ItemWriter itemWriter;
 
-
     @MockBean
     protected DigitalIdService digitalIdService;
 
@@ -216,6 +219,7 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected HealthImmunizationLookupService healthImmunizationLookupService;
+
     @MockBean
     protected LanguageLookupService languageLookupService;
 
@@ -231,15 +235,14 @@ public abstract class AbstractControllerTestSuite {
     @MockBean
     protected EmailConfig emailConfig;
 
-
     @MockBean
     protected SmsGatewayConfig smsGatewayConfig;
+
     @MockBean
     protected RecaptchaConfig recaptchaConfig;
 
     @MockBean
     protected FileScanConfig fileScanConfig;
-
 
     protected Cookie tokenCookie;
 

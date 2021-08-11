@@ -3,6 +3,8 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails;
+import com.elm.shj.admin.portal.services.applicant.ApplicantHealthService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
@@ -49,6 +51,7 @@ public class ApplicantController {
     private final ApplicantMainDataService applicantMainDataService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantRitualLiteService applicantRitualLiteService;
+    private final ApplicantHealthService applicantHealthService;
 
     @GetMapping("/list/all")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
@@ -65,9 +68,28 @@ public class ApplicantController {
      */
     @GetMapping("/find/main-data/{uin}")
     public ApplicantMainDataDto findApplicantMainData(@PathVariable String uin) {
-        log.debug("Handler for {}", "Find applicant by uin");
+        log.debug("Handler for {}", "Find applicant main data by uin");
 
         return applicantMainDataService.findByUin(uin).orElseThrow(
+                () -> {
+                    Map<String, String> errors = new HashMap<>();
+                    errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
+
+                    return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
+                });
+    }
+
+    /**
+     * finds applicant's health details by his UIN
+     *
+     * @param uin the applicant's uin
+     * @return the applicant health details or <code>null</code>
+     */
+    @GetMapping("/health/{uin}")
+    public ApplicantHealthDto findApplicantHealthDetails(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find applicant health details by uin");
+
+        return applicantHealthService.findByUin(uin).orElseThrow(
                 () -> {
                     Map<String, String> errors = new HashMap<>();
                     errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
@@ -83,17 +105,10 @@ public class ApplicantController {
      * @param uin the applicant's uin to find
      * @return the found applicant seasons list
      */
-    @GetMapping("/find/ritual-seasons/uin/{uin}")
+    @GetMapping("/find/ritual-seasons/{uin}")
     public List<Integer> findApplicantRitualSeasons(@PathVariable String uin) {
         log.debug("Handler for {}", "Find applicant by uin");
 
-        applicantService.findByUin(uin).orElseThrow(
-                () -> {
-                    Map<String, String> errors = new HashMap<>();
-                    errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
-
-                    return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
-                });
         return applicantRitualService.findHijriSeasonsByUin(uin);
 
     }
@@ -105,19 +120,11 @@ public class ApplicantController {
      * @param season season number
      * @return the found applicant seasons list
      */
-    @GetMapping("/find/ritual-lite/uin/{uin}/season/{season}")
+    @GetMapping("/find/ritual-lite/{uin}/{season}")
     public List<ApplicantRitualLiteDto> findApplicantRitualByUinAndSeasons(@PathVariable String uin, @PathVariable int season) {
         log.debug("Handler for {}", "Find applicant ritual by uin and season id");
 
-        applicantService.findByUin(uin).orElseThrow(
-                () -> {
-                    Map<String, String> errors = new HashMap<>();
-                    errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
-
-                    return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
-                });
         return applicantRitualLiteService.findApplicantRitualByUinAndSeason(uin, season);
-
     }
 
     /**
@@ -204,6 +211,20 @@ public class ApplicantController {
             log.error("invalid data for uin {}", command.getUin());
             return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
         }
+    }
+
+    /**
+     * finds an applicant card details by his UIN
+     *
+     * @param uin the applicant's card details by  uin
+     * @return the found applicant card details or <code>null</code>
+     */
+    @GetMapping("/card/{uin}")
+    public ResponseEntity<ApplicantCardDetails> findApplicantCardDetails(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find applicant card details by uin");
+        ApplicantCardDetails cardDetails = applicantRitualService.findApplicantRitualCardDetailsByUin(uin).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + uin));
+        return ResponseEntity.ok(Objects.requireNonNull(cardDetails));
+
     }
 
 

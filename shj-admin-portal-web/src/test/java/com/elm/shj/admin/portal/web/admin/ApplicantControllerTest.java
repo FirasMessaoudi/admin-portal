@@ -1,11 +1,13 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantHealthDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualLiteDto;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -37,6 +39,13 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
 
     }
 
+    @Test
+    public void test_find_applicant_health_details_success() throws Exception {
+        String url = Navigation.API_APPLICANTS + "/health/" + EXIST_USER_UIN;
+        ApplicantHealthDto applicantHealthDto = new ApplicantHealthDto();
+        Mockito.when(this.applicantHealthService.findByUin(Mockito.any())).thenReturn(Optional.of(applicantHealthDto));
+        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
+    }
 
     @Test
     public void test_find_applicant_main_data_success() throws Exception {
@@ -49,7 +58,7 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
 
     @Test
     public void test_find_applicant_ritual_seasons_success() throws Exception {
-        String url = Navigation.API_APPLICANTS + "/find/ritual-seasons/uin/"+EXIST_USER_UIN;
+        String url = Navigation.API_APPLICANTS + "/find/ritual-seasons/"+EXIST_USER_UIN;
 
         List<Integer> seasons = new ArrayList<>();
         seasons.add(1442);
@@ -64,7 +73,7 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
 
     @Test
     public void test_find_applicant_ritual_by_uin_and_seasons_success() throws Exception {
-        String url = Navigation.API_APPLICANTS + "/find/ritual-lite/uin/"+EXIST_USER_UIN+"/season/1442";
+        String url = Navigation.API_APPLICANTS + "/find/ritual-lite/"+EXIST_USER_UIN+"/1442";
 
         List<ApplicantRitualLiteDto> applicantRitualLites = new ArrayList<>();
         applicantRitualLites.add(new ApplicantRitualLiteDto());
