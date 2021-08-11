@@ -1,11 +1,13 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantHealthDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualLiteDto;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -37,6 +39,13 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
 
     }
 
+    @Test
+    public void test_find_applicant_health_details_success() throws Exception {
+        String url = Navigation.API_APPLICANTS + "/health/" + EXIST_USER_UIN;
+        ApplicantHealthDto applicantHealthDto = new ApplicantHealthDto();
+        Mockito.when(this.applicantHealthService.findByUin(Mockito.any())).thenReturn(Optional.of(applicantHealthDto));
+        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
+    }
 
     @Test
     public void test_find_applicant_main_data_success() throws Exception {
