@@ -1,4 +1,4 @@
-@Library('pipeline@bugfix/DEVOPS-701-build-without-deploy') _
+@Library('pipeline') _
 
 pipeline_cloud_native {
 
