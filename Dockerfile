@@ -51,8 +51,8 @@ RUN mv shj-admin-portal-web/target/*war app.war
 #USER 1001
 
 ### STAGE DEPLOY ###
-# FROM ${REGISTRY}/openjdk:13-jdk-alpine as runtime
-FROM ${REGISTRY}/bitnami/tomcat:9.0.50
+FROM ${REGISTRY}/openjdk:13-jdk-alpine as runtime
+# FROM ${REGISTRY}/bitnami/tomcat:9.0.50 as runtime
 WORKDIR /usr/src
 COPY --from=build --chown=1001:0 /code/build/app.war .
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.war"]

@@ -18,7 +18,6 @@ import java.util.List;
  * @since 1.0.0
  */
 public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long> {
-
     @Query(value = "select a from JpaApplicant a where " +
             "(a.idNumber = :idNumber and a.dateOfBirthHijri = :dateOfBirthHijri) or " +
             "(a.passportNumber = :passportNumber and a.dateOfBirthGregorian = :dateOfBirthGregorian)")

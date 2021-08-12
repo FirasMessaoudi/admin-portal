@@ -213,19 +213,7 @@ public class ApplicantController {
         }
     }
 
-    /**
-     * finds an applicant card details by his UIN
-     *
-     * @param uin the applicant's card details by  uin
-     * @return the found applicant card details or <code>null</code>
-     */
-    @GetMapping("/card/{uin}")
-    public ResponseEntity<ApplicantCardDetails> findApplicantCardDetails(@PathVariable String uin) {
-        log.debug("Handler for {}", "Find applicant card details by uin");
-        ApplicantCardDetails cardDetails = applicantRitualService.findApplicantRitualCardDetailsByUin(uin).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + uin));
-        return ResponseEntity.ok(Objects.requireNonNull(cardDetails));
 
-    }
 
 
     @ExceptionHandler({ApplicantNotFoundException.class})

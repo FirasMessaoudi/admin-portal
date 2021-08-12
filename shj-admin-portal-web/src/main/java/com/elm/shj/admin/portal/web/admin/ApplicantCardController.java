@@ -3,10 +3,14 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardSearchCriteriaDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.web.error.ApiErrorResponse;
+import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
+import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +18,13 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+
 import java.io.IOException;
 import java.util.*;
 /**
@@ -32,6 +40,8 @@ import java.util.*;
 public class ApplicantCardController {
 
     private final ApplicantCardService applicantCardService;
+    private static final String APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG = "no card details found for applicant with this uin";
+    private static final int CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "')")
@@ -111,5 +121,33 @@ public class ApplicantCardController {
     public ApplicantCardDto findApplicantCard(@PathVariable long cardId) {
         log.debug("Handler for {}", "Find Applicant Card");
         return applicantCardService.findOne(cardId);
+    }
+
+
+    /**
+     * finds an applicant card details by his UIN
+     * to be used by applicant portal
+     *
+     * @param uin the applicant's card details by  uin
+     * @return the found applicant card details or <code>null</code>
+     */
+    @GetMapping("/details/{uin}")
+    public ApplicantCardDetails findCardDetails(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find applicant card details by uin");
+        return applicantCardService.findCardDetailsByUin(uin).orElseThrow(() -> {
+            Map<String, String> errors = new HashMap<>();
+            errors.put("uin", APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG);
+            return new CardDetailsNotFoundException("No Card Details Found For Applicant with uin " + uin, errors);
+        });
+
+    }
+
+    @ExceptionHandler({CardDetailsNotFoundException.class})
+    public ResponseEntity<Object> handleApplicantNotFoundException(
+            CardDetailsNotFoundException ex, WebRequest request) {
+        log.error(ex.getMessage(), ex);
+        ApiErrorResponse apiError =
+                new ApiErrorResponse(CARD_DETAILS_NOT_FOUND_RESPONSE_CODE, ex.getMessage(), ex.getErrors());
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 }

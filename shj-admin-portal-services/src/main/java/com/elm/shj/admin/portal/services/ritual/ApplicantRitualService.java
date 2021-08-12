@@ -47,14 +47,5 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
         return applicantRitualRepository.findApplicantRitualHijriSeasonsByUin(uin);
     }
 
-    /**
-     * Find findApplicantRitualCardDetails  by uin
-     *
-     * @return the   card details
-     */
-    public Optional<ApplicantCardDetails> findApplicantRitualCardDetailsByUin(String uin) {
-        return applicantRitualRepository.findApplicantRitualCardDetailsByUin(uin);
-    }
-
 
 }

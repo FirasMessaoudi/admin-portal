@@ -62,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // any URL does not require authentication should be added to this array
     //TODO: URLs exposed for the applicant portal have to be removed from public URLs once security solution is provided.
     private static final String[] PUBLIC_URLS = {"/api/auth/login", "/api/auth/otp", "/api/users/reset-password", "/api/register",
-            "/api/applicants/**", "/api/applicants/update", "/api/applicant/lookup/**", "/index.html", "/error", "/api-docs",
+            "/api/applicants/**", "/api/applicants/update", "/api/cards/details/**", "/api/applicant/lookup/**", "/index.html", "/error", "/api-docs",
             "/swagger-ui.html", "/swagger-ui/**"};
     // URLs that will be ignored by spring security should be added to this array
     private static final String[] IGNORED_URLS = {"/assets/**", "/cpm-error/**", "/*.png", "/*.jpg", "/*.jpeg",

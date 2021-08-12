@@ -1,6 +1,7 @@
 package com.elm.shj.admin.portal.services.ritual;
 
 import com.elm.dcc.foundation.commons.core.mapper.MapperRegistry;
+import com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;
@@ -27,7 +28,8 @@ import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 public class ApplicantRitualServiceTest {
 
-    private final static String EXIST_USER_UIN = "59737700000059";
+    private final static String EXIST_USER_UIN = "50208700000027";
+    private final static String FAKE_USER_UIN = "123456987";
 
     @Mock
     private MapperRegistry mapperRegistry;
@@ -58,4 +60,6 @@ public class ApplicantRitualServiceTest {
         Assert.assertEquals(1, outSeasons.size());
         Assert.assertEquals(Optional.of(1442), Optional.of(outSeasons.get(0)));
     }
+
+
 }
