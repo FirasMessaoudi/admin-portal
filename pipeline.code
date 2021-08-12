@@ -2,11 +2,6 @@
 
 pipeline_cloud_native {
 
-  options = 
-    ci_branch: 'master|dev.*',
-    skip_qa_deploy_when_ci_branch: true
-  ]
-
   build = {
     strategy        = 'docker-compose'
     config_files    = ['./docker-compose.yaml']
