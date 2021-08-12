@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 /**
  * Repository for applicant health table.
  *
@@ -16,7 +18,11 @@ import org.springframework.data.repository.query.Param;
  */
 public interface ApplicantHealthRepository extends JpaRepository<JpaApplicantHealth, Long> {
 
+    @Query(value = "SELECT ah FROM JpaApplicantHealth ah JOIN ah.applicant a JOIN a.digitalIds adi " +
+            "WHERE adi.uin = :uin AND ah.applicantRitual.id = :ritualId")
+    JpaApplicantHealth findByUinAndRitualId(@Param("uin") String uin, @Param("ritualId") Long ritualId);
+
     @Query(value = "SELECT ah FROM JpaApplicantHealth ah JOIN ah.applicant a JOIN a.digitalIds adi WHERE adi.uin = :uin")
-    JpaApplicantHealth findByUin(@Param("uin") String uin);
+    List<JpaApplicantHealth> findByUin(@Param("uin") String uin);
 
 }

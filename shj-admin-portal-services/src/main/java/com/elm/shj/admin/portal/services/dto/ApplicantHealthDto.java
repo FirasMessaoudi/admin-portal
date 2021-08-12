@@ -46,6 +46,8 @@ public class ApplicantHealthDto implements Serializable {
     private Boolean hasSpecialNeeds;
     private Date creationDate;
     private Date updateDate;
+    @JsonBackReference
+    private ApplicantRitualDto applicantRitual;
     private DataRequestRecordDto dataRequestRecord;
     private List<ApplicantHealthDiseaseDto> diseases;
     @Valid

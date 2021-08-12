@@ -56,6 +56,10 @@ public class JpaApplicantHealth implements Serializable {
     private Date updateDate;
 
     @ManyToOne
+    @JoinColumn(name = "applicant_ritual_id")
+    private JpaApplicantRitual applicantRitual;
+
+    @ManyToOne
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 

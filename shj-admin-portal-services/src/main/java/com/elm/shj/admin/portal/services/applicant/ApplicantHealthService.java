@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -33,8 +36,24 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
      * @param uin the uin of the applicant
      * @return the found health details or empty structure
      */
-    public Optional<ApplicantHealthDto> findByUin(String uin) {
-        JpaApplicantHealth applicantHealth = applicantHealthRepository.findByUin(uin);
+    public ApplicantHealthDto findByUinAndLastRitual(String uin) {
+        List<JpaApplicantHealth> applicantHealths = applicantHealthRepository.findByUin(uin);
+        return getMapper().fromEntity(applicantHealths
+                .stream()
+                .max(Comparator.comparing(ah -> ah.getApplicantRitual().getDateStartHijri()))
+                .orElseThrow(NoSuchElementException::new), mappingContext);
+    }
+
+    /**
+     * Finds applicant's health details by applicant's uin and ritual id
+     *
+     * @param uin      the uin of the applicant
+     * @param ritualId
+     * @return the found health details or empty structure
+     */
+    public Optional<ApplicantHealthDto> findByUinAndRitualId(String uin, Long ritualId) {
+        JpaApplicantHealth applicantHealth;
+        applicantHealth = applicantHealthRepository.findByUinAndRitualId(uin, ritualId);
         if (applicantHealth != null) {
             return Optional.of(getMapper().fromEntity(applicantHealth, mappingContext));
         } else return Optional.empty();

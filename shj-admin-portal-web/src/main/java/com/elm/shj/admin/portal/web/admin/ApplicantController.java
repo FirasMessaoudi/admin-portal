@@ -85,16 +85,17 @@ public class ApplicantController {
      * @return the applicant health details or <code>null</code>
      */
     @GetMapping("/health/{uin}")
-    public ApplicantHealthDto findApplicantHealthDetails(@PathVariable String uin) {
-        log.debug("Handler for {}", "Find applicant health details by uin");
-
-        return applicantHealthService.findByUin(uin).orElseThrow(
-                () -> {
-                    Map<String, String> errors = new HashMap<>();
-                    errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
-
-                    return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
-                });
+    public ApplicantHealthDto findApplicantHealthDetails(@PathVariable String uin, @RequestParam(required = false) Long ritualId) {
+        log.debug("Handler for {}", "Find applicant health details by uin and ritual id");
+        Map<String, String> errors = new HashMap<>();
+        if (ritualId != null) {
+            return applicantHealthService.findByUinAndRitualId(uin, ritualId).orElseThrow(() -> {
+                errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
+                return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
+            });
+        } else {
+            return applicantHealthService.findByUinAndLastRitual(uin);
+        }
     }
 
 
