@@ -3,10 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.card;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
-import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
 import com.elm.shj.admin.portal.services.dto.ECardStatus;
 import com.elm.shj.admin.portal.services.dto.EPrintRequestStatus;
@@ -94,12 +92,5 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
         }
     }
 
-    /**
-     * Find find Applicant Card Details by uin
-     *
-     * @return the   card details
-     */
-    public Optional<ApplicantCardDetails> findCardDetailsByUin(String uin) {
-        return applicantCardRepository.findCardDetailsByUin(uin);
-    }
+
 }

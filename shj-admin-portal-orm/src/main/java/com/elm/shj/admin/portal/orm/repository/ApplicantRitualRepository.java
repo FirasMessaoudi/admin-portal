@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -29,5 +28,6 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
     @Query("select  ar from JpaApplicantRitual ar join ar.applicant a join a.digitalIds di where di.uin=:uin and ar.hijriSeason=:season order by ar.dateStartHijri desc ")
     List<JpaApplicantRitual> findApplicantRitualByUinAndSeason(@Param("uin") String uin, @Param("season") int season);
 
-
+    @Query("select ar   from JpaApplicantRitual ar join ar.applicant a join a.digitalIds di where di.uin=:uin and ar.id=:rid")
+    JpaApplicantRitual findCardDetailsByUinAndRitualId(@Param("uin") String uin, @Param("rid") long rid);
 }

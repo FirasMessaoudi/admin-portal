@@ -1,10 +1,7 @@
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
-import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
-import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,20 +24,5 @@ public class ApplicantCardServiceTest {
     private ApplicantCardRepository applicantCardRepository;
 
 
-    @Test
-    public void test_find_applicant_card_details_by_uin_success() {
-        ApplicantCardDetails card = new ApplicantCardDetails();
-        card.setFullNameEn("Abdelghany Abdelaziz Abdelaziz Elsayed");
-        Mockito.when(applicantCardRepository.findCardDetailsByUin(EXIST_USER_UIN)).thenReturn(Optional.of(card));
-        Optional<ApplicantCardDetails> returnedCard = applicantCardService.findCardDetailsByUin(EXIST_USER_UIN);
-        Assert.assertTrue(returnedCard.isPresent());
-        Assert.assertEquals(returnedCard.get().getFullNameEn(), card.getFullNameEn());
-    }
 
-    @Test
-    public void test_find_applicant_card_details_by_uin_not_found() {
-        Mockito.when(applicantCardRepository.findCardDetailsByUin(FAKE_USER_UIN)).thenReturn(Optional.empty());
-        Optional<ApplicantCardDetails> returnedCard = applicantCardService.findCardDetailsByUin(FAKE_USER_UIN);
-        Assert.assertEquals(returnedCard, Optional.empty());
-    }
 }

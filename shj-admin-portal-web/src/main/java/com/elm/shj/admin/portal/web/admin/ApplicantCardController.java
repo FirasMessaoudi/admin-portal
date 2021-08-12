@@ -3,13 +3,13 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardSearchCriteriaDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.web.error.ApiErrorResponse;
-import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +40,7 @@ import java.util.*;
 public class ApplicantCardController {
 
     private final ApplicantCardService applicantCardService;
+    private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
     private static final String APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG = "no card details found for applicant with this uin";
     private static final int CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
 
@@ -131,10 +132,10 @@ public class ApplicantCardController {
      * @param uin the applicant's card details by  uin
      * @return the found applicant card details or <code>null</code>
      */
-    @GetMapping("/details/{uin}")
-    public ApplicantCardDetails findCardDetails(@PathVariable String uin) {
+    @GetMapping("/details/{uin}/{ritualId}")
+    public ApplicantRitualCardLiteDto findCardDetails(@PathVariable String uin, @PathVariable String ritualId) {
         log.debug("Handler for {}", "Find applicant card details by uin");
-        return applicantCardService.findCardDetailsByUin(uin).orElseThrow(() -> {
+        return applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(uin, ritualId).orElseThrow(() -> {
             Map<String, String> errors = new HashMap<>();
             errors.put("uin", APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG);
             return new CardDetailsNotFoundException("No Card Details Found For Applicant with uin " + uin, errors);

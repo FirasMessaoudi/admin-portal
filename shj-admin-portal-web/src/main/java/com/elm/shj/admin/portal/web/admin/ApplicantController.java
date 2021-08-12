@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails;
 import com.elm.shj.admin.portal.services.applicant.ApplicantHealthService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;

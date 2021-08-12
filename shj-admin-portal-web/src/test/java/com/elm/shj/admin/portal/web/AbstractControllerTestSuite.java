@@ -27,6 +27,7 @@ import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.otp.OtpService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.role.RoleService;
@@ -230,7 +231,8 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected RuleService ruleService;
-
+    @MockBean
+    protected ApplicantRitualCardLiteService applicantRitualCardLiteService;
 
     protected Cookie tokenCookie;
 

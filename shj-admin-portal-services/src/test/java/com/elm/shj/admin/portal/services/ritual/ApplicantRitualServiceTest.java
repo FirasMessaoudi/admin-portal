@@ -1,7 +1,6 @@
 package com.elm.shj.admin.portal.services.ritual;
 
 import com.elm.dcc.foundation.commons.core.mapper.MapperRegistry;
-import com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;

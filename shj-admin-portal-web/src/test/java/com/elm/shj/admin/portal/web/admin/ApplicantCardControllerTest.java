@@ -1,17 +1,15 @@
 package com.elm.shj.admin.portal.web.admin;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantCardDetails;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantHealthDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantRitualLiteDto;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
+import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
+import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
+import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -31,6 +29,7 @@ public class ApplicantCardControllerTest extends AbstractControllerTestSuite {
 
     private final static String EXIST_USER_UIN = "59737700000059";
     private final static String FAKE_USER_UIN = "1234567893";
+    private final static String EXIST_RITUAL_ID = "36";
     private static final int TEST_CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
 
     @Override
@@ -45,17 +44,18 @@ public class ApplicantCardControllerTest extends AbstractControllerTestSuite {
 
     @Test
     public void test_find_applicant_card_details_success() throws Exception {
-        String url = Navigation.API_APPLICANT_CARDS + "/details/" + EXIST_USER_UIN;
-        ApplicantCardDetails applicantCardDetails = new ApplicantCardDetails();
-        when(this.applicantCardService.findCardDetailsByUin(any())).thenReturn(Optional.of(applicantCardDetails));
+        String url = Navigation.API_APPLICANT_CARDS + "/details/" + EXIST_USER_UIN + "/" + EXIST_RITUAL_ID;
+        ApplicantRitualCardLiteDto applicantRituals = new ApplicantRitualCardLiteDto();
+        when(applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(EXIST_USER_UIN, EXIST_RITUAL_ID)).thenReturn(Optional.of(applicantRituals));
         mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
     public void test_find_applicant_card_details_fail() throws Exception {
-        String url = Navigation.API_APPLICANT_CARDS + "/details/" + FAKE_USER_UIN;
-        ApplicantCardDetails applicantCardDetails = new ApplicantCardDetails();
-        when(this.applicantCardService.findCardDetailsByUin(any())).thenReturn(Optional.of(applicantCardDetails));
+        Map<String, String> errors = new HashMap<>();
+        String url = Navigation.API_APPLICANT_CARDS + "/details/" + FAKE_USER_UIN + "/" + EXIST_RITUAL_ID;
+        ;
+        when(applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(any(), any())).thenThrow(new CardDetailsNotFoundException("No Card Details Found For Applicant with uin " + FAKE_USER_UIN, errors));
         mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().is(TEST_CARD_DETAILS_NOT_FOUND_RESPONSE_CODE));
     }
 

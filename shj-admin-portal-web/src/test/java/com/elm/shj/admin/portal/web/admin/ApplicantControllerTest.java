@@ -1,9 +1,6 @@
 package com.elm.shj.admin.portal.web.admin;
 
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantHealthDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantRitualLiteDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import org.junit.jupiter.api.Test;
@@ -30,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class ApplicantControllerTest extends AbstractControllerTestSuite {
 
-    private final static String EXIST_USER_UIN = "59737700000059";
+    private final static String EXIST_USER_UIN = "50208700000027";
     private final static String FAKE_USER_UIN = "1234567893";
     private final static String TEST_MOBILE_NUMBER = "0555359268";
     private final static String TEST_EMAIL = "app@elm.sa";
@@ -102,7 +99,7 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
         UpdateApplicantCmd command = new UpdateApplicantCmd();
         command.setMobileNumber(TEST_MOBILE_NUMBER);
         command.setUin(FAKE_USER_UIN);
-        when(applicantService.findByUin(anyString())).thenReturn(null);
+        when(applicantService.findByUin(anyString())).thenReturn(Optional.empty());
         mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectToJson(command)).with(csrf())).andDo(print()).andExpect(status().is(TEST_APPLICANT_NOT_FOUND_RESPONSE_CODE));
     }
@@ -110,11 +107,19 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
     @Test
     void test_update_successfully() throws Exception {
         String url = Navigation.API_APPLICANTS + "/update";
+        ApplicantDto applicantDto = new ApplicantDto();
+        applicantDto.setDateOfBirthHijri(14051016L);
+        ApplicantContactDto applicantContactDto = new ApplicantContactDto();
+        List<ApplicantContactDto> listOfContacts = new ArrayList<ApplicantContactDto>();
+        listOfContacts.add(applicantContactDto);
+        applicantDto.setContacts(listOfContacts);
         UpdateApplicantCmd command = new UpdateApplicantCmd();
         command.setMobileNumber(TEST_MOBILE_NUMBER);
         command.setUin(EXIST_USER_UIN);
         command.setEmail(TEST_EMAIL);
-        when(applicantService.findByUin(anyString())).thenReturn(Optional.of(new ApplicantDto()));
+        command.setDateOfBirthHijri(14051016);
+        when(applicantService.findByUin(anyString())).thenReturn(Optional.of(applicantDto));
+        when(applicantLiteService.findByUin(anyString())).thenReturn(Optional.of(new ApplicantLiteDto()));
         mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectToJson(command)).with(csrf())).andDo(print()).andExpect(status().isOk());
         verify(applicantService, times(1)).save(any());
