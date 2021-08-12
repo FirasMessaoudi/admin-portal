@@ -8,16 +8,32 @@ services:
       args:
         REGISTRY: ${REGISTRY}
         MAVEN_SETTINGS_XML_URL: ${MAVEN_SETTINGS_XML_URL}
-        npm_config_registry: ${npm_config_registry}
+        NPM_CONFIG_REGISTRY: ${NPM_CONFIG_REGISTRY}
         SASS_BINARY_SITE: ${SASS_BINARY_SITE}
     restart: unless-stopped
     ports:
       - 8080:8080
     env_file:
       - .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://host.docker.internal;databaseName=shc_portal
+      # SPRING_DATASOURCE_USERNAME: sa
+      # SPRING_DATASOURCE_PASSWORD: Aa123456789
 
+  db:
+    image: nexus.elm.sa/mssql/server:2017-CU21-ubuntu-16.04
+    # ports:
+    #   - 1433:1433
+    volumes:
+      - "./src/main/sql/1.0.0:/data"
+      - sqlserver-data:/home/mssql-server-linux
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: Aa123456789
+      MSSQL_PID: Developer
 
-#
+volumes:
+  sqlserver-data:
 #
 #    # MySQL database shared with tomcat containers.
 #    db:

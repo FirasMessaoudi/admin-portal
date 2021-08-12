@@ -1,15 +1,20 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantHealthDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualLiteDto;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.springframework.http.MediaType;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
@@ -28,6 +33,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApplicantControllerTest extends AbstractControllerTestSuite {
 
     private final static String EXIST_USER_UIN = "59737700000059";
+    private final static String FAKE_USER_UIN = "1234567893";
+    private final static String TEST_MOBILE_NUMBER = "0555359268";
+    private final static String TEST_EMAIL = "app@elm.sa";
+    private static final int TEST_APPLICANT_NOT_FOUND_RESPONSE_CODE = 561;
 
     @Override
     public void setUp() throws Exception {
@@ -39,12 +48,19 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
 
     }
 
+    @Test
+    public void test_find_applicant_health_details_success() throws Exception {
+        String url = Navigation.API_APPLICANTS + "/health/" + EXIST_USER_UIN;
+        ApplicantHealthDto applicantHealthDto = new ApplicantHealthDto();
+        when(this.applicantHealthService.findByUin(any())).thenReturn(Optional.of(applicantHealthDto));
+        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
+    }
 
     @Test
     public void test_find_applicant_main_data_success() throws Exception {
         String url = Navigation.API_APPLICANTS + "/find/main-data/" + EXIST_USER_UIN;
         ApplicantMainDataDto applicantMainDataDto = new ApplicantMainDataDto();
-        Mockito.when(this.applicantMainDataService.findByUin(Mockito.any())).thenReturn(Optional.of(applicantMainDataDto));
+        when(this.applicantMainDataService.findByUin(any())).thenReturn(Optional.of(applicantMainDataDto));
         mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
 
     }
@@ -79,6 +95,32 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
         mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(applicantRitualLites.size())))
                 .andExpect(jsonPath("$[0].hijriSeason", is(applicantRitualLiteDto.getHijriSeason())));
+
+    }
+
+    @Test
+    void test_update_uin_not_found() throws Exception {
+        String url = Navigation.API_APPLICANTS + "/update";
+        UpdateApplicantCmd command = new UpdateApplicantCmd();
+        command.setMobileNumber(TEST_MOBILE_NUMBER);
+        command.setUin(FAKE_USER_UIN);
+        when(applicantService.findByUin(anyString())).thenReturn(null);
+        mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectToJson(command)).with(csrf())).andDo(print()).andExpect(status().is(TEST_APPLICANT_NOT_FOUND_RESPONSE_CODE));
+    }
+
+    @Test
+    void test_update_successfully() throws Exception {
+        String url = Navigation.API_APPLICANTS + "/update";
+        UpdateApplicantCmd command = new UpdateApplicantCmd();
+        command.setMobileNumber(TEST_MOBILE_NUMBER);
+        command.setUin(EXIST_USER_UIN);
+        command.setEmail(TEST_EMAIL);
+        when(applicantService.findByUin(anyString())).thenReturn(Optional.of(new ApplicantDto()));
+        mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectToJson(command)).with(csrf())).andDo(print()).andExpect(status().isOk());
+        verify(applicantService, times(1)).save(any());
+
 
     }
 }

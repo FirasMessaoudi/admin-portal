@@ -11,6 +11,7 @@ import com.elm.dcc.foundation.providers.recaptcha.service.RecaptchaService;
 import com.elm.dcc.foundation.providers.sms.config.SmsGatewayConfig;
 import com.elm.shj.admin.portal.orm.repository.ApplicantHealthRepository;
 import com.elm.shj.admin.portal.orm.repository.DataRequestRecordRepository;
+import com.elm.shj.admin.portal.services.applicant.ApplicantHealthService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
@@ -110,6 +111,21 @@ public abstract class AbstractControllerTestSuite {
     protected AuthorityLookupService authorityLookupService;
 
     @MockBean
+    protected RoleService roleService;
+
+    @MockBean
+    protected ApplicantRitualLiteService applicantRitualLiteService;
+
+    @MockBean
+    protected ApplicantHealthService applicantHealthService;
+
+    @MockBean
+    protected DashboardService dashboardService;
+
+    @Autowired
+    protected BCryptPasswordEncoder passwordEncoder;
+
+    @MockBean
     protected PasswordHistoryService passwordHistoryService;
 
     @Autowired
@@ -189,6 +205,7 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected HealthImmunizationLookupService healthImmunizationLookupService;
+
     @MockBean
     protected LanguageLookupService languageLookupService;
 

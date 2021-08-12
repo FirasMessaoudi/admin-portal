@@ -1,6 +1,3 @@
-/*
- * Copyright (c) 2021 ELM. All rights reserved.
- */
 package com.elm.shj.admin.portal.web.error;
 
 import java.util.Map;
@@ -8,43 +5,48 @@ import java.util.Map;
 /**
  * Custom exception for not found applicants.
  *
- * @author Slim Ben Hadj
+ * @author Ahmed Ali (Elnazer)
  * @since 1.1.0
  */
-public class ApplicantNotFoundException extends RuntimeException {
 
-    private static final long serialVersionUID = -2055467894820483788L;
+public class CardDetailsNotFoundException extends RuntimeException {
+
+
+    private static final long serialVersionUID = 1L;
 
     Map<String, String> errors;
 
-    public ApplicantNotFoundException() {
+    public CardDetailsNotFoundException() {
         // empty
     }
 
     /**
      * Constructor with message
+     *
      * @param message
      */
-    public ApplicantNotFoundException(String message) {
+    public CardDetailsNotFoundException(String message) {
         super(message);
     }
 
     /**
      * Constructor with message and errors
+     *
      * @param message
      * @param errors
      */
-    public ApplicantNotFoundException(String message, Map<String, String> errors) {
+    public CardDetailsNotFoundException(String message, Map<String, String> errors) {
         super(message);
         this.errors = errors;
     }
 
     /**
      * Constructor with message and details
+     *
      * @param message the exception message
-     * @param th the thrown exception
+     * @param th      the thrown exception
      */
-    public ApplicantNotFoundException(String message, Throwable th) {
+    public CardDetailsNotFoundException(String message, Throwable th) {
         super(message, th);
     }
 

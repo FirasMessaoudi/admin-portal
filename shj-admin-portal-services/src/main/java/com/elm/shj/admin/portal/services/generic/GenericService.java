@@ -83,7 +83,15 @@ public class GenericService<T, D, K extends Serializable> {
     }
 
     public IGenericMapper<D, T> getMapper() {
-        return mapperRegistry.mapperOf(dtoClass, entityClass);
+        return getMapperRegistry().mapperOf(dtoClass, entityClass);
+    }
+
+    public MapperRegistry getMapperRegistry() {
+        return this.mapperRegistry;
+    }
+
+    public void setMapperRegistry(MapperRegistry mapperRegistry) {
+        this.mapperRegistry = mapperRegistry;
     }
 
 }
