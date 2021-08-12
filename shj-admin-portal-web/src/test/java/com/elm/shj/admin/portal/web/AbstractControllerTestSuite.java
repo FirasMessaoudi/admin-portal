@@ -7,9 +7,10 @@ import com.elm.dcc.foundation.commons.validation.UniqueValidator;
 import com.elm.dcc.foundation.providers.email.config.EmailConfig;
 import com.elm.dcc.foundation.providers.filescan.config.FileScanConfig;
 import com.elm.dcc.foundation.providers.filescan.service.FileScanService;
-import com.elm.dcc.foundation.providers.recaptcha.config.RecaptchaConfig;
 import com.elm.dcc.foundation.providers.recaptcha.service.RecaptchaService;
 import com.elm.dcc.foundation.providers.sms.config.SmsGatewayConfig;
+import com.elm.shj.admin.portal.orm.repository.ApplicantHealthRepository;
+import com.elm.shj.admin.portal.orm.repository.DataRequestRecordRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
@@ -18,7 +19,6 @@ import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.data.request.DataRequestService;
 import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
-import com.elm.shj.admin.portal.services.data.writer.ItemWriter;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.group.RitualGroupService;
@@ -34,12 +34,9 @@ import com.elm.shj.admin.portal.services.unit.RitualUnitService;
 import com.elm.shj.admin.portal.services.user.PasswordHistoryService;
 import com.elm.shj.admin.portal.services.user.UserService;
 import com.elm.shj.admin.portal.services.zone.RitualZoneService;
-import com.elm.shj.admin.portal.web.audit.AuditLogAspect;
 import com.elm.shj.admin.portal.web.boot.BootApplication;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
-import com.elm.shj.admin.portal.web.security.jwt.JwtAuthenticationProvider;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
-import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -53,7 +50,6 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -84,7 +80,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = BootApplication.class)
-@ComponentScan({"com.elm.shj.admin.portal.web", "com.elm.shj.admin.portal.services", "com.elm.dcc.foundation.providers", "com.elm.dcc.foundation.commons.web"})
 @WebMvcTest
 @ActiveProfiles("test")
 public abstract class AbstractControllerTestSuite {
@@ -113,18 +108,6 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected AuthorityLookupService authorityLookupService;
-
-    @MockBean
-    protected RoleService roleService;
-
-    @MockBean
-    protected ApplicantRitualLiteService applicantRitualLiteService;
-
-    @MockBean
-    protected DashboardService dashboardService;
-
-    @Autowired
-    protected BCryptPasswordEncoder passwordEncoder;
 
     @MockBean
     protected PasswordHistoryService passwordHistoryService;
@@ -163,19 +146,10 @@ public abstract class AbstractControllerTestSuite {
     protected PrintRequestService printRequestService;
 
     @MockBean
-    protected RuleService ruleService;
+    protected RoleService roleService;
 
     @MockBean
     protected PrintRequestLiteService printRequestLiteService;
-
-    @MockBean
-    protected JwtAuthenticationProvider jwtAuthenticationProvider;
-
-    @MockBean
-    protected OtpAuthenticationProvider otpAuthenticationProvider;
-
-    @MockBean
-    protected AuditLogAspect auditLogAspect;
 
     @MockBean
     protected RitualTypeLookupService ritualTypeLookupService;
@@ -204,9 +178,8 @@ public abstract class AbstractControllerTestSuite {
     @MockBean
     protected AuditLogService auditLogService;
 
-    @MockBean
-    protected ItemWriter itemWriter;
-
+    @Autowired
+    protected BCryptPasswordEncoder passwordEncoder;
 
     @MockBean
     protected DigitalIdService digitalIdService;
@@ -234,11 +207,25 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected SmsGatewayConfig smsGatewayConfig;
-    @MockBean
-    protected RecaptchaConfig recaptchaConfig;
 
     @MockBean
     protected FileScanConfig fileScanConfig;
+
+    @MockBean
+    protected ApplicantHealthRepository applicantHealthRepository;
+
+    @MockBean
+    protected DataRequestRecordRepository dataRequestRecordRepository;
+
+    @MockBean
+    protected DashboardService dashboardService;
+
+    @MockBean
+    protected ApplicantRitualLiteService applicantRitualLiteService;
+
+
+    @MockBean
+    protected RuleService ruleService;
 
 
     protected Cookie tokenCookie;
@@ -282,11 +269,20 @@ public abstract class AbstractControllerTestSuite {
         Map<String, String> credentials = new HashMap<>();
         credentials.put("idNumber", TEST_USER_NIN);
         credentials.put("password", TEST_USER_PASSWORD);
+
+        Map<String, String> otpCredentials = new HashMap<>();
+        otpCredentials.put("idNumber", TEST_USER_NIN);
+        otpCredentials.put("otp", "1111");
+
         mockMvc.perform(post(Navigation.API_AUTH + "/login").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectToJson(credentials)).with(csrf())).andExpect(status().isOk()).andDo(result -> {
-            Cookie tokenCookie = result.getResponse().getCookie(JwtTokenService.TOKEN_COOKIE_NAME);
-            assertNotNull(tokenCookie);
-            this.tokenCookie = tokenCookie;
+
+            mockMvc.perform(post(Navigation.API_AUTH + "/otp").contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(objectToJson(otpCredentials)).with(csrf())).andExpect(status().isOk()).andDo(result2 -> {
+                Cookie tokenCookie = result2.getResponse().getCookie(JwtTokenService.TOKEN_COOKIE_NAME);
+                assertNotNull(tokenCookie);
+                this.tokenCookie = tokenCookie;
+            });
         });
     }
 
@@ -295,10 +291,42 @@ public abstract class AbstractControllerTestSuite {
 
         RoleDto role = new RoleDto();
         RoleAuthorityDto roleAuthority = new RoleAuthorityDto();
+
         AuthorityLookupDto authority = new AuthorityLookupDto();
         roleAuthority.setAuthority(authority);
         authority.setCode(AuthorityConstants.USER_MANAGEMENT);
-        role.setRoleAuthorities(new HashSet<>(Collections.singletonList(roleAuthority)));
+
+        RoleAuthorityDto roleAuthorityDelete = new RoleAuthorityDto();
+        AuthorityLookupDto authorityDelete = new AuthorityLookupDto();
+        roleAuthorityDelete.setAuthority(authorityDelete);
+        authorityDelete.setCode(AuthorityConstants.DELETE_USER);
+
+        RoleAuthorityDto roleAuthorityEdit = new RoleAuthorityDto();
+        AuthorityLookupDto authorityEdit = new AuthorityLookupDto();
+        roleAuthorityEdit.setAuthority(authorityEdit);
+        authorityEdit.setCode(AuthorityConstants.EDIT_USER);
+
+        RoleAuthorityDto roleAuthorityResetPassword = new RoleAuthorityDto();
+        AuthorityLookupDto authorityResetPassword = new AuthorityLookupDto();
+        roleAuthorityResetPassword.setAuthority(authorityResetPassword);
+        authorityResetPassword.setCode(AuthorityConstants.RESET_PASSWORD);
+
+        RoleAuthorityDto roleAuthorityResetUserPassword = new RoleAuthorityDto();
+        AuthorityLookupDto authorityResetUserPassword = new AuthorityLookupDto();
+        roleAuthorityResetUserPassword.setAuthority(authorityResetUserPassword);
+        authorityResetUserPassword.setCode(AuthorityConstants.RESET_USER_PASSWORD);
+
+        RoleAuthorityDto roleAuthorityAdd = new RoleAuthorityDto();
+        AuthorityLookupDto authorityAdd = new AuthorityLookupDto();
+        roleAuthorityAdd.setAuthority(authorityAdd);
+        authorityAdd.setCode(AuthorityConstants.ADD_USER);
+
+        RoleAuthorityDto roleAuthorityUserStatus = new RoleAuthorityDto();
+        AuthorityLookupDto authorityUserStatus = new AuthorityLookupDto();
+        roleAuthorityUserStatus.setAuthority(authorityUserStatus);
+        authorityUserStatus.setCode(AuthorityConstants.CHANGE_USER_STATUS);
+
+        role.setRoleAuthorities(new HashSet<>((Arrays.asList(roleAuthority, roleAuthorityDelete, roleAuthorityEdit, roleAuthorityResetPassword, roleAuthorityResetUserPassword, roleAuthorityAdd, roleAuthorityUserStatus))));
         UserRoleDto userRole = new UserRoleDto();
         userRole.setUser(loggedInUser);
         userRole.setRole(role);
@@ -316,6 +344,8 @@ public abstract class AbstractControllerTestSuite {
         UserPasswordHistoryDto userPasswordHistoryDto = new UserPasswordHistoryDto();
         userPasswordHistoryDto.setCreationDate(Date.from(LocalDateTime.now(UTC).minusSeconds(10).toInstant(UTC)));
         Mockito.when(passwordHistoryService.findLastByUserId(anyLong())).thenReturn(Optional.of(userPasswordHistoryDto));
+
+        Mockito.when(otpService.validateOtp(any(), any())).thenReturn(true);
 
         doAnswer((Answer<Void>) invocation -> {
             // do nothing

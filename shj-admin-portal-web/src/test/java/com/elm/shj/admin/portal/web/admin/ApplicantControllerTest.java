@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -49,31 +51,34 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
 
     @Test
     public void test_find_applicant_ritual_seasons_success() throws Exception {
-        String url = Navigation.API_APPLICANTS + "/find/ritual-seasons/"+EXIST_USER_UIN;
+        String url = Navigation.API_APPLICANTS + "/find/ritual-seasons/" + EXIST_USER_UIN;
 
         List<Integer> seasons = new ArrayList<>();
         seasons.add(1442);
 
         ApplicantDto applicantDto = new ApplicantDto();
-        Mockito.when(this.applicantService.findByUin(Mockito.any())).thenReturn(Optional.of(applicantDto));
         Mockito.when(this.applicantRitualService.findHijriSeasonsByUin(Mockito.any())).thenReturn(seasons);
 
-        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
+        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(seasons.size())))
+                .andExpect(jsonPath("$[0]", is(1442)));
 
     }
 
     @Test
     public void test_find_applicant_ritual_by_uin_and_seasons_success() throws Exception {
-        String url = Navigation.API_APPLICANTS + "/find/ritual-lite/"+EXIST_USER_UIN+"/1442";
+        String url = Navigation.API_APPLICANTS + "/find/ritual-lite/" + EXIST_USER_UIN + "/1442";
 
+        ApplicantRitualLiteDto applicantRitualLiteDto = new ApplicantRitualLiteDto();
         List<ApplicantRitualLiteDto> applicantRitualLites = new ArrayList<>();
-        applicantRitualLites.add(new ApplicantRitualLiteDto());
+        applicantRitualLites.add(applicantRitualLiteDto);
 
-        ApplicantDto applicantDto = new ApplicantDto();
-        Mockito.when(this.applicantService.findByUin(Mockito.any())).thenReturn(Optional.of(applicantDto));
+
         Mockito.when(this.applicantRitualLiteService.findApplicantRitualByUinAndSeason(EXIST_USER_UIN, 1442)).thenReturn(applicantRitualLites);
 
-        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
+        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(applicantRitualLites.size())))
+                .andExpect(jsonPath("$[0].hijriSeason", is(applicantRitualLiteDto.getHijriSeason())));
 
     }
 }

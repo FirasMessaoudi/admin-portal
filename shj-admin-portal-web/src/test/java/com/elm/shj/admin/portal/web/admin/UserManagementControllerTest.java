@@ -80,7 +80,7 @@ public class UserManagementControllerTest extends AbstractControllerTestSuite {
         int userIdToView = random.nextInt(9) + 1;
         String url = Navigation.API_USERS + "/find/" + userIdToView;
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(userIdToView)));
 
         verify(userService, times(1)).findOne((long) userIdToView);
