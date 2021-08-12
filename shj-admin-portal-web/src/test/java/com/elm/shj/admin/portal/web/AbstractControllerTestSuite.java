@@ -162,9 +162,6 @@ public abstract class AbstractControllerTestSuite {
     protected PrintRequestService printRequestService;
 
     @MockBean
-    protected RoleService roleService;
-
-    @MockBean
     protected PrintRequestLiteService printRequestLiteService;
 
     @MockBean
@@ -193,9 +190,6 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected AuditLogService auditLogService;
-
-    @Autowired
-    protected BCryptPasswordEncoder passwordEncoder;
 
     @MockBean
     protected DigitalIdService digitalIdService;
@@ -233,13 +227,6 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected DataRequestRecordRepository dataRequestRecordRepository;
-
-    @MockBean
-    protected DashboardService dashboardService;
-
-    @MockBean
-    protected ApplicantRitualLiteService applicantRitualLiteService;
-
 
     @MockBean
     protected RuleService ruleService;

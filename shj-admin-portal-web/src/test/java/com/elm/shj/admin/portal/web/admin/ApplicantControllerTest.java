@@ -7,19 +7,17 @@ import com.elm.shj.admin.portal.services.dto.ApplicantRitualLiteDto;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.mockito.Mockito.*;
-
 import java.util.ArrayList;
-import java.util.*;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -73,7 +71,7 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
         seasons.add(1442);
 
         ApplicantDto applicantDto = new ApplicantDto();
-        Mockito.when(this.applicantRitualService.findHijriSeasonsByUin(Mockito.any())).thenReturn(seasons);
+        when(this.applicantRitualService.findHijriSeasonsByUin(any())).thenReturn(seasons);
 
         mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(seasons.size())))
@@ -90,7 +88,7 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
         applicantRitualLites.add(applicantRitualLiteDto);
 
 
-        Mockito.when(this.applicantRitualLiteService.findApplicantRitualByUinAndSeason(EXIST_USER_UIN, 1442)).thenReturn(applicantRitualLites);
+        when(this.applicantRitualLiteService.findApplicantRitualByUinAndSeason(EXIST_USER_UIN, 1442)).thenReturn(applicantRitualLites);
 
         mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(applicantRitualLites.size())))
