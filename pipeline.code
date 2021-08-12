@@ -10,7 +10,7 @@ pipeline_cloud_native {
     binary_artifact = '/usr/src/app.war'
   }
 
-  delpoy = {
+  deploy = {
     // and remove this falg and you will get your app UP in Openshift :-)
     dry_run             = true
     strategy            = 'helm'
