@@ -1,0 +1,31 @@
+@Library('pipeline@bugfix/DEVOPS-701-build-without-deploy') _
+
+pipeline_cloud_native {
+
+  options = 
+    ci_branch: 'master|dev.*',
+    skip_qa_deploy_when_ci_branch: true
+  ]
+
+  build = {
+    strategy        = 'docker-compose'
+    config_files    = ['./docker-compose.yaml']
+    docker_buildkit = true
+    // remove this flag....
+    binary_artifact = '/usr/src/app.war'
+  }
+
+  delpoy = {
+    // and remove this falg and you will get your app UP in Openshift :-)
+    dry_run             = true
+    strategy            = 'helm'
+    gitops_repo_url     = 'https://bitbucket.elm.sa/scm/haj/haj-helm-releases.git'
+    gitops_repo_path    = 'smart-hajj'
+    gitops_repo_commit  = 'HEAD'
+    ci_values           = [
+      app: [
+        image: [tag: '${env.PIPELINE_TAG}']
+      ]
+    ]
+  }
+}
