@@ -48,6 +48,9 @@ public final class AuthorityConstants {
     public static final String VIEW_DATA_REQUEST_DETAILS = "VIEW_DATA_REQUEST_DETAILS";
     public static final String CREATE_DATA_REQUEST = "CREATE_DATA_REQUEST";
 
+    //Integration WebService Call
+    public static final String INTEGRATION_WEB_SERVICE_CALL = "INTEGRATION_WEB_SERVICE_CALL";
+
     private AuthorityConstants() {
         // creating instances is not allowed
     }

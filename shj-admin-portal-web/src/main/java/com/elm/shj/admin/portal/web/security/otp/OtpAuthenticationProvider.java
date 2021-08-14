@@ -12,6 +12,7 @@ import com.elm.shj.admin.portal.services.user.UserService;
 import com.elm.shj.admin.portal.web.error.DeactivatedUserException;
 import com.elm.shj.admin.portal.web.error.UserAlreadyLoggedInException;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
+import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +31,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Custom Authentication Provider to construct and OtpToken with a fresh generated pin
@@ -43,9 +45,11 @@ import java.util.Date;
 public class OtpAuthenticationProvider implements AuthenticationProvider {
 
     private static final String RECAPTCHA_RESPONSE_PARAM_NAME = "grt";
+    private static final long WS_USER_ID = 2;
 
     private final UserService userService;
     private final OtpService otpService;
+    private final JwtTokenService jwtTokenService;
     private final RecaptchaService recaptchaService;
 
     @Value("${login.failed.max.attempts}")
@@ -62,6 +66,7 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
     @Transactional(noRollbackFor = {BadCredentialsException.class, RecaptchaException.class})
     public Authentication authenticate(final Authentication authentication) {
         log.debug("starting authentication process");
+
         long idNumber = Long.parseLong(authentication.getName());
         String password = (String) authentication.getCredentials();
 
@@ -74,38 +79,42 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
             throw new DeactivatedUserException("User is not active.");
         }
 
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpServletRequest request = requestAttributes.getRequest();
-
         if (!BCrypt.checkpw(password, user.getPasswordHash())) {
-            userService.updateLoginTries(user);
-            if (user.getNumberOfTries() >= allowedFailedLogins) {
-                throw new RecaptchaException("Requires captcha.");
+            if (!isWsUser(user.getId())) {
+                userService.updateLoginTries(user);
+                if (user.getNumberOfTries() >= allowedFailedLogins) {
+                    throw new RecaptchaException("Requires captcha.");
+                }
             }
             log.debug("wrong password.");
             throw new BadCredentialsException("invalid credentials.");
         }
 
-        // Check captcha
-        if (user.getNumberOfTries() > allowedFailedLogins) {
-            String recaptchaResponse = request.getParameter(RECAPTCHA_RESPONSE_PARAM_NAME);
-            if (StringUtils.isBlank(recaptchaResponse)) {
-                throw new RecaptchaException("Invalid captcha.");
-            }
-            RecaptchaInfo recaptchaInfo;
-            try {
-                recaptchaInfo = recaptchaService.verifyRecaptcha(request.getRemoteAddr(), recaptchaResponse);
-            } catch (IllegalArgumentException e) {
-                throw new RecaptchaException("Invalid character in captcha response.");
-            }
-            if (recaptchaInfo == null || !recaptchaInfo.isSuccess()) {
-                userService.updateLoginTries(user);
-                throw new RecaptchaException("Invalid captcha.");
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
+
+        if (!isWsUser(user.getId())) {
+            // Check captcha
+            if (user.getNumberOfTries() > allowedFailedLogins) {
+                String recaptchaResponse = request.getParameter(RECAPTCHA_RESPONSE_PARAM_NAME);
+                if (StringUtils.isBlank(recaptchaResponse)) {
+                    throw new RecaptchaException("Invalid captcha.");
+                }
+                RecaptchaInfo recaptchaInfo;
+                try {
+                    recaptchaInfo = recaptchaService.verifyRecaptcha(request.getRemoteAddr(), recaptchaResponse);
+                } catch (IllegalArgumentException e) {
+                    throw new RecaptchaException("Invalid character in captcha response.");
+                }
+                if (recaptchaInfo == null || !recaptchaInfo.isSuccess()) {
+                    userService.updateLoginTries(user);
+                    throw new RecaptchaException("Invalid captcha.");
+                }
             }
         }
 
         // check if user is already logged in if simultaneous login flag is disabled
-        if (!simultaneousLoginEnabled) {
+        if (!simultaneousLoginEnabled && !isWsUser(user.getId())) {
             Date oldTokenExpiryDate = user.getTokenExpiryDate();
             if (oldTokenExpiryDate != null) {
                 LocalDateTime oldTokenExpiryDateTime = oldTokenExpiryDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -114,6 +123,27 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
                     throw new UserAlreadyLoggedInException("User is already logged in");
                 }
             }
+        }
+
+        // in case of WS user return JwtToken directly, otherwise return an OtpToken
+        if (isWsUser(user.getId())) {
+            List<String> grantedAuthorities = new ArrayList<>();
+            Set<Long> userRoleIds = new HashSet<>();
+            user.getUserRoles().forEach(userRoleDto -> {
+                userRoleIds.add(userRoleDto.getId());
+                userRoleDto.getRole().getRoleAuthorities().forEach(roleAuthorityDto -> {
+                    grantedAuthorities.add(roleAuthorityDto.getAuthority().getCode());
+                });
+            });
+
+            // generate the token
+            String token = jwtTokenService.generateToken(idNumber, grantedAuthorities, user.getId(), false, userRoleIds, request);
+            log.debug("generated token for {} is {}", idNumber, token);
+
+            // save user login info
+            userService.updateUserLoginInfo(user.getId(), jwtTokenService.retrieveExpirationDateFromToken(token).orElse(new Date()));
+
+            return new JwtToken(token, authentication, AuthorityUtils.createAuthorityList(grantedAuthorities.toArray(new String[]{})), false, user.getFirstName(), user.getFamilyName(), user.getId(), user.getUserRoles());
         }
 
         // generate OTP for the given principal
@@ -125,6 +155,15 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
 
         // return the Otp Token
         return new OtpToken(true, otpService.getOtpExpiryMinutes(), authentication.getPrincipal(), user.getFirstName(), user.getFamilyName(), maskedMobileNumber, maskedEmail);
+    }
+
+    /**
+     * Check logged in user id is WS user or not
+     * @param userId
+     * @return true if it is WS user
+     */
+    private boolean isWsUser(long userId) {
+        return userId == WS_USER_ID;
     }
 
 

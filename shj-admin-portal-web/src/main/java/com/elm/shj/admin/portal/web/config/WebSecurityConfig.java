@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.config;
 
 import com.elm.dcc.foundation.commons.web.cors.CorsExceptionTranslationFilter;
+import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtAuthenticationProvider;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenFilter;
@@ -27,7 +28,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.header.Header;
@@ -60,10 +60,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String HEADER_WRITER_PATTERN = "/*";
     // any URL does not require authentication should be added to this array
-    //TODO: URLs exposed for the applicant portal have to be removed from public URLs once security solution is provided.
+    // TODO: URLs exposed for the applicant portal have to be removed from public URLs once security solution is provided.
     private static final String[] PUBLIC_URLS = {"/api/auth/login", "/api/auth/otp", "/api/users/reset-password", "/api/register",
-            "/api/applicants/**", "/api/applicants/update", "/api/cards/details/**", "/api/applicant/lookup/**", "/index.html", "/error", "/api-docs",
-            "/swagger-ui.html", "/swagger-ui/**"};
+            "/api/ws/auth", "/api/applicants/**", "/api/applicants/update", "/api/cards/details/**", "/api/applicant/lookup/**", "/index.html", "/error",
+            "/api-docs", "/swagger-ui.html", "/swagger-ui/**"};
     // URLs that will be ignored by spring security should be added to this array
     private static final String[] IGNORED_URLS = {"/assets/**", "/cpm-error/**", "/*.png", "/*.jpg", "/*.jpeg",
             "/*.ttf", "/*.svg", "/*.woff", "/*.woff2", "/*.eot", "/*.ico", "/*.js", "/*.css", "/*.json"};
@@ -153,6 +153,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // allow public urls
                 .antMatchers(PUBLIC_URLS).permitAll()
+                // integration web service call for WS user only
+                .antMatchers(Navigation.API_INTEGRATION + "/**").hasAuthority(AuthorityConstants.INTEGRATION_WEB_SERVICE_CALL)
                 // request authentication for all remaining urls
                 .anyRequest().fullyAuthenticated().and()
                 // add the authentication provider

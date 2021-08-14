@@ -64,9 +64,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         }
 
         long idNumber = Long.parseLong(authentication.getName());
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpServletRequest request = requestAttributes.getRequest();
-
         UserDto user = userService.findByNin(idNumber).orElseThrow(() ->
                 // throw RecaptchaException to prevent DOS attack in case of idNumberStr is not exist
                 new RecaptchaException("idNumber not found."));
@@ -89,6 +86,10 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
                 grantedAuthorities.add(roleAuthorityDto.getAuthority().getCode());
             });
         });
+
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
+
         // generate the token
         String token = jwtTokenService.generateToken(idNumber, grantedAuthorities, user.getId(), passwordExpiredFlag, userRoleIds, request);
         log.debug("generated token for {} is {}", idNumber, token);

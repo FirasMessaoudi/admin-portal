@@ -31,7 +31,7 @@ public class JpaAuditLog implements Serializable {
     private long id;
 
     @Column(name = "user_id_number", nullable = false)
-    private int userIdNumber;
+    private long userIdNumber;
 
     @Column(nullable = false)
     private String handler;

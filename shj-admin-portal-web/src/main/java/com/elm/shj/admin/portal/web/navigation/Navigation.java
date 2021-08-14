@@ -49,5 +49,7 @@ public class Navigation {
 	public static final String API_APPLICANT_LOOKUP = "/api/applicant/lookup";
 	// Registration
 	public static final String API_REGISTRATION = "/api/register";
+	// Integration
+	public static final String API_INTEGRATION = "/api/ws";
 
 }
