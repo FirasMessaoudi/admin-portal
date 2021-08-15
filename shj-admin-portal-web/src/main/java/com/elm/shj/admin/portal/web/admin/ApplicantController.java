@@ -78,26 +78,6 @@ public class ApplicantController {
                 });
     }
 
-    /**
-     * finds applicant's health details by his UIN
-     *
-     * @param uin the applicant's uin
-     * @return the applicant health details or <code>null</code>
-     */
-    @GetMapping("/health/{uin}")
-    public ApplicantHealthDto findApplicantHealthDetails(@PathVariable String uin, @RequestParam(required = false) Long ritualId) {
-        log.debug("Handler for {}", "Find applicant health details by uin and ritual id");
-        Map<String, String> errors = new HashMap<>();
-        if (ritualId != null) {
-            return applicantHealthService.findByUinAndRitualId(uin, ritualId).orElseThrow(() -> {
-                errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
-                return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
-            });
-        } else {
-            return applicantHealthService.findByUinAndLastRitual(uin);
-        }
-    }
-
 
     /**
      * finds an applicant seasons by his UIN
@@ -175,46 +155,6 @@ public class ApplicantController {
             } else throw new ApplicantNotFoundException("No applicant found with uin " + command.getUin(), errors);
         } else throw new ApplicantNotFoundException("No applicant found with uin " + command.getUin(), errors);
     }
-
-    /**
-     * Updates an existing applicant
-     *
-     * @return the updated applicant
-     */
-    @PostMapping("/update")
-    public ResponseEntity<ApplicantLiteDto> update(@RequestBody @Validated UpdateApplicantCmd command) {
-        Optional<ApplicantDto> databaseApplicant = applicantService.findByUin(command.getUin());
-        if (databaseApplicant.isPresent()) {
-            boolean dateOfBirthMatched = false;
-            dateOfBirthMatched = command.getDateOfBirthHijri() == databaseApplicant.get().getDateOfBirthHijri();
-            if (!dateOfBirthMatched) {
-                log.error("invalid data for uin {} and date of birth {}", command.getUin(), command.getDateOfBirthHijri());
-                return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
-            }
-
-        }
-        if (databaseApplicant.isPresent()) {
-            // sets form fields to database applicant instance
-            databaseApplicant.get().getContacts().get(0).setEmail(command.getEmail());
-            databaseApplicant.get().getContacts().get(0).setCountryCode(command.getCountryCode());
-            if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
-                databaseApplicant.get().getContacts().get(0).setLocalMobileNumber(command.getMobileNumber());
-            } else {
-                databaseApplicant.get().getContacts().get(0).setIntlMobileNumber(command.getMobileNumber());
-            }
-            applicantService.save(databaseApplicant.get());
-
-            ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + command.getUin()));
-
-            return ResponseEntity.ok(Objects.requireNonNull(applicantLite));
-        } else {
-            log.error("invalid data for uin {}", command.getUin());
-            return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
-        }
-    }
-
-
-
 
     @ExceptionHandler({ApplicantNotFoundException.class})
     public ResponseEntity<Object> handleApplicantNotFoundException(
