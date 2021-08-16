@@ -3,18 +3,15 @@
  */
 package com.elm.shj.admin.portal.services.ritual;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantMainData;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantRitualLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 /**

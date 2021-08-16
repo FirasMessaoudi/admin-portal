@@ -45,10 +45,6 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
 
     @Test
     public void test_find_applicant_health_details_success() throws Exception {
-        String url = Navigation.API_APPLICANTS + "/health/" + EXIST_USER_UIN;
-        ApplicantHealthDto applicantHealthDto = new ApplicantHealthDto();
-        when(this.applicantHealthService.findByUinAndRitualId(any(), any())).thenReturn(Optional.of(applicantHealthDto));
-        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
     }
 
     @Test

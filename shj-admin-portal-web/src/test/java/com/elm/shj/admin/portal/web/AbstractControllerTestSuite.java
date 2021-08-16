@@ -11,7 +11,7 @@ import com.elm.dcc.foundation.providers.recaptcha.service.RecaptchaService;
 import com.elm.dcc.foundation.providers.sms.config.SmsGatewayConfig;
 import com.elm.shj.admin.portal.orm.repository.ApplicantHealthRepository;
 import com.elm.shj.admin.portal.orm.repository.DataRequestRecordRepository;
-import com.elm.shj.admin.portal.services.applicant.ApplicantHealthService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantHealthLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
@@ -118,7 +118,7 @@ public abstract class AbstractControllerTestSuite {
     protected ApplicantRitualLiteService applicantRitualLiteService;
 
     @MockBean
-    protected ApplicantHealthService applicantHealthService;
+    protected ApplicantHealthLiteService applicantHealthLiteService;
 
     @MockBean
     protected DashboardService dashboardService;

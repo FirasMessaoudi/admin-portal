@@ -5,7 +5,7 @@ package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
 import com.elm.shj.admin.portal.orm.repository.ApplicantHealthRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantHealthDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantHealthLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * Service handling applicant health details
+ * Service handling lightweight version of applicant health details
  *
  * @author Slim Ben Hadj
  * @since 1.1.0
@@ -23,7 +23,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class ApplicantHealthService extends GenericService<JpaApplicantHealth, ApplicantHealthDto, Long> {
+public class ApplicantHealthLiteService extends GenericService<JpaApplicantHealth, ApplicantHealthLiteDto, Long> {
 
     private final ApplicantHealthRepository applicantHealthRepository;
 
@@ -34,12 +34,14 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
      * @param ritualId
      * @return the found health details or empty structure
      */
-    public Optional<ApplicantHealthDto> findByUinAndRitualId(String uin, Long ritualId) {
-        JpaApplicantHealth applicantHealth;
-        applicantHealth = applicantHealthRepository.findByUinAndRitualId(uin, ritualId);
-        if (applicantHealth != null) {
-            return Optional.of(getMapper().fromEntity(applicantHealth, mappingContext));
-        } else return Optional.empty();
+    public Optional<ApplicantHealthLiteDto> findByUinAndRitualId(String uin, Long ritualId) {
+        JpaApplicantHealth healthProfile = applicantHealthRepository.findByUinAndRitualId(uin, ritualId);
+        if (healthProfile == null) {
+            return Optional.empty();
+        } else {
+            ApplicantHealthLiteDto returnedDto = getMapper().fromEntity(healthProfile, mappingContext);
+            return Optional.of(returnedDto);
+        }
     }
 
 }

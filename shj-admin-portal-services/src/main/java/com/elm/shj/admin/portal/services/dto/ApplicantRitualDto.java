@@ -6,7 +6,6 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

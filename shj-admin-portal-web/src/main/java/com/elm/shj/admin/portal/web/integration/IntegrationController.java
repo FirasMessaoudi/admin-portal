@@ -4,11 +4,11 @@
 package com.elm.shj.admin.portal.web.integration;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
-import com.elm.shj.admin.portal.services.applicant.ApplicantHealthService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantHealthLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantHealthDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantHealthLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
@@ -63,7 +63,7 @@ public class IntegrationController {
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantRitualLiteService applicantRitualLiteService;
     private final ApplicantService applicantService;
-    private final ApplicantHealthService applicantHealthService;
+    private final ApplicantHealthLiteService applicantHealthLiteService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -239,10 +239,10 @@ public class IntegrationController {
      * @param ritualId
      * @return the applicant health details or <code>null</code>
      */
-    @GetMapping("/health/uin/{uin}/rituals/{ritualId}")
+    @GetMapping("/health/{uin}/{ritualId}")
     public ResponseEntity<WsResponse<?>> findApplicantHealthDetails(@PathVariable String uin, @PathVariable Long ritualId) {
         log.debug("Handler for {}", "Find applicant health details by uin and ritual id");
-        Optional<ApplicantHealthDto> applicantHealth = applicantHealthService.findByUinAndRitualId(uin, ritualId);
+        Optional<ApplicantHealthLiteDto> applicantHealth = applicantHealthLiteService.findByUinAndRitualId(uin, ritualId);
         if (applicantHealth.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantHealth).build());
         } else {

@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
-import com.elm.shj.admin.portal.services.applicant.ApplicantHealthService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
@@ -56,7 +55,6 @@ public class ApplicantController {
     private final ApplicantMainDataService applicantMainDataService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantRitualLiteService applicantRitualLiteService;
-    private final ApplicantHealthService applicantHealthService;
 
     @GetMapping("/list/all")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
