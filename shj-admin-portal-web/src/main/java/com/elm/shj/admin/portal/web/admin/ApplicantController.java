@@ -7,7 +7,10 @@ import com.elm.shj.admin.portal.services.applicant.ApplicantHealthService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
+import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.error.ApiErrorResponse;
@@ -26,7 +29,10 @@ import org.springframework.web.context.request.WebRequest;
 
 import javax.annotation.security.RolesAllowed;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Main controller for applicant management pages
@@ -76,55 +82,6 @@ public class ApplicantController {
 
                     return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
                 });
-    }
-
-    /**
-     * finds applicant's health details by his UIN
-     *
-     * @param uin the applicant's uin
-     * @return the applicant health details or <code>null</code>
-     */
-    @GetMapping("/health/{uin}")
-    public ApplicantHealthDto findApplicantHealthDetails(@PathVariable String uin, @RequestParam(required = false) Long ritualId) {
-        log.debug("Handler for {}", "Find applicant health details by uin and ritual id");
-        Map<String, String> errors = new HashMap<>();
-        if (ritualId != null) {
-            return applicantHealthService.findByUinAndRitualId(uin, ritualId).orElseThrow(() -> {
-                errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
-                return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
-            });
-        } else {
-            return applicantHealthService.findByUinAndLastRitual(uin);
-        }
-    }
-
-
-    /**
-     * finds an applicant seasons by his UIN
-     *
-     * @param uin the applicant's uin to find
-     * @return the found applicant seasons list
-     */
-    @GetMapping("/find/ritual-seasons/{uin}")
-    public List<Integer> findApplicantRitualSeasons(@PathVariable String uin) {
-        log.debug("Handler for {}", "Find applicant by uin");
-
-        return applicantRitualService.findHijriSeasonsByUin(uin);
-
-    }
-
-    /**
-     * finds an applicant ritual lite by his UIN and season number
-     *
-     * @param uin    the applicant's uin to find
-     * @param season season number
-     * @return the found applicant seasons list
-     */
-    @GetMapping("/find/ritual-lite/{uin}/{season}")
-    public List<ApplicantRitualLiteDto> findApplicantRitualByUinAndSeasons(@PathVariable String uin, @PathVariable int season) {
-        log.debug("Handler for {}", "Find applicant ritual by uin and season id");
-
-        return applicantRitualLiteService.findApplicantRitualByUinAndSeason(uin, season);
     }
 
     /**
@@ -212,8 +169,6 @@ public class ApplicantController {
             return ResponseEntity.status(APPLICANT_NOT_FOUND_RESPONSE_CODE).build();
         }
     }
-
-
 
 
     @ExceptionHandler({ApplicantNotFoundException.class})
