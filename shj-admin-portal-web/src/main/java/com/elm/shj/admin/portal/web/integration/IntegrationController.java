@@ -7,6 +7,8 @@ import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.lookup.*;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
@@ -50,6 +52,8 @@ public class IntegrationController {
     private final MaritalStatusLookupService maritalStatusLookupService;
     private final CountryLookupService countryLookupService;
     private final HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;
+    private final ApplicantRitualService applicantRitualService;
+    private final ApplicantRitualLiteService applicantRitualLiteService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -183,4 +187,45 @@ public class IntegrationController {
         }
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
     }
+
+    /**
+     * finds an applicant seasons by his UIN
+     *
+     * @param uin the applicant's uin to find
+     * @return the found applicant seasons list
+     */
+    @GetMapping("/find/ritual-seasons/{uin}")
+    public ResponseEntity<WsResponse<?>> findApplicantRitualSeasons(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find applicant by uin");
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantRitualService.findHijriSeasonsByUin(uin)).build());
+
+    }
+
+    /**
+     * finds an applicant ritual lite by his UIN and season number
+     *
+     * @param uin    the applicant's uin to find
+     * @param season season number
+     * @return the found applicant seasons list
+     */
+    @GetMapping("/find/ritual-lite/{uin}/{season}")
+    public ResponseEntity<WsResponse<?>> findApplicantRitualByUinAndSeasons(@PathVariable String uin, @PathVariable int season) {
+        log.debug("Handler for {}", "Find applicant ritual by uin and season id");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantRitualLiteService.findApplicantRitualByUinAndSeason(uin, season)).build());
+    }
+
+    /**
+     * finds latest applicant ritual lite by his UIN
+     *
+     * @param uin the applicant's uin to find
+     * @return the found applicant seasons list
+     */
+    @GetMapping("/find/ritual-lite/latest/{uin}")
+    public ResponseEntity<WsResponse<?>> findLatestApplicantRitualByUin(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find latest applicant ritual by uin ");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantRitualLiteService.findLatestApplicantRitualByUin(uin)).build());
+    }
+
+
 }

@@ -31,4 +31,8 @@ public class ApplicantRitualLiteService extends GenericService<JpaApplicantRitua
         return getMapper().fromEntityList(applicantRitualRepository.findApplicantRitualByUinAndSeason(uin, season), mappingContext);
     }
 
+    public ApplicantRitualLiteDto findLatestApplicantRitualByUin(String uin) {
+        return getMapper().fromEntity(applicantRitualRepository.findTopByApplicantDigitalIdsUinOrderByDateStartHijriDesc(uin), mappingContext);
+    }
+
 }

@@ -46,6 +46,16 @@ public class ApplicantRitualRepositoryTest extends AbstractJpaTest {
     }
 
     @Test
+    public void test_find_top_by_applicant_digitalIds_uin_orderBy_dateStartHijri_success() {
+        JpaApplicantRitual applicantRitual = applicantRitualRepository.findTopByApplicantDigitalIdsUinOrderByDateStartHijriDesc(EXIST_USER_UIN);
+
+        assertNotNull(applicantRitual);
+        assertEquals(1443,applicantRitual.getHijriSeason());
+        assertEquals(14431012,applicantRitual.getDateStartHijri());
+
+    }
+
+    @Test
     public void test_find_applicant_ritual_by_uin_and_season_notFound() {
         List<JpaApplicantRitual> applicantRituals = applicantRitualRepository.findApplicantRitualByUinAndSeason(EXIST_USER_UIN, 1441);
 
