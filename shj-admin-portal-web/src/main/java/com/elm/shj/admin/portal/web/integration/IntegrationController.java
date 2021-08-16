@@ -4,12 +4,18 @@
 package com.elm.shj.admin.portal.web.integration;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
+import com.elm.shj.admin.portal.services.applicant.ApplicantHealthService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantHealthDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.web.admin.UpdateApplicantCmd;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
+import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -42,6 +48,8 @@ import java.util.Optional;
 public class IntegrationController {
 
     public final static String ISO8601_DATE_PATTERN = "yyyy-MM-dd";
+    public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
+    private static final int APPLICANT_NOT_FOUND_RESPONSE_CODE = 561;
 
     private final OtpAuthenticationProvider authenticationProvider;
     private final JwtTokenService jwtTokenService;
@@ -54,6 +62,8 @@ public class IntegrationController {
     private final HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantRitualLiteService applicantRitualLiteService;
+    private final ApplicantService applicantService;
+    private final ApplicantHealthService applicantHealthService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -160,32 +170,85 @@ public class IntegrationController {
      */
     @PostMapping("/verify")
     public ResponseEntity<WsResponse<?>> verify(@RequestBody @Validated ValidateApplicantCmd command) {
-
         Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(command.getUin());
-
-        if (!applicant.isPresent()) {
+        if (applicant.isPresent()) {
+            boolean dateOfBirthMatched;
+            SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
+            // decide which date of birth to use
+            if (command.getDateOfBirthGregorian() != null) {
+                String applicantDateFormatted = sdf.format(applicant.get().getDateOfBirthGregorian());
+                String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
+                dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
+            } else {
+                dateOfBirthMatched = command.getDateOfBirthHijri() == applicant.get().getDateOfBirthHijri();
+            }
+            if (!dateOfBirthMatched) {
+                log.debug("unmatched data for {} uin and {} hijri date of birth and {} gregorian date of birth.",
+                        command.getUin(), command.getDateOfBirthHijri(), command.getDateOfBirthGregorian());
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                        .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(command.getUin()).build()).build());
+            }
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
+        } else {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(command.getUin()).build()).build());
         }
+    }
 
-        boolean dateOfBirthMatched;
+    /**
+     * Updates an existing applicant
+     *
+     * @return the updated applicant
+     */
+    @PostMapping("/update")
+    public ResponseEntity<WsResponse<?>> update(@RequestBody @Validated UpdateApplicantCmd command) {
+        Optional<ApplicantDto> databaseApplicant = applicantService.findByUin(command.getUin());
+        if (databaseApplicant.isPresent()) {
+            boolean dateOfBirthMatched;
+            dateOfBirthMatched = command.getDateOfBirthHijri() == databaseApplicant.get().getDateOfBirthHijri();
+            if (!dateOfBirthMatched) {
+                log.error("invalid data for uin {} and date of birth {}", command.getUin(), command.getDateOfBirthHijri());
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                        .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(command.getUin()).build()).build());
+            }
 
-        SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
-        // decide which date of birth to use
-        if (command.getDateOfBirthGregorian() != null) {
-            String applicantDateFormatted = sdf.format(applicant.get().getDateOfBirthGregorian());
-            String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
-            dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
+            // sets form fields to database applicant instance
+            databaseApplicant.get().getContacts().get(0).setEmail(command.getEmail());
+            databaseApplicant.get().getContacts().get(0).setCountryCode(command.getCountryCode());
+            if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
+                databaseApplicant.get().getContacts().get(0).setLocalMobileNumber(command.getMobileNumber());
+            } else {
+                databaseApplicant.get().getContacts().get(0).setIntlMobileNumber(command.getMobileNumber());
+            }
+            applicantService.save(databaseApplicant.get());
+
+            ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + command.getUin()));
+
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantLite).build());
         } else {
-            dateOfBirthMatched = command.getDateOfBirthHijri() == applicant.get().getDateOfBirthHijri();
-        }
-        if (!dateOfBirthMatched) {
-            log.debug("unmatched data for {} uin and {} hijri date of birth and {} gregorian date of birth.",
-                    command.getUin(), command.getDateOfBirthHijri(), command.getDateOfBirthGregorian());
+            log.error("invalid data for uin {}", command.getUin());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(command.getUin()).build()).build());
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(command.getUin()).build()).build());
         }
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
+    }
+
+    /**
+     * finds applicant's health details by his UIN
+     *
+     * @param uin      the applicant's uin
+     * @param ritualId
+     * @return the applicant health details or <code>null</code>
+     */
+    @GetMapping("/health/uin/{uin}/rituals/{ritualId}")
+    public ResponseEntity<WsResponse<?>> findApplicantHealthDetails(@PathVariable String uin, @PathVariable Long ritualId) {
+        log.debug("Handler for {}", "Find applicant health details by uin and ritual id");
+        Optional<ApplicantHealthDto> applicantHealth = applicantHealthService.findByUinAndRitualId(uin, ritualId);
+        if (applicantHealth.isPresent()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantHealth).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(uin).build()).build());
+        }
     }
 
     /**

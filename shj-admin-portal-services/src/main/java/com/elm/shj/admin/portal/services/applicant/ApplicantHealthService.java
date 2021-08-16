@@ -12,9 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -29,20 +26,6 @@ import java.util.Optional;
 public class ApplicantHealthService extends GenericService<JpaApplicantHealth, ApplicantHealthDto, Long> {
 
     private final ApplicantHealthRepository applicantHealthRepository;
-
-    /**
-     * Finds applicant's health details by applicant's uin
-     *
-     * @param uin the uin of the applicant
-     * @return the found health details or empty structure
-     */
-    public ApplicantHealthDto findByUinAndLastRitual(String uin) {
-        List<JpaApplicantHealth> applicantHealths = applicantHealthRepository.findByUin(uin);
-        return getMapper().fromEntity(applicantHealths
-                .stream()
-                .max(Comparator.comparing(ah -> ah.getApplicantRitual().getDateStartHijri()))
-                .orElseThrow(NoSuchElementException::new), mappingContext);
-    }
 
     /**
      * Finds applicant's health details by applicant's uin and ritual id

@@ -98,6 +98,35 @@ public class ApplicantController {
         }
     }
 
+
+    /**
+     * finds an applicant seasons by his UIN
+     *
+     * @param uin the applicant's uin to find
+     * @return the found applicant seasons list
+     */
+    @GetMapping("/find/ritual-seasons/{uin}")
+    public List<Integer> findApplicantRitualSeasons(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find applicant by uin");
+
+        return applicantRitualService.findHijriSeasonsByUin(uin);
+
+    }
+
+    /**
+     * finds an applicant ritual lite by his UIN and season number
+     *
+     * @param uin    the applicant's uin to find
+     * @param season season number
+     * @return the found applicant seasons list
+     */
+    @GetMapping("/find/ritual-lite/{uin}/{season}")
+    public List<ApplicantRitualLiteDto> findApplicantRitualByUinAndSeasons(@PathVariable String uin, @PathVariable int season) {
+        log.debug("Handler for {}", "Find applicant ritual by uin and season id");
+
+        return applicantRitualLiteService.findApplicantRitualByUinAndSeason(uin, season);
+    }
+
     /**
      * finds an applicant by his UIN
      *
