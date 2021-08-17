@@ -6,12 +6,14 @@ package com.elm.shj.admin.portal.web.integration;
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.ApplicantHealthLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantHealthLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -72,6 +74,7 @@ public class IntegrationController {
     private final ApplicantService applicantService;
     private final ApplicantHealthLiteService applicantHealthLiteService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
+    private final ApplicantMainDataService applicantMainDataService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -299,6 +302,28 @@ public class IntegrationController {
     }
 
     /**
+     * finds an applicant by his UIN and ritual id
+     *
+     * @param uin      the applicant's uin to find
+     * @param ritualId applicant ritual id
+     * @return the found applicant or <code>null</code>
+     */
+    @GetMapping("/find/main-data/{uin}/{ritualId}")
+    public ResponseEntity<WsResponse<?>> findApplicantMainData(@PathVariable String uin, @PathVariable long ritualId) {
+        log.debug("Handler for {}", "Find applicant main data by uin");
+
+        Optional<ApplicantMainDataDto> mainDataDtoOptional = applicantMainDataService.findByUin(uin, ritualId);
+        if (mainDataDtoOptional.isPresent()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(mainDataDtoOptional.get()).build());
+
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(uin).build()).build());
+
+        }
+
+    }
+    /**
      * finds an applicant card details by his UIN
      * to be used by applicant portal
      *
@@ -318,4 +343,5 @@ public class IntegrationController {
         }
 
     }
+
 }

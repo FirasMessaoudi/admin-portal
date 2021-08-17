@@ -1,6 +1,9 @@
 package com.elm.shj.admin.portal.web.admin;
 
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantContactDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantRitualLiteDto;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import org.junit.jupiter.api.Test;
@@ -47,14 +50,7 @@ public class ApplicantControllerTest extends AbstractControllerTestSuite {
     public void test_find_applicant_health_details_success() throws Exception {
     }
 
-    @Test
-    public void test_find_applicant_main_data_success() throws Exception {
-        String url = Navigation.API_APPLICANTS + "/find/main-data/" + EXIST_USER_UIN;
-        ApplicantMainDataDto applicantMainDataDto = new ApplicantMainDataDto();
-        when(this.applicantMainDataService.findByUin(any())).thenReturn(Optional.of(applicantMainDataDto));
-        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
 
-    }
 
     @Test
     public void test_find_applicant_ritual_seasons_success() throws Exception {
