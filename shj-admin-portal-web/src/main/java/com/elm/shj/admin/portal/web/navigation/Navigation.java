@@ -45,8 +45,6 @@ public class Navigation {
 	public static final String API_USERS_RESET_PWRD = API_USERS+"/reset-password";
 	// Lookup
 	public static final String API_LOOKUP = "/api/lookup";
-	// Lookup for the applicant portal
-	public static final String API_APPLICANT_LOOKUP = "/api/applicant/lookup";
 	// Registration
 	public static final String API_REGISTRATION = "/api/register";
 	// Integration
