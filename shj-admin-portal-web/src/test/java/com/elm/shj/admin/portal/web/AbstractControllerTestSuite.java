@@ -332,7 +332,12 @@ public abstract class AbstractControllerTestSuite {
         roleAuthorityUserStatus.setAuthority(authorityUserStatus);
         authorityUserStatus.setCode(AuthorityConstants.CHANGE_USER_STATUS);
 
-        role.setRoleAuthorities(new HashSet<>((Arrays.asList(roleAuthority, roleAuthorityDelete, roleAuthorityEdit, roleAuthorityResetPassword, roleAuthorityResetUserPassword, roleAuthorityAdd, roleAuthorityUserStatus))));
+        RoleAuthorityDto roleAuthorityIntegration = new RoleAuthorityDto();
+        AuthorityLookupDto authorityIntegration = new AuthorityLookupDto();
+        roleAuthorityIntegration.setAuthority(authorityIntegration);
+        authorityIntegration.setCode(AuthorityConstants.INTEGRATION_WEB_SERVICE_CALL);
+
+        role.setRoleAuthorities(new HashSet<>((Arrays.asList(roleAuthority, roleAuthorityDelete, roleAuthorityEdit, roleAuthorityResetPassword, roleAuthorityResetUserPassword, roleAuthorityAdd, roleAuthorityUserStatus,roleAuthorityIntegration))));
         UserRoleDto userRole = new UserRoleDto();
         userRole.setUser(loggedInUser);
         userRole.setRole(role);

@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Testing class for service {@link ApplicantMainDataService}
@@ -50,7 +50,11 @@ public class ApplicantMainDataServiceTest {
 
         JpaApplicantMainData jpaApplicantMainData = new JpaApplicantMainData();
         Mockito.when(applicantMainDataRepository.findByUin(UIN_USER_EXIST)).thenReturn(jpaApplicantMainData);
-        Optional<ApplicantMainDataDto> optionalDto = applicantMainDataService.findByUin(UIN_USER_EXIST);
-        assertFalse(optionalDto.isPresent());
+
+        ApplicantMainDataDto applicantMainDataDto = new ApplicantMainDataDto();
+        Mockito.when(applicantMainDataDtoMapper.fromEntity(Mockito.any(), Mockito.any())).thenReturn(applicantMainDataDto);
+
+        Optional<ApplicantMainDataDto> optionalDto = applicantMainDataService.findByUin(UIN_USER_EXIST, 2);
+        assertTrue(optionalDto.isPresent());
     }
 }

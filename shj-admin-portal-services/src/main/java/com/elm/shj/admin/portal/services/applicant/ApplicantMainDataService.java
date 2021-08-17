@@ -5,12 +5,16 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantMainData;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantMainDataRepository;
+import com.elm.shj.admin.portal.services.dto.ApplicantContactDtoMapper;
 import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDtoMapper;
+import com.elm.shj.admin.portal.services.dto.ApplicantRelativeDtoMapper;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -27,6 +31,9 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
 
     private final ApplicantMainDataRepository applicantMainDataRepository;
     private final ApplicantCardRepository applicantCardRepository;
+    private final ApplicantRelativeDtoMapper applicantRelativeDtoMapper;
+    private final ApplicantContactDtoMapper applicantContactDtoMapper;
+    private final ApplicantMainDataDtoMapper applicantMainDataDtoMapper;
 
     /**
      * Finds an applicant by his uin
@@ -34,18 +41,25 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
      * @param uin the uin of applicant to find
      * @return the found applicant or empty structure
      */
-    public Optional<ApplicantMainDataDto> findByUin(String uin) {
+    @Transactional
+    public Optional<ApplicantMainDataDto> findByUin(String uin, long ritualId) {
         JpaApplicantMainData applicant = applicantMainDataRepository.findByUin(uin);
         if (applicant != null) {
-            ApplicantMainDataDto applicantMainDataDto = getMapper().fromEntity(applicant, mappingContext);
+            ApplicantMainDataDto applicantMainDataDto = applicantMainDataDtoMapper.fromEntity(applicant, mappingContext);
 
             applicantMainDataDto.setUin(uin);
 
-            if (!applicant.getRituals().isEmpty()) {
-                JpaApplicantRitual jpaApplicantRitual = applicant.getRituals().get(0);
-                applicantMainDataDto.setRitualTypeCode(jpaApplicantRitual.getTypeCode());
+            if (applicant.getRituals() != null && !applicant.getRituals().isEmpty()) {
+                Optional<JpaApplicantRitual> ritualOptional = applicant.getRituals().stream().filter(ritual -> ritual.getId() == ritualId).findFirst();
 
-                JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualId(jpaApplicantRitual.getId());
+                if (ritualOptional.isPresent()) {
+                    JpaApplicantRitual applicantRitual = ritualOptional.get();
+                    applicantMainDataDto.setRitualTypeCode(applicantRitual.getTypeCode());
+                    applicantMainDataDto.setRelatives(applicantRelativeDtoMapper.fromEntityList(applicantRitual.getRelatives(), mappingContext));
+                    applicantMainDataDto.setContacts(applicantContactDtoMapper.fromEntityList(applicantRitual.getContacts(), mappingContext));
+                }
+
+                JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualId(ritualId);
                 if (jpaApplicantCard != null) {
                     applicantMainDataDto.setCardReferenceNumber(jpaApplicantCard.getReferenceNumber());
                     applicantMainDataDto.setCardStatusCode(jpaApplicantCard.getStatusCode());

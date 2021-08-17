@@ -67,14 +67,6 @@ public class JpaApplicantMainData implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantDigitalId> digitalIds;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
-    private List<JpaApplicantRelative> relatives;
-
-
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "applicant")
-    private List<JpaApplicantContact> contacts;
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")

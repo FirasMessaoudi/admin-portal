@@ -52,6 +52,10 @@ public class JpaApplicantRelative implements Serializable {
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 
+    @ManyToOne
+    @JoinColumn(name = "applicant_ritual_id")
+    private JpaApplicantRitual applicantRitual;
+
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
