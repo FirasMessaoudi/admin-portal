@@ -125,30 +125,5 @@ public class ApplicantCardController {
     }
 
 
-    /**
-     * finds an applicant card details by his UIN
-     * to be used by applicant portal
-     *
-     * @param uin the applicant's card details by  uin
-     * @return the found applicant card details or <code>null</code>
-     */
-    @GetMapping("/details/{uin}/{ritualId}")
-    public ApplicantRitualCardLiteDto findCardDetails(@PathVariable String uin, @PathVariable String ritualId) {
-        log.debug("Handler for {}", "Find applicant card details by uin");
-        return applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(uin, ritualId).orElseThrow(() -> {
-            Map<String, String> errors = new HashMap<>();
-            errors.put("uin", APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG);
-            return new CardDetailsNotFoundException("No Card Details Found For Applicant with uin " + uin, errors);
-        });
 
-    }
-
-    @ExceptionHandler({CardDetailsNotFoundException.class})
-    public ResponseEntity<Object> handleApplicantNotFoundException(
-            CardDetailsNotFoundException ex, WebRequest request) {
-        log.error(ex.getMessage(), ex);
-        ApiErrorResponse apiError =
-                new ApiErrorResponse(CARD_DETAILS_NOT_FOUND_RESPONSE_CODE, ex.getMessage(), ex.getErrors());
-        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
-    }
 }

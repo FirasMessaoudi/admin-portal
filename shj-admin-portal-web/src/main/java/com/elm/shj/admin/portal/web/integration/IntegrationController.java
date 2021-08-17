@@ -10,12 +10,16 @@ import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantHealthLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.web.admin.UpdateApplicantCmd;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
+import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -28,10 +32,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -64,6 +71,7 @@ public class IntegrationController {
     private final ApplicantRitualLiteService applicantRitualLiteService;
     private final ApplicantService applicantService;
     private final ApplicantHealthLiteService applicantHealthLiteService;
+    private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -290,5 +298,24 @@ public class IntegrationController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantRitualLiteService.findLatestApplicantRitualByUin(uin)).build());
     }
 
+    /**
+     * finds an applicant card details by his UIN
+     * to be used by applicant portal
+     *
+     * @param uin the applicant's card details by  uin
+     * @return the found applicant card details or <code>null</code>
+     */
+    @GetMapping("/details/{uin}/{ritualId}")
+    public ResponseEntity<WsResponse<?>> findCardDetails(@PathVariable String uin, @PathVariable String ritualId) {
+        log.debug("Handler for {}", "Find applicant card details by uin");
+        Optional<ApplicantRitualCardLiteDto> returnedApplicantRitualCardLiteDto = applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(uin, ritualId);
 
+        if (returnedApplicantRitualCardLiteDto.isPresent()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(returnedApplicantRitualCardLiteDto).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.CARD_DETAILS_NOT_FOUND).referenceNumber(uin).build()).build());
+        }
+
+    }
 }

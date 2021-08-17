@@ -19,7 +19,8 @@ public class WsError {
     private EWsError error = EWsError.GENERIC;
     private String referenceNumber;
     public enum EWsError {
-        GENERIC(100), APPLICANT_NOT_FOUND(101), APPLICANT_NOT_MATCHED(102);
+        GENERIC(100), APPLICANT_NOT_FOUND(101),
+        APPLICANT_NOT_MATCHED(102), CARD_DETAILS_NOT_FOUND(102);
         int code;
 
         EWsError(int code) {

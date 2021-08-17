@@ -493,15 +493,7 @@ create table shc_portal.shc_applicant_ritual
     CONSTRAINT fk_ritual_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shc_portal.shc_data_request_record (id),
     CONSTRAINT fk_applicant_ritual_applicant FOREIGN KEY (applicant_id) REFERENCES shc_portal.shc_applicant (id)
 );
-GO
-USE shc_portal
-GO
-ALTER TABLE shc_portal.shc_applicant_ritual
-    ADD bus_number nvarchar(20);
 
-ALTER TABLE shc_portal.shc_applicant_ritual
-    ADD seat_number nvarchar(10);
-GO
 if not exists (select * from sys.tables where name = 'shc_card_batch')
 create table shc_portal.shc_card_batch
 (
