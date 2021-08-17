@@ -1,4 +1,4 @@
-package com.elm.shj.admin.portal.web.integration;
+package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class IntegrationControllerTest extends AbstractControllerTestSuite {
+public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
 
     @Override
     public void setUp() throws Exception {
