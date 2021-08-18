@@ -11,7 +11,7 @@ const HttpsProxyAgent = require('https-proxy-agent');
 const proxyConfig = [
   {
     context: '/core/api',
-    target: 'http://localhost:8080/shj-admin',
+    target: 'http://localhost:8085/shj-admin',
     secure: false,
     logLevel: 'debug',
     pathRewrite: {

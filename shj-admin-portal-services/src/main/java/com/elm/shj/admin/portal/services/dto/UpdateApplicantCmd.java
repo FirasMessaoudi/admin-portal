@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021 ELM. All rights reserved.
  */
-package com.elm.shj.admin.portal.web.admin;
+package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import lombok.Data;

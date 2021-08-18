@@ -5,10 +5,12 @@ package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
+import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
+import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
-import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Service handling applicant
@@ -35,8 +41,11 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto, Long> {
 
-    private final DigitalIdService digitalIdService;
     private final ApplicantRepository applicantRepository;
+    private final ApplicantContactRepository applicantContactRepository;
+    private final ApplicantRitualRepository applicantRitualRepository;
+    private final ApplicantLiteService applicantLiteService;
+    public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
 
     /**
      * Find all applicants.
@@ -88,6 +97,27 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         JpaApplicant applicant = applicantRepository.findByUin(uin);
         return (applicant != null) ? Optional.of(getMapper().fromEntity(applicant, mappingContext)) : Optional.empty();
     }
+
+
+    /**
+     * Finds an applicant by his uin
+     *
+     * @param applicantId the applicant ID
+     * @param command     the request body
+     * @return the lite version of applicant  or empty structure
+     */
+    @Transactional
+    public void updateApplicantContacts(long applicantId, UpdateApplicantCmd command) {
+        JpaApplicantRitual jpaApplicantRitual = applicantRitualRepository.findTopByApplicantDigitalIdsUinOrderByDateStartHijriDesc(command.getUin());
+
+        if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
+            applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, jpaApplicantRitual.getId());
+        } else {
+            applicantContactRepository.updateContactIntNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, jpaApplicantRitual.getId());
+        }
+
+    }
+
     /**
      * {@inheritDoc}
      */

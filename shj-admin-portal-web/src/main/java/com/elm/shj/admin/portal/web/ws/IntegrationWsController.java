@@ -4,20 +4,17 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.services.applicant.ApplicantHealthLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantHealthLiteDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
-import com.elm.shj.admin.portal.web.admin.UpdateApplicantCmd;
+import com.elm.shj.admin.portal.services.dto.UpdateApplicantCmd;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -53,7 +50,6 @@ public class IntegrationWsController {
 
     public final static String ISO8601_DATE_PATTERN = "yyyy-MM-dd";
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
-    private static final int APPLICANT_NOT_FOUND_RESPONSE_CODE = 561;
 
     private final OtpAuthenticationProvider authenticationProvider;
     private final JwtTokenService jwtTokenService;
@@ -217,17 +213,7 @@ public class IntegrationWsController {
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                         .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(command.getUin()).build()).build());
             }
-
-            // sets form fields to database applicant instance
-            databaseApplicant.get().getContacts().get(0).setEmail(command.getEmail());
-            databaseApplicant.get().getContacts().get(0).setCountryCode(command.getCountryCode());
-            if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
-                databaseApplicant.get().getContacts().get(0).setLocalMobileNumber(command.getMobileNumber());
-            } else {
-                databaseApplicant.get().getContacts().get(0).setIntlMobileNumber(command.getMobileNumber());
-            }
-            applicantService.save(databaseApplicant.get());
-
+            applicantService.updateApplicantContacts(databaseApplicant.get().getId(), command);
             ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + command.getUin()));
 
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantLite).build());

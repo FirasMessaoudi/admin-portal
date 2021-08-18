@@ -1,9 +1,6 @@
 package com.elm.shj.admin.portal.web.admin;
 
-import com.elm.shj.admin.portal.services.dto.ApplicantContactDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantRitualLiteDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import org.junit.jupiter.api.Test;
