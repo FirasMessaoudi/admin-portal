@@ -36,5 +36,6 @@ public class ApplicantRitualCardLiteDto implements Serializable {
     private String photo;
     private String leaderName;
     private String leaderMobile;
+    private String nationalityCode;
 
 }
