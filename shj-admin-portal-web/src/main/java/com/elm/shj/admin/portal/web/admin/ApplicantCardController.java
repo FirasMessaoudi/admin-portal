@@ -6,11 +6,8 @@ package com.elm.shj.admin.portal.web.admin;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardSearchCriteriaDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
-import com.elm.shj.admin.portal.web.error.ApiErrorResponse;
-import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,15 +15,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 /**
  * Main controller for applicant card management pages
  *
