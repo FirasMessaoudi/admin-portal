@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021 ELM. All rights reserved.
  */
-package com.elm.shj.admin.portal.web.integration;
+package com.elm.shj.admin.portal.web.ws;
 
 import lombok.Builder;
 import lombok.Data;

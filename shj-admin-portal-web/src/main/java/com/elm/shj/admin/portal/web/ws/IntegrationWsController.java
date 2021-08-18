@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021 ELM. All rights reserved.
  */
-package com.elm.shj.admin.portal.web.integration;
+package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.ApplicantHealthLiteService;
@@ -12,7 +12,6 @@ import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantHealthLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
@@ -21,7 +20,6 @@ import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.web.admin.UpdateApplicantCmd;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
-import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -34,18 +32,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Controller for external web service integration
+ * Controller for exposing web services for external party.
  *
  * @author ahmad flaifel
  * @since 1.1.0
@@ -54,7 +49,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(Navigation.API_INTEGRATION)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class IntegrationController {
+public class IntegrationWsController {
 
     public final static String ISO8601_DATE_PATTERN = "yyyy-MM-dd";
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
