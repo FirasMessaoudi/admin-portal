@@ -20,8 +20,8 @@ import java.io.Serializable;
 @Setter
 public class ApplicantRitualCardLiteDto implements Serializable {
 
+    private static final long serialVersionUID = -7334824284229748141L;
 
-    private static final long serialVersionUID = 1l;
     private String hamlahPackageCode;
     private String tafweejCode;
     private String zoneCode;
@@ -37,5 +37,4 @@ public class ApplicantRitualCardLiteDto implements Serializable {
     private String leaderName;
     private String leaderMobile;
     private String nationalityCode;
-
 }
