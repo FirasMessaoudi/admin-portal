@@ -42,22 +42,7 @@ public class ApplicantCardControllerTest extends AbstractControllerTestSuite {
 
     }
 
-    @Test
-    public void test_find_applicant_card_details_success() throws Exception {
-        String url = Navigation.API_APPLICANT_CARDS + "/details/" + EXIST_USER_UIN + "/" + EXIST_RITUAL_ID;
-        ApplicantRitualCardLiteDto applicantRituals = new ApplicantRitualCardLiteDto();
-        when(applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(EXIST_USER_UIN, EXIST_RITUAL_ID)).thenReturn(Optional.of(applicantRituals));
-        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
-    }
 
-    @Test
-    public void test_find_applicant_card_details_fail() throws Exception {
-        Map<String, String> errors = new HashMap<>();
-        String url = Navigation.API_APPLICANT_CARDS + "/details/" + FAKE_USER_UIN + "/" + EXIST_RITUAL_ID;
-        ;
-        when(applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(any(), any())).thenThrow(new CardDetailsNotFoundException("No Card Details Found For Applicant with uin " + FAKE_USER_UIN, errors));
-        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().is(TEST_CARD_DETAILS_NOT_FOUND_RESPONSE_CODE));
-    }
 
 
 }

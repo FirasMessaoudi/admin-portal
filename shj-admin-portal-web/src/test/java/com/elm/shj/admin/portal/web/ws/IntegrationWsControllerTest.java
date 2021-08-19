@@ -1,23 +1,34 @@
 package com.elm.shj.admin.portal.web.ws;
 
-import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
+import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
+    private final static String EXIST_USER_UIN = "50208700000027";
+    private final static String FAKE_USER_UIN = "1234567893";
+    private final static String TEST_MOBILE_NUMBER = "0555359268";
+    private final static String TEST_EMAIL = "app@elm.sa";
+    private static final int TEST_APPLICANT_NOT_FOUND_RESPONSE_CODE = 561;
+    private final static String EXIST_RITUAL_ID = "36";
+    private static final int TEST_CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
 
     @Override
     public void setUp() throws Exception {
@@ -43,5 +54,56 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
         mockMvc.perform(get(url).cookie(tokenCookie).header(JwtTokenService.CALLER_TYPE_HEADER_NAME, JwtTokenService.WEB_SERVICE_CALLER_TYPE).with(csrf())).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.body.uin", is(uin)));
+    }
+
+    @Test
+    void test_update_uin_not_found() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/update";
+        UpdateApplicantCmd command = new UpdateApplicantCmd();
+        command.setMobileNumber(TEST_MOBILE_NUMBER);
+        command.setUin(FAKE_USER_UIN);
+        when(applicantService.findByUin(anyString())).thenReturn(Optional.empty());
+        mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectToJson(command)).with(csrf())).andDo(print()).andExpect(status().is(TEST_APPLICANT_NOT_FOUND_RESPONSE_CODE));
+    }
+
+    @Test
+    void test_update_successfully() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/update";
+        ApplicantDto applicantDto = new ApplicantDto();
+        applicantDto.setDateOfBirthHijri(14051016L);
+        ApplicantContactDto applicantContactDto = new ApplicantContactDto();
+        List<ApplicantContactDto> listOfContacts = new ArrayList<ApplicantContactDto>();
+        listOfContacts.add(applicantContactDto);
+        applicantDto.setContacts(listOfContacts);
+        UpdateApplicantCmd command = new UpdateApplicantCmd();
+        command.setMobileNumber(TEST_MOBILE_NUMBER);
+        command.setUin(EXIST_USER_UIN);
+        command.setEmail(TEST_EMAIL);
+        command.setDateOfBirthHijri(14051016);
+        when(applicantService.findByUin(anyString())).thenReturn(Optional.of(applicantDto));
+        when(applicantLiteService.findByUin(anyString())).thenReturn(Optional.of(new ApplicantLiteDto()));
+        mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectToJson(command)).with(csrf())).andDo(print()).andExpect(status().isOk());
+        verify(applicantService, times(1)).save(any());
+
+
+    }
+
+    @Test
+    public void test_find_applicant_card_details_success() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/details/" + EXIST_USER_UIN + "/" + EXIST_RITUAL_ID;
+        ApplicantRitualCardLiteDto applicantRituals = new ApplicantRitualCardLiteDto();
+        when(applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(EXIST_USER_UIN, EXIST_RITUAL_ID)).thenReturn(Optional.of(applicantRituals));
+        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
+    }
+
+    @Test
+    public void test_find_applicant_card_details_fail() throws Exception {
+        Map<String, String> errors = new HashMap<>();
+        String url = Navigation.API_INTEGRATION + "/details/" + FAKE_USER_UIN + "/" + EXIST_RITUAL_ID;
+        ;
+        when(applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(any(), any())).thenThrow(new CardDetailsNotFoundException("No Card Details Found For Applicant with uin " + FAKE_USER_UIN, errors));
+        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().is(TEST_CARD_DETAILS_NOT_FOUND_RESPONSE_CODE));
     }
 }
