@@ -35,7 +35,7 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
         returnedDto.setRitualType(card.getTypeCode());
         returnedDto.setFullNameEn(card.getApplicant().getFullNameEn());
         returnedDto.setFullNameAr(card.getApplicant().getFullNameAr());
-        returnedDto.setNationalityCode(card.getApplicant().getNationalityCode());
+        returnedDto.setNationalityCode(card.getApplicant().getNationalityCode().toUpperCase());
         returnedDto.setPhoto(card.getApplicant().getPhoto());
         return Optional.of(returnedDto);
     }
