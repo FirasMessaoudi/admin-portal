@@ -271,9 +271,35 @@ GO
 SET IDENTITY_INSERT shc_portal.shc_role ON;
 INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
 VALUES (1, N'مشرف النظام', 'System Admin', 0, 1);
+INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
+VALUES (2, N'مستخدم النظام', 'System User', 0, 1);
+-- new roles
+INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
+VALUES (3, N'مشرف التسجيل', 'Enrollment Officer Supervisor', 0, 1);
+INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
+VALUES (4, N'موظف التسجيل', 'Enrollment Officer', 0, 1);
+INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
+VALUES (5, N'مشرف مركز الخدمة', 'Service Center Agent Supervisor', 0, 1);
+INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
+VALUES (6, N'موظف مركز الخدمة', 'Service Center Agent', 0, 1);
+INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
+VALUES (7, N'مشرف الطباعة', 'Printing Supervisor', 0, 1);
+INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
+VALUES (8, N'موظف الطباعة', 'Printing User', 0, 1);
+INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
+VALUES (9, N'مشرف الحملة', 'Hamlah Owner', 0, 1);
+INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
+VALUES (10, N'موظف الحملة', 'Hamlah User', 0, 1);
+INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
+VALUES (11, N'مشرف المعرفات الرقمية', 'Digital ID Issuer Supervisor', 0, 1);
+INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
+VALUES (12, N'موظف المعرفات الرقمية', 'Digital ID Issuer', 0, 1);
+
+
 SET
 IDENTITY_INSERT shc_portal.shc_role OFF;
 GO
+
 
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (1, 1);
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
@@ -310,38 +336,6 @@ INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
 VALUES (9, 13);
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
 VALUES (11, 13);
-SET
-IDENTITY_INSERT shc_portal.shc_role_authority OFF;
-GO
-
-SET
-IDENTITY_INSERT shc_portal.shc_role ON;
-INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
-VALUES (2, N'مستخدم النظام', 'System User', 0, 1);
--- new roles
-INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
-VALUES (3, N'مشرف التسجيل', 'Enrollment Officer Supervisor', 0, 1);
-INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
-VALUES (4, N'موظف التسجيل', 'Enrollment Officer', 0, 1);
-INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
-VALUES (5, N'مشرف مركز الخدمة', 'Service Center Agent Supervisor', 0, 1);
-INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
-VALUES (6, N'موظف مركز الخدمة', 'Service Center Agent', 0, 1);
-INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
-VALUES (7, N'مشرف الطباعة', 'Printing Supervisor', 0, 1);
-INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
-VALUES (8, N'موظف الطباعة', 'Printing User', 0, 1);
-INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
-VALUES (9, N'مشرف الحملة', 'Hamlah Owner', 0, 1);
-INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
-VALUES (10, N'موظف الحملة', 'Hamlah User', 0, 1);
-INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
-VALUES (11, N'مشرف المعرفات الرقمية', 'Digital ID Issuer Supervisor', 0, 1);
-INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
-VALUES (12, N'موظف المعرفات الرقمية', 'Digital ID Issuer', 0, 1);
-SET
-IDENTITY_INSERT shc_portal.shc_role OFF;
-GO
 
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (2, 1);
 -- new roles authorities
@@ -587,6 +581,7 @@ INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
 VALUES (12, 30);
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
 VALUES (12, 31);
+
 GO
 
 UPDATE shc_portal.shc_user
