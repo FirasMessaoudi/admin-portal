@@ -4,17 +4,15 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.services.applicant.ApplicantHealthLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
-import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
-import com.elm.shj.admin.portal.services.dto.UpdateApplicantCmd;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -42,12 +40,12 @@ import java.util.Optional;
  * @author ahmad flaifel
  * @since 1.1.0
  */
-//@CrossOrigin(
-//        origins = "*",
-//        maxAge = 3600,
-//        exposedHeaders = {"Authorization", JwtTokenService.CALLER_TYPE_HEADER_NAME, JwtTokenService.TOKEN_COOKIE_NAME},
-//        allowCredentials = "true"
-//)
+@CrossOrigin(
+        originPatterns = "*",
+        maxAge = 3600,
+        exposedHeaders = {"Authorization", JwtTokenService.CALLER_TYPE_HEADER_NAME, JwtTokenService.TOKEN_COOKIE_NAME},
+        allowCredentials = "true"
+)
 @Slf4j
 @RestController
 @RequestMapping(Navigation.API_INTEGRATION)
