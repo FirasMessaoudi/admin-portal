@@ -26,7 +26,7 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
     private final static String FAKE_USER_UIN = "1234567893";
     private final static String TEST_MOBILE_NUMBER = "0555359268";
     private final static String TEST_EMAIL = "app@elm.sa";
-    private static final int TEST_APPLICANT_NOT_FOUND_RESPONSE_CODE = 561;
+    private static final int TEST_HIJRI_DATE = 14051016;
     private final static String EXIST_RITUAL_ID = "36";
     private static final int TEST_CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
 
@@ -57,21 +57,47 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
     }
 
     @Test
+    void test_verify_success() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/verify";
+        ApplicantLiteDto applicantLiteDto = new ApplicantLiteDto();
+        applicantLiteDto.setDateOfBirthHijri(Long.valueOf(TEST_HIJRI_DATE));
+        UpdateApplicantCmd command = new UpdateApplicantCmd();
+        command.setMobileNumber(TEST_MOBILE_NUMBER);
+        command.setUin(EXIST_USER_UIN);
+        command.setEmail(TEST_EMAIL);
+        command.setDateOfBirthHijri(14051016);
+        when(applicantLiteService.findByUin(anyString())).thenReturn(Optional.of(applicantLiteDto));
+        mockMvc.perform(post(url).cookie(tokenCookie).contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectToJson(command)).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("SUCCESS"))).andExpect(jsonPath("$.body.dateOfBirthHijri", is(TEST_HIJRI_DATE)));
+    }
+
+    @Test
+    void test_verify_not_found_uin() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/verify";
+        UpdateApplicantCmd command = new UpdateApplicantCmd();
+        command.setMobileNumber(TEST_MOBILE_NUMBER);
+        command.setUin(FAKE_USER_UIN);
+        when(applicantService.findByUin(anyString())).thenReturn(Optional.empty());
+        mockMvc.perform(post(url).cookie(tokenCookie).contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectToJson(command)).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
+    }
+
+    @Test
     void test_update_uin_not_found() throws Exception {
         String url = Navigation.API_INTEGRATION + "/update";
         UpdateApplicantCmd command = new UpdateApplicantCmd();
         command.setMobileNumber(TEST_MOBILE_NUMBER);
         command.setUin(FAKE_USER_UIN);
         when(applicantService.findByUin(anyString())).thenReturn(Optional.empty());
-        mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectToJson(command)).with(csrf())).andDo(print()).andExpect(status().is(TEST_APPLICANT_NOT_FOUND_RESPONSE_CODE));
+        mockMvc.perform(post(url).cookie(tokenCookie).contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectToJson(command)).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
     }
 
     @Test
     void test_update_successfully() throws Exception {
         String url = Navigation.API_INTEGRATION + "/update";
         ApplicantDto applicantDto = new ApplicantDto();
-        applicantDto.setDateOfBirthHijri(14051016L);
+        applicantDto.setDateOfBirthHijri(Long.valueOf(TEST_HIJRI_DATE));
         ApplicantContactDto applicantContactDto = new ApplicantContactDto();
         List<ApplicantContactDto> listOfContacts = new ArrayList<ApplicantContactDto>();
         listOfContacts.add(applicantContactDto);
@@ -83,9 +109,10 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
         command.setDateOfBirthHijri(14051016);
         when(applicantService.findByUin(anyString())).thenReturn(Optional.of(applicantDto));
         when(applicantLiteService.findByUin(anyString())).thenReturn(Optional.of(new ApplicantLiteDto()));
-        mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON_UTF8)
+        doNothing().when(applicantService).updateApplicantContacts(anyLong(), any());
+        mockMvc.perform(post(url).cookie(tokenCookie).contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectToJson(command)).with(csrf())).andDo(print()).andExpect(status().isOk());
-        verify(applicantService, times(1)).save(any());
+        verify(applicantService, times(1)).updateApplicantContacts(anyLong(), any());
 
 
     }
@@ -95,15 +122,14 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
         String url = Navigation.API_INTEGRATION + "/details/" + EXIST_USER_UIN + "/" + EXIST_RITUAL_ID;
         ApplicantRitualCardLiteDto applicantRituals = new ApplicantRitualCardLiteDto();
         when(applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(EXIST_USER_UIN, EXIST_RITUAL_ID)).thenReturn(Optional.of(applicantRituals));
-        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().isOk());
+        mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
     public void test_find_applicant_card_details_fail() throws Exception {
         Map<String, String> errors = new HashMap<>();
         String url = Navigation.API_INTEGRATION + "/details/" + FAKE_USER_UIN + "/" + EXIST_RITUAL_ID;
-        ;
-        when(applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(any(), any())).thenThrow(new CardDetailsNotFoundException("No Card Details Found For Applicant with uin " + FAKE_USER_UIN, errors));
-        mockMvc.perform(get(url).with(csrf())).andDo(print()).andExpect(status().is(TEST_CARD_DETAILS_NOT_FOUND_RESPONSE_CODE));
+        when(applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(any(), any())).thenReturn(Optional.empty());
+        mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
     }
 }

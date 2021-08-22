@@ -106,7 +106,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
             applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, jpaApplicantRitual.getId());
         } else {
-            applicantContactRepository.updateContactIntNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, jpaApplicantRitual.getId());
+            applicantContactRepository.updateContactIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, jpaApplicantRitual.getId());
         }
 
     }

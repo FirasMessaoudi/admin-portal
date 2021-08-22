@@ -24,7 +24,7 @@ public interface ApplicantContactRepository extends JpaRepository<JpaApplicantCo
     @Modifying
     @Query("update JpaApplicantContact contact set contact.countryCode = :countryCode, contact.email = :email, " +
             "contact.intlMobileNumber =:intlMobileNumber where contact.applicant.id =:applicantId and contact.applicantRitual.id=:ritualId")
-    void updateContactIntNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("intlMobileNumber") String intlMobileNumber, @Param("applicantId") long applicantId, @Param("ritualId") long ritualId);
+    void updateContactIntlNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("intlMobileNumber") String intlMobileNumber, @Param("applicantId") long applicantId, @Param("ritualId") long ritualId);
 
 
     @Modifying
