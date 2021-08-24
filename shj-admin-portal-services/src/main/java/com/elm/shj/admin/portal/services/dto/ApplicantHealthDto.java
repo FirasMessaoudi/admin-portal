@@ -31,7 +31,7 @@ public class ApplicantHealthDto implements Serializable {
     private static final long serialVersionUID = 2731031329221419001L;
 
     private long id;
-    @JsonBackReference
+    @JsonBackReference(value = "applicant")
     private ApplicantDto applicant;
 
     @BloodType
@@ -46,7 +46,7 @@ public class ApplicantHealthDto implements Serializable {
     private Boolean hasSpecialNeeds;
     private Date creationDate;
     private Date updateDate;
-    @JsonBackReference
+    @JsonBackReference(value = "applicantRitual")
     private ApplicantRitualDto applicantRitual;
     private DataRequestRecordDto dataRequestRecord;
     private List<ApplicantHealthDiseaseDto> diseases;

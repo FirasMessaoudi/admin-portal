@@ -34,7 +34,7 @@ public class ApplicantRelativeDto implements Serializable {
     @CellIndex(index = 8)
     private String relationshipCode;
 
-    @JsonBackReference
+    @JsonBackReference(value = "applicant")
     private ApplicantDto applicant;
     private ApplicantDto relativeApplicant;
     private Date creationDate;
