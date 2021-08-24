@@ -31,9 +31,9 @@ public class ApplicantContactDto implements Serializable {
     private static final long serialVersionUID = -5662001048401642743L;
 
     private long id;
-    @JsonBackReference
+    @JsonBackReference(value = "applicant")
     private ApplicantDto applicant;
-    @JsonBackReference
+    @JsonBackReference(value = "applicantRitual")
     private JpaApplicantRitual applicantRitual;
     @LanguageCodeList
     @CellIndex(index = 15)
