@@ -44,6 +44,7 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
                 applicantLiteDto.setMobileNumber(applicant.getContacts().get(0).getIntlMobileNumber());
             }
             applicantLiteDto.setCountryCode(applicant.getContacts().get(0).getCountryCode());
+            applicantLiteDto.setHasLocalMobileNumber(applicant.getContacts().get(0).getLocalMobileNumber() != null);
             applicantLiteDto.setGender(applicant.getGender());
             return Optional.of(applicantLiteDto);
         } else return Optional.empty();

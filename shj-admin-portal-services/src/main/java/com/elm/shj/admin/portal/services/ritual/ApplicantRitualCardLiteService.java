@@ -32,7 +32,7 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
         if (card == null)
             return Optional.empty();
         ApplicantRitualCardLiteDto returnedDto = getMapper().fromEntity(card, mappingContext);
-        returnedDto.setRitualType(card.getTypeCode());
+        returnedDto.setRitualType(card.getTypeCode().toUpperCase());
         returnedDto.setFullNameEn(card.getApplicant().getFullNameEn());
         returnedDto.setFullNameAr(card.getApplicant().getFullNameAr());
         returnedDto.setNationalityCode(card.getApplicant().getNationalityCode().toUpperCase());

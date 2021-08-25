@@ -47,6 +47,7 @@ public class JpaApplicantLite implements Serializable {
 
     @Column(name = "full_name_origin")
     private String fullNameOrigin;
+
     private String gender;
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantDigitalId> digitalIds;
