@@ -28,7 +28,10 @@ import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
-
+import java.time.*;
+import java.time.chrono.HijrahChronology;
+import java.time.chrono.HijrahDate;
+import java.util.Calendar;
 /**
  * Generic Item writer to save read items based on their data segment
  *
@@ -138,6 +141,12 @@ public class ItemWriter {
         // Special treatment for ApplicantDto and contact info as they come in the same sheet
         if (item != null && item.getClass().isAssignableFrom(ApplicantDto.class)) {
             ApplicantDto applicant = (ApplicantDto) item;
+            if (applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) {
+                Calendar cl = Calendar.getInstance();
+                cl.setTime(applicant.getDateOfBirthGregorian());
+                HijrahDate islamyDate = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+                applicant.setDateOfBirthHijri(Long.parseLong(islamyDate.toString().substring(islamyDate.toString().indexOf("AH") + 3).replace("-", "")));
+            }
             ApplicantDto existingApplicant = applicantService.findByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
             // if record exists already in DB we need to update it
             if (existingApplicant != null) {
