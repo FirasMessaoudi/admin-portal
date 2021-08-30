@@ -217,7 +217,11 @@ public class IntegrationWsController {
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                         .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(command.getUin()).build()).build());
             }
-            applicantService.updateApplicantContacts(databaseApplicant.get().getId(), command);
+            int updatedRowsCount = applicantService.updateApplicantContacts(databaseApplicant.get().getId(), command);
+            if (updatedRowsCount < 1) {
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                        .body(WsError.builder().error(WsError.EWsError.UPDATE_APPLICANT_FAILED).referenceNumber(command.getUin()).build()).build());
+            }
             ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + command.getUin()));
 
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantLite).build());

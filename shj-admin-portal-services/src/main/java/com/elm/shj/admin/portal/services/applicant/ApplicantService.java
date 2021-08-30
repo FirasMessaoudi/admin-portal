@@ -100,15 +100,15 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      * @return the lite version of applicant  or empty structure
      */
     @Transactional
-    public void updateApplicantContacts(long applicantId, UpdateApplicantCmd command) {
-        JpaApplicantRitual jpaApplicantRitual = applicantRitualRepository.findTopByApplicantDigitalIdsUinOrderByDateStartHijriDesc(command.getUin());
-
+    public int updateApplicantContacts(long applicantId, UpdateApplicantCmd command) {
+        JpaApplicantRitual applicantRitual = applicantRitualRepository.findTopByApplicantDigitalIdsUinOrderByDateStartHijriDesc(command.getUin());
+        int updatedRowsCount;
         if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
-            applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, jpaApplicantRitual.getId());
+            updatedRowsCount = applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, applicantRitual.getId());
         } else {
-            applicantContactRepository.updateContactIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, jpaApplicantRitual.getId());
+            updatedRowsCount = applicantContactRepository.updateContactIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, applicantRitual.getId());
         }
-
+        return updatedRowsCount;
     }
 
     /**
