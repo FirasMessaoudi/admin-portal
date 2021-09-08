@@ -69,9 +69,10 @@ public class RoleService extends GenericService<JpaRole, RoleDto, Long> {
      */
     public List<RoleDto> findAll(Set<Long> loggedInUserRoleIds) {
         if (loggedInUserRoleIds.contains(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID))
-            return mapList(roleRepository.findByDeletedFalseAndActivated(true));
-        // exclude system admin and system user roles in returned list
-        return mapList(roleRepository.findByDeletedFalseAndActivatedTrueAndIdNotIn(RoleRepository.SYSTEM_ROLE_ID_LIST));
+            //exclude ws user
+            return mapList(roleRepository.findByDeletedFalseAndActivatedAndIdNot(true,RoleRepository.WS_USER));
+        // exclude system admin and ws user roles in returned list
+        return mapList(roleRepository.findByDeletedFalseAndActivatedTrueAndIdNotIn(RoleRepository.EXCLUDED_USERS_ROLES_ID_LIST));
     }
 
     /**

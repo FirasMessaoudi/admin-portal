@@ -60,14 +60,11 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
      *
      * @param pageable
      * @param loggedInUserId
-     * @param loggedInUserRoleIds
      * @return
      */
-    public Page<UserDto> findAllNotDeleted(Pageable pageable, long loggedInUserId, Set loggedInUserRoleIds) {
-        if (loggedInUserRoleIds.contains(RoleRepository.SYSTEM_ADMIN_USER_ROLE_ID))
-            return mapPage(userRepository.findDistinctByDeletedFalseAndIdNot(pageable, loggedInUserId));
+    public Page<UserDto> findAllNotDeleted(Pageable pageable, long loggedInUserId) {
         // exclude system users in returned list
-        return mapPage(userRepository.findDistinctByDeletedFalseAndIdNotAndUserRolesRoleIdNot(pageable, loggedInUserId, RoleRepository.SYSTEM_ADMIN_ROLE_ID));
+        return mapPage(userRepository.findDistinctByDeletedFalseAndIdNotAndUserRolesRoleIdNotIn(pageable, loggedInUserId, RoleRepository.EXCLUDED_USERS_ROLES_ID_LIST));
     }
 
     /**

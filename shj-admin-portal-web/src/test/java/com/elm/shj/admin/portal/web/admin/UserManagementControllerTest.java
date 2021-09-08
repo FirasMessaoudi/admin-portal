@@ -48,7 +48,7 @@ public class UserManagementControllerTest extends AbstractControllerTestSuite {
     public void setUp() throws Exception {
         initUserList();
         when(userService.save(Mockito.any(UserDto.class))).then((Answer<UserDto>) this::mockSaveUser);
-        when(userService.findAllNotDeleted(any(Pageable.class), anyLong(), any())).thenReturn(new PageImpl<>(users));
+        when(userService.findAllNotDeleted(any(Pageable.class), anyLong())).thenReturn(new PageImpl<>(users));
         mockSuccessfulLogin();
         triggerLogin();
     }
@@ -71,7 +71,7 @@ public class UserManagementControllerTest extends AbstractControllerTestSuite {
                 .andExpect(jsonPath("$.content[0].id", is((int) users.get(0).getId())));
 
 
-        verify(userService, times(1)).findAllNotDeleted(any(Pageable.class), anyLong(), any());
+        verify(userService, times(1)).findAllNotDeleted(any(Pageable.class), anyLong());
 
     }
 

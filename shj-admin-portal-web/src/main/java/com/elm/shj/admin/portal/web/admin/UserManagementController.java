@@ -92,9 +92,8 @@ public class UserManagementController {
     public Page<UserDto> search(Pageable pageable, @PathVariable long roleId, @PathVariable String nin, @PathVariable int activated, Authentication authentication) {
         log.debug("Handler for {}", "Search Users");
         if (roleId <= 0 && Long.parseLong(nin) == -1 && activated < 0) {
-            return userService.findAllNotDeleted(pageable, jwtTokenService.retrieveUserIdFromToken(((JwtToken) authentication).getToken()).orElse(0L),
-                    jwtTokenService.retrieveUserRoleIdsFromToken(((JwtToken) authentication).getToken()).orElse(new HashSet<>()))
-                    .map(UserManagementController::maskUserInfo);
+            return userService.findAllNotDeleted(pageable, jwtTokenService.retrieveUserIdFromToken(((JwtToken) authentication).getToken()).orElse(0L)
+                    );
         }
         Page<UserDto> usersPage = userService.searchByRoleStatusOrNin(pageable,
                 (roleId <= 0 ? null : roleId),
