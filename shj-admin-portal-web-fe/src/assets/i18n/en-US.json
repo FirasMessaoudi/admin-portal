@@ -412,7 +412,8 @@
     "group_leader": "Group Leader",
     "fawj_number": "Fawj Number",
     "nationality": "Nationality",
-    "motawif": "Motawif"
+    "motawif": "Motawif",
+    "btn_cancel": "Cancel"
   },
   "rule-management": {
     "title": "Decision Rule Management",
