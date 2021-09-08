@@ -396,7 +396,12 @@
     "add_cards": "إضافة بطاقة",
     "cards_from_all_pages": "بطاقة من جميع الصفحات",
     "cards_selected_on_the_current_page": "تم اختيار X من البطاقات في الصفحة الحالية",
-    "dialog_confirm_request_error_text": "حدث خطأ أثناء تأكيد طلبك. يرجى المحاولة مرة أخرى ..."
+    "dialog_confirm_request_error_text": "حدث خطأ أثناء تأكيد طلبك. يرجى المحاولة مرة أخرى ...",
+    "group_leader": "رئيس المجموعة",
+    "fawj_number": "رقم الفوج",
+    "nationality": "الجنسية",
+    "motawif": "مؤسسة الطوافة"
+
   },
   "rule-management": {
     "title": "إدارة قواعد القرار",

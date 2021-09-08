@@ -14,4 +14,5 @@ export class ApplicantRitual {
   permitNumber: string;
   insuranceNumber: string;
   borderNumber: string;
+  tafweejCode: string;
 }
