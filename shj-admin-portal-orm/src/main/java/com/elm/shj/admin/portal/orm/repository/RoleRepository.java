@@ -25,7 +25,9 @@ public interface RoleRepository extends JpaRepository<JpaRole, Long> {
     long SYSTEM_ADMIN_ROLE_ID = 1;
     long SYSTEM_USER_ROLE_ID = 2;
     int SYSTEM_ADMIN_USER_ROLE_ID = 1;
+    long WS_USER = 13;
     List<Long> SYSTEM_ROLE_ID_LIST = Arrays.asList(SYSTEM_ADMIN_ROLE_ID, SYSTEM_USER_ROLE_ID);
+    List<Long> EXCLUDED_USERS_ROLES_ID_LIST = Arrays.asList(SYSTEM_ADMIN_ROLE_ID, WS_USER);
 
     Page<JpaRole> findByDeletedFalse(Pageable pageable);
 
