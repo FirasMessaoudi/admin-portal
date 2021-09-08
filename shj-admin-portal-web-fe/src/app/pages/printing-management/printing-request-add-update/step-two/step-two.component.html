@@ -31,6 +31,11 @@
       <th scope="col">{{'card-management.applicant_id' | translate}}</th>
       <th scope="col">{{'printing-management.id_number' | translate}}</th>
       <th scope="col">{{'card-management.passport_number' | translate}}</th>
+      <th scope="col">{{'printing-management.group_leader' | translate}}</th>
+      <th scope="col">{{'printing-management.hamlah' | translate}}</th>
+      <th scope="col">{{'printing-management.fawj_number' | translate}}</th>
+      <th scope="col">{{'printing-management.nationality' | translate}}</th>
+      <th scope="col">{{'printing-management.motawif' | translate}}</th>
     </tr>
     </thead>
     <tbody>
@@ -55,6 +60,18 @@
       <td>{{printRequestCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
       <td>{{printRequestCard?.card?.applicantRitual?.applicant?.idNumber}}</td>
       <td class="ltr">{{printRequestCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
+
+      <td></td>
+      <td>{{printRequestCard?.card?.applicantRitual?.hamlahPackageCode}}</td>
+      <td>{{printRequestCard?.card?.applicantRitual?.tafweejCode}}</td>
+      <td>{{
+        printRequestCard?.card?.applicantRitual?.applicant?.nationalityCode
+          ? lookupService().localizedLabel(
+          countries,
+          printRequestCard?.card?.applicantRitual?.applicant?.nationalityCode?.toUpperCase()
+          ):""
+        }}</td>
+      <td></td>
     </tr>
     </ng-container>
     </tbody>

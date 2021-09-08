@@ -6,6 +6,9 @@ import {PrintRequestStorage} from "@pages/printing-management/printing-request-a
 import {PrintRequest} from "@model/print-request.model";
 import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
+import {CardService} from "@core/services";
+import {CountryLookup} from "@model/country-lookup.model";
+import {LookupService} from "@core/utilities/lookup.service";
 
 @Component({
   selector: 'app-step-two',
@@ -21,6 +24,7 @@ export class StepTwoComponent implements OnInit {
   isLoading: boolean;
 
   batchTypes: PrintBatchType[];
+  countries: CountryLookup[] = [];
   selectedBatchTypes: string[] = [];
   currentPage: number = 1;
   pageSize: number = 10;
@@ -38,7 +42,9 @@ export class StepTwoComponent implements OnInit {
               private i18nService: I18nService,
               private toastr: ToastService,
               private translate: TranslateService,
-              private printRequestStorage: PrintRequestStorage) {
+              private printRequestStorage: PrintRequestStorage,
+              private cardService: CardService,
+              private lookupsService: LookupService) {
   }
 
   ngOnInit(): void {
@@ -68,6 +74,9 @@ export class StepTwoComponent implements OnInit {
     this.printService.findPrintBatchTypes().subscribe(result => {
       this.batchTypes = result;
     })
+    this.cardService.findCountries().subscribe(result => {
+      this.countries = result;
+    });
   }
 
   batch() {
@@ -92,5 +101,9 @@ export class StepTwoComponent implements OnInit {
 
   getTotalPages(total, size): number {
     return Math.floor((total + size - 1) / size);
+  }
+
+  lookupService(): LookupService {
+    return this.lookupsService;
   }
 }
