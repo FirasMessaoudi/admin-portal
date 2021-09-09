@@ -8,8 +8,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * Copyright (c) 2021 ELM. All rights reserved.
  * @author salzoubi
- * @version 1.0.0
+ * @since 1.0.0
  * **/
 @Entity
 @Table(name = "shc_company_ritual_season")
@@ -27,10 +28,9 @@ public class JpaCompanyRitualSeason implements Serializable {
     @JoinColumn(name = "company_id", nullable = false)
     private JpaCompany companyId;
 
-    //TODO to be foregin key
-    /*@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "ritual_season_id",nullable = false)
-    private JpaRitualSeason ritualSeasonId;*/
+    private JpaRitualSeason ritualSeasonId;
 
 
     @Column(name = "season_start", nullable = false)
