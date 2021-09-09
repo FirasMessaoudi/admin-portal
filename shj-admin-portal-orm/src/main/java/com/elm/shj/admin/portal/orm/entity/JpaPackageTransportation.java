@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * The persistent class for the package_transportation database table.
+ * The persistent class for the shc_package_transportation database table.
  *
  * @author Ahmed Ali
  * @since 1.1.0
@@ -36,8 +36,8 @@ public class JpaPackageTransportation implements Serializable {
 
 
     @ManyToOne
-    @JoinColumn(name = " ritual_package_id")
-    private JpaRitualPackage  package;
+    @JoinColumn(name = "package_id")
+    private JpaRitualPackage packageId;
 
     @Column(name = "type_code")
     private String typeCode;
@@ -62,6 +62,11 @@ public class JpaPackageTransportation implements Serializable {
 
     @Column(name = "ritual_step_code")
     private String ritualStepCode;
+
+
+//    @LazyCollection(LazyCollectionOption.TRUE)
+//    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageTransportation")
+//    private List<JpaApplicantPackageTransportation> packageCatering;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

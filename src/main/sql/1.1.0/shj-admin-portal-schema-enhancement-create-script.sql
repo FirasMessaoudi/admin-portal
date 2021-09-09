@@ -89,10 +89,10 @@ GO
 if not exists(select * from sys.tables where name = 'shc_housing_zone')
 CREATE TABLE shc_portal.shc_housing_zone
 (
-    id      int         NOT NULL PRIMARY KEY IDENTITY (1,1),
-    name_ar nvarchar(45) NOT NULL,
-    name_en varchar(45) NOT NULL,
-    color   varchar(45) NOT NULL,
+    id       int         NOT NULL PRIMARY KEY IDENTITY (1,1),
+    label_ar nvarchar(45) NOT NULL,
+    label_en varchar(45) NOT NULL,
+    color    varchar(45) NOT NULL,
 );
 GO
 
