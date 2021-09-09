@@ -27,10 +27,9 @@ public class JpaCompanyRitualSeason implements Serializable {
     @JoinColumn(name = "company_id", nullable = false)
     private JpaCompany companyId;
 
-    //TODO to be foregin key
-    /*@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "ritual_season_id",nullable = false)
-    private JpaRitualSeason ritualSeasonId;*/
+    private JpaRitualSeason ritualSeasonId;
 
 
     @Column(name = "season_start", nullable = false)
