@@ -2,12 +2,9 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 /**
  * The persistent class for the shc_applicant_package database table.
@@ -51,4 +48,14 @@ public class JpaApplicantPackage {
 //    @LazyCollection(LazyCollectionOption.TRUE)
 //    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
 //    private List<JpaApplicantPackageHousing> applicantPackageHousings;
+
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updateDate = new Date();
+    }
 }

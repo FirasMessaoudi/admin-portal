@@ -37,4 +37,14 @@ public class JpaCompanySeasonPackage {
 //    @ManyToOne
 //    @JoinColumn(name = "basic_package_id")
 //    private JpaRitualPackage ritualPackage;
+
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updateDate = new Date();
+    }
 }

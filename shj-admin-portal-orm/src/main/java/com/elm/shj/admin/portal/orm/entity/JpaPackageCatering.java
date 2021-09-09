@@ -56,4 +56,14 @@ public class JpaPackageCatering {
 //    @LazyCollection(LazyCollectionOption.TRUE)
 //    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageCatering")
 //    private List<JpaApplicantPackageCatering> applicantPackageCaterings;
+
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updateDate = new Date();
+    }
 }
