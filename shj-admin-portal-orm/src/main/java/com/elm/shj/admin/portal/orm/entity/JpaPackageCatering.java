@@ -2,9 +2,12 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the shc_package_catering database table.
@@ -49,13 +52,13 @@ public class JpaPackageCatering {
     private Date updateDate;
 
 
-//    @ManyToOne
-//    @JoinColumn(name = "package_housing_id")
-//    private JpaPackageHousing packageHousing;
+    @ManyToOne
+    @JoinColumn(name = "package_housing_id")
+    private JpaPackageHousing packageHousing;
 
-//    @LazyCollection(LazyCollectionOption.TRUE)
-//    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageCatering")
-//    private List<JpaApplicantPackageCatering> applicantPackageCaterings;
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "jpaPackageCatering")
+    private List<JpaApplicantPackageCatering> applicantPackageCaterings;
 
     @PrePersist
     public void prePersist() {

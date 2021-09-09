@@ -26,11 +26,11 @@ public class JpaCompanyRitualSeason implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
-    private JpaCompany companyId;
+    private JpaCompany company;
 
     @ManyToOne
     @JoinColumn(name = "ritual_season_id",nullable = false)
-    private JpaRitualSeason ritualSeasonId;
+    private JpaRitualSeason jpaRitualSeason;
 
 
     @Column(name = "season_start", nullable = false)

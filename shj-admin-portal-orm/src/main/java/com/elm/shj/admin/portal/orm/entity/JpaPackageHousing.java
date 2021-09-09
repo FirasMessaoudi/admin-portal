@@ -79,7 +79,7 @@ public class JpaPackageHousing implements Serializable {
 
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageHousing")
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "jpaPackageHousing")
     private List<JpaApplicantPackageHousing> applicantPackageHousing;
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

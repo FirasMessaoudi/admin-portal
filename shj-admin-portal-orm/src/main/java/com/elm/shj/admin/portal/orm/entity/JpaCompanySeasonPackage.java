@@ -30,13 +30,13 @@ public class JpaCompanySeasonPackage {
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 
-//    @ManyToOne
-//    @JoinColumn(name = "company_season_ritual_id")
-//    private JpaCompanyRitualSeason companyRitualSeason;
+    @ManyToOne
+    @JoinColumn(name = "company_season_ritual_id")
+    private JpaCompanyRitualSeason companyRitualSeason;
 
-//    @ManyToOne
-//    @JoinColumn(name = "basic_package_id")
-//    private JpaRitualPackage ritualPackage;
+    @ManyToOne
+    @JoinColumn(name = "basic_package_id")
+    private JpaRitualPackage ritualPackage;
 
     @PrePersist
     public void prePersist() {

@@ -35,7 +35,7 @@ public class JpaCompanyStaff implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
-    private JpaCompany companyId;
+    private JpaCompany company;
 
     @Column(name = "title_code")
     private String titleCode;
