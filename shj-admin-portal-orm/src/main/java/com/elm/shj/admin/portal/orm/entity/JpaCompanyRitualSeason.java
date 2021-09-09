@@ -8,8 +8,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * Copyright (c) 2021 ELM. All rights reserved.
  * @author salzoubi
- * @version 1.0.0
+ * @since 1.0.0
  * **/
 @Entity
 @Table(name = "shc_company_ritual_season")

@@ -11,8 +11,9 @@ import java.util.Date;
 import java.util.Set;
 
 /**
+ * Copyright (c) 2021 ELM. All rights reserved.
  * @author salzoubi
- * @version 1.0.0
+ * @since 1.0.0
  * **/
 @Entity
 @Table(name = "shc_company")
