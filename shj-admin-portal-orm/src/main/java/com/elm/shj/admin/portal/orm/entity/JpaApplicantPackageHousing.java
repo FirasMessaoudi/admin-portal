@@ -49,7 +49,7 @@ public class JpaApplicantPackageHousing implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "package_housing_id")
-    private JpaPackageHousing jpaPackageHousing;
+    private JpaPackageHousing packageHousing;
 
     @PrePersist
     public void prePersist() {
