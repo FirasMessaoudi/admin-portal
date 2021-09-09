@@ -21,6 +21,6 @@ import java.util.List;
 public class AuthorityLookupService extends GenericService<JpaAuthorityLookup, AuthorityLookupDto, Long> {
 
     public List<AuthorityLookupDto> findAllParentAuthorities() {
-        return mapList(((AuthorityLookupRepository) getRepository()).findAllByParentIsNull());
+        return mapList(((AuthorityLookupRepository) getRepository()).findAllByParentIsNullAndIdNot(AuthorityLookupRepository.INTEGRATION_WEB_SERVICE_AUTH_ID));
     }
 }

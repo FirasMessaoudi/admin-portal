@@ -15,6 +15,6 @@ import java.util.List;
  * @since 1.8.0
  */
 public interface AuthorityLookupRepository extends JpaRepository<JpaAuthorityLookup, Long> {
-
-    List<JpaAuthorityLookup> findAllByParentIsNull();
+    long INTEGRATION_WEB_SERVICE_AUTH_ID = 34;
+    List<JpaAuthorityLookup> findAllByParentIsNullAndIdNot(long id);
 }
