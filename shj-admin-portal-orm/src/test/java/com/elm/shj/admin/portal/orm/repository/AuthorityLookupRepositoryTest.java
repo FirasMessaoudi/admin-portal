@@ -25,7 +25,7 @@ class AuthorityLookupRepositoryTest extends AbstractJpaTest {
 
     @Test
     public void test_find_all_root_authorities() {
-        List<JpaAuthorityLookup> rootAuthorities = authorityLookupRepository.findAllByParentIsNull();
+        List<JpaAuthorityLookup> rootAuthorities = authorityLookupRepository.findAllByParentIsNullAndIdNot(AuthorityLookupRepository.INTEGRATION_WEB_SERVICE_AUTH_ID);
         assertEquals(3, rootAuthorities.size());
     }
 

@@ -27,7 +27,7 @@ public interface RoleRepository extends JpaRepository<JpaRole, Long> {
     int SYSTEM_ADMIN_USER_ROLE_ID = 1;
     long WS_USER = 13;
     List<Long> SYSTEM_ROLE_ID_LIST = Arrays.asList(SYSTEM_ADMIN_ROLE_ID, SYSTEM_USER_ROLE_ID);
-    List<Long> EXCLUDED_USERS_ROLES_ID_LIST = Arrays.asList(SYSTEM_ADMIN_ROLE_ID, WS_USER);
+    List<Long> EXCLUDED_USERS_ROLES_ID_LIST = Arrays.asList(SYSTEM_ADMIN_ROLE_ID,SYSTEM_USER_ROLE_ID, WS_USER);
 
     Page<JpaRole> findByDeletedFalse(Pageable pageable);
 
@@ -74,6 +74,7 @@ public interface RoleRepository extends JpaRepository<JpaRole, Long> {
     void deactivate(@Param("roleId") long roleId);
 
     @Query("select distinct role from JpaRole role join role.roleAuthorities ra where " +
+            "role.id <> :wsUserRoleId and "+
             "ra.role.id = role.id and " +
             "ra.role.deleted = false and" +
             "(:authorityId = -1L or ra.authority.id = :authorityId or ra.authority.parentId = :authorityId) and " +
@@ -81,5 +82,6 @@ public interface RoleRepository extends JpaRepository<JpaRole, Long> {
             "(:labelEn is null or lower(role.labelEn) like :labelEn)")
     Page<JpaRole> findByAuthorityOrName(Pageable pageable, @Param("authorityId") Long authorityId,
                                         @Param("labelAr") String arabicName,
-                                        @Param("labelEn") String englishName);
+                                        @Param("labelEn") String englishName,
+                                        @Param("wsUserRoleId") long wsUserRoleId);
 }

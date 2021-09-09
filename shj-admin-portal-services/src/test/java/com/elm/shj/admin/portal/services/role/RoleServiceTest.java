@@ -73,13 +73,13 @@ class RoleServiceTest {
     @Test
     void test_search_by_authority_or_name_arabic() {
         serviceToTest.searchByAuthorityOrName(TEST_PAGE, TEST_AUTHORITY_ID, TEST_ARABIC_NAME, null);
-        verify(roleRepository).findByAuthorityOrName(eq(TEST_PAGE), eq(TEST_AUTHORITY_ID), eq("%" + TEST_ARABIC_NAME.toLowerCase() + "%"), eq(null));
+        verify(roleRepository).findByAuthorityOrName(eq(TEST_PAGE), eq(TEST_AUTHORITY_ID), eq("%" + TEST_ARABIC_NAME.toLowerCase() + "%"), eq(null),eq(RoleRepository.WS_USER));
     }
 
     @Test
     void test_search_by_authority_or_name_english() {
         serviceToTest.searchByAuthorityOrName(TEST_PAGE, TEST_AUTHORITY_ID, null, TEST_ENGLISH_NAME);
-        verify(roleRepository).findByAuthorityOrName(eq(TEST_PAGE), eq(TEST_AUTHORITY_ID), eq(null), eq("%" + TEST_ENGLISH_NAME.toLowerCase() + "%"));
+        verify(roleRepository).findByAuthorityOrName(eq(TEST_PAGE), eq(TEST_AUTHORITY_ID), eq(null), eq("%" + TEST_ENGLISH_NAME.toLowerCase() + "%"),eq(RoleRepository.WS_USER));
     }
 
     @Test
