@@ -22,6 +22,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class JpaCompanyRitualSeason implements Serializable {
 
+    private static final long serialVersionUID = -973537367560574699L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
