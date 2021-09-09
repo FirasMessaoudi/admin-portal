@@ -1,3 +1,6 @@
+/*
+ *  Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
@@ -8,13 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Copyright (c) 2021 ELM. All rights reserved.
+ * The persistent class for the shc_company_staff database table.
  * @author salzoubi
  * @since 1.0.0
  * **/
 @Entity
 @Table(name = "shc_company_staff")
-@NamedQuery(name = "JpaCompanyStaff.findAll", query = "SELECT staff FROM JpaCompanyStaff staff")
+@NamedQuery(name = "JpaCompanyStaff.findAll", query = "SELECT j FROM JpaCompanyStaff j")
 @Data
 @NoArgsConstructor
 public class JpaCompanyStaff implements Serializable {
