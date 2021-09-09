@@ -2,6 +2,7 @@
   <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
   <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
 </a>
+
 <div class="dashes flex-center-column my-5 p-5" *ngIf="addedCards.length === 0">
 
   <img class="my-5" src="assets/images/add-cards.jpg" alt='{{ "printing-management.new_request" | translate }}'>
@@ -15,7 +16,7 @@
 <ng-template #showAdd let-modal>
   <div class="modal-header">
     <h4> {{ "printing-management.title" | translate }}</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <button type="button" class="close" aria-label="Close" (click)="resetModal()">
       <span aria-hidden="true" class="h2">&times;</span>
     </button>
   </div>
@@ -77,20 +78,20 @@
         </div>
         <div id="selectbtns">
           <button [disabled]="isSelectLoading"
-          [ngStyle]="{'display': isSelectAllClicked && !isAllSelected ? 'inline-flex': 'none'}"
-          (click)="selectAllCards()"
-          class="btn btn-dcc-primary px-5 mr-3">
+                  [ngStyle]="{'display': isSelectAllClicked && !isAllSelected ? 'inline-flex': 'none'}"
+                  (click)="selectAllCards()"
+                  class="btn btn-dcc-primary px-5 mr-3">
             {{'general.select' | translate}}<span
             class="font-weight-bold px-2">{{page?.totalElements}}</span>{{'printing-management.cards_from_all_pages' | translate}}
-          
+
           </button>
           <button [disabled]="isSelectLoading"
-          [ngStyle]="{'display': isSelectAllClicked && isAllSelected ? 'inline-flex': 'none'}"
-           (click)="deselectAllCards()"
-            class="btn btn-dcc-primary px-5 mr-3">
+                  [ngStyle]="{'display': isSelectAllClicked && isAllSelected ? 'inline-flex': 'none'}"
+                  (click)="deselectAllCards()"
+                  class="btn btn-dcc-primary px-5 mr-3">
             {{'general.deselect' | translate}}<span
             class="font-weight-bold px-2">{{page?.totalElements}}</span>{{'printing-management.cards_from_all_pages' | translate}}
-         
+
           </button>
         </div>
       </div>
@@ -131,7 +132,7 @@
           </tr>
           <ng-container *ngIf="!loading()">
             <tr *ngFor="let card of cards">
-              <td scope="row">
+              <td>
                 <div class="custom-control custom-checkbox my-2">
                   <input type="checkbox" class="custom-control-input" id="applicantCheck-{{card.id}}"
                          [checked]="isChecked(card)"
@@ -176,10 +177,16 @@
     </nav>
 
   </div>
-  <div class="modal-footer justify-content-end">
+  <div class="modal-footer">
     <button type="button" class="btn btn-dcc-primary px-5 ml-3"
             *ngIf="selectedCards?.length"
             (click)="addCards()">{{'printing-management.add_no_cards' | translate : {noCards: selectedCards.length} }}
+    </button>
+
+    <button type="button" class="btn btn-outline-secondary px-5 ml-3"
+            *ngIf="selectedCards?.length"
+            (click)="resetModal()">
+      {{'printing-management.btn_cancel' | translate  }}
     </button>
   </div>
 </ng-template>

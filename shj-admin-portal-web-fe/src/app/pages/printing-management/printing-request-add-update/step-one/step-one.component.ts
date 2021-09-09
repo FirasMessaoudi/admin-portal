@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Subscription} from "rxjs";
 import {Page} from "@shared/model";
@@ -265,5 +265,14 @@ export class StepOneComponent implements OnInit {
 
   loading(): boolean {
     return this.isLoading || this.isSelectLoading;
+  }
+
+  resetModal() {
+    this.searchForm.reset()
+    this.cards = [];
+    this.selectedCards = [];
+    this.isSelectAllClicked = false;
+    this.modalService.dismissAll();
+
   }
 }

@@ -400,7 +400,8 @@
     "group_leader": "رئيس المجموعة",
     "fawj_number": "رقم الفوج",
     "nationality": "الجنسية",
-    "motawif": "مؤسسة الطوافة"
+    "motawif": "مؤسسة الطوافة",
+    "btn_cancel": "إلغاء"
 
   },
   "rule-management": {
