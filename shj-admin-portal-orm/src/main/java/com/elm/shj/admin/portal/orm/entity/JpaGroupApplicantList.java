@@ -26,13 +26,13 @@ public class JpaGroupApplicantList {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", nullable = false)
     private JpaApplicantGroup groupId;
 
-    @Column(name = "applicant_uin")
+    @Column(name = "applicant_uin", nullable = false)
     private String applicantUin;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
     @PrePersist

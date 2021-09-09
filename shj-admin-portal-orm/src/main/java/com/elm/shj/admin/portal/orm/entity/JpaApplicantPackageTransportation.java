@@ -1,3 +1,6 @@
+/*
+ *  Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
@@ -11,7 +14,7 @@ import java.util.Date;
  * the persistent class for the shc_applicant_package_transportation table
  *
  * @author firas messaoudi
- * @since 1.0.0
+ * @since 1.1.0
  */
 @Entity
 @Table(name = "shc_applicant_package_transportation")
@@ -41,6 +44,14 @@ public class JpaApplicantPackageTransportation implements Serializable {
 
     @Column(name = "update_date")
     private Date updateDate;
+
+    @ManyToOne
+    @JoinColumn(name = "application_package_id")
+    private JpaApplicantPackage jpaApplicantPackage;
+
+    @ManyToOne
+    @JoinColumn(name = "ritual_package_transportation_id")
+    private JpaPackageTransportation jpaPackageTransportation;
 
     @PrePersist
     public void prePersist() {
