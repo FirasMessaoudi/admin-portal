@@ -73,14 +73,14 @@ public class JpaPackageHousing implements Serializable {
 
     private String lng;
 
-//    @LazyCollection(LazyCollectionOption.TRUE)
-//    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageHousing")
-//    private List<JpaPackageCatering> packageCatering;
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageHousing")
+    private List<JpaPackageCatering> packageCatering;
 
 
-    //    @LazyCollection(LazyCollectionOption.TRUE)
-//    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageHousing")
-//    private List<JpaApplicantPackageHousing> applicantPackageHousing;
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageHousing")
+    private List<JpaApplicantPackageHousing> applicantPackageHousing;
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 

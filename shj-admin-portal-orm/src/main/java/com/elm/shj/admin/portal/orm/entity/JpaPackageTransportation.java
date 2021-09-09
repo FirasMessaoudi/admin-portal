@@ -64,9 +64,9 @@ public class JpaPackageTransportation implements Serializable {
     private String ritualStepCode;
 
 
-//    @LazyCollection(LazyCollectionOption.TRUE)
-//    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageTransportation")
-//    private List<JpaApplicantPackageTransportation> packageCatering;
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageTransportation")
+    private List<JpaApplicantPackageTransportation> packageCatering;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
