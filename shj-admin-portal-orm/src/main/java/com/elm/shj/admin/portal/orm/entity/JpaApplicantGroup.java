@@ -3,6 +3,8 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -60,10 +62,12 @@ public class JpaApplicantGroup {
     @Column(name = "update_date", nullable = false)
     private Date updateDate;
 
+    @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupId")
     private List<JpaGroupApplicantList> groupApplicantLists;
 
-    @OneToMany(mappedBy = "applicantGroupId", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantGroupId")
     private Set<JpaCompanyRitualStep> companyRitualSteps;
 
 
