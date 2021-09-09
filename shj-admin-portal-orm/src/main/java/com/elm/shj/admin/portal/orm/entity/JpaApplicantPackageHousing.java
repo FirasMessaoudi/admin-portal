@@ -45,7 +45,7 @@ public class JpaApplicantPackageHousing implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "application_package_id")
-    private JpaApplicantPackage jpaApplicantPackage;
+    private JpaApplicantPackage applicantPackage;
 
     @ManyToOne
     @JoinColumn(name = "package_housing_id")

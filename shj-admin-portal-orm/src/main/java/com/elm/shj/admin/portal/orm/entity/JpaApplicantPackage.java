@@ -41,15 +41,15 @@ public class JpaApplicantPackage {
     private JpaRitualPackage ritualPackage;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "jpaPackageCatering")
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageCatering")
     private List<JpaApplicantPackageCatering> applicantPackageCaterings;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "jpaApplicantPackage")
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
     private List<JpaApplicantPackageTransportation> applicantPackageTransportations;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "jpaApplicantPackage")
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
     private List<JpaApplicantPackageHousing> applicantPackageHousings;
 
     @PrePersist

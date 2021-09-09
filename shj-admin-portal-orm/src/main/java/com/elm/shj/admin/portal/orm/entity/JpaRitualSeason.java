@@ -42,6 +42,6 @@ public class JpaRitualSeason {
     private boolean activated;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "jpaRitualSeason")
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "ritualSeason")
     private List<JpaCompanyRitualSeason> companyRitualSeasons;
 }

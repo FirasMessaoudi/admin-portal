@@ -47,7 +47,7 @@ public class JpaApplicantPackageTransportation implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "application_package_id")
-    private JpaApplicantPackage jpaApplicantPackage;
+    private JpaApplicantPackage applicantPackage;
 
     @ManyToOne
     @JoinColumn(name = "ritual_package_transportation_id")

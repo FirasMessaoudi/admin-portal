@@ -57,7 +57,7 @@ public class JpaPackageCatering {
     private JpaPackageHousing packageHousing;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "jpaPackageCatering")
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageCatering")
     private List<JpaApplicantPackageCatering> applicantPackageCaterings;
 
     @PrePersist
