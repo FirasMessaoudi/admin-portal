@@ -294,7 +294,7 @@ CREATE TABLE shc_portal.shc_company
     label_ar                   nvarchar(50) NOT NULL,
     label_en                   varchar(25)   NOT NULL,
     mission_id                 int           NOT NULL,
-    contact_number             int           NOT NULL,
+    contact_number             varchar(20)   NOT NULL,
     website                    varchar(75) NULL,
     accreditation_organization varchar(45)   NOT NULL,
     accreditation_number       varchar(45)   NOT NULL,
