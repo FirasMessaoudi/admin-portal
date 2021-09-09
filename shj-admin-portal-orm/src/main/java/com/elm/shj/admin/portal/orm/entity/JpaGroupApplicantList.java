@@ -7,6 +7,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * The persistent class for the shc_group_applicant_list database table.
+ *
+ * @author Jaafer Jarray
+ * @since 1.1.0
+ */
 @Entity
 @Table(name = "shc_group_applicant_list")
 @NamedQuery(name = "JpaGroupApplicantList.findAll", query = "SELECT j FROM JpaGroupApplicantList j")

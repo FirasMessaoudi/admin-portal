@@ -6,8 +6,14 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * The persistent class for the shc_company_ritual_step database table.
+ *
+ * @author Jaafer Jarray
+ * @since 1.1.0
+ */
 @Entity
-@Table(name = "shc_group_applicant_list")
+@Table(name = "shc_company_ritual_step")
 @NamedQuery(name = "JpaCompanyRitualStep.findAll", query = "SELECT j FROM JpaCompanyRitualStep j")
 @Data
 @NoArgsConstructor

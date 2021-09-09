@@ -9,6 +9,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The persistent class for the shc_applicant_group database table.
+ *
+ * @author Jaafer Jarray
+ * @since 1.1.0
+ */
 @Entity
 @Table(name = "shc_applicant_group")
 @NamedQuery(name = "JpaApplicantGroup.findAll", query = "SELECT j FROM JpaApplicantGroup j")
