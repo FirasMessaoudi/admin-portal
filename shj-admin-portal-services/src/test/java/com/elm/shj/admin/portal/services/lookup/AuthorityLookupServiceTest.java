@@ -53,6 +53,6 @@ class AuthorityLookupServiceTest {
     @Test
     void test_find_all_parent_authorities_success() {
         serviceToTest.findAllParentAuthorities();
-        verify(authorityLookupRepository).findAllByParentIsNull();
+        verify(authorityLookupRepository).findAllByParentIsNullAndIdNot(AuthorityLookupRepository.INTEGRATION_WEB_SERVICE_AUTH_ID);
     }
 }

@@ -58,7 +58,7 @@ public class RoleService extends GenericService<JpaRole, RoleDto, Long> {
     public Page<RoleDto> searchByAuthorityOrName(Pageable pageable, Long authorityId, String arabicName, String englishName) {
         return mapPage(roleRepository.findByAuthorityOrName(pageable, authorityId,
                 StringUtils.isNotBlank(arabicName) ? "%" + arabicName.toLowerCase() + "%" : null,
-                StringUtils.isNotBlank(englishName) ? "%" + englishName.toLowerCase() + "%" : null));
+                StringUtils.isNotBlank(englishName) ? "%" + englishName.toLowerCase() + "%" : null, RoleRepository.WS_USER));
     }
 
     /**
@@ -81,7 +81,7 @@ public class RoleService extends GenericService<JpaRole, RoleDto, Long> {
      */
     public List<RoleDto> findActive() {
         // exclude system admin and system user roles from returned list
-        return mapList(roleRepository.findByDeletedFalseAndActivatedTrueAndIdNotIn(RoleRepository.SYSTEM_ROLE_ID_LIST));
+        return mapList(roleRepository.findByDeletedFalseAndActivatedTrueAndIdNotIn(RoleRepository.EXCLUDED_USERS_ROLES_ID_LIST));
     }
 
 
