@@ -32,7 +32,7 @@ public class JpaApplicantGroup {
     @Column(name = "local_office_id")
     private long localOfficeId;
 
-    @Column(name = "reference_number")
+    @Column(name = "reference_number", nullable = false)
     private String referenceNumber;
 
     @Column(name = "arrival_date")
@@ -44,8 +44,9 @@ public class JpaApplicantGroup {
     @Column(name = "group_leader_id")
     private long groupLeaderId;
 
-    @Column(name = "company_season_ritual")
-    private long companySeasonRitual;
+    @ManyToOne
+    @JoinColumn(name = "company_season_ritual", nullable = false)
+    private JpaCompanyRitualSeason companySeasonRitual;
 
     @Column(name = "group_type_code")
     private String groupTypeCode;
@@ -53,10 +54,10 @@ public class JpaApplicantGroup {
     @Column(name = "entry_transportation_type_code")
     private String EntryTransportationTypeCode;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
-    @Column(name = "update_date")
+    @Column(name = "update_date", nullable = false)
     private Date updateDate;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupId")

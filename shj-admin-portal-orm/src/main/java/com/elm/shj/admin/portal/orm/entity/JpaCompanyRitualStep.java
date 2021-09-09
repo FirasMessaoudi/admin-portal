@@ -25,37 +25,37 @@ public class JpaCompanyRitualStep {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "applicant_group_id")
+    @JoinColumn(name = "applicant_group_id", nullable = false)
     private JpaApplicantGroup applicantGroupId;
 
     @Column(name = "transportation_type_code")
     private String transportationTypeCode;
 
-    @Column(name = "step_index")
+    @Column(name = "step_index", nullable = false)
     private long index;
 
-    @Column(name = "step_code")
+    @Column(name = "step_code", nullable = false)
     private String stepCode;
 
-    @Column(name = "time")
+    @Column(name = "time", nullable = false)
     private Date time;
 
-    @Column(name = "location_lat")
+    @Column(name = "location_lat", nullable = false)
     private double locationLat;
 
-    @Column(name = "location_lng")
+    @Column(name = "location_lng", nullable = false)
     private double LocationLng;
 
-    @Column(name = "location_name_ar")
+    @Column(name = "location_name_ar", nullable = false)
     private String locationNameAr;
 
-    @Column(name = "location_name_en")
+    @Column(name = "location_name_en", nullable = false)
     private String locationNameEn;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
-    @Column(name = "update_date")
+    @Column(name = "update_date", nullable = false)
     private Date updateDate;
 
     @PrePersist
