@@ -19,6 +19,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class JpaCompanySeasonPackage {
 
+    private static final long serialVersionUID = -7509421286587785270L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)

@@ -22,6 +22,8 @@ import java.util.List;
 @NoArgsConstructor
 public class JpaRitualSeason {
 
+    private static final long serialVersionUID = 6421655004418134795L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)

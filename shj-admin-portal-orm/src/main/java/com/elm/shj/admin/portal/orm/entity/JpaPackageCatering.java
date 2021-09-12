@@ -22,6 +22,8 @@ import java.util.List;
 @NoArgsConstructor
 public class JpaPackageCatering {
 
+    private static final long serialVersionUID = 8613036264986315543L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
