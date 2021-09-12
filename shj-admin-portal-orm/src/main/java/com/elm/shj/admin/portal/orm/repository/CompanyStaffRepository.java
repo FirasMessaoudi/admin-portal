@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author salzoubi
  * @since 1.1.0
  **/
-public interface JpaCompanyStaffRepository extends JpaRepository<JpaCompanyStaff, Long> {
+public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, Long> {
 
 }
