@@ -1,16 +1,22 @@
+/*
+ *  Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
- * Copyright (c) 2021 ELM. All rights reserved.
+ * The persistent class for the shc_company_staff database table.
  * @author salzoubi
- * @since 1.0.0
+ * @since 1.1.0
  * **/
 @Entity
 @Table(name = "shc_company_ritual_season")
@@ -19,6 +25,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class JpaCompanyRitualSeason implements Serializable {
 
+    private static final long serialVersionUID = -973537367560574699L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
@@ -32,6 +39,13 @@ public class JpaCompanyRitualSeason implements Serializable {
     @JoinColumn(name = "ritual_season_id",nullable = false)
     private JpaRitualSeason ritualSeason;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyRitualSeason")
+    private Set<JpaCompanySeasonPackage> companySeasonPackages;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyRitualSeason")
+    private Set<JpaApplicantGroup> applicantGroups;
 
     @Column(name = "season_start", nullable = false)
     private Date seasonStart;

@@ -1,0 +1,16 @@
+package com.elm.shj.admin.portal.services.dto;
+
+import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
+import com.elm.shj.admin.portal.orm.entity.JpaPackageCatering;
+import org.mapstruct.Mapper;
+
+
+/**
+ * Mapper for {@link PackageCateringDto} class
+ *
+ * @author ahmed elsayed
+ * @since 1.1.0
+ */
+@Mapper(componentModel = "spring")
+public abstract class PackageCateringMapper implements IGenericMapper<PackageCateringDto, JpaPackageCatering> {
+}
