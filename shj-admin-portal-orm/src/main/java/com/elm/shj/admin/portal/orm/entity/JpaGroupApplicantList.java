@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.entity;
 
 
@@ -5,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -18,7 +22,9 @@ import java.util.Date;
 @NamedQuery(name = "JpaGroupApplicantList.findAll", query = "SELECT j FROM JpaGroupApplicantList j")
 @Data
 @NoArgsConstructor
-public class JpaGroupApplicantList {
+public class JpaGroupApplicantList implements Serializable {
+
+    private static final long serialVersionUID = 7859379318931902943L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,7 +33,7 @@ public class JpaGroupApplicantList {
 
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
-    private JpaApplicantGroup groupId;
+    private JpaApplicantGroup applicantGroup;
 
     @Column(name = "applicant_uin", nullable = false)
     private String applicantUin;

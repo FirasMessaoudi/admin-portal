@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.entity;
 
 
@@ -7,6 +10,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -22,9 +26,10 @@ import java.util.Set;
 @NamedQuery(name = "JpaApplicantGroup.findAll", query = "SELECT j FROM JpaApplicantGroup j")
 @Data
 @NoArgsConstructor
-public class JpaApplicantGroup {
+public class JpaApplicantGroup implements Serializable {
 
-    private static final long serialVersionUID = -6527928280666512305L;
+
+    private static final long serialVersionUID = 2753741851607169463L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,8 +48,9 @@ public class JpaApplicantGroup {
     @Column(name = "departure_date")
     private Date departureDate;
 
-    @Column(name = "group_leader_id")
-    private long groupLeaderId;
+    @ManyToOne
+    @JoinColumn(name = "group_leader_id", nullable = false)
+    private JpaCompanyStaff groupLeader;
 
     @ManyToOne
     @JoinColumn(name = "company_season_ritual", nullable = false)
@@ -59,15 +65,15 @@ public class JpaApplicantGroup {
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
-    @Column(name = "update_date", nullable = false)
+    @Column(name = "update_date")
     private Date updateDate;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupId")
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantGroup")
     private List<JpaGroupApplicantList> groupApplicantLists;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantGroupId")
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantGroup")
     private Set<JpaCompanyRitualStep> companyRitualSteps;
 
 

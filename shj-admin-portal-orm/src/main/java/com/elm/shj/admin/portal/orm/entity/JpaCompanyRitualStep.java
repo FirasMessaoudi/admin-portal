@@ -1,9 +1,13 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -17,7 +21,9 @@ import java.util.Date;
 @NamedQuery(name = "JpaCompanyRitualStep.findAll", query = "SELECT j FROM JpaCompanyRitualStep j")
 @Data
 @NoArgsConstructor
-public class JpaCompanyRitualStep {
+public class JpaCompanyRitualStep implements Serializable {
+
+    private static final long serialVersionUID = 7808149444429290164L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,13 +32,13 @@ public class JpaCompanyRitualStep {
 
     @ManyToOne
     @JoinColumn(name = "applicant_group_id", nullable = false)
-    private JpaApplicantGroup applicantGroupId;
+    private JpaApplicantGroup applicantGroup;
 
     @Column(name = "transportation_type_code")
     private String transportationTypeCode;
 
     @Column(name = "step_index", nullable = false)
-    private long index;
+    private long stepIndex;
 
     @Column(name = "step_code", nullable = false)
     private String stepCode;
@@ -55,7 +61,7 @@ public class JpaCompanyRitualStep {
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
-    @Column(name = "update_date", nullable = false)
+    @Column(name = "update_date")
     private Date updateDate;
 
     @PrePersist

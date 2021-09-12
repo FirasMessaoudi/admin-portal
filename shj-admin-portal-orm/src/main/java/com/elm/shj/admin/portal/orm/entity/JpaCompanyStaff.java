@@ -46,7 +46,7 @@ public class JpaCompanyStaff implements Serializable {
     private JpaCompany company;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupLeaderId")
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupLeader")
     private List<JpaApplicantGroup> applicantGroups;
 
     @Column(name = "title_code")
