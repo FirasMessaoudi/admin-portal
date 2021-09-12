@@ -27,7 +27,7 @@ public class ApplicantPackageCateringDto implements Serializable {
     private String optionEn;
     private Date creationDate;
     private Date updateDate;
-    //private ApplicantPackageDto applicantPackage;
-    //private PackageCateringDto packageCatering;
+    private ApplicantPackageDTO applicantPackage;
+    private PackageCateringDto packageCatering;
 
 }

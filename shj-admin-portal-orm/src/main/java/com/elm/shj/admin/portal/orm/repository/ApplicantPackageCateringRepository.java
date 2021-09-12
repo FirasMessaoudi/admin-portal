@@ -12,5 +12,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author firas messaoudi
  * @since 1.1.0
  */
-public interface ApplicantPackageCatering extends JpaRepository<JpaApplicantPackageCatering, Long> {
+public interface ApplicantPackageCateringRepository extends JpaRepository<JpaApplicantPackageCatering, Long> {
 }

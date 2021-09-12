@@ -12,5 +12,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author firas messaoudi
  * @since 1.1.0
  */
-public interface ApplicantPackageHousing extends JpaRepository<JpaApplicantPackageHousing, Long> {
+public interface ApplicantPackageHousingRepository extends JpaRepository<JpaApplicantPackageHousing, Long> {
 }

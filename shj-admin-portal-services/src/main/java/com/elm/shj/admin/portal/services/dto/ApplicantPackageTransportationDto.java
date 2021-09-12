@@ -28,6 +28,6 @@ public class ApplicantPackageTransportationDto implements Serializable {
     private String vehicleNumber;
     private Date creationDate;
     private Date updateDate;
-    //private ApplicantPackageDto applicantPackage;
+    private ApplicantPackageDTO applicantPackage;
     //private PackageTransportationDto packageTransportation;
 }
