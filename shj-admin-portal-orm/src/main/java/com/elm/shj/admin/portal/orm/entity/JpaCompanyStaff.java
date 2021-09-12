@@ -5,15 +5,18 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the shc_company_staff database table.
  * @author salzoubi
- * @since 1.0.0
+ * @since 1.1.0
  * **/
 @Entity
 @Table(name = "shc_company_staff")
@@ -42,18 +45,20 @@ public class JpaCompanyStaff implements Serializable {
     @JoinColumn(name = "company_id", nullable = false)
     private JpaCompany company;
 
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyStaff")
+    private List<JpaApplicantGroup> applicantGroups;
+
     @Column(name = "title_code")
     private String titleCode;
 
-    //TODO update the script mobile number should be varchar
     @Column(name = "mobile_number", nullable = false)
     private String mobileNumber;
 
     @Column(name = "email")
     private String email;
 
-    //TODO it should be not null
-    @Column(name = "creation_date")
+    @Column(name = "creation_date",nullable = false)
     private Date creationDate;
 
     @Column(name = "update_date")
