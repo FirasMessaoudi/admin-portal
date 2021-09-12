@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "shc_package_housing")
-@NamedQuery(name = "JpaPackageHousing.findAll", query = "SELECT rp  FROM JpaPackageHousing rp")
+@NamedQuery(name = "JpaPackageHousing.findAll", query = "SELECT j  FROM JpaPackageHousing j")
 @Data
 @NoArgsConstructor
 public class JpaPackageHousing implements Serializable {
@@ -35,12 +35,12 @@ public class JpaPackageHousing implements Serializable {
     private String typeCode;
 
     @ManyToOne
-    @JoinColumn(name = "package_id")
+    @JoinColumn(name = "package_id", nullable = false)
     private JpaRitualPackage ritualPackage;
 
     @ManyToOne
     @JoinColumn(name = "zone_id")
-    private JpaHousingZone zone;
+    private JpaHousingZone housingZone;
 
     @Column(name = "reference_number")
     private String referenceNumber;
@@ -48,10 +48,10 @@ public class JpaPackageHousing implements Serializable {
     @Column(name = "category_code")
     private String categoryCode;
 
-    @Column(name = "location_name_ar")
+    @Column(name = "location_name_ar", nullable = false)
     private String locationNameAr;
 
-    @Column(name = "location_name_en")
+    @Column(name = "location_name_en", nullable = false)
     private String locationNameEn;
 
     @Column(name = "validity_start")
@@ -81,6 +81,7 @@ public class JpaPackageHousing implements Serializable {
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageHousing")
     private List<JpaApplicantPackageHousing> applicantPackageHousing;
+
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 

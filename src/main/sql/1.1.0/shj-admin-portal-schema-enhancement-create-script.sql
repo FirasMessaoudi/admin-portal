@@ -226,7 +226,6 @@ CREATE TABLE shc_portal.shc_package_transportation
     creation_date         smalldatetime NOT NULL DEFAULT current_timestamp,
     update_date           smalldatetime NULL,
     CONSTRAINT fk_shc_package_transportation_package FOREIGN KEY (package_id) REFERENCES shc_portal.shc_ritual_package (id),
-    CONSTRAINT fk_shc_package_transportation_ritual_step FOREIGN KEY (id) REFERENCES shc_portal.shc_ritual_type_lk (id),
 );
 GO
 
