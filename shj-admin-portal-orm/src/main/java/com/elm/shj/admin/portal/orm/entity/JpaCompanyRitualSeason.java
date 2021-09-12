@@ -1,3 +1,6 @@
+/*
+ *  Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
@@ -8,7 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Copyright (c) 2021 ELM. All rights reserved.
+ * The persistent class for the shc_company_staff database table.
  * @author salzoubi
  * @since 1.0.0
  * **/
@@ -19,6 +22,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class JpaCompanyRitualSeason implements Serializable {
 
+    private static final long serialVersionUID = -973537367560574699L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)

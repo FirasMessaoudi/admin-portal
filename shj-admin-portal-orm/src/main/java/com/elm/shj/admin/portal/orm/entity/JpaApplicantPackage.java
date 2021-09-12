@@ -41,7 +41,7 @@ public class JpaApplicantPackage {
     private JpaRitualPackage ritualPackage;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageCatering")
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
     private List<JpaApplicantPackageCatering> applicantPackageCaterings;
 
     @LazyCollection(LazyCollectionOption.TRUE)

@@ -44,11 +44,11 @@ public class JpaApplicantPackageCatering implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "application_package_id")
-    private JpaApplicantPackage packageCatering;
+    private JpaApplicantPackage applicantPackage;
 
     @ManyToOne
     @JoinColumn(name = "ritual_package_catering_id")
-    private JpaPackageCatering jpaPackageCatering;
+    private JpaPackageCatering packageCatering;
 
     @PrePersist
     public void prePersist() {

@@ -5,7 +5,6 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -65,7 +64,7 @@ public class JpaPackageTransportation implements Serializable {
 
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "jpaPackageTransportation")
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageTransportation")
     private List<JpaApplicantPackageTransportation> applicantPackageTransportationss;
 
     @Column(name = "creation_date", nullable = false)
