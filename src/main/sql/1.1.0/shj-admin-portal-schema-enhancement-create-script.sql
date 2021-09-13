@@ -377,7 +377,7 @@ CREATE TABLE shc_portal.shc_applicant_group
     arrival_date                   smalldatetime NULL,
     departure_date                 smalldatetime NULL,
     group_leader_id                int NULL,
-    company_season_ritual          int NULL,
+    company_ritual_season_id       int NULL,
     group_type_code                varchar(20) NULL,
     entry_transportation_type_code varchar(20) NULL,
     creation_date                  smalldatetime NOT NULL,
