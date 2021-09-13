@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
@@ -20,21 +21,38 @@ import java.util.Set;
 @Data
 public class CompanyRitualSeasonDto {
     private static final long serialVersionUID = 4098474781987361976L;
+
     private long id;
+
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @JsonBackReference(value = "company")
     private CompanyDto company;
+
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @JsonBackReference(value = "ritualSeason")
     private RitualSeasonDto ritualSeason;
+
+
     @JsonBackReference(value = "companySeasonPackages")
     private Set<CompanySeasonPackageDto> companySeasonPackages;
+
     @JsonBackReference(value = "applicantGroups")
     private Set<ApplicantGroupDto> applicantGroups;
+
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private Date seasonStart;
+
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private Date seasonEnd;
+
     private int totalQuota;
     private int airQuota;
     private int seaQuota;
     private int landQuota;
     private Date creationDate;
     private Date updateDate;
+
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    private boolean isActive;
+
 }

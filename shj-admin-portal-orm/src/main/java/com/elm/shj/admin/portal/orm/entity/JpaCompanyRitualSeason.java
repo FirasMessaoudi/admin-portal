@@ -15,9 +15,10 @@ import java.util.Set;
 
 /**
  * The persistent class for the shc_company_staff database table.
+ *
  * @author salzoubi
  * @since 1.1.0
- * **/
+ **/
 @Entity
 @Table(name = "shc_company_ritual_season")
 @NamedQuery(name = "JpaCompanyRitualSeason.findAll", query = "SELECT j FROM JpaCompanyRitualSeason j")
@@ -36,7 +37,7 @@ public class JpaCompanyRitualSeason implements Serializable {
     private JpaCompany company;
 
     @ManyToOne
-    @JoinColumn(name = "ritual_season_id",nullable = false)
+    @JoinColumn(name = "ritual_season_id", nullable = false)
     private JpaRitualSeason ritualSeason;
 
     @LazyCollection(LazyCollectionOption.TRUE)
@@ -70,6 +71,9 @@ public class JpaCompanyRitualSeason implements Serializable {
 
     @Column(name = "update_date")
     private Date updateDate;
+
+    @Column(name = "active")
+    private boolean isActive;
 
     @PrePersist
     public void prePersist() {
