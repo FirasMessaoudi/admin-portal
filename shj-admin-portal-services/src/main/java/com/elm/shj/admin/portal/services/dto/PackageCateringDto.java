@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -25,8 +26,10 @@ public class PackageCateringDto implements Serializable {
 
     private String mealCode;
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private int mealTime;
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private String mealDescription;
 
     private String type;
