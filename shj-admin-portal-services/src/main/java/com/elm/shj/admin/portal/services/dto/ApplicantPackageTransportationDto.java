@@ -29,5 +29,5 @@ public class ApplicantPackageTransportationDto implements Serializable {
     private Date creationDate;
     private Date updateDate;
     private ApplicantPackageDTO applicantPackage;
-    //private PackageTransportationDto packageTransportation;
+    private PackageTransportationDto packageTransportation;
 }

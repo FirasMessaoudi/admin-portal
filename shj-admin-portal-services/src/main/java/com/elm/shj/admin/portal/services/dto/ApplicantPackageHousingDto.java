@@ -28,5 +28,5 @@ public class ApplicantPackageHousingDto implements Serializable {
     private Date creationDate;
     private Date updateDate;
     private ApplicantPackageDTO applicantPackage;
-    //private PackageHousingDto packageHousing;
+    private PackageHousingDto packageHousing;
 }
