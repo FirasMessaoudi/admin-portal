@@ -1,10 +1,13 @@
 package com.elm.shj.admin.portal.services.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Dto class for the package catering domain.
@@ -14,7 +17,7 @@ import java.util.Date;
  */
 @NoArgsConstructor
 @Data
-public class PackageCateringDto {
+public class PackageCateringDto implements Serializable {
 
     private static final long serialVersionUID = 4099330015218595333L;
 
@@ -36,10 +39,10 @@ public class PackageCateringDto {
 
     private Date updateDate;
 
-//    @JsonBackReference(value = "packageHousing")
-//    private PackageHousingDto packageHousing;
+    @JsonBackReference(value = "packageHousing")
+    private PackageHousingDto packageHousing;
 
-//    @JsonBackReference(value = "applicantPackageCaterings")
-//    private List<ApplicantPackageCateringDto> applicantPackageCaterings;
+    @JsonBackReference(value = "applicantPackageCaterings")
+    private List<ApplicantPackageCateringDto> applicantPackageCaterings;
 
 }
