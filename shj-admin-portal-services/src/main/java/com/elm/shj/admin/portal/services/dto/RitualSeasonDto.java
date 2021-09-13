@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -22,8 +23,10 @@ public class RitualSeasonDto implements Serializable {
 
     private long id;
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private int seasonYear;
-
+    
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private String ritualTypeCode;
 
     private Date seasonStart;

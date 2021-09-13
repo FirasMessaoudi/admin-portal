@@ -34,7 +34,7 @@ public class JpaCompanySeasonPackage implements Serializable {
     private Date updateDate;
 
     @ManyToOne
-    @JoinColumn(name = "company_season_ritual_id")
+    @JoinColumn(name = "company_ritual_season_id")
     private JpaCompanyRitualSeason companyRitualSeason;
 
     @ManyToOne
