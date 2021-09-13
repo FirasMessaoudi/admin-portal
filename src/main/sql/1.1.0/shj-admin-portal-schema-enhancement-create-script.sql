@@ -356,11 +356,11 @@ if not exists(select * from sys.tables where name = 'shc_company_season_package'
 CREATE TABLE shc_portal.shc_company_season_package
 (
     id                       int           NOT NULL PRIMARY KEY IDENTITY (1,1),
-    company_season_ritual_id int           NOT NULL,
+    company_ritual_season_id int           NOT NULL,
     basic_package_id         int           NOT NULL,
     creation_date            smalldatetime NOT NULL DEFAULT current_timestamp,
     update_date              smalldatetime NULL,
-    CONSTRAINT fk_shc_company_season_package_company_season FOREIGN KEY (company_season_ritual_id) REFERENCES shc_portal.shc_company_ritual_season (id),
+    CONSTRAINT fk_shc_company_season_package_company_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season (id),
     CONSTRAINT fk_shc_company_season_package_package FOREIGN KEY (basic_package_id) REFERENCES shc_portal.shc_ritual_package (id)
 );
 GO
