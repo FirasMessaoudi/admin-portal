@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "shc_package_transportation")
-@NamedQuery(name = "JpaPackageTransportation.findAll", query = "SELECT pt FROM JpaPackageTransportation pt")
+@NamedQuery(name = "JpaPackageTransportation.findAll", query = "SELECT j FROM JpaPackageTransportation j")
 @Data
 @NoArgsConstructor
 public class JpaPackageTransportation implements Serializable {
@@ -33,10 +33,6 @@ public class JpaPackageTransportation implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-
-    @ManyToOne
-    @JoinColumn(name = "package_id")
-    private JpaRitualPackage packageId;
 
     @Column(name = "type_code")
     private String typeCode;
@@ -62,16 +58,20 @@ public class JpaPackageTransportation implements Serializable {
     @Column(name = "ritual_step_code")
     private String ritualStepCode;
 
-
-    @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageTransportation")
-    private List<JpaApplicantPackageTransportation> applicantPackageTransportationss;
-
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
+
+
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageTransportation")
+    private List<JpaApplicantPackageTransportation> applicantPackageTransportations;
+
+    @ManyToOne
+    @JoinColumn(name = "package_id", nullable = false)
+    private JpaRitualPackage ritualPackage;
 
 
     @PrePersist

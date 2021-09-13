@@ -2,10 +2,13 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the shc_housing_zone database table.
@@ -15,7 +18,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "shc_housing_zone")
-@NamedQuery(name = "JpaHousingZone.findAll", query = "SELECT hz  FROM JpaHousingZone hz")
+@NamedQuery(name = "JpaHousingZone.findAll", query = "SELECT j FROM JpaHousingZone j")
 @Data
 @NoArgsConstructor
 public class JpaHousingZone implements Serializable {
@@ -41,6 +44,10 @@ public class JpaHousingZone implements Serializable {
 
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
+
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "housingZone")
+    private List<JpaPackageHousing> packageHousings;
 
 
     @PrePersist

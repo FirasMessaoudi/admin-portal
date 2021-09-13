@@ -27,8 +27,8 @@ public class CompanyRitualSeasonDto {
     private RitualSeasonDto ritualSeason;
     @JsonBackReference(value = "companySeasonPackages")
     private Set<CompanySeasonPackageDto> companySeasonPackages;
-    /*@JsonBackReference(value = "applicantGroups")
-    private Set<ApplicantGroupDto> applicantGroups;*/
+    @JsonBackReference(value = "applicantGroups")
+    private Set<ApplicantGroupDto> applicantGroups;
     private Date seasonStart;
     private Date seasonEnd;
     private int totalQuota;

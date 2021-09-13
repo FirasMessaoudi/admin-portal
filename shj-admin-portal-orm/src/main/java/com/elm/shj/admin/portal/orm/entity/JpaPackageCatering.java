@@ -6,6 +6,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import java.util.List;
 @NamedQuery(name = "JpaPackageCatering.findAll", query = "SELECT j FROM JpaPackageCatering j")
 @Data
 @NoArgsConstructor
-public class JpaPackageCatering {
+public class JpaPackageCatering implements Serializable {
 
     private static final long serialVersionUID = 8613036264986315543L;
 
