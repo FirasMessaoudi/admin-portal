@@ -317,7 +317,7 @@ CREATE TABLE shc_portal.shc_company_staff
     id_number     int NOT NULL,
     company_id    int NOT NULL,
     title_code    varchar(45) NULL,
-    mobile_number int NOT NULL,
+    mobile_number varchar(20) NOT NULL,
     email         varchar(255) NULL,
     creation_date smalldatetime NULL DEFAULT current_timestamp,
     update_date   smalldatetime NULL,
