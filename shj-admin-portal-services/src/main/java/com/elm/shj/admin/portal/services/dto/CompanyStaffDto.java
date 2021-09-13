@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Dto class for the companyStaff.
@@ -25,8 +26,8 @@ public class CompanyStaffDto {
     private int idNumber;
     @JsonBackReference(value = "company")
     private CompanyDto company;
-    /* @JsonBackReference(value = "applicantGroups")
-     private List<ApplicantGroupDto> applicantGroups;*/
+    @JsonBackReference(value = "applicantGroups")
+    private List<ApplicantGroupDto> applicantGroups;
     private String titleCode;
     private String mobileNumber;
     private String email;
