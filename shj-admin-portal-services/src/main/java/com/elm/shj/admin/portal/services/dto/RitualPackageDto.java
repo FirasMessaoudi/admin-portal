@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,7 @@ public class RitualPackageDto implements Serializable {
 
     private static final long serialVersionUID = 811079397522626616L;
     private long id;
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private String typeCode;
     private float price;
     private String departureCity;
@@ -40,7 +42,6 @@ public class RitualPackageDto implements Serializable {
 //     private List<JpaPackageHousingDto> packageHousings;
 //     @JsonBackReference
 //     private List<JpaPackageTransportationDto> packageTransportations;
-//
 
 
     private Date creationDate;

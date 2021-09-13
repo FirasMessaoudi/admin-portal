@@ -53,8 +53,8 @@ public class JpaApplicantGroup implements Serializable {
     private JpaCompanyStaff groupLeader;
 
     @ManyToOne
-    @JoinColumn(name = "company_season_ritual", nullable = false)
-    private JpaCompanyRitualSeason companySeasonRitual;
+    @JoinColumn(name = "company_ritual_season_id", nullable = false)
+    private JpaCompanyRitualSeason companyRitualSeason;
 
     @Column(name = "group_type_code")
     private String groupTypeCode;
