@@ -2,9 +2,12 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the shc_applicant_package database table.
@@ -18,6 +21,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class JpaApplicantPackage {
+
+    private static final long serialVersionUID = 6299760561882649100L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,21 +38,21 @@ public class JpaApplicantPackage {
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 
-//    @ManyToOne
-//    @JoinColumn(name = "ritual_package_id")
-//    private JpaRitualPackage ritualPackage;
+    @ManyToOne
+    @JoinColumn(name = "ritual_package_id")
+    private JpaRitualPackage ritualPackage;
 
-//    @LazyCollection(LazyCollectionOption.TRUE)
-//    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
-//    private List<JpaApplicantPackageCatering> applicantPackageCaterings;
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
+    private List<JpaApplicantPackageCatering> applicantPackageCaterings;
 
-//    @LazyCollection(LazyCollectionOption.TRUE)
-//    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
-//    private List<JpaApplicantPackageTransportation> applicantPackageTransportations;
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
+    private List<JpaApplicantPackageTransportation> applicantPackageTransportations;
 
-//    @LazyCollection(LazyCollectionOption.TRUE)
-//    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
-//    private List<JpaApplicantPackageHousing> applicantPackageHousings;
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
+    private List<JpaApplicantPackageHousing> applicantPackageHousings;
 
     @PrePersist
     public void prePersist() {

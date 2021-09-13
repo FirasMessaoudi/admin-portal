@@ -2,9 +2,12 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the shc_ritual_season database table.
@@ -18,6 +21,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class JpaRitualSeason {
+
+    private static final long serialVersionUID = 6421655004418134795L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,7 +43,7 @@ public class JpaRitualSeason {
 
     private boolean activated;
 
-//    @LazyCollection(LazyCollectionOption.TRUE)
-//    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "ritualSeason")
-//    private List<JpaCompanyRitualSeason> companyRitualSeasons;
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "ritualSeason")
+    private List<JpaCompanyRitualSeason> companyRitualSeasons;
 }

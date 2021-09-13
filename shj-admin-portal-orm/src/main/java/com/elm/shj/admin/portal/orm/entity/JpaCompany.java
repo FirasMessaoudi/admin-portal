@@ -1,3 +1,6 @@
+/*
+ *  Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
@@ -11,15 +14,19 @@ import java.util.Date;
 import java.util.Set;
 
 /**
+ * The persistent class for the shc_company database table.
+ *
  * @author salzoubi
- * @version 1.0.0
- * **/
+ * @since 1.1.0
+ */
 @Entity
 @Table(name = "shc_company")
-@NamedQuery(name = "JpaCompany.findAll", query = "SELECT c FROM JpaCompany c")
+@NamedQuery(name = "JpaCompany.findAll", query = "SELECT j FROM JpaCompany j")
 @Data
 @NoArgsConstructor
 public class JpaCompany implements Serializable {
+
+    private static final long serialVersionUID = -2301454504762626185L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -65,11 +72,11 @@ public class JpaCompany implements Serializable {
     @Column(name = "update_date")
     private Date updateDate;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "company")
     private Set<JpaCompanyStaff> companyStaff;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "company")
     private Set<JpaCompanyRitualSeason> companyRitualSeasons;
 

@@ -1,10 +1,16 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.entity;
 
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -20,9 +26,10 @@ import java.util.Set;
 @NamedQuery(name = "JpaApplicantGroup.findAll", query = "SELECT j FROM JpaApplicantGroup j")
 @Data
 @NoArgsConstructor
-public class JpaApplicantGroup {
+public class JpaApplicantGroup implements Serializable {
 
-    private static final long serialVersionUID = -6527928280666512305L;
+
+    private static final long serialVersionUID = 2753741851607169463L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,7 +39,7 @@ public class JpaApplicantGroup {
     @Column(name = "local_office_id")
     private long localOfficeId;
 
-    @Column(name = "reference_number")
+    @Column(name = "reference_number", nullable = false)
     private String referenceNumber;
 
     @Column(name = "arrival_date")
@@ -41,11 +48,13 @@ public class JpaApplicantGroup {
     @Column(name = "departure_date")
     private Date departureDate;
 
-    @Column(name = "group_leader_id")
-    private long groupLeaderId;
+    @ManyToOne
+    @JoinColumn(name = "group_leader_id", nullable = false)
+    private JpaCompanyStaff groupLeader;
 
-    @Column(name = "company_season_ritual")
-    private long companySeasonRitual;
+    @ManyToOne
+    @JoinColumn(name = "company_season_ritual", nullable = false)
+    private JpaCompanyRitualSeason companySeasonRitual;
 
     @Column(name = "group_type_code")
     private String groupTypeCode;
@@ -53,16 +62,18 @@ public class JpaApplicantGroup {
     @Column(name = "entry_transportation_type_code")
     private String EntryTransportationTypeCode;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
     @Column(name = "update_date")
     private Date updateDate;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupId")
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantGroup")
     private List<JpaGroupApplicantList> groupApplicantLists;
 
-    @OneToMany(mappedBy = "applicantGroupId", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantGroup")
     private Set<JpaCompanyRitualStep> companyRitualSteps;
 
 
