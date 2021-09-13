@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -17,7 +18,7 @@ import java.util.Date;
 @NamedQuery(name = "JpaCompanySeasonPackage.findAll", query = "SELECT j FROM JpaCompanySeasonPackage j")
 @Data
 @NoArgsConstructor
-public class JpaCompanySeasonPackage {
+public class JpaCompanySeasonPackage implements Serializable {
 
     private static final long serialVersionUID = -7509421286587785270L;
 

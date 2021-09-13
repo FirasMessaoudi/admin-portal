@@ -6,6 +6,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import java.util.List;
 @NamedQuery(name = "JpaRitualSeason.findAll", query = "SELECT j FROM JpaRitualSeason j")
 @Data
 @NoArgsConstructor
-public class JpaRitualSeason {
+public class JpaRitualSeason implements Serializable {
 
     private static final long serialVersionUID = 6421655004418134795L;
 

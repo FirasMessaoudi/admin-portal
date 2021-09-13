@@ -1,9 +1,12 @@
 package com.elm.shj.admin.portal.services.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Dto class for the ritual season domain.
@@ -13,7 +16,7 @@ import java.util.Date;
  */
 @NoArgsConstructor
 @Data
-public class RitualSeasonDto {
+public class RitualSeasonDto implements Serializable {
 
     private static final long serialVersionUID = 5471593790584285097L;
 
@@ -29,6 +32,6 @@ public class RitualSeasonDto {
 
     private boolean activated;
 
-//    @JsonBackReference(value = "companyRitualSeasons")
-//    private List<CompanyRitualSeasonDto> companyRitualSeasons;
+    @JsonBackReference(value = "companyRitualSeasons")
+    private List<CompanyRitualSeasonDto> companyRitualSeasons;
 }
