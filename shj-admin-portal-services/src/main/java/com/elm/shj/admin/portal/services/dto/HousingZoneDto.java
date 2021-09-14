@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,8 +30,8 @@ public class HousingZoneDto implements Serializable {
     private String labelAr;
     private String labelEn;
     private String color;
-    //    @JsonBackReference
-//    private List<JpaPackageHousingDto> packageHousings;
+    @JsonBackReference("packageHousings")
+    private List<PackageHousingDto> packageHousings;
     private Date creationDate;
     private Date updateDate;
 }
