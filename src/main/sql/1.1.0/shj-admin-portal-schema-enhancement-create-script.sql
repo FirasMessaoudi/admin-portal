@@ -319,9 +319,11 @@ CREATE TABLE shc_portal.shc_company_staff
     title_code    varchar(45) NULL,
     mobile_number varchar(20) NOT NULL,
     email         varchar(255) NULL,
+    company_ritual_season_id   int NULL,
     creation_date smalldatetime NULL DEFAULT current_timestamp,
     update_date   smalldatetime NULL,
     CONSTRAINT fk_shc_company_representative_company FOREIGN KEY (company_id) REFERENCES shc_portal.shc_company (id),
+    CONSTRAINT fk_shc_company_staff_company_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season(id);
 );
 GO
 
@@ -382,7 +384,7 @@ CREATE TABLE shc_portal.shc_applicant_group
     entry_transportation_type_code varchar(20) NULL,
     creation_date                  smalldatetime NOT NULL,
     update_date                    smalldatetime NULL,
-    CONSTRAINT fk_shc_applicant_group_company_season FOREIGN KEY (company_season_ritual) REFERENCES shc_portal.shc_company_ritual_season (id),
+    CONSTRAINT fk_shc_applicant_group_company_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season (id),
     CONSTRAINT fk_shc_applicant_group_representative FOREIGN KEY (group_leader_id) REFERENCES shc_portal.shc_company_staff (id)
 );
 GO
