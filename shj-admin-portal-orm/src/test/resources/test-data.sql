@@ -111,3 +111,6 @@ INSERT INTO shc_applicant_group (id, local_office_id, reference_number, arrival_
 
 INSERT INTO shc_group_applicant_list (id, group_id, applicant_uin, creation_date) VALUES
       (1, 1, N'59737700000059', N'2021-09-14 14:30:00');
+
+INSERT INTO shc_company_ritual_step (id, applicant_group_id, transportation_type_code,step_index,step_code,time,location_lat,location_lng,location_name_ar,location_name_en, creation_date, update_date) VALUES
+    (1, 1, 'code', 1, 'step 1', N'2021-09-14 14:27:00', 18.0, 19.0, 'arafet', 'arafet', N'2021-09-14 14:27:00', N'2021-09-14 14:27:00');

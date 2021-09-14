@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 2020 ELM. All rights reserved.
  */
-package com.elm.shj.admin.portal.services.ritual;
+package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.dcc.foundation.commons.core.mapper.MapperRegistry;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualStep;
 import com.elm.shj.admin.portal.orm.repository.CompanyRitualStepRepository;
+import com.elm.shj.admin.portal.services.applicant.CompanyRitualStepService;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualStepDto;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualStepDtoMapper;
+import org.checkerframework.checker.guieffect.qual.UI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,9 +19,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 
 
@@ -32,7 +36,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class CompanyRitualStepServiceTest {
-
+    private final static String UIN = "59737700000059";
     @InjectMocks
     private CompanyRitualStepService serviceToTest;
     @Mock
@@ -56,8 +60,22 @@ public class CompanyRitualStepServiceTest {
     }
 
     @Test
-    public void test_find_company_ritual_step_by_uin(){
-    serviceToTest.findByApplicantUin(anyString());
-    verify(companyRitualStepRepository).findByApplicantGroupId(anyLong());
+    public void test_find_company_ritual_step_by_uin_success(){
+        List<JpaCompanyRitualStep> jpaCompanyRitualStepList = new ArrayList<>();
+        List<CompanyRitualStepDto> companyRitualStepDtos = new ArrayList<>();
+        Mockito.when(companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(anyString(),anyLong())).thenReturn(jpaCompanyRitualStepList);
+        Mockito.when(companyRitualStepDtoMapper.fromEntityList(any(),any())).thenReturn(companyRitualStepDtos);
+
+        List<CompanyRitualStepDto> result = serviceToTest.findByApplicantUin(UIN);
+        assertFalse(result.isEmpty());
+        assertEquals(result,companyRitualStepDtos);
+    }
+    @Test
+    public void test_find_company_ritual_step_by_uin_fail(){
+        Mockito.when(companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(anyString(),anyLong())).thenReturn(null);
+        Mockito.when(companyRitualStepDtoMapper.fromEntityList(any(),any())).thenReturn(null);
+
+        List<CompanyRitualStepDto> result = serviceToTest.findByApplicantUin(UIN);
+        assertTrue(result.isEmpty());
     }
 }

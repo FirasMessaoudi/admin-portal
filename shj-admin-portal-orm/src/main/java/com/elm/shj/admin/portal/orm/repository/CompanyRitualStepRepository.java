@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CompanyRitualStepRepository extends JpaRepository<JpaCompanyRitualStep, Long> {
-    List<JpaCompanyRitualStep> findByApplicantGroupId(long id);
+    List<JpaCompanyRitualStep> findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(String applicantUin, long id);
 }

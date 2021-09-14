@@ -1,10 +1,12 @@
 /*
  * Copyright (c) 2021 ELM. All rights reserved.
  */
-package com.elm.shj.admin.portal.services.ritual;
+package com.elm.shj.admin.portal.services.applicant;
 
+import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeason;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualStep;
 import com.elm.shj.admin.portal.orm.entity.JpaGroupApplicantList;
+import com.elm.shj.admin.portal.orm.repository.CompanyRitualSeasonRepository;
 import com.elm.shj.admin.portal.orm.repository.CompanyRitualStepRepository;
 import com.elm.shj.admin.portal.orm.repository.GroupApplicantListRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualStepDto;
@@ -28,21 +30,19 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyRitualStepService extends GenericService<JpaCompanyRitualStep, CompanyRitualStepDto, Long> {
-    private final GroupApplicantListRepository groupApplicantListRepository;
     private final CompanyRitualStepRepository companyRitualStepRepository;
-
+    private final CompanyRitualSeasonRepository companyRitualSeasonRepository;
     /**
-     * find group applicant list by uin
-     * find company ritual steps by applicant group
+     * find company ritual steps by applicant uin
      *
      * @return list of company ritual steps
      */
     public List<CompanyRitualStepDto> findByApplicantUin(String applicantUin){
-        Optional<JpaGroupApplicantList> groupApplicantList = groupApplicantListRepository.findByApplicantUin(applicantUin);
-        if(groupApplicantList.isPresent()){
-            List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupId(groupApplicantList.get().getApplicantGroup().getId());
-            return mapList(companyRitualSteps);
-        }
-        return null;
+            JpaCompanyRitualSeason jpaCompanyRitualSeason = companyRitualSeasonRepository.findTopByApplicantGroupsGroupApplicantListsApplicantUinOrderBySeasonStartDesc(applicantUin);
+            if(jpaCompanyRitualSeason!=null) {
+                List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(applicantUin, jpaCompanyRitualSeason.getId());
+                return mapList(companyRitualSteps);
+            }
+            return null;
     }
 }
