@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -55,5 +54,5 @@ public class ApplicantGroupDto implements Serializable {
     private List<JpaGroupApplicantList> groupApplicantLists;
 
     @JsonBackReference(value = "companyRitualSteps")
-    private Set<JpaCompanyRitualStep> companyRitualSteps;
+    private List<JpaCompanyRitualStep> companyRitualSteps;
 }

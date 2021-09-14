@@ -34,14 +34,14 @@ public class RitualPackageDto implements Serializable {
     private String departureCity;
     private int countryId;
 
-//    @JsonBackReference
-//    private List<JpaCompanySeasonPackageDto> companySeasonPackages;
-//     @JsonBackReference
-//     private List<JpaApplicantPackageDto> applicantPackages;
-//     @JsonBackReference
-//     private List<JpaPackageHousingDto> packageHousings;
-//     @JsonBackReference
-//     private List<JpaPackageTransportationDto> packageTransportations;
+    @JsonBackReference("companySeasonPackages")
+    private List<CompanySeasonPackageDto> companySeasonPackages;
+    @JsonBackReference("applicantPackages")
+    private List<ApplicantPackageDTO> applicantPackages;
+    @JsonBackReference("packageHousings")
+    private List<PackageHousingDto> packageHousings;
+    @JsonBackReference("packageTransportations")
+    private List<PackageTransportationDto> packageTransportations;
 
 
     private Date creationDate;
