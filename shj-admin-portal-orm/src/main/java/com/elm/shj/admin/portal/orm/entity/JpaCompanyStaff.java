@@ -45,6 +45,10 @@ public class JpaCompanyStaff implements Serializable {
     @JoinColumn(name = "company_id", nullable = false)
     private JpaCompany company;
 
+    @ManyToOne
+    @JoinColumn(name = "company_ritual_season_id")
+    private JpaCompanyRitualSeason companyRitualSeason;
+
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupLeader")
     private List<JpaApplicantGroup> applicantGroups;
