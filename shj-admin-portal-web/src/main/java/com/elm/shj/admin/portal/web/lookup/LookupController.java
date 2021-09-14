@@ -37,6 +37,7 @@ public class LookupController {
     private final HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;
     private final PrintRequestStatusLookupService printRequestStatusLookupService;
     private final PrintBatchTypeLookupService printBatchTypeLookupService;
+    private final CompanyRitualStepLookupService companyRitualStepLookupService;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -89,5 +90,10 @@ public class LookupController {
     public List<PrintBatchTypeLookupDto> listPrintRequestBatchTypes(Authentication authentication) {
         log.debug("list print batch types...");
         return printBatchTypeLookupService.findAll();
+    }
+    @GetMapping("/company_ritual_step/list")
+    public List<CompanyRitualStepLookupDto> listCompanyRitualStepsLabel(Authentication authentication) {
+        log.debug("list company ritual step labels...");
+        return companyRitualStepLookupService.findAll();
     }
 }

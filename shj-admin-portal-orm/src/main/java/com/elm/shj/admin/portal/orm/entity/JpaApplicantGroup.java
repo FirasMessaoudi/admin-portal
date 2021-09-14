@@ -74,7 +74,7 @@ public class JpaApplicantGroup implements Serializable {
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantGroup")
-    private Set<JpaCompanyRitualStep> companyRitualSteps;
+    private List<JpaCompanyRitualStep> companyRitualSteps;
 
 
     @PrePersist
