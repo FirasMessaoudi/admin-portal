@@ -37,12 +37,12 @@ public class JpaRitualSeason implements Serializable {
     private String ritualTypeCode;
 
     @Column(name = "season_start", nullable = false)
-    private Date seasonStart;
+    private int seasonStart;
 
     @Column(name = "season_end", nullable = false)
-    private Date seasonEnd;
+    private int seasonEnd;
 
-    private boolean activated;
+    private boolean active;
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "ritualSeason")
