@@ -11,7 +11,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 /**
  * The persistent class for the shc_company_staff database table.
@@ -42,17 +42,17 @@ public class JpaCompanyRitualSeason implements Serializable {
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyRitualSeason")
-    private Set<JpaCompanySeasonPackage> companySeasonPackages;
+    private List<JpaCompanySeasonPackage> companySeasonPackages;
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyRitualSeason")
-    private Set<JpaApplicantGroup> applicantGroups;
+    private List<JpaApplicantGroup> applicantGroups;
 
     @Column(name = "season_start", nullable = false)
-    private Date seasonStart;
+    private int seasonStart;
 
     @Column(name = "season_end", nullable = false)
-    private Date seasonEnd;
+    private int seasonEnd;
 
     @Column(name = "total_quota")
     private int totalQuota;

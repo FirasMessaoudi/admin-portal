@@ -37,8 +37,8 @@ public class PackageTransportationDto implements Serializable {
     private String ritualStepCode;
     private Date validityStart;
     private Date validityEnd;
-    @JsonBackReference
-    private List<JpaApplicantPackageTransportation> applicantPackageTransportations;
+    @JsonBackReference("applicantPackageTransportations")
+    private List<ApplicantPackageTransportationDto> applicantPackageTransportations;
     private JpaRitualPackage ritualPackage;
     private Date creationDate;
     private Date updateDate;

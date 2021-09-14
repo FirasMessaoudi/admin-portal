@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.orm.entity.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,10 +41,10 @@ public class PackageHousingDto implements Serializable {
     private boolean isDefault;
     private String lat;
     private String lng;
-    //  @JsonBackReference
-//  private List<JpaPackageCateringDto> packageCatering;
-//  @JsonBackReference
-//  private List<JpaApplicantPackageHousingDto> applicantPackageHousing;
+    @JsonBackReference("packageCatering")
+    private List<PackageCateringDto> packageCatering;
+    @JsonBackReference("applicantPackageHousing")
+    private List<ApplicantPackageHousingDto> applicantPackageHousing;
     private Date creationDate;
     private Date updateDate;
 }

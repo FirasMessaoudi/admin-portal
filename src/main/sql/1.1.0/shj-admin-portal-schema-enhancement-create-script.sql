@@ -276,8 +276,8 @@ CREATE TABLE shc_portal.shc_ritual_season
     id               int           NOT NULL PRIMARY KEY IDENTITY (1,1),
     season_year      int           NOT NULL,
     ritual_type_code varchar(20)   NOT NULL,
-    season_start     smalldatetime NOT NULL,
-    season_end       smalldatetime NOT NULL,
+    season_start     INT           NOT NULL,
+    season_end       INT           NOT NULL,
     active           bit           NOT NULL,
 );
 GO
@@ -335,8 +335,8 @@ CREATE TABLE shc_portal.shc_company_ritual_season
     company_id       int           NOT NULL,
     ritual_season_id int           NOT NULL,
     active           bit           NOT NULL,
-    season_start     smalldatetime NOT NULL,
-    season_end       smalldatetime NOT NULL,
+    season_start     INT           NOT NULL,
+    season_end       INT           NOT NULL,
     total_quota      int NULL,
     air_quota        int NULL,
     sea_quota        int NULL,

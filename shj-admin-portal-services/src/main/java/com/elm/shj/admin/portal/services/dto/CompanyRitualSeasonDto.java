@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,16 +35,16 @@ public class CompanyRitualSeasonDto {
 
 
     @JsonBackReference(value = "companySeasonPackages")
-    private Set<CompanySeasonPackageDto> companySeasonPackages;
+    private List<CompanySeasonPackageDto> companySeasonPackages;
 
     @JsonBackReference(value = "applicantGroups")
-    private Set<ApplicantGroupDto> applicantGroups;
+    private List<ApplicantGroupDto> applicantGroups;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private Date seasonStart;
+    private int seasonStart;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private Date seasonEnd;
+    private int seasonEnd;
 
     private int totalQuota;
     private int airQuota;

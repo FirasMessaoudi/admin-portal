@@ -29,9 +29,9 @@ public class RitualSeasonDto implements Serializable {
     @NotNull(message = "validation.data.constraints.msg.20001")
     private String ritualTypeCode;
 
-    private Date seasonStart;
+    private int seasonStart;
 
-    private Date seasonEnd;
+    private int seasonEnd;
 
     private boolean activated;
 
