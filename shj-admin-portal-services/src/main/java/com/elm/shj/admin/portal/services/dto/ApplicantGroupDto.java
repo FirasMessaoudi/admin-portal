@@ -45,7 +45,7 @@ public class ApplicantGroupDto implements Serializable {
 
     private String groupTypeCode;
 
-    private String EntryTransportationTypeCode;
+    private String entryTransportationTypeCode;
 
     private Date creationDate;
 

@@ -50,7 +50,7 @@ public class JpaCompanyRitualStep implements Serializable {
     private double locationLat;
 
     @Column(name = "location_lng", nullable = false)
-    private double LocationLng;
+    private double locationLng;
 
     @Column(name = "location_name_ar", nullable = false)
     private String locationNameAr;
