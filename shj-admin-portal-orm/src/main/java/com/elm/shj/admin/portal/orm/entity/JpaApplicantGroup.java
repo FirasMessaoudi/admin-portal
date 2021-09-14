@@ -60,7 +60,7 @@ public class JpaApplicantGroup implements Serializable {
     private String groupTypeCode;
 
     @Column(name = "entry_transportation_type_code")
-    private String EntryTransportationTypeCode;
+    private String entryTransportationTypeCode;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

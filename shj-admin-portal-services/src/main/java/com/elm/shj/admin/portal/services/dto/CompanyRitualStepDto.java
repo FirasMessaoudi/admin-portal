@@ -36,7 +36,7 @@ public class CompanyRitualStepDto implements Serializable {
 
     private double locationLat;
 
-    private double LocationLng;
+    private double locationLng;
 
     private String locationNameAr;
 

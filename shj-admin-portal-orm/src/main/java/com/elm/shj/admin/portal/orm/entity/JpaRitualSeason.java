@@ -42,6 +42,7 @@ public class JpaRitualSeason implements Serializable {
     @Column(name = "season_end", nullable = false)
     private Date seasonEnd;
 
+    @Column(name = "active")
     private boolean activated;
 
     @LazyCollection(LazyCollectionOption.TRUE)
