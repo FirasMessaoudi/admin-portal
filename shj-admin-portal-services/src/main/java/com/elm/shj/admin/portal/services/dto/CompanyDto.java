@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -77,9 +78,9 @@ public class CompanyDto {
     private Date updateDate;
 
     @JsonBackReference(value = "companyRitualSeasons")
-    private Set<CompanyRitualSeasonDto> companyRitualSeasons;
+    private List<CompanyRitualSeasonDto> companyRitualSeasons;
 
     @JsonBackReference(value = "companyStaff")
-    private Set<CompanyStaffDto> companyStaff;
+    private List<CompanyStaffDto> companyStaff;
 
 }
