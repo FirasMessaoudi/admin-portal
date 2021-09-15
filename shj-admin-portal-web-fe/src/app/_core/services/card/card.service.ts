@@ -85,4 +85,7 @@ export class CardService {
   findMaritalStatuses(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/marital-status/list');
   }
+  findRitualStepsLabels(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/company_ritual_step/list');
+  }
 }

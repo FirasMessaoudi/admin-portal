@@ -3,12 +3,11 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.services.applicant.CompanyRitualSeasonLiteService;
+import com.elm.shj.admin.portal.services.applicant.CompanyRitualStepMainDataService;
 import com.elm.shj.admin.portal.services.applicant.CompanyRitualStepService;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
-import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantCardSearchCriteriaDto;
-import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
-import com.elm.shj.admin.portal.services.dto.CompanyRitualStepDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +36,8 @@ public class ApplicantCardController {
 
     private final ApplicantCardService applicantCardService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
-    private final CompanyRitualStepService companyRitualStepService;
+    private final CompanyRitualStepMainDataService companyRitualStepService;
+    private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private static final String APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG = "no card details found for applicant with this uin";
     private static final int CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
 
@@ -119,8 +119,12 @@ public class ApplicantCardController {
     public ApplicantCardDto findApplicantCard(@PathVariable long cardId) {
         log.debug("Handler for {}", "Find Applicant Card");
         ApplicantCardDto applicantCardDto = applicantCardService.findOne(cardId);
-        List<CompanyRitualStepDto> companyRitualSteps = companyRitualStepService.findByApplicantUin(applicantCardDto.getApplicantRitual().getApplicant().getIdNumber());
-        applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
+        CompanyRitualSeasonLiteDto companyRitualSeason = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(applicantCardDto.getApplicantRitual().getApplicant().getIdNumber());
+        if(companyRitualSeason!=null) {
+            List<CompanyRitualStepMainDataDto> companyRitualSteps = companyRitualStepService.findByApplicantUin(applicantCardDto.getApplicantRitual().getApplicant().getIdNumber(),companyRitualSeason.getId());
+            applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
+            return applicantCardDto;
+        }
         return applicantCardDto;
 
     }

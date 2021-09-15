@@ -4,10 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
-import com.elm.shj.admin.portal.services.applicant.ApplicantHealthLiteService;
-import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
-import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
-import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
@@ -70,6 +67,7 @@ public class IntegrationWsController {
     private final ApplicantHealthLiteService applicantHealthLiteService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
     private final ApplicantMainDataService applicantMainDataService;
+    private final CompanyRitualStepMainDataService companyRitualStepMainDataService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -331,6 +329,17 @@ public class IntegrationWsController {
                     .body(WsError.builder().error(WsError.EWsError.CARD_DETAILS_NOT_FOUND).referenceNumber(uin).build()).build());
         }
 
+    }
+
+    /**
+     * List of company ritual steps by uin and ritual season id.
+     *
+     * @return WsResponse of company ritual step list
+     */
+    @GetMapping("/company-ritual-step/{uin}/{seasonRitualId}")
+    public ResponseEntity<WsResponse<?>> listCompanyRitualStep(@PathVariable String uin, @PathVariable long seasonRitualId) {
+        log.info("list company ritual step...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findByApplicantUin(uin,seasonRitualId)).build());
     }
 
 }

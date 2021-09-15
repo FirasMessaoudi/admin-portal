@@ -106,7 +106,7 @@ INSERT INTO shc_company_staff (id, full_name_ar, full_name_en, id_number, compan
  VALUES (1, N'احمد السيد', N'Ahmed Elsayed', 1234567897, 1, null, N'54321678', null, N'2021-09-14 14:27:00', null);
 
 INSERT INTO shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES
-(1, null, N'123', null, null, 1, 1, null, null, N'2021-09-14 14:22:00', null);
+(1, 1, N'123', null, null, 1, 1, null, null, N'2021-09-14 14:22:00', null);
 
 
 INSERT INTO shc_group_applicant_list (id, group_id, applicant_uin, creation_date) VALUES

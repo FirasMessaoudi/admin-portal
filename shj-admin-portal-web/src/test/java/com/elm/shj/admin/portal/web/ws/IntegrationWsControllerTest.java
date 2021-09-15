@@ -29,6 +29,8 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
     private static final int TEST_HIJRI_DATE = 14051016;
     private final static String EXIST_RITUAL_ID = "36";
     private static final int TEST_CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
+    private static final String UIN= "1010101040";
+    private static final long COMPANY_RITUAL_ID = 1;
 
     @Override
     public void setUp() throws Exception {
@@ -130,6 +132,20 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
         Map<String, String> errors = new HashMap<>();
         String url = Navigation.API_INTEGRATION + "/details/" + FAKE_USER_UIN + "/" + EXIST_RITUAL_ID;
         when(applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(any(), any())).thenReturn(Optional.empty());
+        mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
+    }
+
+    @Test
+    public void test_find_company_ritual_step_success() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/company-ritual-step/" + UIN + "/" + COMPANY_RITUAL_ID;
+        List<CompanyRitualStepMainDataDto> companyRitualSteps = new ArrayList<>();
+        when(companyRitualStepMainDataService.findByApplicantUin(UIN, COMPANY_RITUAL_ID)).thenReturn(companyRitualSteps);
+        mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk());
+    }
+    @Test
+    public void test_find_company_ritual_step_fail() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/company-ritual-step/" + FAKE_USER_UIN + "/" + COMPANY_RITUAL_ID;
+        when(companyRitualStepMainDataService.findByApplicantUin(any(), any())).thenReturn(null);
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
     }
 }

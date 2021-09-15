@@ -35,5 +35,5 @@ public class ApplicantCardDto implements Serializable {
     private List<PrintRequestCardDto> printRequestCards;
     private String statusCode;
     private Date creationDate;
-    private List<CompanyRitualStepDto> companyRitualSteps;
+    private List<CompanyRitualStepMainDataDto> companyRitualSteps;
 }
