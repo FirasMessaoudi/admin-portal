@@ -337,6 +337,7 @@
     "available_catering": "الوجبات المتوفرة",
     "catering_type": "نوع الوجبة",
     "catering_description": "وصف الوجبة",
+    "catering_time": "وقت الوجبة",
     "catering_location": "الموقع",
     "transportation_method": "وسائل النقل",
     "transportation_type": "نوع النقل",
@@ -357,7 +358,10 @@
     "morshid_id": "رقم هوية المطوف",
     "morshid_name": "اسم المطوف",
     "morshid_title": "دور المرشد",
-    "morshid_contact_number": "رقم التواصل"
+    "morshid_contact_number": "رقم التواصل",
+    "yes": "نعم",
+    "no": "لا",
+    "main": "الاساسي"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

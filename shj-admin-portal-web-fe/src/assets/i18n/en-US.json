@@ -349,6 +349,7 @@
     "available_catering": "Catering",
     "catering_type": "Catering Type",
     "catering_description": "Catering Description",
+    "catering_time": "Catering Time",
     "catering_location": "Location",
     "transportation_method": "Transportation",
     "transportation_type": "Transportation Method",
@@ -369,7 +370,10 @@
     "morshid_id": "Morshid ID Number",
     "morshid_name": "Morshid Name",
     "morshid_title": "’Morshid Title",
-    "morshid_contact_number": "Contact Number"
+    "morshid_contact_number": "Contact Number",
+    "yes": "Yes",
+    "no": "No",
+    "main": "Main"
   },
   "printing-management": {
     "title": "Printing Management",
