@@ -129,14 +129,13 @@ public class ApplicantCardController {
             CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin);
             if (companyRitualSeasonLiteDto != null) {
                 long companyRitualSeasonId = companyRitualSeasonLiteDto.getId();
-                long seasonId = companyRitualSeasonLiteDto.getRitualSeason().getId();
                 applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, uin));
                 List<CompanyRitualStepMainDataDto> companyRitualSteps = companyRitualStepService.findByApplicantUin(uin, companyRitualSeasonId);
                 applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
-                List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, seasonId);
+                List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, companyRitualSeasonId);
                 applicantCardDto.setGroupLeaders(groupLeaders);
             }
         }

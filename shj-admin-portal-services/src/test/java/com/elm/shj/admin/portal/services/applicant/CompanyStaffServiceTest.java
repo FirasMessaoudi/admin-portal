@@ -52,7 +52,7 @@ public class CompanyStaffServiceTest {
         List<JpaCompanyStaff> jpaCompanyStaff = new ArrayList<JpaCompanyStaff>();
         List<CompanyStaffDto> companyStaffDto = new ArrayList<CompanyStaffDto>();
 
-        Mockito.when(companyStaffRepository.findRelatedEmployeesByUinAndSeasonId(anyString(), anyLong())).thenReturn(jpaCompanyStaff);
+        Mockito.when(companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndCompanyRitualSeasonId(anyString(), anyLong())).thenReturn(jpaCompanyStaff);
         List<CompanyStaffDto> resultDto = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(TEST_UIN, TEST_SEASON);
 
         assertNotNull(resultDto);
