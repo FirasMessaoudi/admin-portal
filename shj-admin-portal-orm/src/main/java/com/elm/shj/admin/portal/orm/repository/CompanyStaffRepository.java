@@ -18,9 +18,6 @@ import java.util.List;
  **/
 public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, Long> {
 
-    @Query("select cs from JpaCompanyStaff cs join cs.companyRitualSeason cr"+
-            " join cs.applicantGroups ag join cr.ritualSeason rs join ag.groupApplicantLists ga"+
-            " where ga.applicantUin = :uin and rs.id = :sid and ag.id = ga.applicantGroup.id")
-    List<JpaCompanyStaff> findRelatedEmployeesByUinAndSeasonId(@Param("uin") String uin, @Param("sid") long sid);
+    List<JpaCompanyStaff> findByApplicantGroupsGroupApplicantListsApplicantUinAndCompanyRitualSeasonId(String applicantUin, long sid);
 
 }
