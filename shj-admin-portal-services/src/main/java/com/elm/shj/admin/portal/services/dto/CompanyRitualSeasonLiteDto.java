@@ -1,6 +1,5 @@
 package com.elm.shj.admin.portal.services.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -28,6 +27,5 @@ public class CompanyRitualSeasonLiteDto implements Serializable {
     private int seasonEnd;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @JsonBackReference(value = "ritualSeason")
     private RitualSeasonDto ritualSeason;
 }

@@ -12,5 +12,5 @@ import org.mapstruct.Mapper;
  * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
-public abstract class RitualSeasonMapper implements IGenericMapper<RitualSeasonDto, JpaRitualSeason> {
+public abstract class RitualSeasonMapper implements IGenericMapper<RitualSeasonDto, JpaRitualSeason>, HibernateAwareMapper {
 }

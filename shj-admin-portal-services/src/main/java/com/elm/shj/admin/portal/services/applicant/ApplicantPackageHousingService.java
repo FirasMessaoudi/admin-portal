@@ -3,13 +3,17 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
+import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
+import com.elm.shj.admin.portal.orm.repository.ApplicantPackageHousingRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantPackageHousingDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Service handling applicant package housing
@@ -22,4 +26,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantPackageHousingService extends GenericService<JpaApplicantPackageHousing, ApplicantPackageHousingDto,Long> {
 
+    private final ApplicantPackageHousingRepository applicantPackageHousingRepository;
+
+    public List<ApplicantPackageHousingDto> findApplicantPackageHousingByUinAndCompanyRitualSeasonId(long applicantUin, long companyRitualSeasonId) {
+        List<JpaApplicantPackageHousing> jpaApplicantPackageHousings = applicantPackageHousingRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId(applicantUin, companyRitualSeasonId);
+        return getMapper().fromEntityList(jpaApplicantPackageHousings, mappingContext);
+    }
 }

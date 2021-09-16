@@ -46,7 +46,7 @@ public class JpaApplicantPackageTransportation implements Serializable {
     private Date updateDate;
 
     @ManyToOne
-    @JoinColumn(name = "application_package_id")
+    @JoinColumn(name = "applicant_package_id")
     private JpaApplicantPackage applicantPackage;
 
     @ManyToOne

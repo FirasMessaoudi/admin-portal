@@ -6,6 +6,8 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageTransportation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * Repository for applicant package transportation
  *
@@ -13,4 +15,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.1.0
  */
 public interface ApplicantPackageTransportationRepository extends JpaRepository<JpaApplicantPackageTransportation, Long> {
+
+    List<JpaApplicantPackageTransportation> findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId(long applicantUin, long companyRitualSeasonId);
+
 }

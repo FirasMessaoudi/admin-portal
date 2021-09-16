@@ -12,5 +12,5 @@ import org.mapstruct.Mapper;
  * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
-public abstract class PackageCateringMapper implements IGenericMapper<PackageCateringDto, JpaPackageCatering> {
+public abstract class PackageCateringMapper implements IGenericMapper<PackageCateringDto, JpaPackageCatering>, HibernateAwareMapper {
 }

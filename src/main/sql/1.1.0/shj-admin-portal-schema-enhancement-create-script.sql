@@ -145,7 +145,7 @@ CREATE TABLE shc_portal.shc_package_housing
     validity_end     smalldatetime NULL,
     address_ar       nvarchar(100) NULL,
     address_en       varchar(50) NULL,
-    is_default       BINARY NULL,
+    is_default       bit NULL,
     lat              varchar(20) NULL,
     lng              varchar(20) NULL,
     creation_date    smalldatetime NOT NULL default current_timestamp,

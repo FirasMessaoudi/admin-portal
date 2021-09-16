@@ -7,7 +7,6 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,33 +30,18 @@ public class JpaHousingZone implements Serializable {
     private long id;
 
 
-    @Column(name = "label_ar", nullable = false)
-    private String labelAr;
+    @Column(name = "name_ar", nullable = false)
+    private String nameAr;
 
-    @Column(name = "label_en", nullable = false)
-    private String labelEn;
+    @Column(name = "name_en", nullable = false)
+    private String nameEn;
 
     private String color;
 
-    @Column(name = "creation_date", nullable = false)
-    private Date creationDate;
-
-    @Column(name = "UPDATE_DATE")
-    private Date updateDate;
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "housingZone")
     private List<JpaPackageHousing> packageHousings;
 
-
-    @PrePersist
-    public void prePersist() {
-        creationDate = new Date();
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        updateDate = new Date();
-    }
 
 }

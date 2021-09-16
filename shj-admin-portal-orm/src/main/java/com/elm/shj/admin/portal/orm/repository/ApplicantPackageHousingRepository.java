@@ -6,6 +6,8 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * Repository for applicant package housing
  *
@@ -14,4 +16,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 
 public interface ApplicantPackageHousingRepository extends JpaRepository<JpaApplicantPackageHousing, Long> {
+
+    List<JpaApplicantPackageHousing> findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId(long applicantUin, long companyRitualSeasonId);
+
 }

@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.applicant.CompanyRitualSeasonLiteService;
 import com.elm.shj.admin.portal.services.applicant.CompanyRitualStepMainDataService;
 import com.elm.shj.admin.portal.services.applicant.CompanyRitualStepService;
@@ -35,9 +36,13 @@ import java.util.List;
 public class ApplicantCardController {
 
     private final ApplicantCardService applicantCardService;
+    private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
+    private final ApplicantPackageCateringService applicantPackageCateringService;
+    private final ApplicantPackageHousingService applicantPackageHousingService;
+    private final ApplicantPackageTransportationService applicantPackageTransportationService;
+    private final CompanyLiteService companyLiteService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
     private final CompanyRitualStepMainDataService companyRitualStepService;
-    private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private static final String APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG = "no card details found for applicant with this uin";
     private static final int CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
 
@@ -119,16 +124,22 @@ public class ApplicantCardController {
     public ApplicantCardDto findApplicantCard(@PathVariable long cardId) {
         log.debug("Handler for {}", "Find Applicant Card");
         ApplicantCardDto applicantCardDto = applicantCardService.findOne(cardId);
-        CompanyRitualSeasonLiteDto companyRitualSeason = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(applicantCardDto.getApplicantRitual().getApplicant().getIdNumber());
-        if(companyRitualSeason!=null) {
-            List<CompanyRitualStepMainDataDto> companyRitualSteps = companyRitualStepService.findByApplicantUin(applicantCardDto.getApplicantRitual().getApplicant().getIdNumber(),companyRitualSeason.getId());
-            applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
-            return applicantCardDto;
+        List<ApplicantDigitalIdDto> digitalIds = applicantCardDto.getApplicantRitual().getApplicant().getDigitalIds();
+        if (digitalIds.size() > 0) {
+            String uin = digitalIds.get(0).getUin();
+            CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin);
+            if (companyRitualSeasonLiteDto != null) {
+                long companyRitualSeasonId = companyRitualSeasonLiteDto.getId();
+                applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
+                applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
+                applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
+                applicantCardDto.setCompanyLites(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, uin));
+                List<CompanyRitualStepMainDataDto> companyRitualSteps = companyRitualStepService.findByApplicantUin(uin,companyRitualSeasonId);
+                applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
+            }
         }
         return applicantCardDto;
-
     }
-
 
 
 }

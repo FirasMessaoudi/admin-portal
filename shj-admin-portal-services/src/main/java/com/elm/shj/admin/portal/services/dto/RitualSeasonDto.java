@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,7 +24,7 @@ public class RitualSeasonDto implements Serializable {
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     private int seasonYear;
-    
+
     @NotNull(message = "validation.data.constraints.msg.20001")
     private String ritualTypeCode;
 
@@ -35,6 +34,6 @@ public class RitualSeasonDto implements Serializable {
 
     private boolean activated;
 
-    @JsonBackReference(value = "companyRitualSeasons")
-    private List<CompanyRitualSeasonDto> companyRitualSeasons;
+    @JsonBackReference
+    private List<CompanyRitualSeasonLiteDto> companyRitualSeasons;
 }
