@@ -24,7 +24,7 @@ public class CompanyRitualStepDto implements Serializable {
 
     private long id;
 
-    private JpaApplicantGroup applicantGroup;
+    private ApplicantGroupDto applicantGroup;
 
     private String transportationTypeCode;
 

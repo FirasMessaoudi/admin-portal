@@ -38,9 +38,9 @@ public class ApplicantGroupDto implements Serializable {
 
     private Date departureDate;
 
-    private JpaCompanyStaff groupLeader;
+    private CompanyStaffDto groupLeader;
 
-    private JpaCompanyRitualSeason companySeasonRitual;
+    private CompanyRitualSeasonDto companySeasonRitual;
 
     private String groupTypeCode;
 
