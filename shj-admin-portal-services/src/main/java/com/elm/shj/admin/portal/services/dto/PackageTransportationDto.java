@@ -3,9 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageTransportation;
-import com.elm.shj.admin.portal.orm.entity.JpaHousingZone;
-import com.elm.shj.admin.portal.orm.entity.JpaRitualPackage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,7 +36,7 @@ public class PackageTransportationDto implements Serializable {
     private Date validityEnd;
     @JsonBackReference("applicantPackageTransportations")
     private List<ApplicantPackageTransportationDto> applicantPackageTransportations;
-    private JpaRitualPackage ritualPackage;
+    private RitualPackageDto ritualPackage;
     private Date creationDate;
     private Date updateDate;
 }

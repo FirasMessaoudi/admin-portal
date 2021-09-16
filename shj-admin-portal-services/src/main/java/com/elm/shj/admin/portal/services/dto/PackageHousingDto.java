@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.orm.entity.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,8 +27,8 @@ public class PackageHousingDto implements Serializable {
     private static final long serialVersionUID = -2333926062779667053L;
     private long id;
     private String typeCode;
-    private JpaRitualPackage ritualPackage;
-    private JpaHousingZone housingZone;
+    private RitualPackageDto ritualPackage;
+    private HousingZoneDto housingZone;
     private String referenceNumber;
     private String categoryCode;
     private String locationNameAr;

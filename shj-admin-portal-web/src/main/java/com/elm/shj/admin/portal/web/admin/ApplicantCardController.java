@@ -3,10 +3,9 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
-import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantCardSearchCriteriaDto;
-import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+
 /**
  * Main controller for applicant card management pages
  *
@@ -34,6 +34,11 @@ import java.util.List;
 public class ApplicantCardController {
 
     private final ApplicantCardService applicantCardService;
+    private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
+    private final ApplicantPackageCateringService applicantPackageCateringService;
+    private final ApplicantPackageHousingService applicantPackageHousingService;
+    private final ApplicantPackageTransportationService applicantPackageTransportationService;
+    private final CompanyLiteService companyLiteService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
     private static final String APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG = "no card details found for applicant with this uin";
     private static final int CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
@@ -62,7 +67,6 @@ public class ApplicantCardController {
         return applicantCardService.searchApplicantCards(uin, idNum, passportNumber, pageable);
 
     }
-
 
 
     /**
@@ -115,9 +119,22 @@ public class ApplicantCardController {
     @PreAuthorize("hasAuthority('" + AuthorityConstants.VIEW_CARD_DETAILS + "')")
     public ApplicantCardDto findApplicantCard(@PathVariable long cardId) {
         log.debug("Handler for {}", "Find Applicant Card");
-        return applicantCardService.findOne(cardId);
-    }
+        ApplicantCardDto applicantCardDto = applicantCardService.findOne(cardId);
+        List<ApplicantDigitalIdDto> digitalIds = applicantCardDto.getApplicantRitual().getApplicant().getDigitalIds();
+        if (digitalIds.size() > 0) {
 
+            String uin = digitalIds.get(0).getUin();
+            CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin);
+            if (companyRitualSeasonLiteDto != null) {
+                long companyRitualSeasonId = companyRitualSeasonLiteDto.getId();
+                applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
+                applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
+                applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
+                applicantCardDto.setCompanyLites(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, uin));
+            }
+        }
+        return applicantCardDto;
+    }
 
 
 }

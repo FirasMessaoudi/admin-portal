@@ -23,7 +23,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicantCardDto implements Serializable {
+public class ApplicantCardDto implements Serializable, HibernateAwareMapper {
 
     private static final long serialVersionUID = -5830783313676682718L;
 
@@ -35,4 +35,8 @@ public class ApplicantCardDto implements Serializable {
     private List<PrintRequestCardDto> printRequestCards;
     private String statusCode;
     private Date creationDate;
+    private List<ApplicantPackageCateringDto> applicantPackageCaterings;
+    private List<ApplicantPackageHousingDto> applicantPackageHousings;
+    private List<ApplicantPackageTransportationDto> applicantPackageTransportations;
+    private CompanyLiteDto companyLites;
 }
