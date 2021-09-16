@@ -2,10 +2,7 @@ package com.elm.shj.admin.portal.services.applicant;
 
 
 import com.elm.dcc.foundation.commons.core.mapper.MapperRegistry;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantMainData;
-import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeason;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
-import com.elm.shj.admin.portal.orm.repository.CompanyRitualSeasonRepository;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,9 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,25 +38,12 @@ public class CompanyStaffServiceTest {
     @InjectMocks
     private CompanyStaffService companyStaffService;
 
-    @InjectMocks
-    private CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
-    @Mock
-    private CompanyRitualSeasonLiteMapper companyRitualSeasonLiteMapper;
 
-    @Mock
-    private CompanyRitualSeasonRepository companyRitualSeasonRepository;
 
     @BeforeEach
     public void setUp() throws IllegalAccessException {
         Mockito.lenient().when(mapperRegistry.mapperOf(CompanyStaffDto.class, JpaCompanyStaff.class)).thenReturn(companyStaffMapper);
-        Field mapperRegistryField = ReflectionUtils.findField(companyRitualSeasonLiteService.getClass(), "mapperRegistry");
-        Field repositoryField = ReflectionUtils.findField(companyRitualSeasonLiteService.getClass(), "repository");
 
-        ReflectionUtils.makeAccessible(mapperRegistryField);
-        ReflectionUtils.makeAccessible(repositoryField);
-
-        mapperRegistryField.set(companyRitualSeasonLiteService, mapperRegistry);
-        repositoryField.set(companyRitualSeasonLiteService, companyRitualSeasonRepository);
     }
 
     @Test
