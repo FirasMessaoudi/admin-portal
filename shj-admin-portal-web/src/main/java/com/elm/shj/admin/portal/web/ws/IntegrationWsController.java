@@ -365,18 +365,7 @@ public class IntegrationWsController {
         }
     }
 
-    /**
-     * List of company ritual steps by uin and ritual season id.
-     *
-     * @return WsResponse of company ritual step list
-     */
-    @GetMapping("/company_ritual_step_Label/list")
-    public ResponseEntity<WsResponse<?>> listCompanyRitualStepLabel(@PathVariable String uin, @PathVariable long seasonRitualId) {
-        log.info("list company ritual step...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findByApplicantUin(uin,seasonRitualId)).build());
-    }
-
-    @GetMapping("/company_ritual_step/list")
+    @GetMapping("/company_ritual_step_label/list")
     public ResponseEntity<WsResponse<?>> listCompanyRitualStepsLabel() {
         log.debug("list company ritual step labels...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepLookupService.findAll()).build());
