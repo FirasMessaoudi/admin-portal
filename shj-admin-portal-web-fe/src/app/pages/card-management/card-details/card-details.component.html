@@ -372,7 +372,7 @@
       </ng-template>
     </li>
 
-    <li [ngbNavItem]="5" [disabled]="true">
+    <li [ngbNavItem]="5">
       <a ngbNavLink>{{ 'card-management.motawef_details' | translate }}</a>
       <ng-template ngbNavContent>
         <div class="table-responsive my-4">
@@ -386,18 +386,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td class="ltr">{{ '1086541241' }}</td>
-              <td class="ltr">{{ 'عبد العزير الشهراني' }}</td>
-              <td class="ltr">{{ '0554321546' }}</td>
-              <td class="ltr">{{ 'مرشد عام' }}</td>
-            </tr>
-            <tr>
-              <td class="ltr">{{ '1086541241' }}</td>
-              <td class="ltr">{{ 'محمد العنزي' }}</td>
-              <td class="ltr">{{ '0554321645' }}</td>
-              <td class="ltr">{{ 'مراقب صحي' }}</td>
-            </tr>
+              <tr *ngFor = "let groupLeader of card.groupLeaders">
+                <td class="ltr">{{ groupLeader.idNumber }}</td>
+                <td class="ltr">{{ groupLeader.fullNameAr }}</td>
+                <td class="ltr">{{ groupLeader.mobileNumber }}</td>
+                <td class="ltr">{{ groupLeader.titleCode }}</td>
+              </tr>
             </tbody>
           </table>
         </div>
