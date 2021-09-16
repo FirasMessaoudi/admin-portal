@@ -72,6 +72,7 @@ public class IntegrationWsController {
     private final CompanyRitualStepMainDataService companyRitualStepMainDataService;
     private final CompanyStaffService companyStaffService;
     private final CompanyRitualStepLookupService companyRitualStepLookupService;
+    private CompanyStaffLookupService companyStaffLookupService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -370,6 +371,12 @@ public class IntegrationWsController {
         log.debug("list company ritual step labels...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepLookupService.findAll()).build());
 
+    }
+
+    @GetMapping("/company_staff_title_label/list")
+    public ResponseEntity<WsResponse<?>> listCompanyStaffTitlesLabel() {
+        log.debug("list company Staff title labels...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaffLookupService.findAll()).build());
     }
 
 
