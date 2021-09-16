@@ -38,6 +38,7 @@ public class LookupController {
     private final PrintRequestStatusLookupService printRequestStatusLookupService;
     private final PrintBatchTypeLookupService printBatchTypeLookupService;
     private final CompanyRitualStepLookupService companyRitualStepLookupService;
+    private final CompanyStaffLookupService companyStaffLookupService;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -95,5 +96,10 @@ public class LookupController {
     public List<CompanyRitualStepLookupDto> listCompanyRitualStepsLabel(Authentication authentication) {
         log.debug("list company ritual step labels...");
         return companyRitualStepLookupService.findAll();
+    }
+    @GetMapping("/company_staff_title/list")
+    public List<CompanyStaffTitleLookupDto> listCompanyStaffTitleLabel(Authentication authentication) {
+        log.debug("list company staff title labels...");
+        return companyStaffLookupService.findAll();
     }
 }
