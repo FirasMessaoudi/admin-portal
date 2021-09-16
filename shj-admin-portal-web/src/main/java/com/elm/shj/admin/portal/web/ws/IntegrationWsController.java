@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +72,11 @@ public class IntegrationWsController {
     private final CompanyStaffService companyStaffService;
     private final CompanyRitualStepLookupService companyRitualStepLookupService;
     private final CompanyStaffLookupService companyStaffLookupService;
+    private final ApplicantPackageCateringService applicantPackageCateringService;
+    private final ApplicantPackageHousingService applicantPackageHousingService;
+    private final ApplicantPackageTransportationService applicantPackageTransportationService;
+    private final CompanyLiteService companyLiteService;
+
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -314,6 +318,7 @@ public class IntegrationWsController {
         }
 
     }
+
     /**
      * finds an applicant card details by his UIN
      * to be used by applicant portal
@@ -343,14 +348,14 @@ public class IntegrationWsController {
     @GetMapping("/company-ritual-step/{uin}/{seasonRitualId}")
     public ResponseEntity<WsResponse<?>> listCompanyRitualStep(@PathVariable String uin, @PathVariable long seasonRitualId) {
         log.info("list company ritual step...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findByApplicantUin(uin,seasonRitualId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findByApplicantUin(uin, seasonRitualId)).build());
     }
 
     /**
      * finds an applicant group leaders by his UIN and SEASON ID
      * to be used by applicant portal
      *
-     * @param uin the applicant's group leaders details by  uin
+     * @param uin      the applicant's group leaders details by  uin
      * @param seasonId the applicant's group leaders details by  season id
      * @return the company staff list or <code>null</code>
      */
@@ -380,5 +385,26 @@ public class IntegrationWsController {
     }
 
 
+    /**
+     * finds an applicant package by his UIN and company season ritual id
+     *
+     * @param uin                   the applicant's uin to find
+     * @param companyRitualSeasonId applicant ritual id
+     * @return the found applicant package data
+     */
+    @GetMapping("/applicant/package/{uin}/{companyRitualSeasonId}")
+    public ResponseEntity<WsResponse<?>> findApplicantPackageData(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
+        log.debug("Handler for {}", "Find applicant package details  by uin");
+
+        ApplicantPackageDetailsDto applicantPackageDetails = new ApplicantPackageDetailsDto();
+
+        applicantPackageDetails.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
+        applicantPackageDetails.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
+        applicantPackageDetails.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
+        applicantPackageDetails.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, uin));
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageDetails).build());
+
+    }
 
 }
