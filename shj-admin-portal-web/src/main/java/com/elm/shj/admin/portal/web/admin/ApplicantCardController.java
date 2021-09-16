@@ -4,6 +4,9 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.applicant.CompanyRitualSeasonLiteService;
+import com.elm.shj.admin.portal.services.applicant.CompanyRitualStepMainDataService;
+import com.elm.shj.admin.portal.services.applicant.CompanyRitualStepService;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
@@ -38,8 +41,10 @@ public class ApplicantCardController {
     private final ApplicantPackageCateringService applicantPackageCateringService;
     private final ApplicantPackageHousingService applicantPackageHousingService;
     private final ApplicantPackageTransportationService applicantPackageTransportationService;
+    private final CompanyStaffService companyStaffService;
     private final CompanyLiteService companyLiteService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
+    private final CompanyRitualStepMainDataService companyRitualStepService;
     private static final String APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG = "no card details found for applicant with this uin";
     private static final int CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
 
@@ -127,10 +132,15 @@ public class ApplicantCardController {
             CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin);
             if (companyRitualSeasonLiteDto != null) {
                 long companyRitualSeasonId = companyRitualSeasonLiteDto.getId();
+                long seasonId = companyRitualSeasonLiteDto.getRitualSeason().getId();
                 applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, uin));
+                List<CompanyRitualStepMainDataDto> companyRitualSteps = companyRitualStepService.findByApplicantUin(uin,companyRitualSeasonId);
+                applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
+                List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, seasonId);
+                applicantCardDto.setGroupLeaders(groupLeaders);
             }
         }
         return applicantCardDto;

@@ -4,10 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
-import com.elm.shj.admin.portal.services.applicant.ApplicantHealthLiteService;
-import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
-import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
-import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
@@ -25,12 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -70,7 +69,10 @@ public class IntegrationWsController {
     private final ApplicantHealthLiteService applicantHealthLiteService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
     private final ApplicantMainDataService applicantMainDataService;
-
+    private final CompanyRitualStepMainDataService companyRitualStepMainDataService;
+    private final CompanyStaffService companyStaffService;
+    private final CompanyRitualStepLookupService companyRitualStepLookupService;
+    private final CompanyStaffLookupService companyStaffLookupService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -332,5 +334,51 @@ public class IntegrationWsController {
         }
 
     }
+
+    /**
+     * List of company ritual steps by uin and ritual season id.
+     *
+     * @return WsResponse of company ritual step list
+     */
+    @GetMapping("/company-ritual-step/{uin}/{seasonRitualId}")
+    public ResponseEntity<WsResponse<?>> listCompanyRitualStep(@PathVariable String uin, @PathVariable long seasonRitualId) {
+        log.info("list company ritual step...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findByApplicantUin(uin,seasonRitualId)).build());
+    }
+
+    /**
+     * finds an applicant group leaders by his UIN and SEASON ID
+     * to be used by applicant portal
+     *
+     * @param uin the applicant's group leaders details by  uin
+     * @param seasonId the applicant's group leaders details by  season id
+     * @return the company staff list or <code>null</code>
+     */
+    @GetMapping("/find/company-employees/{uin}/{seasonId}")
+    public ResponseEntity<WsResponse<?>> findCompanyEmployeesByUinAndSeasonId(@PathVariable String uin, @PathVariable long seasonId) {
+        log.debug("Handler for {}", "Find company employee by uin and season ");
+        List<CompanyStaffDto> companyStaff = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, seasonId);
+        if (!companyStaff.isEmpty()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaff).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND).referenceNumber(uin).build()).build());
+        }
+    }
+
+    @GetMapping("/company_ritual_step_label/list")
+    public ResponseEntity<WsResponse<?>> listCompanyRitualStepsLabel() {
+        log.debug("list company ritual step labels...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepLookupService.findAll()).build());
+
+    }
+
+    @GetMapping("/company_staff_title_label/list")
+    public ResponseEntity<WsResponse<?>> listCompanyStaffTitlesLabel() {
+        log.debug("list company Staff title labels...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaffLookupService.findAll()).build());
+    }
+
+
 
 }

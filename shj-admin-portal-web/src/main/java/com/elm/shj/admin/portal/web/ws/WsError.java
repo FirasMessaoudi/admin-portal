@@ -23,7 +23,8 @@ public class WsError {
         APPLICANT_NOT_FOUND(101),
         APPLICANT_NOT_MATCHED(102),
         CARD_DETAILS_NOT_FOUND(103),
-        UPDATE_APPLICANT_FAILED(104);
+        UPDATE_APPLICANT_FAILED(104),
+        COMPANY_STAFF_NOT_FOUND(105);
         int code;
 
         EWsError(int code) {

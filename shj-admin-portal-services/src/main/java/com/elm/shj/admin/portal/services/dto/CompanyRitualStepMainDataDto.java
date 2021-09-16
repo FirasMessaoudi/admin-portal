@@ -3,8 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,21 +10,20 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Dto class for the company ritual step domain.
+ * Dto class for the company ritual step main data
  *
- * @author jaafer jarray
+ * @author firas messaoudi
  * @since 1.1.0
  */
 @NoArgsConstructor
 @Data
-public class CompanyRitualStepDto implements Serializable {
+public class CompanyRitualStepMainDataDto implements Serializable {
 
     private static final long serialVersionUID = -5579020557603388032L;
 
     private long id;
 
-    @JsonBackReference
-    private ApplicantGroupDto applicantGroup;
+    private String referenceNumber;
 
     private String transportationTypeCode;
 

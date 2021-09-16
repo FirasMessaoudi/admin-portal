@@ -40,7 +40,7 @@ public class ApplicantGroupDto implements Serializable {
 
     private CompanyStaffDto groupLeader;
 
-    private CompanyRitualSeasonDto companySeasonRitual;
+    private CompanyRitualSeasonDto companyRitualSeason;
 
     private String groupTypeCode;
 
@@ -51,8 +51,8 @@ public class ApplicantGroupDto implements Serializable {
     private Date updateDate;
 
     @JsonBackReference(value = "groupApplicantLists")
-    private List<JpaGroupApplicantList> groupApplicantLists;
+    private List<GroupApplicantListDto> groupApplicantLists;
 
     @JsonBackReference(value = "companyRitualSteps")
-    private List<JpaCompanyRitualStep> companyRitualSteps;
+    private List<CompanyRitualStepDto> companyRitualSteps;
 }

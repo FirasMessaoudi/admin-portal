@@ -106,11 +106,14 @@ INSERT INTO shc_company_staff (id, full_name_ar, full_name_en, id_number, compan
  VALUES (1, N'احمد السيد', N'Ahmed Elsayed', 1234567897, 1, null, N'54321678', null, N'2021-09-14 14:27:00', null);
 
 INSERT INTO shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES
-(1, null, N'123', null, null, 1, 1, null, null, N'2021-09-14 14:22:00', null);
+(1, 1, N'123', null, null, 1, 1, null, null, N'2021-09-14 14:22:00', null);
 
 
 INSERT INTO shc_group_applicant_list (id, group_id, applicant_uin, creation_date) VALUES
       (1, 1, N'59737700000059', N'2021-09-14 14:30:00');
+
+INSERT INTO shc_company_ritual_step (id, applicant_group_id, transportation_type_code,step_index,step_code,time,location_lat,location_lng,location_name_ar,location_name_en, creation_date, update_date) VALUES
+    (1, 1, 'code', 1, 'step 1', N'2021-09-14 14:27:00', 18.0, 19.0, 'arafet', 'arafet', N'2021-09-14 14:27:00', N'2021-09-14 14:27:00');
 
 INSERT INTO shc_ritual_package (id, type_code, price, departure_city, country_id, creation_date, update_date) VALUES (1, N'A', '100', null, 1, N'2021-09-15 09:54:00', null);
 
