@@ -33,6 +33,7 @@ public class ApplicantCardDto implements Serializable, HibernateAwareMapper {
     private Long batchId;
     @JsonBackReference
     private List<PrintRequestCardDto> printRequestCards;
+    private List<CompanyStaffDto> groupLeaders;
     private String statusCode;
     private Date creationDate;
     private List<CompanyRitualStepMainDataDto> companyRitualSteps;

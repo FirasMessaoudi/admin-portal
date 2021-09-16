@@ -40,6 +40,7 @@ public class ApplicantCardController {
     private final ApplicantPackageCateringService applicantPackageCateringService;
     private final ApplicantPackageHousingService applicantPackageHousingService;
     private final ApplicantPackageTransportationService applicantPackageTransportationService;
+    private final CompanyStaffService companyStaffService;
     private final CompanyLiteService companyLiteService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
     private final CompanyRitualStepMainDataService companyRitualStepService;
@@ -130,12 +131,15 @@ public class ApplicantCardController {
             CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin);
             if (companyRitualSeasonLiteDto != null) {
                 long companyRitualSeasonId = companyRitualSeasonLiteDto.getId();
+                long seasonId = companyRitualSeasonLiteDto.getRitualSeason().getId();
                 applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setCompanyLites(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, uin));
                 List<CompanyRitualStepMainDataDto> companyRitualSteps = companyRitualStepService.findByApplicantUin(uin,companyRitualSeasonId);
                 applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
+                List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, seasonId);
+                applicantCardDto.setGroupLeaders(groupLeaders);
             }
         }
         return applicantCardDto;

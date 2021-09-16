@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -68,6 +69,7 @@ public class IntegrationWsController {
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
     private final ApplicantMainDataService applicantMainDataService;
     private final CompanyRitualStepMainDataService companyRitualStepMainDataService;
+    private final CompanyStaffService companyStaffService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -340,6 +342,26 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> listCompanyRitualStep(@PathVariable String uin, @PathVariable long seasonRitualId) {
         log.info("list company ritual step...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findByApplicantUin(uin,seasonRitualId)).build());
+    }
+
+    /**
+     * finds an applicant group leaders by his UIN and SEASON ID
+     * to be used by applicant portal
+     *
+     * @param uin the applicant's group leaders details by  uin
+     * @param seasonId the applicant's group leaders details by  season id
+     * @return the company staff list or <code>null</code>
+     */
+    @GetMapping("/find/company-employees/{uin}/{seasonId}")
+    public ResponseEntity<WsResponse<?>> findCompanyEmployeesByUinAndSeasonId(@PathVariable String uin, @PathVariable long seasonId) {
+        log.debug("Handler for {}", "Find company employee by uin and season ");
+        List<CompanyStaffDto> companyStaff = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, seasonId);
+        if (!companyStaff.isEmpty()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaff).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND).referenceNumber(uin).build()).build());
+        }
     }
 
 }
