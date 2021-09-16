@@ -72,7 +72,7 @@ public class IntegrationWsController {
     private final CompanyRitualStepMainDataService companyRitualStepMainDataService;
     private final CompanyStaffService companyStaffService;
     private final CompanyRitualStepLookupService companyRitualStepLookupService;
-    private CompanyStaffLookupService companyStaffLookupService;
+    private final CompanyStaffLookupService companyStaffLookupService;
     /**
      * Authenticates the user requesting a webservice call
      *
