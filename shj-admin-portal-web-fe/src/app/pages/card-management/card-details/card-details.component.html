@@ -388,11 +388,11 @@
             </tr>
             </thead>
             <tbody>
-              <tr *ngFor = "let groupLeader of card.groupLeaders">
+              <tr *ngFor = "let groupLeader of card?.groupLeaders">
                 <td class="ltr">{{ groupLeader.idNumber }}</td>
                 <td class="ltr">{{ groupLeader.fullNameAr }}</td>
                 <td class="ltr">{{ groupLeader.mobileNumber }}</td>
-                <td class="ltr">{{ groupLeader.titleCode }}</td>
+                <td class="ltr">{{lookupService().localizedLabel(groupLeaderTitle, groupLeader?.titleCode)}}</td>
               </tr>
             </tbody>
           </table>

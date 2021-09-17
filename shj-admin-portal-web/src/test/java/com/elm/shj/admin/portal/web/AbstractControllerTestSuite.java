@@ -238,6 +238,9 @@ public abstract class AbstractControllerTestSuite {
     @MockBean
     protected CompanyRitualStepMainDataService companyRitualStepMainDataService;
 
+    @MockBean
+    protected CompanyStaffService companyStaffService;
+
     /**
      * Method which is executed before each test
      */

@@ -357,18 +357,12 @@ public class IntegrationWsController {
      *
      * @param uin      the applicant's group leaders details by  uin
      * @param seasonId the applicant's group leaders details by  season id
-     * @return the company staff list or <code>null</code>
+     * @return the company staff list
      */
     @GetMapping("/find/company-employees/{uin}/{seasonId}")
     public ResponseEntity<WsResponse<?>> findCompanyEmployeesByUinAndSeasonId(@PathVariable String uin, @PathVariable long seasonId) {
         log.debug("Handler for {}", "Find company employee by uin and season ");
-        List<CompanyStaffDto> companyStaff = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, seasonId);
-        if (!companyStaff.isEmpty()) {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaff).build());
-        } else {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND).referenceNumber(uin).build()).build());
-        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, seasonId)).build());
     }
 
     @GetMapping("/company_ritual_step_label/list")

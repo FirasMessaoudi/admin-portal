@@ -148,4 +148,22 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
         when(companyRitualStepMainDataService.findByApplicantUin(any(), any())).thenReturn(null);
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
     }
+
+    @Test
+    public void test_find_company_employees_by_uin_success() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/find/company-employees/" + EXIST_USER_UIN + "/" + COMPANY_RITUAL_ID;
+        List<CompanyStaffDto> groupLeaders = new ArrayList<CompanyStaffDto>();
+        when(companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(EXIST_USER_UIN, COMPANY_RITUAL_ID)).thenReturn(null);
+        mockMvc.perform(get(url).cookie(tokenCookie).contentType(MediaType.APPLICATION_JSON).content(objectToJson(groupLeaders)).with(csrf())).andDo(print()).andExpect(status().isOk());
+        verify(companyStaffService, times(1)).findRelatedEmployeesByApplicantUinAndSeasonId(anyString(), anyLong());
+
+    }
+
+    @Test
+    public void test_find_company_employees_by_uin_fail() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/find/company-employees/" + EXIST_USER_UIN + "/" + COMPANY_RITUAL_ID;
+        List<CompanyStaffDto> groupLeaders = new ArrayList<CompanyStaffDto>();
+        when(companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(EXIST_USER_UIN, COMPANY_RITUAL_ID)).thenReturn(groupLeaders);
+        mockMvc.perform(get(url).cookie(tokenCookie).contentType(MediaType.APPLICATION_JSON).content(objectToJson(groupLeaders)).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
+    }
 }

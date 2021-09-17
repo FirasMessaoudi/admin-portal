@@ -33,6 +33,7 @@ export class CardDetailsComponent implements OnInit {
   healthSpecialNeeds: Lookup[];
   maritalStatuses: Lookup[];
   ritualStepsLabels: Lookup[];
+  groupLeaderTitle: Lookup[];
   languageNativeName = Language;
   renderBackLink = false;
   constructor(private route: ActivatedRoute,
@@ -97,6 +98,9 @@ export class CardDetailsComponent implements OnInit {
     this.cardService.findRitualStepsLabels().subscribe(result => {
       this.ritualStepsLabels = result;
     });
+    this.cardService.findGroupLeaderTitleLabels().subscribe(result=> {
+      this.groupLeaderTitle = result;
+    })
   }
 
   goToList() {
