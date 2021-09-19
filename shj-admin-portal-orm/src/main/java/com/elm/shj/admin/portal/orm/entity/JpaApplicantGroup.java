@@ -28,7 +28,6 @@ import java.util.Set;
 @NoArgsConstructor
 public class JpaApplicantGroup implements Serializable {
 
-
     private static final long serialVersionUID = 2753741851607169463L;
 
     @Id

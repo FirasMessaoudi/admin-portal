@@ -3,11 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeason;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualStep;
-import com.elm.shj.admin.portal.orm.repository.CompanyRitualSeasonRepository;
 import com.elm.shj.admin.portal.orm.repository.CompanyRitualStepRepository;
-import com.elm.shj.admin.portal.services.dto.CompanyRitualStepDto;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualStepMainDataDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -27,20 +24,21 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyRitualStepMainDataService extends GenericService<JpaCompanyRitualStep, CompanyRitualStepMainDataDto, Long> {
+
     private final CompanyRitualStepRepository companyRitualStepRepository;
+
     /**
      * find company ritual steps by applicant uin
      *
      * @return list of company ritual steps
      */
-    public List<CompanyRitualStepMainDataDto> findByApplicantUin(String applicantUin, long ritualSeasonId){
+    public List<CompanyRitualStepMainDataDto> findByApplicantUin(String applicantUin, long ritualSeasonId) {
         try {
-                List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(applicantUin,ritualSeasonId);
-                List<CompanyRitualStepMainDataDto> result =  mapList(companyRitualSteps);
-                result.forEach(companyRitualStep -> companyRitualStep.setReferenceNumber(companyRitualSteps.get(0).getApplicantGroup().getReferenceNumber()));
-                return result;
-        }
-        catch (Exception e){
+            List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(applicantUin, ritualSeasonId);
+            List<CompanyRitualStepMainDataDto> result = mapList(companyRitualSteps);
+            result.forEach(companyRitualStep -> companyRitualStep.setReferenceNumber(companyRitualSteps.get(0).getApplicantGroup().getReferenceNumber()));
+            return result;
+        } catch (Exception e) {
             return null;
         }
 

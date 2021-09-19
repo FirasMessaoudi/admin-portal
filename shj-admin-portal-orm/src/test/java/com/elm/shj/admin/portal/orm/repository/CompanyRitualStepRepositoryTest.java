@@ -27,23 +27,25 @@ public class CompanyRitualStepRepositoryTest extends AbstractJpaTest {
     private final static long COMPANY_RITUAL_SEASON_ID = 1;
 
     @Autowired
-    private  CompanyRitualStepRepository companyRitualStepRepository;
+    private CompanyRitualStepRepository companyRitualStepRepository;
 
     @Test
-    public void test_find_by_uin_and_company_ritual_season_success(){
-        List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(EXIST_USER_UIN,COMPANY_RITUAL_SEASON_ID);
+    public void test_find_by_uin_and_company_ritual_season_success() {
+        List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(EXIST_USER_UIN, COMPANY_RITUAL_SEASON_ID);
         assertFalse(companyRitualSteps.isEmpty());
 
     }
+
     @Test
-    public void test_find_by_uin_and_company_ritual_season_fail(){
-        List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(FAKE_USER_UIN,COMPANY_RITUAL_SEASON_ID);
+    public void test_find_by_uin_and_company_ritual_season_fail() {
+        List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(FAKE_USER_UIN, COMPANY_RITUAL_SEASON_ID);
         assertTrue(companyRitualSteps.isEmpty());
     }
+
     @Test
-    public void test_find_all(){
+    public void test_find_all() {
         List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findAll();
-        assertEquals(1,companyRitualSteps.size());
+        assertEquals(1, companyRitualSteps.size());
     }
 
 }
