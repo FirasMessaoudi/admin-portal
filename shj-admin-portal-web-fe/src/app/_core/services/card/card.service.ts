@@ -89,7 +89,7 @@ export class CardService {
     return this.http.get<any>('/core/api/lookup/company_ritual_step/list');
   }
   findGroupLeaderTitleLabels(): Observable<Lookup[]> {
-    return this.http.get<any>('/core/api/lookup/company_staff_title_label/list');
+    return this.http.get<any>('/core/api/lookup/company_staff_title/list');
   }
 
   findHousingCategories(): Observable<Lookup[]> {

@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

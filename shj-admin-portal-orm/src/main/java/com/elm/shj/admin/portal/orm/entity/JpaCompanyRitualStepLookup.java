@@ -3,6 +3,9 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -16,7 +19,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "shc_company_ritual_step_lk")
 @NamedQuery(name = "JpaCompanyRitualStepLookup.findAll", query = "SELECT j FROM JpaCompanyRitualStepLookup j")
+@NoArgsConstructor
+@Data
 public class JpaCompanyRitualStepLookup extends JpaLocalizedLookup {
 
     private static final long serialVersionUID = -913161328642286375L;
+
+    private String description;
 }
