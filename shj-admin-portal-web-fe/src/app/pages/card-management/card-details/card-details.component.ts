@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TranslateService} from "@ngx-translate/core";
 import {I18nService} from "@dcc-commons-ng/services";
 import {PackageCatering} from "@model/package-catering.model";
@@ -28,6 +28,9 @@ export class CardDetailsComponent implements OnInit {
   hamlahPackage: any;
 
   ritualTypes: Lookup[];
+  housingCategories: Lookup[];
+  housingTypes: Lookup[];
+  packageTypes: Lookup[];
   relativeRelationships: Lookup[];
   countries: CountryLookup[];
   healthSpecialNeeds: Lookup[];
@@ -101,6 +104,18 @@ export class CardDetailsComponent implements OnInit {
     this.cardService.findGroupLeaderTitleLabels().subscribe(result=> {
       this.groupLeaderTitle = result;
     })
+
+    this.cardService.findHousingTypes().subscribe(result => {
+      this.housingTypes = result;
+    });
+
+    this.cardService.findHousingCategories().subscribe(result => {
+      this.housingCategories = result;
+    });
+
+    this.cardService.findPackageTypes().subscribe(result => {
+      this.packageTypes = result;
+    });
   }
 
   goToList() {

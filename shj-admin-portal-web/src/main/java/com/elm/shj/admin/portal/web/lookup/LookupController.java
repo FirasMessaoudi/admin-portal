@@ -39,6 +39,9 @@ public class LookupController {
     private final PrintBatchTypeLookupService printBatchTypeLookupService;
     private final CompanyRitualStepLookupService companyRitualStepLookupService;
     private final CompanyStaffLookupService companyStaffLookupService;
+    private final HousingCategoryLookupService housingCategoryLookupService;
+    private final HousingTypeLookupService housingTypeLookupService;
+    private final PackageTypeLookupService packageTypeLookupService;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -92,14 +95,36 @@ public class LookupController {
         log.debug("list print batch types...");
         return printBatchTypeLookupService.findAll();
     }
+
     @GetMapping("/company_ritual_step/list")
     public List<CompanyRitualStepLookupDto> listCompanyRitualStepsLabel(Authentication authentication) {
         log.debug("list company ritual step labels...");
         return companyRitualStepLookupService.findAll();
     }
+
     @GetMapping("/company_staff_title/list")
     public List<CompanyStaffTitleLookupDto> listCompanyStaffTitleLabel(Authentication authentication) {
         log.debug("list company staff title labels...");
         return companyStaffLookupService.findAll();
     }
+
+    @GetMapping("/housing-category/list")
+    public List<HousingCategoryLookupDto> listHousingCategories(Authentication authentication) {
+        log.debug("list housing category...");
+        return housingCategoryLookupService.findAll();
+    }
+
+    @GetMapping("/housing-type/list")
+    public List<HousingTypeLookupDto> listHousingTypes(Authentication authentication) {
+        log.debug("list housing type...");
+        return housingTypeLookupService.findAll();
+    }
+
+    @GetMapping("/package-type/list")
+    public List<PackageTypeLookupDto> listPackageTypes(Authentication authentication) {
+        log.debug("list package type...");
+        return packageTypeLookupService.findAll();
+    }
+
+
 }

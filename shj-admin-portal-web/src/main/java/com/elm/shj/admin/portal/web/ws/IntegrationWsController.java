@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -76,6 +75,9 @@ public class IntegrationWsController {
     private final ApplicantPackageHousingService applicantPackageHousingService;
     private final ApplicantPackageTransportationService applicantPackageTransportationService;
     private final CompanyLiteService companyLiteService;
+    private final HousingCategoryLookupService housingCategoryLookupService;
+    private final HousingTypeLookupService housingTypeLookupService;
+    private final PackageTypeLookupService packageTypeLookupService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -399,6 +401,39 @@ public class IntegrationWsController {
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageDetails).build());
 
+    }
+
+    /**
+     * List all housing categories.
+     *
+     * @return WsResponse of housing categories list
+     */
+    @GetMapping("/housing-category/list")
+    public ResponseEntity<WsResponse<?>> listHousingCategories() {
+        log.debug("list housing category...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(housingCategoryLookupService.findAll()).build());
+    }
+
+    /**
+     * List all housing types.
+     *
+     * @return WsResponse of housing types list
+     */
+    @GetMapping("/housing-type/list")
+    public ResponseEntity<WsResponse<?>> listHousingTypes() {
+        log.debug("list housing types...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(housingTypeLookupService.findAll()).build());
+    }
+
+    /**
+     * List all package types.
+     *
+     * @return WsResponse of package types list
+     */
+    @GetMapping("/package-type/list")
+    public ResponseEntity<WsResponse<?>> listPackageTypes() {
+        log.debug("list package types...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageTypeLookupService.findAll()).build());
     }
 
 }

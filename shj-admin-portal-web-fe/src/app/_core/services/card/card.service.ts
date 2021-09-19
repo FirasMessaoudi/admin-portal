@@ -91,4 +91,16 @@ export class CardService {
   findGroupLeaderTitleLabels(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/company_staff_title_label/list');
   }
+
+  findHousingCategories(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/housing-category/list');
+  }
+
+  findHousingTypes(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/housing-type/list');
+  }
+
+  findPackageTypes(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/package-type/list');
+  }
 }
