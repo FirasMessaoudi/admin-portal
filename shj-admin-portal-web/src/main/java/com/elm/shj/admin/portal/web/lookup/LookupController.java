@@ -42,6 +42,7 @@ public class LookupController {
     private final HousingCategoryLookupService housingCategoryLookupService;
     private final HousingTypeLookupService housingTypeLookupService;
     private final PackageTypeLookupService packageTypeLookupService;
+    private final HousingSiteLookupService housingSiteLookupService;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -124,6 +125,12 @@ public class LookupController {
     public List<PackageTypeLookupDto> listPackageTypes(Authentication authentication) {
         log.debug("list package type...");
         return packageTypeLookupService.findAll();
+    }
+
+    @GetMapping("/housing-site/list")
+    public List<HousingSiteLookupDto> listHousingSites(Authentication authentication) {
+        log.debug("list housing site...");
+        return housingSiteLookupService.findAll();
     }
 
 

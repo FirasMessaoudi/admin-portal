@@ -103,4 +103,8 @@ export class CardService {
   findPackageTypes(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/package-type/list');
   }
+
+  findHousingSites(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/housing-site/list');
+  }
 }

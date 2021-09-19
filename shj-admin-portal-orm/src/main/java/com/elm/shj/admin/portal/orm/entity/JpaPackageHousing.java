@@ -34,6 +34,9 @@ public class JpaPackageHousing implements Serializable {
     @Column(name = "type_code")
     private String typeCode;
 
+    @Column(name = "site_code")
+    private String siteCode;
+
     @ManyToOne
     @JoinColumn(name = "package_id", nullable = false)
     private JpaRitualPackage ritualPackage;
