@@ -368,7 +368,7 @@
     "company_number": "رقم الشركة",
     "company_name": "اسم الشركة",
     "company_contact_number": "رقم تواصل الشركة",
-    "location_type": "الموقع",
+    "location": "الموقع",
     "from": "من",
     "to" : "إلي",
     "BREAKFAST": "فطار",
