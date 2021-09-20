@@ -383,7 +383,9 @@
     "location": "Location",
     "from": "from",
     "to" : "to",
-    "BREAKFAST": "Breakfast"
+    "BREAKFAST": "Breakfast",
+    "LUNCH": "Lunch",
+    "DINNER":"Dinner"
   },
   "printing-management": {
     "title": "Printing Management",

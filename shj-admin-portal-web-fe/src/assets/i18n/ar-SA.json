@@ -371,7 +371,9 @@
     "location_type": "الموقع",
     "from": "من",
     "to" : "إلي",
-    "BREAKFAST": "فطار"
+    "BREAKFAST": "فطار",
+    "LUNCH": "غداء",
+    "DINNER":"عشاء"
   },
   "printing-management": {
     "title": "إدارة الطباعة",
