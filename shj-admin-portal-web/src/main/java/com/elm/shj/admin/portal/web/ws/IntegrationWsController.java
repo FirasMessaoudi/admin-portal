@@ -437,6 +437,16 @@ public class IntegrationWsController {
         log.debug("list package types...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageTypeLookupService.findAll()).build());
     }
+    /**
+     * My program time table by uin and ritual season id.
+     *
+     * @return WsResponse of company ritual step list
+     */
+    @GetMapping("/program-time-table/{uin}/{seasonRitualId}")
+    public ResponseEntity<WsResponse<?>> programTimeTable(@PathVariable String uin, @PathVariable long seasonRitualId) {
+        log.info("list company ritual step...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findByApplicantUin(uin, seasonRitualId)).build());
+    }
 
     /**
      * List all housing sites.
