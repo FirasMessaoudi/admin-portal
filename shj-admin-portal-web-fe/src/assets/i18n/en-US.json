@@ -379,11 +379,13 @@
     "camp_class":"Camp Class",
     "company_number": "Company Number",
     "company_name": "Company Name",
-    "company_contact-number": "Company Contact Number",
+    "company_contact_number": "Company Contact Number",
     "location": "Location",
     "from": "from",
     "to" : "to",
-    "BREAKFAST": "Breakfast"
+    "BREAKFAST": "Breakfast",
+    "LUNCH": "Lunch",
+    "DINNER":"Dinner"
   },
   "printing-management": {
     "title": "Printing Management",
