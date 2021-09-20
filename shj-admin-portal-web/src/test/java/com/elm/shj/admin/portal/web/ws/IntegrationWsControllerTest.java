@@ -166,4 +166,17 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
         when(companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(EXIST_USER_UIN, COMPANY_RITUAL_ID)).thenReturn(groupLeaders);
         mockMvc.perform(get(url).cookie(tokenCookie).contentType(MediaType.APPLICATION_JSON).content(objectToJson(groupLeaders)).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
     }
+    @Test
+    public void test_find_program_table_success() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/program-time-table/" + UIN + "/" + COMPANY_RITUAL_ID;
+        List<CompanyRitualStepMainDataDto> companyRitualSteps = new ArrayList<>();
+        when(companyRitualStepMainDataService.findByApplicantUin(UIN, COMPANY_RITUAL_ID)).thenReturn(companyRitualSteps);
+        mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk());
+    }
+    @Test
+    public void test_find_program_table_fail() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/program-time-table/" + FAKE_USER_UIN + "/" + COMPANY_RITUAL_ID;
+        when(companyRitualStepMainDataService.findByApplicantUin(any(), any())).thenReturn(null);
+        mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
+    }
 }
