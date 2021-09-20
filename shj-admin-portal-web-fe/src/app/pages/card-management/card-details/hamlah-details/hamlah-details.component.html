@@ -114,14 +114,35 @@
         <th scope="col">{{'card-management.catering_description' | translate}}</th>
         <th scope="col">{{'card-management.catering_time' | translate}}</th>
         <th scope="col">{{'card-management.catering_location' | translate}}</th>
+        <th scope="col">{{'card-management.location_name' | translate}}</th>
+
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let catering of card?.applicantPackageCaterings">
-        <td class="ltr">{{ catering?.packageCatering?.type }}</td>
+        <td class="ltr">{{ 'card-management.'+catering?.packageCatering?.type | translate}}</td>
         <td class="ltr">{{ currentLanguage.startsWith("en")? catering?.packageCatering?.descriptionEn : catering?.packageCatering?.descriptionAr }}</td>
-        <td class="ltr">{{ catering?.packageCatering?.mealTime }}:00</td>
-        <td class="ltr">{{currentLanguage.startsWith("en")? catering?.packageCatering?.packageHousing?.housingZone?.nameEn : catering?.packageCatering?.packageHousing?.housingZone?.nameAr}}</td>
+        <td class="ltr">
+          {{ catering?.packageCatering?.mealTime }}:00
+          {{'card-management.from' | translate}}
+          {{ catering?.packageCatering?.packageHousing?.validityStart | dateFormat}}
+          {{'card-management.to' | translate}}
+          {{ catering?.packageCatering?.packageHousing?.validityStart | dateFormat}}
+
+        </td>
+        <td class="ltr">
+          {{
+          catering?.packageCatering?.packageHousing?.siteCode
+            ? lookupService().localizedLabel(
+            housingSites,
+            catering?.packageCatering?.packageHousing?.siteCode
+            )
+            : ''
+          }}
+        </td>
+        <td class="ltr">
+          {{ currentLanguage.startsWith("en")? catering?.packageCatering?.packageHousing?.locationNameEn : catering?.packageCatering?.packageHousing?.locationNameAr}}
+        </td>
       </tr>
       </tbody>
     </table>
@@ -145,7 +166,16 @@
       </thead>
       <tbody>
       <tr *ngFor="let transportation of card?.applicantPackageTransportations">
-        <td class="ltr">{{ transportation?.packageTransportation?.typeCode }}</td>
+        <td class="ltr">
+          {{
+          transportation?.packageTransportation?.typeCode
+            ? lookupService().localizedLabel(
+            transportationTypes,
+            transportation?.packageTransportation?.typeCode
+            )
+            : ''
+          }}
+          </td>
         <td class="ltr">{{ transportation?.packageTransportation?.validityStart | dateTimeFormat}} -- {{ transportation?.packageTransportation?.validityEnd | dateTimeFormat }}</td>
         <td class="ltr">{{ currentLanguage.startsWith("en")? transportation?.packageTransportation?.locationFromNameEn : transportation?.packageTransportation?.locationFromNameAr}}</td>
         <td class="ltr">{{ currentLanguage.startsWith("en")? transportation?.packageTransportation?.locationToNameEn : transportation?.packageTransportation?.locationToNameAr }}</td>

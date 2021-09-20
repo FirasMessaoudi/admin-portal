@@ -107,4 +107,8 @@ export class CardService {
   findHousingSites(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/housing-site/list');
   }
+
+  findTransportationTypes(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/transportation-type/list');
+  }
 }

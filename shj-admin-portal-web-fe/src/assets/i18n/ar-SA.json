@@ -368,7 +368,10 @@
     "company_number": "رقم الشركة",
     "company_name": "اسم الشركة",
     "company_contact_number": "رقم تواصل الشركة",
-    "location_type": "الموقع"
+    "location_type": "الموقع",
+    "from": "من",
+    "to" : "إلي",
+    "BREAKFAST": "فطار"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

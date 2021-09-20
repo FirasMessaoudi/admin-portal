@@ -380,7 +380,10 @@
     "company_number": "Company Number",
     "company_name": "Company Name",
     "company_contact-number": "Company Contact Number",
-    "location": "Location"
+    "location": "Location",
+    "from": "from",
+    "to" : "to",
+    "BREAKFAST": "Breakfast"
   },
   "printing-management": {
     "title": "Printing Management",

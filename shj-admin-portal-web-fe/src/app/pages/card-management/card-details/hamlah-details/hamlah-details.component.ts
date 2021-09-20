@@ -25,6 +25,9 @@ export class HamlahDetailsComponent implements OnInit {
   @Input()
   currentLanguage: string;
 
+  @Input()
+  transportationTypes: Lookup[];
+
   constructor(private lookupsService: LookupService) {
   }
 
