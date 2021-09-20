@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Lookup} from "@model/lookup.model";
+import {ApplicantCard} from "@model/card.model";
+import {LookupService} from "@core/utilities/lookup.service";
 
 @Component({
   selector: 'app-hamlah-details',
@@ -7,9 +10,32 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HamlahDetailsComponent implements OnInit {
 
-  constructor() { }
+  @Input()
+  housingCategories: Lookup[];
+  @Input()
+  housingTypes: Lookup[];
+  @Input()
+  packageTypes: Lookup[];
+  @Input()
+  housingSites: Lookup[];
+
+  @Input()
+  card: ApplicantCard;
+
+  @Input()
+  currentLanguage: string;
+
+  @Input()
+  transportationTypes: Lookup[];
+
+  constructor(private lookupsService: LookupService) {
+  }
 
   ngOnInit(): void {
+  }
+
+  lookupService(): LookupService {
+    return this.lookupsService;
   }
 
 }

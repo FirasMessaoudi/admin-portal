@@ -373,7 +373,17 @@
     "morshid_contact_number": "Contact Number",
     "yes": "Yes",
     "no": "No",
-    "main": "Main"
+    "main": "Main",
+
+    "package_type": "Package Type",
+    "camp_class":"Camp Class",
+    "company_number": "Company Number",
+    "company_name": "Company Name",
+    "company_contact-number": "Company Contact Number",
+    "location": "Location",
+    "from": "from",
+    "to" : "to",
+    "BREAKFAST": "Breakfast"
   },
   "printing-management": {
     "title": "Printing Management",

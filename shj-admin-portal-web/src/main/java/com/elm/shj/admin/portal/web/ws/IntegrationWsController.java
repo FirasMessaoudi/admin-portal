@@ -78,6 +78,8 @@ public class IntegrationWsController {
     private final HousingCategoryLookupService housingCategoryLookupService;
     private final HousingTypeLookupService housingTypeLookupService;
     private final PackageTypeLookupService packageTypeLookupService;
+    private final HousingSiteLookupService housingSiteLookupService;
+    private final TransportationTypeLookupService transportationTypeLookupService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -445,5 +447,28 @@ public class IntegrationWsController {
         log.info("list company ritual step...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findByApplicantUin(uin, seasonRitualId)).build());
     }
+
+    /**
+     * List all housing sites.
+     *
+     * @return WsResponse of housing sites list
+     */
+    @GetMapping("/housing-site/list")
+    public ResponseEntity<WsResponse<?>> listHousingSites() {
+        log.debug("list housing sites...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(housingSiteLookupService.findAll()).build());
+    }
+
+    /**
+     * List all transportation types.
+     *
+     * @return WsResponse of transportation types list
+     */
+    @GetMapping("/transportation-type/list")
+    public ResponseEntity<WsResponse<?>> listTransportationTypes() {
+        log.debug("list transportation types...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(transportationTypeLookupService.findAll()).build());
+    }
+
 
 }

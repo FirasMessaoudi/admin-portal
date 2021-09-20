@@ -26,6 +26,7 @@ drop table if exists shc_portal.shc_housing_type_lk;
 drop table if exists shc_portal.shc_transportation_type_lk;
 drop table if exists shc_portal.shc_applicant_group_type_lk;
 drop table if exists shc_portal.shc_company_ritual_step_lk;
+drop table if exists shc_portal.shc_housing_site_lk;
 
 GO
 
