@@ -372,7 +372,7 @@ public class IntegrationWsController {
     @GetMapping("/company_ritual_step_label/list")
     public ResponseEntity<WsResponse<?>> listCompanyRitualStepsLabel() {
         log.debug("list company ritual step labels...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepLookupService.findAllWithDescription()).build());
 
     }
 
