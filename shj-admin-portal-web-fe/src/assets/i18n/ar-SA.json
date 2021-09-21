@@ -373,7 +373,8 @@
     "to" : "إلي",
     "BREAKFAST": "فطار",
     "LUNCH": "غداء",
-    "DINNER":"عشاء"
+    "DINNER":"عشاء",
+    "package_details": "بيانات الباقة"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

@@ -385,7 +385,8 @@
     "to" : "to",
     "BREAKFAST": "Breakfast",
     "LUNCH": "Lunch",
-    "DINNER":"Dinner"
+    "DINNER":"Dinner",
+    "package_details": "Package Details"
   },
   "printing-management": {
     "title": "Printing Management",
