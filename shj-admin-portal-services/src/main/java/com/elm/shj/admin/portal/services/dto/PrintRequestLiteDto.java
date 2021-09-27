@@ -25,6 +25,7 @@ public class PrintRequestLiteDto implements Serializable {
 
     private long id;
     private String referenceNumber;
+    private String description;
     private String statusCode;
     private Date creationDate;
     private int cardsCount;

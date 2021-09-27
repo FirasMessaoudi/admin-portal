@@ -3,6 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.prinitng;
 
+import static com.elm.shj.admin.portal.orm.repository.PrintRequestLiteSpecification.withFilterAware;
+
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestLite;
 import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestBatchRepository;
@@ -55,8 +57,9 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequestLite,
      * @return
      */
     public Page<PrintRequestLiteDto> findByFilter(PrintRequestFilterVo filterVo, Pageable pageable) {
-        // at the time being, filter has only status code.
-        Page<PrintRequestLiteDto> litePrintRequests = mapPage(printRequestLiteRepository.findByStatusCode(filterVo.getStatusCode(), pageable));
+        // at the time being, filter has only status code and description.
+        Page<PrintRequestLiteDto> litePrintRequests =
+                mapPage(printRequestLiteRepository.findAll(withFilterAware(filterVo.getStatusCode(), filterVo.getDescription()), pageable));
         litePrintRequests.forEach(p -> {
             p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
             p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
