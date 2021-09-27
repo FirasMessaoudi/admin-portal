@@ -97,18 +97,18 @@ VALUES (1, N'ARRIVE_TO_KSA', N'ar', N'القدوم إلى المملكة', N'', 
 INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, description, creation_date)
 VALUES (2, N'ARRIVE_TO_KSA', N'en', N'Arrive to KSA', N'', N'2021-09-21 12:40:00');
 INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, description, creation_date)
-VALUES (3, N'GO_TO_HOTEL', N'ar', N'الذهاب إلي الفندق', N'', N'2021-09-21 12:40:00');
+VALUES (3, N'HOTEL', N'ar', N'الذهاب إلي الفندق', N'', N'2021-09-21 12:40:00');
 INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, description, creation_date)
-VALUES (4, N'GO_TO_HOTEL', N'en', N'Go to Hotel', N'', N'2021-09-21 12:40:00');
+VALUES (4, N'HOTEL', N'en', N'Go to Hotel', N'', N'2021-09-21 12:40:00');
 INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, description, creation_date)
-VALUES (5, N'GO_TO_HARAM_FOR_UMRAH', N'ar', N'الذهاب إلى الحرم للطواف والسعي لأداء العمرة', N'',
+VALUES (5, N'FOR_UMRAH', N'ar', N'الذهاب إلى الحرم للطواف والسعي لأداء العمرة', N'',
         N'2021-09-21 12:40:00');
 INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, description, creation_date)
-VALUES (6, N'GO_TO_HARAM_FOR_UMRAH', N'en', N'Go to Haram for Umrah', N'', N'2021-09-21 12:40:00');
+VALUES (6, N'FOR_UMRAH', N'en', N'Go to Haram for Umrah', N'', N'2021-09-21 12:40:00');
 INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, description, creation_date)
-VALUES (7, N'GO_TO_HARAM_FOR_TAWAF', N'ar', N'الذهاب إلى الحرم طواف القدوم', N'', N'2021-09-21 12:40:00');
+VALUES (7, N'FOR_TAWAF', N'ar', N'الذهاب إلى الحرم طواف القدوم', N'', N'2021-09-21 12:40:00');
 INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, description, creation_date)
-VALUES (8, N'GO_TO_HARAM_FOR_TAWAF', N'en', N'Go to Haram for Tawaf', N'', N'2021-09-21 12:40:00');
+VALUES (8, N'FOR_TAWAF', N'en', N'Go to Haram for Tawaf', N'', N'2021-09-21 12:40:00');
 
 SET
 IDENTITY_INSERT shc_portal.shc_company_ritual_step_lk OFF;
@@ -237,17 +237,17 @@ VALUES (1, 1, N'BUS', 1, N'ARRIVE_TO_KSA', N'2021-07-16 15:27:00', 21.36666520, 
 INSERT INTO shc_portal.shc_company_ritual_step (id, applicant_group_id, transportation_type_code, step_index, step_code,
                                                 time, location_lat, location_lng, location_name_ar, location_name_en,
                                                 creation_date, update_date)
-VALUES (2, 1, N'TRAIN', 1, N'GO_TO_HOTEL', N'2021-08-01 10:34:00', 21.38883178, 39.93599626, N'مزدلفة', N'Muzdalifa',
+VALUES (2, 1, N'TRAIN', 2, N'HOTEL', N'2021-08-01 10:34:00', 21.38883178, 39.93599626, N'مزدلفة', N'Muzdalifa',
         N'2021-09-18 10:34:00', N'2021-09-19 10:34:00');
 INSERT INTO shc_portal.shc_company_ritual_step (id, applicant_group_id, transportation_type_code, step_index, step_code,
                                                 time, location_lat, location_lng, location_name_ar, location_name_en,
                                                 creation_date, update_date)
-VALUES (3, 1, N'CAR', 1, N'GO_TO_HARAM_FOR_UMRAH', N'2021-09-21 11:24:00', 21.36666520, 40.00166666, N'عرفة', N'Arafat',
+VALUES (3, 1, N'CAR', 3, N'FOR_UMRAH', N'2021-09-21 11:24:00', 21.36666520, 40.00166666, N'عرفة', N'Arafat',
         N'2021-09-19 11:24:00', N'2021-09-20 11:24:00');
 INSERT INTO shc_portal.shc_company_ritual_step (id, applicant_group_id, transportation_type_code, step_index, step_code,
                                                 time, location_lat, location_lng, location_name_ar, location_name_en,
                                                 creation_date, update_date)
-VALUES (4, 1, N'BUS', 1, N'GO_TO_HARAM_FOR_TAWAF', N'2021-09-22 11:24:00', 21.38883178, 39.93599626, N'مزدلفة',
+VALUES (4, 1, N'BUS', 4, N'FOR_TAWAF', N'2021-09-22 11:24:00', 21.38883178, 39.93599626, N'مزدلفة',
         N'Muzdalifa', N'2021-09-20 11:24:00', N'2021-09-20 11:24:00');
 
 SET
@@ -379,8 +379,10 @@ SET
 IDENTITY_INSERT shc_portal.shc_applicant_package_transportation OFF;
 GO
 
-USE shc_portal
-GO
 UPDATE shc_portal.shc_applicant_contact SET shc_portal.shc_applicant_contact.applicant_ritual_id = ar.id FROM shc_portal.shc_applicant_ritual ar
                                                                                                                   INNER JOIN shc_portal.shc_applicant a ON  ar.applicant_id = a.id WHERE ar.applicant_id = shc_applicant_contact.applicant_id;
+GO
+
+UPDATE shc_portal.shc_applicant_health SET applicant_ritual_id = ar.id FROM shc_portal.shc_applicant_ritual ar
+                                                                                                                  INNER JOIN shc_portal.shc_applicant a ON  ar.applicant_id = a.id WHERE ar.applicant_id = shc_applicant_health.applicant_id;
 GO
