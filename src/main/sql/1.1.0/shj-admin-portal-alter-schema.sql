@@ -494,3 +494,8 @@ CREATE TABLE shc_portal.shc_housing_site_lk
     CONSTRAINT housing_site_lk_unique UNIQUE (code ASC, lang ASC)
 );
 GO
+
+USE shc_portal
+GO
+ALTER TABLE shc_portal.shc_company_ritual_step_lk ADD short_description varchar(100);
+GO
