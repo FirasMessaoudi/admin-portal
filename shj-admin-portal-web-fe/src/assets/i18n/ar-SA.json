@@ -418,7 +418,8 @@
     "fawj_number": "رقم الفوج",
     "nationality": "الجنسية",
     "motawif": "مؤسسة الطوافة",
-    "btn_cancel": "إلغاء"
+    "btn_cancel": "إلغاء",
+    "description": "وصف طلب الطباعة"
 
   },
   "rule-management": {

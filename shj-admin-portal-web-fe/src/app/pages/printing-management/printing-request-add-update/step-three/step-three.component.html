@@ -12,6 +12,13 @@
     </span>
 </div>
 
+<div class="form-group mt-4">
+  <label class="form-label">{{'printing-management.description' | translate}}</label>
+  <div class='input-group'>
+    <input type="text" class="form-control bg-transparent" maxlength="150" id="description" name="description" [(ngModel)]="description">
+  </div>
+</div>
+
 <div class="mt-5 d-flex">
   <div class="table_header_col--fixed" style="width: 55%">{{'card-management.applicant_name' | translate}}</div>
   <div class="table_header_col--fixed" style="width: 15%">{{'card-management.applicant_id' | translate}}</div>
