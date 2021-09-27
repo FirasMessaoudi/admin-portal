@@ -28,6 +28,6 @@ public class JpaCompanyRitualStepLookup extends JpaLocalizedLookup {
 
     private String description;
 
-    @Column(name="short_description")
-    private String shortDescription;
+    private String summary;
+
 }

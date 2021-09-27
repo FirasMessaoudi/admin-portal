@@ -391,6 +391,22 @@ CREATE TABLE shc_portal.shc_company_ritual_season
 );
 GO
 
+/*---------------------------------------------------
+--  ddl for shc_company_season_package table
+---------------------------------------------------*/
+
+if not exists(select * from sys.tables where name = 'shc_company_season_package')
+CREATE TABLE shc_portal.shc_company_season_package
+(
+    id                       int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    company_ritual_season_id int           NOT NULL,
+    basic_package_id         int           NOT NULL,
+    creation_date            smalldatetime NOT NULL DEFAULT current_timestamp,
+    update_date              smalldatetime NULL,
+    CONSTRAINT fk_shc_company_season_package_company_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season (id),
+    CONSTRAINT fk_shc_company_season_package_package FOREIGN KEY (basic_package_id) REFERENCES shc_portal.shc_ritual_package (id)
+);
+GO
 
 /*---------------------------------------------------
 --  ddl for shc_applicant_group table
@@ -482,9 +498,16 @@ GO
 
 ALTER TABLE shc_portal.shc_ritual_package
     ADD company_ritual_season_id int NULL CONSTRAINT fk_shc_ritual_package_company_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season(id);
-GO
+
 
 ALTER TABLE shc_portal.shc_applicant_ritual
     ADD applicant_package_id int NULL
         CONSTRAINT fk_shc_applicant_ritual_applicant_package FOREIGN KEY (applicant_package_id) REFERENCES shc_portal.shc_applicant_package (id);
+
+GO
+ALTER TABLE shc_portal.shc_company_ritual_step_lk DROP COLUMN long_description;
+GO
+ALTER TABLE shc_portal.shc_company_ritual_step_lk DROP COLUMN short_description;
+GO
+ALTER TABLE shc_portal.shc_company_ritual_step_lk ADD  summary VARCHAR(100);
 GO
