@@ -347,28 +347,6 @@ CREATE TABLE shc_portal.shc_company
 GO
 
 /*---------------------------------------------------
---  ddl for shc_company_staff table
----------------------------------------------------*/
-if not exists(select * from sys.tables where name = 'shc_company_staff')
-CREATE TABLE shc_portal.shc_company_staff
-(
-    id            int NOT NULL PRIMARY KEY IDENTITY (1,1),
-    full_name_ar  nvarchar(255) NULL,
-    full_name_en  varchar(255) NULL,
-    id_number     int NOT NULL,
-    company_id    int NOT NULL,
-    title_code    varchar(45) NULL,
-    mobile_number varchar(20) NOT NULL,
-    email         varchar(255) NULL,
-    company_ritual_season_id   int NULL,
-    creation_date smalldatetime NULL DEFAULT current_timestamp,
-    update_date   smalldatetime NULL,
-    CONSTRAINT fk_shc_company_representative_company FOREIGN KEY (company_id) REFERENCES shc_portal.shc_company (id),
-    CONSTRAINT fk_shc_company_staff_company_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season(id)
-);
-GO
-
-/*---------------------------------------------------
 --  ddl for shc_company_ritual_season table
 ---------------------------------------------------*/
 if not exists(select * from sys.tables where name = 'shc_company_ritual_season')
@@ -388,6 +366,28 @@ CREATE TABLE shc_portal.shc_company_ritual_season
     update_date      smalldatetime NULL,
     CONSTRAINT fk_shc_company_season_company FOREIGN KEY (company_id) REFERENCES shc_portal.shc_company (id),
     CONSTRAINT fk_shc_company_season_season FOREIGN KEY (ritual_season_id) REFERENCES shc_portal.shc_ritual_season (id)
+);
+GO
+
+/*---------------------------------------------------
+--  ddl for shc_company_staff table
+---------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_company_staff')
+CREATE TABLE shc_portal.shc_company_staff
+(
+    id            int NOT NULL PRIMARY KEY IDENTITY (1,1),
+    full_name_ar  nvarchar(255) NULL,
+    full_name_en  varchar(255) NULL,
+    id_number     int NOT NULL,
+    company_id    int NOT NULL,
+    title_code    varchar(45) NULL,
+    mobile_number varchar(20) NOT NULL,
+    email         varchar(255) NULL,
+    company_ritual_season_id   int NULL,
+    creation_date smalldatetime NULL DEFAULT current_timestamp,
+    update_date   smalldatetime NULL,
+    CONSTRAINT fk_shc_company_representative_company FOREIGN KEY (company_id) REFERENCES shc_portal.shc_company (id),
+    CONSTRAINT fk_shc_company_staff_company_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season(id)
 );
 GO
 
@@ -505,9 +505,5 @@ ALTER TABLE shc_portal.shc_applicant_ritual
         CONSTRAINT fk_shc_applicant_ritual_applicant_package FOREIGN KEY (applicant_package_id) REFERENCES shc_portal.shc_applicant_package (id);
 
 GO
-ALTER TABLE shc_portal.shc_company_ritual_step_lk DROP COLUMN long_description;
-GO
-ALTER TABLE shc_portal.shc_company_ritual_step_lk DROP COLUMN short_description;
-GO
-ALTER TABLE shc_portal.shc_company_ritual_step_lk ADD  summary VARCHAR(100);
+ALTER TABLE shc_portal.shc_company_ritual_step_lk ADD summary VARCHAR(100);
 GO

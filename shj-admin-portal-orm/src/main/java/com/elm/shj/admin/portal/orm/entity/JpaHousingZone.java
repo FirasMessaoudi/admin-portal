@@ -30,11 +30,11 @@ public class JpaHousingZone implements Serializable {
     private long id;
 
 
-    @Column(name = "name_ar", nullable = false)
-    private String nameAr;
+    @Column(name = "label_ar", nullable = false)
+    private String labelAr;
 
-    @Column(name = "name_en", nullable = false)
-    private String nameEn;
+    @Column(name = "label_en", nullable = false)
+    private String labelEn;
 
     private String color;
 
