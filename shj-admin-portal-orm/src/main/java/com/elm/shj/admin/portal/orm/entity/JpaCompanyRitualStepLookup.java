@@ -30,6 +30,4 @@ public class JpaCompanyRitualStepLookup extends JpaLocalizedLookup {
 
     @Column(name="short_description")
     private String shortDescription;
-    @Column(name="long_description")
-    private String longDescription;
 }
