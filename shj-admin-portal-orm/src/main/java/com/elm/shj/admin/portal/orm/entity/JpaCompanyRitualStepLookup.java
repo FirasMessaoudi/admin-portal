@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.orm.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -26,4 +27,7 @@ public class JpaCompanyRitualStepLookup extends JpaLocalizedLookup {
     private static final long serialVersionUID = -913161328642286375L;
 
     private String description;
+
+    @Column(name="short_description")
+    private String shortDescription;
 }

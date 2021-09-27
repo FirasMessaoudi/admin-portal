@@ -391,22 +391,6 @@ CREATE TABLE shc_portal.shc_company_ritual_season
 );
 GO
 
-/*---------------------------------------------------
---  ddl for shc_company_season_package table
----------------------------------------------------*/
-
-if not exists(select * from sys.tables where name = 'shc_company_season_package')
-CREATE TABLE shc_portal.shc_company_season_package
-(
-    id                       int           NOT NULL PRIMARY KEY IDENTITY (1,1),
-    company_ritual_season_id int           NOT NULL,
-    basic_package_id         int           NOT NULL,
-    creation_date            smalldatetime NOT NULL DEFAULT current_timestamp,
-    update_date              smalldatetime NULL,
-    CONSTRAINT fk_shc_company_season_package_company_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season (id),
-    CONSTRAINT fk_shc_company_season_package_package FOREIGN KEY (basic_package_id) REFERENCES shc_portal.shc_ritual_package (id)
-);
-GO
 
 /*---------------------------------------------------
 --  ddl for shc_applicant_group table
@@ -442,8 +426,8 @@ CREATE TABLE shc_portal.shc_company_ritual_step
     step_index               int            NOT NULL,
     step_code                varchar(20)    NOT NULL,
     time                     smalldatetime  NOT NULL,
-    location_lat             DECIMAL(10, 0) NOT NULL,
-    location_lng             DECIMAL(10, 0) NOT NULL,
+    location_lat             DECIMAL(10, 8) NOT NULL,
+    location_lng             DECIMAL(11, 8) NOT NULL,
     location_name_ar         nvarchar(100) NOT NULL,
     location_name_en         varchar(100)   NOT NULL,
     creation_date            smalldatetime  NOT NULL DEFAULT current_timestamp,
@@ -498,4 +482,9 @@ GO
 
 ALTER TABLE shc_portal.shc_ritual_package
     ADD company_ritual_season_id int NULL CONSTRAINT fk_shc_ritual_package_company_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season(id);
+GO
+
+ALTER TABLE shc_portal.shc_applicant_ritual
+    ADD applicant_package_id int NULL
+        CONSTRAINT fk_shc_applicant_ritual_applicant_package FOREIGN KEY (applicant_package_id) REFERENCES shc_portal.shc_applicant_package (id);
 GO
