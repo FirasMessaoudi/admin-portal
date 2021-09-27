@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.orm.entity.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,11 +32,13 @@ public class RitualPackageDto implements Serializable {
     private float price;
     private String departureCity;
     private int countryId;
+    private String referenceNumber;
 
-    @JsonBackReference("companySeasonPackages")
-    private List<CompanySeasonPackageDto> companySeasonPackages;
+    @JsonBackReference(value = "ritualSeason")
+    private CompanyRitualSeasonDto companyRitualSeason;
+
     @JsonBackReference("applicantPackages")
-    private List<ApplicantPackageDTO> applicantPackages;
+    private List<ApplicantPackageDto> applicantPackages;
     @JsonBackReference("packageHousings")
     private List<PackageHousingDto> packageHousings;
     @JsonBackReference("packageTransportations")

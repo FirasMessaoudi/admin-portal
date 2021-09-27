@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  * Service handling CompanyRitualSeason
@@ -24,9 +26,14 @@ public class CompanyRitualSeasonLiteService extends GenericService<JpaCompanyRit
     private final CompanyRitualSeasonRepository companyRitualSeasonRepository;
 
 
-    public CompanyRitualSeasonLiteDto getLatestCompanyRitualSeasonByApplicantUin(String applicantUin) {
-        JpaCompanyRitualSeason companyRitualSeason = companyRitualSeasonRepository.findTopByApplicantGroupsGroupApplicantListsApplicantUinOrderBySeasonStartDesc(applicantUin);
+    public CompanyRitualSeasonLiteDto getLatestCompanyRitualSeasonByApplicantUin(long applicantUin) {
+        JpaCompanyRitualSeason companyRitualSeason = companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(applicantUin);
         return getMapper().fromEntity(companyRitualSeason, mappingContext);
+    }
+
+    public List<CompanyRitualSeasonLiteDto> getListCompanyRitualSeasonByApplicantUin(long applicantUin) {
+        List<JpaCompanyRitualSeason> companyRitualSeasons = companyRitualSeasonRepository.findAllByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(applicantUin);
+        return getMapper().fromEntityList(companyRitualSeasons, mappingContext);
     }
 
 }

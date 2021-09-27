@@ -95,6 +95,10 @@ public class JpaApplicantRitual implements Serializable {
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 
+    @ManyToOne
+    @JoinColumn(name = "applicant_package_id")
+    private JpaApplicantPackage  applicantPackage;
+
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantRitual")
     private List<JpaApplicantRelative> relatives;

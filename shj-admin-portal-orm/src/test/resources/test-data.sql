@@ -115,13 +115,13 @@ INSERT INTO shc_group_applicant_list (id, group_id, applicant_uin, creation_date
 INSERT INTO shc_company_ritual_step (id, applicant_group_id, transportation_type_code,step_index,step_code,time,location_lat,location_lng,location_name_ar,location_name_en, creation_date, update_date) VALUES
     (1, 1, 'code', 1, 'step 1', N'2021-09-14 14:27:00', 18.0, 19.0, 'arafet', 'arafet', N'2021-09-14 14:27:00', N'2021-09-14 14:27:00');
 
-INSERT INTO shc_ritual_package (id, type_code, price, departure_city, country_id, creation_date, update_date) VALUES (1, N'A', '100', null, 1, N'2021-09-15 09:54:00', null);
+
+INSERT INTO shc_ritual_package (id, type_code, price, departure_city, country_id, creation_date, update_date,company_ritual_season_id) VALUES (1, N'A', '100', null, 1, N'2021-09-15 09:54:00', null,1);
 
 
 INSERT INTO shc_applicant_package (id, ritual_package_id, applicant_uin, creation_date, update_date) VALUES
 (1, 1, 59737700000059, N'2021-09-15 09:56:00', null);
 
-INSERT INTO shc_company_season_package (id, company_ritual_season_id, basic_package_id, creation_date, update_date) VALUES (1, 1, 1, N'2021-09-15 10:00:00', null);
 
 
 INSERT INTO shc_package_housing (id, package_id, zone_id, reference_number, category_code, type_code, location_name_ar, location_name_en, validity_start, validity_end, address_ar, address_en, is_default, lat, lng, creation_date, update_date)
@@ -132,7 +132,7 @@ INSERT INTO shc_applicant_package_housing (id, applicant_package_id, package_hou
 
 
 INSERT INTO shc_package_catering (id, package_housing_id, meal_code, meal_time, meal_description, type, description_ar, description_en, creation_date, update_date) VALUES
-(1, 1, N'123', 10, N'mail', N'type', null, null, N'2021-09-15 20:28:00', null);
+(1, 1, N'123', '10:00:00', N'mail', N'type', null, null, N'2021-09-15 20:28:00', N'2021-09-15 20:28:00');
 
 
 INSERT INTO shc_applicant_package_catering (id, applicant_package_id, ritual_package_catering_id, option_ar, option_en, creation_date, update_date) VALUES

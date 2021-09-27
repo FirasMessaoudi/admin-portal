@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Dto class for the CompanyRitualSeason.
@@ -34,8 +33,8 @@ public class CompanyRitualSeasonDto {
     private RitualSeasonDto ritualSeason;
 
 
-    @JsonBackReference(value = "companySeasonPackages")
-    private List<CompanySeasonPackageDto> companySeasonPackages;
+    @JsonBackReference(value = "ritualPackages")
+    private List<RitualPackageDto> ritualPackages;
 
     @JsonBackReference(value = "applicantGroups")
     private List<ApplicantGroupDto> applicantGroups;

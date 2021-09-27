@@ -30,6 +30,7 @@ public class ApplicantRitualDto implements Serializable {
 
     private long id;
     private ApplicantDto applicant;
+    private ApplicantPackageDto applicantPackage;
 
     @OnlyCharacters(min = 1, max = 16, allowNumbers = true, allowEmpty = false)
     @CellIndex(index = 4)

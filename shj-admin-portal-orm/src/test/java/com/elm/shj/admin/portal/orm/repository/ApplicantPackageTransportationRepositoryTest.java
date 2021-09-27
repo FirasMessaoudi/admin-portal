@@ -28,7 +28,7 @@ public class ApplicantPackageTransportationRepositoryTest extends AbstractJpaTes
     @Test
     public void test_find_all_by_ApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId_found() {
 
-        List<JpaApplicantPackageTransportation> applicantPackageTransportations = applicantPackageTransportationRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId(EXIST_USER_UIN, 1);
+        List<JpaApplicantPackageTransportation> applicantPackageTransportations = applicantPackageTransportationRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(EXIST_USER_UIN, 1);
 
         assertNotNull(applicantPackageTransportations);
         assertEquals(1, applicantPackageTransportations.size());
@@ -38,7 +38,7 @@ public class ApplicantPackageTransportationRepositoryTest extends AbstractJpaTes
     @Test
     public void test_find_all_by_ApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId_notFound() {
 
-        List<JpaApplicantPackageTransportation> applicantPackageTransportations = applicantPackageTransportationRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId(FAKE_USER_UIN, 1);
+        List<JpaApplicantPackageTransportation> applicantPackageTransportations = applicantPackageTransportationRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(FAKE_USER_UIN, 1);
 
         assertNotNull(applicantPackageTransportations);
         assertEquals(0, applicantPackageTransportations.size());

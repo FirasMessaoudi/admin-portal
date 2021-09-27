@@ -14,5 +14,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  **/
 public interface CompanyRepository extends JpaRepository<JpaCompany, Long> {
 
-    JpaCompany findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsApplicantGroupsGroupApplicantListsApplicantUin(long companyRitualSeasonsId, String applicantUin);
+    JpaCompany findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsRitualPackagesApplicantPackagesApplicantUin(long companyRitualSeasonsId, long applicantUin);
 }

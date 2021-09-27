@@ -5,6 +5,8 @@ import com.elm.shj.admin.portal.orm.test.AbstractJpaTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -15,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class CompanyRitualSeasonRepositoryTest extends AbstractJpaTest {
 
-    private final static String EXIST_USER_UIN = "59737700000059";
-    private final static String FAKE_USER_UIN = "1111111111";
+    private final static long EXIST_USER_UIN = 59737700000059L;
+    private final static long FAKE_USER_UIN = 1111111111L;
 
     @Autowired
     private CompanyRitualSeasonRepository companyRitualSeasonRepository;
@@ -24,7 +26,7 @@ public class CompanyRitualSeasonRepositoryTest extends AbstractJpaTest {
     @Test
     public void test_find_top_by_applicantGroups_groupApplicantLists_applicantUin_order_by_seasonStartDesc_found() {
 
-        JpaCompanyRitualSeason companyRitualSeason = companyRitualSeasonRepository.findTopByApplicantGroupsGroupApplicantListsApplicantUinOrderBySeasonStartDesc(EXIST_USER_UIN);
+        JpaCompanyRitualSeason companyRitualSeason = companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(EXIST_USER_UIN);
 
         assertNotNull(companyRitualSeason);
         assertEquals(14430210, companyRitualSeason.getSeasonStart());
@@ -36,9 +38,32 @@ public class CompanyRitualSeasonRepositoryTest extends AbstractJpaTest {
     @Test
     public void test_find_top_by_applicantGroups_groupApplicantLists_applicantUin_order_by_seasonStartDesc_notFound() {
 
-        JpaCompanyRitualSeason companyRitualSeason = companyRitualSeasonRepository.findTopByApplicantGroupsGroupApplicantListsApplicantUinOrderBySeasonStartDesc(FAKE_USER_UIN);
+        JpaCompanyRitualSeason companyRitualSeason = companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(FAKE_USER_UIN);
 
         assertNull(companyRitualSeason);
+
+    }
+
+    @Test
+    public void test_find_all_by_applicantGroups_groupApplicantLists_applicantUin_order_by_seasonStartDesc_found() {
+
+        List<JpaCompanyRitualSeason> companyRitualSeasons = companyRitualSeasonRepository.findAllByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(EXIST_USER_UIN);
+
+        assertNotNull(companyRitualSeasons);
+        assertEquals(1, companyRitualSeasons.size());
+        assertEquals(14430210, companyRitualSeasons.get(0).getSeasonStart());
+        assertNotNull(companyRitualSeasons.get(0).getRitualSeason());
+        assertEquals("INTERNAL_HAJJ", companyRitualSeasons.get(0).getRitualSeason().getRitualTypeCode());
+
+    }
+
+    @Test
+    public void test_find_all_by_applicantGroups_groupApplicantLists_applicantUin_order_by_seasonStartDesc_notFound() {
+
+        List<JpaCompanyRitualSeason> companyRitualSeasons = companyRitualSeasonRepository.findAllByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(FAKE_USER_UIN);
+
+        assertNotNull(companyRitualSeasons);
+        assertEquals(0, companyRitualSeasons.size());
 
     }
 

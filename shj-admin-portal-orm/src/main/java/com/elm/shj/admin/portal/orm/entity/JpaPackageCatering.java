@@ -7,6 +7,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class JpaPackageCatering implements Serializable {
     private String mealCode;
 
     @Column(name = "meal_time", nullable = false)
-    private int mealTime;
+    private Time mealTime;
 
     @Column(name = "meal_description", nullable = false, length = 256)
     private String mealDescription;

@@ -158,6 +158,7 @@ CREATE TABLE shc_portal.shc_ritual_package
 (
     id             int           NOT NULL PRIMARY KEY IDENTITY (1,1),
     type_code      varchar(20)   NOT NULL,
+    reference_number varchar(45) NOT NULL,
     price          FLOAT NULL,
     departure_city varchar(45) NULL,
     country_id     int NULL,
@@ -203,7 +204,7 @@ CREATE TABLE shc_portal.shc_package_catering
     id                 int           NOT NULL PRIMARY KEY IDENTITY (1,1),
     package_housing_id int           NOT NULL,
     meal_code          nvarchar(50) NULL,
-    meal_time          int           NOT NULL,
+    meal_time          Time           NOT NULL,
     meal_description   varchar(256)  NOT NULL,
     type               varchar(45) NULL,
     description_ar     nvarchar(250) NULL,
@@ -493,4 +494,8 @@ CREATE TABLE shc_portal.shc_housing_site_lk
     creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
     CONSTRAINT housing_site_lk_unique UNIQUE (code ASC, lang ASC)
 );
+GO
+
+ALTER TABLE shc_portal.shc_ritual_package
+    ADD company_ritual_season_id int NULL CONSTRAINT fk_shc_ritual_package_company_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season(id);
 GO

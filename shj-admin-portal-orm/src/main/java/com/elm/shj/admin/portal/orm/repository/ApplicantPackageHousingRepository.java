@@ -17,6 +17,6 @@ import java.util.List;
 
 public interface ApplicantPackageHousingRepository extends JpaRepository<JpaApplicantPackageHousing, Long> {
 
-    List<JpaApplicantPackageHousing> findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId(long applicantUin, long companyRitualSeasonId);
+    List<JpaApplicantPackageHousing> findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(long applicantUin, long companyRitualSeasonId);
 
 }

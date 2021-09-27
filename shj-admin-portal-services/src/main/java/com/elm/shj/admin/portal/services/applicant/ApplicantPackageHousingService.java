@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import com.elm.shj.admin.portal.orm.repository.ApplicantPackageHousingRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantPackageHousingDto;
@@ -24,12 +23,12 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class ApplicantPackageHousingService extends GenericService<JpaApplicantPackageHousing, ApplicantPackageHousingDto,Long> {
+public class ApplicantPackageHousingService extends GenericService<JpaApplicantPackageHousing, ApplicantPackageHousingDto, Long> {
 
     private final ApplicantPackageHousingRepository applicantPackageHousingRepository;
 
     public List<ApplicantPackageHousingDto> findApplicantPackageHousingByUinAndCompanyRitualSeasonId(long applicantUin, long companyRitualSeasonId) {
-        List<JpaApplicantPackageHousing> jpaApplicantPackageHousings = applicantPackageHousingRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId(applicantUin, companyRitualSeasonId);
+        List<JpaApplicantPackageHousing> jpaApplicantPackageHousings = applicantPackageHousingRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(applicantUin, companyRitualSeasonId);
         return getMapper().fromEntityList(jpaApplicantPackageHousings, mappingContext);
     }
 }

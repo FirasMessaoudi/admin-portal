@@ -1,7 +1,6 @@
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompany;
-import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeason;
 import com.elm.shj.admin.portal.orm.test.AbstractJpaTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class CompanyRepositoryTest extends AbstractJpaTest {
 
-    private final static String EXIST_USER_UIN = "59737700000059";
-    private final static String FAKE_USER_UIN = "1111111111";
+    private final static long EXIST_USER_UIN = 59737700000059L;
+    private final static long FAKE_USER_UIN = 1111111111L;
 
     @Autowired
     private CompanyRepository companyRepository;
@@ -25,7 +24,7 @@ public class CompanyRepositoryTest extends AbstractJpaTest {
     @Test
     public void test_findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsApplicantGroupsGroupApplicantListsApplicantUin_found() {
 
-        JpaCompany company = companyRepository.findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsApplicantGroupsGroupApplicantListsApplicantUin(1, EXIST_USER_UIN);
+        JpaCompany company = companyRepository.findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsRitualPackagesApplicantPackagesApplicantUin(1, EXIST_USER_UIN);
 
         assertNotNull(company);
         assertEquals("elm", company.getLabelEn());
@@ -34,7 +33,7 @@ public class CompanyRepositoryTest extends AbstractJpaTest {
     @Test
     public void test_findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsApplicantGroupsGroupApplicantListsApplicantUin_notFound() {
 
-        JpaCompany company = companyRepository.findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsApplicantGroupsGroupApplicantListsApplicantUin(1, FAKE_USER_UIN);
+        JpaCompany company = companyRepository.findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsRitualPackagesApplicantPackagesApplicantUin(1, FAKE_USER_UIN);
 
         assertNull(company);
     }

@@ -17,7 +17,7 @@ import java.util.List;
  */
 @NoArgsConstructor
 @Data
-public class ApplicantPackageDTO implements Serializable {
+public class ApplicantPackageDto implements Serializable {
 
     private static final long serialVersionUID = 9128835722212623516L;
 
@@ -41,4 +41,7 @@ public class ApplicantPackageDTO implements Serializable {
 
     @JsonBackReference(value = "applicantPackageHousings")
     private List<ApplicantPackageHousingDto> applicantPackageHousings;
+
+    @JsonBackReference(value = "applicantRituals")
+    private List<ApplicantRitualDto> applicantRituals;
 }

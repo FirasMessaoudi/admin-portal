@@ -28,7 +28,7 @@ public class ApplicantPackageCateringService extends GenericService<JpaApplicant
     private final ApplicantPackageCateringRepository applicantPackageCateringRepository;
 
     public List<ApplicantPackageCateringDto> findApplicantPackageCateringByUinAndCompanyRitualSeasonId(long applicantUin, long companyRitualSeasonId) {
-        return getMapper().fromEntityList(applicantPackageCateringRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId(applicantUin, companyRitualSeasonId), mappingContext);
+        return getMapper().fromEntityList(applicantPackageCateringRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(applicantUin, companyRitualSeasonId), mappingContext);
     }
 
 

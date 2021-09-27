@@ -18,7 +18,7 @@ import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 /**
  * Testing class for service {@link CompanyRitualSeasonLiteService}
@@ -29,7 +29,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 @ExtendWith(MockitoExtension.class)
 public class CompanyRitualSeasonLiteServiceTest {
 
-    private final static String TEST_UIN = "50208700000027";
+    private final static long TEST_UIN = 50208700000027L;
 
     @Mock
     private MapperRegistry mapperRegistry;
@@ -62,7 +62,7 @@ public class CompanyRitualSeasonLiteServiceTest {
         JpaCompanyRitualSeason jpaCompanyRitualSeason = new JpaCompanyRitualSeason();
         CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = new CompanyRitualSeasonLiteDto();
 
-        Mockito.when(companyRitualSeasonRepository.findTopByApplicantGroupsGroupApplicantListsApplicantUinOrderBySeasonStartDesc(anyString())).thenReturn(jpaCompanyRitualSeason);
+        Mockito.when(companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(anyLong())).thenReturn(jpaCompanyRitualSeason);
         Mockito.when(companyRitualSeasonLiteMapper.fromEntity(any(), any())).thenReturn(companyRitualSeasonLiteDto);
 
         CompanyRitualSeasonLiteDto resultDto = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(TEST_UIN);
@@ -75,7 +75,7 @@ public class CompanyRitualSeasonLiteServiceTest {
     public void test_get_latest_company_ritual_season_by_applicantUin_notFound() {
 
 
-        Mockito.when(companyRitualSeasonRepository.findTopByApplicantGroupsGroupApplicantListsApplicantUinOrderBySeasonStartDesc(anyString())).thenReturn(null);
+        Mockito.when(companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(anyLong())).thenReturn(null);
         Mockito.when(companyRitualSeasonLiteMapper.fromEntity(any(), any())).thenReturn(null);
 
         CompanyRitualSeasonLiteDto resultDto = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(TEST_UIN);

@@ -27,7 +27,7 @@ public class ApplicantPackageCateringRepositoryTest extends AbstractJpaTest {
 
     @Test
     public void test_findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId_found() {
-        List<JpaApplicantPackageCatering> applicantPackageCaterings = applicantPackageCateringRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId(EXIST_USER_UIN, 1);
+        List<JpaApplicantPackageCatering> applicantPackageCaterings = applicantPackageCateringRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(EXIST_USER_UIN, 1);
 
         assertNotNull(applicantPackageCaterings);
         assertEquals(1, applicantPackageCaterings.size());
@@ -36,7 +36,7 @@ public class ApplicantPackageCateringRepositoryTest extends AbstractJpaTest {
 
     @Test
     public void test_findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId_notFound() {
-        List<JpaApplicantPackageCatering> applicantPackageCaterings = applicantPackageCateringRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId(FAKE_USER_UIN, 1);
+        List<JpaApplicantPackageCatering> applicantPackageCaterings = applicantPackageCateringRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(FAKE_USER_UIN, 1);
 
         assertNotNull(applicantPackageCaterings);
         assertEquals(0, applicantPackageCaterings.size());

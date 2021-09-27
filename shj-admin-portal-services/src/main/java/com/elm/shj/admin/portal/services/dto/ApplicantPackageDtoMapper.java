@@ -5,11 +5,11 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackage;
 import org.mapstruct.Mapper;
 
 /**
- * Mapper for {@link ApplicantPackageDTO} class
+ * Mapper for {@link ApplicantPackageDto} class
  *
  * @author ahmed elsayed
  * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
-public abstract class ApplicantPackageMapper implements IGenericMapper<ApplicantPackageDTO, JpaApplicantPackage>, HibernateAwareMapper {
+public abstract class ApplicantPackageDtoMapper implements IGenericMapper<ApplicantPackageDto, JpaApplicantPackage>, HibernateAwareMapper {
 }

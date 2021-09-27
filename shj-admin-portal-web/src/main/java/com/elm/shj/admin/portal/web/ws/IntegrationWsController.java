@@ -80,6 +80,7 @@ public class IntegrationWsController {
     private final PackageTypeLookupService packageTypeLookupService;
     private final HousingSiteLookupService housingSiteLookupService;
     private final TransportationTypeLookupService transportationTypeLookupService;
+    private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -399,7 +400,7 @@ public class IntegrationWsController {
         applicantPackageDetails.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
         applicantPackageDetails.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
         applicantPackageDetails.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-        applicantPackageDetails.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, uin));
+        applicantPackageDetails.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageDetails).build());
 
@@ -470,5 +471,28 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(transportationTypeLookupService.findAll()).build());
     }
 
+    /**
+     * finds all applicant ritual season by his UIN
+     *
+     * @param uin the applicant's uin to find
+     * @return the found company ritual seasons list
+     */
+    @GetMapping("/applicant/ritual-season/{uin}")
+    public ResponseEntity<WsResponse<?>> findApplicantRitualSeasonByUin(@PathVariable Long uin) {
+        log.debug("Handler for {}", "Find all applicant ritual season by uin");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualSeasonLiteService.getListCompanyRitualSeasonByApplicantUin(uin)).build());
+    }
+
+    /**
+     * finds latest applicant ritual season by his UIN
+     *
+     * @param uin the applicant's uin to find
+     * @return the found company ritual seasons for applicant
+     */
+    @GetMapping("/applicant/ritual-season/latest/{uin}")
+    public ResponseEntity<WsResponse<?>> findLatestApplicantRitualSeasonByUin(@PathVariable Long uin) {
+        log.debug("Handler for {}", "Find all applicant ritual season by uin");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin)).build());
+    }
 
 }

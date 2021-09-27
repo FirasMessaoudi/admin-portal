@@ -126,13 +126,13 @@ public class ApplicantCardController {
         if (digitalIds.size() > 0) {
 
             String uin = digitalIds.get(0).getUin();
-            CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin);
+            CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(Long.parseLong(uin));
             if (companyRitualSeasonLiteDto != null) {
                 long companyRitualSeasonId = companyRitualSeasonLiteDto.getId();
                 applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-                applicantCardDto.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, uin));
+                applicantCardDto.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
                 List<CompanyRitualStepMainDataDto> companyRitualSteps = companyRitualStepService.findByApplicantUin(uin, companyRitualSeasonId);
                 applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
                 List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, companyRitualSeasonId);

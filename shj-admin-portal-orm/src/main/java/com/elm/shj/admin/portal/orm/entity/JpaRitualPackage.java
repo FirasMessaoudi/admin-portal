@@ -37,6 +37,9 @@ public class JpaRitualPackage implements Serializable {
     @Column(name = "departure_city")
     private String departureCity;
 
+    @Column(name = "reference_number")
+    private String referenceNumber;
+
     @Column(name = "country_id")
     private int countryId;
 
@@ -47,9 +50,10 @@ public class JpaRitualPackage implements Serializable {
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 
-    @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "ritualPackage")
-    private List<JpaCompanySeasonPackage> companySeasonPackages;
+    @ManyToOne
+    @JoinColumn(name = "company_ritual_season_id")
+    private JpaCompanyRitualSeason companyRitualSeason;
+
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "ritualPackage")

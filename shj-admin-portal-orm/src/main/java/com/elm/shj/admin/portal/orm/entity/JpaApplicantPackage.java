@@ -45,6 +45,10 @@ public class JpaApplicantPackage implements Serializable {
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
+    private List<JpaApplicantRitual> applicantRituals;
+
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
     private List<JpaApplicantPackageCatering> applicantPackageCaterings;
 
     @LazyCollection(LazyCollectionOption.TRUE)
