@@ -507,3 +507,8 @@ ALTER TABLE shc_portal.shc_applicant_ritual
 GO
 ALTER TABLE shc_portal.shc_company_ritual_step_lk ADD summary VARCHAR(100);
 GO
+
+ALTER TABLE shc_portal.shc_group_applicant_list
+DROP CONSTRAINT group_applicant_list_lk_unique;
+
+GO
