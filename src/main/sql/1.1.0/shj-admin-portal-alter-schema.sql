@@ -511,3 +511,7 @@ GO
 ALTER TABLE shc_portal.shc_print_request
     ADD description NVARCHAR(150) default NULL;
 GO
+ALTER TABLE shc_portal.shc_group_applicant_list
+DROP CONSTRAINT group_applicant_list_lk_unique;
+
+GO
