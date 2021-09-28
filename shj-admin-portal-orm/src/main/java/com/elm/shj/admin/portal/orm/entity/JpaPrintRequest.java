@@ -41,6 +41,8 @@ public class JpaPrintRequest implements Serializable {
     @Column(name = "status_code", nullable = false)
     private String statusCode;
 
+    private String description;
+
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, mappedBy = "printRequest")
     private Set<JpaPrintRequestCard> printRequestCards;

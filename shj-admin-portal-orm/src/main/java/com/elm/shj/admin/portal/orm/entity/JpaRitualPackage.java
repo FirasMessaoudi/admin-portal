@@ -43,7 +43,6 @@ public class JpaRitualPackage implements Serializable {
     @Column(name = "country_id")
     private int countryId;
 
-
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
@@ -66,7 +65,6 @@ public class JpaRitualPackage implements Serializable {
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "ritualPackage")
     private List<JpaPackageTransportation> packageTransportations;
-
 
     @PrePersist
     public void prePersist() {

@@ -430,7 +430,8 @@
     "fawj_number": "Fawj Number",
     "nationality": "Nationality",
     "motawif": "Motawif",
-    "btn_cancel": "Cancel"
+    "btn_cancel": "Cancel",
+    "description": "Description"
   },
   "rule-management": {
     "title": "Decision Rule Management",

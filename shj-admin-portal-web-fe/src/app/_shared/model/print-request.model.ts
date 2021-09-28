@@ -10,4 +10,5 @@ export class PrintRequest {
   creationDate: Date;
   updateDate: Date;
   confirmationDate: Date;
+  description?: string;
 }
