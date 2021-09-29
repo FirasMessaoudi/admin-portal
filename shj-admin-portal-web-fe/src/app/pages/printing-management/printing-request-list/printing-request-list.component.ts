@@ -18,7 +18,7 @@ export class PrintingRequestListComponent implements OnInit {
   public isSearchbarCollapsed = true;
   pageArray: Array<number>;
   page: Page;
-  printRequests: Array<PrintRequestLite>= [];
+  printRequests: Array<PrintRequestLite> = [];
   searchForm: FormGroup;
   printRequestStatuses: Lookup[];
   localizedPrintRequestStatuses: Lookup[];
@@ -30,7 +30,8 @@ export class PrintingRequestListComponent implements OnInit {
               private printService: PrintService,
               private lookupsService: LookupService,
               private i18nService: I18nService,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder) {
+  }
 
   ngOnInit(): void {
 
@@ -41,7 +42,8 @@ export class PrintingRequestListComponent implements OnInit {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
-      statusCode: [null]
+      statusCode: [null],
+      description: ['']
     });
   }
 
@@ -85,16 +87,9 @@ export class PrintingRequestListComponent implements OnInit {
   }
 
   loadPage(page: number) {
-    if (!this.searchForm.value.statusCode) {
-      this.listSubscription = this.printService.list(page).subscribe(data => {
-        this.fillPageWithData(data);
-      })
-    } else {
-      this.searchSubscription = this.printService.listFiltered(page, this.searchForm.value).subscribe(data => {
-        this.fillPageWithData(data);
-
-      });
-    }
+    this.searchSubscription = this.printService.listFiltered(page, this.searchForm.value).subscribe(data => {
+      this.fillPageWithData(data);
+    });
 
   }
 
