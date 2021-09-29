@@ -38,10 +38,8 @@
         <span class="form-control-plaintext "><span
           class="status mr-1 done"></span> {{printRequest?.statusCode ? lookupService().localizedLabel(printRequestStatuses, printRequest?.statusCode) : ''}}</span>
       </div>
-    </div>
-
-    <div class="cardBox" *ngIf="printRequest?.description">
-      <div class="form-group col mb-0">
+      <div class="form-group col-lg-12 mt-lg-2 mb-lg-0" *ngIf="printRequest?.description">
+        <label class="col-form-label">{{'printing-management.description' | translate}}</label>
         <span class="form-control-plaintext ">{{printRequest?.description}}</span>
       </div>
     </div>

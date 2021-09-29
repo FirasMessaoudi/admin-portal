@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
- * Repository for print request request lite.
+ * Repository for print request lite.
  * The JpaSpecificationExecutor interface adds methods which allow the execution of Specifications.
  *
  * @author Slim Ben Hadj
