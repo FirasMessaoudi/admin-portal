@@ -1,7 +1,7 @@
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeason;
-import com.elm.shj.admin.portal.orm.repository.CompanyRitualSeasonRepository;
+import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeasonLite;
+import com.elm.shj.admin.portal.orm.repository.CompanyRitualSeasonLiteRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualSeasonLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -21,18 +21,18 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class CompanyRitualSeasonLiteService extends GenericService<JpaCompanyRitualSeason, CompanyRitualSeasonLiteDto, Long> {
+public class CompanyRitualSeasonLiteService extends GenericService<JpaCompanyRitualSeasonLite, CompanyRitualSeasonLiteDto, Long> {
 
-    private final CompanyRitualSeasonRepository companyRitualSeasonRepository;
+    private final CompanyRitualSeasonLiteRepository companyRitualSeasonRepository;
 
 
     public CompanyRitualSeasonLiteDto getLatestCompanyRitualSeasonByApplicantUin(long applicantUin) {
-        JpaCompanyRitualSeason companyRitualSeason = companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(applicantUin);
+        JpaCompanyRitualSeasonLite companyRitualSeason = companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(applicantUin);
         return getMapper().fromEntity(companyRitualSeason, mappingContext);
     }
 
     public List<CompanyRitualSeasonLiteDto> getListCompanyRitualSeasonByApplicantUin(long applicantUin) {
-        List<JpaCompanyRitualSeason> companyRitualSeasons = companyRitualSeasonRepository.findAllByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(applicantUin);
+        List<JpaCompanyRitualSeasonLite> companyRitualSeasons = companyRitualSeasonRepository.findAllByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(applicantUin);
         return getMapper().fromEntityList(companyRitualSeasons, mappingContext);
     }
 

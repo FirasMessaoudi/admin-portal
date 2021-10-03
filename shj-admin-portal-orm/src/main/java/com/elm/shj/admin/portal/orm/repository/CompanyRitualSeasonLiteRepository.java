@@ -1,0 +1,20 @@
+package com.elm.shj.admin.portal.orm.repository;
+
+import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeasonLite;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+/**
+ * Repository for Company Ritual Season data.
+ *
+ * @author Ahmed Elsayed
+ * @since 1.1.0
+ **/
+public interface CompanyRitualSeasonLiteRepository extends JpaRepository<JpaCompanyRitualSeasonLite, Long> {
+
+    JpaCompanyRitualSeasonLite findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(long applicantUin);
+
+    List<JpaCompanyRitualSeasonLite> findAllByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(long applicantUin);
+
+}
