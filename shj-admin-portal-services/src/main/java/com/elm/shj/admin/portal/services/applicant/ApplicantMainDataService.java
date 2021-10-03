@@ -5,10 +5,8 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantMainData;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantMainDataRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantContactDtoMapper;
-import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantMainDataDtoMapper;
-import com.elm.shj.admin.portal.services.dto.ApplicantRelativeDtoMapper;
+import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +32,9 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
     private final ApplicantRelativeDtoMapper applicantRelativeDtoMapper;
     private final ApplicantContactDtoMapper applicantContactDtoMapper;
     private final ApplicantMainDataDtoMapper applicantMainDataDtoMapper;
+    private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
+    private final ApplicantRitualRepository applicantRitualRepository;
+
 
     /**
      * Finds an applicant by his uin
@@ -42,29 +43,34 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
      * @return the found applicant or empty structure
      */
     @Transactional
-    public Optional<ApplicantMainDataDto> findByUin(String uin, long ritualId) {
+    public Optional<ApplicantMainDataDto> findByUin(String uin, long companyRitualSeasonId) {
         JpaApplicantMainData applicant = applicantMainDataRepository.findByUin(uin);
         if (applicant != null) {
             ApplicantMainDataDto applicantMainDataDto = applicantMainDataDtoMapper.fromEntity(applicant, mappingContext);
 
             applicantMainDataDto.setUin(uin);
 
-            if (applicant.getRituals() != null && !applicant.getRituals().isEmpty()) {
-                Optional<JpaApplicantRitual> ritualOptional = applicant.getRituals().stream().filter(ritual -> ritual.getId() == ritualId).findFirst();
+            CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.findOne(companyRitualSeasonId);
 
-                if (ritualOptional.isPresent()) {
-                    JpaApplicantRitual applicantRitual = ritualOptional.get();
-                    applicantMainDataDto.setRitualTypeCode(applicantRitual.getTypeCode());
+            if (companyRitualSeasonLiteDto != null) {
+                applicantMainDataDto.setRitualTypeCode(companyRitualSeasonLiteDto.getRitualSeason().getRitualTypeCode());
+
+                JpaApplicantRitual applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(uin, companyRitualSeasonLiteDto.getId());
+                if (applicantRitual != null) {
                     applicantMainDataDto.setRelatives(applicantRelativeDtoMapper.fromEntityList(applicantRitual.getRelatives(), mappingContext));
                     applicantMainDataDto.setContacts(applicantContactDtoMapper.fromEntityList(applicantRitual.getContacts(), mappingContext));
+
+
+                    JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualId(applicantRitual.getId());
+                    if (jpaApplicantCard != null) {
+                        applicantMainDataDto.setCardReferenceNumber(jpaApplicantCard.getReferenceNumber());
+                        applicantMainDataDto.setCardStatusCode(jpaApplicantCard.getStatusCode());
+                    }
+
                 }
 
-                JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualId(ritualId);
-                if (jpaApplicantCard != null) {
-                    applicantMainDataDto.setCardReferenceNumber(jpaApplicantCard.getReferenceNumber());
-                    applicantMainDataDto.setCardStatusCode(jpaApplicantCard.getStatusCode());
-                }
             }
+
             return Optional.of(applicantMainDataDto);
         } else return Optional.empty();
     }

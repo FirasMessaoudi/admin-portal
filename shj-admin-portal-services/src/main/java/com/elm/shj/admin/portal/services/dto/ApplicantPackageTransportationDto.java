@@ -4,8 +4,8 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,11 +17,13 @@ import java.util.Date;
  * @since 1.1.0
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ApplicantPackageTransportationDto implements Serializable {
     private static final long serialVersionUID = -8137564418002673291L;
 
+    public ApplicantPackageTransportationDto() {
+    }
     private long id;
     private String seatNumber;
     private String wagonNumber;

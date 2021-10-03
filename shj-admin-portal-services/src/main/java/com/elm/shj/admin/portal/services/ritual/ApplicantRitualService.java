@@ -11,8 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service handling applicant rituals
@@ -36,14 +38,23 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
         return mapList(((ApplicantRitualRepository) getRepository()).findAllApplicantRitualsWithoutCard());
     }
 
-    /**
-     * Find hijriSeasons by uin
-     *
-     * @return the list of hijriSeasons
-     */
-    public List<Integer> findHijriSeasonsByUin(String uin) {
-        return applicantRitualRepository.findApplicantRitualHijriSeasonsByUin(uin);
+    public ApplicantRitualDto findByApplicantUinAndCompanyRitualSeasonId(String uin, Long companyRitualSeasonId) {
+        JpaApplicantRitual applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(uin, companyRitualSeasonId);
+        return getMapper().fromEntity(applicantRitual, mappingContext);
     }
 
+    @Transactional
+    public ApplicantRitualDto findApplicantRitualWithContactsAndRelatives(Long applicantRitualId) {
+        Optional<JpaApplicantRitual> applicantRitualOptional = applicantRitualRepository.findById(applicantRitualId);
+        if (applicantRitualOptional.isPresent()) {
+            JpaApplicantRitual applicantRitual = applicantRitualOptional.get();
+            applicantRitual.getContacts().size();
+            applicantRitual.getRelatives().size();
+            applicantRitual.getApplicantHealths().size();
+            return getMapper().fromEntity(applicantRitual, mappingContext);
+        }
+
+        return null;
+    }
 
 }

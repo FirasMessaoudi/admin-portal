@@ -96,6 +96,11 @@ public class ApplicantDto implements Serializable {
     @CellIndex(index = 14)
     private String educationLevelCode;
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @WithRitualPackage
+    @CellIndex(index = 25)
+    private String packageReferenceNumber;
+
     private DataRequestRecordDto dataRequestRecord;
     private List<ApplicantDigitalIdDto> digitalIds;
     private List<ApplicantRelativeDto> relatives;

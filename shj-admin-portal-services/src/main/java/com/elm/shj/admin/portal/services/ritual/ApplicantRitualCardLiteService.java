@@ -5,7 +5,9 @@ package com.elm.shj.admin.portal.services.ritual;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
+import com.elm.shj.admin.portal.services.applicant.CompanyRitualSeasonLiteService;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
+import com.elm.shj.admin.portal.services.dto.CompanyRitualSeasonLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +28,21 @@ import java.util.Optional;
 public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantRitual, ApplicantRitualCardLiteDto, Long> {
 
     private final ApplicantRitualRepository applicantRitualRepository;
+    private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
 
-    public Optional<ApplicantRitualCardLiteDto> findCardDetailsByUinAndRitualId(String uin, String ritualId) {
-        JpaApplicantRitual card = applicantRitualRepository.findCardDetailsByUinAndRitualId(uin, Long.parseLong(ritualId));
+    public Optional<ApplicantRitualCardLiteDto> findCardDetailsByUinAndRitualId(String uin, String companyRitualSeasonId) {
+
+        CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.findOne(Long.parseLong(companyRitualSeasonId));
+
+        if (companyRitualSeasonLiteDto == null) {
+            return Optional.empty();
+        }
+
+        JpaApplicantRitual card = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(uin, Long.parseLong(companyRitualSeasonId));
         if (card == null)
             return Optional.empty();
         ApplicantRitualCardLiteDto returnedDto = getMapper().fromEntity(card, mappingContext);
-        returnedDto.setRitualType(card.getTypeCode().toUpperCase());
+        returnedDto.setRitualType(companyRitualSeasonLiteDto.getRitualSeason().getRitualTypeCode().toUpperCase());
         returnedDto.setFullNameEn(card.getApplicant().getFullNameEn());
         returnedDto.setFullNameAr(card.getApplicant().getFullNameAr());
         returnedDto.setNationalityCode(card.getApplicant().getNationalityCode().toUpperCase());

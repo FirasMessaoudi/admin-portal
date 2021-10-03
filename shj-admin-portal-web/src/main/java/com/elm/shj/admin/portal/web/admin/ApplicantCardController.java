@@ -7,9 +7,11 @@ import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +44,7 @@ public class ApplicantCardController {
     private final CompanyLiteService companyLiteService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
     private final CompanyRitualStepMainDataService companyRitualStepService;
+    private final ApplicantRitualService applicantRitualService;
     private static final String APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG = "no card details found for applicant with this uin";
     private static final int CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
 
@@ -122,12 +125,24 @@ public class ApplicantCardController {
     public ApplicantCardDto findApplicantCard(@PathVariable long cardId) {
         log.debug("Handler for {}", "Find Applicant Card");
         ApplicantCardDto applicantCardDto = applicantCardService.findOne(cardId);
+
+        ApplicantRitualDto applicantRitualDto = applicantRitualService.findApplicantRitualWithContactsAndRelatives(applicantCardDto.getApplicantRitual().getId());
+
+        applicantCardDto.setApplicantRitual(applicantRitualDto);
+        applicantCardDto.getApplicantRitual().getApplicant().setContacts(applicantRitualDto.getContacts());
+        applicantCardDto.getApplicantRitual().getApplicant().setRelatives(applicantRitualDto.getRelatives());
+
+        if (CollectionUtils.isNotEmpty(applicantRitualDto.getApplicantHealths())) {
+            applicantCardDto.getApplicantRitual().getApplicant().setApplicantHealth(applicantRitualDto.getApplicantHealths().get(0));
+        }
         List<ApplicantDigitalIdDto> digitalIds = applicantCardDto.getApplicantRitual().getApplicant().getDigitalIds();
         if (digitalIds.size() > 0) {
 
             String uin = digitalIds.get(0).getUin();
             CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(Long.parseLong(uin));
             if (companyRitualSeasonLiteDto != null) {
+                applicantCardDto.getApplicantRitual().setTypeCode(companyRitualSeasonLiteDto.getRitualSeason().getRitualTypeCode());
+
                 long companyRitualSeasonId = companyRitualSeasonLiteDto.getId();
                 applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));

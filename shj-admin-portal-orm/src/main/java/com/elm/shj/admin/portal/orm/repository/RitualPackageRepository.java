@@ -1,8 +1,9 @@
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.JpaPackageHousing;
 import com.elm.shj.admin.portal.orm.entity.JpaRitualPackage;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
 
 /**
  * Repository for Ritual Package
@@ -13,4 +14,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface RitualPackageRepository extends JpaRepository<JpaRitualPackage, Long> {
 
 
+    Optional<JpaRitualPackage> findByReferenceNumber(String referenceNumber);
 }

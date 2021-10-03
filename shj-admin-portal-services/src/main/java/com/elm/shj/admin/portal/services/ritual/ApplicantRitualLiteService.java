@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * Service handling applicant rituals
  *
@@ -27,12 +25,5 @@ public class ApplicantRitualLiteService extends GenericService<JpaApplicantRitua
 
     private final ApplicantRitualRepository applicantRitualRepository;
 
-    public List<ApplicantRitualLiteDto> findApplicantRitualByUinAndSeason(String uin, int season) {
-        return getMapper().fromEntityList(applicantRitualRepository.findApplicantRitualByUinAndSeason(uin, season), mappingContext);
-    }
-
-    public ApplicantRitualLiteDto findLatestApplicantRitualByUin(String uin) {
-        return getMapper().fromEntity(applicantRitualRepository.findTopByApplicantDigitalIdsUinOrderByDateStartHijriDesc(uin), mappingContext);
-    }
 
 }

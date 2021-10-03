@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -63,4 +64,13 @@ public class ApplicantRelativeDto implements Serializable {
     @HijriDate(minOffset = -140, maxOffset = -11)
     @CellIndex(index = 7)
     private long relativeDateOfBirthHijri;
+
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @WithRitualPackage
+    @OnlyCharacters(min = 1, max = 16, allowNumbers = true, allowEmpty = false)
+    @CellIndex(index = 9)
+    private String packageReferenceNumber;
+
+    @JsonBackReference(value = "applicantRitual")
+    private ApplicantRitualDto applicantRitual;
 }

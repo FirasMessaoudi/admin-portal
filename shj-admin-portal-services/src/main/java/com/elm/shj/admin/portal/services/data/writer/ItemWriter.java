@@ -6,10 +6,11 @@ package com.elm.shj.admin.portal.services.data.writer;
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthSpecialNeeds;
 import com.elm.shj.admin.portal.orm.repository.*;
-import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
-import com.elm.shj.admin.portal.services.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
@@ -26,12 +27,12 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.time.*;
+import java.time.LocalDate;
 import java.time.chrono.HijrahChronology;
 import java.time.chrono.HijrahDate;
-import java.util.Calendar;
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * Generic Item writer to save read items based on their data segment
  *
@@ -52,7 +53,13 @@ public class ItemWriter {
     private final ApplicationContext context;
     private final ApplicantService applicantService;
     private final ApplicantHealthRepository applicantHealthRepository;
+    private final ApplicantHealthSpecialNeedsRepository applicantHealthSpecialNeedsRepository;
     private final DataRequestRecordRepository dataRequestRecordRepository;
+    private final DigitalIdService digitalIdService;
+    private final ApplicantPackageService applicantPackageService;
+    private final RitualPackageService ritualPackageService;
+    private final ApplicantPackageTransportationService applicantPackageTransportationService;
+    private final GroupApplicantListService groupApplicantListService;
 
     /**
      * Populates the registry
@@ -151,37 +158,39 @@ public class ItemWriter {
             // if record exists already in DB we need to update it
             if (existingApplicant != null) {
                 applicant.setId(existingApplicant.getId());
+                applicant.setDigitalIds(existingApplicant.getDigitalIds());
+            } else {
+                applicant.setDigitalIds(Arrays.asList(ApplicantDigitalIdDto.builder().uin(digitalIdService.generate(applicant)).applicant(applicant).build()));
             }
+
+            Long applicantUin = Long.parseLong(applicant.getDigitalIds().get(0).getUin());
+
+            ApplicantRitualDto applicantRitualDto = addRitualPackageToApplicant(applicant, applicantUin, applicant.getPackageReferenceNumber(), null, null);
+
+
+            applicant.setRituals(Arrays.asList(applicantRitualDto));
+
             if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
-                applicant.getContacts().forEach(sn -> sn.setApplicant(applicant));
+                applicant.getContacts().forEach(sn -> {
+                    sn.setApplicant(applicant);
+                    sn.setApplicantRitual(applicantRitualDto);
+                });
             }
             // digital id will bw generated automatically by the scheduler
         }
-        // Special treatment for ApplicantHealthDto and special needs as they come in the same sheet
-        if (item != null && item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
-            ApplicantHealthDto applicantHealth = (ApplicantHealthDto) item;
-            if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
-                // get the special needs and if it is a list then create a list of special needs dtos
-                applicantHealth.setSpecialNeeds(Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
-                        ApplicantHealthSpecialNeedsDto.builder().applicantHealth(applicantHealth).specialNeedTypeCode(sn).build()
-                ).collect(Collectors.toList()));
-            }
-        }
+
         // special treatment for applicant relative
         if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
             ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
             applicantRelative.setRelativeApplicant(applicantService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative)));
         }
-        // Special treatment for ApplicantRitualDto and special needs as they come in the same sheet
-        if (item != null && item.getClass().isAssignableFrom(ApplicantRitualDto.class)) {
-            ApplicantRitualDto applicantRitual = (ApplicantRitualDto) item;
-            long ritualDateStartHijri = applicantRitual.getDateStartHijri() != null ? applicantRitual.getDateStartHijri() : DateUtils.toHijri(applicantRitual.getDateStartGregorian());
-            applicantRitual.setHijriSeason(Integer.parseInt(Long.toString(ritualDateStartHijri).substring(0, 4)));
-        }
 
         Field applicantBasicInfoField = ReflectionUtils.findField(item.getClass(), "applicantBasicInfo");
         Field applicantHealthField = ReflectionUtils.findField(item.getClass(), "applicantHealth");
         Field applicantField = ReflectionUtils.findField(item.getClass(), "applicant");
+        Field packageReferenceNumberField = ReflectionUtils.findField(item.getClass(), "packageReferenceNumber");
+        Field applicantRitualField = ReflectionUtils.findField(item.getClass(), "applicantRitual");
+
         if (item == null || applicantBasicInfoField == null || (applicantField == null && applicantHealthField == null)) {
             return;
         }
@@ -193,27 +202,175 @@ public class ItemWriter {
             // search applicant by his basic info from the database
             ApplicantDto applicant = applicantService.findByBasicInfo(applicantBasicInfo);
             if (applicant != null) {
-                ApplicantHealthDto applicantHealth = applicant.getApplicantHealth() == null ? new ApplicantHealthDto() : applicant.getApplicantHealth();
+
 
                 if (applicantField != null) {
                     // make fields accessible
                     ReflectionUtils.makeAccessible(applicantField);
                     // set the found applicant into the object
                     applicantField.set(item, applicant);
+
                 }
-                if (applicantHealthField != null) {
-                    // make fields accessible
-                    ReflectionUtils.makeAccessible(applicantHealthField);
-                    applicantHealth.setApplicant(applicant);
-                    IGenericMapper<ApplicantHealthDto, JpaApplicantHealth> mapper = findMapper(ApplicantHealthDto.class);
-                    applicantHealth = mapper.fromEntity(applicantHealthRepository.save(mapper.toEntity(applicantHealth, mappingContext)), mappingContext);
-                    // set the found applicant health into the object
-                    applicantHealthField.set(item, applicantHealth);
+
+                if (packageReferenceNumberField != null) {
+
+                    String seatNumber = null;
+                    String busNumber = null;
+
+                    Field busNumberField = ReflectionUtils.findField(item.getClass(), "busNumber");
+                    Field seatNumberField = ReflectionUtils.findField(item.getClass(), "seatNumber");
+
+                    if (busNumberField != null) {
+                        ReflectionUtils.makeAccessible(busNumberField);
+                        busNumber = (String) busNumberField.get(item);
+                    }
+
+                    if (seatNumberField != null) {
+                        ReflectionUtils.makeAccessible(seatNumberField);
+                        seatNumber = (String) seatNumberField.get(item);
+                    }
+
+                    ReflectionUtils.makeAccessible(packageReferenceNumberField);
+                    String packageReferenceNumber = (String) packageReferenceNumberField.get(item);
+                    Long applicantUin = Long.parseLong(applicant.getDigitalIds().get(0).getUin());
+                    ApplicantRitualDto generatedApplicantRitual = addRitualPackageToApplicant(applicant, applicantUin, packageReferenceNumber, busNumber, seatNumber);
+
+                    if (item.getClass().isAssignableFrom(ApplicantRitualDto.class)) {
+
+                        ApplicantRitualDto applicantRitual = (ApplicantRitualDto) item;
+                        applicantRitual.setId(generatedApplicantRitual.getId());
+                        applicantRitual.setApplicantPackage(generatedApplicantRitual.getApplicantPackage());
+                        applicantRitual.setCreationDate(generatedApplicantRitual.getCreationDate());
+
+                        if (applicantRitual.getGroupReferenceNumber() != null) {
+                            groupApplicantListService.registerUserToGroup(applicantUin.toString(), applicantRitual.getGroupReferenceNumber());
+                        }
+                    }
+
+                    if (applicantRitualField != null) {
+                        ReflectionUtils.makeAccessible(applicantRitualField);
+                        applicantRitualField.set(item, generatedApplicantRitual);
+                    }
+
+                    if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
+                        ApplicantHealthDto curApplicantHealth = (ApplicantHealthDto) item;
+                        JpaApplicantHealth jpaApplicantHealth = applicantHealthRepository.findByUinAndRitualId(applicantUin.toString(), generatedApplicantRitual.getId());
+                        if (jpaApplicantHealth != null) {
+                            curApplicantHealth.setId(jpaApplicantHealth.getId());
+                            if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
+                                // get the special needs and if it is a list then create a list of special needs dtos
+                                List<ApplicantHealthSpecialNeedsDto> applicantHealthSpecialNeeds = Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
+                                        ApplicantHealthSpecialNeedsDto.builder().applicantHealth(ApplicantHealthDto.builder().id(curApplicantHealth.getId()).build()).specialNeedTypeCode(sn).build()
+                                ).collect(Collectors.toList());
+                                IGenericMapper<ApplicantHealthSpecialNeedsDto, JpaApplicantHealthSpecialNeeds> mapper = findMapper(ApplicantHealthSpecialNeedsDto.class);
+                                applicantHealthSpecialNeedsRepository.saveAll(mapper.toEntityList(applicantHealthSpecialNeeds, mappingContext));
+                                curApplicantHealth.setSpecialNeeds(null);
+                                curApplicantHealth.setCreationDate(jpaApplicantHealth.getCreationDate());
+                            }
+
+                        } else {
+                            if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
+                                // get the special needs and if it is a list then create a list of special needs dtos
+                                curApplicantHealth.setSpecialNeeds(Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
+                                        ApplicantHealthSpecialNeedsDto.builder().applicantHealth(curApplicantHealth).specialNeedTypeCode(sn).build()
+                                ).collect(Collectors.toList()));
+                            }
+                        }
+
+                    }
+                    if (applicantHealthField != null) {
+                        ApplicantHealthDto applicantHealth = null;
+                        JpaApplicantHealth jpaApplicantHealth = applicantHealthRepository.findByUinAndRitualId(applicantUin.toString(), generatedApplicantRitual.getId());
+
+                        IGenericMapper<ApplicantHealthDto, JpaApplicantHealth> mapper = findMapper(ApplicantHealthDto.class);
+                        if (jpaApplicantHealth != null) {
+                            applicantHealth = mapper.fromEntity(jpaApplicantHealth, mappingContext);
+
+                        } else {
+                            applicantHealth = ApplicantHealthDto.builder().applicantRitual(generatedApplicantRitual).applicant(applicant).build();
+                            applicantHealth = mapper.fromEntity(applicantHealthRepository.save(mapper.toEntity(applicantHealth, mappingContext)), mappingContext);
+                        }
+                        // make fields accessible
+                        ReflectionUtils.makeAccessible(applicantHealthField);
+
+                        // set the found applicant health into the object
+                        applicantHealthField.set(item, applicantHealth);
+                    }
                 }
+
             }
         } catch (IllegalAccessException e) {
             ReflectionUtils.handleReflectionException(e);
         }
+    }
+
+    private ApplicantRitualDto addRitualPackageToApplicant(ApplicantDto applicant, Long applicantUin, String packageReferenceNumber, String busNumber, String seatNumber) {
+
+        ApplicantPackageDto applicantPackageDto = applicantPackageService.findApplicantPackageByUinAndReferenceNumber(applicantUin, packageReferenceNumber);
+        ApplicantRitualDto applicantRitualDto = null;
+
+        if (applicantPackageDto != null) {
+            if (CollectionUtils.isNotEmpty(applicantPackageDto.getApplicantPackageTransportations()) && (busNumber != null || seatNumber != null)) {
+                ApplicantPackageDto finalApplicantPackageDto1 = applicantPackageDto;
+//                applicantPackageDto.getApplicantPackageTransportations().forEach(pt->{
+//                    pt.setSeatNumber(seatNumber);
+//                    pt.setVehicleNumber(busNumber);
+//                    pt.setApplicantPackage(ApplicantPackageDto.builder().id(finalApplicantPackageDto1.getId()).build());
+//
+//                });
+
+                List<ApplicantPackageTransportationDto> applicantPackageTransportations = applicantPackageDto.getApplicantPackageTransportations().stream().map(pt ->
+                        ApplicantPackageTransportationDto.builder().id(pt.getId()).creationDate(pt.getCreationDate()).packageTransportation(PackageTransportationDto.builder().id(pt.getPackageTransportation().getId()).build())
+                                .applicantPackage(ApplicantPackageDto.builder().id(finalApplicantPackageDto1.getId()).build()).vehicleNumber(busNumber).seatNumber(seatNumber).build()
+                ).collect(Collectors.toList());
+
+                applicantPackageTransportationService.saveAll(applicantPackageTransportations);
+            }
+            if (applicantPackageDto.getApplicantRituals() != null && !applicantPackageDto.getApplicantRituals().isEmpty()) {
+                applicantRitualDto = applicantPackageDto.getApplicantRituals().get(0);
+            } else {
+                applicantRitualDto = ApplicantRitualDto.builder().applicantPackage(applicantPackageDto).applicant(applicant).build();
+            }
+        } else {
+            RitualPackageDto ritualPackage = ritualPackageService.findRitualPackageByReferenceNumber(packageReferenceNumber);
+            List<ApplicantPackageHousingDto> applicantPackageHousings = null;
+            List<ApplicantPackageCateringDto> applicantPackageCaterings = new ArrayList<>();
+            List<ApplicantPackageTransportationDto> applicantPackageTransportations = null;
+
+            applicantPackageDto = ApplicantPackageDto.builder().applicantUin(applicantUin).ritualPackage(RitualPackageDto.builder().id(ritualPackage.getId()).build()).build();
+
+            ApplicantPackageDto finalApplicantPackageDto = applicantPackageDto;
+
+            if (CollectionUtils.isNotEmpty(ritualPackage.getPackageHousings())) {
+                applicantPackageHousings = ritualPackage.getPackageHousings().stream().map(ph ->
+                        ApplicantPackageHousingDto.builder().packageHousing(PackageHousingDto.builder().id(ph.getId()).build()).applicantPackage(finalApplicantPackageDto).build()
+                ).collect(Collectors.toList());
+
+                ritualPackage.getPackageHousings().forEach(ph -> {
+                    if (CollectionUtils.isNotEmpty(ph.getPackageCatering())) {
+                        applicantPackageCaterings.addAll(ph.getPackageCatering().stream().map(pc ->
+                                ApplicantPackageCateringDto.builder().packageCatering(PackageCateringDto.builder().id(pc.getId()).build()).applicantPackage(finalApplicantPackageDto).build()
+                        ).collect(Collectors.toList()));
+                    }
+                });
+            }
+
+            if (CollectionUtils.isNotEmpty(ritualPackage.getPackageTransportations())) {
+                applicantPackageTransportations = ritualPackage.getPackageTransportations().stream().map(pt ->
+                        ApplicantPackageTransportationDto.builder().packageTransportation(PackageTransportationDto.builder().id(pt.getId()).build())
+                                .applicantPackage(finalApplicantPackageDto).vehicleNumber(busNumber).seatNumber(seatNumber).build()
+                ).collect(Collectors.toList());
+            }
+            finalApplicantPackageDto.setApplicantPackageCaterings(applicantPackageCaterings);
+            finalApplicantPackageDto.setApplicantPackageHousings(applicantPackageHousings);
+            finalApplicantPackageDto.setApplicantPackageTransportations(applicantPackageTransportations);
+
+            applicantPackageDto = applicantPackageService.save(finalApplicantPackageDto);
+
+            applicantRitualDto = ApplicantRitualDto.builder().applicantPackage(applicantPackageDto).applicant(applicant).build();
+        }
+
+        return applicantRitualDto;
     }
 
     /**

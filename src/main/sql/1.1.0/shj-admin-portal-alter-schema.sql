@@ -512,3 +512,71 @@ ALTER TABLE shc_portal.shc_group_applicant_list
 DROP CONSTRAINT group_applicant_list_lk_unique;
 
 GO
+
+alter table shc_portal.shc_applicant_ritual
+drop column hamlah_package_code
+go
+
+alter table shc_portal.shc_applicant_ritual
+drop column tafweej_code
+go
+
+
+alter table shc_portal.shc_applicant_ritual
+drop column hijri_season
+go
+
+
+alter table shc_portal.shc_applicant_ritual
+drop column date_start_gregorian
+go
+
+
+alter table shc_portal.shc_applicant_ritual
+drop column date_end_gregorian
+go
+
+alter table shc_portal.shc_applicant_ritual
+drop column date_start_hijri
+go
+
+
+alter table shc_portal.shc_applicant_ritual
+drop column date_end_hijri
+go
+
+
+alter table shc_portal.shc_applicant_ritual
+drop column type_code
+go
+
+alter table shc_portal.shc_applicant_ritual alter column permit_number varchar(50) null
+go
+
+alter table shc_portal.shc_applicant_ritual alter column insurance_number varchar(50) null
+go
+
+
+alter table shc_portal.shc_applicant_ritual
+drop column zone_code
+go
+
+
+alter table shc_portal.shc_applicant_ritual
+drop column group_code
+go
+
+
+alter table shc_portal.shc_applicant_ritual
+drop column unit_code
+go
+
+
+alter table shc_portal.shc_applicant_ritual
+drop column bus_number
+go
+
+
+alter table shc_portal.shc_applicant_ritual
+drop column seat_number
+go

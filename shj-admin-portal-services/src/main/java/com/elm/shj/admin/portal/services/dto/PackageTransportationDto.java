@@ -5,8 +5,8 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -19,12 +19,15 @@ import java.util.List;
  * @since 1.1.0
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PackageTransportationDto implements Serializable {
 
 
     private static final long serialVersionUID = 2025548600075831276L;
+
+    public PackageTransportationDto(){
+    }
     private long id;
     private String typeCode;
     private String locationFromNameAr;
