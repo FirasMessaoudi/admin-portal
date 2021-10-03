@@ -38,6 +38,10 @@
         <span class="form-control-plaintext "><span
           class="status mr-1 done"></span> {{printRequest?.statusCode ? lookupService().localizedLabel(printRequestStatuses, printRequest?.statusCode) : ''}}</span>
       </div>
+      <div class="form-group col-lg-12 mt-lg-2 mb-lg-0" *ngIf="printRequest?.description">
+        <label class="col-form-label">{{'printing-management.description' | translate}}</label>
+        <span class="form-control-plaintext ">{{printRequest?.description}}</span>
+      </div>
     </div>
 
     <div class="mt-5 d-flex">
@@ -91,19 +95,28 @@
             <td class="nameCol" style="width: 50%">
               <a *ngIf="canSeeCardDetails" [routerLink]="['/cards/details', batchCard?.card?.id]" target="_blank"
                  class="text-dcc-primary font-weight-bold">
-                <span *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}<br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}</span>
-                <span *ngIf="currentLanguage.startsWith('en')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}<br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}</span>
+                <span
+                  *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}
+                  <br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}</span>
+                <span
+                  *ngIf="currentLanguage.startsWith('en')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
+                  <br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}</span>
               </a>
               <p *ngIf="!canSeeCardDetails" class=" font-weight-bold">
-                <span *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}<br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}</span>
-                <span *ngIf="currentLanguage.startsWith('en')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}<br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}</span>
+                <span
+                  *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}
+                  <br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}</span>
+                <span
+                  *ngIf="currentLanguage.startsWith('en')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
+                  <br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}</span>
               </p>
             </td>
             <td class="ltr" style="width: 10%">{{batchCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
             <td class="ltr" style="width: 10%">{{batchCard?.card?.applicantRitual?.applicant?.idNumber}}</td>
             <td class="ltr" style="width: 10%">{{batchCard?.card?.referenceNumber}}</td>
             <td class="ltr" style="width: 10%">{{batchCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
-            <td class="ltr" style="width: 10%">{{lookupService().localizedLabel(cardStatuses, batchCard?.card?.statusCode)}}</td>
+            <td class="ltr"
+                style="width: 10%">{{lookupService().localizedLabel(cardStatuses, batchCard?.card?.statusCode)}}</td>
           </tr>
           </tbody>
         </ng-template>

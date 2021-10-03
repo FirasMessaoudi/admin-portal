@@ -16,5 +16,8 @@ import java.io.Serializable;
 @Data
 public class PrintRequestFilterVo implements Serializable {
 
+    private static final long serialVersionUID = -8483791293043657948L;
+
     private String statusCode;
+    private String description;
 }

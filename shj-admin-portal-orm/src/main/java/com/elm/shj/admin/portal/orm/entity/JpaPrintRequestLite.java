@@ -33,6 +33,8 @@ public class JpaPrintRequestLite implements Serializable {
     @Column(name = "reference_number")
     private String referenceNumber;
 
+    private String description;
+
     @Column(name = "status_code", nullable = false)
     private String statusCode;
 

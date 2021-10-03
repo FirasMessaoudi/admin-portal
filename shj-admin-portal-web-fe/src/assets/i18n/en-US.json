@@ -111,7 +111,8 @@
     "select-year": "Select year",
     "select-month": "Select month",
     "previous-month": "Previous month",
-    "next-month": "Next month"
+    "next-month": "Next month",
+    "operations": "operations"
   },
 
   "header": {

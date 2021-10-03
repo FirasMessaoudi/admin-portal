@@ -503,11 +503,14 @@ ALTER TABLE shc_portal.shc_ritual_package
 ALTER TABLE shc_portal.shc_applicant_ritual
     ADD applicant_package_id int NULL
         CONSTRAINT fk_shc_applicant_ritual_applicant_package FOREIGN KEY (applicant_package_id) REFERENCES shc_portal.shc_applicant_package (id);
-
 GO
+
 ALTER TABLE shc_portal.shc_company_ritual_step_lk ADD summary VARCHAR(100);
 GO
 
+ALTER TABLE shc_portal.shc_print_request
+    ADD description NVARCHAR(150) default NULL;
+GO
 ALTER TABLE shc_portal.shc_group_applicant_list
 DROP CONSTRAINT group_applicant_list_lk_unique;
 
