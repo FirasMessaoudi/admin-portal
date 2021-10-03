@@ -5,7 +5,6 @@ package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -37,39 +36,6 @@ public class JpaApplicantRitual implements Serializable {
     @ManyToOne
     private JpaApplicant applicant;
 
-    @Column(name = "hamlah_package_code")
-    private String hamlahPackageCode;
-
-    @Column(name = "tafweej_code")
-    private String tafweejCode;
-
-    @Column(name = "zone_code")
-    private String zoneCode;
-
-    @Column(name = "group_code")
-    private String groupCode;
-
-    @Column(name = "unit_code")
-    private String unitCode;
-
-    @Column(name = "hijri_season")
-    private int hijriSeason;
-
-    @Column(name = "date_start_gregorian")
-    private Date dateStartGregorian;
-
-    @Column(name = "date_end_gregorian")
-    private Date dateEndGregorian;
-
-    @Column(name = "date_start_hijri")
-    private Long dateStartHijri;
-
-    @Column(name = "date_end_hijri")
-    private Long dateEndHijri;
-
-    @Column(name = "type_code")
-    private String typeCode;
-
     @Column(name = "visa_number")
     private String visaNumber;
 
@@ -81,10 +47,8 @@ public class JpaApplicantRitual implements Serializable {
 
     @Column(name = "border_number")
     private String borderNumber;
-    @Column(name = "bus_number")
-    private String busNumber;
-    @Column(name = "seat_number")
-    private String seatNumber;
+
+
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
@@ -100,27 +64,26 @@ public class JpaApplicantRitual implements Serializable {
     private JpaApplicantPackage  applicantPackage;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantRitual")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "applicantRitual")
     private List<JpaApplicantRelative> relatives;
 
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "applicantRitual")
+    @OneToMany(cascade = CascadeType.ALL,  mappedBy = "applicantRitual")
     private List<JpaApplicantContact> contacts;
+
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE} ,  mappedBy = "applicantRitual")
+    private List<JpaApplicantHealth>  applicantHealths;
 
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
-        upperCase();
     }
 
     @PreUpdate
     public void preUpdate() {
         updateDate = new Date();
-        upperCase();
     }
 
-    private void upperCase() {
-        typeCode = StringUtils.upperCase(typeCode);
-    }
 }

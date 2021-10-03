@@ -3,9 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,11 +17,14 @@ import java.util.Date;
  * @author jaafer jarray
  * @since 1.1.0
  */
-@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 public class GroupApplicantListDto implements Serializable {
 
     private static final long serialVersionUID = 7014050783686266825L;
+
+    public GroupApplicantListDto(){}
 
     private long id;
 

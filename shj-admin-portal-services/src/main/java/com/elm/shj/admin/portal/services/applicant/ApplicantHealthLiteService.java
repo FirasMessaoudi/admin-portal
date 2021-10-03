@@ -34,8 +34,8 @@ public class ApplicantHealthLiteService extends GenericService<JpaApplicantHealt
      * @param ritualId
      * @return the found health details or empty structure
      */
-    public Optional<ApplicantHealthLiteDto> findByUinAndRitualId(String uin, Long ritualId) {
-        JpaApplicantHealth healthProfile = applicantHealthRepository.findByUinAndRitualId(uin, ritualId);
+    public Optional<ApplicantHealthLiteDto> findByUinAndRitualId(String uin, Long companyRitualSeasonId) {
+        JpaApplicantHealth healthProfile = applicantHealthRepository.findByApplicantDigitalIdsUinAndApplicantRitualApplicantPackageRitualPackageCompanyRitualSeasonId(uin, companyRitualSeasonId);
         if (healthProfile == null) {
             return Optional.empty();
         } else {

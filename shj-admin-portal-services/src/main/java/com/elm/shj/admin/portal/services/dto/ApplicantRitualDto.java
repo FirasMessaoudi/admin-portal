@@ -6,13 +6,16 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Dto class for the applicant ritual domain.
@@ -21,80 +24,57 @@ import java.util.Date;
  * @since 1.0.0
  */
 @WithApplicant
-@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class ApplicantRitualDto implements Serializable {
 
     private static final long serialVersionUID = 8699536906254699723L;
+
+    public ApplicantRitualDto() {
+    }
 
     private long id;
     private ApplicantDto applicant;
     private ApplicantPackageDto applicantPackage;
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @WithRitualPackage
     @OnlyCharacters(min = 1, max = 16, allowNumbers = true, allowEmpty = false)
     @CellIndex(index = 4)
-    private String hamlahPackageCode;
+    private String packageReferenceNumber;
 
     @OnlyCharacters(min = 0, max = 16, allowNumbers = true)
     @CellIndex(index = 5)
-    private String tafweejCode;
+    private String groupReferenceNumber;
 
-    private int hijriSeason;
-
-    @GregorianDate(minOffset = 0, maxOffset = 1)
-    @CellIndex(index = 6)
-    private Date dateStartGregorian;
-
-    @GregorianDate(minOffset = 0, maxOffset = 1)
-    @CellIndex(index = 7)
-    private Date dateEndGregorian;
-
-    @HijriDate(minOffset = 0, maxOffset = 1, allowEmpty = false)
-    @CellIndex(index = 8)
-    private Long dateStartHijri;
-
-    @HijriDate(minOffset = 0, maxOffset = 1, allowEmpty = false)
-    @CellIndex(index = 9)
-    private Long dateEndHijri;
-
-    @RitualTypeCode
-    @CellIndex(index = 10)
-    private String typeCode;
 
     @VisaOrPermitNumber(allowEmpty = false)
-    @CellIndex(index = 11)
+    @CellIndex(index = 6)
     private String visaNumber;
 
     @VisaOrPermitNumber(allowEmpty = false)
-    @CellIndex(index = 12)
+    @CellIndex(index = 7)
     private String permitNumber;
 
     @OnlyCharacters(min = 5, max = 50, allowEmpty = false, allowNumbers = true, allowSpecialChars = true)
-    @CellIndex(index = 13)
+    @CellIndex(index = 8)
     private String insuranceNumber;
 
     @BorderNumber
-    @CellIndex(index = 14)
+    @CellIndex(index = 9)
     private String borderNumber;
 
-    @ZoneCode
-    @CellIndex(index = 15)
-    private String zoneCode;
-    @GroupCode
-    @CellIndex(index = 16)
-    private String groupCode;
-    @UnitCode
-    @CellIndex(index = 17)
-    private String unitCode;
 
     @OnlyCharacters(min = 3, max = 20, allowNumbers = true, allowSpecialChars = true)
-    @CellIndex(index = 18)
+    @CellIndex(index = 10)
     private String busNumber;
 
     @OnlyCharacters(min = 1, max = 6, allowNumbers = true, allowSpecialChars = true)
-    @CellIndex(index = 19)
+    @CellIndex(index = 11)
     private String seatNumber;
+
     private Date creationDate;
     private Date updateDate;
     private DataRequestRecordDto dataRequestRecord;
@@ -103,4 +83,9 @@ public class ApplicantRitualDto implements Serializable {
     @Valid
     @NestedCells
     private ApplicantBasicInfoDto applicantBasicInfo;
+
+    private List<ApplicantContactDto> contacts;
+    private List<ApplicantRelativeDto> relatives;
+    private List<ApplicantHealthDto> applicantHealths;
+    private String typeCode;
 }

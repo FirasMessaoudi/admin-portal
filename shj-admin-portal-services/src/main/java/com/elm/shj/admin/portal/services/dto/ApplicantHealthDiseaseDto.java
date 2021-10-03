@@ -7,11 +7,13 @@ import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
 import com.elm.shj.admin.portal.services.data.validators.WithApplicant;
+import com.elm.shj.admin.portal.services.data.validators.WithRitualPackage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -39,6 +41,12 @@ public class ApplicantHealthDiseaseDto implements Serializable {
     @OnlyCharacters(min = 3, max = 50, allowEmpty = false, allowNumbers = true)
     @CellIndex(index = 4)
     private String labelEn;
+
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @WithRitualPackage
+    @OnlyCharacters(min = 1, max = 16, allowNumbers = true, allowEmpty = false)
+    @CellIndex(index = 6)
+    private String packageReferenceNumber;
 
     private Date creationDate;
     private Date updateDate;

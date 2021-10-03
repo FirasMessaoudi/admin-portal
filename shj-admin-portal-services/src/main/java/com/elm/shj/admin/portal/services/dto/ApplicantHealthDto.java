@@ -5,14 +5,14 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
-import com.elm.shj.admin.portal.services.data.validators.BloodType;
-import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
-import com.elm.shj.admin.portal.services.data.validators.WithApplicant;
+import com.elm.shj.admin.portal.services.data.validators.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -24,11 +24,15 @@ import java.util.List;
  * @since 1.0.0
  */
 @WithApplicant
-@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
 public class ApplicantHealthDto implements Serializable {
 
     private static final long serialVersionUID = 2731031329221419001L;
+
+    public ApplicantHealthDto() {
+    }
 
     private long id;
     @JsonBackReference(value = "applicant")
@@ -44,6 +48,13 @@ public class ApplicantHealthDto implements Serializable {
 
     @CellIndex(index = 6)
     private Boolean hasSpecialNeeds;
+
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @WithRitualPackage
+    @OnlyCharacters(min = 1, max = 16, allowNumbers = true, allowEmpty = false)
+    @CellIndex(index = 8)
+    private String packageReferenceNumber;
+
     private Date creationDate;
     private Date updateDate;
     @JsonBackReference(value = "applicantRitual")

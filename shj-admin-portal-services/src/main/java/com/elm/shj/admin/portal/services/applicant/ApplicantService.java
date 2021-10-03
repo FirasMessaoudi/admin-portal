@@ -4,14 +4,12 @@
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.UpdateApplicantCmd;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +36,8 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     private final ApplicantContactRepository applicantContactRepository;
     private final ApplicantRitualRepository applicantRitualRepository;
     private final ApplicantLiteService applicantLiteService;
+    private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
+    private final ApplicantRitualService applicantRitualService;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
 
     /**
@@ -101,12 +101,17 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      */
     @Transactional
     public int updateApplicantContacts(long applicantId, UpdateApplicantCmd command) {
-        JpaApplicantRitual applicantRitual = applicantRitualRepository.findTopByApplicantDigitalIdsUinOrderByDateStartHijriDesc(command.getUin());
-        int updatedRowsCount;
-        if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
-            updatedRowsCount = applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, applicantRitual.getId());
-        } else {
-            updatedRowsCount = applicantContactRepository.updateContactIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, applicantRitual.getId());
+        CompanyRitualSeasonLiteDto latestCompanyRitualSeason = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(Long.parseLong(command.getUin()));
+        int updatedRowsCount = 0;
+        if (latestCompanyRitualSeason != null) {
+            ApplicantRitualDto applicantRitual = applicantRitualService.findByApplicantUinAndCompanyRitualSeasonId(command.getUin(), latestCompanyRitualSeason.getId());
+
+            if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
+                updatedRowsCount = applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, applicantRitual.getId());
+            } else {
+                updatedRowsCount = applicantContactRepository.updateContactIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, applicantRitual.getId());
+            }
+
         }
         return updatedRowsCount;
     }

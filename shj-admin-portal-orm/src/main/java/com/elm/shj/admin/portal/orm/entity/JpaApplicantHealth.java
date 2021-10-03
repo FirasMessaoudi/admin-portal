@@ -39,13 +39,13 @@ public class JpaApplicantHealth implements Serializable {
     @OneToOne
     private JpaApplicant applicant;
 
-    @Column(name ="blood_type")
+    @Column(name = "blood_type")
     private String bloodType;
 
-    @Column(name ="has_special_needs")
+    @Column(name = "has_special_needs")
     private Boolean hasSpecialNeeds;
 
-    @Column(name ="insurance_policy_number")
+    @Column(name = "insurance_policy_number")
     private String insurancePolicyNumber;
 
     @Column(name = "creation_date", nullable = false)
@@ -62,15 +62,15 @@ public class JpaApplicantHealth implements Serializable {
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantHealth")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "applicantHealth")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthDisease> diseases;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantHealth")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "applicantHealth")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthSpecialNeeds> specialNeeds;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantHealth")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "applicantHealth")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthImmunization> immunizations;
 

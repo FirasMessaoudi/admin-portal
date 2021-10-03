@@ -14,5 +14,5 @@ import org.mapstruct.Mapper;
  * @since 1.0.0
  */
 @Mapper(componentModel = "spring")
-public abstract class ApplicantRitualDtoMapper implements IGenericMapper<ApplicantRitualDto, JpaApplicantRitual> {
+public abstract class ApplicantRitualDtoMapper implements IGenericMapper<ApplicantRitualDto, JpaApplicantRitual>, HibernateAwareMapper {
 }

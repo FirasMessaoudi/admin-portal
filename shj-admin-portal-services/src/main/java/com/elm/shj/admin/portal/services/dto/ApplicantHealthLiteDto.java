@@ -24,6 +24,7 @@ public class ApplicantHealthLiteDto implements Serializable {
 
     private static final long serialVersionUID = -6152719368063316734L;
 
+    private Long id;
     private String bloodType;
     @JsonBackReference
     private ApplicantLiteDto applicant;

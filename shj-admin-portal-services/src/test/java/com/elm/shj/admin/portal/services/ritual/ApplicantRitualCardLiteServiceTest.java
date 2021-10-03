@@ -5,8 +5,6 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDtoMapper;
-import com.elm.shj.admin.portal.services.dto.ApplicantRitualLiteDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantRitualLiteDtoMapper;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +14,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -52,11 +48,10 @@ public class ApplicantRitualCardLiteServiceTest {
     @Test
     public void test_find_applicant_card_details_by_uin_success() {
         JpaApplicantRitual applicantRituals = new JpaApplicantRitual();
-        applicantRituals.setUnitCode("2");
+        applicantRituals.setBorderNumber("2");
         Mockito.when(applicantRitualRepository.findCardDetailsByUinAndRitualId(EXIST_USER_UIN, Long.parseLong(EXIST_RITUAL_ID))).thenReturn(applicantRituals);
         Optional<ApplicantRitualCardLiteDto> applicantRitualLiteDtos = applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(EXIST_USER_UIN, EXIST_RITUAL_ID);
         Assert.assertNotNull(applicantRitualLiteDtos);
-        Assert.assertEquals(applicantRitualLiteDtos.get().getUnitCode(), applicantRituals.getUnitCode());
     }
 
 

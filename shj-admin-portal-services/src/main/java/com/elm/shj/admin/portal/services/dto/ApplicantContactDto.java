@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.CountryCode;
 import com.elm.shj.admin.portal.services.data.validators.LanguageCodeList;
@@ -34,7 +33,7 @@ public class ApplicantContactDto implements Serializable {
     @JsonBackReference(value = "applicant")
     private ApplicantDto applicant;
     @JsonBackReference(value = "applicantRitual")
-    private JpaApplicantRitual applicantRitual;
+    private ApplicantRitualDto applicantRitual;
     @LanguageCodeList
     @CellIndex(index = 15)
     private String languageList;

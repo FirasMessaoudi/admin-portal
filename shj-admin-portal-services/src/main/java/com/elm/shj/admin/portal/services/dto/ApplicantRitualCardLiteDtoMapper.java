@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import org.mapstruct.Mapper;
@@ -15,5 +14,5 @@ import org.mapstruct.Mapper;
  * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
-public abstract class ApplicantRitualCardLiteDtoMapper implements IGenericMapper<ApplicantRitualCardLiteDto, JpaApplicantRitual> {
+public abstract class ApplicantRitualCardLiteDtoMapper implements IGenericMapper<ApplicantRitualCardLiteDto, JpaApplicantRitual>,HibernateAwareMapper {
 }

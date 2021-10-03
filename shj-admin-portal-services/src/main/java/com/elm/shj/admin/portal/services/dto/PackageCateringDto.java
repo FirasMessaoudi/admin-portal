@@ -2,8 +2,9 @@ package com.elm.shj.admin.portal.services.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -17,12 +18,15 @@ import java.util.List;
  * @author ahmed elsayed
  * @since 1.1.0
  */
-@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
 public class PackageCateringDto implements Serializable {
 
     private static final long serialVersionUID = 4099330015218595333L;
 
+    public PackageCateringDto(){
+    }
     private long id;
 
     private String mealCode;
