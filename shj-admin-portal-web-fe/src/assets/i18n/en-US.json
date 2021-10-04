@@ -389,6 +389,9 @@
     "DINNER":"Dinner",
     "package_details": "Package Details"
   },
+  "notification-management": {
+    "title": "Notification Management"
+  },
   "printing-management": {
     "title": "Printing Management",
     "request_number": "Request Number",

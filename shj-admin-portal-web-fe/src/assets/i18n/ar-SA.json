@@ -377,6 +377,9 @@
     "DINNER":"عشاء",
     "package_details": "بيانات الباقة"
   },
+  "notification-management": {
+    "title": "إدارة الإشعارات"
+  },
   "printing-management": {
     "title": "إدارة الطباعة",
     "request_number": "رقم الطلب",

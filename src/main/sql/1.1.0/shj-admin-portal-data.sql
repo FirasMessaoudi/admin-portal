@@ -19,3 +19,16 @@ SET IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
 GO
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (13, 34);
 GO
+
+SET IDENTITY_INSERT shc_portal.shc_authority_lk ON;
+
+INSERT INTO shc_portal.shc_authority_lk(id, label_ar, label_en, code, parent_id)
+VALUES (35, N'إدارة الإشعارات', 'Notification Management', 'NOTIFICATION_MANAGEMENT', NULL);
+
+SET
+IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
+GO
+
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (1, 35);
+
+GO
