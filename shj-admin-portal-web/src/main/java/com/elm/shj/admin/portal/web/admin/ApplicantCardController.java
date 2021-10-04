@@ -128,6 +128,7 @@ public class ApplicantCardController {
 
         ApplicantRitualDto applicantRitualDto = applicantRitualService.findApplicantRitualWithContactsAndRelatives(applicantCardDto.getApplicantRitual().getId());
 
+
         applicantCardDto.setApplicantRitual(applicantRitualDto);
         applicantCardDto.getApplicantRitual().getApplicant().setContacts(applicantRitualDto.getContacts());
         applicantCardDto.getApplicantRitual().getApplicant().setRelatives(applicantRitualDto.getRelatives());
@@ -139,11 +140,11 @@ public class ApplicantCardController {
         if (digitalIds.size() > 0) {
 
             String uin = digitalIds.get(0).getUin();
-            CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(Long.parseLong(uin));
-            if (companyRitualSeasonLiteDto != null) {
-                applicantCardDto.getApplicantRitual().setTypeCode(companyRitualSeasonLiteDto.getRitualSeason().getRitualTypeCode());
+            CompanyRitualSeasonDto companyRitualSeasonDto = applicantRitualDto.getApplicantPackage().getRitualPackage().getCompanyRitualSeason();
+            if (companyRitualSeasonDto != null) {
+                applicantCardDto.getApplicantRitual().setTypeCode(companyRitualSeasonDto.getRitualSeason().getRitualTypeCode());
 
-                long companyRitualSeasonId = companyRitualSeasonLiteDto.getId();
+                long companyRitualSeasonId = companyRitualSeasonDto.getId();
                 applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));

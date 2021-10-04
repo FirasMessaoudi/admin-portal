@@ -1,8 +1,8 @@
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.dcc.foundation.commons.core.mapper.MapperRegistry;
-import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeason;
-import com.elm.shj.admin.portal.orm.repository.CompanyRitualSeasonRepository;
+import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeasonLite;
+import com.elm.shj.admin.portal.orm.repository.CompanyRitualSeasonLiteRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualSeasonLiteDto;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualSeasonLiteMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,14 +37,14 @@ public class CompanyRitualSeasonLiteServiceTest {
     private CompanyRitualSeasonLiteMapper companyRitualSeasonLiteMapper;
 
     @Mock
-    private CompanyRitualSeasonRepository companyRitualSeasonRepository;
+    private CompanyRitualSeasonLiteRepository companyRitualSeasonRepository;
 
     @InjectMocks
     private CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
 
     @BeforeEach
     public void setUp() throws IllegalAccessException {
-        Mockito.lenient().when(mapperRegistry.mapperOf(CompanyRitualSeasonLiteDto.class, JpaCompanyRitualSeason.class)).thenReturn(companyRitualSeasonLiteMapper);
+        Mockito.lenient().when(mapperRegistry.mapperOf(CompanyRitualSeasonLiteDto.class, JpaCompanyRitualSeasonLite.class)).thenReturn(companyRitualSeasonLiteMapper);
 
         Field mapperRegistryField = ReflectionUtils.findField(companyRitualSeasonLiteService.getClass(), "mapperRegistry");
         Field repositoryField = ReflectionUtils.findField(companyRitualSeasonLiteService.getClass(), "repository");
@@ -59,7 +59,7 @@ public class CompanyRitualSeasonLiteServiceTest {
     @Test
     public void test_get_latest_company_ritual_season_by_applicantUin_success() {
 
-        JpaCompanyRitualSeason jpaCompanyRitualSeason = new JpaCompanyRitualSeason();
+        JpaCompanyRitualSeasonLite jpaCompanyRitualSeason = new JpaCompanyRitualSeasonLite();
         CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = new CompanyRitualSeasonLiteDto();
 
         Mockito.when(companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(anyLong())).thenReturn(jpaCompanyRitualSeason);

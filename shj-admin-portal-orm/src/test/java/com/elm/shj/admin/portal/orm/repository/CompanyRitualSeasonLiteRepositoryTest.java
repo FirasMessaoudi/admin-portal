@@ -1,6 +1,6 @@
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeason;
+import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeasonLite;
 import com.elm.shj.admin.portal.orm.test.AbstractJpaTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +15,18 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Ahmed Elsayed
  * @since 1.1.0
  */
-public class CompanyRitualSeasonRepositoryTest extends AbstractJpaTest {
+public class CompanyRitualSeasonLiteRepositoryTest extends AbstractJpaTest {
 
     private final static long EXIST_USER_UIN = 59737700000059L;
     private final static long FAKE_USER_UIN = 1111111111L;
 
     @Autowired
-    private CompanyRitualSeasonRepository companyRitualSeasonRepository;
+    private CompanyRitualSeasonLiteRepository companyRitualSeasonRepository;
 
     @Test
     public void test_find_top_by_applicantGroups_groupApplicantLists_applicantUin_order_by_seasonStartDesc_found() {
 
-        JpaCompanyRitualSeason companyRitualSeason = companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(EXIST_USER_UIN);
+        JpaCompanyRitualSeasonLite companyRitualSeason = companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(EXIST_USER_UIN);
 
         assertNotNull(companyRitualSeason);
         assertEquals(14430210, companyRitualSeason.getSeasonStart());
@@ -38,7 +38,7 @@ public class CompanyRitualSeasonRepositoryTest extends AbstractJpaTest {
     @Test
     public void test_find_top_by_applicantGroups_groupApplicantLists_applicantUin_order_by_seasonStartDesc_notFound() {
 
-        JpaCompanyRitualSeason companyRitualSeason = companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(FAKE_USER_UIN);
+        JpaCompanyRitualSeasonLite companyRitualSeason = companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(FAKE_USER_UIN);
 
         assertNull(companyRitualSeason);
 
@@ -47,7 +47,7 @@ public class CompanyRitualSeasonRepositoryTest extends AbstractJpaTest {
     @Test
     public void test_find_all_by_applicantGroups_groupApplicantLists_applicantUin_order_by_seasonStartDesc_found() {
 
-        List<JpaCompanyRitualSeason> companyRitualSeasons = companyRitualSeasonRepository.findAllByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(EXIST_USER_UIN);
+        List<JpaCompanyRitualSeasonLite> companyRitualSeasons = companyRitualSeasonRepository.findAllByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(EXIST_USER_UIN);
 
         assertNotNull(companyRitualSeasons);
         assertEquals(1, companyRitualSeasons.size());
@@ -60,7 +60,7 @@ public class CompanyRitualSeasonRepositoryTest extends AbstractJpaTest {
     @Test
     public void test_find_all_by_applicantGroups_groupApplicantLists_applicantUin_order_by_seasonStartDesc_notFound() {
 
-        List<JpaCompanyRitualSeason> companyRitualSeasons = companyRitualSeasonRepository.findAllByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(FAKE_USER_UIN);
+        List<JpaCompanyRitualSeasonLite> companyRitualSeasons = companyRitualSeasonRepository.findAllByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(FAKE_USER_UIN);
 
         assertNotNull(companyRitualSeasons);
         assertEquals(0, companyRitualSeasons.size());

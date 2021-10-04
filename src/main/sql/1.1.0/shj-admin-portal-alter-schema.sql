@@ -583,3 +583,6 @@ go
 alter table shc_portal.shc_applicant_ritual
 drop column seat_number
 go
+
+alter table shc_portal.shc_company_staff_title_lk alter column label nvarchar(50) not null
+GO
