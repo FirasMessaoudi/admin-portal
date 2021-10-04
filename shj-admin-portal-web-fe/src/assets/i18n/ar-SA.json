@@ -420,7 +420,7 @@
     "nationality": "الجنسية",
     "motawif": "مؤسسة الطوافة",
     "btn_cancel": "إلغاء",
-    "description": "وصف طلب الطباعة"
+    "request_description": "وصف الطلب"
 
   },
   "rule-management": {

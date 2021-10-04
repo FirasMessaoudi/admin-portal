@@ -83,7 +83,7 @@
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "printing-management.description" | translate }}</label>
+          <label class="col-form-label">{{ "printing-management.request_description" | translate }}</label>
           <input id="description" type="text" formControlName="description" class="form-control"/>
         </div>
 
@@ -117,6 +117,7 @@
           <th scope="col">{{'printing-management.no_batches' | translate}}</th>
           <th scope="col">{{'printing-management.no_cards' | translate}}</th>
           <th scope="col">{{'printing-management.request_confirmation_date' | translate}}</th>
+          <th scope="col">{{'printing-management.request_description' | translate}}</th>
           <th scope="col">{{'printing-management.request_status' | translate}}</th>
           <th scope="col"></th>
         </tr>
@@ -134,6 +135,7 @@
           <td>{{request.batchesCount}}</td>
           <td class="ltr">{{request.cardsCount}}</td>
           <td class="ltr">{{request.confirmationDate | dateFormat}}</td>
+          <td class="ltr">{{request.description}}</td>
           <td class="ltr">
             {{request.statusCode ? lookupService().localizedLabel(printRequestStatuses, request.statusCode) : ""}}
             <span class="status mr-1 done"></span>

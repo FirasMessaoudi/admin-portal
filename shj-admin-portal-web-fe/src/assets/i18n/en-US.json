@@ -432,7 +432,7 @@
     "nationality": "Nationality",
     "motawif": "Motawif",
     "btn_cancel": "Cancel",
-    "description": "Description"
+    "request_description": "Request description"
   },
   "rule-management": {
     "title": "Decision Rule Management",
