@@ -378,7 +378,16 @@
     "package_details": "بيانات الباقة"
   },
   "notification-management": {
-    "title": "إدارة الإشعارات"
+    "title": "إدارة الإشعارات",
+    "notification-body": "محتوى الإشعار",
+    "notification-title": "عنوان الإشعار",
+    "severity": "الحدة",
+    "notification-category": "فئة الإشعار",
+    "notification-type": "نوع الإشعار",
+    "type-code": "نوع الرمز",
+    "body": "المحتوى",
+    "action-label": "اسم الحدث",
+    "expiry-date":"تاريخ انتهاء الصلاحية"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

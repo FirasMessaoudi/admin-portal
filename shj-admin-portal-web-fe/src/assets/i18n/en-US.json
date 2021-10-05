@@ -390,7 +390,16 @@
     "package_details": "Package Details"
   },
   "notification-management": {
-    "title": "Notification Management"
+    "title": "Notification Management",
+    "notification-body": "Notification Body",
+    "notification-title": "Notification Title",
+    "severity": "Severity",
+    "notification-category": "Notification Category",
+    "notification-type": "Notification Type",
+    "type-code": "Type Code",
+    "body": "Body",
+    "action-label": "Action Label",
+    "expiry-date":"Expiry Date"
   },
   "printing-management": {
     "title": "Printing Management",
