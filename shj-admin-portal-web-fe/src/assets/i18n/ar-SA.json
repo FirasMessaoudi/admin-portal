@@ -377,6 +377,9 @@
     "DINNER":"عشاء",
     "package_details": "بيانات الباقة"
   },
+  "notification-management": {
+    "title": "إدارة الإشعارات"
+  },
   "printing-management": {
     "title": "إدارة الطباعة",
     "request_number": "رقم الطلب",
@@ -420,7 +423,7 @@
     "nationality": "الجنسية",
     "motawif": "مؤسسة الطوافة",
     "btn_cancel": "إلغاء",
-    "description": "وصف طلب الطباعة"
+    "request_description": "وصف الطلب"
 
   },
   "rule-management": {

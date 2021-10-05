@@ -7,4 +7,5 @@ export class PrintRequestLite {
   creationDate: Date;
   updateDate: Date;
   confirmationDate: Date;
+  description?: string;
 }

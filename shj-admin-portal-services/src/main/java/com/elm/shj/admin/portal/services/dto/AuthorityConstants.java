@@ -42,6 +42,7 @@ public final class AuthorityConstants {
     public static final String SUSPEND_CARD = "SUSPEND_CARD";
     public static final String REISSUE_CARD = "REISSUE_CARD";
     public static final String ADD_CARD = "ADD_CARD";
+    public static final String NOTIFICATION_MANAGEMENT = "NOTIFICATION_MANAGEMENT";
 
     //Data Request Management
     public static final String DATA_REQUEST_MANAGEMENT = "DATA_REQUEST_MANAGEMENT";

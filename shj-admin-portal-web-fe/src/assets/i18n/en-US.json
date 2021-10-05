@@ -389,6 +389,9 @@
     "DINNER":"Dinner",
     "package_details": "Package Details"
   },
+  "notification-management": {
+    "title": "Notification Management"
+  },
   "printing-management": {
     "title": "Printing Management",
     "request_number": "Request Number",
@@ -432,7 +435,7 @@
     "nationality": "Nationality",
     "motawif": "Motawif",
     "btn_cancel": "Cancel",
-    "description": "Description"
+    "request_description": "Request description"
   },
   "rule-management": {
     "title": "Decision Rule Management",

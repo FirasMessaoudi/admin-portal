@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {EAuthority} from "@model/enum/authority.enum";
 import {AuthenticationService} from '@app/_core/services';
@@ -76,6 +76,14 @@ export class SideNavComponent implements OnInit {
         icon: 'file-upload',
         iconFa: 'fa-w-12',
         routerLink: '/data-requests/list',
+      },
+      {
+        title: 'notification-management.title',
+        roles: [EAuthority.NOTIFICATION_MANAGEMENT],
+        display: false,
+        icon: 'notification',
+        iconFa: 'fa-w-18',
+        routerLink: '/notification/list',
       }
     ];
     // filtering access according to connected user authorities
