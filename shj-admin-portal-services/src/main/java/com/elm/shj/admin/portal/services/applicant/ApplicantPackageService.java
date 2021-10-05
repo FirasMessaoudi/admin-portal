@@ -1,5 +1,6 @@
 package com.elm.shj.admin.portal.services.applicant;
 
+import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackage;
 import com.elm.shj.admin.portal.orm.repository.ApplicantPackageRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
@@ -8,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -19,13 +20,14 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
 
     private final ApplicantPackageRepository applicantPackageRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ApplicantPackageDto findApplicantPackageByUinAndReferenceNumber(Long applicantUin, String packageReferenceNumber) {
         Optional<JpaApplicantPackage> applicantPackageOptional = applicantPackageRepository.findByApplicantUinAndRitualPackageReferenceNumber(applicantUin, packageReferenceNumber);
         if (applicantPackageOptional.isPresent()) {
             JpaApplicantPackage applicantPackage = applicantPackageOptional.get();
             applicantPackage.getApplicantRituals().size();
             applicantPackage.getApplicantPackageTransportations().size();
+            CycleAvoidingMappingContext mappingContext =new CycleAvoidingMappingContext();
             return getMapper().fromEntity(applicantPackage, mappingContext);
         }
         return null;

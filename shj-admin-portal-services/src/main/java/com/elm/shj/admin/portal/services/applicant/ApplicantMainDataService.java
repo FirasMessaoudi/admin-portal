@@ -57,6 +57,9 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
 
                 JpaApplicantRitual applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(uin, companyRitualSeasonLiteDto.getId());
                 if (applicantRitual != null) {
+                    applicantRitual.getRelatives().size();
+                    applicantRitual.getContacts().size();
+
                     applicantMainDataDto.setRelatives(applicantRelativeDtoMapper.fromEntityList(applicantRitual.getRelatives(), mappingContext));
                     applicantMainDataDto.setContacts(applicantContactDtoMapper.fromEntityList(applicantRitual.getContacts(), mappingContext));
 
