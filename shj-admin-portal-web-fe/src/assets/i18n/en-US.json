@@ -444,7 +444,9 @@
     "nationality": "Nationality",
     "motawif": "Motawif",
     "btn_cancel": "Cancel",
-    "request_description": "Request description"
+    "request_description": "Request description",
+    "export_to_excel": "Export to Excel",
+    "export_to_pdf": "Export to PDF"
   },
   "rule-management": {
     "title": "Decision Rule Management",

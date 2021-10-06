@@ -432,8 +432,9 @@
     "nationality": "الجنسية",
     "motawif": "مؤسسة الطوافة",
     "btn_cancel": "إلغاء",
-    "request_description": "وصف الطلب"
-
+    "request_description": "وصف الطلب",
+    "export_to_excel": "تصدير اكسل",
+    "export_to_pdf": "تصدير PDF"
   },
   "rule-management": {
     "title": "إدارة قواعد القرار",
