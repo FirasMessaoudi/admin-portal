@@ -5,7 +5,7 @@
       <li class="dropdown flex-center">
         <a
           class="nav-link d-flex align-items-center dropdown-toggle noArrow"
-          title="معلوماتي"
+          title="{{'header.my_information' | translate}}"
           href="javascript:void(0)"
           id="userMenuLink"
           data-toggle="dropdown"
@@ -27,7 +27,8 @@
           </div>
         </a>
         <div class="dropdown-menu animate slideIn" aria-labelledby="userMenuLink">
-          <a class="dropdown-item" (click)="viewCurrentUserProfile()" href="javascript:void(0)" routerLinkActive="router-link-active">
+          <a class="dropdown-item" (click)="viewCurrentUserProfile()" href="javascript:void(0)"
+             routerLinkActive="router-link-active">
             {{ "header.my_profile" | translate }}
           </a>
           <a class="dropdown-item" [routerLink]="['/change-password']" routerLinkActive="router-link-active">
@@ -36,27 +37,27 @@
           <div class="dropdown-divider"></div>
           <ng-container>
             <a class="dropdown-item" href="javascript:void(0)"
-              *ngIf="currentLanguage.startsWith('en')" (click)="setLanguage('ar-SA')">
+               *ngIf="currentLanguage.startsWith('en')" (click)="setLanguage('ar-SA')">
               <span>عربي</span>
             </a>
             <a class="dropdown-item" href="javascript:void(0)"
-              *ngIf="currentLanguage.startsWith('ar')" (click)="setLanguage('en-US')">
+               *ngIf="currentLanguage.startsWith('ar')" (click)="setLanguage('en-US')">
               <span>English</span>
             </a>
           </ng-container>
         </div>
       </li>
-<!--      <li class="position-relative">-->
-<!--        <a class="nav-link" href="javascript:void(0)" ngbTooltip="">-->
-<!--          <svg-icon styleClass="fa-w-16 h4" icon="bell"></svg-icon>-->
-<!--        </a>-->
-<!--        <span class="notif bg-red">4</span>-->
-<!--      </li>-->
-<!--      <li class="position-relative">-->
-<!--        <a class="nav-link" href="javascript:void(0)" ngbTooltip="">-->
-<!--          <svg-icon styleClass="fa-w-16 h4" icon="cog"></svg-icon>-->
-<!--        </a>-->
-<!--      </li>-->
+      <!--      <li class="position-relative">-->
+      <!--        <a class="nav-link" href="javascript:void(0)" ngbTooltip="">-->
+      <!--          <svg-icon styleClass="fa-w-16 h4" icon="bell"></svg-icon>-->
+      <!--        </a>-->
+      <!--        <span class="notif bg-red">4</span>-->
+      <!--      </li>-->
+      <!--      <li class="position-relative">-->
+      <!--        <a class="nav-link" href="javascript:void(0)" ngbTooltip="">-->
+      <!--          <svg-icon styleClass="fa-w-16 h4" icon="cog"></svg-icon>-->
+      <!--        </a>-->
+      <!--      </li>-->
       <li class="position-relative">
         <a class="nav-link" href="javascript:void(0)" (click)="logout()" ngbTooltip="{{'header.logout' | translate}}">
           <svg-icon styleClass="fa-w-16 h4 flip" icon="logout"></svg-icon>
