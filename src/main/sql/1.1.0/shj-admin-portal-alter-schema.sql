@@ -586,3 +586,148 @@ go
 
 alter table shc_portal.shc_company_staff_title_lk alter column label nvarchar(50) not null
 GO
+
+-- notification tables
+if not exists(select * from sys.tables where name = 'shc_notification_template_name_lk')
+CREATE TABLE shc_portal.shc_notification_template_name_lk
+(
+    id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          VARCHAR(20)   NOT NULL,
+    lang          VARCHAR(45)   NOT NULL,
+    label         NVARCHAR(50)  NOT NULL,
+    creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT notification_template_name_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_notification_processing_status_lk')
+CREATE TABLE shc_portal.shc_notification_processing_status_lk
+(
+    id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          VARCHAR(20)   NOT NULL,
+    description   NVARCHAR(50)  NOT NULL,
+    creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT notification_processing_status_lk_unique UNIQUE (code ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_notification_template_status_lk')
+CREATE TABLE shc_portal.shc_notification_template_status_lk
+(
+    id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          VARCHAR(20)   NOT NULL,
+    lang          VARCHAR(45)   NOT NULL,
+    label         NVARCHAR(50)  NOT NULL,
+    creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT notification_template_status_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_user_notification_status_lk')
+CREATE TABLE shc_portal.shc_user_notification_status_lk
+(
+    id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          VARCHAR(20)   NOT NULL,
+    lang          VARCHAR(45)   NOT NULL,
+    label         NVARCHAR(50)  NOT NULL,
+    creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT user_notification_status_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_notification_template_type_lk')
+CREATE TABLE shc_portal.shc_notification_template_type_lk
+(
+    id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          VARCHAR(20)   NOT NULL,
+    lang          VARCHAR(45)   NOT NULL,
+    label         NVARCHAR(50)  NOT NULL,
+    creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT notification_template_type_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_notification_category_lk')
+CREATE TABLE shc_portal.shc_notification_category_lk
+(
+    id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          VARCHAR(20)   NOT NULL,
+    lang          VARCHAR(45)   NOT NULL,
+    label         NVARCHAR(50)  NOT NULL,
+    creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT notification_category_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_notification_template')
+CREATE TABLE shc_portal.shc_notification_template
+(
+    id              INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    category_code   VARCHAR(20)   NOT NULL,
+    name_code       VARCHAR(20)   NOT NULL,
+    status_code     VARCHAR(20)   NOT NULL,
+    type_code       VARCHAR(20)   NOT NULL,
+    important       BIT           NOT NULL,
+    action_required BIT           NOT NULL,
+    enabled         BIT           NOT NULL,
+    user_specific   BIT           NOT NULL,
+    creation_date   SMALLDATETIME NOT NULL DEFAULT current_timestamp,
+    update_date     SMALLDATETIME NULL,
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_notification_template_content')
+CREATE TABLE shc_portal.shc_notification_template_content
+(
+    id                       INT            NOT NULL PRIMARY KEY IDENTITY (1,1),
+    notification_template_id INT            NOT NULL,
+    lang                     VARCHAR(45)    NOT NULL,
+    title                    NVARCHAR(45)   NOT NULL,
+    body                     NVARCHAR(1000) NOT NULL,
+    action_label             NVARCHAR(45)   NULL,
+    creation_date            SMALLDATETIME  NOT NULL DEFAULT current_timestamp,
+    update_date              SMALLDATETIME  NULL,
+    CONSTRAINT fk_notification_template_content_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_notification_queue')
+CREATE TABLE shc_portal.shc_notification_queue
+(
+    id                       INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    notification_template_id INT           NOT NULL,
+    user_id                  INT           NOT NULL,
+    processing_status_id     INT           NOT NULL,
+    sending_date             SMALLDATETIME NOT NULL,
+    creation_date            SMALLDATETIME NOT NULL DEFAULT current_timestamp,
+    update_date              SMALLDATETIME NULL,
+    CONSTRAINT fk_notification_queue_processing_status_lk FOREIGN KEY (processing_status_id) REFERENCES shc_portal.shc_notification_processing_status_lk (id),
+    CONSTRAINT fk_notification_queue_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_user_notification')
+CREATE TABLE shc_portal.shc_user_notification
+(
+    id                       INT            NOT NULL PRIMARY KEY IDENTITY (1,1),
+    notification_template_id INT            NOT NULL,
+    user_id                  INT            NOT NULL,
+    resolved_content         NVARCHAR(1000) NOT NULL,
+    status_id                INT            NOT NULL,
+    creation_date            SMALLDATETIME  NOT NULL DEFAULT current_timestamp,
+    update_date              SMALLDATETIME  NULL,
+    CONSTRAINT fk_user_notification_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id),
+    CONSTRAINT fk_user_notification_user_notification_status_lk FOREIGN KEY (status_id) REFERENCES shc_portal.shc_user_notification_status_lk (id)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_notification_template_parameter')
+CREATE TABLE shc_portal.shc_notification_template_parameter
+(
+    id                       INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    notification_template_id INT           NOT NULL,
+    parameter_name           VARCHAR(45)   NOT NULL,
+    creation_date            SMALLDATETIME NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT fk_notification_template_parameter_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id)
+);
+GO
