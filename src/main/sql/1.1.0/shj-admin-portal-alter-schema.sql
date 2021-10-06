@@ -712,7 +712,7 @@ CREATE TABLE shc_portal.shc_user_notification
     id                       INT            NOT NULL PRIMARY KEY IDENTITY (1,1),
     notification_template_id INT            NOT NULL,
     user_id                  INT            NOT NULL,
-    resolved_content         NVARCHAR(1000) NOT NULL,
+    resolved_body            NVARCHAR(1000) NOT NULL,
     status_id                INT            NOT NULL,
     creation_date            SMALLDATETIME  NOT NULL DEFAULT current_timestamp,
     update_date              SMALLDATETIME  NULL,
