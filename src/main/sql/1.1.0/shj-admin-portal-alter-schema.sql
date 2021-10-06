@@ -623,18 +623,6 @@ CREATE TABLE shc_portal.shc_notification_template_status_lk
 );
 GO
 
-if not exists(select * from sys.tables where name = 'shc_user_notification_status_lk')
-CREATE TABLE shc_portal.shc_user_notification_status_lk
-(
-    id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
-    code          VARCHAR(20)   NOT NULL,
-    lang          VARCHAR(45)   NOT NULL,
-    label         NVARCHAR(50)  NOT NULL,
-    creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
-    CONSTRAINT user_notification_status_lk_unique UNIQUE (code ASC, lang ASC)
-);
-GO
-
 if not exists(select * from sys.tables where name = 'shc_notification_template_type_lk')
 CREATE TABLE shc_portal.shc_notification_template_type_lk
 (
@@ -703,21 +691,6 @@ CREATE TABLE shc_portal.shc_notification_queue
     update_date              SMALLDATETIME NULL,
     CONSTRAINT fk_notification_queue_processing_status_lk FOREIGN KEY (processing_status_id) REFERENCES shc_portal.shc_notification_processing_status_lk (id),
     CONSTRAINT fk_notification_queue_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id)
-);
-GO
-
-if not exists(select * from sys.tables where name = 'shc_user_notification')
-CREATE TABLE shc_portal.shc_user_notification
-(
-    id                       INT            NOT NULL PRIMARY KEY IDENTITY (1,1),
-    notification_template_id INT            NOT NULL,
-    user_id                  INT            NOT NULL,
-    resolved_body            NVARCHAR(1000) NOT NULL,
-    status_id                INT            NOT NULL,
-    creation_date            SMALLDATETIME  NOT NULL DEFAULT current_timestamp,
-    update_date              SMALLDATETIME  NULL,
-    CONSTRAINT fk_user_notification_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id),
-    CONSTRAINT fk_user_notification_user_notification_status_lk FOREIGN KEY (status_id) REFERENCES shc_portal.shc_user_notification_status_lk (id)
 );
 GO
 
