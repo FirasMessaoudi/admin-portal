@@ -3,12 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,7 +19,6 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@Data
 public class NotificationProcessingStatusLookupDto implements Serializable {
 
     private static final long serialVersionUID = -1358810971203198326L;
