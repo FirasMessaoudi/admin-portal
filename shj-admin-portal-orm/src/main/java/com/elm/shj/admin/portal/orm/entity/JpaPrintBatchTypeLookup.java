@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -20,9 +21,9 @@ import java.util.Date;
 @NamedQuery(name = "JpaPrintBatchTypeLookup.findAll", query = "SELECT j FROM JpaPrintBatchTypeLookup j")
 @Data
 @NoArgsConstructor
-public class JpaPrintBatchTypeLookup {
+public class JpaPrintBatchTypeLookup implements Serializable {
 
-    private static final long serialVersionUID = -3686342256387455834L;
+    private static final long serialVersionUID = -4002009572207762908L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
