@@ -3,8 +3,9 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
@@ -19,7 +20,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "shc_health_immunization_lk")
 @NamedQuery(name = "JpaHealthImmunizationLookup.findAll", query = "SELECT j FROM JpaHealthImmunizationLookup j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaHealthImmunizationLookup extends JpaLocalizedLookup {
 

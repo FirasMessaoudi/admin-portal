@@ -3,7 +3,8 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.Past;
 import java.io.Serializable;
@@ -15,7 +16,8 @@ import java.util.Date;
  * @author Slim Ben Hadj
  * @since 1.1.0
  */
-@Data
+@Getter
+@Setter
 public class ValidateApplicantCmd implements Serializable {
 
     private static final long serialVersionUID = 6641483817347109390L;

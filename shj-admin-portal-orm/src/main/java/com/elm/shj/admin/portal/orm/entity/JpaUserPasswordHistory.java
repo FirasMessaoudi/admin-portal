@@ -3,8 +3,9 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,7 +20,8 @@ import java.util.Date;
 @Entity
 @Table(name = "shc_user_password_history")
 @NamedQuery(name = "JpaUserPasswordHistory.findAll", query = "SELECT j FROM JpaUserPasswordHistory j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaUserPasswordHistory implements Serializable {
     private static final long serialVersionUID = 1L;

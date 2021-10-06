@@ -1,13 +1,13 @@
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,7 +19,8 @@ import java.util.List;
 @Entity
 @Table(name = "shc_ritual_season")
 @NamedQuery(name = "JpaRitualSeason.findAll", query = "SELECT j FROM JpaRitualSeason j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaRitualSeason implements Serializable {
 

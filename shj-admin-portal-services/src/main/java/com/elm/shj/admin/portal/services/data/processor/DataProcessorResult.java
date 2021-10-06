@@ -4,7 +4,8 @@
 package com.elm.shj.admin.portal.services.data.processor;
 
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.poi.ss.usermodel.Row;
 
 import java.util.AbstractMap;
@@ -16,7 +17,8 @@ import java.util.List;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
-@Data
+@Getter
+@Setter
 public class DataProcessorResult<T> {
     boolean withErrors;
     List<AbstractMap.SimpleEntry<Row, T>> parsedItems;

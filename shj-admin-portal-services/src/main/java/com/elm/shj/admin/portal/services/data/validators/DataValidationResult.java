@@ -4,7 +4,8 @@
 package com.elm.shj.admin.portal.services.data.validators;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.poi.ss.usermodel.Cell;
 
 import java.util.List;
@@ -15,7 +16,8 @@ import java.util.List;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
-@Data
+@Getter
+@Setter
 @Builder
 public class DataValidationResult {
 

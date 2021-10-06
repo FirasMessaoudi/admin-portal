@@ -4,7 +4,8 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.dcc.foundation.commons.validation.NinOrIqama;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.Past;
 import java.io.Serializable;
@@ -16,7 +17,8 @@ import java.util.Date;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
-@Data
+@Getter
+@Setter
 public class ResetPasswordCmd implements Serializable {
 
     private static final long serialVersionUID = 1L;

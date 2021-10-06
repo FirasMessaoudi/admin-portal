@@ -1,7 +1,8 @@
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -19,7 +20,8 @@ import java.util.List;
 @Entity
 @Table(name = "shc_ritual_package")
 @NamedQuery(name = "JpaRitualPackage.findAll", query = "SELECT j FROM JpaRitualPackage j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaRitualPackage implements Serializable {
     private static final long serialVersionUID = -8657084839410538572L;

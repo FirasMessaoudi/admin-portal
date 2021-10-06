@@ -3,8 +3,9 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,7 +20,8 @@ import java.util.Date;
 @Entity
 @Table(name = "shc_config")
 @NamedQuery(name = "JpaConfig.findAll", query = "SELECT j FROM JpaConfig j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaConfig implements Serializable {
     private static final long serialVersionUID = 1L;

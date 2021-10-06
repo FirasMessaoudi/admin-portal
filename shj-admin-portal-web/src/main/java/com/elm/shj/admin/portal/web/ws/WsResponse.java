@@ -4,7 +4,8 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Web service operation result
@@ -12,7 +13,8 @@ import lombok.Data;
  * @author Aymen Dhaoui
  * @since 1.1.0
  */
-@Data
+@Getter
+@Setter
 @Builder
 public class WsResponse<T> {
 

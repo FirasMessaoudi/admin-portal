@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -60,8 +61,8 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
                     applicantRitual.getRelatives().size();
                     applicantRitual.getContacts().size();
 
-                    applicantMainDataDto.setRelatives(applicantRelativeDtoMapper.fromEntityList(applicantRitual.getRelatives(), mappingContext));
-                    applicantMainDataDto.setContacts(applicantContactDtoMapper.fromEntityList(applicantRitual.getContacts(), mappingContext));
+                    applicantMainDataDto.setRelatives(applicantRelativeDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.getRelatives()), mappingContext));
+                    applicantMainDataDto.setContacts(applicantContactDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.getContacts()), mappingContext));
 
 
                     JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualId(applicantRitual.getId());

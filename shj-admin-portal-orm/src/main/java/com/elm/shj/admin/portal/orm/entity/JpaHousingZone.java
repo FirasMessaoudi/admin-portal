@@ -1,7 +1,8 @@
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -18,7 +19,8 @@ import java.util.List;
 @Entity
 @Table(name = "shc_housing_zone")
 @NamedQuery(name = "JpaHousingZone.findAll", query = "SELECT j FROM JpaHousingZone j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaHousingZone implements Serializable {
 

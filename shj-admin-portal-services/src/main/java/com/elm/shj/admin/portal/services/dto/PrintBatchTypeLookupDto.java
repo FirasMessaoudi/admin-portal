@@ -17,7 +17,8 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class PrintBatchTypeLookupDto implements Serializable {
 
     private static final long serialVersionUID = -3472461540347274275L;

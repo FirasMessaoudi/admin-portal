@@ -4,7 +4,8 @@ package com.elm.shj.admin.portal.services.dto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -20,7 +21,8 @@ import java.util.List;
  */
 @AllArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
 public class PackageCateringDto implements Serializable {
 
     private static final long serialVersionUID = 4099330015218595333L;

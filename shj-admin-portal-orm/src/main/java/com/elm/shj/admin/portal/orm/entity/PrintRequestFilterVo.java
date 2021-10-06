@@ -3,7 +3,8 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -13,7 +14,8 @@ import java.io.Serializable;
  * @author ahmad flaifel
  * @since 1.0.0
  */
-@Data
+@Getter
+@Setter
 public class PrintRequestFilterVo implements Serializable {
 
     private static final long serialVersionUID = -8483791293043657948L;

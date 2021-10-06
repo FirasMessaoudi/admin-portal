@@ -4,7 +4,8 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
@@ -18,7 +19,8 @@ import java.io.Serializable;
  * @author Slim Ben Hadj
  * @since 1.1.0
  */
-@Data
+@Getter
+@Setter
 public class UpdateApplicantCmd implements Serializable {
 
     private static final long serialVersionUID = -7437270089118787394L;

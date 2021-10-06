@@ -3,8 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,7 +16,8 @@ import java.util.Date;
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class ConfigDto implements Serializable {
     private static final long serialVersionUID = 1L;

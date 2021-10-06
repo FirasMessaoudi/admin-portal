@@ -1,7 +1,8 @@
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -13,7 +14,8 @@ import java.io.Serializable;
  * @since 1.1.0
  */
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class RitualSeasonDto implements Serializable {
 
     private static final long serialVersionUID = 5471593790584285097L;

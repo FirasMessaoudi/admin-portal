@@ -3,8 +3,9 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,7 +19,8 @@ import java.util.Date;
 @Entity
 @Table(name = "shc_print_batch_type_lk")
 @NamedQuery(name = "JpaPrintBatchTypeLookup.findAll", query = "SELECT j FROM JpaPrintBatchTypeLookup j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaPrintBatchTypeLookup {
 

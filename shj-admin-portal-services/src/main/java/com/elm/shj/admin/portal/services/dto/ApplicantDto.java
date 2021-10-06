@@ -7,8 +7,9 @@ import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -29,7 +30,8 @@ import java.util.List;
         @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri")
 })
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class ApplicantDto implements Serializable {
 
     private static final long serialVersionUID = 4276580006724069703L;

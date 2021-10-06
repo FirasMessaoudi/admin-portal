@@ -3,15 +3,16 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * The persistent class for the shc_applicant_ritual database table.
@@ -22,7 +23,8 @@ import java.util.List;
 @Entity
 @Table(name = "shc_applicant_ritual")
 @NamedQuery(name = "JpaApplicantRitual.findAll", query = "SELECT j FROM JpaApplicantRitual j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaApplicantRitual implements Serializable {
 
@@ -65,16 +67,16 @@ public class JpaApplicantRitual implements Serializable {
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "applicantRitual")
-    private List<JpaApplicantRelative> relatives;
+    private Set<JpaApplicantRelative> relatives;
 
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.ALL,  mappedBy = "applicantRitual")
-    private List<JpaApplicantContact> contacts;
+    private Set<JpaApplicantContact> contacts;
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE} ,  mappedBy = "applicantRitual")
-    private List<JpaApplicantHealth>  applicantHealths;
+    private Set<JpaApplicantHealth>  applicantHealths;
 
     @PrePersist
     public void prePersist() {

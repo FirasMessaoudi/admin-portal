@@ -3,10 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.lookup;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Map;
 
@@ -16,7 +13,8 @@ import java.util.Map;
  * @author ahmad flaifel
  * @since 1.0.0
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

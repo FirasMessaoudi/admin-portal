@@ -4,8 +4,9 @@
 package com.elm.shj.admin.portal.orm.entity;
 
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -13,7 +14,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The persistent class for the shc_applicant_group database table.
@@ -24,7 +24,8 @@ import java.util.Set;
 @Entity
 @Table(name = "shc_applicant_group")
 @NamedQuery(name = "JpaApplicantGroup.findAll", query = "SELECT j FROM JpaApplicantGroup j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaApplicantGroup implements Serializable {
 

@@ -17,7 +17,8 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class AuditLogDto implements Serializable {
 
     private static final long serialVersionUID = 4778905193540470232L;

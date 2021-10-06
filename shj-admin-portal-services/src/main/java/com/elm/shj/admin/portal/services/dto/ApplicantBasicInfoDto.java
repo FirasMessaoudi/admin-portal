@@ -5,8 +5,9 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,7 +23,8 @@ import java.util.Date;
         @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri", groups = CheckFirst.class)
 })
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class ApplicantBasicInfoDto implements Serializable {
 
     private static final long serialVersionUID = -5830783311245682596L;
