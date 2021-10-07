@@ -32,3 +32,47 @@ GO
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (1, 35);
 
 GO
+
+
+SET IDENTITY_INSERT shc_portal.shc_notification_category_lk ON;
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
+VALUES (1, 'GENERAL', 'ar', N'عامة');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
+VALUES (2, 'GENERAL', 'en', 'General');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
+VALUES (3, 'HEALTH', 'ar', N'صحي');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
+VALUES (4, 'HEALTH', 'en', 'Health');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
+VALUES (5, 'RELIGIOUS', 'ar', N'دينية');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
+VALUES (6, 'RELIGIOUS', 'en', 'Religious');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
+VALUES (7, 'RITUAL', 'ar', N'شعيرة');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
+VALUES (8, 'RITUAL', 'en', 'Ritual');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
+VALUES (9, 'GENERAL_AWARENESS', 'ar', N'توعية عامة');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
+VALUES (10, 'GENERAL_AWARENESS', 'en', 'General Awareness');
+
+SET
+IDENTITY_INSERT shc_portal.shc_notification_category_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_notification_template_name_lk ON;
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
+VALUES (1, 'PASSWORD_EXPIRATION', 'ar', N'قرب انتهاء كلمة المرور');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
+VALUES (2, 'PASSWORD_EXPIRATION', 'en', 'Password Will Expire');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
+VALUES (3, 'OUT_ARAFAT_FENCE', 'ar', N'خارج حدود عرفات');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
+VALUES (4, 'OUT_ARAFAT_FENCE', 'en', 'Out of Arafat Geo Fence');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
+VALUES (5, 'DAILY_SURVEY', 'ar', N'تقييم الخدمات اليومية المقدمة');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
+VALUES (6, 'DAILY_SURVEY', 'en', 'Evaluate Daily Service');
+SET
+IDENTITY_INSERT shc_portal.shc_notification_template_name_lk OFF;
+GO

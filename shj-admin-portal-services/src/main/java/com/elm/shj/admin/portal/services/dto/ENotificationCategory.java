@@ -1,5 +1,10 @@
 package com.elm.shj.admin.portal.services.dto;
-
+/**
+ * Enum for card statuses
+ *
+ * @author Ahmed Ali
+ * @since 1.1.0
+ */
 public enum ENotificationCategory {
     GENERAL, HEALTH, RELIGIOUS, RITUAL, GENERAL_AWARENESS
 }
