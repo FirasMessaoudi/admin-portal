@@ -15,7 +15,14 @@ import {SvgIconModule} from '@app/_shared/components/svg-icon/svg-icon.module';
 
 // Toggle Dropdown
 import {ToggleDropdownModule} from '@shared/modules/toggle-dropdown/toggle-dropdown.module';
-import {AuthenticationService, CardService, DashboardService, RegisterService, UserService} from './services';
+import {
+  AuthenticationService,
+  CardService,
+  DashboardService,
+  NotificationService,
+  RegisterService,
+  UserService
+} from './services';
 import {DccCommonsNgServicesModule} from "@dcc-commons-ng/services";
 import {environment} from "@env/environment";
 import {LOGIN_URL, PUBLIC_URL_PATTERNS} from "@core/guards/authentication.guard";
@@ -50,6 +57,7 @@ import {LookupService} from "@core/utilities/lookup.service";
     AuthenticationService,
     CardService,
     LookupService,
+    NotificationService,
     {provide: 'environment', useValue: environment}
   ]
 })
