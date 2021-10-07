@@ -6,8 +6,9 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.dcc.foundation.commons.validation.*;
 import com.elm.shj.admin.portal.orm.entity.JpaUser;
 import com.google.common.base.MoreObjects;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +27,8 @@ import java.util.Set;
  * @since 1.0.0
  */
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class UserDto implements Serializable {
     private static final long serialVersionUID = 1L;
 

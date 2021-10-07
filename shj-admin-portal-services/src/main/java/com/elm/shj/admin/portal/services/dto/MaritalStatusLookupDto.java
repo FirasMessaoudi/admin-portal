@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +19,6 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@Data
 public class MaritalStatusLookupDto implements Serializable {
 
     private static final long serialVersionUID = 6978113421016404392L;

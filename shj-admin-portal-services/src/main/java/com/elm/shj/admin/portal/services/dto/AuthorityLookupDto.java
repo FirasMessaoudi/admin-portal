@@ -19,7 +19,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@Data
 public class AuthorityLookupDto implements Serializable {
 
     private static final long serialVersionUID = 4794323197461223130L;

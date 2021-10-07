@@ -3,8 +3,9 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
@@ -20,7 +21,8 @@ import java.util.Date;
 @Entity
 @Table(name = "shc_applicant_health_special_needs")
 @NamedQuery(name = "JpaApplicantHealthSpecialNeeds.findAll", query = "SELECT j FROM JpaApplicantHealthSpecialNeeds j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaApplicantHealthSpecialNeeds implements Serializable {
 

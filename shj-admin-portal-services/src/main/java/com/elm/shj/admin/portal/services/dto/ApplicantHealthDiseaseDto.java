@@ -9,8 +9,9 @@ import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
 import com.elm.shj.admin.portal.services.data.validators.WithApplicant;
 import com.elm.shj.admin.portal.services.data.validators.WithRitualPackage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -25,7 +26,8 @@ import java.util.Date;
  */
 @WithApplicant
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class ApplicantHealthDiseaseDto implements Serializable {
 
     private static final long serialVersionUID = 5702724312215614750L;

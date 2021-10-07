@@ -1,7 +1,8 @@
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -13,7 +14,8 @@ import java.io.Serializable;
  */
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class CompanyLiteDto implements Serializable {
 
     private static final long serialVersionUID = -2782740641877406749L;

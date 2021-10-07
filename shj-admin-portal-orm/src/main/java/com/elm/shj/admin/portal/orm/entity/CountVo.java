@@ -4,8 +4,9 @@
 package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Value object class for returned count.
@@ -14,7 +15,8 @@ import lombok.NoArgsConstructor;
  * @author ahmad flaifel
  * @since 1.4.0
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CountVo {

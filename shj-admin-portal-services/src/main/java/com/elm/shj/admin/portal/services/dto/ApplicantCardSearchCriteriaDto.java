@@ -1,14 +1,16 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class ApplicantCardSearchCriteriaDto implements Serializable {
     private String uin;
     private String idNumber;

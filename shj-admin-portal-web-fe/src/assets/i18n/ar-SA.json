@@ -116,7 +116,8 @@
     "welcome": "مرحبا",
     "change_password": "تغيير كلمة المرور",
     "my_profile": "ملفي الشخصي",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "my_information": "معلوماتي"
   },
   "home": {
     "title": "الصفحة الرئيسية",
@@ -378,7 +379,16 @@
     "package_details": "بيانات الباقة"
   },
   "notification-management": {
-    "title": "إدارة الإشعارات"
+    "title": "إدارة الإشعارات",
+    "notification-body": "محتوى الإشعار",
+    "notification-title": "عنوان الإشعار",
+    "severity": "الحدة",
+    "notification-category": "فئة الإشعار",
+    "notification-type": "نوع الإشعار",
+    "type-code": "نوع الرمز",
+    "body": "المحتوى",
+    "action-label": "اسم الحدث",
+    "expiry-date":"تاريخ انتهاء الصلاحية"
   },
   "printing-management": {
     "title": "إدارة الطباعة",
@@ -423,8 +433,9 @@
     "nationality": "الجنسية",
     "motawif": "مؤسسة الطوافة",
     "btn_cancel": "إلغاء",
-    "request_description": "وصف الطلب"
-
+    "request_description": "وصف الطلب",
+    "export_to_excel": "تصدير اكسل",
+    "export_to_pdf": "تصدير PDF"
   },
   "rule-management": {
     "title": "إدارة قواعد القرار",

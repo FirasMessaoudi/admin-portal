@@ -3,14 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.orm.entity.JpaDataRequestStatusLookup;
-import com.elm.shj.admin.portal.orm.entity.JpaDataSegment;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,7 +17,8 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class DataRequestStatusLookupDto implements Serializable {
 
     private static final long serialVersionUID = 4712345693540474532L;

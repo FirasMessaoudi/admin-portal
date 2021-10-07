@@ -6,7 +6,8 @@ package com.elm.shj.admin.portal.services.dto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -19,7 +20,8 @@ import java.util.List;
  * @author Ahmed Ali
  * @since 1.1.0
  */
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @Builder
 public class RitualPackageDto implements Serializable {

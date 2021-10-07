@@ -6,13 +6,13 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Dto class for the company.
@@ -22,7 +22,8 @@ import java.util.Set;
  */
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class CompanyDto {
 
     private static final long serialVersionUID = 436091561114554168L;

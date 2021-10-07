@@ -3,8 +3,9 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -23,7 +24,8 @@ import java.util.List;
 @Entity
 @Table(name = "shc_applicant")
 @NamedQuery(name = "JpaApplicant.findAll", query = "SELECT j FROM JpaApplicant j")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class JpaApplicant implements Serializable {
 
@@ -84,15 +86,15 @@ public class JpaApplicant implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantDigitalId> digitalIds;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantRelative> relatives;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantRitual> rituals;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantContact> contacts;
 

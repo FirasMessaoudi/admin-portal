@@ -3,10 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -16,7 +13,8 @@ import java.io.Serializable;
  * @author Slim Ben Hadj
  * @since 1.1.0
  */
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

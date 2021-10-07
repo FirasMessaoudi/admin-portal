@@ -7,8 +7,9 @@ import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -24,7 +25,8 @@ import java.util.Date;
 @WithRelative
 @WithApplicant
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class ApplicantRelativeDto implements Serializable {
 
     private static final long serialVersionUID = 1502487798507783275L;

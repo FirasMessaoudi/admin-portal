@@ -1,5 +1,4 @@
-USE
-shc_portal
+USE shc_portal
 GO
 -- shc_user data
 SET IDENTITY_INSERT shc_portal.shc_user ON;
@@ -9,8 +8,7 @@ values ('1', 1234567897, 'M',
         512345678, convert(date, '14/02/1972', 103), '$2a$10$A81/FuMFJWcxaJhUcL8isuVeKKa.hk7GVzTVTyf7xe/XoMVWuKckK',
         N'سعد'
            , N'عبد الرحمن', N'الغامدي', 1, current_timestamp);
-SET
-IDENTITY_INSERT shc_portal.shc_user OFF;
+SET IDENTITY_INSERT shc_portal.shc_user OFF;
 
 -- shc_config data
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
@@ -122,13 +120,12 @@ USE shc_portal
 GO
 INSERT INTO shc_portal.shc_user_password_history (user_id, old_password_hash) values (1, '$2a$10$MLt2QkqgBSo5WdVu5UJXjunvi0t/h.BKDJQWzO2tyrQKBysLmc9ou');
 
-DELETE
-FROM shc_portal.shc_config
+DELETE FROM shc_portal.shc_config
 where conf_key = 'elm.engines.filescan.host';
-DELETE
-FROM shc_portal.shc_config
+DELETE FROM shc_portal.shc_config
 where conf_key = 'elm.engines.filescan.port';
 GO
+
 USE shc_portal
 GO
 UPDATE shc_portal.shc_config

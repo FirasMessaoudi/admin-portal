@@ -119,7 +119,8 @@
     "welcome": "Welcome",
     "change_password": "Change Password",
     "my_profile": "My Profile",
-    "logout": "Logout"
+    "logout": "Logout",
+    "my_information": "My Information"
   },
 
   "home": {
@@ -390,7 +391,16 @@
     "package_details": "Package Details"
   },
   "notification-management": {
-    "title": "Notification Management"
+    "title": "Notification Management",
+    "notification-body": "Notification Body",
+    "notification-title": "Notification Title",
+    "severity": "Severity",
+    "notification-category": "Notification Category",
+    "notification-type": "Notification Type",
+    "type-code": "Type Code",
+    "body": "Body",
+    "action-label": "Action Label",
+    "expiry-date":"Expiry Date"
   },
   "printing-management": {
     "title": "Printing Management",
@@ -435,7 +445,9 @@
     "nationality": "Nationality",
     "motawif": "Motawif",
     "btn_cancel": "Cancel",
-    "request_description": "Request description"
+    "request_description": "Request description",
+    "export_to_excel": "Export to Excel",
+    "export_to_pdf": "Export to PDF"
   },
   "rule-management": {
     "title": "Decision Rule Management",

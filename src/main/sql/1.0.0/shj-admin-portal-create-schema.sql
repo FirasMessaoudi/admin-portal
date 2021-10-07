@@ -1,5 +1,4 @@
-create
-DATABASE "shc_portal";
+create DATABASE "shc_portal";
 GO
 USE shc_portal
 GO

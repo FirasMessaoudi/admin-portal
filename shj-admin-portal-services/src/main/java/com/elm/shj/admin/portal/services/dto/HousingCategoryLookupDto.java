@@ -3,8 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,7 +17,8 @@ import java.util.Date;
  * @since 1.1.0
  */
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class HousingCategoryLookupDto implements Serializable {
 
     private static final long serialVersionUID = -5468276967587051568L;

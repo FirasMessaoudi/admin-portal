@@ -5,8 +5,9 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -22,7 +23,8 @@ import java.util.List;
  * @since 1.1.0
  */
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class CompanyStaffDto {
     private static final long serialVersionUID = -4462482228404995089L;
     private long id;

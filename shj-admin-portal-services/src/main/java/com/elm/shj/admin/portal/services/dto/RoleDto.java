@@ -22,7 +22,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@Data
 public class RoleDto implements Serializable {
 
     private static final long serialVersionUID = 4778905195150470185L;
