@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TranslateService} from "@ngx-translate/core";
 import {I18nService} from "@dcc-commons-ng/services";
-import {PackageCatering} from "@model/package-catering.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {combineLatest} from "rxjs";
 import {map} from "rxjs/operators";
@@ -14,6 +13,7 @@ import {Language} from "@model/enum/language.enum";
 import {ApplicantCard} from "@model/card.model";
 import {EAuthority} from "@shared/model";
 import {NavigationService} from "@core/utilities/navigation.service";
+import {CardStatus} from "@model/enum/card-status.enum";
 
 @Component({
   selector: 'app-card-details',
@@ -24,9 +24,6 @@ export class CardDetailsComponent implements OnInit {
   cardId: number;
   card: ApplicantCard;
   url: any = 'assets/images/default-avatar.svg';
-  //TODO: to be deleted after wiring the backend to the frontend
-  hamlahPackage: any;
-
   ritualTypes: Lookup[];
   housingCategories: Lookup[];
   housingTypes: Lookup[];
@@ -38,9 +35,11 @@ export class CardDetailsComponent implements OnInit {
   healthSpecialNeeds: Lookup[];
   maritalStatuses: Lookup[];
   ritualStepsLabels: Lookup[];
+  cardStatuses: Lookup[];
   groupLeaderTitle: Lookup[];
   languageNativeName = Language;
   renderBackLink = false;
+
   constructor(private route: ActivatedRoute,
               private router: Router,
               private toastr: ToastService,
@@ -80,8 +79,6 @@ export class CardDetailsComponent implements OnInit {
         this.goToList();
       }
     });
-    //TODO: dummy data
-    this.hamlahPackage = {"id":1, "typeCode":{"id":1, "code":null, "label":"VIP", "lang":null}, "hamlahId":1, "campId":1, "price":6500, "departureCity":"Mombai", "countryId":1, "packageHousings":[{"id":1, "type":"مزدلفة", "code":"25475", "labelAr":"مخيم مشاعل النور", "labelEn":"", "validityStart":"01-04-2021", "validityEnd":"02-04-2021", "addressAr":"مزدلفة بجوار محطة القطار", "addressEn":"", "isDefault":true, "packageCaterings":[{"id":1, "type":"غداء", "meal":"", "descriptionAr":"بوفيه مفتوح", "descriptionEn":""}]}], "packageTransportations":[{"id":1, "type":"باص", "validityStart":"03-04-2021", "validityEnd":"04-04-2021", "locationFrom":"منى", "locationTo":"مزدلفة", "vehicleNumber":"ب ح ج 259"}]};
   }
 
   loadLookups() {
@@ -100,10 +97,13 @@ export class CardDetailsComponent implements OnInit {
     this.cardService.findMaritalStatuses().subscribe(result => {
       this.maritalStatuses = result;
     });
+    this.cardService.findCardStatuses().subscribe(result => {
+      this.cardStatuses = result;
+    });
     this.cardService.findRitualStepsLabels().subscribe(result => {
       this.ritualStepsLabels = result;
     });
-    this.cardService.findGroupLeaderTitleLabels().subscribe(result=> {
+    this.cardService.findGroupLeaderTitleLabels().subscribe(result => {
       this.groupLeaderTitle = result;
     })
 
@@ -149,13 +149,32 @@ export class CardDetailsComponent implements OnInit {
     this.navigationService.back();
   }
 
-  packageCaterings(): PackageCatering[] {
-    let packageCaterings: PackageCatering[] = [];
-    //TODO: to be refactored after wiring the backend to the frontend
-    this.hamlahPackage.packageHousings.forEach(housing => {
-      packageCaterings = packageCaterings.concat(housing.packageCaterings);
-    });
-    return packageCaterings;
+  /**
+   * Returns the css class for the given status
+   *
+   * @param status the current card status
+   */
+  buildStatusClass(status: any): string {
+    switch (status) {
+      case CardStatus.READY_TO_PRINT:
+        return "done";
+      case CardStatus.SENT_FOR_PRINT:
+        return "done";
+      case CardStatus.PRINTED:
+        return "done";
+      case CardStatus.DISTRIBUTED:
+        return "done";
+      case CardStatus.ACTIVE:
+        return "done";
+      case CardStatus.WAITING_TO_SEND:
+        return "done";
+      case CardStatus.SUSPENDED:
+        return "Suspended";
+      case CardStatus.CANCELLED:
+        return "new";
+      default:
+        return "done";
+    }
   }
 
 }

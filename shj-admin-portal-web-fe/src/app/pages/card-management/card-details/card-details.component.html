@@ -36,11 +36,23 @@
     </div>
     <div class="col">
       <div class="col-form-label">{{'card-management.applicant_id' | translate }}</div>
-      <div class="form-control-plaintext">{{card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</div>
+      <div *ngIf="card?.applicantRitual?.applicant?.digitalIds[0]?.uin as value; else elseBlock" class="form-control-plaintext text-center text-md-left">
+        <span class="mr-3">{{value}}</span>
+        <span>
+          <span class="status done mr-1"></span>
+          <span>{{'card-management.status_active' | translate}}</span>
+        </span>
+      </div>
     </div>
     <div class="col">
       <div class="col-form-label">{{'card-management.card_number' | translate }}</div>
-      <div class="form-control-plaintext">{{card?.referenceNumber || '---'}} {{card?.statusCode?.label}}</div>
+      <div *ngIf="card?.referenceNumber as value; else elseBlock" class="form-control-plaintext text-center text-md-left">
+        <span class="mr-3">{{value}}</span>
+        <span>
+          <span class="status {{buildStatusClass(card?.statusCode)}} mr-1"></span>
+          <span>{{card?.statusCode ? lookupService().localizedLabel(cardStatuses, card?.statusCode) : '---'}}</span>
+        </span>
+      </div>
     </div>
     <div class="col">
       <span class="avatar">
@@ -273,6 +285,6 @@
   </ul>
 
   <div [ngbNavOutlet]="nav" class="mt-2"></div>
-
+  <ng-template #elseBlock><span class="col-form-label">---</span></ng-template>
 </div>
 

@@ -364,7 +364,6 @@
     "yes": "نعم",
     "no": "لا",
     "main": "الاساسي",
-
     "package_type": "نوع الباقة",
     "camp_class":"فئة المخيم",
     "company_number": "رقم الشركة",
@@ -376,7 +375,8 @@
     "BREAKFAST": "فطار",
     "LUNCH": "غداء",
     "DINNER":"عشاء",
-    "package_details": "بيانات الباقة"
+    "package_details": "بيانات الباقة",
+    "status_active": "نشط"
   },
   "notification-management": {
     "title": "إدارة الإشعارات",
