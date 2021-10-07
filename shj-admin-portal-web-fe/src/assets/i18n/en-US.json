@@ -119,7 +119,8 @@
     "welcome": "Welcome",
     "change_password": "Change Password",
     "my_profile": "My Profile",
-    "logout": "Logout"
+    "logout": "Logout",
+    "my_information": "My Information"
   },
 
   "home": {

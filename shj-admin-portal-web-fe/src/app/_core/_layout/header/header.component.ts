@@ -28,8 +28,6 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.currentUser = this.authenticationService.currentUser
     this.titleService.setTitle(this.translate.instant('general.app_title'));
-
-
   }
 
   logout() {

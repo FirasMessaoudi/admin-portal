@@ -40,7 +40,7 @@
     </div>
     <div class="col">
       <div class="col-form-label">{{'card-management.card_number' | translate }}</div>
-      <div class="form-control-plaintext">{{card?.referenceNumber}} {{card?.statusCode?.label}}</div>
+      <div class="form-control-plaintext">{{card?.referenceNumber || '---'}} {{card?.statusCode?.label}}</div>
     </div>
     <div class="col">
       <span class="avatar">
