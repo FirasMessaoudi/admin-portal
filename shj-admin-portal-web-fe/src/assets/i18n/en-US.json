@@ -399,7 +399,8 @@
     "type-code": "Type Code",
     "body": "Body",
     "action-label": "Action Label",
-    "expiry-date":"Expiry Date"
+    "expiry-date":"Expiry Date",
+    "notification-name": "Notification Name"
   },
   "printing-management": {
     "title": "Printing Management",

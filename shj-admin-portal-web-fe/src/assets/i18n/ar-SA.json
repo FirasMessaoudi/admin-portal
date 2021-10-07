@@ -378,16 +378,17 @@
     "package_details": "بيانات الباقة"
   },
   "notification-management": {
-    "title": "إدارة الإشعارات",
-    "notification-body": "محتوى الإشعار",
-    "notification-title": "عنوان الإشعار",
+    "title": "إدارة التنبيهات",
+    "notification-body": "محتوى التنبيه",
+    "notification-title": "عنوان التنبيه",
     "severity": "الحدة",
-    "notification-category": "فئة الإشعار",
-    "notification-type": "نوع الإشعار",
+    "notification-category": "فئة التنبيه",
+    "notification-type": "نوع التنبيه",
     "type-code": "نوع الرمز",
     "body": "المحتوى",
     "action-label": "اسم الحدث",
-    "expiry-date":"تاريخ انتهاء الصلاحية"
+    "expiry-date":"تاريخ انتهاء الصلاحية",
+    "notification-name": "أسم التنبيه"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

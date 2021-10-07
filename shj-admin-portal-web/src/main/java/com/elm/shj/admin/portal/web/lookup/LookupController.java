@@ -44,6 +44,8 @@ public class LookupController {
     private final PackageTypeLookupService packageTypeLookupService;
     private final HousingSiteLookupService housingSiteLookupService;
     private final TransportationTypeLookupService transportationTypeLookupService;
+    private final NotificationCategoryLookupService notificationCategoryLookupService;
+    private final NotificationTemplateNameLookupService notificationTemplateNameLookupService;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -140,5 +142,16 @@ public class LookupController {
         return transportationTypeLookupService.findAll();
     }
 
+    @GetMapping("/notification-category/list")
+    public List<NotificationCategoryLookupDto> listNotificationCategories(Authentication authentication) {
+        log.debug("list notification category...");
+        return notificationCategoryLookupService.findAll();
+    }
+
+    @GetMapping("/notification-name/list")
+    public List<NotificationTemplateNameLookupDto> listNotificationTemplateNames(Authentication authentication) {
+        log.debug("list notification template name...");
+        return notificationTemplateNameLookupService.findAll();
+    }
 
 }
