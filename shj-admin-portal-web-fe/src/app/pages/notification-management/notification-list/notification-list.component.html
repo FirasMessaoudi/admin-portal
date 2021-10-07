@@ -29,21 +29,21 @@
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.severity" | translate }}</label>
-          <select formControlName="statusCode" class="custom-select">
+          <label class="col-form-label">{{ "notification-management.notification-name" | translate }}</label>
+          <select formControlName="notificationName" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option>
-              severity
+            <option *ngFor="let notificationName of lookupService().localizedItems(notificationNames)" [ngValue]="notificationName.code">
+              {{notificationName.label}}
             </option>
           </select>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification-category" | translate }}</label>
-          <select class="custom-select">
+          <select class="custom-select" formControlName="notificationCategory">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option>
-              notification category
+            <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)" [ngValue]="notificationCategory.code">
+              {{notificationCategory.label}}
             </option>
           </select>
         </div>

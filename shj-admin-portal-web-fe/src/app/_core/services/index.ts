@@ -7,3 +7,4 @@ export * from './dashboard/dashboard.service';
 export * from './card/card.service';
 export * from './data/data-segment.service';
 export * from './data/data-request.service';
+export * from './notification/notification.service';
