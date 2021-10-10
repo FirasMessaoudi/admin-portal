@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Dto class for the user notification queue domain.
+ * Dto class for the user notification domain.
  *
  * @author ahmad flaifel
  * @since 1.1.0
@@ -19,16 +19,15 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class NotificationQueueDto implements Serializable {
+public class UserNotificationDto implements Serializable {
 
-    private static final long serialVersionUID = -2499947945567039208L;
+    private static final long serialVersionUID = 5517356491343788168L;
 
     private long id;
     private long notificationTemplateId;
     private long userId;
-    private NotificationProcessingStatusLookupDto processingStatus;
-    private Date sendingDate;
+    private String resolvedBody;
+    private String statusCode;
     private Date creationDate;
     private Date updateDate;
-
 }

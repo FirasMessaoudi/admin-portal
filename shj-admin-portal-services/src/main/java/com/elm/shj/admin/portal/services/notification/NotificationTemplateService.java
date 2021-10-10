@@ -109,4 +109,14 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         };
     }
 
+        /**
+         * check if  Notification enabled By Name
+         *
+         * @param nameCode the nameCode of the notification template  to find
+         * @return boolean represent if  Notification enabled or not
+         */
+        public boolean isNotificationTemplateEnabled(String nameCode) {
+                return notificationTemplateRepository.isNotificationTemplateEnabled(nameCode);
+        }
+
 }

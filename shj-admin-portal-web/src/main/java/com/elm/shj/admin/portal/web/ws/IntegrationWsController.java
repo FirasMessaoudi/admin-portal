@@ -7,6 +7,7 @@ import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
+import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -81,6 +82,7 @@ public class IntegrationWsController {
     private final HousingSiteLookupService housingSiteLookupService;
     private final TransportationTypeLookupService transportationTypeLookupService;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
+    private final NotificationTemplateService notificationTemplateService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -455,6 +457,30 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findLatestApplicantRitualSeasonByUin(@PathVariable Long uin) {
         log.debug("Handler for {}", "Find all applicant ritual season by uin");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin)).build());
+    }
+
+    /**
+     * Finds Notification Template By Name
+     *
+     * @param nameCode the nameCode of the notification template  to find
+     * @return the found Notification Template or empty structure
+     */
+    @GetMapping("/notification/{nameCode}")
+    public ResponseEntity<WsResponse<?>> findNotificationTemplateByNameCode(@PathVariable String nameCode) {
+        log.debug("Handler for {}", "Find  Notification by nameCode");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationTemplateService.findNotificationTemplateByNameCode(nameCode)).build());
+    }
+
+    /**
+     * check if  Notification enabled By Name
+     *
+     * @param nameCode the nameCode of the notification template  to find
+     * @return boolean represent if  Notification enabled or not
+     */
+    @GetMapping("/notification/enabled/{nameCode}")
+    public ResponseEntity<WsResponse<?>> isNotificationTemplateEnabled(@PathVariable String nameCode) {
+        log.debug("Handler for {}", "Find is Notification Enabled by nameCode");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationTemplateService.isNotificationTemplateEnabled(nameCode)).build());
     }
 
 }
