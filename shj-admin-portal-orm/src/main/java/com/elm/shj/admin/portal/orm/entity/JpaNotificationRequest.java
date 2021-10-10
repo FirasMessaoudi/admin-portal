@@ -6,10 +6,13 @@ package com.elm.shj.admin.portal.orm.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * The persistent class for the shc_notification_request database table.
@@ -32,8 +35,9 @@ public class JpaNotificationRequest implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "notification_template_id")
-    private long notificationTemplateId;
+    @ManyToOne
+    @JoinColumn(name = "notification_template_id")
+    private JpaNotificationTemplate notificationTemplate;
 
     @Column(name = "user_id")
     private long userId;
@@ -47,6 +51,10 @@ public class JpaNotificationRequest implements Serializable {
 
     @Column(name = "sending_date")
     private Date sendingDate;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationRequest")
+    private Set<JpaNotificationRequestParameterValue> notificationRequestParameterValues;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

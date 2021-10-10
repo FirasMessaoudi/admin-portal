@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
+import com.elm.shj.admin.portal.services.notification.UserNotificationService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -83,6 +84,7 @@ public class IntegrationWsController {
     private final TransportationTypeLookupService transportationTypeLookupService;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private final NotificationTemplateService notificationTemplateService;
+    private final UserNotificationService userNotificationService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -459,28 +461,29 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin)).build());
     }
 
+
     /**
-     * Finds Notification Template By Name
+     * finds user notifications by user Id
      *
-     * @param nameCode the nameCode of the notification template  to find
-     * @return the found Notification Template or empty structure
+     * @param userId the userId to find notifications for
+     * @return the User Notifications
      */
-    @GetMapping("/notification/{nameCode}")
-    public ResponseEntity<WsResponse<?>> findNotificationTemplateByNameCode(@PathVariable String nameCode) {
-        log.debug("Handler for {}", "Find  Notification by nameCode");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationTemplateService.findNotificationTemplateByNameCode(nameCode)).build());
+    @GetMapping("/notification/{userId}")
+    public ResponseEntity<WsResponse<?>> findUserNotifications(@PathVariable long userId) {
+        log.debug("Handler for {}", "Find all user notifications by user Id");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.findUserNotifications(userId)).build());
     }
 
     /**
-     * check if  Notification enabled By Name
+     * save Password Expiry Notification Request
      *
-     * @param nameCode the nameCode of the notification template  to find
-     * @return boolean represent if  Notification enabled or not
+     * @param passwordExpiryNotificationRequest this is an object holding the details of password Expiry Notification Request
+     * @return the User Notifications
      */
-    @GetMapping("/notification/enabled/{nameCode}")
-    public ResponseEntity<WsResponse<?>> isNotificationTemplateEnabled(@PathVariable String nameCode) {
-        log.debug("Handler for {}", "Find is Notification Enabled by nameCode");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationTemplateService.isNotificationTemplateEnabled(nameCode)).build());
+    @PostMapping("/notification/password-expiry")
+    public ResponseEntity<WsResponse<?>> savePasswordExpiryNotificationRequest(@RequestBody @Validated PasswordExpiryNotificationRequest passwordExpiryNotificationRequest) {
+        log.debug("Handler for {}", "Find all user notifications by user Id");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.savePasswordExpiryNotificationRequest(passwordExpiryNotificationRequest)).build());
     }
 
 }

@@ -3,9 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,15 +14,17 @@ import java.util.Date;
  * @author ahmad flaifel
  * @since 1.1.0
  */
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class NotificationRequestParameterValueDto implements Serializable {
 
     private static final long serialVersionUID = 5399553423919052752L;
 
     private long id;
-    private long notificationRequestId;
+    private NotificationRequestDto notificationRequest;
     private long notificationTemplateParameterId;
     private String notificationTemplateParameterValue;
     private Date creationDate;

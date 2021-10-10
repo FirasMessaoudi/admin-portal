@@ -32,8 +32,10 @@ public class JpaNotificationRequestParameterValue implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "notification_request_id")
-    private long notificationRequestId;
+
+    @ManyToOne
+    @JoinColumn(name = "notification_request_id")
+    private JpaNotificationRequest notificationRequest;
 
     @Column(name = "notification_template_parameter_id")
     private long notificationTemplateParameterId;

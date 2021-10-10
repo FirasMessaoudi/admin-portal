@@ -32,8 +32,9 @@ public class JpaUserNotification implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "notification_template_id")
-    private long notificationTemplateId;
+    @ManyToOne
+    @JoinColumn(name = "notification_template_id")
+    private JpaNotificationTemplate notificationTemplate;
 
     @Column(name = "user_id")
     private long userId;
@@ -43,6 +44,9 @@ public class JpaUserNotification implements Serializable {
 
     @Column(name = "status_code")
     private String statusCode;
+
+    @Column(name = "user_lang")
+    private String userLang;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

@@ -32,8 +32,9 @@ public class JpaNotificationTemplateContent implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "notification_template_id")
-    private long notificationTemplateId;
+    @ManyToOne
+    @JoinColumn(name = "notification_template_id")
+    private JpaNotificationTemplate notificationTemplate;
 
     private String lang;
 

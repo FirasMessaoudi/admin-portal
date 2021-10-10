@@ -6,10 +6,13 @@ package com.elm.shj.admin.portal.orm.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * The persistent class for the shc_notification_template database table.
@@ -53,6 +56,18 @@ public class JpaNotificationTemplate implements Serializable {
 
     @Column(name = "user_specific")
     private boolean userSpecific;
+
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
+    private Set<JpaUserNotification> userNotifications;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
+    private Set<JpaNotificationTemplateContent> notificationTemplateContents;
+
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
+    private Set<JpaNotificationRequest> notificationRequests;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

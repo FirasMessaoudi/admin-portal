@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class NotificationCategoryLookupDto implements Serializable {
 
     private static final long serialVersionUID = -3311259714351332784L;
