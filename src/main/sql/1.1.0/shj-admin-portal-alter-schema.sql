@@ -509,8 +509,9 @@ ALTER TABLE shc_portal.shc_company_ritual_step_lk ADD summary VARCHAR(100);
 GO
 
 ALTER TABLE shc_portal.shc_print_request
-    ADD description NVARCHAR(150) default NULL;
+    ADD description NVARCHAR(150) NULL;
 GO
+
 ALTER TABLE shc_portal.shc_group_applicant_list
 DROP CONSTRAINT group_applicant_list_lk_unique;
 
@@ -738,10 +739,9 @@ CREATE TABLE shc_portal.shc_user_notification
     notification_template_id INT            NOT NULL,
     user_id                  INT            NOT NULL,
     resolved_body            NVARCHAR(1000) NOT NULL,
-    status_id                INT            NOT NULL,
+    status_code              VARCHAR(20)    NOT NULL,
     creation_date            SMALLDATETIME  NOT NULL DEFAULT current_timestamp,
     update_date              SMALLDATETIME  NULL,
-    CONSTRAINT fk_user_notification_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id),
-    CONSTRAINT fk_user_notification_user_notification_status_lk FOREIGN KEY (status_id) REFERENCES shc_portal.shc_user_notification_status_lk (id)
+    CONSTRAINT fk_user_notification_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id)
 );
 GO

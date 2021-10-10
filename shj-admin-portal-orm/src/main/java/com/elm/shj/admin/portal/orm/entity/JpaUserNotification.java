@@ -41,9 +41,8 @@ public class JpaUserNotification implements Serializable {
     @Column(name = "resolved_body")
     private String resolvedBody;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id")
-    private JpaUserNotificationStatusLookup notificationStatus;
+    @Column(name = "status_code")
+    private String statusCode;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
