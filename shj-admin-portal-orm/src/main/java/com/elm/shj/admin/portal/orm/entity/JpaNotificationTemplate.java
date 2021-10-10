@@ -6,10 +6,13 @@ package com.elm.shj.admin.portal.orm.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the shc_notification_template database table.
@@ -59,6 +62,14 @@ public class JpaNotificationTemplate implements Serializable {
 
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
+
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
+    private List<JpaNotificationTemplateContent> notificationTemplateContents;
+
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
+    private List<JpaNotificationTemplateParameter> notificationTemplateParameters;
 
     @PrePersist
     public void prePersist() {

@@ -50,4 +50,6 @@ public class Navigation {
 	// Integration
 	public static final String API_INTEGRATION = "/api/ws";
 
+	// notification management
+	public static final String API_NOTIFICATION = "/api/notification";
 }

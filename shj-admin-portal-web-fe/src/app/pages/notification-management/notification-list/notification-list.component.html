@@ -20,12 +20,12 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification-body" | translate }}</label>
-          <input type="text" class="form-control"/>
+          <input type="text" formControlName="notificationBody" class="form-control"/>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification-title" | translate }}</label>
-          <input type="text" class="form-control"/>
+          <input type="text" formControlName="notificationTitle" class="form-control"/>
         </div>
 
         <div class="form-group col">
@@ -52,16 +52,34 @@
           <label class="col-form-label">{{ "notification-management.notification-type" | translate }}</label>
           <div>
             <div class="custom-control custom-radio custom-control-inline mr-2">
-              <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
+              <input type="radio" formControlName="notificationType" id="customRadioInline1" name="notificationType" value="FYI" class="custom-control-input">
               <label class="custom-control-label" for="customRadioInline1">FYI</label>
             </div>
             <div class="custom-control custom-radio custom-control-inline mr-2">
-              <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
+              <input type="radio" formControlName="notificationType" id="customRadioInline2" name="notificationType" value="FYA" class="custom-control-input">
               <label class="custom-control-label" for="customRadioInline2">FYA</label>
             </div>
             <div class="custom-control custom-radio custom-control-inline mr-2">
-              <input type="radio" id="customRadioInline3" name="customRadioInline1" class="custom-control-input">
-              <label class="custom-control-label" for="customRadioInline3">ALL</label>
+              <input type="radio" formControlName="notificationType" id="customRadioInline3" name="notificationType" value="ALL" class="custom-control-input">
+              <label class="custom-control-label" for="customRadioInline3">{{ "notification-management.all" | translate }}</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "notification-management.severity" | translate }}</label>
+          <div>
+            <div class="custom-control custom-radio custom-control-inline mr-2">
+              <input type="radio" formControlName="severity" id="customRadioInline4" name="severity" value="IMPORTANT" class="custom-control-input">
+              <label class="custom-control-label" for="customRadioInline4">{{ "notification-management.important" | translate }}</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline mr-2">
+              <input type="radio" formControlName="severity" id="customRadioInline5" name="severity" value="NORMAL" class="custom-control-input">
+              <label class="custom-control-label" for="customRadioInline5">{{ "notification-management.normal" | translate }}</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline mr-2">
+              <input type="radio" formControlName="severity" id="customRadioInline6" name="severity" value="ALL" class="custom-control-input">
+              <label class="custom-control-label" for="customRadioInline6">{{ "notification-management.all" | translate }}</label>
             </div>
           </div>
         </div>
@@ -80,32 +98,41 @@
       <table id="printingRequests" class="table table-striped table-hover">
         <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">{{'notification-management.type-code' | translate}}</th>
+          <th scope="col">{{'notification-management.notification-name' | translate}}</th>
           <th scope="col">{{'notification-management.notification-title' | translate}}</th>
           <th scope="col">{{'notification-management.body' | translate}}</th>
+          <th scope="col">{{'notification-management.type' | translate}}</th>
           <th scope="col">{{'notification-management.action-label' | translate}}</th>
-          <th scope="col">{{'notification-management.expiry-date' | translate}}</th>
+          <th scope="col">{{'notification-management.severity' | translate}}</th>
           <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
-        <tr class="text-center">
+        <tr *ngIf="!page?.content || page?.totalElements === 0" class="text-center">
           <td colspan="10">
             <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
             <p class="text-light-gray mb-3">{{ "general.no_data_found_matching_given_criteria" | translate }}</p>
           </td>
         </tr>
-        <tr>
-          <td>1111</td>
-          <td>1111</td>
-          <td class="ltr">1111</td>
-          <td class="ltr">1111</td>
-          <td class="ltr">1111</td>
-          <td class="ltr">1111
+        <tr *ngFor="let template of notificationTemplates">
+          <td class="ltr">{{lookupService().localizedLabel(notificationNames,template?.nameCode)}}</td>
+          <td class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.title || '---'}}</td>
+          <td class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.body || '---'}}</td>
+          <td class="ltr">
+            {{template?.actionRequired ==true? 'FYA' : 'FYA'}}
           </td>
+          <td class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.actionLabel || '---'}}</td>
+          <td class="ltr" *ngIf="template?.important == true">
+            <span class="status mr-1 Suspended"></span>
+            {{'notification-management.important' |translate}}
+          </td>
+          <td class="ltr" *ngIf="template?.important == false">
+              {{'notification-management.normal' |translate}}
+              <span class="status mr-1 done"></span>
+          </td>
+
           <td>
-            <button [routerLink]="['/print-requests/details']"
+            <button [routerLink]="['']"
                     class="btn btn-link tblView">
               {{"general.btn_edit" | translate}}
             </button>
