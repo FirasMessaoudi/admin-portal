@@ -382,14 +382,19 @@
     "title": "إدارة التنبيهات",
     "notification-body": "محتوى التنبيه",
     "notification-title": "عنوان التنبيه",
-    "severity": "الحدة",
+    "notification-name": "عنوان التنبيه",
+    "severity": "الأهمية",
     "notification-category": "فئة التنبيه",
     "notification-type": "نوع التنبيه",
     "type-code": "نوع الرمز",
     "body": "المحتوى",
     "action-label": "اسم الحدث",
     "expiry-date":"تاريخ انتهاء الصلاحية",
-    "notification-name": "أسم التنبيه"
+    "notification-name": "أسم التنبيه",
+    "important": "مهمة",
+    "normal": "عادية",
+    "all": "الكل",
+    "type": "النوع"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

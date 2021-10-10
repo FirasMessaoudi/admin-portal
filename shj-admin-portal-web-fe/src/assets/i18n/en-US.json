@@ -393,6 +393,7 @@
   "notification-management": {
     "title": "Notification Management",
     "notification-body": "Notification Body",
+    "notification-name": "Notification Name",
     "notification-title": "Notification Title",
     "severity": "Severity",
     "notification-category": "Notification Category",
@@ -401,7 +402,11 @@
     "body": "Body",
     "action-label": "Action Label",
     "expiry-date":"Expiry Date",
-    "notification-name": "Notification Name"
+    "notification-name": "Notification Name",
+    "important": "Important",
+    "normal": "Normal",
+    "all": "All",
+    "type": "Type"
   },
   "printing-management": {
     "title": "Printing Management",

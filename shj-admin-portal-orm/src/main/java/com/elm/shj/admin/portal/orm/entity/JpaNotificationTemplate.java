@@ -12,6 +12,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -68,6 +69,10 @@ public class JpaNotificationTemplate implements Serializable {
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
     private Set<JpaNotificationRequest> notificationRequests;
+
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
+    private List<JpaNotificationTemplateParameter> notificationTemplateParameters;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

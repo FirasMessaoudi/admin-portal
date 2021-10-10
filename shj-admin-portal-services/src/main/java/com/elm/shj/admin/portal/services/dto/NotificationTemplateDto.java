@@ -13,6 +13,7 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import java.util.List;
 
 /**
  * Dto class for the notification template domain.
@@ -39,6 +40,7 @@ public class NotificationTemplateDto implements Serializable {
     private Set<JpaNotificationTemplateContent> notificationTemplateContents;
     private Set<JpaNotificationRequest> notificationRequests;
     private Set<JpaUserNotification> userNotifications;
+    private List<NotificationTemplateParameterDto> notificationTemplateParameters;
 
     private Date creationDate;
     private Date updateDate;

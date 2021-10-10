@@ -24,7 +24,7 @@ public class NotificationTemplateContentDto implements Serializable {
     private static final long serialVersionUID = -5368515528390490032L;
 
     private long id;
-    private long notificationTemplateId;
+    private NotificationTemplateDto notificationTemplate;
     private String lang;
     private String title;
     private String body;
