@@ -12,20 +12,20 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the shc_notification_queue database table.
+ * The persistent class for the shc_user_notification database table.
  *
  * @author ahmad flaifel
  * @since 1.1.0
  */
 @Entity
-@Table(name = "shc_notification_queue")
-@NamedQuery(name = "JpaNotificationQueue.findAll", query = "SELECT j FROM JpaNotificationQueue j")
-@Getter
+@Table(name = "shc_user_notification")
+@NamedQuery(name = "JpaUserNotification.findAll", query = "SELECT j FROM JpaUserNotification j")
 @Setter
+@Getter
 @NoArgsConstructor
-public class JpaNotificationQueue implements Serializable {
+public class JpaUserNotification implements Serializable {
 
-    private static final long serialVersionUID = 2666204322272391703L;
+    private static final long serialVersionUID = 5278838751694591343L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,12 +38,12 @@ public class JpaNotificationQueue implements Serializable {
     @Column(name = "user_id")
     private long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "processing_status_id")
-    private JpaNotificationProcessingStatusLookup processingStatus;
+    @Column(name = "resolved_body")
+    private String resolvedBody;
 
-    @Column(name = "sending_date")
-    private Date sendingDate;
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private JpaUserNotificationStatusLookup notificationStatus;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
