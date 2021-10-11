@@ -25,7 +25,7 @@ public class UserNotificationDto implements Serializable {
 
     private long id;
     private long notificationTemplateId;
-    private long userId;
+    private String uin;
     private String resolvedBody;
     private String statusCode;
     private Date creationDate;

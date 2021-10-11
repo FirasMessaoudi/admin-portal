@@ -36,8 +36,7 @@ public class JpaUserNotification implements Serializable {
     @JoinColumn(name = "notification_template_id")
     private JpaNotificationTemplate notificationTemplate;
 
-    @Column(name = "user_id")
-    private long userId;
+    private String uin;
 
     @Column(name = "resolved_body")
     private String resolvedBody;
