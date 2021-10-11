@@ -32,7 +32,7 @@ public class CompanyRitualStepMainDataService extends GenericService<JpaCompanyR
      *
      * @return list of company ritual steps
      */
-    public List<CompanyRitualStepMainDataDto> findByApplicantUin(String applicantUin, long ritualSeasonId) {
+    public List<CompanyRitualStepMainDataDto> findCompanyRitualStepsByApplicantUinAndRitualId(String applicantUin, long ritualSeasonId) {
         try {
             List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(applicantUin, ritualSeasonId);
             List<CompanyRitualStepMainDataDto> result = mapList(companyRitualSteps);

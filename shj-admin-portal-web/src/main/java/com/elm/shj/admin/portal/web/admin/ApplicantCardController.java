@@ -149,7 +149,7 @@ public class ApplicantCardController {
                 applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
-                List<CompanyRitualStepMainDataDto> companyRitualSteps = companyRitualStepService.findByApplicantUin(uin, companyRitualSeasonId);
+                List<CompanyRitualStepMainDataDto> companyRitualSteps = companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, companyRitualSeasonId);
                 applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
                 List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, companyRitualSeasonId);
                 applicantCardDto.setGroupLeaders(groupLeaders);

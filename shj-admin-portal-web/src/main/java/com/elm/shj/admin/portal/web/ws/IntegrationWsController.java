@@ -318,7 +318,7 @@ public class IntegrationWsController {
     @GetMapping("/company-ritual-step/{uin}/{seasonRitualId}")
     public ResponseEntity<WsResponse<?>> listCompanyRitualStep(@PathVariable String uin, @PathVariable long seasonRitualId) {
         log.info("list company ritual step...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findByApplicantUin(uin, seasonRitualId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, seasonRitualId)).build());
     }
 
     /**
@@ -412,7 +412,7 @@ public class IntegrationWsController {
     @GetMapping("/program-time-table/{uin}/{seasonRitualId}")
     public ResponseEntity<WsResponse<?>> programTimeTable(@PathVariable String uin, @PathVariable long seasonRitualId) {
         log.info("list company ritual step...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findByApplicantUin(uin, seasonRitualId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, seasonRitualId)).build());
     }
 
     /**

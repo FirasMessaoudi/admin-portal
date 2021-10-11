@@ -68,14 +68,14 @@ public class CompanyRitualStepServiceTest {
         Mockito.when(companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(anyString(),anyLong())).thenReturn(jpaCompanyRitualStepList);
         Mockito.when(companyRitualStepDtoMapper.fromEntityList(any(),any())).thenReturn(companyRitualStepDtos);
 
-        List<CompanyRitualStepMainDataDto> result = serviceToTest.findByApplicantUin(UIN,RITUAL_SEASON_ID);
+        List<CompanyRitualStepMainDataDto> result = serviceToTest.findCompanyRitualStepsByApplicantUinAndRitualId(UIN,RITUAL_SEASON_ID);
         assertEquals(1,result.size());
     }
     @Test
     public void test_find_company_ritual_step_by_uin_fail(){
         Mockito.when(companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(anyString(),anyLong())).thenReturn(null);
 
-        List<CompanyRitualStepMainDataDto> result = serviceToTest.findByApplicantUin(UIN,RITUAL_SEASON_ID);
+        List<CompanyRitualStepMainDataDto> result = serviceToTest.findCompanyRitualStepsByApplicantUinAndRitualId(UIN,RITUAL_SEASON_ID);
         assertNull(result);
     }
 }
