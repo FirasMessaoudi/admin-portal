@@ -7,6 +7,7 @@ import org.mapstruct.TargetType;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 
 public interface HibernateAwareMapper {
@@ -17,6 +18,14 @@ public interface HibernateAwareMapper {
 
         if (!Util.wasInitialized(c)) {
             return Collections.emptyList();
+        }
+        return null;
+    }
+
+    @BeforeMapping
+    default <T> Set<T> fixLazyLoadingSet(Collection<?> c, @TargetType Class<?> targetType) {
+        if (!Util.wasInitialized(c)) {
+            return Collections.emptySet();
         }
         return null;
     }

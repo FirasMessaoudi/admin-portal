@@ -3,17 +3,14 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.orm.entity.JpaNotificationRequest;
-import com.elm.shj.admin.portal.orm.entity.JpaNotificationTemplateContent;
-import com.elm.shj.admin.portal.orm.entity.JpaUserNotification;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Dto class for the notification template domain.
@@ -37,9 +34,9 @@ public class NotificationTemplateDto implements Serializable {
     private boolean actionRequired;
     private boolean enabled;
     private boolean userSpecific;
-    private Set<JpaNotificationTemplateContent> notificationTemplateContents;
-    private Set<JpaNotificationRequest> notificationRequests;
-    private Set<JpaUserNotification> userNotifications;
+    private Set<NotificationTemplateContentDto> notificationTemplateContents;
+    private Set<NotificationRequestDto> notificationRequests;
+    private Set<UserNotificationDto> userNotifications;
     private List<NotificationTemplateParameterDto> notificationTemplateParameters;
 
     private Date creationDate;

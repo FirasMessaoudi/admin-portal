@@ -14,5 +14,5 @@ import org.mapstruct.Mapper;
  * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
-public abstract class NotificationRequestDtoMapper implements IGenericMapper<NotificationRequestDto, JpaNotificationRequest> {
+public abstract class NotificationRequestDtoMapper implements IGenericMapper<NotificationRequestDto, JpaNotificationRequest>,HibernateAwareMapper{
 }

@@ -63,6 +63,9 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
             root.fetch("notificationTemplateContents");
+
+            predicates.add(criteriaBuilder.equal(root.get("typeCode"), "SYSTEM_DEFINED"));
+
             if (notificationSearchCriteria.getNotificationTitle() != null && notificationSearchCriteria.getNotificationTitle().trim().length() > 0) {
                 Join<Object, Object> joinParent = root.join("notificationTemplateContents");
                 Path expression = joinParent.get("title");
@@ -84,25 +87,12 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
             }
 
             if (notificationSearchCriteria.getNotificationType() != null) {
-                switch (notificationSearchCriteria.getNotificationType()) {
-                    case FYA:
-                        predicates.add(criteriaBuilder.equal(root.get("actionRequired"), true));
-                        break;
-                    case FYI:
-                        predicates.add(criteriaBuilder.equal(root.get("actionRequired"), false));
-                        break;
-                }
+                predicates.add(criteriaBuilder.equal(root.get("actionRequired"), notificationSearchCriteria.getNotificationType()));
+
             }
 
             if (notificationSearchCriteria.getSeverity() != null) {
-                switch (notificationSearchCriteria.getSeverity()) {
-                    case IMPORTANT:
-                        predicates.add(criteriaBuilder.equal(root.get("important"), true));
-                        break;
-                    case NORMAL:
-                        predicates.add(criteriaBuilder.equal(root.get("important"), false));
-                        break;
-                }
+                predicates.add(criteriaBuilder.equal(root.get("important"), notificationSearchCriteria.getSeverity()));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

@@ -17,6 +17,6 @@ public class NotificationSearchCriteriaDto implements Serializable {
     private String notificationTitle;
     private String notificationCategory;
     private String notificationName;
-    private ENotificationSeverity severity;
-    private ENotificationType notificationType;
+    private Boolean severity;
+    private Boolean notificationType;
 }
