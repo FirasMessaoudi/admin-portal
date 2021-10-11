@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
  * @author Ahmed Ali
  * @since 1.1.0
  */
-public interface NotificationTemplateRepository extends JpaRepository<JpaNotificationTemplate, Long> {
+public interface NotificationTemplateRepository extends JpaRepository<JpaNotificationTemplate, Long>, JpaSpecificationExecutor<JpaNotificationTemplate> {
     JpaNotificationTemplate findByNameCodeAndEnabledTrue(String nameCode);
 
     @Query(value = "select n.enabled from JpaNotificationTemplate n where " + " n.nameCode = :nameCode ")
