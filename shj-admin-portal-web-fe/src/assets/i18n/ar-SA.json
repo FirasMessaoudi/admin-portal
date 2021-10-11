@@ -388,13 +388,15 @@
     "notification-type": "نوع التنبيه",
     "type-code": "نوع الرمز",
     "body": "المحتوى",
-    "action-label": "اسم الحدث",
+    "action-label": "اسم الإجراء",
     "expiry-date":"تاريخ انتهاء الصلاحية",
-    "notification-name": "أسم التنبيه",
+    "notification-name": "اسم التنبيه",
     "important": "مهمة",
     "normal": "عادية",
     "all": "الكل",
-    "type": "النوع"
+    "type": "النوع",
+    "FYI":"للإطلاع",
+    "FYA": "لإتخاذ إجراء"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

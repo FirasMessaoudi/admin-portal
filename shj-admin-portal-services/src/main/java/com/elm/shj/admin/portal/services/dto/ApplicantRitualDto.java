@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Dto class for the applicant ritual domain.
@@ -84,8 +84,8 @@ public class ApplicantRitualDto implements Serializable {
     @NestedCells
     private ApplicantBasicInfoDto applicantBasicInfo;
 
-    private List<ApplicantContactDto> contacts;
-    private List<ApplicantRelativeDto> relatives;
-    private List<ApplicantHealthDto> applicantHealths;
+    private Set<ApplicantContactDto> contacts;
+    private Set<ApplicantRelativeDto> relatives;
+    private Set<ApplicantHealthDto> applicantHealths;
     private String typeCode;
 }

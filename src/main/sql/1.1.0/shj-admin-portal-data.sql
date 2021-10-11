@@ -76,3 +76,36 @@ VALUES (6, 'DAILY_SURVEY', 'en', 'Evaluate Daily Service');
 SET
 IDENTITY_INSERT shc_portal.shc_notification_template_name_lk OFF;
 GO
+
+SET IDENTITY_INSERT shc_portal.shc_notification_template_status_lk ON;
+INSERT INTO shc_portal.shc_notification_template_status_lk (id, code, lang, label) VALUES (1, 'CONFIRMED', 'ar', N'معتمدة');
+INSERT INTO shc_portal.shc_notification_template_status_lk (id, code, lang, label) VALUES (2, 'CONFIRMED', 'en', 'Confirmed');
+INSERT INTO shc_portal.shc_notification_template_status_lk (id, code, lang, label) VALUES (3, 'DRAFT', 'ar', N'نسخة أولية');
+INSERT INTO shc_portal.shc_notification_template_status_lk (id, code, lang, label) VALUES (4, 'DRAFT', 'en', 'Draft');
+SET IDENTITY_INSERT shc_portal.shc_notification_template_status_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_notification_processing_status_lk ON;
+INSERT INTO shc_portal.shc_notification_processing_status_lk (id, code, description) VALUES (1, 'NEW', 'Newly created notification request');
+INSERT INTO shc_portal.shc_notification_processing_status_lk (id, code, description) VALUES (2, 'UNDER_PROCESSING', 'Under processing');
+INSERT INTO shc_portal.shc_notification_processing_status_lk (id, code, description) VALUES (3, 'FAILED', 'Failed to process');
+SET IDENTITY_INSERT shc_portal.shc_notification_processing_status_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_notification_template_type_lk ON;
+INSERT INTO shc_portal.shc_notification_template_type_lk (id, code, lang, label) VALUES (1, 'SYSTEM_DEFINED', 'ar', N'أليا');
+INSERT INTO shc_portal.shc_notification_template_type_lk (id, code, lang, label) VALUES (2, 'SYSTEM_DEFINED', 'en', 'System Defined');
+INSERT INTO shc_portal.shc_notification_template_type_lk (id, code, lang, label) VALUES (3, 'USER_DEFINED', 'ar', N'معرف من المستخدم');
+INSERT INTO shc_portal.shc_notification_template_type_lk (id, code, lang, label) VALUES (4, 'USER_DEFINED', 'en', 'User Defined');
+SET IDENTITY_INSERT shc_portal.shc_notification_template_type_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_user_notification_status_lk ON;
+INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (1, 'NEW', 'ar', N'جديد');
+INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (2, 'NEW', 'en', 'New');
+INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (3, 'READ', 'ar', N'مقروءة');
+INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (4, 'READ', 'en', 'Read');
+INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (5, 'EXPIRED', 'ar', N'منتهية');
+INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (6, 'EXPIRED', 'en', 'Expired');
+SET IDENTITY_INSERT shc_portal.shc_user_notification_status_lk OFF;
+GO

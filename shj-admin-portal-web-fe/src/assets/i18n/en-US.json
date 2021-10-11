@@ -406,7 +406,9 @@
     "important": "Important",
     "normal": "Normal",
     "all": "All",
-    "type": "Type"
+    "type": "Type",
+    "FYI":"FYI",
+    "FYA": "FYA"
   },
   "printing-management": {
     "title": "Printing Management",
