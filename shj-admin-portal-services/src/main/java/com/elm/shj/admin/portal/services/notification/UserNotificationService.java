@@ -39,6 +39,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
      * @param userId the userId of the notifications  to find for
      * @return the found Notifications  or empty structure
      */
+    //TODO: INITIAL CODE TO BE REFACOTORED
     public List<DetailedUserNotificationDto> findUserNotifications(long userId) {
         List<DetailedUserNotificationDto> detailedUserNotificationDtos = new ArrayList<>();
         List<JpaUserNotification> userNotifications = userNotificationRepository.findByUserId(userId);
@@ -65,6 +66,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
         notificationRequestService.save(notificationRequestDto);
     }
 
+    //TODO: INITIAL CODE TO BE REFACOTORED
     public void savePasswordExpiryNotificationRequest(PasswordExpiryNotificationRequest passwordExpiryNotificationRequest) {
         Optional<NotificationTemplateDto> notificationTemplate = notificationTemplateService.findEnabledNotificationTemplateByNameCode(TEMPLATE_NAME);
         if (!notificationTemplate.isPresent()) {
@@ -114,6 +116,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
 
     }
 
+    //TODO: INITIAL CODE TO BE REFACOTORED
     private long findTemplateParameterId(Optional<NotificationTemplateDto> notificationTemplate, String parameterName) {
         try {
             return notificationTemplate.get().getNotificationTemplateParameters().parallelStream().filter(nt -> nt.getParameterName().equals(parameterName)).findAny().get().getId();
