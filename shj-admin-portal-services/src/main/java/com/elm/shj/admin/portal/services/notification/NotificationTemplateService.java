@@ -39,7 +39,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
      * @param nameCode the nameCode of the notification template  to find
      * @return the found Notification Template or empty structure
      */
-    public Optional<NotificationTemplateDto> findNotificationTemplateByNameCode(String nameCode) {
+    public Optional<NotificationTemplateDto> findEnabledNotificationTemplateByNameCode(String nameCode) {
         JpaNotificationTemplate jpaNotificationTemplate = notificationTemplateRepository.findByNameCodeAndEnabledTrue(nameCode);
         return (jpaNotificationTemplate != null) ? Optional.of(getMapper().fromEntity(jpaNotificationTemplate, mappingContext)) : Optional.empty();
     }
@@ -63,6 +63,9 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
             root.fetch("notificationTemplateContents");
+
+            predicates.add(criteriaBuilder.equal(root.get("typeCode"), "SYSTEM_DEFINED"));
+
             if (notificationSearchCriteria.getNotificationTitle() != null && notificationSearchCriteria.getNotificationTitle().trim().length() > 0) {
                 Join<Object, Object> joinParent = root.join("notificationTemplateContents");
                 Path expression = joinParent.get("title");
@@ -84,25 +87,12 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
             }
 
             if (notificationSearchCriteria.getNotificationType() != null) {
-                switch (notificationSearchCriteria.getNotificationType()) {
-                    case FYA:
-                        predicates.add(criteriaBuilder.equal(root.get("actionRequired"), true));
-                        break;
-                    case FYI:
-                        predicates.add(criteriaBuilder.equal(root.get("actionRequired"), false));
-                        break;
-                }
+                predicates.add(criteriaBuilder.equal(root.get("actionRequired"), notificationSearchCriteria.getNotificationType()));
+
             }
 
             if (notificationSearchCriteria.getSeverity() != null) {
-                switch (notificationSearchCriteria.getSeverity()) {
-                    case IMPORTANT:
-                        predicates.add(criteriaBuilder.equal(root.get("important"), true));
-                        break;
-                    case NORMAL:
-                        predicates.add(criteriaBuilder.equal(root.get("important"), false));
-                        break;
-                }
+                predicates.add(criteriaBuilder.equal(root.get("important"), notificationSearchCriteria.getSeverity()));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

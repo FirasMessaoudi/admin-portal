@@ -13,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Service handling  User Notification
@@ -33,6 +30,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
     private final NotificationRequestRepository notificationRequestRepository;
     private final NotificationRequestParameterValueRepository notificationRequestParameterValueRepo;
     public final static String TEMPLATE_NAME = "PASSWORD_EXPIRATION";
+    private final NotificationRequestService notificationRequestService;
     private final NotificationTemplateService notificationTemplateService;
 
     /**
@@ -41,6 +39,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
      * @param userId the userId of the notifications  to find for
      * @return the found Notifications  or empty structure
      */
+    //TODO: INITIAL CODE TO BE REFACOTORED
     public List<DetailedUserNotificationDto> findUserNotifications(long userId) {
         List<DetailedUserNotificationDto> detailedUserNotificationDtos = new ArrayList<>();
         List<JpaUserNotification> userNotifications = userNotificationRepository.findByUserId(userId);
@@ -62,8 +61,14 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
         return detailedUserNotificationDtos;
     }
 
-    public Object savePasswordExpiryNotificationRequest(PasswordExpiryNotificationRequest passwordExpiryNotificationRequest) {
-        Optional<NotificationTemplateDto> notificationTemplate = notificationTemplateService.findNotificationTemplateByNameCode(TEMPLATE_NAME);
+
+    public void saveNotificationRequest(NotificationRequestDto notificationRequestDto) {
+        notificationRequestService.save(notificationRequestDto);
+    }
+
+    //TODO: INITIAL CODE TO BE REFACOTORED
+    public void savePasswordExpiryNotificationRequest(PasswordExpiryNotificationRequest passwordExpiryNotificationRequest) {
+        Optional<NotificationTemplateDto> notificationTemplate = notificationTemplateService.findEnabledNotificationTemplateByNameCode(TEMPLATE_NAME);
         if (!notificationTemplate.isPresent()) {
             //throw custom exception and return specific error code
         }
@@ -76,19 +81,49 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                     notificationRequest.setUserId(param.getUserId());
                     notificationRequest.setProcessingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build());
                     notificationRequest.setSendingDate(new Date());
-                    /**get list of parameters for each template
-                     * check if incoming parameter is found in this template parameters list or not
-                     * if yes insert it with its value if not ignore the incoming one
-                     *
-                     * */
-//                    notificationRequest.setNotificationRequestParameterValues();
 
+
+                    Set<NotificationRequestParameterValueDto> notificationRequestParamValue = new HashSet<>();
+                    notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
+                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, "userName"))
+                            .notificationTemplateParameterValue(param.getUserName())
+                            .notificationRequest(notificationRequest).build());
+                    notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
+                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, "userLang"))
+                            .notificationTemplateParameterValue(param.getUserLang())
+                            .notificationRequest(notificationRequest).build());
+                    notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
+                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, "userId"))
+                            .notificationTemplateParameterValue(Long.toString(param.getUserId()))
+                            .notificationRequest(notificationRequest).build());
+                    notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
+                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, "dayDiff"))
+                            .notificationTemplateParameterValue(Integer.toString(param.getDayDiff()))
+                            .notificationRequest(notificationRequest).build());
+                    notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
+                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, "uin"))
+                            .notificationTemplateParameterValue(Long.toString(param.getUin()))
+                            .notificationRequest(notificationRequest).build());
+
+                    notificationRequest.setNotificationRequestParameterValues(notificationRequestParamValue);
+
+                    saveNotificationRequest(notificationRequest);
 
                 }
 
         );
-//        notificationRequest.setUserLang(passwordExpiryNotificationRequest.getParameterValueList().parallelStream().filter(param-> param.getUserLang().equals()));
-//      notificationRequestRepository.save()
-        return new Object();
+
+
+    }
+
+    //TODO: INITIAL CODE TO BE REFACOTORED
+    private long findTemplateParameterId(Optional<NotificationTemplateDto> notificationTemplate, String parameterName) {
+        try {
+            return notificationTemplate.get().getNotificationTemplateParameters().parallelStream().filter(nt -> nt.getParameterName().equals(parameterName)).findAny().get().getId();
+        } catch (Exception e) {
+            //catch custom exception for parameter not found in template parameter list
+            return -1;
+        }
+
     }
 }

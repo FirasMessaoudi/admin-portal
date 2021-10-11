@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class NotificationRequestDto implements Serializable {
     private static final long serialVersionUID = -2499947945567039208L;
 
     private long id;
+    @JsonBackReference
     @NotNull(message = "validation.data.constraints.msg.20001")
     private NotificationTemplateDto notificationTemplate;
     @NotNull(message = "validation.data.constraints.msg.20001")

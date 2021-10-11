@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -130,11 +131,11 @@ public class ApplicantCardController {
 
 
         applicantCardDto.setApplicantRitual(applicantRitualDto);
-        applicantCardDto.getApplicantRitual().getApplicant().setContacts(applicantRitualDto.getContacts());
-        applicantCardDto.getApplicantRitual().getApplicant().setRelatives(applicantRitualDto.getRelatives());
+        applicantCardDto.getApplicantRitual().getApplicant().setContacts(new ArrayList<>(applicantRitualDto.getContacts()));
+        applicantCardDto.getApplicantRitual().getApplicant().setRelatives(new ArrayList<>(applicantRitualDto.getRelatives()));
 
         if (CollectionUtils.isNotEmpty(applicantRitualDto.getApplicantHealths())) {
-            applicantCardDto.getApplicantRitual().getApplicant().setApplicantHealth(applicantRitualDto.getApplicantHealths().get(0));
+            applicantCardDto.getApplicantRitual().getApplicant().setApplicantHealth(new ArrayList<>(applicantRitualDto.getApplicantHealths()).get(0));
         }
         List<ApplicantDigitalIdDto> digitalIds = applicantCardDto.getApplicantRitual().getApplicant().getDigitalIds();
         if (digitalIds.size() > 0) {

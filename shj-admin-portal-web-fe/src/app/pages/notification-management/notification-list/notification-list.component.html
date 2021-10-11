@@ -32,7 +32,8 @@
           <label class="col-form-label">{{ "notification-management.notification-name" | translate }}</label>
           <select formControlName="notificationName" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option *ngFor="let notificationName of lookupService().localizedItems(notificationNames)" [ngValue]="notificationName.code">
+            <option *ngFor="let notificationName of lookupService().localizedItems(notificationNames)"
+                    [ngValue]="notificationName.code">
               {{notificationName.label}}
             </option>
           </select>
@@ -42,47 +43,33 @@
           <label class="col-form-label">{{ "notification-management.notification-category" | translate }}</label>
           <select class="custom-select" formControlName="notificationCategory">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)" [ngValue]="notificationCategory.code">
+            <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
+                    [ngValue]="notificationCategory.code">
               {{notificationCategory.label}}
             </option>
           </select>
         </div>
 
+
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification-type" | translate }}</label>
-          <div>
-            <div class="custom-control custom-radio custom-control-inline mr-2">
-              <input type="radio" formControlName="notificationType" id="customRadioInline1" name="notificationType" value="FYI" class="custom-control-input">
-              <label class="custom-control-label" for="customRadioInline1">FYI</label>
-            </div>
-            <div class="custom-control custom-radio custom-control-inline mr-2">
-              <input type="radio" formControlName="notificationType" id="customRadioInline2" name="notificationType" value="FYA" class="custom-control-input">
-              <label class="custom-control-label" for="customRadioInline2">FYA</label>
-            </div>
-            <div class="custom-control custom-radio custom-control-inline mr-2">
-              <input type="radio" formControlName="notificationType" id="customRadioInline3" name="notificationType" value="ALL" class="custom-control-input">
-              <label class="custom-control-label" for="customRadioInline3">{{ "notification-management.all" | translate }}</label>
-            </div>
-          </div>
+          <select formControlName="notificationType" class="custom-select">
+            <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
+            <option [ngValue]="true">{{ "notification-management.FYA" | translate }}</option>
+            <option [ngValue]="false">{{"notification-management.FYI" | translate }}</option>
+          </select>
         </div>
+
 
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.severity" | translate }}</label>
-          <div>
-            <div class="custom-control custom-radio custom-control-inline mr-2">
-              <input type="radio" formControlName="severity" id="customRadioInline4" name="severity" value="IMPORTANT" class="custom-control-input">
-              <label class="custom-control-label" for="customRadioInline4">{{ "notification-management.important" | translate }}</label>
-            </div>
-            <div class="custom-control custom-radio custom-control-inline mr-2">
-              <input type="radio" formControlName="severity" id="customRadioInline5" name="severity" value="NORMAL" class="custom-control-input">
-              <label class="custom-control-label" for="customRadioInline5">{{ "notification-management.normal" | translate }}</label>
-            </div>
-            <div class="custom-control custom-radio custom-control-inline mr-2">
-              <input type="radio" formControlName="severity" id="customRadioInline6" name="severity" value="ALL" class="custom-control-input">
-              <label class="custom-control-label" for="customRadioInline6">{{ "notification-management.all" | translate }}</label>
-            </div>
-          </div>
+          <select formControlName="severity" class="custom-select">
+            <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
+            <option [ngValue]="true">{{ "notification-management.important" | translate }}</option>
+            <option [ngValue]="false">{{ "notification-management.normal" | translate }}</option>
+          </select>
         </div>
+
 
         <div class="form-group col-12">
           <button id="btnSearch" type="submit" (click)="search()" class="btn btn-dcc-primary px-5 mr-3">
@@ -115,20 +102,23 @@
           </td>
         </tr>
         <tr *ngFor="let template of notificationTemplates">
-          <td class="ltr">{{lookupService().localizedLabel(notificationNames,template?.nameCode)}}</td>
-          <td class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.title || '---'}}</td>
-          <td class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.body || '---'}}</td>
+          <td class="ltr">{{lookupService().localizedLabel(notificationNames, template?.nameCode)}}</td>
+          <td
+            class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.title || '---'}}</td>
+          <td
+            class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.body || '---'}}</td>
           <td class="ltr">
-            {{template?.actionRequired ==true? 'FYA' : 'FYA'}}
+            {{(template?.actionRequired == true ? 'notification-management.FYA'  : 'notification-management.FYI') | translate}}
           </td>
-          <td class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.actionLabel || '---'}}</td>
+          <td
+            class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.actionLabel || '---'}}</td>
           <td class="ltr" *ngIf="template?.important == true">
             <span class="status mr-1 Suspended"></span>
             {{'notification-management.important' |translate}}
           </td>
           <td class="ltr" *ngIf="template?.important == false">
-              {{'notification-management.normal' |translate}}
-              <span class="status mr-1 done"></span>
+            {{'notification-management.normal' |translate}}
+            <span class="status mr-1 done"></span>
           </td>
 
           <td>

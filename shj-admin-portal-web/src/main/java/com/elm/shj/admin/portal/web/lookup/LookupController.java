@@ -46,6 +46,9 @@ public class LookupController {
     private final TransportationTypeLookupService transportationTypeLookupService;
     private final NotificationCategoryLookupService notificationCategoryLookupService;
     private final NotificationTemplateNameLookupService notificationTemplateNameLookupService;
+    private final NotificationTemplateTypeLookupService notificationTemplateTypeLookupService;
+    private final UserNotificationStatusLookupService userNotificationStatusLookupService;
+    private final NotificationTemplateStatusLookupService notificationTemplateStatusLookupService;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -100,12 +103,14 @@ public class LookupController {
         return printBatchTypeLookupService.findAll();
     }
 
+    //TODO: remove "label" word from the method name and replace underscore in URL by dash
     @GetMapping("/company_ritual_step/list")
     public List<CompanyRitualStepLookupDto> listCompanyRitualStepsLabel(Authentication authentication) {
         log.debug("list company ritual step labels...");
         return companyRitualStepLookupService.findAll();
     }
 
+    //TODO: remove "label" word from the method name and replace underscore in URL by dash
     @GetMapping("/company_staff_title/list")
     public List<CompanyStaffTitleLookupDto> listCompanyStaffTitleLabel(Authentication authentication) {
         log.debug("list company staff title labels...");
@@ -152,6 +157,24 @@ public class LookupController {
     public List<NotificationTemplateNameLookupDto> listNotificationTemplateNames(Authentication authentication) {
         log.debug("list notification template name...");
         return notificationTemplateNameLookupService.findAll();
+    }
+
+    @GetMapping("/notification-template-type/list")
+    public List<NotificationTemplateTypeLookupDto> listNotificationTemplateTypes() {
+        log.debug("list notification template types...");
+        return notificationTemplateTypeLookupService.findAll();
+    }
+
+    @GetMapping("/user-notification-status/list")
+    public List<UserNotificationStatusLookupDto> listUserNotificationStatuses() {
+        log.debug("list user notification statuses...");
+        return userNotificationStatusLookupService.findAll();
+    }
+
+    @GetMapping("/notification-template-status/list")
+    public List<NotificationTemplateStatusLookupDto> listNotificationTemplateStatuses() {
+        log.debug("list notification template statuses...");
+        return notificationTemplateStatusLookupService.findAll();
     }
 
 }
