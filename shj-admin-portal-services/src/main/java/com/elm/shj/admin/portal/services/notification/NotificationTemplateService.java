@@ -39,7 +39,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
      * @param nameCode the nameCode of the notification template  to find
      * @return the found Notification Template or empty structure
      */
-    public Optional<NotificationTemplateDto> findNotificationTemplateByNameCode(String nameCode) {
+    public Optional<NotificationTemplateDto> findEnabledNotificationTemplateByNameCode(String nameCode) {
         JpaNotificationTemplate jpaNotificationTemplate = notificationTemplateRepository.findByNameCodeAndEnabledTrue(nameCode);
         return (jpaNotificationTemplate != null) ? Optional.of(getMapper().fromEntity(jpaNotificationTemplate, mappingContext)) : Optional.empty();
     }

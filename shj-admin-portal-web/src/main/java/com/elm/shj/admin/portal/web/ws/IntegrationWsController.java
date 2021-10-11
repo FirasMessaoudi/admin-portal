@@ -483,7 +483,8 @@ public class IntegrationWsController {
     @PostMapping("/notification/password-expiry")
     public ResponseEntity<WsResponse<?>> savePasswordExpiryNotificationRequest(@RequestBody @Validated PasswordExpiryNotificationRequest passwordExpiryNotificationRequest) {
         log.debug("Handler for {}", "Find all user notifications by user Id");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.savePasswordExpiryNotificationRequest(passwordExpiryNotificationRequest)).build());
+        userNotificationService.savePasswordExpiryNotificationRequest(passwordExpiryNotificationRequest);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(null).build());
     }
 
 }
