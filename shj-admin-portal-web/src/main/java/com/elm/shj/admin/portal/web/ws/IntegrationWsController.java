@@ -463,22 +463,22 @@ public class IntegrationWsController {
 
 
     /**
-     * finds user notifications by user's UIN
+     * finds user notifications by user Id
      *
-     * @param uin the UIN to find notifications for
+     * @param userId the userId to find notifications for
      * @return the User Notifications
      */
-    @GetMapping("/notification/{uin}")
-    public ResponseEntity<WsResponse<?>> findUserNotifications(@PathVariable String uin) {
+    @GetMapping("/notification/{userId}")
+    public ResponseEntity<WsResponse<?>> findUserNotifications(@PathVariable long userId) {
         log.debug("Handler for {}", "Find all user notifications by user Id");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.findUserNotifications(uin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.findUserNotifications(userId)).build());
     }
 
     /**
      * save Password Expiry Notification Request
      *
      * @param passwordExpiryNotificationRequest this is an object holding the details of password Expiry Notification Request
-     * @return the User Notifications
+     * @return success message if process ended successfully
      */
     @PostMapping("/notification/password-expiry")
     public ResponseEntity<WsResponse<?>> savePasswordExpiryNotificationRequest(@RequestBody @Validated PasswordExpiryNotificationRequest passwordExpiryNotificationRequest) {
@@ -487,4 +487,18 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(null).build());
     }
 
+
+    /**
+     * update User Notification Status
+     *
+     * @param notificationId is the id for the notification
+     * @param statusCode     is the code for the new status
+     * @return success message if process ended successfully
+     */
+    @PostMapping("/notification/update-status")
+    public ResponseEntity<WsResponse<?>> updateUserNotificationStatus(Long notificationId, String statusCode) {
+        log.debug("Handler for {}", "update user notification status based on notification Id and status code");
+        userNotificationService.updateUserNotificationStatus(notificationId, statusCode);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(null).build());
+    }
 }

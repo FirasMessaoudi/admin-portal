@@ -43,13 +43,13 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
     /**
      * Finds user Notification by user's UIN
      *
-     * @param uin the UIN of the notifications to find for
-     * @return the found Notifications or empty structure
+     * @param userId the userId of the notifications  to find for
+     * @return the found Notifications  or empty structure
      */
     //TODO: INITIAL CODE TO BE REFACOTORED
-    public List<DetailedUserNotificationDto> findUserNotifications(String uin) {
+    public List<DetailedUserNotificationDto> findUserNotifications(long userId) {
         List<DetailedUserNotificationDto> detailedUserNotificationDtos = new ArrayList<>();
-        List<JpaUserNotification> userNotifications = userNotificationRepository.findByUin(uin);
+        List<JpaUserNotification> userNotifications = userNotificationRepository.findByUserId(userId);
         userNotifications.parallelStream().forEach(
                 notification -> {
                     Optional<JpaNotificationTemplateContent> notificationTemplateContent = notification.getNotificationTemplate().getNotificationTemplateContents().stream().filter(content -> content.getLang().equals(notification.getUserLang())).findAny();
@@ -60,8 +60,8 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                             .actionRequired(notification.getNotificationTemplate().isActionRequired())
                             .userSpecific(notification.getNotificationTemplate().isUserSpecific())
                             .categoryCode(notification.getNotificationTemplate().getCategoryCode())
-                            .title(notificationTemplateContent.map(JpaNotificationTemplateContent::getTitle).orElse(null))
-                            .actionLabel(notificationTemplateContent.map(JpaNotificationTemplateContent::getActionLabel).orElse(null))
+                            .title(notificationTemplateContent.isPresent() ? notificationTemplateContent.get().getTitle() : null)
+                            .actionLabel(notificationTemplateContent.isPresent() ? notificationTemplateContent.get().getActionLabel() : null)
                             .creationDate(notification.getCreationDate())
                             .build());
                 });
@@ -120,8 +120,12 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
 
     }
 
+    public int updateUserNotificationStatus(Long notificationId, String statusCode) {
+        return userNotificationRepository.updateUserNotificationStatus(notificationId, statusCode);
+    }
+
     //TODO: INITIAL CODE TO BE REFACOTORED
     private long findTemplateParameterId(Optional<NotificationTemplateDto> notificationTemplate, String parameterName) {
-            return notificationTemplate.get().getNotificationTemplateParameters().parallelStream().filter(nt -> nt.getParameterName().equals(parameterName)).findAny().get().getId();
+        return notificationTemplate.get().getNotificationTemplateParameters().parallelStream().filter(nt -> nt.getParameterName().equals(parameterName)).findAny().get().getId();
     }
 }

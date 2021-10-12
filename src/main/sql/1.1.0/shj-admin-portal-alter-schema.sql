@@ -735,13 +735,19 @@ GO
 if not exists(select * from sys.tables where name = 'shc_user_notification')
 CREATE TABLE shc_portal.shc_user_notification
 (
-    id                       INT            NOT NULL PRIMARY KEY IDENTITY (1,1),
-    notification_template_id INT            NOT NULL,
-    user_id                  INT            NOT NULL,
+    id                       INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    notification_template_id INT           NOT NULL,
+    user_id                  INT           NOT NULL,
     resolved_body            NVARCHAR(1000) NOT NULL,
-    status_code              VARCHAR(20)    NOT NULL,
-    creation_date            SMALLDATETIME  NOT NULL DEFAULT current_timestamp,
-    update_date              SMALLDATETIME  NULL,
+    status_code              VARCHAR(20)   NOT NULL,
+    creation_date            SMALLDATETIME NOT NULL DEFAULT current_timestamp,
+    update_date              SMALLDATETIME NULL,
     CONSTRAINT fk_user_notification_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id)
 );
+GO
+
+
+GO
+ALTER TABLE shc_portal.shc_user_notification
+    ADD user_lang varchar(45) not null;
 GO

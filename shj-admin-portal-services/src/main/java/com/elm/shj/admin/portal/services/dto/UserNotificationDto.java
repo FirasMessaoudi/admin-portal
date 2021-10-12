@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,8 +25,9 @@ public class UserNotificationDto implements Serializable {
     private static final long serialVersionUID = 5517356491343788168L;
 
     private long id;
+    @JsonBackReference
     private long notificationTemplateId;
-    private String uin;
+    private long userId;
     private String resolvedBody;
     private String statusCode;
     private Date creationDate;
