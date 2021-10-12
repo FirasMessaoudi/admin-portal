@@ -26,8 +26,7 @@ public class CompanyRitualStepDto implements Serializable {
 
     private long id;
 
-    @JsonBackReference
-    private ApplicantGroupDto applicantGroup;
+    private String referenceNumber;
 
     private String transportationTypeCode;
 

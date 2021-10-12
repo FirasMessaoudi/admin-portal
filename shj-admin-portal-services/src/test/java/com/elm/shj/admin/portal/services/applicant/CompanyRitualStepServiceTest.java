@@ -9,8 +9,6 @@ import com.elm.shj.admin.portal.orm.repository.CompanyRitualStepRepository;
 import com.elm.shj.admin.portal.services.applicant.CompanyRitualStepService;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualStepDto;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualStepDtoMapper;
-import com.elm.shj.admin.portal.services.dto.CompanyRitualStepMainDataDto;
-import com.elm.shj.admin.portal.services.dto.CompanyRitualStepMainDataDtoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,16 +38,16 @@ public class CompanyRitualStepServiceTest {
     private final static String UIN = "59737700000059";
     private final static long RITUAL_SEASON_ID = 1;
     @InjectMocks
-    private CompanyRitualStepMainDataService serviceToTest;
+    private CompanyRitualStepService serviceToTest;
     @Mock
     private CompanyRitualStepRepository companyRitualStepRepository;
     @Mock
     private MapperRegistry mapperRegistry;
     @Mock
-    private CompanyRitualStepMainDataDtoMapper companyRitualStepDtoMapper;
+    private CompanyRitualStepDtoMapper companyRitualStepDtoMapper;
     @BeforeEach
     public void setUp() throws IllegalAccessException {
-        Mockito.lenient().when(mapperRegistry.mapperOf(CompanyRitualStepMainDataDto.class, JpaCompanyRitualStep.class)).thenReturn(companyRitualStepDtoMapper);
+        Mockito.lenient().when(mapperRegistry.mapperOf(CompanyRitualStepDto.class, JpaCompanyRitualStep.class)).thenReturn(companyRitualStepDtoMapper);
 
         Field mapperRegistryField = ReflectionUtils.findField(serviceToTest.getClass(), "mapperRegistry");
         Field repositoryField = ReflectionUtils.findField(serviceToTest.getClass(), "repository");
@@ -64,18 +62,18 @@ public class CompanyRitualStepServiceTest {
     @Test
     public void test_find_company_ritual_step_by_uin_success(){
         List<JpaCompanyRitualStep> jpaCompanyRitualStepList = new ArrayList<>();
-        List<CompanyRitualStepMainDataDto> companyRitualStepDtos = new ArrayList<>();
+        List<CompanyRitualStepDto> companyRitualStepDtos = new ArrayList<>();
         Mockito.when(companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(anyString(),anyLong())).thenReturn(jpaCompanyRitualStepList);
         Mockito.when(companyRitualStepDtoMapper.fromEntityList(any(),any())).thenReturn(companyRitualStepDtos);
 
-        List<CompanyRitualStepMainDataDto> result = serviceToTest.findCompanyRitualStepsByApplicantUinAndRitualId(UIN,RITUAL_SEASON_ID);
+        List<CompanyRitualStepDto> result = serviceToTest.findCompanyRitualStepsByApplicantUinAndRitualId(UIN,RITUAL_SEASON_ID);
         assertEquals(1,result.size());
     }
     @Test
     public void test_find_company_ritual_step_by_uin_fail(){
         Mockito.when(companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(anyString(),anyLong())).thenReturn(null);
 
-        List<CompanyRitualStepMainDataDto> result = serviceToTest.findCompanyRitualStepsByApplicantUinAndRitualId(UIN,RITUAL_SEASON_ID);
+        List<CompanyRitualStepDto> result = serviceToTest.findCompanyRitualStepsByApplicantUinAndRitualId(UIN,RITUAL_SEASON_ID);
         assertNull(result);
     }
 }

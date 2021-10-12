@@ -236,7 +236,7 @@ public abstract class AbstractControllerTestSuite {
     protected UserDto loggedInUser;
 
     @MockBean
-    protected CompanyRitualStepMainDataService companyRitualStepMainDataService;
+    protected CompanyRitualStepService companyRitualStepService;
 
     @MockBean
     protected CompanyStaffService companyStaffService;

@@ -69,7 +69,7 @@ public class IntegrationWsController {
     private final ApplicantHealthLiteService applicantHealthLiteService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
     private final ApplicantMainDataService applicantMainDataService;
-    private final CompanyRitualStepMainDataService companyRitualStepMainDataService;
+    private final CompanyRitualStepService companyRitualStepService;
     private final CompanyStaffService companyStaffService;
     private final CompanyRitualStepLookupService companyRitualStepLookupService;
     private final CompanyStaffLookupService companyStaffLookupService;
@@ -318,7 +318,7 @@ public class IntegrationWsController {
     @GetMapping("/company-ritual-step/{uin}/{seasonRitualId}")
     public ResponseEntity<WsResponse<?>> listCompanyRitualStep(@PathVariable String uin, @PathVariable long seasonRitualId) {
         log.info("list company ritual step...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, seasonRitualId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, seasonRitualId)).build());
     }
 
     /**
@@ -412,7 +412,7 @@ public class IntegrationWsController {
     @GetMapping("/program-time-table/{uin}/{seasonRitualId}")
     public ResponseEntity<WsResponse<?>> programTimeTable(@PathVariable String uin, @PathVariable long seasonRitualId) {
         log.info("list company ritual step...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepMainDataService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, seasonRitualId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, seasonRitualId)).build());
     }
 
     /**
