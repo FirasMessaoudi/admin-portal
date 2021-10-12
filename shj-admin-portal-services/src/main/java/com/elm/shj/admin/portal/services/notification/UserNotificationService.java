@@ -1,10 +1,10 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.services.notification;
 
 import com.elm.shj.admin.portal.orm.entity.JpaNotificationTemplateContent;
 import com.elm.shj.admin.portal.orm.entity.JpaUserNotification;
-import com.elm.shj.admin.portal.orm.repository.NotificationRequestParameterValueRepository;
-import com.elm.shj.admin.portal.orm.repository.NotificationRequestRepository;
-import com.elm.shj.admin.portal.orm.repository.NotificationTemplateRepository;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -25,10 +25,7 @@ import java.util.*;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserNotificationService extends GenericService<JpaUserNotification, UserNotificationDto, Long> {
-    private final UserNotificationRepository userNotificationRepository;
-    private final NotificationTemplateRepository notificationTemplateRepository;
-    private final NotificationRequestRepository notificationRequestRepository;
-    private final NotificationRequestParameterValueRepository notificationRequestParameterValueRepo;
+
     public final static String TEMPLATE_NAME = "PASSWORD_EXPIRATION";
     public final static String PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_1 = "user_name";
     public final static String PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_2 = "uin";
@@ -36,7 +33,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
     public final static String PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_4 = "user_lang";
     public final static String PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_5 = "expiry_day_count";
 
-
+    private final UserNotificationRepository userNotificationRepository;
     private final NotificationRequestService notificationRequestService;
     private final NotificationTemplateService notificationTemplateService;
 
@@ -122,6 +119,16 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
 
     public int updateUserNotificationStatus(Long notificationId, String statusCode) {
         return userNotificationRepository.updateUserNotificationStatus(notificationId, statusCode);
+    }
+
+    /**
+     * Retrieve user new notifications count.
+     *
+     * @param userId user id
+     * @return number of un-read user notifications.
+     */
+    public int retrieveUserNewNotificationsCount(long userId) {
+        return userNotificationRepository.countByUserIdAndStatusCode(userId, EUserNotificationStatus.NEW.name());
     }
 
     //TODO: INITIAL CODE TO BE REFACOTORED
