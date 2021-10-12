@@ -33,4 +33,8 @@ export class DataRequestAddComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  ngAfterViewInit() {
+    this.cdr.detectChanges();
+  }
+
 }
