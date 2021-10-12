@@ -463,15 +463,15 @@ public class IntegrationWsController {
 
 
     /**
-     * finds user notifications by user Id
+     * finds user notifications by user's UIN
      *
-     * @param userId the userId to find notifications for
+     * @param uin the UIN to find notifications for
      * @return the User Notifications
      */
-    @GetMapping("/notification/{userId}")
-    public ResponseEntity<WsResponse<?>> findUserNotifications(@PathVariable long userId) {
+    @GetMapping("/notification/{uin}")
+    public ResponseEntity<WsResponse<?>> findUserNotifications(@PathVariable String uin) {
         log.debug("Handler for {}", "Find all user notifications by user Id");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.findUserNotifications(userId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.findUserNotifications(uin)).build());
     }
 
     /**
