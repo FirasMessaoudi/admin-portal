@@ -9,7 +9,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,10 +33,11 @@ public class NotificationTemplateDto implements Serializable {
     private boolean actionRequired;
     private boolean enabled;
     private boolean userSpecific;
+
     private Set<NotificationTemplateContentDto> notificationTemplateContents;
     private Set<NotificationRequestDto> notificationRequests;
     private Set<UserNotificationDto> userNotifications;
-    private List<NotificationTemplateParameterDto> notificationTemplateParameters;
+    private Set<NotificationTemplateParameterDto> notificationTemplateParameters;
 
     private Date creationDate;
     private Date updateDate;

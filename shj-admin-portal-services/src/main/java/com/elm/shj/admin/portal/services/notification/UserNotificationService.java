@@ -30,6 +30,13 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
     private final NotificationRequestRepository notificationRequestRepository;
     private final NotificationRequestParameterValueRepository notificationRequestParameterValueRepo;
     public final static String TEMPLATE_NAME = "PASSWORD_EXPIRATION";
+    public final static String PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_1 = "user_name";
+    public final static String PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_2 = "uin";
+    public final static String PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_3 = "user_id";
+    public final static String PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_4 = "user_lang";
+    public final static String PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_5 = "expiry_day_count";
+
+
     private final NotificationRequestService notificationRequestService;
     private final NotificationTemplateService notificationTemplateService;
 
@@ -81,32 +88,29 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                     notificationRequest.setUserId(param.getUserId());
                     notificationRequest.setProcessingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build());
                     notificationRequest.setSendingDate(new Date());
-
-
                     Set<NotificationRequestParameterValueDto> notificationRequestParamValue = new HashSet<>();
                     notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
-                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, "userName"))
+                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_1))
                             .notificationTemplateParameterValue(param.getUserName())
                             .notificationRequest(notificationRequest).build());
                     notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
-                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, "userLang"))
-                            .notificationTemplateParameterValue(param.getUserLang())
+                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_2))
+                            .notificationTemplateParameterValue(Long.toString(param.getUin()))
                             .notificationRequest(notificationRequest).build());
                     notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
-                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, "userId"))
+                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_3))
                             .notificationTemplateParameterValue(Long.toString(param.getUserId()))
                             .notificationRequest(notificationRequest).build());
                     notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
-                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, "dayDiff"))
-                            .notificationTemplateParameterValue(Integer.toString(param.getDayDiff()))
+                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_4))
+                            .notificationTemplateParameterValue(param.getUserLang())
                             .notificationRequest(notificationRequest).build());
                     notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
-                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, "uin"))
-                            .notificationTemplateParameterValue(Long.toString(param.getUin()))
+                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_PARAMETER_NAME_5))
+                            .notificationTemplateParameterValue(Integer.toString(param.getDayDiff()))
                             .notificationRequest(notificationRequest).build());
 
                     notificationRequest.setNotificationRequestParameterValues(notificationRequestParamValue);
-
                     saveNotificationRequest(notificationRequest);
 
                 }
@@ -118,12 +122,6 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
 
     //TODO: INITIAL CODE TO BE REFACOTORED
     private long findTemplateParameterId(Optional<NotificationTemplateDto> notificationTemplate, String parameterName) {
-        try {
             return notificationTemplate.get().getNotificationTemplateParameters().parallelStream().filter(nt -> nt.getParameterName().equals(parameterName)).findAny().get().getId();
-        } catch (Exception e) {
-            //catch custom exception for parameter not found in template parameter list
-            return -1;
-        }
-
     }
 }
