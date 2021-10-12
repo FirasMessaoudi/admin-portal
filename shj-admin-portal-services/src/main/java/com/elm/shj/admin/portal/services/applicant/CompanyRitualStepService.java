@@ -4,7 +4,9 @@
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualStep;
+import com.elm.shj.admin.portal.orm.repository.CompanyRitualStepRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualStepDto;
+import com.elm.shj.admin.portal.services.dto.CompanyRitualStepMainDataDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,4 +25,22 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyRitualStepService extends GenericService<JpaCompanyRitualStep, CompanyRitualStepDto, Long> {
+    private final CompanyRitualStepRepository companyRitualStepRepository;
+
+    /**
+     * find company ritual steps by applicant uin
+     *
+     * @return list of company ritual steps
+     */
+    public List<CompanyRitualStepDto> findCompanyRitualStepsByApplicantUinAndRitualId(String applicantUin, long ritualSeasonId) {
+        try {
+            List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(applicantUin, ritualSeasonId);
+            List<CompanyRitualStepDto> result = mapList(companyRitualSteps);
+            result.forEach(companyRitualStep -> companyRitualStep.setReferenceNumber(companyRitualSteps.get(0).getApplicantGroup().getReferenceNumber()));
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
 }

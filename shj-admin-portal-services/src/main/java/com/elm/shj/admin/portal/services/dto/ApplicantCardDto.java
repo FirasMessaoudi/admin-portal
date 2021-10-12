@@ -34,7 +34,7 @@ public class ApplicantCardDto implements Serializable, HibernateAwareMapper {
     private List<CompanyStaffDto> groupLeaders;
     private String statusCode;
     private Date creationDate;
-    private List<CompanyRitualStepMainDataDto> companyRitualSteps;
+    private List<CompanyRitualStepDto> companyRitualSteps;
     private List<ApplicantPackageCateringDto> applicantPackageCaterings;
     private List<ApplicantPackageHousingDto> applicantPackageHousings;
     private List<ApplicantPackageTransportationDto> applicantPackageTransportations;

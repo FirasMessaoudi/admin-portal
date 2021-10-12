@@ -44,7 +44,7 @@ public class ApplicantCardController {
     private final CompanyStaffService companyStaffService;
     private final CompanyLiteService companyLiteService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
-    private final CompanyRitualStepMainDataService companyRitualStepService;
+    private final CompanyRitualStepService companyRitualStepService;
     private final ApplicantRitualService applicantRitualService;
     private static final String APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG = "no card details found for applicant with this uin";
     private static final int CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
@@ -150,7 +150,7 @@ public class ApplicantCardController {
                 applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
-                List<CompanyRitualStepMainDataDto> companyRitualSteps = companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, companyRitualSeasonId);
+                List<CompanyRitualStepDto> companyRitualSteps = companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, companyRitualSeasonId);
                 applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
                 List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, companyRitualSeasonId);
                 applicantCardDto.setGroupLeaders(groupLeaders);
