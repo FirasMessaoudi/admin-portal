@@ -21,60 +21,35 @@ INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (13, 34)
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_authority_lk ON;
-
-INSERT INTO shc_portal.shc_authority_lk(id, label_ar, label_en, code, parent_id)
-VALUES (35, N'إدارة الإشعارات', 'Notification Management', 'NOTIFICATION_MANAGEMENT', NULL);
-
-SET
-IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
+INSERT INTO shc_portal.shc_authority_lk(id, label_ar, label_en, code, parent_id) VALUES (35, N'إدارة الإشعارات', 'Notification Management', 'NOTIFICATION_MANAGEMENT', NULL);
+SET IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
 GO
 
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (1, 35);
-
 GO
 
-
 SET IDENTITY_INSERT shc_portal.shc_notification_category_lk ON;
-INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
-VALUES (1, 'GENERAL', 'ar', N'عامة');
-INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
-VALUES (2, 'GENERAL', 'en', 'General');
-INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
-VALUES (3, 'HEALTH', 'ar', N'صحي');
-INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
-VALUES (4, 'HEALTH', 'en', 'Health');
-INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
-VALUES (5, 'RELIGIOUS', 'ar', N'دينية');
-INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
-VALUES (6, 'RELIGIOUS', 'en', 'Religious');
-INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
-VALUES (7, 'RITUAL', 'ar', N'شعيرة');
-INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
-VALUES (8, 'RITUAL', 'en', 'Ritual');
-INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
-VALUES (9, 'GENERAL_AWARENESS', 'ar', N'توعية عامة');
-INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label)
-VALUES (10, 'GENERAL_AWARENESS', 'en', 'General Awareness');
-
-SET
-IDENTITY_INSERT shc_portal.shc_notification_category_lk OFF;
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (1, 'GENERAL', 'ar', N'عامة');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (2, 'GENERAL', 'en', 'General');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (3, 'HEALTH', 'ar', N'صحي');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (4, 'HEALTH', 'en', 'Health');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (5, 'RELIGIOUS', 'ar', N'دينية');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (6, 'RELIGIOUS', 'en', 'Religious');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (7, 'RITUAL', 'ar', N'شعيرة');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (8, 'RITUAL', 'en', 'Ritual');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (9, 'GENERAL_AWARENESS', 'ar', N'توعية عامة');
+INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (10, 'GENERAL_AWARENESS', 'en', 'General Awareness');
+SET IDENTITY_INSERT shc_portal.shc_notification_category_lk OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template_name_lk ON;
-INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
-VALUES (1, 'PASSWORD_EXPIRATION', 'ar', N'قرب انتهاء كلمة المرور');
-INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
-VALUES (2, 'PASSWORD_EXPIRATION', 'en', 'Password Will Expire');
-INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
-VALUES (3, 'OUT_ARAFAT_FENCE', 'ar', N'خارج حدود عرفات');
-INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
-VALUES (4, 'OUT_ARAFAT_FENCE', 'en', 'Out of Arafat Geo Fence');
-INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
-VALUES (5, 'DAILY_SURVEY', 'ar', N'تقييم الخدمات اليومية المقدمة');
-INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
-VALUES (6, 'DAILY_SURVEY', 'en', 'Evaluate Daily Service');
-SET
-IDENTITY_INSERT shc_portal.shc_notification_template_name_lk OFF;
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (1, 'PASSWORD_EXPIRATION', 'ar', N'قرب انتهاء كلمة المرور');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (2, 'PASSWORD_EXPIRATION', 'en', 'Password Will Expire');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (3, 'OUT_ARAFAT_FENCE', 'ar', N'خارج حدود عرفات');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (4, 'OUT_ARAFAT_FENCE', 'en', 'Out of Arafat Geo Fence');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (5, 'DAILY_SURVEY', 'ar', N'تقييم الخدمات اليومية المقدمة');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (6, 'DAILY_SURVEY', 'en', 'Evaluate Daily Service');
+SET IDENTITY_INSERT shc_portal.shc_notification_template_name_lk OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template_status_lk ON;
@@ -109,3 +84,12 @@ INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) V
 INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (6, 'EXPIRED', 'en', 'Expired');
 SET IDENTITY_INSERT shc_portal.shc_user_notification_status_lk OFF;
 GO
+
+SET IDENTITY_INSERT shc_portal.shc_notification_template ON;
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific)
+values (1, 'GENERAL', 'PASSWORD_EXPIRATION', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific)
+values (1, 'RITUAL', 'OUT_ARAFAT_FENCE', 'CONFIRMED', 'SYSTEM_DEFINED', 1, 0, 1, 1);
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific)
+values (1, 'RITUAL', 'DAILY_SURVEY', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
+SET IDENTITY_INSERT shc_portal.shc_notification_template OFF;

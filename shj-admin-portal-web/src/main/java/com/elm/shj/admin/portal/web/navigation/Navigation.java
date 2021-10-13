@@ -49,6 +49,8 @@ public class Navigation {
 	public static final String API_REGISTRATION = "/api/register";
 	// Integration
 	public static final String API_INTEGRATION = "/api/ws";
+	// Notification Integration
+	public static final String API_NOTIFICATION_INTEGRATION = "/api/ws/notification";
 
 	// notification management
 	public static final String API_NOTIFICATION = "/api/notification";
