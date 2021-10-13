@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.services.dto;
 
 import lombok.*;
@@ -13,11 +16,9 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PasswordExpiryNotificationRequestParameterValue {
+public class PasswordExpiryNotificationRequestUserParameters {
 
     private long userId;
-    private long uin;
-    private String userName;
     private String userLang;
-    private int dayDiff;
+    private int daysToExpiry;
 }

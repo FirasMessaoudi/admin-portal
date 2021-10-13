@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaNotificationRequest;
@@ -17,5 +20,5 @@ import java.util.Date;
  */
 public interface NotificationRequestRepository extends JpaRepository<JpaNotificationRequest, Long> {
     @Query(value = "select nr from JpaNotificationRequest nr where " + " nr.processingStatus.code = :statusCode  and nr.sendingDate <= :processingDate")
-    Page<JpaNotificationRequest> findUserNotificationRequests(Pageable pageable, @Param("statusCode") String statusCode, @Param("processingDate") Date processingDate);
+    Page<JpaNotificationRequest> findNotificationRequests(Pageable pageable, @Param("statusCode") String statusCode, @Param("processingDate") Date processingDate);
 }

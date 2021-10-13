@@ -489,16 +489,15 @@ public class IntegrationWsController {
 
 
     /**
-     * update User Notification Status
+     * mark User Notification As Read
      *
      * @param notificationId is the id for the notification
-     * @param statusCode     is the code for the new status
      * @return success message if process ended successfully
      */
     @PostMapping("/notification/update-status")
-    public ResponseEntity<WsResponse<?>> updateUserNotificationStatus(Long notificationId, String statusCode) {
+    public ResponseEntity<WsResponse<?>> markUserNotificationAsRead(Long notificationId) {
         log.debug("Handler for {}", "update user notification status based on notification Id and status code");
-        userNotificationService.updateUserNotificationStatus(notificationId, statusCode);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(null).build());
+        int numberOfRowsAffected = userNotificationService.markUserNotificationAsRead(notificationId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(numberOfRowsAffected).build());
     }
 }

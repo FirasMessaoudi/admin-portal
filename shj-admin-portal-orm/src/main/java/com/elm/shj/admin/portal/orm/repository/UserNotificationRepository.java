@@ -22,7 +22,7 @@ public interface UserNotificationRepository extends JpaRepository<JpaUserNotific
 
     @Modifying
     @Query("update JpaUserNotification n set n.statusCode = :statusCode where n.id =:notificationId ")
-    int updateUserNotificationStatus(Long notificationId, String statusCode);
+    int markUserNotificationAsRead(Long notificationId, String statusCode);
 
     int countByUserIdAndStatusCode(long userId, String statusCode);
 }

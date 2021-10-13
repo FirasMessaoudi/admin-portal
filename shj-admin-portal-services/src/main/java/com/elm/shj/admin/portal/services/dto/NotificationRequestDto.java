@@ -3,6 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

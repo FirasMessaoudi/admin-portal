@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.services.notification;
 
 import com.elm.shj.admin.portal.orm.entity.JpaNotificationTemplate;
@@ -99,14 +102,14 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         };
     }
 
-        /**
-         * check if  Notification enabled By Name
-         *
-         * @param nameCode the nameCode of the notification template  to find
-         * @return boolean represent if  Notification enabled or not
-         */
-        public boolean isNotificationTemplateEnabled(String nameCode) {
-                return notificationTemplateRepository.isNotificationTemplateEnabled(nameCode);
-        }
+    /**
+     * check if  Notification enabled By Name
+     *
+     * @param nameCode the nameCode of the notification template  to find
+     * @return boolean represent if  Notification enabled or not
+     */
+    public boolean isNotificationTemplateEnabled(String nameCode) {
+        return notificationTemplateRepository.isNotificationTemplateEnabled(nameCode);
+    }
 
 }

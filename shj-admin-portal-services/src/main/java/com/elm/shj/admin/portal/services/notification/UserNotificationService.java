@@ -27,17 +27,15 @@ import java.util.*;
 public class UserNotificationService extends GenericService<JpaUserNotification, UserNotificationDto, Long> {
 
     public final static String PASSWORD_EXPIRATION_TEMPLATE_NAME = "PASSWORD_EXPIRATION";
-    public final static String PASSWORD_EXPIRY_TEMPLATE_USERNAME_PARAMETER_NAME = "user_name";
-    public final static String PASSWORD_EXPIRY_TEMPLATE_UIN_PARAMETER_NAME = "uin";
     public final static String PASSWORD_EXPIRY_TEMPLATE_USER_ID_PARAMETER_NAME = "user_id";
     public final static String PASSWORD_EXPIRY_TEMPLATE_USER_LANG_PARAMETER_NAME = "user_lang";
-    public final static String PASSWORD_EXPIRY_TEMPLATE_EXPIRY_DAY_COUNT_PARAMETER_NAME = "expiry_day_count";
+    public final static String PASSWORD_EXPIRY_TEMPLATE_DAYS_TO_EXPIRY_PARAMETER_NAME = "days_to_expiry";
     private final NotificationRequestService notificationRequestService;
     private final NotificationTemplateService notificationTemplateService;
     private final UserNotificationRepository userNotificationRepository;
 
     /**
-     * Finds user Notification by user's UIN
+     * Finds user Notifications by user's Id
      *
      * @param userId the userId of the notifications  to find for
      * @return the found Notifications  or empty structure
@@ -76,7 +74,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
             //throw custom exception and return specific error code
         }
 
-        passwordExpiryNotificationRequest.getParameterValueList().parallelStream().forEach(
+        passwordExpiryNotificationRequest.getUserParametersList().parallelStream().forEach(
                 param -> {
                     NotificationRequestDto notificationRequest = new NotificationRequestDto();
                     notificationRequest.setNotificationTemplate(notificationTemplate.get());
@@ -85,25 +83,18 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                     notificationRequest.setProcessingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build());
                     notificationRequest.setSendingDate(new Date());
                     Set<NotificationRequestParameterValueDto> notificationRequestParamValue = new HashSet<>();
+
                     notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
-                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_USERNAME_PARAMETER_NAME))
-                            .notificationTemplateParameterValue(param.getUserName())
-                            .notificationRequest(notificationRequest).build());
-                    notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
-                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_UIN_PARAMETER_NAME))
-                            .notificationTemplateParameterValue(Long.toString(param.getUin()))
-                            .notificationRequest(notificationRequest).build());
-                    notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
-                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_USER_ID_PARAMETER_NAME))
+                            .notificationTemplateParameterId(findNotificationTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_USER_ID_PARAMETER_NAME))
                             .notificationTemplateParameterValue(Long.toString(param.getUserId()))
                             .notificationRequest(notificationRequest).build());
                     notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
-                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_USER_LANG_PARAMETER_NAME))
+                            .notificationTemplateParameterId(findNotificationTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_USER_LANG_PARAMETER_NAME))
                             .notificationTemplateParameterValue(param.getUserLang())
                             .notificationRequest(notificationRequest).build());
                     notificationRequestParamValue.add(NotificationRequestParameterValueDto.builder()
-                            .notificationTemplateParameterId(findTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_EXPIRY_DAY_COUNT_PARAMETER_NAME))
-                            .notificationTemplateParameterValue(Integer.toString(param.getDayDiff()))
+                            .notificationTemplateParameterId(findNotificationTemplateParameterId(notificationTemplate, PASSWORD_EXPIRY_TEMPLATE_DAYS_TO_EXPIRY_PARAMETER_NAME))
+                            .notificationTemplateParameterValue(Integer.toString(param.getDaysToExpiry()))
                             .notificationRequest(notificationRequest).build());
 
                     notificationRequest.setNotificationRequestParameterValues(notificationRequestParamValue);
@@ -116,8 +107,8 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
 
     }
 
-    public int updateUserNotificationStatus(Long notificationId, String statusCode) {
-        return userNotificationRepository.updateUserNotificationStatus(notificationId, statusCode);
+    public int markUserNotificationAsRead(Long notificationId) {
+        return userNotificationRepository.markUserNotificationAsRead(notificationId, EUserNotificationStatus.READ.name());
     }
 
     /**
@@ -131,7 +122,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
     }
 
     //TODO: INITIAL CODE TO BE REFACOTORED
-    private long findTemplateParameterId(Optional<NotificationTemplateDto> notificationTemplate, String parameterName) {
+    private long findNotificationTemplateParameterId(Optional<NotificationTemplateDto> notificationTemplate, String parameterName) {
         return notificationTemplate.get().getNotificationTemplateParameters().parallelStream().filter(nt -> nt.getParameterName().equals(parameterName)).findAny().get().getId();
     }
 }
