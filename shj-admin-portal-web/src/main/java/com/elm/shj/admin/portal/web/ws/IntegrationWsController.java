@@ -7,7 +7,6 @@ import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
-import com.elm.shj.admin.portal.services.notification.UserNotificationService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
@@ -77,7 +76,6 @@ public class IntegrationWsController {
     private final HousingSiteLookupService housingSiteLookupService;
     private final TransportationTypeLookupService transportationTypeLookupService;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
-    private final UserNotificationService userNotificationService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -455,42 +453,4 @@ public class IntegrationWsController {
     }
 
 
-    /**
-     * finds user notifications by user Id
-     *
-     * @param userId the userId to find notifications for
-     * @return the User Notifications
-     */
-    @GetMapping("/notification/{userId}")
-    public ResponseEntity<WsResponse<?>> findUserNotifications(@PathVariable long userId) {
-        log.debug("Handler for {}", "Find all user notifications by user Id");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.findUserNotifications(userId)).build());
-    }
-
-    /**
-     * save Password Expiry Notification Request
-     *
-     * @param passwordExpiryNotificationRequest this is an object holding the details of password Expiry Notification Request
-     * @return success message if process ended successfully
-     */
-    @PostMapping("/notification/password-expiry")
-    public ResponseEntity<WsResponse<?>> savePasswordExpiryNotificationRequest(@RequestBody @Validated PasswordExpiryNotificationRequest passwordExpiryNotificationRequest) {
-        log.debug("Handler for {}", "Find all user notifications by user Id");
-        userNotificationService.savePasswordExpiryNotificationRequest(passwordExpiryNotificationRequest);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(null).build());
-    }
-
-
-    /**
-     * mark User Notification As Read
-     *
-     * @param notificationId is the id for the notification
-     * @return success message if process ended successfully
-     */
-    @PostMapping("/notification/update-status")
-    public ResponseEntity<WsResponse<?>> markUserNotificationAsRead(Long notificationId) {
-        log.debug("Handler for {}", "update user notification status based on notification Id and status code");
-        int numberOfRowsAffected = userNotificationService.markUserNotificationAsRead(notificationId);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(numberOfRowsAffected).build());
-    }
 }

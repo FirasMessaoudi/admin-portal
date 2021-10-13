@@ -3,13 +3,17 @@
  */
 package com.elm.shj.admin.portal.web.ws;
 
+import com.elm.shj.admin.portal.services.dto.PasswordExpiryNotificationRequest;
 import com.elm.shj.admin.portal.services.notification.UserNotificationService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -43,5 +47,50 @@ public class NotificationWsController {
         log.debug("Handler for count un-read user notifications.");
         int userNewNotificationsCount = userNotificationService.retrieveUserNewNotificationsCount(userId);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNewNotificationsCount).build());
+    }
+
+
+    /**
+     * finds user notifications by user Id
+     *
+     * @param userId the userId to find notifications for
+     * @return the User Notifications
+     */
+    @GetMapping("/{userId}")
+    public ResponseEntity<WsResponse<?>> findUserNotifications(@PathVariable long userId) {
+        log.debug("Handler for {}", "Find all user notifications by user Id");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.findUserNotifications(userId)).build());
+    }
+
+    /**
+     * save Password Expiry Notification Request
+     *
+     * @param passwordExpiryNotificationRequest this is an object holding the details of password Expiry Notification Request
+     * @return success message if process ended successfully
+     */
+    @PostMapping("/password-expiry")
+    public ResponseEntity<WsResponse<?>> savePasswordExpiryNotificationRequest(@RequestBody @Validated PasswordExpiryNotificationRequest passwordExpiryNotificationRequest) {
+        log.debug("Handler for {}", "Find all user notifications by user Id");
+        try {
+            userNotificationService.savePasswordExpiryNotificationRequest(passwordExpiryNotificationRequest);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(e.getMessage()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(null).build());
+    }
+
+
+    /**
+     * mark User Notification As Read
+     *
+     * @param notificationId is the id for the notification
+     * @return success message if process ended successfully
+     */
+    @PostMapping("/mark-as-read")
+    public ResponseEntity<WsResponse<?>> markUserNotificationAsRead(Long notificationId) {
+        log.debug("Handler for {}", "mark user notification as read");
+        int numberOfRowsAffected = userNotificationService.markUserNotificationAsRead(notificationId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(numberOfRowsAffected).build());
     }
 }

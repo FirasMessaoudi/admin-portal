@@ -65,7 +65,7 @@ public class NotificationProcessingSchedulerService {
         userNotification.setStatusCode(EUserNotificationStatus.NEW.name());
         userNotification.setUserId(notificationRequest.getUserId());
         userNotification.setUserLang(notificationRequest.getUserLang());
-        Optional<JpaNotificationTemplateContent> notificationTemplateContent = notificationRequest.getNotificationTemplate().getNotificationTemplateContents().stream().filter(content -> content.getLang().equals(notificationRequest.getUserLang())).findAny();
+        Optional<JpaNotificationTemplateContent> notificationTemplateContent = notificationRequest.getNotificationTemplate().getNotificationTemplateContents().stream().filter(content -> content.getLang().equalsIgnoreCase(notificationRequest.getUserLang())).findAny();
         String resolvedBody = resolveNotificationRequestBody(notificationRequest.getNotificationTemplate(), notificationRequest.getNotificationRequestParameterValues(), notificationTemplateContent);
         userNotification.setResolvedBody(resolvedBody);
         userNotificationRepository.save(userNotification);
