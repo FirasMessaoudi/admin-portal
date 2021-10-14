@@ -82,7 +82,7 @@ public class NotificationProcessingScheduler {
         userNotification.setResolvedBody(resolvedBody);
         userNotificationRepository.save(userNotification);
         notificationRequestRepository.delete(notificationRequest);
-        log.debug("End processing notification request with ID   {} ", notificationRequest.getId());
+        log.error("End processing notification request with ID   {} ", notificationRequest.getId());
 
     }
 
