@@ -9,7 +9,6 @@ import com.elm.shj.admin.portal.orm.repository.NotificationRequestRepository;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
 import com.elm.shj.admin.portal.services.dto.ENotificationProcessingStatus;
 import com.elm.shj.admin.portal.services.dto.EUserNotificationStatus;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -18,10 +17,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
@@ -32,30 +31,33 @@ import java.util.Set;
  * @author Ahmed Ali
  * @since 1.1.0
  */
-@Service
+@Component
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class NotificationProcessingSchedulerService {
+public class NotificationProcessingScheduler {
 
     private final NotificationRequestRepository notificationRequestRepository;
     private final UserNotificationRepository userNotificationRepository;
-
     @Value("${notification.processing.batch.size}")
     private int notificationProcessingBatchSize;
-    private static final String PROCESSING_STATUS_CODE = ENotificationProcessingStatus.NEW.name();
+
 
     @PostConstruct
     @Scheduled(cron = "${scheduler.notification.processing.cron}")
     @SchedulerLock(name = "notification-processing-task")
-    void sendUserNotifications() throws NotFoundException {
+    void sendUserNotifications() {
         log.debug("send notification scheduler started ...");
-        Page<JpaNotificationRequest> notificationRequests = notificationRequestRepository.findNotificationRequests(PageRequest.ofSize(notificationProcessingBatchSize), PROCESSING_STATUS_CODE, new Date());
+        Page<JpaNotificationRequest> notificationRequests = notificationRequestRepository.findNotificationRequests(PageRequest.ofSize(notificationProcessingBatchSize), ENotificationProcessingStatus.NEW.name(), new Date());
         notificationRequests.stream().parallel().forEach(
                 notificationRequest -> {
+                    notificationRequest.getProcessingStatus().setId(ENotificationProcessingStatus.UNDER_PROCESSING.getId());
+                    notificationRequestRepository.save(notificationRequest);
                     try {
                         processNotificationRequest(notificationRequest);
-                    } catch (NotFoundException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        notificationRequest.getProcessingStatus().setId(ENotificationProcessingStatus.FAILED.getId());
+                        notificationRequestRepository.save(notificationRequest);
+                        log.debug("Failed to send notification request with id >>  {}", notificationRequest.getId());
                     }
                 }
         );
@@ -64,9 +66,8 @@ public class NotificationProcessingSchedulerService {
 
 
     @Transactional
-    void processNotificationRequest(JpaNotificationRequest notificationRequest) throws NotFoundException {
+    void processNotificationRequest(JpaNotificationRequest notificationRequest) {
         log.debug("Start processing notification request with ID   {} ", notificationRequest.getId());
-
         JpaUserNotification userNotification = new JpaUserNotification();
         userNotification.setNotificationTemplate(notificationRequest.getNotificationTemplate());
         userNotification.setStatusCode(EUserNotificationStatus.NEW.name());
@@ -75,17 +76,17 @@ public class NotificationProcessingSchedulerService {
         Optional<JpaNotificationTemplateContent> notificationTemplateContent = notificationRequest.getNotificationTemplate().getNotificationTemplateContents().stream().filter(content -> content.getLang().equalsIgnoreCase(notificationRequest.getUserLang())).findAny();
         String resolvedBody = resolveNotificationRequestBody(notificationRequest.getNotificationTemplate(), notificationRequest.getNotificationRequestParameterValues(), notificationTemplateContent);
         if (resolvedBody.equals("no content")) {
-            throw new NotFoundException("no Template content found for template ID  " + notificationRequest.getNotificationTemplate().getId() + "\t  for user language code " + notificationRequest.getUserLang());
+            log.error("no Template content found for template ID  " + notificationRequest.getNotificationTemplate().getId() + "\t  for user language code " + notificationRequest.getUserLang());
         }
+
         userNotification.setResolvedBody(resolvedBody);
         userNotificationRepository.save(userNotification);
         notificationRequestRepository.delete(notificationRequest);
-
         log.debug("End processing notification request with ID   {} ", notificationRequest.getId());
 
     }
 
-    private String resolveNotificationRequestBody(JpaNotificationTemplate notificationTemplate, Set<JpaNotificationRequestParameterValue> notificationRequestParameterValues, Optional<JpaNotificationTemplateContent> notificationContent) throws NotFoundException {
+    private String resolveNotificationRequestBody(JpaNotificationTemplate notificationTemplate, Set<JpaNotificationRequestParameterValue> notificationRequestParameterValues, Optional<JpaNotificationTemplateContent> notificationContent) {
         String emptyBody = "no content";
         if (!notificationContent.isPresent()) {
             return emptyBody;
@@ -96,11 +97,10 @@ public class NotificationProcessingSchedulerService {
             for (JpaNotificationRequestParameterValue param : notificationRequestParameterValues) {
                 Optional<JpaNotificationTemplateParameter> templateParameter = notificationTemplate.getNotificationTemplateParameters().stream().filter(tparam -> tparam.getId() == param.getNotificationTemplateParameterId()).findFirst();
                 if (!templateParameter.isPresent()) {
-                    throw new NotFoundException("no Template parameters found for template ID  " + notificationTemplate.getId());
+                    log.error("no Template parameters found for template ID  " + notificationTemplate.getId());
                 }
                 resolvedBody = resolvedBody.replaceAll("<" + templateParameter.get().getParameterName() + ">", param.getNotificationTemplateParameterValue());
             }
-
             log.debug("End resolving notification request body the resolved body is {}", resolvedBody);
             return resolvedBody;
         }

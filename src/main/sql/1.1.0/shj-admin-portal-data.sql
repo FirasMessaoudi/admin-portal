@@ -86,10 +86,21 @@ SET IDENTITY_INSERT shc_portal.shc_user_notification_status_lk OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template ON;
-INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific)
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important,
+                                                  action_required, enabled, user_specific)
 values (1, 'GENERAL', 'PASSWORD_EXPIRATION', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
-INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific)
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important,
+                                                  action_required, enabled, user_specific)
 values (1, 'RITUAL', 'OUT_ARAFAT_FENCE', 'CONFIRMED', 'SYSTEM_DEFINED', 1, 0, 1, 1);
-INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific)
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important,
+                                                  action_required, enabled, user_specific)
 values (1, 'RITUAL', 'DAILY_SURVEY', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
-SET IDENTITY_INSERT shc_portal.shc_notification_template OFF;
+SET
+IDENTITY_INSERT shc_portal.shc_notification_template OFF;
+
+
+GO
+INSERT INTO shc_portal.shc_portal.shc_config ( conf_key, conf_value  ) VALUES (  'notification.processing.batch.size',  '1000' );
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('scheduler.notification.processing.cron', '* * * ? * *');
+GO
