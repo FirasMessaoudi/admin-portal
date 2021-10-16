@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.dto.PasswordExpiryNotificationRequest;
+import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
 import com.elm.shj.admin.portal.services.notification.UserNotificationService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 public class NotificationWsController {
 
     private final UserNotificationService userNotificationService;
+    private final NotificationRequestService notificationRequestService;
 
     /**
      * Count user un-read notifications.
@@ -72,7 +74,7 @@ public class NotificationWsController {
     public ResponseEntity<WsResponse<?>> savePasswordExpiryNotificationRequest(@RequestBody @Validated PasswordExpiryNotificationRequest passwordExpiryNotificationRequest) {
         log.debug("Handler for {}", "Find all user notifications by user Id");
         try {
-            userNotificationService.savePasswordExpiryNotificationRequest(passwordExpiryNotificationRequest);
+            notificationRequestService.savePasswordExpiryNotificationRequest(passwordExpiryNotificationRequest);
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(e.getMessage()).build());

@@ -6,15 +6,19 @@ package com.elm.shj.admin.portal.services.notification;
 import com.elm.shj.admin.portal.orm.entity.JpaNotificationTemplateContent;
 import com.elm.shj.admin.portal.orm.entity.JpaUserNotification;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.DetailedUserNotificationDto;
+import com.elm.shj.admin.portal.services.dto.EUserNotificationStatus;
+import com.elm.shj.admin.portal.services.dto.UserNotificationDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Service handling  User Notification
@@ -27,12 +31,6 @@ import java.util.*;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserNotificationService extends GenericService<JpaUserNotification, UserNotificationDto, Long> {
 
-    public static final String PASSWORD_EXPIRATION_TEMPLATE_NAME = "PASSWORD_EXPIRATION";
-    public static final String PASSWORD_EXPIRY_TEMPLATE_USER_ID_PARAMETER_NAME = "user_id";
-    public static final String PASSWORD_EXPIRY_TEMPLATE_USER_LANG_PARAMETER_NAME = "user_lang";
-    public static final String PASSWORD_EXPIRY_TEMPLATE_DAYS_TO_EXPIRY_PARAMETER_NAME = "days_to_expiry";
-    private final NotificationRequestService notificationRequestService;
-    private final NotificationTemplateService notificationTemplateService;
     private final UserNotificationRepository userNotificationRepository;
 
     /**
@@ -67,38 +65,6 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
     }
 
 
-    /**
-     * save Password Expiry Notification Request Details
-     *
-     * @param passwordExpiryNotificationRequest the Password Expiry Notification Request Details to save
-     */
-    public void savePasswordExpiryNotificationRequest(PasswordExpiryNotificationRequest passwordExpiryNotificationRequest) throws NotFoundException {
-        Optional<NotificationTemplateDto> notificationTemplate = notificationTemplateService.findEnabledNotificationTemplateByNameCode(PASSWORD_EXPIRATION_TEMPLATE_NAME);
-
-        if (!notificationTemplate.isPresent()) {
-            throw new NotFoundException("no Template found for  " + PASSWORD_EXPIRATION_TEMPLATE_NAME);
-        }
-
-        passwordExpiryNotificationRequest.getUserParametersList().parallelStream().forEach(
-                param -> {
-                    NotificationRequestDto notificationRequest = new NotificationRequestDto();
-                    notificationRequest.setNotificationTemplate(notificationTemplate.get());
-                    notificationRequest.setUserLang(param.getUserLang());
-                    notificationRequest.setUserId(param.getUserId());
-                    notificationRequest.setProcessingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build());
-                    notificationRequest.setSendingDate(new Date());
-                    Set<NotificationRequestParameterValueDto> notificationRequestParamValue = new HashSet<>();
-                    notificationRequestParamValue.add(buildNotificationRequestParamValue(notificationTemplate, notificationRequest, PASSWORD_EXPIRY_TEMPLATE_USER_ID_PARAMETER_NAME, Long.toString(param.getUserId())));
-                    notificationRequestParamValue.add(buildNotificationRequestParamValue(notificationTemplate, notificationRequest, PASSWORD_EXPIRY_TEMPLATE_USER_LANG_PARAMETER_NAME, param.getUserLang()));
-                    notificationRequestParamValue.add(buildNotificationRequestParamValue(notificationTemplate, notificationRequest, PASSWORD_EXPIRY_TEMPLATE_DAYS_TO_EXPIRY_PARAMETER_NAME, Integer.toString(param.getDaysToExpiry())));
-                    notificationRequest.setNotificationRequestParameterValues(notificationRequestParamValue);
-                    notificationRequestService.save(notificationRequest);
-
-                }
-        );
-
-    }
-
 
     /**
      * mark User Notification As Read
@@ -120,31 +86,5 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
         return userNotificationRepository.countByUserIdAndStatusCode(userId, EUserNotificationStatus.NEW.name());
     }
 
-    /**
-     * Retrieve Notification Template Parameter Id
-     *
-     * @param parameterName        to find id for
-     * @param notificationTemplate to find parameter id for
-     * @return notification Template parameter id.
-     */
-    private long findNotificationTemplateParameterId(Optional<NotificationTemplateDto> notificationTemplate, String parameterName) {
-        return notificationTemplate.get().getNotificationTemplateParameters().parallelStream().filter(nt -> nt.getParameterName().equalsIgnoreCase(parameterName)).findAny().get().getId();
-    }
-
-    /**
-     * build Notification Request Param Value
-     *
-     * @param notificationRequest
-     * @param notificationTemplate
-     * @param paramName            notification Request Parameter name
-     * @param paramValue           notification Request Parameter value
-     * @return Notification Request Parameter Value instance.
-     */
-    private NotificationRequestParameterValueDto buildNotificationRequestParamValue(Optional<NotificationTemplateDto> notificationTemplate, NotificationRequestDto notificationRequest, String paramName, String paramValue) {
-        return NotificationRequestParameterValueDto.builder()
-                .notificationTemplateParameterId(findNotificationTemplateParameterId(notificationTemplate, paramName))
-                .notificationTemplateParameterValue(paramValue)
-                .notificationRequest(notificationRequest).build();
-    }
 
 }
