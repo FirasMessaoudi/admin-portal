@@ -112,7 +112,7 @@ export class NotificationListComponent implements OnInit {
 
   getNotificationContentForCurrentLanguage(notificationContents: NotificationTemplateContent []) {
     if (notificationContents.length > 0) {
-      let contents = notificationContents.filter(value => this.i18nService.language.startsWith(value.lang));
+      let contents = notificationContents.filter(value => this.i18nService.language.toLowerCase().startsWith(value.lang.toLowerCase()));
       if (!contents) {
         return notificationContents[0];
       }
