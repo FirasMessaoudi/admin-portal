@@ -18,7 +18,7 @@ INSERT INTO shc_authority_lk (id, label_ar, label_en, code, parent_id, creation_
 VALUES (9, N'اضا�?ة دور', N'Add Role', N'ADD_ROLE', 8, N'2020-07-27 11:44:00');
 INSERT INTO shc_authority_lk (id, label_ar, label_en, code, parent_id, creation_date)
 VALUES (10, N'تعديل دور', N'Edit Role', N'EDIT_ROLE', 8, N'2020-07-27 11:44:00');
-INSERT INTO shc_authority_lk (id,label_ar, label_en, code, parent_id, creation_date)
+INSERT INTO shc_authority_lk (id, label_ar, label_en, code, parent_id, creation_date)
 VALUES (11, N'حذ�? دور', N'Delete Role', N'DELETE_ROLE', 8, N'2020-07-27 11:44:00');
 INSERT INTO shc_authority_lk (id, label_ar, label_en, code, parent_id, creation_date)
 VALUES (12, N'تغيير حالة دور', N'Change Role Status', N'CHANGE_ROLE_STATUS', 8, N'2020-08-12 12:59:00');
@@ -26,12 +26,57 @@ INSERT INTO shc_authority_lk (id, label_ar, label_en, code, parent_id, creation_
 VALUES (13, N'إعادة تعيين كلمة مرور المستخدم', N'Reset User Password', N'RESET_USER_PASSWORD', 2,
         N'2020-09-07 11:04:00');
 
+-- INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label ,creation_date) VALUES (1, 'PASSWORD_EXPIRATION', 'ar', N'قرب انتهاء كلمة المرور',N'2020-08-12 12:59:00');
+-- INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (2, 'PASSWORD_EXPIRATION', 'en', 'Password Will Expire');
+-- INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (3, 'OUT_ARAFAT_FENCE', 'ar', N'خارج حدود عرفات');
+-- INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (4, 'OUT_ARAFAT_FENCE', 'en', 'Out of Arafat Geo Fence');
+-- INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (5, 'DAILY_SURVEY', 'ar', N'تقييم الخدمات اليومية المقدمة');
+-- INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (6, 'DAILY_SURVEY', 'en', 'Evaluate Daily Service');
+--
+--
+-- INSERT INTO shc_portal.shc_notification_template_status_lk (id, code, lang, label) VALUES (1, 'CONFIRMED', 'ar', N'معتمدة');
+-- INSERT INTO shc_portal.shc_notification_template_status_lk (id, code, lang, label) VALUES (2, 'CONFIRMED', 'en', 'Confirmed');
+-- INSERT INTO shc_portal.shc_notification_template_status_lk (id, code, lang, label) VALUES (3, 'DRAFT', 'ar', N'نسخة أولية');
+-- INSERT INTO shc_portal.shc_notification_template_status_lk (id, code, lang, label) VALUES (4, 'DRAFT', 'en', 'Draft');
+--
+--
+-- INSERT INTO shc_portal.shc_notification_processing_status_lk (id, code, description) VALUES (1, 'NEW', 'Newly created notification request');
+-- INSERT INTO shc_portal.shc_notification_processing_status_lk (id, code, description) VALUES (2, 'UNDER_PROCESSING', 'Under processing');
+-- INSERT INTO shc_portal.shc_notification_processing_status_lk (id, code, description) VALUES (3, 'FAILED', 'Failed to process');
+--
+--
+-- INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (1, 'GENERAL', 'ar', N'عامة');
+-- INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (2, 'GENERAL', 'en', 'General');
+-- INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (3, 'HEALTH', 'ar', N'صحي');
+-- INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (4, 'HEALTH', 'en', 'Health');
+-- INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (5, 'RELIGIOUS', 'ar', N'دينية');
+-- INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (6, 'RELIGIOUS', 'en', 'Religious');
+-- INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (7, 'RITUAL', 'ar', N'شعيرة');
+-- INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (8, 'RITUAL', 'en', 'Ritual');
+-- INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (9, 'GENERAL_AWARENESS', 'ar', N'توعية عامة');
+-- INSERT INTO shc_portal.shc_notification_category_lk (id, code, lang, label) VALUES (10, 'GENERAL_AWARENESS', 'en', 'General Awareness');
+--
+--
+-- INSERT INTO shc_portal.shc_notification_template_type_lk (id, code, lang, label) VALUES (1, 'SYSTEM_DEFINED', 'ar', N'أليا');
+-- INSERT INTO shc_portal.shc_notification_template_type_lk (id, code, lang, label) VALUES (2, 'SYSTEM_DEFINED', 'en', 'System Defined');
+-- INSERT INTO shc_portal.shc_notification_template_type_lk (id, code, lang, label) VALUES (3, 'USER_DEFINED', 'ar', N'معرف من المستخدم');
+-- INSERT INTO shc_portal.shc_notification_template_type_lk (id, code, lang, label) VALUES (4, 'USER_DEFINED', 'en', 'User Defined');
+--
+--
+-- INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (1, 'NEW', 'ar', N'جديد');
+-- INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (2, 'NEW', 'en', 'New');
+-- INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (3, 'READ', 'ar', N'مقروءة');
+-- INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (4, 'READ', 'en', 'Read');
+-- INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (5, 'EXPIRED', 'ar', N'منتهية');
+-- INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (6, 'EXPIRED', 'en', 'Expired');
 
 
 INSERT INTO shc_role (id, label_ar, label_en, deleted, activated, creation_date, update_date)
 VALUES (1, N'مشر�? النظام', N'System Admin', 0, 1, N'2020-07-27 11:44:00', null);
 INSERT INTO shc_role (id, label_ar, label_en, deleted, activated, creation_date, update_date)
 VALUES (2, N'مستخدم النظام', N'System User', 0, 1, N'2020-09-07 11:04:00', null);
+
+
 
 INSERT INTO shc_user (id, nin, gender, mobile_number, date_of_birth_gregorian, date_of_birth_hijri, password_hash,
                       email, first_name, father_name, grand_father_name, family_name, activated, deleted, blocked,
@@ -67,25 +112,9 @@ values (1,1010101040,'1987-02-18','عبدالغنى عبدالعزيز عبدا�
 insert into shc_applicant_digital_id (id, uin, applicant_id, creation_date)
 values (1,59737700000059,1,N'2004-08-12');
 
-insert into shc_applicant_ritual (id, applicant_id, hijri_season,
-                                  date_start_gregorian, date_end_gregorian, date_start_hijri, date_end_hijri, type_code,
-                                  permit_number, insurance_number, creation_date, UPDATE_DATE)
-values (1, 1, 1442, '2020-08-10', '2020-08-31', 14421012, 14421012, 'INTERNAL_UMRAH',
-        '1234567891225678912345678912345678912345678912365', '1234567891225678912345678912345678912345678912365',
-        '2021-08-03 17:36:00', '2021-08-03 17:36:00');
 
-insert into shc_applicant_ritual (id, applicant_id, hijri_season,
-                                  date_start_gregorian, date_end_gregorian, date_start_hijri, date_end_hijri, type_code,
-                                  permit_number, insurance_number, creation_date, UPDATE_DATE)
-values (2, 1, 1443, '2021-08-10', '2021-08-31', 14431012, 14431012, 'INTERNAL_HAJJ',
-        '1234567891225678912345678912345678912345678912365', '1234567891225678912345678912345678912345678912365',
-        '2021-08-03 17:36:00', '2021-08-03 17:36:00');
 
-insert into shc_applicant_contact(id, applicant_id, language_list, email, local_mobile_number, intl_mobile_number,
-                                  country_code, street_name, district_name, city_name, building_number, postal_code,
-                                  creation_date, update_date, applicant_ritual_id)
-values (1, 1, 'AR,EN', 'app@elm1', 00966558572482, 00355558572477, 'AL', 545454, 545454, 545454, 545454, 545454,
-        '2021-06-30 16:49:00', '2021-08-18 14:40:00', 1);
+
 
 
 
@@ -112,34 +141,94 @@ INSERT INTO shc_applicant_group (id, local_office_id, reference_number, arrival_
 INSERT INTO shc_group_applicant_list (id, group_id, applicant_uin, creation_date) VALUES
       (1, 1, N'59737700000059', N'2021-09-14 14:30:00');
 
-INSERT INTO shc_company_ritual_step (id, applicant_group_id, transportation_type_code,step_index,step_code,time,location_lat,location_lng,location_name_ar,location_name_en, creation_date, update_date) VALUES
-    (1, 1, 'code', 1, 'step 1', N'2021-09-14 14:27:00', 18.0, 19.0, 'arafet', 'arafet', N'2021-09-14 14:27:00', N'2021-09-14 14:27:00');
+INSERT INTO shc_company_ritual_step (id, applicant_group_id, transportation_type_code, step_index, step_code, time,
+                                     location_lat, location_lng, location_name_ar, location_name_en, creation_date,
+                                     update_date)
+VALUES (1, 1, 'code', 1, 'step 1', N'2021-09-14 14:27:00', 18.0, 19.0, 'arafet', 'arafet', N'2021-09-14 14:27:00',
+        N'2021-09-14 14:27:00');
 
 
-INSERT INTO shc_ritual_package (id, type_code, price, departure_city, country_id, creation_date, update_date,company_ritual_season_id) VALUES (1, N'A', '100', null, 1, N'2021-09-15 09:54:00', null,1);
+INSERT INTO shc_ritual_package (id, type_code, price, departure_city, country_id, creation_date, update_date,
+                                company_ritual_season_id)
+VALUES (1, N'A', '100', null, 1, N'2021-09-15 09:54:00', null, 1);
 
 
-INSERT INTO shc_applicant_package (id, ritual_package_id, applicant_uin, creation_date, update_date) VALUES
-(1, 1, 59737700000059, N'2021-09-15 09:56:00', null);
+INSERT INTO shc_applicant_package (id, ritual_package_id, applicant_uin, creation_date, update_date)
+VALUES (1, 1, 59737700000059, N'2021-09-15 09:56:00', null);
+
+insert into shc_applicant_ritual (id, applicant_id, visa_number,
+                                  permit_number, insurance_number, creation_date, UPDATE_DATE, applicant_package_id)
+values (1, 1, '1234567891225678912345678912345678912345678912365',
+        '1234567891225678912345678912345678912345678912365', '1234567891225678912345678912345678912345678912365',
+        '2021-08-03 17:36:00', '2021-08-03 17:36:00', 1);
+
+insert into shc_applicant_ritual (id, applicant_id, visa_number,
+                                  permit_number, insurance_number, creation_date, UPDATE_DATE, applicant_package_id)
+values (2, 1, '1234567891225678912345678912345678912345678912365',
+        '1234567891225678912345678912345678912345678912365', '1234567891225678912345678912345678912345678912365',
+        '2021-08-03 17:36:00', '2021-08-03 17:36:00', 1);
+
+insert into shc_applicant_contact(id, applicant_id, language_list, email, local_mobile_number, intl_mobile_number,
+                                  country_code, street_name, district_name, city_name, building_number, postal_code,
+                                  creation_date, update_date, applicant_ritual_id)
+values (1, 1, 'AR,EN', 'app@elm1', 00966558572482, 00355558572477, 'AL', 545454, 545454, 545454, 545454, 545454,
+        '2021-06-30 16:49:00', '2021-08-18 14:40:00', 1);
+INSERT INTO shc_package_housing (id, package_id, zone_id, reference_number, category_code, type_code, location_name_ar,
+                                 location_name_en, validity_start, validity_end, address_ar, address_en, is_default,
+                                 lat, lng, creation_date, update_date)
+VALUES (1, 1, null, null, N'VIP', null, N'مكة', N'Macka', null, null, N'مكة', N'Macka', 1, null, null,
+        N'2021-09-15 10:10:00', null);
+
+INSERT INTO shc_applicant_package_housing (id, applicant_package_id, package_housing_id, room_number, bed_number,
+                                           creation_date, update_date)
+VALUES (1, 1, 1, N'22', N'3', N'2021-09-15 10:13:00', null);
 
 
-
-INSERT INTO shc_package_housing (id, package_id, zone_id, reference_number, category_code, type_code, location_name_ar, location_name_en, validity_start, validity_end, address_ar, address_en, is_default, lat, lng, creation_date, update_date)
-VALUES (1, 1, null, null, N'VIP', null, N'مكة', N'Macka', null, null, N'مكة', N'Macka', 1, null, null, N'2021-09-15 10:10:00', null);
-
-INSERT INTO shc_applicant_package_housing (id, applicant_package_id, package_housing_id, room_number, bed_number, creation_date, update_date) VALUES
- (1, 1, 1, N'22', N'3', N'2021-09-15 10:13:00', null);
+INSERT INTO shc_package_catering (id, package_housing_id, meal_code, meal_time, meal_description, type, description_ar,
+                                  description_en, creation_date, update_date)
+VALUES (1, 1, N'123', '10:00:00', N'mail', N'type', null, null, N'2021-09-15 20:28:00', N'2021-09-15 20:28:00');
 
 
-INSERT INTO shc_package_catering (id, package_housing_id, meal_code, meal_time, meal_description, type, description_ar, description_en, creation_date, update_date) VALUES
-(1, 1, N'123', '10:00:00', N'mail', N'type', null, null, N'2021-09-15 20:28:00', N'2021-09-15 20:28:00');
+INSERT INTO shc_applicant_package_catering (id, applicant_package_id, ritual_package_catering_id, option_ar, option_en,
+                                            creation_date, update_date)
+VALUES (1, 1, 1, null, null, N'2021-09-15 20:30:00', null);
 
+INSERT INTO shc_package_transportation (id, package_id, type_code, validity_start, validity_end, location_from_name_ar,
+                                        location_from_name_en, location_to_name_ar, location_to_name_en,
+                                        ritual_step_code, creation_date, update_date)
+VALUES (1, 1, N'A', N'2021-09-15 20:43:00', N'2021-09-15 20:43:00', N'مكه', N'Macka', N'الطائف', N'el Taaff', null,
+        N'2021-09-15 20:44:00', null);
 
-INSERT INTO shc_applicant_package_catering (id, applicant_package_id, ritual_package_catering_id, option_ar, option_en, creation_date, update_date) VALUES
-(1, 1, 1, null, null, N'2021-09-15 20:30:00', null);
-
-INSERT INTO shc_package_transportation (id, package_id, type_code, validity_start, validity_end, location_from_name_ar, location_from_name_en, location_to_name_ar, location_to_name_en, ritual_step_code, creation_date, update_date) VALUES
-  (1, 1, N'A', N'2021-09-15 20:43:00', N'2021-09-15 20:43:00', N'مكه', N'Macka', N'الطائف', N'el Taaff', null, N'2021-09-15 20:44:00', null);
-
-INSERT INTO shc_applicant_package_transportation (id, applicant_package_id, ritual_package_transportation_id, seat_number, wagon_number, vehicle_number, creation_date, update_date)
+INSERT INTO shc_applicant_package_transportation (id, applicant_package_id, ritual_package_transportation_id,
+                                                  seat_number, wagon_number, vehicle_number, creation_date, update_date)
 VALUES (1, 1, 1, N'12', N'1', N'122', N'2021-09-15 20:47:00', null);
+
+
+
+--
+--  INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important,
+--                                                   action_required, enabled, user_specific)
+-- values (3, 'GENERAL', 'PASSWORD_EXPIRATION', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
+-- INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important,
+--                                                   action_required, enabled, user_specific)
+-- values (1, 'RITUAL', 'OUT_ARAFAT_FENCE', 'CONFIRMED', 'SYSTEM_DEFINED', 1, 0, 1, 1);
+-- INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important,
+--                                                   action_required, enabled, user_specific)
+-- values (2, 'RITUAL', 'DAILY_SURVEY', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
+--
+--
+--
+-- INSERT INTO shc_portal.shc_portal.shc_notification_request (id, notification_template_id, user_id, processing_status_id, sending_date, creation_date, update_date, user_lang) VALUES (1, 3, 1, 1, N'2021-10-17 16:34:00', N'2021-10-17 16:35:00', null, N'EN');
+--
+-- INSERT INTO shc_portal.shc_portal.shc_notification_request_parameter_value (id, notification_request_id, notification_template_parameter_id, notification_template_parameter_value, creation_date) VALUES (1, 1, 1, N'5', N'2021-10-17 16:36:00');
+-- INSERT INTO shc_portal.shc_portal.shc_notification_request_parameter_value (id, notification_request_id, notification_template_parameter_id, notification_template_parameter_value, creation_date) VALUES (2, 1, 6, N'1', N'2021-10-17 16:36:00');
+-- INSERT INTO shc_portal.shc_portal.shc_notification_request_parameter_value (id, notification_request_id, notification_template_parameter_id, notification_template_parameter_value, creation_date) VALUES (3, 1, 7, N'EN', N'2021-10-17 16:36:00');
+--
+-- INSERT INTO shc_portal.shc_portal.shc_user_notification (id, notification_template_id, user_id, resolved_body, status_code, creation_date, update_date, user_lang) VALUES (982, 3, 1, N'Password will expire after 1 days', N'NEW', N'2021-10-16 16:39:00', null, N'en');
+-- INSERT INTO shc_portal.shc_portal.shc_user_notification (id, notification_template_id, user_id, resolved_body, status_code, creation_date, update_date, user_lang) VALUES (983, 3, 1, N'Password will expire after 1 days', N'NEW', N'2021-10-16 16:40:00', null, N'en');
+-- INSERT INTO shc_portal.shc_portal.shc_user_notification (id, notification_template_id, user_id, resolved_body, status_code, creation_date, update_date, user_lang) VALUES (984, 3, 1, N'Password will expire after 1 days', N'NEW', N'2021-10-16 16:41:00', null, N'en');
+-- INSERT INTO shc_portal.shc_portal.shc_user_notification (id, notification_template_id, user_id, resolved_body, status_code, creation_date, update_date, user_lang) VALUES (985, 3, 1, N'Password will expire after 1 days', N'NEW', N'2021-10-16 16:42:00', null, N'en');
+-- INSERT INTO shc_portal.shc_portal.shc_user_notification (id, notification_template_id, user_id, resolved_body, status_code, creation_date, update_date, user_lang) VALUES (986, 3, 1, N'Password will expire after 1 days', N'NEW', N'2021-10-16 16:43:00', null, N'en');
+-- INSERT INTO shc_portal.shc_portal.shc_user_notification (id, notification_template_id, user_id, resolved_body, status_code, creation_date, update_date, user_lang) VALUES (987, 3, 1, N'Password will expire after 1 days', N'NEW', N'2021-10-16 16:44:00', null, N'en');
+
+

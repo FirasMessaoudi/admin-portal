@@ -17,10 +17,15 @@ import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.data.request.DataRequestService;
 import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
+import com.elm.shj.admin.portal.services.data.writer.ItemWriter;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.group.RitualGroupService;
 import com.elm.shj.admin.portal.services.lookup.*;
+import com.elm.shj.admin.portal.services.notification.NotificationProcessingScheduler;
+import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
+import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
+import com.elm.shj.admin.portal.services.notification.UserNotificationService;
 import com.elm.shj.admin.portal.services.otp.OtpService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
@@ -241,6 +246,64 @@ public abstract class AbstractControllerTestSuite {
     @MockBean
     protected CompanyStaffService companyStaffService;
 
+    @MockBean
+    protected UserNotificationService userNotificationService;
+
+    @MockBean
+    protected CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
+
+    @MockBean
+    protected ApplicantPackageHousingService applicantPackageHousingService;
+
+    @MockBean
+    protected ApplicantPackageCateringService applicantPackageCateringService;
+
+    @MockBean
+    protected ApplicantPackageTransportationService applicantPackageTransportationService;
+
+    @MockBean
+    protected CompanyLiteService companyLiteService;
+    @MockBean
+    protected CompanyRitualStepLookupService companyRitualStepLookupService;
+    @MockBean
+    protected CompanyStaffLookupService companyStaffLookupService;
+    @MockBean
+    protected HousingCategoryLookupService housingCategoryLookupService;
+    @MockBean
+    protected HousingTypeLookupService housingTypeLookupService;
+    @MockBean
+    protected PackageTypeLookupService packageTypeLookupService;
+    @MockBean
+    protected HousingSiteLookupService housingSiteLookupService;
+    @MockBean
+    protected TransportationTypeLookupService transportationTypeLookupService;
+    @MockBean
+    protected NotificationCategoryLookupService notificationCategoryLookupService;
+    @MockBean
+    protected NotificationTemplateNameLookupService notificationTemplateNameLookupService;
+    @MockBean
+    protected NotificationTemplateTypeLookupService notificationTemplateTypeLookupService;
+    @MockBean
+    protected UserNotificationStatusLookupService userNotificationStatusLookupService;
+    @MockBean
+    protected NotificationTemplateStatusLookupService notificationTemplateStatusLookupService;
+    @MockBean
+    protected NotificationTemplateService notificationTemplateService;
+    @MockBean
+    protected NotificationRequestService notificationRequestService;
+    @MockBean
+    protected ApplicantGroupService applicantGroupService;
+    @MockBean
+    protected ApplicantPackageService applicantPackageService;
+    @MockBean
+    protected GroupApplicantListService groupApplicantListService;
+    @MockBean
+    protected RitualPackageService ritualPackageService;
+    @MockBean
+    protected ItemWriter itemWriter;
+    @MockBean
+    protected NotificationProcessingScheduler notificationProcessingScheduler;
+
     /**
      * Method which is executed before each test
      */
@@ -340,7 +403,7 @@ public abstract class AbstractControllerTestSuite {
         roleAuthorityIntegration.setAuthority(authorityIntegration);
         authorityIntegration.setCode(AuthorityConstants.INTEGRATION_WEB_SERVICE_CALL);
 
-        role.setRoleAuthorities(new HashSet<>((Arrays.asList(roleAuthority, roleAuthorityDelete, roleAuthorityEdit, roleAuthorityResetPassword, roleAuthorityResetUserPassword, roleAuthorityAdd, roleAuthorityUserStatus,roleAuthorityIntegration))));
+        role.setRoleAuthorities(new HashSet<>((Arrays.asList(roleAuthority, roleAuthorityDelete, roleAuthorityEdit, roleAuthorityResetPassword, roleAuthorityResetUserPassword, roleAuthorityAdd, roleAuthorityUserStatus, roleAuthorityIntegration))));
         UserRoleDto userRole = new UserRoleDto();
         userRole.setUser(loggedInUser);
         userRole.setRole(role);
