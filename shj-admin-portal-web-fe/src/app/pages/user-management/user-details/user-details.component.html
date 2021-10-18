@@ -38,9 +38,9 @@
             </div>
             <div class="form-group col">
               <label class="col-form-label">{{'general.date_of_birth' | translate}}</label>
-              <span class="form-control-plaintext">{{ user?.dateOfBirthGregorian | dateFormat }}
+              <span class="form-control-plaintext">{{ user?.dateOfBirthGregorian | gregorianDateFormat }}
                 <span *ngIf="user?.dateOfBirthGregorian">-</span>
-                {{ user?.dateOfBirthHijri | hijriFormat }}
+                {{ user?.dateOfBirthHijri | hijriDateFormat }}
             </span>
 
             </div>
@@ -80,11 +80,11 @@
             </div>
             <div class="form-group col">
               <label class="col-form-label">{{'user-management.creation_date' | translate}}</label>
-              <span class="form-control-plaintext ">{{ user?.creationDate | dateFormat }}</span>
+              <span class="form-control-plaintext ">{{ user?.creationDate | gregorianDateFormat }}</span>
             </div>
             <div class="form-group col">
               <label class="col-form-label">{{'user-management.last_login' | translate}}</label>
-              <span class="form-control-plaintext ">{{ user?.lastLoginDate | dateFormat }}</span>
+              <span class="form-control-plaintext ">{{ user?.lastLoginDate | gregorianDateFormat }}</span>
             </div>
           </div>
         </div>

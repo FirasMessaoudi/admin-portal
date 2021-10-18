@@ -74,9 +74,10 @@
             </div>
             <div class="form-group col">
               <label class="col-form-label">{{'general.date_of_birth' | translate}}</label>
-              <span class="form-control-plaintext">{{ card?.applicantRitual?.applicant?.dateOfBirthGregorian | dateFormat }}
+              <span
+                class="form-control-plaintext">{{ card?.applicantRitual?.applicant?.dateOfBirthGregorian | gregorianDateFormat }}
                 <span *ngIf="card?.applicantRitual?.applicant?.dateOfBirthGregorian">-</span>
-                {{ card?.applicantRitual?.applicant?.dateOfBirthHijri | hijriFormat }}
+                {{ card?.applicantRitual?.applicant?.dateOfBirthHijri |  hijriDateFormat }}
               </span>
             </div>
             <div class="form-group col">
@@ -261,7 +262,7 @@
               <tbody>
               <tr *ngFor="let immunization of card?.applicantRitual?.applicant?.applicantHealth?.immunizations">
                 <td class="ltr">{{immunization.immunizationCode}}</td>
-                <td class="ltr">{{immunization.immunizationDate | dateFormat}}</td>
+                <td class="ltr">{{immunization.immunizationDate | gregorianDateFormat}}</td>
               </tr>
               </tbody>
             </table>

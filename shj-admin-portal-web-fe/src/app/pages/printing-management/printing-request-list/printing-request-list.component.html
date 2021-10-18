@@ -134,7 +134,7 @@
                  class="text-dcc-primary font-weight-bold">{{request.referenceNumber}}</a></td>
           <td>{{request.batchesCount}}</td>
           <td class="ltr">{{request.cardsCount}}</td>
-          <td class="ltr">{{request.confirmationDate | dateFormat}}</td>
+          <td class="ltr">{{request.confirmationDate | gregorianDateFormat}}</td>
           <td class="ltr">{{request.description}}</td>
           <td class="ltr">
             {{request.statusCode ? lookupService().localizedLabel(printRequestStatuses, request.statusCode) : ""}}

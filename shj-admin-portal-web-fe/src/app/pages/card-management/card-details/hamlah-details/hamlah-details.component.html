@@ -94,8 +94,8 @@
             : ''
           }}
         </td>
-        <td class="ltr">{{ housing?.packageHousing?.validityStart | dateFormat}}</td>
-        <td class="ltr">{{ housing?.packageHousing?.validityEnd | dateFormat}}</td>
+        <td class="ltr">{{ housing?.packageHousing?.validityStart | gregorianDateFormat}}</td>
+        <td class="ltr">{{ housing?.packageHousing?.validityEnd | gregorianDateFormat}}</td>
       </tr>
       </tbody>
     </table>
@@ -125,9 +125,9 @@
         <td class="ltr">
           {{ catering?.packageCatering?.mealTime }}
           {{'card-management.from' | translate}}
-          {{ catering?.packageCatering?.packageHousing?.validityStart | dateFormat}}
+          {{ catering?.packageCatering?.packageHousing?.validityStart | gregorianDateFormat}}
           {{'card-management.to' | translate}}
-          {{ catering?.packageCatering?.packageHousing?.validityStart | dateFormat}}
+          {{ catering?.packageCatering?.packageHousing?.validityStart | gregorianDateFormat}}
 
         </td>
         <td class="ltr">

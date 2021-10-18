@@ -62,12 +62,13 @@
         </div>
         <div class="form-group col">
           <label class="col-form-label">{{'role-management.creation_date' | translate}}</label>
-          <span class="form-control-plaintext ">{{ role?.creationDate | dateFormat }}</span>
+          <span class="form-control-plaintext ">{{ role?.creationDate | gregorianDateFormat }}</span>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{'role-management.update_date' | translate}}</label>
-          <span class="form-control-plaintext ">{{ !role?.updateDate? '--' : role?.updateDate | dateFormat }}</span>
+          <span
+            class="form-control-plaintext ">{{ !role?.updateDate ? '--' : role?.updateDate | gregorianDateFormat }}</span>
         </div>
 
       </div>

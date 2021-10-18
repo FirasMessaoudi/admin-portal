@@ -23,12 +23,14 @@
           </td>
         </tr>
         <tr *ngFor="let rule of page?.content">
-          <td class="text-center" scope="row"><a [routerLink]="['/rules/edit', rule?.id]" class="text-dcc-primary font-weight-bold">{{rule.id}}</a></td>
+          <td class="text-center" scope="row"><a [routerLink]="['/rules/edit', rule?.id]"
+                                                 class="text-dcc-primary font-weight-bold">{{rule.id}}</a></td>
           <td>{{ currentLanguage.startsWith("en") ? rule.labelEn : rule.labelAr }}</td>
-          <td width="15%" class="ltr">{{ rule?.creationDate | dateFormat }}</td>
-          <td width="15%" class="ltr">{{ rule?.updateDate | dateFormat }}</td>
+          <td width="15%" class="ltr">{{ rule?.creationDate | gregorianDateFormat }}</td>
+          <td width="15%" class="ltr">{{ rule?.updateDate | gregorianDateFormat }}</td>
           <td class="text-center" width="20%" style="text-align:center">
-            <a [routerLink]="['/rules/edit', rule?.id]" class="action mx-2" ngbTooltip="{{'general.tooltip_view' | translate}}">
+            <a [routerLink]="['/rules/edit', rule?.id]" class="action mx-2"
+               ngbTooltip="{{'general.tooltip_view' | translate}}">
               <svg-icon styleClass="text-dcc-primary h3" icon="eye"></svg-icon>
             </a>
           </td>
