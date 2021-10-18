@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaUserNotification;
@@ -8,6 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+/**
+ * Testing class for Repository {@link UserNotificationRepository}
+ *
+ * @author Ahmed Ali
+ * @since 1.1.0
+ */
 public class UserNotificationRepositoryTest extends AbstractJpaTest {
  private static final int TEST_USER_ID = 1;
  private static final long TEST_NOTIFICATION_ID = 982;

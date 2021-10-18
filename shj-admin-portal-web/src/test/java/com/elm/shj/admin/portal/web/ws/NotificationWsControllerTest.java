@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.dto.DetailedUserNotificationDto;
@@ -25,6 +28,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Testing class for Controller {@link NotificationWsController}
+ *
+ * @author Ahmed Ali
+ * @since 1.1.0
+ */
 public class NotificationWsControllerTest extends AbstractControllerTestSuite {
 
     @Override

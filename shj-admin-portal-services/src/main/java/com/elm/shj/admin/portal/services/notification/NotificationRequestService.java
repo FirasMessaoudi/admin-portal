@@ -45,7 +45,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
      * @param notificationRequest the   notification request to be processed
      */
     @Transactional
-    public void processNotificationRequest(JpaNotificationRequest notificationRequest) throws Exception {
+    public void processNotificationRequest(JpaNotificationRequest notificationRequest) {
         log.debug("Start processing notification request with ID   {} ", notificationRequest.getId());
         JpaUserNotification userNotification = new JpaUserNotification();
         userNotification.setNotificationTemplate(notificationRequest.getNotificationTemplate());

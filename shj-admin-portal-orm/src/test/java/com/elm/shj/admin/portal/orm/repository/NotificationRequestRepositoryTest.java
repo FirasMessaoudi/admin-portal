@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaNotificationRequest;
@@ -11,6 +14,12 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Testing class for Repository {@link NotificationRequestRepository}
+ *
+ * @author Ahmed Ali
+ * @since 1.1.0
+ */
 public class NotificationRequestRepositoryTest extends AbstractJpaTest {
     private static final int TEST_BATCH_SIZE = 1000;
     private static final String TEST_PROCESSING_STATUS_CODE = "NEW";
