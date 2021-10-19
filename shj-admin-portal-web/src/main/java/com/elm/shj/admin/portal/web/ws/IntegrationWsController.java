@@ -452,5 +452,11 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin)).build());
     }
 
+    @GetMapping("/company-details/{uin}/{seasonRitualId}")
+    public ResponseEntity<WsResponse<?>> companyDetails(@PathVariable String uin, @PathVariable long seasonRitualId) {
+        log.info("company details...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(seasonRitualId, Long.parseLong(uin))).build());
+    }
+
 
 }
