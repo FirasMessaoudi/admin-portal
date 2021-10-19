@@ -73,7 +73,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
         }
         log.debug("Start resolving notification request body the unresolved body is {}", notificationContent.get().getBody());
         String resolvedBody = notificationContent.get().getBody();
-        if (!resolvedBody.isEmpty()) {
+        if (resolvedBody != null && !resolvedBody.isEmpty()) {
             for (JpaNotificationRequestParameterValue param : notificationRequestParameterValues) {
                 Optional<JpaNotificationTemplateParameter> templateParameter = notificationTemplate.getNotificationTemplateParameters().stream().filter(tparam -> tparam.getId() == param.getNotificationTemplateParameterId()).findFirst();
                 if (!templateParameter.isPresent()) {
@@ -97,7 +97,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     public void savePasswordExpiryNotificationRequest(PasswordExpiryNotificationRequest passwordExpiryNotificationRequest) throws NotFoundException {
         Optional<NotificationTemplateDto> notificationTemplate = notificationTemplateService.findEnabledNotificationTemplateByNameCode(PASSWORD_EXPIRATION_TEMPLATE_NAME);
 
-        if (!notificationTemplate.isPresent()) {
+        if (notificationTemplate == null || !notificationTemplate.isPresent()) {
             throw new NotFoundException("no Template found for  " + PASSWORD_EXPIRATION_TEMPLATE_NAME);
         }
 
