@@ -104,3 +104,12 @@ INSERT INTO shc_portal.shc_portal.shc_config ( conf_key, conf_value  ) VALUES ( 
 INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
 VALUES ('scheduler.notification.processing.cron', '* * * ? * *');
 GO
+GO
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('scheduler.user.notification.expiration.cron', '0 0/1 * * * *');
+GO
+
+GO
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('user.notification.expiration.batch.size', 1000);
+GO

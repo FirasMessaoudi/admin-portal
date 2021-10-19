@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,16 +66,29 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
     }
 
 
-
     /**
      * mark User Notification As Read
      *
      * @param notificationId is the id for the notification
      * @return number of affected rows
      */
+    @Transactional
     public int markUserNotificationAsRead(Long notificationId) {
-        return userNotificationRepository.markUserNotificationAsRead(notificationId, EUserNotificationStatus.READ.name());
+        return userNotificationRepository.updateUserNotificationStatus(notificationId, EUserNotificationStatus.READ.name());
     }
+
+
+    /**
+     * mark User Notification As Expird
+     *
+     * @param notificationId is the id for the notification
+     * @return number of affected rows
+     */
+    @Transactional
+    public int markUserNotificationsAsExpired(Long notificationId) {
+        return userNotificationRepository.updateUserNotificationStatus(notificationId, EUserNotificationStatus.EXPIRED.name());
+    }
+
 
     /**
      * Retrieve user new notifications count.

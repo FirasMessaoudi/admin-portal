@@ -36,10 +36,10 @@ public class UserNotificationRepositoryTest extends AbstractJpaTest {
  }
 
  @Test
- public void test_mark_User_Notification_As_Read() {
+ public void test_update_User_Notification_Status() {
   JpaUserNotification userNotification = userNotificationRepository.findById(TEST_NOTIFICATION_ID).get();
   assertNotNull(userNotification);
-  int numberOfAffectedRows = userNotificationRepository.markUserNotificationAsRead(TEST_NOTIFICATION_ID, TEST_READ_STATUS_CODE);
+  int numberOfAffectedRows = userNotificationRepository.updateUserNotificationStatus(TEST_NOTIFICATION_ID, TEST_READ_STATUS_CODE);
 
   assertEquals(userNotification.getStatusCode(), TEST_READ_STATUS_CODE);
   assertEquals(1, numberOfAffectedRows);

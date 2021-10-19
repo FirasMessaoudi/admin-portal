@@ -57,6 +57,9 @@ public class JpaNotificationTemplate implements Serializable {
     @Column(name = "user_specific")
     private boolean userSpecific;
 
+    @Column(name = "expiration_period_in_minutes")
+    private int expirationPeriodInMinutes;
+
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
     private Set<JpaUserNotification> userNotifications;

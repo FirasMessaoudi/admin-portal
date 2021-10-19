@@ -4,9 +4,12 @@
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaUserNotification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -20,9 +23,11 @@ public interface UserNotificationRepository extends JpaRepository<JpaUserNotific
 
     List<JpaUserNotification> findByUserId(Long userId);
 
+    Page<JpaUserNotification> findByStatusCodeNot(Pageable pageable, String statusCode);
+
     @Modifying
     @Query("update JpaUserNotification n set n.statusCode = :statusCode where n.id =:notificationId ")
-    int markUserNotificationAsRead(Long notificationId, String statusCode);
+    int updateUserNotificationStatus(@Param("notificationId") Long notificationId, @Param("statusCode") String statusCode);
 
     int countByUserIdAndStatusCode(long userId, String statusCode);
 }

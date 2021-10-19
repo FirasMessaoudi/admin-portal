@@ -41,7 +41,14 @@ public class UserNotificationServiceTest {
     public void test_mark_User_Notification_As_Read() {
         long notificationId = 1;
         userNotificationService.markUserNotificationAsRead(notificationId);
-        verify(userNotificationRepository, times(1)).markUserNotificationAsRead(anyLong(), eq(EUserNotificationStatus.READ.name()));
+        verify(userNotificationRepository, times(1)).updateUserNotificationStatus(anyLong(), eq(EUserNotificationStatus.READ.name()));
+    }
+
+    @Test
+    public void test_mark_User_Notification_As_Expired() {
+        long notificationId = 1;
+        userNotificationService.markUserNotificationsAsExpired(notificationId);
+        verify(userNotificationRepository, times(1)).updateUserNotificationStatus(anyLong(), eq(EUserNotificationStatus.EXPIRED.name()));
     }
 
 

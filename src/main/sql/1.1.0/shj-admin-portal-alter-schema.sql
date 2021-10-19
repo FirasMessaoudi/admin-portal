@@ -751,3 +751,8 @@ GO
 ALTER TABLE shc_portal.shc_user_notification
     ADD user_lang varchar(45) not null;
 GO
+
+GO
+alter table shc_portal.shc_notification_template
+    add expiration_period_in_minutes int
+    GO
