@@ -11,8 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -34,7 +33,7 @@ public class UserNotificationServiceTest {
     public void test_find_User_Notifications() {
         long userId = 1;
         userNotificationService.findUserNotifications(userId);
-        verify(userNotificationRepository, times(1)).findByUserId(anyLong());
+        verify(userNotificationRepository, times(1)).findByUserIdAndStatusCodeNot(anyLong(), anyString());
     }
 
     @Test

@@ -21,7 +21,7 @@ import java.util.List;
  */
 public interface UserNotificationRepository extends JpaRepository<JpaUserNotification, Long> {
 
-    List<JpaUserNotification> findByUserId(Long userId);
+    List<JpaUserNotification> findByUserIdAndStatusCodeNot(Long userId, String statusCode);
 
     Page<JpaUserNotification> findByStatusCodeNot(Pageable pageable, String statusCode);
 

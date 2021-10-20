@@ -42,7 +42,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
      */
     public List<DetailedUserNotificationDto> findUserNotifications(long userId) {
         List<DetailedUserNotificationDto> detailedUserNotificationDtos = new ArrayList<>();
-        List<JpaUserNotification> userNotifications = userNotificationRepository.findByUserId(userId);
+        List<JpaUserNotification> userNotifications = userNotificationRepository.findByUserIdAndStatusCodeNot(userId, EUserNotificationStatus.EXPIRED.name());
 
         if (userNotifications.isEmpty())
             return Collections.emptyList();
