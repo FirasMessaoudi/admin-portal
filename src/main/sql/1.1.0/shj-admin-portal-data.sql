@@ -113,3 +113,14 @@ GO
 INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
 VALUES ('user.notification.expiration.batch.size', 1000);
 GO
+
+GO
+update shc_portal.shc_notification_template
+set expiration_period_in_minutes= 150
+where id = 1;
+
+update shc_portal.shc_notification_template
+set expiration_period_in_minutes= 150
+where id = 2;
+
+GO

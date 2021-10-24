@@ -31,8 +31,6 @@ import java.util.Set;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class NotificationRequestService extends GenericService<JpaNotificationRequest, NotificationRequestDto, Long> {
     public static final String PASSWORD_EXPIRATION_TEMPLATE_NAME = "PASSWORD_EXPIRATION";
-    public static final String PASSWORD_EXPIRY_TEMPLATE_USER_ID_PARAMETER_NAME = "user_id";
-    public static final String PASSWORD_EXPIRY_TEMPLATE_USER_LANG_PARAMETER_NAME = "user_lang";
     public static final String PASSWORD_EXPIRY_TEMPLATE_DAYS_TO_EXPIRY_PARAMETER_NAME = "days_to_expiry";
     private final NotificationTemplateService notificationTemplateService;
     private final NotificationRequestRepository notificationRequestRepository;
@@ -110,15 +108,12 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                     notificationRequest.setProcessingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build());
                     notificationRequest.setSendingDate(new Date());
                     Set<NotificationRequestParameterValueDto> notificationRequestParamValue = new HashSet<>();
-                    notificationRequestParamValue.add(buildNotificationRequestParamValue(notificationTemplate, notificationRequest, PASSWORD_EXPIRY_TEMPLATE_USER_ID_PARAMETER_NAME, Long.toString(param.getUserId())));
-                    notificationRequestParamValue.add(buildNotificationRequestParamValue(notificationTemplate, notificationRequest, PASSWORD_EXPIRY_TEMPLATE_USER_LANG_PARAMETER_NAME, param.getUserLang()));
                     notificationRequestParamValue.add(buildNotificationRequestParamValue(notificationTemplate, notificationRequest, PASSWORD_EXPIRY_TEMPLATE_DAYS_TO_EXPIRY_PARAMETER_NAME, Integer.toString(param.getDaysToExpiry())));
                     notificationRequest.setNotificationRequestParameterValues(notificationRequestParamValue);
                     save(notificationRequest);
 
                 }
         );
-
     }
 
     /**
