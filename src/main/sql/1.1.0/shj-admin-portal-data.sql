@@ -124,3 +124,7 @@ set expiration_period_in_minutes= 150
 where id = 2;
 
 GO
+
+GO
+INSERT INTO shc_portal.shc_portal.shc_notification_template_parameter (  notification_template_id, parameter_name  ) VALUES (  1, N'days_to_expiry' );
+GO

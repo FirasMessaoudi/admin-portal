@@ -11,6 +11,7 @@ import com.elm.dcc.foundation.providers.recaptcha.service.RecaptchaService;
 import com.elm.dcc.foundation.providers.sms.config.SmsGatewayConfig;
 import com.elm.shj.admin.portal.orm.repository.ApplicantHealthRepository;
 import com.elm.shj.admin.portal.orm.repository.DataRequestRecordRepository;
+import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.audit.AuditLogService;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
@@ -22,10 +23,7 @@ import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.group.RitualGroupService;
 import com.elm.shj.admin.portal.services.lookup.*;
-import com.elm.shj.admin.portal.services.notification.NotificationProcessingScheduler;
-import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
-import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
-import com.elm.shj.admin.portal.services.notification.UserNotificationService;
+import com.elm.shj.admin.portal.services.notification.*;
 import com.elm.shj.admin.portal.services.otp.OtpService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
@@ -303,6 +301,11 @@ public abstract class AbstractControllerTestSuite {
     protected ItemWriter itemWriter;
     @MockBean
     protected NotificationProcessingScheduler notificationProcessingScheduler;
+    @MockBean
+    protected UserNotificationRepository userNotificationRepository;
+
+    @MockBean
+    protected UserNotificationExpirationScheduler userNotificationExpirationScheduler;
 
     /**
      * Method which is executed before each test
