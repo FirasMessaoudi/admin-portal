@@ -51,6 +51,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                 notification -> {
                     Optional<JpaNotificationTemplateContent> notificationTemplateContent = notification.getNotificationTemplate().getNotificationTemplateContents().stream().filter(content -> content.getLang().equalsIgnoreCase(notification.getUserLang())).findAny();
                     detailedUserNotificationDtos.add(DetailedUserNotificationDto.builder()
+                            .id(notification.getId())
                             .resolvedBody(notification.getResolvedBody())
                             .statusCode(notification.getStatusCode())
                             .important(notification.getNotificationTemplate().isImportant())
