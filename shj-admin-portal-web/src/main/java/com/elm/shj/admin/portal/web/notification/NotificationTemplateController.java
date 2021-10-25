@@ -15,10 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -29,19 +26,27 @@ import java.io.IOException;
  * @since 1.0.0
  */
 @RestController
-@RequestMapping(Navigation.API_NOTIFICATION)
+@RequestMapping(Navigation.API_NOTIFICATION_TEMPLATE)
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class NotificationTemplateController {
 
     private final NotificationTemplateService notificationTemplateService;
 
-    @PostMapping("/template/list")
+    @PostMapping("/list")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
     public Page<NotificationTemplateDto> searchNotificationTemplate(@RequestBody NotificationSearchCriteriaDto notificationSearchCriteria,
                                                                     Pageable pageable, Authentication authentication) throws IOException {
 
         return notificationTemplateService.findByFilter(notificationSearchCriteria, pageable);
 
+    }
+
+
+    @GetMapping("/{templateId}")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
+    public NotificationTemplateDto findNotificationTemplateById(@PathVariable long templateId,
+                                                                Authentication authentication) {
+        return notificationTemplateService.findOne(templateId);
     }
 }

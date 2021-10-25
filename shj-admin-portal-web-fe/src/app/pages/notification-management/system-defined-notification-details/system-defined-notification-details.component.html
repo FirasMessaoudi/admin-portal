@@ -1,3 +1,43 @@
-<p>system-defined-notification-details works!</p>
+<a class="d-block button_back" href="javascript:void(0);" (click)="goBackToList()">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h3 class="sectionTitle">{{'notification-management.system_defined_notification_details' | translate }}</h3>
+  </div>
+  <div class="content__section" *ngIf="!canSeeSystemDefinedNotificationDetails">
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
 
-{{notificationId}}
+  <div class="content__section" *ngIf="canSeeSystemDefinedNotificationDetails">
+    <div class="cardBox row row-cols-1 row-cols-md-2 row-cols-lg-6">
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{'notification-management.notification-name' | translate}}</label>
+        <span
+          class="form-control-plaintext ">{{lookupService().localizedLabel(notificationTemplateNames, notification?.nameCode)}} </span>
+      </div>
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{' ' | translate}}</label>
+        <span class="form-control-plaintext "> </span>
+      </div>
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{' ' | translate}}</label>
+        <span class="form-control-plaintext "> </span>
+      </div>
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{' ' | translate}}</label>
+        <span class="form-control-plaintext "> </span>
+      </div>
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{'notification-management.severity' | translate}} </label>
+        <span class="form-control-plaintext "></span>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
