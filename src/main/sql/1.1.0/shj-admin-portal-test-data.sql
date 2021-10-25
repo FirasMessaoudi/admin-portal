@@ -286,5 +286,19 @@ INSERT INTO shc_portal.shc_package_catering (id, package_housing_id, meal_code, 
                                              description_ar, description_en, creation_date, update_date)
 VALUES (2, 1, N'123', N'10:00:00', N'mail', N'type', null, null, N'2021-09-15 20:28:00', null);
 
-SET IDENTITY_INSERT shc_portal.shc_package_catering OFF;
+SET
+IDENTITY_INSERT shc_portal.shc_package_catering OFF;
+GO
+GO
+SET IDENTITY_INSERT shc_portal.shc_applicant_digital_id_status_lk ON;
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label)
+VALUES (1, 'VALID', 'ar', N'نشط');
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label)
+VALUES (2, 'VALID', 'en', 'Active');
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label)
+VALUES (3, 'INVALID', 'ar', N'متوقف');
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label)
+VALUES (4, 'INVALID', 'en', 'Invalid');
+SET
+IDENTITY_INSERT shc_portal.shc_applicant_digital_id_status_lk OFF;
 GO

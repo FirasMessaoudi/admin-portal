@@ -49,6 +49,8 @@ public class LookupController {
     private final NotificationTemplateTypeLookupService notificationTemplateTypeLookupService;
     private final UserNotificationStatusLookupService userNotificationStatusLookupService;
     private final NotificationTemplateStatusLookupService notificationTemplateStatusLookupService;
+    private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
+
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -175,6 +177,12 @@ public class LookupController {
     public List<NotificationTemplateStatusLookupDto> listNotificationTemplateStatuses() {
         log.debug("list notification template statuses...");
         return notificationTemplateStatusLookupService.findAll();
+    }
+
+    @GetMapping("/digital-id-status/list")
+    public List<ApplicantDigitalIdStatusLookupDto> listDigitalIdStatuses() {
+        log.debug("list applicant digital ID statuses...");
+        return applicantDigitalIdStatusLookupService.findAll();
     }
 
 }

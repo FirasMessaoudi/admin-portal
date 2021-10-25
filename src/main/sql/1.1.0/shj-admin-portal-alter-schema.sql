@@ -1,9 +1,12 @@
-USE shc_portal
+USE
+shc_portal
 GO
-ALTER TABLE shc_portal.shc_applicant_health ADD applicant_ritual_id int;
+ALTER TABLE shc_portal.shc_applicant_health
+    ADD applicant_ritual_id int;
 GO
 
-ALTER TABLE shc_portal.shc_applicant_health ADD CONSTRAINT fk_applicant_health_applicant_ritual FOREIGN KEY (applicant_ritual_id) REFERENCES shc_portal.shc_applicant_ritual (id);
+ALTER TABLE shc_portal.shc_applicant_health
+    ADD CONSTRAINT fk_applicant_health_applicant_ritual FOREIGN KEY (applicant_ritual_id) REFERENCES shc_portal.shc_applicant_ritual (id);
 GO
 
 -- update audit log table to handle big number for user id
@@ -156,14 +159,14 @@ GO
 if not exists(select * from sys.tables where name = 'shc_ritual_package')
 CREATE TABLE shc_portal.shc_ritual_package
 (
-    id             int           NOT NULL PRIMARY KEY IDENTITY (1,1),
-    type_code      varchar(20)   NOT NULL,
-    reference_number varchar(45) NOT NULL,
-    price          FLOAT NULL,
-    departure_city varchar(45) NULL,
-    country_id     int NULL,
-    creation_date  smalldatetime NOT NULL DEFAULT current_timestamp,
-    update_date    smalldatetime NULL,
+    id               int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    type_code        varchar(20)   NOT NULL,
+    reference_number varchar(45)   NOT NULL,
+    price            FLOAT NULL,
+    departure_city   varchar(45) NULL,
+    country_id       int NULL,
+    creation_date    smalldatetime NOT NULL DEFAULT current_timestamp,
+    update_date      smalldatetime NULL,
 );
 GO
 
@@ -204,7 +207,7 @@ CREATE TABLE shc_portal.shc_package_catering
     id                 int           NOT NULL PRIMARY KEY IDENTITY (1,1),
     package_housing_id int           NOT NULL,
     meal_code          nvarchar(50) NULL,
-    meal_time          Time           NOT NULL,
+    meal_time          Time          NOT NULL,
     meal_description   varchar(256)  NOT NULL,
     type               varchar(45) NULL,
     description_ar     nvarchar(250) NULL,
@@ -314,12 +317,12 @@ GO
 if not exists(select * from sys.tables where name = 'shc_ritual_season')
 CREATE TABLE shc_portal.shc_ritual_season
 (
-    id               int           NOT NULL PRIMARY KEY IDENTITY (1,1),
-    season_year      int           NOT NULL,
-    ritual_type_code varchar(20)   NOT NULL,
-    season_start     INT           NOT NULL,
-    season_end       INT           NOT NULL,
-    active           bit           NOT NULL,
+    id               int         NOT NULL PRIMARY KEY IDENTITY (1,1),
+    season_year      int         NOT NULL,
+    ritual_type_code varchar(20) NOT NULL,
+    season_start     INT         NOT NULL,
+    season_end       INT         NOT NULL,
+    active           bit         NOT NULL,
 );
 GO
 
@@ -375,19 +378,19 @@ GO
 if not exists(select * from sys.tables where name = 'shc_company_staff')
 CREATE TABLE shc_portal.shc_company_staff
 (
-    id            int NOT NULL PRIMARY KEY IDENTITY (1,1),
-    full_name_ar  nvarchar(255) NULL,
-    full_name_en  varchar(255) NULL,
-    id_number     int NOT NULL,
-    company_id    int NOT NULL,
-    title_code    varchar(45) NULL,
-    mobile_number varchar(20) NOT NULL,
-    email         varchar(255) NULL,
-    company_ritual_season_id   int NULL,
-    creation_date smalldatetime NULL DEFAULT current_timestamp,
-    update_date   smalldatetime NULL,
+    id                       int         NOT NULL PRIMARY KEY IDENTITY (1,1),
+    full_name_ar             nvarchar(255) NULL,
+    full_name_en             varchar(255) NULL,
+    id_number                int         NOT NULL,
+    company_id               int         NOT NULL,
+    title_code               varchar(45) NULL,
+    mobile_number            varchar(20) NOT NULL,
+    email                    varchar(255) NULL,
+    company_ritual_season_id int NULL,
+    creation_date            smalldatetime NULL DEFAULT current_timestamp,
+    update_date              smalldatetime NULL,
     CONSTRAINT fk_shc_company_representative_company FOREIGN KEY (company_id) REFERENCES shc_portal.shc_company (id),
-    CONSTRAINT fk_shc_company_staff_company_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season(id)
+    CONSTRAINT fk_shc_company_staff_company_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season (id)
 );
 GO
 
@@ -505,7 +508,8 @@ ALTER TABLE shc_portal.shc_applicant_ritual
         CONSTRAINT fk_shc_applicant_ritual_applicant_package FOREIGN KEY (applicant_package_id) REFERENCES shc_portal.shc_applicant_package (id);
 GO
 
-ALTER TABLE shc_portal.shc_company_ritual_step_lk ADD summary VARCHAR(100);
+ALTER TABLE shc_portal.shc_company_ritual_step_lk
+    ADD summary VARCHAR(100);
 GO
 
 ALTER TABLE shc_portal.shc_print_request
@@ -513,45 +517,54 @@ ALTER TABLE shc_portal.shc_print_request
 GO
 
 ALTER TABLE shc_portal.shc_group_applicant_list
-DROP CONSTRAINT group_applicant_list_lk_unique;
+DROP
+CONSTRAINT group_applicant_list_lk_unique;
 
 GO
 
 alter table shc_portal.shc_applicant_ritual
-drop column hamlah_package_code
+drop
+column hamlah_package_code
 go
 
 alter table shc_portal.shc_applicant_ritual
-drop column tafweej_code
-go
-
-
-alter table shc_portal.shc_applicant_ritual
-drop column hijri_season
+drop
+column tafweej_code
 go
 
 
 alter table shc_portal.shc_applicant_ritual
-drop column date_start_gregorian
+drop
+column hijri_season
 go
 
 
 alter table shc_portal.shc_applicant_ritual
-drop column date_end_gregorian
-go
-
-alter table shc_portal.shc_applicant_ritual
-drop column date_start_hijri
+drop
+column date_start_gregorian
 go
 
 
 alter table shc_portal.shc_applicant_ritual
-drop column date_end_hijri
+drop
+column date_end_gregorian
+go
+
+alter table shc_portal.shc_applicant_ritual
+drop
+column date_start_hijri
 go
 
 
 alter table shc_portal.shc_applicant_ritual
-drop column type_code
+drop
+column date_end_hijri
+go
+
+
+alter table shc_portal.shc_applicant_ritual
+drop
+column type_code
 go
 
 alter table shc_portal.shc_applicant_ritual alter column permit_number varchar(50) null
@@ -562,27 +575,32 @@ go
 
 
 alter table shc_portal.shc_applicant_ritual
-drop column zone_code
+drop
+column zone_code
 go
 
 
 alter table shc_portal.shc_applicant_ritual
-drop column group_code
+drop
+column group_code
 go
 
 
 alter table shc_portal.shc_applicant_ritual
-drop column unit_code
+drop
+column unit_code
 go
 
 
 alter table shc_portal.shc_applicant_ritual
-drop column bus_number
+drop
+column bus_number
 go
 
 
 alter table shc_portal.shc_applicant_ritual
-drop column seat_number
+drop
+column seat_number
 go
 
 alter table shc_portal.shc_company_staff_title_lk alter column label nvarchar(50) not null
@@ -595,7 +613,7 @@ CREATE TABLE shc_portal.shc_notification_template_name_lk
     id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
     code          VARCHAR(20)   NOT NULL,
     lang          VARCHAR(45)   NOT NULL,
-    label         NVARCHAR(50)  NOT NULL,
+    label         NVARCHAR(50) NOT NULL,
     creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
     CONSTRAINT notification_template_name_lk_unique UNIQUE (code ASC, lang ASC)
 );
@@ -606,7 +624,7 @@ CREATE TABLE shc_portal.shc_notification_processing_status_lk
 (
     id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
     code          VARCHAR(20)   NOT NULL,
-    description   NVARCHAR(50)  NOT NULL,
+    description   NVARCHAR(50) NOT NULL,
     creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
     CONSTRAINT notification_processing_status_lk_unique UNIQUE (code ASC)
 );
@@ -618,7 +636,7 @@ CREATE TABLE shc_portal.shc_notification_template_status_lk
     id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
     code          VARCHAR(20)   NOT NULL,
     lang          VARCHAR(45)   NOT NULL,
-    label         NVARCHAR(50)  NOT NULL,
+    label         NVARCHAR(50) NOT NULL,
     creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
     CONSTRAINT notification_template_status_lk_unique UNIQUE (code ASC, lang ASC)
 );
@@ -630,7 +648,7 @@ CREATE TABLE shc_portal.shc_notification_template_type_lk
     id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
     code          VARCHAR(20)   NOT NULL,
     lang          VARCHAR(45)   NOT NULL,
-    label         NVARCHAR(50)  NOT NULL,
+    label         NVARCHAR(50) NOT NULL,
     creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
     CONSTRAINT notification_template_type_lk_unique UNIQUE (code ASC, lang ASC)
 );
@@ -642,7 +660,7 @@ CREATE TABLE shc_portal.shc_notification_category_lk
     id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
     code          VARCHAR(20)   NOT NULL,
     lang          VARCHAR(45)   NOT NULL,
-    label         NVARCHAR(50)  NOT NULL,
+    label         NVARCHAR(50) NOT NULL,
     creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
     CONSTRAINT notification_category_lk_unique UNIQUE (code ASC, lang ASC)
 );
@@ -668,14 +686,14 @@ GO
 if not exists(select * from sys.tables where name = 'shc_notification_template_content')
 CREATE TABLE shc_portal.shc_notification_template_content
 (
-    id                       INT            NOT NULL PRIMARY KEY IDENTITY (1,1),
-    notification_template_id INT            NOT NULL,
-    lang                     VARCHAR(45)    NOT NULL,
-    title                    NVARCHAR(45)   NOT NULL,
+    id                       INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    notification_template_id INT           NOT NULL,
+    lang                     VARCHAR(45)   NOT NULL,
+    title                    NVARCHAR(45) NOT NULL,
     body                     NVARCHAR(1000) NOT NULL,
-    action_label             NVARCHAR(45)   NULL,
-    creation_date            SMALLDATETIME  NOT NULL DEFAULT current_timestamp,
-    update_date              SMALLDATETIME  NULL,
+    action_label             NVARCHAR(45) NULL,
+    creation_date            SMALLDATETIME NOT NULL DEFAULT current_timestamp,
+    update_date              SMALLDATETIME NULL,
     CONSTRAINT fk_notification_template_content_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id)
 );
 GO
@@ -726,7 +744,7 @@ CREATE TABLE shc_portal.shc_user_notification_status_lk
     id            INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
     code          VARCHAR(20)   NOT NULL,
     lang          VARCHAR(45)   NOT NULL,
-    label         NVARCHAR(50)  NOT NULL,
+    label         NVARCHAR(50) NOT NULL,
     creation_date SMALLDATETIME NOT NULL DEFAULT current_timestamp,
     CONSTRAINT user_notification_status_lk_unique UNIQUE (code ASC, lang ASC)
 );
@@ -754,5 +772,28 @@ GO
 
 GO
 alter table shc_portal.shc_notification_template
-    add expiration_period_in_minutes int
-    GO
+    add expiration_period_in_minutes int GO
+
+
+GO
+ALTER TABLE shc_portal.shc_applicant_digital_id
+    ADD status_code varchar(20);
+GO
+UPDATE shc_portal.shc_portal.shc_applicant_digital_id
+SET status_code = 'VALID'
+WHERE id > 0;
+ALTER TABLE shc_applicant
+DROP
+COLUMN status;
+GO
+if not exists (select * from sys.tables where name = 'shc_applicant_digital_id_status_lk')
+create table shc_portal.shc_applicant_digital_id_status_lk
+(
+    id            int PRIMARY KEY NOT NULL identity(1,1),
+    code          VARCHAR(20)     NOT NULL,
+    lang          VARCHAR(45)     NOT NULL,
+    label         NVARCHAR(50) NOT NULL,
+    creation_date smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint shc_applicant_digital_id_status_lk_unique unique (code ASC, lang ASC)
+);
+GO

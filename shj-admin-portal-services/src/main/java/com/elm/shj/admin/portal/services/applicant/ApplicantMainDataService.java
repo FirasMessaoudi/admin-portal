@@ -48,6 +48,8 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
         JpaApplicantMainData applicant = applicantMainDataRepository.findByUin(uin);
         if (applicant != null) {
             ApplicantMainDataDto applicantMainDataDto = applicantMainDataDtoMapper.fromEntity(applicant, mappingContext);
+            String statusCode = applicant.getDigitalIds().get(0).getStatusCode();
+            applicantMainDataDto.setStatusCode(statusCode);
 
             applicantMainDataDto.setUin(uin);
 

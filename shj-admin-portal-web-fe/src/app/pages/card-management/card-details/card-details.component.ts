@@ -14,6 +14,7 @@ import {ApplicantCard} from "@model/card.model";
 import {EAuthority} from "@shared/model";
 import {NavigationService} from "@core/utilities/navigation.service";
 import {CardStatus} from "@model/enum/card-status.enum";
+import {DigitalIdStatus} from "@model/enum/digital-id-status.enum";
 
 @Component({
   selector: 'app-card-details',
@@ -37,6 +38,7 @@ export class CardDetailsComponent implements OnInit {
   ritualStepsLabels: Lookup[];
   cardStatuses: Lookup[];
   groupLeaderTitle: Lookup[];
+  applicantStatuses: Lookup[] = [];
   languageNativeName = Language;
   renderBackLink = false;
 
@@ -126,6 +128,11 @@ export class CardDetailsComponent implements OnInit {
     this.cardService.findTransportationTypes().subscribe(result => {
       this.transportationTypes = result;
     });
+
+    this.cardService.findDigitalIdStatuses().subscribe(result => {
+      this.applicantStatuses = result;
+    });
+
   }
 
   goToList() {
@@ -138,6 +145,17 @@ export class CardDetailsComponent implements OnInit {
 
   lookupService(): LookupService {
     return this.lookupsService;
+  }
+
+  buildDigitalIdClass(status: any): string {
+    switch (status) {
+      case DigitalIdStatus.VALID:
+        return "done";
+      case DigitalIdStatus.INVALID:
+        return "Suspended";
+      default:
+        return "done";
+    }
   }
 
   get canSeeCardDetails(): boolean {

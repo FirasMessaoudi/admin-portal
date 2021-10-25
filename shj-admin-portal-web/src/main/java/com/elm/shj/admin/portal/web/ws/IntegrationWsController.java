@@ -76,6 +76,8 @@ public class IntegrationWsController {
     private final HousingSiteLookupService housingSiteLookupService;
     private final TransportationTypeLookupService transportationTypeLookupService;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
+    private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
+
 
     /**
      * Authenticates the user requesting a webservice call
@@ -456,6 +458,17 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> companyDetails(@PathVariable String uin, @PathVariable long seasonRitualId) {
         log.info("company details...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(seasonRitualId, Long.parseLong(uin))).build());
+    }
+
+    /**
+     * List all applicant digital ID statuses.
+     *
+     * @return WsResponse of applicant digital ID statuses list
+     */
+    @GetMapping("/digital-id-status/list")
+    public ResponseEntity<WsResponse<?>> listDigitalIdStatuses() {
+        log.debug("list digital ID statuses...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantDigitalIdStatusLookupService.findAll()).build());
     }
 
 

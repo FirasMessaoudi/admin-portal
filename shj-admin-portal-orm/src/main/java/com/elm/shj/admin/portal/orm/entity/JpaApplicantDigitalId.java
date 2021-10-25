@@ -34,6 +34,9 @@ public class JpaApplicantDigitalId implements Serializable {
 
     private String uin;
 
+    @Column(name = "status_code")
+    private String statusCode;
+
     @ManyToOne
     private JpaApplicant applicant;
 

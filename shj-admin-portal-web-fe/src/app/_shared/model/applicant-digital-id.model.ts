@@ -5,4 +5,5 @@ export class ApplicantDigitalId {
   uin: string;
   applicant: Applicant;
   creationDate: Date;
+  statusCode: string;
  }

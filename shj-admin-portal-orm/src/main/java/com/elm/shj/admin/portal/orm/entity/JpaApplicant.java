@@ -101,8 +101,6 @@ public class JpaApplicant implements Serializable {
     @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
     private JpaApplicantHealth applicantHealth;
 
-    private long status;
-
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
