@@ -74,14 +74,13 @@ GO
 
 
 SET IDENTITY_INSERT shc_portal.shc_transportation_type_lk ON;
-
-INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label, creation_date)
-VALUES (1, N'CAR', N'ar', N'سيارة', N'2021-09-20 09:19:00');
-INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label, creation_date)
-VALUES (2, N'CAR', N'en', N'Car', N'2021-09-20 09:19:00');
-
-SET
-    IDENTITY_INSERT shc_portal.shc_transportation_type_lk OFF;
+INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label) VALUES (1, 'CAR', 'ar', N'سيارة');
+INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label) VALUES (2, 'CAR', 'en', 'Car');
+INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label) VALUES (3, 'BUS', 'ar', N'باص');
+INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label) VALUES (4, 'BUS', 'en', 'Bus');
+INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label) VALUES (5, 'TRAIN', 'ar', N'قطار');
+INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label) VALUES (6, 'TRAIN', 'en', 'Train');
+SET IDENTITY_INSERT shc_portal.shc_transportation_type_lk OFF;
 GO
 
 ----------------      shc_company_ritual_step_lk           --------------------------------------
