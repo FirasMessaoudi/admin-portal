@@ -31,8 +31,8 @@ public class ApplicantDigitalIdDto implements Serializable {
 
     private long id;
     private String uin;
+    private String statusCode;
     @JsonBackReference
     private ApplicantDto applicant;
-    private String statusCode;
     private Date creationDate;
 }

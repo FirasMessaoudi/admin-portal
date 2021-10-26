@@ -431,6 +431,17 @@ public class IntegrationWsController {
     }
 
     /**
+     * List all applicant digital ID statuses.
+     *
+     * @return WsResponse of applicant digital ID statuses list
+     */
+    @GetMapping("/digital-id-status/list")
+    public ResponseEntity<WsResponse<?>> listDigitalIdStatuses() {
+        log.debug("list digital ID statuses...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantDigitalIdStatusLookupService.findAll()).build());
+    }
+
+    /**
      * finds all applicant ritual season by his UIN
      *
      * @param uin the applicant's uin to find
@@ -459,17 +470,5 @@ public class IntegrationWsController {
         log.info("company details...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(seasonRitualId, Long.parseLong(uin))).build());
     }
-
-    /**
-     * List all applicant digital ID statuses.
-     *
-     * @return WsResponse of applicant digital ID statuses list
-     */
-    @GetMapping("/digital-id-status/list")
-    public ResponseEntity<WsResponse<?>> listDigitalIdStatuses() {
-        log.debug("list digital ID statuses...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantDigitalIdStatusLookupService.findAll()).build());
-    }
-
 
 }
