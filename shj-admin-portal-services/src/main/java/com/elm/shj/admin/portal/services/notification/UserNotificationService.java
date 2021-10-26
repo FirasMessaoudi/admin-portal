@@ -52,6 +52,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                             .id(notification.getId())
                             .resolvedBody(notification.getResolvedBody())
                             .statusCode(notification.getStatusCode())
+                            .nameCode(notification.getNotificationTemplate().getNameCode())
                             .important(notification.getNotificationTemplate().isImportant())
                             .actionRequired(notification.getNotificationTemplate().isActionRequired())
                             .userSpecific(notification.getNotificationTemplate().isUserSpecific())
