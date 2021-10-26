@@ -237,6 +237,12 @@ tr:hover .tblView{
     visibility: visible;
 }
 
+.status_wraper{
+    font-size: 14px;
+    color: #666;
+    font-weight: normal;
+    white-space: nowrap;
+  }
 .status{
     display: inline-block;
     min-width: 8px;
@@ -276,22 +282,49 @@ tr:hover .tblView{
     @include py(3);
 }
 
-.avatar{
+.avatar {
     border-radius: 50rem;
     position: absolute;
     padding: 5px;
     background-color: #f3f3f3;
-    border: 2px #D3E2C5 solid;
-
-    img{
-        width: 154px;
-        height: 154px;
-        border-radius: 50rem;
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
+    border: 2px #d3e2c5 solid;
+    z-index: 1;
+  
+    img {
+      width: 154px;
+      height: 154px;
+      border-radius: 50rem;
     }
-}
-
+  
+    @include media-breakpoint-down(sm) {
+      position: relative;
+      display: inline-flex;
+      margin-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+  
+  }
+  .maskAv{
+    position: relative;
+  
+    &::after{
+      content: "";
+      height: 20px;
+      width: 50%;
+      background-color: #FFF;
+      position: absolute;
+      display: block;
+      bottom: -80px;
+      
+      [dir="rtl"] & {
+        left: -1px;
+      }
+      [dir="ltr"] & {
+        right: -1px;
+      }
+  
+    }
+  }
 
 .nav-tabs .nav-link{
     border-width: 2px;
