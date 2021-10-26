@@ -136,3 +136,20 @@ GO
 GO
 INSERT INTO shc_portal.shc_portal.shc_notification_template_parameter (  notification_template_id, parameter_name  ) VALUES (  1, N'days_to_expiry' );
 GO
+
+UPDATE shc_portal.shc_portal.shc_card_status_lk
+SET label = N'نشط'
+WHERE code = 'ACTIVE' AND lang = 'ar';
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_card_status_lk ON;
+INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
+VALUES (17, 'EXPIRED', 'ar', N'منتهي');
+INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
+VALUES (18, 'EXPIRED', 'en', 'Expired');
+INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
+VALUES (19, 'REISSUED', 'ar', N'إعادة الإصدار');
+INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
+VALUES (20, 'REISSUED', 'en', 'Re-Issue');
+SET IDENTITY_INSERT shc_portal.shc_card_status_lk OFF;
+GO
