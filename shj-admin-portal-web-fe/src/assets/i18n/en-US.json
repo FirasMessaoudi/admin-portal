@@ -401,14 +401,15 @@
     "type-code": "Type Code",
     "body": "Body",
     "action-label": "Action Label",
-    "expiry-date":"Expiry Date",
+    "expiry-date": "Expiry Date",
     "notification-name": "Notification Name",
     "important": "Important",
     "normal": "Normal",
     "all": "All",
     "type": "Type",
-    "FYI":"FYI",
-    "FYA": "FYA"
+    "FYI": "FYI",
+    "FYA": "FYA",
+    "system_defined_notification_details": "System Notifications"
   },
   "printing-management": {
     "title": "Printing Management",

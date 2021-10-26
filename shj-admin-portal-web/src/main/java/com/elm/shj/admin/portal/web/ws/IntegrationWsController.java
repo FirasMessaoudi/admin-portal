@@ -78,6 +78,9 @@ public class IntegrationWsController {
     private final TransportationTypeLookupService transportationTypeLookupService;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private final HealthImmunizationLookupService healthImmunizationLookupService;
+    private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
+
+
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -462,6 +465,17 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>>  listImmunization() {
         log.debug("list health immunizations...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(healthImmunizationLookupService.findAll()).build());
+    }
+
+    /**
+     * List all applicant digital ID statuses.
+     *
+     * @return WsResponse of applicant digital ID statuses list
+     */
+    @GetMapping("/digital-id-status/list")
+    public ResponseEntity<WsResponse<?>> listDigitalIdStatuses() {
+        log.debug("list digital ID statuses...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantDigitalIdStatusLookupService.findAll()).build());
     }
 
 

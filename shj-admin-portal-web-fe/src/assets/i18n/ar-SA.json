@@ -389,14 +389,15 @@
     "type-code": "نوع الرمز",
     "body": "المحتوى",
     "action-label": "اسم الإجراء",
-    "expiry-date":"تاريخ انتهاء الصلاحية",
+    "expiry-date": "تاريخ انتهاء الصلاحية",
     "notification-name": "اسم التنبيه",
     "important": "مهمة",
     "normal": "عادية",
     "all": "الكل",
     "type": "النوع",
-    "FYI":"للإطلاع",
-    "FYA": "لإتخاذ إجراء"
+    "FYI": "للإطلاع",
+    "FYA": "لإتخاذ إجراء",
+    "system_defined_notification_details": "تنبيهات النظام"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

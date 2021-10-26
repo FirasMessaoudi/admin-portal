@@ -6,9 +6,10 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "@shared/shared.module";
 import {TranslateModule} from "@ngx-translate/core";
 import {NotificationListComponent} from './notification-list/notification-list.component';
+import {SystemDefinedNotificationDetailsComponent} from './system-defined-notification-details/system-defined-notification-details.component';
 
 @NgModule({
-  declarations: [NotificationListComponent, NotificationListComponent],
+  declarations: [NotificationListComponent, NotificationListComponent, SystemDefinedNotificationDetailsComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

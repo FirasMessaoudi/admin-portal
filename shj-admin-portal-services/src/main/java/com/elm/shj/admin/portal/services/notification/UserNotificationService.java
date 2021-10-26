@@ -14,11 +14,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service handling  User Notification
@@ -41,7 +40,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
      */
     public List<DetailedUserNotificationDto> findUserNotifications(long userId) {
         List<DetailedUserNotificationDto> detailedUserNotificationDtos = new ArrayList<>();
-        List<JpaUserNotification> userNotifications = userNotificationRepository.findByUserId(userId);
+        List<JpaUserNotification> userNotifications = userNotificationRepository.findByUserIdAndStatusCodeNot(userId, EUserNotificationStatus.EXPIRED.name());
 
         if (userNotifications.isEmpty())
             return Collections.emptyList();
@@ -50,6 +49,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                 notification -> {
                     Optional<JpaNotificationTemplateContent> notificationTemplateContent = notification.getNotificationTemplate().getNotificationTemplateContents().stream().filter(content -> content.getLang().equalsIgnoreCase(notification.getUserLang())).findAny();
                     detailedUserNotificationDtos.add(DetailedUserNotificationDto.builder()
+                            .id(notification.getId())
                             .resolvedBody(notification.getResolvedBody())
                             .statusCode(notification.getStatusCode())
                             .important(notification.getNotificationTemplate().isImportant())
@@ -61,10 +61,8 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                             .creationDate(notification.getCreationDate())
                             .build());
                 });
-        return detailedUserNotificationDtos;
+        return detailedUserNotificationDtos.stream().sorted(Comparator.comparing(DetailedUserNotificationDto::getCreationDate).reversed()).collect(Collectors.toList());
     }
-
-
 
     /**
      * mark User Notification As Read
@@ -72,9 +70,23 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
      * @param notificationId is the id for the notification
      * @return number of affected rows
      */
+    @Transactional
     public int markUserNotificationAsRead(Long notificationId) {
-        return userNotificationRepository.markUserNotificationAsRead(notificationId, EUserNotificationStatus.READ.name());
+        return userNotificationRepository.updateUserNotificationStatus(notificationId, EUserNotificationStatus.READ.name());
     }
+
+
+    /**
+     * mark User Notification As Expird
+     *
+     * @param notificationId is the id for the notification
+     * @return number of affected rows
+     */
+    @Transactional
+    public int markUserNotificationsAsExpired(Long notificationId) {
+        return userNotificationRepository.updateUserNotificationStatus(notificationId, EUserNotificationStatus.EXPIRED.name());
+    }
+
 
     /**
      * Retrieve user new notifications count.

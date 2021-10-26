@@ -89,10 +89,16 @@ public class NotificationWsController {
      * @param notificationId is the id for the notification
      * @return success message if process ended successfully
      */
-    @PostMapping("/mark-as-read")
-    public ResponseEntity<WsResponse<?>> markUserNotificationAsRead(Long notificationId) {
+    @PostMapping("/mark-as-read/{notificationId}")
+    public ResponseEntity<WsResponse<?>> markUserNotificationAsRead(@PathVariable Long notificationId) {
         log.debug("Handler for {}", "mark user notification as read");
-        int numberOfRowsAffected = userNotificationService.markUserNotificationAsRead(notificationId);
+        int numberOfRowsAffected = 0;
+        try {
+            numberOfRowsAffected = userNotificationService.markUserNotificationAsRead(notificationId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(e.getMessage()).build());
+        }
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(numberOfRowsAffected).build());
     }
 }

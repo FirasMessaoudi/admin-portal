@@ -70,13 +70,13 @@ public class NotificationWsControllerTest extends AbstractControllerTestSuite {
 
     @Test
     public void test_count_User_New_Notifications() throws Exception {
-        long userId = 1;
-        int userNotificationCount = 5;
+        long userId = 3088;
+        int userNotificationCount = 1;
         String url = Navigation.API_NOTIFICATION_INTEGRATION + "/count-new-notifications/" + userId;
         when(userNotificationService.retrieveUserNewNotificationsCount(anyLong())).thenReturn(userNotificationCount);
         mockMvc.perform(get(url).cookie(tokenCookie).header(JwtTokenService.CALLER_TYPE_HEADER_NAME, JwtTokenService.WEB_SERVICE_CALLER_TYPE).with(csrf())).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.body", is(5)));
+                .andExpect(jsonPath("$.body", is(1)));
 
     }
 

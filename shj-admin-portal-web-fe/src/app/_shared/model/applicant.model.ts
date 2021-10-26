@@ -22,5 +22,5 @@ export class Applicant {
   relatives: ApplicantRelative[];
   contacts: ApplicantContact[];
   applicantHealth: ApplicantHealth;
-  status: number;
+
 }

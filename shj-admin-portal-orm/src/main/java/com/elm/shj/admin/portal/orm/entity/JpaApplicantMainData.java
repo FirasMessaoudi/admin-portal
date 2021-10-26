@@ -74,8 +74,6 @@ public class JpaApplicantMainData implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantRitual> rituals;
 
-    private long status;
-
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
