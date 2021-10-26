@@ -448,3 +448,8 @@ tr:hover .tblView{
 .nameCol{
   width: 40%;
 }
+
+
+.btn:disabled:hover{
+    box-shadow: 0 0 0 0
+}
