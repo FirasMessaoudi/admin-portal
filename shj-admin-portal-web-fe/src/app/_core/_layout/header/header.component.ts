@@ -4,7 +4,6 @@ import {Router} from '@angular/router';
 import {AuthenticationService} from '@app/_core/services';
 import {I18nService} from "@dcc-commons-ng/services";
 import {Location} from "@angular/common";
-import {NavigationService} from "@core/utilities/navigation.service";
 import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
 import {Title} from "@angular/platform-browser";
 

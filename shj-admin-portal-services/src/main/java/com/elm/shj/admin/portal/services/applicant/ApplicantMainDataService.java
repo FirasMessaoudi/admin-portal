@@ -46,11 +46,13 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
     @Transactional
     public Optional<ApplicantMainDataDto> findByUin(String uin, long companyRitualSeasonId) {
         JpaApplicantMainData applicant = applicantMainDataRepository.findByUin(uin);
+
         if (applicant != null) {
-            ApplicantMainDataDto applicantMainDataDto = applicantMainDataDtoMapper.fromEntity(applicant, mappingContext);
             String statusCode = applicant.getDigitalIds().get(0).getStatusCode();
+            ApplicantMainDataDto applicantMainDataDto = applicantMainDataDtoMapper.fromEntity(applicant, mappingContext);
             applicantMainDataDto.setStatusCode(statusCode);
 
+            applicantMainDataDto.setStatusCode(statusCode);
             applicantMainDataDto.setUin(uin);
 
             CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.findOne(companyRitualSeasonId);

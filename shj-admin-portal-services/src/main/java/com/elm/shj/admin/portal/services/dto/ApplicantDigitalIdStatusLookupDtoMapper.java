@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 ELM. All rights reserved.
+ *  Copyright (c) 2021 ELM. All rights reserved.
  */
 package com.elm.shj.admin.portal.services.dto;
 
@@ -16,5 +16,3 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public abstract class ApplicantDigitalIdStatusLookupDtoMapper implements IGenericMapper<ApplicantDigitalIdStatusLookupDto, JpaApplicantDigitalIdStatusLookup> {
 }
-
-
