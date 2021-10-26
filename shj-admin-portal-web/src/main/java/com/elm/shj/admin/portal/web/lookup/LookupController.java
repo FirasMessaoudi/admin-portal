@@ -49,7 +49,7 @@ public class LookupController {
     private final NotificationTemplateTypeLookupService notificationTemplateTypeLookupService;
     private final UserNotificationStatusLookupService userNotificationStatusLookupService;
     private final NotificationTemplateStatusLookupService notificationTemplateStatusLookupService;
-
+    private final HealthImmunizationLookupService healthImmunizationLookupService;
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
         return authorityLookupService.findAllParentAuthorities();
@@ -176,5 +176,9 @@ public class LookupController {
         log.debug("list notification template statuses...");
         return notificationTemplateStatusLookupService.findAll();
     }
-
+    @GetMapping("/health-immunization/list")
+    public List<HealthImmunizationLookupDto> listImmunization() {
+        log.debug("list health immunizations...");
+        return healthImmunizationLookupService.findAll();
+    }
 }

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -76,7 +77,7 @@ public class IntegrationWsController {
     private final HousingSiteLookupService housingSiteLookupService;
     private final TransportationTypeLookupService transportationTypeLookupService;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
-
+    private final HealthImmunizationLookupService healthImmunizationLookupService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -456,6 +457,11 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> companyDetails(@PathVariable String uin, @PathVariable long seasonRitualId) {
         log.info("company details...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(seasonRitualId, Long.parseLong(uin))).build());
+    }
+    @GetMapping("/health-immunization/list")
+    public ResponseEntity<WsResponse<?>>  listImmunization() {
+        log.debug("list health immunizations...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(healthImmunizationLookupService.findAll()).build());
     }
 
 
