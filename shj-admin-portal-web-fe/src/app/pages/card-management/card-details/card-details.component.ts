@@ -39,6 +39,7 @@ export class CardDetailsComponent implements OnInit {
   cardStatuses: Lookup[];
   groupLeaderTitle: Lookup[];
   applicantStatuses: Lookup[] = [];
+  immunizations: Lookup[];
   languageNativeName = Language;
   renderBackLink = false;
 
@@ -131,6 +132,10 @@ export class CardDetailsComponent implements OnInit {
 
     this.cardService.findDigitalIdStatuses().subscribe(result => {
       this.applicantStatuses = result;
+    });
+
+    this.cardService.findHealthImmunizations().subscribe(result => {
+      this.immunizations = result;
     });
 
   }

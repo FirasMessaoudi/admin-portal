@@ -279,7 +279,7 @@
               </thead>
               <tbody>
               <tr *ngFor="let immunization of card?.applicantRitual?.applicant?.applicantHealth?.immunizations">
-                <td class="ltr">{{immunization.immunizationCode}}</td>
+                <td class="ltr">{{immunization.immunizationCode ? lookupService().localizedLabel(immunizations, immunization.immunizationCode) : ''}}</td>
                 <td class="ltr">{{immunization.immunizationDate | gregorianDateFormat}}</td>
               </tr>
               </tbody>
