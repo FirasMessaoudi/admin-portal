@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -78,7 +79,7 @@ public class IntegrationWsController {
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private final HealthImmunizationLookupService healthImmunizationLookupService;
     private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
-
+    private final ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -478,4 +479,9 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(healthImmunizationLookupService.findAll()).build());
     }
 
+    @GetMapping("/religious-occasions-day/list")
+    public ResponseEntity<WsResponse<?>>  listReligiousOccasionsDay() {
+        log.debug("list religious occasions day...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(religiousOccasionsDayLookupService.findAll()).build());
+    }
 }
