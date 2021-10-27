@@ -467,15 +467,16 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin)).build());
     }
 
-    @GetMapping("/health-immunization/list")
-    public ResponseEntity<WsResponse<?>>  listImmunization() {
-        log.debug("list health immunizations...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(healthImmunizationLookupService.findAll()).build());
-    }
     @GetMapping("/company-details/{uin}/{seasonRitualId}")
-    public ResponseEntity<WsResponse<?>> companyDetails(@PathVariable String uin, @PathVariable long seasonRitualId) {
+    public ResponseEntity<WsResponse<?>> findApplicantCompanyDetailsByUinAndRitualId(@PathVariable String uin, @PathVariable long seasonRitualId) {
         log.info("company details...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(seasonRitualId, Long.parseLong(uin))).build());
+    }
+
+    @GetMapping("/health-immunization/list")
+    public ResponseEntity<WsResponse<?>> listImmunization() {
+        log.debug("list health immunizations...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(healthImmunizationLookupService.findAll()).build());
     }
 
     @GetMapping("/religious-occasions-day/list")

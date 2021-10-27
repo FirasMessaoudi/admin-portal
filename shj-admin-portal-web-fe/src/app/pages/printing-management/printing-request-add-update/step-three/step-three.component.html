@@ -12,12 +12,15 @@
     </span>
 </div>
 
-<div class="form-group mt-4">
-  <label class="form-label">{{'printing-management.request_description' | translate}}</label>
-  <div class='input-group'>
-    <input type="text" class="form-control bg-transparent" maxlength="150" id="description" name="description" [(ngModel)]="description">
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mt-4">
+  <div class="form-group col">
+    <label class="form-label">{{'printing-management.request_description' | translate}}</label>
+    <textarea id="description" name="description" [(ngModel)]="description" rows="4" cols="50" class="form-control"></textarea>
   </div>
 </div>
+
+
 
 <div class="mt-5 d-flex">
   <div class="table_header_col--fixed" style="width: 55%">{{'card-management.applicant_name' | translate}}</div>

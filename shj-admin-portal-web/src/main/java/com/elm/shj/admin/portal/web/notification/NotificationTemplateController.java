@@ -32,14 +32,21 @@ import java.io.IOException;
 public class NotificationTemplateController {
 
     private final NotificationTemplateService notificationTemplateService;
+    private final static String SYSTEM_DEFINED = "SYSTEM_DEFINED";
+    private final static String USER_DEFINED = "USER_DEFINED";
 
-    @PostMapping("/list")
+    @PostMapping("/system-defined/list")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
-    public Page<NotificationTemplateDto> searchNotificationTemplate(@RequestBody NotificationSearchCriteriaDto notificationSearchCriteria,
+    public Page<NotificationTemplateDto> searchSystemDefinedNotificationTemplate(@RequestBody NotificationSearchCriteriaDto notificationSearchCriteria,
                                                                     Pageable pageable, Authentication authentication) throws IOException {
+        return notificationTemplateService.findByFilter(notificationSearchCriteria, SYSTEM_DEFINED, pageable);
+    }
 
-        return notificationTemplateService.findByFilter(notificationSearchCriteria, pageable);
-
+    @PostMapping("/user-defined/list")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
+    public Page<NotificationTemplateDto> searchUserDefinedNotificationTemplate(@RequestBody NotificationSearchCriteriaDto notificationSearchCriteria,
+                                                                    Pageable pageable, Authentication authentication) throws IOException {
+        return notificationTemplateService.findByFilter(notificationSearchCriteria, USER_DEFINED, pageable);
     }
 
 
@@ -48,5 +55,19 @@ public class NotificationTemplateController {
     public NotificationTemplateDto findNotificationTemplateById(@PathVariable long templateId,
                                                                 Authentication authentication) {
         return notificationTemplateService.findOne(templateId);
+    }
+
+    @PutMapping("/update")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
+    public NotificationTemplateDto updateNotificationTemplate(@RequestBody NotificationTemplateDto notificationTemplate,
+                                                              Authentication authentication) {
+        notificationTemplate.getNotificationTemplateContents().parallelStream().forEach(content -> {
+            content.setNotificationTemplate(notificationTemplate);
+        });
+        NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.findOne(notificationTemplate.getId());
+        savedNotificationTemplate.setEnabled(notificationTemplate.isEnabled());
+        savedNotificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
+
+        return notificationTemplateService.save(savedNotificationTemplate);
     }
 }

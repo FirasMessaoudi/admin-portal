@@ -9,7 +9,8 @@ import {AuthenticationService, NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {Lookup} from "@model/lookup.model";
-import {NotificationTemplateContent} from "@model/notification-template-content.model";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {DccValidators} from "@shared/validators";
 
 @Component({
   selector: 'app-system-defined-notification-details',
@@ -17,11 +18,14 @@ import {NotificationTemplateContent} from "@model/notification-template-content.
   styleUrls: ['./system-defined-notification-details.component.scss']
 })
 export class SystemDefinedNotificationDetailsComponent implements OnInit {
-  notificationId: number;
+  notificationTemplateId: number;
   isLoading: boolean;
-  notification: NotificationTemplate;
+  notificationTemplate: NotificationTemplate;
   notificationTemplateCategories: Lookup[] = [];
   notificationTemplateNames: Lookup[] = [];
+  templateForm: FormGroup;
+  editable: boolean = false;
+
 
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,
@@ -31,25 +35,28 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
               private authenticationService: AuthenticationService,
               private notificationService: NotificationService,
               private lookupsService: LookupService,
+              private formBuilder: FormBuilder,
   ) {
   }
 
 
   ngOnInit(): void {
+
     combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
     }))).subscribe(results => {
-      this.notificationId = +results.params; // (+) converts string 'id' to a number
-      if (this.notificationId) {
+      this.notificationTemplateId = +results.params; // (+) converts string 'id' to a number
+      if (this.notificationTemplateId) {
         this.isLoading = true;
         // load user details
-        this.notificationService.findNotificationTemplateById(this.notificationId).subscribe(data => {
+        this.notificationService.findNotificationTemplateById(this.notificationTemplateId).subscribe(data => {
           if (data && data.id) {
             this.isLoading = false;
-            this.notification = data;
+            this.notificationTemplate = data;
+            this.initForm();
           } else {
-            this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.notificationId}),
+            this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.notificationTemplateId}),
               this.translate.instant('general.dialog_error_title'));
             this.goBackToList();
           }
@@ -60,19 +67,46 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
         this.goBackToList();
       }
     });
+    this.loadLookups();
+
   }
 
-  getNotificationContentForCurrentLanguage(notificationContents: NotificationTemplateContent []) {
-    if (notificationContents.length > 0) {
-      let contents = notificationContents.filter(value => this.i18nService.language.toLowerCase().startsWith(value.lang.toLowerCase()));
+
+  private initForm() {
+    this.templateForm = this.formBuilder.group({
+      body: [this.getnotificationContentForSelectedLang("ar").body, [Validators.required, DccValidators.arabicCharacters(true), Validators.maxLength(60), Validators.minLength(3)]],
+      title: [this.getnotificationContentForSelectedLang("ar").title, [Validators.required, DccValidators.latinCharacters(true), Validators.maxLength(60), Validators.minLength(3)]],
+      actionLabel: [this.getnotificationContentForSelectedLang("ar").actionLabel, [Validators.required, DccValidators.latinCharacters(true), Validators.maxLength(60), Validators.minLength(3)]],
+      enabled: [this.notificationTemplate.enabled]
+    });
+  }
+
+  getnotificationContentForSelectedLang(lang: string) {
+    if (this.notificationTemplate?.notificationTemplateContents.length > 0) {
+      let contents = this.notificationTemplate.notificationTemplateContents.filter(value => lang.toLowerCase().startsWith(value.lang.toLowerCase()));
       if (!contents) {
-        return notificationContents[0];
+        return this.notificationTemplate.notificationTemplateContents[0];
       }
       return contents[0];
     } else {
       return null;
     }
   }
+
+  getTempContentIndex(lang: string) {
+    if (this.notificationTemplate?.notificationTemplateContents.length > 0) {
+      let index = this.notificationTemplate.notificationTemplateContents.findIndex((value => lang.toLowerCase().startsWith(value.lang.toLowerCase())));
+      return index;
+    } else {
+      return -1;
+    }
+  }
+
+
+  get f() {
+    return this.templateForm.controls;
+  }
+
 
   get currentLanguage(): string {
     return this.i18nService.language;
@@ -104,4 +138,62 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
     return this.lookupsService;
   }
 
+  back() {
+    if (this.editable) {
+      this.editable = false;
+    } else {
+      this.goBackToList();
+    }
+  }
+
+
+  copyToClipboard(val) {
+    var copyText = val;
+    navigator.clipboard.writeText(copyText.value);
+
+    var tooltip = document.getElementById("myTooltip");
+    tooltip.innerHTML = "Copied: " + copyText;
+  }
+
+  outFunc() {
+    var tooltip = document.getElementById("myTooltip");
+    tooltip.innerHTML = "Copy to clipboard";
+  }
+
+  updateNotificationTemplate() {
+
+    if (!this.editable) {
+      this.editable = true;
+    } else {
+      Object.keys(this.templateForm.controls).forEach(field => {
+        const control = this.templateForm.get(field);
+        control.markAsTouched({onlySelf: true});
+      });
+
+      // if (this.templateForm.invalid) {
+      //   return;
+      // }
+      let index = this.getTempContentIndex("ar");
+      this.notificationTemplate.enabled = this.templateForm.controls['enabled'].value;
+      this.notificationTemplate.notificationTemplateContents[index].title = this.templateForm.controls['title'].value;
+      this.notificationTemplate.notificationTemplateContents[index].body = this.templateForm.controls['body'].value;
+      this.notificationTemplate.notificationTemplateContents[index].actionLabel = this.templateForm.controls['actionLabel'].value;
+      this.notificationService.updateNotificationTemplate(this.notificationTemplate).subscribe(res => {
+        if (res.hasOwnProperty('errors') && res.errors) {
+          this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant('general.dialog_edit_title'));
+          Object.keys(this.templateForm.controls).forEach(field => {
+            console.log('looking for validation errors for : ' + field);
+            if (res.errors[field]) {
+              const control = this.templateForm.get(field);
+              control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
+              control.markAsTouched({onlySelf: true});
+            }
+          });
+        } else {
+          this.toastr.success(this.translate.instant('general.dialog_edit_success_text'), this.translate.instant('general.dialog_edit_title'));
+          this.editable = false;
+        }
+      });
+    }
+  }
 }

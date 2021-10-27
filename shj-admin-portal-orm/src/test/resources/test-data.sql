@@ -119,8 +119,8 @@ values (1,59737700000059,1,N'2004-08-12');
 
 
 INSERT INTO shc_company (id, code, label_ar, label_en, mission_id, contact_number, website
-                                              , accreditation_organization, accreditation_number, accreditation_date, accreditation_expiry, email, creation_date, update_date)
-VALUES (1, N'111111', N'علم', N'elm', 113, 45567788, null, N'test', N'3445667', N'2021-09-14 12:12:00', N'2027-09-14 12:12:00', null, N'2021-09-14 12:12:00', null);
+                                              , accreditation_organization, accreditation_number, accreditation_date, accreditation_expiry, email, creation_date, update_date, location_lat, location_lng)
+VALUES (1, N'111111', N'علم', N'elm', 113, 45567788, null, N'test', N'3445667', N'2021-09-14 12:12:00', N'2027-09-14 12:12:00', null, N'2021-09-14 12:12:00', null, 20.39414800, 39.90002300);
 
 
 INSERT INTO shc_ritual_season (id, season_year, ritual_type_code, ACTIVE, season_start, season_end) VALUES

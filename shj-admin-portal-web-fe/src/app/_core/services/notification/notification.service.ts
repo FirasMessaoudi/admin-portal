@@ -1,16 +1,20 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpEvent, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpEvent, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 import {Lookup} from "@model/lookup.model";
 import {NotificationSearchCriteria} from "@model/notification-search-criteria.model";
 import {catchError} from "rxjs/internal/operators";
+import {NotificationTemplate} from "@model/notification-template.model";
+import {CookieService} from "ngx-cookie-service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
 
-  constructor(private http: HttpClient) {
+
+  constructor(private http: HttpClient, private cookieService: CookieService) {
+
   }
 
   findNotificationCategories(): Observable<Lookup[]> {
@@ -24,7 +28,12 @@ export class NotificationService {
 
   list(pageNumber: any, notificationSearchCriteria: NotificationSearchCriteria): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
-    return this.http.post<any>("/core/api/notification/template/list", notificationSearchCriteria, {params: params});
+    return this.http.post<any>("/core/api/notification/template/system-defined/list", notificationSearchCriteria, {params: params});
+  }
+
+  listUserDefined(pageNumber: any, notificationSearchCriteria: NotificationSearchCriteria): Observable<any> {
+    let params = new HttpParams().set('page', pageNumber);
+    return this.http.post<any>("/core/api/notification/template/user-defined/list", notificationSearchCriteria, {params: params});
   }
 
 
@@ -45,4 +54,26 @@ export class NotificationService {
     );
   }
 
+
+  /**
+   * Creates or updates rule details in the server.
+   *
+   * @param notificationTemplate the notification Template to  update
+   * @return {Observable<notificationTemplate>}  updated notificationTemplate.
+   */
+  updateNotificationTemplate(notificationTemplate: NotificationTemplate): Observable<any> {
+
+
+    let headers = new HttpHeaders();
+    headers = headers.set('X-XSRF-TOKEN', this.cookieService.get("XSRF-TOKEN"));
+    return this.http.put<any>('/core/api/notification/template/update', notificationTemplate, {'headers': headers}).pipe(catchError((error: HttpErrorResponse) => {
+        if (error.hasOwnProperty('error')) {
+          return of(error.error);
+        } else {
+          console.error('An error happened while updating the notification Template : ' + error);
+          return of(error);
+        }
+      })
+    );
+  }
 }

@@ -16,28 +16,128 @@
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'notification-management.notification-name' | translate}}</label>
         <span
-          class="form-control-plaintext ">{{lookupService().localizedLabel(notificationTemplateNames, notification?.nameCode)}} </span>
+          class="form-control-plaintext ">{{lookupService().localizedLabel(notificationTemplateNames, notificationTemplate?.nameCode)}} </span>
       </div>
       <div class="form-group col mb-lg-0">
-        <label class="col-form-label">{{' ' | translate}}</label>
-        <span class="form-control-plaintext "> </span>
+        <label class="col-form-label">{{'notification-management.notification-type' | translate}}</label>
+        <span
+          class="form-control-plaintext "> {{(notificationTemplate?.actionRequired == true ? 'notification-management.FYA' : 'notification-management.FYI') | translate}} </span>
       </div>
       <div class="form-group col mb-lg-0">
-        <label class="col-form-label">{{' ' | translate}}</label>
-        <span class="form-control-plaintext "> </span>
+        <label class="col-form-label">{{ "notification-management.notification-category" | translate }}</label>
+        <span
+          class="form-control-plaintext "> {{lookupService().localizedLabel(notificationTemplateCategories, notificationTemplate?.categoryCode)}}</span>
       </div>
       <div class="form-group col mb-lg-0">
-        <label class="col-form-label">{{' ' | translate}}</label>
-        <span class="form-control-plaintext "> </span>
+        <label class="col-form-label">{{'notification-management.expiry-date' | translate}}</label>
+        <span class="form-control-plaintext ">{{notificationTemplate?.expirationPeriodInMinutes}} </span>
       </div>
       <div class="form-group col mb-lg-0">
-        <label class="col-form-label">{{'notification-management.severity' | translate}} </label>
-        <span class="form-control-plaintext "></span>
+        <label class="col-form-label">{{'notification-management.notification-severity' | translate}} </label>
+        <span class="form-control-plaintext "
+              *ngIf="notificationTemplate?.important == true"><span
+          class="status mr-1 Suspended"></span>{{'notification-management.important' |translate}}</span>
+        <span class="form-control-plaintext "
+              *ngIf="notificationTemplate?.important == false"><span
+          class="status mr-1 done"></span>{{'notification-management.normal' |translate}}</span>
+
       </div>
 
 
     </div>
 
+    <form [formGroup]="templateForm">
 
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+
+
+        <div class="form-group col">
+
+
+          <label>{{'notification-management.notification-status' | translate}}</label>
+          <div>
+            <input id="enable" type="radio" [value]="true" name="enabled" [attr.disabled]="editable"
+                   formControlName="enabled">
+            <label for="enable">{{'notification-management.enabled' | translate}}</label>
+          </div>
+
+          <div>
+            <input id="disable" type="radio" [value]="false" [attr.disabled]="editable" name="enabled"
+                   formControlName="enabled">
+            <label for="disable">{{'notification-management.disabled' | translate}}</label>
+          </div>
+        </div>
+
+      </div>
+      <div class="row row-cols-1 row-cols-md-1 row-cols-lg-1">
+
+
+        <div *ngIf="editable">
+          <label>{{'notification-management.notification-title' | translate}}</label>
+          <input class="form-control-plaintext " type="text" name="title" formControlName="title">
+        </div>
+
+        <div *ngIf="!editable">
+          <label> {{'notification-management.notification-title' | translate}}</label>
+          <label class="form-control-plaintext" name="title"
+                 formControlName="title">{{getnotificationContentForSelectedLang("ar").title}}</label>
+        </div>
+      </div>
+
+      <div class="row row-cols-1 row-cols-md-1 row-cols-lg-1">
+
+        <div *ngIf="editable">
+          <label for="body">{{'notification-management.notification-body' | translate}}</label>
+          <input class="form-control-plaintext " id="body" type="text" name="body" formControlName="body">
+        </div>
+
+        <div *ngIf="!editable">
+          <label for="bodyAsLabel">{{'notification-management.notification-body' | translate}}</label>
+          <label class="form-control-plaintext " id="bodyAsLabel" name="body"
+                 formControlName="body">{{getnotificationContentForSelectedLang("ar").body}}</label>
+        </div>
+
+      </div>
+      <div *ngIf="notificationTemplate.actionRequired" class="row row-cols-1 row-cols-md-1 row-cols-lg-1">
+
+
+        <div *ngIf="editable">
+          <label for="actionLabel">{{'notification-management.action-label' | translate}}</label>
+          <input class="form-control-plaintext " id="actionLabel" type="text" name="actionLabel"
+                 formControlName="actionLabel">
+        </div>
+        <div *ngIf="!editable">
+          <label for="actionLabelAsLabel">{{'notification-management.action-label' | translate}}</label>
+          <label class="form-control-plaintext " id="actionLabelAsLabel" name="actionLabel"
+                 formControlName="actionLabel">{{getnotificationContentForSelectedLang("ar").actionLabel}}</label>
+        </div>
+      </div>
+
+
+      <div class="row row-cols-8 row-cols-md-8 row-cols-lg-8">
+
+
+        <button (click)="back()" class="btn btn-outline-dcc-primary px-4">
+          <span>{{ "general.btn_back" | translate }}</span>
+        </button>
+
+        <button (click)="updateNotificationTemplate()" class="btn btn-outline-dcc-primary px-4">
+          <span *ngIf="!editable">{{ "general.btn_edit" | translate }}</span>
+          <span *ngIf="editable">{{ "general.btn_save" | translate }}</span>
+        </button>
+
+      </div>
+    </form>
+    <div>
+      <div class="tooltip">
+        <button onclick="copyToClipboard('Hello World')" onmouseout="outFunc()">
+          <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
+          Copy text
+        </button>
+      </div>
+      <label id="myInput">Hello World</label>
+
+
+    </div>
   </div>
-
+</div>

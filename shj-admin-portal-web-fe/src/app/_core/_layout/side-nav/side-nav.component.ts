@@ -84,6 +84,15 @@ export class SideNavComponent implements OnInit {
         icon: 'notification',
         iconFa: 'fa-w-18',
         routerLink: '/notification/list',
+      },
+      //TODO Change this to create submenus
+      {
+        title: 'notification-management.user_defined_notifications',
+        roles: [EAuthority.NOTIFICATION_MANAGEMENT],
+        display: false,
+        icon: 'notification',
+        iconFa: 'fa-w-18',
+        routerLink: '/user-defined-notification/list',
       }
     ];
     // filtering access according to connected user authorities

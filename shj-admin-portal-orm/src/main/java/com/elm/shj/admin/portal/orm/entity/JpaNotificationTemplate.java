@@ -65,7 +65,7 @@ public class JpaNotificationTemplate implements Serializable {
     private Set<JpaUserNotification> userNotifications;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "notificationTemplate")
     private Set<JpaNotificationTemplateContent> notificationTemplateContents;
 
     @LazyCollection(LazyCollectionOption.TRUE)
