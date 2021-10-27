@@ -1,4 +1,6 @@
 import {NotificationTemplateContent} from "@model/notification-template-content.model";
+import {NotificationTemplateParameter} from "@model/notification-template-parameter.model";
+
 
 export class NotificationTemplate {
   id: number;
@@ -12,5 +14,7 @@ export class NotificationTemplate {
   userSpecific: boolean;
   expirationPeriodInMinutes: number;
   notificationTemplateContents: NotificationTemplateContent [];
+  notificationTemplateParameters: NotificationTemplateParameter [];
+
   creationDate: Date;
 }

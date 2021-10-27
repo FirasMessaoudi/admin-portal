@@ -40,83 +40,115 @@
         <span class="form-control-plaintext "
               *ngIf="notificationTemplate?.important == false"><span
           class="status mr-1 done"></span>{{'notification-management.normal' |translate}}</span>
-
       </div>
-
-
     </div>
-
     <form [formGroup]="templateForm">
 
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
 
 
         <div class="form-group col">
-
-
           <label>{{'notification-management.notification-status' | translate}}</label>
           <div>
-            <input id="enable" type="radio" [value]="true" name="enabled" [attr.disabled]="editable"
-                   formControlName="enabled">
-            <label for="enable">{{'notification-management.enabled' | translate}}</label>
-          </div>
-
-          <div>
-            <input id="disable" type="radio" [value]="false" [attr.disabled]="editable" name="enabled"
-                   formControlName="enabled">
-            <label for="disable">{{'notification-management.disabled' | translate}}</label>
+            <div class="custom-control custom-radio custom-control-inline mr-5">
+              <input formControlName="enabled" [value]="true" [checked]="notificationTemplate?.enabled==true"
+                     type="radio" [disabled]="!editable" id="customRadioInline01" class="custom-control-input">
+              <label class="custom-control-label"
+                     for="customRadioInline01">{{'notification-management.enabled' | translate}}</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline mr-5">
+              <input formControlName="enabled" [value]="false" type="radio" [disabled]="!editable"
+                     id="customRadioInline02" class="custom-control-input"
+                     [checked]="notificationTemplate?.enabled==false">
+              <label class="custom-control-label"
+                     for="customRadioInline02">{{'notification-management.disabled' | translate}}</label>
+            </div>
           </div>
         </div>
 
+
       </div>
+
+
       <div class="row row-cols-1 row-cols-md-1 row-cols-lg-1">
-
-
-        <div *ngIf="editable">
+        <div class="form-group col">
           <label>{{'notification-management.notification-title' | translate}}</label>
-          <input class="form-control-plaintext " type="text" name="title" formControlName="title">
-        </div>
 
-        <div *ngIf="!editable">
-          <label> {{'notification-management.notification-title' | translate}}</label>
-          <label class="form-control-plaintext" name="title"
-                 formControlName="title">{{getnotificationContentForSelectedLang("ar").title}}</label>
+          <input *ngIf="editable" class="form-control" required type="text" name="title" [maxLength]="50"
+                 formControlName="title" [class.is-invalid]="f.title.invalid && f.title.touched">
+          <label *ngIf="!editable" class="form-control-plaintext" name="title"
+          >{{getnotificationContentForSelectedLang("ar")?.title}}</label>
+          <div *ngIf="f.title.invalid && f.title.touched" class="invalid-feedback">
+            <div *ngIf="f.title.errors.required">{{'general.field_validation_required' | translate}}</div>
+            <div *ngIf="f.title.errors.invalid">{{f.title.errors['invalid'] | translate}}</div>
+            <div
+              *ngIf="f.title.errors.minlength"> {{ "general.field_validation_min_length" | translate: {minLength: 5} }}</div>
+            <div
+              *ngIf="f.title.errors.maxlength"> {{ "general.field_validation_max_length" | translate: {maxLength: 50} }} </div>
+            <div
+              *ngIf="f.title.hasError('whitespace') && !f.title.errors.required &&!f.title.errors.invalid && !f.title.errors.minlength">{{'general.field_validation_required' | translate}}</div>
+
+          </div>
         </div>
       </div>
 
-      <div class="row row-cols-1 row-cols-md-1 row-cols-lg-1">
 
-        <div *ngIf="editable">
-          <label for="body">{{'notification-management.notification-body' | translate}}</label>
-          <input class="form-control-plaintext " id="body" type="text" name="body" formControlName="body">
+      <div class="row row-cols-2 row-cols-md-2 row-cols-lg-2">
+        <div class="form-group col">
+          <label>{{'notification-management.notification-body' | translate}}</label>
+          <input *ngIf="editable" class="form-control" type="text" required [maxLength]="500" formControlName="body"
+                 [class.is-invalid]="f.body.invalid && f.body.touched">
+          <label class="form-control-plaintext " *ngIf="!editable"
+          >{{getnotificationContentForSelectedLang("ar")?.body}}</label>
+          <div *ngIf="f.body.invalid && f.body.touched" class="invalid-feedback">
+            <div *ngIf="f.body.errors.required">{{'general.field_validation_required' | translate}}</div>
+            <div *ngIf="f.body.errors.invalid">{{f.body.errors['invalid'] | translate}}</div>
+            <div
+              *ngIf="f.body.errors.minlength"> {{ "general.field_validation_min_length" | translate: {minLength: 10} }}</div>
+            <div
+              *ngIf="f.body.errors.maxlength"> {{ "general.field_validation_max_length" | translate: {maxLength: 500} }} </div>
+            <div
+              *ngIf="f.body.hasError('whitespace') && !f.body.errors.required &&!f.body.errors.invalid && !f.body.errors.minlength">{{'general.field_validation_required' | translate}}</div>
+
+          </div>
         </div>
+        <div class="form-group col" *ngFor="let templateParam of notificationTemplate?.notificationTemplateParameters">
+          <label>{{'notification-management.notification-parameters' | translate}}</label>
+          <div (click)="copyParameter('<'+templateParam.parameterName+'>')"
+               [ngbTooltip]="'support.click-to-copy' | translate">
+            <div class="login-box__wrapper">
+              <p class="text-dcc-primary font-weight-bold mb-2">{{'<' + templateParam.parameterName + '>'}}</p>
+            </div>
+          </div>
 
-        <div *ngIf="!editable">
-          <label for="bodyAsLabel">{{'notification-management.notification-body' | translate}}</label>
-          <label class="form-control-plaintext " id="bodyAsLabel" name="body"
-                 formControlName="body">{{getnotificationContentForSelectedLang("ar").body}}</label>
         </div>
-
       </div>
-      <div *ngIf="notificationTemplate.actionRequired" class="row row-cols-1 row-cols-md-1 row-cols-lg-1">
 
 
-        <div *ngIf="editable">
-          <label for="actionLabel">{{'notification-management.action-label' | translate}}</label>
-          <input class="form-control-plaintext " id="actionLabel" type="text" name="actionLabel"
+      <div *ngIf="notificationTemplate?.actionRequired" class="row row-cols-1 row-cols-md-1 row-cols-lg-1">
+        <div class="form-group col">
+          <label>{{'notification-management.action-label' | translate}}</label>
+          <input *ngIf="editable" class="form-control " required [maxLength]="50" type="text"
+                 [class.is-invalid]="f.actionLabel.invalid && f.actionLabel.touched"
                  formControlName="actionLabel">
-        </div>
-        <div *ngIf="!editable">
-          <label for="actionLabelAsLabel">{{'notification-management.action-label' | translate}}</label>
-          <label class="form-control-plaintext " id="actionLabelAsLabel" name="actionLabel"
-                 formControlName="actionLabel">{{getnotificationContentForSelectedLang("ar").actionLabel}}</label>
+          <label *ngIf="!editable"
+                 class="form-control-plaintext ">{{getnotificationContentForSelectedLang("ar")?.actionLabel}}</label>
+          <div *ngIf="f.actionLabel.invalid && f.actionLabel.touched" class="invalid-feedback">
+            <div *ngIf="f.actionLabel.errors.required">{{'general.field_validation_required' | translate}}</div>
+            <div *ngIf="f.actionLabel.errors.invalid">{{f.actionLabel.errors['invalid'] | translate}}</div>
+            <div
+              *ngIf="f.actionLabel.errors.minlength"> {{ "general.field_validation_min_length" | translate: {minLength: 3} }}</div>
+            <div
+              *ngIf="f.actionLabel.errors.maxlength"> {{ "general.field_validation_max_length" | translate: {maxLength: 50} }} </div>
+            <div
+              *ngIf="f.actionLabel.hasError('whitespace') && !f.actionLabel.errors.required &&!f.actionLabel.errors.invalid && !f.actionLabel.errors.minlength">{{'general.field_validation_required' | translate}}</div>
+
+          </div>
         </div>
       </div>
 
 
-      <div class="row row-cols-8 row-cols-md-8 row-cols-lg-8">
-
-
+      <div class="d-flex justify-content-between">
         <button (click)="back()" class="btn btn-outline-dcc-primary px-4">
           <span>{{ "general.btn_back" | translate }}</span>
         </button>
@@ -125,19 +157,11 @@
           <span *ngIf="!editable">{{ "general.btn_edit" | translate }}</span>
           <span *ngIf="editable">{{ "general.btn_save" | translate }}</span>
         </button>
-
       </div>
+
+
     </form>
-    <div>
-      <div class="tooltip">
-        <button onclick="copyToClipboard('Hello World')" onmouseout="outFunc()">
-          <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
-          Copy text
-        </button>
-      </div>
-      <label id="myInput">Hello World</label>
 
 
-    </div>
   </div>
 </div>

@@ -385,6 +385,7 @@
     "notification-body": "تفاصيل التنبيه",
     "notification-title": "عنوان التنبيه",
     "notification-severity": "الأهمية",
+    "notification-parameters": "عوامل متغيره في التنبيه",
     "notification-category": "فئة التنبيه",
     "notification-status": "حالة التنبيه",
     "notification-type": "نوع التنبيه",
