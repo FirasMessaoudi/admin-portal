@@ -1,5 +1,5 @@
 {
-  "validation.constraints" : {
+  "validation.constraints": {
     "data-segment": {
       "missing": "Data Segment parameter is missing!",
       "not-found": "The requested Data Segment was not found!",
@@ -9,8 +9,7 @@
       "excel-only": "Only Excel files are accepted!"
     }
   },
-
-  "dcc.commons.validation.constraints":{
+  "dcc.commons.validation.constraints": {
     "nin": "Please enter a valid ID number",
     "unique": "The value you have entered is already in use",
     "password": "Password should be a combination of lower/upper/digit/special characters",
@@ -87,7 +86,7 @@
     "mobile_number": "Mobile Number",
     "password": "Password",
     "field_pattern_not_matched": "Pattern does not match",
-    "search" : "search",
+    "search": "search",
     "nin": "NIN",
     "cal_hijri": "Hijri",
     "cal_greg": "Gregorian",
@@ -112,7 +111,11 @@
     "select-month": "Select month",
     "previous-month": "Previous month",
     "next-month": "Next month",
-    "operations": "Operations"
+    "operations": "Operations",
+    "export_to_excel": "Export to Excel",
+    "export_to_pdf": "Export to PDF",
+    "from": "from",
+    "to": "to"
   },
 
   "header": {
@@ -377,16 +380,14 @@
     "no": "No",
     "main": "Main",
     "package_type": "Package Type",
-    "camp_class":"Camp Class",
+    "camp_class": "Camp Class",
     "company_number": "Company Number",
     "company_name": "Company Name",
     "company_contact_number": "Company Contact Number",
     "location": "Location",
-    "from": "from",
-    "to" : "to",
     "BREAKFAST": "Breakfast",
     "LUNCH": "Lunch",
-    "DINNER":"Dinner",
+    "DINNER": "Dinner",
     "package_details": "Package Details",
     "status_active": "Active"
   },
@@ -395,8 +396,8 @@
     "notification-body": "Notification Body",
     "notification-name": "Notification Name",
     "notification-title": "Notification Title",
+    "notification_category": "Notification Category",
     "notification-severity": "Severity",
-    "notification-category": "Notification Category",
     "notification-status": "Notification Status",
     "notification-type": "Notification Type",
     "type-code": "Type Code",
@@ -409,7 +410,16 @@
     "FYA": "FYA",
     "enabled": "enabled",
     "disabled": "disabled",
-    "system_defined_notification_details": "System Notifications"
+    "system_defined_notification_details": "System Notifications",
+    "user_defined_notifications": "User Defined Notifications",
+    "new_notification": "Create Notification",
+    "notification_details": "Notification Details",
+    "notification_creation_date": "Notification Creation Date",
+    "notification_display_date": "Notification Display Date",
+    "high": "High",
+    "low": "Low",
+    "creation_date": "Creation Date",
+    "display_date": "Display Date"
   },
   "printing-management": {
     "title": "Printing Management",
@@ -436,7 +446,7 @@
     "confirm_request": "Confirm Request",
     "request_details": "Print Request Details",
     "hamlah_number": "Hamlah Number",
-    "motawef_number":"Motawef Number",
+    "motawef_number": "Motawef Number",
     "hamlah": "Hamlah",
     "btn_confirm_request": "Confirm Request",
     "print_request_summary": "Print Request Summary",
@@ -454,9 +464,7 @@
     "nationality": "Nationality",
     "motawif": "Motawif",
     "btn_cancel": "Cancel",
-    "request_description": "Request description",
-    "export_to_excel": "Export to Excel",
-    "export_to_pdf": "Export to PDF"
+    "request_description": "Request description"
   },
   "rule-management": {
     "title": "Decision Rule Management",

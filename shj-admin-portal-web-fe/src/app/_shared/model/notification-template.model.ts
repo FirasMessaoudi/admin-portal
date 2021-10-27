@@ -12,4 +12,5 @@ export class NotificationTemplate {
   userSpecific: boolean;
   expirationPeriodInMinutes: number;
   notificationTemplateContents: NotificationTemplateContent [];
+  creationDate: Date;
 }

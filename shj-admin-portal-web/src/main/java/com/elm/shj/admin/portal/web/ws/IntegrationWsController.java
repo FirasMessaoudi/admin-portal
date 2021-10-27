@@ -76,6 +76,7 @@ public class IntegrationWsController {
     private final HousingSiteLookupService housingSiteLookupService;
     private final TransportationTypeLookupService transportationTypeLookupService;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
+    private final HealthImmunizationLookupService healthImmunizationLookupService;
     private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
 
 
@@ -431,6 +432,17 @@ public class IntegrationWsController {
     }
 
     /**
+     * List all applicant digital ID statuses.
+     *
+     * @return WsResponse of applicant digital ID statuses list
+     */
+    @GetMapping("/digital-id-status/list")
+    public ResponseEntity<WsResponse<?>> listDigitalIdStatuses() {
+        log.debug("list digital ID statuses...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantDigitalIdStatusLookupService.findAll()).build());
+    }
+
+    /**
      * finds all applicant ritual season by his UIN
      *
      * @param uin the applicant's uin to find
@@ -455,21 +467,15 @@ public class IntegrationWsController {
     }
 
     @GetMapping("/company-details/{uin}/{seasonRitualId}")
-    public ResponseEntity<WsResponse<?>> companyDetails(@PathVariable String uin, @PathVariable long seasonRitualId) {
+    public ResponseEntity<WsResponse<?>> findApplicantCompanyDetailsByUinAndRitualId(@PathVariable String uin, @PathVariable long seasonRitualId) {
         log.info("company details...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(seasonRitualId, Long.parseLong(uin))).build());
     }
 
-    /**
-     * List all applicant digital ID statuses.
-     *
-     * @return WsResponse of applicant digital ID statuses list
-     */
-    @GetMapping("/digital-id-status/list")
-    public ResponseEntity<WsResponse<?>> listDigitalIdStatuses() {
-        log.debug("list digital ID statuses...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantDigitalIdStatusLookupService.findAll()).build());
+    @GetMapping("/health-immunization/list")
+    public ResponseEntity<WsResponse<?>> listImmunization() {
+        log.debug("list health immunizations...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(healthImmunizationLookupService.findAll()).build());
     }
-
 
 }

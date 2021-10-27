@@ -30,12 +30,16 @@
   </div>
 
   <div class="row cardBox">
-    <div class="col">
-      <div class="col-form-label">{{card?.applicantRitual?.applicant?.fullNameAr}}</div>
-      <div class="form-control-plaintext">{{card?.applicantRitual?.applicant?.fullNameEn}}</div>
+    <div class="col-12 col-md-4 order-md-1 order-1 order-md-0">
+      <div class="col-form-label text-center text-md-left">
+        <span>{{card?.applicantRitual?.applicant?.fullNameAr}}</span>
+      </div>
+      <div class="form-control-plaintext text-center text-md-left">
+        <span>{{card?.applicantRitual?.applicant?.fullNameEn}}</span>
+      </div>
     </div>
-    <div class="col">
-      <div class="col-form-label">{{'card-management.applicant_id' | translate }}</div>
+    <div class="col-12 col-md-2 order-2 order-md-1">
+      <div class="col-form-label text-center text-md-left">{{'card-management.applicant_id' | translate }}</div>
       <div *ngIf="card?.applicantRitual?.applicant?.digitalIds[0]?.uin as value; else elseBlock"
            class="form-control-plaintext text-center text-md-left">
         <span class="mr-3">{{value}}</span>
@@ -47,8 +51,8 @@
         </span>
       </div>
     </div>
-    <div class="col">
-      <div class="col-form-label">{{'card-management.card_number' | translate }}</div>
+    <div class="col-12 col-md-2 order-2 order-md-1">
+      <div class="col-form-label text-center text-md-left">{{'card-management.card_number' | translate }}</div>
       <div *ngIf="card?.referenceNumber as value; else elseBlock"
            class="form-control-plaintext text-center text-md-left">
         <span class="mr-3">{{value}}</span>
@@ -58,7 +62,7 @@
         </span>
       </div>
     </div>
-    <div class="col">
+    <div class="col-12 col-md-4 order-0 order-md-3 d-flex justify-content-center maskAv">
       <span class="avatar">
         <img
           [src]="card?.applicantRitual?.applicant?.photo ? 'data:image/jpeg;base64,'+card?.applicantRitual?.applicant?.photo : url"/>
@@ -275,7 +279,7 @@
               </thead>
               <tbody>
               <tr *ngFor="let immunization of card?.applicantRitual?.applicant?.applicantHealth?.immunizations">
-                <td class="ltr">{{immunization.immunizationCode}}</td>
+                <td class="ltr">{{immunization.immunizationCode ? lookupService().localizedLabel(immunizations, immunization.immunizationCode) : ''}}</td>
                 <td class="ltr">{{immunization.immunizationDate | gregorianDateFormat}}</td>
               </tr>
               </tbody>

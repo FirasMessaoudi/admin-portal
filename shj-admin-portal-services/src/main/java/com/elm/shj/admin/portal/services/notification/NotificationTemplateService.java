@@ -54,30 +54,27 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
      * @param notificationSearchCriteria filter value object
      * @return
      */
-    public Page<NotificationTemplateDto> findByFilter(NotificationSearchCriteriaDto notificationSearchCriteria, Pageable pageable) {
-        Page<NotificationTemplateDto> notificationTemplates =
-                mapPage(notificationTemplateRepository.findAll(withNotificationFilter(notificationSearchCriteria), pageable));
-
-        return notificationTemplates;
+    public Page<NotificationTemplateDto> findByFilter(NotificationSearchCriteriaDto notificationSearchCriteria, String typeCode, Pageable pageable) {
+        return mapPage(notificationTemplateRepository.findAll(withNotificationFilter(notificationSearchCriteria, typeCode), pageable));
     }
 
-    private Specification<JpaNotificationTemplate> withNotificationFilter(final NotificationSearchCriteriaDto notificationSearchCriteria) {
+    private Specification<JpaNotificationTemplate> withNotificationFilter(final NotificationSearchCriteriaDto notificationSearchCriteria, String typeCode) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
             root.fetch("notificationTemplateContents");
 
-            predicates.add(criteriaBuilder.equal(root.get("typeCode"), "SYSTEM_DEFINED"));
+            predicates.add(criteriaBuilder.equal(root.get("typeCode"), typeCode));
 
             if (notificationSearchCriteria.getNotificationTitle() != null && notificationSearchCriteria.getNotificationTitle().trim().length() > 0) {
                 Join<Object, Object> joinParent = root.join("notificationTemplateContents");
-                Path expression = joinParent.get("title");
+                Path<String> expression = joinParent.get("title");
                 predicates.add(criteriaBuilder.like(expression, "%" + notificationSearchCriteria.getNotificationTitle().trim() + "%"));
             }
 
             if (notificationSearchCriteria.getNotificationBody() != null && notificationSearchCriteria.getNotificationBody().trim().length() > 0) {
                 Join<Object, Object> joinParent = root.join("notificationTemplateContents");
-                Path expression = joinParent.get("body");
+                Path<String> expression = joinParent.get("body");
                 predicates.add(criteriaBuilder.like(expression, "%" + notificationSearchCriteria.getNotificationBody().trim() + "%"));
             }
 

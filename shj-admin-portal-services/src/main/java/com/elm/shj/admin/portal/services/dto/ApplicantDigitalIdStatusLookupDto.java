@@ -6,7 +6,6 @@ package com.elm.shj.admin.portal.services.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -22,6 +21,7 @@ import java.util.Date;
 public class ApplicantDigitalIdStatusLookupDto implements Serializable {
 
     private static final long serialVersionUID = 3173097897775498101L;
+
     private long id;
     private String code;
     private String lang;

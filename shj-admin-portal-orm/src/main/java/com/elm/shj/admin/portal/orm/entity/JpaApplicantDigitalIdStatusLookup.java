@@ -20,3 +20,4 @@ public class JpaApplicantDigitalIdStatusLookup extends JpaLocalizedLookup {
 
     private static final long serialVersionUID = 7841949657705295859L;
 }
+

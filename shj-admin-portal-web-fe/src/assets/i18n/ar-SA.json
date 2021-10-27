@@ -1,5 +1,5 @@
 {
-  "validation.constraints" : {
+  "validation.constraints": {
     "data-segment": {
       "missing": "عنصر شريحة البيانات مفقودة!",
       "not-found": "لم يتم العثور على شريحة البيانات المطلوبة!",
@@ -110,7 +110,11 @@
     "select-month": "اختر الشهر",
     "previous-month": "الشهر السابق",
     "next-month": "الشهر التالي",
-    "operations": "العمليات"
+    "operations": "العمليات",
+    "export_to_excel": "تصدير اكسل",
+    "export_to_pdf": "تصدير PDF",
+    "from": "من",
+    "to": "إلى"
   },
   "header": {
     "welcome": "مرحبا",
@@ -365,16 +369,14 @@
     "no": "لا",
     "main": "الاساسي",
     "package_type": "نوع الباقة",
-    "camp_class":"فئة المخيم",
+    "camp_class": "فئة المخيم",
     "company_number": "رقم الشركة",
     "company_name": "اسم الشركة",
     "company_contact_number": "رقم تواصل الشركة",
     "location": "الموقع",
-    "from": "من",
-    "to" : "إلي",
     "BREAKFAST": "فطار",
     "LUNCH": "غداء",
-    "DINNER":"عشاء",
+    "DINNER": "عشاء",
     "package_details": "بيانات الباقة",
     "status_active": "نشط"
   },
@@ -395,9 +397,18 @@
     "all": "الكل",
     "FYI": "للإطلاع",
     "FYA": "لإتخاذ إجراء",
+    "system_defined_notification_details": "تنبيهات النظام",
+    "user_defined_notifications": "تنبيهات المستخدم",
+    "new_notification": "إضافة تنبيه",
+    "notification_details": "تفاصيل التنبيه",
+    "notification_creation_date": "تاريخ إنشاء التنبيه",
+    "notification_display_date": "تاريخ إظهار التنبيه",
+    "high": "عالية",
+    "low": "قليلة",
+    "creation_date": "تاريخ الإنشاء",
+    "display_date": "تاريخ الإظهار",
     "enabled": "مفعلة",
-    "disabled": "غير مفعلة",
-    "system_defined_notification_details": "تنبيهات النظام"
+    "disabled": "غير مفعلة"
   },
   "printing-management": {
     "title": "إدارة الطباعة",
