@@ -79,7 +79,7 @@ public class IntegrationWsController {
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private final HealthImmunizationLookupService healthImmunizationLookupService;
     private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
-
+    private final ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -467,15 +467,20 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin)).build());
     }
 
-    @GetMapping("/company-details/{uin}/{seasonRitualId}")
-    public ResponseEntity<WsResponse<?>> companyDetails(@PathVariable String uin, @PathVariable long seasonRitualId) {
-        log.info("company details...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(seasonRitualId, Long.parseLong(uin))).build());
-    }
     @GetMapping("/health-immunization/list")
     public ResponseEntity<WsResponse<?>>  listImmunization() {
         log.debug("list health immunizations...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(healthImmunizationLookupService.findAll()).build());
     }
+    @GetMapping("/company-details/{uin}/{seasonRitualId}")
+    public ResponseEntity<WsResponse<?>> companyDetails(@PathVariable String uin, @PathVariable long seasonRitualId) {
+        log.info("company details...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(seasonRitualId, Long.parseLong(uin))).build());
+    }
 
+    @GetMapping("/religious-occasions-day/list")
+    public ResponseEntity<WsResponse<?>>  listReligiousOccasionsDay() {
+        log.debug("list religious occasions day...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(religiousOccasionsDayLookupService.findAll()).build());
+    }
 }
