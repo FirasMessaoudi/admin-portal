@@ -10,7 +10,8 @@ import {LookupService} from "@core/utilities/lookup.service";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {Lookup} from "@model/lookup.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {DccValidators} from "@shared/validators";
+import {EAuthority} from "@shared/model";
+import {noWhitespaceValidator} from "@core/utilities/custom-validators";
 
 @Component({
   selector: 'app-system-defined-notification-details',
@@ -24,7 +25,7 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
   notificationTemplateCategories: Lookup[] = [];
   notificationTemplateNames: Lookup[] = [];
   templateForm: FormGroup;
-  editable: boolean = false;
+  editable: boolean;
 
 
   constructor(private i18nService: I18nService,
@@ -54,7 +55,7 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
           if (data && data.id) {
             this.isLoading = false;
             this.notificationTemplate = data;
-            this.initForm();
+            this.updateForm();
           } else {
             this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.notificationTemplateId}),
               this.translate.instant('general.dialog_error_title'));
@@ -68,17 +69,25 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
       }
     });
     this.loadLookups();
+    this.initForm();
 
   }
 
 
   private initForm() {
     this.templateForm = this.formBuilder.group({
-      body: [this.getnotificationContentForSelectedLang("ar").body, [Validators.required, DccValidators.arabicCharacters(true), Validators.maxLength(60), Validators.minLength(3)]],
-      title: [this.getnotificationContentForSelectedLang("ar").title, [Validators.required, DccValidators.latinCharacters(true), Validators.maxLength(60), Validators.minLength(3)]],
-      actionLabel: [this.getnotificationContentForSelectedLang("ar").actionLabel, [Validators.required, DccValidators.latinCharacters(true), Validators.maxLength(60), Validators.minLength(3)]],
-      enabled: [this.notificationTemplate.enabled]
+      body: ['', [Validators.required, noWhitespaceValidator, Validators.maxLength(500), Validators.minLength(3)]],
+      title: ['', [Validators.required, noWhitespaceValidator, Validators.maxLength(50), Validators.minLength(10)]],
+      actionLabel: ['', [Validators.maxLength(50), noWhitespaceValidator, Validators.minLength(5)]],
+      enabled: [{value: '', disabled: true}]
     });
+  }
+
+  private updateForm() {
+    this.templateForm.controls['enabled'].setValue(this.notificationTemplate.enabled);
+    this.templateForm.controls['title'].setValue(this.getnotificationContentForSelectedLang("ar").title);
+    this.templateForm.controls['body'].setValue(this.getnotificationContentForSelectedLang("ar").body);
+    this.templateForm.controls['actionLabel'].setValue(this.getnotificationContentForSelectedLang("ar").actionLabel);
   }
 
   getnotificationContentForSelectedLang(lang: string) {
@@ -114,8 +123,7 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
 
   get canSeeSystemDefinedNotificationDetails(): boolean {
 
-    // return this.authenticationService.hasAuthority(EAuthority.SYSTEM_DEFINED_NOTIFICATION_DETAILS);
-    return true;
+    return this.authenticationService.hasAuthority(EAuthority.SYSTEM_DEFINED_NOTIFICATION_DETAILS);
   }
 
   goBackToList() {
@@ -141,38 +149,34 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
   back() {
     if (this.editable) {
       this.editable = false;
+      this.updateForm();
+      this.templateForm.controls['enabled'].disable();
     } else {
       this.goBackToList();
     }
   }
 
-
-  copyToClipboard(val) {
-    var copyText = val;
-    navigator.clipboard.writeText(copyText.value);
-
-    var tooltip = document.getElementById("myTooltip");
-    tooltip.innerHTML = "Copied: " + copyText;
+  copyParameter(text: any) {
+    navigator.clipboard.writeText(text).then(() =>
+      this.toastr.success(this.translate.instant('support.text-copied'), '')
+    ).catch(e => console.error(e));
   }
 
-  outFunc() {
-    var tooltip = document.getElementById("myTooltip");
-    tooltip.innerHTML = "Copy to clipboard";
-  }
 
   updateNotificationTemplate() {
 
     if (!this.editable) {
       this.editable = true;
+      this.templateForm.controls['enabled'].enable();
     } else {
       Object.keys(this.templateForm.controls).forEach(field => {
         const control = this.templateForm.get(field);
         control.markAsTouched({onlySelf: true});
       });
 
-      // if (this.templateForm.invalid) {
-      //   return;
-      // }
+      if (this.templateForm.invalid) {
+        return;
+      }
       let index = this.getTempContentIndex("ar");
       this.notificationTemplate.enabled = this.templateForm.controls['enabled'].value;
       this.notificationTemplate.notificationTemplateContents[index].title = this.templateForm.controls['title'].value;

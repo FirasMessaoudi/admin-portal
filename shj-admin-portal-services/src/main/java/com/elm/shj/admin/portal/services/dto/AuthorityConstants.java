@@ -42,7 +42,6 @@ public final class AuthorityConstants {
     public static final String SUSPEND_CARD = "SUSPEND_CARD";
     public static final String REISSUE_CARD = "REISSUE_CARD";
     public static final String ADD_CARD = "ADD_CARD";
-    public static final String NOTIFICATION_MANAGEMENT = "NOTIFICATION_MANAGEMENT";
 
     //Data Request Management
     public static final String DATA_REQUEST_MANAGEMENT = "DATA_REQUEST_MANAGEMENT";
@@ -51,6 +50,9 @@ public final class AuthorityConstants {
 
     //Integration WebService Call
     public static final String INTEGRATION_WEB_SERVICE_CALL = "INTEGRATION_WEB_SERVICE_CALL";
+    //notification management
+    public static final String NOTIFICATION_MANAGEMENT = "NOTIFICATION_MANAGEMENT";
+    public static final String SYSTEM_DEFINED_NOTIFICATION_DETAILS = "SYSTEM_DEFINED_NOTIFICATION_DETAILS";
 
     private AuthorityConstants() {
         // creating instances is not allowed

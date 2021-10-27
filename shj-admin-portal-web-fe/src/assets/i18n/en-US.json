@@ -396,6 +396,7 @@
     "notification-body": "Notification Body",
     "notification-name": "Notification Name",
     "notification-title": "Notification Title",
+    "notification-parameters": "Notification Parameters",
     "notification_category": "Notification Category",
     "notification-severity": "Severity",
     "notification-status": "Notification Status",

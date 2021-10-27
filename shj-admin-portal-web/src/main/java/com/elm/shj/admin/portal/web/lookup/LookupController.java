@@ -51,6 +51,7 @@ public class LookupController {
     private final NotificationTemplateStatusLookupService notificationTemplateStatusLookupService;
     private final HealthImmunizationLookupService healthImmunizationLookupService;
     private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
+    private final ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
 
 
     @GetMapping("/authority/list/parent")
@@ -183,6 +184,12 @@ public class LookupController {
     public List<HealthImmunizationLookupDto> listImmunization() {
         log.debug("list health immunizations...");
         return healthImmunizationLookupService.findAll();
+    }
+
+    @GetMapping("/religious-occasions-day/list")
+    public List<ReligiousOccasionsDayLookupDto> listReligiousOccasionsDay() {
+        log.debug("list religious occasions day...");
+        return religiousOccasionsDayLookupService.findAll();
     }
 
     @GetMapping("/digital-id-status/list")

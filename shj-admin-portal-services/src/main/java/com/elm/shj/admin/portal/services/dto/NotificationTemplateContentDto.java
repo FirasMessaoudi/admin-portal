@@ -3,11 +3,14 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -28,8 +31,13 @@ public class NotificationTemplateContentDto implements Serializable {
     @JsonBackReference
     private NotificationTemplateDto notificationTemplate;
     private String lang;
+    @Max(50)
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private String title;
+    @Max(500)
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private String body;
+    @NullOrNotBlank(min = 0, max = 50)
     private String actionLabel;
     private Date creationDate;
     private Date updateDate;
