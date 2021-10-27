@@ -42,13 +42,12 @@ public class NotificationWsController {
      * Count user un-read notifications.
      *
      * @param userId
-     * @return number of un-read user notifications.
+     * @return number of un-read user specific and user not specific notifications.
      */
     @GetMapping("/count-new-notifications/{userId}")
     public ResponseEntity<WsResponse<?>> countUserNewNotifications(@PathVariable Long userId) {
         log.debug("Handler for count un-read user notifications.");
-        int userNewNotificationsCount = userNotificationService.retrieveUserNewNotificationsCount(userId);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNewNotificationsCount).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.retrieveUserNewNotificationsCount(userId)).build());
     }
 
 

@@ -90,13 +90,19 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
 
 
     /**
-     * Retrieve user new notifications count.
+     * Retrieve user new notifications counts.
      *
      * @param userId user id
      * @return number of un-read user notifications.
      */
-    public int retrieveUserNewNotificationsCount(long userId) {
-        return userNotificationRepository.countByUserIdAndStatusCode(userId, EUserNotificationStatus.NEW.name());
+    public UserNewNotificationsCountVo retrieveUserNewNotificationsCount(long userId) {
+        int userSpecificNewNotificationsCount = userNotificationRepository.countByUserIdAndStatusCodeAndNotificationTemplateUserSpecific(userId, EUserNotificationStatus.NEW.name(), true);
+        int userNotSpecificNewNotificationsCount = userNotificationRepository.countByUserIdAndStatusCodeAndNotificationTemplateUserSpecific(userId, EUserNotificationStatus.NEW.name(), false);
+        UserNewNotificationsCountVo userNewNotificationsCountVo = UserNewNotificationsCountVo
+                .builder().userSpecificNewNotificationsCount(userSpecificNewNotificationsCount)
+                .userNotSpecificNewNotificationsCount(userNotSpecificNewNotificationsCount).build();
+
+        return userNewNotificationsCountVo;
     }
 
 

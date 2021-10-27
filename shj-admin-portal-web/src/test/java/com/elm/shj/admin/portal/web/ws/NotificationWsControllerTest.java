@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.web.ws;
 import com.elm.shj.admin.portal.services.dto.DetailedUserNotificationDto;
 import com.elm.shj.admin.portal.services.dto.PasswordExpiryNotificationRequest;
 import com.elm.shj.admin.portal.services.dto.PasswordExpiryNotificationRequestUserParameters;
+import com.elm.shj.admin.portal.services.notification.UserNewNotificationsCountVo;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -71,12 +72,13 @@ public class NotificationWsControllerTest extends AbstractControllerTestSuite {
     @Test
     public void test_count_User_New_Notifications() throws Exception {
         long userId = 3088;
-        int userNotificationCount = 1;
+        UserNewNotificationsCountVo notificationsCountVo = UserNewNotificationsCountVo.builder().userSpecificNewNotificationsCount(1).userNotSpecificNewNotificationsCount(2).build();
         String url = Navigation.API_NOTIFICATION_INTEGRATION + "/count-new-notifications/" + userId;
-        when(userNotificationService.retrieveUserNewNotificationsCount(anyLong())).thenReturn(userNotificationCount);
+        when(userNotificationService.retrieveUserNewNotificationsCount(anyLong())).thenReturn(notificationsCountVo);
         mockMvc.perform(get(url).cookie(tokenCookie).header(JwtTokenService.CALLER_TYPE_HEADER_NAME, JwtTokenService.WEB_SERVICE_CALLER_TYPE).with(csrf())).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.body", is(1)));
+                .andExpect(jsonPath("$.body.userSpecificNewNotificationsCount", is(1)))
+                .andExpect(jsonPath("$.body.userNotSpecificNewNotificationsCount", is(2)));
 
     }
 

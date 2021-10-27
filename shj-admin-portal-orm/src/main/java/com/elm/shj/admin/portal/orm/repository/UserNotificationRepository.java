@@ -30,4 +30,6 @@ public interface UserNotificationRepository extends JpaRepository<JpaUserNotific
     int updateUserNotificationStatus(@Param("notificationId") Long notificationId, @Param("statusCode") String statusCode);
 
     int countByUserIdAndStatusCode(long userId, String statusCode);
+
+    int countByUserIdAndStatusCodeAndNotificationTemplateUserSpecific(long userId, String statusCode, boolean userSpecific);
 }
