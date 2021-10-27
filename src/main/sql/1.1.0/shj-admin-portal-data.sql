@@ -151,5 +151,19 @@ INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
 VALUES (19, 'REISSUED', 'ar', N'إعادة الإصدار');
 INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
 VALUES (20, 'REISSUED', 'en', 'Re-Issue');
-SET IDENTITY_INSERT shc_portal.shc_card_status_lk OFF;
+SET
+IDENTITY_INSERT shc_portal.shc_card_status_lk OFF;
+GO
+
+
+GO
+SET IDENTITY_INSERT shc_portal.shc_authority_lk ON;
+INSERT INTO shc_portal.shc_authority_lk(id, label_ar, label_en, code, parent_id)
+VALUES (36, N'عرض تفاصيل تنبيهات النظام', 'System Defined Notification Details', 'SYSTEM_DEFINED_NOTIFICATION_DETAILS',
+        NULL);
+SET
+IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
+GO
+
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (1, 36);
 GO
