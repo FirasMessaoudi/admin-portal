@@ -49,4 +49,18 @@ public class NotificationTemplateController {
                                                                 Authentication authentication) {
         return notificationTemplateService.findOne(templateId);
     }
+
+    @PutMapping("/update")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
+    public NotificationTemplateDto updateNotificationTemplate(@RequestBody NotificationTemplateDto notificationTemplate,
+                                                              Authentication authentication) {
+        notificationTemplate.getNotificationTemplateContents().parallelStream().forEach(content -> {
+            content.setNotificationTemplate(notificationTemplate);
+        });
+        NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.findOne(notificationTemplate.getId());
+        savedNotificationTemplate.setEnabled(notificationTemplate.isEnabled());
+        savedNotificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
+
+        return notificationTemplateService.save(savedNotificationTemplate);
+    }
 }

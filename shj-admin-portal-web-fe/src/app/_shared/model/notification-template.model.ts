@@ -10,5 +10,6 @@ export class NotificationTemplate {
   actionRequired: boolean;
   enabled: boolean;
   userSpecific: boolean;
+  expirationPeriodInMinutes: number;
   notificationTemplateContents: NotificationTemplateContent [];
 }
