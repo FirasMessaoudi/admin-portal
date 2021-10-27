@@ -1,5 +1,5 @@
 {
-  "validation.constraints" : {
+  "validation.constraints": {
     "data-segment": {
       "missing": "Data Segment parameter is missing!",
       "not-found": "The requested Data Segment was not found!",
@@ -9,8 +9,7 @@
       "excel-only": "Only Excel files are accepted!"
     }
   },
-
-  "dcc.commons.validation.constraints":{
+  "dcc.commons.validation.constraints": {
     "nin": "Please enter a valid ID number",
     "unique": "The value you have entered is already in use",
     "password": "Password should be a combination of lower/upper/digit/special characters",
@@ -28,7 +27,6 @@
     "password-confirmation-mismatch": "Password and Confirm Password Mismatch",
     "invalid": "The value you have entered is invalid"
   },
-
   "general": {
     "app_name": "Elm Product",
     "app_title": "Shaaer",
@@ -87,7 +85,7 @@
     "mobile_number": "Mobile Number",
     "password": "Password",
     "field_pattern_not_matched": "Pattern does not match",
-    "search" : "search",
+    "search": "search",
     "nin": "NIN",
     "cal_hijri": "Hijri",
     "cal_greg": "Gregorian",
@@ -112,9 +110,12 @@
     "select-month": "Select month",
     "previous-month": "Previous month",
     "next-month": "Next month",
-    "operations": "Operations"
+    "operations": "Operations",
+    "export_to_excel": "Export to Excel",
+    "export_to_pdf": "Export to PDF",
+    "from": "from",
+    "to": "to"
   },
-
   "header": {
     "welcome": "Welcome",
     "change_password": "Change Password",
@@ -122,7 +123,6 @@
     "logout": "Logout",
     "my_information": "My Information"
   },
-
   "home": {
     "title": "Home",
     "period": "Period",
@@ -145,7 +145,6 @@
     "welcome": "Welcome to:",
     "legend": "Legend"
   },
-
   "role-management": {
     "title": "Role Management",
     "roles_list": "Roles List",
@@ -170,7 +169,6 @@
     "dialog_delete_success_text": "Role has been successfully deleted",
     "add_role_no_authorities_error": "At least one authority should be selected"
   },
-
   "user-management": {
     "title": "User Management",
     "users_list": "Users List",
@@ -214,7 +212,6 @@
     "select_all": "Select All",
     "deselect_all": "Deselect All"
   },
-
   "login": {
     "header_title": "Login",
     "side_info": "The DCC template aims to unify efforts and standardize the way we implement our products in ELM.\n          It can reduce efforts related to common project activities like project structure, technology stack, error handling strategy, coding standards, ...\n          In our last survey, effort saved can go up to 20% of the total project effort.",
@@ -229,7 +226,6 @@
     "invalid_otp": "Invalid OTP! Please try again...",
     "user_is_deactivated": "User is not active"
   },
-
   "register": {
     "header_title": "Create New Account",
     "btn_register": "Register",
@@ -239,7 +235,6 @@
     "link_legal_accept": "Please read and accept Terms and Conditions to proceed!",
     "terms_and_conditions_text": "To view the terms and conditions, please click on the <a target='_blank' href='{{url}}'>link</a>"
   },
-
   "change-password": {
     "title": "Change Password",
     "header_text": "Your password has expired, please create a new one.",
@@ -249,19 +244,16 @@
     "new-password-confirm-mismatch": "Confirm password does not match password, please check",
     "success_text": "Password has been changed Successfully, please login with the new password"
   },
-
   "reset-password": {
     "title": "Reset Password",
     "btn_reset_password": "Reset Password",
     "btn_back_to_login": "Back to Login"
   },
-
   "footer": {
     "copyright": "* Trial Version * All Rights Reserved, Elm {{year}}",
     "terms_and_conditions": "Terms & Conditions",
     "channels": "channels "
   },
-
   "support": {
     "header_title": "Support",
     "header_text": "Our team is ready to support you. To contact Support Team please use on the below channels:",
@@ -377,16 +369,14 @@
     "no": "No",
     "main": "Main",
     "package_type": "Package Type",
-    "camp_class":"Camp Class",
+    "camp_class": "Camp Class",
     "company_number": "Company Number",
     "company_name": "Company Name",
     "company_contact_number": "Company Contact Number",
     "location": "Location",
-    "from": "from",
-    "to" : "to",
     "BREAKFAST": "Breakfast",
     "LUNCH": "Lunch",
-    "DINNER":"Dinner",
+    "DINNER": "Dinner",
     "package_details": "Package Details",
     "status_active": "Active"
   },
@@ -396,7 +386,7 @@
     "notification-name": "Notification Name",
     "notification-title": "Notification Title",
     "severity": "Severity",
-    "notification-category": "Notification Category",
+    "notification_category": "Notification Category",
     "notification-type": "Notification Type",
     "type-code": "Type Code",
     "body": "Body",
@@ -409,7 +399,16 @@
     "type": "Type",
     "FYI": "FYI",
     "FYA": "FYA",
-    "system_defined_notification_details": "System Notifications"
+    "system_defined_notification_details": "System Notifications",
+    "user_defined_notifications": "User Defined Notifications",
+    "new_notification": "Create Notification",
+    "notification_details": "Notification Details",
+    "notification_creation_date": "Notification Creation Date",
+    "notification_display_date": "Notification Display Date",
+    "high": "High",
+    "low": "Low",
+    "creation_date": "Creation Date",
+    "display_date": "Display Date"
   },
   "printing-management": {
     "title": "Printing Management",
@@ -436,7 +435,7 @@
     "confirm_request": "Confirm Request",
     "request_details": "Print Request Details",
     "hamlah_number": "Hamlah Number",
-    "motawef_number":"Motawef Number",
+    "motawef_number": "Motawef Number",
     "hamlah": "Hamlah",
     "btn_confirm_request": "Confirm Request",
     "print_request_summary": "Print Request Summary",
@@ -454,9 +453,7 @@
     "nationality": "Nationality",
     "motawif": "Motawif",
     "btn_cancel": "Cancel",
-    "request_description": "Request description",
-    "export_to_excel": "Export to Excel",
-    "export_to_pdf": "Export to PDF"
+    "request_description": "Request description"
   },
   "rule-management": {
     "title": "Decision Rule Management",

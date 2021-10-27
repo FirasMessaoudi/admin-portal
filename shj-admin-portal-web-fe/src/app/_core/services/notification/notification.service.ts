@@ -24,7 +24,12 @@ export class NotificationService {
 
   list(pageNumber: any, notificationSearchCriteria: NotificationSearchCriteria): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
-    return this.http.post<any>("/core/api/notification/template/list", notificationSearchCriteria, {params: params});
+    return this.http.post<any>("/core/api/notification/template/system-defined/list", notificationSearchCriteria, {params: params});
+  }
+
+  listUserDefined(pageNumber: any, notificationSearchCriteria: NotificationSearchCriteria): Observable<any> {
+    let params = new HttpParams().set('page', pageNumber);
+    return this.http.post<any>("/core/api/notification/template/user-defined/list", notificationSearchCriteria, {params: params});
   }
 
 

@@ -11,4 +11,5 @@ export class NotificationTemplate {
   enabled: boolean;
   userSpecific: boolean;
   notificationTemplateContents: NotificationTemplateContent [];
+  creationDate: Date;
 }

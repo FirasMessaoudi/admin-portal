@@ -7,9 +7,18 @@ import {SharedModule} from "@shared/shared.module";
 import {TranslateModule} from "@ngx-translate/core";
 import {NotificationListComponent} from './notification-list/notification-list.component';
 import {SystemDefinedNotificationDetailsComponent} from './system-defined-notification-details/system-defined-notification-details.component';
+import {UserDefinedNotificationListComponent} from "@pages/notification-management/user-defined-notification-list/user-defined-notification-list.component";
+import {UserDefinedNotificationDetailsComponent} from "@pages/notification-management/user-defined-notification-details/user-defined-notification-details.component";
 
 @NgModule({
-  declarations: [NotificationListComponent, NotificationListComponent, SystemDefinedNotificationDetailsComponent],
+  declarations:
+    [
+      NotificationListComponent,
+      NotificationListComponent,
+      SystemDefinedNotificationDetailsComponent,
+      UserDefinedNotificationListComponent,
+      UserDefinedNotificationDetailsComponent
+    ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -18,4 +27,5 @@ import {SystemDefinedNotificationDetailsComponent} from './system-defined-notifi
     TranslateModule
   ]
 })
-export class NotificationManagementModule { }
+export class NotificationManagementModule {
+}
