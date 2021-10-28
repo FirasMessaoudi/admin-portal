@@ -403,13 +403,14 @@
     "new_notification": "إضافة تنبيه",
     "notification_details": "تفاصيل التنبيه",
     "notification_creation_date": "تاريخ إنشاء التنبيه",
-    "notification_display_date": "تاريخ إظهار التنبيه",
+    "notification_sending_date": "تاريخ إظهار التنبيه",
     "high": "عالية",
     "low": "قليلة",
     "creation_date": "تاريخ الإنشاء",
     "display_date": "تاريخ الإظهار",
     "enabled": "مفعلة",
-    "disabled": "غير مفعلة"
+    "disabled": "غير مفعلة",
+    "display_notification": "عرض التنبيه"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

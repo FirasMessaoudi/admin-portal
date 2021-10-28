@@ -397,7 +397,7 @@
     "notification-name": "Notification Name",
     "notification-title": "Notification Title",
     "notification-parameters": "Notification Parameters",
-    "notification_category": "Notification Category",
+    "notification-category": "Notification Category",
     "notification-severity": "Severity",
     "notification-status": "Notification Status",
     "notification-type": "Notification Type",
@@ -416,11 +416,12 @@
     "new_notification": "Create Notification",
     "notification_details": "Notification Details",
     "notification_creation_date": "Notification Creation Date",
-    "notification_display_date": "Notification Display Date",
+    "notification_sending_date": "Notification Sending Date",
     "high": "High",
     "low": "Low",
     "creation_date": "Creation Date",
-    "display_date": "Display Date"
+    "display_date": "Sending Date",
+    "display_notification": "Display Notification"
   },
   "printing-management": {
     "title": "Printing Management",

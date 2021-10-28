@@ -1,15 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {combineLatest} from "rxjs";
-import {map} from "rxjs/operators";
 import {I18nService} from "@dcc-commons-ng/services";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
 import {AuthenticationService, NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
-import {NotificationTemplate} from "@model/notification-template.model";
 import {Lookup} from "@model/lookup.model";
-import {NotificationTemplateContent} from "@model/notification-template-content.model";
+import {FormBuilder, FormGroup} from "@angular/forms";
+import {NgbCalendar, NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-user-defined-notification-details',
@@ -17,11 +15,12 @@ import {NotificationTemplateContent} from "@model/notification-template-content.
   styleUrls: ['./user-defined-notification-details.component.scss']
 })
 export class UserDefinedNotificationDetailsComponent implements OnInit {
-  notificationId: number;
-  isLoading: boolean;
-  notification: NotificationTemplate;
-  notificationTemplateCategories: Lookup[] = [];
-  notificationTemplateNames: Lookup[] = [];
+  notificationCategories: Lookup[] = [];
+  localizedNotificationCategories: Lookup[] = [];
+  notificationForm: FormGroup;
+  hoveredDate: NgbDate | null = null;
+  fromDate: NgbDate | null;
+  toDate: NgbDate | null;
 
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,
@@ -31,77 +30,68 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
               private authenticationService: AuthenticationService,
               private notificationService: NotificationService,
               private lookupsService: LookupService,
+              private formBuilder: FormBuilder,
+              private calendar: NgbCalendar,
+              public formatter: NgbDateParserFormatter
   ) {
+    this.fromDate = calendar.getToday();
+    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
-
 
   ngOnInit(): void {
-    combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
-      params: results[0].id,
-      qParams: results[1]
-    }))).subscribe(results => {
-      this.notificationId = +results.params; // (+) converts string 'id' to a number
-      if (this.notificationId) {
-        this.isLoading = true;
-        // load user details
-        this.notificationService.findNotificationTemplateById(this.notificationId).subscribe(data => {
-          if (data && data.id) {
-            this.isLoading = false;
-            this.notification = data;
-          } else {
-            this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.notificationId}),
-              this.translate.instant('general.dialog_error_title'));
-            this.goBackToList();
-          }
-        });
-      } else {
-        this.toastr.error(this.translate.instant('general.route_id_param_not_found'),
-          this.translate.instant('general.dialog_error_title'));
-        this.goBackToList();
-      }
-    });
+    this.loadLookups();
+    this.initForm();
   }
 
-  getNotificationContentForCurrentLanguage(notificationContents: NotificationTemplateContent []) {
-    if (notificationContents.length > 0) {
-      let contents = notificationContents.filter(value => this.i18nService.language.toLowerCase().startsWith(value.lang.toLowerCase()));
-      if (!contents) {
-        return notificationContents[0];
-      }
-      return contents[0];
-    } else {
-      return null;
-    }
+  loadLookups() {
+    this.notificationService.findNotificationCategories().subscribe(result => {
+      this.notificationCategories = result;
+      this.localizedNotificationCategories = this.lookupsService.localizedItems(this.notificationCategories);
+    });
   }
 
   get currentLanguage(): string {
     return this.i18nService.language;
   }
 
-  get canSeeSystemDefinedNotificationDetails(): boolean {
-
-    // return this.authenticationService.hasAuthority(EAuthority.SYSTEM_DEFINED_NOTIFICATION_DETAILS);
-    return true;
-  }
-
-  goBackToList() {
-    this.router.navigate(['/notification/list']);
-  }
-
-
-  loadLookups() {
-
-    this.notificationService.findNotificationCategories().subscribe(result => {
-      this.notificationTemplateCategories = result;
-    });
-
-    this.notificationService.findNotificationTemplateNames().subscribe(result => {
-      this.notificationTemplateNames = result;
-    });
-  }
-
   lookupService(): LookupService {
     return this.lookupsService;
   }
 
+  initForm() {
+    this.notificationForm = this.formBuilder.group({
+      notificationTitle: [null],
+      notificationBody: [null],
+      notificationCategory: [null],
+      severity: [null]
+    });
+  }
+
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+      this.toDate = date;
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
+  }
+
+  isHovered(date: NgbDate) {
+    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
+  }
+
+  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+    const parsed = this.formatter.parse(input);
+    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
 }

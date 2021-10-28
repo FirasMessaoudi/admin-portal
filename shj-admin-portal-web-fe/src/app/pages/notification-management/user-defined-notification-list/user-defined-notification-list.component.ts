@@ -8,6 +8,7 @@ import {LookupService} from "@core/utilities/lookup.service";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {NotificationTemplateContent} from "@model/notification-template-content.model";
 import {I18nService} from "@dcc-commons-ng/services";
+import {NgbCalendar, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-user-defined-notification-list',
@@ -26,6 +27,9 @@ export class UserDefinedNotificationListComponent implements OnInit {
   localizedNotificationCategories: Lookup[] = [];
   localizedNotificationNames: Lookup[] = [];
 
+  model: NgbDateStruct;
+  today = this.calendar.getToday();
+
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
@@ -33,7 +37,8 @@ export class UserDefinedNotificationListComponent implements OnInit {
               private formBuilder: FormBuilder,
               private lookupsService: LookupService,
               private notificationService: NotificationService,
-              private i18nService: I18nService) {
+              private i18nService: I18nService,
+              private calendar: NgbCalendar) {
   }
 
   ngOnInit(): void {
@@ -47,12 +52,10 @@ export class UserDefinedNotificationListComponent implements OnInit {
     this.notificationService.findNotificationCategories().subscribe(result => {
       this.notificationCategories = result;
       this.localizedNotificationCategories = this.lookupsService.localizedItems(this.notificationCategories);
-
     });
     this.notificationService.findNotificationTemplateNames().subscribe(result => {
       this.notificationNames = result;
       this.localizedNotificationNames = this.lookupsService.localizedItems(this.notificationNames);
-
     });
   }
 
@@ -116,6 +119,10 @@ export class UserDefinedNotificationListComponent implements OnInit {
 
   lookupService(): LookupService {
     return this.lookupsService;
+  }
+
+  get currentLanguage(): string {
+    return this.i18nService.language;
   }
 
   getNotificationContentForCurrentLanguage(notificationContents: NotificationTemplateContent []) {

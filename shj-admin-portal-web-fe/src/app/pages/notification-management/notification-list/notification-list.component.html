@@ -39,7 +39,7 @@
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification_category" | translate }}</label>
+          <label class="col-form-label">{{ "notification-management.notification-category" | translate }}</label>
           <select class="custom-select" formControlName="notificationCategory">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
             <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
@@ -61,7 +61,7 @@
 
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.severity" | translate }}</label>
+          <label class="col-form-label">{{ "notification-management.notification-severity" | translate }}</label>
           <select formControlName="severity" class="custom-select">
             <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
             <option [ngValue]="true">{{ "notification-management.important" | translate }}</option>

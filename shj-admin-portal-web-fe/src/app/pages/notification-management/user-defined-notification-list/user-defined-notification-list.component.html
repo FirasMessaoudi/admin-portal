@@ -52,59 +52,45 @@
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification_display_date" | translate }}</label>
-          <div class="d-flex">
-            <label class="col-form-label mr-2">{{ "general.from" | translate }}</label>
-            <hijri-gregorian-datepicker [showLabel]="false"
-                                        name="displayStartDate"
-                                        buttonClass="dcc-primary"
-                                        class="datepicker"
-                                        [isRequired]="false"
-                                        [GregLabel]="'general.cal_greg' | translate"
-                                        [hijriLabel]="'general.cal_hijri' | translate"
-                                        [readonly]="true"
-                                        #datePicker>
-            </hijri-gregorian-datepicker>
-            <label class="col-form-label mx-2">{{ "general.to" | translate }}</label>
-            <hijri-gregorian-datepicker [showLabel]="false"
-                                        name="displayEndDate"
-                                        buttonClass="dcc-primary"
-                                        class="datepicker"
-                                        [isRequired]="false"
-                                        [GregLabel]="'general.cal_greg' | translate"
-                                        [hijriLabel]="'general.cal_hijri' | translate"
-                                        [readonly]="true"
-                                        #datePicker>
-            </hijri-gregorian-datepicker>
+          <label class="col-form-label">{{ "notification-management.notification_sending_date" | translate }}</label>
+          <div class="input-group d-flex align-items-baseline">
+            <!-- TODO Implement range selection datepicker component, update placeholder value and set disabled attribute to false-->
+            <input class="form-control"
+                   placeholder="{{currentLanguage.startsWith('ar') ? 'من 2020/12/01 إلى 2022/12/05' : 'From 01/12/2020 to 15/12/2022'}}"
+                   [disabled]="true"
+                   name="dp" [(ngModel)]="model" ngbDatepicker [footerTemplate]="footerTemplate" #d="ngbDatepicker">
+            <div class="input-group-append">
+              <button [disabled]="true" class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
+              </button>
+            </div>
           </div>
+          <ng-template #footerTemplate>
+            <hr class="my-0">
+            <button class="btn btn-primary btn-sm m-2 float-left" (click)="model = today; d.close()">Today</button>
+            <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()">Close</button>
+          </ng-template>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification_creation_date" | translate }}</label>
-          <div class="d-flex">
-            <label class="col-form-label mr-2">{{ "general.from" | translate }}</label>
-            <hijri-gregorian-datepicker [showLabel]="false"
-                                        name="creationStartDate"
-                                        buttonClass="dcc-primary"
-                                        class="datepicker"
-                                        [isRequired]="false"
-                                        [GregLabel]="'general.cal_greg' | translate"
-                                        [hijriLabel]="'general.cal_hijri' | translate"
-                                        [readonly]="true"
-                                        #datePicker>
-            </hijri-gregorian-datepicker>
-            <label class="col-form-label mx-2">{{ "general.to" | translate }}</label>
-            <hijri-gregorian-datepicker [showLabel]="false"
-                                        name="creationEndDate"
-                                        buttonClass="dcc-primary"
-                                        class="datepicker"
-                                        [isRequired]="false"
-                                        [GregLabel]="'general.cal_greg' | translate"
-                                        [hijriLabel]="'general.cal_hijri' | translate"
-                                        [readonly]="true"
-                                        #datePicker>
-            </hijri-gregorian-datepicker>
+          <div class="input-group d-flex align-items-baseline">
+            <!-- TODO Implement range selection datepicker component, update placeholder value and set disabled attribute to false-->
+            <input class="form-control"
+                   placeholder="{{currentLanguage.startsWith('ar') ? 'من 2020/12/01 إلى 2022/12/05' : 'From 01/12/2020 to 15/12/2022'}}"
+                   [disabled]="true"
+                   name="dp" [(ngModel)]="model" ngbDatepicker [footerTemplate]="footerTemplate" #d="ngbDatepicker">
+            <div class="input-group-append">
+              <button [disabled]="true" class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
+              </button>
+            </div>
           </div>
+          <ng-template #footerTemplate>
+            <hr class="my-0">
+            <button class="btn btn-primary btn-sm m-2 float-left" (click)="model = today; d.close()">Today</button>
+            <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()">Close</button>
+          </ng-template>
         </div>
 
         <div class="form-group col-12">
@@ -155,16 +141,18 @@
             class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.body || '---'}}</td>
           <td
             class="ltr">{{template?.categoryCode ? lookupService().localizedLabel(notificationCategories, template?.categoryCode) : '---'}}</td>
-          <td class="ltr" *ngIf="template?.important">
-            {{'notification-management.high' |translate}}
-            <span class="status mr-1 Suspended"></span>
+          <td class="ltr d-flex align-items-baseline" *ngIf="template?.important">
+            <span>{{'notification-management.high' |translate}}</span>
+            <span class="status mr-1 Suspended severity-badge"></span>
           </td>
-          <td class="ltr" *ngIf="!template?.important">
-            {{'notification-management.low' |translate}}
-            <span class="status mr-1 done"></span>
+          <td class="ltr d-flex align-items-baseline" *ngIf="!template?.important">
+            <span>{{'notification-management.low' |translate}}</span>
+            <span class="status mr-1 done severity-badge"></span>
           </td>
+          <!--TODO Bind the correct value of notification sending date-->
           <td
-            class="ltr">{{template?.creationDate | dateFormat}}</td>
+            class="ltr">---
+          </td>
           <td
             class="ltr">{{template?.creationDate | dateFormat}}</td>
           <td>
