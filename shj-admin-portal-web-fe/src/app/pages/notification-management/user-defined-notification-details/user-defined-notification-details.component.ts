@@ -18,6 +18,7 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   notificationCategories: Lookup[] = [];
   localizedNotificationCategories: Lookup[] = [];
   notificationForm: FormGroup;
+
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;

@@ -52,45 +52,69 @@
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification_sending_date" | translate }}</label>
-          <div class="input-group d-flex align-items-baseline">
-            <!-- TODO Implement range selection datepicker component, update placeholder value and set disabled attribute to false-->
-            <input class="form-control"
-                   placeholder="{{currentLanguage.startsWith('ar') ? 'من 2020/12/01 إلى 2022/12/05' : 'From 01/12/2020 to 15/12/2022'}}"
-                   [disabled]="true"
-                   name="dp" [(ngModel)]="model" ngbDatepicker [footerTemplate]="footerTemplate" #d="ngbDatepicker">
-            <div class="input-group-append">
-              <button [disabled]="true" class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
-                <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
-              </button>
-            </div>
-          </div>
-          <ng-template #footerTemplate>
-            <hr class="my-0">
-            <button class="btn btn-primary btn-sm m-2 float-left" (click)="model = today; d.close()">Today</button>
-            <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()">Close</button>
-          </ng-template>
-        </div>
-
-        <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification_creation_date" | translate }}</label>
-          <div class="input-group d-flex align-items-baseline">
-            <!-- TODO Implement range selection datepicker component, update placeholder value and set disabled attribute to false-->
-            <input class="form-control"
-                   placeholder="{{currentLanguage.startsWith('ar') ? 'من 2020/12/01 إلى 2022/12/05' : 'From 01/12/2020 to 15/12/2022'}}"
-                   [disabled]="true"
-                   name="dp" [(ngModel)]="model" ngbDatepicker [footerTemplate]="footerTemplate" #d="ngbDatepicker">
-            <div class="input-group-append">
-              <button [disabled]="true" class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
-                <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
-              </button>
+
+          <div class="date-picker-range form-inline flex-nowrap">
+
+            <div class="form-group hidden">
+              <div class="input-group">
+                <input name="datepicker"
+                       class="form-control"
+                       ngbDatepicker
+                       #datepicker="ngbDatepicker"
+                       [autoClose]="'outside'"
+                       (dateSelect)="onDateSelection($event)"
+                       [displayMonths]="2"
+                       [dayTemplate]="t"
+                       outsideDays="hidden"
+                       [startDate]="fromDate!"
+                       tabindex="-1">
+                <ng-template #t let-date let-focused="focused">
+                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                      [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                      (mouseleave)="hoveredDate = null">
+                    {{ date.day }}
+                </span>
+                </ng-template>
+              </div>
             </div>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="form-control prepend">{{'general.from' | translate}}</span>
+                </div>
+                <input #dpFromDate
+                       class="form-control"
+                       placeholder="DD/MM/YYYY"
+                       name="dpFromDate"
+                       [readOnly]="true"
+                       [value]="formatter.format(fromDate)"
+                       (click)="datepicker.toggle()"
+                       (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="form-control prepend">{{'general.to' | translate}}</span>
+                </div>
+                <input #dpToDate
+                       class="form-control"
+                       placeholder="DD/MM/YYYY"
+                       name="dpToDate"
+                       [readOnly]="true"
+                       [value]="formatter.format(toDate)"
+                       (click)="datepicker.toggle()"
+                       (input)="toDate = validateInput(toDate, dpToDate.value)">
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
+                  </span>
+                </div>
+              </div>
+            </div>
+
           </div>
-          <ng-template #footerTemplate>
-            <hr class="my-0">
-            <button class="btn btn-primary btn-sm m-2 float-left" (click)="model = today; d.close()">Today</button>
-            <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()">Close</button>
-          </ng-template>
         </div>
 
         <div class="form-group col-12">

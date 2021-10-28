@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -22,4 +23,6 @@ public class NotificationSearchCriteriaDto implements Serializable {
     private String notificationName;
     private Boolean severity;
     private Boolean notificationType;
+    private Date creationDateStart;
+    private Date creationDateEnd;
 }

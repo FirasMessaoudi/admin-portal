@@ -20,6 +20,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,6 +94,14 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
 
             if (notificationSearchCriteria.getSeverity() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("important"), notificationSearchCriteria.getSeverity()));
+            }
+
+            if (notificationSearchCriteria.getCreationDateStart() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("creationDate"), notificationSearchCriteria.getCreationDateStart()));
+            }
+
+            if (notificationSearchCriteria.getCreationDateEnd() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("creationDate"), notificationSearchCriteria.getCreationDateEnd()));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
