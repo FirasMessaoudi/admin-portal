@@ -775,19 +775,16 @@ alter table shc_portal.shc_notification_template
     add expiration_period_in_minutes int GO
 
 
-GO
 ALTER TABLE shc_portal.shc_applicant_digital_id
     ADD status_code varchar(20);
 GO
-UPDATE shc_portal.shc_portal.shc_applicant_digital_id
-SET status_code = 'VALID'
-WHERE id > 0;
-ALTER TABLE shc_applicant
-DROP
-COLUMN status;
+
+ALTER TABLE shc_portal.shc_applicant
+    DROP COLUMN status;
 GO
+
 if not exists (select * from sys.tables where name = 'shc_applicant_digital_id_status_lk')
-create table shc_portal.shc_applicant_digital_id_status_lk
+CREATE TABLE shc_portal.shc_applicant_digital_id_status_lk
 (
     id            int PRIMARY KEY NOT NULL identity(1,1),
     code          VARCHAR(20)     NOT NULL,
