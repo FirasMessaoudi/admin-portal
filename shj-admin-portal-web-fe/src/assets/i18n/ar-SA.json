@@ -412,7 +412,8 @@
     "disabled": "غير مفعلة",
     "display_notification": "عرض التنبيه",
     "add_notification": "إضافة التنبيه",
-    "edit_notification_details": "تعديل بيانات التنبيه"
+    "edit_notification_details": "تعديل بيانات التنبيه",
+    "content_params_error": "محتوى الرسالة النصية غير صحيح يحتوي على متغيرات لا يمكن إحتسابها في حالة التعديل يجب أن تحتوي متغيرات من المتغيرات المعرفة والتابعة لها"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

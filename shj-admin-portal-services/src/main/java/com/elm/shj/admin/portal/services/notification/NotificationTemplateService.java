@@ -49,6 +49,25 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
     }
 
     /**
+     * update Notification Template
+     *
+     * @param notificationTemplate the notification Template to be updated
+     * @return the updated Notification Template
+     */
+    public NotificationTemplateDto updateNotificationTemplate(NotificationTemplateDto notificationTemplate) {
+
+        notificationTemplate.getNotificationTemplateContents().parallelStream().forEach(content -> {
+            content.setNotificationTemplate(notificationTemplate);
+        });
+        NotificationTemplateDto savedNotificationTemplate = findOne(notificationTemplate.getId());
+        savedNotificationTemplate.setEnabled(notificationTemplate.isEnabled());
+        savedNotificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
+
+        return save(savedNotificationTemplate);
+    }
+
+
+    /**
      * Find paginated notification template based on filter.
      *
      * @param pageable                   requested page of result.
@@ -58,6 +77,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
     public Page<NotificationTemplateDto> findByFilter(NotificationSearchCriteriaDto notificationSearchCriteria, String typeCode, Pageable pageable) {
         return mapPage(notificationTemplateRepository.findAll(withNotificationFilter(notificationSearchCriteria, typeCode), pageable));
     }
+
 
     private Specification<JpaNotificationTemplate> withNotificationFilter(final NotificationSearchCriteriaDto notificationSearchCriteria, String typeCode) {
         return (root, criteriaQuery, criteriaBuilder) -> {
