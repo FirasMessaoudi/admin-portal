@@ -52,7 +52,7 @@ public class LookupController {
     private final HealthImmunizationLookupService healthImmunizationLookupService;
     private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
     private final ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
-
+    private final LanguageLookupService languageLookupService;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -196,6 +196,12 @@ public class LookupController {
     public List<ApplicantDigitalIdStatusLookupDto> listDigitalIdStatuses() {
         log.debug("list applicant digital ID statuses...");
         return applicantDigitalIdStatusLookupService.findAll();
+    }
+
+    @GetMapping("/language/list")
+    public List<LanguageLookupDto> listLanguages() {
+        log.debug("list languages...");
+        return languageLookupService.findAll();
     }
 
 }

@@ -407,10 +407,12 @@
     "high": "عالية",
     "low": "قليلة",
     "creation_date": "تاريخ الإنشاء",
-    "display_date": "تاريخ الإظهار",
+    "sending_date": "تاريخ الإظهار",
     "enabled": "مفعلة",
     "disabled": "غير مفعلة",
-    "display_notification": "عرض التنبيه"
+    "display_notification": "عرض التنبيه",
+    "add_notification": "إضافة التنبيه",
+    "edit_notification_details": "تعديل بيانات التنبيه"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

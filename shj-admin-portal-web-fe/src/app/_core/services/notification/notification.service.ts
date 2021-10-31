@@ -12,9 +12,7 @@ import {CookieService} from "ngx-cookie-service";
 })
 export class NotificationService {
 
-
   constructor(private http: HttpClient, private cookieService: CookieService) {
-
   }
 
   findNotificationCategories(): Observable<Lookup[]> {
@@ -36,6 +34,9 @@ export class NotificationService {
     return this.http.post<any>("/core/api/notification/template/user-defined/list", notificationSearchCriteria, {params: params});
   }
 
+  findLanguages(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/language/list');
+  }
 
   /**
    * Finds notification Template  by his ID from the server.
@@ -53,7 +54,6 @@ export class NotificationService {
       )
     );
   }
-
 
   /**
    * Creates or updates rule details in the server.

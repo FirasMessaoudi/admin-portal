@@ -2,12 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {I18nService} from "@dcc-commons-ng/services";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastService} from "@shared/components/toast";
-import {TranslateService} from "@ngx-translate/core";
+import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
 import {AuthenticationService, NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {Lookup} from "@model/lookup.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {NgbCalendar, NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-user-defined-notification-details',
@@ -18,10 +17,10 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   notificationCategories: Lookup[] = [];
   localizedNotificationCategories: Lookup[] = [];
   notificationForm: FormGroup;
-
-  hoveredDate: NgbDate | null = null;
-  fromDate: NgbDate | null;
-  toDate: NgbDate | null;
+  languages: Lookup[] = [];
+  translatedLanguages: Lookup[] = [];
+  activeId;
+  editMode: boolean;
 
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,
@@ -32,11 +31,7 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
               private notificationService: NotificationService,
               private lookupsService: LookupService,
               private formBuilder: FormBuilder,
-              private calendar: NgbCalendar,
-              public formatter: NgbDateParserFormatter
   ) {
-    this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
 
   ngOnInit(): void {
@@ -49,6 +44,19 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       this.notificationCategories = result;
       this.localizedNotificationCategories = this.lookupsService.localizedItems(this.notificationCategories);
     });
+    this.notificationService.findLanguages().subscribe(result => {
+      this.languages = result;
+      this.translatedLanguages = this.languages
+        .filter(c =>
+          this.currentLanguage.toLowerCase().substr(0, 2) === c.lang.toLowerCase().substr(0, 2)
+        );
+      this.activeId = 1;
+    });
+
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.translatedLanguages = this.languages.filter(c =>
+        event.lang.toLowerCase().substr(0, 2) === c.lang.toLowerCase().substr(0, 2));
+    })
   }
 
   get currentLanguage(): string {
@@ -61,38 +69,32 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
 
   initForm() {
     this.notificationForm = this.formBuilder.group({
-      notificationTitle: [null],
-      notificationBody: [null],
+      creationDate: {value: null, disabled: true},
+      sendingDate: {value: null, disabled: true},
+      notificationName: [''],
       notificationCategory: [null],
-      severity: [null]
+      severity: [null],
+      enabled: {value: false},
+      notificationTitle: [''],
+      notificationDetails: ['']
     });
   }
 
-  onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
-      this.toDate = date;
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
-    }
+  get canSeeAddUpdateUserDefinedNotification(): boolean {
+    //TODO Update authorities
+    // return this.authenticationService.hasAuthority(EAuthority.ADD_USER) || this.authenticationService.hasAuthority(EAuthority.EDIT_USER);
+    return true;
   }
 
-  isHovered(date: NgbDate) {
-    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+  goBackToList() {
+    this.router.navigate(['/user-defined-notification/list']);
   }
 
-  isInside(date: NgbDate) {
-    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  backToReadOnlyMode() {
+    this.editMode = false;
   }
 
-  isRange(date: NgbDate) {
-    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
-  }
-
-  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-    const parsed = this.formatter.parse(input);
-    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  enableEditMode() {
+    this.editMode = true;
   }
 }

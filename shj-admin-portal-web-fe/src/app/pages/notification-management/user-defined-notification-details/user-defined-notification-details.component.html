@@ -1,14 +1,13 @@
+<a class="d-block button_back" href="javascript:void(0);" (click)="goBackToList()">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
 <div class="content__wrapper">
   <div class="title__Page">
-    <h3 class="sectionTitle">
-      {{ "notification-management.display_notification" | translate }}
-    </h3>
-    <button id="createNotification" routerLink="/" class="btn btn-outline-dcc-primary px-4" [disabled]="true">
-      <svg-icon styleClass="mr-2" icon="plus"></svg-icon>
-      <span>{{ "notification-management.new_notification" | translate }}</span>
-    </button>
+    <h3 *ngIf="editMode" class="sectionTitle">{{"notification-management.edit_notification_details" | translate }}</h3>
+    <h3 *ngIf="!editMode" class="sectionTitle">{{"notification-management.display_notification" | translate }}</h3>
   </div>
-  <div class="content__section">
+  <div class="content__section" *ngIf="!canSeeAddUpdateUserDefinedNotification">
     {{'header.welcome' | translate}} <span
     class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
   </div>
@@ -18,13 +17,34 @@
       <form [formGroup]="notificationForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification-title" | translate }}</label>
-          <input type="text" formControlName="notificationTitle" class="form-control"/>
+          <label class="col-form-label">{{ "notification-management.creation_date" | translate }}</label>
+          <input type="text" formControlName="creationDate" class="form-control"/>
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification_details" | translate }}</label>
-          <input type="text" formControlName="notificationBody" class="form-control"/>
+          <label class="col-form-label">{{ "notification-management.sending_date" | translate }}</label>
+          <input type="text" formControlName="sendingDate" class="form-control"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "notification-management.notification-status" | translate }}</label>
+          <div class="radio-group form-control-plaintext d-flex font-weight-normal">
+            <div class="radio-item align-items-baseline d-flex mr-5">
+              <input formControlName="enabled" class="mr-2" name="enabled" [value]="true" type="radio"
+                     id="customRadioInline01">
+              <label for="customRadioInline01">{{'notification-management.enabled' | translate}}</label>
+            </div>
+            <div class="radio-item align-items-baseline d-flex">
+              <input formControlName="enabled" class="mr-2" name="enabled" [value]="false" type="radio"
+                     id="customRadioInline02">
+              <label for="customRadioInline02">{{'notification-management.disabled' | translate}}</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "notification-management.notification-name" | translate }}</label>
+          <input type="text" formControlName="notificationName" class="form-control"/>
         </div>
 
         <div class="form-group col">
@@ -36,64 +56,6 @@
               {{notificationCategory.label}}
             </option>
           </select>
-        </div>
-
-        <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification_sending_date" | translate }}</label>
-
-          <form class="form-inline">
-            <div class="form-group hidden">
-              <div class="input-group">
-                <input name="datepicker"
-                       class="form-control"
-                       ngbDatepicker
-                       #datepicker="ngbDatepicker"
-                       [autoClose]="'outside'"
-                       (dateSelect)="onDateSelection($event)"
-                       [displayMonths]="2"
-                       [dayTemplate]="t"
-                       outsideDays="hidden"
-                       [startDate]="fromDate!"
-                       tabindex="-1">
-                <ng-template #t let-date let-focused="focused">
-        <span class="custom-day"
-              [class.focused]="focused"
-              [class.range]="isRange(date)"
-              [class.faded]="isHovered(date) || isInside(date)"
-              (mouseenter)="hoveredDate = date"
-              (mouseleave)="hoveredDate = null">
-          {{ date.day }}
-        </span>
-                </ng-template>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="input-group">
-                <input #dpFromDate
-                       class="form-control" placeholder="yyyy-mm-dd"
-                       name="dpFromDate"
-                       [disabled]="true"
-                       [value]="formatter.format(fromDate)"
-                       (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button"></button>
-                </div>
-              </div>
-            </div>
-            <div class="form-group ml-2">
-              <div class="input-group">
-                <input #dpToDate
-                       class="form-control" placeholder="yyyy-mm-dd"
-                       name="dpToDate"
-                       [value]="formatter.format(toDate)"
-                       (input)="toDate = validateInput(toDate, dpToDate.value)">
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button"></button>
-                </div>
-              </div>
-            </div>
-          </form>
-
         </div>
 
         <div class="form-group col">
@@ -109,5 +71,54 @@
     </div>
 
   </div>
+
+  <div class="content__section">
+
+    <ul ngbNav #nav="ngbNav" class="nav-tabs" [activeId]="activeId">
+      <li *ngFor="let language of translatedLanguages; let i = index" [ngbNavItem]="i + 1">
+        <a ngbNavLink>{{language.label}}
+          <svg-icon *ngIf="'en' === language.code.toLowerCase()" styleClass="fa-w-16"
+                    icon="check-circle-outline"></svg-icon>
+        </a>
+        <ng-template ngbNavContent>
+
+          <form [formGroup]="notificationForm" class="row row-cols-1">
+            <div class="form-group col-sm-12 col-md-6 col-lg-4">
+              <label class="col-form-label">{{ "notification-management.notification-title" | translate }}</label>
+              <input type="text" formControlName="notificationTitle" class="form-control"/>
+            </div>
+
+            <div class="form-group col">
+              <label class="col-form-label">{{ "notification-management.notification-body" | translate }}</label>
+              <textarea type="text" formControlName="notificationDetails" class="form-control" rows="2"></textarea>
+            </div>
+
+          </form>
+
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-outline-dcc-primary px-4 mr-1" (click)="backToReadOnlyMode()">
+              {{"general.btn_back" | translate}}</button>
+            <span *ngIf="editMode">
+            <button class="btn btn-outline-dcc-primary px-4 ml-auto mr-1 mr-lg-3 mr-md-2 px-4">
+              {{"general.btn_save" | translate}}
+            </button>
+            <button class="btn btn-dcc-primary px-4">
+              {{"notification-management.add_notification" | translate}}
+            </button>
+            </span>
+            <span *ngIf="!editMode">
+                <button class="btn btn-outline-dcc-primary px-4 ml-auto mr-1 mr-lg-3 mr-md-2 px-4"
+                        (click)="enableEditMode()">
+                  {{ "general.btn_edit" | translate}}
+                </button>
+            </span>
+          </div>
+
+        </ng-template>
+      </li>
+    </ul>
+  </div>
+
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
 
 </div>

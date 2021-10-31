@@ -420,8 +420,10 @@
     "high": "High",
     "low": "Low",
     "creation_date": "Creation Date",
-    "display_date": "Sending Date",
-    "display_notification": "Display Notification"
+    "sending_date": "Sending Date",
+    "display_notification": "Display Notification",
+    "add_notification": "Add Notification",
+    "edit_notification_details": "Edit Notification Details"
   },
   "printing-management": {
     "title": "Printing Management",

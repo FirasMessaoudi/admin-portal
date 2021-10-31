@@ -15,8 +15,6 @@ export class CardService {
   constructor(private http: HttpClient) {
   }
 
-
-
   searchCardsToPrint(uin: any, idNumber: number, hamlahNumber: any, motawefNumber: any, passportNumber: any,
                      nationality: any, excludedCardsIds, pageNumber: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
