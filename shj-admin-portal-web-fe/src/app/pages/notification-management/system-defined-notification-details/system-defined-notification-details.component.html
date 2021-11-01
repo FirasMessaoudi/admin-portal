@@ -75,8 +75,9 @@
 
         <ul ngbNav #nav="ngbNav" class="nav-tabs" [activeId]="activeId">
           <li *ngFor="let language of translatedLanguages; let i = index" [ngbNavItem]="i + 1">
-            <a ngbNavLink>{{language.label}}
-              <svg-icon *ngIf="'en' === language.code.toLowerCase()" styleClass="fa-w-16"
+
+            <a ngbNavLink (click)="setSelectedLang(language.code.toLowerCase())">{{language.label}}
+              <svg-icon *ngIf="selectedLang==language.code.toLowerCase()" styleClass="fa-w-16"
                         icon="check-circle-outline"></svg-icon>
             </a>
             <ng-template ngbNavContent>
@@ -87,12 +88,12 @@
                   <input *ngIf="editable" class="form-control" required type="text" name="title" [maxLength]="50"
                          formControlName="title" [class.is-invalid]="f.title.invalid && f.title.touched">
                   <label *ngIf="!editable" class="form-control-plaintext" name="title"
-                  >{{getNotificationContentForSelectedLang("ar")?.title}}</label>
+                  >{{getNotificationContentForSelectedLang()?.title}}</label>
                   <div *ngIf="f.title.invalid && f.title.touched" class="invalid-feedback">
                     <div *ngIf="f.title.errors.required">{{'general.field_validation_required' | translate}}</div>
                     <div *ngIf="f.title.errors.invalid">{{f.title.errors['invalid'] | translate}}</div>
                     <div
-                      *ngIf="f.title.errors.minlength"> {{ "general.field_validation_min_length" | translate: {minLength: 5} }}</div>
+                      *ngIf="f.title.errors.minlength"> {{ "general.field_validation_min_length" | translate: {minLength: 10} }}</div>
                     <div
                       *ngIf="f.title.errors.maxlength"> {{ "general.field_validation_max_length" | translate: {maxLength: 50} }} </div>
                     <div
@@ -109,12 +110,12 @@
                   <input *ngIf="editable" class="form-control" type="text" required [maxLength]="500" formControlName="body"
                          [class.is-invalid]="f.body.invalid && f.body.touched">
                   <label class="form-control-plaintext " *ngIf="!editable"
-                  >{{getNotificationContentForSelectedLang("ar")?.body}}</label>
+                  >{{getNotificationContentForSelectedLang()?.body}}</label>
                   <div *ngIf="f.body.invalid && f.body.touched" class="invalid-feedback">
                     <div *ngIf="f.body.errors.required">{{'general.field_validation_required' | translate}}</div>
                     <div *ngIf="f.body.errors.invalid">{{f.body.errors['invalid'] | translate}}</div>
                     <div
-                      *ngIf="f.body.errors.minlength"> {{ "general.field_validation_min_length" | translate: {minLength: 10} }}</div>
+                      *ngIf="f.body.errors.minlength"> {{ "general.field_validation_min_length" | translate: {minLength: 3} }}</div>
                     <div
                       *ngIf="f.body.errors.maxlength"> {{ "general.field_validation_max_length" | translate: {maxLength: 500} }} </div>
                     <div
@@ -144,12 +145,12 @@
                          [class.is-invalid]="f.actionLabel.invalid && f.actionLabel.touched"
                          formControlName="actionLabel">
                   <label *ngIf="!editable"
-                         class="form-control-plaintext ">{{getNotificationContentForSelectedLang("ar")?.actionLabel}}</label>
+                         class="form-control-plaintext ">{{getNotificationContentForSelectedLang()?.actionLabel}}</label>
                   <div *ngIf="f.actionLabel.invalid && f.actionLabel.touched" class="invalid-feedback">
                     <div *ngIf="f.actionLabel.errors.required">{{'general.field_validation_required' | translate}}</div>
                     <div *ngIf="f.actionLabel.errors.invalid">{{f.actionLabel.errors['invalid'] | translate}}</div>
                     <div
-                      *ngIf="f.actionLabel.errors.minlength"> {{ "general.field_validation_min_length" | translate: {minLength: 3} }}</div>
+                      *ngIf="f.actionLabel.errors.minlength"> {{ "general.field_validation_min_length" | translate: {minLength: 5} }}</div>
                     <div
                       *ngIf="f.actionLabel.errors.maxlength"> {{ "general.field_validation_max_length" | translate: {maxLength: 50} }} </div>
                     <div

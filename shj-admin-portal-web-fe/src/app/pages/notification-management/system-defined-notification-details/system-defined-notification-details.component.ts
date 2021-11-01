@@ -32,6 +32,7 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
   translatedLanguages: Lookup[] = [];
   activeId;
   allParamsAreValid = true;
+  selectedLang: string;
 
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,
@@ -47,7 +48,6 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
 
 
   ngOnInit(): void {
-
     combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
@@ -60,6 +60,8 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
           if (data && data.id) {
             this.isLoading = false;
             this.notificationTemplate = data;
+            this.selectedLang = "ar";
+
             this.updateForm();
           } else {
             this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.notificationTemplateId}),
@@ -90,26 +92,26 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
 
   private updateForm() {
     this.templateForm.controls['enabled'].setValue(this.notificationTemplate.enabled);
-    this.templateForm.controls['title'].setValue(this.getNotificationContentForSelectedLang("ar").title);
-    this.templateForm.controls['body'].setValue(this.getNotificationContentForSelectedLang("ar").body);
-    this.templateForm.controls['actionLabel'].setValue(this.getNotificationContentForSelectedLang("ar").actionLabel);
+    this.templateForm.controls['title'].setValue(this.getNotificationContentForSelectedLang()?.title);
+    this.templateForm.controls['body'].setValue(this.getNotificationContentForSelectedLang()?.body);
+    this.templateForm.controls['actionLabel'].setValue(this.getNotificationContentForSelectedLang()?.actionLabel);
   }
 
-  getNotificationContentForSelectedLang(lang: string) {
+  getNotificationContentForSelectedLang() {
     if (this.notificationTemplate?.notificationTemplateContents.length > 0) {
-      let contents = this.notificationTemplate.notificationTemplateContents.filter(value => lang.toLowerCase().startsWith(value.lang.toLowerCase()));
-      if (!contents) {
-        return this.notificationTemplate.notificationTemplateContents[0];
+      let index = this.notificationTemplate.notificationTemplateContents.findIndex((value => this.selectedLang?.toLowerCase().startsWith(value.lang.toLowerCase())));
+      if (index == -1) {
+        return null;
       }
-      return contents[0];
+      return this.notificationTemplate.notificationTemplateContents[index];
     } else {
       return null;
     }
   }
 
-  getTempContentIndex(lang: string) {
+  getTempContentIndex() {
     if (this.notificationTemplate?.notificationTemplateContents.length > 0) {
-      let index = this.notificationTemplate.notificationTemplateContents.findIndex((value => lang.toLowerCase().startsWith(value.lang.toLowerCase())));
+      let index = this.notificationTemplate.notificationTemplateContents.findIndex((value => this.selectedLang?.toLowerCase().startsWith(value.lang.toLowerCase())));
       return index;
     } else {
       return -1;
@@ -168,7 +170,11 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
   back() {
     if (this.editable) {
       this.editable = false;
-      this.updateForm();
+      if (this.getTempContentIndex() == -1) {
+        this.resetTemplateForm();
+      } else {
+        this.updateForm();
+      }
       this.templateForm.controls['enabled'].disable();
     } else {
       this.goBackToList();
@@ -182,27 +188,39 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
   }
 
   checkForContentParams() {
-    var userAddedParamters = this.selectedLangTemplateContent.body.match(/\<(.*?)\>/g).map(function (v) {
-      return v.trim().substring(1, v.trim().length - 1);
-    });
-    var templateParams = this.notificationTemplate.notificationTemplateParameters.map(function (el) {
-      return el.parameterName;
-    });
-    for (let i = 0; i < userAddedParamters.length; i++) {
-      if (templateParams.indexOf(userAddedParamters[i]) === -1) {
-        this.allParamsAreValid = false;
-        break;
+    let matchedParams = this.selectedLangTemplateContent.body.match(/\<(.*?)\>/g);
+    if (matchedParams != null) {
+      var userAddedParamters = matchedParams.map(function (v) {
+        return v.trim().substring(1, v.trim().length - 1);
+      });
+      var templateParams = this.notificationTemplate.notificationTemplateParameters.map(function (el) {
+        return el.parameterName;
+      });
+      for (let i = 0; i < userAddedParamters.length; i++) {
+        if (templateParams.indexOf(userAddedParamters[i]) === -1) {
+          this.allParamsAreValid = false;
+          break;
+        }
       }
     }
   }
 
 
   updateNotificationTemplate() {
+    let templateContentIndex = this.getTempContentIndex();
     this.allParamsAreValid = true;
     if (!this.editable) {
       this.editable = true;
       this.templateForm.controls['enabled'].enable();
+      if (templateContentIndex == -1) {
+        this.selectedLangTemplateContent = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
+        this.resetTemplateForm();
+      } else {
+        this.selectedLangTemplateContent = this.notificationTemplate.notificationTemplateContents[templateContentIndex];
+        this.updateForm();
+      }
     } else {
+
       Object.keys(this.templateForm.controls).forEach(field => {
         const control = this.templateForm.get(field);
         control.markAsTouched({onlySelf: true});
@@ -212,13 +230,9 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
       if (this.templateForm.invalid) {
         return;
       }
-      let index = this.getTempContentIndex("ar");
       this.notificationTemplate.enabled = this.templateForm.controls['enabled'].value;
-      this.selectedLangTemplateContent = this.notificationTemplate.notificationTemplateContents[index];
-      this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value;
-      this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value;
-      this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value;
 
+      this.addOrUpdateSelectedLangContent(templateContentIndex);
       //compare every matching if it is exist in list of template params
       this.checkForContentParams();
       if (!this.allParamsAreValid) {
@@ -249,5 +263,50 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
         }
       });
     }
+  }
+
+  setSelectedLang(lang: string) {
+    let lastTemplateContentIndex = this.getTempContentIndex();
+    this.addOrUpdateSelectedLangContent(lastTemplateContentIndex);
+    this.selectedLang = lang;
+    let templateContentIndex = this.getTempContentIndex();
+    if (templateContentIndex == -1) {
+      this.resetTemplateForm();
+    } else if (templateContentIndex != -1) {
+
+
+      this.templateForm.controls['title'].setValue(this.getNotificationContentForSelectedLang()?.title);
+      this.templateForm.controls['body'].setValue(this.getNotificationContentForSelectedLang()?.body);
+      this.templateForm.controls['actionLabel'].setValue(this.getNotificationContentForSelectedLang()?.actionLabel);
+
+    }
+  }
+
+  addOrUpdateSelectedLangContent(index: number) {
+
+    if (index != -1) {
+      this.selectedLangTemplateContent = this.notificationTemplate.notificationTemplateContents[index];
+      this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value;
+      this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value;
+      this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value;
+      this.notificationTemplate.notificationTemplateContents[index] = this.selectedLangTemplateContent;
+    } else {
+      this.selectedLangTemplateContent = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
+      this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value;
+      this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value;
+      this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value;
+      if (this.selectedLangTemplateContent.title != '' && this.selectedLangTemplateContent.actionLabel != '' && this.selectedLangTemplateContent.body != '')
+        this.notificationTemplate.notificationTemplateContents.push(this.selectedLangTemplateContent);
+
+    }
+  }
+
+  resetTemplateForm() {
+    this.templateForm.controls['title'].setValue('');
+    this.templateForm.controls['body'].setValue('');
+    this.templateForm.controls['actionLabel'].setValue('');
+    this.templateForm.controls['body'].setErrors(null);
+    this.templateForm.controls['actionLabel'].setErrors(null);
+    this.templateForm.controls['title'].setErrors(null);
   }
 }
