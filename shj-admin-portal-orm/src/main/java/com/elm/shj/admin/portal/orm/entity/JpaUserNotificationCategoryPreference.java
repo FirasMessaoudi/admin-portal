@@ -33,7 +33,7 @@ public class JpaUserNotificationCategoryPreference implements Serializable {
     private long id;
 
     @Column(name = "user_id")
-    private int userId;
+    private long userId;
 
     @Column(name = "category_code")
     private String categoryCode;
