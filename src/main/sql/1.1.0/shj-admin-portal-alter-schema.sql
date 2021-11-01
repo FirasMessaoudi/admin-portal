@@ -794,3 +794,15 @@ CREATE TABLE shc_portal.shc_applicant_digital_id_status_lk
     constraint shc_applicant_digital_id_status_lk_unique unique (code ASC, lang ASC)
 );
 GO
+
+if not exists(select * from sys.tables where name = 'shc_user_notification_category_preference')
+CREATE TABLE shc_portal.shc_user_notification_category_preference
+(
+    id            int PRIMARY KEY NOT NULL identity (1,1),
+    user_id       int             NOT NULL,
+    category_code VARCHAR(20)     NOT NULL,
+    enabled       bit             NOT NULL,
+    creation_date smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date   SMALLDATETIME   NULL
+);
+GO

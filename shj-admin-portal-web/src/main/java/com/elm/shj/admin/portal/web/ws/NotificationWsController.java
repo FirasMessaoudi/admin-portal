@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.dto.PasswordExpiryNotificationRequest;
 import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
+import com.elm.shj.admin.portal.services.notification.UserNotificationCategoryPreferenceService;
 import com.elm.shj.admin.portal.services.notification.UserNotificationService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -37,6 +38,7 @@ public class NotificationWsController {
 
     private final UserNotificationService userNotificationService;
     private final NotificationRequestService notificationRequestService;
+    private final UserNotificationCategoryPreferenceService notificationCategoryPreferenceService;
 
     /**
      * Count user un-read notifications.
@@ -99,5 +101,17 @@ public class NotificationWsController {
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(e.getMessage()).build());
         }
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(numberOfRowsAffected).build());
+    }
+
+    /**
+     * Find user notification category preference.
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("/user-notification-category-preference/{userId}")
+    public ResponseEntity<WsResponse<?>> findUserNotificationCategoryPreference(@PathVariable long userId) {
+        log.debug("Handler for {}", "Find user notification category preference by user Id");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationCategoryPreferenceService.findUserNotificationCategoryPreference(userId)).build());
     }
 }
