@@ -806,3 +806,5 @@ CREATE TABLE shc_portal.shc_user_notification_category_preference
     update_date   SMALLDATETIME   NULL
 );
 GO
+alter table shc_portal.shc_applicant_package_transportation alter column vehicle_number nvarchar(50);
+GO
