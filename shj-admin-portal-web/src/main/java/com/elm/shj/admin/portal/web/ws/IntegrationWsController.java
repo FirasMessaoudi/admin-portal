@@ -80,7 +80,7 @@ public class IntegrationWsController {
     private final HealthImmunizationLookupService healthImmunizationLookupService;
     private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
     private final ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
-
+    private final NotificationCategoryLookupService notificationCategoryLookupService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -483,5 +483,10 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>>  listReligiousOccasionsDay() {
         log.debug("list religious occasions day...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(religiousOccasionsDayLookupService.findAll()).build());
+    }
+    @GetMapping("/notification-category/list")
+    public ResponseEntity<WsResponse<?>> listNotificationCategories() {
+        log.debug("list notification categories...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationCategoryLookupService.findAll()).build());
     }
 }
