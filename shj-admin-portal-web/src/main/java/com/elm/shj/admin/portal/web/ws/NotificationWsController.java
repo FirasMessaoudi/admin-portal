@@ -125,7 +125,7 @@ public class NotificationWsController {
      * @return updated userNotificationCategoryPreference
      */
     @PutMapping("/update-user-notification-category-preference")
-    public ResponseEntity<WsResponse<?>> findUserNotificationCategoryPreference(@RequestBody UserNotificationCategoryPreferenceDto userNotificationCategoryPreference) {
+    public ResponseEntity<WsResponse<?>> updateUserNotificationCategoryPreference(@RequestBody UserNotificationCategoryPreferenceDto userNotificationCategoryPreference) {
         log.debug("Handler for {}", "Update user notification category preference");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationCategoryPreferenceService.save(userNotificationCategoryPreference)).build());
     }
