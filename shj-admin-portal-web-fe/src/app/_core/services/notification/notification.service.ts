@@ -79,4 +79,19 @@ export class NotificationService {
       })
     );
   }
+
+  loadCompanies() : Observable<any> {
+    return this.http.get<any>('' ).pipe(
+      catchError(
+        (error: any, caught: Observable<HttpEvent<any>>) => {
+          console.error(error);
+          return of(null);
+        }
+      )
+    );
+  }
+
+  loadNationality():Observable<Lookup[]> {
+    return this.http.get<any>('');
+  }
 }

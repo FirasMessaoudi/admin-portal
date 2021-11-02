@@ -6,6 +6,7 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
+import {CompanyLite} from "@model/company-lite.model";
 
 @Component({
   selector: 'app-user-defined-notification-add',
@@ -21,7 +22,8 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   activeId;
   checkedCriteria: number = -1;
   checkedGender: number = -1;
-
+  companiesList: CompanyLite[] = []
+  nationalitiesList: Lookup[] = [];
   constructor(private notificationService: NotificationService,
               private lookupsService: LookupService,
               private formBuilder: FormBuilder,
@@ -32,6 +34,14 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.notificationService.loadCompanies().subscribe(result => {
+      this.companiesList = result;
+    });
+    this.notificationService.loadNationality().subscribe(result => {
+      this.nationalitiesList = result;
+    });
+
+
     this.loadLookups();
     this.initForm();
   }
@@ -54,6 +64,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.translatedLanguages = this.languages.filter(c =>
         event.lang.toLowerCase().substr(0, 2) === c.lang.toLowerCase().substr(0, 2));
     })
+
+
+
   }
 
   get currentLanguage(): string {
