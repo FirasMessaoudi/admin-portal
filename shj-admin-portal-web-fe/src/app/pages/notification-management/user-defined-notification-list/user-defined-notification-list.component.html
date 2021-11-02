@@ -6,7 +6,9 @@
         <svg-icon styleClass="h4 pt-3" icon="search" (click)="isSearchbarCollapsed = !isSearchbarCollapsed"></svg-icon>
       </button>
     </h3>
-    <button id="createNotification" routerLink="/" class="btn btn-outline-dcc-primary px-4" [disabled]="true"
+    <button id="createNotification"
+            routerLink="/user-defined-notification/create"
+            class="btn btn-outline-dcc-primary px-4"
             *ngIf="canCreateNewNotification">
       <svg-icon styleClass="mr-2" icon="plus"></svg-icon>
       <span>{{ "notification-management.new_notification" | translate }}</span>
