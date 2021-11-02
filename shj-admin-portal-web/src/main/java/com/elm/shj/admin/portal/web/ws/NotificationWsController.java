@@ -3,7 +3,9 @@
  */
 package com.elm.shj.admin.portal.web.ws;
 
+import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.PasswordExpiryNotificationRequest;
+import com.elm.shj.admin.portal.services.dto.UserNotificationCategoryPreferenceDto;
 import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
 import com.elm.shj.admin.portal.services.notification.UserNotificationCategoryPreferenceService;
 import com.elm.shj.admin.portal.services.notification.UserNotificationService;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -113,5 +116,17 @@ public class NotificationWsController {
     public ResponseEntity<WsResponse<?>> findUserNotificationCategoryPreference(@PathVariable long userId) {
         log.debug("Handler for {}", "Find user notification category preference by user Id");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationCategoryPreferenceService.findUserNotificationCategoryPreference(userId)).build());
+    }
+
+    /**
+     * Update user notification category preference.
+     *
+     * @param userNotificationCategoryPreference
+     * @return updated userNotificationCategoryPreference
+     */
+    @PutMapping("/update-user-notification-category-preference")
+    public ResponseEntity<WsResponse<?>> findUserNotificationCategoryPreference(@RequestBody UserNotificationCategoryPreferenceDto userNotificationCategoryPreference) {
+        log.debug("Handler for {}", "Update user notification category preference");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationCategoryPreferenceService.save(userNotificationCategoryPreference)).build());
     }
 }

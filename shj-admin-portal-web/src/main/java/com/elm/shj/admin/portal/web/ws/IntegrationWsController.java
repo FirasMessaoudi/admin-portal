@@ -81,6 +81,7 @@ public class IntegrationWsController {
     private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
     private final ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
     private final NotificationCategoryLookupService notificationCategoryLookupService;
+    private final NotificationTemplateNameLookupService notificationTemplateNameLookupService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -484,9 +485,16 @@ public class IntegrationWsController {
         log.debug("list religious occasions day...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(religiousOccasionsDayLookupService.findAll()).build());
     }
+
     @GetMapping("/notification-category/list")
     public ResponseEntity<WsResponse<?>> listNotificationCategories() {
         log.debug("list notification categories...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationCategoryLookupService.findAll()).build());
+    }
+
+    @GetMapping("/notification-name/list")
+    public ResponseEntity<WsResponse<?>> listNotificationNames() {
+        log.debug("list notification template name...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationTemplateNameLookupService.findAll()).build());
     }
 }
