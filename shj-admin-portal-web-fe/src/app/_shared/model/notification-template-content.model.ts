@@ -7,4 +7,11 @@ export class NotificationTemplateContent {
   title: string;
   body: string;
   actionLabel: string;
+
+  constructor(lang: string, title: string, body: string, actionLabel: string) {
+    this.lang = lang;
+    this.title = lang;
+    this.body = lang;
+    this.actionLabel = lang;
+  }
 }

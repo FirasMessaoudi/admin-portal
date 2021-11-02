@@ -67,6 +67,9 @@ export class NotificationService {
     let headers = new HttpHeaders();
     headers = headers.set('X-XSRF-TOKEN', this.cookieService.get("XSRF-TOKEN"));
     return this.http.put<any>('/core/api/notification/template/update', notificationTemplate, {'headers': headers}).pipe(catchError((error: HttpErrorResponse) => {
+        if (error.status == 558) {
+          return of(error);
+        }
         if (error.hasOwnProperty('error')) {
           return of(error.error);
         } else {

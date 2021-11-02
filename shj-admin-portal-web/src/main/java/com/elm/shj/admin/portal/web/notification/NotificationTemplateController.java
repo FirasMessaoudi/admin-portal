@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.notification;
 
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.NotificationSearchCriteriaDto;
+import com.elm.shj.admin.portal.services.dto.NotificationTemplateContentDto;
 import com.elm.shj.admin.portal.services.dto.NotificationTemplateDto;
 import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -13,12 +14,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Main controller for notification template management pages
@@ -35,18 +41,19 @@ public class NotificationTemplateController {
     private final NotificationTemplateService notificationTemplateService;
     private final static String SYSTEM_DEFINED = "SYSTEM_DEFINED";
     private final static String USER_DEFINED = "USER_DEFINED";
+    private static final int INVALID_TEMPLATE_CONTENT_PARAMS_RESPONSE_CODE = 558;
 
     @PostMapping("/system-defined/list")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
     public Page<NotificationTemplateDto> searchSystemDefinedNotificationTemplate(@RequestBody NotificationSearchCriteriaDto notificationSearchCriteria,
-                                                                    Pageable pageable, Authentication authentication) throws IOException {
+                                                                                 Pageable pageable, Authentication authentication) throws IOException {
         return notificationTemplateService.findByFilter(notificationSearchCriteria, SYSTEM_DEFINED, pageable);
     }
 
     @PostMapping("/user-defined/list")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
     public Page<NotificationTemplateDto> searchUserDefinedNotificationTemplate(@RequestBody NotificationSearchCriteriaDto notificationSearchCriteria,
-                                                                    Pageable pageable, Authentication authentication) throws IOException {
+                                                                               Pageable pageable, Authentication authentication) throws IOException {
         return notificationTemplateService.findByFilter(notificationSearchCriteria, USER_DEFINED, pageable);
     }
 
@@ -60,15 +67,27 @@ public class NotificationTemplateController {
 
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.SYSTEM_DEFINED_NOTIFICATION_DETAILS + "')")
-    public NotificationTemplateDto updateNotificationTemplate(@RequestBody @Validated NotificationTemplateDto notificationTemplate,
-                                                              Authentication authentication) {
-        notificationTemplate.getNotificationTemplateContents().parallelStream().forEach(content -> {
-            content.setNotificationTemplate(notificationTemplate);
-        });
-        NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.findOne(notificationTemplate.getId());
-        savedNotificationTemplate.setEnabled(notificationTemplate.isEnabled());
-        savedNotificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
+    public ResponseEntity<NotificationTemplateDto> updateNotificationTemplate(@RequestBody @Validated NotificationTemplateDto notificationTemplate) {
+        if (!validateTemplateContentParams(notificationTemplate))
+            return ResponseEntity.status(INVALID_TEMPLATE_CONTENT_PARAMS_RESPONSE_CODE).body(null);
+        NotificationTemplateDto updatedNotificationTemplate = notificationTemplateService.updateNotificationTemplate(notificationTemplate);
+        return ResponseEntity.ok(updatedNotificationTemplate);
+    }
 
-        return notificationTemplateService.save(savedNotificationTemplate);
+
+    private boolean validateTemplateContentParams(NotificationTemplateDto notificationTemplate) {
+        boolean allParamsValid = true;
+        Pattern pattern = Pattern.compile("\\<(.*?)\\>");
+        List templateParams = notificationTemplate.getNotificationTemplateParameters().parallelStream().map(param -> param.getParameterName()).collect(Collectors.toList());
+        for (NotificationTemplateContentDto notificationTemplateContentDto : notificationTemplate.getNotificationTemplateContents()) {
+            Matcher matcher = pattern.matcher(notificationTemplateContentDto.getBody());
+            while (matcher.find()) {
+                if (!templateParams.contains(matcher.group(1).trim())) {
+                    allParamsValid = false;
+                    break;
+                }
+            }
+        }
+        return allParamsValid;
     }
 }
