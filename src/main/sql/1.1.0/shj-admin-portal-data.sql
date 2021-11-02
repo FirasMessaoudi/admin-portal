@@ -155,7 +155,7 @@ GO
 SET IDENTITY_INSERT shc_portal.shc_authority_lk ON;
 INSERT INTO shc_portal.shc_authority_lk(id, label_ar, label_en, code, parent_id)
 VALUES (36, N'عرض تفاصيل تنبيهات النظام', 'System Defined Notification Details', 'SYSTEM_DEFINED_NOTIFICATION_DETAILS',
-        NULL);
+        35);
 SET
 IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
 GO

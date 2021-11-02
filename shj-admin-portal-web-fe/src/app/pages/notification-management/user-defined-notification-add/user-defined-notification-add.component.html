@@ -1,0 +1,215 @@
+<a class="d-block button_back" href="javascript:void(0);" (click)="goBackToList()">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h3 class="sectionTitle">{{"notification-management.add_notification" | translate }}</h3>
+  </div>
+  <div class="content__section" *ngIf="!canAddUserDefinedNotification">
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
+
+  <div class="content__section">
+    صفات التنبيه
+    <div class="searchBox">
+      <form [formGroup]="notificationForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "notification-management.creation_date" | translate }}</label>
+          <input type="text" formControlName="creationDate" class="form-control"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "notification-management.sending_date" | translate }}</label>
+          <input type="text" formControlName="sendingDate" class="form-control"/>
+        </div>
+
+        <div class="form-group col"></div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "notification-management.notification-name" | translate }}</label>
+          <input type="text" formControlName="notificationName" class="form-control"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "notification-management.notification-category" | translate }}</label>
+          <select class="custom-select" formControlName="notificationCategory">
+            <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+            <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
+                    [ngValue]="notificationCategory.code">
+              {{notificationCategory.label}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "notification-management.notification-severity" | translate }}</label>
+          <select formControlName="severity" class="custom-select">
+            <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
+            <option [ngValue]="true">{{ "notification-management.important" | translate }}</option>
+            <option [ngValue]="false">{{ "notification-management.normal" | translate }}</option>
+          </select>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+
+  <div class="content__section">
+    <div>محتوى التنبيه (يحب تعبئة لغة واحدة على الأقل)</div>
+
+    <ul ngbNav #nav="ngbNav" class="nav-tabs" [activeId]="activeId">
+      <li *ngFor="let language of translatedLanguages; let i = index" [ngbNavItem]="i + 1">
+        <a ngbNavLink>{{language.label}}
+          <svg-icon *ngIf="'en' === language.code.toLowerCase()" styleClass="fa-w-16"
+                    icon="check-circle-outline"></svg-icon>
+        </a>
+        <ng-template ngbNavContent>
+
+          <form [formGroup]="notificationForm" class="row row-cols-1">
+            <div class="form-group col-sm-12 col-md-6 col-lg-4">
+              <label class="col-form-label">{{ "notification-management.notification-title" | translate }}</label>
+              <input type="text" formControlName="notificationTitle" class="form-control"/>
+            </div>
+
+            <div class="form-group col">
+              <label class="col-form-label">{{ "notification-management.notification-body" | translate }}</label>
+              <textarea type="text" formControlName="notificationDetails" class="form-control" rows="2"></textarea>
+            </div>
+          </form>
+
+        </ng-template>
+      </li>
+    </ul>
+  </div>
+
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+  <div class="content__section">
+    <div>اختيار المرسل إليهم</div>
+    <label class="col-form-label">إرسال التنبيه إلى</label>
+    <div class="radio-group form-control-plaintext d-flex font-weight-normal">
+      <div class="radio-item align-items-baseline d-flex mr-5">
+        <input class="mr-2" name="enabled" [value]="-1" type="radio"
+               [(ngModel)]="checkedCriteria"
+               id="customRadioInline01">
+        <label for="customRadioInline01">الكل</label>
+      </div>
+      <div class="radio-item align-items-baseline d-flex mr-5">
+        <input class="mr-2" name="enabled" [value]="0" type="radio"
+               [(ngModel)]="checkedCriteria"
+               id="customRadioInline02">
+        <label for="customRadioInline02">حسب صفات الحجيج</label>
+      </div>
+      <div class="radio-item align-items-baseline d-flex">
+        <input class="mr-2" name="enabled" [value]="1" type="radio"
+               [(ngModel)]="checkedCriteria"
+               id="customRadioInline03">
+        <label for="customRadioInline03">مجموعة محددة</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="searchBox" *ngIf="checkedCriteria == 0">
+    <form class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+
+      <div class="form-group col">
+        <label class="col-form-label">المخيم</label>
+        <select class="custom-select">
+          <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
+          <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
+                  [ngValue]="notificationCategory.code">
+            {{notificationCategory.label}}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group col">
+        <label class="col-form-label">الشركة</label>
+        <select class="custom-select">
+          <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
+          <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
+                  [ngValue]="notificationCategory.code">
+            {{notificationCategory.label}}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group col">
+        <label class="col-form-label">الجنسية</label>
+        <select class="custom-select">
+          <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
+          <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
+                  [ngValue]="notificationCategory.code">
+            {{notificationCategory.label}}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group col">
+        <label class="col-form-label">العمر</label>
+        <div class="d-flex flex-nowrap">
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="form-control prepend">{{'general.from' | translate}}</span>
+              </div>
+              <input type="number" class="form-control"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="form-control prepend">{{'general.to' | translate}}</span>
+              </div>
+              <input type="number" class="form-control"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col">
+        <label class="col-form-label">النوع</label>
+        <div class="radio-group form-control-plaintext d-flex font-weight-normal">
+          <div class="radio-item align-items-baseline d-flex mr-5">
+            <input class="mr-2" name="gender" [value]="-1" type="radio"
+                   [(ngModel)]="checkedGender"
+                   id="customRadioInline04">
+            <label for="customRadioInline04">الكل</label>
+          </div>
+          <div class="radio-item align-items-baseline d-flex mr-5">
+            <input class="mr-2" name="gender" [value]="0" type="radio"
+                   [(ngModel)]="checkedGender"
+                   id="customRadioInline05">
+            <label for="customRadioInline05">ذكور</label>
+          </div>
+          <div class="radio-item align-items-baseline d-flex">
+            <input class="mr-2" name="gender" [value]="1" type="radio"
+                   [(ngModel)]="checkedGender"
+                   id="customRadioInline06">
+            <label for="customRadioInline06">إناث</label>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <div *ngIf="checkedCriteria == 1">إضافة حاج</div>
+
+  <div class="d-flex justify-content-between">
+    <button class="btn btn-outline-dcc-primary px-4 mr-1">
+      {{"general.btn_back" | translate}}</button>
+    <span>
+      <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4">
+        {{"general.btn_save" | translate}}
+      </button>
+      <button class="btn btn-dcc-primary px-4">
+        {{"notification-management.add_notification" | translate}}
+      </button>
+    </span>
+  </div>
+
+</div>

@@ -423,7 +423,8 @@
     "sending_date": "Sending Date",
     "display_notification": "Display Notification",
     "add_notification": "Add Notification",
-    "edit_notification_details": "Edit Notification Details"
+    "edit_notification_details": "Edit Notification Details",
+    "content_params_error": " invalid notification content , notification contains parameter not right in the allowed list"
   },
   "printing-management": {
     "title": "Printing Management",
