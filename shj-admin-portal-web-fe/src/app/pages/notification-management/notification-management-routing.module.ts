@@ -5,6 +5,7 @@ import {NotificationListComponent} from "@pages/notification-management/notifica
 import {SystemDefinedNotificationDetailsComponent} from "@pages/notification-management/system-defined-notification-details/system-defined-notification-details.component";
 import {UserDefinedNotificationListComponent} from "@pages/notification-management/user-defined-notification-list/user-defined-notification-list.component";
 import {UserDefinedNotificationDetailsComponent} from "@pages/notification-management/user-defined-notification-details/user-defined-notification-details.component";
+import {UserDefinedNotificationAddComponent} from "@pages/notification-management/user-defined-notification-add/user-defined-notification-add.component";
 
 
 const routes: Routes = [
@@ -22,6 +23,11 @@ const routes: Routes = [
   {
     path: 'user-defined-notification/details/:id',
     component: UserDefinedNotificationDetailsComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: 'user-defined-notification/create',
+    component: UserDefinedNotificationAddComponent,
     canActivate: [AuthenticationGuard]
   }
 ];

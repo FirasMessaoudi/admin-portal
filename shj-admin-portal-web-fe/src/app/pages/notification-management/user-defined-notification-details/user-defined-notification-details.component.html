@@ -99,7 +99,7 @@
             <button class="btn btn-outline-dcc-primary px-4 mr-1" (click)="backToReadOnlyMode()">
               {{"general.btn_back" | translate}}</button>
             <span *ngIf="editMode">
-            <button class="btn btn-outline-dcc-primary px-4 ml-auto mr-1 mr-lg-3 mr-md-2 px-4">
+            <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4">
               {{"general.btn_save" | translate}}
             </button>
             <button class="btn btn-dcc-primary px-4">
@@ -107,7 +107,7 @@
             </button>
             </span>
             <span *ngIf="!editMode">
-                <button class="btn btn-outline-dcc-primary px-4 ml-auto mr-1 mr-lg-3 mr-md-2 px-4"
+                <button class="btn btn-outline-dcc-primary px-4"
                         (click)="enableEditMode()">
                   {{ "general.btn_edit" | translate}}
                 </button>
