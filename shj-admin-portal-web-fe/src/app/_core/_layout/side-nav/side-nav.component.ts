@@ -81,7 +81,7 @@ export class SideNavComponent implements OnInit {
         title: 'notification-management.title',
         roles: [EAuthority.NOTIFICATION_MANAGEMENT],
         display: false,
-        icon: 'notification',
+        icon: 'megaphone',
         iconFa: 'fa-w-18',
         routerLink: '/notification/list',
       },
