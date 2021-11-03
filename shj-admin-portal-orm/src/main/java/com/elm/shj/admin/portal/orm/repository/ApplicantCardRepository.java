@@ -44,10 +44,14 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
                                                 @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds);
 
 
+    /*this method is used find all Applicant Cards with status Not Equals  REISSUED */
+    @Query("SELECT card FROM JpaApplicantCard card    WHERE  card.statusCode <> :reissuedStatusCode   ")
+    Page<JpaApplicantCard> findAllApplicantCards(@Param("reissuedStatusCode") String reissuedStatusCode, Pageable pageable);
+
     /*this method is used to filter Applicant Cards Based on Search Criteria */
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi " +
-            "WHERE (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (TRIM(a.idNumber) LIKE '%'+:idNumber+'%' OR :idNumber IS NULL) AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL)   ")
-    Page<JpaApplicantCard> searchApplicantCards(@Param("uin") String uin, @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, Pageable pageable);
+            "WHERE (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (TRIM(a.idNumber) LIKE '%'+:idNumber+'%' OR :idNumber IS NULL) AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL)  AND (card.statusCode <> :reissuedStatusCode ) ")
+    Page<JpaApplicantCard> searchApplicantCards(@Param("uin") String uin, @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("reissuedStatusCode") String reissuedStatusCode, Pageable pageable);
 
     JpaApplicantCard findByApplicantRitualId(long id);
 

@@ -58,7 +58,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @return the list of applicants' cards
      */
     public Page<ApplicantCardDto> findAll(Pageable pageable) {
-        return mapPage(getRepository().findAll(pageable));
+        return mapPage(applicantCardRepository.findAllApplicantCards(ECardStatus.REISSUED.name(), pageable));
     }
 
     /**
@@ -101,10 +101,10 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      */
     public Page<ApplicantCardDto> searchApplicantCards(String uin, String idNumber, String passportNumber, Pageable pageable) {
         if (uin == null && idNumber == null && passportNumber == null) {
-            return mapPage(getRepository().findAll(pageable));
+            return mapPage(applicantCardRepository.findAllApplicantCards(ECardStatus.REISSUED.name(), pageable));
         } else {
 
-            return mapPage(applicantCardRepository.searchApplicantCards(uin, idNumber, passportNumber, pageable));
+            return mapPage(applicantCardRepository.searchApplicantCards(uin, idNumber, passportNumber, ECardStatus.REISSUED.name(), pageable));
 
         }
     }

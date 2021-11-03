@@ -73,7 +73,7 @@ export class CardDetailsComponent implements OnInit {
         this.cardService.find(this.cardId).subscribe(data => {
           if (data && data.id) {
             this.card = data;
-            this.loadOperationBasedOnCurrentStatus();
+            this.loadOperationsBasedOnCurrentStatus();
             console.log(this.card);
           } else {
             this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.cardId}),
@@ -145,7 +145,7 @@ export class CardDetailsComponent implements OnInit {
 
   }
 
-  loadOperationBasedOnCurrentStatus() {
+  loadOperationsBasedOnCurrentStatus() {
     this.operations = cardStatusActions.get(this.card.statusCode);
   }
 
