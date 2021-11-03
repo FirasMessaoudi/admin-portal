@@ -70,10 +70,11 @@ export class UserDefinedNotificationListComponent implements OnInit {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
-      notificationTitle: [null],
-      notificationBody: [null],
+      notificationTitle: [''],
+      notificationBody: [''],
       notificationCategory: [null],
-      severity: [null]
+      severity: [null],
+      toDescription: ''
     });
   }
 

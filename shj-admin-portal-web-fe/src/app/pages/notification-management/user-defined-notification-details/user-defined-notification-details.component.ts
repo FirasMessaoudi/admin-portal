@@ -7,6 +7,9 @@ import {AuthenticationService, NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {Lookup} from "@model/lookup.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {NotificationTemplate} from "@model/notification-template.model";
+import {combineLatest} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-user-defined-notification-details',
@@ -21,6 +24,10 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   translatedLanguages: Lookup[] = [];
   activeId;
   editMode: boolean;
+  notificationTemplate: NotificationTemplate;
+  selectedLang: string;
+  notificationTemplateId: number;
+  notificationTemplateNames: Lookup[] = [];
 
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,
@@ -35,6 +42,30 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
+      params: results[0].id,
+      qParams: results[1]
+    }))).subscribe(results => {
+      this.notificationTemplateId = +results.params; // (+) converts string 'id' to a number
+      if (this.notificationTemplateId) {
+        // load user details
+        this.notificationService.findNotificationTemplateById(this.notificationTemplateId).subscribe(data => {
+          if (data && data.id) {
+            this.notificationTemplate = data;
+            this.selectedLang = "ar";
+            this.updateForm();
+          } else {
+            this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.notificationTemplateId}),
+              this.translate.instant('general.dialog_error_title'));
+            this.goBackToList();
+          }
+        });
+      } else {
+        this.toastr.error(this.translate.instant('general.route_id_param_not_found'),
+          this.translate.instant('general.dialog_error_title'));
+        this.goBackToList();
+      }
+    });
     this.loadLookups();
     this.initForm();
   }
@@ -44,6 +75,11 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       this.notificationCategories = result;
       this.localizedNotificationCategories = this.lookupsService.localizedItems(this.notificationCategories);
     });
+
+    this.notificationService.findNotificationTemplateNames().subscribe(result => {
+      this.notificationTemplateNames = result;
+    });
+
     this.notificationService.findLanguages().subscribe(result => {
       this.languages = result;
       this.translatedLanguages = this.languages
@@ -80,6 +116,26 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     });
   }
 
+  getNotificationContentForSelectedLang() {
+    if (this.notificationTemplate?.notificationTemplateContents.length > 0) {
+      let index = this.notificationTemplate.notificationTemplateContents.findIndex((value => this.selectedLang?.toLowerCase().startsWith(value.lang.toLowerCase())));
+      if (index == -1) {
+        return null;
+      }
+      return this.notificationTemplate.notificationTemplateContents[index];
+    } else {
+      return null;
+    }
+  }
+
+  updateForm() {
+    this.notificationForm.controls['creationDate'].setValue(this.notificationTemplate.creationDate);
+    this.notificationForm.controls['enabled'].setValue(this.notificationTemplate.enabled);
+    this.notificationForm.controls['notificationName'].setValue(this.notificationTemplate.nameCode);
+    this.notificationForm.controls['notificationTitle'].setValue(this.getNotificationContentForSelectedLang()?.title);
+    this.notificationForm.controls['notificationDetails'].setValue(this.getNotificationContentForSelectedLang()?.body);
+  }
+
   get canSeeAddUpdateUserDefinedNotification(): boolean {
     //TODO Update authorities
     // return this.authenticationService.hasAuthority(EAuthority.ADD_USER) || this.authenticationService.hasAuthority(EAuthority.EDIT_USER);
@@ -97,4 +153,5 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   enableEditMode() {
     this.editMode = true;
   }
+
 }
