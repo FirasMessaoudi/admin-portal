@@ -77,7 +77,6 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
     });
     this.loadLookups();
     this.initForm();
-
   }
 
 
