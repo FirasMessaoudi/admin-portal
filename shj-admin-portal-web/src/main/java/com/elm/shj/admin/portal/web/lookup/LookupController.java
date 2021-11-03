@@ -53,6 +53,7 @@ public class LookupController {
     private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
     private final ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
     private final LanguageLookupService languageLookupService;
+    private final MealTypeLookupService mealTypeLookupService;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -190,6 +191,12 @@ public class LookupController {
     public List<ReligiousOccasionsDayLookupDto> listReligiousOccasionsDay() {
         log.debug("list religious occasions day...");
         return religiousOccasionsDayLookupService.findAll();
+    }
+
+    @GetMapping("/meal-type/list")
+    public List<MealTypeLookupDto> listMealTypes() {
+        log.debug("list meal types...");
+        return mealTypeLookupService.findAll();
     }
 
     @GetMapping("/digital-id-status/list")
