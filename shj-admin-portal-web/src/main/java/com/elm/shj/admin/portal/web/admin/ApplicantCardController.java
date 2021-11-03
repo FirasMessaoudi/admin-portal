@@ -8,6 +8,9 @@ import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.web.error.ActionNotAllowedException;
+import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
+import com.elm.shj.admin.portal.web.error.UserNotAllowedException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +21,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Main controller for applicant card management pages
@@ -159,5 +165,32 @@ public class ApplicantCardController {
         return applicantCardDto;
     }
 
+    /**
+     * change card status
+     *
+     * @param cardId     the card ID to find
+     * @param actionCode the new status Code
+     * @throws CardDetailsNotFoundException
+     * @throws UserNotAllowedException
+     * @throws ActionNotAllowedException
+     */
+    @PostMapping("/change-status/{cardId}/{actionCode}")
+    public void changeCardStatus(@PathVariable long cardId, @PathVariable String actionCode, Authentication authentication) throws CardDetailsNotFoundException, ActionNotAllowedException, UserNotAllowedException {
+        Set<GrantedAuthority> userAuthorities = (Set<GrantedAuthority>) ((User) authentication.getPrincipal()).getAuthorities();
+        ApplicantCardDto card = applicantCardService.findOne(cardId);
+        if (card == null) {
+            throw new CardDetailsNotFoundException("no card found with id : " + cardId);
+        }
+        String changeResult = applicantCardService.changeCardStatus(card, actionCode, userAuthorities);
+        if (changeResult.equalsIgnoreCase("user not allowed")) {
+            log.debug(changeResult);
+            throw new UserNotAllowedException("this user does not have the authority to take this action");
+        } else if (changeResult.equalsIgnoreCase("action not allowed")) {
+            log.debug(changeResult);
+            throw new ActionNotAllowedException("this user can not take the action of { " + actionCode + " } on card with status { " + card.getStatusCode() + " }");
+        } else {
+            log.debug(changeResult);
+        }
+    }
 
 }

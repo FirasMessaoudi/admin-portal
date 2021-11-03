@@ -297,6 +297,10 @@
     "applicant_id": "هوية ضيف الرحمن",
     "card_number": "الرقم التسلسلي للبطاقة",
     "card_status": "حالة البطاقة",
+    "suspend_card": "إيقاف البطاقة",
+    "reissue_card": "إعادة إصدار البطاقة",
+    "activate_card": "تفعيل البطاقة",
+    "cancel_card": "إلغاء البطاقة",
     "applicant_id_status": "حالة هوية ضيف الرحمن",
     "nationality": "الجنسية",
     "passport_number": "رقم جواز السفر",
@@ -378,7 +382,12 @@
     "LUNCH": "غداء",
     "DINNER": "عشاء",
     "package_details": "بيانات الباقة",
-    "status_active": "نشط"
+    "status_active": "نشط",
+    "user_not_authorized": "المستخدم لا تتوفر له الصلاحية المحددة لإتخاذ هذا الإجراء",
+    "dialog_activate_card_confirm_text": "هل تريد الإستمرار يتفعيل البطاقة ؟",
+    "dialog_cancel_card_confirm_text": "هل تريد الإستمرار بإلغاء البطاقة ؟",
+    "dialog_suspend_card_confirm_text": "هل تريد الإستمرار بإيقاف البطاقة ؟",
+    "dialog_reissue_card_confirm_text": "هل تريد الإستمرار بإعادة إصدار البطاقة ؟"
   },
   "notification-management": {
     "title": "إدارة التنبيهات",

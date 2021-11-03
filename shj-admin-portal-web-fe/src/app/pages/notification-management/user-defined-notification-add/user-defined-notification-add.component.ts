@@ -41,7 +41,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.nationalitiesList = result;
     });
 
-
     this.loadLookups();
     this.initForm();
   }

@@ -162,3 +162,80 @@ GO
 
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (1, 36);
 GO
+
+use shc_portal
+--Activate Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin ,Hamalah admin  )
+ insert into shc_portal.shc_role_authority ( role_id, authority_id)
+values (1,17);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (3, 17);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (4, 17);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (5, 17);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (6, 17);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (9, 17);
+
+--Suspend Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin )
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (1, 19);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (3, 19);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (4, 19);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (5, 19);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (6, 19);
+
+--Cancel Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin )
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (1, 18);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (3, 18);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (4, 18);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (5, 18);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (6, 18);
+
+--Re-issue Card(System Admin  , Service center agent and service center regent admin )
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (1, 20);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (5, 20);
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (6, 20);
+
+
+--remove duplicate rows
+WITH cte AS (
+    SELECT role_id,
+           authority_id,
+
+           ROW_NUMBER() OVER (
+            PARTITION BY
+            role_id,
+            authority_id
+            ORDER BY
+                role_id,
+                authority_id
+
+            ) row_num
+    FROM shc_portal.shc_role_authority
+)
+DELETE
+FROM cte
+WHERE row_num > 1;
+
+insert into shc_portal.shc_card_status_lk (code, lang, label)
+values ('REISSUED', 'en', 'Re-issued');
+insert into shc_portal.shc_card_status_lk (code, lang, label)
+values ('REISSUED', 'ar', N'تمت إعادة الإصدار');
+insert into shc_portal.shc_card_status_lk (code, lang, label)
+values ('EXPIRED', 'en', 'expired');
+insert into shc_portal.shc_card_status_lk (code, lang, label)
+values ('EXPIRED', 'ar', N'منتهيه');

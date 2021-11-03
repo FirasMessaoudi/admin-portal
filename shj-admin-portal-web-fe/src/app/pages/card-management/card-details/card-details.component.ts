@@ -15,6 +15,8 @@ import {EAuthority} from "@shared/model";
 import {NavigationService} from "@core/utilities/navigation.service";
 import {CardStatus} from "@model/enum/card-status.enum";
 import {DigitalIdStatus} from "@model/enum/digital-id-status.enum";
+import {cardStatusActions} from "@model/enum/Card-status-actions.model";
+import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 
 @Component({
   selector: 'app-card-details',
@@ -42,6 +44,7 @@ export class CardDetailsComponent implements OnInit {
   immunizations: Lookup[];
   languageNativeName = Language;
   renderBackLink = false;
+  operations: string[];
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -51,7 +54,8 @@ export class CardDetailsComponent implements OnInit {
               private i18nService: I18nService,
               private lookupsService: LookupService,
               private authenticationService: AuthenticationService,
-              private navigationService: NavigationService
+              private navigationService: NavigationService,
+              private confirmDialogService: ConfirmDialogService
   ) {
   }
 
@@ -69,6 +73,7 @@ export class CardDetailsComponent implements OnInit {
         this.cardService.find(this.cardId).subscribe(data => {
           if (data && data.id) {
             this.card = data;
+            this.loadOperationsBasedOnCurrentStatus();
             console.log(this.card);
           } else {
             this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.cardId}),
@@ -138,6 +143,53 @@ export class CardDetailsComponent implements OnInit {
       this.immunizations = result;
     });
 
+  }
+
+  loadOperationsBasedOnCurrentStatus() {
+    this.operations = cardStatusActions.get(this.card.statusCode);
+  }
+
+  changeCardStatus(actionCode: string, confirmationText: string) {
+    if (this.isUserHasAllowedAuthority(actionCode)) {
+      this.confirmDialogService.confirm(this.translate.instant(confirmationText), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+        if (confirm) {
+          this.cardService.changeCardStatus(this.card.id, actionCode).subscribe(_ => {
+            this.toastr.success(this.translate.instant('general.dialog_edit_success_text'), this.translate.instant('general.dialog_edit_title'));
+          }, error => {
+            this.toastr.warning(this.translate.instant("general.dialog_error_text"), this.translate.instant("general.dialog_edit_title"));
+          });
+        }
+      });
+    } else {
+      this.toastr.error(this.translate.instant('card-management.user_not_authorized'),
+        this.translate.instant('general.dialog_error_title'));
+    }
+  }
+
+
+  isUserHasAllowedAuthority(statusCode: string) {
+    switch (statusCode.toLowerCase()) {
+      case 'suspend_card': {
+        return this.authenticationService.hasAuthority(EAuthority.SUSPEND_CARD);
+        break;
+      }
+      case 'reissue_card': {
+        return this.authenticationService.hasAuthority(EAuthority.REISSUE_CARD);
+        break;
+      }
+      case 'activate_card': {
+        return this.authenticationService.hasAuthority(EAuthority.ACTIVATE_CARD);
+        break;
+      }
+      case 'cancel_card': {
+        return this.authenticationService.hasAuthority(EAuthority.CANCEL_CARD);
+        break;
+      }
+      default: {
+        return false;
+        break;
+      }
+    }
   }
 
   goToList() {

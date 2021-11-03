@@ -54,6 +54,11 @@
         </div>
 
         <div class="form-group col">
+          <label class="col-form-label">To Description</label>
+          <input type="text" formControlName="notificationBody" class="form-control"/>
+        </div>
+
+        <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification_creation_date" | translate }}</label>
 
           <div class="date-picker-range form-inline flex-nowrap">
@@ -168,11 +173,11 @@
           <td
             class="ltr">{{template?.categoryCode ? lookupService().localizedLabel(notificationCategories, template?.categoryCode) : '---'}}</td>
           <td class="ltr d-flex align-items-baseline" *ngIf="template?.important">
-            <span>{{'notification-management.high' |translate}}</span>
+            <span>{{'notification-management.important' |translate}}</span>
             <span class="status mr-1 Suspended severity-badge"></span>
           </td>
           <td class="ltr d-flex align-items-baseline" *ngIf="!template?.important">
-            <span>{{'notification-management.low' |translate}}</span>
+            <span>{{'notification-management.normal' |translate}}</span>
             <span class="status mr-1 done severity-badge"></span>
           </td>
           <!--TODO Bind the correct value of notification sending date-->

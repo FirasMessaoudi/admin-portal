@@ -120,4 +120,8 @@ export class CardService {
     return this.http.get<any>('/core/api/lookup/health-immunization/list');
   }
 
+  changeCardStatus(id: number, actionCode: string): Observable<any> {
+    return this.http.post('/core/api/cards/change-status/' + id + "/" + actionCode, null);
+  }
+
 }
