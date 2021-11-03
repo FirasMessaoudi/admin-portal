@@ -16,15 +16,20 @@
   <div class="title__Page">
     <h3 class="sectionTitle">{{'card-management.card_details' | translate }}</h3>
     <div ngbDropdown>
-      <button disabled type="submit" class="btn btn-dcc-primary px-5 mr-3 noArrow" id="dropdownBasic1"
+      <button type="submit" class="btn btn-dcc-primary px-5 mr-3 noArrow" id="dropdownBasic1"
               ngbDropdownToggle>
         {{'general.operations'| translate}}
         <svg-icon styleClass="h4 ml-3" icon="bars"></svg-icon>
       </button>
-      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-        <button ngbDropdownItem>Action - 1</button>
-        <button ngbDropdownItem>Another Action</button>
-        <button ngbDropdownItem>Something else is here</button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let op of operations">
+        <button class="dropdown-item" *ngIf="op.toLowerCase()=='suspend_card'"
+                (click)="changeCardStatus(op,'card-management.dialog_suspend_card_confirm_text')">{{'card-management.suspend_card' |translate}}</button>
+        <button class="dropdown-item" *ngIf="op.toLowerCase()=='cancel_card'"
+                (click)="changeCardStatus(op,'card-management.dialog_cancel_card_confirm_text')">{{'card-management.cancel_card' |translate}}</button>
+        <button class="dropdown-item" *ngIf="op.toLowerCase()=='activate_card'"
+                (click)="changeCardStatus(op,'card-management.dialog_activate_card_confirm_text')">{{'card-management.activate_card' |translate}}</button>
+        <button class="dropdown-item" *ngIf="op.toLowerCase()=='reissue_card'"
+                (click)="changeCardStatus(op,'card-management.dialog_reissue_card_confirm_text')">{{'card-management.reissue_card' |translate}}</button>
       </div>
     </div>
   </div>
@@ -57,7 +62,7 @@
            class="form-control-plaintext text-center text-md-left">
         <span class="mr-3">{{value}}</span>
         <span>
-          <span class="status {{buildStatusClass(card?.statusCode)}} mr-1"></span>
+           <span class="status {{buildStatusClass(card?.statusCode)}} mr-1"></span>
           <span>{{card?.statusCode ? lookupService().localizedLabel(cardStatuses, card?.statusCode) : '---'}}</span>
         </span>
       </div>

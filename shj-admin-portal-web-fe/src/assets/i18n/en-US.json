@@ -308,6 +308,10 @@
     "applicant_id": "Rahman Guest ID",
     "card_number": "Card Serial Number",
     "card_status": "Card Status",
+    "suspend_card": "Suspend Card",
+    "reissue_card": "Reissue Card",
+    "activate_card": "Activate Card",
+    "cancel_card": "Cancel Card",
     "applicant_id_status": "Rahman Guest ID Status",
     "nationality": "Nationality",
     "passport_number": "Passport Number",
@@ -389,7 +393,12 @@
     "LUNCH": "Lunch",
     "DINNER": "Dinner",
     "package_details": "Package Details",
-    "status_active": "Active"
+    "status_active": "Active",
+    "user_not_authorized": "The user is not authorized to take this action",
+    "dialog_activate_card_confirm_text": "Are you sure you want to activate card ?",
+    "dialog_cancel_card_confirm_text": "Are you sure you want to cancel card?",
+    "dialog_suspend_card_confirm_text": "Are you sure you want to suspend card?",
+    "dialog_reissue_card_confirm_text": "Are you sure you want to Re-Issue card?"
   },
   "notification-management": {
     "title": "Notification Management",
