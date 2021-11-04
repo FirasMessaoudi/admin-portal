@@ -387,7 +387,9 @@
     "dialog_activate_card_confirm_text": "هل تريد الإستمرار يتفعيل البطاقة ؟",
     "dialog_cancel_card_confirm_text": "هل تريد الإستمرار بإلغاء البطاقة ؟",
     "dialog_suspend_card_confirm_text": "هل تريد الإستمرار بإيقاف البطاقة ؟",
-    "dialog_reissue_card_confirm_text": "هل تريد الإستمرار بإعادة إصدار البطاقة ؟"
+    "dialog_reissue_card_confirm_text": "هل تريد الإستمرار بإعادة إصدار البطاقة ؟",
+    "reissue_warning_text": "حيث أنه تم إعادة إصدار هذه البطاقه سيتم العوده إلي عرض الكل لرؤية البطاقة الجديده",
+    "card_status_changed_success_text": "تم تغيير حالة البطاقة بنجاح"
   },
   "notification-management": {
     "title": "إدارة التنبيهات",

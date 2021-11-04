@@ -15,7 +15,7 @@ import {EAuthority} from "@shared/model";
 import {NavigationService} from "@core/utilities/navigation.service";
 import {CardStatus} from "@model/enum/card-status.enum";
 import {DigitalIdStatus} from "@model/enum/digital-id-status.enum";
-import {cardStatusActions} from "@model/enum/Card-status-actions.model";
+import {CardAllowedActions, cardStatusActions} from "@model/enum/Card-status-actions.model";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 
 @Component({
@@ -154,7 +154,19 @@ export class CardDetailsComponent implements OnInit {
       this.confirmDialogService.confirm(this.translate.instant(confirmationText), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
         if (confirm) {
           this.cardService.changeCardStatus(this.card.id, actionCode).subscribe(_ => {
-            this.toastr.success(this.translate.instant('general.dialog_edit_success_text'), this.translate.instant('general.dialog_edit_title'));
+            this.toastr.success(this.translate.instant('card-management.card_status_changed_success_text'), this.translate.instant('general.dialog_edit_title'));
+            if (actionCode == CardAllowedActions.ACTIVATE_CARD) {
+              this.operations = cardStatusActions.get(CardStatus.ACTIVE);
+            } else if (actionCode == CardAllowedActions.SUSPEND_CARD) {
+              this.operations = cardStatusActions.get(CardStatus.SUSPENDED);
+            } else if (actionCode == CardAllowedActions.CANCEL_CARD) {
+              this.operations = cardStatusActions.get(CardStatus.CANCELLED);
+            } else {
+              this.operations = [];
+              this.toastr.warning(this.translate.instant("card-management.reissue_warning_text"), this.translate.instant("general.dialog_confirmation_title"));
+              setTimeout(() => this.goToList(), 4000); // 2500 is millisecond
+
+            }
           }, error => {
             this.toastr.warning(this.translate.instant("general.dialog_error_text"), this.translate.instant("general.dialog_edit_title"));
           });

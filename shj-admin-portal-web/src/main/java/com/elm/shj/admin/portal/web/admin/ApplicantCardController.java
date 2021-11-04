@@ -131,8 +131,10 @@ public class ApplicantCardController {
     @PreAuthorize("hasAuthority('" + AuthorityConstants.VIEW_CARD_DETAILS + "')")
     public ApplicantCardDto findApplicantCard(@PathVariable long cardId) {
         log.debug("Handler for {}", "Find Applicant Card");
-        ApplicantCardDto applicantCardDto = applicantCardService.findOne(cardId);
-
+        ApplicantCardDto applicantCardDto = applicantCardService.findApplicantCard(cardId);
+        if (applicantCardDto == null) {
+            throw new CardDetailsNotFoundException("no card found with id : " + cardId);
+        }
         ApplicantRitualDto applicantRitualDto = applicantRitualService.findApplicantRitualWithContactsAndRelatives(applicantCardDto.getApplicantRitual().getId());
 
 
@@ -177,7 +179,7 @@ public class ApplicantCardController {
     @PostMapping("/change-status/{cardId}/{actionCode}")
     public void changeCardStatus(@PathVariable long cardId, @PathVariable String actionCode, Authentication authentication) throws CardDetailsNotFoundException, ActionNotAllowedException, UserNotAllowedException {
         Set<GrantedAuthority> userAuthorities = (Set<GrantedAuthority>) ((User) authentication.getPrincipal()).getAuthorities();
-        ApplicantCardDto card = applicantCardService.findOne(cardId);
+        ApplicantCardDto card = applicantCardService.findApplicantCard(cardId);
         if (card == null) {
             throw new CardDetailsNotFoundException("no card found with id : " + cardId);
         }

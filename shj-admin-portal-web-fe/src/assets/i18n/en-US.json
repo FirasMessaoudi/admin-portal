@@ -398,7 +398,9 @@
     "dialog_activate_card_confirm_text": "Are you sure you want to activate card ?",
     "dialog_cancel_card_confirm_text": "Are you sure you want to cancel card?",
     "dialog_suspend_card_confirm_text": "Are you sure you want to suspend card?",
-    "dialog_reissue_card_confirm_text": "Are you sure you want to Re-Issue card?"
+    "dialog_reissue_card_confirm_text": "Are you sure you want to Re-Issue card?",
+    "reissue_warning_text": "Since this card had been reissued , you will be navigating to listing page to find the new one",
+    "card_status_changed_success_text": "Card Status Changed Successfully"
   },
   "notification-management": {
     "title": "Notification Management",

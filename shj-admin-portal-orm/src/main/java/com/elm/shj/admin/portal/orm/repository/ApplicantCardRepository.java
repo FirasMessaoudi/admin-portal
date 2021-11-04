@@ -32,6 +32,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
                                              @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds,
                                              Pageable pageable);
 
+    JpaApplicantCard findByIdAndStatusCodeNot(long id, String statusCode);
 
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi WHERE card.id " +
             "NOT IN (SELECT card2.id FROM JpaApplicantCard card2 LEFT JOIN card2.printRequestCards prc LEFT JOIN prc.printRequest pr " +

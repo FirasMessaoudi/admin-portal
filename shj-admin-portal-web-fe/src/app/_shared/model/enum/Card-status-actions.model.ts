@@ -12,4 +12,12 @@ cardStatusActions.set(CardStatus.DISTRIBUTED, ['CANCEL_CARD', 'ACTIVATE_CARD']);
 cardStatusActions.set(CardStatus.WAITING_TO_SEND, ['CANCEL_CARD']);
 
 
+export enum CardAllowedActions {
+  ACTIVATE_CARD = 'ACTIVATE_CARD',
+  SUSPEND_CARD = 'SUSPEND_CARD',
+  CANCEL_CARD = 'CANCEL_CARD',
+  REISSUE_CARD = 'REISSUE_CARD',
+}
+
+
 

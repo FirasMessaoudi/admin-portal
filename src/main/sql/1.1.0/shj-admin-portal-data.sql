@@ -139,7 +139,7 @@ GO
 
 SET IDENTITY_INSERT shc_portal.shc_card_status_lk ON;
 INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
-VALUES (17, 'EXPIRED', 'ar', N'منتهي');
+VALUES (17, 'EXPIRED', 'ar', N'منتهيه');
 INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
 VALUES (18, 'EXPIRED', 'en', 'Expired');
 INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
@@ -168,74 +168,21 @@ use shc_portal
  insert into shc_portal.shc_role_authority ( role_id, authority_id)
 values (1,17);
 insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (3, 17);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (4, 17);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (5, 17);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (6, 17);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (9, 17);
+
 
 --Suspend Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin )
 insert into shc_portal.shc_role_authority (role_id, authority_id)
 values (1, 19);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (3, 19);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (4, 19);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (5, 19);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (6, 19);
+
 
 --Cancel Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin )
 insert into shc_portal.shc_role_authority (role_id, authority_id)
 values (1, 18);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (3, 18);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (4, 18);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (5, 18);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (6, 18);
+
 
 --Re-issue Card(System Admin  , Service center agent and service center regent admin )
 insert into shc_portal.shc_role_authority (role_id, authority_id)
 values (1, 20);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (5, 20);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (6, 20);
 
 
---remove duplicate rows
-WITH cte AS (
-    SELECT role_id,
-           authority_id,
 
-           ROW_NUMBER() OVER (
-            PARTITION BY
-            role_id,
-            authority_id
-            ORDER BY
-                role_id,
-                authority_id
-
-            ) row_num
-    FROM shc_portal.shc_role_authority
-)
-DELETE
-FROM cte
-WHERE row_num > 1;
-
-insert into shc_portal.shc_card_status_lk (code, lang, label)
-values ('REISSUED', 'en', 'Re-issued');
-insert into shc_portal.shc_card_status_lk (code, lang, label)
-values ('REISSUED', 'ar', N'تمت إعادة الإصدار');
-insert into shc_portal.shc_card_status_lk (code, lang, label)
-values ('EXPIRED', 'en', 'expired');
-insert into shc_portal.shc_card_status_lk (code, lang, label)
-values ('EXPIRED', 'ar', N'منتهيه');

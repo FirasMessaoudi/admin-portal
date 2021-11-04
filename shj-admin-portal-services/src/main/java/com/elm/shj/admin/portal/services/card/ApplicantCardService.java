@@ -143,5 +143,13 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
         return "Status Changed Successfully";
     }
 
-
+    /**
+     * Find Applicant Card
+     *
+     * @param cardId
+     * @return the  applicant cards
+     */
+    public ApplicantCardDto findApplicantCard(long cardId) {
+        return getMapper().fromEntity(applicantCardRepository.findByIdAndStatusCodeNot(cardId, ECardStatus.REISSUED.name()), mappingContext);
+    }
 }
