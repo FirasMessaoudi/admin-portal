@@ -263,6 +263,3 @@ INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
 VALUES ('DINNER','ar',N'عشاء')
 GO
 
-UPDATE shc_portal.shc_applicant_package SET start_date ='2021-10-15' ,end_date = '2021-11-15' WHERE id= 1
-GO
-
