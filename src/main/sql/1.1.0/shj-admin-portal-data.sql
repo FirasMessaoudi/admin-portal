@@ -244,3 +244,25 @@ GO
 UPDATE shc_portal.shc_portal.shc_card_status_lk SET label = N'تمت إعادة الإصدار' WHERE code = 'REISSUED' and lang = 'ar';
 UPDATE shc_portal.shc_portal.shc_card_status_lk SET label = 'Reissued' WHERE code = 'REISSUED' and lang = 'en';
 GO
+
+INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
+VALUES ('12_15','en','First days of Tashriq')
+INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
+VALUES ('12_15','ar',N'اول ايام التشريق')
+INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
+VALUES ('BREAKFAST','en','Breakfast')
+INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
+VALUES ('BREAKFAST','ar',N'افطار')
+INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
+VALUES ('LUNCH','en','lunch')
+INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
+VALUES ('LUNCH','ar',N'غداء')
+INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
+VALUES ('DINNER','en','Dinner')
+INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
+VALUES ('DINNER','ar',N'عشاء')
+GO
+
+UPDATE shc_portal.shc_applicant_package SET start_date ='2021-10-15' ,end_date = '2021-11-15' WHERE id= 1
+GO
+
