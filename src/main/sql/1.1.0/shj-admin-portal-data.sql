@@ -239,3 +239,8 @@ insert into shc_portal.shc_card_status_lk (code, lang, label)
 values ('EXPIRED', 'en', 'expired');
 insert into shc_portal.shc_card_status_lk (code, lang, label)
 values ('EXPIRED', 'ar', N'منتهيه');
+GO
+
+UPDATE shc_portal.shc_portal.shc_card_status_lk SET label = N'تمت إعادة الإصدار' WHERE code = 'REISSUED' and lang = 'ar';
+UPDATE shc_portal.shc_portal.shc_card_status_lk SET label = 'Reissued' WHERE code = 'REISSUED' and lang = 'en';
+GO
