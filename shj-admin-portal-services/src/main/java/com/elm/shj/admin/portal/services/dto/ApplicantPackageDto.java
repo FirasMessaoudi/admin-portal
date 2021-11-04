@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
@@ -33,9 +34,14 @@ public class ApplicantPackageDto implements Serializable {
     @NotNull(message = "validation.data.constraints.msg.20001")
     private long applicantUin;
 
+    private Date startDate;
+
+    private Date endDate;
+
     private Date creationDate;
 
     private Date updateDate;
+
 
     @JsonBackReference(value = "ritualPackage")
     private RitualPackageDto ritualPackage;

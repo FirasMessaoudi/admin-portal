@@ -808,3 +808,34 @@ CREATE TABLE shc_portal.shc_user_notification_category_preference
 GO
 alter table shc_portal.shc_applicant_package_transportation alter column vehicle_number nvarchar(50);
 GO
+
+if not exists (select * from sys.tables where name = 'shc_religious_occasions_day_lk')
+create table shc_portal.shc_religious_occasions_day_lk
+(
+    id                   int PRIMARY KEY NOT NULL identity(1,1),
+    code                 VARCHAR(20)     NOT NULL,
+    lang                 VARCHAR(45)     NOT NULL,
+    label                NVARCHAR(50) NOT NULL,
+    creation_date        smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint religious_occasions_day_lk_unique unique (code ASC, lang ASC)
+);
+GO
+
+if not exists (select * from sys.tables where name = 'shc_meal_type_lk')
+create table shc_portal.shc_meal_type_lk
+(
+    id                   int PRIMARY KEY NOT NULL identity(1,1),
+    code                 VARCHAR(20)     NOT NULL,
+    lang                 VARCHAR(45)     NOT NULL,
+    label                NVARCHAR(50) NOT NULL,
+    creation_date        smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint shc_meal_type_lk_unique unique (code ASC, lang ASC)
+);
+GO
+
+ALTER TABLE shc_portal.shc_applicant_package
+    ADD start_date DATE;
+
+ALTER TABLE shc_portal.shc_applicant_package
+    ADD end_date DATE;
+GO

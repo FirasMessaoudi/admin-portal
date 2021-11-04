@@ -302,3 +302,6 @@ VALUES (4, 'INVALID', 'en', 'Invalid');
 SET
 IDENTITY_INSERT shc_portal.shc_applicant_digital_id_status_lk OFF;
 GO
+
+UPDATE shc_portal.shc_applicant_package SET start_date ='2021-10-15' ,end_date = '2021-11-15' WHERE id= 1
+GO
