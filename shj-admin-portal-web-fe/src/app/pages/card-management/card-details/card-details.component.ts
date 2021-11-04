@@ -15,7 +15,7 @@ import {EAuthority} from "@shared/model";
 import {NavigationService} from "@core/utilities/navigation.service";
 import {CardStatus} from "@model/enum/card-status.enum";
 import {DigitalIdStatus} from "@model/enum/digital-id-status.enum";
-import {CardAllowedActions, cardStatusActions} from "@model/enum/Card-status-actions.model";
+import {CardStatusActions} from "@model/enum/card-status-actions.model";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 
 @Component({
@@ -44,7 +44,6 @@ export class CardDetailsComponent implements OnInit {
   immunizations: Lookup[];
   languageNativeName = Language;
   renderBackLink = false;
-  operations: string[];
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -73,7 +72,6 @@ export class CardDetailsComponent implements OnInit {
         this.cardService.find(this.cardId).subscribe(data => {
           if (data && data.id) {
             this.card = data;
-            this.loadOperationsBasedOnCurrentStatus();
             console.log(this.card);
           } else {
             this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.cardId}),
@@ -145,28 +143,32 @@ export class CardDetailsComponent implements OnInit {
 
   }
 
-  loadOperationsBasedOnCurrentStatus() {
-    this.operations = cardStatusActions.get(this.card.statusCode);
+  public get cardStatus(): typeof CardStatus {
+    return CardStatus;
+  }
+
+  public get actions(): typeof CardStatusActions {
+    return CardStatusActions;
   }
 
   changeCardStatus(actionCode: string, confirmationText: string) {
     if (this.isUserHasAllowedAuthority(actionCode)) {
       this.confirmDialogService.confirm(this.translate.instant(confirmationText), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
         if (confirm) {
-          this.cardService.changeCardStatus(this.card.id, actionCode).subscribe(_ => {
-            this.toastr.success(this.translate.instant('card-management.card_status_changed_success_text'), this.translate.instant('general.dialog_edit_title'));
-            if (actionCode == CardAllowedActions.ACTIVATE_CARD) {
-              this.operations = cardStatusActions.get(CardStatus.ACTIVE);
-            } else if (actionCode == CardAllowedActions.SUSPEND_CARD) {
-              this.operations = cardStatusActions.get(CardStatus.SUSPENDED);
-            } else if (actionCode == CardAllowedActions.CANCEL_CARD) {
-              this.operations = cardStatusActions.get(CardStatus.CANCELLED);
+          this.cardService.changeCardStatus(this.card.id, actionCode).subscribe(result => {
+            this.card = result;
+            let cardStatusChangedText = '';
+            if (actionCode == this.actions.ACTIVATE_CARD) {
+              cardStatusChangedText = 'card-management.dialog_activated_card_success_text';
+            } else if (actionCode == this.actions.SUSPEND_CARD) {
+              cardStatusChangedText = 'card-management.dialog_suspended_card_success_text';
+            } else if (actionCode == this.actions.CANCEL_CARD) {
+              cardStatusChangedText = 'card-management.dialog_canceled_card_success_text';
             } else {
-              this.operations = [];
-              this.toastr.warning(this.translate.instant("card-management.reissue_warning_text"), this.translate.instant("general.dialog_confirmation_title"));
-              setTimeout(() => this.goToList(), 4000); // 2500 is millisecond
+              cardStatusChangedText = 'card-management.dialog_reissued_card_success_text';
 
             }
+            this.toastr.success(this.translate.instant(cardStatusChangedText), this.translate.instant('general.dialog_edit_title'));
           }, error => {
             this.toastr.warning(this.translate.instant("general.dialog_error_text"), this.translate.instant("general.dialog_edit_title"));
           });
@@ -243,18 +245,6 @@ export class CardDetailsComponent implements OnInit {
    */
   buildStatusClass(status: any): string {
     switch (status) {
-      case CardStatus.READY_TO_PRINT:
-        return "done";
-      case CardStatus.SENT_FOR_PRINT:
-        return "done";
-      case CardStatus.PRINTED:
-        return "done";
-      case CardStatus.DISTRIBUTED:
-        return "done";
-      case CardStatus.ACTIVE:
-        return "done";
-      case CardStatus.WAITING_TO_SEND:
-        return "done";
       case CardStatus.SUSPENDED:
         return "Suspended";
       case CardStatus.CANCELLED:

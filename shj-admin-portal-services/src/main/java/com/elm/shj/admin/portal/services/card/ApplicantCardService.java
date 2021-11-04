@@ -15,12 +15,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Service handling applicant card
@@ -33,7 +35,7 @@ import java.util.*;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantCardService extends GenericService<JpaApplicantCard, ApplicantCardDto, Long> {
 
-    private static Map<String, String[]> CARD_STATUS_ALLOWED_ACTION = new HashMap<>();
+    public static final Map<String, String[]> CARD_STATUS_ALLOWED_ACTION = new HashMap<>();
 
     private final ApplicantCardRepository applicantCardRepository;
 
@@ -112,35 +114,26 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     /**
      * change card status
      *
-     * @param card            to   change it's status
-     * @param actionCode      the new status Code
-     * @param userAuthorities set of user authorities the new status Code
-     * @return String represent if the change done successfully or an issue happened
+     * @param card       to   change it's status
+     * @param actionCode the new status Code
+     * @return card with  the status changed  successfully
      **/
     @Transactional
-    public String changeCardStatus(ApplicantCardDto card, String actionCode, Set<GrantedAuthority> userAuthorities) {
-        boolean isUserAllowed = userAuthorities.parallelStream().anyMatch(auth -> auth.getAuthority().equalsIgnoreCase(actionCode));
-        if (!isUserAllowed)
-            return "user not allowed";
-
-        String[] allowedActions = CARD_STATUS_ALLOWED_ACTION.get(card.getStatusCode().toUpperCase());
-        boolean isActionAllowed = Arrays.stream(allowedActions).anyMatch(action -> action.equalsIgnoreCase(actionCode));
-
-        if (!isActionAllowed)
-            return "action not allowed";
+    public ApplicantCardDto changeCardStatus(ApplicantCardDto card, String actionCode) {
 
         if (actionCode.equalsIgnoreCase(ECardStatusAction.CANCEL_CARD.name())) {
-            applicantCardRepository.changeCardStatus(card.getId(), ECardStatus.CANCELLED.name());
+            card.setStatusCode(ECardStatus.CANCELLED.name());
         } else if (actionCode.equalsIgnoreCase(ECardStatusAction.ACTIVATE_CARD.name())) {
-            applicantCardRepository.changeCardStatus(card.getId(), ECardStatus.ACTIVE.name());
+            card.setStatusCode(ECardStatus.ACTIVE.name());
         } else if (actionCode.equalsIgnoreCase(ECardStatusAction.SUSPEND_CARD.name())) {
-            applicantCardRepository.changeCardStatus(card.getId(), ECardStatus.SUSPENDED.name());
+            card.setStatusCode(ECardStatus.SUSPENDED.name());
         } else {
-            applicantCardRepository.changeCardStatus(card.getId(), ECardStatus.REISSUED.name());
+            card.setStatusCode(ECardStatus.REISSUED.name());
             log.debug("Generate new applicant card  after mark old one as reissued...");
-            save(ApplicantCardDto.builder().applicantRitual(card.getApplicantRitual()).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
+            return save(ApplicantCardDto.builder().applicantRitual(card.getApplicantRitual()).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
         }
-        return "Status Changed Successfully";
+        return save(card);
+
     }
 
     /**

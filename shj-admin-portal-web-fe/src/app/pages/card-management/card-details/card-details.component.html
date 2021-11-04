@@ -21,15 +21,19 @@
         {{'general.operations'| translate}}
         <svg-icon styleClass="h4 ml-3" icon="bars"></svg-icon>
       </button>
-      <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let op of operations">
-        <button ngbDropdownItem *ngIf="op.toLowerCase()=='suspend_card'"
-                (click)="changeCardStatus(op,'card-management.dialog_suspend_card_confirm_text')">{{'card-management.suspend_card' |translate}}</button>
-        <button ngbDropdownItem *ngIf="op.toLowerCase()=='cancel_card'"
-                (click)="changeCardStatus(op,'card-management.dialog_cancel_card_confirm_text')">{{'card-management.cancel_card' |translate}}</button>
-        <button ngbDropdownItem *ngIf="op.toLowerCase()=='activate_card'"
-                (click)="changeCardStatus(op,'card-management.dialog_activate_card_confirm_text')">{{'card-management.activate_card' |translate}}</button>
-        <button ngbDropdownItem *ngIf="op.toLowerCase()=='reissue_card'"
-                (click)="changeCardStatus(op,'card-management.dialog_reissue_card_confirm_text')">{{'card-management.reissue_card' |translate}}</button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        <button ngbDropdownItem *ngIf="card.statusCode==cardStatus.ACTIVE"
+                (click)="changeCardStatus(actions.SUSPEND_CARD,'card-management.dialog_suspend_card_confirm_text')">{{'card-management.suspend_card' |translate}}</button>
+        <button ngbDropdownItem *ngIf="card.statusCode==cardStatus.ACTIVE || card.statusCode==cardStatus.READY_TO_PRINT
+                                || card.statusCode==cardStatus.SUSPENDED || card.statusCode==cardStatus.SENT_FOR_PRINT
+                                || card.statusCode==cardStatus.DISTRIBUTED || card.statusCode==cardStatus.PRINTED
+                                || card.statusCode==cardStatus.WAITING_TO_SEND"
+                (click)="changeCardStatus(actions.CANCEL_CARD,'card-management.dialog_cancel_card_confirm_text')">{{'card-management.cancel_card' |translate}}</button>
+        <button ngbDropdownItem
+                *ngIf="card.statusCode==cardStatus.SUSPENDED || card.statusCode==cardStatus.PRINTED || card.statusCode==cardStatus.DISTRIBUTED"
+                (click)="changeCardStatus(actions.ACTIVATE_CARD,'card-management.dialog_activate_card_confirm_text')">{{'card-management.activate_card' |translate}}</button>
+        <button ngbDropdownItem *ngIf="card.statusCode==cardStatus.CANCELLED "
+                (click)="changeCardStatus(actions.REISSUE_CARD,'card-management.dialog_reissue_card_confirm_text')">{{'card-management.reissue_card' |translate}}</button>
       </div>
     </div>
   </div>
@@ -284,7 +288,8 @@
               </thead>
               <tbody>
               <tr *ngFor="let immunization of card?.applicantRitual?.applicant?.applicantHealth?.immunizations">
-                <td class="ltr">{{immunization.immunizationCode ? lookupService().localizedLabel(immunizations, immunization.immunizationCode) : ''}}</td>
+                <td
+                  class="ltr">{{immunization.immunizationCode ? lookupService().localizedLabel(immunizations, immunization.immunizationCode) : ''}}</td>
                 <td class="ltr">{{immunization.immunizationDate | gregorianDateFormat}}</td>
               </tr>
               </tbody>

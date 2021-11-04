@@ -395,12 +395,14 @@
     "package_details": "Package Details",
     "status_active": "Active",
     "user_not_authorized": "The user is not authorized to take this action",
-    "dialog_activate_card_confirm_text": "Are you sure you want to activate card ?",
+    "dialog_activate_card_confirm_text": "Are you sure you want to activate card?",
     "dialog_cancel_card_confirm_text": "Are you sure you want to cancel card?",
     "dialog_suspend_card_confirm_text": "Are you sure you want to suspend card?",
     "dialog_reissue_card_confirm_text": "Are you sure you want to Re-Issue card?",
-    "reissue_warning_text": "Since this card had been reissued , you will be navigating to listing page to find the new one",
-    "card_status_changed_success_text": "Card Status Changed Successfully"
+    "dialog_activated_card_success_text": "Card has been activated successfully",
+    "dialog_suspended_card_success_text": "Card has been suspended successfully",
+    "dialog_canceled_card_success_text": "Card has been canceled successfully",
+    "dialog_reissued_card_success_text": "Card has been reissued successfully"
   },
   "notification-management": {
     "title": "Notification Management",

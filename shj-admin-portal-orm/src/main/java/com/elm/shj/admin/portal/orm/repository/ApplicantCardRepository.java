@@ -7,7 +7,6 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -56,8 +55,5 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
 
     JpaApplicantCard findByApplicantRitualId(long id);
 
-    @Modifying
-    @Query("update JpaApplicantCard card set card.statusCode = :statusCode where card.id =:id  ")
-    int changeCardStatus(@Param("id") long id, @Param("statusCode") String statusCode);
 
 }

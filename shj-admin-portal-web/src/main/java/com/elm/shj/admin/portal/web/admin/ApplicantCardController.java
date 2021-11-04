@@ -8,9 +8,7 @@ import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
-import com.elm.shj.admin.portal.web.error.ActionNotAllowedException;
 import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
-import com.elm.shj.admin.portal.web.error.UserNotAllowedException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +23,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.NotAuthorizedException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -172,27 +172,41 @@ public class ApplicantCardController {
      *
      * @param cardId     the card ID to find
      * @param actionCode the new status Code
+     * @return card after updating the status
      * @throws CardDetailsNotFoundException
-     * @throws UserNotAllowedException
-     * @throws ActionNotAllowedException
+     * @throws NotAuthorizedException
      */
     @PostMapping("/change-status/{cardId}/{actionCode}")
-    public void changeCardStatus(@PathVariable long cardId, @PathVariable String actionCode, Authentication authentication) throws CardDetailsNotFoundException, ActionNotAllowedException, UserNotAllowedException {
-        Set<GrantedAuthority> userAuthorities = (Set<GrantedAuthority>) ((User) authentication.getPrincipal()).getAuthorities();
+    public ApplicantCardDto changeCardStatus(@PathVariable long cardId, @PathVariable String actionCode, Authentication authentication) throws CardDetailsNotFoundException, NotAuthorizedException {
         ApplicantCardDto card = applicantCardService.findApplicantCard(cardId);
         if (card == null) {
             throw new CardDetailsNotFoundException("no card found with id : " + cardId);
         }
-        String changeResult = applicantCardService.changeCardStatus(card, actionCode, userAuthorities);
-        if (changeResult.equalsIgnoreCase("user not allowed")) {
-            log.debug(changeResult);
-            throw new UserNotAllowedException("this user does not have the authority to take this action");
-        } else if (changeResult.equalsIgnoreCase("action not allowed")) {
-            log.debug(changeResult);
-            throw new ActionNotAllowedException("this user can not take the action of { " + actionCode + " } on card with status { " + card.getStatusCode() + " }");
+        boolean isUserAllowed = isUserAuthorizedToChangeCardStatus(card, actionCode, authentication);
+        if (isUserAllowed) {
+            return applicantCardService.changeCardStatus(card, actionCode);
         } else {
-            log.debug(changeResult);
+            throw new NotAuthorizedException("the user is not authorized or this action is not allowed on card with id :  " + card.getId());
         }
+
+    }
+
+    private boolean isUserAuthorizedToChangeCardStatus(ApplicantCardDto card, String actionCode, Authentication authentication) {
+        Set<GrantedAuthority> userAuthorities = (Set<GrantedAuthority>) ((User) authentication.getPrincipal()).getAuthorities();
+        boolean isUserAllowed = userAuthorities.parallelStream().anyMatch(auth -> auth.getAuthority().equalsIgnoreCase(actionCode));
+        if (!isUserAllowed) {
+            log.error("this user does not have the authority to take this action on  card status");
+            return false;
+        }
+        String[] allowedActions = applicantCardService.CARD_STATUS_ALLOWED_ACTION.get(card.getStatusCode().toUpperCase());
+        boolean isActionAllowed = Arrays.stream(allowedActions).anyMatch(action -> action.equalsIgnoreCase(actionCode));
+        if (!isActionAllowed) {
+            log.error("action with status code {} is not allowed on card with status {}", actionCode, card.getStatusCode());
+            return false;
+        }
+
+        return true;
+
     }
 
 }
