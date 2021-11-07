@@ -15,7 +15,7 @@ import {EAuthority} from "@shared/model";
 import {NavigationService} from "@core/utilities/navigation.service";
 import {CardStatus} from "@model/enum/card-status.enum";
 import {DigitalIdStatus} from "@model/enum/digital-id-status.enum";
-import {CardStatusActions} from "@model/enum/card-status-actions.model";
+import {CardStatusActions} from "@model/enum/card-status-actions.enum";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 
 @Component({
