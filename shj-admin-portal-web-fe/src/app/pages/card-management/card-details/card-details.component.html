@@ -12,7 +12,7 @@
   </div>
 </div>
 
-<div class="content__wrapper" *ngIf="canSeeCardDetails">
+<div class="content__wrapper" *ngIf="canSeeCardDetails  ">
   <div class="title__Page">
     <h3 class="sectionTitle">{{'card-management.card_details' | translate }}</h3>
     <div ngbDropdown>
@@ -309,5 +309,17 @@
 
   <div [ngbNavOutlet]="nav" class="mt-2"></div>
   <ng-template #elseBlock><span class="col-form-label">---</span></ng-template>
+
+
+  <!-- Loading spinner placeholder -->
+  <!--  <div *ngIf="isLoading" class="text-center">-->
+  <!--    <div style="height: 200px;">-->
+  <!--      <div class="preloader inner_page">-->
+  <!--        <div></div>-->
+  <!--        <div></div>-->
+  <!--        <div></div>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </div>-->
 </div>
 
