@@ -19,7 +19,8 @@
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.creation_date" | translate }}</label>
           <input *ngIf="editMode" type="text" formControlName="creationDate" class="form-control"/>
-          <label *ngIf="!editMode" class="form-control-plaintext">{{notificationTemplate?.creationDate | dateFormat}}</label>
+          <label *ngIf="!editMode"
+                 class="form-control-plaintext">{{notificationTemplate?.creationDate | dateFormat}}</label>
         </div>
 
         <div class="form-group col">
@@ -32,8 +33,10 @@
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification-status" | translate }}</label>
           <span *ngIf="!editMode">
-             <label *ngIf="notificationTemplate?.enabled" class="form-control-plaintext">{{'notification-management.enabled' | translate}}</label>
-             <label *ngIf="!notificationTemplate?.enabled" class="form-control-plaintext">{{'notification-management.disabled' | translate}}</label>
+             <label *ngIf="notificationTemplate?.enabled"
+                    class="form-control-plaintext">{{'notification-management.enabled' | translate}}</label>
+             <label *ngIf="!notificationTemplate?.enabled"
+                    class="form-control-plaintext">{{'notification-management.disabled' | translate}}</label>
           </span>
           <div *ngIf="editMode" class="radio-group form-control-plaintext d-flex font-weight-normal">
             <div class="radio-item align-items-baseline d-flex mr-5">
@@ -53,13 +56,13 @@
           <label class="col-form-label">{{ "notification-management.notification-name" | translate }}</label>
           <input *ngIf="editMode" type="text" formControlName="notificationName" class="form-control"/>
           <label *ngIf="!editMode" class="form-control-plaintext">
-            {{notificationTemplate?.nameCode ? lookupService().localizedLabel(notificationTemplateNames, notificationTemplate?.nameCode): '---'}}</label>
+            {{notificationTemplate?.nameCode ? lookupService().localizedLabel(notificationTemplateNames, notificationTemplate?.nameCode) : '---'}}</label>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification-category" | translate }}</label>
           <label *ngIf="!editMode" class="form-control-plaintext">
-            {{notificationTemplate?.categoryCode ? lookupService().localizedLabel(notificationCategories, notificationTemplate?.categoryCode): '---'}}</label>
+            {{notificationTemplate?.categoryCode ? lookupService().localizedLabel(notificationCategories, notificationTemplate?.categoryCode) : '---'}}</label>
           <select *ngIf="editMode" class="custom-select" formControlName="notificationCategory">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
             <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
@@ -72,8 +75,10 @@
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification-severity" | translate }}</label>
           <span *ngIf="!editMode">
-             <label *ngIf="notificationTemplate?.important" class="form-control-plaintext">{{ "notification-management.important" | translate }}</label>
-             <label *ngIf="!notificationTemplate?.important" class="form-control-plaintext">{{'notification-management.normal' | translate}}</label>
+             <label *ngIf="notificationTemplate?.important"
+                    class="form-control-plaintext">{{ "notification-management.important" | translate }}</label>
+             <label *ngIf="!notificationTemplate?.important"
+                    class="form-control-plaintext">{{'notification-management.normal' | translate}}</label>
           </span>
           <select *ngIf="editMode" formControlName="severity" class="custom-select">
             <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
@@ -91,8 +96,8 @@
 
     <ul ngbNav #nav="ngbNav" class="nav-tabs" [activeId]="activeId">
       <li *ngFor="let language of translatedLanguages; let i = index" [ngbNavItem]="i + 1">
-        <a ngbNavLink>{{language.label}}
-          <svg-icon *ngIf="'en' === language.code.toLowerCase()" styleClass="fa-w-16"
+        <a ngbNavLink (click)="setSelectedLang(language.code.toLowerCase())">{{language.label}}
+          <svg-icon *ngIf="selectedLang==language.code.toLowerCase()" styleClass="fa-w-16"
                     icon="check-circle-outline"></svg-icon>
         </a>
         <ng-template ngbNavContent>
@@ -126,7 +131,7 @@
             </button>
             </span>
             <span *ngIf="!editMode">
-                <button class="btn btn-outline-dcc-primary px-4"
+                <button class="btn btn-outline-dcc-primary px-4" [disabled]="true"
                         (click)="enableEditMode()">
                   {{ "general.btn_edit" | translate}}
                 </button>

@@ -23,6 +23,9 @@ export class NotificationService {
     return this.http.get<any>('/core/api/lookup/notification-name/list');
   }
 
+  findNotificationTemplateStatuses(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/notification-template-status/list');
+  }
 
   list(pageNumber: any, notificationSearchCriteria: NotificationSearchCriteria): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
@@ -55,6 +58,21 @@ export class NotificationService {
     );
   }
 
+  createNotificationTemplate(notificationTemplate: NotificationTemplate): Observable<any> {
+    let headers = new HttpHeaders();
+    headers = headers.set('X-XSRF-TOKEN', this.cookieService.get("XSRF-TOKEN"));
+    return this.http.post<any>('/core/api/notification/template/user-defined/create', notificationTemplate, {'headers': headers})
+      .pipe(catchError((error: HttpErrorResponse) => {
+          if (error.hasOwnProperty('error')) {
+            return of(error.error);
+          } else {
+            console.error('An error happened while creating the notification template : ' + error);
+            return of(error);
+          }
+        })
+      );
+  }
+
   /**
    * Creates or updates rule details in the server.
    *
@@ -62,26 +80,25 @@ export class NotificationService {
    * @return {Observable<notificationTemplate>}  updated notificationTemplate.
    */
   updateNotificationTemplate(notificationTemplate: NotificationTemplate): Observable<any> {
-
-
     let headers = new HttpHeaders();
     headers = headers.set('X-XSRF-TOKEN', this.cookieService.get("XSRF-TOKEN"));
-    return this.http.put<any>('/core/api/notification/template/update', notificationTemplate, {'headers': headers}).pipe(catchError((error: HttpErrorResponse) => {
-        if (error.status == 558) {
-          return of(error);
-        }
-        if (error.hasOwnProperty('error')) {
-          return of(error.error);
-        } else {
-          console.error('An error happened while updating the notification Template : ' + error);
-          return of(error);
-        }
-      })
-    );
+    return this.http.put<any>('/core/api/notification/template/update', notificationTemplate, {'headers': headers})
+      .pipe(catchError((error: HttpErrorResponse) => {
+          if (error.status == 558) {
+            return of(error);
+          }
+          if (error.hasOwnProperty('error')) {
+            return of(error.error);
+          } else {
+            console.error('An error happened while updating the notification Template : ' + error);
+            return of(error);
+          }
+        })
+      );
   }
 
-  loadCompanies() : Observable<any> {
-    return this.http.get<any>('' ).pipe(
+  loadCompanies(): Observable<any> {
+    return this.http.get<any>('').pipe(
       catchError(
         (error: any, caught: Observable<HttpEvent<any>>) => {
           console.error(error);
@@ -91,7 +108,8 @@ export class NotificationService {
     );
   }
 
-  loadNationality():Observable<Lookup[]> {
+  loadNationality(): Observable<Lookup[]> {
     return this.http.get<any>('');
   }
+
 }

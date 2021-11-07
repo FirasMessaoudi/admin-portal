@@ -7,6 +7,9 @@ import {NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {CompanyLite} from "@model/company-lite.model";
+import {NotificationTemplateContent} from "@model/notification-template-content.model";
+import {NotificationTemplate} from "@model/notification-template.model";
+import {ToastService} from "@shared/components/toast";
 
 @Component({
   selector: 'app-user-defined-notification-add',
@@ -24,22 +27,24 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   checkedGender: number = -1;
   companiesList: CompanyLite[] = []
   nationalitiesList: Lookup[] = [];
+  creationDate: Date;
+  selectedLang: string;
+  notificationTemplate: NotificationTemplate;
+  selectedLangTemplateContent: NotificationTemplateContent;
+
   constructor(private notificationService: NotificationService,
               private lookupsService: LookupService,
               private formBuilder: FormBuilder,
               private router: Router,
               private translate: TranslateService,
               private i18nService: I18nService,
+              private toastr: ToastService,
   ) {
   }
 
   ngOnInit(): void {
-    this.notificationService.loadCompanies().subscribe(result => {
-      this.companiesList = result;
-    });
-    this.notificationService.loadNationality().subscribe(result => {
-      this.nationalitiesList = result;
-    });
+    this.creationDate = new Date();
+    this.selectedLang = "ar";
 
     this.loadLookups();
     this.initForm();
@@ -64,8 +69,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
         event.lang.toLowerCase().substr(0, 2) === c.lang.toLowerCase().substr(0, 2));
     })
 
-
-
   }
 
   get currentLanguage(): string {
@@ -74,15 +77,76 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   initForm() {
     this.notificationForm = this.formBuilder.group({
-      creationDate: {value: null, disabled: true},
       sendingDate: {value: null, disabled: true},
-      notificationName: [''],
-      notificationCategory: [null],
+      name: [''],
+      category: [null],
       severity: [null],
-      enabled: {value: false},
-      notificationTitle: [''],
-      notificationDetails: ['']
+      title: [''],
+      body: ['']
     });
+  }
+
+  saveAndSend() {
+    console.log(this.notificationForm.value);
+  }
+
+  saveAsDraft() {
+    console.log(this.notificationForm.value);
+  }
+
+  setSelectedLang(lang: string) {
+    let lastTemplateContentIndex = this.getTempContentIndex();
+    this.addOrUpdateSelectedLangContent(lastTemplateContentIndex);
+    this.selectedLang = lang;
+    let templateContentIndex = this.getTempContentIndex();
+    if (templateContentIndex == -1) {
+      this.resetTemplateForm();
+    } else if (templateContentIndex != -1) {
+      this.notificationForm.controls['title'].setValue(this.getNotificationContentForSelectedLang()?.title);
+      this.notificationForm.controls['body'].setValue(this.getNotificationContentForSelectedLang()?.body);
+    }
+  }
+
+  addOrUpdateSelectedLangContent(index: number) {
+    if (index != -1) {
+      this.selectedLangTemplateContent = this.notificationTemplate.notificationTemplateContents[index];
+      this.selectedLangTemplateContent.title = this.notificationForm.controls['title'].value;
+      this.selectedLangTemplateContent.body = this.notificationForm.controls['body'].value;
+      this.notificationTemplate.notificationTemplateContents[index] = this.selectedLangTemplateContent;
+    } else {
+      this.selectedLangTemplateContent = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
+      this.selectedLangTemplateContent.title = this.notificationForm.controls['title'].value;
+      this.selectedLangTemplateContent.body = this.notificationForm.controls['body'].value;
+      if (this.selectedLangTemplateContent.title != '' && this.selectedLangTemplateContent.body != '')
+        this.notificationTemplate.notificationTemplateContents.push(this.selectedLangTemplateContent);
+    }
+  }
+
+  resetTemplateForm() {
+    this.notificationForm.controls['title'].setValue('');
+    this.notificationForm.controls['body'].setValue('');
+    this.notificationForm.controls['title'].setErrors(null);
+    this.notificationForm.controls['body'].setErrors(null);
+  }
+
+  getNotificationContentForSelectedLang() {
+    if (this.notificationTemplate?.notificationTemplateContents.length > 0) {
+      let index = this.notificationTemplate.notificationTemplateContents.findIndex((value => this.selectedLang?.toLowerCase().startsWith(value.lang.toLowerCase())));
+      if (index == -1) {
+        return null;
+      }
+      return this.notificationTemplate.notificationTemplateContents[index];
+    } else {
+      return null;
+    }
+  }
+
+  getTempContentIndex() {
+    if (this.notificationTemplate?.notificationTemplateContents?.length > 0) {
+      return this.notificationTemplate.notificationTemplateContents.findIndex((value => this.selectedLang?.toLowerCase().startsWith(value.lang.toLowerCase())));
+    } else {
+      return -1;
+    }
   }
 
   get canAddUserDefinedNotification(): boolean {
@@ -97,5 +161,49 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   goBackToList() {
     this.router.navigate(['/user-defined-notification/list']);
+  }
+
+  submit() {
+      Object.keys(this.notificationForm.controls).forEach(field => {
+          const control = this.notificationForm.get(field);
+          control.markAsTouched({onlySelf: true});
+          this.notificationForm.controls['body'].setErrors(null);
+      });
+
+      this.notificationTemplate = this.notificationForm.value;
+      this.notificationTemplate.notificationTemplateContents = [];
+
+    let templateContentIndex = this.getTempContentIndex();
+      if (templateContentIndex === -1) {
+        this.selectedLangTemplateContent = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
+        this.resetTemplateForm();
+      } else {
+        this.selectedLangTemplateContent = this.notificationTemplate.notificationTemplateContents[templateContentIndex];
+      }
+
+      if (this.notificationForm.invalid) {
+        return;
+      }
+
+      this.addOrUpdateSelectedLangContent(templateContentIndex);
+
+      console.log(this.notificationTemplate);
+
+      this.notificationService.createNotificationTemplate(this.notificationTemplate).subscribe(res => {
+          if (res.hasOwnProperty('errors') && res.errors) {
+          this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant('general.dialog_edit_title'));
+          Object.keys(this.notificationForm.controls).forEach(field => {
+            console.log('looking for validation errors for : ' + field);
+            if (res.errors[field]) {
+              const control = this.notificationForm.get(field);
+              control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
+              control.markAsTouched({onlySelf: true});
+            }
+          });
+        } else {
+          this.toastr.success(this.translate.instant('general.dialog_edit_success_text'), this.translate.instant('general.dialog_edit_title'));
+        }
+      });
+
   }
 }

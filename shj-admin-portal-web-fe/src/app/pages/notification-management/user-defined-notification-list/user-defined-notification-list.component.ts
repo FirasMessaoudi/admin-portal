@@ -35,6 +35,8 @@ export class UserDefinedNotificationListComponent implements OnInit {
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
 
+  notificationTemplateStatuses: Lookup[] = [];
+
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
@@ -66,15 +68,18 @@ export class UserDefinedNotificationListComponent implements OnInit {
       this.notificationNames = result;
       this.localizedNotificationNames = this.lookupsService.localizedItems(this.notificationNames);
     });
+    this.notificationService.findNotificationTemplateStatuses().subscribe(result => {
+      this.notificationTemplateStatuses = result;
+    });
   }
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
-      notificationTitle: [''],
-      notificationBody: [''],
-      notificationCategory: [null],
+      title: [''],
+      body: [''],
+      category: [null],
       severity: [null],
-      toDescription: ''
+      description: ['']
     });
   }
 

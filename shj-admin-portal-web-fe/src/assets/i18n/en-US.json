@@ -436,8 +436,18 @@
     "sending_date": "Sending Date",
     "display_notification": "Display Notification",
     "add_notification": "Add Notification",
+    "add_the_notification": "Add Notification",
     "edit_notification_details": "Edit Notification Details",
-    "content_params_error": " invalid notification content , notification contains parameter not right in the allowed list"
+    "content_params_error": " invalid notification content , notification contains parameter not right in the allowed list",
+    "notification_attributes": "Notification Attributes",
+    "notification_details_caution": "Notification content (at least one language must be filled in)",
+    "choose_recipients": "Choose the recipients",
+    "send_notification_to": "Send notification to",
+    "categorized_applicants": "Categorized applicants",
+    "selected_applicants": "Selected applicants",
+    "notification_description": "Notification Description",
+    "save_as_draft": "Save as draft",
+    "save_and_send": "Save and Send"
   },
   "printing-management": {
     "title": "Printing Management",

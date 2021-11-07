@@ -423,9 +423,19 @@
     "enabled": "مفعلة",
     "disabled": "غير مفعلة",
     "display_notification": "عرض التنبيه",
-    "add_notification": "إضافة التنبيه",
+    "add_notification": "إضافة تنبيه",
+    "add_the_notification": "إضافة التنبيه",
     "edit_notification_details": "تعديل بيانات التنبيه",
-    "content_params_error": "محتوى الرسالة النصية غير صحيح يحتوي على متغيرات لا يمكن إحتسابها في حالة التعديل يجب أن تحتوي متغيرات من المتغيرات المعرفة والتابعة لها"
+    "content_params_error": "محتوى الرسالة النصية غير صحيح يحتوي على متغيرات لا يمكن إحتسابها في حالة التعديل يجب أن تحتوي متغيرات من المتغيرات المعرفة والتابعة لها",
+    "notification_attributes": "صفات التنبيه",
+    "notification_details_caution": "محتوى التنبيه (يحب تعبئة لغة واحدة على الأقل)",
+    "choose_recipients": "اختيار المرسل إليهم",
+    "send_notification_to": "إرسال التنبيه إلى",
+    "categorized_applicants": "حسب صفات الحجيج",
+    "selected_applicants": "مجموعة محددة",
+    "notification_description": "وصف التنبيه",
+    "save_as_draft": "حفظ كمسودة",
+    "save_and_send": "حفظ وإرسال"
   },
   "printing-management": {
     "title": "إدارة الطباعة",
