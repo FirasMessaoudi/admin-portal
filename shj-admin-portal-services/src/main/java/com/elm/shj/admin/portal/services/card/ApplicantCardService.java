@@ -129,6 +129,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
             card.setStatusCode(ECardStatus.SUSPENDED.name());
         } else {
             card.setStatusCode(ECardStatus.REISSUED.name());
+            save(card);
             log.debug("Generate new applicant card  after mark old one as reissued...");
             return save(ApplicantCardDto.builder().applicantRitual(card.getApplicantRitual()).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
         }

@@ -163,7 +163,9 @@
 
               <div class="d-flex justify-content-between">
                 <button (click)="back()" class="btn btn-outline-dcc-primary px-4">
-                  <span>{{ "general.btn_back" | translate }}</span>
+                  <span *ngIf="!editable">{{ "general.btn_back" | translate }}</span>
+                  <span *ngIf="editable">{{ "notification-management.cancel_edit" | translate }}</span>
+
                 </button>
 
                 <button (click)="updateNotificationTemplate()" class="btn btn-outline-dcc-primary px-4">

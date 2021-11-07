@@ -45,6 +45,7 @@ export class CardDetailsComponent implements OnInit {
   languageNativeName = Language;
   renderBackLink = false;
 
+
   constructor(private route: ActivatedRoute,
               private router: Router,
               private toastr: ToastService,
@@ -60,19 +61,20 @@ export class CardDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadLookups();
+    // this.isLoading = true;
     this.renderBackLink = this.navigationService.getHistory().length !== 1;
     combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
     }))).subscribe(results => {
       this.cardId = +results.params; // (+) converts string 'id' to a number
-
+      // this.isLoading = false;
       if (this.cardId) {
         // load user details
         this.cardService.find(this.cardId).subscribe(data => {
           if (data && data.id) {
             this.card = data;
-            console.log(this.card);
+
           } else {
             this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.cardId}),
               this.translate.instant('general.dialog_error_title'));

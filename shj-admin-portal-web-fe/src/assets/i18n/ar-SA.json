@@ -390,7 +390,7 @@
     "dialog_activated_card_success_text": "تم تفعيل البطاقة بنجاح",
     "dialog_suspended_card_success_text": "تم إيقاف البطاقة بنجاح",
     "dialog_canceled_card_success_text": "تم إلغاء البطاقة بنجاح",
-    "dialog_reissued_card_success_text": "تم إعادة إصدار البطاقة بنجاح"
+    "dialog_reissued_card_success_text": "تم إعادة إصدارة بطاقة جديدة بنجاح ويمكن طباعتها"
   },
   "notification-management": {
     "title": "إدارة التنبيهات",
@@ -435,7 +435,8 @@
     "selected_applicants": "مجموعة محددة",
     "notification_description": "وصف التنبيه",
     "save_as_draft": "حفظ كمسودة",
-    "save_and_send": "حفظ وإرسال"
+    "save_and_send": "حفظ وإرسال",
+    "cancel_edit": "إلغاء التعديلات"
   },
   "printing-management": {
     "title": "إدارة الطباعة",
