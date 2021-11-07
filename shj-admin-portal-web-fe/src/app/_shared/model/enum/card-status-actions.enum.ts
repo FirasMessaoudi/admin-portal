@@ -1,9 +1,7 @@
+
 export enum CardStatusActions {
   ACTIVATE_CARD = 'ACTIVATE_CARD',
   SUSPEND_CARD = 'SUSPEND_CARD',
   CANCEL_CARD = 'CANCEL_CARD',
   REISSUE_CARD = 'REISSUE_CARD',
 }
-
-
-

@@ -62,9 +62,9 @@
     </div>
     <div class="col-12 col-md-2 order-2 order-md-1">
       <div class="col-form-label text-center text-md-left">{{'card-management.card_number' | translate }}</div>
-      <div *ngIf="card?.referenceNumber as value; else elseBlock"
-           class="form-control-plaintext text-center text-md-left">
-        <span class="mr-3">{{value}}</span>
+      <div
+        class="form-control-plaintext text-center text-md-left">
+        <span *ngIf="card?.referenceNumber as value; else elseBlock" class="mr-3">{{value}}</span>
         <span>
            <span class="status {{buildStatusClass(card?.statusCode)}} mr-1"></span>
           <span>{{card?.statusCode ? lookupService().localizedLabel(cardStatuses, card?.statusCode) : '---'}}</span>

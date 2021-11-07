@@ -219,12 +219,10 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
         this.updateForm();
       }
     } else {
-
-      Object.keys(this.templateForm.controls).forEach(field => {
-        const control = this.templateForm.get(field);
-        control.markAsTouched({onlySelf: true});
-        this.templateForm.controls['body'].setErrors(null);
-      });
+       Object.keys(this.templateForm.controls).forEach(field => {
+         const control = this.templateForm.get(field);
+         control.markAsTouched({onlySelf: true});
+       });
 
       if (this.templateForm.invalid) {
         return;
