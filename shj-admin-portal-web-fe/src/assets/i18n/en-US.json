@@ -448,7 +448,7 @@
     "notification_description": "Notification Description",
     "save_as_draft": "Save as draft",
     "save_and_send": "Save and Send",
-    "cancel_edit": "Cancel Edit"
+    "cancel_confirmation_text": "Are you sure you want to cancel the Edit?"
   },
   "printing-management": {
     "title": "Printing Management",

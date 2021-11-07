@@ -436,7 +436,7 @@
     "notification_description": "وصف التنبيه",
     "save_as_draft": "حفظ كمسودة",
     "save_and_send": "حفظ وإرسال",
-    "cancel_edit": "إلغاء التعديلات"
+    "cancel_confirmation_text": "هل تريد الإستمرار  في تعديل التنبيه؟"
   },
   "printing-management": {
     "title": "إدارة الطباعة",
