@@ -59,9 +59,9 @@ export class NotificationListComponent implements OnInit {
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
       notificationBody: [null],
-      notificationTitle: [null],
-      notificationCategory: [null],
-      notificationName: [null],
+      title: [null],
+      category: [null],
+      name: [null],
       severity: [null],
       notificationType: [null]
     });

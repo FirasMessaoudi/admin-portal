@@ -53,8 +53,14 @@ public class NotificationTemplateController {
     @PostMapping("/user-defined/list")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
     public Page<NotificationTemplateDto> searchUserDefinedNotificationTemplate(@RequestBody NotificationSearchCriteriaDto notificationSearchCriteria,
-                                                                               Pageable pageable, Authentication authentication) throws IOException {
+                                                                               Pageable pageable, Authentication authentication) {
         return notificationTemplateService.findByFilter(notificationSearchCriteria, USER_DEFINED, pageable);
+    }
+
+    @PostMapping("/user-defined/create")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
+    public NotificationTemplateDto createUserDefinedNotificationTemplate(@RequestBody NotificationTemplateDto notificationTemplate, Authentication authentication) {
+        return notificationTemplateService.create(notificationTemplate);
     }
 
 

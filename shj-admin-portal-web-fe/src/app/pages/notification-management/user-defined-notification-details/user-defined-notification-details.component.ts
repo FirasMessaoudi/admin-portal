@@ -10,6 +10,7 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {combineLatest} from "rxjs";
 import {map} from "rxjs/operators";
+import {NotificationTemplateContent} from "@model/notification-template-content.model";
 
 @Component({
   selector: 'app-user-defined-notification-details',
@@ -28,6 +29,7 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   selectedLang: string;
   notificationTemplateId: number;
   notificationTemplateNames: Lookup[] = [];
+  content: NotificationTemplateContent;
 
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,
@@ -107,12 +109,12 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     this.notificationForm = this.formBuilder.group({
       creationDate: {value: null, disabled: true},
       sendingDate: {value: null, disabled: true},
-      notificationName: [''],
-      notificationCategory: [null],
+      name: [''],
+      category: [null],
       severity: [null],
       enabled: {value: false},
-      notificationTitle: [''],
-      notificationDetails: ['']
+      title: [''],
+      details: ['']
     });
   }
 
@@ -154,4 +156,46 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     this.editMode = true;
   }
 
+  setSelectedLang(lang: string) {
+    let lastTemplateContentIndex = this.getTempContentIndex();
+    this.addOrUpdateSelectedLangContent(lastTemplateContentIndex);
+    this.selectedLang = lang;
+    let templateContentIndex = this.getTempContentIndex();
+    if (templateContentIndex == -1) {
+      this.resetForm();
+    } else if (templateContentIndex != -1) {
+      this.notificationForm.controls['notificationTitle'].setValue(this.getNotificationContentForSelectedLang()?.title);
+      this.notificationForm.controls['notificationDetails'].setValue(this.getNotificationContentForSelectedLang()?.body);
+    }
+  }
+
+  resetForm() {
+    this.notificationForm.controls['notificationTitle'].setValue('');
+    this.notificationForm.controls['notificationDetails'].setValue('');
+    this.notificationForm.controls['notificationTitle'].setErrors(null);
+    this.notificationForm.controls['notificationDetails'].setErrors(null);
+  }
+
+  addOrUpdateSelectedLangContent(index: number) {
+    if (index != -1) {
+      this.content = this.notificationTemplate.notificationTemplateContents[index];
+      this.content.title = this.notificationForm.controls['notificationTitle'].value;
+      this.content.body = this.notificationForm.controls['notificationDetails'].value;
+      this.notificationTemplate.notificationTemplateContents[index] = this.content;
+    } else {
+      this.content = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
+      this.content.title = this.notificationForm.controls['notificationTitle'].value;
+      this.content.body = this.notificationForm.controls['notificationDetails'].value;
+      if (this.content.title != '' && this.content.body != '')
+        this.notificationTemplate.notificationTemplateContents.push(this.content);
+    }
+  }
+
+  getTempContentIndex() {
+    if (this.notificationTemplate?.notificationTemplateContents.length > 0) {
+      return this.notificationTemplate.notificationTemplateContents.findIndex((value => this.selectedLang?.toLowerCase().startsWith(value.lang.toLowerCase())));
+    } else {
+      return -1;
+    }
+  }
 }

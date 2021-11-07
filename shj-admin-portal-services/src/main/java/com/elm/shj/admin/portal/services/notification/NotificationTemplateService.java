@@ -128,5 +128,9 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         };
     }
 
-
+    public NotificationTemplateDto create(NotificationTemplateDto notificationTemplate) {
+        notificationTemplate.getNotificationTemplateContents().parallelStream().forEach(content -> content.setNotificationTemplate(notificationTemplate));
+        notificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
+        return save(notificationTemplate);
+    }
 }
