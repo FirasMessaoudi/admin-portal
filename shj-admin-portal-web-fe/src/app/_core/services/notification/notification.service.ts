@@ -59,9 +59,7 @@ export class NotificationService {
   }
 
   createNotificationTemplate(notificationTemplate: NotificationTemplate): Observable<any> {
-    let headers = new HttpHeaders();
-    headers = headers.set('X-XSRF-TOKEN', this.cookieService.get("XSRF-TOKEN"));
-    return this.http.post<any>('/core/api/notification/template/user-defined/create', notificationTemplate, {'headers': headers})
+    return this.http.post<any>('/core/api/notification/template/user-defined/create', notificationTemplate)
       .pipe(catchError((error: HttpErrorResponse) => {
           if (error.hasOwnProperty('error')) {
             return of(error.error);

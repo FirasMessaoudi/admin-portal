@@ -6,7 +6,6 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
-import {CompanyLite} from "@model/company-lite.model";
 import {NotificationTemplateContent} from "@model/notification-template-content.model";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {ToastService} from "@shared/components/toast";
@@ -25,8 +24,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   activeId;
   checkedCriteria: number = -1;
   checkedGender: number = -1;
-  companiesList: CompanyLite[] = []
-  nationalitiesList: Lookup[] = [];
   creationDate: Date;
   selectedLang: string;
   notificationTemplate: NotificationTemplate;
@@ -87,11 +84,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   saveAndSend() {
-    console.log(this.notificationForm.value);
   }
 
   saveAsDraft() {
-    console.log(this.notificationForm.value);
   }
 
   setSelectedLang(lang: string) {
@@ -114,7 +109,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.selectedLangTemplateContent.body = this.notificationForm.controls['body'].value;
       this.notificationTemplate.notificationTemplateContents[index] = this.selectedLangTemplateContent;
     } else {
-      this.selectedLangTemplateContent = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
+      this.selectedLangTemplateContent.lang = this.selectedLang.toUpperCase();
       this.selectedLangTemplateContent.title = this.notificationForm.controls['title'].value;
       this.selectedLangTemplateContent.body = this.notificationForm.controls['body'].value;
       if (this.selectedLangTemplateContent.title != '' && this.selectedLangTemplateContent.body != '')
@@ -164,46 +159,51 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   submit() {
-      Object.keys(this.notificationForm.controls).forEach(field => {
-          const control = this.notificationForm.get(field);
-          control.markAsTouched({onlySelf: true});
-          this.notificationForm.controls['body'].setErrors(null);
-      });
-
-      this.notificationTemplate = this.notificationForm.value;
-      this.notificationTemplate.notificationTemplateContents = [];
+    Object.keys(this.notificationForm.controls).forEach(field => {
+      const control = this.notificationForm.get(field);
+      control.markAsTouched({onlySelf: true});
+      this.notificationForm.controls['body'].setErrors(null);
+    });
 
     let templateContentIndex = this.getTempContentIndex();
-      if (templateContentIndex === -1) {
-        this.selectedLangTemplateContent = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
-        this.resetTemplateForm();
+    if (templateContentIndex === -1) {
+      this.selectedLangTemplateContent = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
+      this.resetTemplateForm();
+    } else {
+      this.selectedLangTemplateContent = this.notificationTemplate.notificationTemplateContents[templateContentIndex];
+    }
+
+    if (this.notificationForm.invalid) {
+      return;
+    }
+
+    this.notificationTemplate = new NotificationTemplate();
+
+    this.notificationTemplate.nameCode = this.notificationForm.controls['name'].value;
+    this.notificationTemplate.categoryCode = this.notificationForm.controls['category'].value;
+    this.notificationTemplate.important = this.notificationForm.controls['severity'].value;
+    this.notificationTemplate.statusCode = "DRAFT";
+    this.notificationTemplate.typeCode = 'USER_DEFINED';
+    this.notificationTemplate.notificationTemplateContents = [];
+
+    this.addOrUpdateSelectedLangContent(templateContentIndex);
+
+    this.notificationService.createNotificationTemplate(this.notificationTemplate).subscribe(res => {
+      if (res.hasOwnProperty('errors') && res.errors) {
+        this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant('general.dialog_edit_title'));
+        Object.keys(this.notificationForm.controls).forEach(field => {
+          console.log('looking for validation errors for : ' + field);
+          if (res.errors[field]) {
+            const control = this.notificationForm.get(field);
+            control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
+            control.markAsTouched({onlySelf: true});
+          }
+        });
       } else {
-        this.selectedLangTemplateContent = this.notificationTemplate.notificationTemplateContents[templateContentIndex];
+        this.toastr.success(this.translate.instant('general.dialog_edit_success_text'), this.translate.instant('general.dialog_edit_title'));
+        this.router.navigate(['/user-defined-notification/list']);
       }
-
-      if (this.notificationForm.invalid) {
-        return;
-      }
-
-      this.addOrUpdateSelectedLangContent(templateContentIndex);
-
-      console.log(this.notificationTemplate);
-
-      this.notificationService.createNotificationTemplate(this.notificationTemplate).subscribe(res => {
-          if (res.hasOwnProperty('errors') && res.errors) {
-          this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant('general.dialog_edit_title'));
-          Object.keys(this.notificationForm.controls).forEach(field => {
-            console.log('looking for validation errors for : ' + field);
-            if (res.errors[field]) {
-              const control = this.notificationForm.get(field);
-              control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
-              control.markAsTouched({onlySelf: true});
-            }
-          });
-        } else {
-          this.toastr.success(this.translate.instant('general.dialog_edit_success_text'), this.translate.instant('general.dialog_edit_title'));
-        }
-      });
+    });
 
   }
 }
