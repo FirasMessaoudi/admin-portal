@@ -114,7 +114,7 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       severity: [null],
       enabled: {value: false},
       title: [''],
-      details: ['']
+      body: ['']
     });
   }
 
@@ -133,9 +133,9 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   updateForm() {
     this.notificationForm.controls['creationDate'].setValue(this.notificationTemplate.creationDate);
     this.notificationForm.controls['enabled'].setValue(this.notificationTemplate.enabled);
-    this.notificationForm.controls['notificationName'].setValue(this.notificationTemplate.nameCode);
-    this.notificationForm.controls['notificationTitle'].setValue(this.getNotificationContentForSelectedLang()?.title);
-    this.notificationForm.controls['notificationDetails'].setValue(this.getNotificationContentForSelectedLang()?.body);
+    this.notificationForm.controls['name'].setValue(this.notificationTemplate.nameCode);
+    this.notificationForm.controls['title'].setValue(this.getNotificationContentForSelectedLang()?.title);
+    this.notificationForm.controls['body'].setValue(this.getNotificationContentForSelectedLang()?.body);
   }
 
   get canSeeAddUpdateUserDefinedNotification(): boolean {
@@ -164,28 +164,28 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     if (templateContentIndex == -1) {
       this.resetForm();
     } else if (templateContentIndex != -1) {
-      this.notificationForm.controls['notificationTitle'].setValue(this.getNotificationContentForSelectedLang()?.title);
-      this.notificationForm.controls['notificationDetails'].setValue(this.getNotificationContentForSelectedLang()?.body);
+      this.notificationForm.controls['title'].setValue(this.getNotificationContentForSelectedLang()?.title);
+      this.notificationForm.controls['body'].setValue(this.getNotificationContentForSelectedLang()?.body);
     }
   }
 
   resetForm() {
-    this.notificationForm.controls['notificationTitle'].setValue('');
-    this.notificationForm.controls['notificationDetails'].setValue('');
-    this.notificationForm.controls['notificationTitle'].setErrors(null);
-    this.notificationForm.controls['notificationDetails'].setErrors(null);
+    this.notificationForm.controls['title'].setValue('');
+    this.notificationForm.controls['body'].setValue('');
+    this.notificationForm.controls['title'].setErrors(null);
+    this.notificationForm.controls['body'].setErrors(null);
   }
 
   addOrUpdateSelectedLangContent(index: number) {
     if (index != -1) {
       this.content = this.notificationTemplate.notificationTemplateContents[index];
-      this.content.title = this.notificationForm.controls['notificationTitle'].value;
-      this.content.body = this.notificationForm.controls['notificationDetails'].value;
+      this.content.title = this.notificationForm.controls['title'].value;
+      this.content.body = this.notificationForm.controls['body'].value;
       this.notificationTemplate.notificationTemplateContents[index] = this.content;
     } else {
       this.content = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
-      this.content.title = this.notificationForm.controls['notificationTitle'].value;
-      this.content.body = this.notificationForm.controls['notificationDetails'].value;
+      this.content.title = this.notificationForm.controls['title'].value;
+      this.content.body = this.notificationForm.controls['body'].value;
       if (this.content.title != '' && this.content.body != '')
         this.notificationTemplate.notificationTemplateContents.push(this.content);
     }
