@@ -166,7 +166,6 @@ export class CardDetailsComponent implements OnInit {
               cardStatusChangedText = 'card-management.dialog_canceled_card_success_text';
             } else {
               cardStatusChangedText = 'card-management.dialog_reissued_card_success_text';
-
             }
             this.toastr.success(this.translate.instant(cardStatusChangedText), this.translate.instant('general.dialog_edit_title'));
           }, error => {
@@ -185,23 +184,18 @@ export class CardDetailsComponent implements OnInit {
     switch (statusCode.toLowerCase()) {
       case 'suspend_card': {
         return this.authenticationService.hasAuthority(EAuthority.SUSPEND_CARD);
-        break;
       }
       case 'reissue_card': {
         return this.authenticationService.hasAuthority(EAuthority.REISSUE_CARD);
-        break;
       }
       case 'activate_card': {
         return this.authenticationService.hasAuthority(EAuthority.ACTIVATE_CARD);
-        break;
       }
       case 'cancel_card': {
         return this.authenticationService.hasAuthority(EAuthority.CANCEL_CARD);
-        break;
       }
       default: {
         return false;
-        break;
       }
     }
   }

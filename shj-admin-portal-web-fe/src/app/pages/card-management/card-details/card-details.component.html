@@ -135,8 +135,7 @@
             </div>
             <div class="form-group col">
               <label class="col-form-label">{{'card-management.applicant_languages' | translate}}</label>
-              <!--                <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.languageList}}</span>-->
-              <span class="form-control-plaintext">
+               <span class="form-control-plaintext">
                   <span
                     *ngFor="let lang of card?.applicantRitual?.applicant?.contacts[0]?.languageList.split(','); let lastItem = last;">
                     {{languageNativeName[lang.trim()]}}<span *ngIf="!lastItem">-</span></span>
