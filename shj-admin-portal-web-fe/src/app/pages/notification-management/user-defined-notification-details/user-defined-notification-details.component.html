@@ -54,7 +54,7 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification-name" | translate }}</label>
-          <input *ngIf="editMode" type="text" formControlName="notificationName" class="form-control"/>
+          <input *ngIf="editMode" type="text" formControlName="name" class="form-control"/>
           <label *ngIf="!editMode" class="form-control-plaintext">
             {{notificationTemplate?.nameCode ? lookupService().localizedLabel(notificationTemplateNames, notificationTemplate?.nameCode) : '---'}}</label>
         </div>
@@ -63,7 +63,7 @@
           <label class="col-form-label">{{ "notification-management.notification-category" | translate }}</label>
           <label *ngIf="!editMode" class="form-control-plaintext">
             {{notificationTemplate?.categoryCode ? lookupService().localizedLabel(notificationCategories, notificationTemplate?.categoryCode) : '---'}}</label>
-          <select *ngIf="editMode" class="custom-select" formControlName="notificationCategory">
+          <select *ngIf="editMode" class="custom-select" formControlName="category">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
             <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
                     [ngValue]="notificationCategory.code">
@@ -105,15 +105,15 @@
           <form [formGroup]="notificationForm" class="row row-cols-1">
             <div class="form-group col-sm-12 col-md-6 col-lg-4">
               <label class="col-form-label">{{ "notification-management.notification-title" | translate }}</label>
-              <input *ngIf="editMode" type="text" formControlName="notificationTitle" class="form-control"/>
-              <input *ngIf="!editMode" type="text" formControlName="notificationTitle" class="form-control-plaintext"/>
+              <input *ngIf="editMode" type="text" formControlName="title" class="form-control"/>
+              <input *ngIf="!editMode" type="text" formControlName="title" class="form-control-plaintext"/>
             </div>
 
             <div class="form-group col">
               <label class="col-form-label">{{ "notification-management.notification-body" | translate }}</label>
-              <textarea *ngIf="editMode" type="text" formControlName="notificationDetails" class="form-control"
+              <textarea *ngIf="editMode" type="text" formControlName="body" class="form-control"
                         rows="2"></textarea>
-              <textarea *ngIf="!editMode" type="text" formControlName="notificationDetails"
+              <textarea *ngIf="!editMode" type="text" formControlName="body"
                         class="form-control-plaintext" rows="2"></textarea>
             </div>
 

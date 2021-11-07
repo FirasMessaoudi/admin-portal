@@ -198,7 +198,7 @@ public class ApplicantCardController {
             log.error("this user does not have the authority to take this action on  card status");
             return false;
         }
-        String[] allowedActions = applicantCardService.CARD_STATUS_ALLOWED_ACTION.get(card.getStatusCode().toUpperCase());
+        String[] allowedActions = ApplicantCardService.CARD_STATUS_ALLOWED_ACTION.get(card.getStatusCode().toUpperCase());
         boolean isActionAllowed = Arrays.stream(allowedActions).anyMatch(action -> action.equalsIgnoreCase(actionCode));
         if (!isActionAllowed) {
             log.error("action with status code {} is not allowed on card with status {}", actionCode, card.getStatusCode());

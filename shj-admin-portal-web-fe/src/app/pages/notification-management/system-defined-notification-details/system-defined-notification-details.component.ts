@@ -13,6 +13,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {EAuthority} from "@shared/model";
 import {noWhitespaceValidator} from "@core/utilities/custom-validators";
 import {NotificationTemplateContent} from "@model/notification-template-content.model";
+import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 
 @Component({
   selector: 'app-system-defined-notification-details',
@@ -43,6 +44,7 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
               private notificationService: NotificationService,
               private lookupsService: LookupService,
               private formBuilder: FormBuilder,
+              private confirmDialogService: ConfirmDialogService
   ) {
   }
 
@@ -168,13 +170,17 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
 
   back() {
     if (this.editable) {
-      this.editable = false;
-      if (this.getTempContentIndex() == -1) {
-        this.resetTemplateForm();
-      } else {
-        this.updateForm();
-      }
-      this.templateForm.controls['enabled'].disable();
+      this.confirmDialogService.confirm(this.translate.instant('notification-management.cancel_confirmation_text'), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+        if (confirm) {
+          this.editable = false;
+          if (this.getTempContentIndex() == -1) {
+            this.resetTemplateForm();
+          } else {
+            this.updateForm();
+          }
+          this.templateForm.controls['enabled'].disable();
+        }
+      });
     } else {
       this.goBackToList();
     }
@@ -219,12 +225,10 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
         this.updateForm();
       }
     } else {
-
-      Object.keys(this.templateForm.controls).forEach(field => {
-        const control = this.templateForm.get(field);
-        control.markAsTouched({onlySelf: true});
-        this.templateForm.controls['body'].setErrors(null);
-      });
+       Object.keys(this.templateForm.controls).forEach(field => {
+         const control = this.templateForm.get(field);
+         control.markAsTouched({onlySelf: true});
+       });
 
       if (this.templateForm.invalid) {
         return;

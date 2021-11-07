@@ -15,7 +15,7 @@ import {EAuthority} from "@shared/model";
 import {NavigationService} from "@core/utilities/navigation.service";
 import {CardStatus} from "@model/enum/card-status.enum";
 import {DigitalIdStatus} from "@model/enum/digital-id-status.enum";
-import {CardStatusActions} from "@model/enum/card-status-actions.model";
+import {CardStatusActions} from "@model/enum/card-status-actions.enum";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 
 @Component({
@@ -45,6 +45,7 @@ export class CardDetailsComponent implements OnInit {
   languageNativeName = Language;
   renderBackLink = false;
 
+
   constructor(private route: ActivatedRoute,
               private router: Router,
               private toastr: ToastService,
@@ -60,19 +61,20 @@ export class CardDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadLookups();
+    // this.isLoading = true;
     this.renderBackLink = this.navigationService.getHistory().length !== 1;
     combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
     }))).subscribe(results => {
       this.cardId = +results.params; // (+) converts string 'id' to a number
-
+      // this.isLoading = false;
       if (this.cardId) {
         // load user details
         this.cardService.find(this.cardId).subscribe(data => {
           if (data && data.id) {
             this.card = data;
-            console.log(this.card);
+
           } else {
             this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.cardId}),
               this.translate.instant('general.dialog_error_title'));
@@ -166,7 +168,6 @@ export class CardDetailsComponent implements OnInit {
               cardStatusChangedText = 'card-management.dialog_canceled_card_success_text';
             } else {
               cardStatusChangedText = 'card-management.dialog_reissued_card_success_text';
-
             }
             this.toastr.success(this.translate.instant(cardStatusChangedText), this.translate.instant('general.dialog_edit_title'));
           }, error => {
@@ -185,23 +186,18 @@ export class CardDetailsComponent implements OnInit {
     switch (statusCode.toLowerCase()) {
       case 'suspend_card': {
         return this.authenticationService.hasAuthority(EAuthority.SUSPEND_CARD);
-        break;
       }
       case 'reissue_card': {
         return this.authenticationService.hasAuthority(EAuthority.REISSUE_CARD);
-        break;
       }
       case 'activate_card': {
         return this.authenticationService.hasAuthority(EAuthority.ACTIVATE_CARD);
-        break;
       }
       case 'cancel_card': {
         return this.authenticationService.hasAuthority(EAuthority.CANCEL_CARD);
-        break;
       }
       default: {
         return false;
-        break;
       }
     }
   }

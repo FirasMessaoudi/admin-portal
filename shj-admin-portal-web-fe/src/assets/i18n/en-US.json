@@ -402,7 +402,7 @@
     "dialog_activated_card_success_text": "Card has been activated successfully",
     "dialog_suspended_card_success_text": "Card has been suspended successfully",
     "dialog_canceled_card_success_text": "Card has been canceled successfully",
-    "dialog_reissued_card_success_text": "Card has been reissued successfully"
+    "dialog_reissued_card_success_text": "Card has been reissued successfully , you can print the new card"
   },
   "notification-management": {
     "title": "Notification Management",
@@ -447,7 +447,8 @@
     "selected_applicants": "Selected applicants",
     "notification_description": "Notification Description",
     "save_as_draft": "Save as draft",
-    "save_and_send": "Save and Send"
+    "save_and_send": "Save and Send",
+    "cancel_confirmation_text": "Are you sure you want to cancel the Edit?"
   },
   "printing-management": {
     "title": "Printing Management",

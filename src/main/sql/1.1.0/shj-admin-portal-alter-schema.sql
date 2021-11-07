@@ -839,3 +839,6 @@ ALTER TABLE shc_portal.shc_applicant_package
 ALTER TABLE shc_portal.shc_applicant_package
     ADD end_date DATE;
 GO
+
+alter table shc_portal.shc_company_ritual_step_lk alter column summary nvarchar(100);
+GO
