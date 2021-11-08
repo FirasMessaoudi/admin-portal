@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.card;
 
 import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
+import com.elm.shj.admin.portal.services.dto.Constants;
 import com.elm.shj.admin.portal.services.dto.ECardStatus;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,8 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * Scheduler to generate automatically Cards for new added applicantRituals
@@ -27,6 +30,8 @@ public class ApplicantCardScheduler {
 
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantCardService applicantCardService;
+    private final UserCardStatusAuditService userCardStatusAuditService;
+
 
     /**
      * Scheduled job to create cards for new applicant ritual records
@@ -38,7 +43,9 @@ public class ApplicantCardScheduler {
         LockAssert.assertLocked();
         applicantRitualService.findAllWithoutCards().forEach(applicantRitual -> {
             // generate and save the card
-            applicantCardService.save(ApplicantCardDto.builder().applicantRitual(applicantRitual).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
+            ApplicantCardDto savedCard = applicantCardService.save(ApplicantCardDto.builder().applicantRitual(applicantRitual).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
+            userCardStatusAuditService.saveUserCardStatusAudit(savedCard, Optional.of(Constants.SYSTEM_USER_ID_NUMBER));
+
         });
     }
 

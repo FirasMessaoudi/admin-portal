@@ -10,6 +10,8 @@ import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
+import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
+import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -25,10 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.NotAuthorizedException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Main controller for applicant card management pages
@@ -49,6 +48,7 @@ public class ApplicantCardController {
     private final ApplicantPackageTransportationService applicantPackageTransportationService;
     private final CompanyStaffService companyStaffService;
     private final CompanyLiteService companyLiteService;
+    private final JwtTokenService jwtTokenService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
     private final CompanyRitualStepService companyRitualStepService;
     private final ApplicantRitualService applicantRitualService;
@@ -184,7 +184,9 @@ public class ApplicantCardController {
         }
         boolean isUserAllowed = isUserAuthorizedToChangeCardStatus(card, actionCode, authentication);
         if (isUserAllowed) {
-            return applicantCardService.changeCardStatus(card, actionCode);
+            JwtToken loggedInUser = (JwtToken) authentication;
+            Optional<Long> userId = jwtTokenService.retrieveUserIdFromToken(loggedInUser.getToken());
+            return applicantCardService.changeCardStatus(card, actionCode, userId);
         } else {
             throw new NotAuthorizedException("the user is not authorized or this action is not allowed on card with id :  " + card.getId());
         }
