@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * Scheduler to generate automatically Cards for new added applicantRituals
  *
@@ -40,6 +43,24 @@ public class ApplicantCardScheduler {
             // generate and save the card
             applicantCardService.save(ApplicantCardDto.builder().applicantRitual(applicantRitual).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
         });
+    }
+
+    /**
+     * Scheduled job to update card status based on ritual end date
+     */
+    @Scheduled(cron = "${scheduler.update.applicant.card.status.cron}")
+    @SchedulerLock(name = "update-applicant-cards-status-task")
+    public void updateApplicantCardStatusBasedOnRitualEndDate() {
+        log.debug("Update applicants cards status scheduler started...");
+        LockAssert.assertLocked();
+        List<ApplicantCardDto> cardsList = applicantCardService.findAll();
+        cardsList.parallelStream()
+                .filter(card -> card.getApplicantRitual().getApplicantPackage() != null)
+                .filter(card -> new Date().after(card.getApplicantRitual().getApplicantPackage().getEndDate()))
+                .forEach(card -> card.setStatusCode( ECardStatus.EXPIRED.name()));
+
+        applicantCardService.saveAll(cardsList);
+
     }
 
 
