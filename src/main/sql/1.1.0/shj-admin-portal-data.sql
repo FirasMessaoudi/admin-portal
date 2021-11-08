@@ -212,3 +212,7 @@ INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
 VALUES ('DINNER','ar',N'عشاء')
 GO
 
+INSERT INTO shc_portal.shc_config(conf_key ,conf_value )
+VALUES ('scheduler.update.applicant.card.status.cron','0 0/5 * * * *')
+GO
+
