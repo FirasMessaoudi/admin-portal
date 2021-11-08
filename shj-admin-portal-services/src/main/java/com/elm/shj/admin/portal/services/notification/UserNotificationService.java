@@ -6,9 +6,8 @@ package com.elm.shj.admin.portal.services.notification;
 import com.elm.shj.admin.portal.orm.entity.JpaNotificationTemplateContent;
 import com.elm.shj.admin.portal.orm.entity.JpaUserNotification;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
-import com.elm.shj.admin.portal.services.dto.DetailedUserNotificationDto;
-import com.elm.shj.admin.portal.services.dto.EUserNotificationStatus;
-import com.elm.shj.admin.portal.services.dto.UserNotificationDto;
+import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +29,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserNotificationService extends GenericService<JpaUserNotification, UserNotificationDto, Long> {
 
+    private final static String DRAFT = "DRAFT";
+
     private final UserNotificationRepository userNotificationRepository;
+    private final ApplicantMainDataService applicantMainDataService;
 
     /**
      * Finds user Notifications by user Id
@@ -105,5 +107,17 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
         return userNewNotificationsCountVo;
     }
 
+    public void sendToCategorizedApplicants(NotificationTemplateDto notificationTemplate) {
+    }
 
+    public void sendToAllApplicants(long templateId) {
+        List<ApplicantMainDataDto> applicants = applicantMainDataService.findAll();
+        List<UserNotificationDto> userNotifications = applicants.stream().parallel().map(applicant -> UserNotificationDto
+                .builder()
+                .userId(applicant.getId())
+                .notificationTemplateId(templateId)
+                .statusCode(DRAFT)
+                .build()).collect(Collectors.toList());
+        super.saveAll(userNotifications);
+    }
 }
