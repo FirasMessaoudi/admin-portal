@@ -71,6 +71,19 @@ export class NotificationService {
       );
   }
 
+  sendToAll(notificationTemplate: NotificationTemplate): Observable<any> {
+    return this.http.post<any>('/core/api/user-notification/send-to-all', notificationTemplate)
+      .pipe(catchError((error: HttpErrorResponse) => {
+          if (error.hasOwnProperty('error')) {
+            return of(error.error);
+          } else {
+            console.error('An error happened while sending user notifications : ' + error);
+            return of(error);
+          }
+        })
+      );
+  }
+
   /**
    * Creates or updates rule details in the server.
    *

@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.services.dto.NotificationSearchCriteriaDto;
 import com.elm.shj.admin.portal.services.dto.NotificationTemplateContentDto;
 import com.elm.shj.admin.portal.services.dto.NotificationTemplateDto;
 import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
+import com.elm.shj.admin.portal.services.notification.UserNotificationService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,8 @@ import java.util.stream.Collectors;
 public class NotificationTemplateController {
 
     private final NotificationTemplateService notificationTemplateService;
+    private final UserNotificationService userNotificationService;
+
     private final static String SYSTEM_DEFINED = "SYSTEM_DEFINED";
     private final static String USER_DEFINED = "USER_DEFINED";
     private static final int INVALID_TEMPLATE_CONTENT_PARAMS_RESPONSE_CODE = 558;
@@ -80,6 +83,12 @@ public class NotificationTemplateController {
         return ResponseEntity.ok(updatedNotificationTemplate);
     }
 
+    @GetMapping("/send-to-all/{templateId}")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
+    public void sendToAllApplicants(@PathVariable long templateId,
+                                    Authentication authentication) {
+        userNotificationService.sendToAllApplicants(templateId);
+    }
 
     private boolean validateTemplateContentParams(NotificationTemplateDto notificationTemplate) {
         boolean allParamsValid = true;

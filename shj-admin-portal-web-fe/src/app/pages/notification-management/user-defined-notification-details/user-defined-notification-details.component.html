@@ -120,7 +120,7 @@
           </form>
 
           <div class="d-flex justify-content-between">
-            <button class="btn btn-outline-dcc-primary px-4 mr-1" (click)="backToReadOnlyMode()">
+            <button class="btn btn-outline-dcc-primary px-4 mr-1" [routerLink]="['/user-defined-notification/list']">
               {{"general.btn_back" | translate}}</button>
             <span *ngIf="editMode">
             <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4">
