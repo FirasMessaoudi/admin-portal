@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
 import {Lookup} from "@model/lookup.model";
-import {FormArray, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
@@ -27,6 +27,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   selectedLang: string = 'ar';
   notificationTemplate: NotificationTemplate;
   contentForm: FormGroup;
+  notificationNames: Lookup[];
 
   constructor(private notificationService: NotificationService,
               private lookupsService: LookupService,
@@ -83,6 +84,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.translatedLanguages = this.languages.filter(c =>
         event.lang.toLowerCase().substr(0, 2) === c.lang.toLowerCase().substr(0, 2));
     })
+    this.notificationService.findNotificationTemplateNames().subscribe(result => {
+      this.notificationNames = result;
+    });
   }
 
   get currentLanguage(): string {

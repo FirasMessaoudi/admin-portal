@@ -848,7 +848,7 @@ GO
 /*---------------------------------------------------
 --  ddl for shc_user_card_status_audit table
 ---------------------------------------------------*/
-if not exists(select * from sys.tables where name = 'shc_audit_user_card_status')
+if not exists(select * from sys.tables where name = 'shc_user_card_status_audit')
 CREATE TABLE shc_portal.shc_user_card_status_audit
 
 
