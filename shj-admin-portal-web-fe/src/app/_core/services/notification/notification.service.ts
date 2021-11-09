@@ -72,7 +72,7 @@ export class NotificationService {
   }
 
   sendToAll(notificationTemplate: NotificationTemplate): Observable<any> {
-    return this.http.post<any>('/core/api/user-notification/send-to-all', notificationTemplate)
+    return this.http.post<any>('/core/api/notification/template/send-to-all', notificationTemplate)
       .pipe(catchError((error: HttpErrorResponse) => {
           if (error.hasOwnProperty('error')) {
             return of(error.error);

@@ -2,12 +2,18 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
 import {Lookup} from "@model/lookup.model";
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {NotificationService} from "@core/services";
+import {FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
+import {CardService, NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {ToastService} from "@shared/components/toast";
+import {NgbCalendar, NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {ConfirmDialogService} from "@shared/components/confirm-dialog";
+import * as momentjs from 'moment';
+
+const moment = momentjs;
 
 @Component({
   selector: 'app-user-defined-notification-add',
@@ -27,7 +33,11 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   selectedLang: string = 'ar';
   notificationTemplate: NotificationTemplate;
   contentForm: FormGroup;
-  notificationNames: Lookup[];
+  today: NgbDate;
+  notificationDate: NgbDate;
+  isLoading: boolean;
+  nationalities: Lookup[] = [];
+  localizedNationalities: Lookup[] = [];
 
   constructor(private notificationService: NotificationService,
               private lookupsService: LookupService,
@@ -35,7 +45,14 @@ export class UserDefinedNotificationAddComponent implements OnInit {
               private router: Router,
               private translate: TranslateService,
               private i18nService: I18nService,
+              private calendar: NgbCalendar,
+              public formatter: NgbDateParserFormatter,
+              private cardService: CardService,
+              private dateFormatterService: DateFormatterService,
+              private confirmDialogService: ConfirmDialogService,
               private toastr: ToastService) {
+    this.notificationDate = calendar.getToday();
+    this.today = calendar.getToday();
   }
 
   ngOnInit(): void {
@@ -43,7 +60,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     this.initForm();
 
     this.contentForm = this.formBuilder.group({
-      contents: this.formBuilder.array([])
+      contents: this.formBuilder.array([], this.atLeastOne(Validators.required))
     });
 
   }
@@ -52,7 +69,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     const contentForm = this.formBuilder.group({
       lang: language,
       body: ['', [Validators.minLength(3), Validators.maxLength(500),]],
-      title: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(50)]],
+      title: ['', [Validators.minLength(10), Validators.maxLength(50)]],
     });
     this.contents.push(contentForm);
   }
@@ -70,6 +87,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.notificationCategories = result;
       this.localizedNotificationCategories = this.lookupsService.localizedItems(this.notificationCategories);
     });
+
     this.notificationService.findLanguages().subscribe(result => {
       this.languages = result;
       this.translatedLanguages = this.languages
@@ -80,13 +98,14 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.translatedLanguages.forEach(language => this.addContent(language.code));
     });
 
+    this.cardService.findCountries().subscribe(result => {
+      this.nationalities = result;
+    });
+
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.translatedLanguages = this.languages.filter(c =>
         event.lang.toLowerCase().substr(0, 2) === c.lang.toLowerCase().substr(0, 2));
     })
-    this.notificationService.findNotificationTemplateNames().subscribe(result => {
-      this.notificationNames = result;
-    });
   }
 
   get currentLanguage(): string {
@@ -95,10 +114,12 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   initForm() {
     this.notificationForm = this.formBuilder.group({
-      sendingDate: {value: null, disabled: true},
-      toDescription: ['', [Validators.minLength(3), Validators.maxLength(250),]],
+      description: ['', [Validators.minLength(3), Validators.maxLength(250),]],
       category: [null, Validators.required],
-      severity: [null, Validators.required],
+      severity: [false, Validators.required],
+      userSpecific: [false, Validators.required],
+      forceSending: [false, Validators.required],
+      enabled: [true, Validators.required]
     });
   }
 
@@ -121,7 +142,31 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   saveAsDraft() {
-    this.prepareNotificationTemplate();
+    Object.keys(this.notificationForm.controls).forEach(field => {
+      const control = this.notificationForm.get(field);
+      control.markAsTouched({onlySelf: true});
+    });
+
+    if (this.notificationForm.invalid) {
+      return;
+    }
+
+    this.notificationTemplate = new NotificationTemplate();
+
+    this.notificationTemplate.description = this.notificationForm.controls['description'].value;
+    this.notificationTemplate.categoryCode = this.notificationForm.controls['category'].value;
+    this.notificationTemplate.important = this.notificationForm.controls['severity'].value;
+    this.notificationTemplate.sendingDate = this.getSelectedDate(this.notificationDate);
+    this.notificationTemplate.userSpecific = this.notificationForm.controls['userSpecific'].value;
+    this.notificationTemplate.forceSending = this.notificationForm.controls['forceSending'].value;
+    this.notificationTemplate.enabled = this.notificationForm.controls['enabled'].value;
+    this.notificationTemplate.statusCode = "DRAFT";
+    this.notificationTemplate.typeCode = 'USER_DEFINED';
+    this.notificationTemplate.expirationPeriodInMinutes = 60 * 24 * 7;
+
+    this.notificationTemplate.notificationTemplateContents = this.contentForm.controls['contents'].value.filter(c => c.body !== '' || c.title !== '');
+
+    console.log(this.notificationTemplate);
 
     this.notificationService.createNotificationTemplate(this.notificationTemplate).subscribe(res => {
       if (res.hasOwnProperty('errors') && res.errors) {
@@ -141,7 +186,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
-  prepareNotificationTemplate() {
+  saveAndSend() {
+    this.isLoading = true;
+
     Object.keys(this.notificationForm.controls).forEach(field => {
       const control = this.notificationForm.get(field);
       control.markAsTouched({onlySelf: true});
@@ -153,17 +200,21 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
     this.notificationTemplate = new NotificationTemplate();
 
-    this.notificationTemplate.toDescription = this.notificationForm.controls['toDescription'].value;
+    this.notificationTemplate.description = this.notificationForm.controls['description'].value;
     this.notificationTemplate.categoryCode = this.notificationForm.controls['category'].value;
     this.notificationTemplate.important = this.notificationForm.controls['severity'].value;
-    this.notificationTemplate.statusCode = "DRAFT";
+    this.notificationTemplate.sendingDate = this.getSelectedDate(this.notificationDate);
+    this.notificationTemplate.userSpecific = this.notificationForm.controls['userSpecific'].value;
+    this.notificationTemplate.forceSending = this.notificationForm.controls['forceSending'].value;
+    this.notificationTemplate.enabled = this.notificationForm.controls['enabled'].value;
+    this.notificationTemplate.statusCode = "CONFIRMED";
     this.notificationTemplate.typeCode = 'USER_DEFINED';
+    this.notificationTemplate.expirationPeriodInMinutes = 60 * 24 * 7;
 
     this.notificationTemplate.notificationTemplateContents = this.contentForm.controls['contents'].value.filter(c => c.body !== '' || c.title !== '');
-  }
 
-  saveAndSend() {
-    this.prepareNotificationTemplate();
+    console.log(this.notificationTemplate);
+
     this.notificationService.createNotificationTemplate(this.notificationTemplate).subscribe(res => {
       if (res.hasOwnProperty('errors') && res.errors) {
         this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant('general.dialog_edit_title'));
@@ -175,17 +226,48 @@ export class UserDefinedNotificationAddComponent implements OnInit {
             control.markAsTouched({onlySelf: true});
           }
         });
+        this.isLoading = false;
       } else {
-        this.notificationService.sendToAll(this.notificationTemplate).subscribe(res => {
-          if (res.hasOwnProperty('errors') && res.errors) {
-            this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant('general.dialog_edit_title'));
-          } else {
-            this.toastr.success(this.translate.instant('general.dialog_edit_success_text'), this.translate.instant('general.dialog_edit_title'));
-            this.router.navigate(['/user-defined-notification/list']);
-          }
+        this.notificationService.sendToAll(res).subscribe(() => {
+          this.isLoading = false;
+          /* if (result.hasOwnProperty('errors') && res.errors) {
+             this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant('general.dialog_edit_title'));
+           } else {*/
+          this.toastr.success(this.translate.instant('general.dialog_edit_success_text'), this.translate.instant('general.dialog_edit_title'));
+          this.router.navigate(['/user-defined-notification/list']);
         })
       }
     });
   }
+
+  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+    const parsed = this.formatter.parse(input);
+    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+
+  getSelectedDate(selectedDate: NgbDate): string {
+    let formattedDate = this.dateFormatterService.toString(selectedDate);
+    return moment(formattedDate, 'DD/MM/YYYY').locale('en').format();
+  }
+
+  goBack() {
+    this.confirmDialogService
+      .confirm(this.translate.instant('notification-management.cancel_confirmation_text'),
+        this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+      if (confirm) {
+        this.goBackToList()
+      }
+    });
+  }
+
+  onDateSelection(date: NgbDate) {
+    this.notificationDate = date;
+  }
+
+  atLeastOne = (validator: ValidatorFn) => (group: FormGroup): ValidationErrors | null => {
+    const hasAtLeastOne = group && group.controls && Object.keys(group.controls).some(k => !validator(group.controls[k]));
+    return hasAtLeastOne ? null : {atLeastOne: true};
+  };
+
 
 }

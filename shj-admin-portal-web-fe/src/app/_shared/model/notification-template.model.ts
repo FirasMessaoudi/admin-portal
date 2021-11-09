@@ -8,14 +8,15 @@ export class NotificationTemplate {
   nameCode: string;
   statusCode: string;
   typeCode: string;
-  toDescription: string;
+  description: string;
   important: boolean;
   actionRequired: boolean;
   enabled: boolean;
   userSpecific: boolean;
+  forceSending: boolean;
   expirationPeriodInMinutes: number;
   notificationTemplateContents: NotificationTemplateContent [];
   notificationTemplateParameters: NotificationTemplateParameter [];
-
   creationDate: Date;
+  sendingDate: any;
 }

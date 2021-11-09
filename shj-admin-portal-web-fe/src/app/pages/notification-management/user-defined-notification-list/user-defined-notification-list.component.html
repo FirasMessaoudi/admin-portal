@@ -21,110 +21,181 @@
 
   <div class="content__section" *ngIf="canSeeNotificationList">
     <div class="searchBox" [ngbCollapse]="isSearchbarCollapsed">
-      <form [formGroup]="searchForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+      <form [formGroup]="searchForm">
 
-        <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification-title" | translate }}</label>
-          <input type="text" formControlName="title" class="form-control"/>
-        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.notification-title" | translate }}</label>
+            <input type="text" formControlName="notificationTitle" class="form-control"/>
+          </div>
 
-        <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification_details" | translate }}</label>
-          <input type="text" formControlName="body" class="form-control"/>
-        </div>
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.notification-body" | translate }}</label>
+            <input type="text" formControlName="notificationBody" class="form-control"/>
+          </div>
 
-        <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification-category" | translate }}</label>
-          <select class="custom-select" formControlName="category">
-            <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
-                    [ngValue]="notificationCategory.code">
-              {{notificationCategory.label}}
-            </option>
-          </select>
-        </div>
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.notification-category" | translate }}</label>
+            <select class="custom-select" formControlName="notificationCategory">
+              <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+              <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
+                      [ngValue]="notificationCategory.code">
+                {{notificationCategory.label}}
+              </option>
+            </select>
+          </div>
 
-        <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification-severity" | translate }}</label>
-          <select formControlName="severity" class="custom-select">
-            <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
-            <option [ngValue]="true">{{ "notification-management.important" | translate }}</option>
-            <option [ngValue]="false">{{ "notification-management.normal" | translate }}</option>
-          </select>
-        </div>
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.notification-severity" | translate }}</label>
+            <select formControlName="severity" class="custom-select">
+              <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
+              <option [ngValue]="true">{{ "notification-management.important" | translate }}</option>
+              <option [ngValue]="false">{{ "notification-management.normal" | translate }}</option>
+            </select>
+          </div>
 
-        <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification_description" | translate}}</label>
-          <input type="text" formControlName="body" class="form-control"/>
-        </div>
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.notification_date" | translate }}</label>
 
-        <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification_creation_date" | translate }}</label>
+            <div class="date-picker-range form-inline flex-nowrap">
 
-          <div class="date-picker-range form-inline flex-nowrap">
+              <div class="form-group hidden">
+                <div class="input-group">
+                  <input name="datepicker"
+                         class="form-control"
+                         ngbDatepicker
+                         #notificationDatepicker="ngbDatepicker"
+                         [autoClose]="'outside'"
+                         (dateSelect)="onNotificationDateSelection($event)"
+                         [displayMonths]="2"
+                         [dayTemplate]="t1"
+                         outsideDays="hidden"
+                         [startDate]="notificationFromDate"
+                         tabindex="-1">
+                  <ng-template #t1 let-date let-focused="focused">
+                <span class="custom-day" [class.focused]="focused" [class.range]="isNotificationDateInRange(date)"
+                      [class.faded]="isNotificationDateHovered(date) || isNotificationDateInside(date)" (mouseenter)="notificationHoveredDate = date"
+                      (mouseleave)="notificationHoveredDate = null">
+                    {{ date.day }}
+                </span>
+                  </ng-template>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend" (click)="notificationDatepicker.toggle()">
+                    <span class="form-control prepend">{{'general.from' | translate}}</span>
+                  </div>
+                  <input #dpNotificationFromDate
+                         class="form-control"
+                         placeholder="DD/MM/YYYY"
+                         name="dpNotificationFromDate"
+                         [readOnly]="true"
+                         [value]="formatter.format(notificationFromDate)"
+                         (click)="notificationDatepicker.toggle()"
+                         (input)="notificationFromDate = validateInput(notificationFromDate, dpNotificationFromDate.value)">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend" (click)="notificationDatepicker.toggle()">
+                    <span class="form-control prepend">{{'general.to' | translate}}</span>
+                  </div>
+                  <input #dpNotificationToDate
+                         class="form-control"
+                         placeholder="DD/MM/YYYY"
+                         name="dpNotificationToDate"
+                         [readOnly]="true"
+                         [value]="formatter.format(notificationToDate)"
+                         (click)="notificationDatepicker.toggle()"
+                         (input)="notificationToDate = validateInput(notificationToDate, dpNotificationToDate.value)">
+                  <div class="input-group-append" (click)="notificationDatepicker.toggle()">
+                  <span class="input-group-text">
+                    <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
+                  </span>
+                  </div>
+                </div>
+              </div>
 
-            <div class="form-group hidden">
-              <div class="input-group">
-                <input name="datepicker"
-                       class="form-control"
-                       ngbDatepicker
-                       #datepicker="ngbDatepicker"
-                       [autoClose]="'outside'"
-                       (dateSelect)="onDateSelection($event)"
-                       [displayMonths]="2"
-                       [dayTemplate]="t"
-                       outsideDays="hidden"
-                       [startDate]="fromDate!"
-                       tabindex="-1">
-                <ng-template #t let-date let-focused="focused">
+            </div>
+          </div>
+
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.notification_creation_date" | translate }}</label>
+
+            <div class="date-picker-range form-inline flex-nowrap">
+
+              <div class="form-group hidden">
+                <div class="input-group">
+                  <input name="datepicker"
+                         class="form-control"
+                         ngbDatepicker
+                         #datepicker="ngbDatepicker"
+                         [autoClose]="'outside'"
+                         (dateSelect)="onDateSelection($event)"
+                         [displayMonths]="2"
+                         [dayTemplate]="t2"
+                         outsideDays="hidden"
+                         [startDate]="fromDate!"
+                         tabindex="-1">
+                  <ng-template #t2 let-date let-focused="focused">
                 <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
                       [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
                       (mouseleave)="hoveredDate = null">
                     {{ date.day }}
                 </span>
-                </ng-template>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="form-control prepend">{{'general.from' | translate}}</span>
+                  </ng-template>
                 </div>
-                <input #dpFromDate
-                       class="form-control"
-                       placeholder="DD/MM/YYYY"
-                       name="dpFromDate"
-                       [readOnly]="true"
-                       [value]="formatter.format(fromDate)"
-                       (click)="datepicker.toggle()"
-                       (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
               </div>
-            </div>
-            <div class="form-group">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="form-control prepend">{{'general.to' | translate}}</span>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend" (click)="datepicker.toggle()">
+                    <span class="form-control prepend">{{'general.from' | translate}}</span>
+                  </div>
+                  <input #dpFromDate
+                         class="form-control"
+                         placeholder="DD/MM/YYYY"
+                         name="dpFromDate"
+                         [readOnly]="true"
+                         [value]="formatter.format(fromDate)"
+                         (click)="datepicker.toggle()"
+                         (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
                 </div>
-                <input #dpToDate
-                       class="form-control"
-                       placeholder="DD/MM/YYYY"
-                       name="dpToDate"
-                       [readOnly]="true"
-                       [value]="formatter.format(toDate)"
-                       (click)="datepicker.toggle()"
-                       (input)="toDate = validateInput(toDate, dpToDate.value)">
-                <div class="input-group-append">
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend" (click)="datepicker.toggle()">
+                    <span class="form-control prepend">{{'general.to' | translate}}</span>
+                  </div>
+                  <input #dpToDate
+                         class="form-control"
+                         placeholder="DD/MM/YYYY"
+                         name="dpToDate"
+                         [readOnly]="true"
+                         [value]="formatter.format(toDate)"
+                         (click)="datepicker.toggle()"
+                         (input)="toDate = validateInput(toDate, dpToDate.value)">
+                  <div class="input-group-append" (click)="datepicker.toggle()">
                   <span class="input-group-text">
                     <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
                   </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+          <div class="form-group col-sm-12 col-md-12 col-lg-8">
+            <label class="col-form-label">{{ "notification-management.notification_description" | translate}}</label>
+            <input type="text" formControlName="description" class="form-control"/>
           </div>
         </div>
 
-        <div class="form-group col-12">
+        <div class="form-group">
           <button id="btnSearch" type="submit" (click)="search()" class="btn btn-dcc-primary px-5 mr-3">
             {{ "general.btn_search" | translate }}
           </button>
@@ -150,10 +221,10 @@
         <thead>
         <tr>
           <th scope="col">{{'notification-management.notification-title' | translate}}</th>
-          <th scope="col">{{'notification-management.notification_details' | translate}}</th>
+          <th scope="col">{{'notification-management.notification-body' | translate}}</th>
           <th scope="col">{{'notification-management.notification-category' | translate}}</th>
           <th scope="col">{{'notification-management.notification-severity' | translate}}</th>
-          <th scope="col">{{'notification-management.sending_date' | translate}}</th>
+          <th scope="col">{{'notification-management.notification_date' | translate}}</th>
           <th scope="col">{{'notification-management.creation_date' | translate}}</th>
           <th scope="col">{{'notification-management.notification-status' | translate}}</th>
           <th scope="col"></th>
@@ -181,9 +252,8 @@
             <span>{{'notification-management.normal' |translate}}</span>
             <span class="status mr-1 done severity-badge"></span>
           </td>
-          <!--TODO Bind the correct value of notification sending date-->
           <td
-            class="ltr">---
+            class="ltr">{{template?.sendingDate | dateFormat}}
           </td>
           <td
             class="ltr">{{template?.creationDate | dateFormat}}</td>

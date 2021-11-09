@@ -11,226 +11,311 @@
     class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
   </div>
 
-  <div class="content__section">
-    <label
-      class="form-control-plaintext my-2">{{ "notification-management.notification_attributes" | translate }}</label>
-    <div class="searchBox">
-      <form [formGroup]="notificationForm">
+  <div *ngIf="!isLoading">
+    <div class="content__section">
+      <label
+        class="form-control-plaintext my-2">{{ "notification-management.notification_attributes" | translate }}</label>
+      <div class="searchBox">
+        <form [formGroup]="notificationForm">
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
 
-          <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.creation_date" | translate }}</label>
-            <div class="input-group">
-              <label class="form-control">{{creationDate | dateFormat}}</label>
-              <div class="input-group-append">
+            <div class="form-group col-sm-12 col-md-12 col-lg-8">
+              <label class="col-form-label">{{ "notification-management.notification_description" | translate }}</label>
+              <input type="text" formControlName="description" class="form-control" maxlength="250"/>
+            </div>
+
+            <div class="form-group col">
+              <label class="col-form-label">{{ "notification-management.notification-status" | translate }}</label>
+              <div class="radio-group form-control-plaintext d-flex font-weight-normal">
+                <div class="radio-item align-items-baseline d-flex mr-5">
+                  <input formControlName="enabled"
+                         class="mr-2"
+                         name="enabled"
+                         [value]="true"
+                         type="radio"
+                         id="customRadioInline05">
+                  <label for="customRadioInline05">{{'notification-management.enabled' | translate}}</label>
+                </div>
+                <div class="radio-item align-items-baseline d-flex">
+                  <input formControlName="enabled"
+                         class="mr-2" name="enabled"
+                         [value]="false"
+                         type="radio"
+                         id="customRadioInline06">
+                  <label for="customRadioInline06">{{'notification-management.disabled' | translate}}</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+
+            <div class="form-group col">
+              <label class="col-form-label">{{ "notification-management.creation_date" | translate }}</label>
+              <div class="input-group">
+                <label class="form-control disabled-control">{{creationDate | dateFormat}}</label>
+                <div class="input-group-append">
                   <span class="input-group-text">
                     <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
                   </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col">
+              <label class="col-form-label">{{ "notification-management.notification_date" | translate }}</label>
+              <div class="input-group">
+                <input #dpNotificationDate
+                       class="form-control"
+                       (click)="d.toggle()"
+                       placeholder="DD/MM/YYYY"
+                       name="dpNotificationDate"
+                       (dateSelect)="onDateSelection($event)"
+                       [value]="formatter.format(notificationDate)"
+                       (input)="notificationDate = validateInput(notificationDate, dpNotificationDate.value)"
+                       ngbDatepicker #d="ngbDatepicker"
+                       [readOnly]="true"
+                       [minDate]="today">
+                <div class="input-group-append" (click)="d.toggle()">
+                  <span class="input-group-text">
+                    <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col">
+              <label class="col-form-label">{{ "notification-management.notification_type" | translate }}</label>
+              <div class="radio-group form-control-plaintext d-flex font-weight-normal">
+                <div class="radio-item align-items-baseline d-flex mr-5">
+                  <input formControlName="userSpecific"
+                         class="mr-2"
+                         name="userSpecific"
+                         [value]="false"
+                         type="radio"
+                         id="customRadioInline01">
+                  <label for="customRadioInline01">{{'notification-management.general' | translate}}</label>
+                </div>
+                <div class="radio-item align-items-baseline d-flex">
+                  <input formControlName="userSpecific"
+                         class="mr-2"
+                         name="userSpecific"
+                         [value]="true"
+                         type="radio"
+                         id="customRadioInline02">
+                  <label for="customRadioInline02">{{'notification-management.user_specific' | translate}}</label>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.sending_date" | translate }}</label>
-            <div class="input-group">
-              <input type="text" formControlName="sendingDate" class="form-control"/>
-              <div class="input-group-append">
-                  <span class="input-group-text">
-                    <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
-                  </span>
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+
+            <div class="form-group col">
+              <label class="col-form-label">{{ "notification-management.notification-category" | translate }}</label>
+              <select class="custom-select" formControlName="category">
+                <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+                <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
+                        [ngValue]="notificationCategory.code">
+                  {{notificationCategory.label}}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group col">
+              <label class="col-form-label">{{ "notification-management.notification-severity" | translate }}</label>
+              <select formControlName="severity" class="custom-select">
+                <option [ngValue]="true">{{ "notification-management.important" | translate }}</option>
+                <option [ngValue]="false">{{ "notification-management.normal" | translate }}</option>
+              </select>
+            </div>
+
+            <div class="form-group col">
+              <label class="col-form-label">{{ "notification-management.force_sending" | translate }}</label>
+              <div class="radio-group form-control-plaintext d-flex font-weight-normal">
+                <div class="radio-item align-items-baseline d-flex mr-5">
+                  <input formControlName="forceSending"
+                         class="mr-2"
+                         name="forceSending"
+                         [value]="true"
+                         type="radio"
+                         id="customRadioInline03">
+                  <label for="customRadioInline03">{{'general.dialog_confirmation_ok' | translate}}</label>
+                </div>
+                <div class="radio-item align-items-baseline d-flex">
+                  <input formControlName="forceSending"
+                         class="mr-2"
+                         name="forceSending"
+                         [value]="false"
+                         type="radio"
+                         id="customRadioInline04">
+                  <label for="customRadioInline04">{{'general.dialog_confirmation_cancel' | translate}}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+
+    <hr class="my-4 w-100">
+
+    <div class="content__section">
+      <label
+        class="form-control-plaintext my-2">{{ "notification-management.notification_content_caution" | translate }}</label>
+
+      <ul ngbNav #nav="ngbNav" class="nav-tabs mt-2" [activeId]="activeId">
+        <li *ngFor="let language of translatedLanguages; let i = index" [ngbNavItem]="i + 1">
+          <a ngbNavLink (click)="setSelectedLang(language.code.toLowerCase())">{{language.label}}
+            <svg-icon *ngIf="selectedLang === language.code.toLowerCase()" styleClass="fa-w-16"
+                      icon="check-circle-outline"></svg-icon>
+          </a>
+          <ng-template ngbNavContent>
+            <form [formGroup]="contentForm">
+              <div formArrayName="contents">
+                <div [formGroupName]="i" class="row row-cols-1">
+                  <div class="form-group col-sm-12 col-md-6 col-lg-4">
+                    <label class="col-form-label">{{ "notification-management.notification-title" | translate }}</label>
+                    <input type="text" formControlName="title" class="form-control" maxlength="50"/>
+                  </div>
+
+                  <div class="form-group col">
+                    <label class="col-form-label">{{ "notification-management.notification-body" | translate }}</label>
+                    <textarea type="text" formControlName="body" class="form-control" rows="2"
+                              maxlength="500"></textarea>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </ng-template>
+        </li>
+      </ul>
+    </div>
+
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+    <hr class="my-4 w-100">
+
+    <div class="content__section mb-4">
+      <label class="form-control-plaintext my-2">{{ "notification-management.choose_recipients" | translate }}</label>
+      <label class="col-form-label">{{ "notification-management.send_notification_to" | translate }}</label>
+      <div class="radio-group form-control-plaintext d-flex font-weight-normal">
+        <div class="radio-item align-items-baseline d-flex mr-5">
+          <input class="mr-2" name="target" [value]="-1" type="radio"
+                 [(ngModel)]="checkedCriteria"
+                 id="customRadioInline07">
+          <label for="customRadioInline07">{{ "notification-management.all" | translate }}</label>
+        </div>
+        <div class="radio-item align-items-baseline d-flex mr-5">
+          <input class="mr-2" name="target" [value]="0" type="radio"
+                 [(ngModel)]="checkedCriteria"
+                 id="customRadioInline08">
+          <label for="customRadioInline08">{{ "notification-management.categorized_applicants" | translate }}</label>
+        </div>
+        <div class="radio-item align-items-baseline d-flex">
+          <input class="mr-2" name="target" [value]="1" type="radio"
+                 [(ngModel)]="checkedCriteria"
+                 [disabled]="true"
+                 id="customRadioInline09">
+          <label for="customRadioInline09">{{ "notification-management.selected_applicants" | translate }}</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="searchBox mb-4 animate slideIn delay" *ngIf="checkedCriteria == 0">
+      <form class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+
+        <div class="form-group col">
+          <label class="col-form-label">{{"notification-management.camp"| translate}}</label>
+          <select class="custom-select">
+            <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
+            <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
+                    [ngValue]="notificationCategory.code">
+              {{notificationCategory.label}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{"notification-management.company"| translate}}</label>
+          <select class="custom-select">
+            <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
+            <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
+                    [ngValue]="notificationCategory.code">
+              {{notificationCategory.label}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{"notification-management.nationality"| translate}}</label>
+          <select class="custom-select">
+            <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
+            <option *ngFor="let nationality of lookupService().localizedItems(nationalities)"
+                    [ngValue]="nationality.code">
+              {{nationality.label}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{"notification-management.age"| translate}}</label>
+          <div class="d-flex flex-nowrap">
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="form-control prepend">{{'general.from' | translate}}</span>
+                </div>
+                <input type="number" class="form-control"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="form-control prepend">{{'general.to' | translate}}</span>
+                </div>
+                <input type="number" class="form-control"/>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-
-          <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.notification_description" | translate }}</label>
-            <input type="text" formControlName="toDescription" class="form-control" maxlength="250"/>
+        <div class="form-group col">
+          <label class="col-form-label">{{"notification-management.gender"| translate}}</label>
+          <div class="radio-group form-control-plaintext d-flex font-weight-normal">
+            <div class="radio-item align-items-baseline d-flex mr-5">
+              <input class="mr-2" name="gender" [value]="-1" type="radio"
+                     [(ngModel)]="checkedGender"
+                     id="customRadioInline10">
+              <label for="customRadioInline10">{{"notification-management.all"| translate}}</label>
+            </div>
+            <div class="radio-item align-items-baseline d-flex mr-5">
+              <input class="mr-2" name="gender" [value]="0" type="radio"
+                     [(ngModel)]="checkedGender"
+                     id="customRadioInline11">
+              <label for="customRadioInline11">{{"notification-management.male"| translate}}</label>
+            </div>
+            <div class="radio-item align-items-baseline d-flex">
+              <input class="mr-2" name="gender" [value]="1" type="radio"
+                     [(ngModel)]="checkedGender"
+                     id="customRadioInline12">
+              <label for="customRadioInline12">{{"notification-management.female"| translate}}</label>
+            </div>
           </div>
-
-          <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.notification-category" | translate }}</label>
-            <select class="custom-select" formControlName="category">
-              <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-              <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
-                      [ngValue]="notificationCategory.code">
-                {{notificationCategory.label}}
-              </option>
-            </select>
-          </div>
-
-          <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.notification-severity" | translate }}</label>
-            <select formControlName="severity" class="custom-select">
-              <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
-              <option [ngValue]="true">{{ "notification-management.important" | translate }}</option>
-              <option [ngValue]="false">{{ "notification-management.normal" | translate }}</option>
-            </select>
-          </div>
-
         </div>
+
       </form>
     </div>
+    <div *ngIf="checkedCriteria == 1">إضافة حاج</div>
 
-  </div>
-
-  <hr class="my-4 w-100">
-
-  <div class="content__section">
-    <label
-      class="form-control-plaintext my-2">{{ "notification-management.notification_details_caution" | translate }}</label>
-
-    <ul ngbNav #nav="ngbNav" class="nav-tabs mt-2" [activeId]="activeId">
-      <li *ngFor="let language of translatedLanguages; let i = index" [ngbNavItem]="i + 1">
-        <a ngbNavLink (click)="setSelectedLang(language.code.toLowerCase())">{{language.label}}
-          <svg-icon *ngIf="selectedLang === language.code.toLowerCase()" styleClass="fa-w-16"
-                    icon="check-circle-outline"></svg-icon>
-        </a>
-        <ng-template ngbNavContent>
-          <form [formGroup]="contentForm">
-            <div formArrayName="contents">
-              <div [formGroupName]="i" class="row row-cols-1">
-                <div class="form-group col-sm-12 col-md-6 col-lg-4">
-                  <label class="col-form-label">{{ "notification-management.notification-title" | translate }}</label>
-                  <input type="text" formControlName="title" class="form-control" maxlength="50"/>
-                </div>
-
-                <div class="form-group col">
-                  <label class="col-form-label">{{ "notification-management.notification-body" | translate }}</label>
-                  <textarea type="text" formControlName="body" class="form-control" rows="2" maxlength="500"></textarea>
-                </div>
-              </div>
-            </div>
-          </form>
-        </ng-template>
-      </li>
-    </ul>
-  </div>
-
-  <div [ngbNavOutlet]="nav" class="mt-2"></div>
-
-  <hr class="my-4 w-100">
-
-  <div class="content__section">
-    <label class="form-control-plaintext my-2">{{ "notification-management.choose_recipients" | translate }}</label>
-    <label class="col-form-label">{{ "notification-management.send_notification_to" | translate }}</label>
-    <div class="radio-group form-control-plaintext d-flex font-weight-normal">
-      <div class="radio-item align-items-baseline d-flex mr-5">
-        <input class="mr-2" name="target" [value]="-1" type="radio"
-               [(ngModel)]="checkedCriteria"
-               id="customRadioInline01">
-        <label for="customRadioInline01">{{ "notification-management.all" | translate }}</label>
-      </div>
-      <div class="radio-item align-items-baseline d-flex mr-5">
-        <input class="mr-2" name="target" [value]="0" type="radio"
-               [(ngModel)]="checkedCriteria"
-               [disabled]="true"
-               id="customRadioInline02">
-        <label for="customRadioInline02">{{ "notification-management.categorized_applicants" | translate }}</label>
-      </div>
-      <div class="radio-item align-items-baseline d-flex">
-        <input class="mr-2" name="target" [value]="1" type="radio"
-               [(ngModel)]="checkedCriteria"
-               [disabled]="true"
-               id="customRadioInline03">
-        <label for="customRadioInline03">{{ "notification-management.selected_applicants" | translate }}</label>
-      </div>
-    </div>
-  </div>
-
-  <div class="searchBox" *ngIf="checkedCriteria == 0">
-    <form class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-
-      <div class="form-group col">
-        <label class="col-form-label">المخيم</label>
-        <select class="custom-select">
-          <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
-          <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
-                  [ngValue]="notificationCategory.code">
-            {{notificationCategory.label}}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group col">
-        <label class="col-form-label">الشركة</label>
-        <select class="custom-select">
-          <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
-          <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
-                  [ngValue]="notificationCategory.code">
-            {{notificationCategory.label}}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group col">
-        <label class="col-form-label">الجنسية</label>
-        <select class="custom-select">
-          <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
-          <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
-                  [ngValue]="notificationCategory.code">
-            {{notificationCategory.label}}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group col">
-        <label class="col-form-label">العمر</label>
-        <div class="d-flex flex-nowrap">
-          <div class="form-group">
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="form-control prepend">{{'general.from' | translate}}</span>
-              </div>
-              <input type="number" class="form-control"/>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="form-control prepend">{{'general.to' | translate}}</span>
-              </div>
-              <input type="number" class="form-control"/>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group col">
-        <label class="col-form-label">النوع</label>
-        <div class="radio-group form-control-plaintext d-flex font-weight-normal">
-          <div class="radio-item align-items-baseline d-flex mr-5">
-            <input class="mr-2" name="gender" [value]="-1" type="radio"
-                   [(ngModel)]="checkedGender"
-                   id="customRadioInline04">
-            <label for="customRadioInline04">الكل</label>
-          </div>
-          <div class="radio-item align-items-baseline d-flex mr-5">
-            <input class="mr-2" name="gender" [value]="0" type="radio"
-                   [(ngModel)]="checkedGender"
-                   id="customRadioInline05">
-            <label for="customRadioInline05">ذكور</label>
-          </div>
-          <div class="radio-item align-items-baseline d-flex">
-            <input class="mr-2" name="gender" [value]="1" type="radio"
-                   [(ngModel)]="checkedGender"
-                   id="customRadioInline06">
-            <label for="customRadioInline06">إناث</label>
-          </div>
-        </div>
-      </div>
-
-    </form>
-  </div>
-  <div *ngIf="checkedCriteria == 1">إضافة حاج</div>
-
-  <div class="d-flex justify-content-between">
-    <button class="btn btn-outline-dcc-primary px-4 mr-1" [routerLink]="['/user-defined-notification/list']">
-      {{"general.btn_back" | translate}}</button>
-    <span>
+    <div class="d-flex justify-content-between">
+      <button class="btn btn-outline-dcc-primary px-4 mr-1" (click)="goBack()">
+        {{"general.btn_back" | translate}}</button>
+      <span>
       <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4"
               [disabled]="!notificationForm.valid"
               (click)="saveAsDraft()">
@@ -242,6 +327,19 @@
         {{"notification-management.save_and_send" | translate}}
       </button>
     </span>
+    </div>
+
+  </div>
+
+  <!-- Loading spinner placeholder -->
+  <div *ngIf="isLoading" class="text-center">
+    <div style="height: 200px;">
+      <div class="preloader inner_page">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
   </div>
 
 </div>

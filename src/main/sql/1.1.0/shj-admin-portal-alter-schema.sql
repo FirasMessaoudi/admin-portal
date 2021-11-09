@@ -671,15 +671,18 @@ CREATE TABLE shc_portal.shc_notification_template
 (
     id              INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
     category_code   VARCHAR(20)   NOT NULL,
-    name_code       VARCHAR(20)   NOT NULL,
+    name_code       VARCHAR(20)   NULL,
     status_code     VARCHAR(20)   NOT NULL,
     type_code       VARCHAR(20)   NOT NULL,
+    description     NVARCHAR(500) NULL,
     important       BIT           NOT NULL,
     action_required BIT           NOT NULL,
     enabled         BIT           NOT NULL,
     user_specific   BIT           NOT NULL,
+    force_sending   BIT           NOT NULL DEFAULT 1,
     creation_date   SMALLDATETIME NOT NULL DEFAULT current_timestamp,
     update_date     SMALLDATETIME NULL,
+    sending_date    SMALLDATETIME NULL,
 );
 GO
 
