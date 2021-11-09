@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
-
 import java.util.Optional;
 
 /**
@@ -64,9 +63,14 @@ public class ApplicantCardScheduler {
         cardsList.parallelStream()
                 .filter(card -> card.getApplicantRitual().getApplicantPackage() != null)
                 .filter(card -> new Date().after(card.getApplicantRitual().getApplicantPackage().getEndDate()))
-                .forEach(card -> card.setStatusCode( ECardStatus.EXPIRED.name()));
+                .forEach(card -> {
+                    card.setStatusCode(ECardStatus.EXPIRED.name());
+                    userCardStatusAuditService.saveUserCardStatusAudit(card, Optional.of(Constants.SYSTEM_USER_ID_NUMBER));
+
+                });
 
         applicantCardService.saveAll(cardsList);
+
 
     }
 
