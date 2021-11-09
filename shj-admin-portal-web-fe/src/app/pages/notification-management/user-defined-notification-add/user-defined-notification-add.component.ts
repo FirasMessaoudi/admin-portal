@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
 import {Lookup} from "@model/lookup.model";
-import {FormArray, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
@@ -92,7 +92,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   initForm() {
     this.notificationForm = this.formBuilder.group({
       sendingDate: {value: null, disabled: true},
-      name: ['', [Validators.required, Validators.minLength(3)]],
+      toDescription: ['', [Validators.minLength(3), Validators.maxLength(250),]],
       category: [null, Validators.required],
       severity: [null, Validators.required],
     });
@@ -149,7 +149,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
     this.notificationTemplate = new NotificationTemplate();
 
-    this.notificationTemplate.nameCode = this.notificationForm.controls['name'].value;
+    this.notificationTemplate.toDescription = this.notificationForm.controls['toDescription'].value;
     this.notificationTemplate.categoryCode = this.notificationForm.controls['category'].value;
     this.notificationTemplate.important = this.notificationForm.controls['severity'].value;
     this.notificationTemplate.statusCode = "DRAFT";
