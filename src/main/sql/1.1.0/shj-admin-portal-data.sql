@@ -163,11 +163,10 @@ GO
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (1, 36);
 GO
 
-use shc_portal
+
 --Activate Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin ,Hamalah admin  )
  insert into shc_portal.shc_role_authority ( role_id, authority_id)
 values (1,17);
-insert into shc_portal.shc_role_authority (role_id, authority_id)
 
 
 --Suspend Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin )

@@ -856,8 +856,8 @@ CREATE TABLE shc_portal.shc_user_card_status_audit
     id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
     user_id       int           NOT NULL,
     card_id       int           NOT NULL,
-    uin           NVARCHAR(200) NOT NULL,
-    status_code   NVARCHAR(50) NOT NULL,
+    uin           varchar(45)   NOT NULL,
+    status_code   varchar(20)   NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
 );
