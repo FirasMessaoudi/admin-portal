@@ -82,7 +82,7 @@
             </a>
             <ng-template ngbNavContent>
               <div class="row row-cols-1 row-cols-md-1 row-cols-lg-1">
-                <div class="form-group col">
+                <div class="form-group col-sm-9 col-md-5 col-lg-3">
                   <label>{{'notification-management.notification-title' | translate}}</label>
 
                   <input *ngIf="editable" class="form-control" required type="text" name="title" [maxLength]="50"
@@ -105,10 +105,12 @@
 
 
               <div class="row row-cols-2 row-cols-md-2 row-cols-lg-2">
-                <div class="form-group col">
+                <div class="form-group col-sm-9 col-md-5 col-lg-3">
                   <label>{{'notification-management.notification-body' | translate}}</label>
-                  <input *ngIf="editable" class="form-control" type="text" required [maxLength]="500" formControlName="body"
-                         [class.is-invalid]="f.body.invalid && f.body.touched">
+
+                  <textarea *ngIf="editable" required type="text" formControlName="body" class="form-control"
+                            rows="10" [maxLength]="500"
+                            [class.is-invalid]="f.body.invalid && f.body.touched"></textarea>
                   <label class="form-control-plaintext " *ngIf="!editable"
                   >{{getNotificationContentForSelectedLang()?.body}}</label>
                   <div *ngIf="f.body.invalid && f.body.touched" class="invalid-feedback">
@@ -128,7 +130,7 @@
                 <div class="form-group col" *ngFor="let templateParam of notificationTemplate?.notificationTemplateParameters">
                   <label>{{'notification-management.notification-parameters' | translate}}</label>
                   <div (click)="copyParameter('<'+templateParam.parameterName+'>')"
-                       [ngbTooltip]="'support.click-to-copy' | translate">
+                       [ngbTooltip]="paramTooltipText">
                     <div class="login-box__wrapper">
                       <p class="text-dcc-primary font-weight-bold mb-2">{{'<' + templateParam.parameterName + '>'}}</p>
                     </div>
@@ -139,7 +141,7 @@
 
 
               <div *ngIf="notificationTemplate?.actionRequired" class="row row-cols-1 row-cols-md-1 row-cols-lg-1">
-                <div class="form-group col">
+                <div class="form-group col-sm-9 col-md-5 col-lg-3">
                   <label>{{'notification-management.action-label' | translate}}</label>
                   <input *ngIf="editable" class="form-control " required [maxLength]="50" type="text"
                          [class.is-invalid]="f.actionLabel.invalid && f.actionLabel.touched"

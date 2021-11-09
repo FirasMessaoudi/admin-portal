@@ -26,7 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserCardStatusAuditService extends GenericService<JpaUserCardStatusAudit, UserCardStatusAuditDto, Long> {
 
-    public void saveUserCardStatusAudit(ApplicantCardDto card, Optional<Long> userId) {
+    public UserCardStatusAuditDto saveUserCardStatusAudit(ApplicantCardDto card, Optional<Long> userId) {
         UserDto user = new UserDto();
         user.setId(userId.get());
         UserCardStatusAuditDto userCardStatusAuditDto = UserCardStatusAuditDto.builder()
@@ -35,7 +35,7 @@ public class UserCardStatusAuditService extends GenericService<JpaUserCardStatus
                 .user(user)
                 .uin(card.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin())
                 .build();
-        save(userCardStatusAuditDto);
+        return save(userCardStatusAuditDto);
     }
 
 }
