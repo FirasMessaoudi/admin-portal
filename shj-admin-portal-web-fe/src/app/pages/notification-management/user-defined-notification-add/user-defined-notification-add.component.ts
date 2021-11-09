@@ -96,7 +96,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   initForm() {
     this.notificationForm = this.formBuilder.group({
       sendingDate: {value: null, disabled: true},
-      name: ['', [Validators.required, Validators.minLength(3)]],
+      toDescription: ['', [Validators.minLength(3), Validators.maxLength(250),]],
       category: [null, Validators.required],
       severity: [null, Validators.required],
     });
@@ -153,7 +153,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
     this.notificationTemplate = new NotificationTemplate();
 
-    this.notificationTemplate.nameCode = this.notificationForm.controls['name'].value;
+    this.notificationTemplate.toDescription = this.notificationForm.controls['toDescription'].value;
     this.notificationTemplate.categoryCode = this.notificationForm.controls['category'].value;
     this.notificationTemplate.important = this.notificationForm.controls['severity'].value;
     this.notificationTemplate.statusCode = "DRAFT";

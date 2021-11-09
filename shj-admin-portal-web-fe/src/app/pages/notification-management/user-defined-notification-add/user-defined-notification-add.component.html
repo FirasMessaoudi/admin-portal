@@ -47,14 +47,8 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
 
           <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.notification-name" | translate }}</label>
-            <select formControlName="name" class="custom-select">
-              <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-              <option *ngFor="let notificationName of lookupService().localizedItems(notificationNames)"
-                      [ngValue]="notificationName.code">
-                {{notificationName.label}}
-              </option>
-            </select>
+            <label class="col-form-label">{{ "notification-management.notification_description" | translate }}</label>
+            <input type="text" formControlName="toDescription" class="form-control" maxlength="250"/>
           </div>
 
           <div class="form-group col">

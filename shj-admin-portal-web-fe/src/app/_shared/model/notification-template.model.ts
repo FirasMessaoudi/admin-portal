@@ -8,6 +8,7 @@ export class NotificationTemplate {
   nameCode: string;
   statusCode: string;
   typeCode: string;
+  toDescription: string;
   important: boolean;
   actionRequired: boolean;
   enabled: boolean;
