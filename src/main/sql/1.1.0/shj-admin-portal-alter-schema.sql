@@ -865,3 +865,7 @@ CREATE TABLE shc_portal.shc_user_card_status_audit
 
 );
 GO
+
+ALTER TABLE shc_portal.shc_notification_category_lk
+    ADD sample nvarchar(500);
+GO
