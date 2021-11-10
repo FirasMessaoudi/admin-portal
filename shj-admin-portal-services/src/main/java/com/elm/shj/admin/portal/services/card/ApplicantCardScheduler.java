@@ -61,13 +61,8 @@ public class ApplicantCardScheduler {
         LockAssert.assertLocked();
 
         List<ApplicantCardDto> cardsList = applicantCardService.findApplicantCardsEligibleToExpire();
-        applicantCardService.updateCardStatusesAsExpired(cardsList.parallelStream().map((card)-> card.getId()).collect(Collectors.toList()));
-        /*cardsList.parallelStream()
-               .forEach(card -> {
-                    card.setStatusCode(ECardStatus.EXPIRED.name());
-                    userCardStatusAuditService.saveUserCardStatusAudit(card, Optional.of(Constants.SYSTEM_USER_ID_NUMBER));
-                });*/
-
+        applicantCardService.updateCardStatusesAsExpired(cardsList.parallelStream().map((card) -> card.getId()).collect(Collectors.toList()));
+        userCardStatusAuditService.saveUserCardStatusAudit(cardsList, Optional.of(Constants.SYSTEM_USER_ID_NUMBER));
 
     }
 
