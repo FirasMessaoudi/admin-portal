@@ -48,7 +48,11 @@ public class NotificationProcessingScheduler {
                     notificationRequest.getProcessingStatus().setId(ENotificationProcessingStatus.UNDER_PROCESSING.getId());
                     notificationRequestRepository.save(notificationRequest);
                     try {
-                        notificationRequestService.processNotificationRequest(notificationRequest);
+                        if (notificationRequest.getNotificationTemplate().isEnabled()) {
+                            notificationRequestService.processNotificationRequest(notificationRequest);
+                        } else {
+                            notificationRequestRepository.delete(notificationRequest);
+                        }
                     } catch (Exception e) {
                         notificationRequest.getProcessingStatus().setId(ENotificationProcessingStatus.FAILED.getId());
                         notificationRequestRepository.save(notificationRequest);
