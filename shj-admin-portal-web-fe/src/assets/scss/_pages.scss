@@ -198,6 +198,10 @@
 
 ngb-datepicker {
   direction: ltr;
+
+  .bg-primary {
+    background-color: $dcc-primary !important;
+  }
 }
 
 ngb-datepicker-navigation-select {
