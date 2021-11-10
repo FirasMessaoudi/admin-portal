@@ -19,7 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service handling applicant card
@@ -151,5 +155,9 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
         return getMapper().fromEntity(applicantCardRepository.findByIdAndStatusCodeNot(cardId, ECardStatus.REISSUED.name()), mappingContext);
     }
 
+    public void updateCardStatusesBasedOnRitualEndDate() {
+        List<String>  excludedCardsStatuses = Stream.of(ECardStatus.EXPIRED.name(),ECardStatus.CANCELLED.name(),ECardStatus.REISSUED.name()).collect(Collectors.toList());
+        applicantCardRepository.updateCardStatusesBasedOnRitualEndDate(ECardStatus.EXPIRED.name(), Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()),excludedCardsStatuses );
+    }
 
 }
