@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,6 +38,14 @@ public class UserCardStatusAuditService extends GenericService<JpaUserCardStatus
                 .uin(card.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin())
                 .build();
         return save(userCardStatusAuditDto);
+    }
+
+    public List<UserCardStatusAuditDto> saveUserCardStatusAudit(List<ApplicantCardDto> cards, Optional<Long> userId) {
+        List<UserCardStatusAuditDto> auditedList = new ArrayList<>();
+        cards.parallelStream().forEach(card -> {
+            auditedList.add(saveUserCardStatusAudit(card, userId));
+        });
+        return auditedList;
     }
 
 }

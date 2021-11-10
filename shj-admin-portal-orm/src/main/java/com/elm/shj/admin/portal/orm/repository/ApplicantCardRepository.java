@@ -58,13 +58,15 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
 
     JpaApplicantCard findByApplicantRitualId(long id);
 
-    @Transactional
+
     @Modifying
-    @Query("UPDATE JpaApplicantCard card  SET card.statusCode = :statusCode WHERE  card.id in " +
-            "(SELECT  appCard FROM JpaApplicantCard appCard " +
+    @Query("UPDATE JpaApplicantCard card  SET card.statusCode = :statusCode WHERE  card.id in :cardsIds ")
+    int updateCardStatusesAsExpired(@Param("statusCode") String statusCode,  @Param("cardsIds") List<Long> cardsIds);
+
+    @Query( "SELECT  appCard FROM JpaApplicantCard appCard " +
             "INNER JOIN appCard.applicantRitual ritual " +
             "INNER JOIN ritual.applicantPackage package " +
-            "WHERE :todayDate > package.endDate AND  appCard.statusCode NOT IN :excludedCardsStatuses )")
-    int updateCardStatusesBasedOnRitualEndDate(@Param("statusCode") String statusCode, @Param("todayDate") Date todayDate, @Param("excludedCardsStatuses") List<String> excludedCardsStatuses);
+            "WHERE :todayDate > package.endDate AND  appCard.statusCode NOT IN :excludedCardsStatuses ")
+    List<JpaApplicantCard> findApplicantCardsEligibleToExpire(@Param("todayDate") Date todayDate, @Param("excludedCardsStatuses") List<String> excludedCardsStatuses);
 
 }

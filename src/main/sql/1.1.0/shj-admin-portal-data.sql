@@ -215,3 +215,25 @@ INSERT INTO shc_portal.shc_config(conf_key ,conf_value )
 VALUES ('scheduler.update.applicant.card.status.cron','0 0/5 * * * *')
 GO
 
+UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = N'احرص على حمل بطاقة الحج الخاصة بك عند اداء الشعائر'
+WHERE code = 'GENERAL' and lang = 'ar';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = N'في حالة ارتفاع درجة حرارتك فوق 38 درجة توجه الى اقرب نقطة صحية مباشرة'
+WHERE code = 'HEALTH' and lang = 'ar';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = N'ربنا تقبل منا انك انت السميع العليم'
+WHERE code = 'RELIGIOUS' and lang = 'ar';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = N'طواف الافاضة هو ركن من اركان الحج لا يتم الا بالاتيان به؛ و دليل ذلك قوله تعالى: (و ليطوفوا بالبيت العتيق)'
+WHERE code = 'RITUAL' and lang = 'ar';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = N'تجنب صعود الجبال والاماكن المرتفعة وتجنب المزاحمة و الالتحام و الافتراش في الطرقات'
+WHERE code = 'GENERAL_AWARENESS' and lang = 'ar';
+
+UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = ''
+WHERE code = 'GENERAL' and lang = 'en';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = ''
+WHERE code = 'HEALTH' and lang = 'en';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = ''
+WHERE code = 'RELIGIOUS' and lang = 'en';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = ''
+WHERE code = 'RITUAL' and lang = 'en';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample =''
+WHERE code = 'GENERAL_AWARENESS' and lang = 'en';
+Go

@@ -155,9 +155,15 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
         return getMapper().fromEntity(applicantCardRepository.findByIdAndStatusCodeNot(cardId, ECardStatus.REISSUED.name()), mappingContext);
     }
 
-    public void updateCardStatusesBasedOnRitualEndDate() {
+    public List<ApplicantCardDto> findApplicantCardsEligibleToExpire() {
         List<String>  excludedCardsStatuses = Stream.of(ECardStatus.EXPIRED.name(),ECardStatus.CANCELLED.name(),ECardStatus.REISSUED.name()).collect(Collectors.toList());
-        applicantCardRepository.updateCardStatusesBasedOnRitualEndDate(ECardStatus.EXPIRED.name(), Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()),excludedCardsStatuses );
+        List<JpaApplicantCard> applicantCardsList = applicantCardRepository.findApplicantCardsEligibleToExpire( Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()), excludedCardsStatuses);
+        return  getMapper().fromEntityList(applicantCardsList,mappingContext);
+    }
+
+    @Transactional
+    public void updateCardStatusesAsExpired(List<Long> cardsIds) {
+        applicantCardRepository.updateCardStatusesAsExpired(ECardStatus.EXPIRED.name(),cardsIds );
     }
 
 }

@@ -3,17 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
-import com.elm.shj.admin.portal.services.data.validators.*;
 import lombok.Data;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Dto class for the applicant emergency data.
@@ -23,6 +16,8 @@ import java.util.List;
  */
 @Data
 public class ApplicantEmergencyDto implements Serializable {
+
+    private static final long serialVersionUID = -2027005588974249665L;
 
     @NestedCells
     private ApplicantRitualEmergencyDto applicantRitualEmergencyDto;
