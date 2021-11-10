@@ -244,13 +244,13 @@
             class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.body || '---'}}</td>
           <td
             class="ltr">{{template?.categoryCode ? lookupService().localizedLabel(notificationCategories, template?.categoryCode) : '---'}}</td>
-          <td class="ltr d-flex align-items-baseline" *ngIf="template?.important">
-            <span>{{'notification-management.important' |translate}}</span>
+          <td class=" d-flex align-items-baseline" *ngIf="template?.important">
             <span class="status mr-1 Suspended severity-badge"></span>
+            <span>{{'notification-management.important' |translate}}</span>
           </td>
-          <td class="ltr d-flex align-items-baseline" *ngIf="!template?.important">
-            <span>{{'notification-management.normal' |translate}}</span>
+          <td class=" d-flex align-items-baseline" *ngIf="!template?.important">
             <span class="status mr-1 done severity-badge"></span>
+            <span>{{'notification-management.normal' |translate}}</span>
           </td>
           <td
             class="ltr">{{template?.sendingDate | dateFormat}}
@@ -266,6 +266,8 @@
             </button>
           </td>
         </tr>
+
+
         </tbody>
       </table>
     </div>
