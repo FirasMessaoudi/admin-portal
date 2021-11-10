@@ -71,6 +71,7 @@
                          [dayTemplate]="t1"
                          outsideDays="hidden"
                          [startDate]="notificationFromDate"
+                         [footerTemplate]="notificationDateFooterTemplate"
                          tabindex="-1">
                   <ng-template #t1 let-date let-focused="focused">
                 <span class="custom-day" [class.focused]="focused" [class.range]="isNotificationDateInRange(date)"
@@ -118,6 +119,13 @@
               </div>
 
             </div>
+            <ng-template #notificationDateFooterTemplate>
+              <hr class="my-0">
+              <button class="btn btn-outline-dcc-primary  btn-sm m-2 float-right" type="button"
+                      (click)="notificationDatepicker.close()">{{'general.btn_close'| translate}}</button>
+              <button class="btn btn-dcc-primary btn-sm m-2 float-left" type="button"
+                      (click)="clearNotificationDate()">{{'general.btn_clear'| translate}}</button>
+            </ng-template>
           </div>
 
           <div class="form-group col">
@@ -137,7 +145,7 @@
                          [dayTemplate]="t2"
                          outsideDays="hidden"
                          [startDate]="fromDate!"
-                         [footerTemplate]="footerTemplate"
+                         [footerTemplate]="creationDateFooterTemplate"
                          tabindex="-1">
                   <ng-template #t2 let-date let-focused="focused">
                 <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
@@ -185,12 +193,12 @@
               </div>
 
             </div>
-            <ng-template #footerTemplate>
+            <ng-template #creationDateFooterTemplate>
               <hr class="my-0">
               <button class="btn btn-outline-dcc-primary  btn-sm m-2 float-right" type="button"
                       (click)="datepicker.close()">{{'general.btn_close'| translate}}</button>
               <button class="btn btn-dcc-primary btn-sm m-2 float-left" type="button"
-                      (click)="clear()">{{'general.btn_clear'| translate}}</button>
+                      (click)="clearCreationDate()">{{'general.btn_clear'| translate}}</button>
             </ng-template>
           </div>
 

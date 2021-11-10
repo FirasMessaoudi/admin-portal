@@ -39,6 +39,7 @@ export class UserDefinedNotificationListComponent implements OnInit {
   notificationTemplateStatuses: Lookup[] = [];
 
   @ViewChild('datepicker') datePicker: any;
+  @ViewChild('notificationDatepicker') notificationDatePicker: any;
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
@@ -191,6 +192,7 @@ export class UserDefinedNotificationListComponent implements OnInit {
       this.notificationFromDate = date;
     } else if (this.notificationFromDate && !this.notificationToDate && date && date.after(this.notificationFromDate)) {
       this.notificationToDate = date;
+      this.notificationDatePicker.close();
     } else {
       this.notificationToDate = null;
       this.notificationFromDate = date;
@@ -227,9 +229,15 @@ export class UserDefinedNotificationListComponent implements OnInit {
   }
 
 
-  clear() {
+  clearCreationDate() {
       this.fromDate = undefined;
       this.toDate = undefined;
       this.onDateSelection(null);
+  }
+
+  clearNotificationDate() {
+    this.notificationFromDate = undefined;
+    this.notificationToDate = undefined;
+    this.onNotificationDateSelection(null);
   }
 }

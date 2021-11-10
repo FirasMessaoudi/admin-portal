@@ -27,7 +27,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   languages: Lookup[] = [];
   translatedLanguages: Lookup[] = [];
   activeId;
-  checkedCriteria: number = 1;
+  checkedCriteria: number = 0;
   checkedGender: number = 0;
   creationDate: Date = new Date();
   selectedLang: string = 'ar';
@@ -267,6 +267,5 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     const hasAtLeastOne = group && group.controls && Object.keys(group.controls).some(k => !validator(group.controls[k]));
     return hasAtLeastOne ? null : {atLeastOne: true};
   };
-
 
 }
