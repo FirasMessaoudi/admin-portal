@@ -671,15 +671,18 @@ CREATE TABLE shc_portal.shc_notification_template
 (
     id              INT           NOT NULL PRIMARY KEY IDENTITY (1,1),
     category_code   VARCHAR(20)   NOT NULL,
-    name_code       VARCHAR(20)   NOT NULL,
+    name_code       VARCHAR(20)   NULL,
     status_code     VARCHAR(20)   NOT NULL,
     type_code       VARCHAR(20)   NOT NULL,
+    description     NVARCHAR(500) NULL,
     important       BIT           NOT NULL,
     action_required BIT           NOT NULL,
     enabled         BIT           NOT NULL,
     user_specific   BIT           NOT NULL,
+    force_sending   BIT           NOT NULL DEFAULT 1,
     creation_date   SMALLDATETIME NOT NULL DEFAULT current_timestamp,
     update_date     SMALLDATETIME NULL,
+    sending_date    SMALLDATETIME NULL,
 );
 GO
 
@@ -780,7 +783,8 @@ ALTER TABLE shc_portal.shc_applicant_digital_id
 GO
 
 ALTER TABLE shc_portal.shc_applicant
-    DROP COLUMN status;
+DROP
+COLUMN status;
 GO
 
 if not exists (select * from sys.tables where name = 'shc_applicant_digital_id_status_lk')
@@ -803,7 +807,7 @@ CREATE TABLE shc_portal.shc_user_notification_category_preference
     category_code VARCHAR(20)     NOT NULL,
     enabled       bit             NOT NULL,
     creation_date smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    update_date   SMALLDATETIME   NULL
+    update_date   SMALLDATETIME NULL
 );
 GO
 alter table shc_portal.shc_applicant_package_transportation alter column vehicle_number nvarchar(50);
@@ -812,11 +816,11 @@ GO
 if not exists (select * from sys.tables where name = 'shc_religious_occasions_day_lk')
 create table shc_portal.shc_religious_occasions_day_lk
 (
-    id                   int PRIMARY KEY NOT NULL identity(1,1),
-    code                 VARCHAR(20)     NOT NULL,
-    lang                 VARCHAR(45)     NOT NULL,
-    label                NVARCHAR(50) NOT NULL,
-    creation_date        smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id            int PRIMARY KEY NOT NULL identity(1,1),
+    code          VARCHAR(20)     NOT NULL,
+    lang          VARCHAR(45)     NOT NULL,
+    label         NVARCHAR(50) NOT NULL,
+    creation_date smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     constraint religious_occasions_day_lk_unique unique (code ASC, lang ASC)
 );
 GO
@@ -824,11 +828,11 @@ GO
 if not exists (select * from sys.tables where name = 'shc_meal_type_lk')
 create table shc_portal.shc_meal_type_lk
 (
-    id                   int PRIMARY KEY NOT NULL identity(1,1),
-    code                 VARCHAR(20)     NOT NULL,
-    lang                 VARCHAR(45)     NOT NULL,
-    label                NVARCHAR(50) NOT NULL,
-    creation_date        smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id            int PRIMARY KEY NOT NULL identity(1,1),
+    code          VARCHAR(20)     NOT NULL,
+    lang          VARCHAR(45)     NOT NULL,
+    label         NVARCHAR(50) NOT NULL,
+    creation_date smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     constraint shc_meal_type_lk_unique unique (code ASC, lang ASC)
 );
 GO
@@ -841,4 +845,23 @@ ALTER TABLE shc_portal.shc_applicant_package
 GO
 
 alter table shc_portal.shc_company_ritual_step_lk alter column summary nvarchar(100);
+GO
+
+
+/*---------------------------------------------------
+--  ddl for shc_user_card_status_audit table
+---------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_user_card_status_audit')
+CREATE TABLE shc_portal.shc_user_card_status_audit
+
+
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    user_id       int           NOT NULL,
+    card_id       int           NOT NULL,
+    uin           varchar(45)   NOT NULL,
+    status_code   varchar(20)   NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+);
 GO

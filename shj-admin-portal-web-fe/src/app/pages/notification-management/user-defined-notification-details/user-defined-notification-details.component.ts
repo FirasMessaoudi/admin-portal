@@ -28,8 +28,8 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   notificationTemplate: NotificationTemplate;
   selectedLang: string;
   notificationTemplateId: number;
-  notificationTemplateNames: Lookup[] = [];
   content: NotificationTemplateContent;
+  notificationStatuses: Lookup[];
 
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,
@@ -78,8 +78,8 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       this.localizedNotificationCategories = this.lookupsService.localizedItems(this.notificationCategories);
     });
 
-    this.notificationService.findNotificationTemplateNames().subscribe(result => {
-      this.notificationTemplateNames = result;
+    this.notificationService.findNotificationTemplateStatuses().subscribe(result => {
+      this.notificationStatuses = result;
     });
 
     this.notificationService.findLanguages().subscribe(result => {
@@ -113,6 +113,8 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       category: [null],
       severity: [null],
       enabled: {value: false},
+      userSpecific: {value: false},
+      forceSending: {value: false},
       title: [''],
       body: ['']
     });

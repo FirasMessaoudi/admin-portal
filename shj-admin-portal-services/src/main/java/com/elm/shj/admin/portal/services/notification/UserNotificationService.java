@@ -6,8 +6,10 @@ package com.elm.shj.admin.portal.services.notification;
 import com.elm.shj.admin.portal.orm.entity.JpaNotificationTemplateContent;
 import com.elm.shj.admin.portal.orm.entity.JpaUserNotification;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
-import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.DetailedUserNotificationDto;
+import com.elm.shj.admin.portal.services.dto.EUserNotificationStatus;
+import com.elm.shj.admin.portal.services.dto.NotificationTemplateDto;
+import com.elm.shj.admin.portal.services.dto.UserNotificationDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,9 +35,9 @@ import java.util.stream.Collectors;
 public class UserNotificationService extends GenericService<JpaUserNotification, UserNotificationDto, Long> {
 
     private final static String DRAFT = "DRAFT";
+    private final static String CONFIRMED = "CONFIRMED";
 
     private final UserNotificationRepository userNotificationRepository;
-    private final ApplicantMainDataService applicantMainDataService;
 
     /**
      * Finds user Notifications by user Id
@@ -110,14 +115,17 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
     public void sendToCategorizedApplicants(NotificationTemplateDto notificationTemplate) {
     }
 
-    public void sendToAllApplicants(long templateId) {
-        List<ApplicantMainDataDto> applicants = applicantMainDataService.findAll();
-        List<UserNotificationDto> userNotifications = applicants.stream().parallel().map(applicant -> UserNotificationDto
-                .builder()
-                .userId(applicant.getId())
-                .notificationTemplateId(templateId)
-                .statusCode(DRAFT)
-                .build()).collect(Collectors.toList());
-        super.saveAll(userNotifications);
+    private int calculateAge(Date birthDate) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate convertedBirthDate = convertToLocalDateViaInstant(birthDate);
+        if (convertedBirthDate != null) {
+            return Period.between(convertedBirthDate, currentDate).getYears();
+        } else {
+            return 0;
+        }
+    }
+
+    private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }

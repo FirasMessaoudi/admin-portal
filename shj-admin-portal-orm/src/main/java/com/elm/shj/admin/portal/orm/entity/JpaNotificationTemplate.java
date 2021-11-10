@@ -47,6 +47,9 @@ public class JpaNotificationTemplate implements Serializable {
     @Column(name = "type_code")
     private String typeCode;
 
+    @Column(name = "description")
+    private String description;
+
     private boolean important;
 
     @Column(name = "action_required")
@@ -56,6 +59,9 @@ public class JpaNotificationTemplate implements Serializable {
 
     @Column(name = "user_specific")
     private boolean userSpecific;
+
+    @Column(name = "force_sending")
+    private boolean forceSending;
 
     @Column(name = "expiration_period_in_minutes")
     private int expirationPeriodInMinutes;
@@ -81,6 +87,9 @@ public class JpaNotificationTemplate implements Serializable {
 
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
+
+    @Column(name = "sending_date")
+    private Date sendingDate;
 
     @PrePersist
     public void prePersist() {

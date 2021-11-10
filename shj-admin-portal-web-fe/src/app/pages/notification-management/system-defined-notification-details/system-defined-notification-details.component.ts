@@ -28,6 +28,7 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
   notificationTemplateNames: Lookup[] = [];
   templateForm: FormGroup;
   editable: boolean;
+  paramTooltipText: '';
   selectedLangTemplateContent: NotificationTemplateContent;
   languages: Lookup[] = [];
   translatedLanguages: Lookup[] = [];
@@ -173,6 +174,7 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
       this.confirmDialogService.confirm(this.translate.instant('notification-management.cancel_confirmation_text'), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
         if (confirm) {
           this.editable = false;
+          this.paramTooltipText = '';
           if (this.getTempContentIndex() == -1) {
             this.resetTemplateForm();
           } else {
@@ -187,9 +189,11 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
   }
 
   copyParameter(text: any) {
-    navigator.clipboard.writeText(text).then(() =>
-      this.toastr.success(this.translate.instant('support.text-copied'), '')
-    ).catch(e => console.error(e));
+    if (this.editable) {
+      navigator.clipboard.writeText(text).then(() =>
+        this.toastr.success(this.translate.instant('support.text-copied'), '')
+      ).catch(e => console.error(e));
+    }
   }
 
   checkForContentParams() {
@@ -216,6 +220,7 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
     this.allParamsAreValid = true;
     if (!this.editable) {
       this.editable = true;
+      this.paramTooltipText = this.translate.instant('support.click-to-copy');
       this.templateForm.controls['enabled'].enable();
       if (templateContentIndex == -1) {
         this.selectedLangTemplateContent = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
@@ -262,6 +267,7 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
         } else {
           this.toastr.success(this.translate.instant('general.dialog_edit_success_text'), this.translate.instant('general.dialog_edit_title'));
           this.editable = false;
+          this.paramTooltipText = '';
           this.templateForm.controls['enabled'].disable();
         }
       });

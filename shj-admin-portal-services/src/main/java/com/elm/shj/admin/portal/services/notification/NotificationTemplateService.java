@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -70,7 +71,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
     /**
      * Find paginated notification template based on filter.
      *
-     * @param pageable                   requested page of result.
+     * @param pageable requested page of result.
      * @param notificationSearchCriteria filter value object
      * @return
      */
@@ -83,7 +84,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         return (root, criteriaQuery, criteriaBuilder) -> {
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
-            root.fetch("notificationTemplateContents");
+            root.get("notificationTemplateContents");
 
             predicates.add(criteriaBuilder.equal(root.get("typeCode"), typeCode));
 
@@ -103,13 +104,16 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
                 predicates.add(criteriaBuilder.equal(root.get("nameCode"), notificationSearchCriteria.getNotificationName()));
             }
 
+            if (notificationSearchCriteria.getDescription() != null && notificationSearchCriteria.getDescription().trim().length() > 0) {
+                predicates.add(criteriaBuilder.like(root.get("description"), "%" + notificationSearchCriteria.getDescription().trim() + "%"));
+            }
+
             if (notificationSearchCriteria.getNotificationCategory() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("categoryCode"), notificationSearchCriteria.getNotificationCategory()));
             }
 
             if (notificationSearchCriteria.getNotificationType() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("actionRequired"), notificationSearchCriteria.getNotificationType()));
-
             }
 
             if (notificationSearchCriteria.getSeverity() != null) {
@@ -124,10 +128,19 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("creationDate"), notificationSearchCriteria.getCreationDateEnd()));
             }
 
+            if (notificationSearchCriteria.getSendingDateStart() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("sendingDate"), notificationSearchCriteria.getSendingDateStart()));
+            }
+
+            if (notificationSearchCriteria.getSendingDateEnd() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("sendingDate"), notificationSearchCriteria.getSendingDateEnd()));
+            }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
 
+    @Transactional
     public NotificationTemplateDto create(NotificationTemplateDto notificationTemplate) {
         notificationTemplate.getNotificationTemplateContents().parallelStream().forEach(content -> content.setNotificationTemplate(notificationTemplate));
         notificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());

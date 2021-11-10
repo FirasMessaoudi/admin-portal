@@ -5,8 +5,10 @@ package com.elm.shj.admin.portal.services.data.writer;
 
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthSpecialNeeds;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
@@ -81,6 +83,10 @@ public class ItemWriter {
         mapperRegistry.put(EDataSegment.APPLICANT_IMMUNIZATION_DATA, Objects.requireNonNull(findMapper(ApplicantHealthImmunizationDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_DISEASE_DATA, Objects.requireNonNull(findMapper(ApplicantHealthDiseaseDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, Objects.requireNonNull(findMapper(ApplicantRitualDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_INFO_EMERGENCY_DATA, Objects.requireNonNull(findMapper(ApplicantInfoEmergencyDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_EMERGENCY_DATA, Objects.requireNonNull(findMapper(ApplicantRitualEmergencyDto.class)));
+
+
     }
 
     /**
@@ -94,48 +100,106 @@ public class ItemWriter {
     @Transactional
     @SuppressWarnings({"rawtypes", "unchecked"})
     public <T, S> void write(List<AbstractMap.SimpleEntry<Row, T>> items, DataSegmentDto dataSegment, long dataRequestId) {
-        // update applicant related attributes
-        items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
-        // save all items and build data records
-        List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
-        List<S> savedItems = new ArrayList<>();
-        JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
-        items.forEach(entry -> {
-            S savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
-            savedItems.add(savedItem);
-            try {
-                dataRequestRecords.add(DataRequestRecordDto.builder()
-                        .createDataRequestId(dataRequestId)
-                        .lastUpdateDataRequestId(dataRequestId)
-                        .createDataRequestRowNum((long) entry.getKey().getRowNum())
-                        .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
-                        .itemId(Long.parseLong(BeanUtils.getProperty(savedItem, "id")))
-                        .build());
-            } catch (Exception e) {
-                ReflectionUtils.handleReflectionException(e);
-            }
-        });
-        // save all records
-        List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
-        // update all items with record ids
-        savedItems.forEach(s -> {
-            savedRecords.stream().filter(r -> {
-                try {
-                    return StringUtils.equals(BeanUtils.getProperty(r, "itemId"), BeanUtils.getProperty(s, "id"));
-                } catch (Exception e) {
-                    ReflectionUtils.handleReflectionException(e);
-                    return false;
+        if(dataSegment.getId()==7){
+            JpaRepository applicantRepository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.APPLICANT_DATA));
+            JpaRepository applicantRitualRepository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.APPLICANT_RITUAL_DATA));
+            List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
+            List<S> savedItems = new ArrayList<>();
+            items.forEach(entry ->{
+            ApplicantEmergencyDto emergencyDto = (ApplicantEmergencyDto)entry.getValue();
+
+                S savedApplicant = (S)applicantRepository.save(mapperRegistry.get(EDataSegment.APPLICANT_INFO_EMERGENCY_DATA).toEntity(emergencyDto.getApplicantInfoEmergencyDto(), mappingContext));
+                savedItems.add(savedApplicant);
+                S savedApplicantRitual = (S)applicantRitualRepository.save(mapperRegistry.get(EDataSegment.APPLICANT_RITUAL_EMERGENCY_DATA).toEntity(emergencyDto.getApplicantRitualEmergencyDto(), mappingContext));
+                savedItems.add(savedApplicantRitual);
+                savedItems.forEach(item ->{
+                    try{
+                        dataRequestRecords.add(DataRequestRecordDto.builder()
+                                .createDataRequestId(dataRequestId)
+                                .lastUpdateDataRequestId(dataRequestId)
+                                .createDataRequestRowNum((long) entry.getKey().getRowNum())
+                                .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
+                                .itemId(Long.parseLong(BeanUtils.getProperty(item, "id")))
+                                .build());
+                    }catch (Exception e){
+                        ReflectionUtils.handleReflectionException(e);
+                    }
+                });
+
+            });
+
+            List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+            savedItems.forEach(s -> {
+                savedRecords.stream().filter(r -> {
+                    try {
+                        return StringUtils.equals(BeanUtils.getProperty(r, "itemId"), BeanUtils.getProperty(s, "id"));
+                    } catch (Exception e) {
+                        ReflectionUtils.handleReflectionException(e);
+                        return false;
+                    }
+                }).forEach(r -> {
+                    try {
+                        BeanUtils.setProperty(s, "dataRequestRecord", r);
+                    } catch (Exception e) {
+                        ReflectionUtils.handleReflectionException(e);
+                    }
+                });
+            });
+            savedItems.forEach(item -> {
+                if (item.getClass().isAssignableFrom(JpaApplicant.class)){
+                    applicantRepository.save(item);
                 }
-            }).forEach(r -> {
+                if (item.getClass().isAssignableFrom(JpaApplicantRitual.class)){
+                    applicantRitualRepository.save(item);
+                }
+
+            });
+
+        }
+        else {
+            // update applicant related attributes
+            items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
+            // save all items and build data records
+            List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
+            List<S> savedItems = new ArrayList<>();
+            JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
+            items.forEach(entry -> {
+                S savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
+                savedItems.add(savedItem);
                 try {
-                    BeanUtils.setProperty(s, "dataRequestRecord", r);
+                    dataRequestRecords.add(DataRequestRecordDto.builder()
+                            .createDataRequestId(dataRequestId)
+                            .lastUpdateDataRequestId(dataRequestId)
+                            .createDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .itemId(Long.parseLong(BeanUtils.getProperty(savedItem, "id")))
+                            .build());
                 } catch (Exception e) {
                     ReflectionUtils.handleReflectionException(e);
                 }
             });
-        });
-        // update saved items
-        repository.saveAll(savedItems);
+            // save all records
+            List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+            // update all items with record ids
+            savedItems.forEach(s -> {
+                savedRecords.stream().filter(r -> {
+                    try {
+                        return StringUtils.equals(BeanUtils.getProperty(r, "itemId"), BeanUtils.getProperty(s, "id"));
+                    } catch (Exception e) {
+                        ReflectionUtils.handleReflectionException(e);
+                        return false;
+                    }
+                }).forEach(r -> {
+                    try {
+                        BeanUtils.setProperty(s, "dataRequestRecord", r);
+                    } catch (Exception e) {
+                        ReflectionUtils.handleReflectionException(e);
+                    }
+                });
+            });
+            // update saved items
+            repository.saveAll(savedItems);
+        }
     }
 
     /**

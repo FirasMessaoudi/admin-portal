@@ -7,9 +7,7 @@ package com.elm.shj.admin.portal.services.dto;
  * Copyright (c) 2021 ELM. All rights reserved.
  */
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -25,6 +23,8 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class NotificationRequestDto implements Serializable {
 
     private static final long serialVersionUID = -2499947945567039208L;
