@@ -15,9 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Scheduler to generate automatically Cards for new added applicantRituals
@@ -55,23 +55,18 @@ public class ApplicantCardScheduler {
      * Scheduled job to update card status based on ritual end date
      */
     @Scheduled(cron = "${scheduler.update.applicant.card.status.cron}")
-    @SchedulerLock(name = "update-applicant-cards-status-task")
-    public void updateApplicantCardStatusBasedOnRitualEndDate() {
-        log.debug("Update applicants cards status scheduler started...");
+    @SchedulerLock(name = "expire-ritual-applicant-card")
+    public void expireRitualApplicantCard() {
+        log.debug("Expire Ritual Applicant Card scheduler started...");
         LockAssert.assertLocked();
-        applicantCardService.updateCardStatusesBasedOnRitualEndDate();
 
-        /*List<ApplicantCardDto> cardsList = applicantCardService.findAll();
-        cardsList.parallelStream()
-                .filter(card -> card.getApplicantRitual().getApplicantPackage() != null)
-                .filter(card -> new Date().after(card.getApplicantRitual().getApplicantPackage().getEndDate()))
-                .forEach(card -> {
+        List<ApplicantCardDto> cardsList = applicantCardService.findApplicantCardsEligibleToExpire();
+        applicantCardService.updateCardStatusesAsExpired(cardsList.parallelStream().map((card)-> card.getId()).collect(Collectors.toList()));
+        /*cardsList.parallelStream()
+               .forEach(card -> {
                     card.setStatusCode(ECardStatus.EXPIRED.name());
                     userCardStatusAuditService.saveUserCardStatusAudit(card, Optional.of(Constants.SYSTEM_USER_ID_NUMBER));
-
-                });
-
-        applicantCardService.saveAll(cardsList);*/
+                });*/
 
 
     }
