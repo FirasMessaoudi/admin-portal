@@ -59,7 +59,9 @@ public class ApplicantCardScheduler {
     public void updateApplicantCardStatusBasedOnRitualEndDate() {
         log.debug("Update applicants cards status scheduler started...");
         LockAssert.assertLocked();
-        List<ApplicantCardDto> cardsList = applicantCardService.findAll();
+        applicantCardService.updateCardStatusesBasedOnRitualEndDate();
+
+        /*List<ApplicantCardDto> cardsList = applicantCardService.findAll();
         cardsList.parallelStream()
                 .filter(card -> card.getApplicantRitual().getApplicantPackage() != null)
                 .filter(card -> new Date().after(card.getApplicantRitual().getApplicantPackage().getEndDate()))
@@ -69,7 +71,7 @@ public class ApplicantCardScheduler {
 
                 });
 
-        applicantCardService.saveAll(cardsList);
+        applicantCardService.saveAll(cardsList);*/
 
 
     }
