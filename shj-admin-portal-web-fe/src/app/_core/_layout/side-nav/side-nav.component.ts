@@ -93,12 +93,12 @@ export class SideNavComponent implements OnInit {
         submenu: true,
         menuItems: [
           {
-            title: 'notification-management.system_defined_notification_details',
+            title: 'notification-management.system_notifications',
             roles: [EAuthority.NOTIFICATION_MANAGEMENT],
             routerLink: '/notification/list'
           },
           {
-            title: 'notification-management.user_defined_notifications',
+            title: 'notification-management.user_notifications',
             roles: [EAuthority.NOTIFICATION_MANAGEMENT],
             routerLink: '/user-defined-notification/list',
           }
