@@ -212,3 +212,6 @@ INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
 VALUES ('DINNER','ar',N'عشاء')
 GO
 
+
+
+
