@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.notification;
 import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.NotificationRequestRepository;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
+import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import javassist.NotFoundException;
@@ -15,10 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service handling Notification Request
@@ -35,7 +34,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     private final NotificationTemplateService notificationTemplateService;
     private final NotificationRequestRepository notificationRequestRepository;
     private final UserNotificationRepository userNotificationRepository;
-
+    private final ApplicantMainDataService applicantMainDataService;
 
     /**
      * will handle processing of  user Notifications in notification processing scheduler
@@ -141,6 +140,23 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
      */
     private long findNotificationTemplateParameterId(Optional<NotificationTemplateDto> notificationTemplate, String parameterName) {
         return notificationTemplate.get().getNotificationTemplateParameters().parallelStream().filter(nt -> nt.getParameterName().equalsIgnoreCase(parameterName)).findAny().get().getId();
+    }
+
+    @Transactional
+    public void sendToAllApplicants(NotificationTemplateDto notificationTemplate) {
+        List<ApplicantMainDataDto> applicants = applicantMainDataService.findAll();
+        List<NotificationRequestDto> notificationRequests = applicants.parallelStream().map(applicant -> NotificationRequestDto
+                        .builder()
+                        .userId(applicant.getId())
+                        .notificationTemplate(notificationTemplate)
+                        .sendingDate(notificationTemplate.getSendingDate())
+                        // if there is no content that matches preferred language, pick present language content in order (by default english, arabic, french...)
+                        //.userLang(notificationTemplate.getNotificationTemplateContents().stream().findFirst().toString())
+                        .userLang("AR")
+                        .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
+                        .build())
+                .collect(Collectors.toList());
+        super.saveAll(notificationRequests);
     }
 
 }

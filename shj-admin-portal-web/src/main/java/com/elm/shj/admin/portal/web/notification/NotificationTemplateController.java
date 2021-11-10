@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.NotificationSearchCriteriaDto;
 import com.elm.shj.admin.portal.services.dto.NotificationTemplateContentDto;
 import com.elm.shj.admin.portal.services.dto.NotificationTemplateDto;
+import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
 import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
 import com.elm.shj.admin.portal.services.notification.UserNotificationService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
 public class NotificationTemplateController {
 
     private final NotificationTemplateService notificationTemplateService;
-    private final UserNotificationService userNotificationService;
+    private final NotificationRequestService notificationRequestService;
 
     private final static String SYSTEM_DEFINED = "SYSTEM_DEFINED";
     private final static String USER_DEFINED = "USER_DEFINED";
@@ -83,11 +84,10 @@ public class NotificationTemplateController {
         return ResponseEntity.ok(updatedNotificationTemplate);
     }
 
-    @GetMapping("/send-to-all/{templateId}")
+    @PostMapping("/send-to-all")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
-    public void sendToAllApplicants(@PathVariable long templateId,
-                                    Authentication authentication) {
-        userNotificationService.sendToAllApplicants(templateId);
+    public void sendToAllApplicants(@RequestBody NotificationTemplateDto notificationTemplateDto, Authentication authentication) {
+        notificationRequestService.sendToAllApplicants(notificationTemplateDto);
     }
 
     private boolean validateTemplateContentParams(NotificationTemplateDto notificationTemplate) {

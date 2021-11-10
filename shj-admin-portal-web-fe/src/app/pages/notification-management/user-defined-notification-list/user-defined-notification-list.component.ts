@@ -35,6 +35,10 @@ export class UserDefinedNotificationListComponent implements OnInit {
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
 
+  notificationHoveredDate: NgbDate | null = null;
+  notificationFromDate: NgbDate | null;
+  notificationToDate: NgbDate | null;
+
   notificationTemplateStatuses: Lookup[] = [];
 
   private listSubscription: Subscription;
@@ -50,6 +54,9 @@ export class UserDefinedNotificationListComponent implements OnInit {
               private dateFormatterService: DateFormatterService) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+
+    this.notificationFromDate = calendar.getToday();
+    this.notificationToDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
 
   ngOnInit(): void {
@@ -75,9 +82,9 @@ export class UserDefinedNotificationListComponent implements OnInit {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
-      title: [''],
-      body: [''],
-      category: [null],
+      notificationTitle: [''],
+      notificationBody: [''],
+      notificationCategory: [null],
       severity: [null],
       description: ['']
     });
@@ -113,13 +120,16 @@ export class UserDefinedNotificationListComponent implements OnInit {
     const fromDate = this.getSelectedDate(this.fromDate)
     const toDate = this.getSelectedDate(this.toDate);
 
+    const notificationFromDate = this.getSelectedDate(this.notificationFromDate)
+    const notificationToDate = this.getSelectedDate(this.notificationToDate);
+
     const payload = this.searchForm.value;
     payload.creationDateStart = fromDate;
     payload.creationDateEnd = toDate;
+    payload.sendingDateStart = notificationFromDate;
+    payload.sendingDateEnd = notificationToDate;
 
     this.searchSubscription = this.notificationService.listUserDefined(0, payload).subscribe(data => {
-
-      console.log(payload);
 
       this.notificationTemplates = [];
       this.pageArray = [];
@@ -132,7 +142,6 @@ export class UserDefinedNotificationListComponent implements OnInit {
   }
 
   loadPage(page: number) {
-    console.log(this.searchForm.value);
     this.listSubscription = this.notificationService.listUserDefined(page, this.searchForm.value).subscribe(data => {
       this.page = data;
       if (this.page != null) {
@@ -175,7 +184,17 @@ export class UserDefinedNotificationListComponent implements OnInit {
       this.toDate = null;
       this.fromDate = date;
     }
+  }
 
+  onNotificationDateSelection(date: NgbDate) {
+    if (!this.notificationFromDate && !this.notificationToDate) {
+      this.notificationFromDate = date;
+    } else if (this.notificationFromDate && !this.notificationToDate && date && date.after(this.notificationFromDate)) {
+      this.notificationToDate = date;
+    } else {
+      this.notificationToDate = null;
+      this.notificationFromDate = date;
+    }
   }
 
   isHovered(date: NgbDate) {
@@ -194,5 +213,18 @@ export class UserDefinedNotificationListComponent implements OnInit {
     const parsed = this.formatter.parse(input);
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
+
+  isNotificationDateHovered(date: NgbDate) {
+    return this.notificationFromDate && !this.notificationToDate && this.notificationHoveredDate && date.after(this.notificationFromDate) && date.before(this.notificationHoveredDate);
+  }
+
+  isNotificationDateInside(date: NgbDate) {
+    return this.notificationToDate && date.after(this.notificationFromDate) && date.before(this.notificationToDate);
+  }
+
+  isNotificationDateInRange(date: NgbDate) {
+    return date.equals(this.notificationFromDate) || (this.notificationToDate && date.equals(this.notificationToDate)) || this.isNotificationDateInside(date) || this.isNotificationDateHovered(date);
+  }
+
 
 }

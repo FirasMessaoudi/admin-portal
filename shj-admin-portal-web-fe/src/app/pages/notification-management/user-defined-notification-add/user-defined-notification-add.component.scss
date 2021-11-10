@@ -1,3 +1,7 @@
+textarea {
+  resize: none;
+}
+
 .radio-group {
   border: none !important;
   color: rgb(102, 102, 102) !important;
@@ -42,4 +46,8 @@
     color: #3B7937;
   }
 
+}
+
+.disabled-control {
+  background-color: rgb(250, 250, 250);
 }

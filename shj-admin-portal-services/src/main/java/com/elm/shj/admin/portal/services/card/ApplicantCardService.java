@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Service handling applicant card
@@ -38,6 +35,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     public static final Map<String, String[]> CARD_STATUS_ALLOWED_ACTION = new HashMap<>();
 
     private final ApplicantCardRepository applicantCardRepository;
+    private final UserCardStatusAuditService userCardStatusAuditService;
 
     @PostConstruct
     private void postConstruct() {
@@ -116,10 +114,11 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      *
      * @param card       to   change it's status
      * @param actionCode the new status Code
+     * @param userId     the id of the logged in user
      * @return card with  the status changed  successfully
      **/
     @Transactional
-    public ApplicantCardDto changeCardStatus(ApplicantCardDto card, String actionCode) {
+    public ApplicantCardDto changeCardStatus(ApplicantCardDto card, String actionCode, Optional<Long> userId) {
 
         if (actionCode.equalsIgnoreCase(ECardStatusAction.CANCEL_CARD.name())) {
             card.setStatusCode(ECardStatus.CANCELLED.name());
@@ -131,11 +130,16 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
             card.setStatusCode(ECardStatus.REISSUED.name());
             save(card);
             log.debug("Generate new applicant card  after mark old one as reissued...");
-            return save(ApplicantCardDto.builder().applicantRitual(card.getApplicantRitual()).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
+            userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
+            ApplicantCardDto savedCard = save(ApplicantCardDto.builder().applicantRitual(card.getApplicantRitual()).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
+            userCardStatusAuditService.saveUserCardStatusAudit(savedCard, userId);
+            return savedCard;
         }
+        userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
         return save(card);
 
     }
+
 
     /**
      * Find Applicant Card
@@ -146,4 +150,6 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     public ApplicantCardDto findApplicantCard(long cardId) {
         return getMapper().fromEntity(applicantCardRepository.findByIdAndStatusCodeNot(cardId, ECardStatus.REISSUED.name()), mappingContext);
     }
+
+
 }

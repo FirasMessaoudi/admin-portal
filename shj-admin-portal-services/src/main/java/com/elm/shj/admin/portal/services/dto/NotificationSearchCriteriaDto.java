@@ -21,8 +21,11 @@ public class NotificationSearchCriteriaDto implements Serializable {
     private String notificationTitle;
     private String notificationCategory;
     private String notificationName;
+    private String description;
     private Boolean severity;
     private Boolean notificationType;
     private Date creationDateStart;
     private Date creationDateEnd;
+    private Date sendingDateStart;
+    private Date sendingDateEnd;
 }
