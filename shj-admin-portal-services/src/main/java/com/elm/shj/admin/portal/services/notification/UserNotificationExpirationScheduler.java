@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.notification;
 
 import com.elm.shj.admin.portal.orm.entity.JpaUserNotification;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
+import com.elm.shj.admin.portal.services.dto.ENotificationTemplateType;
 import com.elm.shj.admin.portal.services.dto.EUserNotificationStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,16 +53,21 @@ public class UserNotificationExpirationScheduler {
             }
             userNotifications.stream().parallel().forEach(
                     notification -> {
-                        long diffInMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), notification.getCreationDate().toInstant()
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDateTime().plusMinutes(notification.getNotificationTemplate().getExpirationPeriodInMinutes()));
-                        if (diffInMinutes <= 0) {
-                            try {
-                                userNotificationService.markUserNotificationsAsExpired(notification.getId());
-                            } catch (Exception e) {
-                                log.error("Failed to mark User Notifications As Expired notification Id  >>  {}", notification.getId());
+                        if (notification.getNotificationTemplate().getTypeCode() == ENotificationTemplateType.SYSTEM_DEFINED.name()) {
+                            long diffInMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), notification.getCreationDate().toInstant()
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDateTime().plusMinutes(notification.getNotificationTemplate().getExpirationPeriodInMinutes()));
+                            if (diffInMinutes <= 0) {
+                                try {
+                                    userNotificationService.markUserNotificationsAsExpired(notification.getId());
+                                } catch (Exception e) {
+                                    log.error("Failed to mark User Notifications As Expired notification Id  >>  {}", notification.getId());
+                                }
                             }
+                        } else {
+                            // TODO: kindly add the logic for the user defined one
                         }
+
                     }
             );
             pageNum++;
