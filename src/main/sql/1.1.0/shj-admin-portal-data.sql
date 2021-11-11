@@ -247,6 +247,10 @@ WHERE code = 'GENERAL_AWARENESS'
   and lang = 'en';
 Go
 
-insert into shc_portal.shc_data_segment (id,template_file_name, label_ar, label_en)
-values (7 ,'applicant-emergency-data.xlsx',N'البيانات الضرورية لهوية ضيف الرحمن (في حالة الطوارئ)','Applicant Emergency Data');
+SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
+insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
+values (7, 'applicant-emergency-data.xlsx', N'البيانات الضرورية لهوية ضيف الرحمن (في حالة الطوارئ)',
+        'Applicant Emergency Data');
+SET
+IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 Go
