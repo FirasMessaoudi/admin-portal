@@ -227,13 +227,30 @@ UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = N'تجن�
 WHERE code = 'GENERAL_AWARENESS' and lang = 'ar';
 
 UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = ''
-WHERE code = 'GENERAL' and lang = 'en';
-UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = ''
-WHERE code = 'HEALTH' and lang = 'en';
-UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = ''
-WHERE code = 'RELIGIOUS' and lang = 'en';
-UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample = ''
-WHERE code = 'RITUAL' and lang = 'en';
-UPDATE shc_portal.shc_portal.shc_notification_category_lk SET sample =''
-WHERE code = 'GENERAL_AWARENESS' and lang = 'en';
+WHERE code = 'GENERAL'
+  and lang = 'en';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk
+SET sample = ''
+WHERE code = 'HEALTH'
+  and lang = 'en';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk
+SET sample = ''
+WHERE code = 'RELIGIOUS'
+  and lang = 'en';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk
+SET sample = ''
+WHERE code = 'RITUAL'
+  and lang = 'en';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk
+SET sample =''
+WHERE code = 'GENERAL_AWARENESS'
+  and lang = 'en';
+Go
+
+SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
+insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
+values (7, 'applicant-emergency-data.xlsx', N'البيانات الضرورية لهوية ضيف الرحمن (في حالة الطوارئ)',
+        'Applicant Emergency Data');
+SET
+IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 Go

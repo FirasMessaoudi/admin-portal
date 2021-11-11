@@ -42,13 +42,30 @@ export class NotificationService {
   }
 
   /**
-   * Finds notification Template  by his ID from the server.
+   * Finds notification Template by his ID from the server.
    *
    *@param templateId the template Id
    * @return {Observable<PrintRequest>} The template identified by its ID.
    */
   findNotificationTemplateById(templateId: number): Observable<any> {
     return this.http.get<any>('/core/api/notification/template/' + templateId).pipe(
+      catchError(
+        (error: any, caught: Observable<HttpEvent<any>>) => {
+          console.error(error);
+          return of(null);
+        }
+      )
+    );
+  }
+
+  /**
+   * Finds user notification notification Template by its ID from the server.
+   *
+   * @param templateId the template ID
+   * @return {Observable<PrintRequest>} The template identified by its ID.
+   */
+  findUserDefinedNotificationTemplateById(templateId: number): Observable<any> {
+    return this.http.get<any>('/core/api/notification/template/user-defined/' + templateId).pipe(
       catchError(
         (error: any, caught: Observable<HttpEvent<any>>) => {
           console.error(error);
@@ -109,7 +126,7 @@ export class NotificationService {
   }
 
   loadCompanies(): Observable<any> {
-    return this.http.get<any>('').pipe(
+    return this.http.get<any>('/core/api/user-notification/company/list').pipe(
       catchError(
         (error: any, caught: Observable<HttpEvent<any>>) => {
           console.error(error);
