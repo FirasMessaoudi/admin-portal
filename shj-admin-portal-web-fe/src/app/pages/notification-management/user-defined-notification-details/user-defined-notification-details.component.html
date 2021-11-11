@@ -119,7 +119,7 @@
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification-status" | translate }}</label>
           <label *ngIf="!editMode" class="form-control-plaintext">
-            {{notificationTemplate?.statusCode ? lookupService().localizedLabel(notificationStatuses, notificationTemplate?.statusCode) : '---'}}</label>
+            {{notificationTemplate?.statusCode? lookupService().localizedLabel(notificationStatuses, notificationTemplate?.statusCode) : '---'}}</label>
           <select *ngIf="editMode" class="custom-select" formControlName="notificationStatus">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
             <option *ngFor="let notificationStatus of lookupService().localizedItems(notificationStatuses)"

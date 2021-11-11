@@ -83,6 +83,14 @@ export const environment = {
       url: '/api/lookup/notification-name/list',
       data: '[{"id":1,"code":"PASSWORD_EXPIRATION","lang":"ar","label":"قرب انتهاء كلمة المرور","creationDate":1633621320000},{"id":2,"code":"PASSWORD_EXPIRATION","lang":"en","label":"Password Will Expire","creationDate":1633621320000},{"id":3,"code":"OUT_ARAFAT_FENCE","lang":"ar","label":"خارج حدود عرفات","creationDate":1633621320000},{"id":4,"code":"OUT_ARAFAT_FENCE","lang":"en","label":"Out of Arafat Geo Fence","creationDate":1633621320000},{"id":5,"code":"DAILY_SURVEY","lang":"ar","label":"تقييم الخدمات اليومية المقدمة","creationDate":1633621320000},{"id":6,"code":"DAILY_SURVEY","lang":"en","label":"Evaluate Daily Service","creationDate":1633621320000}]'
     },
+    {
+      url: '/api/notification/template/user-defined/list?page=0',
+      data:'{"content":[{"id":4,"categoryCode":"GENERAL","nameCode":null,"statusCode":"CONFIRMED","typeCode":"USER_DEFINED","description":"نموذج تنبيه أول","important":false,"actionRequired":false,"enabled":true,"userSpecific":false,"forceSending":true,"expirationPeriodInMinutes":10080,"notificationTemplateContents":[{"id":3,"lang":"EN","title":"First notification title","body":"First notification content","actionLabel":null,"creationDate":1636625040000,"updateDate":null},{"id":4,"lang":"AR","title":"عنوان التنبيه الأول","body":"محتوى التنبيه الأول","actionLabel":null,"creationDate":1636625040000,"updateDate":null}],"notificationRequests":[],"userNotifications":[],"notificationTemplateParameters":[],"creationDate":1636625040000,"updateDate":null,"sendingDate":1636578000000}],"pageable":{"sort":{"unsorted":true,"sorted":false,"empty":true},"offset":0,"pageNumber":0,"pageSize":10,"paged":true,"unpaged":false},"last":true,"totalPages":1,"totalElements":1,"size":10,"number":0,"sort":{"unsorted":true,"sorted":false,"empty":true},"first":true,"numberOfElements":1,"empty":false}'
+    },
+    {
+      url: '/api/notification/template/4',
+      data: '{"id":4,"categoryCode":"GENERAL","nameCode":null,"statusCode":"CONFIRMED","typeCode":"USER_DEFINED","description":"نموذج تنبيه أول","important":false,"actionRequired":false,"enabled":true,"userSpecific":false,"forceSending":true,"expirationPeriodInMinutes":10080,"notificationTemplateContents":[{"id":3,"lang":"EN","title":"First notification title","body":"First notification content","actionLabel":null,"creationDate":1636625040000,"updateDate":null},{"id":4,"lang":"AR","title":"عنوان التنبيه الأول","body":"محتوى التنبيه الأول","actionLabel":null,"creationDate":1636625040000,"updateDate":null}],"notificationRequests":[],"userNotifications":[],"notificationTemplateParameters":[],"creationDate":1636625040000,"updateDate":null,"sendingDate":1636578000000}'
+    }
 
   ]
 };
