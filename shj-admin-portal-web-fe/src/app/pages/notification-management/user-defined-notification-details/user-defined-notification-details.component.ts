@@ -51,7 +51,7 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       this.notificationTemplateId = +results.params; // (+) converts string 'id' to a number
       if (this.notificationTemplateId) {
         // load user details
-        this.notificationService.findNotificationTemplateById(this.notificationTemplateId).subscribe(data => {
+        this.notificationService.findUserDefinedNotificationTemplateById(this.notificationTemplateId).subscribe(data => {
           if (data && data.id) {
             this.notificationTemplate = data;
             this.selectedLang = "ar";

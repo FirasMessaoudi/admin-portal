@@ -75,6 +75,13 @@ public class NotificationTemplateController {
         return notificationTemplateService.findOne(templateId);
     }
 
+    @GetMapping("/user-defined/{templateId}")
+    //TODO Change the authorization to user defined notification
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
+    public NotificationTemplateDto findUserDefinedNotificationTemplateById(@PathVariable long templateId, Authentication authentication) {
+        return notificationTemplateService.findOne(templateId);
+    }
+
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.SYSTEM_DEFINED_NOTIFICATION_DETAILS + "')")
     public ResponseEntity<NotificationTemplateDto> updateNotificationTemplate(@RequestBody @Validated NotificationTemplateDto notificationTemplate) {
