@@ -416,7 +416,7 @@
     "notification-type": "Notification Type",
     "type-code": "Type Code",
     "action-label": "Action Label",
-    "expiry-date": "Expiry Date",
+    "expiry-date": "Auto Expiry Date",
     "important": "Important",
     "normal": "Normal",
     "all": "All",
@@ -459,7 +459,9 @@
     "company": "Company",
     "gender": "Gender",
     "male": "Male",
-    "female": "Female"
+    "female": "Female",
+    "minute": "Minute",
+    "minutes": "Minutes"
   },
   "printing-management": {
     "title": "Printing Management",

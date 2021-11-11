@@ -403,7 +403,7 @@
     "notification-type": "نوع التنبيه",
     "type-code": "نوع الرمز",
     "action-label": "اسم الإجراء",
-    "expiry-date": "تاريخ انتهاء الصلاحية",
+    "expiry-date": "تاريخ الانتهاء التلقائي",
     "notification-name": "اسم التنبيه",
     "important": "مهمة",
     "normal": "عادية",
@@ -447,7 +447,9 @@
     "company": "الشركة",
     "gender": "النوع",
     "male": "ذكور",
-    "female": "إناث"
+    "female": "إناث",
+    "minute": "دقيقة",
+    "minutes": "دقائق"
   },
   "printing-management": {
     "title": "إدارة الطباعة",
