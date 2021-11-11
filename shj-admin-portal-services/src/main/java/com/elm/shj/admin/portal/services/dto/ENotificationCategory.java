@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 /**
- * Enum for card statuses
+ * Enum for Notification Category
  *
  * @author Ahmed Ali
  * @since 1.1.0

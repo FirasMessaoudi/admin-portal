@@ -39,7 +39,8 @@
                 </div>
                 <div class="radio-item align-items-baseline d-flex">
                   <input formControlName="enabled"
-                         class="mr-2" name="enabled"
+                         class="mr-2"
+                         name="enabled"
                          [value]="false"
                          type="radio"
                          id="customRadioInline06">
@@ -205,19 +206,19 @@
       <label class="col-form-label">{{ "notification-management.send_notification_to" | translate }}</label>
       <div class="radio-group form-control-plaintext d-flex font-weight-normal">
         <div class="radio-item align-items-baseline d-flex mr-5">
-          <input class="mr-2" name="target" [value]="-1" type="radio"
+          <input class="mr-2" name="target" [value]="0" type="radio"
                  [(ngModel)]="checkedCriteria"
                  id="customRadioInline07">
           <label for="customRadioInline07">{{ "notification-management.all" | translate }}</label>
         </div>
         <div class="radio-item align-items-baseline d-flex mr-5">
-          <input class="mr-2" name="target" [value]="0" type="radio"
+          <input class="mr-2" name="target" [value]="1" type="radio"
                  [(ngModel)]="checkedCriteria"
                  id="customRadioInline08">
           <label for="customRadioInline08">{{ "notification-management.categorized_applicants" | translate }}</label>
         </div>
         <div class="radio-item align-items-baseline d-flex">
-          <input class="mr-2" name="target" [value]="1" type="radio"
+          <input class="mr-2" name="target" [value]="2" type="radio"
                  [(ngModel)]="checkedCriteria"
                  [disabled]="true"
                  id="customRadioInline09">
@@ -226,7 +227,7 @@
       </div>
     </div>
 
-    <div class="searchBox mb-4 animate slideIn delay" *ngIf="checkedCriteria == 0">
+    <div class="searchBox mb-4 animate slideIn delay" *ngIf="checkedCriteria === 1">
       <form class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
 
         <div class="form-group col">
@@ -288,19 +289,19 @@
           <label class="col-form-label">{{"notification-management.gender"| translate}}</label>
           <div class="radio-group form-control-plaintext d-flex font-weight-normal">
             <div class="radio-item align-items-baseline d-flex mr-5">
-              <input class="mr-2" name="gender" [value]="-1" type="radio"
+              <input class="mr-2" name="gender" [value]="0" type="radio"
                      [(ngModel)]="checkedGender"
                      id="customRadioInline10">
               <label for="customRadioInline10">{{"notification-management.all"| translate}}</label>
             </div>
             <div class="radio-item align-items-baseline d-flex mr-5">
-              <input class="mr-2" name="gender" [value]="0" type="radio"
+              <input class="mr-2" name="gender" [value]="1" type="radio"
                      [(ngModel)]="checkedGender"
                      id="customRadioInline11">
               <label for="customRadioInline11">{{"notification-management.male"| translate}}</label>
             </div>
             <div class="radio-item align-items-baseline d-flex">
-              <input class="mr-2" name="gender" [value]="1" type="radio"
+              <input class="mr-2" name="gender" [value]="2" type="radio"
                      [(ngModel)]="checkedGender"
                      id="customRadioInline12">
               <label for="customRadioInline12">{{"notification-management.female"| translate}}</label>
@@ -310,7 +311,7 @@
 
       </form>
     </div>
-    <div *ngIf="checkedCriteria == 1">إضافة حاج</div>
+    <div *ngIf="checkedCriteria === 2">إضافة حاج</div>
 
     <div class="d-flex justify-content-between">
       <button class="btn btn-outline-dcc-primary px-4 mr-1" (click)="goBack()">

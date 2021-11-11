@@ -1,7 +1,7 @@
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="sectionTitle">
-      {{ "notification-management.user_defined_notifications" | translate }}
+      {{ "notification-management.user_notifications" | translate }}
       <button class="btn btn-link shadow-none">
         <svg-icon styleClass="h4 pt-3" icon="search" (click)="isSearchbarCollapsed = !isSearchbarCollapsed"></svg-icon>
       </button>
@@ -71,6 +71,7 @@
                          [dayTemplate]="t1"
                          outsideDays="hidden"
                          [startDate]="notificationFromDate"
+                         [footerTemplate]="notificationDateFooterTemplate"
                          tabindex="-1">
                   <ng-template #t1 let-date let-focused="focused">
                 <span class="custom-day" [class.focused]="focused" [class.range]="isNotificationDateInRange(date)"
@@ -118,6 +119,13 @@
               </div>
 
             </div>
+            <ng-template #notificationDateFooterTemplate>
+              <hr class="my-0">
+              <button class="btn btn-outline-dcc-primary  btn-sm m-2 float-right" type="button"
+                      (click)="notificationDatepicker.close()">{{'general.btn_close'| translate}}</button>
+              <button class="btn btn-dcc-primary btn-sm m-2 float-left" type="button"
+                      (click)="clearNotificationDate()">{{'general.btn_clear'| translate}}</button>
+            </ng-template>
           </div>
 
           <div class="form-group col">
@@ -137,6 +145,7 @@
                          [dayTemplate]="t2"
                          outsideDays="hidden"
                          [startDate]="fromDate!"
+                         [footerTemplate]="creationDateFooterTemplate"
                          tabindex="-1">
                   <ng-template #t2 let-date let-focused="focused">
                 <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
@@ -184,6 +193,13 @@
               </div>
 
             </div>
+            <ng-template #creationDateFooterTemplate>
+              <hr class="my-0">
+              <button class="btn btn-outline-dcc-primary  btn-sm m-2 float-right" type="button"
+                      (click)="datepicker.close()">{{'general.btn_close'| translate}}</button>
+              <button class="btn btn-dcc-primary btn-sm m-2 float-left" type="button"
+                      (click)="clearCreationDate()">{{'general.btn_clear'| translate}}</button>
+            </ng-template>
           </div>
 
         </div>
@@ -244,13 +260,13 @@
             class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.body || '---'}}</td>
           <td
             class="ltr">{{template?.categoryCode ? lookupService().localizedLabel(notificationCategories, template?.categoryCode) : '---'}}</td>
-          <td class="ltr d-flex align-items-baseline" *ngIf="template?.important">
-            <span>{{'notification-management.important' |translate}}</span>
+          <td class=" d-flex align-items-baseline" *ngIf="template?.important">
             <span class="status mr-1 Suspended severity-badge"></span>
+            <span>{{'notification-management.important' |translate}}</span>
           </td>
-          <td class="ltr d-flex align-items-baseline" *ngIf="!template?.important">
-            <span>{{'notification-management.normal' |translate}}</span>
+          <td class=" d-flex align-items-baseline" *ngIf="!template?.important">
             <span class="status mr-1 done severity-badge"></span>
+            <span>{{'notification-management.normal' |translate}}</span>
           </td>
           <td
             class="ltr">{{template?.sendingDate | dateFormat}}
@@ -266,6 +282,8 @@
             </button>
           </td>
         </tr>
+
+
         </tbody>
       </table>
     </div>

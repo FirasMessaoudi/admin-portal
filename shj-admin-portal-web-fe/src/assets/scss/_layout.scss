@@ -101,7 +101,7 @@
   }
 
   .sideNav{
-
+    .item.submenu_item.active{@extend .font-weight-bold;}
     .item{
     display: block;
     padding-top: .75rem;

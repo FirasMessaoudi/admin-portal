@@ -7,13 +7,58 @@
 
   <ul class="sideNav mt-4">
     <li *ngFor="let link of links">
-      <a class="item" *ngIf="link.display" routerLink="{{ link.routerLink }}"
-         [class.active]="(link.routerLink === '/' && router.routerState.snapshot.url === link.routerLink) || (link.routerLink !== '/' && router.routerState.snapshot.url.indexOf(link.routerLink.split('/')[1]) != -1)">
+      <a class="item" *ngIf="link.display && !link.submenu" routerLink="{{ link.routerLink }}"
+         [class.active]="(link.routerLink === '/' && router.routerState.snapshot.url === link.routerLink)
+         || (link.routerLink !== '/'
+         && router.routerState.snapshot.url.indexOf(link.routerLink.split('/')[1]) != -1)">
           <span class="navIcon">
             <svg-icon styleClass="mx-3 {{ link.iconFa }}" icon="{{ link.icon }}"></svg-icon>
           </span>
         {{ link.title | translate }}
       </a>
+
+      <a *ngIf="link.submenu" class="item pointer"
+         (click)="isCollapsed = !isCollapsed">
+        <span class="d-flex">
+       <span class="navIcon">
+            <svg-icon styleClass="mx-3 {{ link.iconFa }}" icon="{{ link.icon }}"></svg-icon>
+       </span>
+          {{ link.title | translate }}
+          <svg-icon class="ml-auto pr-3" styleClass="flip" icon="chevron-left-light"></svg-icon>
+          </span>
+      </a>
+      <div *ngIf="link.submenu" [ngbCollapse]="isCollapsed">
+        <a class="item submenu_item pointer border-0 px-md-5" *ngFor="let menuItem of link.menuItems"
+           routerLink="{{ menuItem.routerLink }}"
+           [class.active]="(menuItem.routerLink === '/' && router.routerState.snapshot.url === menuItem.routerLink)
+           || (menuItem.routerLink !== '/' && router.routerState.snapshot.url.indexOf(menuItem.routerLink.split('/')[1]) != -1)">
+          {{ menuItem.title | translate }}
+        </a>
+      </div>
     </li>
+
+    <!--submenu -->
+    <!--    <li >-->
+    <!--     <a class="item pointer" (click)="isCollapsed = !isCollapsed"  >-->
+    <!--       <span class="navIcon">-->
+    <!--            <svg-icon styleClass="mx-3 fa-w-12" icon="file-alt"></svg-icon>-->
+    <!--          </span>-->
+    <!--       main menu-->
+    <!--       <svg-icon styleClass="px-4 flip float-left" icon="chevron-left-light"></svg-icon>-->
+    <!--     </a>-->
+    <!--      <div  [ngbCollapse]="isCollapsed" class="px-md-5" >-->
+    <!--        <a class="item pointer border-0">-->
+    <!--          sub menu 1-->
+    <!--        </a>-->
+    <!--        <a class="item pointer border-0">-->
+    <!--          sub menu 2-->
+    <!--        </a>-->
+    <!--      </div>-->
+
+    <!--    </li>-->
+
   </ul>
 </nav>
+
+
+

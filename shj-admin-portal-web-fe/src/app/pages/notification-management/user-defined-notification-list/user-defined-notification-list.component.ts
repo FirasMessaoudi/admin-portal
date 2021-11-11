@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {EAuthority, Page} from "@shared/model";
 import {AuthenticationService, NotificationService} from "@core/services";
 import {FormBuilder, FormGroup} from "@angular/forms";
@@ -30,16 +30,16 @@ export class UserDefinedNotificationListComponent implements OnInit {
   notificationNames: Lookup[] = [];
   localizedNotificationCategories: Lookup[] = [];
   localizedNotificationNames: Lookup[] = [];
-
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
-
   notificationHoveredDate: NgbDate | null = null;
   notificationFromDate: NgbDate | null;
   notificationToDate: NgbDate | null;
-
   notificationTemplateStatuses: Lookup[] = [];
+
+  @ViewChild('datepicker') datePicker: any;
+  @ViewChild('notificationDatepicker') notificationDatePicker: any;
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
@@ -180,6 +180,7 @@ export class UserDefinedNotificationListComponent implements OnInit {
       this.fromDate = date;
     } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
       this.toDate = date;
+      this.datePicker.close();
     } else {
       this.toDate = null;
       this.fromDate = date;
@@ -191,6 +192,7 @@ export class UserDefinedNotificationListComponent implements OnInit {
       this.notificationFromDate = date;
     } else if (this.notificationFromDate && !this.notificationToDate && date && date.after(this.notificationFromDate)) {
       this.notificationToDate = date;
+      this.notificationDatePicker.close();
     } else {
       this.notificationToDate = null;
       this.notificationFromDate = date;
@@ -227,4 +229,15 @@ export class UserDefinedNotificationListComponent implements OnInit {
   }
 
 
+  clearCreationDate() {
+      this.fromDate = undefined;
+      this.toDate = undefined;
+      this.onDateSelection(null);
+  }
+
+  clearNotificationDate() {
+    this.notificationFromDate = undefined;
+    this.notificationToDate = undefined;
+    this.onNotificationDateSelection(null);
+  }
 }

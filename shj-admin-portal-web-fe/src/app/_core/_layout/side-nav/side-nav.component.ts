@@ -11,6 +11,7 @@ import {AuthenticationService} from '@app/_core/services';
 export class SideNavComponent implements OnInit {
   currentUser: any;
   links: {}[];
+  public isCollapsed = true;
   constructor(
     public router: Router,
     private authenticationService: AuthenticationService
@@ -26,6 +27,7 @@ export class SideNavComponent implements OnInit {
         icon: 'portrait',
         iconFa:'fa-w-12',
         routerLink: '/',
+        submenu: false,
       },
       {
         title: 'card-management.title',
@@ -34,6 +36,7 @@ export class SideNavComponent implements OnInit {
         icon: 'address-card',
         iconFa: 'fa-w-18',
         routerLink: '/cards/list',
+        submenu: false,
       },
       {
         title: 'printing-management.title',
@@ -42,6 +45,7 @@ export class SideNavComponent implements OnInit {
         icon: 'print',
         iconFa:'fa-w-16',
         routerLink: '/print-requests/list',
+        submenu: false,
       },
       {
         title: 'role-management.title',
@@ -50,6 +54,7 @@ export class SideNavComponent implements OnInit {
         icon: 'file-alt',
         iconFa:'fa-w-12',
         routerLink: '/roles/list',
+        submenu: false,
       },
       {
         title: 'user-management.title',
@@ -58,6 +63,7 @@ export class SideNavComponent implements OnInit {
         icon: 'users',
         iconFa:'fa-w-20',
         routerLink: '/users/list',
+        submenu: false,
       },
 /*
       TODO Uncomment the following block
@@ -76,6 +82,7 @@ export class SideNavComponent implements OnInit {
         icon: 'file-upload',
         iconFa: 'fa-w-12',
         routerLink: '/data-requests/list',
+        submenu: false,
       },
       {
         title: 'notification-management.title',
@@ -83,17 +90,40 @@ export class SideNavComponent implements OnInit {
         display: false,
         icon: 'megaphone',
         iconFa: 'fa-w-18',
-        routerLink: '/notification/list',
-      },
-      //TODO Change this to create submenus
-      {
-        title: 'notification-management.user_defined_notifications',
-        roles: [EAuthority.NOTIFICATION_MANAGEMENT],
-        display: false,
-        icon: 'megaphone',
-        iconFa: 'fa-w-18',
-        routerLink: '/user-defined-notification/list',
+        submenu: true,
+        menuItems: [
+          {
+            title: 'notification-management.system_notifications',
+            roles: [EAuthority.NOTIFICATION_MANAGEMENT],
+            routerLink: '/notification/list'
+          },
+          {
+            title: 'notification-management.user_notifications',
+            roles: [EAuthority.NOTIFICATION_MANAGEMENT],
+            routerLink: '/user-defined-notification/list',
+          }
+        ]
       }
+     // ,
+      // {
+      //   title: 'notification-management.title',
+      //   roles: [EAuthority.NOTIFICATION_MANAGEMENT],
+      //   display: false,
+      //   icon: 'megaphone',
+      //   iconFa: 'fa-w-18',
+      //   routerLink: '/notification/list',
+      //   submenu: false,
+      // },
+      //TODO Change this to create submenus
+      // {
+      //   title: 'notification-management.user_defined_notifications',
+      //   roles: [EAuthority.NOTIFICATION_MANAGEMENT],
+      //   display: false,
+      //   icon: 'megaphone',
+      //   iconFa: 'fa-w-18',
+      //   routerLink: '/user-defined-notification/list',
+      //   submenu: false,
+      // }
     ];
     // filtering access according to connected user authorities
     let user: any = this.authenticationService.currentUser;

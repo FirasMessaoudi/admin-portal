@@ -416,7 +416,7 @@
     "notification-type": "Notification Type",
     "type-code": "Type Code",
     "action-label": "Action Label",
-    "expiry-date": "Expiry Date",
+    "expiry-date": "Auto Expiry Date",
     "important": "Important",
     "normal": "Normal",
     "all": "All",
@@ -424,8 +424,8 @@
     "FYA": "FYA",
     "enabled": "Enabled",
     "disabled": "Disabled",
-    "system_defined_notification_details": "System Notifications",
-    "user_defined_notifications": "User Defined Notifications",
+    "system_notifications": "System Notifications",
+    "user_notifications": "User Notifications",
     "new_notification": "Create Notification",
     "notification_details": "Notification Details",
     "notification_creation_date": "Notification Creation Date",
@@ -459,7 +459,9 @@
     "company": "Company",
     "gender": "Gender",
     "male": "Male",
-    "female": "Female"
+    "female": "Female",
+    "minute": "Minute",
+    "minutes": "Minutes"
   },
   "printing-management": {
     "title": "Printing Management",

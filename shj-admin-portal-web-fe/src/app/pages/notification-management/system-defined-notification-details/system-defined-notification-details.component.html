@@ -4,7 +4,7 @@
 </a>
 <div class="content__wrapper">
   <div class="title__Page">
-    <h3 class="sectionTitle">{{'notification-management.system_defined_notification_details' | translate }}</h3>
+    <h3 class="sectionTitle">{{'notification-management.system_notifications' | translate }}</h3>
   </div>
   <div class="content__section" *ngIf="!canSeeSystemDefinedNotificationDetails">
     {{'header.welcome' | translate}} <span
@@ -30,7 +30,9 @@
       </div>
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'notification-management.expiry-date' | translate}}</label>
-        <span class="form-control-plaintext ">{{notificationTemplate?.expirationPeriodInMinutes}} </span>
+        <span class="form-control-plaintext "></span> {{notificationTemplate?.expirationPeriodInMinutes}}
+        <span>{{(notificationTemplate?.expirationPeriodInMinutes > 10 || notificationTemplate?.expirationPeriodInMinutes < 3) ? ('notification-management.minute' | translate) : ('notification-management.minutes' | translate) }}</span>
+
       </div>
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'notification-management.notification-severity' | translate}} </label>
@@ -49,21 +51,33 @@
 
 
         <div class="form-group col">
-          <label>{{'notification-management.notification-status' | translate}}</label>
-          <div>
-            <div class="custom-control custom-radio custom-control-inline mr-5">
-
-              <input formControlName="enabled" [value]="true" [checked]="notificationTemplate?.enabled==true"
-                     type="radio" [disabled]="!editable" id="customRadioInline01" class="custom-control-input">
-              <label class="custom-control-label"
-                     for="customRadioInline01">{{'notification-management.enabled' | translate}}</label>
+          <label class="col-form-label">{{'notification-management.notification-status' | translate}}</label>
+          <span *ngIf="!editable">
+             <label *ngIf="notificationTemplate?.enabled"
+                    class="form-control-plaintext">{{'notification-management.enabled' | translate}}</label>
+             <label *ngIf="!notificationTemplate?.enabled"
+                    class="form-control-plaintext">{{'notification-management.disabled' | translate}}</label>
+          </span>
+          <div *ngIf="editable" class="radio-group form-control-plaintext d-flex font-weight-normal">
+            <div class="radio-item align-items-baseline d-flex mr-5">
+              <input type="radio"
+                     formControlName="enabled"
+                     name="enabled"
+                     class="mr-2"
+                     id="customRadioInline01"
+                     [value]="true"
+                     [disabled]="!editable">
+              <label for="customRadioInline01">{{'notification-management.enabled' | translate}}</label>
             </div>
-            <div class="custom-control custom-radio custom-control-inline mr-5">
-              <input formControlName="enabled" [value]="false" type="radio" [disabled]="!editable"
-                     id="customRadioInline02" class="custom-control-input"
-                     [checked]="notificationTemplate?.enabled==false">
-              <label class="custom-control-label"
-                     for="customRadioInline02">{{'notification-management.disabled' | translate}}</label>
+            <div class="radio-item align-items-baseline d-flex">
+              <input type="radio"
+                     formControlName="enabled"
+                     name="enabled"
+                     class="mr-2"
+                     id="customRadioInline02"
+                     [value]="false"
+                     [disabled]="!editable">
+              <label for="customRadioInline02">{{'notification-management.disabled' | translate}}</label>
             </div>
           </div>
         </div>
@@ -109,7 +123,7 @@
                   <label>{{'notification-management.notification-body' | translate}}</label>
 
                   <textarea *ngIf="editable" required type="text" formControlName="body" class="form-control"
-                            rows="10" [maxLength]="500"
+                            rows="8" [maxLength]="500"
                             [class.is-invalid]="f.body.invalid && f.body.touched"></textarea>
                   <label class="form-control-plaintext " *ngIf="!editable"
                   >{{getNotificationContentForSelectedLang()?.body}}</label>
@@ -127,7 +141,8 @@
                       *ngIf="f.body.errors.invalidParams">{{'notification-management.content_params_error' | translate}}</div>
                   </div>
                 </div>
-                <div class="form-group col" *ngFor="let templateParam of notificationTemplate?.notificationTemplateParameters">
+                <div class="form-group col"
+                     *ngFor="let templateParam of notificationTemplate?.notificationTemplateParameters">
                   <label>{{'notification-management.notification-parameters' | translate}}</label>
                   <div (click)="copyParameter('<'+templateParam.parameterName+'>')"
                        [ngbTooltip]="paramTooltipText">
