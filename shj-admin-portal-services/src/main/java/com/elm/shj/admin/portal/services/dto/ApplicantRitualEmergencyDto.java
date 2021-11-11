@@ -7,9 +7,10 @@ import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.BorderNumber;
 import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
 import com.elm.shj.admin.portal.services.data.validators.VisaOrPermitNumber;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Dto class for the applicant ritual emergency data.
@@ -17,7 +18,11 @@ import java.io.Serializable;
  * @author f.messaoudi
  * @since 1.1.0
  */
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApplicantRitualEmergencyDto implements Serializable {
     private static final long serialVersionUID = 5356872922618503948L;
 
@@ -52,4 +57,10 @@ public class ApplicantRitualEmergencyDto implements Serializable {
     @OnlyCharacters(min = 1, max = 6, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 32)
     private String seatNumber;
+
+    private ApplicantDto applicant;
+    private ApplicantPackageDto applicantPackage;
+    private Date creationDate;
+
+
 }

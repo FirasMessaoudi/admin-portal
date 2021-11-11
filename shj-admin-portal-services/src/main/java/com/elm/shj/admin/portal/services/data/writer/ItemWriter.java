@@ -8,7 +8,6 @@ import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthSpecialNeeds;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
@@ -83,9 +82,6 @@ public class ItemWriter {
         mapperRegistry.put(EDataSegment.APPLICANT_IMMUNIZATION_DATA, Objects.requireNonNull(findMapper(ApplicantHealthImmunizationDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_DISEASE_DATA, Objects.requireNonNull(findMapper(ApplicantHealthDiseaseDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, Objects.requireNonNull(findMapper(ApplicantRitualDto.class)));
-        mapperRegistry.put(EDataSegment.APPLICANT_INFO_EMERGENCY_DATA, Objects.requireNonNull(findMapper(ApplicantInfoEmergencyDto.class)));
-        mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_EMERGENCY_DATA, Objects.requireNonNull(findMapper(ApplicantRitualEmergencyDto.class)));
-
 
     }
 
@@ -102,18 +98,18 @@ public class ItemWriter {
     public <T, S> void write(List<AbstractMap.SimpleEntry<Row, T>> items, DataSegmentDto dataSegment, long dataRequestId) {
         if(dataSegment.getId()==7){
             JpaRepository applicantRepository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.APPLICANT_DATA));
-            JpaRepository applicantRitualRepository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.APPLICANT_RITUAL_DATA));
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
             List<S> savedItems = new ArrayList<>();
             items.forEach(entry ->{
-            ApplicantEmergencyDto emergencyDto = (ApplicantEmergencyDto)entry.getValue();
-
-                S savedApplicant = (S)applicantRepository.save(mapperRegistry.get(EDataSegment.APPLICANT_INFO_EMERGENCY_DATA).toEntity(emergencyDto.getApplicantInfoEmergencyDto(), mappingContext));
+                ApplicantEmergencyDto emergencyDto = (ApplicantEmergencyDto) entry.getValue();
+                ApplicantDto applicantDto = getApplicantFromEmergency(emergencyDto);
+                ApplicantRitualEmergencyDto applicantRitualEmergencyDto = emergencyDto.getApplicantRitualEmergencyDto();
+                updateNestedApplicantInfo(applicantDto, Collections.emptyList());
+                updateApplicantRitualInfo(applicantDto, applicantRitualEmergencyDto);
+                S savedApplicant = (S) applicantRepository.save(mapperRegistry.get(EDataSegment.APPLICANT_DATA).toEntity(applicantDto, mappingContext));
                 savedItems.add(savedApplicant);
-                S savedApplicantRitual = (S)applicantRitualRepository.save(mapperRegistry.get(EDataSegment.APPLICANT_RITUAL_EMERGENCY_DATA).toEntity(emergencyDto.getApplicantRitualEmergencyDto(), mappingContext));
-                savedItems.add(savedApplicantRitual);
-                savedItems.forEach(item ->{
-                    try{
+                savedItems.forEach(item -> {
+                    try {
                         dataRequestRecords.add(DataRequestRecordDto.builder()
                                 .createDataRequestId(dataRequestId)
                                 .lastUpdateDataRequestId(dataRequestId)
@@ -127,7 +123,6 @@ public class ItemWriter {
                 });
 
             });
-
             List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
             savedItems.forEach(s -> {
                 savedRecords.stream().filter(r -> {
@@ -147,15 +142,13 @@ public class ItemWriter {
             });
             savedItems.forEach(item -> {
                 if (item.getClass().isAssignableFrom(JpaApplicant.class)){
+                    ((JpaApplicant) item).getRituals().get(0).setDataRequestRecord(((JpaApplicant) item).getDataRequestRecord());
                     applicantRepository.save(item);
-                }
-                if (item.getClass().isAssignableFrom(JpaApplicantRitual.class)){
-                    applicantRitualRepository.save(item);
                 }
 
             });
-
         }
+
         else {
             // update applicant related attributes
             items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
@@ -200,6 +193,50 @@ public class ItemWriter {
             // update saved items
             repository.saveAll(savedItems);
         }
+    }
+
+    /**
+     * update related applicant ritual from applicant
+     *
+     * @param applicantDto
+     */
+
+    private <T> void updateApplicantRitualInfo(ApplicantDto applicantDto, ApplicantRitualEmergencyDto applicantRitualEmergencyDto) {
+        applicantDto.getRituals().get(0).setBorderNumber(applicantRitualEmergencyDto.getBorderNumber());
+        applicantDto.getRituals().get(0).setVisaNumber(applicantRitualEmergencyDto.getVisaNumber());
+        applicantDto.getRituals().get(0).setPermitNumber(applicantRitualEmergencyDto.getPermitNumber());
+        applicantDto.getRituals().get(0).setInsuranceNumber(applicantRitualEmergencyDto.getInsuranceNumber());
+        applicantDto.getRituals().get(0).setBusNumber(applicantRitualEmergencyDto.getBusNumber());
+        applicantDto.getRituals().get(0).setSeatNumber(applicantRitualEmergencyDto.getSeatNumber());
+        applicantDto.getRituals().get(0).setGroupReferenceNumber(applicantRitualEmergencyDto.getGroupReferenceNumber());
+
+    }
+
+    /**
+     * get related applicant properties from emergencyDto
+     *
+     * @param emergencyDto
+     */
+    private ApplicantDto getApplicantFromEmergency(ApplicantEmergencyDto emergencyDto) {
+        ApplicantDto applicantDto = new ApplicantDto();
+        applicantDto.setGender(emergencyDto.getGender());
+        applicantDto.setNationalityCode(emergencyDto.getNationalityCode());
+        applicantDto.setIdNumber(emergencyDto.getIdNumber());
+        applicantDto.setIdNumberOriginal(emergencyDto.getIdNumberOriginal());
+        applicantDto.setPassportNumber(emergencyDto.getPassportNumber());
+        applicantDto.setDateOfBirthGregorian(emergencyDto.getDateOfBirthGregorian());
+        applicantDto.setDateOfBirthHijri(emergencyDto.getDateOfBirthHijri());
+        applicantDto.setFullNameAr(emergencyDto.getFullNameAr());
+        applicantDto.setFullNameEn(emergencyDto.getFullNameEn());
+        applicantDto.setFullNameOrigin(emergencyDto.getFullNameOrigin());
+        applicantDto.setMaritalStatusCode(emergencyDto.getMaritalStatusCode());
+        applicantDto.setPhoto(emergencyDto.getPhoto());
+        applicantDto.setBiometricDataFace(emergencyDto.getBiometricDataFace());
+        applicantDto.setBiometricDataFinger(emergencyDto.getBiometricDataFinger());
+        applicantDto.setEducationLevelCode(emergencyDto.getEducationLevelCode());
+        applicantDto.setPackageReferenceNumber(emergencyDto.getPackageReferenceNumber());
+        applicantDto.setContacts(emergencyDto.getContacts());
+        return applicantDto;
     }
 
     /**
