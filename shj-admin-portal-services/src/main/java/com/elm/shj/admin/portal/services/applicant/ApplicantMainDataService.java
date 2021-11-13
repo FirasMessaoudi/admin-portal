@@ -69,7 +69,7 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
                     applicantMainDataDto.setContacts(applicantContactDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.getContacts()), mappingContext));
 
 
-                    JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualId(applicantRitual.getId());
+                    JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualIdAndStatusCodeNot(applicantRitual.getId(), ECardStatus.REISSUED.name());
                     if (jpaApplicantCard != null) {
                         applicantMainDataDto.setCardReferenceNumber(jpaApplicantCard.getReferenceNumber());
                         applicantMainDataDto.setCardStatusCode(jpaApplicantCard.getStatusCode());
