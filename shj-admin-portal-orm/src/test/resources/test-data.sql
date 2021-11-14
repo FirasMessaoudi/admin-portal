@@ -110,24 +110,23 @@ insert into shc_applicant (id,id_number,date_of_birth_gregorian, full_name_ar, f
 values (1,1010101040,'1987-02-18','عبدالغنى عبدالعزيز عبدالعزيز السيد' , 'Abdelghany Abdelaziz Abdelaziz Elsayed',1,N'2004-08-12' );
 
 insert into shc_applicant_digital_id (id, uin, applicant_id, creation_date)
-values (1,59737700000059,1,N'2004-08-12');
+values (1, 59737700000059, 1, N'2004-08-12');
 
 
 
+INSERT INTO shc_company ( id, code, label_ar, label_en, mission_id, contact_number, website
+                        , accreditation_organization, accreditation_number, accreditation_date, accreditation_expiry
+                        , email, creation_date, update_date)
+VALUES (1, N'111111', N'علم', N'elm', 113, 45567788, null, N'test', N'3445667', N'2021-09-14 12:12:00',
+        N'2027-09-14 12:12:00', null, N'2021-09-14 12:12:00', null);
 
 
+INSERT INTO shc_ritual_season (id, season_year, ritual_type_code, ACTIVE, season_start, season_end)
+VALUES (2, 1443, N'INTERNAL_HAJJ', true, 14430210, 14430410);
 
-
-INSERT INTO shc_company (id, code, label_ar, label_en, mission_id, contact_number, website
-                                              , accreditation_organization, accreditation_number, accreditation_date, accreditation_expiry, email, creation_date, update_date, location_lat, location_lng)
-VALUES (1, N'111111', N'علم', N'elm', 113, 45567788, null, N'test', N'3445667', N'2021-09-14 12:12:00', N'2027-09-14 12:12:00', null, N'2021-09-14 12:12:00', null, 20.39414800, 39.90002300);
-
-
-INSERT INTO shc_ritual_season (id, season_year, ritual_type_code, ACTIVE, season_start, season_end) VALUES
-(2, 1443, N'INTERNAL_HAJJ', true, 14430210, 14430410);
-
-INSERT INTO shc_company_ritual_season (id, company_id, ritual_season_id, active, total_quota, air_quota, sea_quota, land_quota, creation_date, update_date, season_start, season_end) VALUES
-(1, 1, 2, 1, 1, 1, 1, 1, N'2021-09-14 13:48:00', null, 14430210, 14430410);
+INSERT INTO shc_company_ritual_season (id, company_id, ritual_season_id, active, total_quota, air_quota, sea_quota,
+                                       land_quota, creation_date, update_date, season_start, season_end)
+VALUES (1, 1, 2, 1, 1, 1, 1, 1, N'2021-09-14 13:48:00', null, 14430210, 14430410);
 
 
 

@@ -9,7 +9,6 @@ import com.elm.shj.admin.portal.services.dto.NotificationTemplateContentDto;
 import com.elm.shj.admin.portal.services.dto.NotificationTemplateDto;
 import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
 import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
-import com.elm.shj.admin.portal.services.notification.UserNotificationService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -101,14 +100,21 @@ public class NotificationTemplateController {
         boolean allParamsValid = true;
         Pattern pattern = Pattern.compile("\\<(.*?)\\>");
         List templateParams = notificationTemplate.getNotificationTemplateParameters().parallelStream().map(param -> param.getParameterName()).collect(Collectors.toList());
-        for (NotificationTemplateContentDto notificationTemplateContentDto : notificationTemplate.getNotificationTemplateContents()) {
-            Matcher matcher = pattern.matcher(notificationTemplateContentDto.getBody());
-            while (matcher.find()) {
-                if (!templateParams.contains(matcher.group(1).trim())) {
-                    allParamsValid = false;
-                    break;
+        if (notificationTemplate.getNotificationTemplateContents() != null && notificationTemplate.getNotificationTemplateContents().size() > 0) {
+            for (NotificationTemplateContentDto notificationTemplateContentDto : notificationTemplate.getNotificationTemplateContents()) {
+
+                if (notificationTemplateContentDto != null && notificationTemplateContentDto.getBody() != null) {
+                    Matcher matcher = pattern.matcher(notificationTemplateContentDto.getBody());
+                    while (matcher.find()) {
+                        if (!templateParams.contains(matcher.group(1).trim())) {
+                            allParamsValid = false;
+                            break;
+                        }
+                    }
                 }
+
             }
+
         }
         return allParamsValid;
     }

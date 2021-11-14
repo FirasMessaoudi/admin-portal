@@ -141,6 +141,10 @@ update shc_portal.shc_notification_template
 set expiration_period_in_minutes= 150
 where id = 2;
 
+update shc_portal.shc_notification_template
+set expiration_period_in_minutes= 150
+where id = 3;
+
 GO
 
 GO
