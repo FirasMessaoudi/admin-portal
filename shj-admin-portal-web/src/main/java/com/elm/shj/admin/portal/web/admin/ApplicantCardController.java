@@ -3,18 +3,16 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
-import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
-import com.elm.shj.admin.portal.services.dto.*;
-import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
-import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantCardSearchCriteriaDto;
+import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +25,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.NotAuthorizedException;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Main controller for applicant card management pages
@@ -42,16 +43,9 @@ import java.util.*;
 public class ApplicantCardController {
 
     private final ApplicantCardService applicantCardService;
-    private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
-    private final ApplicantPackageCateringService applicantPackageCateringService;
-    private final ApplicantPackageHousingService applicantPackageHousingService;
-    private final ApplicantPackageTransportationService applicantPackageTransportationService;
-    private final CompanyStaffService companyStaffService;
-    private final CompanyLiteService companyLiteService;
+
     private final JwtTokenService jwtTokenService;
-    private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
-    private final CompanyRitualStepService companyRitualStepService;
-    private final ApplicantRitualService applicantRitualService;
+
     private static final String APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG = "no card details found for applicant with this uin";
     private static final int CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
 
@@ -135,35 +129,7 @@ public class ApplicantCardController {
         if (applicantCardDto == null) {
             throw new CardDetailsNotFoundException("no card found with id : " + cardId);
         }
-        ApplicantRitualDto applicantRitualDto = applicantRitualService.findApplicantRitualWithContactsAndRelatives(applicantCardDto.getApplicantRitual().getId());
-
-
-        applicantCardDto.setApplicantRitual(applicantRitualDto);
-        applicantCardDto.getApplicantRitual().getApplicant().setContacts(new ArrayList<>(applicantRitualDto.getContacts()));
-        applicantCardDto.getApplicantRitual().getApplicant().setRelatives(new ArrayList<>(applicantRitualDto.getRelatives()));
-
-        if (CollectionUtils.isNotEmpty(applicantRitualDto.getApplicantHealths())) {
-            applicantCardDto.getApplicantRitual().getApplicant().setApplicantHealth(new ArrayList<>(applicantRitualDto.getApplicantHealths()).get(0));
-        }
-        List<ApplicantDigitalIdDto> digitalIds = applicantCardDto.getApplicantRitual().getApplicant().getDigitalIds();
-        if (digitalIds.size() > 0) {
-
-            String uin = digitalIds.get(0).getUin();
-            CompanyRitualSeasonDto companyRitualSeasonDto = applicantRitualDto.getApplicantPackage().getRitualPackage().getCompanyRitualSeason();
-            if (companyRitualSeasonDto != null) {
-                applicantCardDto.getApplicantRitual().setTypeCode(companyRitualSeasonDto.getRitualSeason().getRitualTypeCode());
-
-                long companyRitualSeasonId = companyRitualSeasonDto.getId();
-                applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-                applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-                applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-                applicantCardDto.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
-                List<CompanyRitualStepDto> companyRitualSteps = companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, companyRitualSeasonId);
-                applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
-                List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, companyRitualSeasonId);
-                applicantCardDto.setGroupLeaders(groupLeaders);
-            }
-        }
+        applicantCardDto = applicantCardService.buildApplicantCard(applicantCardDto);
         return applicantCardDto;
     }
 
@@ -186,7 +152,8 @@ public class ApplicantCardController {
         if (isUserAllowed) {
             JwtToken loggedInUser = (JwtToken) authentication;
             Optional<Long> userId = jwtTokenService.retrieveUserIdFromToken(loggedInUser.getToken());
-            return applicantCardService.changeCardStatus(card, actionCode, userId);
+            card = applicantCardService.buildApplicantCard(applicantCardService.changeCardStatus(card, actionCode, userId));
+            return card;
         } else {
             throw new NotAuthorizedException("the user is not authorized or this action is not allowed on card with id :  " + card.getId());
         }

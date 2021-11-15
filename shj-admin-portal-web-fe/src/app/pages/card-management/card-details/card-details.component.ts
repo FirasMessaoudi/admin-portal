@@ -159,6 +159,7 @@ export class CardDetailsComponent implements OnInit {
         if (confirm) {
           this.cardService.changeCardStatus(this.card.id, actionCode).subscribe(result => {
             this.card = result;
+            this.cardId = this.card.id;
             let cardStatusChangedText = '';
             if (actionCode == this.actions.ACTIVATE_CARD) {
               cardStatusChangedText = 'card-management.dialog_activated_card_success_text';
