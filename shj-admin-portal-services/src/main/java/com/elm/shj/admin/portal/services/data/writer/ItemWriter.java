@@ -292,8 +292,6 @@ public class ItemWriter {
                         sn.setApplicantRitual(applicantRitualDto);
                     });
                 }
-                // digital id will bw generated automatically by the scheduler
-
             }
 
 
