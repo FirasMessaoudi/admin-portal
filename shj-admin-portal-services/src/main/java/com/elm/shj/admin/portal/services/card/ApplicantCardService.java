@@ -5,13 +5,13 @@ package com.elm.shj.admin.portal.services.card;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
-import com.elm.shj.admin.portal.services.dto.ECardStatus;
-import com.elm.shj.admin.portal.services.dto.ECardStatusAction;
-import com.elm.shj.admin.portal.services.dto.EPrintRequestStatus;
+import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +40,13 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
 
     private final ApplicantCardRepository applicantCardRepository;
     private final UserCardStatusAuditService userCardStatusAuditService;
+    private final CompanyRitualStepService companyRitualStepService;
+    private final ApplicantRitualService applicantRitualService;
+    private final ApplicantPackageCateringService applicantPackageCateringService;
+    private final ApplicantPackageHousingService applicantPackageHousingService;
+    private final ApplicantPackageTransportationService applicantPackageTransportationService;
+    private final CompanyStaffService companyStaffService;
+    private final CompanyLiteService companyLiteService;
 
     @PostConstruct
     private void postConstruct() {
@@ -137,13 +144,54 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
             userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
             ApplicantCardDto savedCard = save(ApplicantCardDto.builder().applicantRitual(card.getApplicantRitual()).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
             userCardStatusAuditService.saveUserCardStatusAudit(savedCard, userId);
+            savedCard = buildApplicantCard(savedCard);
             return savedCard;
         }
         userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
+        card = buildApplicantCard(card);
         return save(card);
 
     }
 
+
+    /**
+     * Build Applicant Card
+     *
+     * @param applicantCardDto the   applicant card to be populated
+     * @return the   final applicant card to be returned
+     */
+    public ApplicantCardDto buildApplicantCard(ApplicantCardDto applicantCardDto) {
+
+        ApplicantRitualDto applicantRitualDto = applicantRitualService.findApplicantRitualWithContactsAndRelatives(applicantCardDto.getApplicantRitual().getId());
+
+        applicantCardDto.setApplicantRitual(applicantRitualDto);
+        applicantCardDto.getApplicantRitual().getApplicant().setContacts(new ArrayList<>(applicantRitualDto.getContacts()));
+        applicantCardDto.getApplicantRitual().getApplicant().setRelatives(new ArrayList<>(applicantRitualDto.getRelatives()));
+
+        if (CollectionUtils.isNotEmpty(applicantRitualDto.getApplicantHealths())) {
+            applicantCardDto.getApplicantRitual().getApplicant().setApplicantHealth(new ArrayList<>(applicantRitualDto.getApplicantHealths()).get(0));
+        }
+        List<ApplicantDigitalIdDto> digitalIds = applicantCardDto.getApplicantRitual().getApplicant().getDigitalIds();
+        if (digitalIds.size() > 0) {
+
+            String uin = digitalIds.get(0).getUin();
+            CompanyRitualSeasonDto companyRitualSeasonDto = applicantRitualDto.getApplicantPackage().getRitualPackage().getCompanyRitualSeason();
+            if (companyRitualSeasonDto != null) {
+                applicantCardDto.getApplicantRitual().setTypeCode(companyRitualSeasonDto.getRitualSeason().getRitualTypeCode());
+
+                long companyRitualSeasonId = companyRitualSeasonDto.getId();
+                applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
+                applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
+                applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
+                applicantCardDto.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
+                List<CompanyRitualStepDto> companyRitualSteps = companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, companyRitualSeasonId);
+                applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
+                List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, companyRitualSeasonId);
+                applicantCardDto.setGroupLeaders(groupLeaders);
+            }
+        }
+        return applicantCardDto;
+    }
 
     /**
      * Find Applicant Card
@@ -156,14 +204,14 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     }
 
     public List<ApplicantCardDto> findApplicantCardsEligibleToExpire() {
-        List<String>  excludedCardsStatuses = Stream.of(ECardStatus.EXPIRED.name(),ECardStatus.CANCELLED.name(),ECardStatus.REISSUED.name()).collect(Collectors.toList());
-        List<JpaApplicantCard> applicantCardsList = applicantCardRepository.findApplicantCardsEligibleToExpire( Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()), excludedCardsStatuses);
-        return  getMapper().fromEntityList(applicantCardsList,mappingContext);
+        List<String> excludedCardsStatuses = Stream.of(ECardStatus.EXPIRED.name(), ECardStatus.CANCELLED.name(), ECardStatus.REISSUED.name()).collect(Collectors.toList());
+        List<JpaApplicantCard> applicantCardsList = applicantCardRepository.findApplicantCardsEligibleToExpire(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()), excludedCardsStatuses);
+        return getMapper().fromEntityList(applicantCardsList, mappingContext);
     }
 
     @Transactional
     public void updateCardStatusesAsExpired(List<Long> cardsIds) {
-        applicantCardRepository.updateCardStatusesAsExpired(ECardStatus.EXPIRED.name(),cardsIds );
+        applicantCardRepository.updateCardStatusesAsExpired(ECardStatus.EXPIRED.name(), cardsIds);
     }
 
 }

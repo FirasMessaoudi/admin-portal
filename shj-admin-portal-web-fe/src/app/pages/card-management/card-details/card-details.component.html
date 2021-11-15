@@ -30,9 +30,9 @@
                                 || card?.statusCode==cardStatus.WAITING_TO_SEND"
                 (click)="changeCardStatus(actions.CANCEL_CARD,'card-management.dialog_cancel_card_confirm_text')">{{'card-management.cancel_card' |translate}}</button>
         <button ngbDropdownItem
-                *ngIf="card.statusCode==cardStatus.SUSPENDED || card.statusCode==cardStatus.PRINTED || card.statusCode==cardStatus.DISTRIBUTED"
+                *ngIf="card?.statusCode==cardStatus.SUSPENDED || card?.statusCode==cardStatus.PRINTED || card?.statusCode==cardStatus.DISTRIBUTED"
                 (click)="changeCardStatus(actions.ACTIVATE_CARD,'card-management.dialog_activate_card_confirm_text')">{{'card-management.activate_card' |translate}}</button>
-        <button ngbDropdownItem *ngIf="card.statusCode==cardStatus.CANCELLED "
+        <button ngbDropdownItem *ngIf="card?.statusCode==cardStatus.CANCELLED "
                 (click)="changeCardStatus(actions.REISSUE_CARD,'card-management.dialog_reissue_card_confirm_text')">{{'card-management.reissue_card' |translate}}</button>
       </div>
     </div>
