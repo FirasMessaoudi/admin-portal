@@ -209,6 +209,10 @@ public class ItemWriter {
         applicantDto.getRituals().get(0).setBusNumber(applicantRitualEmergencyDto.getBusNumber());
         applicantDto.getRituals().get(0).setSeatNumber(applicantRitualEmergencyDto.getSeatNumber());
         applicantDto.getRituals().get(0).setGroupReferenceNumber(applicantRitualEmergencyDto.getGroupReferenceNumber());
+        //applicantDto.getRituals().get(0).getApplicantPackage().getApplicantPackageTransportations().get(0).setSeatNumber(applicantRitualEmergencyDto.getSeatNumber());
+        //applicantDto.getRituals().get(0).getApplicantPackage().getApplicantPackageTransportations().get(0).setVehicleNumber(applicantRitualEmergencyDto.getBusNumber());
+        //applicantPackageService.save(applicantDto.getRituals().get(0).getApplicantPackage());
+
 
     }
 
@@ -262,6 +266,7 @@ public class ItemWriter {
                 applicant.setDigitalIds(existingApplicant.getDigitalIds());
             } else {
                 applicant.setDigitalIds(Arrays.asList(ApplicantDigitalIdDto.builder().uin(digitalIdService.generate(applicant)).applicant(applicant).build()));
+                applicant.getDigitalIds().get(0).setStatusCode("VALID");
             }
 
             Long applicantUin = Long.parseLong(applicant.getDigitalIds().get(0).getUin());

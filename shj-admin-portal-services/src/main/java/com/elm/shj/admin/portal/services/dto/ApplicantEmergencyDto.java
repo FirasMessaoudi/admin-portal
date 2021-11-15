@@ -21,6 +21,11 @@ import java.util.List;
  * @author f.messaoudi
  * @since 1.1.0
  */
+@UniqueApplicant
+@FieldDependency.List({
+        @FieldDependency(first = "idNumber", second = "passportNumber"),
+        @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri")
+})
 @Getter
 @Setter
 @Builder
@@ -31,6 +36,7 @@ public class ApplicantEmergencyDto implements Serializable {
     private static final long serialVersionUID = -2027005588974249665L;
 
     @NestedCells
+    @Valid
     private ApplicantRitualEmergencyDto applicantRitualEmergencyDto;
 
     @Gender

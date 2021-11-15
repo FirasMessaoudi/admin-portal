@@ -18,6 +18,7 @@ import java.util.Date;
  * @author f.messaoudi
  * @since 1.1.0
  */
+
 @Getter
 @Setter
 @Builder
@@ -49,12 +50,11 @@ public class ApplicantRitualEmergencyDto implements Serializable {
     @CellIndex(index = 30)
     private String borderNumber;
 
-
-    @OnlyCharacters(min = 3, max = 20, allowNumbers = true, allowSpecialChars = true)
+    @OnlyCharacters(allowEmpty = false, min = 3, max = 20, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 31)
     private String busNumber;
 
-    @OnlyCharacters(min = 1, max = 6, allowNumbers = true, allowSpecialChars = true)
+    @OnlyCharacters(allowEmpty = false, min = 1, max = 6, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 32)
     private String seatNumber;
 
