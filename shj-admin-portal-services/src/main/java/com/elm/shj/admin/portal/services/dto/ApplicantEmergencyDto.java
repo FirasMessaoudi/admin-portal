@@ -21,7 +21,6 @@ import java.util.List;
  * @author f.messaoudi
  * @since 1.1.0
  */
-@UniqueApplicant
 @FieldDependency.List({
         @FieldDependency(first = "idNumber", second = "passportNumber"),
         @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri")
