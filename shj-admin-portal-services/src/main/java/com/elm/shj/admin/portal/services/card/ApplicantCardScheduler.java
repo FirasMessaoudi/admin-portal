@@ -62,6 +62,7 @@ public class ApplicantCardScheduler {
 
         List<ApplicantCardDto> cardsList = applicantCardService.findApplicantCardsEligibleToExpire();
         applicantCardService.updateCardStatusesAsExpired(cardsList.parallelStream().map((card) -> card.getId()).collect(Collectors.toList()));
+        cardsList.parallelStream().forEach((card) -> card.setStatusCode(ECardStatus.EXPIRED.name()));
         userCardStatusAuditService.saveUserCardStatusAudit(cardsList, Optional.of(Constants.SYSTEM_USER_ID_NUMBER));
 
     }

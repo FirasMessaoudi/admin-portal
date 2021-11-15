@@ -208,22 +208,22 @@ SET IDENTITY_INSERT shc_portal.shc_company_ritual_step ON;
 INSERT INTO shc_portal.shc_company_ritual_step (id, applicant_group_id, transportation_type_code, step_index, step_code,
                                                 time, location_lat, location_lng, location_name_ar, location_name_en,
                                                 creation_date, update_date)
-VALUES (1, 1, N'BUS', 1, N'ARRIVE_TO_KSA', N'2021-07-16 15:27:00', 21.36666520, 40.00166666, N'عرفة', N'Arafat',
+VALUES (1, 1, N'BUS', 1, N'ARRIVE_TO_KSA', N'2021-11-15 15:00:00', 21.36666520, 40.00166666, N'عرفة', N'Arafat',
         N'2021-09-17 15:27:00', N'2021-09-16 15:27:00');
 INSERT INTO shc_portal.shc_company_ritual_step (id, applicant_group_id, transportation_type_code, step_index, step_code,
                                                 time, location_lat, location_lng, location_name_ar, location_name_en,
                                                 creation_date, update_date)
-VALUES (2, 1, N'TRAIN', 2, N'HOTEL', N'2021-08-01 10:34:00', 21.38883178, 39.93599626, N'مزدلفة', N'Muzdalifa',
+VALUES (2, 1, N'TRAIN', 2, N'HOTEL', N'2021-11-16 10:00:00', 21.38883178, 39.93599626, N'مزدلفة', N'Muzdalifa',
         N'2021-09-18 10:34:00', N'2021-09-19 10:34:00');
 INSERT INTO shc_portal.shc_company_ritual_step (id, applicant_group_id, transportation_type_code, step_index, step_code,
                                                 time, location_lat, location_lng, location_name_ar, location_name_en,
                                                 creation_date, update_date)
-VALUES (3, 1, N'CAR', 3, N'FOR_UMRAH', N'2021-09-21 11:24:00', 21.36666520, 40.00166666, N'عرفة', N'Arafat',
+VALUES (3, 1, N'CAR', 3, N'FOR_UMRAH', N'2021-11-16 19:00:00', 21.36666520, 40.00166666, N'عرفة', N'Arafat',
         N'2021-09-19 11:24:00', N'2021-09-20 11:24:00');
 INSERT INTO shc_portal.shc_company_ritual_step (id, applicant_group_id, transportation_type_code, step_index, step_code,
                                                 time, location_lat, location_lng, location_name_ar, location_name_en,
                                                 creation_date, update_date)
-VALUES (4, 1, N'BUS', 4, N'FOR_TAWAF', N'2021-09-22 11:24:00', 21.38883178, 39.93599626, N'مزدلفة',
+VALUES (4, 1, N'BUS', 4, N'FOR_TAWAF', N'2021-11-17 15:00:00', 21.38883178, 39.93599626, N'مزدلفة',
         N'Muzdalifa', N'2021-09-20 11:24:00', N'2021-09-20 11:24:00');
 
 SET
@@ -253,8 +253,8 @@ INSERT INTO shc_portal.shc_package_housing (id, package_id, zone_id, reference_n
                                             location_name_ar, location_name_en, validity_start, validity_end,
                                             address_ar, address_en, lat, lng, creation_date, update_date, is_default,
                                             site_code)
-VALUES (1, 1, 1, N'1111', N'A', N'HOTEL', N'فندق دار التوحيد', N'Dar al Tawhid Hotel', N'2021-09-16 13:15:00',
-        N'2021-09-16 13:15:00', N'شارع ابراهيم الخليل،مكة المكرمة', N'Ibrahim El Khalil Street, Makkah ', N'1123',
+VALUES (1, 1, 1, N'1111', N'A', N'HOTEL', N'فندق دار التوحيد', N'Dar al Tawhid Hotel', N'2021-11-12 10:00:00',
+        N'2021-11-18 19:00:00', N'شارع ابراهيم الخليل،مكة المكرمة', N'Ibrahim El Khalil Street, Makkah ', N'1123',
         N'1233', N'2021-09-15 10:10:00', null, 1, N'MAKKAH');
 
 SET
@@ -288,7 +288,7 @@ INSERT INTO shc_portal.shc_package_catering (id, package_housing_id, meal_code, 
 VALUES (1, 1, N'123', N'10:35:00', N'mail', N'BREAKFAST', N'بوفيه مفتوح', N'Open buffet', N'2021-09-15 20:28:00', null);
 INSERT INTO shc_portal.shc_package_catering (id, package_housing_id, meal_code, meal_time, meal_description, type,
                                              description_ar, description_en, creation_date, update_date)
-VALUES (2, 1, N'123', N'10:00:00', N'mail', N'type', null, null, N'2021-09-15 20:28:00', null);
+VALUES (2, 1, N'123', N'10:00:00', N'mail', N'type',  N'بوفيه مفتوح' , 'Open buffet', N'2021-09-15 20:28:00', null);
 
 SET
 IDENTITY_INSERT shc_portal.shc_package_catering OFF;
@@ -307,5 +307,23 @@ SET
 IDENTITY_INSERT shc_portal.shc_applicant_digital_id_status_lk OFF;
 GO
 
-UPDATE shc_portal.shc_applicant_package SET start_date ='2021-10-15' ,end_date = '2021-11-15' WHERE id= 1
+UPDATE shc_portal.shc_applicant_package SET start_date = '2021-10-15' ,end_date = '2021-11-20' WHERE id= 1
 GO
+
+
+INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
+VALUES ('04_10','en','First days of Tashriq');
+INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
+VALUES ('04_10','ar',N'اول ايام التشريق');
+INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
+VALUES  ('04_11'  ,'en'  ,'Second days of Tashriq' )
+INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
+VALUES  ('04_11'  ,'ar'  , N'ثاني ايام التشريق' )
+INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
+VALUES  ('04_12'  ,'en'  ,'Third days of Tashriq' )
+INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
+VALUES  ('04_12'  ,'ar'  ,N'ثالث ايام التشريق' )
+GO
+
+
+
