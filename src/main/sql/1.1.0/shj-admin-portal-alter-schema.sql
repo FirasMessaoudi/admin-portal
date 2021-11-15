@@ -679,10 +679,10 @@ CREATE TABLE shc_portal.shc_notification_template
     action_required BIT           NOT NULL,
     enabled         BIT           NOT NULL,
     user_specific   BIT           NOT NULL,
+    sending_date    SMALLDATETIME NULL,
     force_sending   BIT           NOT NULL,
     creation_date   SMALLDATETIME NOT NULL DEFAULT current_timestamp,
-    update_date     SMALLDATETIME NULL,
-    sending_date    SMALLDATETIME NULL,
+    update_date     SMALLDATETIME NULL
 );
 GO
 
