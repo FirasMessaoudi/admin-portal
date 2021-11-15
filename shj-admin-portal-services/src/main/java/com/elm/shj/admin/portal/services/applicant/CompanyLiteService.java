@@ -23,7 +23,6 @@ public class CompanyLiteService extends GenericService<JpaCompany, CompanyLiteDt
     private final CompanyRepository companyRepository;
 
     public CompanyLiteDto findCompanyByCompanyRitualSeasonsIdAndApplicantUin(long companyRitualSeasonsId, long applicantUin) {
-
         return getMapper().fromEntity(companyRepository.findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsRitualPackagesApplicantPackagesApplicantUin(companyRitualSeasonsId, applicantUin), mappingContext);
     }
 

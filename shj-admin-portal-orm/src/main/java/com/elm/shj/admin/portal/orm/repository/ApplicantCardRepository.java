@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
             "WHERE  (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (TRIM(a.idNumber) LIKE '%'+:idNumber+'%' OR :idNumber IS NULL) AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL)  AND (card.statusCode <> :reissuedStatusCode ) ")
     Page<JpaApplicantCard> searchApplicantCards(@Param("uin") String uin, @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("reissuedStatusCode") String reissuedStatusCode, Pageable pageable);
 
-    JpaApplicantCard findByApplicantRitualId(long id);
+    JpaApplicantCard findByApplicantRitualIdAndStatusCodeNot(long id, String statusCode);
 
 
     @Modifying

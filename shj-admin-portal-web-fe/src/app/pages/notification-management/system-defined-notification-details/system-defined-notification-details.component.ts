@@ -304,7 +304,8 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
       this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value;
       this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value;
       this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value;
-      if (this.selectedLangTemplateContent.title != '' && this.selectedLangTemplateContent.actionLabel != '' && this.selectedLangTemplateContent.body != '')
+
+      if (this.selectedLangTemplateContent.title != '' && this.selectedLangTemplateContent.body != '')
         this.notificationTemplate.notificationTemplateContents.push(this.selectedLangTemplateContent);
 
     }

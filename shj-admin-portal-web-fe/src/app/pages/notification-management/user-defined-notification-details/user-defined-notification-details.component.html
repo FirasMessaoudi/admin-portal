@@ -154,7 +154,7 @@
             <div class="form-group col">
               <label class="col-form-label">{{ "notification-management.notification-body" | translate }}</label>
               <textarea *ngIf="editMode" type="text" formControlName="body" class="form-control"
-                        rows="2"></textarea>
+                        rows="3"></textarea>
               <label *ngIf="!editMode"
                      class="form-control-plaintext">{{getNotificationContentForSelectedLang()?.body}}</label>
             </div>

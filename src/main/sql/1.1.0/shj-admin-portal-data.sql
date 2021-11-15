@@ -79,28 +79,38 @@ SET IDENTITY_INSERT shc_portal.shc_user_notification_status_lk ON;
 INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (1, 'NEW', 'ar', N'جديد');
 INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (2, 'NEW', 'en', 'New');
 INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (3, 'READ', 'ar', N'مقروءة');
-INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (4, 'READ', 'en', 'Read');
-INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (5, 'EXPIRED', 'ar', N'منتهية');
-INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (6, 'EXPIRED', 'en', 'Expired');
-SET IDENTITY_INSERT shc_portal.shc_user_notification_status_lk OFF;
+INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label)
+VALUES (4, 'READ', 'en', 'Read');
+INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label)
+VALUES (5, 'EXPIRED', 'ar', N'منتهية');
+INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label)
+VALUES (6, 'EXPIRED', 'en', 'Expired');
+SET
+IDENTITY_INSERT shc_portal.shc_user_notification_status_lk OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template ON;
-INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific)
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important,
+                                                  action_required, enabled, user_specific)
 values (1, 'GENERAL', 'PASSWORD_EXPIRATION', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
-INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific)
-values (1, 'RITUAL', 'OUT_ARAFAT_FENCE', 'CONFIRMED', 'SYSTEM_DEFINED', 1, 0, 1, 1);
-INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific)
-values (1, 'RITUAL', 'DAILY_SURVEY', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
-SET IDENTITY_INSERT shc_portal.shc_notification_template OFF;
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important,
+                                                  action_required, enabled, user_specific)
+values (2, 'RITUAL', 'OUT_ARAFAT_FENCE', 'CONFIRMED', 'SYSTEM_DEFINED', 1, 0, 1, 1);
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important,
+                                                  action_required, enabled, user_specific)
+values (3, 'RITUAL', 'DAILY_SURVEY', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
+SET
+IDENTITY_INSERT shc_portal.shc_notification_template OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template_content ON;
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
-values (1, 1, 'AR', N'قرب انتهاء كلمة المرور', N'سوف تنتهي صلاحية كلمة المرور خلال <days> أيام من الأن', N'تغيير كلمة المرور');
+values (1, 1, 'AR', N'قرب انتهاء كلمة المرور', N'سوف تنتهي صلاحية كلمة المرور خلال <days> أيام من الأن',
+        N'تغيير كلمة المرور');
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
 values (2, 1, 'EN', 'Password will expire soon', 'Password will expire after <days> days', 'Change Password');
-SET IDENTITY_INSERT shc_portal.shc_notification_template_content OFF;
+SET
+IDENTITY_INSERT shc_portal.shc_notification_template_content OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template_parameter ON;
@@ -131,6 +141,10 @@ update shc_portal.shc_notification_template
 set expiration_period_in_minutes= 150
 where id = 2;
 
+update shc_portal.shc_notification_template
+set expiration_period_in_minutes= 150
+where id = 3;
+
 GO
 
 GO
@@ -139,7 +153,7 @@ GO
 
 SET IDENTITY_INSERT shc_portal.shc_card_status_lk ON;
 INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
-VALUES (17, 'EXPIRED', 'ar', N'منتهيه');
+VALUES (17, 'EXPIRED', 'ar', N'منتهية');
 INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
 VALUES (18, 'EXPIRED', 'en', 'Expired');
 INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
@@ -163,6 +177,15 @@ GO
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (1, 36);
 GO
 
+SET IDENTITY_INSERT shc_portal.shc_authority_lk ON;
+INSERT INTO shc_portal.shc_authority_lk(id, label_ar, label_en, code, parent_id)
+VALUES (37, N'تنبيهات المستخدم', 'User Defined Notification Management', 'USER_DEFINED_NOTIFICATION_MANAGEMENT', 35);
+SET IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
+GO
+
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
+VALUES (1, 37);
+GO
 
 --Activate Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin ,Hamalah admin  )
  insert into shc_portal.shc_role_authority ( role_id, authority_id)

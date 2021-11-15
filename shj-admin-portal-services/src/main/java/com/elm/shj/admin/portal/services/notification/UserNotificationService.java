@@ -45,7 +45,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
      * @param userId the userId of the notifications  to find for
      * @return the found Notifications  or empty structure
      */
-    public List<DetailedUserNotificationDto> findUserNotifications(long userId) {
+    public List<DetailedUserNotificationDto> findUserNotifications(String userId) {
         List<DetailedUserNotificationDto> detailedUserNotificationDtos = new ArrayList<>();
         List<JpaUserNotification> userNotifications = userNotificationRepository.findByUserIdAndStatusCodeNot(userId, EUserNotificationStatus.EXPIRED.name());
 
@@ -102,7 +102,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
      * @param userId user id
      * @return number of un-read user notifications.
      */
-    public UserNewNotificationsCountVo retrieveUserNewNotificationsCount(long userId) {
+    public UserNewNotificationsCountVo retrieveUserNewNotificationsCount(String userId) {
         int userSpecificNewNotificationsCount = userNotificationRepository.countByUserIdAndStatusCodeAndNotificationTemplateUserSpecific(userId, EUserNotificationStatus.NEW.name(), true);
         int userNotSpecificNewNotificationsCount = userNotificationRepository.countByUserIdAndStatusCodeAndNotificationTemplateUserSpecific(userId, EUserNotificationStatus.NEW.name(), false);
         UserNewNotificationsCountVo userNewNotificationsCountVo = UserNewNotificationsCountVo
@@ -112,20 +112,4 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
         return userNewNotificationsCountVo;
     }
 
-    public void sendToCategorizedApplicants(NotificationTemplateDto notificationTemplate) {
-    }
-
-    private int calculateAge(Date birthDate) {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate convertedBirthDate = convertToLocalDateViaInstant(birthDate);
-        if (convertedBirthDate != null) {
-            return Period.between(convertedBirthDate, currentDate).getYears();
-        } else {
-            return 0;
-        }
-    }
-
-    private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
-        return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
 }

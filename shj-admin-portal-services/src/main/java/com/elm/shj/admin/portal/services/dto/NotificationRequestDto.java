@@ -34,7 +34,7 @@ public class NotificationRequestDto implements Serializable {
     @NotNull(message = "validation.data.constraints.msg.20001")
     private NotificationTemplateDto notificationTemplate;
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private long userId;
+    private String userId;
     private NotificationProcessingStatusLookupDto processingStatus;
     @NotNull(message = "validation.data.constraints.msg.20001")
     private String userLang;

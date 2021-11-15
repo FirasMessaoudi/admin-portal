@@ -12,6 +12,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class ApplicantCardSearchCriteriaDto implements Serializable {
+
+    private static final long serialVersionUID = 4367068154822439005L;
+
     private String uin;
     private String idNumber;
     private String passportNumber;

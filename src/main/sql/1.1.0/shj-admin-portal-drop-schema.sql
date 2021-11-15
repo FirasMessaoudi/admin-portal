@@ -27,8 +27,28 @@ drop table if exists shc_portal.shc_transportation_type_lk;
 drop table if exists shc_portal.shc_applicant_group_type_lk;
 drop table if exists shc_portal.shc_company_ritual_step_lk;
 drop table if exists shc_portal.shc_housing_site_lk;
-
-GO
+drop table if exists shc_portal.shc_applicant_digital_id_status_lk
+drop table if exists shc_portal.shc_user_notification_category_preference
+drop table if exists shc_portal.shc_religious_occasions_day_lk
+drop table if exists shc_portal.shc_meal_type_lk
+drop table if exists shc_portal.shc_user_card_status_audit
+drop table if exists shc_portal.shc_ritual_group
+drop table if exists shc_portal.shc_ritual_zone
+drop table if exists shc_portal.shc_ritual_unit
+drop table if exists shc_portal.shc_user_notification
+drop table if exists shc_portal.shc_user_notification_status_lk
+drop table if exists shc_portal.shc_notification_request_parameter_value
+drop table if exists shc_portal.shc_notification_template_parameter
+drop table if exists shc_portal.shc_notification_request
+drop table if exists shc_portal.shc_notification_template_content
+drop table if exists shc_portal.shc_notification_template
+drop table if exists shc_portal.shc_notification_category_lk
+drop table if exists shc_portal.shc_notification_template_type_lk
+drop table if exists shc_portal.shc_notification_template_status_lk
+drop table if exists shc_portal.shc_notification_processing_status_lk
+drop table if exists shc_portal.shc_notification_template_name_lk
+drop table if exists shc_portal.shc_user_card_status_audit
+    GO
 
 
 

@@ -38,15 +38,18 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
             return Optional.empty();
         }
 
-        JpaApplicantRitual card = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(uin, Long.parseLong(companyRitualSeasonId));
-        if (card == null)
+        JpaApplicantRitual applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(uin, Long.parseLong(companyRitualSeasonId));
+        if (applicantRitual == null)
             return Optional.empty();
-        ApplicantRitualCardLiteDto returnedDto = getMapper().fromEntity(card, mappingContext);
+        ApplicantRitualCardLiteDto returnedDto = getMapper().fromEntity(applicantRitual, mappingContext);
         returnedDto.setRitualType(companyRitualSeasonLiteDto.getRitualSeason().getRitualTypeCode().toUpperCase());
-        returnedDto.setFullNameEn(card.getApplicant().getFullNameEn());
-        returnedDto.setFullNameAr(card.getApplicant().getFullNameAr());
-        returnedDto.setNationalityCode(card.getApplicant().getNationalityCode().toUpperCase());
-        returnedDto.setPhoto(card.getApplicant().getPhoto());
+        returnedDto.setFullNameEn(applicantRitual.getApplicant().getFullNameEn());
+        returnedDto.setFullNameAr(applicantRitual.getApplicant().getFullNameAr());
+        returnedDto.setNationalityCode(applicantRitual.getApplicant().getNationalityCode().toUpperCase());
+        returnedDto.setPhoto(applicantRitual.getApplicant().getPhoto());
+        returnedDto.setHijriSeason(companyRitualSeasonLiteDto.getRitualSeason().getSeasonYear());
+
+
         return Optional.of(returnedDto);
     }
 

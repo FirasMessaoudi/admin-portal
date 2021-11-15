@@ -68,12 +68,6 @@ public class JpaCompany implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "location_lat")
-    private double locationLat;
-
-    @Column(name = "location_lng")
-    private double locationLng;
-
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 

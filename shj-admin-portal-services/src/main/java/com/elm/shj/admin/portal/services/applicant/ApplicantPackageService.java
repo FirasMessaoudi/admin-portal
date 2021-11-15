@@ -25,9 +25,11 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
         Optional<JpaApplicantPackage> applicantPackageOptional = applicantPackageRepository.findByApplicantUinAndRitualPackageReferenceNumber(applicantUin, packageReferenceNumber);
         if (applicantPackageOptional.isPresent()) {
             JpaApplicantPackage applicantPackage = applicantPackageOptional.get();
-            applicantPackage.getApplicantRituals().size();
+            if (applicantPackage.getApplicantRituals() != null) {
+                applicantPackage.getApplicantRituals().size();
+            }
             applicantPackage.getApplicantPackageTransportations().size();
-            CycleAvoidingMappingContext mappingContext =new CycleAvoidingMappingContext();
+            CycleAvoidingMappingContext mappingContext = new CycleAvoidingMappingContext();
             return getMapper().fromEntity(applicantPackage, mappingContext);
         }
         return null;

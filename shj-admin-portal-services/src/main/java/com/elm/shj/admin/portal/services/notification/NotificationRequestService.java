@@ -4,9 +4,10 @@
 package com.elm.shj.admin.portal.services.notification;
 
 import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.orm.repository.NotificationRequestRepository;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
-import com.elm.shj.admin.portal.services.applicant.ApplicantMainDataService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import javassist.NotFoundException;
@@ -34,7 +35,8 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     private final NotificationTemplateService notificationTemplateService;
     private final NotificationRequestRepository notificationRequestRepository;
     private final UserNotificationRepository userNotificationRepository;
-    private final ApplicantMainDataService applicantMainDataService;
+    private final ApplicantRepository applicantRepository;
+    private final ApplicantService applicantService;
 
     /**
      * will handle processing of  user Notifications in notification processing scheduler
@@ -43,7 +45,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
      */
     @Transactional
     public void processNotificationRequest(JpaNotificationRequest notificationRequest) {
-        log.debug("Start processing notification request with ID   {} ", notificationRequest.getId());
+        log.debug("Start processing notification request with ID {} ", notificationRequest.getId());
         JpaUserNotification userNotification = new JpaUserNotification();
         userNotification.setNotificationTemplate(notificationRequest.getNotificationTemplate());
         userNotification.setStatusCode(EUserNotificationStatus.NEW.name());
@@ -110,7 +112,6 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                     notificationRequestParamValue.add(buildNotificationRequestParamValue(notificationTemplate, notificationRequest, PASSWORD_EXPIRY_TEMPLATE_DAYS_TO_EXPIRY_PARAMETER_NAME, Integer.toString(param.getDaysToExpiry())));
                     notificationRequest.setNotificationRequestParameterValues(notificationRequestParamValue);
                     save(notificationRequest);
-
                 }
         );
     }
@@ -143,20 +144,42 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     }
 
     @Transactional
-    public void sendToAllApplicants(NotificationTemplateDto notificationTemplate) {
-        List<ApplicantMainDataDto> applicants = applicantMainDataService.findAll();
+    public NotificationTemplateDto sendToAllApplicants(NotificationTemplateDto notificationTemplate) {
+        NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
+        List<ApplicantDto> applicants = applicantService.findAllHavingActiveRitual();
         List<NotificationRequestDto> notificationRequests = applicants.parallelStream().map(applicant -> NotificationRequestDto
                         .builder()
-                        .userId(applicant.getId())
-                        .notificationTemplate(notificationTemplate)
-                        .sendingDate(notificationTemplate.getSendingDate())
+                        .userId(applicant.getDigitalIds().get(0).getUin())
+                        .notificationTemplate(savedNotificationTemplate)
+                        .sendingDate(savedNotificationTemplate.getSendingDate())
+                        // TODO Send notification in applicant preferred language
                         // if there is no content that matches preferred language, pick present language content in order (by default english, arabic, french...)
                         //.userLang(notificationTemplate.getNotificationTemplateContents().stream().findFirst().toString())
-                        .userLang("AR")
+                        .userLang("ar")
                         .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
                         .build())
                 .collect(Collectors.toList());
         super.saveAll(notificationRequests);
+        return savedNotificationTemplate;
+    }
+
+    @Transactional
+    public NotificationTemplateDto sendToCategorizedApplicants(CategorizedNotificationVo categorizedNotificationVo) {
+        NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(categorizedNotificationVo.getNotificationTemplate());
+
+        List<ApplicantDto> applicants = applicantService.findAllByCriteria(categorizedNotificationVo.getApplicantSearchCriteria());
+
+        List<NotificationRequestDto> notificationRequests = applicants.parallelStream().map(applicant -> NotificationRequestDto
+                        .builder()
+                        .userId(applicant.getDigitalIds().get(0).getUin())
+                        .notificationTemplate(savedNotificationTemplate)
+                        .sendingDate(savedNotificationTemplate.getSendingDate())
+                        .userLang("ar")
+                        .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
+                        .build())
+                .collect(Collectors.toList());
+        super.saveAll(notificationRequests);
+        return savedNotificationTemplate;
     }
 
 }

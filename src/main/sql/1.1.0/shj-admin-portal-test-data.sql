@@ -32,10 +32,14 @@ GO
 
 SET IDENTITY_INSERT shc_portal.shc_housing_type_lk ON;
 
-INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label, creation_date)
-VALUES (1, N'HOTEL', N'en', N'Hotel', N'2021-09-17 16:39:00');
-INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label, creation_date)
-VALUES (2, N'HOTEL', N'ar', N'فندق', N'2021-09-17 16:40:00');
+INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
+VALUES (1, 'HOTEL', 'en', 'Hotel');
+INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
+VALUES (2, 'HOTEL', 'ar', N'فندق');
+INSERT INTO shc_portal.shc_housing_type_lk(id, code, label, lang)
+VALUES (3, 'CAMP', 'Camp', 'en');
+INSERT INTO shc_portal.shc_housing_type_lk(id, code, label, lang)
+VALUES (4, 'CAMP', N'مخيم', 'ar');
 
 SET
     IDENTITY_INSERT shc_portal.shc_housing_type_lk OFF;
