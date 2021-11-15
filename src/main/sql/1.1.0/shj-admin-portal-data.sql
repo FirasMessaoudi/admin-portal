@@ -79,28 +79,20 @@ SET IDENTITY_INSERT shc_portal.shc_user_notification_status_lk ON;
 INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (1, 'NEW', 'ar', N'جديد');
 INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (2, 'NEW', 'en', 'New');
 INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (3, 'READ', 'ar', N'مقروءة');
-INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label)
-VALUES (4, 'READ', 'en', 'Read');
-INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label)
-VALUES (5, 'EXPIRED', 'ar', N'منتهية');
-INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label)
-VALUES (6, 'EXPIRED', 'en', 'Expired');
-SET
-IDENTITY_INSERT shc_portal.shc_user_notification_status_lk OFF;
+INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (4, 'READ', 'en', 'Read');
+INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (5, 'EXPIRED', 'ar', N'منتهية');
+INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) VALUES (6, 'EXPIRED', 'en', 'Expired');
+SET IDENTITY_INSERT shc_portal.shc_user_notification_status_lk OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template ON;
-INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important,
-                                                  action_required, enabled, user_specific)
-values (1, 'GENERAL', 'PASSWORD_EXPIRATION', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
-INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important,
-                                                  action_required, enabled, user_specific)
-values (2, 'RITUAL', 'OUT_ARAFAT_FENCE', 'CONFIRMED', 'SYSTEM_DEFINED', 1, 0, 1, 1);
-INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important,
-                                                  action_required, enabled, user_specific)
-values (3, 'RITUAL', 'DAILY_SURVEY', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
-SET
-IDENTITY_INSERT shc_portal.shc_notification_template OFF;
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific, force_sending)
+values (1, 'GENERAL', 'PASSWORD_EXPIRATION', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1, 1);
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific, force_sending)
+values (2, 'RITUAL', 'OUT_ARAFAT_FENCE', 'CONFIRMED', 'SYSTEM_DEFINED', 1, 0, 1, 1, 1);
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific, force_sending)
+values (3, 'RITUAL', 'DAILY_SURVEY', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1, 1);
+SET IDENTITY_INSERT shc_portal.shc_notification_template OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template_content ON;
@@ -161,14 +153,10 @@ SET
 IDENTITY_INSERT shc_portal.shc_card_status_lk OFF;
 GO
 
-
-GO
 SET IDENTITY_INSERT shc_portal.shc_authority_lk ON;
 INSERT INTO shc_portal.shc_authority_lk(id, label_ar, label_en, code, parent_id)
-VALUES (36, N'عرض تفاصيل تنبيهات النظام', 'System Defined Notification Details', 'SYSTEM_DEFINED_NOTIFICATION_DETAILS',
-        35);
-SET
-IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
+VALUES (36, N'عرض تفاصيل تنبيهات النظام', 'System Defined Notification Details', 'SYSTEM_DEFINED_NOTIFICATION_DETAILS', 35);
+SET IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
 GO
 
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (1, 36);
@@ -185,28 +173,17 @@ VALUES (1, 37);
 GO
 
 --Activate Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin ,Hamalah admin  )
- insert into shc_portal.shc_role_authority ( role_id, authority_id)
-values (1,17);
-
+insert into shc_portal.shc_role_authority ( role_id, authority_id) values (1,17);
 
 --Suspend Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin )
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (1, 19);
-
+insert into shc_portal.shc_role_authority (role_id, authority_id) values (1, 19);
 
 --Cancel Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin )
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (1, 18);
-
+insert into shc_portal.shc_role_authority (role_id, authority_id) values (1, 18);
 
 --Re-issue Card(System Admin  , Service center agent and service center regent admin )
-insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (1, 20);
-
-
-
-
-
+insert into shc_portal.shc_role_authority (role_id, authority_id) values (1, 20);
+GO
 
 
 UPDATE shc_portal.shc_portal.shc_card_status_lk SET label = N'تمت إعادة الإصدار' WHERE code = 'REISSUED' and lang = 'ar';
@@ -214,21 +191,23 @@ UPDATE shc_portal.shc_portal.shc_card_status_lk SET label = 'Reissued' WHERE cod
 GO
 
 INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
-VALUES ('12_15','en','First days of Tashriq')
+VALUES ('12_15','en','First days of Tashriq');
 INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
-VALUES ('12_15','ar',N'اول ايام التشريق')
+VALUES ('12_15','ar',N'اول ايام التشريق');
+GO
+
 INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
-VALUES ('BREAKFAST','en','Breakfast')
+VALUES ('BREAKFAST','en','Breakfast');
 INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
-VALUES ('BREAKFAST','ar',N'افطار')
+VALUES ('BREAKFAST','ar',N'افطار');
 INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
-VALUES ('LUNCH','en','lunch')
+VALUES ('LUNCH','en','lunch');
 INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
-VALUES ('LUNCH','ar',N'غداء')
+VALUES ('LUNCH','ar',N'غداء');
 INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
-VALUES ('DINNER','en','Dinner')
+VALUES ('DINNER','en','Dinner');
 INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
-VALUES ('DINNER','ar',N'عشاء')
+VALUES ('DINNER','ar',N'عشاء');
 GO
 
 INSERT INTO shc_portal.shc_config(conf_key ,conf_value )
@@ -271,6 +250,5 @@ SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
 insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
 values (7, 'applicant-emergency-data.xlsx', N'البيانات الضرورية لهوية ضيف الرحمن (في حالة الطوارئ)',
         'Applicant Emergency Data');
-SET
-IDENTITY_INSERT shc_portal.shc_data_segment OFF;
-Go
+SET IDENTITY_INSERT shc_portal.shc_data_segment OFF;
+GO

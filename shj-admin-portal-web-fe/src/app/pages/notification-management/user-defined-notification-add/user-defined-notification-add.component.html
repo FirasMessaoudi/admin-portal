@@ -229,6 +229,7 @@
                  [value]="2"
                  type="radio"
                  [(ngModel)]="checkedCriteria"
+                 [disabled]="true"
                  id="customRadioInline09">
           <label for="customRadioInline09">{{ "notification-management.selected_applicants" | translate }}</label>
         </div>
@@ -244,7 +245,6 @@
             <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
             <option *ngFor="let camp of camps" [ngValue]="camp.id">
               {{currentLanguage.startsWith('ar') ? camp.locationNameAr : camp.locationNameEn}}
-              {{camp.referenceNumber}}
             </option>
           </select>
         </div>
