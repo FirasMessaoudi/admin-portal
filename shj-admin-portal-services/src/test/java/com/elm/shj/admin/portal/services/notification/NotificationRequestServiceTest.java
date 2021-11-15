@@ -70,7 +70,7 @@ public class NotificationRequestServiceTest {
   String PASSWORD_EXPIRATION_TEMPLATE_NAME = "PASSWORD_EXPIRATION";
   PasswordExpiryNotificationRequest passwordExpiryNotificationRequest = new PasswordExpiryNotificationRequest();
   PasswordExpiryNotificationRequestUserParameters param = new PasswordExpiryNotificationRequestUserParameters();
-  param.setUserId(1);
+  param.setUserId("1");
   param.setDaysToExpiry(5);
   param.setUserLang("EN");
   Set<PasswordExpiryNotificationRequestUserParameters> userParametersList = new HashSet<>();
@@ -91,7 +91,7 @@ public class NotificationRequestServiceTest {
  public void test_Save_Password_Expiry_Notification_Request() throws NotFoundException {
   PasswordExpiryNotificationRequest passwordExpiryNotificationRequest = new PasswordExpiryNotificationRequest();
   PasswordExpiryNotificationRequestUserParameters param = new PasswordExpiryNotificationRequestUserParameters();
-  param.setUserId(1);
+  param.setUserId("1");
   param.setDaysToExpiry(5);
   param.setUserLang("EN");
   Set<PasswordExpiryNotificationRequestUserParameters> userParametersList = new HashSet<>();
@@ -129,7 +129,7 @@ public class NotificationRequestServiceTest {
   notificationTemplate.setNotificationTemplateContents(notificationTemplateContents);
   JpaNotificationRequest notificationRequest = new JpaNotificationRequest();
   notificationRequest.setId(1);
-  notificationRequest.setUserId(1);
+  notificationRequest.setUserId("1");
   notificationRequest.setUserLang("EN");
   notificationRequest.setNotificationTemplate(notificationTemplate);
   return notificationRequest;

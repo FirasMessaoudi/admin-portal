@@ -6,6 +6,7 @@ import {NotificationSearchCriteria} from "@model/notification-search-criteria.mo
 import {catchError} from "rxjs/internal/operators";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {CookieService} from "ngx-cookie-service";
+import {CategorizedNotificationVo} from "@model/categorized-notification-vo.model";
 
 @Injectable({
   providedIn: 'root'
@@ -75,7 +76,13 @@ export class NotificationService {
     );
   }
 
-  createNotificationTemplate(notificationTemplate: NotificationTemplate): Observable<any> {
+  /**
+   * Creates user defined notification template and sets its status to draft.
+   *
+   * @param notificationTemplate the notification template to be saved
+   * @return {Observable<notificationTemplate>} created notificationTemplate.
+   */
+  saveAsDraft(notificationTemplate: NotificationTemplate): Observable<any> {
     return this.http.post<any>('/core/api/notification/template/user-defined/create', notificationTemplate)
       .pipe(catchError((error: HttpErrorResponse) => {
           if (error.hasOwnProperty('error')) {
@@ -88,8 +95,33 @@ export class NotificationService {
       );
   }
 
-  sendToAll(notificationTemplate: NotificationTemplate): Observable<any> {
+  /**
+   * Creates user defined notification template and sends it to all applicants having active ritual.
+   *
+   * @param notificationTemplate the notification template to be saved
+   * @return {Observable<notificationTemplate>} created notificationTemplate.
+   */
+  saveAndSendToAll(notificationTemplate: NotificationTemplate): Observable<any> {
     return this.http.post<any>('/core/api/notification/template/send-to-all', notificationTemplate)
+      .pipe(catchError((error: HttpErrorResponse) => {
+          if (error.hasOwnProperty('error')) {
+            return of(error.error);
+          } else {
+            console.error('An error happened while sending user notifications : ' + error);
+            return of(error);
+          }
+        })
+      );
+  }
+
+  /**
+   * Creates user defined notification template and sends it to categorized applicants.
+   *
+   * @return {Observable<notificationTemplate>} created notificationTemplate.
+   * @param categorizedNotification
+   */
+  saveAndSendToCategorizedApplicants(categorizedNotification: CategorizedNotificationVo): Observable<any> {
+    return this.http.post<any>('/core/api/notification/template/send-to-categorized', categorizedNotification)
       .pipe(catchError((error: HttpErrorResponse) => {
           if (error.hasOwnProperty('error')) {
             return of(error.error);
@@ -126,7 +158,7 @@ export class NotificationService {
   }
 
   loadCompanies(): Observable<any> {
-    return this.http.get<any>('/core/api/user-notification/company/list').pipe(
+    return this.http.get<any>('/core/api/notification/template/company/list').pipe(
       catchError(
         (error: any, caught: Observable<HttpEvent<any>>) => {
           console.error(error);
@@ -136,8 +168,15 @@ export class NotificationService {
     );
   }
 
-  loadNationality(): Observable<Lookup[]> {
-    return this.http.get<any>('');
+  loadCamps(): Observable<any> {
+    return this.http.get<any>('/core/api/notification/template/camp/list').pipe(
+      catchError(
+        (error: any, caught: Observable<HttpEvent<any>>) => {
+          console.error(error);
+          return of(null);
+        }
+      )
+    );
   }
 
 }

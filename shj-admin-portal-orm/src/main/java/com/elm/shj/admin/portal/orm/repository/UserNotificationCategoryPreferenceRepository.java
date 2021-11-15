@@ -16,5 +16,5 @@ import java.util.List;
  */
 public interface UserNotificationCategoryPreferenceRepository extends JpaRepository<JpaUserNotificationCategoryPreference, Long> {
 
-    List<JpaUserNotificationCategoryPreference> findByUserId(long userId);
+    List<JpaUserNotificationCategoryPreference> findByUserId(String userId);
 }

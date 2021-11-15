@@ -20,6 +20,7 @@ import java.util.Set;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -59,7 +60,7 @@ public class NotificationWsControllerTest extends AbstractControllerTestSuite {
         String url = Navigation.API_NOTIFICATION_INTEGRATION + "/" + userId;
 
 
-        when(userNotificationService.findUserNotifications(anyLong())).thenReturn(detailedUserNotificationDtos);
+        when(userNotificationService.findUserNotifications(anyString())).thenReturn(detailedUserNotificationDtos);
 
         mockMvc.perform(get(url).cookie(tokenCookie).header(JwtTokenService.CALLER_TYPE_HEADER_NAME, JwtTokenService.WEB_SERVICE_CALLER_TYPE).with(csrf())).andDo(print())
                 .andExpect(status().isOk())
@@ -74,7 +75,7 @@ public class NotificationWsControllerTest extends AbstractControllerTestSuite {
         long userId = 3088;
         UserNewNotificationsCountVo notificationsCountVo = UserNewNotificationsCountVo.builder().userSpecificNewNotificationsCount(1).userNotSpecificNewNotificationsCount(2).build();
         String url = Navigation.API_NOTIFICATION_INTEGRATION + "/count-new-notifications/" + userId;
-        when(userNotificationService.retrieveUserNewNotificationsCount(anyLong())).thenReturn(notificationsCountVo);
+        when(userNotificationService.retrieveUserNewNotificationsCount(anyString())).thenReturn(notificationsCountVo);
         mockMvc.perform(get(url).cookie(tokenCookie).header(JwtTokenService.CALLER_TYPE_HEADER_NAME, JwtTokenService.WEB_SERVICE_CALLER_TYPE).with(csrf())).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.body.userSpecificNewNotificationsCount", is(1)))
@@ -86,7 +87,7 @@ public class NotificationWsControllerTest extends AbstractControllerTestSuite {
     public void test_save_Password_Expiry_Notification_Request() throws Exception {
         PasswordExpiryNotificationRequest passwordExpiryNotificationRequest = new PasswordExpiryNotificationRequest();
         PasswordExpiryNotificationRequestUserParameters param = new PasswordExpiryNotificationRequestUserParameters();
-        param.setUserId(1);
+        param.setUserId("1");
         param.setDaysToExpiry(5);
         param.setUserLang("EN");
         Set<PasswordExpiryNotificationRequestUserParameters> userParametersList = new HashSet<>();

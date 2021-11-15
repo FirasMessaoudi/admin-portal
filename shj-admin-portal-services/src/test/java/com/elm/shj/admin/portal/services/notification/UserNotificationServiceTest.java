@@ -31,9 +31,9 @@ public class UserNotificationServiceTest {
 
     @Test
     public void test_find_User_Notifications() {
-        long userId = 1;
+        String userId = "1";
         userNotificationService.findUserNotifications(userId);
-        verify(userNotificationRepository, times(1)).findByUserIdAndStatusCodeNot(anyLong(), anyString());
+        verify(userNotificationRepository, times(1)).findByUserIdAndStatusCodeNot(anyString(), anyString());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class UserNotificationServiceTest {
 
     @Test
     public void test_retrieve_User_New_Notifications_Count() {
-        long userId = 1;
+        String userId = "1";
         userNotificationService.retrieveUserNewNotificationsCount(userId);
         verify(userNotificationRepository, times(1)).countByUserIdAndStatusCode(anyLong(), eq(EUserNotificationStatus.NEW.name()));
     }

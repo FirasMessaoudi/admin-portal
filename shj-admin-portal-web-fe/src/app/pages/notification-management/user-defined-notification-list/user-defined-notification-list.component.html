@@ -8,18 +8,17 @@
     </h3>
     <button id="createNotification"
             routerLink="/user-defined-notification/create"
-            class="btn btn-outline-dcc-primary px-4"
-            *ngIf="canCreateNewNotification">
+            class="btn btn-outline-dcc-primary px-4" *ngIf="canSeeAddUpdateUserDefinedNotification">
       <svg-icon styleClass="mr-2" icon="plus"></svg-icon>
       <span>{{ "notification-management.new_notification" | translate }}</span>
     </button>
   </div>
-  <div class="content__section" *ngIf="!canSeeNotificationList">
+  <div class="content__section" *ngIf="!canSeeAddUpdateUserDefinedNotification">
     {{'header.welcome' | translate}} <span
     class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
   </div>
 
-  <div class="content__section" *ngIf="canSeeNotificationList">
+  <div class="content__section" *ngIf="canSeeAddUpdateUserDefinedNotification">
     <div class="searchBox" [ngbCollapse]="isSearchbarCollapsed">
       <form [formGroup]="searchForm">
 

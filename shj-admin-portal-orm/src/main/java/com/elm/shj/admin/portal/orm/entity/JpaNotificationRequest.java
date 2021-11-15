@@ -40,7 +40,7 @@ public class JpaNotificationRequest implements Serializable {
     private JpaNotificationTemplate notificationTemplate;
 
     @Column(name = "user_id")
-    private long userId;
+    private String userId;
 
     @ManyToOne
     @JoinColumn(name = "processing_status_id")
