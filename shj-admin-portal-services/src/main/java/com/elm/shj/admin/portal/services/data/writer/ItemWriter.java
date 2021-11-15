@@ -104,7 +104,7 @@ public class ItemWriter {
                 ApplicantEmergencyDto emergencyDto = (ApplicantEmergencyDto) entry.getValue();
                 ApplicantDto applicantDto = getApplicantFromEmergency(emergencyDto);
                 ApplicantRitualEmergencyDto applicantRitualEmergencyDto = emergencyDto.getApplicantRitualEmergencyDto();
-                updateNestedApplicantInfo(applicantDto, Collections.emptyList());
+                updateNestedApplicantInfo(applicantDto, Collections.emptyList(), applicantRitualEmergencyDto.getBusNumber(), applicantRitualEmergencyDto.getSeatNumber());
                 updateApplicantRitualInfo(applicantDto, applicantRitualEmergencyDto);
                 S savedApplicant = (S) applicantRepository.save(mapperRegistry.get(EDataSegment.APPLICANT_DATA).toEntity(applicantDto, mappingContext));
                 savedItems.add(savedApplicant);
@@ -249,7 +249,7 @@ public class ItemWriter {
      * @param item the item to update
      */
     @SuppressWarnings("unchecked")
-    private <T> void updateNestedApplicantInfo(T item, List<T> bulkList) {
+    private <T> void updateNestedApplicantInfo(T item, List<T> bulkList, String... busAndSeatNumbers) {
         // Special treatment for ApplicantDto and contact info as they come in the same sheet
         if (item != null && item.getClass().isAssignableFrom(ApplicantDto.class)) {
             ApplicantDto applicant = (ApplicantDto) item;
@@ -270,19 +270,33 @@ public class ItemWriter {
             }
 
             Long applicantUin = Long.parseLong(applicant.getDigitalIds().get(0).getUin());
+            if (busAndSeatNumbers.length > 0) {
+                ApplicantRitualDto applicantRitualDto = addRitualPackageToApplicant(applicant, applicantUin, applicant.getPackageReferenceNumber(), busAndSeatNumbers[0], busAndSeatNumbers[1]);
+                applicant.setRituals(Arrays.asList(applicantRitualDto));
 
-            ApplicantRitualDto applicantRitualDto = addRitualPackageToApplicant(applicant, applicantUin, applicant.getPackageReferenceNumber(), null, null);
+                if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
+                    applicant.getContacts().forEach(sn -> {
+                        sn.setApplicant(applicant);
+                        sn.setApplicantRitual(applicantRitualDto);
+                    });
+                }
+                // digital id will bw generated automatically by the scheduler
 
+            } else {
+                ApplicantRitualDto applicantRitualDto = addRitualPackageToApplicant(applicant, applicantUin, applicant.getPackageReferenceNumber(), null, null);
+                applicant.setRituals(Arrays.asList(applicantRitualDto));
 
-            applicant.setRituals(Arrays.asList(applicantRitualDto));
+                if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
+                    applicant.getContacts().forEach(sn -> {
+                        sn.setApplicant(applicant);
+                        sn.setApplicantRitual(applicantRitualDto);
+                    });
+                }
+                // digital id will bw generated automatically by the scheduler
 
-            if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
-                applicant.getContacts().forEach(sn -> {
-                    sn.setApplicant(applicant);
-                    sn.setApplicantRitual(applicantRitualDto);
-                });
             }
-            // digital id will bw generated automatically by the scheduler
+
+
         }
 
         // special treatment for applicant relative
