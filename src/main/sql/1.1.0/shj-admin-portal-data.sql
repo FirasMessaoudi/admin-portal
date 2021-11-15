@@ -105,18 +105,15 @@ GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template_content ON;
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
-values (1, 1, 'AR', N'قرب انتهاء كلمة المرور', N'سوف تنتهي صلاحية كلمة المرور خلال <days> أيام من الأن',
+values (1, 1, 'AR', N'قرب انتهاء كلمة المرور', N'سوف تنتهي صلاحية كلمة المرور خلال <days_to_expiry> أيام من الأن',
         N'تغيير كلمة المرور');
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
-values (2, 1, 'EN', 'Password will expire soon', 'Password will expire after <days> days', 'Change Password');
+values (2, 1, 'EN', 'Password will expire soon', 'Password will expire after <days_to_expiry> days', 'Change Password');
 SET
 IDENTITY_INSERT shc_portal.shc_notification_template_content OFF;
 GO
 
-SET IDENTITY_INSERT shc_portal.shc_notification_template_parameter ON;
-INSERT INTO shc_portal.shc_notification_template_parameter (id, notification_template_id, parameter_name) values (1, 1, 'days_to_expiry');
-SET IDENTITY_INSERT shc_portal.shc_notification_template_parameter OFF;
-GO
+
 
 INSERT INTO shc_portal.shc_portal.shc_config ( conf_key, conf_value  ) VALUES (  'notification.processing.batch.size',  '1000' );
 INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
