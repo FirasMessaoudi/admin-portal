@@ -461,7 +461,8 @@
     "male": "Male",
     "female": "Female",
     "minute": "Minute",
-    "minutes": "Minutes"
+    "minutes": "Minutes",
+    "saved_successfully" : "Saved successfully"
   },
   "printing-management": {
     "title": "Printing Management",

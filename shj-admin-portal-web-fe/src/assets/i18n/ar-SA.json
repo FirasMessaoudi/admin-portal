@@ -449,7 +449,8 @@
     "male": "ذكور",
     "female": "إناث",
     "minute": "دقيقة",
-    "minutes": "دقائق"
+    "minutes": "دقائق",
+    "saved_successfully" : "تم حفظ البيانات بنجاح"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

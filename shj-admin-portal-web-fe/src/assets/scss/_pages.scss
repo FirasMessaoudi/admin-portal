@@ -607,3 +607,28 @@ textarea {
 .disabled-control {
   background-color: rgb(250, 250, 250);
 }
+
+
+.form-group {
+  .append {
+
+    [dir='ltr'] & {
+      border-left: 0 !important;
+    }
+
+  }
+
+  .prepend {
+    color: #848484;
+    background-color: #F8F8F8;
+
+    [dir='rtl'] & {
+      border-left: 0 !important;
+    }
+
+    [dir='ltr'] & {
+      border-right: 0 !important;
+    }
+  }
+
+}

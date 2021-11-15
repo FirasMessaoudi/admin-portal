@@ -30,9 +30,10 @@
       </div>
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'notification-management.expiry-date' | translate}}</label>
-        <span class="form-control-plaintext "></span> {{notificationTemplate?.expirationPeriodInMinutes}}
-        <span>{{(notificationTemplate?.expirationPeriodInMinutes > 10 || notificationTemplate?.expirationPeriodInMinutes < 3) ? ('notification-management.minute' | translate) : ('notification-management.minutes' | translate) }}</span>
-
+        <span class="form-control-plaintext ">
+          {{notificationTemplate?.expirationPeriodInMinutes}}
+          {{(notificationTemplate?.expirationPeriodInMinutes > 10 || notificationTemplate?.expirationPeriodInMinutes < 3) ? ('notification-management.minute' | translate) : ('notification-management.minutes' | translate) }}
+        </span>
       </div>
       <div class="form-group col mb-lg-0">
         <label class="col-form-label">{{'notification-management.notification-severity' | translate}} </label>

@@ -21,7 +21,7 @@ import java.util.List;
  */
 public interface UserNotificationRepository extends JpaRepository<JpaUserNotification, Long> {
 
-    List<JpaUserNotification> findByUserIdAndStatusCodeNot(Long userId, String statusCode);
+    List<JpaUserNotification> findByUserIdAndStatusCodeNot(String userId, String statusCode);
 
     Page<JpaUserNotification> findByStatusCodeNot(Pageable pageable, String statusCode);
 
@@ -31,5 +31,5 @@ public interface UserNotificationRepository extends JpaRepository<JpaUserNotific
 
     int countByUserIdAndStatusCode(long userId, String statusCode);
 
-    int countByUserIdAndStatusCodeAndNotificationTemplateUserSpecific(long userId, String statusCode, boolean userSpecific);
+    int countByUserIdAndStatusCodeAndNotificationTemplateUserSpecific(String userId, String statusCode, boolean userSpecific);
 }

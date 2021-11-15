@@ -53,6 +53,7 @@ public final class AuthorityConstants {
     //notification management
     public static final String NOTIFICATION_MANAGEMENT = "NOTIFICATION_MANAGEMENT";
     public static final String SYSTEM_DEFINED_NOTIFICATION_DETAILS = "SYSTEM_DEFINED_NOTIFICATION_DETAILS";
+    public static final String USER_DEFINED_NOTIFICATION_MANAGEMENT = "USER_DEFINED_NOTIFICATION_MANAGEMENT";
 
     private AuthorityConstants() {
         // creating instances is not allowed

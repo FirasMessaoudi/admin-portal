@@ -99,13 +99,8 @@ export class UserDefinedNotificationListComponent implements OnInit {
     }
   }
 
-  get canSeeNotificationList(): boolean {
-    return this.authenticationService.hasAuthority(EAuthority.NOTIFICATION_MANAGEMENT);
-  }
-
-  //TODO create notification authority
-  get canCreateNewNotification(): boolean {
-    return true;
+  get canSeeAddUpdateUserDefinedNotification(): boolean {
+    return this.authenticationService.hasAuthority(EAuthority.USER_DEFINED_NOTIFICATION_MANAGEMENT);
   }
 
   getSelectedDate(selectedDate: NgbDate): string {

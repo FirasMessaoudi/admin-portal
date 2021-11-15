@@ -153,7 +153,7 @@ GO
 
 SET IDENTITY_INSERT shc_portal.shc_card_status_lk ON;
 INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
-VALUES (17, 'EXPIRED', 'ar', N'منتهيه');
+VALUES (17, 'EXPIRED', 'ar', N'منتهية');
 INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
 VALUES (18, 'EXPIRED', 'en', 'Expired');
 INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label)
@@ -177,6 +177,15 @@ GO
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (1, 36);
 GO
 
+SET IDENTITY_INSERT shc_portal.shc_authority_lk ON;
+INSERT INTO shc_portal.shc_authority_lk(id, label_ar, label_en, code, parent_id)
+VALUES (37, N'تنبيهات المستخدم', 'User Defined Notification Management', 'USER_DEFINED_NOTIFICATION_MANAGEMENT', 35);
+SET IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
+GO
+
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
+VALUES (1, 37);
+GO
 
 --Activate Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin ,Hamalah admin  )
  insert into shc_portal.shc_role_authority ( role_id, authority_id)

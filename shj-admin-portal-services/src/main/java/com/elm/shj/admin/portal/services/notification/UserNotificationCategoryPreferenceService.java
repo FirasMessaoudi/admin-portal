@@ -35,7 +35,7 @@ public class UserNotificationCategoryPreferenceService extends GenericService<Jp
      * @param userId
      * @return
      */
-    public List<UserNotificationCategoryPreferenceDto> findUserNotificationCategoryPreference(long userId) {
+    public List<UserNotificationCategoryPreferenceDto> findUserNotificationCategoryPreference(String userId) {
         return mapList(notificationCategoryPreferenceRepository.findByUserId(userId));
     }
 

@@ -50,7 +50,7 @@ public class NotificationWsController {
      * @return number of un-read user specific and user not specific notifications.
      */
     @GetMapping("/count-new-notifications/{userId}")
-    public ResponseEntity<WsResponse<?>> countUserNewNotifications(@PathVariable Long userId) {
+    public ResponseEntity<WsResponse<?>> countUserNewNotifications(@PathVariable String userId) {
         log.debug("Handler for count un-read user notifications.");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.retrieveUserNewNotificationsCount(userId)).build());
     }
@@ -63,7 +63,7 @@ public class NotificationWsController {
      * @return the User Notifications
      */
     @GetMapping("/{userId}")
-    public ResponseEntity<WsResponse<?>> findUserNotifications(@PathVariable long userId) {
+    public ResponseEntity<WsResponse<?>> findUserNotifications(@PathVariable String userId) {
         log.debug("Handler for {}", "Find all user notifications by user Id");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.findUserNotifications(userId)).build());
     }
@@ -113,7 +113,7 @@ public class NotificationWsController {
      * @return
      */
     @GetMapping("/user-notification-category-preference/{userId}")
-    public ResponseEntity<WsResponse<?>> findUserNotificationCategoryPreference(@PathVariable long userId) {
+    public ResponseEntity<WsResponse<?>> findUserNotificationCategoryPreference(@PathVariable String userId) {
         log.debug("Handler for {}", "Find user notification category preference by user Id");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationCategoryPreferenceService.findUserNotificationCategoryPreference(userId)).build());
     }

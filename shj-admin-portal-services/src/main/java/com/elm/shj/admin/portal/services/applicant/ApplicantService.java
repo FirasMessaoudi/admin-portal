@@ -6,7 +6,6 @@ package com.elm.shj.admin.portal.services.applicant;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
-import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -15,11 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import javax.persistence.criteria.Predicate;
+import java.util.*;
 
 /**
  * Service handling applicant
@@ -34,8 +34,6 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
 
     private final ApplicantRepository applicantRepository;
     private final ApplicantContactRepository applicantContactRepository;
-    private final ApplicantRitualRepository applicantRitualRepository;
-    private final ApplicantLiteService applicantLiteService;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private final ApplicantRitualService applicantRitualService;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
@@ -125,4 +123,48 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         // persist the record
         return super.save(applicant);
     }
+
+    /**
+     * Find all applicants having active ritual
+     *
+     * @return the list of applicants
+     */
+    public List<ApplicantDto> findAllHavingActiveRitual() {
+        return mapList(((ApplicantRepository) getRepository()).findAllApplicantsHavingActiveRitual());
+    }
+
+    public List<ApplicantDto> findAllByCriteria(ApplicantSearchCriteriaDto applicantSearchCriteria) {
+        return mapList(applicantRepository.findAll(withApplicantFilter(applicantSearchCriteria)));
+    }
+
+    private Specification<JpaApplicant> withApplicantFilter(final ApplicantSearchCriteriaDto criteria) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            //Create atomic predicates
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (criteria.getGender() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("gender"), criteria.getGender()));
+            }
+
+            if (criteria.getMinAge() != null) {
+                Date date = new Date();
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                c.add(Calendar.YEAR, -criteria.getMinAge());
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("dateOfBirthGregorian"), c.getTime()));
+            }
+
+            if (criteria.getMaxAge() != null) {
+                Date date = new Date();
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                c.add(Calendar.YEAR, -criteria.getMaxAge());
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("dateOfBirthGregorian"), c.getTime()));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
 }
+

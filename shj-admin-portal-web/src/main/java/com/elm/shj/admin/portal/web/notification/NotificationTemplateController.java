@@ -3,10 +3,9 @@
  */
 package com.elm.shj.admin.portal.web.notification;
 
-import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
-import com.elm.shj.admin.portal.services.dto.NotificationSearchCriteriaDto;
-import com.elm.shj.admin.portal.services.dto.NotificationTemplateContentDto;
-import com.elm.shj.admin.portal.services.dto.NotificationTemplateDto;
+import com.elm.shj.admin.portal.services.applicant.CompanyLiteService;
+import com.elm.shj.admin.portal.services.applicant.PackageHousingService;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
 import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -41,6 +40,8 @@ public class NotificationTemplateController {
 
     private final NotificationTemplateService notificationTemplateService;
     private final NotificationRequestService notificationRequestService;
+    private final CompanyLiteService companyLiteService;
+    private final PackageHousingService packageHousingService;
 
     private final static String SYSTEM_DEFINED = "SYSTEM_DEFINED";
     private final static String USER_DEFINED = "USER_DEFINED";
@@ -54,14 +55,14 @@ public class NotificationTemplateController {
     }
 
     @PostMapping("/user-defined/list")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
     public Page<NotificationTemplateDto> searchUserDefinedNotificationTemplate(@RequestBody NotificationSearchCriteriaDto notificationSearchCriteria,
                                                                                Pageable pageable, Authentication authentication) {
         return notificationTemplateService.findByFilter(notificationSearchCriteria, USER_DEFINED, pageable);
     }
 
     @PostMapping("/user-defined/create")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
     public NotificationTemplateDto createUserDefinedNotificationTemplate(@RequestBody NotificationTemplateDto notificationTemplate, Authentication authentication) {
         return notificationTemplateService.create(notificationTemplate);
     }
@@ -76,7 +77,7 @@ public class NotificationTemplateController {
 
     @GetMapping("/user-defined/{templateId}")
     //TODO Change the authorization to user defined notification
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
     public NotificationTemplateDto findUserDefinedNotificationTemplateById(@PathVariable long templateId, Authentication authentication) {
         return notificationTemplateService.findOne(templateId);
     }
@@ -91,9 +92,30 @@ public class NotificationTemplateController {
     }
 
     @PostMapping("/send-to-all")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
-    public void sendToAllApplicants(@RequestBody NotificationTemplateDto notificationTemplateDto, Authentication authentication) {
-        notificationRequestService.sendToAllApplicants(notificationTemplateDto);
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
+    public NotificationTemplateDto sendToAllApplicants(@RequestBody NotificationTemplateDto notificationTemplateDto, Authentication authentication) {
+        return notificationRequestService.sendToAllApplicants(notificationTemplateDto);
+    }
+
+    @PostMapping("/send-to-categorized")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
+    public NotificationTemplateDto sendToCategorizedApplicants(@RequestBody CategorizedNotificationVo categorizedNotificationVo,
+                                                               Authentication authentication) {
+        return notificationRequestService.sendToCategorizedApplicants(categorizedNotificationVo);
+    }
+
+    @GetMapping("/company/list")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
+    public List<CompanyLiteDto> listCompanies(Authentication authentication) {
+        log.debug("List companies...");
+        return companyLiteService.findAll();
+    }
+
+    @GetMapping("/camp/list")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
+    public List<PackageHousingDto> listCamps(Authentication authentication) {
+        log.debug("List camps...");
+        return packageHousingService.findAllCamps();
     }
 
     private boolean validateTemplateContentParams(NotificationTemplateDto notificationTemplate) {
