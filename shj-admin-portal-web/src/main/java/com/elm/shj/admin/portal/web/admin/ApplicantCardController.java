@@ -152,7 +152,8 @@ public class ApplicantCardController {
         if (isUserAllowed) {
             JwtToken loggedInUser = (JwtToken) authentication;
             Optional<Long> userId = jwtTokenService.retrieveUserIdFromToken(loggedInUser.getToken());
-            return applicantCardService.changeCardStatus(card, actionCode, userId);
+            card = applicantCardService.buildApplicantCard(applicantCardService.changeCardStatus(card, actionCode, userId));
+            return card;
         } else {
             throw new NotAuthorizedException("the user is not authorized or this action is not allowed on card with id :  " + card.getId());
         }

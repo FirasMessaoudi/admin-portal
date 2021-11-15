@@ -144,12 +144,10 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
             userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
             ApplicantCardDto savedCard = save(ApplicantCardDto.builder().applicantRitual(card.getApplicantRitual()).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
             userCardStatusAuditService.saveUserCardStatusAudit(savedCard, userId);
-            savedCard = buildApplicantCard(savedCard);
             return savedCard;
         }
         userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
-        card = buildApplicantCard(card);
-        return save(card);
+         return save(card);
 
     }
 
