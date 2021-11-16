@@ -40,4 +40,10 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
 
     @Query("SELECT a FROM JpaApplicant a LEFT JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs WHERE rs.active = true")
     List<JpaApplicant> findAllApplicantsHavingActiveRitual();
+
+    @Query(value = "select case when count(a)> 0 then true else false end  from JpaApplicant a JOIN a.rituals ar join ar.applicantPackage ap join ap.ritualPackage rp where " +
+            "((a.idNumber = :idNumber and a.dateOfBirthHijri = :dateOfBirthHijri) or " +
+            "(a.passportNumber = :passportNumber and a.dateOfBirthGregorian = :dateOfBirthGregorian)) and rp.referenceNumber = :packageCode")
+    boolean findByBasicInfoAndPackageCode(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
+                                          @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian, @Param("packageCode") String packageCode);
 }

@@ -57,4 +57,13 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
         return null;
     }
 
+    /**
+     * Find all  without applicant ID
+     *
+     * @return the list of applicants
+     */
+    public List<ApplicantRitualDto> findAllByApplicantId(Long id) {
+        return mapList(((ApplicantRitualRepository) getRepository()).findAllByApplicantId(id));
+    }
+
 }
