@@ -86,27 +86,26 @@ SET IDENTITY_INSERT shc_portal.shc_user_notification_status_lk OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template ON;
-INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific)
-values (1, 'GENERAL', 'PASSWORD_EXPIRATION', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
-INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific)
-values (2, 'RITUAL', 'OUT_ARAFAT_FENCE', 'CONFIRMED', 'SYSTEM_DEFINED', 1, 0, 1, 1);
-INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific)
-values (3, 'RITUAL', 'DAILY_SURVEY', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1);
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific, force_sending)
+values (1, 'GENERAL', 'PASSWORD_EXPIRATION', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1, 1);
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific, force_sending)
+values (2, 'RITUAL', 'OUT_ARAFAT_FENCE', 'CONFIRMED', 'SYSTEM_DEFINED', 1, 0, 1, 1, 1);
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific, force_sending)
+values (3, 'RITUAL', 'DAILY_SURVEY', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1, 1);
 SET IDENTITY_INSERT shc_portal.shc_notification_template OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template_content ON;
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
-values (1, 1, 'AR', N'قرب انتهاء كلمة المرور', N'سوف تنتهي صلاحية كلمة المرور خلال <days> أيام من الأن', N'تغيير كلمة المرور');
+values (1, 1, 'AR', N'قرب انتهاء كلمة المرور', N'سوف تنتهي صلاحية كلمة المرور خلال <days_to_expiry> أيام من الأن',
+        N'تغيير كلمة المرور');
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
-values (2, 1, 'EN', 'Password will expire soon', 'Password will expire after <days> days', 'Change Password');
-SET IDENTITY_INSERT shc_portal.shc_notification_template_content OFF;
+values (2, 1, 'EN', 'Password will expire soon', 'Password will expire after <days_to_expiry> days', 'Change Password');
+SET
+IDENTITY_INSERT shc_portal.shc_notification_template_content OFF;
 GO
 
-SET IDENTITY_INSERT shc_portal.shc_notification_template_parameter ON;
-INSERT INTO shc_portal.shc_notification_template_parameter (id, notification_template_id, parameter_name) values (1, 1, 'days_to_expiry');
-SET IDENTITY_INSERT shc_portal.shc_notification_template_parameter OFF;
-GO
+
 
 INSERT INTO shc_portal.shc_portal.shc_config ( conf_key, conf_value  ) VALUES (  'notification.processing.batch.size',  '1000' );
 INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
@@ -191,11 +190,7 @@ UPDATE shc_portal.shc_portal.shc_card_status_lk SET label = N'تمت إعادة 
 UPDATE shc_portal.shc_portal.shc_card_status_lk SET label = 'Reissued' WHERE code = 'REISSUED' and lang = 'en';
 GO
 
-INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
-VALUES ('12_15','en','First days of Tashriq');
-INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
-VALUES ('12_15','ar',N'اول ايام التشريق');
-GO
+
 
 INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
 VALUES ('BREAKFAST','en','Breakfast');

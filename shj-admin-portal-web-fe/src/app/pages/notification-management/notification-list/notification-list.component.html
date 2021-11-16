@@ -118,20 +118,18 @@
           <td
             class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.body || '---'}}</td>
           <td class="ltr">
-            {{(template?.actionRequired == true ? 'notification-management.FYA'  : 'notification-management.FYI') | translate}}
+            {{(template?.actionRequired == true ? 'notification-management.FYA' : 'notification-management.FYI') | translate}}
           </td>
           <td
             class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.actionLabel || '---'}}</td>
-          <td class="ltr" *ngIf="template?.important == true">
-            <span class="status mr-1 Suspended"></span>
-            {{'notification-management.important' |translate}}
+          <td class=" d-flex align-items-baseline" *ngIf="template?.important">
+            <span class="status mr-1 Suspended severity-badge"></span>
+            <span>{{'notification-management.important' | translate}}</span>
           </td>
-          <td class="ltr" *ngIf="template?.important == false">
-            <span class="status mr-1 done"></span>
-            {{'notification-management.normal' |translate}}
-
+          <td class=" d-flex align-items-baseline" *ngIf="!template?.important">
+            <span class="status mr-1 done severity-badge"></span>
+            <span>{{'notification-management.normal' | translate}}</span>
           </td>
-
           <td>
             <button [routerLink]="['/system-defined-notification/details', template.id]"
                     class="btn btn-sm btn-outline-dcc-primary tblView">
