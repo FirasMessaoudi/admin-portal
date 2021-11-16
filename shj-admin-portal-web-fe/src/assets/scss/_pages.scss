@@ -196,6 +196,31 @@
 }
 
 
+.langTab.nav-tabs {
+
+  border-bottom: 3px solid #F0F0F0;
+  @include my(5);
+
+  .nav-link {
+    border-width: 3px;
+    margin-bottom: -3px;
+    color: #666;
+    @include px(5);
+    @include py(3);
+
+    &.active {
+      
+    }
+  }
+
+  .check{
+    svg{
+      @include mt(1);
+    }
+  }
+}
+
+
 ngb-datepicker {
   direction: ltr;
 
