@@ -14,7 +14,9 @@ import com.elm.shj.admin.portal.orm.repository.DataRequestRecordRepository;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.audit.AuditLogService;
+import com.elm.shj.admin.portal.services.card.ApplicantCardScheduler;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
+import com.elm.shj.admin.portal.services.card.UserCardStatusAuditService;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.data.request.DataRequestService;
 import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
@@ -303,9 +305,23 @@ public abstract class AbstractControllerTestSuite {
     protected NotificationProcessingScheduler notificationProcessingScheduler;
     @MockBean
     protected UserNotificationRepository userNotificationRepository;
-
+    @MockBean
+    protected ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
     @MockBean
     protected UserNotificationExpirationScheduler userNotificationExpirationScheduler;
+    @MockBean
+    protected ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
+    @MockBean
+    protected MealTypeLookupService mealTypeLookupService;
+    @MockBean
+    protected PackageHousingService packageHousingService;
+
+    @MockBean
+    protected UserCardStatusAuditService userCardStatusAuditService;
+    @MockBean
+    protected UserNotificationCategoryPreferenceService notificationCategoryPreferenceService;
+    @MockBean
+    protected ApplicantCardScheduler applicantCardScheduler;
 
     /**
      * Method which is executed before each test
