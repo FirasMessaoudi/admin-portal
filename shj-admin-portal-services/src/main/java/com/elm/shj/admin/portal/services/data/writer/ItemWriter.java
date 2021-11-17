@@ -198,9 +198,10 @@ public class ItemWriter {
     }
 
     /**
-     * update related applicant ritual from applicant
+     * update related applicant ritual from applicant emergency
      *
      * @param applicantDto
+     * @param applicantRitualEmergencyDto
      */
 
     private <T> void updateApplicantRitualInfo(ApplicantDto applicantDto, ApplicantRitualEmergencyDto applicantRitualEmergencyDto) {
@@ -270,8 +271,9 @@ public class ItemWriter {
                 applicant.setDigitalIds(Arrays.asList(ApplicantDigitalIdDto.builder().uin(digitalIdService.generate(applicant)).applicant(applicant).build()));
                 applicant.getDigitalIds().get(0).setStatusCode("VALID");
             }
-
             Long applicantUin = Long.parseLong(applicant.getDigitalIds().get(0).getUin());
+
+            // this case is for emergency data to insert bus number and seat number in applicant package transportation
             if (busAndSeatNumbers.length > 0) {
                 ApplicantRitualDto applicantRitualDto = addRitualPackageToApplicant(applicant, applicantUin, applicant.getPackageReferenceNumber(), busAndSeatNumbers[0], busAndSeatNumbers[1]);
                 if (existingApplicant != null) {
@@ -279,7 +281,6 @@ public class ItemWriter {
                 } else {
                     applicant.setRituals(Arrays.asList(applicantRitualDto));
                 }
-
                 if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
                     applicant.getContacts().forEach(sn -> {
                         sn.setApplicant(applicant);
@@ -288,8 +289,9 @@ public class ItemWriter {
                 }
                 // digital id will bw generated automatically by the scheduler
 
-
-            } else {
+            }
+            // this case is for applicant data upload
+            else {
                 ApplicantRitualDto applicantRitualDto = addRitualPackageToApplicant(applicant, applicantUin, applicant.getPackageReferenceNumber(), null, null);
                 if (existingApplicant != null) {
                     applicant.getRituals().add(applicantRitualDto);
@@ -303,12 +305,10 @@ public class ItemWriter {
                     });
                 }
             }
-            //add new contact
+            //add existing contacts to new contact
             if (existingApplicant != null) {
                 applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicant.getId()));
-
             }
-
         }
 
         // special treatment for applicant relative
