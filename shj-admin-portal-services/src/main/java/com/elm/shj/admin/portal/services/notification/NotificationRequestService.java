@@ -35,7 +35,6 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     private final NotificationTemplateService notificationTemplateService;
     private final NotificationRequestRepository notificationRequestRepository;
     private final UserNotificationRepository userNotificationRepository;
-    private final ApplicantRepository applicantRepository;
     private final ApplicantService applicantService;
 
     /**
@@ -167,7 +166,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     public NotificationTemplateDto sendToCategorizedApplicants(CategorizedNotificationVo categorizedNotificationVo) {
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(categorizedNotificationVo.getNotificationTemplate());
 
-        List<ApplicantDto> applicants = applicantService.findAllByCriteria(categorizedNotificationVo.getApplicantSearchCriteria());
+        List<ApplicantDto> applicants = applicantService.findAllByCriteria(categorizedNotificationVo.getApplicantSearchCriteria(), null);
 
         List<NotificationRequestDto> notificationRequests = applicants.parallelStream().map(applicant -> NotificationRequestDto
                         .builder()
@@ -182,4 +181,22 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
         return savedNotificationTemplate;
     }
 
+    @Transactional
+    public NotificationTemplateDto sendToSelectedApplicants(NotificationTemplateDto notificationTemplate, List<Long> selectedApplicants) {
+        NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
+
+        List<ApplicantDto> applicants = applicantService.findByIds(selectedApplicants);
+
+        List<NotificationRequestDto> notificationRequests = applicants.parallelStream().map(applicant -> NotificationRequestDto
+                        .builder()
+                        .userId(applicant.getDigitalIds().get(0).getUin())
+                        .notificationTemplate(savedNotificationTemplate)
+                        .sendingDate(savedNotificationTemplate.getSendingDate())
+                        .userLang("ar")
+                        .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
+                        .build())
+                .collect(Collectors.toList());
+        super.saveAll(notificationRequests);
+        return savedNotificationTemplate;
+    }
 }

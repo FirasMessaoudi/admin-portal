@@ -123,10 +123,10 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     /**
      * change card status
      *
-     * @param card       to   change it's status
+     * @param card       to change its status
      * @param actionCode the new status Code
-     * @param userId     the id of the logged in user
-     * @return card with  the status changed  successfully
+     * @param userId     the id of the logged-in user
+     * @return card with  the status changed successfully
      **/
     @Transactional
     public ApplicantCardDto changeCardStatus(ApplicantCardDto card, String actionCode, Optional<Long> userId) {

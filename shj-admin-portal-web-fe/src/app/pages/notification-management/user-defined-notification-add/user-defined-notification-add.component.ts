@@ -8,14 +8,17 @@ import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {ToastService} from "@shared/components/toast";
-import {NgbCalendar, NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
+import {ModalDismissReasons, NgbCalendar, NgbDate, NgbDateParserFormatter, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 import * as momentjs from 'moment';
 import {CompanyLite} from "@model/company-lite.model";
 import {PackageHousing} from "@model/package-housing.model";
-import {EAuthority} from "@shared/model";
+import {EAuthority, Page} from "@shared/model";
 import {CategorizedNotificationVo} from "@model/categorized-notification-vo.model";
+import {Applicant} from "@model/applicant.model";
+import {Subscription} from "rxjs";
+import {ApplicantService} from "@core/services/applicant/applicant.service";
 
 const moment = momentjs;
 
@@ -29,6 +32,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   DRAFT: string = 'DRAFT';
   CONFIRMED: string = 'CONFIRMED';
 
+  closeResult = '';
   notificationCategories: Lookup[] = [];
   localizedNotificationCategories: Lookup[] = [];
   notificationForm: FormGroup;
@@ -47,6 +51,20 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   nationalities: Lookup[] = [];
   companies: CompanyLite[] = [];
   camps: PackageHousing[] = [];
+  searchForm: FormGroup;
+  pageArray: Array<number>;
+  page: Page;
+  selectedApplicants: Array<Applicant> = [];
+  applicants: Array<Applicant> = [];
+  addedApplicants: Array<Applicant> = [];
+  addedApplicantsCurrentPage: number = 1;
+  addedApplicantsPageSize: number = 10;
+  isSelectAllClicked: boolean;
+  isSelectLoading: boolean;
+  isAllSelected: boolean;
+
+  private listSubscription: Subscription;
+  private searchSubscription: Subscription;
 
   constructor(private notificationService: NotificationService,
               private authenticationService: AuthenticationService,
@@ -57,9 +75,11 @@ export class UserDefinedNotificationAddComponent implements OnInit {
               private i18nService: I18nService,
               private calendar: NgbCalendar,
               private cardService: CardService,
+              private applicantService: ApplicantService,
               private dateFormatterService: DateFormatterService,
               private confirmDialogService: ConfirmDialogService,
               private toastr: ToastService,
+              private modalService: NgbModal,
               public formatter: NgbDateParserFormatter) {
     this.notificationDate = calendar.getToday();
     this.today = calendar.getToday();
@@ -69,6 +89,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     this.loadLookups();
     this.initForm();
     this.initCategorizedApplicantsForm();
+    this.initSearchForm();
 
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.translatedLanguages = this.languages.filter(c =>
@@ -84,6 +105,15 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    if (this.listSubscription) {
+      this.listSubscription.unsubscribe();
+    }
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+  }
+
   initForm() {
     this.notificationForm = this.formBuilder.group({
       description: ['', [Validators.minLength(3), Validators.maxLength(250),]],
@@ -92,6 +122,14 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       userSpecific: [false, Validators.required],
       forceSending: [false, Validators.required],
       enabled: [true, Validators.required]
+    });
+  }
+
+  initSearchForm(): void {
+    this.searchForm = this.formBuilder.group({
+      uin: [null],
+      idNumber: [null],
+      passportNumber: [null]
     });
   }
 
@@ -258,7 +296,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   saveAndSend() {
     if (this.checkedCriteria === 0) this.saveAndSendToAll();
     else if (this.checkedCriteria === 1) this.saveAndSendToCategorizedApplicants(this.categorizedApplicantsForm.value);
-    else if (this.checkedCriteria === 2) this.saveAndSendToSelectedApplicants();
+    else if (this.checkedCriteria === 2) this.saveAndSendToSelectedApplicants(this.addedApplicants.map(applicant => applicant.id));
   }
 
   saveAndSendToCategorizedApplicants(criteria) {
@@ -287,7 +325,139 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
-  saveAndSendToSelectedApplicants() {
+  saveAndSendToSelectedApplicants(selectedApplicants) {
+    this.isLoading = true;
+    let notificationTemplate = this.createNotificationTemplate();
+    notificationTemplate.statusCode = this.CONFIRMED;
 
+    this.notificationService.saveAndSendToSelectedApplicants(notificationTemplate, selectedApplicants).subscribe(res => {
+      this.isLoading = false;
+      if (res.hasOwnProperty('errors') && res.errors) {
+        this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
+        Object.keys(this.notificationForm.controls).forEach(field => {
+          console.log('looking for validation errors for : ' + field);
+          if (res.errors[field]) {
+            const control = this.notificationForm.get(field);
+            control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
+            control.markAsTouched({onlySelf: true});
+          }
+        });
+      } else {
+        this.toastr.success(this.translate.instant("notification-management.saved_successfully"), this.translate.instant("general.dialog_add_title"));
+        this.router.navigate(['/user-defined-notification/list']);
+      }
+    });
+  }
+
+  addApplicants() {
+    this.addedApplicants = [...this.addedApplicants, ...this.selectedApplicants];
+    this.applicants = [];
+    this.selectedApplicants = [];
+    this.isSelectAllClicked = false;
+    this.modalService.dismissAll();
+  }
+
+  resetModal() {
+    this.searchForm.reset()
+    this.applicants = [];
+    this.selectedApplicants = [];
+    this.isSelectAllClicked = false;
+    this.modalService.dismissAll();
+  }
+
+  search(pageNumber: number): void {
+    this.isLoading = true;
+    this.searchSubscription = this.applicantService.search(this.searchForm.value, this.addedApplicants.map(applicant => applicant.id), pageNumber)
+      .subscribe(data => {
+        this.isLoading = false;
+        this.applicants = [];
+        this.pageArray = [];
+        this.page = data;
+        if (this.page != null) {
+          this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
+          this.applicants = this.page.content;
+        }
+      });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
+  open(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  pageCounter(i: number): Array<number> {
+    return new Array(i);
+  }
+
+  loading(): boolean {
+    return this.isLoading || this.isSelectLoading;
+  }
+
+  isChecked(card) {
+    return this.selectedApplicants.some(c => c.id === card.id);
+  }
+
+  isAllChecked() {
+    if (this.applicants.length > 0)
+      return this.applicants.map(c => c.id).every(id => this.selectedApplicants.map(c => c.id).includes(id));
+  }
+
+  selectApplicantsInThePage(event) {
+    this.isSelectAllClicked = true;
+    if (event.target.checked) {
+      this.applicants.forEach(card => {
+        if (!this.selectedApplicants.map(c => c.id).includes(card.id)) {
+          this.selectedApplicants.push(card);
+        }
+      })
+    } else {
+      this.applicants.forEach(card => {
+        this.selectedApplicants.splice(this.selectedApplicants.findIndex(c => c.id === card.id), 1);
+      })
+    }
+
+    this.isAllSelected = this.selectedApplicants.length === this.page.totalElements;
+  }
+
+  selectOne(event, id) {
+    const selectedIndex = this.applicants.findIndex(card => card.id === id);
+
+    if (event.target.checked) {
+      this.selectedApplicants.push(this.applicants[selectedIndex]);
+    } else {
+      this.selectedApplicants.splice(this.selectedApplicants.findIndex(card => card.id === id), 1);
+    }
+
+    this.isAllSelected = this.selectedApplicants.length === this.page.totalElements;
+  }
+
+  openLg(content) {
+    this.modalService.open(content, {size: 'xl'});
+  }
+
+  undoAddApplicant(applicantId: number) {
+    this.addedApplicants.splice(this.addedApplicants.findIndex(applicant => applicant.id === applicantId), 1);
+    if (this.addedApplicantsCurrentPage !== 1 && this.addedApplicants.length % this.addedApplicantsPageSize === 0) this.addedApplicantsCurrentPage--;
+  }
+
+  setCurrentPage(page: number) {
+    this.addedApplicantsCurrentPage = page;
+  }
+
+  getTotalPages(total, size): number {
+    return Math.floor((total + size - 1) / size);
   }
 }

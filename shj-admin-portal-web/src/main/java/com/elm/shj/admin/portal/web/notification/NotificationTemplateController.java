@@ -93,8 +93,8 @@ public class NotificationTemplateController {
 
     @PostMapping("/send-to-all")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
-    public NotificationTemplateDto sendToAllApplicants(@RequestBody NotificationTemplateDto notificationTemplateDto, Authentication authentication) {
-        return notificationRequestService.sendToAllApplicants(notificationTemplateDto);
+    public NotificationTemplateDto sendToAllApplicants(@RequestBody NotificationTemplateDto notificationTemplate, Authentication authentication) {
+        return notificationRequestService.sendToAllApplicants(notificationTemplate);
     }
 
     @PostMapping("/send-to-categorized")
@@ -102,6 +102,14 @@ public class NotificationTemplateController {
     public NotificationTemplateDto sendToCategorizedApplicants(@RequestBody CategorizedNotificationVo categorizedNotificationVo,
                                                                Authentication authentication) {
         return notificationRequestService.sendToCategorizedApplicants(categorizedNotificationVo);
+    }
+
+    @PostMapping("/send-to-selected")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
+    public NotificationTemplateDto sendToSelectedApplicants(@RequestBody NotificationTemplateDto notificationTemplate,
+                                                            @RequestParam List<Long> selectedApplicants,
+                                                            Authentication authentication) {
+        return notificationRequestService.sendToSelectedApplicants(notificationTemplate, selectedApplicants);
     }
 
     @GetMapping("/company/list")

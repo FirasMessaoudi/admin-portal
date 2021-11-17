@@ -49,7 +49,6 @@ public class ApplicantRitualDto implements Serializable {
     @CellIndex(index = 5)
     private String groupReferenceNumber;
 
-
     @VisaOrPermitNumber(allowEmpty = false)
     @CellIndex(index = 6)
     private String visaNumber;
@@ -65,7 +64,6 @@ public class ApplicantRitualDto implements Serializable {
     @BorderNumber
     @CellIndex(index = 9)
     private String borderNumber;
-
 
     @OnlyCharacters(min = 3, max = 20, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 10)
