@@ -22,10 +22,7 @@ import org.springframework.util.Assert;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
@@ -49,6 +46,7 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
                     i -> i % 2 == 0 ? "F" : "M",
                     mapping(Integer::intValue, toList())
             ));
+    private static ThreadLocal<List<String>> threadLocalLatestSerialList = ThreadLocal.withInitial(() -> new ArrayList<>());
 
     private final ApplicantDigitalIdRepository applicantDigitalIdRepository;
     private final CountryLookupService countryLookupService;
@@ -82,12 +80,14 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
         String dobDigits = YEAR_FORMATTER.format(dobGregorian);
         // generate serial digits
         String uinPrefix = genderDigit + countryDigits + dobDigits;
-        List<String> latestSerialList = applicantDigitalIdRepository.fetchUinByUinLike(uinPrefix);
-        long nextSequence = CollectionUtils.isEmpty(latestSerialList) ? 1 : Long.parseLong(latestSerialList.get(0)) + 1;
+        threadLocalLatestSerialList.get().addAll(0, applicantDigitalIdRepository.fetchUinByUinLike(uinPrefix));
+        long nextSequence = CollectionUtils.isEmpty(threadLocalLatestSerialList.get()) ? 1 : Long.parseLong(threadLocalLatestSerialList.get().get(0)) + 1;
         String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 7, "0");
         // generate checksum digit
         String partialSmartId = uinPrefix + serialDigits;
         String checkDigit = calculateCheckDigit(partialSmartId);
+        // add newly generated uinPrefix to the list to avoid duplicate for the current processed file in addition to the database.
+        threadLocalLatestSerialList.get().add(0, serialDigits);
         // return smart id
         return partialSmartId + checkDigit;
     }
