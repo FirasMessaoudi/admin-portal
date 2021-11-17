@@ -12,6 +12,7 @@ import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
@@ -61,6 +62,8 @@ public class ItemWriter {
     private final RitualPackageService ritualPackageService;
     private final ApplicantPackageTransportationService applicantPackageTransportationService;
     private final GroupApplicantListService groupApplicantListService;
+    private final ApplicantRitualService applicantRitualService;
+    private final ApplicantContactService applicantContactService;
 
     /**
      * Populates the registry
@@ -148,7 +151,6 @@ public class ItemWriter {
 
             });
         }
-
         else {
             // update applicant related attributes
             items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
@@ -202,17 +204,13 @@ public class ItemWriter {
      */
 
     private <T> void updateApplicantRitualInfo(ApplicantDto applicantDto, ApplicantRitualEmergencyDto applicantRitualEmergencyDto) {
-        applicantDto.getRituals().get(0).setBorderNumber(applicantRitualEmergencyDto.getBorderNumber());
-        applicantDto.getRituals().get(0).setVisaNumber(applicantRitualEmergencyDto.getVisaNumber());
-        applicantDto.getRituals().get(0).setPermitNumber(applicantRitualEmergencyDto.getPermitNumber());
-        applicantDto.getRituals().get(0).setInsuranceNumber(applicantRitualEmergencyDto.getInsuranceNumber());
-        applicantDto.getRituals().get(0).setBusNumber(applicantRitualEmergencyDto.getBusNumber());
-        applicantDto.getRituals().get(0).setSeatNumber(applicantRitualEmergencyDto.getSeatNumber());
-        applicantDto.getRituals().get(0).setGroupReferenceNumber(applicantRitualEmergencyDto.getGroupReferenceNumber());
-        //applicantDto.getRituals().get(0).getApplicantPackage().getApplicantPackageTransportations().get(0).setSeatNumber(applicantRitualEmergencyDto.getSeatNumber());
-        //applicantDto.getRituals().get(0).getApplicantPackage().getApplicantPackageTransportations().get(0).setVehicleNumber(applicantRitualEmergencyDto.getBusNumber());
-        //applicantPackageService.save(applicantDto.getRituals().get(0).getApplicantPackage());
-
+        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setBorderNumber(applicantRitualEmergencyDto.getBorderNumber());
+        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setVisaNumber(applicantRitualEmergencyDto.getVisaNumber());
+        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setPermitNumber(applicantRitualEmergencyDto.getPermitNumber());
+        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setInsuranceNumber(applicantRitualEmergencyDto.getInsuranceNumber());
+        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setBusNumber(applicantRitualEmergencyDto.getBusNumber());
+        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setSeatNumber(applicantRitualEmergencyDto.getSeatNumber());
+        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setGroupReferenceNumber(applicantRitualEmergencyDto.getGroupReferenceNumber());
 
     }
 
@@ -264,6 +262,10 @@ public class ItemWriter {
             if (existingApplicant != null) {
                 applicant.setId(existingApplicant.getId());
                 applicant.setDigitalIds(existingApplicant.getDigitalIds());
+                applicant.setRituals(applicantRitualService.findAllByApplicantId(existingApplicant.getId()));
+                applicant.setRelatives(existingApplicant.getRelatives());
+                applicant.setCreationDate(existingApplicant.getCreationDate());
+
             } else {
                 applicant.setDigitalIds(Arrays.asList(ApplicantDigitalIdDto.builder().uin(digitalIdService.generate(applicant)).applicant(applicant).build()));
                 applicant.getDigitalIds().get(0).setStatusCode("VALID");
@@ -272,7 +274,11 @@ public class ItemWriter {
             Long applicantUin = Long.parseLong(applicant.getDigitalIds().get(0).getUin());
             if (busAndSeatNumbers.length > 0) {
                 ApplicantRitualDto applicantRitualDto = addRitualPackageToApplicant(applicant, applicantUin, applicant.getPackageReferenceNumber(), busAndSeatNumbers[0], busAndSeatNumbers[1]);
-                applicant.setRituals(Arrays.asList(applicantRitualDto));
+                if (existingApplicant != null) {
+                    applicant.getRituals().add(applicantRitualDto);
+                } else {
+                    applicant.setRituals(Arrays.asList(applicantRitualDto));
+                }
 
                 if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
                     applicant.getContacts().forEach(sn -> {
@@ -282,10 +288,14 @@ public class ItemWriter {
                 }
                 // digital id will bw generated automatically by the scheduler
 
+
             } else {
                 ApplicantRitualDto applicantRitualDto = addRitualPackageToApplicant(applicant, applicantUin, applicant.getPackageReferenceNumber(), null, null);
-                applicant.setRituals(Arrays.asList(applicantRitualDto));
-
+                if (existingApplicant != null) {
+                    applicant.getRituals().add(applicantRitualDto);
+                } else {
+                    applicant.setRituals(Arrays.asList(applicantRitualDto));
+                }
                 if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
                     applicant.getContacts().forEach(sn -> {
                         sn.setApplicant(applicant);
@@ -293,7 +303,11 @@ public class ItemWriter {
                     });
                 }
             }
+            //add new contact
+            if (existingApplicant != null) {
+                applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicant.getId()));
 
+            }
 
         }
 

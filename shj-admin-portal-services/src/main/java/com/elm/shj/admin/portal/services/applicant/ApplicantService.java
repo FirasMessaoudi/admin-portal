@@ -166,5 +166,10 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         };
     }
 
+    public boolean existsByBasicInfoAndPackageCode(ApplicantBasicInfoDto applicantBasicInfo) {
+        return ((ApplicantRepository) getRepository()).findByBasicInfoAndPackageCode(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian(), applicantBasicInfo.getPackageReferenceNumber());
+
+    }
+
 }
 

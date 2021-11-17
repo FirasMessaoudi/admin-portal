@@ -254,9 +254,9 @@
         </tr>
         <tr *ngFor="let template of notificationTemplates">
           <td
-            class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.title || '---'}}</td>
+            class="ltr text-break">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.title || '---'}}</td>
           <td
-            class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.body || '---'}}</td>
+            class="ltr text-break">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.body || '---'}}</td>
           <td
             class="ltr">{{template?.categoryCode ? lookupService().localizedLabel(notificationCategories, template?.categoryCode) : '---'}}</td>
           <td class=" d-flex align-items-baseline" *ngIf="template?.important">

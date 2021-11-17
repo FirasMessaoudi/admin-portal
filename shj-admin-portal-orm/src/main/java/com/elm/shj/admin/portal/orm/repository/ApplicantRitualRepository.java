@@ -30,5 +30,6 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
 
     JpaApplicantRitual findByApplicantDigitalIdsUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(String uin, Long companyRitualSeasonId);
 
+    List<JpaApplicantRitual> findAllByApplicantId(Long id);
 
 }

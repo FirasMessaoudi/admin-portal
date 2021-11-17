@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 /**
  * Repository for Applicant Contact Table.
  *
@@ -27,4 +29,5 @@ public interface ApplicantContactRepository extends JpaRepository<JpaApplicantCo
             "contact.localMobileNumber =:localMobileNumber where contact.applicant.id =:applicantId and contact.applicantRitual.id=:ritualId")
     int updateContactLocalNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("localMobileNumber") String localMobileNumber, @Param("applicantId") long applicantId, @Param("ritualId") long ritualId);
 
+    List<JpaApplicantContact> findAllByApplicantId(Long id);
 }

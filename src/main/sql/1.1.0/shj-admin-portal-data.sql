@@ -190,11 +190,7 @@ UPDATE shc_portal.shc_portal.shc_card_status_lk SET label = N'تمت إعادة 
 UPDATE shc_portal.shc_portal.shc_card_status_lk SET label = 'Reissued' WHERE code = 'REISSUED' and lang = 'en';
 GO
 
-INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
-VALUES ('12_15','en','First days of Tashriq');
-INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
-VALUES ('12_15','ar',N'اول ايام التشريق');
-GO
+
 
 INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
 VALUES ('BREAKFAST','en','Breakfast');

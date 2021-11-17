@@ -1,9 +1,7 @@
 /*--------------------------------------------------------
 --  ddl for to drop tables
 --------------------------------------------------------*/
-
-USE
-shc_portal
+USE shc_portal
 GO
 drop table if exists shc_portal.shc_user_role;
 drop table if exists shc_portal.shc_role_authority;
@@ -50,4 +48,15 @@ drop table if exists shc_portal.shc_language_lk;
 drop table if exists shc_portal.shc_marital_status_lk;
 drop table if exists shc_portal.shc_ritual_type_lk;
 drop table if exists shc_portal.shc_scheduled_tasks_lock;
+GO
+
+USE master
+GO
+drop schema if exists shc_portal;
+GO
+drop database if exists shc_portal;
+GO
+drop login shc_user;
+GO
+drop user if exists shc_user;
 GO
