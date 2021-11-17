@@ -169,11 +169,11 @@
       <label
         class="form-control-plaintext my-2">{{ "notification-management.notification_content_caution" | translate }}</label>
 
-      <ul ngbNav #nav="ngbNav" class="nav-tabs mt-2" [activeId]="activeId">
+      <ul ngbNav #nav="ngbNav" class="nav-tabs langTab" [activeId]="activeId">
         <li *ngFor="let language of translatedLanguages; let i = index" [ngbNavItem]="i + 1">
           <a ngbNavLink (click)="setSelectedLang(language.code.toLowerCase())">{{language.label}}
-            <svg-icon *ngIf="selectedLang === language.code.toLowerCase()" styleClass="fa-w-16"
-                      icon="check-circle-outline"></svg-icon>
+            <svg-icon *ngIf="selectedLang === language.code.toLowerCase()" styleClass="fa-w-20 ml-2 check"
+                      icon="check-circle"></svg-icon>
           </a>
           <ng-template ngbNavContent>
             <form [formGroup]="contentForm">
@@ -523,7 +523,8 @@
             </li>
             <li class="page-item"
                 [class.disabled]="addedApplicantsCurrentPage === getTotalPages(addedApplicants.length, addedApplicantsPageSize)">
-              <a class="page-link" (click)="setCurrentPage(addedApplicantsCurrentPage + 1)">{{'general.nav_next' | translate}}</a>
+              <a class="page-link"
+                 (click)="setCurrentPage(addedApplicantsCurrentPage + 1)">{{'general.nav_next' | translate}}</a>
             </li>
             <li class="page-item"
                 [class.disabled]="addedApplicantsCurrentPage === getTotalPages(addedApplicants.length, addedApplicantsPageSize)">

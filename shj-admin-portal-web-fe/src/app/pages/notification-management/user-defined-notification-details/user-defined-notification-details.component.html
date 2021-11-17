@@ -137,11 +137,11 @@
 
   <div class="content__section">
 
-    <ul ngbNav #nav="ngbNav" class="nav-tabs contentTabs" [activeId]="activeId">
+    <ul ngbNav #nav="ngbNav" class="nav-tabs langTab" [activeId]="activeId">
       <li *ngFor="let language of translatedLanguages; let i = index" [ngbNavItem]="i + 1">
         <a ngbNavLink (click)="setSelectedLang(language.code.toLowerCase())">{{language.label}}
-          <svg-icon *ngIf="selectedLang==language.code.toLowerCase()" styleClass="fa-w-16"
-                    icon="check-circle-outline"></svg-icon>
+          <svg-icon *ngIf="selectedLang==language.code.toLowerCase()" styleClass="fa-w-20 ml-2 check"
+                    icon="check-circle"></svg-icon>
         </a>
         <ng-template ngbNavContent>
 
