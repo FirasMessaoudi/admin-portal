@@ -41,8 +41,8 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Query("select a from JpaApplicant a where a.id not in (select ad.applicant.id from JpaApplicantDigitalId ad)")
     List<JpaApplicant> findAllApplicantsWithoutDigitalId();
 
-    @Query("SELECT a FROM JpaApplicant a LEFT JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs WHERE rs.active = true")
-    List<JpaApplicant> findAllApplicantsHavingActiveRitual();
+    @Query("SELECT a FROM JpaApplicant a LEFT JOIN a.rituals ar JOIN ar.applicantPackage ap WHERE (:today >= ap.startDate AND :today <= ap.endDate)")
+    List<JpaApplicant> findAllApplicantsHavingActiveRitual(@Param("today") Date today);
 
     @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END  FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp WHERE " +
             "((a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +

@@ -129,8 +129,8 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      *
      * @return the list of applicants
      */
-    public List<ApplicantDto> findAllHavingActiveRitual() {
-        return mapList(((ApplicantRepository) getRepository()).findAllApplicantsHavingActiveRitual());
+    public List<ApplicantDto> findAllHavingActiveRitual(Date today) {
+        return mapList(((ApplicantRepository) getRepository()).findAllApplicantsHavingActiveRitual(today));
     }
 
     public List<ApplicantDto> findAllByCriteria(ApplicantSearchCriteriaDto applicantSearchCriteria, List<Long> excludedIds) {
@@ -146,12 +146,19 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
 
-            //TODO Filter applicants having one active ritual based on start date and end date
+            // Retrieve only applicants having one active ritual based on applicant package start date and end date
+            Date today = new Date();
+            Join<JpaApplicant, JpaApplicantPackageHousing> rituals = root.join("rituals");
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(rituals.get("applicantPackage").get("startDate"), today));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(rituals.get("applicantPackage").get("endDate"), today));
+
+            if (criteria.getCompany() != null) {
+                Path<String> companyId = rituals.get("applicantPackage").get("ritualPackage").get("companyRitualSeason").get("company").get("id");
+                predicates.add(criteriaBuilder.equal(companyId, criteria.getCompany()));
+            }
 
             if (criteria.getCamp() != null) {
-                Join<JpaApplicant, JpaApplicantPackageHousing> applicantPackageHousings = root
-                        .join("rituals")
-                        .join("applicantPackage")
+                Join<JpaApplicant, JpaApplicantPackageHousing> applicantPackageHousings = rituals.join("applicantPackage")
                         .join("applicantPackageHousings");
                 Path<String> campId = applicantPackageHousings.get("packageHousing").get("id");
                 predicates.add(criteriaBuilder.equal(campId, criteria.getCamp()));
@@ -166,13 +173,13 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             }
 
             if (criteria.getMaxAge() != null) {
-                Date date = getDateFromAge(criteria.getMaxAge());
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("dateOfBirthGregorian"), date));
+                Date dateBeforeMaxAge = getDateFromAge(criteria.getMaxAge());
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("dateOfBirthGregorian"), dateBeforeMaxAge));
             }
 
             if (criteria.getMinAge() != null) {
-                Date date = getDateFromAge(criteria.getMinAge());
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("dateOfBirthGregorian"), date));
+                Date dateBeforeMinAge = getDateFromAge(criteria.getMinAge());
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("dateOfBirthGregorian"), dateBeforeMinAge));
             }
 
             if (criteria.getUin() != null && criteria.getUin().trim().length() > 0) {

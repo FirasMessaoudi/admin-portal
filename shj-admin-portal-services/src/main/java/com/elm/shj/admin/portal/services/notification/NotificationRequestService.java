@@ -145,7 +145,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     @Transactional
     public NotificationTemplateDto sendToAllApplicants(NotificationTemplateDto notificationTemplate) {
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
-        List<ApplicantDto> applicants = applicantService.findAllHavingActiveRitual();
+        List<ApplicantDto> applicants = applicantService.findAllHavingActiveRitual(new Date());
         List<NotificationRequestDto> notificationRequests = applicants.parallelStream().map(applicant -> NotificationRequestDto
                         .builder()
                         .userId(applicant.getDigitalIds().get(0).getUin())
