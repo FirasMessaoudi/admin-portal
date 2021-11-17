@@ -2,7 +2,6 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
-import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import org.junit.jupiter.api.Test;
@@ -142,6 +141,22 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
         when(companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(UIN, COMPANY_RITUAL_ID)).thenReturn(companyRitualSteps);
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk());
     }
+
+    @Test
+    public void test_list_languages_success() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/language/list";
+        when(languageLookupService.findAll()).thenReturn(new ArrayList<>());
+        mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void test_list_languages_fail() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/language/list";
+        when(languageLookupService.findAll()).thenReturn(null);
+        mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.body").isEmpty());
+    }
+
     @Test
     public void test_find_company_ritual_step_fail() throws Exception {
         String url = Navigation.API_INTEGRATION + "/company-ritual-step/" + FAKE_USER_UIN + "/" + COMPANY_RITUAL_ID;
