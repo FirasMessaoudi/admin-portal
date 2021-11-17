@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -83,6 +82,7 @@ public class IntegrationWsController {
     private final NotificationCategoryLookupService notificationCategoryLookupService;
     private final NotificationTemplateNameLookupService notificationTemplateNameLookupService;
     private final MealTypeLookupService mealTypeLookupService;
+    private final LanguageLookupService languageLookupService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -166,6 +166,17 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> listCountries() {
         log.debug("list countries...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(countryLookupService.findAll()).build());
+    }
+
+    /**
+     * List all supported languages
+     *
+     * @return WsResponse of supported languages list
+     */
+    @GetMapping("/language/list")
+    public ResponseEntity<WsResponse<?>> listLanguages() {
+        log.debug("list languages...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(languageLookupService.findAll()).build());
     }
 
     /**

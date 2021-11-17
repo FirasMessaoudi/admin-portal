@@ -238,7 +238,7 @@ SET IDENTITY_INSERT shc_portal.shc_ritual_package ON;
 
 INSERT INTO shc_portal.shc_ritual_package (id, type_code, price, departure_city, country_id, creation_date, update_date,
                                            company_ritual_season_id, reference_number)
-VALUES (1, N'VIP', 100, null, 1, N'2021-09-15 09:54:00', null, 1, N'PKG1442');
+VALUES (1, N'VIP', 100, null, 1, N'2021-09-15 09:54:00', null, 1, N'PKG1443');
 
 SET
     IDENTITY_INSERT shc_portal.shc_ritual_package OFF;

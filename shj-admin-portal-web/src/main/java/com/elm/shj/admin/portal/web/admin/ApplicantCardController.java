@@ -168,12 +168,13 @@ public class ApplicantCardController {
             return false;
         }
         String[] allowedActions = ApplicantCardService.CARD_STATUS_ALLOWED_ACTION.get(card.getStatusCode().toUpperCase());
-        boolean isActionAllowed = Arrays.stream(allowedActions).anyMatch(action -> action.equalsIgnoreCase(actionCode));
-        if (!isActionAllowed) {
-            log.error("action with status code {} is not allowed on card with status {}", actionCode, card.getStatusCode());
-            return false;
+        if (allowedActions != null) {
+            boolean isActionAllowed = Arrays.stream(allowedActions).anyMatch(action -> action.equalsIgnoreCase(actionCode));
+            if (!isActionAllowed) {
+                log.error("action with status code {} is not allowed on card with status {}", actionCode, card.getStatusCode());
+                return false;
+            }
         }
-
         return true;
 
     }
