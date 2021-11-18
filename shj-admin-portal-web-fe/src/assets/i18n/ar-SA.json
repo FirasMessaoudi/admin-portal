@@ -451,7 +451,8 @@
     "minute": "دقيقة",
     "minutes": "دقائق",
     "saved_successfully" : "تم حفظ البيانات بنجاح",
-    "add_user_defined_notifications": "إضافة تنبيهات المستخدم"
+    "add_user_defined_notifications": "إضافة تنبيهات المستخدم",
+    "save_changes_confirmation_text": "هل تريد حفظ التعديلات الحالية ؟"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

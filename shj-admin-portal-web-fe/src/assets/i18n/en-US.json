@@ -463,7 +463,8 @@
     "minute": "Minute",
     "minutes": "Minutes",
     "saved_successfully" : "Saved successfully",
-    "add_user_defined_notifications": "Add User Defined Notifications"
+    "add_user_defined_notifications": "Add User Defined Notifications",
+    "save_changes_confirmation_text": "Are you sure, you want to save changes ?"
   },
   "printing-management": {
     "title": "Printing Management",

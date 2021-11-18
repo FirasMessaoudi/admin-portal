@@ -294,9 +294,19 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   };
 
   saveAndSend() {
-    if (this.checkedCriteria === 0) this.saveAndSendToAll();
-    else if (this.checkedCriteria === 1) this.saveAndSendToCategorizedApplicants(this.categorizedApplicantsForm.value);
-    else if (this.checkedCriteria === 2) this.saveAndSendToSelectedApplicants(this.addedApplicants.map(applicant => applicant.id));
+    this.confirmDialogService.confirm(
+      this.translate.instant('notification-management.save_changes_confirmation_text'),
+      this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+      if (confirm) {
+        if (this.checkedCriteria === 0) {
+          this.saveAndSendToAll();
+        } else if (this.checkedCriteria === 1) {
+          this.saveAndSendToCategorizedApplicants(this.categorizedApplicantsForm.value);
+        } else if (this.checkedCriteria === 2) {
+          this.saveAndSendToSelectedApplicants(this.addedApplicants.map(applicant => applicant.id));
+        }
+      }
+    });
   }
 
   saveAndSendToCategorizedApplicants(criteria) {
@@ -391,7 +401,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   open(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', centered: true}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
