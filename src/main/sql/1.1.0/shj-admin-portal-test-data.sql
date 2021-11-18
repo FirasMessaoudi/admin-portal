@@ -284,11 +284,11 @@ GO
 SET IDENTITY_INSERT shc_portal.shc_package_catering ON;
 
 INSERT INTO shc_portal.shc_package_catering (id, package_housing_id, meal_code, meal_time, meal_description, type,
-                                             description_ar, description_en, creation_date, update_date)
-VALUES (1, 1, N'123', N'10:35:00', N'mail', N'BREAKFAST', N'بوفيه مفتوح', N'Open buffet', N'2021-09-15 20:28:00', null);
+                                             description_ar, description_en, creation_date, update_date,is_default)
+VALUES (1, 1, N'123', N'10:35:00', N'mail', N'BREAKFAST', N'بوفيه مفتوح', N'Open buffet', N'2021-09-15 20:28:00', null, 1);
 INSERT INTO shc_portal.shc_package_catering (id, package_housing_id, meal_code, meal_time, meal_description, type,
-                                             description_ar, description_en, creation_date, update_date)
-VALUES (2, 1, N'123', N'10:00:00', N'mail', N'type',  N'بوفيه مفتوح' , 'Open buffet', N'2021-09-15 20:28:00', null);
+                                             description_ar, description_en, creation_date, update_date,,is_default)
+VALUES (2, 1, N'123', N'10:00:00', N'mail', N'type',  N'بوفيه مفتوح' , 'Open buffet', N'2021-09-15 20:28:00', null,1);
 
 SET
 IDENTITY_INSERT shc_portal.shc_package_catering OFF;

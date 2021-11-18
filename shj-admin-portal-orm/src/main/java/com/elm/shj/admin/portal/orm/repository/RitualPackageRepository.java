@@ -15,4 +15,6 @@ public interface RitualPackageRepository extends JpaRepository<JpaRitualPackage,
 
 
     Optional<JpaRitualPackage> findByReferenceNumber(String referenceNumber);
+
+    Optional<JpaRitualPackage> findByApplicantPackagesApplicantUinAndCompanyRitualSeasonId(long uin,long companyRitualSeasonId);
 }

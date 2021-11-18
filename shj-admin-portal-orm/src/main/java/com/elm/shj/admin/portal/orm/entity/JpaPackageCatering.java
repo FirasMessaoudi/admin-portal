@@ -57,6 +57,8 @@ public class JpaPackageCatering implements Serializable {
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 
+    @Column(name = "is_default")
+    private boolean isDefault;
 
     @ManyToOne
     @JoinColumn(name = "package_housing_id")
