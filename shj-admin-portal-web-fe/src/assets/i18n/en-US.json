@@ -462,7 +462,8 @@
     "female": "Female",
     "minute": "Minute",
     "minutes": "Minutes",
-    "saved_successfully" : "Saved successfully"
+    "saved_successfully" : "Saved successfully",
+    "add_user_defined_notifications": "Add User Defined Notifications"
   },
   "printing-management": {
     "title": "Printing Management",

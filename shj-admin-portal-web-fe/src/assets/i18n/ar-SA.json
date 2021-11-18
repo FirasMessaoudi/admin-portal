@@ -450,7 +450,8 @@
     "female": "إناث",
     "minute": "دقيقة",
     "minutes": "دقائق",
-    "saved_successfully" : "تم حفظ البيانات بنجاح"
+    "saved_successfully" : "تم حفظ البيانات بنجاح",
+    "add_user_defined_notifications": "إضافة تنبيهات المستخدم"
   },
   "printing-management": {
     "title": "إدارة الطباعة",
