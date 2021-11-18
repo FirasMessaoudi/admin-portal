@@ -63,7 +63,7 @@ public class JpaApplicantRitual implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "applicant_package_id")
-    private JpaApplicantPackage  applicantPackage;
+    private JpaApplicantPackage applicantPackage;
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "applicantRitual")

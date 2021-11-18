@@ -93,7 +93,8 @@
 
             <a ngbNavLink (click)="setSelectedLang(language.code.toLowerCase())">{{language.label}}
               <svg-icon *ngIf="selectedLang==language.code.toLowerCase()" styleClass="fa-w-20 ml-2 check"
-                        icon="check-circle"></svg-icon>            </a>
+                        icon="check-circle"></svg-icon>
+            </a>
             <ng-template ngbNavContent>
               <div class="row row-cols-1 row-cols-md-1 row-cols-lg-1">
                 <div class="form-group col-sm-9 col-md-5 col-lg-3">
@@ -101,8 +102,7 @@
 
                   <input *ngIf="editable" class="form-control" required type="text" name="title" [maxLength]="50"
                          formControlName="title" [class.is-invalid]="f.title.invalid && f.title.touched">
-                  <label *ngIf="!editable" class="form-control-plaintext" name="title"
-                  >{{getNotificationContentForSelectedLang()?.title}}</label>
+                  <label *ngIf="!editable" class="form-control-plaintext">{{getNotificationContentForSelectedLang()?.title}}</label>
                   <div *ngIf="f.title.invalid && f.title.touched" class="invalid-feedback">
                     <div *ngIf="f.title.errors.required">{{'general.field_validation_required' | translate}}</div>
                     <div *ngIf="f.title.errors.invalid">{{f.title.errors['invalid'] | translate}}</div>

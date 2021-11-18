@@ -117,11 +117,35 @@ export class NotificationService {
   /**
    * Creates user defined notification template and sends it to categorized applicants.
    *
-   * @return {Observable<notificationTemplate>} created notificationTemplate.
    * @param categorizedNotification
+   * @return {Observable<notificationTemplate>} created notificationTemplate.
    */
   saveAndSendToCategorizedApplicants(categorizedNotification: CategorizedNotificationVo): Observable<any> {
     return this.http.post<any>('/core/api/notification/template/send-to-categorized', categorizedNotification)
+      .pipe(catchError((error: HttpErrorResponse) => {
+          if (error.hasOwnProperty('error')) {
+            return of(error.error);
+          } else {
+            console.error('An error happened while sending user notifications : ' + error);
+            return of(error);
+          }
+        })
+      );
+  }
+
+  /**
+   * Creates user defined notification template and sends it to categorized applicants.
+   *
+   * @return {Observable<notificationTemplate>} created notificationTemplate.
+   * @param notificationTemplate created notificationTemplate.
+   * @param selectedApplicants
+   */
+  saveAndSendToSelectedApplicants(notificationTemplate: NotificationTemplate, selectedApplicants): Observable<any> {
+    let params = new HttpParams();
+    if (selectedApplicants.length > 0) {
+      params = params.append('selectedApplicants', selectedApplicants);
+    }
+    return this.http.post<any>('/core/api/notification/template/send-to-selected', notificationTemplate, {params: params})
       .pipe(catchError((error: HttpErrorResponse) => {
           if (error.hasOwnProperty('error')) {
             return of(error.error);

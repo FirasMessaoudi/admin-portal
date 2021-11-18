@@ -22,4 +22,7 @@ public class ApplicantSearchCriteriaDto implements Serializable {
     private Integer minAge;
     private Integer maxAge;
     private String gender;
+    private String idNumber;
+    private String uin;
+    private String passportNumber;
 }

@@ -78,12 +78,10 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         return mapPage(notificationTemplateRepository.findAll(withNotificationFilter(notificationSearchCriteria, typeCode), pageable));
     }
 
-
     private Specification<JpaNotificationTemplate> withNotificationFilter(final NotificationSearchCriteriaDto notificationSearchCriteria, String typeCode) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
-            root.get("notificationTemplateContents");
 
             predicates.add(criteriaBuilder.equal(root.get("typeCode"), typeCode));
 

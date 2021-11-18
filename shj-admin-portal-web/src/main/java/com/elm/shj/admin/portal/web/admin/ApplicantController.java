@@ -7,9 +7,8 @@ import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantSearchCriteriaDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
-import com.elm.shj.admin.portal.services.dto.UpdateApplicantCmd;
-import com.elm.shj.admin.portal.web.error.ApiErrorResponse;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
@@ -17,18 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.annotation.security.RolesAllowed;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Main controller for applicant management pages
@@ -59,6 +52,20 @@ public class ApplicantController {
     }
 
     /**
+     * finds a list of applicants matching criteria
+     *
+     * @return the list of applicants or empty list
+     */
+    @PostMapping("/find")
+    @RolesAllowed(AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT)
+    public Page<ApplicantDto> findApplicants(@RequestBody ApplicantSearchCriteriaDto applicantSearchCriteria,
+                                             @RequestParam List<Long> excludedIds,
+                                             Pageable pageable) {
+        log.debug("Find applicants matching criteria...");
+        return applicantService.findAllByCriteriaAndNotInExcludedIds(applicantSearchCriteria, excludedIds, pageable);
+    }
+
+    /**
      * finds an applicant by his UIN
      *
      * @param uin the applicant's uin to find
@@ -75,7 +82,5 @@ public class ApplicantController {
             return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
         });
     }
-
-
 
 }

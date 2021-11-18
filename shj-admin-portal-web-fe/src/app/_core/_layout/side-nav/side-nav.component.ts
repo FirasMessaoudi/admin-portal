@@ -89,7 +89,7 @@ export class SideNavComponent implements OnInit {
         roles: [EAuthority.NOTIFICATION_MANAGEMENT],
         display: false,
         icon: 'megaphone',
-        iconFa: 'fa-w-18',
+        iconFa: 'fa-w-16',
         submenu: true,
         menuItems: [
           {

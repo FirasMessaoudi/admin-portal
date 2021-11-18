@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -18,7 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.*;
 import java.util.*;
 
 /**
@@ -129,41 +129,91 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      *
      * @return the list of applicants
      */
-    public List<ApplicantDto> findAllHavingActiveRitual() {
-        return mapList(((ApplicantRepository) getRepository()).findAllApplicantsHavingActiveRitual());
+    public List<ApplicantDto> findAllHavingActiveRitual(Date today) {
+        return mapList(((ApplicantRepository) getRepository()).findAllApplicantsHavingActiveRitual(today));
     }
 
-    public List<ApplicantDto> findAllByCriteria(ApplicantSearchCriteriaDto applicantSearchCriteria) {
-        return mapList(applicantRepository.findAll(withApplicantFilter(applicantSearchCriteria)));
+    public List<ApplicantDto> findAllByCriteria(ApplicantSearchCriteriaDto applicantSearchCriteria, List<Long> excludedIds) {
+        return mapList(applicantRepository.findAll(withApplicantFilter(applicantSearchCriteria, excludedIds)));
     }
 
-    private Specification<JpaApplicant> withApplicantFilter(final ApplicantSearchCriteriaDto criteria) {
+    public Page<ApplicantDto> findAllByCriteriaAndNotInExcludedIds(ApplicantSearchCriteriaDto applicantSearchCriteria, List<Long> excludedIds, Pageable pageable) {
+        return mapPage(applicantRepository.findAll(withApplicantFilter(applicantSearchCriteria, excludedIds), pageable));
+    }
+
+    private Specification<JpaApplicant> withApplicantFilter(final ApplicantSearchCriteriaDto criteria, List<Long> excludedIds) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
+
+            // Retrieve only applicants having one active ritual based on applicant package start date and end date
+            Date today = new Date();
+            Join<JpaApplicant, JpaApplicantPackageHousing> rituals = root.join("rituals");
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(rituals.get("applicantPackage").get("startDate"), today));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(rituals.get("applicantPackage").get("endDate"), today));
+
+            if (criteria.getCompany() != null) {
+                Path<String> companyId = rituals.get("applicantPackage").get("ritualPackage").get("companyRitualSeason").get("company").get("id");
+                predicates.add(criteriaBuilder.equal(companyId, criteria.getCompany()));
+            }
+
+            if (criteria.getCamp() != null) {
+                Join<JpaApplicant, JpaApplicantPackageHousing> applicantPackageHousings = rituals.join("applicantPackage")
+                        .join("applicantPackageHousings");
+                Path<String> campId = applicantPackageHousings.get("packageHousing").get("id");
+                predicates.add(criteriaBuilder.equal(campId, criteria.getCamp()));
+            }
+
+            if (criteria.getNationality() != null) {
+                predicates.add(criteriaBuilder.equal(criteriaBuilder.upper(root.get("nationalityCode")), criteria.getNationality().toUpperCase()));
+            }
 
             if (criteria.getGender() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("gender"), criteria.getGender()));
             }
 
-            if (criteria.getMinAge() != null) {
-                Date date = new Date();
-                Calendar c = Calendar.getInstance();
-                c.setTime(date);
-                c.add(Calendar.YEAR, -criteria.getMinAge());
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("dateOfBirthGregorian"), c.getTime()));
+            if (criteria.getMaxAge() != null) {
+                Date dateBeforeMaxAge = getDateFromAge(criteria.getMaxAge());
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("dateOfBirthGregorian"), dateBeforeMaxAge));
             }
 
-            if (criteria.getMaxAge() != null) {
-                Date date = new Date();
-                Calendar c = Calendar.getInstance();
-                c.setTime(date);
-                c.add(Calendar.YEAR, -criteria.getMaxAge());
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("dateOfBirthGregorian"), c.getTime()));
+            if (criteria.getMinAge() != null) {
+                Date dateBeforeMinAge = getDateFromAge(criteria.getMinAge());
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("dateOfBirthGregorian"), dateBeforeMinAge));
+            }
+
+            if (criteria.getUin() != null && criteria.getUin().trim().length() > 0) {
+                Join<JpaApplicant, JpaApplicantDigitalId> digitalIds = root.join("digitalIds");
+                predicates.add(criteriaBuilder.like(digitalIds.get("uin"), "%" + criteria.getUin().trim() + "%"));
+            }
+
+            if (criteria.getIdNumber() != null && criteria.getIdNumber().trim().length() > 0) {
+                predicates.add(criteriaBuilder.like(root.get("idNumber"), "%" + criteria.getIdNumber().trim() + "%"));
+            }
+
+            if (criteria.getPassportNumber() != null && criteria.getPassportNumber().trim().length() > 0) {
+                predicates.add(criteriaBuilder.like(root.get("passportNumber"), "%" + criteria.getPassportNumber().trim() + "%"));
+            }
+
+            if (excludedIds != null && !excludedIds.isEmpty()) {
+                predicates.add(criteriaBuilder.not(root.get("id").in(excludedIds)));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    private Date getDateFromAge(Integer age) {
+        Date date = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.YEAR, -age);
+        return c.getTime();
+    }
+
+
+    public List<ApplicantDto> findByIds(List<Long> selectedApplicants) {
+        return mapList(applicantRepository.findByIds(selectedApplicants));
     }
 
     public boolean existsByBasicInfoAndPackageCode(ApplicantBasicInfoDto applicantBasicInfo) {
