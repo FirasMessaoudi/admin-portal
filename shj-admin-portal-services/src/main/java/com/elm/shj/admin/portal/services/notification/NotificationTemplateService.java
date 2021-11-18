@@ -21,7 +21,6 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,7 +70,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
     /**
      * Find paginated notification template based on filter.
      *
-     * @param pageable requested page of result.
+     * @param pageable                   requested page of result.
      * @param notificationSearchCriteria filter value object
      * @return
      */
@@ -133,7 +132,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
             if (notificationSearchCriteria.getSendingDateEnd() != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("sendingDate"), notificationSearchCriteria.getSendingDateEnd()));
             }
-
+            criteriaQuery.distinct(true);
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
