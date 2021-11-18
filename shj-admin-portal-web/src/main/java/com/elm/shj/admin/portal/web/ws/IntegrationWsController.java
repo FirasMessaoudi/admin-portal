@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
+import com.elm.shj.admin.portal.orm.entity.JpaPackageCatering;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -83,6 +86,9 @@ public class IntegrationWsController {
     private final NotificationTemplateNameLookupService notificationTemplateNameLookupService;
     private final MealTypeLookupService mealTypeLookupService;
     private final LanguageLookupService languageLookupService;
+    private final RitualPackageService ritualPackageService;
+
+
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -377,6 +383,22 @@ public class IntegrationWsController {
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageDetails).build());
 
+    }
+
+    /**
+     * finds package catering related to applicant even if not have applicant package catering by his UIN and company season ritual id
+     *
+     * @param uin                   the applicant's uin to find
+     * @param companyRitualSeasonId applicant ritual id
+     * @return the found package Catering related to applicant
+     */
+    @GetMapping("/package/catering/{uin}/{companyRitualSeasonId}")
+    public ResponseEntity<WsResponse<?>> findApplicantPackageCatering(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
+        log.debug("Handler for {}", "Find package Catering  by uin");
+        RitualPackageDto ritualPackage = ritualPackageService.findRitualPackageByApplicantUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId);
+        List<PackageCateringDto> packageCateringDtoList = new ArrayList<>();
+        ritualPackage.getPackageHousings().forEach(e->packageCateringDtoList.addAll(e.getPackageCatering()));
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageCateringDtoList).build());
     }
 
     /**

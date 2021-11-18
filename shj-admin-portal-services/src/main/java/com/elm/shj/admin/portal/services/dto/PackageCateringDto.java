@@ -45,6 +45,8 @@ public class PackageCateringDto implements Serializable {
 
     private String descriptionEn;
 
+    private boolean isDefault;
+
     private Date creationDate;
 
     private Date updateDate;

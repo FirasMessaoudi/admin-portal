@@ -44,4 +44,25 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
     }
 
 
+    @Transactional
+    public RitualPackageDto findRitualPackageByApplicantUinAndCompanyRitualSeasonId(long uin, long companyRitualSeasonId) {
+
+        Optional<JpaRitualPackage> ritualPackageOptional =  ritualPackageRepository.findByApplicantPackagesApplicantUinAndCompanyRitualSeasonId(uin,companyRitualSeasonId);
+
+        if (ritualPackageOptional.isPresent()) {
+            JpaRitualPackage ritualPackage = ritualPackageOptional.get();
+            ritualPackage.getApplicantPackages().size();
+            ritualPackage.getCompanyRitualSeason();
+            ritualPackage.getApplicantPackages().forEach(e-> {e.getApplicantPackageHousings().size();});
+            ritualPackage.getPackageTransportations().size();
+            ritualPackage.getPackageHousings().size();
+            if(CollectionUtils.isNotEmpty(ritualPackage.getPackageHousings())){
+                ritualPackage.getPackageHousings().forEach(ph -> ph.getPackageCatering().size());
+            }
+
+            return getMapper().fromEntity(ritualPackage, mappingContext);
+        }
+
+        return null;
+    }
 }
