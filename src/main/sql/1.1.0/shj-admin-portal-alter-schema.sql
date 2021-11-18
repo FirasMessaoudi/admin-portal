@@ -871,6 +871,10 @@ ALTER TABLE shc_portal.shc_notification_category_lk
     ADD sample nvarchar(500);
 GO
 
+
+ALTER TABLE shc_portal.shc_applicant_package_catering ADD is_default bit;
+GO
+
 /*--------------------------------------------------------
 --  ddl for incident tables
 --------------------------------------------------------*/

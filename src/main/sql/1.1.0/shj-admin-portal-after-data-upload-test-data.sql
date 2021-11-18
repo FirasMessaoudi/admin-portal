@@ -6,4 +6,6 @@ SELECT 1, UIN
 FROM shc_portal.shc_applicant_digital_id;
 GO
 
+update shc_portal.shc_applicant_package_catering set option_en= 'continental', option_ar=N'كونتيننتال'
+GO
 
