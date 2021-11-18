@@ -870,3 +870,60 @@ GO
 ALTER TABLE shc_portal.shc_notification_category_lk
     ADD sample nvarchar(500);
 GO
+
+/*--------------------------------------------------------
+--  ddl for incident tables
+--------------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_applicant_incident')
+create table shc_portal.shc_applicant_incident
+(
+    id                  int            NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    reference_number    varchar(45)    NOT NULL,
+    applicant_ritual_id int            NOT NULL,
+    status_code         varchar(20)    NOT NULL,
+    type_code           varchar(20)    NOT NULL,
+    description         nvarchar(1000) NOT NULL,
+    -- Latitudes range from -90 to +90 (degrees), so DECIMAL(10,8) is ok for that, but longitudes range from -180 to +180 (degrees) so we need DECIMAL(11,8).
+    location_lat        decimal(10, 8) NOT NULL,
+    location_lng        decimal(11, 8) NOT NULL,
+    resolution_comment  nvarchar(1000) NULL,
+    creation_date       smalldatetime  NOT NULL default current_timestamp,
+    update_date         smalldatetime  NULL,
+    CONSTRAINT fk_applicant_incident_applicant_ritual FOREIGN KEY (applicant_ritual_id) REFERENCES shc_portal.shc_applicant_ritual (id),
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_incident_attachment')
+create table shc_portal.shc_incident_attachment
+(
+    id                    int            NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    file_path             nvarchar(1000) NOT NULL,
+    applicant_incident_id int            NOT NULL,
+    creation_date         smalldatetime  NOT NULL default current_timestamp,
+    CONSTRAINT fk_incident_attachment_applicant_incident FOREIGN KEY (applicant_incident_id) REFERENCES shc_portal.shc_applicant_incident (id),
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_incident_type_lk')
+create table shc_portal.shc_incident_type_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(50)  NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT incident_type_lk_unique unique (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_incident_status_lk')
+create table shc_portal.shc_incident_status_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(50)  NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT incident_status_lk_unique unique (code ASC, lang ASC)
+);
+GO

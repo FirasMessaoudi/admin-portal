@@ -47,4 +47,8 @@ drop table if exists shc_portal.shc_notification_template_status_lk;
 drop table if exists shc_portal.shc_notification_processing_status_lk;
 drop table if exists shc_portal.shc_notification_template_name_lk;
 drop table if exists shc_portal.shc_user_card_status_audit;
+drop table if exists shc_portal.shc_incident_attachment;
+drop table if exists shc_portal.shc_applicant_incident;
+drop table if exists shc_portal.shc_incident_type_lk;
+drop table if exists shc_portal.shc_incident_status_lk;
 GO
