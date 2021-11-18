@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.digitalid;
 
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDigitalIdDto;
+import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockAssert;
@@ -37,7 +38,7 @@ public class DigitalIdScheduler {
         LockAssert.assertLocked();
         applicantService.findAllWithoutDigitalId().forEach(applicant -> {
             // generate and save digital id for each applicant
-            digitalIdService.save(ApplicantDigitalIdDto.builder().applicant(applicant).uin(digitalIdService.generate(applicant)).build());
+            digitalIdService.save(ApplicantDigitalIdDto.builder().statusCode(EDigitalIdStatus.VALID.name()).applicant(applicant).uin(digitalIdService.generate(applicant)).build());
         });
     }
 

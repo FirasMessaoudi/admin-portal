@@ -53,4 +53,6 @@ public class Navigation {
 	public static final String API_NOTIFICATION_INTEGRATION = "/api/ws/notification";
 	// notification template management
 	public static final String API_NOTIFICATION_TEMPLATE = "/api/notification/template";
+	// Incidents
+	public static final String API_INCIDENTS = "/api/incidents";
 }
