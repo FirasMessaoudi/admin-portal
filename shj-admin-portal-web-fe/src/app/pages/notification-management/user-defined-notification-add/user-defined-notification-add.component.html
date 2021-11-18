@@ -348,14 +348,14 @@
           <form [formGroup]="searchForm" name="searchApplicant" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
             <div class="form-group col">
               <label class="col-form-label">{{'card-management.applicant_id' | translate }}</label>
-              <input id="uin" type="number" formControlName="uin" class="form-control"
+              <input id="uin" formControlName="uin" class="form-control"
                      onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length<=9"
                      min="0" step="1"/>
             </div>
 
             <div class="form-group col">
               <label class="col-form-label">{{'printing-management.id_number' | translate }}</label>
-              <input type="number" formControlName="idNumber" class="form-control"
+              <input formControlName="idNumber" class="form-control"
                      onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length<=9"
                      min="0" step="1"/>
             </div>
