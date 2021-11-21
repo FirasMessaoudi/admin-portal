@@ -872,7 +872,7 @@ ALTER TABLE shc_portal.shc_notification_category_lk
 GO
 
 
-ALTER TABLE shc_portal.shc_package_catering ADD is_default bit;
+ALTER TABLE shc_portal.shc_package_catering ADD is_default bit default(0);
 GO
 
 /*--------------------------------------------------------
