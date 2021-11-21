@@ -84,6 +84,8 @@ INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label) VALUES
 INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label) VALUES (4, 'BUS', 'en', 'Bus');
 INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label) VALUES (5, 'TRAIN', 'ar', N'قطار');
 INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label) VALUES (6, 'TRAIN', 'en', 'Train');
+INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label) VALUES (7, 'AIRPLANE', 'ar', N'طائرة');
+INSERT INTO shc_portal.shc_transportation_type_lk (id, code, lang, label) VALUES (8, 'AIRPLANE', 'en', 'AirPlane');
 SET IDENTITY_INSERT shc_portal.shc_transportation_type_lk OFF;
 GO
 
