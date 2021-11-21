@@ -8,18 +8,17 @@ import com.elm.shj.admin.portal.orm.entity.JpaUserNotification;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
 import com.elm.shj.admin.portal.services.dto.DetailedUserNotificationDto;
 import com.elm.shj.admin.portal.services.dto.EUserNotificationStatus;
-import com.elm.shj.admin.portal.services.dto.NotificationTemplateDto;
 import com.elm.shj.admin.portal.services.dto.UserNotificationDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,9 +33,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserNotificationService extends GenericService<JpaUserNotification, UserNotificationDto, Long> {
 
-    private final static String DRAFT = "DRAFT";
-    private final static String CONFIRMED = "CONFIRMED";
-
     private final UserNotificationRepository userNotificationRepository;
 
     /**
@@ -46,7 +42,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
      * @return the found Notifications  or empty structure
      */
     public List<DetailedUserNotificationDto> findUserNotifications(String userId) {
-        List<DetailedUserNotificationDto> detailedUserNotificationDtos = new ArrayList<>();
+        List<DetailedUserNotificationDto> detailedUserNotifications = new ArrayList<>();
         List<JpaUserNotification> userNotifications = userNotificationRepository.findByUserIdAndStatusCodeNot(userId, EUserNotificationStatus.EXPIRED.name());
 
         if (userNotifications.isEmpty())
@@ -55,7 +51,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
         userNotifications.parallelStream().forEach(
                 notification -> {
                     Optional<JpaNotificationTemplateContent> notificationTemplateContent = notification.getNotificationTemplate().getNotificationTemplateContents().stream().filter(content -> content.getLang().equalsIgnoreCase(notification.getUserLang())).findAny();
-                    detailedUserNotificationDtos.add(DetailedUserNotificationDto.builder()
+                    detailedUserNotifications.add(DetailedUserNotificationDto.builder()
                             .id(notification.getId())
                             .resolvedBody(notification.getResolvedBody())
                             .statusCode(notification.getStatusCode())
@@ -69,7 +65,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                             .creationDate(notification.getCreationDate())
                             .build());
                 });
-        return detailedUserNotificationDtos.stream().sorted(Comparator.comparing(DetailedUserNotificationDto::getCreationDate).reversed()).collect(Collectors.toList());
+        return detailedUserNotifications.stream().sorted(Comparator.comparing(DetailedUserNotificationDto::getCreationDate).reversed()).collect(Collectors.toList());
     }
 
     /**
@@ -112,4 +108,34 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
         return userNewNotificationsCountVo;
     }
 
+    public Page<DetailedUserNotificationDto> findTypedUserNotifications(String userId, EUserNotificationType type, Pageable pageable) {
+        List<DetailedUserNotificationDto> detailedUserNotifications = new ArrayList<>();
+
+        Page<JpaUserNotification> userNotifications;
+
+        if (EUserNotificationType.ALL.equals(type)) {
+            userNotifications = userNotificationRepository.findByUserIdAndStatusCodeNot(userId, EUserNotificationStatus.EXPIRED.name(), pageable);
+        } else {
+            userNotifications = userNotificationRepository.findByUserIdAndNotificationTemplateUserSpecificAndStatusCodeNot(userId, EUserNotificationType.USER_SPECIFIC.equals(type), EUserNotificationStatus.EXPIRED.name(), pageable);
+        }
+
+        userNotifications.stream().forEach(
+                notification -> {
+                    Optional<JpaNotificationTemplateContent> notificationTemplateContent = notification.getNotificationTemplate().getNotificationTemplateContents().stream().filter(content -> content.getLang().equalsIgnoreCase(notification.getUserLang())).findAny();
+                    detailedUserNotifications.add(DetailedUserNotificationDto.builder()
+                            .id(notification.getId())
+                            .resolvedBody(notification.getResolvedBody())
+                            .statusCode(notification.getStatusCode())
+                            .nameCode(notification.getNotificationTemplate().getNameCode())
+                            .important(notification.getNotificationTemplate().isImportant())
+                            .actionRequired(notification.getNotificationTemplate().isActionRequired())
+                            .userSpecific(notification.getNotificationTemplate().isUserSpecific())
+                            .categoryCode(notification.getNotificationTemplate().getCategoryCode())
+                            .title(notificationTemplateContent.map(JpaNotificationTemplateContent::getTitle).orElse(null))
+                            .actionLabel(notificationTemplateContent.map(JpaNotificationTemplateContent::getActionLabel).orElse(null))
+                            .creationDate(notification.getCreationDate())
+                            .build());
+                });
+        return new PageImpl<>(detailedUserNotifications.stream().sorted(Comparator.comparing(DetailedUserNotificationDto::getCreationDate).reversed()).collect(Collectors.toList()), pageable, userNotifications.getTotalElements());
+    }
 }
