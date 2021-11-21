@@ -223,7 +223,7 @@ VALUES (3, 1, N'CAR', 3, N'FOR_UMRAH', N'2021-11-16 19:00:00', 21.36666520, 40.0
 INSERT INTO shc_portal.shc_company_ritual_step (id, applicant_group_id, transportation_type_code, step_index, step_code,
                                                 time, location_lat, location_lng, location_name_ar, location_name_en,
                                                 creation_date, update_date)
-VALUES (4, 1, N'BUS', 4, N'FOR_TAWAF', N'2021-11-17 15:00:00', 21.38883178, 39.93599626, N'مزدلفة',
+VALUES (4, 1, N'AIRPLANE', 4, N'FOR_TAWAF', N'2021-11-17 15:00:00', 21.38883178, 39.93599626, N'مزدلفة',
         N'Muzdalifa', N'2021-09-20 11:24:00', N'2021-09-20 11:24:00');
 
 SET
