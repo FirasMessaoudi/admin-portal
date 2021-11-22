@@ -27,10 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Controller for exposing web services for external party.
@@ -385,6 +382,7 @@ public class IntegrationWsController {
 
     }
 
+
     /**
      * finds package catering related to applicant even if not have applicant package catering by his UIN and company season ritual id
      *
@@ -396,8 +394,7 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findApplicantPackageCatering(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
         log.debug("Handler for {}", "Find package Catering  by uin");
         RitualPackageDto ritualPackage = ritualPackageService.findRitualPackageByApplicantUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId);
-        List<PackageCateringDto> packageCateringDtoList = new ArrayList<>();
-        ritualPackage.getPackageHousings().forEach(e->packageCateringDtoList.addAll(e.getPackageCatering()));
+        Set<PackageCateringDto> packageCateringDtoList= ritualPackageService.findPackageCateringFromRitualPackage(Long.parseLong(uin),ritualPackage);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageCateringDtoList).build());
     }
 
