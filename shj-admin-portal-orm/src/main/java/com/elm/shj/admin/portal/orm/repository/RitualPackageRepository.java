@@ -17,4 +17,16 @@ public interface RitualPackageRepository extends JpaRepository<JpaRitualPackage,
     Optional<JpaRitualPackage> findByReferenceNumber(String referenceNumber);
 
     Optional<JpaRitualPackage> findByApplicantPackagesApplicantUinAndCompanyRitualSeasonId(long uin,long companyRitualSeasonId);
+
+   /* @Query("SELECT ritualPackage FROM JpaRitualPackage ritualPackage " +
+            "join ritualPackage.companyRitualSeason companyRitualSeason " +
+            "JOIN ritualPackage.applicantPackages  applicantPackages " +
+            "JOIN ritualPackage.packageHousings packageHousings " +
+            "JOIN packageHousings.packageCatering packageCatering " +
+            "LEFT JOIN packageCatering.applicantPackageCaterings applicantPackageCaterings " +
+            "ON applicantPackageCaterings.packageCatering.id = packageCatering.id " +
+            "AND applicantPackageCaterings.applicantPackage.id = applicantPackages.id " +
+            "WHERE companyRitualSeason.id = :companyRitualSeasonId " +
+            "AND applicantPackages.applicantUin = :uin")
+    Optional<JpaRitualPackage> findByApplicantPackagesApplicantUinAndCompanyRitualSeasonIdNew(@Param("uin") long uin,@Param("companyRitualSeasonId") long companyRitualSeasonId);*/
 }

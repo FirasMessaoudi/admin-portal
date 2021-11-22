@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.utils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.chrono.HijrahDate;
 import java.time.chrono.IsoChronology;
@@ -58,6 +59,13 @@ public class DateUtils {
             }
         }
         return hijrahDate == null ? null : Date.from(IsoChronology.INSTANCE.date(hijrahDate).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+
+    public static LocalDate convertToLocalDate(Date targetDate){
+        return targetDate.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
 
 }
