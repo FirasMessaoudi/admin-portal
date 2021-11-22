@@ -15,6 +15,7 @@ import {PRINTING_MANAGEMENT_ROUTES} from "@core/routes/printing-management-route
 import {RULE_MANAGEMENT_ROUTES} from "@core/routes/rule-management-routes";
 import {DATA_UPLOAD_MANAGEMENT_ROUTES} from "@core/routes/data-upload-management-routes";
 import {NOTIFICATION_MANAGEMENT_ROUTES} from "@core/routes/notification-management-routes";
+import {INCIDENT_MANAGEMENT_ROUTES} from "@core/routes/incident-management-routes";
 
 const routes: Routes = [
 
@@ -68,6 +69,12 @@ const routes: Routes = [
     path: '',
     component: AppLayoutComponent,
     canActivate: [AuthenticationGuard],
+    children: INCIDENT_MANAGEMENT_ROUTES
+  },
+  {
+    path: '',
+    component: AppLayoutComponent,
+    canActivate: [AuthenticationGuard],
     children: DATA_UPLOAD_MANAGEMENT_ROUTES
   },
   {
@@ -91,7 +98,11 @@ const routes: Routes = [
 @NgModule({
   imports: [
     QuicklinkModule,
-    RouterModule.forRoot(routes, {preloadingStrategy: QuicklinkStrategy, useHash: true, scrollPositionRestoration: 'enabled'})
+    RouterModule.forRoot(routes, {
+      preloadingStrategy: QuicklinkStrategy,
+      useHash: true,
+      scrollPositionRestoration: 'enabled'
+    })
   ],
   exports: [RouterModule]
 })
