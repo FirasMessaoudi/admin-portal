@@ -3,9 +3,9 @@
  */
 package com.elm.shj.admin.portal.web.ws;
 
-import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.PasswordExpiryNotificationRequest;
 import com.elm.shj.admin.portal.services.dto.UserNotificationCategoryPreferenceDto;
+import com.elm.shj.admin.portal.services.notification.EUserNotificationType;
 import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
 import com.elm.shj.admin.portal.services.notification.UserNotificationCategoryPreferenceService;
 import com.elm.shj.admin.portal.services.notification.UserNotificationService;
@@ -15,9 +15,9 @@ import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,9 +63,16 @@ public class NotificationWsController {
      * @return the User Notifications
      */
     @GetMapping("/{userId}")
-    public ResponseEntity<WsResponse<?>> findUserNotifications(@PathVariable String userId) {
+    public ResponseEntity<WsResponse<?>> findUserNotifications(@PathVariable String userId,
+                                                               @RequestParam(required = false) EUserNotificationType type,
+                                                               Pageable pageable) {
         log.debug("Handler for {}", "Find all user notifications by user Id");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.findUserNotifications(userId)).build());
+        if (type != null) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(
+                    userNotificationService.findTypedUserNotifications(userId, type, pageable)).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(
+                userNotificationService.findUserNotifications(userId)).build());
     }
 
     /**

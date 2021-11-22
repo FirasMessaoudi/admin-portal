@@ -243,7 +243,8 @@ CREATE TABLE shc_portal.shc_applicant_package_catering
     applicant_package_id       int           NOT NULL,
     ritual_package_catering_id int           NOT NULL,
     option_ar                  nvarchar(250) NULL,
-    option_en                  varchar(125) NULL,
+    option_en                  varchar(125)  NULL,
+    is_default                 bit           NOT NULL DEFAULT 0,
     creation_date              smalldatetime NOT NULL DEFAULT current_timestamp,
     update_date                smalldatetime NULL,
     CONSTRAINT fk_shc_applicant_package_catering_ritual_catering FOREIGN KEY (ritual_package_catering_id) REFERENCES shc_portal.shc_package_catering (id),
@@ -869,10 +870,6 @@ GO
 
 ALTER TABLE shc_portal.shc_notification_category_lk
     ADD sample nvarchar(500);
-GO
-
-
-ALTER TABLE shc_portal.shc_package_catering ADD is_default bit default(0);
 GO
 
 /*--------------------------------------------------------
