@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -84,15 +84,15 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
 
         Optional<ApplicantPackageDto> applicantPackageDto = ritualPackage.getApplicantPackages().stream()
                 .filter(p-> p.getApplicantUin() == uin)
-                .filter(p -> LocalDate.now().isBefore(DateUtils.convertToLocalDate(p.getEndDate()))
-                        && LocalDate.now().isAfter(DateUtils.convertToLocalDate(p.getStartDate()))).findFirst();
+                .filter(p -> LocalDateTime.now().minusDays(1).isBefore(DateUtils.convertToLocalDate(p.getEndDate()))
+                        && LocalDateTime.now().plusDays(1).isAfter(DateUtils.convertToLocalDate(p.getStartDate()))).findFirst();
         if(!applicantPackageDto.isPresent()){
            return packageCateringDtoList;
         }
 
         Optional<PackageHousingDto> packageHousingDto = ritualPackage.getPackageHousings().stream()
-                .filter(p -> LocalDate.now().isAfter(DateUtils.convertToLocalDate(p.getValidityStart()))
-                        && LocalDate.now().isBefore(DateUtils.convertToLocalDate(p.getValidityEnd()))).findFirst();
+                .filter(p -> LocalDateTime.now().isAfter(DateUtils.convertToLocalDate(p.getValidityStart()))
+                        && LocalDateTime.now().isBefore(DateUtils.convertToLocalDate(p.getValidityEnd()))).findFirst();
         if(!packageHousingDto.isPresent()){
             return packageCateringDtoList;
         }

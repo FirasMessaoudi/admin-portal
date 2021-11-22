@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.chrono.HijrahDate;
 import java.time.chrono.IsoChronology;
@@ -62,10 +63,10 @@ public class DateUtils {
     }
 
 
-    public static LocalDate convertToLocalDate(Date targetDate){
+    public static LocalDateTime convertToLocalDate(Date targetDate){
         return targetDate.toInstant()
                 .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+                .toLocalDateTime();
     }
 
 }
