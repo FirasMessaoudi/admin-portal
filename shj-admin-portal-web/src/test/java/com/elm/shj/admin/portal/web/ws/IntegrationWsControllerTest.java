@@ -30,6 +30,8 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
     private static final int TEST_CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
     private static final String UIN= "1010101040";
     private static final long COMPANY_RITUAL_ID = 1;
+    private final static long EXIST_APPLICANT_RITUAL_ID = 1;
+    private final static long FAKE_APPLICANT_RITUAL_ID = 24;
 
     @Override
     public void setUp() throws Exception {
@@ -194,4 +196,23 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
         when(companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(any(), any())).thenReturn(null);
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
     }
-}
+
+    @Test
+    public void test_list_applicant_related_incidents_fail() throws Exception {
+        String url = Navigation.API_INTEGRATION + "/incident/list/" + EXIST_APPLICANT_RITUAL_ID;
+        when(applicantIncidentService.listApplicantRelatedIncidents(anyLong())).thenReturn(null);
+        mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isNoContent()).andExpect(jsonPath("$.status", is("FAILURE")));
+    }
+    @Test
+    public void test_list_applicant_related_incidents_success() throws Exception {
+
+        List<ApplicantIncidentDto> applicantIncidents= new ArrayList<>();
+        ApplicantIncidentDto applicantIncidentDto  = new ApplicantIncidentDto();
+        applicantIncidentDto.setId(1);
+        applicantIncidentDto.setDescription("hello");
+        applicantIncidents.add(applicantIncidentDto);
+        String url = Navigation.API_INTEGRATION + "/incident/list/" + EXIST_APPLICANT_RITUAL_ID;
+        when(applicantIncidentService.listApplicantRelatedIncidents(anyLong())).thenReturn(applicantIncidents);
+        mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("SUCCESS")));
+    }
+ }

@@ -77,6 +77,10 @@ public class JpaApplicantRitual implements Serializable {
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE} ,  mappedBy = "applicantRitual")
     private Set<JpaApplicantHealth>  applicantHealths;
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "applicantRitual")
+    private Set<JpaApplicantIncident> applicantIncidents;
+
 
     @PrePersist
     public void prePersist() {

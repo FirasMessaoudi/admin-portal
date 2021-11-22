@@ -7,6 +7,7 @@ import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.orm.entity.JpaPackageCatering;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
@@ -84,7 +85,7 @@ public class IntegrationWsController {
     private final MealTypeLookupService mealTypeLookupService;
     private final LanguageLookupService languageLookupService;
     private final RitualPackageService ritualPackageService;
-
+    private final ApplicantIncidentService applicantIncidentService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -533,5 +534,24 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>>  listMealTypes() {
         log.debug("list meal types...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(mealTypeLookupService.findAll()).build());
+    }
+
+    /**
+     * List of incidents.
+     *
+     * @param applicantRitualId
+     * @return WsResponse of list of incidents
+     */
+    @GetMapping("/incident/list/{applicantRitualId}")
+    public ResponseEntity<WsResponse<?>> listApplicantRelatedIncidents(@PathVariable long applicantRitualId) {
+        log.info("list incidents...");
+        List<ApplicantIncidentDto> applicantIncidents = applicantIncidentService.listApplicantRelatedIncidents(applicantRitualId);
+        if (applicantIncidents==null||applicantIncidents.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(null).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantIncidents).build());
+
+        }
     }
 }

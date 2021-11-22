@@ -3,12 +3,15 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Dto class for applicant incident domain.
@@ -24,6 +27,7 @@ public class ApplicantIncidentDto implements Serializable {
     private static final long serialVersionUID = -5654394816918782403L;
 
     private long id;
+    @JsonBackReference(value = "applicantRitual")
     private ApplicantRitualDto applicantRitual;
     private String statusCode;
     private String typeCode;
@@ -31,6 +35,8 @@ public class ApplicantIncidentDto implements Serializable {
     private Double locationLat;
     private Double locationLng;
     private String resolutionComment;
+    private List<IncidentAttachmentDto>  incidentAttachments;
+
     private Date creationDate;
     private Date updateDate;
 }

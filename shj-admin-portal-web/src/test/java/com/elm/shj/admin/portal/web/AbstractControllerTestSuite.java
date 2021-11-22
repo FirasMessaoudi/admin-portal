@@ -245,6 +245,9 @@ public abstract class AbstractControllerTestSuite {
     protected CompanyRitualStepService companyRitualStepService;
 
     @MockBean
+    protected ApplicantIncidentService applicantIncidentService;
+
+    @MockBean
     protected CompanyStaffService companyStaffService;
 
     @MockBean
@@ -354,7 +357,7 @@ public abstract class AbstractControllerTestSuite {
     protected ApplicantCardScheduler applicantCardScheduler;
 
     @MockBean
-    protected ApplicantIncidentService applicantIncidentService;
+    protected ApplicantContactService applicantContactService ;
 
     @MockBean
     protected ApplicantChatContactService applicantChatContactService;
