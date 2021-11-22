@@ -55,4 +55,6 @@ public class Navigation {
 	public static final String API_NOTIFICATION_TEMPLATE = "/api/notification/template";
 	// Incidents
 	public static final String API_INCIDENTS = "/api/incidents";
+	// Chat
+	public static final String API_APPLICANT_CHAT = "/api/chat";
 }

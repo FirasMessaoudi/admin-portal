@@ -928,3 +928,19 @@ create table shc_portal.shc_incident_status_lk
     CONSTRAINT incident_status_lk_unique unique (code ASC, lang ASC)
 );
 GO
+
+/*--------------------------------------------------------
+--  ddl for applicant chat contact table
+--------------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_applicant_chat_contact')
+create table shc_portal.shc_applicant_chat_contact
+(
+    id                  int            NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    uin                 varchar(45)    NOT NULL,
+    alias               nvarchar(100)  NOT NULL,
+    photo_file_path     varchar(100)   NULL,
+    system_defined      bit            NOT NULL default 0,
+    creation_date       smalldatetime  NOT NULL default current_timestamp,
+    update_date         smalldatetime  NULL,
+);
+GO
