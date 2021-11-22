@@ -203,6 +203,7 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
         when(applicantIncidentService.listApplicantRelatedIncidents(anyLong())).thenReturn(null);
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isNoContent()).andExpect(jsonPath("$.status", is("FAILURE")));
     }
+
     @Test
     public void test_list_applicant_related_incidents_success() throws Exception {
 

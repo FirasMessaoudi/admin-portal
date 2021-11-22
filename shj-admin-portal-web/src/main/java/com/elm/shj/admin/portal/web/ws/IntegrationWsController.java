@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.orm.entity.JpaPackageCatering;
+import com.elm.shj.admin.portal.orm.repository.ApplicantChatContactRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
@@ -86,6 +87,7 @@ public class IntegrationWsController {
     private final LanguageLookupService languageLookupService;
     private final RitualPackageService ritualPackageService;
     private final ApplicantIncidentService applicantIncidentService;
+    private final ApplicantChatContactService  applicantChatContactService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -554,4 +556,18 @@ public class IntegrationWsController {
 
         }
     }
+
+    /**
+     * List of incidents.
+     *
+     * @param applicantChatContactUin
+     * @return WsResponse of number of selected rows
+     */
+    @DeleteMapping("/applicant-chat-contact/{applicantChatContactUin}")
+    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantChatContactUin) {
+        log.info("delete Applicant Chat Contact...");
+        long numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantChatContactUin);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : "+numberOfAffectedRows).build());
+    }
+
 }
