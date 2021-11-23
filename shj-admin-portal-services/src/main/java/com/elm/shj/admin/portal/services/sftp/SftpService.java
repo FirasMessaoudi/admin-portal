@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -25,13 +26,21 @@ import java.util.Arrays;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class SftpService {
+ public class SftpService {
 
+    @Autowired
+    @Qualifier("sftpProperties")
+    private   SftpProperties config;
+
+    @Autowired
+    @Qualifier("applicantIncidentSftpProperties")
+    private   SftpProperties applicantIncidentConfig;
     // Set the prompt when logging in for the first time, optional values: (ask | yes | no)
     private static final String SESSION_CONFIG_STRICT_HOST_KEY_CHECKING = "StrictHostKeyChecking";
 
-    private final SftpProperties config;
+
+
+
 
     /**
      * upload files

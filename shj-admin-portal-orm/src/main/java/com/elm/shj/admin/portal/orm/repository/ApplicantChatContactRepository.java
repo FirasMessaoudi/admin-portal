@@ -13,5 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.1.0
  */
 public interface ApplicantChatContactRepository extends JpaRepository<JpaApplicantChatContact, Long> {
+    //TODO:change it to contains applicant id
     long deleteByUinAndSystemDefinedFalse(String uin);
 }
