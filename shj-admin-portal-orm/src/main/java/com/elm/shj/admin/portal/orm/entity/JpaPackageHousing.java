@@ -74,9 +74,9 @@ public class JpaPackageHousing implements Serializable {
     @Column(name = "is_default")
     private boolean isDefault;
 
-    private String lat;
+    private double lat;
 
-    private String lng;
+    private double lng;
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageHousing")

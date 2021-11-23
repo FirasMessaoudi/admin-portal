@@ -962,3 +962,11 @@ create table shc_portal.shc_applicant_chat_contact_type_lk
     CONSTRAINT applicant_chat_contact_type_lk_unique unique (code ASC, lang ASC)
 );
 GO
+alter table shc_portal.shc_package_housing drop column lat;
+GO
+alter table shc_portal.shc_package_housing drop column lng;
+GO
+alter table shc_portal.shc_package_housing add lat decimal(10, 8);
+GO
+alter table shc_portal.shc_package_housing add lng decimal(11, 8);
+GO
