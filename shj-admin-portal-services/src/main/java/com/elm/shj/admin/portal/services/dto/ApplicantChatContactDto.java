@@ -25,9 +25,14 @@ public class ApplicantChatContactDto implements Serializable {
 
     private Long id;
     private String uin;
+    private ApplicantRitualDto applicantRitual;
+    private String contactUin;
     private String alias;
     private String photoFilePath;
+    private String mobileNumber;
+    private String contactTypeCode;
     private Boolean systemDefined;
+    private Boolean deleted;
     private Date creationDate;
     private Date updateDate;
 }

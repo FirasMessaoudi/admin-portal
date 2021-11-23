@@ -930,17 +930,35 @@ create table shc_portal.shc_incident_status_lk
 GO
 
 /*--------------------------------------------------------
---  ddl for applicant chat contact table
+--  ddl for applicant chat contact tables
 --------------------------------------------------------*/
 if not exists(select * from sys.tables where name = 'shc_applicant_chat_contact')
 create table shc_portal.shc_applicant_chat_contact
 (
     id                  int            NOT NULL PRIMARY KEY IDENTITY (1, 1),
     uin                 varchar(45)    NOT NULL,
+    applicant_ritual_id int            NOT NULL,
+    contact_uin         varchar(45)    NOT NULL,
     alias               nvarchar(100)  NOT NULL,
     photo_file_path     varchar(100)   NULL,
+    mobile_number       varchar(20)    NULL,
+    contact_type_code   varchar(20)    NOT NULL,
     system_defined      bit            NOT NULL default 0,
+    deleted             bit            NOT NULL default 0,
     creation_date       smalldatetime  NOT NULL default current_timestamp,
     update_date         smalldatetime  NULL,
+    CONSTRAINT fk_applicant_chat_contact_applicant_ritual FOREIGN KEY (applicant_ritual_id) REFERENCES shc_portal.shc_applicant_ritual (id)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_applicant_chat_contact_type_lk')
+create table shc_portal.shc_applicant_chat_contact_type_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(50)  NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT applicant_chat_contact_type_lk_unique unique (code ASC, lang ASC)
 );
 GO

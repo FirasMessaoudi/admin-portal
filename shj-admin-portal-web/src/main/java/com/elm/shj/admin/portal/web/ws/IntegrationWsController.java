@@ -87,6 +87,8 @@ public class IntegrationWsController {
     private final LanguageLookupService languageLookupService;
     private final RitualPackageService ritualPackageService;
     private final ApplicantIncidentService applicantIncidentService;
+    private final IncidentStatusLookupService incidentStatusLookupService;
+    private final IncidentTypeLookupService incidentTypeLookupService;
     private final ApplicantChatContactService  applicantChatContactService;
 
     /**
@@ -548,7 +550,7 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> listApplicantRelatedIncidents(@PathVariable long applicantRitualId) {
         log.info("list incidents...");
         List<ApplicantIncidentDto> applicantIncidents = applicantIncidentService.listApplicantRelatedIncidents(applicantRitualId);
-        if (applicantIncidents==null||applicantIncidents.isEmpty()) {
+        if (applicantIncidents == null || applicantIncidents.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(null).build());
         } else {
@@ -556,6 +558,19 @@ public class IntegrationWsController {
 
         }
     }
+
+    @GetMapping("/incident-status/list")
+    public ResponseEntity<WsResponse<?>> listIncidentStatus() {
+        log.debug("list incident status...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(incidentStatusLookupService.findAll()).build());
+    }
+
+    @GetMapping("/incident-type/list")
+    public ResponseEntity<WsResponse<?>> listIncidentType() {
+        log.debug("list incident type...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(incidentTypeLookupService.findAll()).build());
+    }
+
 
     /**
      * List of incidents.
