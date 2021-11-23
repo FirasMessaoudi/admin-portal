@@ -34,13 +34,28 @@ public class JpaApplicantChatContact implements Serializable {
 
     private String uin;
 
+    @ManyToOne
+    @JoinColumn(name = "applicant_ritual_id")
+    private JpaApplicantRitual applicantRitual;
+
+    @Column(name = "contact_uin")
+    private String contactUin;
+
     private String alias;
 
     @Column(name = "photo_file_path")
     private String photoFilePath;
 
+    @Column(name = "mobile_number")
+    private String mobileNumber;
+
+    @Column(name = "contact_type_code")
+    private String contactTypeCode;
+
     @Column(name = "system_defined")
     private Boolean systemDefined;
+
+    private Boolean deleted;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
