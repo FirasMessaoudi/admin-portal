@@ -49,12 +49,12 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DataRequestService extends GenericService<JpaDataRequest, DataRequestDto, Long> {
 
-    private static final SimpleDateFormat FILE_NAME_POSTFIX_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
-    private static final SimpleDateFormat FOLDER_NAME_FORMAT = new SimpleDateFormat("yyyy_MM_dd");
-    private static final SimpleDateFormat REF_NUMBER_FORMAT = new SimpleDateFormat("SSS");
+ private static final SimpleDateFormat REF_NUMBER_FORMAT = new SimpleDateFormat("SSS");
     private static final String REQUEST_REF_NUMBER_SYSTEM_PREFIX = "DS";
     private static final String REQUEST_REF_NUMBER_WS_PREFIX = "DI";
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
+    private static final String DATA_UPLOAD_CONFIG_PROPERTIES = "dataUploadConfigProperties";
+
 
     private final SftpService sftpService;
     private final DataProcessorService dataRequestProcessor;
@@ -93,7 +93,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
         if (dataRequest == null) {
             return null;
         }
-        return sftpService.downloadFile(dataRequest.getOriginalSourcePath());
+        return sftpService.downloadFile(dataRequest.getOriginalSourcePath(),DATA_UPLOAD_CONFIG_PROPERTIES);
     }
 
     /**
@@ -108,7 +108,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
                 || dataRequest.getStatus().getId() != EDataRequestStatus.PROCESSED_WITH_ERRORS.getId()) {
             return null;
         }
-        return sftpService.downloadFile(dataRequest.getErrorFilePath());
+        return sftpService.downloadFile(dataRequest.getErrorFilePath(),DATA_UPLOAD_CONFIG_PROPERTIES);
     }
 
     /**
@@ -120,7 +120,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
         // generate request reference
         String requestReference = generateReferenceNumber(EDataRequestChannel.nullSafeValueOf(dataRequest.getChannel()));
         // generate file and folder names to be uploaded/created in SFTP
-        String sftpPath = generateSftpFilePath(file.getOriginalFilename(), requestReference, false);
+        String sftpPath = sftpService.generateSftpFilePath(file.getOriginalFilename(), requestReference, false);
         // create and save the data request
         dataRequest.setReferenceNumber(requestReference);
         dataRequest.setOriginalSourcePath(sftpPath);
@@ -130,7 +130,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
         log.info("data request created successfully with #{}", createdRequest.getId());
         // upload the file in the SFTP
         try {
-            sftpService.uploadFile(sftpPath, file.getInputStream());
+            sftpService.uploadFile(sftpPath, file.getInputStream(),DATA_UPLOAD_CONFIG_PROPERTIES);
         } catch (JSchException e) {
             log.error("Unable to open attached file", e);
             throw new IllegalArgumentException("Unable to open attached file");
@@ -207,7 +207,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
         // initial validation
         if (dataRequest != null && dataRequest.getOriginalSourcePath() != null) {
             // retrieve the original file to start processing
-            Resource originalFile = sftpService.downloadFile(dataRequest.getOriginalSourcePath());
+            Resource originalFile = sftpService.downloadFile(dataRequest.getOriginalSourcePath(),DATA_UPLOAD_CONFIG_PROPERTIES);
             // process the file
             DataProcessorResult<T> parserResult = dataRequestProcessor.processRequestFile(originalFile, dataRequest.getDataSegment());
             // save all parsed items
@@ -222,8 +222,8 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
                     fileName = originalFile.getDescription().split("\\[")[1].replaceAll("]", "");
                 }
                 // save the file in the sftp folder
-                String errorFilePath = generateSftpFilePath(fileName, dataRequest.getReferenceNumber(), true);
-                sftpService.uploadFile(errorFilePath, errorFile.getInputStream());
+                String errorFilePath = sftpService.generateSftpFilePath(fileName, dataRequest.getReferenceNumber(), true);
+                sftpService.uploadFile(errorFilePath, errorFile.getInputStream(),DATA_UPLOAD_CONFIG_PROPERTIES);
                 // update the data request status
                 Set<Integer> rowsWithErrors = parserResult.getDataValidationResults().stream().filter(dvr -> !dvr.isValid()).map(dvr -> dvr.getCell().getRow().getRowNum()).collect(Collectors.toSet());
                 ((DataRequestRepository) getRepository()).updateProcessingStatus(dataRequestId, EDataRequestStatus.PROCESSED_WITH_ERRORS.getId(), errorFilePath, rowsWithErrors.size());
@@ -234,28 +234,6 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
         }
     }
 
-    /**
-     * Generates the file path to be used to save the file in sftp server
-     *
-     * @param fileName         the file name to save
-     * @param requestReference the data request reference
-     * @param isErrorFile      if the file to save is an error file
-     * @return the sftp path for the file
-     */
-    private String generateSftpFilePath(String fileName, String requestReference, boolean isErrorFile) {
-        String[] fileNameParts = Objects.requireNonNull(fileName).split("\\.");
-        String localFileName = fileNameParts[0] +
-                "_" +
-                (isErrorFile ? "with-errors" : FILE_NAME_POSTFIX_FORMAT.format(new Date())) +
-                "." +
-                fileNameParts[1];
-        return FOLDER_NAME_FORMAT.format(new Date()) +
-                "/" +
-                requestReference +
-                "/" +
-                (isErrorFile ? "error/" : "") +
-                localFileName;
-    }
 
 
 }
