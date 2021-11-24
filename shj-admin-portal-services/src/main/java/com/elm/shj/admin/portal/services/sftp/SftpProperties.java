@@ -18,7 +18,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter
 @Setter
 @AutoConfigureBefore(AutowiredAnnotationBeanPostProcessor.class)
-@ConfigurationProperties(ignoreUnknownFields = false, prefix = "sftp.client")
 public class SftpProperties {
     private String host;
     private Integer port;

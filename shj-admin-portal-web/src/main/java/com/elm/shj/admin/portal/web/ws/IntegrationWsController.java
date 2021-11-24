@@ -4,6 +4,8 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
+import com.elm.shj.admin.portal.orm.entity.JpaPackageCatering;
+import com.elm.shj.admin.portal.orm.repository.ApplicantChatContactRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
@@ -27,10 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Controller for exposing web services for external party.
@@ -92,6 +91,7 @@ public class IntegrationWsController {
     private final ApplicantIncidentService applicantIncidentService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
+    private final ApplicantChatContactService  applicantChatContactService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -579,4 +579,18 @@ public class IntegrationWsController {
         log.debug("Camp Location ...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageHousingService.findCamp(seasonRitualId, uin)).build());
     }
+
+    /**
+     * List of incidents.
+     *
+     * @param applicantChatContactUin
+     * @return WsResponse of number of selected rows
+     */
+    @DeleteMapping("/applicant-chat-contact/{applicantChatContactUin}")
+    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantChatContactUin) {
+        log.info("delete Applicant Chat Contact...");
+        long numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantChatContactUin);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : "+numberOfAffectedRows).build());
+    }
+
 }
