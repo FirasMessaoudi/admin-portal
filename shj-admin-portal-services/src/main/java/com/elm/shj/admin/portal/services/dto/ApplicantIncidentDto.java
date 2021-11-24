@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +28,7 @@ public class ApplicantIncidentDto implements Serializable {
     private long id;
     @JsonBackReference(value = "applicantRitual")
     private ApplicantRitualDto applicantRitual;
+    private String referenceNumber;
     private String statusCode;
     private String typeCode;
     private String description;
