@@ -86,6 +86,8 @@ public class IntegrationWsController {
     private final MealTypeLookupService mealTypeLookupService;
     private final LanguageLookupService languageLookupService;
     private final RitualPackageService ritualPackageService;
+    private final PackageHousingService packageHousingService;
+
     private final ApplicantIncidentService applicantIncidentService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
@@ -571,6 +573,12 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(incidentTypeLookupService.findAll()).build());
     }
 
+
+    @GetMapping("/housing/{uin}/{seasonRitualId}")
+    public ResponseEntity<WsResponse<?>> findCampLocation(@PathVariable long uin, @PathVariable long seasonRitualId) {
+        log.debug("Camp Location ...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageHousingService.findCamp(seasonRitualId, uin)).build());
+    }
 
     /**
      * List of incidents.
