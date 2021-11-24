@@ -39,12 +39,14 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @param applicantUin the UIN of the applicant
      * @return the list of chat contacts
      */
-    public List<ApplicantChatContactLiteDto> listApplicantChatContacts(String applicantUin, Boolean systemDefined) {
+    public List<ApplicantChatContactLiteDto> listApplicantChatContacts(String applicantUin, Long applicantRitualId, Boolean systemDefined) {
         List<ApplicantChatContactDto> contacts;
         if (systemDefined == null) {
-            contacts = mapList(applicantChatContactRepository.findAllByApplicantUinAndDeletedFalse(applicantUin));
+            contacts = mapList(applicantChatContactRepository.findAllByUinAndRitualIdAndSystemDefined(applicantUin, applicantRitualId));
+        } else if (systemDefined) {
+            contacts = mapList(applicantChatContactRepository.findSystemDefined(applicantUin, applicantRitualId));
         } else {
-            contacts = mapList(applicantChatContactRepository.findAllByApplicantUinAndSystemDefinedAndDeletedFalse(applicantUin, systemDefined));
+            contacts = mapList(applicantChatContactRepository.findUserDefined(applicantUin));
         }
         return contacts.parallelStream().map(c -> {
             Optional<ApplicantLiteDto> applicantLite = applicantLiteService.findByUin(c.getContactUin());
