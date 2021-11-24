@@ -267,7 +267,8 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected CompanyLiteService companyLiteService;
-
+    @MockBean
+    protected IncidentStatusLookupService incidentStatusLookupService;
     @MockBean
     protected CompanyRitualStepLookupService companyRitualStepLookupService;
 
@@ -358,7 +359,8 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected ApplicantContactService applicantContactService ;
-
+    @MockBean
+    protected IncidentTypeLookupService incidentTypeLookupService;
     @MockBean
     protected ApplicantChatContactService applicantChatContactService;
 

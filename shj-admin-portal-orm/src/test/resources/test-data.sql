@@ -175,7 +175,7 @@ values (1, 1, 'AR,EN', 'app@elm1', 00966558572482, 00355558572477, 'AL', 545454,
 INSERT INTO shc_package_housing (id, package_id, zone_id, reference_number, category_code, type_code, location_name_ar,
                                  location_name_en, validity_start, validity_end, address_ar, address_en, is_default,
                                  lat, lng, creation_date, update_date)
-VALUES (1, 1, null, null, N'VIP', null, N'مكة', N'Macka', null, null, N'مكة', N'Macka', 1, null, null,
+VALUES (1, 1, null, null, N'VIP', null, N'مكة', N'Macka', null, null, N'مكة', N'Macka', 1, 1.3234, 2.3344,
         N'2021-09-15 10:10:00', null);
 
 INSERT INTO shc_applicant_package_housing (id, applicant_package_id, package_housing_id, room_number, bed_number,
@@ -229,5 +229,9 @@ INSERT INTO shc_user_notification (id, notification_template_id, user_id, resolv
 INSERT INTO shc_user_notification (id, notification_template_id, user_id, resolved_body, status_code, creation_date, update_date, user_lang) VALUES (985, 3, 1, N'Password will expire after 1 days', N'NEW', N'2021-10-16 16:42:00', null, N'en');
 INSERT INTO shc_user_notification (id, notification_template_id, user_id, resolved_body, status_code, creation_date, update_date, user_lang) VALUES (986, 3, 1, N'Password will expire after 1 days', N'NEW', N'2021-10-16 16:43:00', null, N'en');
 INSERT INTO shc_user_notification (id, notification_template_id, user_id, resolved_body, status_code, creation_date, update_date, user_lang) VALUES (987, 3, 1, N'Password will expire after 1 days', N'NEW', N'2021-10-16 16:44:00', null, N'en');
+
+INSERT INTO shc_contact_type_lk (id, code, creation_date) VALUES (1, N'STAFF', N'2021-11-24 20:07:00');
+INSERT INTO  shc_applicant_chat_contact (id, applicant_uin, contact_uin, type_id, alias, avatar, system_defined, staff_title_code, relationship_code, mobile_number, deleted, applicant_ritual_id, creation_date, update_date) VALUES (3, N'12345', N'12345', 1, null, null, 1, null, null, null, 0, 1, N'2021-11-24 20:09:00', null);
+INSERT INTO  shc_applicant_chat_contact (id, applicant_uin, contact_uin, type_id, alias, avatar, system_defined, staff_title_code, relationship_code, mobile_number, deleted, applicant_ritual_id, creation_date, update_date) VALUES (4, N'111', N'222', 1, null, null, 0, null, null, null, 0, 1, N'2021-11-24 20:09:00', null);
 
 

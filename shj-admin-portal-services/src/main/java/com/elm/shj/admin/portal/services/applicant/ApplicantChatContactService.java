@@ -42,9 +42,9 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
     public List<ApplicantChatContactLiteDto> listApplicantChatContacts(String applicantUin, Boolean systemDefined) {
         List<ApplicantChatContactDto> contacts;
         if (systemDefined == null) {
-            contacts = mapList(applicantChatContactRepository.findAllByApplicantUin(applicantUin));
+            contacts = mapList(applicantChatContactRepository.findAllByApplicantUinAndDeletedFalse(applicantUin));
         } else {
-            contacts = mapList(applicantChatContactRepository.findAllByApplicantUinAndSystemDefined(applicantUin, systemDefined));
+            contacts = mapList(applicantChatContactRepository.findAllByApplicantUinAndSystemDefinedAndDeletedFalse(applicantUin, systemDefined));
         }
         return contacts.parallelStream().map(c -> {
             Optional<ApplicantLiteDto> applicantLite = applicantLiteService.findByUin(c.getContactUin());
@@ -67,8 +67,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
     }
 
     @Transactional
-    public long deleteApplicantChatContact(String applicantUin) {
-        return applicantChatContactRepository.deleteByApplicantUinAndSystemDefinedFalse(applicantUin);
+    public int deleteApplicantChatContact(String applicantUin,String contactUin) {
+        return applicantChatContactRepository.markDeleted(applicantUin,contactUin);
     }
 
 }

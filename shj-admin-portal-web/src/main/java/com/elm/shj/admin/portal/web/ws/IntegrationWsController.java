@@ -588,13 +588,14 @@ public class IntegrationWsController {
     /**
      * List of incidents.
      *
-     * @param applicantChatContactUin
+     * @param applicantUin
+     * @param contactUin
      * @return WsResponse of number of selected rows
      */
-    @DeleteMapping("/chat-contact/{applicantChatContactUin}")
-    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantChatContactUin) {
+    @PostMapping("/chat-contact/{applicantUin}/{contactUin}")
+    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantUin,@PathVariable String contactUin) {
         log.info("Delete Applicant Chat Contact...");
-        long numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantChatContactUin);
+        int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin,contactUin);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
     }
 }
