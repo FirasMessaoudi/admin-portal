@@ -16,7 +16,10 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Objects;
 
 /**
  * Service for filesystem manipulation using SFTP
@@ -26,20 +29,21 @@ import java.util.Arrays;
  */
 @Slf4j
 @Service
- public class SftpService {
+public class SftpService {
 
     @Autowired
     @Qualifier("sftpProperties")
-    private   SftpProperties config;
+    private SftpProperties dataUploadConfig;
 
     @Autowired
     @Qualifier("applicantIncidentSftpProperties")
-    private   SftpProperties applicantIncidentConfig;
+    private SftpProperties applicantIncidentsConfig;
     // Set the prompt when logging in for the first time, optional values: (ask | yes | no)
+    private static final SimpleDateFormat FILE_NAME_POSTFIX_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
+    private static final SimpleDateFormat FOLDER_NAME_FORMAT = new SimpleDateFormat("yyyy_MM_dd");
     private static final String SESSION_CONFIG_STRICT_HOST_KEY_CHECKING = "StrictHostKeyChecking";
-
-
-
+    private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
+    private static final String DATA_UPLOAD_CONFIG_PROPERTIES = "dataUploadConfigProperties";
 
 
     /**
@@ -50,9 +54,11 @@ import java.util.Arrays;
      * @return if the file was uploaded successfully
      * @throws JSchException in case of operation failure
      */
-    public boolean uploadFile(String targetPath, InputStream inputStream) throws JSchException {
+    public boolean uploadFile(String targetPath, InputStream inputStream,String  configPropertiesType) throws JSchException {
+        SftpProperties config= getSftpPropertiesConfig( configPropertiesType);
+
         log.info("Upload File Started, ftpServer [{}:{}], ftpPath [{}]", config.getHost(), config.getPort(), targetPath);
-        ChannelSftp sftp = this.createSftp();
+        ChannelSftp sftp = this.createSftp( configPropertiesType);
         try {
             createDirs(config.getRootFolder(), sftp);
             sftp.cd(config.getRootFolder());
@@ -84,8 +90,8 @@ import java.util.Arrays;
      * @return if the file was uploaded successfully
      * @throws Exception in case of operation failure
      */
-    public boolean uploadFile(String targetPath, File file) throws Exception {
-        return this.uploadFile(targetPath, new FileInputStream(file));
+    public boolean uploadFile(String targetPath, File file,String  configPropertiesType) throws Exception {
+        return this.uploadFile(targetPath, new FileInputStream(file), configPropertiesType);
     }
 
     /**
@@ -95,9 +101,10 @@ import java.util.Arrays;
      * @return the file reference
      * @throws Exception in case of operation failure
      */
-    public Resource downloadFile(String targetPath) throws Exception {
+    public Resource downloadFile(String targetPath,String  configPropertiesType) throws Exception {
+        SftpProperties config= getSftpPropertiesConfig( configPropertiesType);
         log.info("Download File Started, ftpServer [{}:{}], ftpPath [{}]", config.getHost(), config.getPort(), targetPath);
-        ChannelSftp sftp = this.createSftp();
+        ChannelSftp sftp = this.createSftp( configPropertiesType);
         ByteArrayOutputStream outputStream = null;
         try {
             createDirs(config.getRootFolder(), sftp);
@@ -126,10 +133,12 @@ import java.util.Arrays;
      * @return if the file is deleted
      * @throws Exception in case of operation failure
      */
-    public boolean deleteFile(String targetPath) throws Exception {
+    public boolean deleteFile(String targetPath,String  configPropertiesType) throws Exception {
+        SftpProperties config= getSftpPropertiesConfig( configPropertiesType);
+
         ChannelSftp sftp = null;
         try {
-            sftp = this.createSftp();
+            sftp = this.createSftp( configPropertiesType);
             sftp.cd(config.getRootFolder());
             sftp.rm(targetPath);
             return true;
@@ -184,11 +193,12 @@ import java.util.Arrays;
      * @return the created connection
      * @throws JSchException in case of operation failure
      */
-    private ChannelSftp createSftp() throws JSchException {
+    private ChannelSftp createSftp(String  configPropertiesType) throws JSchException {
+        SftpProperties config= getSftpPropertiesConfig( configPropertiesType);
         JSch jsch = new JSch();
         log.info("Try to connect sftp[" + config.getUsername() + "@" + config.getHost() + "], use password[" + config.getPassword() + "]");
 
-        Session session = createSession(jsch, config.getHost(), config.getUsername(), config.getPort());
+        Session session = createSession(jsch, config.getHost(), config.getUsername(), config.getPort(),config.getSessionStrictHostKeyChecking());
         session.setPassword(config.getPassword());
         session.connect(config.getSessionConnectTimeout());
 
@@ -212,7 +222,7 @@ import java.util.Arrays;
      * @return the created session
      * @throws JSchException in case of operation failure
      */
-    private Session createSession(JSch jsch, String host, String username, Integer port) throws JSchException {
+    private Session createSession(JSch jsch, String host, String username, Integer port,String sessionStrictHostKeyChecking) throws JSchException {
         Session session;
 
         if (port <= 0) {
@@ -225,7 +235,7 @@ import java.util.Arrays;
             throw new JSchException(host + " session is null");
         }
 
-        session.setConfig(SESSION_CONFIG_STRICT_HOST_KEY_CHECKING, config.getSessionStrictHostKeyChecking());
+        session.setConfig(SESSION_CONFIG_STRICT_HOST_KEY_CHECKING,sessionStrictHostKeyChecking);
         return session;
     }
 
@@ -251,4 +261,36 @@ import java.util.Arrays;
         }
     }
 
+    private SftpProperties getSftpPropertiesConfig(String configPropertiesType) {
+        switch (configPropertiesType) {
+            case APPLICANT_INCIDENTS_CONFIG_PROPERTIES:
+                return applicantIncidentsConfig;
+            default:
+                return dataUploadConfig;
+        }
+    }
+
+
+    /**
+     * Generates the file path to be used to save the file in sftp server
+     *
+     * @param fileName         the file name to save
+     * @param referenceNumber the data request reference
+     * @param isErrorFile      if the file to save is an error file
+     * @return the sftp path for the file
+     */
+    public String generateSftpFilePath(String fileName, String referenceNumber, boolean isErrorFile) {
+        String[] fileNameParts = Objects.requireNonNull(fileName).split("\\.");
+        String localFileName = fileNameParts[0] +
+                "_" +
+                (isErrorFile ? "with-errors" : FILE_NAME_POSTFIX_FORMAT.format(new Date())) +
+                "." +
+                fileNameParts[1];
+        return FOLDER_NAME_FORMAT.format(new Date()) +
+                "/" +
+                referenceNumber +
+                "/" +
+                (isErrorFile ? "error/" : "") +
+                localFileName;
+    }
 }

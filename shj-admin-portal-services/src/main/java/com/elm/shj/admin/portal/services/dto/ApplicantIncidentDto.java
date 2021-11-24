@@ -30,6 +30,7 @@ public class ApplicantIncidentDto implements Serializable {
     @JsonBackReference(value = "applicantRitual")
     private ApplicantRitualDto applicantRitual;
     private String statusCode;
+    private String referenceNumber;
     private String typeCode;
     private String description;
     private Double locationLat;

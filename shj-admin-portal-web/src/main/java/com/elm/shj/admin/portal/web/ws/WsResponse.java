@@ -6,6 +6,8 @@ package com.elm.shj.admin.portal.web.ws;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 /**
  * Web service operation result
@@ -34,4 +36,5 @@ public class WsResponse<T> {
 
     private EWsResponseStatus status = EWsResponseStatus.SUCCESS;
     private T body;
+    private MultiValueMap<String, String> headers;
 }
