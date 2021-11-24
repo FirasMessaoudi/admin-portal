@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.services.dto;
 
 import lombok.Getter;
@@ -33,7 +36,4 @@ public class RitualSeasonDto implements Serializable {
     private int seasonEnd;
 
     private boolean activated;
-
-//    @JsonBackReference
-//    private List<CompanyRitualSeasonLiteDto> companyRitualSeasons;
 }

@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-
 import lombok.*;
 
 import java.io.Serializable;

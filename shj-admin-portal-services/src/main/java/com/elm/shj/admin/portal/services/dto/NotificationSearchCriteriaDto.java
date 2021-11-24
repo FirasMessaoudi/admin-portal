@@ -10,6 +10,12 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Notification filter value object.
+ *
+ * @author Slim Ben Hadj
+ * @since 1.1.0
+ */
 @Getter
 @Setter
 @NoArgsConstructor

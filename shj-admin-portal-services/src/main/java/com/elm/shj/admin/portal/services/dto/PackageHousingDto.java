@@ -25,7 +25,6 @@ import java.util.List;
 @Builder
 public class PackageHousingDto implements Serializable {
 
-
     private static final long serialVersionUID = -2333926062779667053L;
 
     public PackageHousingDto(){
