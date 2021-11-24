@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.dto.ApplicantIncidentDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -77,8 +78,11 @@ public class IncidentWsController {
      */
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<WsResponse<?>> create(@RequestPart("incident") @Valid ApplicantIncidentDto applicantIncidentRequest,
-                                                @RequestPart("attachment") MultipartFile incidentAttachment) throws Exception {
+                                                @RequestPart("attachment") MultipartFile incidentAttachment,
+                                                @RequestPart("applicantRitual") ApplicantRitualDto applicantRitual
+                                                ) throws Exception {
 
+        applicantIncidentRequest.setApplicantRitual(applicantRitual);
         log.info("adding  applicant incident");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantIncidentService.addApplicantIncident(applicantIncidentRequest, incidentAttachment)).build());
 
