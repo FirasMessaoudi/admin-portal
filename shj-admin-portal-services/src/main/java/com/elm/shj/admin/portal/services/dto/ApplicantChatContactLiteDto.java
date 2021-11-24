@@ -3,15 +3,13 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Dto class for the applicant chat contact domain.
+ * Dto class for the applicant chat contact lite domain.
  *
  * @author Slim Ben Hadj
  * @since 1.1.0
@@ -19,14 +17,18 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ApplicantChatContactDto implements Serializable {
+@AllArgsConstructor
+@Builder
+public class ApplicantChatContactLiteDto implements Serializable {
 
-    private static final long serialVersionUID = -4684813036429505035L;
+    private static final long serialVersionUID = -3274483957064433720L;
 
     private Long id;
     private String applicantUin;
     private String contactUin;
-    private ContactTypeLookupDto type;
+    private String contactFullNameAr;
+    private String contactFullNameEn;
+    private Long typeId;
     private String alias;
     private String avatar;
     private Boolean systemDefined;
@@ -34,7 +36,6 @@ public class ApplicantChatContactDto implements Serializable {
     private String relationshipCode;
     private String mobileNumber;
     private Boolean deleted;
-    private ApplicantRitualDto applicantRitual;
     private Date creationDate;
     private Date updateDate;
 }

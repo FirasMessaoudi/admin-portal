@@ -87,11 +87,10 @@ public class IntegrationWsController {
     private final LanguageLookupService languageLookupService;
     private final RitualPackageService ritualPackageService;
     private final PackageHousingService packageHousingService;
-
     private final ApplicantIncidentService applicantIncidentService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
-    private final ApplicantChatContactService  applicantChatContactService;
+    private final ApplicantChatContactService applicantChatContactService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -401,7 +400,7 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findApplicantPackageCatering(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
         log.debug("Handler for {}", "Find package Catering  by uin");
         RitualPackageDto ritualPackage = ritualPackageService.findRitualPackageByApplicantUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId);
-        Set<PackageCateringDto> packageCateringDtoList= ritualPackageService.findPackageCateringFromRitualPackage(Long.parseLong(uin),ritualPackage);
+        Set<PackageCateringDto> packageCateringDtoList = ritualPackageService.findPackageCateringFromRitualPackage(Long.parseLong(uin), ritualPackage);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageCateringDtoList).build());
     }
 
@@ -519,7 +518,7 @@ public class IntegrationWsController {
     }
 
     @GetMapping("/religious-occasions-day/list")
-    public ResponseEntity<WsResponse<?>>  listReligiousOccasionsDay() {
+    public ResponseEntity<WsResponse<?>> listReligiousOccasionsDay() {
         log.debug("list religious occasions day...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(religiousOccasionsDayLookupService.findAll()).build());
     }
@@ -537,7 +536,7 @@ public class IntegrationWsController {
     }
 
     @GetMapping("/meal-type/list")
-    public ResponseEntity<WsResponse<?>>  listMealTypes() {
+    public ResponseEntity<WsResponse<?>> listMealTypes() {
         log.debug("list meal types...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(mealTypeLookupService.findAll()).build());
     }
@@ -557,7 +556,6 @@ public class IntegrationWsController {
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(null).build());
         } else {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantIncidents).build());
-
         }
     }
 
@@ -573,11 +571,18 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(incidentTypeLookupService.findAll()).build());
     }
 
-
     @GetMapping("/housing/{uin}/{seasonRitualId}")
     public ResponseEntity<WsResponse<?>> findCampLocation(@PathVariable long uin, @PathVariable long seasonRitualId) {
         log.debug("Camp Location ...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageHousingService.findCamp(seasonRitualId, uin)).build());
+    }
+
+    @GetMapping("/chat-contact/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findAChatContactsByApplicantUin(@PathVariable String applicantUin,
+                                                                         @RequestParam(required = false) Boolean systemDefined) {
+        log.debug("List chat contacts by applicant UIN {}", applicantUin);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(
+                applicantChatContactService.listApplicantChatContacts(applicantUin, systemDefined)).build());
     }
 
     /**
@@ -586,11 +591,10 @@ public class IntegrationWsController {
      * @param applicantChatContactUin
      * @return WsResponse of number of selected rows
      */
-    @DeleteMapping("/applicant-chat-contact/{applicantChatContactUin}")
+    @DeleteMapping("/chat-contact/{applicantChatContactUin}")
     public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantChatContactUin) {
-        log.info("delete Applicant Chat Contact...");
+        log.info("Delete Applicant Chat Contact...");
         long numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantChatContactUin);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : "+numberOfAffectedRows).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
     }
-
 }
