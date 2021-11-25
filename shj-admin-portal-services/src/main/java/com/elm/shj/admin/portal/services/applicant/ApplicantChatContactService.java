@@ -5,14 +5,14 @@ package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantChatContact;
 import com.elm.shj.admin.portal.orm.repository.ApplicantChatContactRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantChatContactDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantChatContactLiteDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -32,6 +32,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
 
     private final ApplicantChatContactRepository applicantChatContactRepository;
     private final ApplicantLiteService applicantLiteService;
+    private final ApplicantRitualService applicantRitualService;
 
     /**
      * List all chat contacts of a specific applicant.
@@ -73,4 +74,43 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         return applicantChatContactRepository.markDeleted(applicantUin,contactUin);
     }
 
+    /**
+     * Creates a new chat contact
+     *
+     * @param contact the chat contact to save
+     * @return savedContact saved one
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public ApplicantChatContactLiteDto createChatContact(String applicantUin, ApplicantChatContactVo contact, Long applicantRitualId) {
+        ApplicantRitualDto applicantRitual = applicantRitualService.findById(applicantRitualId);
+
+        ApplicantChatContactDto savedContact = ApplicantChatContactDto
+                .builder()
+                .applicantUin(applicantUin)
+                .contactUin(contact.getUin())
+                .alias(contact.getAlias())
+                .mobileNumber(contact.getMobileNumber())
+                .systemDefined(false)
+                .deleted(false)
+                .applicantRitual(applicantRitual)
+                .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
+                .build();
+
+        savedContact = save(savedContact);
+        return ApplicantChatContactLiteDto.builder()
+                .id(savedContact.getId())
+                .applicantUin(savedContact.getApplicantUin())
+                .contactUin(savedContact.getContactUin())
+                .contactFullNameAr(applicantRitual.getApplicant().getFullNameAr())
+                .contactFullNameEn((applicantRitual.getApplicant().getFullNameEn()))
+                .typeId(savedContact.getType().getId())
+                .alias(savedContact.getAlias())
+                .systemDefined(savedContact.getSystemDefined())
+                .staffTitleCode(savedContact.getStaffTitleCode())
+                .mobileNumber(savedContact.getMobileNumber())
+                .deleted(savedContact.getDeleted())
+                .creationDate(savedContact.getCreationDate())
+                .updateDate(savedContact.getUpdateDate())
+                .build();
+    }
 }

@@ -200,7 +200,6 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(healthSpecialNeedsLookupService.findAll()).build());
     }
 
-
     /**
      * Verify an applicant based on cross-check factor, uin and date of birth.
      *
@@ -366,7 +365,6 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaffLookupService.findAll()).build());
     }
 
-
     /**
      * finds an applicant package by his UIN and company season ritual id
      *
@@ -386,9 +384,7 @@ public class IntegrationWsController {
         applicantPackageDetails.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageDetails).build());
-
     }
-
 
     /**
      * finds package catering related to applicant even if not have applicant package catering by his UIN and company season ritual id
@@ -439,7 +435,7 @@ public class IntegrationWsController {
     }
 
     /**
-     * My program time table by uin and ritual season id.
+     * My program timetable by uin and ritual season id.
      *
      * @return WsResponse of company ritual step list
      */
@@ -595,12 +591,18 @@ public class IntegrationWsController {
      * @return WsResponse of number of selected rows
      */
     @PostMapping("/chat-contact/{applicantUin}/{contactUin}")
-    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantUin,@PathVariable String contactUin) {
+    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantUin, @PathVariable String contactUin) {
         log.info("Delete Applicant Chat Contact...");
-        int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin,contactUin);
+        int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin, contactUin);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
     }
 
+    /**
+     * Check the existence of an applicant based his UIN.
+     *
+     * @param uin The UIN of the applicant.
+     * @return WsResponse of applicant (in case of success) or error (in case of failure)
+     */
     @GetMapping("/applicant/find-by-uin/{uin}")
     public ResponseEntity<WsResponse<?>> findApplicantBasicDetailsByUin(@PathVariable String uin) {
         Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(uin);
@@ -610,4 +612,13 @@ public class IntegrationWsController {
         }
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
     }
+
+    @PostMapping("/chat-contact/create/{applicantUin}/{applicantRitualId}")
+    public ResponseEntity<WsResponse<?>> createApplicantChatContact(@PathVariable String applicantUin,
+                                                                    @PathVariable Long applicantRitualId,
+                                                                    @RequestBody @Validated ApplicantChatContactVo contact) {
+        ApplicantChatContactLiteDto savedContact = applicantChatContactService.createChatContact(applicantUin, contact, applicantRitualId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(savedContact).build());
+    }
+
 }
