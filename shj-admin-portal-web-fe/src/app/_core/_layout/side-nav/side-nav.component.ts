@@ -48,6 +48,16 @@ export class SideNavComponent implements OnInit {
         submenu: false,
       },
       {
+        title: 'incident-management.title',
+        //TODO Change this roles: [EAuthority.INCIDENT_MANAGEMENT]
+        roles: [EAuthority.USER_MANAGEMENT],
+        display: false,
+        icon: 'flag',
+        iconFa:'fa-w-16',
+        routerLink: '/incidents/list',
+        submenu: false,
+      },
+      {
         title: 'role-management.title',
         roles: [EAuthority.ROLE_MANAGEMENT],
         display: false,
@@ -144,5 +154,4 @@ export class SideNavComponent implements OnInit {
       });
     }
   }
-
 }

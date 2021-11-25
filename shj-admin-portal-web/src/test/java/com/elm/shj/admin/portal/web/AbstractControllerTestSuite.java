@@ -24,6 +24,7 @@ import com.elm.shj.admin.portal.services.data.writer.ItemWriter;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.group.RitualGroupService;
+import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.notification.*;
 import com.elm.shj.admin.portal.services.otp.OtpService;
@@ -218,7 +219,6 @@ public abstract class AbstractControllerTestSuite {
     @MockBean
     protected EmailConfig emailConfig;
 
-
     @MockBean
     protected SmsGatewayConfig smsGatewayConfig;
 
@@ -233,6 +233,7 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected RuleService ruleService;
+
     @MockBean
     protected ApplicantRitualCardLiteService applicantRitualCardLiteService;
 
@@ -242,6 +243,9 @@ public abstract class AbstractControllerTestSuite {
 
     @MockBean
     protected CompanyRitualStepService companyRitualStepService;
+
+    @MockBean
+    protected ApplicantIncidentService applicantIncidentService;
 
     @MockBean
     protected CompanyStaffService companyStaffService;
@@ -264,64 +268,101 @@ public abstract class AbstractControllerTestSuite {
     @MockBean
     protected CompanyLiteService companyLiteService;
     @MockBean
+    protected IncidentStatusLookupService incidentStatusLookupService;
+    @MockBean
     protected CompanyRitualStepLookupService companyRitualStepLookupService;
+
     @MockBean
     protected CompanyStaffLookupService companyStaffLookupService;
+
     @MockBean
     protected HousingCategoryLookupService housingCategoryLookupService;
+
     @MockBean
     protected HousingTypeLookupService housingTypeLookupService;
+
     @MockBean
     protected PackageTypeLookupService packageTypeLookupService;
+
     @MockBean
     protected HousingSiteLookupService housingSiteLookupService;
+
     @MockBean
     protected TransportationTypeLookupService transportationTypeLookupService;
+
     @MockBean
     protected NotificationCategoryLookupService notificationCategoryLookupService;
+
     @MockBean
     protected NotificationTemplateNameLookupService notificationTemplateNameLookupService;
+
     @MockBean
     protected NotificationTemplateTypeLookupService notificationTemplateTypeLookupService;
+
     @MockBean
     protected UserNotificationStatusLookupService userNotificationStatusLookupService;
+
     @MockBean
     protected NotificationTemplateStatusLookupService notificationTemplateStatusLookupService;
+
     @MockBean
     protected NotificationTemplateService notificationTemplateService;
+
     @MockBean
     protected NotificationRequestService notificationRequestService;
+
     @MockBean
     protected ApplicantGroupService applicantGroupService;
+
     @MockBean
     protected ApplicantPackageService applicantPackageService;
+
     @MockBean
     protected GroupApplicantListService groupApplicantListService;
+
     @MockBean
     protected RitualPackageService ritualPackageService;
+
     @MockBean
     protected ItemWriter itemWriter;
+
     @MockBean
     protected NotificationProcessingScheduler notificationProcessingScheduler;
+
     @MockBean
     protected UserNotificationRepository userNotificationRepository;
+
     @MockBean
     protected ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
+
     @MockBean
     protected UserNotificationExpirationScheduler userNotificationExpirationScheduler;
+
     @MockBean
     protected ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
+
     @MockBean
     protected MealTypeLookupService mealTypeLookupService;
+
     @MockBean
     protected PackageHousingService packageHousingService;
 
+
     @MockBean
     protected UserCardStatusAuditService userCardStatusAuditService;
+
     @MockBean
     protected UserNotificationCategoryPreferenceService notificationCategoryPreferenceService;
+
     @MockBean
     protected ApplicantCardScheduler applicantCardScheduler;
+
+    @MockBean
+    protected ApplicantContactService applicantContactService ;
+    @MockBean
+    protected IncidentTypeLookupService incidentTypeLookupService;
+    @MockBean
+    protected ApplicantChatContactService applicantChatContactService;
 
     /**
      * Method which is executed before each test

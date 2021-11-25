@@ -9,7 +9,7 @@ import {NotificationListComponent} from './notification-list/notification-list.c
 import {SystemDefinedNotificationDetailsComponent} from './system-defined-notification-details/system-defined-notification-details.component';
 import {UserDefinedNotificationListComponent} from "@pages/notification-management/user-defined-notification-list/user-defined-notification-list.component";
 import {UserDefinedNotificationDetailsComponent} from "@pages/notification-management/user-defined-notification-details/user-defined-notification-details.component";
-import { UserDefinedNotificationAddComponent } from './user-defined-notification-add/user-defined-notification-add.component';
+import {UserDefinedNotificationAddComponent} from './user-defined-notification-add/user-defined-notification-add.component';
 
 @NgModule({
   declarations:

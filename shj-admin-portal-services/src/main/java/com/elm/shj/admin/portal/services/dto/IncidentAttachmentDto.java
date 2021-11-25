@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class IncidentAttachmentDto implements Serializable {
 
     private long id;
     private String filePath;
+    @JsonBackReference(value = "applicantIncident")
     private ApplicantIncidentDto applicantIncident;
     private Date creationDate;
 }

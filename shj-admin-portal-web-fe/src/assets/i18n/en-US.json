@@ -464,7 +464,8 @@
     "minutes": "Minutes",
     "saved_successfully" : "Saved successfully",
     "add_user_defined_notifications": "Add User Defined Notifications",
-    "save_changes_confirmation_text": "Are you sure, you want to save changes ?"
+    "save_changes_confirmation_text": "Are you sure, you want to save changes ?",
+    "add_no_applicants": "Add {{noApplicants}} Applicant(s)"
   },
   "printing-management": {
     "title": "Printing Management",
@@ -551,5 +552,8 @@
     "channel_WEB_SERVICE": "Web Service",
     "dialog_download_error_text": "Error while downloading the template file. Please try again...",
     "dialog_confirm_request_error_text": "Error while confirming your request. Please try again..."
+  },
+  "incident-management": {
+    "title": "Incident Management"
   }
 }

@@ -452,7 +452,8 @@
     "minutes": "دقائق",
     "saved_successfully" : "تم حفظ البيانات بنجاح",
     "add_user_defined_notifications": "إضافة تنبيهات المستخدم",
-    "save_changes_confirmation_text": "هل تريد حفظ التعديلات الحالية ؟"
+    "save_changes_confirmation_text": "هل تريد حفظ التعديلات الحالية ؟",
+    "add_no_applicants": "إضافة {{noApplicants}} مرسل إليه"
   },
   "printing-management": {
     "title": "إدارة الطباعة",
@@ -541,5 +542,8 @@
     "channel_WEB_SERVICE": "ربط عن طريق الويب",
     "dialog_download_error_text": "حدث خطأ أثناء تنزيل ملف النموذج. يرجى المحاولة مرة أخرى ...",
     "dialog_confirm_request_error_text": "حدث خطأ أثناء تأكيد طلبك. يرجى المحاولة مرة أخرى ..."
+  },
+  "incident-management": {
+    "title": "إدارة البلاغات"
   }
 }

@@ -6,10 +6,13 @@ package com.elm.shj.admin.portal.orm.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the shc_applicant_incident database table.
@@ -56,11 +59,17 @@ public class JpaApplicantIncident implements Serializable {
     @Column(name = "resolution_comment")
     private String resolutionComment;
 
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantIncident")
+    private List<JpaIncidentAttachment>  incidentAttachments;
+
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
     @Column(name = "update_date")
     private Date updateDate;
+
 
     @PrePersist
     public void prePersist() {

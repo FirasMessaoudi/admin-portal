@@ -26,14 +26,16 @@ import java.util.List;
 @Builder
 public class RitualPackageDto implements Serializable {
 
-
     private static final long serialVersionUID = 811079397522626616L;
 
     public RitualPackageDto() {
     }
+
     private long id;
+
     @NotNull(message = "validation.data.constraints.msg.20001")
     private String typeCode;
+
     private float price;
     private String departureCity;
     private int countryId;
@@ -48,7 +50,6 @@ public class RitualPackageDto implements Serializable {
     private List<PackageHousingDto> packageHousings;
     @JsonBackReference("packageTransportations")
     private List<PackageTransportationDto> packageTransportations;
-
 
     private Date creationDate;
     private Date updateDate;
