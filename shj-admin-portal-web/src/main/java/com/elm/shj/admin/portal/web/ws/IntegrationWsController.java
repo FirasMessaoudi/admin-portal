@@ -4,8 +4,6 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
-import com.elm.shj.admin.portal.orm.entity.JpaPackageCatering;
-import com.elm.shj.admin.portal.orm.repository.ApplicantChatContactRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
@@ -29,7 +27,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Controller for exposing web services for external party.
@@ -577,12 +578,13 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageHousingService.findCamp(seasonRitualId, uin)).build());
     }
 
-    @GetMapping("/chat-contact/{applicantUin}")
-    public ResponseEntity<WsResponse<?>> findAChatContactsByApplicantUin(@PathVariable String applicantUin,
-                                                                         @RequestParam(required = false) Boolean systemDefined) {
-        log.debug("List chat contacts by applicant UIN {}", applicantUin);
+    @GetMapping("/chat-contact/{uin}/{applicantRitualId}")
+    public ResponseEntity<WsResponse<?>> findAChatContactsByUinAndRitualId(@PathVariable String uin,
+                                                                           @PathVariable Long applicantRitualId,
+                                                                           @RequestParam(required = false) Boolean systemDefined) {
+        log.debug("List chat contacts by uin {} and applicant ritual ID {}", uin, applicantRitualId);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(
-                applicantChatContactService.listApplicantChatContacts(applicantUin, systemDefined)).build());
+                applicantChatContactService.listApplicantChatContacts(uin, applicantRitualId, systemDefined)).build());
     }
 
     /**

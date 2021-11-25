@@ -56,8 +56,4 @@ public class Navigation {
 	// Incidents
 	public static final String API_INCIDENTS = "/api/incidents";
 	public static final String API_INCIDENTS_INTEGRATION = "/api/ws/incidents";
-
-	// Chat
-	public static final String API_APPLICANT_CHAT = "/api/chat";
-
 }
