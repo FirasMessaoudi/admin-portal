@@ -72,7 +72,6 @@ public class IncidentWsController {
      * Creates a new applicant incident
      *
      * @param applicantIncidentRequest applicant incident details
-     * @param incidentAttachment       the incident attachment
      * @return WsResponse of  the persisted applicant incident
      */
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

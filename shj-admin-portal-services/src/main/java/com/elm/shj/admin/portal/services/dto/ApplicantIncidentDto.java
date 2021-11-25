@@ -28,7 +28,6 @@ public class ApplicantIncidentDto implements Serializable {
     private long id;
     @JsonBackReference(value = "applicantRitual")
     private ApplicantRitualDto applicantRitual;
-    private String referenceNumber;
     private String statusCode;
     private String referenceNumber;
     private String typeCode;

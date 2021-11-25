@@ -4,13 +4,12 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
-import com.elm.shj.admin.portal.orm.entity.JpaPackageCatering;
-import com.elm.shj.admin.portal.orm.repository.ApplicantChatContactRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -29,7 +28,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Controller for exposing web services for external party.
@@ -91,8 +93,8 @@ public class IntegrationWsController {
     private final ApplicantIncidentService applicantIncidentService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
-    private final ApplicantChatContactService  applicantChatContactService;
-
+    private final ApplicantChatContactService applicantChatContactService;
+    private final ApplicantRitualService applicantRitualService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -590,7 +592,16 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantChatContactUin) {
         log.info("delete Applicant Chat Contact...");
         long numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantChatContactUin);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : "+numberOfAffectedRows).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
+    }
+
+    @GetMapping("/ritual/{uin}/{companyRitualSeasonId}")
+    public ResponseEntity<WsResponse<?>> finsApllicantRitual(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
+        log.debug("Handler for {}", "Find applicant ritual by uin");
+        ApplicantRitualDto applicantRitualDtO = applicantRitualService.findByApplicantUinAndCompanyRitualSeasonId(uin, companyRitualSeasonId);
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantRitualDtO).build());
+
     }
 
 }
