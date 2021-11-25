@@ -4,16 +4,15 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaContactTypeLookup;
 import org.mapstruct.Mapper;
 
 /**
- * Mapper for {@link ApplicantInfoEmergencyDto} class
+ * Mapper for {@link ContactTypeLookupDto} class
  *
- * @author f.messaoudi
+ * @author Slim Ben Hadj
  * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
-public abstract class ApplicantInfoEmergencyDtoMapper implements IGenericMapper<ApplicantInfoEmergencyDto, JpaApplicant> {
-
+public abstract class ContactTypeLookupDtoMapper implements IGenericMapper<ContactTypeLookupDto, JpaContactTypeLookup> {
 }

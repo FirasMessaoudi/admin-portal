@@ -29,6 +29,7 @@ import java.util.List;
 public class JpaCompanyRitualSeason implements Serializable {
 
     private static final long serialVersionUID = -973537367560574699L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
@@ -90,6 +91,4 @@ public class JpaCompanyRitualSeason implements Serializable {
     public void preUpdate() {
         updateDate = new Date();
     }
-
-
 }

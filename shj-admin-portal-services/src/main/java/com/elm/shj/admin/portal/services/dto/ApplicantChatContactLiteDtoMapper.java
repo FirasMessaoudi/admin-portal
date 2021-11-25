@@ -4,15 +4,15 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantChatContact;
 import org.mapstruct.Mapper;
 
 /**
- * Mapper for {@link ApplicantLiteDto} class
+ * Mapper for {@link ApplicantChatContactLiteDto} class
  *
  * @author Slim Ben Hadj
  * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
-public abstract class ApplicantLiteDtoMapper implements IGenericMapper<ApplicantLiteDto, JpaApplicantLite> {
+public abstract class ApplicantChatContactLiteDtoMapper implements IGenericMapper<ApplicantChatContactLiteDto, JpaApplicantChatContact> {
 }

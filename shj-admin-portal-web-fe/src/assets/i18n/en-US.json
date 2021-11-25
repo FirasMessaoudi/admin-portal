@@ -465,7 +465,7 @@
     "saved_successfully" : "Saved successfully",
     "add_user_defined_notifications": "Add User Defined Notifications",
     "save_changes_confirmation_text": "Are you sure, you want to save changes ?",
-    "add_no_applicants": "Add {{noApplicants}} Applicants"
+    "add_no_applicants": "Add {{noApplicants}} Applicant(s)"
   },
   "printing-management": {
     "title": "Printing Management",

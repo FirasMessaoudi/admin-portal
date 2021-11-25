@@ -9,7 +9,6 @@ import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
-import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -89,12 +88,11 @@ public class IntegrationWsController {
     private final LanguageLookupService languageLookupService;
     private final RitualPackageService ritualPackageService;
     private final PackageHousingService packageHousingService;
-
     private final ApplicantIncidentService applicantIncidentService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
     private final ApplicantChatContactService applicantChatContactService;
-    private final ApplicantRitualService applicantRitualService;
+
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -403,7 +401,7 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findApplicantPackageCatering(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
         log.debug("Handler for {}", "Find package Catering  by uin");
         RitualPackageDto ritualPackage = ritualPackageService.findRitualPackageByApplicantUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId);
-        Set<PackageCateringDto> packageCateringDtoList= ritualPackageService.findPackageCateringFromRitualPackage(Long.parseLong(uin),ritualPackage);
+        Set<PackageCateringDto> packageCateringDtoList = ritualPackageService.findPackageCateringFromRitualPackage(Long.parseLong(uin), ritualPackage);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageCateringDtoList).build());
     }
 
@@ -521,7 +519,7 @@ public class IntegrationWsController {
     }
 
     @GetMapping("/religious-occasions-day/list")
-    public ResponseEntity<WsResponse<?>>  listReligiousOccasionsDay() {
+    public ResponseEntity<WsResponse<?>> listReligiousOccasionsDay() {
         log.debug("list religious occasions day...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(religiousOccasionsDayLookupService.findAll()).build());
     }
@@ -539,7 +537,7 @@ public class IntegrationWsController {
     }
 
     @GetMapping("/meal-type/list")
-    public ResponseEntity<WsResponse<?>>  listMealTypes() {
+    public ResponseEntity<WsResponse<?>> listMealTypes() {
         log.debug("list meal types...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(mealTypeLookupService.findAll()).build());
     }
@@ -559,7 +557,6 @@ public class IntegrationWsController {
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(null).build());
         } else {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantIncidents).build());
-
         }
     }
 
@@ -575,33 +572,32 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(incidentTypeLookupService.findAll()).build());
     }
 
-
     @GetMapping("/housing/{uin}/{seasonRitualId}")
     public ResponseEntity<WsResponse<?>> findCampLocation(@PathVariable long uin, @PathVariable long seasonRitualId) {
         log.debug("Camp Location ...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageHousingService.findCamp(seasonRitualId, uin)).build());
     }
 
+    @GetMapping("/chat-contact/{uin}/{applicantRitualId}")
+    public ResponseEntity<WsResponse<?>> findAChatContactsByUinAndRitualId(@PathVariable String uin,
+                                                                           @PathVariable Long applicantRitualId,
+                                                                           @RequestParam(required = false) Boolean systemDefined) {
+        log.debug("List chat contacts by uin {} and applicant ritual ID {}", uin, applicantRitualId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(
+                applicantChatContactService.listApplicantChatContacts(uin, applicantRitualId, systemDefined)).build());
+    }
+
     /**
      * List of incidents.
      *
-     * @param applicantChatContactUin
+     * @param applicantUin
+     * @param contactUin
      * @return WsResponse of number of selected rows
      */
-    @DeleteMapping("/applicant-chat-contact/{applicantChatContactUin}")
-    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantChatContactUin) {
-        log.info("delete Applicant Chat Contact...");
-        long numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantChatContactUin);
+    @PostMapping("/chat-contact/{applicantUin}/{contactUin}")
+    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantUin,@PathVariable String contactUin) {
+        log.info("Delete Applicant Chat Contact...");
+        int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin,contactUin);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
     }
-
-    @GetMapping("/ritual/{uin}/{companyRitualSeasonId}")
-    public ResponseEntity<WsResponse<?>> finsApllicantRitual(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
-        log.debug("Handler for {}", "Find applicant ritual by uin");
-        ApplicantRitualDto applicantRitualDtO = applicantRitualService.findByApplicantUinAndCompanyRitualSeasonId(uin, companyRitualSeasonId);
-
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantRitualDtO).build());
-
-    }
-
 }
