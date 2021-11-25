@@ -600,4 +600,14 @@ public class IntegrationWsController {
         int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin,contactUin);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
     }
+
+    @GetMapping("/applicant/find-by-uin/{uin}")
+    public ResponseEntity<WsResponse<?>> findApplicantBasicDetailsByUin(@PathVariable String uin) {
+        Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(uin);
+        if (!applicant.isPresent()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
+    }
 }
