@@ -534,4 +534,14 @@ public class IntegrationWsController {
         log.debug("list meal types...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(mealTypeLookupService.findAll()).build());
     }
+
+    @GetMapping("/applicant/find-by-uin/{uin}")
+    public ResponseEntity<WsResponse<?>> findApplicantBasicDetailsByUin(@PathVariable String uin) {
+        Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(uin);
+        if (!applicant.isPresent()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
+    }
 }
