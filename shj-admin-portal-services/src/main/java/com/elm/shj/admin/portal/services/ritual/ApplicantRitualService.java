@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -36,6 +37,17 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
      */
     public List<ApplicantRitualDto> findAllWithoutCards() {
         return mapList(((ApplicantRitualRepository) getRepository()).findAllApplicantRitualsWithoutCard());
+    }
+
+    /**
+     * finds an applicant ritual by its ID
+     *
+     * @param applicantRitualId the data request id to find
+     * @return the found applicant request or <code>null</code>
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public ApplicantRitualDto findById(Long applicantRitualId) {
+        return findOne(applicantRitualId);
     }
 
     public ApplicantRitualDto findByApplicantUinAndCompanyRitualSeasonId(String uin, Long companyRitualSeasonId) {

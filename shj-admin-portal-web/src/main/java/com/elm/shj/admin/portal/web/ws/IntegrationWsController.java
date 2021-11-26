@@ -440,7 +440,7 @@ public class IntegrationWsController {
     }
 
     /**
-     * My program time table by uin and ritual season id.
+     * My program timetable by uin and ritual season id.
      *
      * @return WsResponse of company ritual step list
      */
@@ -596,9 +596,9 @@ public class IntegrationWsController {
      * @return WsResponse of number of selected rows
      */
     @PostMapping("/chat-contact/{applicantUin}/{contactUin}")
-    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantUin,@PathVariable String contactUin) {
+    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantUin, @PathVariable String contactUin) {
         log.info("Delete Applicant Chat Contact...");
-        int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin,contactUin);
+        int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin, contactUin);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
     }
     @GetMapping("/ritual/{uin}/{companyRitualSeasonId}")
@@ -609,4 +609,29 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantRitualDtO).build());
 
     }
+
+    /**
+     * Check the existence of an applicant based his UIN.
+     *
+     * @param uin The UIN of the applicant.
+     * @return WsResponse of applicant (in case of success) or error (in case of failure)
+     */
+    @GetMapping("/applicant/find-by-uin/{uin}")
+    public ResponseEntity<WsResponse<?>> findApplicantBasicDetailsByUin(@PathVariable String uin) {
+        Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(uin);
+        if (!applicant.isPresent()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
+    }
+
+    @PostMapping("/chat-contact/create/{applicantUin}/{applicantRitualId}")
+    public ResponseEntity<WsResponse<?>> createApplicantChatContact(@PathVariable String applicantUin,
+                                                                    @PathVariable Long applicantRitualId,
+                                                                    @RequestBody @Validated ApplicantChatContactVo contact) {
+        ApplicantChatContactLiteDto savedContact = applicantChatContactService.createChatContact(applicantUin, contact, applicantRitualId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(savedContact).build());
+    }
+
 }

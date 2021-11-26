@@ -3,9 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -19,6 +17,8 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ContactTypeLookupDto implements Serializable {
 
     private static final long serialVersionUID = 7345719468154974521L;

@@ -1,3 +1,6 @@
+/*
+ *  Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
@@ -35,7 +38,6 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
     private final ApplicantMainDataDtoMapper applicantMainDataDtoMapper;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private final ApplicantRitualRepository applicantRitualRepository;
-
 
     /**
      * Finds an applicant by his uin
