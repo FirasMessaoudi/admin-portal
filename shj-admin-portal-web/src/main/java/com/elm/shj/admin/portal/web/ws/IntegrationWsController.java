@@ -9,6 +9,7 @@ import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -92,7 +93,7 @@ public class IntegrationWsController {
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
     private final ApplicantChatContactService applicantChatContactService;
-
+    private final ApplicantRitualService applicantRitualService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -599,5 +600,13 @@ public class IntegrationWsController {
         log.info("Delete Applicant Chat Contact...");
         int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin,contactUin);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
+    }
+    @GetMapping("/ritual/{uin}/{companyRitualSeasonId}")
+    public ResponseEntity<WsResponse<?>> finsApllicantRitual(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
+        log.debug("Handler for {}", "Find applicant ritual by uin");
+        ApplicantRitualDto applicantRitualDtO = applicantRitualService.findByApplicantUinAndCompanyRitualSeasonId(uin, companyRitualSeasonId);
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantRitualDtO).build());
+
     }
 }

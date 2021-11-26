@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,7 +75,8 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         try {
             if(!attachment.isEmpty() && attachment.getSize()>0){
                 // generate file and folder names to be uploaded/created in SFTP
-                String sftpPath = sftpService.generateSftpFilePath(attachment.getOriginalFilename(), referenceNumber, false);
+                Path p = Paths.get(attachment.getOriginalFilename());
+                String sftpPath = sftpService.generateSftpFilePath(p.getFileName().toString(), referenceNumber, false);
                 List<IncidentAttachmentDto> incidentAttachmentList = new ArrayList<>();
                 IncidentAttachmentDto incidentAttachmentDto = new IncidentAttachmentDto();
                 incidentAttachmentDto.setFilePath(sftpPath);
