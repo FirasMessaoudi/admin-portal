@@ -544,6 +544,13 @@
     "dialog_confirm_request_error_text": "حدث خطأ أثناء تأكيد طلبك. يرجى المحاولة مرة أخرى ..."
   },
   "incident-management": {
-    "title": "إدارة البلاغات"
+    "title": "إدارة البلاغات",
+    "applicant_shaaer_id": "رقم هوية مقدم البلاغ",
+    "applicant_name": "اسم مقدم البلاغ",
+    "incident_type": "نوع البلاغ",
+    "incident_date": "تاريخ تقديم البلاغ",
+    "status": "حالة البلاغ",
+    "all": "الكل",
+    "incident_id": "رقم البلاغ"
   }
 }

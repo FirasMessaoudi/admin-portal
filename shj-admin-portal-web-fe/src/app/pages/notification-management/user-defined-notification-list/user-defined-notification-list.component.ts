@@ -60,7 +60,6 @@ export class UserDefinedNotificationListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.initForm();
     this.loadLookups();
     this.loadPage(0);

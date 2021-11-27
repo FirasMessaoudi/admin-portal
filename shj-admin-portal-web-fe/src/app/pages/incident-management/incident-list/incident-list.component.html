@@ -1,1 +1,207 @@
-<p>incident-list works!</p>
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h3 class="sectionTitle">
+      {{ "incident-management.title" | translate }}
+      <button class="btn btn-link shadow-none">
+        <svg-icon styleClass="h4 pt-3" icon="search" (click)="isSearchbarCollapsed = !isSearchbarCollapsed"></svg-icon>
+      </button>
+    </h3>
+
+  </div>
+  <div class="content__section" *ngIf="!canSeeIncidentList">
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
+
+  <div class="content__section" *ngIf="canSeeIncidentList">
+    <div class="searchBox" [ngbCollapse]="isSearchbarCollapsed">
+      <form [formGroup]="searchForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+
+        <div class="form-group col">
+          <label class="col-form-label">{{"incident-management.applicant_shaaer_id" | translate }}</label>
+          <input type="text" formControlName="applicantId" class="form-control" [maxLength]="10"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "incident-management.applicant_name" | translate }}</label>
+          <input type="text" formControlName="applicantName" class="form-control" [maxLength]="75"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "incident-management.incident_type" | translate }}</label>
+          <select formControlName="incidentType" class="custom-select">
+            <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+            <option *ngFor="let type of lookupService().localizedItems(incidentTypes)" [ngValue]="type.code">
+              {{type.label}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "incident-management.incident_date" | translate }}</label>
+          <div class="date-picker-range form-inline flex-nowrap">
+
+            <div class="form-group hidden">
+              <div class="input-group">
+                <input name="datepicker"
+                       class="form-control"
+                       ngbDatepicker
+                       #datepicker="ngbDatepicker"
+                       [autoClose]="'outside'"
+                       (dateSelect)="onDateSelection($event)"
+                       [displayMonths]="2"
+                       [dayTemplate]="t1"
+                       outsideDays="hidden"
+                       [footerTemplate]="footerTemplate"
+                       tabindex="-1">
+                <ng-template #t1 let-date let-focused="focused">
+                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                      [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                      (mouseleave)="hoveredDate = null">
+                    {{ date.day }}
+                </span>
+                </ng-template>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend" (click)="datepicker.toggle()">
+                  <span class="form-control prepend">{{'general.from' | translate}}</span>
+                </div>
+                <input #dpFromDate
+                       class="form-control"
+                       placeholder="DD/MM/YYYY"
+                       name="dpFromDate"
+                       [readOnly]="true"
+                       [value]="formatter.format(fromDate)"
+                       (click)="datepicker.toggle()"
+                       (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend" (click)="datepicker.toggle()">
+                  <span class="form-control prepend">{{'general.to' | translate}}</span>
+                </div>
+                <input #dpToDate
+                       class="form-control"
+                       placeholder="DD/MM/YYYY"
+                       name="dpToDate"
+                       [readOnly]="true"
+                       [value]="formatter.format(toDate)"
+                       (click)="datepicker.toggle()"
+                       (input)="toDate = validateInput(toDate, dpToDate.value)">
+                <div class="input-group-append" (click)="datepicker.toggle()">
+                  <span class="input-group-text">
+                    <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #footerTemplate>
+            <hr class="my-0">
+            <button class="btn btn-outline-dcc-primary  btn-sm m-2 float-right" type="button"
+                    (click)="datepicker.close()">{{'general.btn_close'| translate}}</button>
+            <button class="btn btn-dcc-primary btn-sm m-2 float-left" type="button"
+                    (click)="clearDate()">{{'general.btn_clear'| translate}}</button>
+          </ng-template>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "incident-management.status" | translate }}</label>
+          <select class="custom-select" formControlName="status">
+            <option [ngValue]="null" selected>{{"incident-management.all" | translate}}</option>
+            <option *ngFor="let status of lookupService().localizedItems(incidentStatuses)" [ngValue]="status.code">
+              {{status.label}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-12">
+          <button id="btnSearch" type="submit" (click)="search()" class="btn btn-dcc-primary px-5 mr-3">
+            {{ "general.btn_search" | translate }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="d-flex justify-content-end bg-dcc-light mt-4 actionBar">
+      <div class="bg-white">
+        <a id="exportToExcel" class="btn btn-dcc-light btn-action m-w-l" href="/">
+          <svg-icon styleClass="mx-3 fa-w-18" icon="file-excel"></svg-icon>
+          {{'general.export_to_excel' | translate}}
+        </a>
+        <a id="exportToPDF" class="btn btn-dcc-light btn-action m-w-l" href="/">
+          <svg-icon styleClass="mx-3 fa-w-18" icon="file-pdf"></svg-icon>
+          {{'general.export_to_pdf' | translate}}
+        </a>
+      </div>
+    </div>
+    <div class="table-responsive mb-4">
+      <table id="systemDefinedNotifications" class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th scope="col">{{'incident-management.incident_id' | translate}}</th>
+          <th scope="col">{{'incident-management.applicant_shaaer_id' | translate}}</th>
+          <th scope="col">{{'incident-management.applicant_name' | translate}}</th>
+          <th scope="col">{{'incident-management.incident_type' | translate}}</th>
+          <th scope="col">{{'incident-management.incident_date' | translate}}</th>
+          <th scope="col">{{'incident-management.status' | translate}}</th>
+          <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngIf="!page?.content || page?.totalElements === 0" class="text-center">
+          <td colspan="10">
+            <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
+            <p class="text-light-gray mb-3">{{ "general.no_data_found_matching_given_criteria" | translate }}</p>
+          </td>
+        </tr>
+        <tr *ngFor="let incident of incidents">
+          <td class="ltr">{{incident.referenceNumber}}</td>
+          <td class="ltr">{{incident.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
+          <td
+            class="ltr">{{currentLanguage?.startsWith('ar') ? incident.applicantRitual?.applicant?.fullNameAr : incident.applicantRitual?.applicant?.fullNameEn}}</td>
+          <td class="ltr">{{incident.typeCode ? lookupService().localizedLabel(incidentTypes, incident.typeCode): '---'}}</td>
+          <td class="ltr">{{incident.creationDate | dateFormat}}</td>
+          <td class=" d-flex align-items-baseline">
+            <span class="status {{buildStatusClass(incident?.statusCode)}} mr-1"></span>
+            <span>{{incident.statusCode ? lookupService().localizedLabel(incidentStatuses, incident.statusCode): '---'}}</span>
+          </td>
+          <td>
+            <button [routerLink]="['/incidents/details', incident.id]"
+                    class="btn btn-sm btn-outline-dcc-primary tblView">
+              {{"general.btn_view" | translate}}
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <nav aria-label="Page navigation example" *ngIf="page?.content && page?.totalElements > 0">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="page?.first">
+          <a class="page-link" (click)="loadPage(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>
+        </li>
+
+        <li class="page-item" [class.disabled]="page?.first">
+          <a class="page-link" (click)="loadPage(page?.number-1)"
+             tabindex="-1">{{'general.nav_previous' | translate}}</a>
+        </li>
+        <li class="page-item active">
+          <a class="page-link" [class.disabled]="true">{{(page?.number + 1) + ' / ' + page?.totalPages}}</a>
+        </li>
+        <li class="page-item" [class.disabled]="page?.last">
+          <a class="page-link" (click)="loadPage(page?.number+1)">{{'general.nav_next' | translate}}</a>
+        </li>
+
+        <li class="page-item" [class.disabled]="page?.last">
+          <a class="page-link" (click)="loadPage(page?.totalPages-1)">{{'general.nav_last' | translate}}</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+</div>
