@@ -50,7 +50,7 @@ public class IncidentWsController {
      * @return WsResponse of  the saved incident attachment
      */
     @GetMapping("/attachment/{attachmentId}")
-    public ResponseEntity<WsResponse<?>> downloadAttachment(@PathVariable long attachmentId) throws Exception {
+    public  ResponseEntity<Resource> downloadAttachment(@PathVariable long attachmentId) throws Exception {
         log.info("Downloading incident attachment with id# {} ", attachmentId);
         Resource attachment = applicantIncidentService.downloadApplicantIncidentAttachment(attachmentId);
 
@@ -62,8 +62,8 @@ public class IncidentWsController {
 
             MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"");
-
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).headers(headers).body(attachment).build());
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"")
+                    .body(attachment);
 
         }
         return null;
@@ -77,7 +77,7 @@ public class IncidentWsController {
      */
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<WsResponse<?>> create(@RequestPart("incident") @Valid ApplicantIncidentDto applicantIncidentRequest,
-                                                @RequestPart("attachment") MultipartFile incidentAttachment,
+                                                @RequestPart(value = "attachment",required = false) MultipartFile incidentAttachment,
                                                 @RequestPart("applicantRitual") ApplicantRitualDto applicantRitual
                                                 ) throws Exception {
 

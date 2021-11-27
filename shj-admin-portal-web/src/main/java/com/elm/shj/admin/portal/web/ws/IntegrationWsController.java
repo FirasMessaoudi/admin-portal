@@ -601,8 +601,15 @@ public class IntegrationWsController {
         int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin, contactUin);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
     }
+
+    /**
+     * find applicant ritual
+     * @param uin
+     * @param companyRitualSeasonId
+     * @return
+     */
     @GetMapping("/ritual/{uin}/{companyRitualSeasonId}")
-    public ResponseEntity<WsResponse<?>> finsApllicantRitual(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
+    public ResponseEntity<WsResponse<?>> finsApplicantRitual(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
         log.debug("Handler for {}", "Find applicant ritual by uin");
         ApplicantRitualDto applicantRitualDtO = applicantRitualService.findByApplicantUinAndCompanyRitualSeasonId(uin, companyRitualSeasonId);
 

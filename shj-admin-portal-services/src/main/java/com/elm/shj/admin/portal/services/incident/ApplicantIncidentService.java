@@ -73,8 +73,9 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
 
         // upload the file in the SFTP
         try {
-            if(!attachment.isEmpty() && attachment.getSize()>0){
+            if(attachment!=null && !attachment.isEmpty() && attachment.getSize()>0){
                 // generate file and folder names to be uploaded/created in SFTP
+
                 Path p = Paths.get(attachment.getOriginalFilename());
                 String sftpPath = sftpService.generateSftpFilePath(p.getFileName().toString(), referenceNumber, false);
                 List<IncidentAttachmentDto> incidentAttachmentList = new ArrayList<>();
