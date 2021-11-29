@@ -882,7 +882,7 @@ create table shc_portal.shc_applicant_incident
     reference_number    varchar(45)    NOT NULL,
     applicant_ritual_id int            NOT NULL,
     status_code         varchar(20)    NOT NULL,
-    type_code           varchar(20)    NOT NULL,
+    type_id         int   NOT NULL,
     description         nvarchar(1000) NOT NULL,
     -- Latitudes range from -90 to +90 (degrees), so DECIMAL(10,8) is ok for that, but longitudes range from -180 to +180 (degrees) so we need DECIMAL(11,8).
     location_lat        decimal(10, 8) NOT NULL,
@@ -1031,5 +1031,11 @@ create table shc_portal.shc_company_staff_card
     CONSTRAINT fk_company_staff_card_company_ritual_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season (id),
     CONSTRAINT fk_company_staff_card_company_staff_digital_id FOREIGN KEY (company_staff_digital_id_id) REFERENCES shc_portal.shc_company_staff_digital_id (id)
 );
+
 GO
+ALTER TABLE shc_portal.shc_applicant_incident
+    ADD CONSTRAINT fk_applicant_incident_incident_type_lk FOREIGN KEY (type_id) REFERENCES shc_portal.shc_incident_type_lk (id);
+GO
+
+
 

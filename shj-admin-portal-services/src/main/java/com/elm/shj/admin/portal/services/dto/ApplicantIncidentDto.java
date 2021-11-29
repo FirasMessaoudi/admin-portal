@@ -28,7 +28,7 @@ public class ApplicantIncidentDto implements Serializable {
     private ApplicantRitualDto applicantRitual;
     private String statusCode;
     private String referenceNumber;
-    private String typeCode;
+    private long typeId;
     private String description;
     private Double locationLat;
     private Double locationLng;

@@ -45,8 +45,8 @@ public class JpaApplicantIncident implements Serializable {
     @Column(name = "status_code")
     private String statusCode;
 
-    @Column(name = "type_code")
-    private String typeCode;
+    @Column(name = "type_id")
+    private long typeId;
 
     private String description;
 
