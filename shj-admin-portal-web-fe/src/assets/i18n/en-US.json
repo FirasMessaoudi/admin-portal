@@ -554,6 +554,13 @@
     "dialog_confirm_request_error_text": "Error while confirming your request. Please try again..."
   },
   "incident-management": {
-    "title": "Incident Management"
+    "title": "Incident Management",
+    "applicant_shaaer_id": "Applicant Shaaer ID",
+    "applicant_name": "Applicant Name",
+    "incident_type": "Incident Type",
+    "incident_date": "Incident Date",
+    "status": "Status",
+    "all": "All",
+    "incident_id": "Incident ID"
   }
 }

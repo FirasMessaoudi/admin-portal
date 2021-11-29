@@ -54,6 +54,8 @@ public class LookupController {
     private final ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
     private final LanguageLookupService languageLookupService;
     private final MealTypeLookupService mealTypeLookupService;
+    private final IncidentTypeLookupService incidentTypeLookupService;
+    private final IncidentStatusLookupService incidentStatusLookupService;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -209,6 +211,18 @@ public class LookupController {
     public List<LanguageLookupDto> listLanguages() {
         log.debug("list languages...");
         return languageLookupService.findAll();
+    }
+
+    @GetMapping("/incident-type/list")
+    public List<IncidentTypeLookupDto> listIncidentTypes() {
+        log.debug("list incident types...");
+        return incidentTypeLookupService.findAll();
+    }
+
+    @GetMapping("/incident-status/list")
+    public List<IncidentStatusLookupDto> listIncidentStatuses() {
+        log.debug("list incident statuses...");
+        return incidentStatusLookupService.findAll();
     }
 
 }

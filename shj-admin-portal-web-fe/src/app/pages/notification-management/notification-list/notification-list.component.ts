@@ -37,7 +37,6 @@ export class NotificationListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.initForm();
     this.loadLookups();
     this.loadPage(0);
@@ -47,7 +46,6 @@ export class NotificationListComponent implements OnInit {
     this.notificationService.findNotificationCategories().subscribe(result => {
       this.notificationCategories = result;
       this.localizedNotificationCategories = this.lookupsService.localizedItems(this.notificationCategories);
-
     });
     this.notificationService.findNotificationTemplateNames().subscribe(result => {
       this.notificationNames = result;

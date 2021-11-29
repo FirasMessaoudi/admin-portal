@@ -3,6 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.incident;
 
+import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
 import com.elm.shj.admin.portal.orm.entity.JpaIncidentAttachment;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentRepository;
@@ -10,6 +12,10 @@ import com.elm.shj.admin.portal.orm.repository.IncidentAttachmentRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantIncidentDto;
 import com.elm.shj.admin.portal.services.dto.EIncidentStatus;
 import com.elm.shj.admin.portal.services.dto.IncidentAttachmentDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantIncidentDto;
+import com.elm.shj.admin.portal.services.dto.EIncidentStatus;
+import com.elm.shj.admin.portal.services.dto.IncidentAttachmentDto;
+import com.elm.shj.admin.portal.services.dto.IncidentSearchCriteriaDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.jcraft.jsch.JSchException;
@@ -18,10 +24,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.SetJoin;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -50,30 +62,70 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
     private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
 
     /**
-     * List of applicant related incidents.
-     * @param  applicantRitualId
-     * @return  List of applicant related incidents
+     * Find all incidents.
+     *
+     * @param pageable the current page information
+     * @return the list of incidents
      */
-
-    public List<ApplicantIncidentDto> listApplicantRelatedIncidents(long applicantRitualId){
-        return  mapList(applicantIncidentRepository.findByApplicantRitualId(applicantRitualId));
+    public Page<ApplicantIncidentDto> findAll(IncidentSearchCriteriaDto criteria, Pageable pageable) {
+        return mapPage(applicantIncidentRepository.findAll(withFilter(criteria), pageable));
     }
 
+    private Specification<JpaApplicantIncident> withFilter(final IncidentSearchCriteriaDto criteria) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            //Create atomic predicates
+            List<Predicate> predicates = new ArrayList<>();
+            if (criteria.getApplicantId() != null && criteria.getApplicantId().trim().length() > 0) {
+                Join<JpaApplicant, JpaApplicantDigitalId> digitalIds = root.join("applicantRitual").join("applicant").join("digitalIds");
+                predicates.add(criteriaBuilder.like(digitalIds.get("uin"), "%" + criteria.getApplicantId().trim() + "%"));
+            }
+            if (criteria.getApplicantName() != null && criteria.getApplicantName().trim().length() > 0) {
+                Predicate predicateForFullNameAr = criteriaBuilder.like(root.get("applicantRitual").get("applicant").get("fullNameAr"), "%" + criteria.getApplicantName().trim() + "%");
+                Predicate predicateForFullNameEn = criteriaBuilder.like(root.get("applicantRitual").get("applicant").get("fullNameEn"), "%" + criteria.getApplicantName().trim() + "%");
+                Predicate predicateForFullNameOrigin = criteriaBuilder.like(root.get("applicantRitual").get("applicant").get("fullNameOrigin"), "%" + criteria.getApplicantName().trim() + "%");
+                predicates.add(criteriaBuilder.or(predicateForFullNameAr, predicateForFullNameEn, predicateForFullNameOrigin));
+            }
+            if (criteria.getIncidentType() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("typeCode"), criteria.getIncidentType()));
+            }
+            if (criteria.getStatus() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("statusCode"), criteria.getStatus()));
+            }
+            if (criteria.getCreationDateStart() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("creationDate"), criteria.getCreationDateStart()));
+            }
+            if (criteria.getCreationDateEnd() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("creationDate"), criteria.getCreationDateEnd()));
+            }
+            criteriaQuery.distinct(true);
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
 
+    /**
+     * List of applicant related incidents.
+     *
+     * @param applicantRitualId
+     * @return List of applicant related incidents
+     */
+    public List<ApplicantIncidentDto> listApplicantRelatedIncidents(long applicantRitualId) {
+        return mapList(applicantIncidentRepository.findByApplicantRitualId(applicantRitualId));
+    }
 
     /**
      * {@inheritDoc}
      */
     @Transactional
-    public ApplicantIncidentDto addApplicantIncident(ApplicantIncidentDto  applicantIncidentDto, MultipartFile attachment) {
-         // generate request reference
-        String referenceNumber= generateReferenceNumber();
+    public ApplicantIncidentDto addApplicantIncident(ApplicantIncidentDto applicantIncidentDto, MultipartFile attachment) {
+        // generate request reference
+        String referenceNumber = generateReferenceNumber();
         // generate and set reference number
         applicantIncidentDto.setReferenceNumber(referenceNumber);
         applicantIncidentDto.setStatusCode(EIncidentStatus.UNDER_PROCESSING.name());
+
         // upload the file in the SFTP
         try {
-            if(attachment!=null && !attachment.isEmpty() && attachment.getSize()>0){
+            if (attachment != null && !attachment.isEmpty() && attachment.getSize() > 0) {
                 // generate file and folder names to be uploaded/created in SFTP
 
                 Path p = Paths.get(attachment.getOriginalFilename());
@@ -84,7 +136,7 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
                 incidentAttachmentDto.setApplicantIncident(applicantIncidentDto);
                 incidentAttachmentList.add(incidentAttachmentDto);
                 applicantIncidentDto.setIncidentAttachments(incidentAttachmentList);
-                sftpService.uploadFile(sftpPath, attachment.getInputStream(),APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
+                sftpService.uploadFile(sftpPath, attachment.getInputStream(), APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
                 log.info("file uploaded successfully to: {}", sftpPath);
             }
 
@@ -102,7 +154,6 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         return createdApplicantIncident;
     }
 
-
     /**
      * fetches the original file of the data request
      *
@@ -110,12 +161,13 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
      * @return the attachment of the applicant incident
      */
     public Resource downloadApplicantIncidentAttachment(long incidentAttachmentId) throws Exception {
-       Optional<JpaIncidentAttachment> incidentAttachment= incidentAttachmentRepository.findById(incidentAttachmentId);
+        Optional<JpaIncidentAttachment> incidentAttachment = incidentAttachmentRepository.findById(incidentAttachmentId);
         if (!incidentAttachment.isPresent()) {
             return null;
         }
-        return sftpService.downloadFile(incidentAttachment.get().getFilePath(),APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
+        return sftpService.downloadFile(incidentAttachment.get().getFilePath(), APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
     }
+
     /**
      * Generates a unique identifier for the applicant incident
      *
