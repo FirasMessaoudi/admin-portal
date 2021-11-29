@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -29,8 +31,12 @@ public class ApplicantIncidentDto implements Serializable {
     private String statusCode;
     private String referenceNumber;
     private long typeId;
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @Size(min = 5, max = 500)
     private String description;
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private Double locationLat;
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private Double locationLng;
     private String resolutionComment;
     private List<IncidentAttachmentDto> incidentAttachments;
