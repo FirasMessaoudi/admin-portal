@@ -7,7 +7,9 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
 import com.elm.shj.admin.portal.orm.entity.JpaIncidentAttachment;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentRepository;
 import com.elm.shj.admin.portal.orm.repository.IncidentAttachmentRepository;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantIncidentDto;
+import com.elm.shj.admin.portal.services.dto.EIncidentStatus;
+import com.elm.shj.admin.portal.services.dto.IncidentAttachmentDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.jcraft.jsch.JSchException;
@@ -69,8 +71,6 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         // generate and set reference number
         applicantIncidentDto.setReferenceNumber(referenceNumber);
         applicantIncidentDto.setStatusCode(EIncidentStatus.UNDER_PROCESSING.name());
-
-
         // upload the file in the SFTP
         try {
             if(attachment!=null && !attachment.isEmpty() && attachment.getSize()>0){

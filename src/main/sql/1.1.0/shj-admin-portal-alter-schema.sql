@@ -999,7 +999,37 @@ alter table shc_portal.shc_package_housing drop column lat;
 GO
 alter table shc_portal.shc_package_housing drop column lng;
 GO
-alter table shc_portal.shc_package_housing add lat decimal(10, 8);
+alter table shc_portal.shc_package_housing
+    add lat decimal(10, 8);
 GO
-alter table shc_portal.shc_package_housing add lng decimal(11, 8);
+alter table shc_portal.shc_package_housing
+    add lng decimal(11, 8);
 GO
+
+if not exists(select * from sys.tables where name = 'shc_company_staff_digital_id')
+create table shc_portal.shc_company_staff_digital_id
+(
+    id               int PRIMARY KEY NOT NULL identity (1,1),
+    company_staff_id int             NOT NULL,
+    suin             VARCHAR(45)     NOT NULL,
+    season_year      int             NOT NULL,
+    creation_date    smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date      smalldatetime NULL,
+    CONSTRAINT fk_company_staff_company_staff_digital_id FOREIGN KEY (company_staff_id) REFERENCES shc_portal.shc_company_staff (id),
+);
+GO
+if not exists(select * from sys.tables where name = 'shc_company_staff_card')
+create table shc_portal.shc_company_staff_card
+(
+    id                          int PRIMARY KEY NOT NULL identity (1,1),
+    company_ritual_season_id    int             NOT NULL,
+    company_staff_digital_id_id int             NOT NULL,
+    reference_number            VARCHAR(20)     NOT NULL,
+    status_code                 VARCHAR(20)     NOT NULL,
+    creation_date               smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date                 smalldatetime NULL,
+    CONSTRAINT fk_company_staff_card_company_ritual_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season (id),
+    CONSTRAINT fk_company_staff_card_company_staff_digital_id FOREIGN KEY (company_staff_digital_id_id) REFERENCES shc_portal.shc_company_staff_digital_id (id)
+);
+GO
+
