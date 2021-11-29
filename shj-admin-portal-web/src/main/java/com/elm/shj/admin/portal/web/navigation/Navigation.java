@@ -11,7 +11,7 @@ package com.elm.shj.admin.portal.web.navigation;
  */
 public class Navigation {
 
-	private Navigation() {
+    private Navigation() {
 		// private constructor to prevent construction
 	}
 
@@ -55,5 +55,8 @@ public class Navigation {
 	public static final String API_NOTIFICATION_TEMPLATE = "/api/notification/template";
 	// Incidents
 	public static final String API_INCIDENTS = "/api/incidents";
+	// Incident Integration
 	public static final String API_INCIDENTS_INTEGRATION = "/api/ws/incidents";
+	// Chat Contact Integration
+	public static final String API_CHAT_CONTACT_INTEGRATION = "/api/ws/chat-contact";
 }
