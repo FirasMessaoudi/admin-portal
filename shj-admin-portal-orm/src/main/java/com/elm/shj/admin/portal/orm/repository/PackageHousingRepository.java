@@ -19,6 +19,6 @@ public interface PackageHousingRepository extends JpaRepository<JpaPackageHousin
     List<JpaPackageHousing> findAllCamps();
 
     @Query("SELECT h FROM JpaPackageHousing h JOIN h.ritualPackage r JOIN r.companyRitualSeason c JOIN r.applicantPackages a" +
-            " WHERE c.ritualSeason.id = :RitualSeasonsId AND a.applicantUin =:uin AND CURRENT_TIMESTAMP BETWEEN h.validityStart AND h.validityEnd")
-    JpaPackageHousing findPackageHousing(@Param("RitualSeasonsId") long companyRitualSeasonsId, @Param("uin") long uin);
+            " WHERE c.id = :companyRitualSeasonsId AND a.applicantUin =:uin AND CURRENT_TIMESTAMP BETWEEN h.validityStart AND h.validityEnd")
+    JpaPackageHousing findPackageHousing(@Param("companyRitualSeasonsId") long companyRitualSeasonsId, @Param("uin") long uin);
 }

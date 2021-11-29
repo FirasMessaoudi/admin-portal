@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class ApplicantIncidentDto implements Serializable {
     private static final long serialVersionUID = -5654394816918782403L;
 
     private long id;
+    @JsonBackReference
     private ApplicantRitualDto applicantRitual;
     private String statusCode;
     private String referenceNumber;
