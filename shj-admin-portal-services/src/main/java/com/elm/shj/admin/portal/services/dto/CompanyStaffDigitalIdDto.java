@@ -4,10 +4,7 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,6 +19,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class CompanyStaffDigitalIdDto implements Serializable {
 
     private static final long serialVersionUID = 7921153249196768040L;

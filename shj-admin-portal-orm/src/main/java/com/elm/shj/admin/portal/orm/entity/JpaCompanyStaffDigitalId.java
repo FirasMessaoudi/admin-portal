@@ -42,11 +42,19 @@ public class JpaCompanyStaffDigitalId implements Serializable {
     @JoinColumn(name = "company_staff", nullable = false)
     private JpaCompanyStaff companyStaff;
 
+    @Column(name = "update_date")
+    private Date updateDate;
+
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updateDate = new Date();
     }
 }
