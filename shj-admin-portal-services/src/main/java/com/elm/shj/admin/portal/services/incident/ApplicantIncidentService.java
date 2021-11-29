@@ -12,10 +12,7 @@ import com.elm.shj.admin.portal.orm.repository.IncidentAttachmentRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantIncidentDto;
 import com.elm.shj.admin.portal.services.dto.EIncidentStatus;
 import com.elm.shj.admin.portal.services.dto.IncidentAttachmentDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantIncidentDto;
-import com.elm.shj.admin.portal.services.dto.EIncidentStatus;
-import com.elm.shj.admin.portal.services.dto.IncidentAttachmentDto;
-import com.elm.shj.admin.portal.services.dto.IncidentSearchCriteriaDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.jcraft.jsch.JSchException;
@@ -28,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -100,6 +98,17 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
             criteriaQuery.distinct(true);
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    /**
+     * finds an incident by its ID
+     *
+     * @param incidentId the incident id to find
+     * @return the found incident or <code>null</code>
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public ApplicantIncidentDto findById(long incidentId) {
+        return findOne(incidentId);
     }
 
     /**
@@ -181,4 +190,19 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         return generator.generate(REQUEST_REF_NUMBER_LENGTH - 6) + REF_NUMBER_FORMAT.format(new Date());
     }
 
+    /**
+     * Updates applicant incident
+     *
+     * @param incidentId the ID number of the incident to update
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public void update(long incidentId, ApplicantIncidentVo applicantIncidentVo) {
+
+        if (EIncidentResolutionType.MARK_AS_RESOLVED.equals(applicantIncidentVo.getOperation())) {
+            applicantIncidentRepository.update(incidentId, applicantIncidentVo.getResolutionComment(), EIncidentStatus.RESOLVED.name());
+        }
+        if (EIncidentResolutionType.MARK_AS_CLOSED.equals(applicantIncidentVo.getOperation())) {
+            applicantIncidentRepository.update(incidentId, applicantIncidentVo.getResolutionComment(), EIncidentStatus.CLOSED.name());
+        }
+    }
 }

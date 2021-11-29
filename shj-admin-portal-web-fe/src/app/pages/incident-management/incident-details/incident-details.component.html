@@ -1,1 +1,145 @@
-<p>incident-details works!</p>
+<a class="d-block button_back" href="javascript:void(0);" (click)="navigateToList()">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h3 class="sectionTitle">{{"incident-management.title" | translate }}</h3>
+  </div>
+  <div class="content__section" *ngIf="!canSeeAddUpdateIncidents">
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
+
+  <h5 class="subtitle__Page mb-4">{{'incident-management.incident_details' | translate}}</h5>
+  <div class="content__section">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+      <div class="form-group col">
+        <label class="col-form-label">{{"incident-management.incident_number" | translate }}</label>
+        <label class="form-control-plaintext">{{incident?.referenceNumber}}</label>
+      </div>
+      <div class="form-group col">
+        <label class="col-form-label">{{"incident-management.applicant_shaaer_id" | translate }}</label>
+        <label class="form-control-plaintext">{{incident?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</label>
+      </div>
+      <div class="form-group col">
+        <label class="col-form-label">{{"incident-management.applicant_name" | translate }}</label>
+        <label
+          class="form-control-plaintext">{{currentLanguage.startsWith('ar') ? incident?.applicantRitual?.applicant?.fullNameAr : incident?.applicantRitual?.applicant?.fullNameEn}}</label>
+      </div>
+      <div class="form-group col">
+        <label class="col-form-label">{{"incident-management.incident_type" | translate }}</label>
+        <label
+          class="form-control-plaintext">{{incident?.typeCode ? lookupService().localizedLabel(incidentTypes, incident?.typeCode) : '---'}}</label>
+      </div>
+      <div class="form-group col">
+        <label class="col-form-label">{{"incident-management.incident_date" | translate }}</label>
+        <label class="form-control-plaintext">{{incident?.creationDate | dateFormat}}</label>
+      </div>
+      <div class="form-group col">
+        <label class="col-form-label">{{"incident-management.status" | translate }}</label>
+        <label class="form-control-plaintext">
+          <span class="status {{buildStatusClass(incident?.statusCode)}} mr-1"></span>
+          <span>{{incident?.statusCode ? lookupService().localizedLabel(incidentStatuses, incident?.statusCode) : '---'}}</span>
+        </label>
+      </div>
+    </div>
+    <div class="row rows-cols-1">
+      <div class="form-group col">
+        <label class="col-form-label">{{"incident-management.incident_description" | translate }}</label>
+        <label class="form-control-plaintext">{{incident?.description}}</label>
+      </div>
+    </div>
+    <div class="row rows-cols-1">
+      <div class="form-group col" *ngIf="incident?.incidentAttachments?.length > 0">
+        <label class="col-form-label">{{"incident-management.attachments" | translate }}</label>
+        <span *ngFor="let attachment of incident?.incidentAttachments">
+          <a href="#"
+             class="form-control-plaintext">{{attachment?.filePath.substring(attachment?.filePath?.lastIndexOf("/") + 1)}}</a>
+            </span>
+      </div>
+    </div>
+    <div class="row row-cols-1">
+      <div class="form-group col">
+        <label class="col-form-label">{{"incident-management.location" | translate }}</label>
+        <div class="map mt-1" *ngIf="mapIsReady">
+          <google-map [width]="'100%'" [height]="'100%'" [options]="mapOptions"></google-map>
+        </div>
+      </div>
+    </div>
+    <!--    <div *ngIf="mapIsReady">
+          <google-map></google-map>
+          &lt;!&ndash;      Start MAP
+                <div class="haj-map" *ngIf="mapIsReady">
+                  <google-map [width]="'100%'" [height]="'100%'" [options]="mapOptions">
+                    <map-marker [title]="marker.title" [position]="marker.position" [options]="marker.options"></map-marker>
+                  </google-map>
+                </div>
+                End Map&ndash;&gt;
+        </div>
+      </div>-->
+  </div>
+  <div class="content__section w-100">
+    <hr class="my-4 w-100">
+    <h5 class="subtitle__Page mb-4">{{'incident-management.incident_resolution' | translate}}</h5>
+
+    <form [formGroup]="incidentForm">
+
+      <div class="row rows-cols-1">
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "incident-management.operation" | translate }}</label>
+          <div class="radio-group form-control-plaintext d-flex font-weight-normal">
+            <div class="radio-item align-items-baseline d-flex mr-5">
+              <input class="mr-2"
+                     name="operation"
+                     formControlName="operation"
+                     [value]="MARK_AS_RESOLVED"
+                     type="radio"
+                     id="customRadioInline01">
+              <label for="customRadioInline01">{{'incident-management.mark_as_resolved' | translate}}</label>
+            </div>
+            <div class="radio-item align-items-baseline d-flex">
+              <input class="mr-2"
+                     name="operation"
+                     formControlName="operation"
+                     [value]="MARK_AS_CLOSED"
+                     type="radio"
+                     id="customRadioInline02">
+              <label for="customRadioInline02">{{'incident-management.mark_as_closed' | translate}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row rows-cols-1">
+        <div class="form-group col">
+          <label class="col-form-label">{{ "incident-management.comments" | translate }}
+            <span class="text-danger px-1">*</span>
+          </label>
+          <textarea type="text" formControlName="resolutionComment" class="form-control" rows="3" maxlength="500"></textarea>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-outline-dcc-primary px-4" [disabled]="true"
+                (click)="cancel()">{{"general.btn_cancel" | translate}}</button>
+        <button class="btn btn-dcc-primary px-4" [disabled]="!incidentForm.valid"
+                (click)="save()">{{"general.btn_send" | translate}}</button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Loading spinner placeholder -->
+  <div *ngIf="isLoading" class="text-center">
+    <div style="height: 200px;">
+      <div class="preloader inner_page">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+
+</div>

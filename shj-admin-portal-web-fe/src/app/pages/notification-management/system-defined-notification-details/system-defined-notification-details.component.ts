@@ -82,7 +82,6 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
     this.initForm();
   }
 
-
   private initForm() {
     this.templateForm = this.formBuilder.group({
       body: ['', [Validators.required, noWhitespaceValidator, Validators.maxLength(500), Validators.minLength(3)]],

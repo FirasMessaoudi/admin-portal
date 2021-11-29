@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.ws;
 
+import com.elm.dcc.foundation.commons.validation.SafeFile;
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -21,12 +22,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -576,29 +580,6 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageHousingService.findCamp(seasonRitualId, uin)).build());
     }
 
-    @GetMapping("/chat-contact/{uin}/{applicantRitualId}")
-    public ResponseEntity<WsResponse<?>> findAChatContactsByUinAndRitualId(@PathVariable String uin,
-                                                                           @PathVariable Long applicantRitualId,
-                                                                           @RequestParam(required = false) Boolean systemDefined) {
-        log.debug("List chat contacts by uin {} and applicant ritual ID {}", uin, applicantRitualId);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(
-                applicantChatContactService.listApplicantChatContacts(uin, applicantRitualId, systemDefined)).build());
-    }
-
-    /**
-     * List of incidents.
-     *
-     * @param applicantUin
-     * @param contactUin
-     * @return WsResponse of number of selected rows
-     */
-    @PostMapping("/chat-contact/{applicantUin}/{contactUin}")
-    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantUin, @PathVariable String contactUin) {
-        log.info("Delete Applicant Chat Contact...");
-        int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin, contactUin);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
-    }
-
     /**
      * find applicant ritual
      * @param uin
@@ -611,7 +592,6 @@ public class IntegrationWsController {
         ApplicantRitualDto applicantRitualDtO = applicantRitualService.findByApplicantUinAndCompanyRitualSeasonId(uin, companyRitualSeasonId);
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantRitualDtO).build());
-
     }
 
     /**
@@ -630,12 +610,5 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
     }
 
-    @PostMapping("/chat-contact/create/{applicantUin}/{applicantRitualId}")
-    public ResponseEntity<WsResponse<?>> createApplicantChatContact(@PathVariable String applicantUin,
-                                                                    @PathVariable Long applicantRitualId,
-                                                                    @RequestBody @Validated ApplicantChatContactVo contact) {
-        ApplicantChatContactLiteDto savedContact = applicantChatContactService.createChatContact(applicantUin, contact, applicantRitualId);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(savedContact).build());
-    }
 
 }

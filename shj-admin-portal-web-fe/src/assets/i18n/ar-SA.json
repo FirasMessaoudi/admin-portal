@@ -551,6 +551,15 @@
     "incident_date": "تاريخ تقديم البلاغ",
     "status": "حالة البلاغ",
     "all": "الكل",
-    "incident_id": "رقم البلاغ"
+    "incident_number": "رقم البلاغ",
+    "incident_details": "تفاصيل البلاغ",
+    "attachments": "المرفقات",
+    "location": "الموقع على الخريطة",
+    "incident_description": "وصف البلاغ",
+    "incident_resolution": "معالجة البلاغ",
+    "operation": "الإجراء",
+    "mark_as_resolved": "تم حل البلاغ",
+    "mark_as_closed": "تم إغلاق البلاغ",
+    "comments": "الملاحظات (سوف تظهر لمقدم البلاغ)"
   }
 }
