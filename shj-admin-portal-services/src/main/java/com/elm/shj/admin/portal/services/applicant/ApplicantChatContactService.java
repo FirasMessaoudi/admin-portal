@@ -73,8 +73,25 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
     }
 
     @Transactional
-    public int deleteApplicantChatContact(String applicantUin,String contactUin) {
-        return applicantChatContactRepository.markDeleted(applicantUin,contactUin);
+    public int deleteApplicantChatContact(String applicantUin, String contactUin) {
+        return applicantChatContactRepository.markDeleted(applicantUin, contactUin);
+    }
+
+    private ApplicantChatContactLiteDto mapChatContactToChatContactLite(ApplicantChatContactDto applicantChatContact) {
+        return ApplicantChatContactLiteDto.builder()
+                .id(applicantChatContact.getId())
+                .applicantUin(applicantChatContact.getApplicantUin())
+                .contactUin(applicantChatContact.getContactUin())
+                .typeId(applicantChatContact.getType().getId())
+                .alias(applicantChatContact.getAlias())
+                .avatar(applicantChatContact.getAvatar())
+                .systemDefined(applicantChatContact.getSystemDefined())
+                .staffTitleCode(applicantChatContact.getStaffTitleCode())
+                .mobileNumber(applicantChatContact.getMobileNumber())
+                .deleted(applicantChatContact.getDeleted())
+                .creationDate(applicantChatContact.getCreationDate())
+                .updateDate(applicantChatContact.getUpdateDate())
+                .build();
     }
 
     /**
@@ -106,21 +123,39 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         }
 
         savedContact = save(savedContact);
-        return ApplicantChatContactLiteDto.builder()
-                .id(savedContact.getId())
-                .applicantUin(savedContact.getApplicantUin())
-                .contactUin(savedContact.getContactUin())
-                .contactFullNameAr(applicantRitual.getApplicant().getFullNameAr())
-                .contactFullNameEn((applicantRitual.getApplicant().getFullNameEn()))
-                .typeId(savedContact.getType().getId())
-                .alias(savedContact.getAlias())
-                .avatar(savedContact.getAvatar())
-                .systemDefined(savedContact.getSystemDefined())
-                .staffTitleCode(savedContact.getStaffTitleCode())
-                .mobileNumber(savedContact.getMobileNumber())
-                .deleted(savedContact.getDeleted())
-                .creationDate(savedContact.getCreationDate())
-                .updateDate(savedContact.getUpdateDate())
-                .build();
+        ApplicantChatContactLiteDto chatContactLite = mapChatContactToChatContactLite(savedContact);
+        chatContactLite.setContactFullNameAr(applicantRitual.getApplicant().getFullNameAr());
+        chatContactLite.setContactFullNameEn(applicantRitual.getApplicant().getFullNameEn());
+
+        return chatContactLite;
+    }
+
+    /**
+     * finds a chat contact by its ID
+     *
+     * @param chatContactId the chat contact id to find
+     * @return the found contact or <code>null</code>
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public ApplicantChatContactDto findById(long chatContactId) {
+        return findOne(chatContactId);
+    }
+
+    /**
+     * Updates user defined chat contact
+     *
+     * @param contact the chat contact to save
+     * @return savedContact saved one
+     */
+    public ApplicantChatContactLiteDto updateUserDefinedChatContact(Long id, ApplicantChatContactVo contact, MultipartFile contactAvatarFile) throws IOException {
+        ApplicantChatContactDto applicantChatContact = findOne(id);
+        applicantChatContact.setAlias(contact.getAlias());
+        applicantChatContact.setMobileNumber(contact.getMobileNumber());
+        // Update applicant chat contact avatar
+        if (contactAvatarFile != null) {
+            String encodedAvatarStr = Base64.getEncoder().encodeToString(contactAvatarFile.getBytes());
+            applicantChatContact.setAvatar(encodedAvatarStr);
+        }
+        return mapChatContactToChatContactLite(applicantChatContact);
     }
 }
