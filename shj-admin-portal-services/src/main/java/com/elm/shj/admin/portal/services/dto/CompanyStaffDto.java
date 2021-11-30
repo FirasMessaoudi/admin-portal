@@ -77,6 +77,7 @@ public class CompanyStaffDto {
     @Min(1)
     @Max(15)
     @NotNull(message = "validation.data.constraints.msg.20001")
+    @CellIndex(index = 0)
     private int idNumber;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
