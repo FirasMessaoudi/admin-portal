@@ -1059,6 +1059,17 @@ ALTER TABLE shc_portal.shc_company_staff
 ALTER TABLE shc_portal.shc_company_staff
     ADD  photo  varchar(max) NULL;
 
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  mobile_number_intl     VARCHAR(20) NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  data_request_record_id int NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD CONSTRAINT fk_company_staff_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shc_portal.shc_data_request_record (id);
+GO
+
+
 
 
 

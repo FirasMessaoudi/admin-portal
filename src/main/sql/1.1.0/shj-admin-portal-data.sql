@@ -276,3 +276,11 @@ values (9, 'staff-ritual-data.xlsx', '', 'Staff Ritual Data');
 SET
 IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 GO
+
+
+SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
+insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
+values (8, 'staff-main-data.xlsx', N'بيانات العاملين	',
+        'Staff Main Data');
+SET IDENTITY_INSERT shc_portal.shc_data_segment OFF;
+GO
