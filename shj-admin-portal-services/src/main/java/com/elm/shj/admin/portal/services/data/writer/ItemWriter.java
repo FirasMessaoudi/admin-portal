@@ -77,6 +77,7 @@ public class ItemWriter {
         repositoryRegistry.put(EDataSegment.APPLICANT_IMMUNIZATION_DATA, ApplicantHealthImmunizationRepository.class);
         repositoryRegistry.put(EDataSegment.APPLICANT_DISEASE_DATA, ApplicantHealthDiseaseRepository.class);
         repositoryRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, ApplicantRitualRepository.class);
+        repositoryRegistry.put(EDataSegment.STAFF_MAIN_DATA, CompanyStaffRepository.class);
 
         // mapper registry initialization
         mapperRegistry.put(EDataSegment.APPLICANT_DATA, Objects.requireNonNull(findMapper(ApplicantDto.class)));
@@ -85,6 +86,7 @@ public class ItemWriter {
         mapperRegistry.put(EDataSegment.APPLICANT_IMMUNIZATION_DATA, Objects.requireNonNull(findMapper(ApplicantHealthImmunizationDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_DISEASE_DATA, Objects.requireNonNull(findMapper(ApplicantHealthDiseaseDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, Objects.requireNonNull(findMapper(ApplicantRitualDto.class)));
+        mapperRegistry.put(EDataSegment.STAFF_MAIN_DATA, Objects.requireNonNull(findMapper(CompanyStaffDto.class)));
 
     }
 
@@ -150,10 +152,13 @@ public class ItemWriter {
                 }
 
             });
-        }
-        else {
-            // update applicant related attributes
-            items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
+        }else {
+            if(dataSegment.getId()<8){
+                // update applicant related attributes
+                items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
+
+            }
+
             // save all items and build data records
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
             List<S> savedItems = new ArrayList<>();
