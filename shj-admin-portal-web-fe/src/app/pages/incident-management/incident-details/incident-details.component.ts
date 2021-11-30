@@ -49,6 +49,7 @@ export class IncidentDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadGoogleMapsApiKey();
     combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
@@ -75,7 +76,6 @@ export class IncidentDetailsComponent implements OnInit {
     });
     this.initForm();
     this.loadLookups();
-    this.loadMapkey();
   }
 
   loadLookups() {
@@ -123,19 +123,20 @@ export class IncidentDetailsComponent implements OnInit {
     }
   }
 
-  async loadMapkey() {
-    /*  this.lookupsService.loadGoogleMapKey().subscribe(result => {*/
-    this.loadScript(1).then(() => {
-      this.mapIsReady = true
+  async loadGoogleMapsApiKey() {
+    this.lookupsService.loadGoogleMapsApiKey().subscribe(result => {
+      this.loadScript(result).then(() => {
+        this.mapIsReady = true
+      });
     });
   }
+
 
   private loadScript(key) {
     return new Promise((resolve, reject) => {
       const script = this.renderer2.createElement('script');
       script.type = 'text/javascript';
-      // script.src = 'https://maps.googleapis.com/maps/api/js?key=' + key;
-      script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAC78ugAlOF9B2YK8-ukki2IQTyNAgUSO0';
+      script.src = 'https://maps.googleapis.com/maps/api/js?key=' + key;
       script.text = ``;
       script.async = true;
       script.defer = true;
@@ -150,10 +151,13 @@ export class IncidentDetailsComponent implements OnInit {
   }
 
   save() {
+    this.isLoading = true;
     this.incidentService.handle(this.incidentId, this.incidentForm.value).subscribe(_ => {
+      this.isLoading = false;
       this.toastr.success(this.translate.instant('user-management.dialog_delete_success_text'), this.translate.instant('user-management.dialog_delete_title'));
       this.navigateToList();
     }, error => {
+      this.isLoading = false;
       this.toastr.error(this.translate.instant('general.dialog_error_text'), this.translate.instant('user-management.dialog_delete_title'));
     });
   }
