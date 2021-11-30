@@ -3,8 +3,8 @@
  */
 package com.elm.shj.admin.portal.web.ws;
 
-import com.elm.shj.admin.portal.services.dto.ApplicantIncidentDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantIncidentLiteDto;
+import com.elm.shj.admin.portal.services.incident.ApplicantIncidentLiteService;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -42,6 +42,7 @@ import java.util.Objects;
 public class IncidentWsController {
 
     private final ApplicantIncidentService applicantIncidentService;
+    private final ApplicantIncidentLiteService applicantIncidentLiteService;
 
     /**
      * Downloads applicant incident attachment
@@ -75,11 +76,11 @@ public class IncidentWsController {
      * @return WsResponse of the persisted applicant incident
      */
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<WsResponse<?>> create(@RequestPart("incident") @Valid ApplicantIncidentDto applicantIncidentRequest,
-                                                @RequestPart(value = "attachment", required = false) MultipartFile incidentAttachment,
-                                                @RequestPart("applicantRitual") ApplicantRitualDto applicantRitual) throws Exception {
-        applicantIncidentRequest.setApplicantRitual(applicantRitual);
+    public ResponseEntity<WsResponse<?>> create(@RequestPart("incident") @Valid ApplicantIncidentLiteDto applicantIncidentRequest,
+                                                @RequestPart(value = "attachment", required = false) MultipartFile incidentAttachment
+                                                ) throws Exception {
+
         log.info("adding  applicant incident");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantIncidentService.addApplicantIncident(applicantIncidentRequest, incidentAttachment)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantIncidentLiteService.addApplicantIncident(applicantIncidentRequest, incidentAttachment)).build());
     }
 }
