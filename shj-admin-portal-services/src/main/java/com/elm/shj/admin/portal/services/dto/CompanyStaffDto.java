@@ -74,13 +74,11 @@ public class CompanyStaffDto {
     @CellIndex(index = 10)
     private String photo;
 
-    @Min(1)
-    @Max(15)
+    @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     @NotNull(message = "validation.data.constraints.msg.20001")
     @CellIndex(index = 0)
     private int idNumber;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
     @JsonBackReference(value = "company")
     private CompanyDto company;
 
@@ -97,15 +95,12 @@ public class CompanyStaffDto {
     @CellIndex(index = 6)
     private String fullNameOrigin;
 
-    @Max(20)
-    @Min(10)
-    @NotNull(message = "validation.data.constraints.msg.20001")
+
+    @NullOrNotBlank(min = 5, max = 16)
     @CellIndex(index =13)
     private String mobileNumber;
 
-    @Max(20)
-    @Min(10)
-    @NotNull(message = "validation.data.constraints.msg.20001")
+    @NullOrNotBlank(min = 5, max = 30)
     @CellIndex(index =14)
     private String mobileNumberIntl;
 

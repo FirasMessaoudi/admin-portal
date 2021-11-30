@@ -94,7 +94,7 @@ public class JpaCompanyStaff implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "companyStaff")
     private List<JpaCompanyStaffDigitalId> digitalIds;
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "company_id")
     private JpaCompany company;
 
     @ManyToOne
