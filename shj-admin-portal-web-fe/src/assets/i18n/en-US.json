@@ -561,6 +561,15 @@
     "incident_date": "Incident Date",
     "status": "Status",
     "all": "All",
-    "incident_id": "Incident ID"
+    "incident_number": "Incident Number",
+    "incident_details": "Incident Details",
+    "attachments": "Attachments",
+    "location": "Location",
+    "incident_description": "Incident Description",
+    "incident_resolution": "Incident Resolution",
+    "operation": "Operation",
+    "mark_as_resolved": "Mark as resolved",
+    "mark_as_closed": "Mark as closed",
+    "comments": "Comments (will be shown to the applicant)"
   }
 }

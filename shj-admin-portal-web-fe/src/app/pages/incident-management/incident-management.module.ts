@@ -6,6 +6,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "@shared/shared.module";
 import {IncidentManagementRoutingModule} from "@pages/incident-management/incident-management-routing.module";
 import {TranslateModule} from "@ngx-translate/core";
+import {GoogleMapsModule} from "@angular/google-maps";
 
 @NgModule({
   declarations: [IncidentListComponent, IncidentDetailsComponent],
@@ -14,7 +15,8 @@ import {TranslateModule} from "@ngx-translate/core";
     ReactiveFormsModule,
     SharedModule,
     IncidentManagementRoutingModule,
-    TranslateModule
+    TranslateModule,
+    GoogleMapsModule
   ]
 })
 export class IncidentManagementModule {

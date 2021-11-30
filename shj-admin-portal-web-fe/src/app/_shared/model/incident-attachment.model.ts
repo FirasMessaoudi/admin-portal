@@ -1,4 +1,4 @@
-import {ApplicantIncident} from "@model/incident.model";
+import {ApplicantIncident} from "@model/applicant-incident.model";
 
 export class IncidentAttachment {
   id: number;

@@ -14,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -81,7 +84,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @return savedContact saved one
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantChatContactLiteDto createChatContact(String applicantUin, ApplicantChatContactVo contact, Long applicantRitualId) {
+    public ApplicantChatContactLiteDto createChatContact(String applicantUin, ApplicantChatContactVo contact, Long applicantRitualId, MultipartFile contactAvatarFile) throws IOException {
         ApplicantRitualDto applicantRitual = applicantRitualService.findById(applicantRitualId);
 
         ApplicantChatContactDto savedContact = ApplicantChatContactDto
@@ -96,6 +99,12 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
 
+        // Update applicant chat contact avatar
+        if (contactAvatarFile != null) {
+            String encodedAvatarStr = Base64.getEncoder().encodeToString(contactAvatarFile.getBytes());
+            savedContact.setAvatar(encodedAvatarStr);
+        }
+
         savedContact = save(savedContact);
         return ApplicantChatContactLiteDto.builder()
                 .id(savedContact.getId())
@@ -105,6 +114,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .contactFullNameEn((applicantRitual.getApplicant().getFullNameEn()))
                 .typeId(savedContact.getType().getId())
                 .alias(savedContact.getAlias())
+                .avatar(savedContact.getAvatar())
                 .systemDefined(savedContact.getSystemDefined())
                 .staffTitleCode(savedContact.getStaffTitleCode())
                 .mobileNumber(savedContact.getMobileNumber())

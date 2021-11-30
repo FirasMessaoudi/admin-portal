@@ -30,5 +30,4 @@ public class ApplicantChatContactVo implements Serializable {
     @NotNull
     @Size(min = 5, max = 20)
     private String mobileNumber;
-
 }

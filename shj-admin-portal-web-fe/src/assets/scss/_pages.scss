@@ -209,12 +209,12 @@
     @include py(3);
 
     &.active {
-      
+
     }
   }
 
-  .check{
-    svg{
+  .check {
+    svg {
       @include mt(1);
     }
   }

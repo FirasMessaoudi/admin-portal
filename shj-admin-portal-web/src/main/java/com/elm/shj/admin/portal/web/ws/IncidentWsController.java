@@ -50,7 +50,7 @@ public class IncidentWsController {
      * @return WsResponse of  the saved incident attachment
      */
     @GetMapping("/attachment/{attachmentId}")
-    public  ResponseEntity<Resource> downloadAttachment(@PathVariable long attachmentId) throws Exception {
+    public ResponseEntity<Resource> downloadAttachment(@PathVariable long attachmentId) throws Exception {
         log.info("Downloading incident attachment with id# {} ", attachmentId);
         Resource attachment = applicantIncidentService.downloadApplicantIncidentAttachment(attachmentId);
 
@@ -64,7 +64,6 @@ public class IncidentWsController {
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"");
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"")
                     .body(attachment);
-
         }
         return null;
     }
@@ -73,17 +72,14 @@ public class IncidentWsController {
      * Creates a new applicant incident
      *
      * @param applicantIncidentRequest applicant incident details
-     * @return WsResponse of  the persisted applicant incident
+     * @return WsResponse of the persisted applicant incident
      */
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<WsResponse<?>> create(@RequestPart("incident") @Valid ApplicantIncidentDto applicantIncidentRequest,
-                                                @RequestPart(value = "attachment",required = false) MultipartFile incidentAttachment,
-                                                @RequestPart("applicantRitual") ApplicantRitualDto applicantRitual
-                                                ) throws Exception {
-
+                                                @RequestPart(value = "attachment", required = false) MultipartFile incidentAttachment,
+                                                @RequestPart("applicantRitual") ApplicantRitualDto applicantRitual) throws Exception {
         applicantIncidentRequest.setApplicantRitual(applicantRitual);
         log.info("adding  applicant incident");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantIncidentService.addApplicantIncident(applicantIncidentRequest, incidentAttachment)).build());
-
     }
 }

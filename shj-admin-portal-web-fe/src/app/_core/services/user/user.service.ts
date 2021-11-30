@@ -4,8 +4,6 @@ import {map} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {catchError} from "rxjs/internal/operators";
 import {ChangePasswordCmd, User} from '@shared/model';
-import {Role} from '@shared/model/role.model';
-import {UserStatus} from "@model/user-status.model";
 
 export const DEFAULT_MAX_USER_AGE = 16;
 
@@ -17,8 +15,6 @@ export class UserService {
 
   constructor(private http: HttpClient) {
   }
-
-
 
   /**
    * Finds user by his ID from the server.

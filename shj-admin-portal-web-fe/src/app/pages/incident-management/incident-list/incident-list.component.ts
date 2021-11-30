@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {EAuthority, Page} from "@shared/model";
 import {AuthenticationService} from "@core/services";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ApplicantIncident} from "@model/incident.model";
+import {ApplicantIncident} from "@model/applicant-incident.model";
 import {Subscription} from "rxjs";
 import {IncidentService} from "@core/services/incident/incident.service";
 import {Lookup} from "@model/lookup.model";
