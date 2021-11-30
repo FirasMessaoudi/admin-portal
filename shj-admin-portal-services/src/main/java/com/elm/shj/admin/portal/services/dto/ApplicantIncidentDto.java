@@ -30,7 +30,7 @@ public class ApplicantIncidentDto implements Serializable {
     private ApplicantRitualDto applicantRitual;
     private String statusCode;
     private String referenceNumber;
-    private long typeId;
+    private String typeCode;
     @NotNull(message = "validation.data.constraints.msg.20001")
     @Size(min = 5, max = 500)
     private String description;
