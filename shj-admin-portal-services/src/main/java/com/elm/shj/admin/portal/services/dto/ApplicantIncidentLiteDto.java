@@ -22,12 +22,12 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ApplicantIncidentDto implements Serializable {
+public class ApplicantIncidentLiteDto implements Serializable {
 
     private static final long serialVersionUID = -5654394816918782403L;
 
     private long id;
-    private ApplicantRitualDto applicantRitual;
+    private long applicantRitualId;
     private String statusCode;
     private String referenceNumber;
     private String typeCode;
@@ -39,7 +39,7 @@ public class ApplicantIncidentDto implements Serializable {
     @NotNull(message = "validation.data.constraints.msg.20001")
     private Double locationLng;
     private String resolutionComment;
-    private List<IncidentAttachmentDto> incidentAttachments;
+    private List<IncidentAttachmentLiteDto> incidentAttachments;
     private Date creationDate;
     private Date updateDate;
 }

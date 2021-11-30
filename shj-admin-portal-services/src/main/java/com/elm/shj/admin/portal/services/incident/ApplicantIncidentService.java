@@ -15,6 +15,7 @@ import com.elm.shj.admin.portal.services.dto.IncidentAttachmentDto;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
+import com.elm.shj.admin.portal.services.utils.DateUtils;
 import com.jcraft.jsch.JSchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -121,47 +122,6 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         return mapList(applicantIncidentRepository.findByApplicantRitualId(applicantRitualId));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Transactional
-    public ApplicantIncidentDto addApplicantIncident(ApplicantIncidentDto applicantIncidentDto, MultipartFile attachment) {
-        // generate request reference
-        String referenceNumber = generateReferenceNumber();
-        // generate and set reference number
-        applicantIncidentDto.setReferenceNumber(referenceNumber);
-        applicantIncidentDto.setStatusCode(EIncidentStatus.UNDER_PROCESSING.name());
-
-        // upload the file in the SFTP
-        try {
-            if (attachment != null && !attachment.isEmpty() && attachment.getSize() > 0) {
-                // generate file and folder names to be uploaded/created in SFTP
-
-                Path p = Paths.get(attachment.getOriginalFilename());
-                String sftpPath = sftpService.generateSftpFilePath(p.getFileName().toString(), referenceNumber, false);
-                List<IncidentAttachmentDto> incidentAttachmentList = new ArrayList<>();
-                IncidentAttachmentDto incidentAttachmentDto = new IncidentAttachmentDto();
-                incidentAttachmentDto.setFilePath(sftpPath);
-                incidentAttachmentDto.setApplicantIncident(applicantIncidentDto);
-                incidentAttachmentList.add(incidentAttachmentDto);
-                applicantIncidentDto.setIncidentAttachments(incidentAttachmentList);
-                sftpService.uploadFile(sftpPath, attachment.getInputStream(), APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
-                log.info("file uploaded successfully to: {}", sftpPath);
-            }
-
-        } catch (JSchException e) {
-            log.error("Unable to open attached file", e);
-            throw new IllegalArgumentException("Unable to open attached file");
-        } catch (IOException ioe) {
-            log.error("Unable to upload file to SFTP", ioe);
-            throw new IllegalArgumentException("Unable to upload file to SFTP");
-        }
-        // persist the request
-        ApplicantIncidentDto createdApplicantIncident = super.save(applicantIncidentDto);
-        log.info("applicant incident created successfully with id# {}", createdApplicantIncident.getId());
-        // return the persisted object
-        return createdApplicantIncident;
-    }
 
     /**
      * fetches the original file of the data request
@@ -177,18 +137,7 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         return sftpService.downloadFile(incidentAttachment.get().getFilePath(), APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
     }
 
-    /**
-     * Generates a unique identifier for the applicant incident
-     *
-     * @return a unique identifier for the applicant incident
-     */
-    public String generateReferenceNumber() {
-        RandomStringGenerator generator = new RandomStringGenerator.Builder()
-                .withinRange('0', '9')
-                .filteredBy(t -> t >= '0' && t <= '9')
-                .build();
-        return generator.generate(REQUEST_REF_NUMBER_LENGTH - 6) + REF_NUMBER_FORMAT.format(new Date());
-    }
+
 
     /**
      * Updates applicant incident
