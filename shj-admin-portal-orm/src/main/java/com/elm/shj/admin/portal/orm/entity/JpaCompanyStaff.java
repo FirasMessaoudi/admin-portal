@@ -42,7 +42,7 @@ public class JpaCompanyStaff implements Serializable {
     private String fullNameEn;
 
     @Column(name = "id_number", nullable = false)
-    private int idNumber;
+    private String idNumber;
 
 
     private Long season;

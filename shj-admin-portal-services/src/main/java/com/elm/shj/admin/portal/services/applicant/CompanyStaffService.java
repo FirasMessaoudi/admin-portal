@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -22,7 +23,12 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     private final CompanyStaffRepository companyStaffRepository;
 
 
-    public List<CompanyStaffDto> findRelatedEmployeesByApplicantUinAndSeasonId(String uin, long sid){
-        return mapList(companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndCompanyRitualSeasonId(uin, sid));}
+    public List<CompanyStaffDto> findRelatedEmployeesByApplicantUinAndSeasonId(String uin, long sid) {
+        return mapList(companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndCompanyRitualSeasonId(uin, sid));
+    }
 
+
+    public boolean existsByBasicInfo(String idNumber, String passeportNumber, Date dateGreg, Long dateHijri) {
+        return ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, dateHijri, passeportNumber, dateGreg);
+    }
 }

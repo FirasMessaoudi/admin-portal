@@ -71,7 +71,7 @@ public class CompanyStaffDto {
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     @NotNull(message = "validation.data.constraints.msg.20001")
     @CellIndex(index = 0)
-    private int idNumber;
+    private String idNumber;
 
     @JsonBackReference(value = "company")
     private CompanyDto company;
