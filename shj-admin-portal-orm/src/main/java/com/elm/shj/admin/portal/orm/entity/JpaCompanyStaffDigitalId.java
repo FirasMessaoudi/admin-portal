@@ -39,7 +39,7 @@ public class JpaCompanyStaffDigitalId implements Serializable {
     private int seasonYear;
 
     @ManyToOne
-    @JoinColumn(name = "company_staff", nullable = false)
+    @JoinColumn(name = "company_staff_id", nullable = false)
     private JpaCompanyStaff companyStaff;
 
     @Column(name = "update_date")
