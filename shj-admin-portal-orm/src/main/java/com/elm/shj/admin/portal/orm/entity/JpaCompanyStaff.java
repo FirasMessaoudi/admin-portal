@@ -44,7 +44,8 @@ public class JpaCompanyStaff implements Serializable {
     @Column(name = "id_number", nullable = false)
     private int idNumber;
 
-    private int season;
+
+    private Long season;
 
     @Column(name = "title_code")
     private String titleCode;
@@ -94,7 +95,7 @@ public class JpaCompanyStaff implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "companyStaff")
     private List<JpaCompanyStaffDigitalId> digitalIds;
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "company_id")
     private JpaCompany company;
 
     @ManyToOne

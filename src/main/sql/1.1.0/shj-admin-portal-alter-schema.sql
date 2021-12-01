@@ -1071,6 +1071,42 @@ GO
 
 
 
+GO
+declare
+@schema_name nvarchar(256)
+declare
+@table_name nvarchar(256)
+declare
+@col_name nvarchar(256)
+declare
+@Command nvarchar(1000)
+set @schema_name = N'shc_portal'
+set @table_name = N'shc_company_staff'
+set @col_name = N'company_id'
+select @Command = 'ALTER TABLE ' + @schema_name + '.[' + @table_name + '] DROP CONSTRAINT ' + d.name
+from sys.tables t
+         join sys.default_constraints d on d.parent_object_id = t.object_id
+         join sys.columns c on c.object_id = t.object_id and c.column_id = d.parent_column_id
+where t.name = @table_name
+  and t.schema_id = schema_id(@schema_name)
+  and c.name = @col_name execute (@Command)
+GO
+
+
+
+alter table shc_portal.shc_company_staff drop CONSTRAINT fk_shc_company_representative_company ;
+
+GO
+alter table shc_portal.shc_company_staff drop column company_id;
+GO
+ALTER TABLE shc_portal.shc_company_staff
+    ADD company_id INT  NULL;
+
+GO
+ALTER TABLE shc_portal.shc_company_staff
+    ADD CONSTRAINT fk_company_staff_company FOREIGN KEY (company_id) REFERENCES shc_portal.shc_company (id);
+GO
+
 
 
 

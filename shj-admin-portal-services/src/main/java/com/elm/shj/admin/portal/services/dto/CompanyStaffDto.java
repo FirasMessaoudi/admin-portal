@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffDigitalId;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -11,12 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
@@ -74,12 +68,11 @@ public class CompanyStaffDto {
     @CellIndex(index = 10)
     private String photo;
 
-    @Min(1)
-    @Max(15)
+    @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     @NotNull(message = "validation.data.constraints.msg.20001")
+    @CellIndex(index = 0)
     private int idNumber;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
     @JsonBackReference(value = "company")
     private CompanyDto company;
 
@@ -89,22 +82,19 @@ public class CompanyStaffDto {
     @NullOrNotBlank(min = 3, max = 45)
     @CellIndex(index = 11)
     private String titleCode;
-    @CellIndex(index =15)
-    private int season;
+    @CellIndex(index = 15)
+    private Long season;
 
     @NullOrNotBlank(min = 10, max = 150)
     @CellIndex(index = 6)
     private String fullNameOrigin;
 
-    @Max(20)
-    @Min(10)
-    @NotNull(message = "validation.data.constraints.msg.20001")
+
+    @NullOrNotBlank(min = 5, max = 16)
     @CellIndex(index =13)
     private String mobileNumber;
 
-    @Max(20)
-    @Min(10)
-    @NotNull(message = "validation.data.constraints.msg.20001")
+    @NullOrNotBlank(min = 5, max = 30)
     @CellIndex(index =14)
     private String mobileNumberIntl;
 
