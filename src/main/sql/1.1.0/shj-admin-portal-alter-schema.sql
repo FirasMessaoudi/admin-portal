@@ -1100,13 +1100,18 @@ GO
 alter table shc_portal.shc_company_staff drop column company_id;
 GO
 ALTER TABLE shc_portal.shc_company_staff
-    ADD company_id INT  NULL;
+    ADD company_id INT NULL;
 
 GO
 ALTER TABLE shc_portal.shc_company_staff
     ADD CONSTRAINT fk_company_staff_company FOREIGN KEY (company_id) REFERENCES shc_portal.shc_company (id);
 GO
 
+alter table shc_portal.shc_company_staff drop column id_number;
+GO
+ALTER TABLE shc_portal.shc_company_staff
+    ADD id_number VARCHAR(16) NOT NULL;
+GO
 
 
 

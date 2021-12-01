@@ -254,13 +254,27 @@ SET IDENTITY_INSERT shc_portal.shc_incident_type_lk OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_incident_status_lk ON;
-INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label) VALUES (1, 'UNDER_PROCESSING', 'ar', N'جاري دراسة الشكوى');
-INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label) VALUES (2, 'UNDER_PROCESSING', 'en', 'Under Processing');
-INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label) VALUES (3, 'RESOLVED', 'ar', N'تم حل الشكوى');
-INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label) VALUES (4, 'RESOLVED', 'en', 'Resolved');
-INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label) VALUES (5, 'CLOSED', 'ar', N'تم إغلاق الشكوى');
-INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label) VALUES (6, 'CLOSED', 'en', 'Closed');
-SET IDENTITY_INSERT shc_portal.shc_incident_status_lk OFF;
+INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label)
+VALUES (1, 'UNDER_PROCESSING', 'ar', N'جاري دراسة الشكوى');
+INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label)
+VALUES (2, 'UNDER_PROCESSING', 'en', 'Under Processing');
+INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label)
+VALUES (3, 'RESOLVED', 'ar', N'تم حل الشكوى');
+INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label)
+VALUES (4, 'RESOLVED', 'en', 'Resolved');
+INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label)
+VALUES (5, 'CLOSED', 'ar', N'تم إغلاق الشكوى');
+INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label)
+VALUES (6, 'CLOSED', 'en', 'Closed');
+SET
+IDENTITY_INSERT shc_portal.shc_incident_status_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
+insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
+values (9, 'staff-ritual-data.xlsx', '', 'Staff Ritual Data');
+SET
+IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 GO
 
 
