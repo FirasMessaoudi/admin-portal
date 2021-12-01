@@ -27,7 +27,6 @@ public class ApplicantChatContactVo implements Serializable {
     @NotNull(message = "validation.data.constraints.msg.20001")
     private String alias;
 
-    @NotNull
     @Size(min = 5, max = 20)
     private String mobileNumber;
 }
