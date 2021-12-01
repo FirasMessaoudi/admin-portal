@@ -17,16 +17,16 @@ import java.util.List;
 /**
  * The persistent class for the shc_applicant_incident database table.
  *
- * @author Slim Ben Hadj
+ * @author Ahmed Ali
  * @since 1.1.0
  */
 @Entity
 @Table(name = "shc_applicant_incident")
-@NamedQuery(name = "JpaApplicantIncident.findAll", query = "SELECT j FROM JpaApplicantIncident j")
+@NamedQuery(name = "JpaApplicantIncidentLite.findAll", query = "SELECT j FROM JpaApplicantIncidentLite j")
 @Getter
 @Setter
 @NoArgsConstructor
-public class JpaApplicantIncident implements Serializable {
+public class JpaApplicantIncidentLite implements Serializable {
 
     private static final long serialVersionUID = 3754291597972237947L;
 
@@ -38,9 +38,9 @@ public class JpaApplicantIncident implements Serializable {
     @Column(name = "reference_number")
     private String referenceNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "applicant_ritual_id")
-    private JpaApplicantRitual applicantRitual;
+
+    @Column(name = "applicant_ritual_id")
+    private long applicantRitualId;
 
     @Column(name = "status_code")
     private String statusCode;
@@ -61,8 +61,8 @@ public class JpaApplicantIncident implements Serializable {
 
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantIncident")
-    private List<JpaIncidentAttachment>  incidentAttachments;
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantIncidentLite")
+    private List<JpaIncidentAttachmentLite>  incidentAttachments;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

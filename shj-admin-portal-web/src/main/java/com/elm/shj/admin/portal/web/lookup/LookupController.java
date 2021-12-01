@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.lookup;
 
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
+import com.elm.shj.admin.portal.services.utils.MapUtils;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,7 @@ public class LookupController {
     private final MealTypeLookupService mealTypeLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
     private final IncidentStatusLookupService incidentStatusLookupService;
+    private final MapUtils mapUtils;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -223,6 +225,12 @@ public class LookupController {
     public List<IncidentStatusLookupDto> listIncidentStatuses() {
         log.debug("list incident statuses...");
         return incidentStatusLookupService.findAll();
+    }
+
+    @GetMapping("/google-maps/api-key")
+    public String loadGoogleMapsApiKey() {
+        log.debug("load google maps api key...");
+        return mapUtils.retrieveGoogleMapsApiKey();
     }
 
 }

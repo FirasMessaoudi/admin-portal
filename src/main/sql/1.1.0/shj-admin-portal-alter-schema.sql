@@ -882,7 +882,7 @@ create table shc_portal.shc_applicant_incident
     reference_number    varchar(45)    NOT NULL,
     applicant_ritual_id int            NOT NULL,
     status_code         varchar(20)    NOT NULL,
-    type_id         int   NOT NULL,
+    type_code           varchar(20)    NOT NULL,
     description         nvarchar(1000) NOT NULL,
     -- Latitudes range from -90 to +90 (degrees), so DECIMAL(10,8) is ok for that, but longitudes range from -180 to +180 (degrees) so we need DECIMAL(11,8).
     location_lat        decimal(10, 8) NOT NULL,
@@ -1032,9 +1032,85 @@ create table shc_portal.shc_company_staff_card
     CONSTRAINT fk_company_staff_card_company_staff_digital_id FOREIGN KEY (company_staff_digital_id_id) REFERENCES shc_portal.shc_company_staff_digital_id (id)
 );
 
+
+
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  id_number_original      VARCHAR(30) NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD gender  VARCHAR(1) NULL;
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  date_of_birth_hijri     INT NULL;
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  date_of_birth_gregorian DATE   NULL;
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  passport_number         VARCHAR(30) NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  nationality_code     VARCHAR(20) NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  full_name_origin  NVARCHAR(150) NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  season     INT NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  photo  varchar(max) NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  mobile_number_intl     VARCHAR(20) NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  data_request_record_id int NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD CONSTRAINT fk_company_staff_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shc_portal.shc_data_request_record (id);
 GO
-ALTER TABLE shc_portal.shc_applicant_incident
-    ADD CONSTRAINT fk_applicant_incident_incident_type_lk FOREIGN KEY (type_id) REFERENCES shc_portal.shc_incident_type_lk (id);
+
+
+
+GO
+declare
+@schema_name nvarchar(256)
+declare
+@table_name nvarchar(256)
+declare
+@col_name nvarchar(256)
+declare
+@Command nvarchar(1000)
+set @schema_name = N'shc_portal'
+set @table_name = N'shc_company_staff'
+set @col_name = N'company_id'
+select @Command = 'ALTER TABLE ' + @schema_name + '.[' + @table_name + '] DROP CONSTRAINT ' + d.name
+from sys.tables t
+         join sys.default_constraints d on d.parent_object_id = t.object_id
+         join sys.columns c on c.object_id = t.object_id and c.column_id = d.parent_column_id
+where t.name = @table_name
+  and t.schema_id = schema_id(@schema_name)
+  and c.name = @col_name execute (@Command)
+GO
+
+
+
+alter table shc_portal.shc_company_staff drop CONSTRAINT fk_shc_company_representative_company ;
+
+GO
+alter table shc_portal.shc_company_staff drop column company_id;
+GO
+ALTER TABLE shc_portal.shc_company_staff
+    ADD company_id INT NULL;
+
+GO
+ALTER TABLE shc_portal.shc_company_staff
+    ADD CONSTRAINT fk_company_staff_company FOREIGN KEY (company_id) REFERENCES shc_portal.shc_company (id);
+GO
+
+alter table shc_portal.shc_company_staff drop column id_number;
+GO
+ALTER TABLE shc_portal.shc_company_staff
+    ADD id_number VARCHAR(16) NOT NULL;
 GO
 
 

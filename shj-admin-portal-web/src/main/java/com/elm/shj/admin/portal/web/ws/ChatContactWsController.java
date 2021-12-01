@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.commons.validation.SafeFile;
 import com.elm.shj.admin.portal.services.applicant.ApplicantChatContactService;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -40,7 +41,6 @@ import java.util.Optional;
 public class ChatContactWsController {
 
     private final ApplicantChatContactService applicantChatContactService;
-    private final ApplicantLiteService applicantLiteService;
 
     /**
      * finds chat contacts by uin and applicant ritual ID
@@ -73,6 +73,30 @@ public class ChatContactWsController {
         log.debug("Handler for {}", "Create Applicant Chat Contact");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
                 .body(applicantChatContactService.createChatContact(applicantUin, contact, applicantRitualId, contactAvatarFile)).build());
+    }
+
+    /**
+     * Updates user defined chat contact
+     *
+     * @param contact applicant chat contact details
+     * @return WsResponse of the persisted chat contact
+     */
+    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<WsResponse<?>> update(@PathVariable Long id,
+                                                @RequestPart @Valid ApplicantChatContactVo contact,
+                                                @RequestPart(value = "avatar", required = false) @SafeFile MultipartFile contactAvatarFile) throws Exception {
+        ApplicantChatContactDto applicantChatContact = applicantChatContactService.findById(id);
+        if (applicantChatContact == null) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(id.toString()).build()).build());
+        }
+        if (applicantChatContact.getSystemDefined()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(id.toString()).build()).build());
+        }
+        log.debug("Handler for {}", "Update User Defined Chat Contact");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
+                .body(applicantChatContactService.updateUserDefinedChatContact(id, contact, contactAvatarFile)).build());
     }
 
     /**

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,5 +20,12 @@ import java.util.List;
 public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, Long> {
 
     List<JpaCompanyStaff> findByApplicantGroupsGroupApplicantListsApplicantUinAndCompanyRitualSeasonId(String applicantUin, long sid);
+
+    @Query(value = "SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
+            "FROM JpaCompanyStaff a WHERE " +
+            "(a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
+            "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian)")
+    boolean existsByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
+                              @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
 }
