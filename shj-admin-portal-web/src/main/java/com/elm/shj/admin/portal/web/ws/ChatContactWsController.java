@@ -41,7 +41,7 @@ import java.util.Optional;
 public class ChatContactWsController {
 
     private final ApplicantChatContactService applicantChatContactService;
-
+    private final ApplicantLiteService applicantLiteService;
     /**
      * finds chat contacts by uin and applicant ritual ID
      *
