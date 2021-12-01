@@ -12,6 +12,7 @@ import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {Marker} from "@model/marker.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 
 @Component({
   selector: 'app-incident-details',
@@ -34,7 +35,11 @@ export class IncidentDetailsComponent implements OnInit {
   marker: Marker;
   MARK_AS_RESOLVED: string = 'MARK_AS_RESOLVED';
   MARK_AS_CLOSED: string = 'MARK_AS_CLOSED';
+  UNDER_PROCESSING: string = 'UNDER_PROCESSING';
+  RESOLVED: string = 'RESOLVED';
+  CLOSED: string = 'CLOSED';
   incidentForm: FormGroup;
+  icon: any;
 
   constructor(private incidentService: IncidentService,
               private router: Router,
@@ -43,6 +48,7 @@ export class IncidentDetailsComponent implements OnInit {
               private toastr: ToastService,
               private lookupsService: LookupService,
               private route: ActivatedRoute,
+              private confirmDialogService: ConfirmDialogService,
               private formBuilder: FormBuilder,
               @Inject(DOCUMENT) private document: Document,
               private renderer2: Renderer2) {
@@ -126,7 +132,11 @@ export class IncidentDetailsComponent implements OnInit {
   async loadGoogleMapsApiKey() {
     this.lookupsService.loadGoogleMapsApiKey().subscribe(result => {
       this.loadScript(result).then(() => {
-        this.mapIsReady = true
+        this.mapIsReady = true;
+        this.icon = {
+          url: 'assets/images/svg-icons/map-marker-alt-solid.svg', // url
+          scaledSize: new google.maps.Size(50, 50), // scaled size
+        };
       });
     });
   }
@@ -147,18 +157,30 @@ export class IncidentDetailsComponent implements OnInit {
   }
 
   cancel() {
-
+    this.resetForm();
   }
 
   save() {
-    this.isLoading = true;
-    this.incidentService.handle(this.incidentId, this.incidentForm.value).subscribe(_ => {
-      this.isLoading = false;
-      this.toastr.success(this.translate.instant('user-management.dialog_delete_success_text'), this.translate.instant('user-management.dialog_delete_title'));
-      this.navigateToList();
-    }, error => {
-      this.isLoading = false;
-      this.toastr.error(this.translate.instant('general.dialog_error_text'), this.translate.instant('user-management.dialog_delete_title'));
+    let confirmationText, successText;
+    if (this.incidentForm.controls.operation.value === this.MARK_AS_RESOLVED) {
+      confirmationText = 'incident-management.dialog_resolve_complaint_confirmation_text';
+      successText = 'incident-management.dialog_resolve_complaint_success_text';
+    } else if (this.incidentForm.controls.operation.value === this.MARK_AS_CLOSED) {
+      confirmationText = 'incident-management.dialog_close_complaint_confirmation_text';
+      successText = 'incident-management.dialog_close_complaint_success_text';
+    }
+    this.confirmDialogService.confirm(this.translate.instant(confirmationText), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+      if (confirm) {
+        this.isLoading = true;
+        this.incidentService.handle(this.incidentId, this.incidentForm.value).subscribe(_ => {
+          this.isLoading = false;
+          this.toastr.success(this.translate.instant(successText), this.translate.instant('incident-management.incident_resolution'));
+          this.navigateToList();
+        }, error => {
+          this.isLoading = false;
+          this.toastr.error(this.translate.instant('general.dialog_error_text'), this.translate.instant('incident-management.incident_resolution'));
+        });
+      }
     });
   }
 
@@ -170,4 +192,11 @@ export class IncidentDetailsComponent implements OnInit {
       }
     );
   }
+
+  private resetForm() {
+    this.incidentForm.controls.operation.setValue(this.MARK_AS_RESOLVED);
+    this.incidentForm.controls.resolutionComment.setValue('');
+  }
+
+
 }
