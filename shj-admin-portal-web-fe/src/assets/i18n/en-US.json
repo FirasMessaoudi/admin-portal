@@ -572,8 +572,8 @@
     "mark_as_closed": "Mark as closed",
     "comments": "Comments",
     "comments_caution": "will be shown to the applicant",
-    "dialog_resolve_complaint_text": "Are you sure you want to resolve the complaint ?",
-    "dialog_close_complaint_text": "Are you sure you want to close the complaint ?",
+    "dialog_resolve_complaint_confirmation_text": "Are you sure you want to resolve the complaint ?",
+    "dialog_close_complaint_confirmation_text": "Are you sure you want to close the complaint ?",
     "dialog_resolve_complaint_success_text": "The complaint status changed to resolved",
     "dialog_close_complaint_success_text": "The complaint status changed to closed",
     "operation_date": "Operation Date"
