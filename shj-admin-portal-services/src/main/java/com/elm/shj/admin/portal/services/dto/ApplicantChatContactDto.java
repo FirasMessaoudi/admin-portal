@@ -33,6 +33,8 @@ public class ApplicantChatContactDto implements Serializable {
     private String staffTitleCode;
     private String relationshipCode;
     private String mobileNumber;
+    private String countryPhonePrefix;
+    private String countryCode;
     private Boolean deleted;
     private ApplicantRitualDto applicantRitual;
     private Date creationDate;
