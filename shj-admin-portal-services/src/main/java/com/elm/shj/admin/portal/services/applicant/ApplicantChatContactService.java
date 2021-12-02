@@ -54,21 +54,10 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         }
         return contacts.parallelStream().map(c -> {
             Optional<ApplicantLiteDto> applicantLite = applicantLiteService.findByUin(c.getContactUin());
-            return ApplicantChatContactLiteDto.builder()
-                    .id(c.getId())
-                    .applicantUin(c.getApplicantUin())
-                    .contactUin(c.getContactUin())
-                    .contactFullNameAr(applicantLite.map(ApplicantLiteDto::getFullNameAr).orElse(null))
-                    .contactFullNameEn(applicantLite.map(ApplicantLiteDto::getFullNameEn).orElse(null))
-                    .typeId(c.getType().getId())
-                    .alias(c.getAlias())
-                    .systemDefined(c.getSystemDefined())
-                    .staffTitleCode(c.getStaffTitleCode())
-                    .mobileNumber(c.getMobileNumber())
-                    .deleted(c.getDeleted())
-                    .creationDate(c.getCreationDate())
-                    .updateDate(c.getUpdateDate())
-                    .build();
+            ApplicantChatContactLiteDto contact = mapChatContactToChatContactLite(c);
+            contact.setContactFullNameAr(applicantLite.map(ApplicantLiteDto::getFullNameAr).orElse(null));
+            contact.setContactFullNameEn(applicantLite.map(ApplicantLiteDto::getFullNameEn).orElse(null));
+            return contact;
         }).collect(Collectors.toList());
     }
 
@@ -84,10 +73,14 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .contactUin(applicantChatContact.getContactUin())
                 .typeId(applicantChatContact.getType().getId())
                 .alias(applicantChatContact.getAlias())
+                .relationshipCode(applicantChatContact.getRelationshipCode())
+                .staffTitleCode(applicantChatContact.getStaffTitleCode())
                 .avatar(applicantChatContact.getAvatar())
                 .systemDefined(applicantChatContact.getSystemDefined())
                 .staffTitleCode(applicantChatContact.getStaffTitleCode())
                 .mobileNumber(applicantChatContact.getMobileNumber())
+                .countryPhonePrefix(applicantChatContact.getCountryPhonePrefix())
+                .countryCode(applicantChatContact.getCountryCode())
                 .deleted(applicantChatContact.getDeleted())
                 .creationDate(applicantChatContact.getCreationDate())
                 .updateDate(applicantChatContact.getUpdateDate())
@@ -110,6 +103,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .contactUin(contact.getUin())
                 .alias(contact.getAlias())
                 .mobileNumber(contact.getMobileNumber())
+                .countryPhonePrefix(contact.getCountryPhonePrefix())
+                .countryCode(contact.getCountryCode())
                 .systemDefined(false)
                 .deleted(false)
                 .applicantRitual(applicantRitual)
@@ -151,6 +146,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         ApplicantChatContactDto applicantChatContact = findOne(id);
         applicantChatContact.setAlias(contact.getAlias());
         applicantChatContact.setMobileNumber(contact.getMobileNumber());
+        applicantChatContact.setCountryPhonePrefix(contact.getCountryPhonePrefix());
+        applicantChatContact.setCountryCode(contact.getCountryCode());
         // Update applicant chat contact avatar
         if (contactAvatarFile != null) {
             String encodedAvatarStr = Base64.getEncoder().encodeToString(contactAvatarFile.getBytes());

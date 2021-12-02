@@ -9,6 +9,8 @@ import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
+import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
+import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -65,6 +67,8 @@ public class ItemWriter {
     private final ApplicantContactService applicantContactService;
     private final CompanyStaffService  companyStaffService;
     private final CompanyStaffDigitalIdService  companyStaffDigitalIdService;
+      private final CompanyStaffCardService companyStaffCardService;
+    private final CompanyRitualSeasonLiteService companyRitualSeasonService;
 
     /**
      * Populates the registry
@@ -157,6 +161,11 @@ public class ItemWriter {
             if (dataSegment.getId() < 8) {
                 // update applicant related attributes
                 items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
+
+            }
+            if (dataSegment.getId() == 9) {
+                //Temporary for testing only : staff ritual
+                items.forEach(entry -> updateCompanyStaffRitualData(entry.getValue()));
 
             }
 
@@ -534,6 +543,53 @@ public class ItemWriter {
 
     private <T> void updateCompanyStaffRitualData(T item) {
         if (item != null && item.getClass().isAssignableFrom(CompanyStaffRitualDto.class)) {
+            CompanyStaffRitualDto companyStaffRitual = (CompanyStaffRitualDto) item;
+            CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(companyStaffRitual.getIdNumber(), companyStaffRitual.getPassportNumber(), companyStaffRitual.getDateOfBirthGregorian(), companyStaffRitual.getDateOfBirthHijri());
+            List<CompanyStaffDigitalIdDto> companyStaffDigitalIds = companyStaffDigitalIdService.findByDigitalIdByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
+            //this has to be checked
+            CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByCompanyCodeAndRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+            if (!companyStaffDigitalIds.isEmpty()) {
+                List<CompanyStaffCardDto> companyStaffCardDtos = companyStaffCardService.findByDigitalId(companyStaffDigitalIds.get(0).getId());
+                if (companyStaffCardDtos.isEmpty()) {
+                    CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                    companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalIds.get(0));
+                    companyStaffCardDto.setStatusCode("READY_TO_PRINT");
+                    companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                    companyStaffCardService.save(companyStaffCardDto);
+                }
+
+                // find staff cards for same company and same ritual
+                List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalIds.get(0).getId(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+                if (companyStaffCards.isEmpty()) {
+                    CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                    companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalIds.get(0));
+                    companyStaffCardDto.setStatusCode("READY_TO_PRINT");
+                    companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                    companyStaffCardService.save(companyStaffCardDto);
+                }
+
+                //find staff cards for different company or different ritual
+                List<CompanyStaffCardDto> companyStaffCards2 = companyStaffCardService.findByDigitalIdAndDifferentCompanyOrRitual(companyStaffDigitalIds.get(0).getId(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+                if (CollectionUtils.isNotEmpty(companyStaffCards2)) {
+                    companyStaffCards2.forEach(c -> {
+                        c.setStatusCode("EXPIRED");
+                    });
+                    companyStaffCardService.saveAll(companyStaffCards2);
+                }
+
+            } else {
+                CompanyStaffDigitalIdDto staffDigitalId = new CompanyStaffDigitalIdDto();
+                staffDigitalId.setCompanyStaff(existingStaff);
+                staffDigitalId.setSeasonYear(companyStaffRitual.getSeason());
+                CompanyStaffDigitalIdDto savedDigitalId = companyStaffDigitalIdService.save(staffDigitalId);
+                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                companyStaffCardDto.setCompanyStaffDigitalId(savedDigitalId);
+                companyStaffCardDto.setStatusCode("READY_TO_PRINT");
+                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                companyStaffCardService.save(companyStaffCardDto);
+                // create new digital id for that staff
+            }
+
         }
     }
 

@@ -23,6 +23,8 @@ import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.*;
 
+import java.util.List;
+
 /**
  * Service handling company staff digital id
  *
@@ -123,7 +125,11 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
     public CompanyStaffDigitalIdDto save(CompanyStaffDigitalIdDto dto) {
         return super.save(dto);
     }
-
+    /**
+     * @param staffId
+     * @param season
+     * @return list of companyStaffDigitalId
+     */
     public Optional<JpaCompanyStaffDigitalId> findByBasicInfo(long staffId, int season) {
         return companyStaffDigitalIdRepository.findByBasicInfo(staffId,season);
     }

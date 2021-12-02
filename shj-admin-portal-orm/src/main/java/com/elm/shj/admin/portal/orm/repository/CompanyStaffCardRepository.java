@@ -17,6 +17,10 @@ import java.util.List;
 public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaffCard, Long> {
     List<JpaCompanyStaffCard> findAllByCompanyStaffDigitalIdId(long id);
 
-    List<JpaCompanyStaffCard> findAllByCompanyStaffDigitalIdAndStatusCodeInAndCompanyRitualSeasonCompanyCodeAndCompanyRitualSeasonRitualSeasonRitualTypeCode(long id, List<String> statusCodes, String companyCode, String ritualTypeCode);
+    //check those two
+    List<JpaCompanyStaffCard> findAllByCompanyStaffDigitalIdIdAndStatusCodeInAndCompanyRitualSeasonCompanyCodeAndCompanyRitualSeasonRitualSeasonRitualTypeCode(long id, List<String> statusCodes, String companyCode, String ritualTypeCode);
+
+    List<JpaCompanyStaffCard> findAllByCompanyStaffDigitalIdIdAndStatusCodeInAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(long id, List<String> statusCodes, String companyCode, String ritualTypeCode);
+
 
 }

@@ -58,6 +58,12 @@ public class JpaApplicantChatContact implements Serializable {
     @Column(name = "mobile_number")
     private String mobileNumber;
 
+    @Column(name = "country_phone_prefix")
+    private String countryPhonePrefix;
+
+    @Column(name = "country_code")
+    private String countryCode;
+
     private Boolean deleted;
 
     @ManyToOne
