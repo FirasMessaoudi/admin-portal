@@ -28,7 +28,7 @@ public class CompanyStaffDigitalIdDto implements Serializable {
 
     private String suin;
 
-    private int seasonYear;
+    private Long seasonYear;
 
     @JsonBackReference
     private CompanyStaffDto companyStaff;
