@@ -545,7 +545,7 @@
   },
   "incident-management": {
     "title": "إدارة البلاغات",
-    "applicant_shaaer_id": "رقم هوية مقدم البلاغ",
+    "applicant_shaaer_id": "هوية شعائر",
     "applicant_name": "اسم مقدم البلاغ",
     "incident_type": "نوع البلاغ",
     "incident_date": "تاريخ تقديم البلاغ",
@@ -560,6 +560,12 @@
     "operation": "الإجراء",
     "mark_as_resolved": "تم حل البلاغ",
     "mark_as_closed": "تم إغلاق البلاغ",
-    "comments": "الملاحظات (سوف تظهر لمقدم البلاغ)"
+    "comments": "الملاحظات",
+    "comments_caution": "سوف تظهر لمقدم البلاغ",
+    "dialog_resolve_complaint_confirmation_text": "هل تريد تحويل حالة الشكوى إلى تم الحل وإشعار مقدم الشكوى بذلك ؟",
+    "dialog_close_complaint_confirmation_text": "هل تريد تحويل حالة الشكوى إلى مغلقة وإشعار مقدم الشكوى بذلك ؟",
+    "dialog_resolve_complaint_success_text": "تم تحويل حالة الشكوى إلى تم الحل",
+    "dialog_close_complaint_success_text": "تم تحويل حالة الشكوى إلى مغلقة",
+    "operation_date": "تاريخ الإجراء"
   }
 }

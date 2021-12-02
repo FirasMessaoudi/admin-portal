@@ -6,6 +6,8 @@ package com.elm.shj.admin.portal.web.ws;
 import com.elm.dcc.foundation.commons.validation.SafeFile;
 import com.elm.shj.admin.portal.services.applicant.ApplicantChatContactService;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller for exposing chat contacts web services for external party.
@@ -39,7 +41,7 @@ import java.io.IOException;
 public class ChatContactWsController {
 
     private final ApplicantChatContactService applicantChatContactService;
-
+    private final ApplicantLiteService applicantLiteService;
     /**
      * finds chat contacts by uin and applicant ritual ID
      *
@@ -109,5 +111,30 @@ public class ChatContactWsController {
         log.info("Delete Applicant Chat Contact...");
         int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin, contactUin);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
+    }
+
+    @GetMapping("find-one/{uin}/{applicantRitualId}/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findOneApplicantByUinAndRitualId(@PathVariable String uin,
+                                                                        @PathVariable Long applicantRitualId,
+                                                                        @PathVariable String applicantUin) {
+        log.debug("find chat contact by uin {} and applicant ritual ID {}", uin, applicantRitualId);
+        if(uin.equals(applicantUin)){
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
+
+        }
+        List<ApplicantChatContactLiteDto> applicantChatContactList = applicantChatContactService.listApplicantChatContacts(uin, applicantRitualId, null);
+        boolean isFound = applicantChatContactList.parallelStream().anyMatch(p -> p.getContactUin().equals(applicantUin));
+        if (isFound)
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(uin).build()).build());
+
+        Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(applicantUin);
+        if (!applicant.isPresent()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
+
     }
 }

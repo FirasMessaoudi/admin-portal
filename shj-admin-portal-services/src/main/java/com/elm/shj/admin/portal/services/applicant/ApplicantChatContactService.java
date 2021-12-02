@@ -64,10 +64,12 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                     .alias(c.getAlias())
                     .systemDefined(c.getSystemDefined())
                     .staffTitleCode(c.getStaffTitleCode())
+                    .relationshipCode(c.getRelationshipCode())
                     .mobileNumber(c.getMobileNumber())
                     .deleted(c.getDeleted())
                     .creationDate(c.getCreationDate())
                     .updateDate(c.getUpdateDate())
+                    .avatar(c.getAvatar())
                     .build();
         }).collect(Collectors.toList());
     }
