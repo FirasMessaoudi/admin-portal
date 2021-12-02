@@ -1113,5 +1113,9 @@ ALTER TABLE shc_portal.shc_company_staff
     ADD id_number VARCHAR(16) NOT NULL;
 GO
 
-
+alter table shc_portal.shc_company_staff_digital_id drop column suin;
+GO
+ALTER TABLE shc_portal.shc_company_staff_digital_id
+    ADD suin VARCHAR(45) NULL;
+GO
 

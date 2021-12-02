@@ -27,8 +27,27 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return mapList(companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndCompanyRitualSeasonId(uin, sid));
     }
 
-
-    public boolean existsByBasicInfo(String idNumber, String passeportNumber, Date dateGreg, Long dateHijri) {
-        return ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, dateHijri, passeportNumber, dateGreg);
+    /**
+     * @param idNumber
+     * @param passportNumber
+     * @param dateGreg
+     * @param dateHijri
+     * @return
+     */
+    public boolean existsByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
+        return ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg);
     }
+
+    /**
+     * @param idNumber
+     * @param passportNumber
+     * @param dateGreg
+     * @param dateHijri
+     * @return companyStaffDto
+     */
+    public CompanyStaffDto findByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
+        return getMapper().fromEntity(companyStaffRepository.findByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg), mappingContext);
+    }
+
+
 }

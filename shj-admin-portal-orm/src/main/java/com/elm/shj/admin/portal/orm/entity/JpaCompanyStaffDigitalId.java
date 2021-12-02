@@ -32,11 +32,11 @@ public class JpaCompanyStaffDigitalId implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(nullable = false)
+   // @Column(nullable = false)
     private String suin;
 
     @Column(name = "season_year", nullable = false)
-    private int seasonYear;
+    private Long seasonYear;
 
     @ManyToOne
     @JoinColumn(name = "company_staff_id", nullable = false)
