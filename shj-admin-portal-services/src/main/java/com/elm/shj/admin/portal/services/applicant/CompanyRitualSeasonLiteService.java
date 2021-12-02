@@ -36,4 +36,5 @@ public class CompanyRitualSeasonLiteService extends GenericService<JpaCompanyRit
         return getMapper().fromEntityList(companyRitualSeasons, mappingContext);
     }
 
+
 }

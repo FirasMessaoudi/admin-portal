@@ -130,9 +130,15 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
      * @param season
      * @return list of companyStaffDigitalId
      */
-    public Optional<JpaCompanyStaffDigitalId> findByBasicInfo(long staffId, int season) {
-        return companyStaffDigitalIdRepository.findByBasicInfo(staffId,season);
+    public CompanyStaffDigitalIdDto findByBasicInfo(long staffId, int season) {
+      Optional<JpaCompanyStaffDigitalId> digitalId=  companyStaffDigitalIdRepository.findByBasicInfo(staffId,season) ;
+        if (digitalId.isPresent()) {
+            return getMapper().fromEntity(digitalId.get(), mappingContext);
+        }
+        return null;
+
     }
+
 
     /**
      * Find all staff without digital IDs
