@@ -69,4 +69,7 @@ public class DateUtils {
                 .toLocalDateTime();
     }
 
+public static long getCurrentHijriYear(){
+   return Long.valueOf(Long.toString(toHijri(new Date())).substring(0,4));
+}
 }

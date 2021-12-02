@@ -4,7 +4,9 @@
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
+import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
+import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -31,4 +33,6 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     public boolean existsByBasicInfo(String idNumber, String passeportNumber, Date dateGreg, Long dateHijri) {
         return ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, dateHijri, passeportNumber, dateGreg);
     }
+
+
 }

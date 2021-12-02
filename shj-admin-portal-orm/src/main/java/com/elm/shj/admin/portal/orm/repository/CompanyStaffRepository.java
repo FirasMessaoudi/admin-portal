@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     boolean existsByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                               @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
+
+    @Query("select s from JpaCompanyStaff s where s.id not in (select sdi.companyStaff.id from JpaCompanyStaffDigitalId sdi where sdi.seasonYear =:season)")
+    List<JpaCompanyStaff> findAllWithoutSuin(@Param("season") int season );
 }

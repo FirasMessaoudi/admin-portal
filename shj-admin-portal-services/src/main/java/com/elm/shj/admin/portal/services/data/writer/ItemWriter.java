@@ -5,11 +5,10 @@ package com.elm.shj.admin.portal.services.data.writer;
 
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthSpecialNeeds;
+import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -64,6 +63,8 @@ public class ItemWriter {
     private final GroupApplicantListService groupApplicantListService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantContactService applicantContactService;
+    private final CompanyStaffService  companyStaffService;
+    private final CompanyStaffDigitalIdService  companyStaffDigitalIdService;
 
     /**
      * Populates the registry
@@ -167,6 +168,10 @@ public class ItemWriter {
                 items.forEach(entry -> {
                     S savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
                     savedItems.add(savedItem);
+                    if(dataSegment.getId()==8){
+                        CompanyStaffDto staff =(CompanyStaffDto) entry.getValue() ;
+                        generateSmartIdRecordIfRequired(staff);
+                    }
                     try {
                         dataRequestRecords.add(DataRequestRecordDto.builder()
                                 .createDataRequestId(dataRequestId)
@@ -203,6 +208,14 @@ public class ItemWriter {
             }
         }
     }
+
+    private void generateSmartIdRecordIfRequired(CompanyStaffDto staff) {
+        Optional<JpaCompanyStaffDigitalId> digitalId=  companyStaffDigitalIdService.findByBasicInfo(staff.getId(),staff.getSeason());
+      if(digitalId.isEmpty()){
+          CompanyStaffDigitalIdDto companyStaffDigitalIdDto= CompanyStaffDigitalIdDto.builder().companyStaff(staff).seasonYear(staff.getSeason()).statusCode(EStaffDigitalIdStatus.VALID.name()).build();
+          companyStaffDigitalIdService.save(companyStaffDigitalIdDto);
+      }
+     }
 
     /**
      * update related applicant ritual from applicant emergency

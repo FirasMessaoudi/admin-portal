@@ -32,8 +32,11 @@ public class JpaCompanyStaffDigitalId implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(nullable = false)
+
     private String suin;
+
+    @Column(name = "status_code")
+    private String statusCode;
 
     @Column(name = "season_year", nullable = false)
     private int seasonYear;

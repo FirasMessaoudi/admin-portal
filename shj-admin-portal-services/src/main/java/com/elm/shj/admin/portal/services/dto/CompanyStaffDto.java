@@ -83,7 +83,7 @@ public class CompanyStaffDto {
     @CellIndex(index = 11)
     private String titleCode;
     @CellIndex(index = 15)
-    private Long season;
+    private int season;
 
     @NullOrNotBlank(min = 10, max = 150)
     @CellIndex(index = 6)

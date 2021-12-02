@@ -284,3 +284,6 @@ values (8, 'staff-main-data.xlsx', N'بيانات العاملين	',
         'Staff Main Data');
 SET IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('scheduler.generate.staff.digital.ids.cron', '0 0/15 * * * *');

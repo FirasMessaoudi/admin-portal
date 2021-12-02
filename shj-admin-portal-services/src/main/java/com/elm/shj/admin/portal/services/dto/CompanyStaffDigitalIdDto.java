@@ -28,6 +28,8 @@ public class CompanyStaffDigitalIdDto implements Serializable {
 
     private String suin;
 
+    private String statusCode;
+
     private int seasonYear;
 
     @JsonBackReference

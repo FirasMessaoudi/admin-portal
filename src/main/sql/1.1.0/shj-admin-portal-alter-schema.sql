@@ -1011,7 +1011,7 @@ create table shc_portal.shc_company_staff_digital_id
 (
     id               int PRIMARY KEY NOT NULL identity (1,1),
     company_staff_id int             NOT NULL,
-    suin             VARCHAR(45)     NOT NULL,
+    suin             VARCHAR(45)     ,
     season_year      int             NOT NULL,
     creation_date    smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_date      smalldatetime NULL,
@@ -1053,8 +1053,7 @@ ALTER TABLE shc_portal.shc_company_staff
 ALTER TABLE shc_portal.shc_company_staff
     ADD  full_name_origin  NVARCHAR(150) NULL;
 
-ALTER TABLE shc_portal.shc_company_staff
-    ADD  season     INT NULL;
+
 
 ALTER TABLE shc_portal.shc_company_staff
     ADD  photo  varchar(max) NULL;
@@ -1111,6 +1110,10 @@ alter table shc_portal.shc_company_staff drop column id_number;
 GO
 ALTER TABLE shc_portal.shc_company_staff
     ADD id_number VARCHAR(16) NOT NULL;
+GO
+
+ALTER TABLE shc_portal.shc_company_staff_digital_id
+    ADD status_code varchar(20);
 GO
 
 

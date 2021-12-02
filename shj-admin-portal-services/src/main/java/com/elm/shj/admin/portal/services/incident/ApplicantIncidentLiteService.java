@@ -121,7 +121,7 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
                 .filteredBy(t -> t >= '0' && t <= '9')
                 .build();
 
-        return   Long.toString(DateUtils.toHijri(new Date())).substring(0,4)  + generator.generate(REQUEST_REF_NUMBER_LENGTH - 6)  ;
+        return  DateUtils.getCurrentHijriYear()  + generator.generate(REQUEST_REF_NUMBER_LENGTH - 4)  ;
     }
 
 }
