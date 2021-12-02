@@ -116,7 +116,6 @@ public class ChatContactWsController {
     @GetMapping("find-one/{uin}/{applicantRitualId}/{applicantUin}")
     public ResponseEntity<WsResponse<?>> findOneApplicantByUinAndRitualId(@PathVariable String uin,
                                                                         @PathVariable Long applicantRitualId,
-                                                                        @RequestParam(required = false) Boolean systemDefined,
                                                                         @PathVariable String applicantUin) {
         log.debug("find chat contact by uin {} and applicant ritual ID {}", uin, applicantRitualId);
         if(uin.equals(applicantUin)){
@@ -124,7 +123,7 @@ public class ChatContactWsController {
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
 
         }
-        List<ApplicantChatContactLiteDto> applicantChatContactList = applicantChatContactService.listApplicantChatContacts(uin, applicantRitualId, systemDefined);
+        List<ApplicantChatContactLiteDto> applicantChatContactList = applicantChatContactService.listApplicantChatContacts(uin, applicantRitualId, null);
         boolean isFound = applicantChatContactList.parallelStream().anyMatch(p -> p.getContactUin().equals(applicantUin));
         if (isFound)
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
