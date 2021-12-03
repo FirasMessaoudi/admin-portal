@@ -114,14 +114,18 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
         Page<JpaUserNotification> userNotifications;
 
         if (EUserNotificationType.ALL.equals(type)) {
-            userNotifications = userNotificationRepository.findByUserIdAndStatusCodeNot(userId, EUserNotificationStatus.EXPIRED.name(), pageable);
+            userNotifications = userNotificationRepository
+                    .findByUserIdAndStatusCodeNotOrderByCreationDateDesc(userId, EUserNotificationStatus.EXPIRED.name(), pageable);
         } else {
-            userNotifications = userNotificationRepository.findByUserIdAndNotificationTemplateUserSpecificAndStatusCodeNot(userId, EUserNotificationType.USER_SPECIFIC.equals(type), EUserNotificationStatus.EXPIRED.name(), pageable);
+            userNotifications = userNotificationRepository
+                    .findByUserIdAndNotificationTemplateUserSpecificAndStatusCodeNotOrderByCreationDateDesc(
+                            userId, EUserNotificationType.USER_SPECIFIC.equals(type), EUserNotificationStatus.EXPIRED.name(), pageable);
         }
 
         userNotifications.stream().forEach(
                 notification -> {
-                    Optional<JpaNotificationTemplateContent> notificationTemplateContent = notification.getNotificationTemplate().getNotificationTemplateContents().stream().filter(content -> content.getLang().equalsIgnoreCase(notification.getUserLang())).findAny();
+                    Optional<JpaNotificationTemplateContent> notificationTemplateContent = notification.getNotificationTemplate()
+                            .getNotificationTemplateContents().stream().filter(content -> content.getLang().equalsIgnoreCase(notification.getUserLang())).findAny();
                     detailedUserNotifications.add(DetailedUserNotificationDto.builder()
                             .id(notification.getId())
                             .resolvedBody(notification.getResolvedBody())
@@ -136,6 +140,6 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                             .creationDate(notification.getCreationDate())
                             .build());
                 });
-        return new PageImpl<>(detailedUserNotifications.stream().sorted(Comparator.comparing(DetailedUserNotificationDto::getCreationDate).reversed()).collect(Collectors.toList()), pageable, userNotifications.getTotalElements());
+        return new PageImpl<>(detailedUserNotifications, pageable, userNotifications.getTotalElements());
     }
 }
