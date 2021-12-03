@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-
 /**
  * Service handling CompanyRitualSeason
  *
@@ -25,11 +24,9 @@ public class CompanyRitualSeasonService extends GenericService<JpaCompanyRitualS
 
     private final CompanyRitualSeasonRepository companyRitualSeasonRepository;
 
-
     public CompanyRitualSeasonDto getLatestCompanyRitualSeasonByCompanyCodeAndRitualSeason(String companyCode, String typeCode) {
         Optional<JpaCompanyRitualSeason> companyRitualSeason = companyRitualSeasonRepository.findByCompanyCodeAndRitualSeasonRitualTypeCode(companyCode, typeCode);
         return getMapper().fromEntity(companyRitualSeason.get(), mappingContext);
     }
-
 
 }

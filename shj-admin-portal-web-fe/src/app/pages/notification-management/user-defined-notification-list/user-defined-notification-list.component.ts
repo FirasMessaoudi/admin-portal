@@ -52,11 +52,6 @@ export class UserDefinedNotificationListComponent implements OnInit {
               private calendar: NgbCalendar,
               public formatter: NgbDateParserFormatter,
               private dateFormatterService: DateFormatterService) {
-    this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
-
-    this.notificationFromDate = calendar.getToday();
-    this.notificationToDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
 
   ngOnInit(): void {
@@ -125,7 +120,7 @@ export class UserDefinedNotificationListComponent implements OnInit {
     //Trim input values and replace all whitespaces characters
     payload.notificationTitle = payload.notificationTitle.replace(/\s/g, " ").trim();
     payload.notificationBody = payload.notificationBody.replace(/\s/g, " ").trim();
-    payload.description = payload.descriptiobn.replace(/\s/g, " ").trim();
+    payload.description = payload.description.replace(/\s/g, " ").trim();
 
     this.searchSubscription = this.notificationService.listUserDefined(0, payload).subscribe(data => {
 
