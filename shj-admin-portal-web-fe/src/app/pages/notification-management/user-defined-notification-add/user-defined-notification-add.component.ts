@@ -203,22 +203,28 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   saveAsDraft() {
-    const notificationTemplate = this.createNotificationTemplate();
+    this.confirmDialogService.confirm(
+      this.translate.instant('notification-management.save_changes_confirmation_text'),
+      this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+      if (confirm) {
+        const notificationTemplate = this.createNotificationTemplate();
 
-    this.notificationService.saveAsDraft(notificationTemplate).subscribe(res => {
-      if (res.hasOwnProperty('errors') && res.errors) {
-        this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
-        Object.keys(this.notificationForm.controls).forEach(field => {
-          console.log('looking for validation errors for : ' + field);
-          if (res.errors[field]) {
-            const control = this.notificationForm.get(field);
-            control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
-            control.markAsTouched({onlySelf: true});
+        this.notificationService.saveAsDraft(notificationTemplate).subscribe(res => {
+          if (res.hasOwnProperty('errors') && res.errors) {
+            this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
+            Object.keys(this.notificationForm.controls).forEach(field => {
+              console.log('looking for validation errors for : ' + field);
+              if (res.errors[field]) {
+                const control = this.notificationForm.get(field);
+                control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
+                control.markAsTouched({onlySelf: true});
+              }
+            });
+          } else {
+            this.toastr.success(this.translate.instant("notification-management.saved_successfully"), this.translate.instant("general.dialog_add_title"));
+            this.router.navigate(['/user-defined-notification/list']);
           }
         });
-      } else {
-        this.toastr.success(this.translate.instant("notification-management.saved_successfully"), this.translate.instant("general.dialog_add_title"));
-        this.router.navigate(['/user-defined-notification/list']);
       }
     });
   }
