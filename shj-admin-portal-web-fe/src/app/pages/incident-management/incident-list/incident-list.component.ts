@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {EAuthority, Page} from "@shared/model";
 import {AuthenticationService} from "@core/services";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {ApplicantIncident} from "@model/applicant-incident.model";
 import {Subscription} from "rxjs";
 import {IncidentService} from "@core/services/incident/incident.service";
@@ -43,9 +43,6 @@ export class IncidentListComponent implements OnInit, OnDestroy {
               public formatter: NgbDateParserFormatter,
               private i18nService: I18nService,
               private dateFormatterService: DateFormatterService) {
-    this.fromDate = calendar.getToday();
-    this.today = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
 
   ngOnInit(): void {
@@ -65,8 +62,9 @@ export class IncidentListComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
-      applicantId: ['', Validators.required],
-      applicantName: ['', Validators.required],
+      incidentNumber: [''],
+      applicantId: [''],
+      applicantName: [''],
       incidentType: [null],
       status: [null]
     });

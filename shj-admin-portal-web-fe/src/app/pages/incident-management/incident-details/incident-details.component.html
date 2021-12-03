@@ -77,7 +77,7 @@
     <form [formGroup]="incidentForm">
 
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-        <div class="form-group col" *ngIf="incident?.statusCode === UNDER_PROCESSING">
+        <div class="form-group col" *ngIf="isUnderProcessing(incident)">
           <label class="col-form-label">{{ "incident-management.operation" | translate }}</label>
           <div class="radio-group form-control-plaintext d-flex font-weight-normal">
             <div class="radio-item align-items-baseline d-flex mr-5">
@@ -100,12 +100,12 @@
             </div>
           </div>
         </div>
-        <div class="form-group col" *ngIf="incident?.statusCode !== UNDER_PROCESSING">
+        <div class="form-group col" *ngIf="!isUnderProcessing(incident)">
           <label class="col-form-label">{{"incident-management.operation" | translate }}</label>
           <label
             class="form-control-plaintext">{{(incident?.statusCode === 'RESOLVED' ? 'incident-management.mark_as_resolved' : 'incident-management.mark_as_closed') | translate}}</label>
         </div>
-        <div class="form-group col" *ngIf="incident?.statusCode !== UNDER_PROCESSING">
+        <div class="form-group col" *ngIf="!isUnderProcessing(incident)">
           <label class="col-form-label">{{"incident-management.operation_date" | translate }}</label>
           <label class="form-control-plaintext">{{incident?.updateDate | dateFormat}}</label>
         </div>
@@ -115,23 +115,23 @@
         <div class="form-group col">
           <label class="col-form-label">{{ "incident-management.comments" | translate }}
             <span
-              *ngIf="incident?.statusCode === UNDER_PROCESSING">
+              *ngIf="isUnderProcessing(incident)">
               ({{"incident-management.comments_caution" | translate}})
             </span>
-            <span *ngIf="incident?.statusCode === UNDER_PROCESSING" class="text-danger">*</span>
+            <span *ngIf="isUnderProcessing(incident)" class="text-danger">*</span>
           </label>
-          <textarea *ngIf="incident?.statusCode === UNDER_PROCESSING" type="text" formControlName="resolutionComment"
+          <textarea *ngIf="isUnderProcessing(incident)" type="text" formControlName="resolutionComment"
                     class="form-control" rows="3"
                     maxlength="500"></textarea>
-          <label *ngIf="incident?.statusCode !== UNDER_PROCESSING"
+          <label *ngIf="!isUnderProcessing(incident)"
                  class="form-control-plaintext">{{incident?.resolutionComment}}</label>
         </div>
       </div>
 
       <div class="d-flex justify-content-between">
-        <button class="btn btn-outline-dcc-primary px-4" [disabled]="!incidentForm?.dirty"
+        <button *ngIf="isUnderProcessing(incident)" class="btn btn-outline-dcc-primary px-4" [disabled]="!incidentForm?.dirty"
                 (click)="cancel()">{{"general.btn_cancel" | translate}}</button>
-        <button class="btn btn-dcc-primary px-4" [disabled]="!incidentForm.valid"
+        <button *ngIf="isUnderProcessing(incident)" class="btn btn-dcc-primary px-4" [disabled]="!incidentForm.valid"
                 (click)="save()">{{"general.btn_send" | translate}}</button>
       </div>
 

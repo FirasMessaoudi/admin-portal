@@ -23,6 +23,7 @@ public class IncidentSearchCriteriaDto implements Serializable {
 
     private static final long serialVersionUID = 4619655483279464845L;
 
+    private String incidentNumber;
     private String applicantId;
     private String applicantName;
     private String incidentType;

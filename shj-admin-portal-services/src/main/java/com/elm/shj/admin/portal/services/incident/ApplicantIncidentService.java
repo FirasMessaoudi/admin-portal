@@ -74,6 +74,9 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         return (root, criteriaQuery, criteriaBuilder) -> {
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
+            if (criteria.getIncidentNumber() != null && criteria.getIncidentNumber().trim().length() > 0) {
+                predicates.add(criteriaBuilder.like(root.get("referenceNumber"), "%" + criteria.getIncidentNumber().trim() + "%"));
+            }
             if (criteria.getApplicantId() != null && criteria.getApplicantId().trim().length() > 0) {
                 Join<JpaApplicant, JpaApplicantDigitalId> digitalIds = root.join("applicantRitual").join("applicant").join("digitalIds");
                 predicates.add(criteriaBuilder.like(digitalIds.get("uin"), "%" + criteria.getApplicantId().trim() + "%"));
@@ -136,7 +139,6 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         }
         return sftpService.downloadFile(incidentAttachment.get().getFilePath(), APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
     }
-
 
 
     /**

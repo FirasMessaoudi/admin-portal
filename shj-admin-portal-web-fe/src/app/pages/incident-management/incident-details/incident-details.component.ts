@@ -198,5 +198,8 @@ export class IncidentDetailsComponent implements OnInit {
     this.incidentForm.controls.resolutionComment.setValue('');
   }
 
+  isUnderProcessing(incident): boolean {
+    return incident?.statusCode === this.UNDER_PROCESSING;
+}
 
 }
