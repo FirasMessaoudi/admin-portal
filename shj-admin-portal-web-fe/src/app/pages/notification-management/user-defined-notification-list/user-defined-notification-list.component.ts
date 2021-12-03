@@ -122,6 +122,10 @@ export class UserDefinedNotificationListComponent implements OnInit {
     payload.creationDateEnd = toDate;
     payload.sendingDateStart = notificationFromDate;
     payload.sendingDateEnd = notificationToDate;
+    //Trim input values and replace all whitespaces characters
+    payload.notificationTitle = payload.notificationTitle.replace(/\s/g, " ").trim();
+    payload.notificationBody = payload.notificationBody.replace(/\s/g, " ").trim();
+    payload.description = payload.descriptiobn.replace(/\s/g, " ").trim();
 
     this.searchSubscription = this.notificationService.listUserDefined(0, payload).subscribe(data => {
 
