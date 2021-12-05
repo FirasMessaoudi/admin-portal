@@ -42,7 +42,6 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
                     i -> i % 2 == 0 ? "F" : "M",
                     mapping(Integer::intValue, toList())
             ));
-    private static ThreadLocal<List<String>> threadLocalLatestSerialList = ThreadLocal.withInitial(() -> new ArrayList<>());
 
     private final CompanyStaffDigitalIdRepository  companyStaffDigitalIdRepository;
 
@@ -62,22 +61,22 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
      * @param staff the company staff   to generate smart id for
      * @return the generated smart id
      */
-    public String generate(CompanyStaffDto staff) {
+    public String generate(CompanyStaffDto staff , int seasonYear) {
         // check inputs
         Assert.notNull(staff.getGender(), "Invalid Staff  Gender!");
         Assert.isTrue(Arrays.asList("M", "F").contains(staff.getGender().toUpperCase()), "Invalid Staff Gender!");
-        Assert.notNull(staff.getSeason(), "Invalid Staff  Season!");
+        Assert.notNull(seasonYear, "Invalid Staff  Season!");
+        Assert.isTrue(seasonYear > 0, "Invalid Staff  Season!");
+
         // generate gender digit
         String genderDigit = String.valueOf(GENDER_DIGITS.get(staff.getGender().toUpperCase()).get(ThreadLocalRandom.current().nextInt(0, "F".equalsIgnoreCase(staff.getGender()) ? 4 : 5)));
-        String suinPrefix = genderDigit +staff.getSeason() ;
-       threadLocalLatestSerialList.get().addAll(0, companyStaffDigitalIdRepository.fetchSuinBySuinLike(suinPrefix));
-        long nextSequence = CollectionUtils.isEmpty(threadLocalLatestSerialList.get()) ? 1 : Long.parseLong(threadLocalLatestSerialList.get().get(0)) + 1;
-        String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 5, "0");
+        String suinPrefix = genderDigit + seasonYear;
+        List<String> latestSerialList = companyStaffDigitalIdRepository.fetchSuinBySuinLike(suinPrefix);
+        long nextSequence = CollectionUtils.isEmpty(latestSerialList) ? 1 : Long.parseLong(latestSerialList.get(0)) + 1;
+          String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 6, "0");
         // generate checksum digit
         String partialSmartId = suinPrefix + serialDigits;
         String checkDigit = calculateCheckDigit(partialSmartId);
-        // add newly generated suinPrefix to the list to avoid duplicate for the current processed file in addition to the database.
-//        threadLocalLatestSerialList.get().add(0, serialDigits);
         // return staff smart id
         return partialSmartId + checkDigit;
 

@@ -58,7 +58,7 @@ public class DigitalIdScheduler {
         LockAssert.assertLocked();
         companyStaffDigitalIdService.findAllWithoutDigitalId().forEach(digitalId -> {
             // generate and save staff digital id for each company staff member
-            digitalId.setSuin(companyStaffDigitalIdService.generate(digitalId.getCompanyStaff()));
+            digitalId.setSuin(companyStaffDigitalIdService.generate(digitalId.getCompanyStaff(),digitalId.getSeasonYear()));
             digitalId.setStatusCode(EStaffDigitalIdStatus.VALID.name());
             companyStaffDigitalIdService.save(digitalId);
         });
