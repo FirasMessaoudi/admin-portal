@@ -68,7 +68,7 @@ public class ItemWriter {
     private final ApplicantContactService applicantContactService;
     private final CompanyStaffService  companyStaffService;
     private final CompanyStaffDigitalIdService  companyStaffDigitalIdService;
-      private final CompanyStaffCardService companyStaffCardService;
+    private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
 
 
@@ -108,7 +108,7 @@ public class ItemWriter {
     @Transactional
     @SuppressWarnings({"rawtypes", "unchecked"})
     public <T, S> void write(List<AbstractMap.SimpleEntry<Row, T>> items, DataSegmentDto dataSegment, long dataRequestId) {
-        if(dataSegment.getId()==7){
+        if(dataSegment.getId()==EDataSegment.APPLICANT_EMERGENCY_DATA.getId()){
             JpaRepository applicantRepository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.APPLICANT_DATA));
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
             List<S> savedItems = new ArrayList<>();
@@ -160,29 +160,46 @@ public class ItemWriter {
 
             });
         }else {
-            if (dataSegment.getId() < 8) {
+            if (dataSegment.getId() < EDataSegment.STAFF_MAIN_DATA.getId()) {
                 // update applicant related attributes
                 items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
-
             }
-            if (dataSegment.getId() == 9) {
+            if (dataSegment.getId() == EDataSegment.STAFF_RITUAL_DATA.getId()) {
                 //Temporary for testing only : staff ritual
                 items.forEach(entry -> updateCompanyStaffRitualData(entry.getValue()));
 
             }
 
             // save all items and build data records
-            if (dataSegment.getId() != 9) {
+            if (dataSegment.getId() != EDataSegment.STAFF_RITUAL_DATA.getId()) {
                 List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
                 List<S> savedItems = new ArrayList<>();
                 JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
                 items.forEach(entry -> {
-                    S savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
-                    savedItems.add(savedItem);
-                    if(dataSegment.getId()==8){
+                    S savedItem =null;
+                    //this part is to handle staff main data
+                    if(dataSegment.getId()==EDataSegment.STAFF_MAIN_DATA.getId()){
                         CompanyStaffDto staff =(CompanyStaffDto) entry.getValue() ;
-                        generateSmartIdRecordIfRequired(staff);
+                        CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(),staff.getPassportNumber(),staff.getDateOfBirthGregorian(),staff.getDateOfBirthHijri());
+                        // if record exists already in DB we need to update it
+                        if (existingStaff != null) {
+                            staff.setId(existingStaff.getId());
+                            staff.setDigitalIds(existingStaff.getDigitalIds());
+                            staff.setCompany(existingStaff.getCompany());
+                            staff.setDataRequestRecord(existingStaff.getDataRequestRecord());
+                            staff.setApplicantGroups(existingStaff.getApplicantGroups());
+                            staff.setCreationDate(existingStaff.getCreationDate());
+                            savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(staff, mappingContext));
+                        }else{
+                            savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
+                            generateSmartIdRecordIfRequired(staff);
+                        }
+                    }else{
+                          savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
+
                     }
+                    savedItems.add(savedItem);
+
                     try {
                         dataRequestRecords.add(DataRequestRecordDto.builder()
                                 .createDataRequestId(dataRequestId)

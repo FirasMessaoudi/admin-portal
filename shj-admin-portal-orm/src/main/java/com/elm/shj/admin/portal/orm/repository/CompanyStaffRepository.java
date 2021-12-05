@@ -32,6 +32,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
     @Query("select s from JpaCompanyStaff s where s.id not in (select sdi.companyStaff.id from JpaCompanyStaffDigitalId sdi where sdi.seasonYear =:season)")
     List<JpaCompanyStaff> findAllWithoutSuin(@Param("season") int season );
+
     @Query(value = "SELECT a " +
             "FROM JpaCompanyStaff a WHERE " +
             "(a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
