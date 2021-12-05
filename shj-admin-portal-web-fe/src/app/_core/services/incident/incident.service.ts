@@ -1,19 +1,19 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpErrorResponse, HttpEvent, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpEvent, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 import {Lookup} from "@model/lookup.model";
 import {IncidentSearchCriteria} from "@model/incident-search-criteria.model";
 import {catchError} from "rxjs/internal/operators";
 import {ApplicantIncident} from "@model/applicant-incident.model";
-import {User} from "@shared/model";
 import {ApplicantIncidentVo} from "@model/applicant-incident-vo.model";
+import {CookieService} from "ngx-cookie-service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class IncidentService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private cookieService: CookieService) {
   }
 
   /**
@@ -62,6 +62,17 @@ export class IncidentService {
    * @param incidentVo the incident value object containing resolution comment and resolution type
    */
   handle(incidentId: number, incidentVo: ApplicantIncidentVo): Observable<any> {
-    return this.http.put<any>('/core/api/incidents/handle/' + incidentId, incidentVo);
+    let headers = new HttpHeaders();
+    headers = headers.set('X-XSRF-TOKEN', this.cookieService.get("XSRF-TOKEN"));
+    return this.http.put<any>('/core/api/incidents/handle/' + incidentId, incidentVo, {'headers': headers})
+      .pipe(catchError((error: HttpErrorResponse) => {
+          if (error.hasOwnProperty('error')) {
+            return of(error.error);
+          } else {
+            console.error('An error happened while updating incident : ' + error);
+            return of(error);
+          }
+        })
+      );
   }
 }
