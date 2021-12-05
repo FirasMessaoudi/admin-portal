@@ -62,8 +62,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
     }
 
     @Transactional
-    public int deleteApplicantChatContact(String applicantUin, String contactUin) {
-        return applicantChatContactRepository.markDeleted(applicantUin, contactUin);
+    public int deleteApplicantChatContact(String applicantUin, String contactUin,Long applicantRitualId) {
+        return applicantChatContactRepository.markDeleted(applicantUin, contactUin,applicantRitualId);
     }
 
     private ApplicantChatContactLiteDto mapChatContactToChatContactLite(ApplicantChatContactDto applicantChatContact) {

@@ -222,7 +222,7 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
     @Test
     void test_delete_applicant_chat_contact() throws Exception {
         String url = Navigation.API_INTEGRATION + "/chat-contact/"+TEST_APPLICANT_UIN+"/"+TEST_CONTACT_UIN;
-        when(applicantChatContactService.deleteApplicantChatContact(anyString(),anyString())).thenReturn(1);
+        when(applicantChatContactService.deleteApplicantChatContact(anyString(),anyString(),anyLong())).thenReturn(1);
         mockMvc.perform(post(url).cookie(tokenCookie).contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectToJson(null)).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("SUCCESS"))).andExpect(jsonPath("$.body", is("number of affected rows : 1")));
     }

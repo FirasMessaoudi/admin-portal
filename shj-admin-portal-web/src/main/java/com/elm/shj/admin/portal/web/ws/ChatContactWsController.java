@@ -106,10 +106,10 @@ public class ChatContactWsController {
      * @param contactUin   the UIN of the chat contact
      * @return WsResponse of number of selected rows
      */
-    @PostMapping("/{applicantUin}/{contactUin}")
-    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantUin, @PathVariable String contactUin) {
+    @PostMapping("/delete/{applicantUin}/{contactUin}/{applicantRitualId}")
+    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantUin, @PathVariable String contactUin ,@PathVariable Long applicantRitualId) {
         log.info("Delete Applicant Chat Contact...");
-        int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin, contactUin);
+        int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin, contactUin,applicantRitualId);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
     }
 
