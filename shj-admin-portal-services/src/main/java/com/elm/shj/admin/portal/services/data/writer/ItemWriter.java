@@ -5,10 +5,11 @@ package com.elm.shj.admin.portal.services.data.writer;
 
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
-import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthSpecialNeeds;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
-import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
@@ -547,17 +548,19 @@ public class ItemWriter {
             CompanyStaffRitualDto companyStaffRitual = (CompanyStaffRitualDto) item;
             CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(companyStaffRitual.getIdNumber(), companyStaffRitual.getPassportNumber(), companyStaffRitual.getDateOfBirthGregorian(), companyStaffRitual.getDateOfBirthHijri());
             CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason().intValue());
-            //this has to be checked
             CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByCompanyCodeAndRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
 
             if (companyStaffDigitalId !=null) {
                 List<CompanyStaffCardDto> companyStaffCardDtos = companyStaffCardService.findByDigitalId(companyStaffDigitalId.getId());
+                // if no cards for digitalId and SEASON
                 if (companyStaffCardDtos.isEmpty()) {
                     CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
                     companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
                     companyStaffCardDto.setStatusCode("READY_TO_PRINT");
                     companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                     companyStaffCardService.save(companyStaffCardDto);
+                    return;
+
                 }
 
                 // find staff cards for same company and same ritual
@@ -568,15 +571,18 @@ public class ItemWriter {
                     companyStaffCardDto.setStatusCode("READY_TO_PRINT");
                     companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                     companyStaffCardService.save(companyStaffCardDto);
+                    return;
                 }
 
                 //find staff cards for different company or different ritual
                 List<CompanyStaffCardDto> companyStaffCards2 = companyStaffCardService.findByDigitalIdAndDifferentCompanyOrRitual(companyStaffDigitalId.getId(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
                 if (CollectionUtils.isNotEmpty(companyStaffCards2)) {
                     companyStaffCards2.forEach(c -> {
-                        c.setStatusCode("EXPIRED");
+                        if (c.getStatusCode().equals("ACTIVE"))
+                            c.setStatusCode("EXPIRED");
                     });
                     companyStaffCardService.saveAll(companyStaffCards2);
+                    return;
                 }
 
             } else {

@@ -5,8 +5,6 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeason;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -19,6 +17,6 @@ import java.util.Optional;
 public interface CompanyRitualSeasonRepository extends JpaRepository<JpaCompanyRitualSeason, Long> {
 
     //for test :must be updated
-    @Query("select cr from JpaCompanyRitualSeason cr where cr.id = 1 ")
-    Optional<JpaCompanyRitualSeason> findByCompanyCodeAndRitualSeasonRitualTypeCode(@Param("companyCode") String companyCode, @Param("typeCode") String typeCode);
+    // @Query("select cr from JpaCompanyRitualSeason cr where cr.company.code = :companyCode and cr.ritualSeason.ritualTypeCode = :typeCode")
+    Optional<JpaCompanyRitualSeason> findTopByCompanyCodeOrderBySeasonStartDesc(String companyCode);
 }
