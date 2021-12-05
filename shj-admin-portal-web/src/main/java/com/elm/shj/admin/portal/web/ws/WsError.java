@@ -27,7 +27,8 @@ public class WsError {
         CARD_DETAILS_NOT_FOUND(103),
         UPDATE_APPLICANT_FAILED(104),
         COMPANY_STAFF_NOT_FOUND(105),
-        APPLICANT_CHAT_CONTACT_NOT_FOUND(106);
+        APPLICANT_CHAT_CONTACT_NOT_FOUND(106),
+        INCIDENT_TYPE_NOT_FOUND(107);
         int code;
 
         EWsError(int code) {

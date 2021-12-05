@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaIncidentTypeLookup;
+import com.elm.shj.admin.portal.orm.entity.JpaRitualTypeLookup;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -13,4 +14,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.1.0
  */
 public interface IncidentTypeLookupRepository extends JpaRepository<JpaIncidentTypeLookup, Long> {
+    JpaIncidentTypeLookup findFirstByCode(String typeCode);
 }
