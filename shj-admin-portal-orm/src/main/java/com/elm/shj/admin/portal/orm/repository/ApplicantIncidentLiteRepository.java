@@ -22,4 +22,7 @@ import java.util.List;
 public interface ApplicantIncidentLiteRepository extends JpaRepository<JpaApplicantIncidentLite, Long>, JpaSpecificationExecutor<JpaApplicantIncidentLite> {
     List<JpaApplicantIncidentLite> findByApplicantRitualId(long applicantRitualId);
 
+    @Query("select substring(j.referenceNumber,5, 8) from JpaApplicantIncidentLite j where j.referenceNumber like :referenceNum% order by substring(j.referenceNumber, 5, 8) desc")
+    List<String> fetchReferenceNumByReferenceNumLike(@Param("referenceNum") String referenceNum);
+
 }

@@ -14,6 +14,8 @@ import com.elm.shj.admin.portal.services.utils.DateUtils;
 import com.jcraft.jsch.JSchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -49,8 +51,10 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
 
 
     private final SftpService sftpService;
-     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
+    private final  ApplicantIncidentLiteRepository applicantIncidentLiteRepository ;
+    private static final int REQUEST_REF_NUMBER_LENGTH = 12;
     private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
+    private static ThreadLocal<List<String>> threadLocalLatestSerialList = ThreadLocal.withInitial(() -> new ArrayList<>());
 
 
 
@@ -116,12 +120,12 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
      * @return a unique identifier for the applicant incident
      */
     public String generateReferenceNumber() {
-        RandomStringGenerator generator = new RandomStringGenerator.Builder()
-                .withinRange('0', '9')
-                .filteredBy(t -> t >= '0' && t <= '9')
-                .build();
+        String referenceNumPrefix = String.valueOf(DateUtils.getCurrentHijriYear());
+        threadLocalLatestSerialList.get().addAll(0, applicantIncidentLiteRepository.fetchReferenceNumByReferenceNumLike(referenceNumPrefix));
+        long nextSequence = CollectionUtils.isEmpty(threadLocalLatestSerialList.get()) ? 1 : Long.parseLong(threadLocalLatestSerialList.get().get(0)) + 1;
+        String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 8, "0");
 
-        return  DateUtils.getCurrentHijriYear()  + generator.generate(REQUEST_REF_NUMBER_LENGTH - 4)  ;
+        return    referenceNumPrefix+ serialDigits  ;
     }
 
 }
