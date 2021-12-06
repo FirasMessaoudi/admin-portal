@@ -55,7 +55,7 @@
         <label class="col-form-label">{{"incident-management.attachments" | translate }}</label>
         <span *ngFor="let attachment of incident?.incidentAttachments">
           <a href="#"
-             class="form-control-plaintext">{{attachment?.filePath.substring(attachment?.filePath?.lastIndexOf("/") + 1)}}</a>
+             class="form-control-plaintext attachment"><u>{{attachment?.filePath.substring(attachment?.filePath?.lastIndexOf("/") + 1)}}</u></a>
             </span>
       </div>
     </div>
@@ -121,15 +121,15 @@
             <span *ngIf="isUnderProcessing(incident)" class="text-danger">*</span>
           </label>
           <textarea *ngIf="isUnderProcessing(incident)" type="text" formControlName="resolutionComment"
-                    class="form-control" rows="3"
-                    maxlength="500"></textarea>
+                    class="form-control" rows="3" maxlength="500"></textarea>
           <label *ngIf="!isUnderProcessing(incident)"
-                 class="form-control-plaintext">{{incident?.resolutionComment}}</label>
+                 class="form-control-plaintext text-break">{{incident?.resolutionComment}}</label>
         </div>
       </div>
 
       <div class="d-flex justify-content-between">
-        <button *ngIf="isUnderProcessing(incident)" class="btn btn-outline-dcc-primary px-4" [disabled]="!incidentForm?.dirty"
+        <button *ngIf="isUnderProcessing(incident)" class="btn btn-outline-dcc-primary px-4"
+                [disabled]="!incidentForm?.dirty"
                 (click)="cancel()">{{"general.btn_cancel" | translate}}</button>
         <button *ngIf="isUnderProcessing(incident)" class="btn btn-dcc-primary px-4" [disabled]="!incidentForm.valid"
                 (click)="save()">{{"general.btn_send" | translate}}</button>

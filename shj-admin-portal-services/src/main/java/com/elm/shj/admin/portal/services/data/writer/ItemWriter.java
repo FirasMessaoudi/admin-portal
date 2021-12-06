@@ -575,6 +575,7 @@ public class ItemWriter {
                     companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
                     companyStaffCardDto.setStatusCode("READY_TO_PRINT");
                     companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                    companyStaffCardDto.setReferenceNumber("");
                     companyStaffCardService.save(companyStaffCardDto);
                     return;
 
@@ -587,6 +588,7 @@ public class ItemWriter {
                     companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
                     companyStaffCardDto.setStatusCode("READY_TO_PRINT");
                     companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                    companyStaffCardDto.setReferenceNumber("");
                     companyStaffCardService.save(companyStaffCardDto);
                     return;
                 }
@@ -610,6 +612,7 @@ public class ItemWriter {
                 CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
                 companyStaffCardDto.setCompanyStaffDigitalId(savedDigitalId);
                 companyStaffCardDto.setStatusCode("READY_TO_PRINT");
+                companyStaffCardDto.setReferenceNumber("");
                 companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                 companyStaffCardService.save(companyStaffCardDto);
                 // create new digital id for that staff
