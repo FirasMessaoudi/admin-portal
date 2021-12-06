@@ -121,15 +121,15 @@
             <span *ngIf="isUnderProcessing(incident)" class="text-danger">*</span>
           </label>
           <textarea *ngIf="isUnderProcessing(incident)" type="text" formControlName="resolutionComment"
-                    class="form-control" rows="3"
-                    maxlength="500"></textarea>
+                    class="form-control" rows="3" maxlength="500"></textarea>
           <label *ngIf="!isUnderProcessing(incident)"
                  class="form-control-plaintext text-break">{{incident?.resolutionComment}}</label>
         </div>
       </div>
 
       <div class="d-flex justify-content-between">
-        <button *ngIf="isUnderProcessing(incident)" class="btn btn-outline-dcc-primary px-4" [disabled]="!incidentForm?.dirty"
+        <button *ngIf="isUnderProcessing(incident)" class="btn btn-outline-dcc-primary px-4"
+                [disabled]="!incidentForm?.dirty"
                 (click)="cancel()">{{"general.btn_cancel" | translate}}</button>
         <button *ngIf="isUnderProcessing(incident)" class="btn btn-dcc-primary px-4" [disabled]="!incidentForm.valid"
                 (click)="save()">{{"general.btn_send" | translate}}</button>
