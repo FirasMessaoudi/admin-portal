@@ -179,8 +179,8 @@
 
 
               <div class="d-flex justify-content-between">
-                <button (click)="back()" class="btn btn-outline-dcc-primary px-4">
-                  <span>{{ "general.btn_back" | translate }}</span>
+                <button *ngIf="editable" (click)="cancel()" class="btn btn-outline-dcc-primary px-4">
+                  <span>{{ "general.btn_cancel"  | translate }}</span>
 
                 </button>
 
