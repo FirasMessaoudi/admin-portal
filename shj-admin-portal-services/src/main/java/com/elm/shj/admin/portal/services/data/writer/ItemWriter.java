@@ -570,6 +570,7 @@ public class ItemWriter {
             CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByCompanyCodeAndRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
 
             if (companyStaffDigitalId !=null) {
+                // if he has a digital id for that same season
                 List<CompanyStaffCardDto> companyStaffCardDtos = companyStaffCardService.findByDigitalId(companyStaffDigitalId.getId());
                 // if no cards for digitalId and SEASON
                 if (companyStaffCardDtos.isEmpty()) {
@@ -607,6 +608,8 @@ public class ItemWriter {
                 }
 
             } else {
+                // create new digital id for that staff in case he has no digital id for that same season
+
                 CompanyStaffDigitalIdDto staffDigitalId = new CompanyStaffDigitalIdDto();
                 staffDigitalId.setCompanyStaff(existingStaff);
                 staffDigitalId.setSeasonYear(companyStaffRitual.getSeason().intValue());
@@ -617,7 +620,6 @@ public class ItemWriter {
                 companyStaffCardDto.setReferenceNumber("");
                 companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                 companyStaffCardService.save(companyStaffCardDto);
-                // create new digital id for that staff
             }
 
         }
