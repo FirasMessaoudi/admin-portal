@@ -39,7 +39,7 @@ public class LookupController {
     private final PrintRequestStatusLookupService printRequestStatusLookupService;
     private final PrintBatchTypeLookupService printBatchTypeLookupService;
     private final CompanyRitualStepLookupService companyRitualStepLookupService;
-    private final CompanyStaffLookupService companyStaffLookupService;
+    private final CompanyStaffTitleLookupService companyStaffTitleLookupService;
     private final HousingCategoryLookupService housingCategoryLookupService;
     private final HousingTypeLookupService housingTypeLookupService;
     private final PackageTypeLookupService packageTypeLookupService;
@@ -123,7 +123,7 @@ public class LookupController {
     @GetMapping("/company_staff_title/list")
     public List<CompanyStaffTitleLookupDto> listCompanyStaffTitleLabel(Authentication authentication) {
         log.debug("list company staff title labels...");
-        return companyStaffLookupService.findAll();
+        return companyStaffTitleLookupService.findAll();
     }
 
     @GetMapping("/housing-category/list")

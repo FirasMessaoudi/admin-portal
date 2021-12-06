@@ -21,9 +21,11 @@ import java.util.List;
  * @author salzoubi
  * @since 1.1.0
  */
+
 @NoArgsConstructor
 @Getter
 @Setter
+@UniqueCompanyStaff
 @FieldDependency.List({
         @FieldDependency(first = "idNumber", second = "passportNumber"),
         @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri")
@@ -33,10 +35,10 @@ public class CompanyStaffDto {
     private long id;
 
     @CellIndex(index = 5)
-    @NullOrNotBlank(min = 5, max = 255)
+    @OnlyCharacters(min = 6, max = 150, arabic = true)
     private String fullNameAr;
 
-    @NullOrNotBlank(min = 5, max = 255)
+    @OnlyCharacters(min = 10, max = 150, allowEmpty = false)
     @CellIndex(index = 4)
     private String fullNameEn;
 
@@ -49,13 +51,14 @@ public class CompanyStaffDto {
     @CellIndex(index = 1)
     private String passportNumber;
 
-    @GregorianDate(minOffset = -120, maxOffset = -10)
+    @GregorianDate(minOffset = -120, maxOffset = -10 ,allowNull = false)
     @CellIndex(index = 2)
     private Date dateOfBirthGregorian;
 
     @HijriDate(minOffset = -140, maxOffset = -11)
     @CellIndex(index = 3)
     private Long dateOfBirthHijri;
+
     @Gender
     @CellIndex(index = 7)
     private String gender;
@@ -68,8 +71,8 @@ public class CompanyStaffDto {
     @CellIndex(index = 10)
     private String photo;
 
+    @UniquePerRequest
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
-    @NotNull(message = "validation.data.constraints.msg.20001")
     @CellIndex(index = 0)
     private String idNumber;
 
@@ -79,9 +82,10 @@ public class CompanyStaffDto {
     @JsonBackReference(value = "applicantGroups")
     private List<ApplicantGroupDto> applicantGroups;
 
-    @NullOrNotBlank(min = 3, max = 45)
+    @JobTitleCode
     @CellIndex(index = 11)
     private String titleCode;
+
     @CellIndex(index = 15)
     private int season;
 
@@ -98,7 +102,7 @@ public class CompanyStaffDto {
     @CellIndex(index =14)
     private String mobileNumberIntl;
 
-    @NullOrNotBlank(min = 5, max = 255)
+    @NullOrNotBlank(min = 5, max = 50)
     @Email(message = "validation.data.constraints.msg.20003")
     @CellIndex(index =12)
     private String email;

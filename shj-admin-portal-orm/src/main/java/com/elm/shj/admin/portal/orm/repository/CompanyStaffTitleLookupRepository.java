@@ -13,4 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.1.0
  */
 public interface CompanyStaffTitleLookupRepository extends JpaRepository<JpaCompanyStaffTitleLookup, Long> {
+    boolean existsByCode(String jobTitleCode);
 }

@@ -17,6 +17,10 @@ import com.elm.shj.admin.portal.services.audit.AuditLogService;
 import com.elm.shj.admin.portal.services.card.ApplicantCardScheduler;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.card.UserCardStatusAuditService;
+import com.elm.shj.admin.portal.services.company.CompanyLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.data.request.DataRequestService;
 import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
@@ -273,7 +277,7 @@ public abstract class AbstractControllerTestSuite {
     protected CompanyRitualStepLookupService companyRitualStepLookupService;
 
     @MockBean
-    protected CompanyStaffLookupService companyStaffLookupService;
+    protected CompanyStaffTitleLookupService companyStaffTitleLookupService;
 
     @MockBean
     protected HousingCategoryLookupService housingCategoryLookupService;

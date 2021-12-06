@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.applicant.CompanyLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyLiteService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;

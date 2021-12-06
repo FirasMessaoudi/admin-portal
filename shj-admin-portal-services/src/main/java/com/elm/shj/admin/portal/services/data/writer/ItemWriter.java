@@ -11,6 +11,8 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthSpecialNeeds;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -66,7 +68,7 @@ public class ItemWriter {
     private final GroupApplicantListService groupApplicantListService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantContactService applicantContactService;
-    private final CompanyStaffService  companyStaffService;
+    private final CompanyStaffService companyStaffService;
     private final CompanyStaffDigitalIdService  companyStaffDigitalIdService;
     private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;

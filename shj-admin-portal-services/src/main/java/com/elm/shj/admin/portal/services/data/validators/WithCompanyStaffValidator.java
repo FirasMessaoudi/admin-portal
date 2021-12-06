@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.applicant.CompanyStaffService;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;

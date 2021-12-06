@@ -5,8 +5,8 @@ package com.elm.shj.admin.portal.services.ritual;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
-import com.elm.shj.admin.portal.services.applicant.CompanyRitualSeasonLiteService;
-import com.elm.shj.admin.portal.services.applicant.CompanyStaffService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualSeasonLiteDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffDto;
