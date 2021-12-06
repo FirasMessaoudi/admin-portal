@@ -55,7 +55,7 @@
         <label class="col-form-label">{{"incident-management.attachments" | translate }}</label>
         <span *ngFor="let attachment of incident?.incidentAttachments">
           <a href="#"
-             class="form-control-plaintext">{{attachment?.filePath.substring(attachment?.filePath?.lastIndexOf("/") + 1)}}</a>
+             class="form-control-plaintext attachment"><u>{{attachment?.filePath.substring(attachment?.filePath?.lastIndexOf("/") + 1)}}</u></a>
             </span>
       </div>
     </div>
