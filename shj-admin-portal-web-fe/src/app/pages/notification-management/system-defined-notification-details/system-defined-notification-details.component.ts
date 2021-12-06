@@ -294,16 +294,15 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
 
     if (index != -1) {
       this.selectedLangTemplateContent = this.notificationTemplate.notificationTemplateContents[index];
-      this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value;
-      this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value;
-      this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value;
+      this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value.replace(/\s/g, " ").trim();
+      this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value.replace(/\s/g, " ").trim();
+      this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value.replace(/\s/g, " ").trim();
       this.notificationTemplate.notificationTemplateContents[index] = this.selectedLangTemplateContent;
     } else {
       this.selectedLangTemplateContent = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
-      this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value;
-      this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value;
-      this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value;
-
+      this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value.replace(/\s/g, " ").trim();
+      this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value.replace(/\s/g, " ").trim();
+      this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value.replace(/\s/g, " ").trim();
       if (this.selectedLangTemplateContent.title != '' && this.selectedLangTemplateContent.body != '')
         this.notificationTemplate.notificationTemplateContents.push(this.selectedLangTemplateContent);
 
