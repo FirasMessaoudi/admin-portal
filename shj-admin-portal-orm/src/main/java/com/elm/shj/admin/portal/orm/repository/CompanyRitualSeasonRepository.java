@@ -17,6 +17,5 @@ import java.util.Optional;
 public interface CompanyRitualSeasonRepository extends JpaRepository<JpaCompanyRitualSeason, Long> {
 
     //for test :must be updated
-    // @Query("select cr from JpaCompanyRitualSeason cr where cr.company.code = :companyCode and cr.ritualSeason.ritualTypeCode = :typeCode")
     Optional<JpaCompanyRitualSeason> findTopByCompanyCodeOrderBySeasonStartDesc(String companyCode);
 }
