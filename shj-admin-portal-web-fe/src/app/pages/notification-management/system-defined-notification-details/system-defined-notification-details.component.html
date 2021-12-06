@@ -141,12 +141,11 @@
                       *ngIf="f.body.errors.invalidParams">{{'notification-management.content_params_error' | translate}}</div>
                   </div>
                 </div>
-                <div class="form-group col"
-                     *ngFor="let templateParam of notificationTemplate?.notificationTemplateParameters">
+                <div class="form-group col" >
                   <label>{{'notification-management.notification-parameters' | translate}}</label>
-                  <div (click)="copyParameter('<'+templateParam.parameterName+'>')"
+                  <div *ngFor="let templateParam of notificationTemplate?.notificationTemplateParameters" (click)="copyParameter('<'+templateParam.parameterName+'>')"
                        [ngbTooltip]="paramTooltipText">
-                    <div class="login-box__wrapper">
+                    <div >
                       <p class="text-dcc-primary font-weight-bold mb-2">{{'<' + templateParam.parameterName + '>'}}</p>
                     </div>
                   </div>
@@ -179,8 +178,8 @@
 
 
               <div class="d-flex justify-content-between">
-                <button (click)="back()" class="btn btn-outline-dcc-primary px-4">
-                  <span>{{ "general.btn_back" | translate }}</span>
+                <button *ngIf="editable" (click)="cancel()" class="btn btn-outline-dcc-primary px-4">
+                  <span>{{ "general.btn_cancel"  | translate }}</span>
 
                 </button>
 
