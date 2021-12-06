@@ -170,9 +170,11 @@ export class IncidentDetailsComponent implements OnInit {
       successText = 'incident-management.dialog_close_complaint_success_text';
     }
     this.confirmDialogService.confirm(this.translate.instant(confirmationText), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+      let payload = this.incidentForm.value;
+      payload.resolutionComment = payload.resolutionComment.replace(/\s/g, " ").trim();
       if (confirm) {
         this.isLoading = true;
-        this.incidentService.handle(this.incidentId, this.incidentForm.value).subscribe(_ => {
+        this.incidentService.handle(this.incidentId, payload).subscribe(_ => {
           this.isLoading = false;
           this.toastr.success(this.translate.instant(successText), this.translate.instant('incident-management.incident_resolution'));
           this.navigateToList();
@@ -200,6 +202,6 @@ export class IncidentDetailsComponent implements OnInit {
 
   isUnderProcessing(incident): boolean {
     return incident?.statusCode === this.UNDER_PROCESSING;
-}
+  }
 
 }
