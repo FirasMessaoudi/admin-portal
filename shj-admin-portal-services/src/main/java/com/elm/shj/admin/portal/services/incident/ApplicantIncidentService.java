@@ -9,17 +9,11 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
 import com.elm.shj.admin.portal.orm.entity.JpaIncidentAttachment;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentRepository;
 import com.elm.shj.admin.portal.orm.repository.IncidentAttachmentRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantIncidentDto;
-import com.elm.shj.admin.portal.services.dto.EIncidentStatus;
-import com.elm.shj.admin.portal.services.dto.IncidentAttachmentDto;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
-import com.elm.shj.admin.portal.services.utils.DateUtils;
-import com.jcraft.jsch.JSchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -28,14 +22,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.SetJoin;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -99,7 +89,10 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
             if (criteria.getCreationDateEnd() != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("creationDate"), criteria.getCreationDateEnd()));
             }
-            criteriaQuery.distinct(true).orderBy(criteriaBuilder.desc(root.get("updateDate")));
+
+            Expression<Date> dateTomeDescOrder = criteriaBuilder.coalesce(root.get("updateDate"), root.get("creationDate"));
+            criteriaQuery.orderBy(criteriaBuilder.desc(dateTomeDescOrder));
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
