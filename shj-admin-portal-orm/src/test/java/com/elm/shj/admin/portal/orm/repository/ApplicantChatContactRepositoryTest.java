@@ -35,7 +35,7 @@ public class ApplicantChatContactRepositoryTest extends AbstractJpaTest {
     @Test
     public void test_delete_applicant_chat_contact_success() {
 
-        int numOfAffectedRows = applicantChatContactRepository.markDeleted(TEST_ANOTHER_APPLICANT_UIN, TEST_ANOTHER_CONTACT_UIN,TEST_APPLICANT_RITUAL_ID);
+        int numOfAffectedRows = applicantChatContactRepository.markDeleted(TEST_ANOTHER_APPLICANT_UIN, TEST_ANOTHER_CONTACT_UIN);
         entityManager.clear();
         assertTrue(numOfAffectedRows > 0);
     }
@@ -44,7 +44,7 @@ public class ApplicantChatContactRepositoryTest extends AbstractJpaTest {
     @Test
     public void test_delete_applicant_chat_contact_fail() {
 
-        int numOfAffectedRows = applicantChatContactRepository.markDeleted(TEST_APPLICANT_UIN, TEST_CONTACT_UIN,TEST_APPLICANT_RITUAL_ID);
+        int numOfAffectedRows = applicantChatContactRepository.markDeleted(TEST_APPLICANT_UIN, TEST_CONTACT_UIN);
         entityManager.clear();
         assertFalse(numOfAffectedRows > 0);
     }
