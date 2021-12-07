@@ -43,7 +43,6 @@ public class ApplicantChatContactServiceTest {
 
     private final static String TEST_APPLICANT_UIN = "111";
     private final static String TEST_CONTACT_UIN = "222";
-    private final static long TEST_APPLICANT_RITUAL_ID = 24;
     @Mock
     private MapperRegistry mapperRegistry;
     @Mock
@@ -62,8 +61,8 @@ public class ApplicantChatContactServiceTest {
 
     @Test
     public void test_delete_applicant_chat_contact_success() {
-        applicantChatContactService.deleteApplicantChatContact(TEST_APPLICANT_UIN, TEST_CONTACT_UIN,TEST_APPLICANT_RITUAL_ID);
-        verify(applicantChatContactRepository, times(1)).markDeleted(  anyString(),  anyString(),anyLong());
+        applicantChatContactService.deleteApplicantChatContact(TEST_APPLICANT_UIN, TEST_CONTACT_UIN);
+        verify(applicantChatContactRepository, times(1)).markDeleted(  anyString(),  anyString());
     }
 
 
