@@ -282,7 +282,8 @@ SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
 insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
 values (8, 'staff-main-data.xlsx', N'بيانات العاملين	',
         'Staff Main Data');
-SET IDENTITY_INSERT shc_portal.shc_data_segment OFF;
+SET
+IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
@@ -290,3 +291,7 @@ VALUES ('scheduler.generate.staff.digital.ids.cron', '0 0/15 * * * *');
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('data.request.company.staff.override', 'false');
+
+update shc_portal.shc_data_segment
+set label_ar =N'بيانات الشعيرة للعاملين	'
+where id = 9
