@@ -34,9 +34,9 @@ public class CompanyStaffRitualDto implements Serializable {
     @CellIndex(index = 0)
     private String idNumber;
 
+    @CellIndex(index = 1)
     @UniquePerRequest
     @PassportNumber
-    @CellIndex(index = 1)
     private String passportNumber;
 
     @CellIndex(index = 2)
