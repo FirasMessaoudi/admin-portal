@@ -617,6 +617,7 @@ public class ItemWriter {
                 companyStaffCardDto.setStatusCode("READY_TO_PRINT");
                 companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                 companyStaffCardService.save(companyStaffCardDto);
+
             }
 
         }
