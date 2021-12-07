@@ -24,8 +24,8 @@ public class CompanyRitualSeasonService extends GenericService<JpaCompanyRitualS
 
     private final CompanyRitualSeasonRepository companyRitualSeasonRepository;
 
-    public CompanyRitualSeasonDto getLatestCompanyRitualSeasonByCompanyCodeAndRitualSeason(String companyCode, String typeCode) {
-        Optional<JpaCompanyRitualSeason> companyRitualSeason = companyRitualSeasonRepository.findTopByCompanyCodeOrderBySeasonStartDesc(companyCode);
+    public CompanyRitualSeasonDto getLatestCompanyRitualSeasonByRitualSeason(String typeCode, int seasonYear) {
+        Optional<JpaCompanyRitualSeason> companyRitualSeason = companyRitualSeasonRepository.findTopByRitualSeasonRitualTypeCodeAndRitualSeasonSeasonYearOrderBySeasonStartDesc(typeCode, seasonYear);
         if (companyRitualSeason.isPresent())
             return getMapper().fromEntity(companyRitualSeason.get(), mappingContext);
         else

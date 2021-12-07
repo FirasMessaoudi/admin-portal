@@ -106,12 +106,14 @@ public class CompanyStaffDto {
 
     @NullOrNotBlank(min = 5, max = 50)
     @Email(message = "validation.data.constraints.msg.20003")
-    @CellIndex(index =12)
+    @CellIndex(index = 12)
     private String email;
 
     private DataRequestRecordDto dataRequestRecord;
-     private List<CompanyStaffDigitalIdDto> digitalIds;
+    private List<CompanyStaffDigitalIdDto> digitalIds;
 
+    //@JsonBackReference(value = "companyRitualSeason")
+    private CompanyRitualSeasonDto companyRitualSeason;
     private Date creationDate;
     private Date updateDate;
 }

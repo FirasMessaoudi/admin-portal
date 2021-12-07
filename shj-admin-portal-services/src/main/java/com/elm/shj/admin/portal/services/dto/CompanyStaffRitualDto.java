@@ -54,7 +54,7 @@ public class CompanyStaffRitualDto implements Serializable {
     @CellIndex(index = 5)
     @SamePerRequest
     @SeasonYear
-    private Long season;
+    private int season;
 
     @CellIndex(index = 6)
     @CompanyCode

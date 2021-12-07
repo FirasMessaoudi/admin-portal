@@ -566,10 +566,10 @@ public class ItemWriter {
         if (item != null && item.getClass().isAssignableFrom(CompanyStaffRitualDto.class)) {
             CompanyStaffRitualDto companyStaffRitual = (CompanyStaffRitualDto) item;
             CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(companyStaffRitual.getIdNumber(), companyStaffRitual.getPassportNumber(), companyStaffRitual.getDateOfBirthGregorian(), companyStaffRitual.getDateOfBirthHijri());
-            CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason().intValue());
-            CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByCompanyCodeAndRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
-
-            if (companyStaffDigitalId !=null) {
+            CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
+            CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
+            existingStaff.setCompanyRitualSeason(companyRitualSeasonDto);
+            if (companyStaffDigitalId != null) {
                 // if he has a digital id for that same season
                 List<CompanyStaffCardDto> companyStaffCardDtos = companyStaffCardService.findByDigitalId(companyStaffDigitalId.getId());
                 // if no cards for digitalId and SEASON
@@ -610,7 +610,7 @@ public class ItemWriter {
 
                 CompanyStaffDigitalIdDto staffDigitalId = new CompanyStaffDigitalIdDto();
                 staffDigitalId.setCompanyStaff(existingStaff);
-                staffDigitalId.setSeasonYear(companyStaffRitual.getSeason().intValue());
+                staffDigitalId.setSeasonYear(companyStaffRitual.getSeason());
                 CompanyStaffDigitalIdDto savedDigitalId = companyStaffDigitalIdService.save(staffDigitalId);
                 CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
                 companyStaffCardDto.setCompanyStaffDigitalId(savedDigitalId);
@@ -619,6 +619,8 @@ public class ItemWriter {
                 companyStaffCardService.save(companyStaffCardDto);
 
             }
+            CompanyStaffDto companyStaffDto = companyStaffService.save(existingStaff);
+            System.out.println((companyStaffDto.getCompanyRitualSeason()));
 
         }
     }
