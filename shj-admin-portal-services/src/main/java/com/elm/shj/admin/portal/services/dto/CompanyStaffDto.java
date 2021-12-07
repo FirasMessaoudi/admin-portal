@@ -86,6 +86,8 @@ public class CompanyStaffDto {
     @CellIndex(index = 11)
     private String titleCode;
 
+    @SamePerRequest
+    @SeasonYear
     @CellIndex(index = 15)
     private int season;
 

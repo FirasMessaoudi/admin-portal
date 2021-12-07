@@ -72,7 +72,7 @@ public class DataProcessorService {
             if (row.getRowNum() != headerRowNum && !isBlankRow(row)) {
                 try {
                     // read item
-                    T item = excelItemReader.read(row);
+                    T item = excelItemReader.read(row ,headerRowNum);
                     // add all reading errors
                     dataValidationResults.addAll(excelItemReader.getDataReadingErrors());
                     // run validations

@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.data.reader;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
+import com.elm.shj.admin.portal.services.data.validators.SamePerRequest;
 import com.elm.shj.admin.portal.services.data.validators.UniquePerRequest;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,9 @@ public class ExcelItemReader<T> {
     private final Map<Integer, String> fieldMapping = new HashMap<>();
     private final Class<T> typeClass;
     private final Map<Field, List<Object>> uniqueFields = new HashMap<>();
+    private final Map<Field, Object> sameFieldValue = new HashMap<>();
     private final List<DataValidationResult> dataReadingErrors = new ArrayList<>();
+
 
     public ExcelItemReader(Class<T> typeClass) {
         this.typeClass = typeClass;
@@ -124,6 +127,10 @@ public class ExcelItemReader<T> {
                 f.isAnnotationPresent(CellIndex.class) && f.isAnnotationPresent(UniquePerRequest.class)
         ).collect(Collectors.toMap((f) -> f, (f) -> new ArrayList<>())));
 
+        sameFieldValue.putAll(Arrays.stream(clazz.getDeclaredFields()).filter(f ->
+                f.isAnnotationPresent(CellIndex.class) && f.isAnnotationPresent(SamePerRequest.class)
+        ).collect(Collectors.toMap((f) -> f, (f) -> new Object())));
+
         fieldMapping.putAll(Arrays.stream(clazz.getDeclaredFields()).filter(f ->
                 f.isAnnotationPresent(CellIndex.class)
         ).collect(Collectors.toMap((f) -> f.getAnnotation(CellIndex.class).index(), (f) -> (StringUtils.isNoneBlank(parentFieldName) ? parentFieldName + "[0]." : "") + f.getName())));
@@ -136,7 +143,7 @@ public class ExcelItemReader<T> {
      * @return the read item
      */
     @SuppressWarnings("rawtypes")
-    public T read(Row row) throws ReflectiveOperationException {
+    public T read(Row row, int headerRowNum) throws ReflectiveOperationException {
         // create new instance of the type to be populated
         T type = createInstance(typeClass);
         Set<Field> nestedFields = fieldMapping.values().stream().filter(f -> f.contains(".")).map(f -> {
@@ -198,6 +205,13 @@ public class ExcelItemReader<T> {
                     } else {
                         uniqueFields.get(fieldToProcess).add(value);
                     }
+                }else if (value != null && StringUtils.isNotBlank(value.toString()) && sameFieldValue.containsKey(fieldToProcess)) {
+                    if(row.getRowNum()==headerRowNum+1){
+                        sameFieldValue.put(fieldToProcess,value);
+                    }else if (!sameFieldValue.get(fieldToProcess).equals(value)) {
+                        dataReadingErrors.add(DataValidationResult.builder().valid(false).cell(cell).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_SAME_VALUE.getMessage())).valid(false).build());
+                    }
+
                 }
             } catch (ReflectiveOperationException e) {
                 ReflectionUtils.handleReflectionException(e);
