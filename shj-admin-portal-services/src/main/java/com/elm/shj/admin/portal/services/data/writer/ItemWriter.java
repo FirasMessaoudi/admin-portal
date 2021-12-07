@@ -619,8 +619,7 @@ public class ItemWriter {
                 companyStaffCardService.save(companyStaffCardDto);
 
             }
-            CompanyStaffDto companyStaffDto = companyStaffService.save(existingStaff);
-            System.out.println((companyStaffDto.getCompanyRitualSeason()));
+            companyStaffService.save(existingStaff);
 
         }
     }
