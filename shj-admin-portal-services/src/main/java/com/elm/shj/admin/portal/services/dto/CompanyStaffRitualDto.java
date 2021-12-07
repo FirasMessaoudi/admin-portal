@@ -39,12 +39,12 @@ public class CompanyStaffRitualDto implements Serializable {
     @CellIndex(index = 1)
     private String passportNumber;
 
-    @GregorianDate(minOffset = -120, maxOffset = -10)
     @CellIndex(index = 2)
+    @GregorianDate(minOffset = -120, maxOffset = -10)
     private Date dateOfBirthGregorian;
 
-    @HijriDate(minOffset = -140, maxOffset = -11)
     @CellIndex(index = 3)
+    @HijriDate(minOffset = -140, maxOffset = -11)
     private Long dateOfBirthHijri;
 
     @CellIndex(index = 4)
