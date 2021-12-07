@@ -1118,7 +1118,7 @@ ALTER TABLE shc_portal.shc_company_staff_digital_id
     ADD status_code varchar(20);
 GO
 
-ALTER TABLE shc_portal.shc_company_staff_card ALTER COLUMN reference_number varchar(16) NULL
+ALTER TABLE shc_portal.shc_company_staff_card ALTER COLUMN reference_number varchar(20) NULL
 GO
 
 
