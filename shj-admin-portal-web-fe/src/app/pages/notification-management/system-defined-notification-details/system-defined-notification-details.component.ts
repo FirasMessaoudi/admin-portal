@@ -168,8 +168,8 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
     return this.lookupsService;
   }
 
-  back() {
-    if (this.editable) {
+  cancel() {
+
       this.confirmDialogService.confirm(this.translate.instant('notification-management.cancel_confirmation_text'), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
         if (confirm) {
           this.editable = false;
@@ -182,9 +182,7 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
           this.templateForm.controls['enabled'].disable();
         }
       });
-    } else {
-      this.goBackToList();
-    }
+
   }
 
   copyParameter(text: any) {

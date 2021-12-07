@@ -4,6 +4,7 @@ package com.elm.shj.admin.portal.services.applicant;
 import com.elm.dcc.foundation.commons.core.mapper.MapperRegistry;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

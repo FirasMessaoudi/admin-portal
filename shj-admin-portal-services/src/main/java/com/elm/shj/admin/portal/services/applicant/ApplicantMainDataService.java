@@ -9,6 +9,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantMainDataRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;

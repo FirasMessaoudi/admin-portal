@@ -1,4 +1,4 @@
-package com.elm.shj.admin.portal.services.applicant;
+package com.elm.shj.admin.portal.services.company;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeasonLite;
 import com.elm.shj.admin.portal.orm.repository.CompanyRitualSeasonLiteRepository;

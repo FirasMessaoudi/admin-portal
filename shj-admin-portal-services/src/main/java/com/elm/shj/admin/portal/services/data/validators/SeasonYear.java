@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.services.data.validators;
 
 import javax.validation.Constraint;
@@ -6,25 +9,25 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Validation annotation to validate that ritual package corresponds to an existing ritual package in the database
+ * Validation annotation to validate the season year range
  *
- * @author Ahmed Elsayed
+ * @author Ahmed Ali
  * @since 1.1.0
  */
 @Target({METHOD, FIELD})
 @Retention(RUNTIME)
-@Constraint(validatedBy = WithRitualPackageValidator.class)
+@Constraint(validatedBy = SeasonYearValidator.class)
 @Documented
-public @interface WithRitualPackage {
+public @interface SeasonYear {
 
-    String message() default "validation.data.constraints.msg.30009";
+    String message() default "validation.data.constraints.msg.20011";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
 }

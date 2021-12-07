@@ -4,9 +4,7 @@
 package com.elm.shj.admin.portal.services.digitalid;
 
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
-import com.elm.shj.admin.portal.services.applicant.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDigitalIdDto;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffDigitalIdDto;
 import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
 import com.elm.shj.admin.portal.services.dto.EStaffDigitalIdStatus;
 import lombok.RequiredArgsConstructor;

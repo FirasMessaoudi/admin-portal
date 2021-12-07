@@ -6,7 +6,7 @@ package com.elm.shj.admin.portal.services.applicant;
 import com.elm.dcc.foundation.commons.core.mapper.MapperRegistry;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualStep;
 import com.elm.shj.admin.portal.orm.repository.CompanyRitualStepRepository;
-import com.elm.shj.admin.portal.services.applicant.CompanyRitualStepService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualStepDto;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualStepDtoMapper;
 import org.junit.jupiter.api.BeforeEach;

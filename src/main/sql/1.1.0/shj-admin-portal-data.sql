@@ -287,3 +287,6 @@ GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('scheduler.generate.staff.digital.ids.cron', '0 0/15 * * * *');
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('data.request.company.staff.override', 'false');

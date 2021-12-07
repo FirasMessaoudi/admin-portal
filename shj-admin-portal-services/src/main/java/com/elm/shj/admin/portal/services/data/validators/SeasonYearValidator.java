@@ -3,29 +3,29 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.company.CompanyLiteService;
+import com.elm.shj.admin.portal.services.unit.RitualUnitService;
+import com.elm.shj.admin.portal.services.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * Validator for {@link CompanyCode} annotation
+ * Validator for {@link SeasonYear} annotation
  *
- * @author f.messaoudi
+ * @author Ahmed Ali
  * @since 1.1.0
  */
-public class CompanyCodeValidator implements ConstraintValidator<CompanyCode, Object> {
+public class SeasonYearValidator implements ConstraintValidator<SeasonYear, Object> {
 
-    @Autowired
-    private CompanyLiteService companyLiteService;
+
 
     /**
      * {@inheritDoc}
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value != null && companyLiteService.existsByCode(value.toString().toUpperCase());
+        int seasonYear = (Integer) value;
+        return value != null && (DateUtils.getCurrentHijriYear()-1 <= seasonYear &&  seasonYear<= (DateUtils.getCurrentHijriYear()+1));
     }
-
 }

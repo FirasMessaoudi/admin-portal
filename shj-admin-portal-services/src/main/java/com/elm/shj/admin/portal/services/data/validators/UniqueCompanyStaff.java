@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.services.data.validators;
 
 import javax.validation.Constraint;
@@ -6,25 +9,25 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Validation annotation to validate that ritual package corresponds to an existing ritual package in the database
+ * Validation annotation to validate that company staff info corresponds to a unique companyStaff record in the database
  *
- * @author Ahmed Elsayed
+ * @author Ahmed Ali
  * @since 1.1.0
  */
-@Target({METHOD, FIELD})
+@Target({TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = WithRitualPackageValidator.class)
+@Constraint(validatedBy = UniqueCompanyStaffValidator.class)
 @Documented
-public @interface WithRitualPackage {
+public @interface UniqueCompanyStaff {
 
-    String message() default "validation.data.constraints.msg.30009";
+    String message() default "validation.data.constraints.msg.30001";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
 }

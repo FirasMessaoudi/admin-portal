@@ -3,9 +3,12 @@
  */
 package com.elm.shj.admin.portal.web.ws;
 
-import com.elm.dcc.foundation.commons.validation.SafeFile;
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.company.CompanyLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
@@ -22,15 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -70,7 +70,7 @@ public class IntegrationWsController {
     private final CompanyRitualStepService companyRitualStepService;
     private final CompanyStaffService companyStaffService;
     private final CompanyRitualStepLookupService companyRitualStepLookupService;
-    private final CompanyStaffLookupService companyStaffLookupService;
+    private final CompanyStaffTitleLookupService companyStaffTitleLookupService;
     private final ApplicantPackageCateringService applicantPackageCateringService;
     private final ApplicantPackageHousingService applicantPackageHousingService;
     private final ApplicantPackageTransportationService applicantPackageTransportationService;
@@ -365,7 +365,7 @@ public class IntegrationWsController {
     @GetMapping("/company_staff_title_label/list")
     public ResponseEntity<WsResponse<?>> listCompanyStaffTitlesLabel() {
         log.debug("list company Staff title labels...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaffLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaffTitleLookupService.findAll()).build());
     }
 
 

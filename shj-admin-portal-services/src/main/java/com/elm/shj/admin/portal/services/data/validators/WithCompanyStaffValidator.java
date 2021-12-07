@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.applicant.CompanyStaffService;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
@@ -30,22 +30,25 @@ public class WithCompanyStaffValidator implements ConstraintValidator<WithCompan
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        Field idNumber = ReflectionUtils.findField(value.getClass(), "idNumber");
-        Field passportNumber = ReflectionUtils.findField(value.getClass(), "passportNumber");
-        Field dateOfBirthGregorian = ReflectionUtils.findField(value.getClass(), "dateOfBirthGregorian");
-        Field dateOfBirthHijri = ReflectionUtils.findField(value.getClass(), "dateOfBirthHijri");
+        Field idNumberField = ReflectionUtils.findField(value.getClass(), "idNumber");
+        Field passportNumberField = ReflectionUtils.findField(value.getClass(), "passportNumber");
+        Field dateOfBirthGregorianField = ReflectionUtils.findField(value.getClass(), "dateOfBirthGregorian");
+        Field dateOfBirthHijriField = ReflectionUtils.findField(value.getClass(), "dateOfBirthHijri");
 
-        if (value == null || idNumber == null || passportNumber == null || dateOfBirthGregorian == null || dateOfBirthHijri == null) {
+        if (value == null || (idNumberField == null && passportNumberField == null) || (dateOfBirthGregorianField == null && dateOfBirthHijriField == null)) {
             return false;
         }
         try {
             // make fields accessible
-            ReflectionUtils.makeAccessible(idNumber);
-            ReflectionUtils.makeAccessible(passportNumber);
-            ReflectionUtils.makeAccessible(dateOfBirthGregorian);
-            ReflectionUtils.makeAccessible(dateOfBirthHijri);
-
-            return companyStaffService.existsByBasicInfo(idNumber.get(value).toString(), (String) passportNumber.get(value), (Date) dateOfBirthGregorian.get(value), (Long) dateOfBirthHijri.get(value));
+            ReflectionUtils.makeAccessible(idNumberField);
+            ReflectionUtils.makeAccessible(passportNumberField);
+            ReflectionUtils.makeAccessible(dateOfBirthGregorianField);
+            ReflectionUtils.makeAccessible(dateOfBirthHijriField);
+            String idNumber = idNumberField.get(value) != null ? idNumberField.get(value).toString() : null;
+            String passportNumber = passportNumberField.get(value) != null ? passportNumberField.get(value).toString() : null;
+            Date dateOfBirthGregorian = dateOfBirthGregorianField.get(value) != null ? (Date) dateOfBirthGregorianField.get(value) : null;
+            Long dateOfBirthHijri = dateOfBirthHijriField.get(value) != null ? (Long) dateOfBirthHijriField.get(value) : null;
+            return companyStaffService.existsByBasicInfo(idNumber, passportNumber, dateOfBirthGregorian, dateOfBirthHijri);
         } catch (IllegalAccessException e) {
             ReflectionUtils.handleReflectionException(e);
         }
