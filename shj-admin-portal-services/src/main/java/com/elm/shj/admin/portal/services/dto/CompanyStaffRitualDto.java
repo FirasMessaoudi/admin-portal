@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -31,21 +30,21 @@ public class CompanyStaffRitualDto implements Serializable {
     private long id;
 
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
-    @NotNull(message = "validation.data.constraints.msg.20001")
+    @UniquePerRequest
     @CellIndex(index = 0)
     private String idNumber;
 
+    @CellIndex(index = 1)
     @UniquePerRequest
     @PassportNumber
-    @CellIndex(index = 1)
     private String passportNumber;
 
-    @GregorianDate(minOffset = -120, maxOffset = -10)
     @CellIndex(index = 2)
+    @GregorianDate(minOffset = -120, maxOffset = -10)
     private Date dateOfBirthGregorian;
 
-    @HijriDate(minOffset = -140, maxOffset = -11)
     @CellIndex(index = 3)
+    @HijriDate(minOffset = -140, maxOffset = -11)
     private Long dateOfBirthHijri;
 
     @CellIndex(index = 4)
@@ -53,6 +52,8 @@ public class CompanyStaffRitualDto implements Serializable {
     String typeCode;
 
     @CellIndex(index = 5)
+    @SamePerRequest
+    @SeasonYear
     private Long season;
 
     @CellIndex(index = 6)

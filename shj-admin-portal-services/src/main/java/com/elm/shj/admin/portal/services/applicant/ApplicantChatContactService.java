@@ -153,6 +153,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
             String encodedAvatarStr = Base64.getEncoder().encodeToString(contactAvatarFile.getBytes());
             applicantChatContact.setAvatar(encodedAvatarStr);
         }
-        return mapChatContactToChatContactLite(applicantChatContact);
+        ApplicantChatContactDto savedContact = save(applicantChatContact);
+        return mapChatContactToChatContactLite(savedContact);
     }
 }
