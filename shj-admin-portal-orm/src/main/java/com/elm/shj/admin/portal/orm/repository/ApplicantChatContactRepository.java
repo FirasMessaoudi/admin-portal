@@ -41,6 +41,5 @@ public interface ApplicantChatContactRepository extends JpaRepository<JpaApplica
     @Modifying
     @Query("update JpaApplicantChatContact j set j.avatar = :avatar, j.updateDate = CURRENT_TIMESTAMP where j.contactUin =:contactUin")
     void updateAvatar(@Param("contactUin") String contactUin, @Param("avatar") String avatar);
-            " contact.contactUin=:contactUin and contact.applicantRitual.id=:applicantRitualId and contact.systemDefined=false")
-    int markDeleted(@Param("applicantUin") String applicantUin,@Param("contactUin") String contactUin , @Param("applicantRitualId") Long applicantRitualId);
-}
+
+ }
