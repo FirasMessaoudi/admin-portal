@@ -889,7 +889,7 @@ create table shc_portal.shc_applicant_incident
     location_lng        decimal(11, 8) NOT NULL,
     resolution_comment  nvarchar(1000) NULL,
     creation_date       smalldatetime  NOT NULL default current_timestamp,
-    update_date         smalldatetime  NULL,
+    update_date         smalldatetime  NOT NULL default current_timestamp,
     CONSTRAINT fk_applicant_incident_applicant_ritual FOREIGN KEY (applicant_ritual_id) REFERENCES shc_portal.shc_applicant_ritual (id),
 );
 GO

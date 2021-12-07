@@ -5,7 +5,6 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantChatContact;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,8 +37,4 @@ public interface ApplicantChatContactRepository extends JpaRepository<JpaApplica
     @Query("update JpaApplicantChatContact contact set contact.deleted = true where contact.applicantUin =:applicantUin and" +
             " contact.contactUin=:contactUin and contact.applicantRitual.id=:applicantRitualId and contact.systemDefined=false")
     int markDeleted(@Param("applicantUin") String applicantUin,@Param("contactUin") String contactUin , @Param("applicantRitualId") Long applicantRitualId);
-
-    @Modifying
-    @Query("update JpaApplicantChatContact j set j.avatar = :avatar, j.updateDate = CURRENT_TIMESTAMP where j.contactUin =:contactUin")
-    void updateAvatar(@Param("contactUin") String contactUin, @Param("avatar") String avatar);
 }
