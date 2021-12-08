@@ -51,10 +51,6 @@ public class JpaCompanyRitualSeason implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyRitualSeason")
     private List<JpaApplicantGroup> applicantGroups;
 
-    @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyRitualSeason")
-    private List<JpaCompanyStaff> groupLeaders;
-
     @Column(name = "season_start", nullable = false)
     private int seasonStart;
 

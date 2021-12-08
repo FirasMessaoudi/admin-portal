@@ -1132,6 +1132,8 @@ Go
 ALTER table shc_company_staff_card drop column company_staff_digital_id_id;
 Go
 
+use shc_portal
+
 ALTER TABLE shc_portal.shc_company_staff DROP CONSTRAINT fk_company_staff_company;
 GO
 
