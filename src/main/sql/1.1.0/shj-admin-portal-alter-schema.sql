@@ -1126,9 +1126,25 @@ Alter table shc_company_staff_card
     add company_staff_suin VARCHAR(45) NULL;
 GO
 
-ALTER table shc_company_staff_card drop constraint fk_company_staff_digital_id;
+ALTER table shc_company_staff_card drop constraint fk_company_staff_card_company_staff_digital_id;
 Go
 
 ALTER table shc_company_staff_card drop column company_staff_digital_id_id;
 Go
+
+ALTER TABLE shc_portal.shc_company_staff DROP CONSTRAINT fk_company_staff_company;
+GO
+
+ALTER TABLE shc_portal.shc_company_staff DROP CONSTRAINT fk_shc_company_staff_company_season;
+GO
+
+alter table shc_portal.shc_company_staff
+drop
+column company_id;
+GO
+
+alter table shc_portal.shc_company_staff
+drop
+column company_ritual_season_id
+GO
 

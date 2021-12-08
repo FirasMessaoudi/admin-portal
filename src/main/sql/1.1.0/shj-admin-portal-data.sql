@@ -288,13 +288,16 @@ GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('scheduler.generate.staff.digital.ids.cron', '0 0/15 * * * *');
+GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('data.request.company.staff.override', 'false');
+GO
 
 update shc_portal.shc_data_segment
 set label_ar =N'بيانات الشعيرة للعاملين	'
 where id = 9
+    GO
 
 delete
 from shc_portal.shc_config
