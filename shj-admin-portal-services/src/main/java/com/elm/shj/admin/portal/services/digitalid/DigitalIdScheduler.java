@@ -6,7 +6,6 @@ package com.elm.shj.admin.portal.services.digitalid;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDigitalIdDto;
 import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
-import com.elm.shj.admin.portal.services.dto.EStaffDigitalIdStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockAssert;
@@ -42,23 +41,6 @@ public class DigitalIdScheduler {
         applicantService.findAllWithoutDigitalId().forEach(applicant -> {
             // generate and save digital id for each applicant
             digitalIdService.save(ApplicantDigitalIdDto.builder().statusCode(EDigitalIdStatus.VALID.name()).applicant(applicant).uin(digitalIdService.generate(applicant)).build());
-        });
-    }
-
-
-    /**
-     * Scheduled job to create digital IDs for new  Company Staff
-     */
-    @Scheduled(cron = "${scheduler.generate.staff.digital.ids.cron}")
-    @SchedulerLock(name = "generate-staff-digital-ids-task")
-    public void generateIdsForNewCompanyStaff() {
-        log.debug("Generate companyStaff digital ids scheduler started...");
-        LockAssert.assertLocked();
-        companyStaffDigitalIdService.findAllWithoutDigitalId().forEach(digitalId -> {
-            // generate and save staff digital id for each company staff member
-            digitalId.setSuin(companyStaffDigitalIdService.generate(digitalId.getCompanyStaff(),digitalId.getSeasonYear()));
-            digitalId.setStatusCode(EStaffDigitalIdStatus.VALID.name());
-            companyStaffDigitalIdService.save(digitalId);
         });
     }
 

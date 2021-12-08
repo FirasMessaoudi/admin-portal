@@ -29,34 +29,34 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
     List<String> cardStatus = Arrays.asList("ACTIVE", "READY_TO_PRINT", "SENT_FOR_PRINT", "PRINTED", "DISTRIBUTED", "SUSPENDED");
 
     /**
-     * find company staff cards by digital id
+     * find company staff cards by suin
      *
-     * @param id
+     * @param suin
      * @return
      */
-    public List<CompanyStaffCardDto> findByDigitalId(long id) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffDigitalIdId(id));
+    public List<CompanyStaffCardDto> findByDigitalId(String suin) {
+        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuin(suin));
     }
 
     /**
      * find company staff cards
      *
-     * @param digitalId
+     * @param suin
      * @param companyCode
      * @param ritualType
      * @return
      */
-    public List<CompanyStaffCardDto> findByDigitalIdCompanyCodeRitualType(long digitalId, String companyCode, String ritualType) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffDigitalIdIdAndStatusCodeInAndCompanyRitualSeasonCompanyCodeAndCompanyRitualSeasonRitualSeasonRitualTypeCode(digitalId, cardStatus, companyCode, ritualType));
+    public List<CompanyStaffCardDto> findByDigitalIdCompanyCodeRitualType(String suin, String companyCode, String ritualType) {
+        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndStatusCodeInAndCompanyRitualSeasonCompanyCodeAndCompanyRitualSeasonRitualSeasonRitualTypeCode(suin, cardStatus, companyCode, ritualType));
     }
 
     /**
-     * @param digitalId
+     * @param suin
      * @param companyCode
      * @param ritualType
      * @return
      */
-    public List<CompanyStaffCardDto> findByDigitalIdAndDifferentCompanyOrRitual(long digitalId, String companyCode, String ritualType) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffDigitalIdIdAndStatusCodeInAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(digitalId, cardStatus, companyCode, ritualType));
+    public List<CompanyStaffCardDto> findByDigitalIdAndDifferentCompanyOrRitual(String suin, String companyCode, String ritualType) {
+        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndStatusCodeInAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(suin, cardStatus, companyCode, ritualType));
     }
 }

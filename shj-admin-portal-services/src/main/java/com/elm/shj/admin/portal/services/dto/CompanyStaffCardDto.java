@@ -33,8 +33,7 @@ public class CompanyStaffCardDto implements Serializable {
     @JsonBackReference(value = "companyRitualSeason")
     private CompanyRitualSeasonDto companyRitualSeason;
 
-    @JsonBackReference(value = "companyStaffDigitalId")
-    private CompanyStaffDigitalIdDto companyStaffDigitalId;
+    private String companyStaffSuin;
 
     private Date creationDate;
 

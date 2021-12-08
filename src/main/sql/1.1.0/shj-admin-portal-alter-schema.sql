@@ -1122,3 +1122,13 @@ ALTER TABLE shc_portal.shc_company_staff_card ALTER COLUMN reference_number varc
 GO
 
 
+Alter table shc_company_staff_card
+    add company_staff_suin VARCHAR(45) NULL;
+GO
+
+ALTER table shc_company_staff_card drop constraint fk_company_staff_digital_id;
+Go
+
+ALTER table shc_company_staff_card drop column company_staff_digital_id_id;
+Go
+
