@@ -199,4 +199,19 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
         super.saveAll(notificationRequests);
         return savedNotificationTemplate;
     }
+
+    @Transactional
+    public NotificationTemplateDto sendIncidentNotification(NotificationTemplateDto notificationTemplate, String uin) {
+        NotificationRequestDto notificationRequest = NotificationRequestDto
+                .builder()
+                .userId(uin)
+                .notificationTemplate(notificationTemplate)
+                //TODO Update user lang to applicants' preferred language
+                .userLang("ar")
+                .sendingDate(new Date())
+                .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
+                .build();
+        super.save(notificationRequest);
+        return notificationTemplate;
+    }
 }
