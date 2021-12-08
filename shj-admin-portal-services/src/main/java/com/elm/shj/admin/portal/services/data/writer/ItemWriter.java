@@ -187,7 +187,7 @@ public class ItemWriter {
                         if (existingStaff != null) {
                             staff.setId(existingStaff.getId());
                             staff.setDigitalIds(existingStaff.getDigitalIds());
-                            staff.setCompany(existingStaff.getCompany());
+                           // staff.setCompany(existingStaff.getCompany());
                             staff.setDataRequestRecord(existingStaff.getDataRequestRecord());
                             staff.setApplicantGroups(existingStaff.getApplicantGroups());
                             staff.setCreationDate(existingStaff.getCreationDate());
