@@ -295,3 +295,8 @@ VALUES ('data.request.company.staff.override', 'false');
 update shc_portal.shc_data_segment
 set label_ar =N'بيانات الشعيرة للعاملين	'
 where id = 9
+
+delete
+from shc_portal.shc_config
+where conf_key = 'scheduler.generate.staff.digital.ids.cron';
+Go
