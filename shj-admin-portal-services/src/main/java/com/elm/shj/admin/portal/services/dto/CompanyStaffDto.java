@@ -21,7 +21,6 @@ import java.util.List;
  * @author salzoubi
  * @since 1.1.0
  */
-
 @NoArgsConstructor
 @Getter
 @Setter

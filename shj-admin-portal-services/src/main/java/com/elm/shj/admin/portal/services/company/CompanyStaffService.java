@@ -4,10 +4,9 @@
 package com.elm.shj.admin.portal.services.company;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
-import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffDto;
+import com.elm.shj.admin.portal.services.dto.CompanyStaffLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +23,13 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
     private final CompanyStaffRepository companyStaffRepository;
 
+    public CompanyStaffLiteDto findBySuin(String suin) {
+        CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findBySuin(suin), mappingContext);
+        if (companyStaff == null) return null;
+        return CompanyStaffLiteDto.builder().fullNameAr(companyStaff.getFullNameAr()).fullNameEn(companyStaff.getFullNameEn())
+                .mobileNumber(companyStaff.getMobileNumber()).email(companyStaff.getEmail()).nationalityCode(companyStaff.getNationalityCode())
+                .photo(companyStaff.getPhoto()).titleCode(companyStaff.getTitleCode()).build();
+    }
 
     public List<CompanyStaffDto> findRelatedEmployeesByApplicantUinAndSeasonId(String uin, long sid) {
         return mapList(companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndCompanyRitualSeasonId(uin, sid));
@@ -50,6 +56,5 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     public CompanyStaffDto findByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
         return getMapper().fromEntity(companyStaffRepository.findByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg), mappingContext);
     }
-
 
 }
