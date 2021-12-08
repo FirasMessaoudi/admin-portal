@@ -93,10 +93,6 @@ public class JpaCompanyStaff implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "companyStaff")
     private List<JpaCompanyStaffDigitalId> digitalIds;
 
-    @ManyToOne
-    @JoinColumn(name = "company_ritual_season_id")
-    private JpaCompanyRitualSeason companyRitualSeason;
-
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupLeader")
     private List<JpaApplicantGroup> applicantGroups;

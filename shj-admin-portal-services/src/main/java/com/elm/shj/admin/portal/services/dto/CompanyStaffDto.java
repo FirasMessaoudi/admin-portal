@@ -108,8 +108,6 @@ public class CompanyStaffDto {
     private DataRequestRecordDto dataRequestRecord;
     private List<CompanyStaffDigitalIdDto> digitalIds;
 
-    @JsonBackReference(value = "companyRitualSeason")
-    private CompanyRitualSeasonDto companyRitualSeason;
     private Date creationDate;
     private Date updateDate;
 }

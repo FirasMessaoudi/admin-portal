@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +19,7 @@ import java.util.List;
  **/
 public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, Long> {
 
-    List<JpaCompanyStaff> findByApplicantGroupsGroupApplicantListsApplicantUinAndCompanyRitualSeasonId(String applicantUin, long sid);
+    List<JpaCompanyStaff> findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(String applicantUin, long sid);
 
     @Query(value = "SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
             "FROM JpaCompanyStaff a WHERE " +
