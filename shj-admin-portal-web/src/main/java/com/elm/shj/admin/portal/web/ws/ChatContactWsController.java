@@ -5,9 +5,9 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.commons.validation.SafeFile;
 import com.elm.shj.admin.portal.services.applicant.ApplicantChatContactService;
-import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +42,8 @@ public class ChatContactWsController {
 
     private final ApplicantChatContactService applicantChatContactService;
     private final ApplicantLiteService applicantLiteService;
+    private final CompanyStaffService companyStaffService;
+
     /**
      * finds chat contacts by uin and applicant ritual ID
      *
@@ -107,7 +109,7 @@ public class ChatContactWsController {
      * @return WsResponse of number of selected rows
      */
     @PostMapping("/delete/{applicantUin}/{contactUin}")
-    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantUin, @PathVariable String contactUin ) {
+    public ResponseEntity<WsResponse<?>> deleteApplicantChatContact(@PathVariable String applicantUin, @PathVariable String contactUin) {
         log.info("Delete Applicant Chat Contact...");
         int numberOfAffectedRows = applicantChatContactService.deleteApplicantChatContact(applicantUin, contactUin);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body("number of affected rows : " + numberOfAffectedRows).build());
@@ -115,13 +117,12 @@ public class ChatContactWsController {
 
     @GetMapping("find-one/{uin}/{applicantRitualId}/{applicantUin}")
     public ResponseEntity<WsResponse<?>> findOneApplicantByUinAndRitualId(@PathVariable String uin,
-                                                                        @PathVariable Long applicantRitualId,
-                                                                        @PathVariable String applicantUin) {
+                                                                          @PathVariable Long applicantRitualId,
+                                                                          @PathVariable String applicantUin) {
         log.debug("find chat contact by uin {} and applicant ritual ID {}", uin, applicantRitualId);
-        if(uin.equals(applicantUin)){
+        if (uin.equals(applicantUin)) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
-
         }
         List<ApplicantChatContactLiteDto> applicantChatContactList = applicantChatContactService.listApplicantChatContacts(uin, applicantRitualId, null);
         boolean isFound = applicantChatContactList.parallelStream().anyMatch(p -> p.getContactUin().equals(applicantUin));
@@ -135,6 +136,16 @@ public class ChatContactWsController {
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
         }
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
+    }
 
+    @GetMapping("/find-staff/{applicantRitualId}/{suin}")
+    public ResponseEntity<WsResponse<?>> findStaffContactByUinAndRitualId(@PathVariable String suin,
+                                                                          @PathVariable Long applicantRitualId) {
+        CompanyStaffLiteDto companyStaff = companyStaffService.findBySuin(suin);
+        if (companyStaff == null) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(suin).build()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaff).build());
     }
 }
