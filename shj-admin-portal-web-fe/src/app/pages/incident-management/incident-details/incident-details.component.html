@@ -59,7 +59,7 @@
             </span>
       </div>
     </div>
-    <div class="row row-cols-1">
+    <div *ngIf="incident?.locationLat && incident?.locationLng" class="row row-cols-1">
       <div class="form-group col">
         <label class="col-form-label">{{"incident-management.location" | translate }}</label>
         <div class="map mt-1" *ngIf="mapIsReady">

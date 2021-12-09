@@ -68,13 +68,28 @@ public class ChatContactWsController {
      * @return WsResponse of the persisted chat contact
      */
     @PostMapping(value = "/create/{applicantUin}/{applicantRitualId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<WsResponse<?>> create(@PathVariable String applicantUin,
+    public ResponseEntity<WsResponse<?>> createApplicant(@PathVariable String applicantUin,
                                                 @PathVariable Long applicantRitualId,
                                                 @RequestPart @Valid ApplicantChatContactVo contact,
                                                 @RequestPart(value = "avatar", required = false) @SafeFile MultipartFile contactAvatarFile) throws Exception {
         log.debug("Handler for {}", "Create Applicant Chat Contact");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
-                .body(applicantChatContactService.createChatContact(applicantUin, contact, applicantRitualId, contactAvatarFile)).build());
+                .body(applicantChatContactService.createApplicantChatContact(applicantUin, contact, applicantRitualId, contactAvatarFile)).build());
+    }
+
+    /**
+     * Add new applicant chat contact
+     *
+     * @param contactUin staff chat contact (suin)
+     * @return WsResponse of the persisted chat contact
+     */
+    @PostMapping(value = "/create-staff/{applicantUin}/{applicantRitualId}/{contactUin}")
+    public ResponseEntity<WsResponse<?>> createStaff(@PathVariable String applicantUin,
+                                                @PathVariable Long applicantRitualId,
+                                                     @PathVariable String contactUin) throws Exception {
+        log.debug("Handler for {}", "Create Applicant Chat Contact");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
+                .body(applicantChatContactService.createStaffChatContact(applicantUin, applicantRitualId,contactUin )).build());
     }
 
     /**

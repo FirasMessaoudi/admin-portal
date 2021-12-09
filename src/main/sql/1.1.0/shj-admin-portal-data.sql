@@ -49,6 +49,10 @@ INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
 INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (4, 'OUT_ARAFAT_FENCE', 'en', 'Out of Arafat Geo Fence');
 INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (5, 'DAILY_SURVEY', 'ar', N'تقييم الخدمات اليومية المقدمة');
 INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (6, 'DAILY_SURVEY', 'en', 'Evaluate Daily Service');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (7, 'RESOLVE_INCIDENT', 'ar', N'حل شكوى');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (8, 'RESOLVE_INCIDENT', 'en', 'Resolve Incident');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (9, 'CLOSE_INCIDENT', 'ar', N'حل شكوى');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (10, 'CLOSE_INCIDENT', 'en', 'Close Incident');
 SET IDENTITY_INSERT shc_portal.shc_notification_template_name_lk OFF;
 GO
 
@@ -92,17 +96,33 @@ INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, 
 values (2, 'RITUAL', 'OUT_ARAFAT_FENCE', 'CONFIRMED', 'SYSTEM_DEFINED', 1, 0, 1, 1, 1);
 INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific, force_sending)
 values (3, 'RITUAL', 'DAILY_SURVEY', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1, 1);
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific, force_sending)
+values (4, 'GENERAL', 'RESOLVE_INCIDENT', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 0, 1, 1, 1);
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific, force_sending)
+values (5, 'GENERAL', 'CLOSE_INCIDENT', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 0, 1, 1, 1);
 SET IDENTITY_INSERT shc_portal.shc_notification_template OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template_content ON;
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
-values (1, 1, 'AR', N'قرب انتهاء كلمة المرور', N'سوف تنتهي صلاحية كلمة المرور خلال <days_to_expiry> أيام من الأن',
+INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
+VALUES (1, 1, 'AR', N'قرب انتهاء كلمة المرور', N'سوف تنتهي صلاحية كلمة المرور خلال <days_to_expiry> أيام من الأن',
         N'تغيير كلمة المرور');
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
-values (2, 1, 'EN', 'Password will expire soon', 'Password will expire after <days_to_expiry> days', 'Change Password');
-SET
-IDENTITY_INSERT shc_portal.shc_notification_template_content OFF;
+VALUES (2, 1, 'EN', 'Password will expire soon', 'Password will expire after <days_to_expiry> days', 'Change Password');
+INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
+VALUES (3, 4, 'AR', N'حل شكوى',
+        N'عزيزي ضيف الرحمن نفيدكم بأن راحتكم هي أولويتنا تم دراسة الشكوى المقدمة وتم حلها وفي حالة عدم رضاكم عن الحل أو استمرار الشكوى نأمل رفع شكوى جديدة');
+INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body)
+VALUES (4, 4, 'EN', 'Resolve incident',
+        'Dear Applicant your satisfaction is out priority, your complaint had been investigated and resolved please if the resolution is not as per your expectation or still not resolved raise another complaint');
+INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body)
+VALUES (5, 5, 'AR', N'حل شكوى',
+        N'عزيزي ضيف الرحمن نفيدكم بأن راحتكم هي أولويتنا تم دراسة الشكوى المقدمة وتم إغلاقها وفي حالة استمرار الشكوى نأمل رفع شكوى جديدة بتفاصيل أكثر');
+INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body)
+VALUES (6, 5, 'EN', 'Close incident',
+        'Dear Applicant your satisfaction is out priority, your complaint had been investigated and closed please if the  still not resolved raise another complain with more details');
+SET IDENTITY_INSERT shc_portal.shc_notification_template_content OFF;
 GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('notification.processing.batch.size', '1000');
@@ -131,6 +151,11 @@ GO
 update shc_portal.shc_notification_template
 set expiration_period_in_minutes= 150
 where id = 3;
+GO
+
+update shc_portal.shc_notification_template
+set expiration_period_in_minutes= 0
+where id in (4, 5);
 GO
 
 INSERT INTO shc_portal.shc_portal.shc_notification_template_parameter (  notification_template_id, parameter_name  ) VALUES (  1, N'days_to_expiry' );

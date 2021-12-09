@@ -11,7 +11,10 @@ import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentRepository;
 import com.elm.shj.admin.portal.orm.repository.IncidentAttachmentRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
+import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,11 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
     private final ApplicantIncidentRepository applicantIncidentRepository;
     private final SftpService sftpService;
     private final IncidentAttachmentRepository incidentAttachmentRepository;
+    private final NotificationRequestService notificationRequestService;
+    private final NotificationTemplateService notificationTemplateService;
+    private static final String RESOLVE_INCIDENT_TEMPLATE_NAME = "RESOLVE_INCIDENT";
+    private static final String CLOSE_INCIDENT_TEMPLATE_NAME = "CLOSE_INCIDENT";
+
     private static final SimpleDateFormat REF_NUMBER_FORMAT = new SimpleDateFormat("SSS");
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
     private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
@@ -140,13 +148,23 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
      * @param incidentId the ID number of the incident to update
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public void update(long incidentId, ApplicantIncidentVo applicantIncidentVo) {
-
+    public void update(long incidentId, ApplicantIncidentVo applicantIncidentVo) throws NotFoundException {
         if (EIncidentResolutionType.MARK_AS_RESOLVED.equals(applicantIncidentVo.getOperation())) {
             applicantIncidentRepository.update(incidentId, applicantIncidentVo.getResolutionComment(), EIncidentStatus.RESOLVED.name());
+            sendIncidentNotification(incidentId, RESOLVE_INCIDENT_TEMPLATE_NAME);
         }
         if (EIncidentResolutionType.MARK_AS_CLOSED.equals(applicantIncidentVo.getOperation())) {
             applicantIncidentRepository.update(incidentId, applicantIncidentVo.getResolutionComment(), EIncidentStatus.CLOSED.name());
+            sendIncidentNotification(incidentId, CLOSE_INCIDENT_TEMPLATE_NAME);
         }
+    }
+
+    private void sendIncidentNotification(long incidentId, String closeIncidentTemplateName) throws NotFoundException {
+        Optional<NotificationTemplateDto> notificationTemplate = notificationTemplateService.findEnabledNotificationTemplateByNameCode(closeIncidentTemplateName);
+        if (notificationTemplate == null || !notificationTemplate.isPresent()) {
+            throw new NotFoundException("no Template found for  " + closeIncidentTemplateName);
+        }
+        String uin = findById(incidentId).getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin();
+        notificationRequestService.sendIncidentNotification(notificationTemplate.get(), uin);
     }
 }

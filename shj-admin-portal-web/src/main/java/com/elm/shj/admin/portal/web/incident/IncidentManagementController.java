@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.web.incident;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -67,11 +68,10 @@ public class IncidentManagementController {
     @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
     //TODO Change it to INCIDENT_MANAGEMENT
     public ResponseEntity<String> handleIncident(@PathVariable long incidentId,
-                                                 @RequestBody ApplicantIncidentVo applicantIncidentVo) {
+                                                 @RequestBody ApplicantIncidentVo applicantIncidentVo) throws NotFoundException {
         log.debug("Handle incident #{}", incidentId);
         applicantIncidentService.update(incidentId, applicantIncidentVo);
         return ResponseEntity.ok(StringUtils.EMPTY);
     }
-
 
 }
