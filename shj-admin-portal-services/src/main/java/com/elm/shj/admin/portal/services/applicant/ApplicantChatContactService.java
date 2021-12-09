@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantChatContact;
 import com.elm.shj.admin.portal.orm.repository.ApplicantChatContactRepository;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -36,6 +37,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
     private final ApplicantChatContactRepository applicantChatContactRepository;
     private final ApplicantLiteService applicantLiteService;
     private final ApplicantRitualService applicantRitualService;
+    private final CompanyStaffService companyStaffService;
 
     /**
      * List all chat contacts of a specific applicant.
@@ -94,7 +96,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @return savedContact saved one
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantChatContactLiteDto createChatContact(String applicantUin, ApplicantChatContactVo contact, Long applicantRitualId, MultipartFile contactAvatarFile) throws IOException {
+    public ApplicantChatContactLiteDto createApplicantChatContact(String applicantUin, ApplicantChatContactVo contact, Long applicantRitualId, MultipartFile contactAvatarFile) throws IOException {
         ApplicantRitualDto applicantRitual = applicantRitualService.findById(applicantRitualId);
 
         ApplicantChatContactDto savedContact = ApplicantChatContactDto
@@ -121,6 +123,42 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         ApplicantChatContactLiteDto chatContactLite = mapChatContactToChatContactLite(savedContact);
         chatContactLite.setContactFullNameAr(applicantRitual.getApplicant().getFullNameAr());
         chatContactLite.setContactFullNameEn(applicantRitual.getApplicant().getFullNameEn());
+
+        return chatContactLite;
+    }
+
+    /**
+     * Creates a new staff chat contact
+     *
+     * @param suin the chat contact uin
+     * @return savedContact saved one
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public ApplicantChatContactLiteDto createStaffChatContact(String applicantUin,  Long applicantRitualId, String suin) throws IOException {
+        ApplicantRitualDto applicantRitual = applicantRitualService.findById(applicantRitualId);
+        CompanyStaffLiteDto companyStaff = companyStaffService.findBySuin(suin);
+        if (companyStaff == null) {
+
+        }
+        ApplicantChatContactDto savedContact = ApplicantChatContactDto
+                .builder()
+                .applicantUin(applicantUin)
+                .contactUin(suin)
+                .mobileNumber(companyStaff.getMobileNumber())
+              //  .countryPhonePrefix(companyStaff.getCountryPhonePrefix())
+                .countryCode(companyStaff.getNationalityCode())
+                .systemDefined(false)
+                .deleted(false)
+                .applicantRitual(applicantRitual)
+                .avatar(companyStaff.getPhoto())
+                .staffTitleCode(companyStaff.getTitleCode())
+                .type(ContactTypeLookupDto.builder().id(EChatContactType.STAFF.getId()).build())
+                .build();
+
+        savedContact = save(savedContact);
+        ApplicantChatContactLiteDto chatContactLite = mapChatContactToChatContactLite(savedContact);
+        chatContactLite.setContactFullNameAr(companyStaff.getFullNameAr());
+        chatContactLite.setContactFullNameEn(companyStaff.getFullNameEn());
 
         return chatContactLite;
     }
