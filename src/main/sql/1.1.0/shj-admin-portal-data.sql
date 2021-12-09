@@ -295,7 +295,7 @@ VALUES ('data.request.company.staff.override', 'false');
 GO
 
 update shc_portal.shc_data_segment
-set label_ar =N'بيانات الشعيرة للعاملين	'
+set label_ar =N'بيانات الشعيرة للعاملين'
 where id = 9
     GO
 

@@ -19,6 +19,7 @@ import java.util.Date;
  * @since 1.1.0
  */
 @WithCompanyStaff
+@WithCompanyRitualSeason
 @NoArgsConstructor
 @Getter
 @Setter
