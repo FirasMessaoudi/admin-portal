@@ -97,10 +97,7 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
             if (criteria.getCreationDateEnd() != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("creationDate"), criteria.getCreationDateEnd()));
             }
-
-            Expression<Date> dateTomeDescOrder = criteriaBuilder.coalesce(root.get("updateDate"), root.get("creationDate"));
-            criteriaQuery.orderBy(criteriaBuilder.desc(dateTomeDescOrder));
-
+            criteriaQuery.orderBy(criteriaBuilder.desc(root.get("creationDate")));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
