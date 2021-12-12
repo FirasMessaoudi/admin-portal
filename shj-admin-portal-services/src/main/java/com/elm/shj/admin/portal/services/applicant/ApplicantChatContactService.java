@@ -55,16 +55,23 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
             contacts = mapList(applicantChatContactRepository.findUserDefined(applicantUin));
         }
         return contacts.parallelStream().map(c -> {
-            Optional<ApplicantLiteDto> applicantLite = applicantLiteService.findByUin(c.getContactUin());
             ApplicantChatContactLiteDto contact = mapChatContactToChatContactLite(c);
-            contact.setContactFullNameAr(applicantLite.map(ApplicantLiteDto::getFullNameAr).orElse(null));
-            contact.setContactFullNameEn(applicantLite.map(ApplicantLiteDto::getFullNameEn).orElse(null));
+            if (EChatContactType.APPLICANT.getId() == c.getType().getId()) {
+                Optional<ApplicantLiteDto> applicantLite = applicantLiteService.findByUin(c.getContactUin());
+                contact.setContactFullNameAr(applicantLite.map(ApplicantLiteDto::getFullNameAr).orElse(null));
+                contact.setContactFullNameEn(applicantLite.map(ApplicantLiteDto::getFullNameEn).orElse(null));
+            } else if (EChatContactType.STAFF.getId() == c.getType().getId()) {
+                Optional<CompanyStaffLiteDto> staffLite = companyStaffService.findBySuin(c.getContactUin());
+                contact.setContactFullNameAr(staffLite.map(CompanyStaffLiteDto::getFullNameAr).orElse(null));
+                contact.setContactFullNameEn(staffLite.map(CompanyStaffLiteDto::getFullNameEn).orElse(null));
+                contact.setStaffTitleCode(staffLite.map(CompanyStaffLiteDto::getTitleCode).orElse(null));
+            }
             return contact;
         }).collect(Collectors.toList());
     }
 
     @Transactional
-    public int deleteApplicantChatContact(String applicantUin, String contactUin ) {
+    public int deleteApplicantChatContact(String applicantUin, String contactUin) {
         return applicantChatContactRepository.markDeleted(applicantUin, contactUin);
     }
 
@@ -134,32 +141,27 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @return savedContact saved one
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantChatContactLiteDto createStaffChatContact(String applicantUin,  Long applicantRitualId, String suin) throws IOException {
+    public ApplicantChatContactLiteDto createStaffChatContact(String applicantUin, Long applicantRitualId, String suin) {
         ApplicantRitualDto applicantRitual = applicantRitualService.findById(applicantRitualId);
-        CompanyStaffLiteDto companyStaff = companyStaffService.findBySuin(suin);
-        if (companyStaff == null) {
-
-        }
+        Optional<CompanyStaffLiteDto> companyStaff = companyStaffService.findBySuin(suin);
         ApplicantChatContactDto savedContact = ApplicantChatContactDto
                 .builder()
                 .applicantUin(applicantUin)
                 .contactUin(suin)
-                .mobileNumber(companyStaff.getMobileNumber())
-              //  .countryPhonePrefix(companyStaff.getCountryPhonePrefix())
-                .countryCode(companyStaff.getNationalityCode())
+                .mobileNumber(companyStaff.map(CompanyStaffLiteDto::getMobileNumber).orElse(null))
+                .countryCode(companyStaff.map(CompanyStaffLiteDto::getNationalityCode).orElse(null))
                 .systemDefined(false)
                 .deleted(false)
                 .applicantRitual(applicantRitual)
-                .avatar(companyStaff.getPhoto())
-                .staffTitleCode(companyStaff.getTitleCode())
+                .avatar(companyStaff.map(CompanyStaffLiteDto::getPhoto).orElse(null))
+                .staffTitleCode(companyStaff.map(CompanyStaffLiteDto::getTitleCode).orElse(null))
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.STAFF.getId()).build())
                 .build();
 
         savedContact = save(savedContact);
         ApplicantChatContactLiteDto chatContactLite = mapChatContactToChatContactLite(savedContact);
-        chatContactLite.setContactFullNameAr(companyStaff.getFullNameAr());
-        chatContactLite.setContactFullNameEn(companyStaff.getFullNameEn());
-
+        chatContactLite.setContactFullNameAr(companyStaff.map(CompanyStaffLiteDto::getFullNameAr).orElse(null));
+        chatContactLite.setContactFullNameEn(companyStaff.map(CompanyStaffLiteDto::getFullNameEn).orElse(null));
         return chatContactLite;
     }
 

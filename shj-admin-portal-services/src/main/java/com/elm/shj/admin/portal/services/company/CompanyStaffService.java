@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -23,12 +24,20 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
     private final CompanyStaffRepository companyStaffRepository;
 
-    public CompanyStaffLiteDto findBySuin(String suin) {
+    public Optional<CompanyStaffLiteDto> findBySuin(String suin) {
         CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findBySuin(suin), mappingContext);
-        if (companyStaff == null) return null;
-        return CompanyStaffLiteDto.builder().fullNameAr(companyStaff.getFullNameAr()).fullNameEn(companyStaff.getFullNameEn())
-                .mobileNumber(companyStaff.getMobileNumber()).email(companyStaff.getEmail()).nationalityCode(companyStaff.getNationalityCode())
-                .photo(companyStaff.getPhoto()).titleCode(companyStaff.getTitleCode()).build();
+        if (companyStaff != null) {
+            CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
+                    .fullNameAr(companyStaff.getFullNameAr())
+                    .fullNameEn(companyStaff.getFullNameEn())
+                    .mobileNumber(companyStaff.getMobileNumber())
+                    .email(companyStaff.getEmail())
+                    .nationalityCode(companyStaff.getNationalityCode())
+                    .photo(companyStaff.getPhoto())
+                    .titleCode(companyStaff.getTitleCode())
+                    .build();
+            return Optional.of(companyStaffLite);
+        } else return Optional.empty();
     }
 
     public List<CompanyStaffDto> findRelatedEmployeesByApplicantUinAndSeasonId(String uin, long sid) {
