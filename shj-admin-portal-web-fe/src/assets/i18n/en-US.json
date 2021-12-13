@@ -405,7 +405,7 @@
     "dialog_reissued_card_success_text": "Card has been reissued successfully , you can print the new card"
   },
   "notification-management": {
-    "title": "Notification Management",
+    "title": "System Notification Management",
     "notification-body": "Notification Body",
     "notification-name": "Notification Name",
     "notification-title": "Notification Title",
