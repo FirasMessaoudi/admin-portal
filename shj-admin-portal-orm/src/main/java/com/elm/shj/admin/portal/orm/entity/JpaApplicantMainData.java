@@ -66,15 +66,10 @@ public class JpaApplicantMainData implements Serializable {
 
     private String photo;
 
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "applicant")
-    private List<JpaApplicantDigitalId> digitalIds;
-
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantRitual> rituals;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
-
-
 }
