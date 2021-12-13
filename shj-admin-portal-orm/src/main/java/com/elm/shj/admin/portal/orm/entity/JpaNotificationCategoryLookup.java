@@ -27,4 +27,5 @@ public class JpaNotificationCategoryLookup extends JpaLocalizedLookup {
 
     private static final long serialVersionUID = -296706128414877088L;
     private String sample;
+    private boolean mandatory;
 }

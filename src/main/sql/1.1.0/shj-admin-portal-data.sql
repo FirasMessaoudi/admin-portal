@@ -328,3 +328,13 @@ delete
 from shc_portal.shc_config
 where conf_key = 'scheduler.generate.staff.digital.ids.cron';
 Go
+
+update shc_notification_category_lk
+set shc_notification_category_lk.mandatory = 1
+where code in ('HEALTH', 'RITUAL');
+Go
+
+update shc_notification_category_lk
+set shc_notification_category_lk.mandatory = 0
+where code not in ('HEALTH', 'RITUAL');
+Go

@@ -1150,3 +1150,6 @@ drop
 column company_ritual_season_id
 GO
 
+Alter table shc_notification_category_lk
+    add mandatory bit NOT NULL default 0;
+GO
