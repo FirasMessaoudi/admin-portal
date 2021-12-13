@@ -1,7 +1,7 @@
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="sectionTitle">
-      {{ "notification-management.title" | translate }}
+      {{ "notification-management.system_notifications" | translate }}
       <button class="btn btn-link shadow-none">
         <svg-icon styleClass="h4 pt-3" icon="search" (click)="isSearchbarCollapsed = !isSearchbarCollapsed"></svg-icon>
       </button>
@@ -101,6 +101,7 @@
           <th scope="col">{{'notification-management.notification-type' | translate}}</th>
           <th scope="col">{{'notification-management.action-label' | translate}}</th>
           <th scope="col">{{'notification-management.notification-severity' | translate}}</th>
+          <th scope="col">{{'notification-management.notification-status' | translate}}</th>
           <th scope="col">{{'notification-management.expiry-date' | translate}}</th>
 
           <th scope="col"></th>
@@ -124,17 +125,18 @@
           </td>
           <td
             class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.actionLabel || '---'}}</td>
-          <td class=" d-flex align-items-baseline" *ngIf="template?.important">
+          <td *ngIf="template?.important">
             <span class="status mr-1 Suspended severity-badge"></span>
             <span>{{'notification-management.important' | translate}}</span>
           </td>
-          <td class=" d-flex align-items-baseline" *ngIf="!template?.important">
+          <td *ngIf="!template?.important">
             <span class="status mr-1 done severity-badge"></span>
             <span>{{'notification-management.normal' | translate}}</span>
           </td>
-          <td class=" d-flex align-items-baseline" *ngIf="!template?.important">
-            <span class="status mr-1 done severity-badge"></span>
-            <span>{{'notification-management.normal' | translate}}</span>
+
+          <td >
+            <span *ngIf="template?.enabled">{{'notification-management.enabled' | translate}}</span>
+            <span *ngIf="!template?.enabled">{{'notification-management.disabled' | translate}}</span>
           </td>
           <td >
             {{template?.expirationPeriodInMinutes}}
