@@ -56,7 +56,7 @@
               class="mr-3">{{value}}</span>
         <span>
            <span
-             class="status {{buildDigitalIdClass(card?.applicantRitual?.applicant?.digitalIds[0]?.statusCode)}} mr-1"></span>
+             class="status {{buildDigitalIdClass(card?.applicantRitual?.applicant?.digitalIds[0]?.statusCode)}} mr-2"></span>
             <span>{{card?.applicantRitual?.applicant?.digitalIds[0]?.statusCode ? lookupService().localizedLabel(applicantStatuses, card?.applicantRitual?.applicant?.digitalIds[0]?.statusCode) : ' --- '}}</span>
         </span>
       </div>
@@ -67,8 +67,8 @@
         class="form-control-plaintext text-center text-md-left">
         <span *ngIf="card?.referenceNumber as value; else elseBlock" class="mr-3">{{value}}</span>
         <span>
-           <span class="status {{buildStatusClass(card?.statusCode)}} mr-1"></span>
-          <span>{{card?.statusCode ? lookupService().localizedLabel(cardStatuses, card?.statusCode) : ' --- '}}</span>
+           <span class="status {{buildStatusClass(card?.statusCode)  }} mr-2"></span>
+          <span>{{ card?.statusCode ? lookupService().localizedLabel(cardStatuses, card?.statusCode) : ' --- '}}</span>
         </span>
       </div>
     </div>
