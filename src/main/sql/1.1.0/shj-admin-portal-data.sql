@@ -115,13 +115,13 @@ VALUES (3, 4, 'AR', N'حل شكوى',
         N'عزيزي ضيف الرحمن نفيدكم بأن راحتكم هي أولويتنا تم دراسة الشكوى المقدمة وتم حلها وفي حالة عدم رضاكم عن الحل أو استمرار الشكوى نأمل رفع شكوى جديدة');
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body)
 VALUES (4, 4, 'EN', 'Resolve incident',
-        'Dear Applicant your satisfaction is out priority, your complaint had been investigated and resolved please if the resolution is not as per your expectation or still not resolved raise another complaint');
+        'Dear applicant your satisfaction is our top priority, your complaint has been investigated and resolved. If the provided resolution is not as per your expectations or if the complaint still not resolved we would request you to raise another complaint');
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body)
 VALUES (5, 5, 'AR', N'حل شكوى',
         N'عزيزي ضيف الرحمن نفيدكم بأن راحتكم هي أولويتنا تم دراسة الشكوى المقدمة وتم إغلاقها وفي حالة استمرار الشكوى نأمل رفع شكوى جديدة بتفاصيل أكثر');
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body)
 VALUES (6, 5, 'EN', 'Close incident',
-        'Dear Applicant your satisfaction is out priority, your complaint had been investigated and closed please if the  still not resolved raise another complain with more details');
+        'Dear applicant your satisfaction is our top priority, your complaint has been investigated and closed. If the complaint is still not resolved we would request you to raise another complaint with more details');
 SET IDENTITY_INSERT shc_portal.shc_notification_template_content OFF;
 GO
 
