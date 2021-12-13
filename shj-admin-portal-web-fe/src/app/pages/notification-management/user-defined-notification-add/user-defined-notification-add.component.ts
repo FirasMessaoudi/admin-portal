@@ -144,7 +144,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       enabled: true,
       userSpecific: false,
       forceSending: false,
-      status: null,
       description: '',
       notificationTemplateContents: this.formBuilder.array([], requiredArabicAndEnglishContent())
     });
@@ -294,6 +293,11 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     notificationTemplate.statusCode = this.DRAFT;
     notificationTemplate.notificationTemplateContents = this.notificationForm.get('notificationTemplateContents')
       .value.filter(c => c.body.trim() !== '' || c.title.trim() !== '');
+    notificationTemplate.notificationTemplateContents.forEach(c => {
+      c.title = c.title.replace(/\s/g, " ").trim();
+      c.body = c.body.replace(/\s/g, " ").trim();
+    });
+    console.log(notificationTemplate);
     return notificationTemplate;
   }
 

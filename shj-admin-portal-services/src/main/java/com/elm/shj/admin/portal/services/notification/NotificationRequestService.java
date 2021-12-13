@@ -201,7 +201,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     }
 
     @Transactional
-    public NotificationTemplateDto sendIncidentNotification(NotificationTemplateDto notificationTemplate, String uin) {
+    public void sendIncidentNotification(NotificationTemplateDto notificationTemplate, String uin) {
         NotificationRequestDto notificationRequest = NotificationRequestDto
                 .builder()
                 .userId(uin)
@@ -212,6 +212,5 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                 .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
                 .build();
         super.save(notificationRequest);
-        return notificationTemplate;
     }
 }

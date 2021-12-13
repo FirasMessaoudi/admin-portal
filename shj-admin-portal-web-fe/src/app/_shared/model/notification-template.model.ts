@@ -1,7 +1,6 @@
 import {NotificationTemplateContent} from "@model/notification-template-content.model";
 import {NotificationTemplateParameter} from "@model/notification-template-parameter.model";
 
-
 export class NotificationTemplate {
   id: number;
   categoryCode: string;
