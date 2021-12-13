@@ -156,8 +156,8 @@ public class ChatContactWsController {
     @GetMapping("/find-staff/{applicantRitualId}/{suin}")
     public ResponseEntity<WsResponse<?>> findStaffContactByUinAndRitualId(@PathVariable String suin,
                                                                           @PathVariable Long applicantRitualId) {
-        CompanyStaffLiteDto companyStaff = companyStaffService.findBySuin(suin);
-        if (companyStaff == null) {
+        Optional<CompanyStaffLiteDto> companyStaff = companyStaffService.findBySuin(suin);
+        if (!companyStaff.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(suin).build()).build());
         }

@@ -101,6 +101,8 @@
           <th scope="col">{{'notification-management.notification-type' | translate}}</th>
           <th scope="col">{{'notification-management.action-label' | translate}}</th>
           <th scope="col">{{'notification-management.notification-severity' | translate}}</th>
+          <th scope="col">{{'notification-management.expiry-date' | translate}}</th>
+
           <th scope="col"></th>
         </tr>
         </thead>
@@ -130,7 +132,17 @@
             <span class="status mr-1 done severity-badge"></span>
             <span>{{'notification-management.normal' | translate}}</span>
           </td>
+          <td class=" d-flex align-items-baseline" *ngIf="!template?.important">
+            <span class="status mr-1 done severity-badge"></span>
+            <span>{{'notification-management.normal' | translate}}</span>
+          </td>
+          <td >
+            {{template?.expirationPeriodInMinutes}}
+            {{(template?.expirationPeriodInMinutes > 10 || template?.expirationPeriodInMinutes < 3) ? ('notification-management.minute' | translate) : ('notification-management.minutes' | translate) }}
+
+          </td>
           <td>
+
             <button [routerLink]="['/system-defined-notification/details', template.id]"
                     class="btn btn-sm btn-outline-dcc-primary tblView">
               {{"general.btn_view" | translate}}
