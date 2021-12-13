@@ -24,7 +24,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface WithCompanyRitualSeason {
 
-    String message() default "validation.data.constraints.msg.30002";
+    String message() default "validation.data.constraints.msg.30010";
 
     Class<?>[] groups() default {};
 
