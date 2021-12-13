@@ -1122,17 +1122,15 @@ ALTER TABLE shc_portal.shc_company_staff_card ALTER COLUMN reference_number varc
 GO
 
 
-Alter table shc_company_staff_card
+Alter table shc_portal.shc_company_staff_card
     add company_staff_suin VARCHAR(45) NULL;
 GO
 
-ALTER table shc_company_staff_card drop constraint fk_company_staff_card_company_staff_digital_id;
+ALTER table shc_portal.shc_company_staff_card drop constraint fk_company_staff_card_company_staff_digital_id;
 Go
 
-ALTER table shc_company_staff_card drop column company_staff_digital_id_id;
+ALTER table shc_portal.shc_company_staff_card drop column company_staff_digital_id_id;
 Go
-
-use shc_portal
 
 ALTER TABLE shc_portal.shc_company_staff DROP CONSTRAINT fk_company_staff_company;
 GO
@@ -1150,6 +1148,6 @@ drop
 column company_ritual_season_id
 GO
 
-Alter table shc_notification_category_lk
+Alter table shc_portal.shc_notification_category_lk
     add mandatory bit NOT NULL default 0;
 GO
