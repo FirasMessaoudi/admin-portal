@@ -42,7 +42,7 @@ public class WithCompanyRitualSeasonValidator implements ConstraintValidator<Wit
             ReflectionUtils.makeAccessible(typeCodeField);
             ReflectionUtils.makeAccessible(seasonField);
             ReflectionUtils.makeAccessible(companyCodeField);
-            CompanyRitualSeasonDto companyRitualSeason = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason((String) companyCodeField.get(value), (String) companyCodeField.get(value), (int) seasonField.get(value));
+            CompanyRitualSeasonDto companyRitualSeason = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason((String) companyCodeField.get(value), (String) typeCodeField.get(value), (int) seasonField.get(value));
             return companyRitualSeason != null;
         } catch (IllegalAccessException e) {
             ReflectionUtils.handleReflectionException(e);
