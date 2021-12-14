@@ -75,4 +75,12 @@ export class IncidentService {
         })
       );
   }
+
+  /**
+   * Download incident attachment.
+   */
+  downloadIncidentAttachment(id) {
+    return this.http.get<any>('/core/api/incidents/attachments/' + id);
+  }
+
 }
