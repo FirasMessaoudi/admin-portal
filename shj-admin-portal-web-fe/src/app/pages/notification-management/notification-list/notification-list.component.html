@@ -100,6 +100,7 @@
           <th scope="col">{{'notification-management.notification-body' | translate}}</th>
           <th scope="col">{{'notification-management.notification-type' | translate}}</th>
           <th scope="col">{{'notification-management.action-label' | translate}}</th>
+          <th scope="col">{{ "notification-management.notification-category" | translate }}</th>
           <th scope="col">{{'notification-management.notification-severity' | translate}}</th>
           <th scope="col">{{'notification-management.notification-status' | translate}}</th>
           <th scope="col">{{'notification-management.expiry-date' | translate}}</th>
@@ -125,6 +126,8 @@
           </td>
           <td
             class="ltr">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.actionLabel || '---'}}</td>
+          <td class="ltr">{{lookupService().localizedLabel(notificationCategories, template?.categoryCode)}}</td>
+
           <td *ngIf="template?.important">
             <span class="status mr-1 Suspended severity-badge"></span>
             <span>{{'notification-management.important' | translate}}</span>
@@ -134,14 +137,15 @@
             <span>{{'notification-management.normal' | translate}}</span>
           </td>
 
-          <td >
+          <td>
             <span *ngIf="template?.enabled">{{'notification-management.enabled' | translate}}</span>
             <span *ngIf="!template?.enabled">{{'notification-management.disabled' | translate}}</span>
           </td>
-          <td >
-            {{template?.expirationPeriodInMinutes}}
-            {{(template?.expirationPeriodInMinutes > 10 || template?.expirationPeriodInMinutes < 3) ? ('notification-management.minute' | translate) : ('notification-management.minutes' | translate) }}
-
+          <td>
+            <span *ngIf="template?.expirationPeriodInMinutes > 0 ; else elseBlock">
+              {{template?.expirationPeriodInMinutes}}
+              {{((template?.expirationPeriodInMinutes > 10 || template?.expirationPeriodInMinutes < 3) ? ('notification-management.minute' | translate) : ('notification-management.minutes' | translate)) }}
+            </span>
           </td>
           <td>
 
@@ -177,5 +181,5 @@
       </ul>
     </nav>
   </div>
-
+  <ng-template #elseBlock><span class="col-form-label">  ---    </span></ng-template>
 </div>
