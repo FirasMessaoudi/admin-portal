@@ -592,7 +592,6 @@ public class ItemWriter {
                 List<CompanyStaffCardDto> companyStaffCards2 = companyStaffCardService.findByDigitalIdAndDifferentCompanyOrRitual(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
                 if (CollectionUtils.isNotEmpty(companyStaffCards2)) {
                     companyStaffCards2.forEach(c -> {
-                        if (c.getStatusCode().equals(ECardStatus.ACTIVE.name()))
                             c.setStatusCode(ECardStatus.EXPIRED.name());
                     });
                     companyStaffCardService.saveAll(companyStaffCards2);
