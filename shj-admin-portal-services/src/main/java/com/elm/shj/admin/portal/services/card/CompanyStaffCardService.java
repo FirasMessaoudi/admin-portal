@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.card;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffCardRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffCardDto;
+import com.elm.shj.admin.portal.services.dto.ECardStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard, CompanyStaffCardDto, Long> {
     private final CompanyStaffCardRepository companyStaffCardRepository;
-    List<String> cardStatus = Arrays.asList("ACTIVE", "READY_TO_PRINT", "SENT_FOR_PRINT", "PRINTED", "DISTRIBUTED", "SUSPENDED");
+    List<String> cardStatus = Arrays.asList(ECardStatus.ACTIVE.name(), ECardStatus.READY_TO_PRINT.name(), ECardStatus.SENT_FOR_PRINT.name(), ECardStatus.PRINTED.name(), ECardStatus.DISTRIBUTED.name(), ECardStatus.SUSPENDED.name());
 
     /**
      * find company staff cards by suin
