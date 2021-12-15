@@ -48,7 +48,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
         if (userNotifications.isEmpty())
             return Collections.emptyList();
 
-        userNotifications.parallelStream().forEach(
+        userNotifications.stream().forEach(
                 notification -> {
                     Optional<JpaNotificationTemplateContent> notificationTemplateContent = notification.getNotificationTemplate().getNotificationTemplateContents().stream().filter(content -> content.getLang().equalsIgnoreCase(notification.getUserLang())).findAny();
                     detailedUserNotifications.add(DetailedUserNotificationDto.builder()
