@@ -21,7 +21,7 @@ import java.io.Serializable;
 public class CompanyStaffLiteDto implements Serializable {
 
     private static final long serialVersionUID = 531849258704172988L;
-
+    private String suin;
     private String fullNameAr;
     private String fullNameEn;
     private String email;
