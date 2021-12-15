@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.services.dto;
 
 import lombok.AllArgsConstructor;
@@ -7,6 +10,12 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
+/**
+ * Applicant card filter value object.
+ *
+ * @author Slim Ben Hadj
+ * @since 1.1.0
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

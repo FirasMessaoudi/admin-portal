@@ -1,4 +1,4 @@
-package com.elm.shj.admin.portal.services.applicant;
+package com.elm.shj.admin.portal.services.company;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeasonLite;
 import com.elm.shj.admin.portal.orm.repository.CompanyRitualSeasonLiteRepository;
@@ -35,5 +35,6 @@ public class CompanyRitualSeasonLiteService extends GenericService<JpaCompanyRit
         List<JpaCompanyRitualSeasonLite> companyRitualSeasons = companyRitualSeasonRepository.findAllByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(applicantUin);
         return getMapper().fromEntityList(companyRitualSeasons, mappingContext);
     }
+
 
 }

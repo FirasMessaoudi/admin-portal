@@ -29,6 +29,7 @@ import java.util.List;
 public class JpaCompanyRitualSeason implements Serializable {
 
     private static final long serialVersionUID = -973537367560574699L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
@@ -49,10 +50,6 @@ public class JpaCompanyRitualSeason implements Serializable {
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyRitualSeason")
     private List<JpaApplicantGroup> applicantGroups;
-
-    @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyRitualSeason")
-    private List<JpaCompanyStaff> groupLeaders;
 
     @Column(name = "season_start", nullable = false)
     private int seasonStart;
@@ -90,6 +87,4 @@ public class JpaCompanyRitualSeason implements Serializable {
     public void preUpdate() {
         updateDate = new Date();
     }
-
-
 }

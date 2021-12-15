@@ -74,7 +74,8 @@
                          tabindex="-1">
                   <ng-template #t1 let-date let-focused="focused">
                 <span class="custom-day" [class.focused]="focused" [class.range]="isNotificationDateInRange(date)"
-                      [class.faded]="isNotificationDateHovered(date) || isNotificationDateInside(date)" (mouseenter)="notificationHoveredDate = date"
+                      [class.faded]="isNotificationDateHovered(date) || isNotificationDateInside(date)"
+                      (mouseenter)="notificationHoveredDate = date"
                       (mouseleave)="notificationHoveredDate = null">
                     {{ date.day }}
                 </span>
@@ -259,11 +260,11 @@
             class="ltr text-break">{{getNotificationContentForCurrentLanguage(template?.notificationTemplateContents)?.body || '---'}}</td>
           <td
             class="ltr">{{template?.categoryCode ? lookupService().localizedLabel(notificationCategories, template?.categoryCode) : '---'}}</td>
-          <td class=" d-flex align-items-baseline" *ngIf="template?.important">
+          <td *ngIf="template?.important">
             <span class="status mr-1 Suspended severity-badge"></span>
             <span>{{'notification-management.important' |translate}}</span>
           </td>
-          <td class=" d-flex align-items-baseline" *ngIf="!template?.important">
+          <td *ngIf="!template?.important">
             <span class="status mr-1 done severity-badge"></span>
             <span>{{'notification-management.normal' |translate}}</span>
           </td>

@@ -544,6 +544,28 @@
     "dialog_confirm_request_error_text": "حدث خطأ أثناء تأكيد طلبك. يرجى المحاولة مرة أخرى ..."
   },
   "incident-management": {
-    "title": "إدارة البلاغات"
+    "title": "إدارة البلاغات",
+    "applicant_shaaer_id": "هوية شعائر",
+    "applicant_name": "اسم مقدم البلاغ",
+    "incident_type": "نوع البلاغ",
+    "incident_date": "تاريخ تقديم البلاغ",
+    "status": "حالة البلاغ",
+    "all": "الكل",
+    "incident_number": "رقم البلاغ",
+    "incident_details": "تفاصيل البلاغ",
+    "attachments": "المرفقات",
+    "location": "الموقع على الخريطة",
+    "incident_description": "وصف البلاغ",
+    "incident_resolution": "معالجة البلاغ",
+    "operation": "الإجراء",
+    "mark_as_resolved": "تم حل الشكوى",
+    "mark_as_closed": "تم إغلاق الشكوى",
+    "comments": "الملاحظات",
+    "comments_caution": "سوف تظهر لمقدم البلاغ",
+    "dialog_resolve_complaint_confirmation_text": "هل تريد تحويل حالة الشكوى إلى تم الحل وإشعار مقدم الشكوى بذلك ؟",
+    "dialog_close_complaint_confirmation_text": "هل تريد تحويل حالة الشكوى إلى مغلقة وإشعار مقدم الشكوى بذلك ؟",
+    "dialog_resolve_complaint_success_text": "تم تحويل حالة الشكوى إلى تم الحل",
+    "dialog_close_complaint_success_text": "تم تحويل حالة الشكوى إلى مغلقة",
+    "operation_date": "تاريخ الإجراء"
   }
 }

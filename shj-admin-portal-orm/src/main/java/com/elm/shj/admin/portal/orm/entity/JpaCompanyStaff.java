@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.orm.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -41,19 +42,8 @@ public class JpaCompanyStaff implements Serializable {
     private String fullNameEn;
 
     @Column(name = "id_number", nullable = false)
-    private int idNumber;
+    private String idNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
-    private JpaCompany company;
-
-    @ManyToOne
-    @JoinColumn(name = "company_ritual_season_id")
-    private JpaCompanyRitualSeason companyRitualSeason;
-
-    @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupLeader")
-    private List<JpaApplicantGroup> applicantGroups;
 
     @Column(name = "title_code")
     private String titleCode;
@@ -61,14 +51,52 @@ public class JpaCompanyStaff implements Serializable {
     @Column(name = "mobile_number", nullable = false)
     private String mobileNumber;
 
+    @Column(name = "mobile_number_intl", nullable = false)
+    private String mobileNumberIntl;
+
     @Column(name = "email")
     private String email;
+
+    private String photo;
+
+    @Column(name = "id_number_original")
+    private String idNumberOriginal;
+
+    @Column(name = "passport_number")
+    private String passportNumber;
+
+    @Column(name = "date_of_birth_gregorian")
+    private Date dateOfBirthGregorian;
+
+    @Column(name = "date_of_birth_hijri")
+    private Long dateOfBirthHijri;
+
+    private String gender;
+
+    @Column(name = "nationality_code")
+    private String nationalityCode;
+
+    @Column(name = "full_name_origin")
+    private String fullNameOrigin;
+
 
     @Column(name = "creation_date",nullable = false)
     private Date creationDate;
 
     @Column(name = "update_date")
     private Date updateDate;
+
+    @ManyToOne
+    @JoinColumn(name = "data_request_record_id")
+    private JpaDataRequestRecord dataRequestRecord;
+
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "companyStaff")
+    private List<JpaCompanyStaffDigitalId> digitalIds;
+
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupLeader")
+    private List<JpaApplicantGroup> applicantGroups;
+
 
     @PrePersist
     public void prePersist() {
@@ -78,7 +106,11 @@ public class JpaCompanyStaff implements Serializable {
     @PreUpdate
     public void preUpdate() {
         updateDate = new Date();
+        upperCase();
     }
 
-
+    private void upperCase() {
+        gender = StringUtils.upperCase(gender);
+        nationalityCode = StringUtils.upperCase(nationalityCode);
+    }
 }

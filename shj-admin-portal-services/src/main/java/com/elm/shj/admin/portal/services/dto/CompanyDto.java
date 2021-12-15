@@ -81,7 +81,5 @@ public class CompanyDto {
     @JsonBackReference(value = "companyRitualSeasons")
     private List<CompanyRitualSeasonDto> companyRitualSeasons;
 
-    @JsonBackReference(value = "companyStaff")
-    private List<CompanyStaffDto> companyStaff;
 
 }

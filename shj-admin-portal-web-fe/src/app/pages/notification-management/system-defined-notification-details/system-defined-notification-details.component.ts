@@ -82,7 +82,6 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
     this.initForm();
   }
 
-
   private initForm() {
     this.templateForm = this.formBuilder.group({
       body: ['', [Validators.required, noWhitespaceValidator, Validators.maxLength(500), Validators.minLength(3)]],
@@ -169,23 +168,20 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
     return this.lookupsService;
   }
 
-  back() {
-    if (this.editable) {
-      this.confirmDialogService.confirm(this.translate.instant('notification-management.cancel_confirmation_text'), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
-        if (confirm) {
-          this.editable = false;
-          this.paramTooltipText = '';
-          if (this.getTempContentIndex() == -1) {
-            this.resetTemplateForm();
-          } else {
-            this.updateForm();
-          }
-          this.templateForm.controls['enabled'].disable();
+  cancel() {
+    this.confirmDialogService.confirm(this.translate.instant('notification-management.cancel_confirmation_text'), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+      if (confirm) {
+        this.editable = false;
+        this.paramTooltipText = '';
+        if (this.getTempContentIndex() == -1) {
+          this.resetTemplateForm();
+        } else {
+          this.updateForm();
         }
-      });
-    } else {
-      this.goBackToList();
-    }
+        this.templateForm.controls['enabled'].disable();
+      }
+    });
+
   }
 
   copyParameter(text: any) {
@@ -230,10 +226,10 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
         this.updateForm();
       }
     } else {
-       Object.keys(this.templateForm.controls).forEach(field => {
-         const control = this.templateForm.get(field);
-         control.markAsTouched({onlySelf: true});
-       });
+      Object.keys(this.templateForm.controls).forEach(field => {
+        const control = this.templateForm.get(field);
+        control.markAsTouched({onlySelf: true});
+      });
 
       if (this.templateForm.invalid) {
         return;
@@ -295,16 +291,15 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
 
     if (index != -1) {
       this.selectedLangTemplateContent = this.notificationTemplate.notificationTemplateContents[index];
-      this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value;
-      this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value;
-      this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value;
+      this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value.replace(/\s/g, " ").trim();
+      this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value.replace(/\s/g, " ").trim();
+      this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value?.replace(/\s/g, " ").trim();
       this.notificationTemplate.notificationTemplateContents[index] = this.selectedLangTemplateContent;
     } else {
       this.selectedLangTemplateContent = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
-      this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value;
-      this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value;
-      this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value;
-
+      this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value.replace(/\s/g, " ").trim();
+      this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value.replace(/\s/g, " ").trim();
+      this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value?.replace(/\s/g, " ").trim();
       if (this.selectedLangTemplateContent.title != '' && this.selectedLangTemplateContent.body != '')
         this.notificationTemplate.notificationTemplateContents.push(this.selectedLangTemplateContent);
 

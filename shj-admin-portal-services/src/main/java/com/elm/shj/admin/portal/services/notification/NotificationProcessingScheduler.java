@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.notification;
 
-
 import com.elm.shj.admin.portal.orm.entity.JpaNotificationRequest;
 import com.elm.shj.admin.portal.orm.repository.NotificationRequestRepository;
 import com.elm.shj.admin.portal.services.dto.ENotificationProcessingStatus;

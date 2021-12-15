@@ -69,7 +69,7 @@ public class DataRequestManagementController {
      */
     @GetMapping("/find/{dataRequestId}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.VIEW_DATA_REQUEST_DETAILS + "')")
-    public DataRequestDto findRole(@PathVariable long dataRequestId) {
+    public DataRequestDto find(@PathVariable long dataRequestId) {
         log.debug("Finding data request #{}", dataRequestId);
         return dataRequestService.findById(dataRequestId);
     }

@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,8 +77,8 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         return null;
     }
 
-    public Set<PackageCateringDto> findPackageCateringFromRitualPackage(long uin, RitualPackageDto ritualPackage){
-        Set<PackageCateringDto> packageCateringDtoList = new HashSet<>();
+    public List<PackageCateringDto> findPackageCateringFromRitualPackage(long uin, RitualPackageDto ritualPackage){
+        List<PackageCateringDto> packageCateringDtoList = new ArrayList<>();
 
         Optional<ApplicantPackageDto> applicantPackageDto = ritualPackage.getApplicantPackages().stream()
                 .filter(p-> p.getApplicantUin() == uin)
@@ -117,6 +115,6 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
             }
 
         });
-        return packageCateringDtoList;
+        return packageCateringDtoList.stream().sorted(Comparator.comparing(PackageCateringDto::getMealTime)).collect(Collectors.toList());
     }
 }

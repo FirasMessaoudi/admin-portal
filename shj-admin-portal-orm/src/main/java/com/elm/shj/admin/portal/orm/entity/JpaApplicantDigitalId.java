@@ -37,8 +37,8 @@ public class JpaApplicantDigitalId implements Serializable {
     @Column(name = "status_code")
     private String statusCode;
 
-    @ManyToOne
-    private JpaApplicant applicant;
+    @Column(name = "applicant_id")
+    private long applicantId;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

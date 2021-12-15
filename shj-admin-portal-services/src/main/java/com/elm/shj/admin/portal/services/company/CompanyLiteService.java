@@ -1,4 +1,4 @@
-package com.elm.shj.admin.portal.services.applicant;
+package com.elm.shj.admin.portal.services.company;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompany;
 import com.elm.shj.admin.portal.orm.repository.CompanyRepository;
@@ -24,6 +24,16 @@ public class CompanyLiteService extends GenericService<JpaCompany, CompanyLiteDt
 
     public CompanyLiteDto findCompanyByCompanyRitualSeasonsIdAndApplicantUin(long companyRitualSeasonsId, long applicantUin) {
         return getMapper().fromEntity(companyRepository.findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsRitualPackagesApplicantPackagesApplicantUin(companyRitualSeasonsId, applicantUin), mappingContext);
+    }
+
+    /**
+     * Checks if a company exists by its code
+     *
+     * @param companyCode the code of the country to look for
+     * @return if the company is found
+     */
+    public boolean existsByCode(String companyCode) {
+        return ((CompanyRepository) getRepository()).existsByCode(companyCode);
     }
 
 }

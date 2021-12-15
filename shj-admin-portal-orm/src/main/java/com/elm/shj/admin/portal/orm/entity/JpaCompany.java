@@ -76,10 +76,6 @@ public class JpaCompany implements Serializable {
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "company")
-    private List<JpaCompanyStaff> companyStaff;
-
-    @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "company")
     private List<JpaCompanyRitualSeason> companyRitualSeasons;
 
     @PrePersist

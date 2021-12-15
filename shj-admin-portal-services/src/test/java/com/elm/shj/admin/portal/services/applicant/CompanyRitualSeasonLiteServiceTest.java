@@ -3,6 +3,7 @@ package com.elm.shj.admin.portal.services.applicant;
 import com.elm.dcc.foundation.commons.core.mapper.MapperRegistry;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeasonLite;
 import com.elm.shj.admin.portal.orm.repository.CompanyRitualSeasonLiteRepository;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualSeasonLiteDto;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualSeasonLiteMapper;
 import org.junit.jupiter.api.BeforeEach;

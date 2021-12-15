@@ -930,17 +930,224 @@ create table shc_portal.shc_incident_status_lk
 GO
 
 /*--------------------------------------------------------
---  ddl for applicant chat contact table
+--  ddl for applicant chat contact tables
 --------------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_contact_type_lk')
+create table shc_portal.shc_contact_type_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT contact_type_lk_unique unique (code ASC)
+);
+GO
+
 if not exists(select * from sys.tables where name = 'shc_applicant_chat_contact')
 create table shc_portal.shc_applicant_chat_contact
 (
+    id                   int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    applicant_uin        varchar(45)   NOT NULL,
+    contact_uin          varchar(45)   NOT NULL,
+    type_id              int           NOT NULL,
+    alias                nvarchar(500) NULL,
+    avatar               varchar(max)  NULL,
+    system_defined       bit           NOT NULL default 0,
+    staff_title_code     varchar(20)   NULL,
+    relationship_code    varchar(20)   NULL,
+    mobile_number        varchar(20)   NULL,
+    country_phone_prefix varchar(10)   NULL,
+    country_code         varchar(10)   NULL,
+    deleted              bit           NOT NULL default 0,
+    applicant_ritual_id  int           NOT NULL,
+    creation_date        smalldatetime NOT NULL default current_timestamp,
+    update_date          smalldatetime NULL,
+    CONSTRAINT fk_applicant_chat_contact_applicant_ritual FOREIGN KEY (applicant_ritual_id) REFERENCES shc_portal.shc_applicant_ritual (id),
+    CONSTRAINT fk_applicant_chat_contact_chat_contact_type FOREIGN KEY (type_id) REFERENCES shc_portal.shc_contact_type_lk (id)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_chat_message_type_lk')
+create table shc_portal.shc_chat_message_type_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT chat_message_type_lk_unique unique (code ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_chat_message')
+create table shc_portal.shc_chat_message
+(
     id                  int            NOT NULL PRIMARY KEY IDENTITY (1, 1),
-    uin                 varchar(45)    NOT NULL,
-    alias               nvarchar(100)  NOT NULL,
-    photo_file_path     varchar(100)   NULL,
-    system_defined      bit            NOT NULL default 0,
+    text                nvarchar(4000) NOT NULL,
+    type_id             int            NOT NULL,
+    content_file_path   nvarchar(500)  NULL,
+    sender_id           int            NOT NULL,
+    receiver_id         int            NOT NULL,
+    sent_date           smalldatetime  NULL,
+    received_date       smalldatetime  NULL,
+    read_date           smalldatetime  NULL,
+    deleted             bit            NOT NULL default 0,
     creation_date       smalldatetime  NOT NULL default current_timestamp,
     update_date         smalldatetime  NULL,
+    CONSTRAINT fk_chat_message_chat_message_type FOREIGN KEY (type_id) REFERENCES shc_portal.shc_chat_message_type_lk (id),
+    CONSTRAINT fk_chat_message_applicant_chat_contact_sender FOREIGN KEY (sender_id) REFERENCES shc_portal.shc_applicant_chat_contact (id),
+    CONSTRAINT fk_chat_message_applicant_chat_contact_receiver FOREIGN KEY (receiver_id) REFERENCES shc_portal.shc_applicant_chat_contact (id)
 );
+GO
+
+alter table shc_portal.shc_package_housing drop column lat;
+GO
+alter table shc_portal.shc_package_housing drop column lng;
+GO
+alter table shc_portal.shc_package_housing
+    add lat decimal(10, 8);
+GO
+alter table shc_portal.shc_package_housing
+    add lng decimal(11, 8);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_company_staff_digital_id')
+create table shc_portal.shc_company_staff_digital_id
+(
+    id               int PRIMARY KEY NOT NULL identity (1,1),
+    company_staff_id int             NOT NULL,
+    suin             VARCHAR(45)     ,
+    season_year      int             NOT NULL,
+    creation_date    smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date      smalldatetime NULL,
+    CONSTRAINT fk_company_staff_company_staff_digital_id FOREIGN KEY (company_staff_id) REFERENCES shc_portal.shc_company_staff (id),
+);
+GO
+if not exists(select * from sys.tables where name = 'shc_company_staff_card')
+create table shc_portal.shc_company_staff_card
+(
+    id                          int PRIMARY KEY NOT NULL identity (1,1),
+    company_ritual_season_id    int             NOT NULL,
+    company_staff_digital_id_id int             NOT NULL,
+    reference_number            VARCHAR(20)     NOT NULL,
+    status_code                 VARCHAR(20)     NOT NULL,
+    creation_date               smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date                 smalldatetime NULL,
+    CONSTRAINT fk_company_staff_card_company_ritual_season FOREIGN KEY (company_ritual_season_id) REFERENCES shc_portal.shc_company_ritual_season (id),
+    CONSTRAINT fk_company_staff_card_company_staff_digital_id FOREIGN KEY (company_staff_digital_id_id) REFERENCES shc_portal.shc_company_staff_digital_id (id)
+);
+
+
+
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  id_number_original      VARCHAR(30) NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD gender  VARCHAR(1) NULL;
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  date_of_birth_hijri     INT NULL;
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  date_of_birth_gregorian DATE   NULL;
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  passport_number         VARCHAR(30) NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  nationality_code     VARCHAR(20) NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  full_name_origin  NVARCHAR(150) NULL;
+
+
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  photo  varchar(max) NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  mobile_number_intl     VARCHAR(20) NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD  data_request_record_id int NULL;
+
+ALTER TABLE shc_portal.shc_company_staff
+    ADD CONSTRAINT fk_company_staff_data_request_record FOREIGN KEY (data_request_record_id) REFERENCES shc_portal.shc_data_request_record (id);
+GO
+
+
+
+GO
+declare
+@schema_name nvarchar(256)
+declare
+@table_name nvarchar(256)
+declare
+@col_name nvarchar(256)
+declare
+@Command nvarchar(1000)
+set @schema_name = N'shc_portal'
+set @table_name = N'shc_company_staff'
+set @col_name = N'company_id'
+select @Command = 'ALTER TABLE ' + @schema_name + '.[' + @table_name + '] DROP CONSTRAINT ' + d.name
+from sys.tables t
+         join sys.default_constraints d on d.parent_object_id = t.object_id
+         join sys.columns c on c.object_id = t.object_id and c.column_id = d.parent_column_id
+where t.name = @table_name
+  and t.schema_id = schema_id(@schema_name)
+  and c.name = @col_name execute (@Command)
+GO
+
+
+
+alter table shc_portal.shc_company_staff drop CONSTRAINT fk_shc_company_representative_company ;
+
+GO
+alter table shc_portal.shc_company_staff drop column company_id;
+GO
+ALTER TABLE shc_portal.shc_company_staff
+    ADD company_id INT NULL;
+
+GO
+ALTER TABLE shc_portal.shc_company_staff
+    ADD CONSTRAINT fk_company_staff_company FOREIGN KEY (company_id) REFERENCES shc_portal.shc_company (id);
+GO
+
+alter table shc_portal.shc_company_staff drop column id_number;
+GO
+ALTER TABLE shc_portal.shc_company_staff
+    ADD id_number VARCHAR(16) NOT NULL;
+GO
+
+ALTER TABLE shc_portal.shc_company_staff_digital_id
+    ADD status_code varchar(20);
+GO
+
+ALTER TABLE shc_portal.shc_company_staff_card ALTER COLUMN reference_number varchar(20) NULL
+GO
+
+
+Alter table shc_portal.shc_company_staff_card
+    add company_staff_suin VARCHAR(45) NULL;
+GO
+
+ALTER table shc_portal.shc_company_staff_card drop constraint fk_company_staff_card_company_staff_digital_id;
+Go
+
+ALTER table shc_portal.shc_company_staff_card drop column company_staff_digital_id_id;
+Go
+
+ALTER TABLE shc_portal.shc_company_staff DROP CONSTRAINT fk_company_staff_company;
+GO
+
+ALTER TABLE shc_portal.shc_company_staff DROP CONSTRAINT fk_shc_company_staff_company_season;
+GO
+
+alter table shc_portal.shc_company_staff
+drop
+column company_id;
+GO
+
+alter table shc_portal.shc_company_staff
+drop
+column company_ritual_season_id
+GO
+
+Alter table shc_portal.shc_notification_category_lk
+    add mandatory bit NOT NULL default 0;
 GO

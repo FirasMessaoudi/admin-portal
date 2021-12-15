@@ -4,12 +4,16 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
-import com.elm.shj.admin.portal.orm.entity.JpaPackageCatering;
 import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.company.CompanyLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -66,7 +70,7 @@ public class IntegrationWsController {
     private final CompanyRitualStepService companyRitualStepService;
     private final CompanyStaffService companyStaffService;
     private final CompanyRitualStepLookupService companyRitualStepLookupService;
-    private final CompanyStaffLookupService companyStaffLookupService;
+    private final CompanyStaffTitleLookupService companyStaffTitleLookupService;
     private final ApplicantPackageCateringService applicantPackageCateringService;
     private final ApplicantPackageHousingService applicantPackageHousingService;
     private final ApplicantPackageTransportationService applicantPackageTransportationService;
@@ -85,8 +89,12 @@ public class IntegrationWsController {
     private final MealTypeLookupService mealTypeLookupService;
     private final LanguageLookupService languageLookupService;
     private final RitualPackageService ritualPackageService;
+    private final PackageHousingService packageHousingService;
     private final ApplicantIncidentService applicantIncidentService;
-
+    private final IncidentStatusLookupService incidentStatusLookupService;
+    private final IncidentTypeLookupService incidentTypeLookupService;
+    private final ApplicantChatContactService applicantChatContactService;
+    private final ApplicantRitualService applicantRitualService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -357,7 +365,7 @@ public class IntegrationWsController {
     @GetMapping("/company_staff_title_label/list")
     public ResponseEntity<WsResponse<?>> listCompanyStaffTitlesLabel() {
         log.debug("list company Staff title labels...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaffLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaffTitleLookupService.findAll()).build());
     }
 
 
@@ -395,7 +403,7 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findApplicantPackageCatering(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
         log.debug("Handler for {}", "Find package Catering  by uin");
         RitualPackageDto ritualPackage = ritualPackageService.findRitualPackageByApplicantUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId);
-        Set<PackageCateringDto> packageCateringDtoList= ritualPackageService.findPackageCateringFromRitualPackage(Long.parseLong(uin),ritualPackage);
+        List<PackageCateringDto> packageCateringDtoList = ritualPackageService.findPackageCateringFromRitualPackage(Long.parseLong(uin), ritualPackage);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageCateringDtoList).build());
     }
 
@@ -433,7 +441,7 @@ public class IntegrationWsController {
     }
 
     /**
-     * My program time table by uin and ritual season id.
+     * My program timetable by uin and ritual season id.
      *
      * @return WsResponse of company ritual step list
      */
@@ -513,7 +521,7 @@ public class IntegrationWsController {
     }
 
     @GetMapping("/religious-occasions-day/list")
-    public ResponseEntity<WsResponse<?>>  listReligiousOccasionsDay() {
+    public ResponseEntity<WsResponse<?>> listReligiousOccasionsDay() {
         log.debug("list religious occasions day...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(religiousOccasionsDayLookupService.findAll()).build());
     }
@@ -531,7 +539,7 @@ public class IntegrationWsController {
     }
 
     @GetMapping("/meal-type/list")
-    public ResponseEntity<WsResponse<?>>  listMealTypes() {
+    public ResponseEntity<WsResponse<?>> listMealTypes() {
         log.debug("list meal types...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(mealTypeLookupService.findAll()).build());
     }
@@ -546,12 +554,61 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> listApplicantRelatedIncidents(@PathVariable long applicantRitualId) {
         log.info("list incidents...");
         List<ApplicantIncidentDto> applicantIncidents = applicantIncidentService.listApplicantRelatedIncidents(applicantRitualId);
-        if (applicantIncidents==null||applicantIncidents.isEmpty()) {
+        if (applicantIncidents == null || applicantIncidents.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(null).build());
         } else {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantIncidents).build());
-
         }
     }
+
+    @GetMapping("/incident-status/list")
+    public ResponseEntity<WsResponse<?>> listIncidentStatus() {
+        log.debug("list incident status...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(incidentStatusLookupService.findAll()).build());
+    }
+
+    @GetMapping("/incident-type/list")
+    public ResponseEntity<WsResponse<?>> listIncidentType() {
+        log.debug("list incident type...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(incidentTypeLookupService.findAll()).build());
+    }
+
+    @GetMapping("/housing/{uin}/{seasonRitualId}")
+    public ResponseEntity<WsResponse<?>> findCampLocation(@PathVariable long uin, @PathVariable long seasonRitualId) {
+        log.debug("Camp Location ...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageHousingService.findCamp(seasonRitualId, uin)).build());
+    }
+
+    /**
+     * find applicant ritual
+     * @param uin
+     * @param companyRitualSeasonId
+     * @return
+     */
+    @GetMapping("/ritual/{uin}/{companyRitualSeasonId}")
+    public ResponseEntity<WsResponse<?>> finsApplicantRitual(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
+        log.debug("Handler for {}", "Find applicant ritual by uin");
+        ApplicantRitualDto applicantRitualDtO = applicantRitualService.findByApplicantUinAndCompanyRitualSeasonId(uin, companyRitualSeasonId);
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantRitualDtO).build());
+    }
+
+    /**
+     * Check the existence of an applicant based his UIN.
+     *
+     * @param uin The UIN of the applicant.
+     * @return WsResponse of applicant (in case of success) or error (in case of failure)
+     */
+    @GetMapping("/applicant/find-by-uin/{uin}")
+    public ResponseEntity<WsResponse<?>> findApplicantBasicDetailsByUin(@PathVariable String uin) {
+        Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(uin);
+        if (!applicant.isPresent()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
+    }
+
+
 }

@@ -37,7 +37,6 @@ export class NotificationListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.initForm();
     this.loadLookups();
     this.loadPage(0);
@@ -47,7 +46,6 @@ export class NotificationListComponent implements OnInit {
     this.notificationService.findNotificationCategories().subscribe(result => {
       this.notificationCategories = result;
       this.localizedNotificationCategories = this.lookupsService.localizedItems(this.notificationCategories);
-
     });
     this.notificationService.findNotificationTemplateNames().subscribe(result => {
       this.notificationNames = result;
@@ -58,8 +56,8 @@ export class NotificationListComponent implements OnInit {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
-      notificationBody: [null],
-      notificationTitle: [null],
+      notificationBody: [''],
+      notificationTitle: [''],
       notificationCategory: [null],
       notificationName: [null],
       severity: [null],
@@ -81,7 +79,12 @@ export class NotificationListComponent implements OnInit {
   }
 
   search(): void {
-    this.searchSubscription = this.notificationService.list(0, this.searchForm.value).subscribe(data => {
+    let payload = this.searchForm.value;
+    //Trim input values and replace all whitespaces characters
+    payload.notificationTitle = payload.notificationTitle.replace(/\s/g, " ").trim();
+    payload.notificationBody = payload.notificationBody.replace(/\s/g, " ").trim();
+
+    this.searchSubscription = this.notificationService.list(0, payload).subscribe(data => {
       this.notificationTemplates = [];
       this.pageArray = [];
       this.page = data;

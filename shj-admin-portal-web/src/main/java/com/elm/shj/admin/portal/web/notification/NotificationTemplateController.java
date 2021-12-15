@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.notification;
 
-import com.elm.shj.admin.portal.services.applicant.CompanyLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyLiteService;
 import com.elm.shj.admin.portal.services.applicant.PackageHousingService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.notification.NotificationRequestService;

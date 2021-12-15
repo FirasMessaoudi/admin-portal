@@ -32,15 +32,43 @@ public class JpaApplicantChatContact implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    private String uin;
+    @Column(name = "applicant_uin")
+    private String applicantUin;
+
+    @Column(name = "contact_uin")
+    private String contactUin;
+
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private JpaContactTypeLookup type;
 
     private String alias;
 
-    @Column(name = "photo_file_path")
-    private String photoFilePath;
+    private String avatar;
 
     @Column(name = "system_defined")
     private Boolean systemDefined;
+
+    @Column(name = "staff_title_code")
+    private String staffTitleCode;
+
+    @Column(name = "relationship_code")
+    private String relationshipCode;
+
+    @Column(name = "mobile_number")
+    private String mobileNumber;
+
+    @Column(name = "country_phone_prefix")
+    private String countryPhonePrefix;
+
+    @Column(name = "country_code")
+    private String countryCode;
+
+    private Boolean deleted;
+
+    @ManyToOne
+    @JoinColumn(name = "applicant_ritual_id")
+    private JpaApplicantRitual applicantRitual;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

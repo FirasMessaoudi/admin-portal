@@ -14,7 +14,8 @@ public enum EExcelItemReaderErrorType {
     INVALID_DATE_FORMAT("validation.data.constraints.msg.20005"),
     INVALID_NUMBER_FORMAT("validation.data.constraints.msg.20005"),
     INVALID_BOOLEAN_FORMAT("validation.data.constraints.msg.20005"),
-    DUPLICATE_VALUE("validation.data.constraints.msg.30001");
+    DUPLICATE_VALUE("validation.data.constraints.msg.30001"),
+    NOT_SAME_VALUE("validation.data.constraints.msg.30004");
 
     String message;
 

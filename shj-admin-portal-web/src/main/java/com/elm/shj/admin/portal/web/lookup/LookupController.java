@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.lookup;
 
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
+import com.elm.shj.admin.portal.services.utils.MapUtils;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class LookupController {
     private final PrintRequestStatusLookupService printRequestStatusLookupService;
     private final PrintBatchTypeLookupService printBatchTypeLookupService;
     private final CompanyRitualStepLookupService companyRitualStepLookupService;
-    private final CompanyStaffLookupService companyStaffLookupService;
+    private final CompanyStaffTitleLookupService companyStaffTitleLookupService;
     private final HousingCategoryLookupService housingCategoryLookupService;
     private final HousingTypeLookupService housingTypeLookupService;
     private final PackageTypeLookupService packageTypeLookupService;
@@ -54,6 +55,9 @@ public class LookupController {
     private final ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
     private final LanguageLookupService languageLookupService;
     private final MealTypeLookupService mealTypeLookupService;
+    private final IncidentTypeLookupService incidentTypeLookupService;
+    private final IncidentStatusLookupService incidentStatusLookupService;
+    private final MapUtils mapUtils;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -119,7 +123,7 @@ public class LookupController {
     @GetMapping("/company_staff_title/list")
     public List<CompanyStaffTitleLookupDto> listCompanyStaffTitleLabel(Authentication authentication) {
         log.debug("list company staff title labels...");
-        return companyStaffLookupService.findAll();
+        return companyStaffTitleLookupService.findAll();
     }
 
     @GetMapping("/housing-category/list")
@@ -209,6 +213,24 @@ public class LookupController {
     public List<LanguageLookupDto> listLanguages() {
         log.debug("list languages...");
         return languageLookupService.findAll();
+    }
+
+    @GetMapping("/incident-type/list")
+    public List<IncidentTypeLookupDto> listIncidentTypes() {
+        log.debug("list incident types...");
+        return incidentTypeLookupService.findAll();
+    }
+
+    @GetMapping("/incident-status/list")
+    public List<IncidentStatusLookupDto> listIncidentStatuses() {
+        log.debug("list incident statuses...");
+        return incidentStatusLookupService.findAll();
+    }
+
+    @GetMapping("/google-maps/api-key")
+    public String loadGoogleMapsApiKey() {
+        log.debug("load google maps api key...");
+        return mapUtils.retrieveGoogleMapsApiKey();
     }
 
 }

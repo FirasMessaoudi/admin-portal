@@ -465,7 +465,7 @@
     "saved_successfully" : "Saved successfully",
     "add_user_defined_notifications": "Add User Defined Notifications",
     "save_changes_confirmation_text": "Are you sure, you want to save changes ?",
-    "add_no_applicants": "Add {{noApplicants}} Applicants"
+    "add_no_applicants": "Add {{noApplicants}} Applicant(s)"
   },
   "printing-management": {
     "title": "Printing Management",
@@ -554,6 +554,28 @@
     "dialog_confirm_request_error_text": "Error while confirming your request. Please try again..."
   },
   "incident-management": {
-    "title": "Incident Management"
+    "title": "Incident Management",
+    "applicant_shaaer_id": "Applicant Shaaer ID",
+    "applicant_name": "Applicant Name",
+    "incident_type": "Incident Type",
+    "incident_date": "Incident Date",
+    "status": "Status",
+    "all": "All",
+    "incident_number": "Incident Number",
+    "incident_details": "Incident Details",
+    "attachments": "Attachments",
+    "location": "Location",
+    "incident_description": "Incident Description",
+    "incident_resolution": "Incident Resolution",
+    "operation": "Operation",
+    "mark_as_resolved": "Mark as resolved",
+    "mark_as_closed": "Mark as closed",
+    "comments": "Comments",
+    "comments_caution": "will be shown to the applicant",
+    "dialog_resolve_complaint_confirmation_text": "Are you sure you want to resolve the complaint ?",
+    "dialog_close_complaint_confirmation_text": "Are you sure you want to close the complaint ?",
+    "dialog_resolve_complaint_success_text": "The complaint status changed to resolved",
+    "dialog_close_complaint_success_text": "The complaint status changed to closed",
+    "operation_date": "Operation Date"
   }
 }

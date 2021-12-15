@@ -31,23 +31,23 @@
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification-status" | translate }}</label>
+          <label class="col-form-label">{{ "notification-management.enabled" | translate }}</label>
           <span *ngIf="!editMode">
              <label *ngIf="notificationTemplate?.enabled"
-                    class="form-control-plaintext">{{'notification-management.enabled' | translate}}</label>
+                    class="form-control-plaintext">{{'general.label_yes' | translate}}</label>
              <label *ngIf="!notificationTemplate?.enabled"
-                    class="form-control-plaintext">{{'notification-management.disabled' | translate}}</label>
+                    class="form-control-plaintext">{{'general.label_no' | translate}}</label>
           </span>
           <div *ngIf="editMode" class="radio-group form-control-plaintext d-flex font-weight-normal">
             <div class="radio-item align-items-baseline d-flex mr-5">
               <input formControlName="enabled" class="mr-2" name="enabled" [value]="true" type="radio"
                      id="customRadioInline01">
-              <label for="customRadioInline01">{{'notification-management.enabled' | translate}}</label>
+              <label for="customRadioInline01">{{'general.label_yes' | translate}}</label>
             </div>
             <div class="radio-item align-items-baseline d-flex">
               <input formControlName="enabled" class="mr-2" name="enabled" [value]="false" type="radio"
                      id="customRadioInline02">
-              <label for="customRadioInline02">{{'notification-management.disabled' | translate}}</label>
+              <label for="customRadioInline02">{{'general.label_no' | translate}}</label>
             </div>
           </div>
         </div>

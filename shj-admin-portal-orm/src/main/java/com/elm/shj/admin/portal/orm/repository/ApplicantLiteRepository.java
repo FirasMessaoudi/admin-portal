@@ -15,6 +15,7 @@ import org.springframework.data.repository.query.Param;
  * @since 1.1.0
  */
 public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite, Long> {
-    @Query(value = "SELECT a FROM JpaApplicantLite a JOIN a.digitalIds adi WHERE adi.uin = :uin")
+
+    @Query(value = "SELECT a FROM JpaApplicantLite a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id WHERE adi.uin = :uin")
     JpaApplicantLite findByUin(@Param("uin") String uin);
 }

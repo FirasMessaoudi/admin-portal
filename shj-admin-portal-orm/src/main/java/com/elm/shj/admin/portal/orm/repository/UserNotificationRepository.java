@@ -23,9 +23,9 @@ public interface UserNotificationRepository extends JpaRepository<JpaUserNotific
 
     List<JpaUserNotification> findByUserIdAndStatusCodeNot(String userId, String statusCode);
 
-    Page<JpaUserNotification> findByUserIdAndStatusCodeNot(String userId, String statusCode, Pageable pageable);
+    Page<JpaUserNotification> findByUserIdAndStatusCodeNotOrderByCreationDateDesc(String userId, String statusCode, Pageable pageable);
 
-    Page<JpaUserNotification> findByUserIdAndNotificationTemplateUserSpecificAndStatusCodeNot(String userId, boolean userSpecific, String statusCode, Pageable pageable);
+    Page<JpaUserNotification> findByUserIdAndNotificationTemplateUserSpecificAndStatusCodeNotOrderByCreationDateDesc(String userId, boolean userSpecific, String statusCode, Pageable pageable);
 
     Page<JpaUserNotification> findByStatusCodeNot(Pageable pageable, String statusCode);
 

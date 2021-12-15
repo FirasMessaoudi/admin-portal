@@ -21,4 +21,5 @@ public interface ApplicantDigitalIdRepository extends JpaRepository<JpaApplicant
     @Query("select substring(d.uin, 7, 7) from JpaApplicantDigitalId d where d.uin like :uin% order by substring(d.uin, 7, 7) desc")
     List<String> fetchUinByUinLike(@Param("uin") String uin);
 
+    JpaApplicantDigitalId findByApplicantId(long applicantId);
 }

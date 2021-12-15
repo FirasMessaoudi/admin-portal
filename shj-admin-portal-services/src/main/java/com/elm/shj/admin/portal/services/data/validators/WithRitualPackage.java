@@ -22,7 +22,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface WithRitualPackage {
 
-    String message() default "validation.data.constraints.msg.30004";
+    String message() default "validation.data.constraints.msg.30009";
 
     Class<?>[] groups() default {};
 

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
 import {Lookup} from "@model/lookup.model";
-import {FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
+import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {AuthenticationService, CardService, NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
@@ -22,6 +22,35 @@ import {ApplicantService} from "@core/services/applicant/applicant.service";
 
 const moment = momentjs;
 
+function nonEmptyBody(c: AbstractControl): { [key: string]: any } | null {
+  let title = c.get('title');
+  let body = c.get('body');
+  let lang = c.get('lang');
+  if (title.pristine || body.pristine) {
+    return null;
+  }
+  if (lang.value.toLowerCase() === 'ar' || lang.value.toLowerCase() === 'en') {
+    if (title.value.trim().length === 0) {
+      title.setErrors({'required': true});
+    }
+    if (body.value.trim().length === 0) {
+      body.setErrors({'required': true});
+    }
+  }
+  return null;
+}
+
+export function requiredArabicAndEnglishContent(): ValidatorFn {
+  return (formArray: FormArray): { [key: string]: any } | null => {
+    let valid: boolean = true;
+    formArray.controls.filter(c => c.value.lang.toLowerCase() === 'ar' || c.value.lang.toLowerCase() === 'en')
+      .forEach((contents: FormGroup) => {
+        valid = valid && contents.value.title.length > 0 && contents.value.body.length > 0;
+      });
+    return valid ? null : {requiredContent: 'Arabic and english content required'}
+  }
+}
+
 @Component({
   selector: 'app-user-defined-notification-add',
   templateUrl: './user-defined-notification-add.component.html',
@@ -37,14 +66,12 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   localizedNotificationCategories: Lookup[] = [];
   notificationForm: FormGroup;
   categorizedApplicantsForm: FormGroup;
-  contentForm: FormGroup;
   languages: Lookup[] = [];
   translatedLanguages: Lookup[] = [];
   activeId;
   checkedCriteria: number = 0;
   creationDate: Date = new Date();
   notificationTemplate: NotificationTemplate;
-  selectedLang: string;
   today: NgbDate;
   notificationDate: NgbDate;
   isLoading: boolean;
@@ -99,10 +126,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     this.notificationService.loadCompanies().subscribe(res => this.companies = res);
 
     this.notificationService.loadCamps().subscribe(res => this.camps = res);
-
-    this.contentForm = this.formBuilder.group({
-      contents: this.formBuilder.array([], this.atLeastOne(Validators.required))
-    });
   }
 
   ngOnDestroy() {
@@ -116,38 +139,39 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   initForm() {
     this.notificationForm = this.formBuilder.group({
-      description: ['', [Validators.minLength(3), Validators.maxLength(250),]],
       categoryCode: [null, Validators.required],
-      important: [false, Validators.required],
-      userSpecific: [false, Validators.required],
-      forceSending: [false, Validators.required],
-      enabled: [true, Validators.required]
+      important: false,
+      enabled: true,
+      userSpecific: false,
+      forceSending: false,
+      description: '',
+      notificationTemplateContents: this.formBuilder.array([], requiredArabicAndEnglishContent())
     });
   }
 
   initSearchForm(): void {
     this.searchForm = this.formBuilder.group({
-      uin: [null],
-      idNumber: [null],
-      passportNumber: [null]
+      uin: '',
+      idNumber: '',
+      passportNumber: ''
     });
   }
 
-  addContent(language) {
-    const contentForm = this.formBuilder.group({
+  addTemplateContents(language: string) {
+    const content = this.formBuilder.group({
       lang: language,
-      body: ['', [Validators.maxLength(500)]],
-      title: ['', [Validators.maxLength(50)]],
-    });
-    this.contents.push(contentForm);
+      title: [''],
+      body: ['']
+    }, {validator: nonEmptyBody});
+    this.notificationTemplateContents.push(content);
   }
 
-  get contents() {
-    return this.contentForm.controls["contents"] as FormArray;
+  get notificationTemplateContents(): FormArray {
+    return <FormArray>this.notificationForm.get('notificationTemplateContents');
   }
 
   get f() {
-    return this.contentForm.controls;
+    return this.notificationForm.controls;
   }
 
   loadLookups() {
@@ -163,7 +187,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
           this.currentLanguage.toLowerCase().substr(0, 2) === c.lang.toLowerCase().substr(0, 2)
         );
       this.activeId = 1;
-      this.translatedLanguages.forEach(language => this.addContent(language.code));
+      this.translatedLanguages.forEach(lang => this.addTemplateContents(lang.code));
     });
 
     this.cardService.findCountries().subscribe(result => {
@@ -186,10 +210,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
-  setSelectedLang(lang: string) {
-    this.selectedLang = lang;
-  }
-
   get canSeeAddUpdateUserDefinedNotification(): boolean {
     return this.authenticationService.hasAuthority(EAuthority.USER_DEFINED_NOTIFICATION_MANAGEMENT);
   }
@@ -203,22 +223,28 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   saveAsDraft() {
-    const notificationTemplate = this.createNotificationTemplate();
+    this.confirmDialogService.confirm(
+      this.translate.instant('notification-management.save_changes_confirmation_text'),
+      this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+      if (confirm) {
+        const notificationTemplate = this.createNotificationTemplate();
 
-    this.notificationService.saveAsDraft(notificationTemplate).subscribe(res => {
-      if (res.hasOwnProperty('errors') && res.errors) {
-        this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
-        Object.keys(this.notificationForm.controls).forEach(field => {
-          console.log('looking for validation errors for : ' + field);
-          if (res.errors[field]) {
-            const control = this.notificationForm.get(field);
-            control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
-            control.markAsTouched({onlySelf: true});
+        this.notificationService.saveAsDraft(notificationTemplate).subscribe(res => {
+          if (res.hasOwnProperty('errors') && res.errors) {
+            this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
+            Object.keys(this.notificationForm.controls).forEach(field => {
+              console.log('looking for validation errors for : ' + field);
+              if (res.errors[field]) {
+                const control = this.notificationForm.get(field);
+                control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
+                control.markAsTouched({onlySelf: true});
+              }
+            });
+          } else {
+            this.toastr.success(this.translate.instant("notification-management.saved_successfully"), this.translate.instant("general.dialog_add_title"));
+            this.router.navigate(['/user-defined-notification/list']);
           }
         });
-      } else {
-        this.toastr.success(this.translate.instant("notification-management.saved_successfully"), this.translate.instant("general.dialog_add_title"));
-        this.router.navigate(['/user-defined-notification/list']);
       }
     });
   }
@@ -265,7 +291,13 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     notificationTemplate.sendingDate = this.getSelectedDate(this.notificationDate);
     notificationTemplate.typeCode = this.USER_DEFINED;
     notificationTemplate.statusCode = this.DRAFT;
-    notificationTemplate.notificationTemplateContents = this.contentForm.controls['contents'].value.filter(c => c.body !== '' || c.title !== '');
+    notificationTemplate.notificationTemplateContents = this.notificationForm.get('notificationTemplateContents')
+      .value.filter(c => c.body.trim() !== '' || c.title.trim() !== '');
+    notificationTemplate.notificationTemplateContents.forEach(c => {
+      c.title = c.title.replace(/\s/g, " ").trim();
+      c.body = c.body.replace(/\s/g, " ").trim();
+    });
+    console.log(notificationTemplate);
     return notificationTemplate;
   }
 
@@ -287,11 +319,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   onDateSelection(date: NgbDate) {
     this.notificationDate = date;
   }
-
-  atLeastOne = (validator: ValidatorFn) => (group: FormGroup): ValidationErrors | null => {
-    const hasAtLeastOne = group && group.controls && Object.keys(group.controls).some(k => !validator(group.controls[k]));
-    return hasAtLeastOne ? null : {atLeastOne: true};
-  };
 
   saveAndSend() {
     this.confirmDialogService.confirm(

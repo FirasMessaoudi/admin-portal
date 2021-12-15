@@ -27,6 +27,8 @@ public class DigitalIdScheduler {
 
     private final ApplicantService applicantService;
     private final DigitalIdService digitalIdService;
+    private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
+
 
     /**
      * Scheduled job to create digital IDs for new applicants

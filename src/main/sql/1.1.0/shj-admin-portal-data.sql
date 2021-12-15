@@ -49,6 +49,10 @@ INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label)
 INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (4, 'OUT_ARAFAT_FENCE', 'en', 'Out of Arafat Geo Fence');
 INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (5, 'DAILY_SURVEY', 'ar', N'تقييم الخدمات اليومية المقدمة');
 INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (6, 'DAILY_SURVEY', 'en', 'Evaluate Daily Service');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (7, 'RESOLVE_INCIDENT', 'ar', N'حل شكوى');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (8, 'RESOLVE_INCIDENT', 'en', 'Resolve Incident');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (9, 'CLOSE_INCIDENT', 'ar', N'حل شكوى');
+INSERT INTO shc_portal.shc_notification_template_name_lk (id, code, lang, label) VALUES (10, 'CLOSE_INCIDENT', 'en', 'Close Incident');
 SET IDENTITY_INSERT shc_portal.shc_notification_template_name_lk OFF;
 GO
 
@@ -92,49 +96,68 @@ INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, 
 values (2, 'RITUAL', 'OUT_ARAFAT_FENCE', 'CONFIRMED', 'SYSTEM_DEFINED', 1, 0, 1, 1, 1);
 INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific, force_sending)
 values (3, 'RITUAL', 'DAILY_SURVEY', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 1, 1, 1, 1);
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific, force_sending)
+values (4, 'GENERAL', 'RESOLVE_INCIDENT', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 0, 1, 1, 1);
+INSERT INTO shc_portal.shc_notification_template (id, category_code, name_code, status_code, type_code, important, action_required, enabled, user_specific, force_sending)
+values (5, 'GENERAL', 'CLOSE_INCIDENT', 'CONFIRMED', 'SYSTEM_DEFINED', 0, 0, 1, 1, 1);
 SET IDENTITY_INSERT shc_portal.shc_notification_template OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template_content ON;
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
-values (1, 1, 'AR', N'قرب انتهاء كلمة المرور', N'سوف تنتهي صلاحية كلمة المرور خلال <days_to_expiry> أيام من الأن',
+INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
+VALUES (1, 1, 'AR', N'قرب انتهاء كلمة المرور', N'سوف تنتهي صلاحية كلمة المرور خلال <days_to_expiry> أيام من الأن',
         N'تغيير كلمة المرور');
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
-values (2, 1, 'EN', 'Password will expire soon', 'Password will expire after <days_to_expiry> days', 'Change Password');
-SET
-IDENTITY_INSERT shc_portal.shc_notification_template_content OFF;
+VALUES (2, 1, 'EN', 'Password will expire soon', 'Password will expire after <days_to_expiry> days', 'Change Password');
+INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
+VALUES (3, 4, 'AR', N'حل شكوى',
+        N'عزيزي ضيف الرحمن نفيدكم بأن راحتكم هي أولويتنا تم دراسة الشكوى المقدمة وتم حلها وفي حالة عدم رضاكم عن الحل أو استمرار الشكوى نأمل رفع شكوى جديدة');
+INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body)
+VALUES (4, 4, 'EN', 'Resolve incident',
+        'Dear applicant your satisfaction is our top priority, your complaint has been investigated and resolved. If the provided resolution is not as per your expectations or if the complaint still not resolved we would request you to raise another complaint');
+INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body)
+VALUES (5, 5, 'AR', N'حل شكوى',
+        N'عزيزي ضيف الرحمن نفيدكم بأن راحتكم هي أولويتنا تم دراسة الشكوى المقدمة وتم إغلاقها وفي حالة استمرار الشكوى نأمل رفع شكوى جديدة بتفاصيل أكثر');
+INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body)
+VALUES (6, 5, 'EN', 'Close incident',
+        'Dear applicant your satisfaction is our top priority, your complaint has been investigated and closed. If the complaint is still not resolved we would request you to raise another complaint with more details');
+SET IDENTITY_INSERT shc_portal.shc_notification_template_content OFF;
 GO
 
-INSERT INTO shc_portal.shc_portal.shc_config ( conf_key, conf_value  ) VALUES (  'notification.processing.batch.size',  '1000' );
-INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
-VALUES ('scheduler.notification.processing.cron', '* * * ? * *');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('notification.processing.batch.size', '1000');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('scheduler.notification.processing.cron', '* * * ? * *');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('google.maps.api.key', 'AIzaSyAC78ugAlOF9B2YK8-ukki2IQTyNAgUSO0');
 GO
-GO
+
 INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
 VALUES ('scheduler.user.notification.expiration.cron', '0 0/1 * * * *');
 GO
 
-GO
 INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
 VALUES ('user.notification.expiration.batch.size', 1000);
 GO
 
-GO
 update shc_portal.shc_notification_template
 set expiration_period_in_minutes= 150
 where id = 1;
+GO
 
 update shc_portal.shc_notification_template
 set expiration_period_in_minutes= 150
 where id = 2;
+GO
 
 update shc_portal.shc_notification_template
 set expiration_period_in_minutes= 150
 where id = 3;
-
 GO
 
+update shc_portal.shc_notification_template
+set expiration_period_in_minutes= 0
+where id in (4, 5);
 GO
+
 INSERT INTO shc_portal.shc_portal.shc_notification_template_parameter (  notification_template_id, parameter_name  ) VALUES (  1, N'days_to_expiry' );
 GO
 
@@ -171,24 +194,21 @@ VALUES (1, 37);
 GO
 
 --Activate Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin ,Hamalah admin  )
-insert into shc_portal.shc_role_authority ( role_id, authority_id) values (1,17);
+INSERT INTO shc_portal.shc_role_authority ( role_id, authority_id) values (1,17);
 
 --Suspend Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin )
-insert into shc_portal.shc_role_authority (role_id, authority_id) values (1, 19);
+INSERT INTO shc_portal.shc_role_authority (role_id, authority_id) values (1, 19);
 
 --Cancel Card (System Admin ,Enrollment officer and enrollment officer admin , Service center agent and service center regent admin )
-insert into shc_portal.shc_role_authority (role_id, authority_id) values (1, 18);
+INSERT INTO shc_portal.shc_role_authority (role_id, authority_id) values (1, 18);
 
 --Re-issue Card(System Admin  , Service center agent and service center regent admin )
-insert into shc_portal.shc_role_authority (role_id, authority_id) values (1, 20);
+INSERT INTO shc_portal.shc_role_authority (role_id, authority_id) values (1, 20);
 GO
-
 
 UPDATE shc_portal.shc_portal.shc_card_status_lk SET label = N'تمت إعادة الإصدار' WHERE code = 'REISSUED' and lang = 'ar';
 UPDATE shc_portal.shc_portal.shc_card_status_lk SET label = 'Reissued' WHERE code = 'REISSUED' and lang = 'en';
 GO
-
-
 
 INSERT INTO shc_portal.shc_meal_type_lk (code,lang,label)
 VALUES ('BREAKFAST','en','Breakfast');
@@ -238,12 +258,11 @@ UPDATE shc_portal.shc_portal.shc_notification_category_lk
 SET sample =''
 WHERE code = 'GENERAL_AWARENESS'
   and lang = 'en';
-Go
+GO
 
 SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
 insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
-values (7, 'applicant-emergency-data.xlsx', N'البيانات الضرورية لهوية ضيف الرحمن (في حالة الطوارئ)',
-        'Applicant Emergency Data');
+values (7, 'applicant-emergency-data.xlsx', N'البيانات الضرورية لهوية ضيف الرحمن (في حالة الطوارئ)', 'Applicant Emergency Data');
 SET IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 GO
 
@@ -260,11 +279,62 @@ SET IDENTITY_INSERT shc_portal.shc_incident_type_lk OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_incident_status_lk ON;
-INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label) VALUES (1, 'UNDER_PROCESSING', 'ar', N'جاري دراسة الشكوى');
-INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label) VALUES (2, 'UNDER_PROCESSING', 'en', 'Under Processing');
-INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label) VALUES (3, 'RESOLVED', 'ar', N'تم حل الشكوى');
-INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label) VALUES (4, 'RESOLVED', 'en', 'Resolved');
-INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label) VALUES (5, 'CLOSED', 'ar', N'تم إغلاق الشكوى');
-INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label) VALUES (6, 'CLOSED', 'en', 'Closed');
-SET IDENTITY_INSERT shc_portal.shc_incident_status_lk OFF;
+INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label)
+VALUES (1, 'UNDER_PROCESSING', 'ar', N'جاري دراسة الشكوى');
+INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label)
+VALUES (2, 'UNDER_PROCESSING', 'en', 'Under Processing');
+INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label)
+VALUES (3, 'RESOLVED', 'ar', N'تم حل الشكوى');
+INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label)
+VALUES (4, 'RESOLVED', 'en', 'Resolved');
+INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label)
+VALUES (5, 'CLOSED', 'ar', N'تم إغلاق الشكوى');
+INSERT INTO shc_portal.shc_incident_status_lk (id, code, lang, label)
+VALUES (6, 'CLOSED', 'en', 'Closed');
+SET
+IDENTITY_INSERT shc_portal.shc_incident_status_lk OFF;
 GO
+
+SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
+insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
+values (9, 'staff-ritual-data.xlsx', '', 'Staff Ritual Data');
+SET
+IDENTITY_INSERT shc_portal.shc_data_segment OFF;
+GO
+
+
+SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
+insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
+values (8, 'staff-main-data.xlsx', N'بيانات العاملين	',
+        'Staff Main Data');
+SET
+IDENTITY_INSERT shc_portal.shc_data_segment OFF;
+GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('scheduler.generate.staff.digital.ids.cron', '0 0/15 * * * *');
+GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('data.request.company.staff.override', 'false');
+GO
+
+update shc_portal.shc_data_segment
+set label_ar =N'بيانات الشعيرة للعاملين'
+where id = 9
+    GO
+
+delete
+from shc_portal.shc_config
+where conf_key = 'scheduler.generate.staff.digital.ids.cron';
+Go
+
+update shc_notification_category_lk
+set shc_notification_category_lk.mandatory = 1
+where code in ('HEALTH', 'RITUAL');
+Go
+
+update shc_notification_category_lk
+set shc_notification_category_lk.mandatory = 0
+where code not in ('HEALTH', 'RITUAL');
+Go

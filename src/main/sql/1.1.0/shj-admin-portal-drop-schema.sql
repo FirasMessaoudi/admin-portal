@@ -53,4 +53,8 @@ drop table if exists shc_portal.shc_incident_attachment;
 drop table if exists shc_portal.shc_applicant_incident;
 drop table if exists shc_portal.shc_incident_type_lk;
 drop table if exists shc_portal.shc_incident_status_lk;
+drop table if exists shc_portal.shc_chat_message;
+drop table if exists shc_portal.shc_applicant_chat_contact;
+drop table if exists shc_portal.shc_chat_message_type_lk;
+drop table if exists shc_portal.shc_contact_type_lk;
 GO

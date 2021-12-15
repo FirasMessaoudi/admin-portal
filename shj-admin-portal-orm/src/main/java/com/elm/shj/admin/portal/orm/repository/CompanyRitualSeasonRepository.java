@@ -6,6 +6,8 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualSeason;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 /**
  * Repository for Company Ritual Season data.
  *
@@ -14,4 +16,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  **/
 public interface CompanyRitualSeasonRepository extends JpaRepository<JpaCompanyRitualSeason, Long> {
 
+    Optional<JpaCompanyRitualSeason> findTopByCompanyCodeAndRitualSeasonRitualTypeCodeAndRitualSeasonSeasonYearAndRitualSeasonActiveTrueOrderBySeasonStartDesc(String companyCode, String ritualTypeCode, int seasonYear);
 }
