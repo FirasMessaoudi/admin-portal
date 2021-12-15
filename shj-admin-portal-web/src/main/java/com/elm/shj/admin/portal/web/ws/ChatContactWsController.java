@@ -93,7 +93,7 @@ public class ChatContactWsController {
                                                      @PathVariable String staffUin) throws Exception {
         log.debug("Handler for {}", "Create Staff Chat Contact  for Applicant");
         Optional<CompanyStaffLiteDto> existStaff=  companyStaffService.findBySuin(staffUin);
-        if (!existStaff.isEmpty()) {
+        if (existStaff.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
                     .body(applicantChatContactService.createStaffChatContact(applicantUin,applicantRitualId, existStaff)).build());
         }  return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
@@ -168,7 +168,7 @@ public class ChatContactWsController {
     @GetMapping("/find-staff/{suin}")
     public ResponseEntity<WsResponse<?>> findStaffContactByValidSuin(@PathVariable String suin) {
         Optional<CompanyStaffLiteDto> existStaff=  companyStaffService.findBySuin(suin);
-        if (!existStaff.isEmpty()) {
+        if (existStaff.isPresent()) {
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(existStaff).build());
         }
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
