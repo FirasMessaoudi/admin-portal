@@ -144,7 +144,7 @@ export class StepOneComponent implements OnInit {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       centered: true,
-      size: 'xl'
+      size: 'lg'
     }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {

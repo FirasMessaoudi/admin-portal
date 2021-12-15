@@ -659,7 +659,29 @@ textarea {
 }
 
 
+/*=============================================================================
+    Modal
+================================================================================*/
 
+.modal-body,
+.modal-footer,
+.modal-header {
+  padding: 1.5rem;
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-end;
+  color: #1e1655;
+
+  .close {
+    outline: 0;
+    font-size: 2.5rem;
+    font-weight: 100;
+  }
+}
+
+/*=======================*/
 
 .statistics{
   font-weight: bold;
