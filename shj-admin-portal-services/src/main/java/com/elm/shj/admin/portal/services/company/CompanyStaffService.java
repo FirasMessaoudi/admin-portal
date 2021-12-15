@@ -29,6 +29,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findBySuin(suin, EDigitalIdStatus.VALID.name()), mappingContext);
         if (companyStaff != null) {
             CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
+                    .suin(suin)
                     .fullNameAr(companyStaff.getFullNameAr())
                     .fullNameEn(companyStaff.getFullNameEn())
                     .mobileNumber(companyStaff.getMobileNumber())
