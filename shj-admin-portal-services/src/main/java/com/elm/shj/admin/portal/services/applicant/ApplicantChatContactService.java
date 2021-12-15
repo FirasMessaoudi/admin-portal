@@ -64,7 +64,6 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 Optional<CompanyStaffLiteDto> staffLite = companyStaffService.findBySuin(c.getContactUin());
                 contact.setContactFullNameAr(staffLite.map(CompanyStaffLiteDto::getFullNameAr).orElse(null));
                 contact.setContactFullNameEn(staffLite.map(CompanyStaffLiteDto::getFullNameEn).orElse(null));
-                contact.setStaffTitleCode(staffLite.map(CompanyStaffLiteDto::getTitleCode).orElse(null));
             }
             return contact;
         }).collect(Collectors.toList());
