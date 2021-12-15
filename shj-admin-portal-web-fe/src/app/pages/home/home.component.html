@@ -6,6 +6,30 @@
     {{'home.welcome' | translate}} <span class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
   </div>
   <div class="content__section" *ngIf="canSeeDashboard">
+
+
+    <div class="statistics">
+
+      <div class="sts-title">حجاج هذا العام</div>
+      <div class="sts-number text-dark">1,934,323</div>
+  
+      <svg-icon styleClass="sts-icon display-4" icon="user-solid"></svg-icon>
+  
+      <div class="sts-details">
+        <div>
+          <svg-icon styleClass="text-dcc-primary" icon="circle"></svg-icon>
+          <div>حجاج الخارج</div>
+        </div>
+        <div>1,547,755</div>
+      </div>
+  
+      <div>
+        حجاج الداخل
+        447,755
+      </div>
+
+    </div>
+
     <section class="numbers">
       <div class="row">
         <div class="col-md-6 col-lg-3">
