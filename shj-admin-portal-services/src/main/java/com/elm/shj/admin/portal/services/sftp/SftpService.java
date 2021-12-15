@@ -101,10 +101,10 @@ public class SftpService {
      * @return the file reference
      * @throws Exception in case of operation failure
      */
-    public Resource downloadFile(String targetPath,String  configPropertiesType) throws Exception {
-        SftpProperties config= getSftpPropertiesConfig( configPropertiesType);
+    public Resource downloadFile(String targetPath, String configPropertiesType) throws Exception {
+        SftpProperties config = getSftpPropertiesConfig( configPropertiesType);
         log.info("Download File Started, ftpServer [{}:{}], ftpPath [{}]", config.getHost(), config.getPort(), targetPath);
-        ChannelSftp sftp = this.createSftp( configPropertiesType);
+        ChannelSftp sftp = this.createSftp(configPropertiesType);
         ByteArrayOutputStream outputStream = null;
         try {
             createDirs(config.getRootFolder(), sftp);
@@ -193,7 +193,7 @@ public class SftpService {
      * @return the created connection
      * @throws JSchException in case of operation failure
      */
-    private ChannelSftp createSftp(String  configPropertiesType) throws JSchException {
+    private ChannelSftp createSftp(String configPropertiesType) throws JSchException {
         SftpProperties config= getSftpPropertiesConfig( configPropertiesType);
         JSch jsch = new JSch();
         log.info("Try to connect sftp[" + config.getUsername() + "@" + config.getHost() + "], use password[" + config.getPassword() + "]");
@@ -222,7 +222,7 @@ public class SftpService {
      * @return the created session
      * @throws JSchException in case of operation failure
      */
-    private Session createSession(JSch jsch, String host, String username, Integer port,String sessionStrictHostKeyChecking) throws JSchException {
+    private Session createSession(JSch jsch, String host, String username, Integer port, String sessionStrictHostKeyChecking) throws JSchException {
         Session session;
 
         if (port <= 0) {

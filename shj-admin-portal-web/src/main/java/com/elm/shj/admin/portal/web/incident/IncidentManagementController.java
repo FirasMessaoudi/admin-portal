@@ -11,12 +11,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 /**
  * Main controller for incident management page
@@ -72,6 +78,31 @@ public class IncidentManagementController {
         log.debug("Handle incident #{}", incidentId);
         applicantIncidentService.update(incidentId, applicantIncidentVo);
         return ResponseEntity.ok(StringUtils.EMPTY);
+    }
+
+    /**
+     * Downloads applicant incident attachment
+     *
+     * @param attachmentId data request Id
+     * @return WsResponse of  the saved incident attachment
+     */
+    @GetMapping("/attachments/{attachmentId}")
+    public ResponseEntity<Resource> downloadAttachment(@PathVariable long attachmentId) throws Exception {
+        log.info("Downloading incident attachment with id# {} ", attachmentId);
+        Resource attachment = applicantIncidentService.downloadApplicantIncidentAttachment(attachmentId);
+        if (attachment != null) {
+            String attachmentName = "img.jpg";
+            if (Objects.requireNonNull(attachment.getDescription()).contains("[")) {
+                attachmentName = attachment.getDescription().split("\\[")[1].replaceAll("]", "");
+            }
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"");
+            return ResponseEntity
+                    .ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"")
+                    .body(attachment);
+        }
+        return null;
     }
 
 }

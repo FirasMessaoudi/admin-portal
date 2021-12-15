@@ -54,7 +54,7 @@
       <div class="form-group col" *ngIf="incident?.incidentAttachments?.length > 0">
         <label class="col-form-label">{{"incident-management.attachments" | translate }}</label>
         <span *ngFor="let attachment of incident?.incidentAttachments">
-          <a href="#"
+          <a (click)="downloadAttachment(attachment?.id)"
              class="form-control-plaintext attachment"><u>{{attachment?.filePath.substring(attachment?.filePath?.lastIndexOf("/") + 1)}}</u></a>
             </span>
       </div>

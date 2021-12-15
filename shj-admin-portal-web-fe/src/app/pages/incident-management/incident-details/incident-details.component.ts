@@ -204,4 +204,18 @@ export class IncidentDetailsComponent implements OnInit {
     return incident?.statusCode === this.UNDER_PROCESSING;
   }
 
+  downloadAttachment(id) {
+    this.incidentService.downloadIncidentAttachment(id).subscribe(data => {
+        this.downloadFile(data);
+        console.log(data)
+      },
+      error => console.log('Error downloading the file.'),
+      () => console.info('OK')
+    );
+  }
+
+  downloadFile(data: Response) {
+    const url = window.URL.createObjectURL(data);
+    window.open(url);
+  }
 }
