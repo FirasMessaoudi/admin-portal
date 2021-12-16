@@ -214,8 +214,9 @@ export class IncidentDetailsComponent implements OnInit {
     );
   }
 
-  downloadFile(data: Response) {
-    const url = window.URL.createObjectURL(data);
+  downloadFile(data) {
+    const blob = new Blob([data], {type: 'image/jpg'});
+    const url = window.URL.createObjectURL(blob);
     window.open(url);
   }
 }
