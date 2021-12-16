@@ -64,23 +64,4 @@ public class ApplicantController {
         log.debug("Find applicants matching criteria...");
         return applicantService.findAllByCriteriaAndNotInExcludedIds(applicantSearchCriteria, excludedIds, pageable);
     }
-
-    /**
-     * finds an applicant by his UIN
-     *
-     * @param uin the applicant's uin to find
-     * @return the found applicant or <code>null</code>
-     */
-    @GetMapping("/find/{uin}")
-    public ApplicantLiteDto findApplicant(@PathVariable String uin) {
-        log.debug("Handler for {}", "Find applicant by uin");
-
-        return applicantLiteService.findByUin(uin).orElseThrow(() -> {
-            Map<String, String> errors = new HashMap<>();
-            errors.put("uin", APPLICANT_NOT_FOUND_ERROR_MSG);
-
-            return new ApplicantNotFoundException("No applicant found with uin " + uin, errors);
-        });
-    }
-
 }
