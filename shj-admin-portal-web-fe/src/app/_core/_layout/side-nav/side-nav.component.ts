@@ -11,7 +11,7 @@ import {AuthenticationService} from '@app/_core/services';
 export class SideNavComponent implements OnInit {
   currentUser: any;
   links: {}[];
-  public isCollapsed = true;
+  public isCollapsed = false;
   constructor(
     public router: Router,
     private authenticationService: AuthenticationService
@@ -24,8 +24,8 @@ export class SideNavComponent implements OnInit {
         title: 'home.title',
         roles: [EAuthority.ADMIN_DASHBOARD],
         display: false,
-        icon: 'portrait',
-        iconFa:'fa-w-12',
+        icon: 'home',
+        iconFa:'fa-w-18',
         routerLink: '/',
         submenu: false,
       },

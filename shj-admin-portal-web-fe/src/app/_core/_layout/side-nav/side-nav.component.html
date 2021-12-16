@@ -8,30 +8,28 @@
   <ul class="sideNav mt-4">
     <li *ngFor="let link of links">
       <a class="item" *ngIf="link.display && !link.submenu" routerLink="{{ link.routerLink }}"
-         [class.active]="(link.routerLink === '/' && router.routerState.snapshot.url === link.routerLink)
-         || (link.routerLink !== '/'
-         && router.routerState.snapshot.url.indexOf(link.routerLink.split('/')[1]) != -1)">
+      routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
           <span class="navIcon">
             <svg-icon styleClass="mx-3 {{ link.iconFa }}" icon="{{ link.icon }}"></svg-icon>
           </span>
         {{ link.title | translate }}
       </a>
 
-      <a *ngIf="link.submenu" class="item pointer"
-         (click)="isCollapsed = !isCollapsed">
-        <span class="d-flex">
-       <span class="navIcon">
-            <svg-icon styleClass="mx-3 {{ link.iconFa }}" icon="{{ link.icon }}"></svg-icon>
-       </span>
-          {{ link.title | translate }}
-          <svg-icon class="ml-auto pr-3" styleClass="flip" icon="chevron-left-light"></svg-icon>
+      <a *ngIf="link.submenu" class="item pointer submenuHdr" (click)="isCollapsed = !isCollapsed" [ngClass]="isCollapsed ? '' : 'active'">
+        <span class="d-flex justify-content-between align-items-baseline">
+          <span>
+            <span class="navIcon">
+              <svg-icon styleClass="mx-3 {{ link.iconFa }}" icon="{{ link.icon }}"></svg-icon>
+            </span>
+            {{ link.title | translate }}
           </span>
+          <svg-icon class="chevron mx-3" [icon]="isCollapsed ? 'chevron-left-light' : 'chevron-down-light'"
+            [ngClass]="isCollapsed ? '' : 'flip'"></svg-icon>
+        </span>
       </a>
-      <div *ngIf="link.submenu" [ngbCollapse]="isCollapsed">
+      <div *ngIf="link.submenu" class="submenu_items" [ngbCollapse]="isCollapsed">
         <a class="item submenu_item pointer border-0 px-md-5" *ngFor="let menuItem of link.menuItems"
-           routerLink="{{ menuItem.routerLink }}"
-           [class.active]="(menuItem.routerLink === '/' && router.routerState.snapshot.url === menuItem.routerLink)
-           || (menuItem.routerLink !== '/' && router.routerState.snapshot.url.indexOf(menuItem.routerLink.split('/')[1]) != -1)">
+          routerLinkActive="active" routerLink="{{ menuItem.routerLink }}">
           {{ menuItem.title | translate }}
         </a>
       </div>
@@ -42,3 +40,13 @@
 
 
 
+<!-- <a *ngIf="link.submenu" href="javascript:void(0)" (click)="isCollapsed = !isCollapsed">
+  {{ link.title | translate }}
+</a>
+<div *ngIf="link.submenu" [ngbCollapse]="isCollapsed" class="collapse navbar-collapse" routerLinkActive="active">
+  <ul class="navbar-nav">
+    <li class="nav-item" routerLinkActive="active" *ngFor="let menuItem of link.menuItems">
+      <a class="nav-link" routerLink="{{ menuItem.routerLink }}">{{ menuItem.title | translate }}</a>
+    </li>
+  </ul>
+</div> -->

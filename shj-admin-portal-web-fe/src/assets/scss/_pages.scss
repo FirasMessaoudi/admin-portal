@@ -57,25 +57,34 @@
   }
 }
 
-.modal-body,
-.modal-footer,
-.modal-header {
-  @include p(3);
-}
-
-.modal-header {
-  color: $dcc-primary;
-}
-
-.modalWidthItem {
-  min-width: 290px;
-}
-
-.modal-footer {
+.operations{
   display: flex;
-  justify-content: space-between;
-  background-color: $gray-100;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  width: 160px;
+
+  svg{
+    font-size: 20px;
+    padding-top: 0.35rem;
+  }
 }
+.operationsNav{
+  width: 160px;
+  padding: 0;
+  margin-top: 0;
+  border: 0;
+  box-shadow: $box-shadow-sm;
+
+  .dropdown-item{
+    padding: 0.5rem 1rem;
+
+    &:hover{
+      background-color: #F5F8F4;
+    }
+  }
+}
+
 
 /*=============================================================================
     Bootstrap custom Radio style
@@ -662,22 +671,48 @@ textarea {
 /*=============================================================================
     Modal
 ================================================================================*/
+.modal-content{
+  @include p(5);
+}
 
-.modal-body,
-.modal-footer,
-.modal-header {
-  padding: 1.5rem;
+.modal-body{
+  @include py(4);
+  @include px(0);
 }
 
 .modal-header {
+  padding: 0;
   display: flex;
   align-items: flex-end;
-  color: #1e1655;
+
+  .modal-title{
+    font-weight: bold;
+    color: #0C4008;
+  }
 
   .close {
     outline: 0;
     font-size: 2.5rem;
     font-weight: 100;
+  }
+}
+
+.modal-footer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  background-color: $light;
+
+  button{
+    @include px(5);
+    min-width: 110px;
+  }
+}
+
+.modal-footer > * {
+  @include media-breakpoint-up(sm) {
+    margin: 0;
   }
 }
 
@@ -700,6 +735,3 @@ textarea {
   font-size: 3rem;
 }
 
-.sts-details{
-
-}
