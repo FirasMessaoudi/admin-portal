@@ -38,7 +38,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Query(value = "SELECT a FROM JpaApplicant a JOIN a.digitalIds adi WHERE adi.uin = :uin")
     JpaApplicant findByUin(@Param("uin") String uin);
 
-    @Query("select a from JpaApplicant a where a.id not in (select ad.applicantId from JpaApplicantDigitalId ad)")
+    @Query("select a from JpaApplicant a where a.id not in (select ad.applicant.id from JpaApplicantDigitalId ad)")
     List<JpaApplicant> findAllApplicantsWithoutDigitalId();
 
     @Query("SELECT a FROM JpaApplicant a LEFT JOIN a.rituals ar JOIN ar.applicantPackage ap WHERE (:today >= ap.startDate AND :today <= ap.endDate)")

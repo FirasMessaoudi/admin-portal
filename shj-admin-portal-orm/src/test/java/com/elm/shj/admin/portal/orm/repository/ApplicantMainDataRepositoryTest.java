@@ -20,11 +20,14 @@ public class ApplicantMainDataRepositoryTest extends AbstractJpaTest {
     public void test_find_By_uin_success() {
         JpaApplicantMainData jpaApplicantMainData = applicantMainDataRepository.findByUin(UIN_USER_EXIST);
         assertNotNull(jpaApplicantMainData);
+        assertEquals(1,jpaApplicantMainData.getDigitalIds().size());
+        assertEquals(UIN_USER_EXIST,jpaApplicantMainData.getDigitalIds().get(0).getUin());
     }
 
     @Test
     public void test_find_By_uin_fail() {
         JpaApplicantMainData jpaApplicantMainData = applicantMainDataRepository.findByUin(NIN_USER_FAKE);
         assertNull(jpaApplicantMainData);
+
     }
 }
