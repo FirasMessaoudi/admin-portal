@@ -16,12 +16,13 @@
   <div class="title__Page">
     <h3 class="sectionTitle">{{'card-management.card_details' | translate }}</h3>
     <div ngbDropdown>
-      <button type="submit" class="btn btn-dcc-primary px-5 mr-3 noArrow" id="dropdownBasic1"
+      <button type="submit" class="btn btn-dcc-primary noArrow operations" id="dropdownBasic1"
               ngbDropdownToggle>
         {{'general.operations'| translate}}
         <svg-icon styleClass="h4 ml-3" icon="bars"></svg-icon>
       </button>
-      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+      
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="operationsNav">
         <button ngbDropdownItem *ngIf="card?.statusCode==cardStatus.ACTIVE"
                 (click)="changeCardStatus(actions.SUSPEND_CARD,'card-management.dialog_suspend_card_confirm_text')">{{'card-management.suspend_card' |translate}}</button>
         <button ngbDropdownItem *ngIf="card?.statusCode==cardStatus.ACTIVE || card?.statusCode==cardStatus.READY_TO_PRINT

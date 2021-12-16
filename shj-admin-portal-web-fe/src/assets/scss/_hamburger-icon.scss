@@ -119,13 +119,13 @@
 
 
   .sidebar-wrapper{
-    width: 240px;
+    width: 270px;
     transition: all 0.3s ease-in-out;
     
     @include media-breakpoint-down(md) {
         position: absolute;
         z-index: 1;
-        right: -240px;
+        right: -270px;
         box-shadow: $box-shadow;
         border-radius: 0.5rem 0 0 0.5rem;
         opacity: 0;

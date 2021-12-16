@@ -64,7 +64,6 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 Optional<CompanyStaffLiteDto> staffLite = companyStaffService.findBySuin(c.getContactUin());
                 contact.setContactFullNameAr(staffLite.map(CompanyStaffLiteDto::getFullNameAr).orElse(null));
                 contact.setContactFullNameEn(staffLite.map(CompanyStaffLiteDto::getFullNameEn).orElse(null));
-                contact.setStaffTitleCode(staffLite.map(CompanyStaffLiteDto::getTitleCode).orElse(null));
             }
             return contact;
         }).collect(Collectors.toList());
@@ -137,17 +136,18 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
     /**
      * Creates a new staff chat contact
      *
-     * @param suin the chat contact uin
+     * @param applicantUin the chat contact uin
+     * @param applicantRitualId the applicant ritual id
+     * @param companyStaff the company staff
      * @return savedContact saved one
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantChatContactLiteDto createStaffChatContact(String applicantUin, Long applicantRitualId, String suin) {
+    public ApplicantChatContactLiteDto createStaffChatContact(String applicantUin, Long applicantRitualId, Optional<CompanyStaffLiteDto> companyStaff) {
         ApplicantRitualDto applicantRitual = applicantRitualService.findById(applicantRitualId);
-        Optional<CompanyStaffLiteDto> companyStaff = companyStaffService.findBySuin(suin);
         ApplicantChatContactDto savedContact = ApplicantChatContactDto
                 .builder()
                 .applicantUin(applicantUin)
-                .contactUin(suin)
+                .contactUin(companyStaff.get().getSuin())
                 .mobileNumber(companyStaff.map(CompanyStaffLiteDto::getMobileNumber).orElse(null))
                 .countryCode(companyStaff.map(CompanyStaffLiteDto::getNationalityCode).orElse(null))
                 .systemDefined(false)
