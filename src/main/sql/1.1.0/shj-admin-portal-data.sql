@@ -338,3 +338,23 @@ update shc_notification_category_lk
 set shc_notification_category_lk.mandatory = 0
 where code not in ('HEALTH', 'RITUAL');
 Go
+
+Go
+INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value   ) VALUES (   'sftp.incident.client.protocol',  'sftp'   );
+INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value   ) VALUES (   'sftp.incident.client.host',  '127.0.0.1'  );
+INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value  ) VALUES (   'sftp.incident.client.port',  '22' );
+INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value   ) VALUES (   'sftp.incident.client.username',  'sftp-user' );
+INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value  ) VALUES (   'sftp.incident.client.password',  'Aa123456' );
+INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value   ) VALUES (   'sftp.incident.client.root-folder',  '/data/smart-hajj/applicant-incidents/' );
+INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value  ) VALUES (   'sftp.incident.client.session-strict-host-key-checking',  'no' );
+INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value   ) VALUES (   'sftp.incident.client.session-connect-timeout',  '15000' );
+INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value  ) VALUES (   'sftp.incident.client.channel-connected-timeout',  '15000' );
+Go
+
+SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
+insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
+values (10, 'staff-applicant-group-data.xlsx', N'بيانات المجموعات',
+        'Staff Applicant Group Data');
+SET
+IDENTITY_INSERT shc_portal.shc_data_segment OFF;
+GO

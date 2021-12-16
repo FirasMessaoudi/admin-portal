@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffLiteDto;
+import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +26,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     private final CompanyStaffRepository companyStaffRepository;
 
     public Optional<CompanyStaffLiteDto> findBySuin(String suin) {
-        CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findBySuin(suin), mappingContext);
+        CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findBySuin(suin, EDigitalIdStatus.VALID.name()), mappingContext);
         if (companyStaff != null) {
             CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
+                    .suin(suin)
                     .fullNameAr(companyStaff.getFullNameAr())
                     .fullNameEn(companyStaff.getFullNameEn())
                     .mobileNumber(companyStaff.getMobileNumber())
