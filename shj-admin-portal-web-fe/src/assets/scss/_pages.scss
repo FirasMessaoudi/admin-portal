@@ -57,6 +57,33 @@
   }
 }
 
+.operations{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  width: 160px;
+
+  svg{
+    font-size: 20px;
+    padding-top: 0.35rem;
+  }
+}
+.operationsNav{
+  width: 160px;
+  padding: 0;
+  margin-top: 0;
+  border: 0;
+  box-shadow: $box-shadow-sm;
+
+  .dropdown-item{
+    padding: 0.5rem 1rem;
+
+    &:hover{
+      background-color: #F5F8F4;
+    }
+  }
+}
 
 
 /*=============================================================================
