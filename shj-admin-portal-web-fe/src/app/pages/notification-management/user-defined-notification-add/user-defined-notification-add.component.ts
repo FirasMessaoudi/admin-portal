@@ -328,7 +328,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     return moment(formattedDate, 'DD/MM/YYYY').locale('en').format();
   }
 
-  goBack() {
+  cancel() {
     this.confirmDialogService
       .confirm(this.translate.instant('notification-management.cancel_confirmation_text'),
         this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
