@@ -303,13 +303,27 @@
 
           <div class="form-group col">
             <label class="col-form-label">{{"notification-management.age"| translate}}</label>
-            <div class="d-flex flex-nowrap">
+            <div formGroupName="age" class="d-flex flex-nowrap">
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="form-control prepend">{{'general.from' | translate}}</span>
                   </div>
-                  <input type="number" class="form-control" formControlName="minAge" min="0"/>
+                  <input type="number" class="form-control" formControlName="minAge"
+                         onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 2"
+                         step="1" [class.is-invalid]="cf.age.touched && (cf.age['controls']['minAge'].invalid || cf.age.errors)"/>
+                  <div *ngIf="cf.age.invalid && cf.age.touched" class="invalid-feedback">
+                    <div
+                      *ngIf="cf.age['controls']['minAge'].errors?.min">
+                      {{"notification-management.age_validation_min" | translate: {minLength: 0} }}
+                    </div>
+                    <div
+                      *ngIf="cf.age['controls']['minAge'].errors?.max">
+                      {{"notification-management.age_validation_max" | translate: {maxLength: 120} }}
+                    </div>
+                    <div *ngIf="cf.age.errors?.invalidAgeRange">
+                      {{'notification-management.age_validation_range' | translate}}</div>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
@@ -317,7 +331,18 @@
                   <div class="input-group-prepend">
                     <span class="form-control append prepend">{{'general.to' | translate}}</span>
                   </div>
-                  <input type="number" class="form-control" formControlName="maxAge" max="120"/>
+                  <input type="number" class="form-control" formControlName="maxAge"
+                         onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 2"
+                         step="1"
+                         [class.is-invalid]="cf.age['controls']['maxAge'].invalid && cf.age['controls']['maxAge'].touched"/>
+                  <div *ngIf="cf.age.invalid && cf.age.touched" class="invalid-feedback">
+                    <div
+                      *ngIf="cf.age['controls']['maxAge'].errors?.min">
+                      {{"notification-management.age_validation_min" | translate: {minLength: 0} }}</div>
+                    <div
+                      *ngIf="cf.age['controls']['maxAge'].errors?.max">
+                      {{"notification-management.age_validation_max" | translate: {maxLength: 120} }} </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -355,8 +380,8 @@
               </div>
             </div>
           </div>
-
         </form>
+
       </div>
       <div *ngIf="checkedCriteria === 2" class="animate slideIn delay mb-4">
         <div class="d-flex justify-content-end">
@@ -381,20 +406,21 @@
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.applicant_id' | translate }}</label>
                 <input id="uin" formControlName="uin" class="form-control"
-                       onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length<=9"
+                       onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 14"
                        min="0" step="1"/>
               </div>
 
               <div class="form-group col">
                 <label class="col-form-label">{{'printing-management.id_number' | translate }}</label>
                 <input formControlName="idNumber" class="form-control"
-                       onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length<=9"
+                       onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 9"
                        min="0" step="1"/>
               </div>
 
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.passport_number' | translate }}</label>
-                <input id="passportNumber" formControlName="passportNumber" type="text" class="form-control"/>
+                <input id="passportNumber" formControlName="passportNumber" type="text" class="form-control"
+                       onkeypress="return this.value.length <=9"/>
               </div>
 
               <div class="form-group col-12">
@@ -457,7 +483,6 @@
                         <br>{{applicant?.fullNameEn}}</td>
                       <td *ngIf="currentLanguage.startsWith('en')">{{applicant?.fullNameEn}}
                         <br>{{applicant?.fullNameAr}}</td>
-
                       <td>{{applicant?.digitalIds[0]?.uin}}</td>
                       <td>{{applicant?.idNumber}}</td>
                       <td class="ltr">{{applicant?.passportNumber}}</td>
@@ -576,12 +601,12 @@
           {{"general.btn_back" | translate}}</button>
         <span>
       <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4"
-              [disabled]="!notificationForm.valid"
+              [disabled]="!notificationForm.valid || !categorizedApplicantsForm.valid"
               (click)="saveAsDraft()">
         {{"notification-management.save_as_draft" | translate}}
       </button>
       <button class="btn btn-dcc-primary px-4"
-              [disabled]="!notificationForm.valid"
+              [disabled]="!notificationForm.valid || !categorizedApplicantsForm.valid"
               (click)="saveAndSend()">
         {{"notification-management.save_and_send" | translate}}
       </button>

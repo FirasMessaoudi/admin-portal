@@ -453,7 +453,10 @@
     "saved_successfully" : "تم حفظ البيانات بنجاح",
     "add_user_defined_notifications": "إضافة تنبيهات المستخدم",
     "save_changes_confirmation_text": "هل تريد حفظ التعديلات الحالية ؟",
-    "add_no_applicants": "إضافة {{noApplicants}} مرسل إليه"
+    "add_no_applicants": "إضافة {{noApplicants}} مرسل إليه",
+    "age_validation_min": "يجب أن تكون هذه القيمة أكبر من {{minLength}}",
+    "age_validation_max": "يجب أن تكون هذه القيمة أصغر من {{maxLength}}",
+    "age_validation_range": "يجب ألا تتجاوز القيمة الدنيا للعمر القيمة الأقصى"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

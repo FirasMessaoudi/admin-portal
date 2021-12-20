@@ -51,6 +51,22 @@ export function requiredArabicAndEnglishContent(): ValidatorFn {
   }
 }
 
+function invalidAgeRange(c: AbstractControl): { [key: string]: any } | null {
+  let minAge = c.get('minAge');
+  let maxAge = c.get('maxAge');
+  if (minAge.value === null || maxAge.value === null) {
+    return null;
+  }
+  if (minAge.pristine || maxAge.pristine) {
+    return null;
+  }
+  if (minAge.value > maxAge.value) {
+    c.setErrors({invalidAgeRange: 'Invalid age range'});
+    return {invalidAgeRange: 'Invalid age range'};
+  }
+  return null;
+}
+
 @Component({
   selector: 'app-user-defined-notification-add',
   templateUrl: './user-defined-notification-add.component.html',
@@ -174,6 +190,10 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     return this.notificationForm.controls;
   }
 
+  get cf() {
+    return this.categorizedApplicantsForm.controls;
+  }
+
   loadLookups() {
     this.notificationService.findNotificationCategories().subscribe(result => {
       this.notificationCategories = result;
@@ -201,12 +221,14 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   initCategorizedApplicantsForm() {
     this.categorizedApplicantsForm = this.formBuilder.group({
-      camp: [null, Validators.required],
-      company: [null, Validators.required],
-      nationality: [null, Validators.required],
-      minAge: [0, Validators.required],
-      maxAge: [120, Validators.required],
-      gender: [null, Validators.required]
+      camp: null,
+      company: null,
+      nationality: null,
+      age: this.formBuilder.group({
+        minAge: ['', [Validators.min(0), Validators.max(120)]],
+        maxAge: ['', [Validators.min(0), Validators.max(120)]],
+      }, {validator: invalidAgeRange}),
+      gender: null
     });
   }
 
@@ -428,7 +450,11 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   open(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', centered: true, size: 'lg'}).result.then((result) => {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true,
+      size: 'lg'
+    }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
