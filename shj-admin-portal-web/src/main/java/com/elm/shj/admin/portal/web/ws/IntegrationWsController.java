@@ -95,6 +95,7 @@ public class IntegrationWsController {
     private final IncidentTypeLookupService incidentTypeLookupService;
     private final ApplicantChatContactService applicantChatContactService;
     private final ApplicantRitualService applicantRitualService;
+
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -582,6 +583,7 @@ public class IntegrationWsController {
 
     /**
      * find applicant ritual
+     *
      * @param uin
      * @param companyRitualSeasonId
      * @return
@@ -610,5 +612,23 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
     }
 
+    /**
+     * Updates user preferred language
+     *
+     * @param uin  The UIN of the applicant.
+     * @param lang the preferred language to update user with
+     * @return WsResponse of applicant (in case of success) or error (in case of failure)
+     */
+    @PutMapping("/applicant/language/{uin}/{lang}")
+    public ResponseEntity<WsResponse<?>> updateUserPreferredLanguage(@PathVariable String lang, @PathVariable String uin) {
+        Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(uin);
+        if (applicant.isPresent()) {
+            applicantService.updatePreferredLanguage(uin, lang);
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(null).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
+        }
+    }
 
 }
