@@ -98,6 +98,8 @@ public class ApplicantDto implements Serializable {
     @CellIndex(index = 14)
     private String educationLevelCode;
 
+    private String preferredLanguage;
+
     @NotNull(message = "validation.data.constraints.msg.20001")
     @WithRitualPackage
     @CellIndex(index = 25)

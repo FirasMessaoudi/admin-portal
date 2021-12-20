@@ -768,17 +768,13 @@ CREATE TABLE shc_portal.shc_user_notification
 );
 GO
 
-
-GO
 ALTER TABLE shc_portal.shc_user_notification
     ADD user_lang varchar(45) not null;
 GO
 
-
 ALTER TABLE shc_portal.shc_notification_template
-    ADD expiration_period_in_minutes INT;
+    ADD expiration_period_in_minutes INT NULL;
 GO
-
 
 ALTER TABLE shc_portal.shc_applicant_digital_id
     ADD status_code varchar(20);
@@ -1150,4 +1146,8 @@ GO
 
 Alter table shc_portal.shc_notification_category_lk
     add mandatory bit NOT NULL default 0;
+GO
+
+ALTER TABLE shc_portal.shc_applicant
+    ADD preferred_language VARCHAR(2) DEFAULT 'en' NOT NULL;
 GO
