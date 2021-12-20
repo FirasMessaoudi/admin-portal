@@ -151,10 +151,11 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                         .userId(applicant.getDigitalIds().get(0).getUin())
                         .notificationTemplate(savedNotificationTemplate)
                         .sendingDate(savedNotificationTemplate.getSendingDate())
-                        // TODO Send notification in applicant preferred language
-                        // if there is no content that matches preferred language, pick present language content in order (by default english, arabic, french...)
-                        //.userLang(notificationTemplate.getNotificationTemplateContents().stream().findFirst().toString())
-                        .userLang("ar")
+                        .userLang(notificationTemplate.getNotificationTemplateContents()
+                                .stream().filter(c -> applicant.getPreferredLanguage().equalsIgnoreCase(c.getLang()))
+                                .findFirst()
+                                .map(NotificationTemplateContentDto::getLang)
+                                .orElse("en"))
                         .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
                         .build())
                 .collect(Collectors.toList());
@@ -173,7 +174,11 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                         .userId(applicant.getDigitalIds().get(0).getUin())
                         .notificationTemplate(savedNotificationTemplate)
                         .sendingDate(savedNotificationTemplate.getSendingDate())
-                        .userLang("ar")
+                        .userLang(savedNotificationTemplate.getNotificationTemplateContents()
+                                .stream().filter(c -> applicant.getPreferredLanguage().equalsIgnoreCase(c.getLang()))
+                                .findFirst()
+                                .map(NotificationTemplateContentDto::getLang)
+                                .orElse("en"))
                         .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
                         .build())
                 .collect(Collectors.toList());
@@ -192,7 +197,11 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                         .userId(applicant.getDigitalIds().get(0).getUin())
                         .notificationTemplate(savedNotificationTemplate)
                         .sendingDate(savedNotificationTemplate.getSendingDate())
-                        .userLang("ar")
+                        .userLang(notificationTemplate.getNotificationTemplateContents()
+                                .stream().filter(c -> applicant.getPreferredLanguage().equalsIgnoreCase(c.getLang()))
+                                .findFirst()
+                                .map(NotificationTemplateContentDto::getLang)
+                                .orElse(null))
                         .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
                         .build())
                 .collect(Collectors.toList());
@@ -201,13 +210,16 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     }
 
     @Transactional
-    public void sendIncidentNotification(NotificationTemplateDto notificationTemplate, String uin) {
+    public void sendIncidentNotification(NotificationTemplateDto notificationTemplate, String uin, String preferredLanguage) {
         NotificationRequestDto notificationRequest = NotificationRequestDto
                 .builder()
                 .userId(uin)
                 .notificationTemplate(notificationTemplate)
-                //TODO Update user lang to applicants' preferred language
-                .userLang("ar")
+                .userLang(notificationTemplate.getNotificationTemplateContents()
+                        .stream().filter(c -> preferredLanguage.equalsIgnoreCase(c.getLang()))
+                        .findFirst()
+                        .map(NotificationTemplateContentDto::getLang)
+                        .orElse("en"))
                 .sendingDate(new Date())
                 .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
                 .build();

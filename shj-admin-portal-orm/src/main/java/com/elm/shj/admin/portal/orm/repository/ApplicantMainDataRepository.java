@@ -13,6 +13,6 @@ import org.springframework.data.repository.query.Param;
  */
 public interface ApplicantMainDataRepository extends JpaRepository<JpaApplicantMainData, Long> {
 
-    @Query(value = "SELECT a FROM JpaApplicantMainData a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id WHERE adi.uin = :uin")
+    @Query(value = "SELECT a FROM JpaApplicantMainData a JOIN a.digitalIds adi WHERE adi.uin = :uin")
     JpaApplicantMainData findByUin(@Param("uin") String uin);
 }

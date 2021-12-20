@@ -50,7 +50,12 @@ public class JpaApplicantLite implements Serializable {
     @Column(name = "full_name_origin")
     private String fullNameOrigin;
 
+    @Column(name = "preferred_language")
+    private String preferredLanguage;
+
     private String gender;
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "applicant")
+    private List<JpaApplicantDigitalId> digitalIds;
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")

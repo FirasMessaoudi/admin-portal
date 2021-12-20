@@ -69,22 +69,22 @@ public class ChatContactWsController {
      * @param contact applicant chat contact details
      * @return WsResponse of the persisted chat contact
      */
-    @PostMapping(value = "/create/{applicantUin}/{applicantRitualId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<WsResponse<?>> createApplicant(@PathVariable String applicantUin,
-                                                         @PathVariable Long applicantRitualId,
-                                                         @RequestPart @Valid ApplicantChatContactVo contact,
-                                                         @RequestPart(value = "avatar", required = false) @SafeFile MultipartFile contactAvatarFile) throws Exception {
+    @PostMapping(value = "/create/{applicantRitualId}")
+    public ResponseEntity<WsResponse<?>> createApplicant(
+            @PathVariable Long applicantRitualId,
+            @RequestBody ApplicantChatContactLiteDto contact
+    ) throws Exception {
         log.debug("Handler for {}", "Create Applicant Chat Contact");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
-                .body(applicantChatContactService.createApplicantChatContact(applicantUin, contact, applicantRitualId, contactAvatarFile)).build());
+                .body(applicantChatContactService.createApplicantChatContact(applicantRitualId, contact)).build());
     }
 
     /**
      * Add new applicant chat contact
      *
-     * @param applicantUin applicant (uin)
+     * @param applicantUin      applicant (uin)
      * @param applicantRitualId
-     * @param staffUin staff chat contact (suin)
+     * @param staffUin          staff chat contact (suin)
      * @return WsResponse of the persisted chat contact
      */
     @PostMapping(value = "/create-staff/{applicantUin}/{applicantRitualId}/{staffUin}")
@@ -92,11 +92,12 @@ public class ChatContactWsController {
                                                      @PathVariable Long applicantRitualId,
                                                      @PathVariable String staffUin) throws Exception {
         log.debug("Handler for {}", "Create Staff Chat Contact  for Applicant");
-        Optional<CompanyStaffLiteDto> existStaff=  companyStaffService.findBySuin(staffUin);
+        Optional<CompanyStaffLiteDto> existStaff = companyStaffService.findBySuin(staffUin);
         if (existStaff.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
-                    .body(applicantChatContactService.createStaffChatContact(applicantUin,applicantRitualId, existStaff)).build());
-        }  return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(applicantChatContactService.createStaffChatContact(applicantUin, applicantRitualId, existStaff)).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                 .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(staffUin).build()).build());
 
 
@@ -108,10 +109,10 @@ public class ChatContactWsController {
      * @param contact applicant chat contact details
      * @return WsResponse of the persisted chat contact
      */
-    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/update/{id}")
     public ResponseEntity<WsResponse<?>> update(@PathVariable Long id,
-                                                @RequestPart @Valid ApplicantChatContactVo contact,
-                                                @RequestPart(value = "avatar", required = false) @SafeFile MultipartFile contactAvatarFile) throws Exception {
+                                                @RequestBody ApplicantChatContactLiteDto contact
+    ) throws Exception {
         ApplicantChatContactDto applicantChatContact = applicantChatContactService.findById(id);
         if (applicantChatContact == null) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
@@ -123,7 +124,7 @@ public class ChatContactWsController {
         }
         log.debug("Handler for {}", "Update User Defined Chat Contact");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
-                .body(applicantChatContactService.updateUserDefinedChatContact(id, contact, contactAvatarFile)).build());
+                .body(applicantChatContactService.updateUserDefinedChatContact(id, contact)).build());
     }
 
     /**
@@ -164,12 +165,11 @@ public class ChatContactWsController {
     }
 
 
-
     @GetMapping("/find-staff/{suin}")
     public ResponseEntity<WsResponse<?>> findStaffContactByValidSuin(@PathVariable String suin) {
-        Optional<CompanyStaffLiteDto> existStaff=  companyStaffService.findBySuin(suin);
+        Optional<CompanyStaffLiteDto> existStaff = companyStaffService.findBySuin(suin);
         if (existStaff.isPresent()) {
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(existStaff).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(existStaff).build());
         }
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                 .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(suin).build()).build());

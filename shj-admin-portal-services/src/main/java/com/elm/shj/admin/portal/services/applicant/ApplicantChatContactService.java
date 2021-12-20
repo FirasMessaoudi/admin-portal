@@ -102,28 +102,23 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @return savedContact saved one
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantChatContactLiteDto createApplicantChatContact(String applicantUin, ApplicantChatContactVo contact, Long applicantRitualId, MultipartFile contactAvatarFile) throws IOException {
+    public ApplicantChatContactLiteDto createApplicantChatContact(Long applicantRitualId, ApplicantChatContactLiteDto contact) throws IOException {
         ApplicantRitualDto applicantRitual = applicantRitualService.findById(applicantRitualId);
 
         ApplicantChatContactDto savedContact = ApplicantChatContactDto
                 .builder()
-                .applicantUin(applicantUin)
-                .contactUin(contact.getUin())
+                .applicantUin(contact.getApplicantUin())
+                .contactUin(contact.getContactUin())
                 .alias(contact.getAlias())
                 .mobileNumber(contact.getMobileNumber())
                 .countryPhonePrefix(contact.getCountryPhonePrefix())
                 .countryCode(contact.getCountryCode())
                 .systemDefined(false)
                 .deleted(false)
+                .avatar(contact.getAvatar())
                 .applicantRitual(applicantRitual)
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
-
-        // Update applicant chat contact avatar
-        if (contactAvatarFile != null) {
-            String encodedAvatarStr = Base64.getEncoder().encodeToString(contactAvatarFile.getBytes());
-            savedContact.setAvatar(encodedAvatarStr);
-        }
 
         savedContact = save(savedContact);
         ApplicantChatContactLiteDto chatContactLite = mapChatContactToChatContactLite(savedContact);
@@ -136,9 +131,9 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
     /**
      * Creates a new staff chat contact
      *
-     * @param applicantUin the chat contact uin
+     * @param applicantUin      the chat contact uin
      * @param applicantRitualId the applicant ritual id
-     * @param companyStaff the company staff
+     * @param companyStaff      the company staff
      * @return savedContact saved one
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
@@ -182,17 +177,13 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @param contact the chat contact to save
      * @return savedContact saved one
      */
-    public ApplicantChatContactLiteDto updateUserDefinedChatContact(Long id, ApplicantChatContactVo contact, MultipartFile contactAvatarFile) throws IOException {
+    public ApplicantChatContactLiteDto updateUserDefinedChatContact(Long id, ApplicantChatContactLiteDto contact) throws IOException {
         ApplicantChatContactDto applicantChatContact = findOne(id);
         applicantChatContact.setAlias(contact.getAlias());
         applicantChatContact.setMobileNumber(contact.getMobileNumber());
         applicantChatContact.setCountryPhonePrefix(contact.getCountryPhonePrefix());
         applicantChatContact.setCountryCode(contact.getCountryCode());
-        // Update applicant chat contact avatar
-        if (contactAvatarFile != null) {
-            String encodedAvatarStr = Base64.getEncoder().encodeToString(contactAvatarFile.getBytes());
-            applicantChatContact.setAvatar(encodedAvatarStr);
-        }
+        applicantChatContact.setAvatar(contact.getAvatar());
         ApplicantChatContactDto savedContact = save(applicantChatContact);
         return mapChatContactToChatContactLite(savedContact);
     }

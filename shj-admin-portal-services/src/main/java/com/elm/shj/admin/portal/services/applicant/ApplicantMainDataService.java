@@ -4,11 +4,9 @@
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantMainData;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
-import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantMainDataRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
@@ -36,15 +34,11 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
 
     private final ApplicantMainDataRepository applicantMainDataRepository;
     private final ApplicantCardRepository applicantCardRepository;
-    private final ApplicantRitualRepository applicantRitualRepository;
-    private final ApplicantDigitalIdRepository applicantDigitalIdRepository;
-
     private final ApplicantRelativeDtoMapper applicantRelativeDtoMapper;
     private final ApplicantContactDtoMapper applicantContactDtoMapper;
     private final ApplicantMainDataDtoMapper applicantMainDataDtoMapper;
-
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
-
+    private final ApplicantRitualRepository applicantRitualRepository;
 
     /**
      * Finds an applicant by his uin
@@ -55,10 +49,9 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
     @Transactional
     public Optional<ApplicantMainDataDto> findByUin(String uin, long companyRitualSeasonId) {
         JpaApplicantMainData applicant = applicantMainDataRepository.findByUin(uin);
-        JpaApplicantDigitalId applicantDigitalId = applicantDigitalIdRepository.findByApplicantId(applicant.getId());
 
         if (applicant != null) {
-            String statusCode = applicantDigitalId == null ? "" : applicantDigitalId.getStatusCode();
+            String statusCode = applicant.getDigitalIds().get(0).getStatusCode();
             ApplicantMainDataDto applicantMainDataDto = applicantMainDataDtoMapper.fromEntity(applicant, mappingContext);
             applicantMainDataDto.setStatusCode(statusCode);
 
@@ -78,15 +71,19 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
                     applicantMainDataDto.setRelatives(applicantRelativeDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.getRelatives()), mappingContext));
                     applicantMainDataDto.setContacts(applicantContactDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.getContacts()), mappingContext));
 
+
                     JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualIdAndStatusCodeNot(applicantRitual.getId(), ECardStatus.REISSUED.name());
                     if (jpaApplicantCard != null) {
                         applicantMainDataDto.setCardReferenceNumber(jpaApplicantCard.getReferenceNumber());
                         applicantMainDataDto.setCardStatusCode(jpaApplicantCard.getStatusCode());
                     }
+
                 }
+
             }
+
             return Optional.of(applicantMainDataDto);
-        } else
-            return Optional.empty();
+        } else return Optional.empty();
     }
+
 }

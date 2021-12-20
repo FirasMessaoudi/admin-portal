@@ -161,7 +161,10 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         if (notificationTemplate == null || !notificationTemplate.isPresent()) {
             throw new NotFoundException("no Template found for  " + closeIncidentTemplateName);
         }
-        String uin = findById(incidentId).getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin();
-        notificationRequestService.sendIncidentNotification(notificationTemplate.get(), uin);
+
+        ApplicantIncidentDto applicantIncident = findById(incidentId);
+        String uin = applicantIncident.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin();
+        String preferredLanguage = applicantIncident.getApplicantRitual().getApplicant().getPreferredLanguage();
+        notificationRequestService.sendIncidentNotification(notificationTemplate.get(), uin, preferredLanguage);
     }
 }
