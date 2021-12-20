@@ -222,5 +222,11 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
 
     }
 
+    @Transactional
+    public void updatePreferredLanguage(String uin, String lang) {
+        Optional<ApplicantDto> applicant = findByUin(uin);
+        log.debug("Applicant ID: {}", applicant.get().getId());
+        applicant.ifPresent(applicantDto -> applicantRepository.updatePreferredLanguage(applicantDto.getId(), lang));
+    }
 }
 
