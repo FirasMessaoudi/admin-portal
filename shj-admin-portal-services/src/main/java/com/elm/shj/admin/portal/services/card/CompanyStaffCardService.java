@@ -48,7 +48,7 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public List<CompanyStaffCardDto> findByDigitalIdCompanyCodeRitualType(String suin, String companyCode, String ritualType) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndStatusCodeInAndCompanyRitualSeasonCompanyCodeAndCompanyRitualSeasonRitualSeasonRitualTypeCode(suin, cardStatus, companyCode, ritualType));
+        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndCompanyRitualSeasonCompanyCodeAndCompanyRitualSeasonRitualSeasonRitualTypeCode(suin, companyCode, ritualType, cardStatus));
     }
 
     /**
@@ -58,6 +58,6 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public List<CompanyStaffCardDto> findByDigitalIdAndDifferentCompanyOrRitual(String suin, String companyCode, String ritualType) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndStatusCodeInAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(suin, cardStatus, companyCode, ritualType));
+        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(suin, companyCode, ritualType, cardStatus));
     }
 }
