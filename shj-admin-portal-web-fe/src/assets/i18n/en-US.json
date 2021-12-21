@@ -440,7 +440,7 @@
     "edit_notification_details": "Edit Notification Details",
     "content_params_error": " invalid notification content , notification contains parameter not right in the allowed list",
     "notification_attributes": "Notification Attributes",
-    "notification_content_caution": "Notification content (at least one language must be filled in)",
+    "notification_content_caution": "Notification content",
     "choose_recipients": "Choose the recipients",
     "send_notification_to": "Send notification to",
     "by_applicant_attributes": "By Applicant Attributes",

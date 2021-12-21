@@ -428,7 +428,7 @@
     "edit_notification_details": "تعديل بيانات التنبيه",
     "content_params_error": "محتوى الرسالة النصية غير صحيح يحتوي على متغيرات لا يمكن إحتسابها في حالة التعديل يجب أن تحتوي متغيرات من المتغيرات المعرفة والتابعة لها",
     "notification_attributes": "صفات التنبيه",
-    "notification_content_caution": "محتوى التنبيه (يحب تعبئة لغة واحدة على الأقل)",
+    "notification_content_caution": "محتوى التنبيه",
     "choose_recipients": "اختيار المرسل إليهم",
     "send_notification_to": "إرسال التنبيه إلى",
     "by_applicant_attributes": "حسب صفات الحجيج",
