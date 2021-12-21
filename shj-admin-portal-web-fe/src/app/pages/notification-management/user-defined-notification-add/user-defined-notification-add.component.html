@@ -17,44 +17,12 @@
         <label
           class="form-control-plaintext my-2">{{ "notification-management.notification_attributes" | translate }}</label>
 
-
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
 
-          <div class="form-group col-sm-12 col-md-12 col-lg-8">
-            <label class="col-form-label">{{ "notification-management.notification_description" | translate }}</label>
-            <input type="text" formControlName="description" class="form-control" maxlength="250"/>
-          </div>
-
-          <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.notification-status" | translate }}</label>
-            <div class="radio-group form-control-plaintext d-flex font-weight-normal">
-              <div class="radio-item align-items-baseline d-flex mr-5">
-                <input formControlName="enabled"
-                       class="mr-2"
-                       name="enabled"
-                       [value]="true"
-                       type="radio"
-                       id="customRadioInline05">
-                <label for="customRadioInline05">{{'notification-management.enabled' | translate}}</label>
-              </div>
-              <div class="radio-item align-items-baseline d-flex">
-                <input formControlName="enabled"
-                       class="mr-2"
-                       name="enabled"
-                       [value]="false"
-                       type="radio"
-                       id="customRadioInline06">
-                <label for="customRadioInline06">{{'notification-management.disabled' | translate}}</label>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-
-          <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.creation_date" | translate }}</label>
+          <div class="col">
+            <label class="col-form-label">{{ "notification-management.creation_date" | translate }}
+              <span class="text-danger">*</span>
+            </label>
             <div class="input-group">
               <label class="form-control disabled-control">{{creationDate | dateFormat}}</label>
               <div class="input-group-append">
@@ -65,54 +33,78 @@
             </div>
           </div>
 
-          <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.notification_date" | translate }}</label>
-            <div class="input-group">
-              <input #dpNotificationDate
-                     class="form-control"
-                     (click)="d.toggle()"
-                     placeholder="DD/MM/YYYY"
-                     name="dpNotificationDate"
-                     (dateSelect)="onDateSelection($event)"
-                     [value]="formatter.format(notificationDate)"
-                     (input)="notificationDate = validateInput(notificationDate, dpNotificationDate.value)"
-                     ngbDatepicker #d="ngbDatepicker"
-                     [readOnly]="true"
-                     [minDate]="today">
-              <div class="input-group-append" (click)="d.toggle()">
-                  <span class="input-group-text">
-                    <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
-                  </span>
-              </div>
+          <div class="col">
+            <label class="col-form-label">{{ "notification-management.notification_date" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <div class="d-flex">
+              <hijri-gregorian-datepicker [showLabel]="false"
+                                          name="sendingDateGregorian"
+                                          buttonClass="dcc-primary"
+                                          class="datepicker {{f.sendingDateGregorian.errors && f.sendingDateGregorian.touched ? 'is-invalid' : ''}}"
+                                          [(selectedDate)]="selectedSendingDate"
+                                          (selectedDateChange)="onSendingDateChange($event)"
+                                          [isRequired]="true"
+                                          [minGreg]="minSendingDateGregorian"
+                                          [minHijri]="minSendingDateHijri"
+                                          [GregLabel]="'general.cal_greg' | translate"
+                                          [hijriLabel]="'general.cal_hijri' | translate"
+                                          [selectedDateType]="selectedDateType"
+                                          [disabled]="false"
+                                          [readonly]="true"
+                                          #datePicker>
+              </hijri-gregorian-datepicker>
+              <ngb-timepicker class="ml-2" formControlName="sendingTime" [spinners]="false"></ngb-timepicker>
+            </div>
+          </div>
+
+          <div class="col">
+            <label class="col-form-label">{{ "notification-management.notification_type" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
+              <label ngbButtonLabel class="btn" [class.btn-select]="!notificationForm.value.userSpecific">
+                <input ngbButton
+                       name="userSpecific"
+                       type="radio"
+                       formControlName="userSpecific"
+                       [value]="false">
+                {{'notification-management.general' | translate}}
+              </label>
+              <label ngbButtonLabel class="btn" [class.btn-select]="notificationForm.value.userSpecific">
+                <input ngbButton
+                       name="userSpecific"
+                       type="radio"
+                       formControlName="userSpecific"
+                       [value]="true">
+                {{'notification-management.user_specific' | translate}}
+              </label>
             </div>
           </div>
 
           <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.notification_type" | translate }}</label>
-            <div class="radio-group form-control-plaintext d-flex font-weight-normal">
-              <div class="radio-item align-items-baseline d-flex mr-5">
-                <input formControlName="userSpecific"
-                       class="mr-2"
-                       name="userSpecific"
-                       [value]="false"
+            <label class="col-form-label">{{ "notification-management.notification-status" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
+              <label ngbButtonLabel class="btn" [class.btn-select]="notificationForm.value.enabled">
+                <input ngbButton
+                       name="enabled"
                        type="radio"
-                       id="customRadioInline01">
-                <label for="customRadioInline01">{{'notification-management.general' | translate}}</label>
-              </div>
-              <div class="radio-item align-items-baseline d-flex">
-                <input formControlName="userSpecific"
-                       class="mr-2"
-                       name="userSpecific"
-                       [value]="true"
+                       formControlName="enabled"
+                       [value]="true">
+                {{'notification-management.enabled' | translate}}
+              </label>
+              <label ngbButtonLabel class="btn" [class.btn-select]="!notificationForm.value.enabled">
+                <input ngbButton
+                       name="enabled"
                        type="radio"
-                       id="customRadioInline02">
-                <label for="customRadioInline02">{{'notification-management.user_specific' | translate}}</label>
-              </div>
+                       formControlName="enabled"
+                       [value]="false">
+                {{'notification-management.disabled' | translate}}
+              </label>
             </div>
           </div>
-        </div>
-
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
 
           <div class="form-group col">
             <label class="col-form-label">{{ "notification-management.notification-category" | translate }}
@@ -128,36 +120,44 @@
           </div>
 
           <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.notification-severity" | translate }}</label>
+            <label class="col-form-label">{{ "notification-management.notification-severity" | translate }}
+              <span class="text-danger">*</span>
+            </label>
             <select formControlName="important" class="custom-select">
               <option [ngValue]="true">{{ "notification-management.important" | translate }}</option>
               <option [ngValue]="false">{{ "notification-management.normal" | translate }}</option>
             </select>
           </div>
 
+          <div class="form-group col-sm-12 col-md-12 col-lg-8">
+            <label class="col-form-label">{{ "notification-management.notification_description" | translate }}</label>
+            <input type="text" formControlName="description" class="form-control" maxlength="250"/>
+          </div>
+
           <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.force_sending" | translate }}</label>
-            <div class="radio-group form-control-plaintext d-flex font-weight-normal">
-              <div class="radio-item align-items-baseline d-flex mr-5">
-                <input formControlName="forceSending"
-                       class="mr-2"
+            <label class="col-form-label">{{ "notification-management.force_sending" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
+              <label ngbButtonLabel class="btn" [class.btn-select]="notificationForm.value.forceSending">
+                <input ngbButton
                        name="forceSending"
-                       [value]="true"
                        type="radio"
-                       id="customRadioInline03">
-                <label for="customRadioInline03">{{'general.dialog_confirmation_ok' | translate}}</label>
-              </div>
-              <div class="radio-item align-items-baseline d-flex">
-                <input formControlName="forceSending"
-                       class="mr-2"
+                       formControlName="forceSending"
+                       [value]="true">
+                {{'general.dialog_confirmation_ok' | translate}}
+              </label>
+              <label ngbButtonLabel class="btn" [class.btn-select]="!notificationForm.value.forceSending">
+                <input ngbButton
                        name="forceSending"
-                       [value]="false"
                        type="radio"
-                       id="customRadioInline04">
-                <label for="customRadioInline04">{{'general.dialog_confirmation_cancel' | translate}}</label>
-              </div>
+                       formControlName="forceSending"
+                       [value]="false">
+                {{'general.dialog_confirmation_cancel' | translate}}
+              </label>
             </div>
           </div>
+
         </div>
 
 
@@ -311,7 +311,8 @@
                   </div>
                   <input type="number" class="form-control" formControlName="minAge"
                          onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 2"
-                         step="1" [class.is-invalid]="cf.age.touched && (cf.age['controls']['minAge'].invalid || cf.age.errors)"/>
+                         step="1"
+                         [class.is-invalid]="cf.age.touched && (cf.age['controls']['minAge'].invalid || cf.age.errors)"/>
                   <div *ngIf="cf.age.invalid && cf.age.touched" class="invalid-feedback">
                     <div
                       *ngIf="cf.age['controls']['minAge'].errors?.min">
@@ -406,14 +407,14 @@
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.applicant_id' | translate }}</label>
                 <input id="uin" formControlName="uin" class="form-control"
-                       onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 14"
+                       onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length < 14"
                        min="0" step="1"/>
               </div>
 
               <div class="form-group col">
                 <label class="col-form-label">{{'printing-management.id_number' | translate }}</label>
                 <input formControlName="idNumber" class="form-control"
-                       onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 9"
+                       onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length < 10"
                        min="0" step="1"/>
               </div>
 
