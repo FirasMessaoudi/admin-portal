@@ -182,7 +182,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       description: '',
       sendingDateGregorian: ['', Validators.compose([Validators.required])],
       sendingDateHijri: ['', Validators.compose([Validators.required])],
-      sendingTime: [{"hour": 0, "minute": 0}, Validators.compose([Validators.required])],
+      sendingTime: [null, Validators.compose([Validators.required])],
       notificationTemplateContents: this.formBuilder.array([], requiredArabicAndEnglishContent())
     });
   }
