@@ -208,7 +208,7 @@
 .langTab.nav-tabs {
 
   border-bottom: 3px solid #F0F0F0;
-  @include my(5);
+  @include my(3);
 
   .nav-link {
     border-width: 3px;
@@ -713,6 +713,20 @@ textarea {
 .modal-footer > * {
   @include media-breakpoint-up(sm) {
     margin: 0;
+  }
+}
+
+/*=======================*/
+
+.ngb-tp-hour {
+  [dir="rtl"] & {
+    order: 2 !important;
+  }
+}
+
+.ngb-tp-spacer {
+  [dir="rtl"] & {
+    order: 1 !important;
   }
 }
 

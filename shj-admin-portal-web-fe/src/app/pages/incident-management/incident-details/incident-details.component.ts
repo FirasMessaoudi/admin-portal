@@ -157,10 +157,33 @@ export class IncidentDetailsComponent implements OnInit {
   }
 
   cancel() {
-    this.resetForm();
+    this.confirmDialogService
+      .confirm(this.translate.instant('notification-management.cancel_confirmation_text'),
+        this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+      if (confirm) {
+        this.goBackToList();
+      }
+    });
+  }
+
+  goBackToList() {
+    this.router.navigate(['/incidents/list']);
+  }
+
+  get f() {
+    return this.incidentForm.controls;
   }
 
   save() {
+    Object.keys(this.incidentForm.controls).forEach(field => {
+      const control = this.incidentForm.get(field);
+      control.markAsTouched({onlySelf: true});
+    });
+
+    if (this.incidentForm.invalid) {
+      return;
+    }
+
     let confirmationText, successText;
     if (this.incidentForm.controls.operation.value === this.MARK_AS_RESOLVED) {
       confirmationText = 'incident-management.dialog_resolve_complaint_confirmation_text';
@@ -193,11 +216,6 @@ export class IncidentDetailsComponent implements OnInit {
         resolutionComment: ['', [Validators.required, Validators.maxLength(500)]]
       }
     );
-  }
-
-  private resetForm() {
-    this.incidentForm.controls.operation.setValue(this.MARK_AS_RESOLVED);
-    this.incidentForm.controls.resolutionComment.setValue('');
   }
 
   isUnderProcessing(incident): boolean {

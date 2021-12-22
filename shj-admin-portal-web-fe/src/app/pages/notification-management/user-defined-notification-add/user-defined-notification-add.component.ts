@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from "@angular/router";
 import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
 import {Lookup} from "@model/lookup.model";
@@ -8,10 +8,8 @@ import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {ToastService} from "@shared/components/toast";
-import {ModalDismissReasons, NgbCalendar, NgbDate, NgbDateParserFormatter, NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {ModalDismissReasons, NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
-import * as momentjs from 'moment';
 import {CompanyLite} from "@model/company-lite.model";
 import {PackageHousing} from "@model/package-housing.model";
 import {EAuthority, Page} from "@shared/model";
@@ -19,8 +17,11 @@ import {CategorizedNotificationVo} from "@model/categorized-notification-vo.mode
 import {Applicant} from "@model/applicant.model";
 import {Subscription} from "rxjs";
 import {ApplicantService} from "@core/services/applicant/applicant.service";
-
-const moment = momentjs;
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/datepicker/consts";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {
+  HijriGregorianDatepickerComponent
+} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datepicker.component";
 
 function nonEmptyBody(c: AbstractControl): { [key: string]: any } | null {
   let title = c.get('title');
@@ -51,6 +52,22 @@ export function requiredArabicAndEnglishContent(): ValidatorFn {
   }
 }
 
+function invalidAgeRange(c: AbstractControl): { [key: string]: any } | null {
+  let minAge = c.get('minAge');
+  let maxAge = c.get('maxAge');
+  if (minAge.value === null || maxAge.value === null) {
+    return null;
+  }
+  if (minAge.pristine || maxAge.pristine) {
+    return null;
+  }
+  if (minAge.value > maxAge.value) {
+    c.setErrors({invalidAgeRange: 'Invalid age range'});
+    return {invalidAgeRange: 'Invalid age range'};
+  }
+  return null;
+}
+
 @Component({
   selector: 'app-user-defined-notification-add',
   templateUrl: './user-defined-notification-add.component.html',
@@ -72,8 +89,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   checkedCriteria: number = 0;
   creationDate: Date = new Date();
   notificationTemplate: NotificationTemplate;
-  today: NgbDate;
-  notificationDate: NgbDate;
   isLoading: boolean;
   nationalities: Lookup[] = [];
   companies: CompanyLite[] = [];
@@ -90,6 +105,14 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   isSelectLoading: boolean;
   isAllSelected: boolean;
 
+  selectedSendingDate: NgbDateStruct;
+  minSendingDateGregorian: NgbDateStruct;
+  minSendingDateHijri: NgbDateStruct;
+  dateString: string;
+  selectedDateType: any;
+
+  @ViewChild('datePicker') datePicker: HijriGregorianDatepickerComponent;
+
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
@@ -100,19 +123,31 @@ export class UserDefinedNotificationAddComponent implements OnInit {
               private router: Router,
               private translate: TranslateService,
               private i18nService: I18nService,
-              private calendar: NgbCalendar,
               private cardService: CardService,
               private applicantService: ApplicantService,
-              private dateFormatterService: DateFormatterService,
               private confirmDialogService: ConfirmDialogService,
               private toastr: ToastService,
               private modalService: NgbModal,
-              public formatter: NgbDateParserFormatter) {
-    this.notificationDate = calendar.getToday();
-    this.today = calendar.getToday();
+              private dateFormatterService: DateFormatterService) {
   }
 
+
   ngOnInit(): void {
+    // calendar default;
+    let toDayGregorian = this.dateFormatterService.todayGregorian();
+    let toDayHijri = this.dateFormatterService.todayHijri();
+    this.minSendingDateGregorian = {
+      year: toDayGregorian.year,
+      month: toDayGregorian.month,
+      day: toDayGregorian.day
+    };
+    this.minSendingDateHijri = {
+      year: toDayHijri.year,
+      month: toDayHijri.month,
+      day: toDayHijri.day
+    };
+    this.selectedDateType = DateType.Gregorian;
+
     this.loadLookups();
     this.initForm();
     this.initCategorizedApplicantsForm();
@@ -145,6 +180,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       userSpecific: false,
       forceSending: false,
       description: '',
+      sendingDateGregorian: ['', Validators.compose([Validators.required])],
+      sendingDateHijri: ['', Validators.compose([Validators.required])],
+      sendingTime: [null, Validators.compose([Validators.required])],
       notificationTemplateContents: this.formBuilder.array([], requiredArabicAndEnglishContent())
     });
   }
@@ -174,6 +212,10 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     return this.notificationForm.controls;
   }
 
+  get cf() {
+    return this.categorizedApplicantsForm.controls;
+  }
+
   loadLookups() {
     this.notificationService.findNotificationCategories().subscribe(result => {
       this.notificationCategories = result;
@@ -201,12 +243,14 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   initCategorizedApplicantsForm() {
     this.categorizedApplicantsForm = this.formBuilder.group({
-      camp: [null, Validators.required],
-      company: [null, Validators.required],
-      nationality: [null, Validators.required],
-      minAge: [0, Validators.required],
-      maxAge: [120, Validators.required],
-      gender: [null, Validators.required]
+      camp: null,
+      company: null,
+      nationality: null,
+      age: this.formBuilder.group({
+        minAge: ['', [Validators.min(0), Validators.max(120)]],
+        maxAge: ['', [Validators.min(0), Validators.max(120)]],
+      }, {validator: invalidAgeRange}),
+      gender: null
     });
   }
 
@@ -272,11 +316,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
-  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-    const parsed = this.formatter.parse(input);
-    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
-  }
-
   createNotificationTemplate(): NotificationTemplate {
     Object.keys(this.notificationForm.controls).forEach(field => {
       const control = this.notificationForm.get(field);
@@ -288,9 +327,20 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     }
 
     let notificationTemplate = this.notificationForm.value;
-    notificationTemplate.sendingDate = this.getSelectedDate(this.notificationDate);
     notificationTemplate.typeCode = this.USER_DEFINED;
     notificationTemplate.statusCode = this.DRAFT;
+
+    let sendingDate = this.notificationForm.value.sendingDateGregorian;
+
+    console.log(sendingDate);
+
+    sendingDate.setHours(this.notificationForm.value.sendingTime.hour);
+    sendingDate.setMinutes(this.notificationForm.value.sendingTime.minute);
+
+    console.log(sendingDate);
+
+    notificationTemplate.sendingDate = sendingDate;
+
     notificationTemplate.notificationTemplateContents = this.notificationForm.get('notificationTemplateContents')
       .value.filter(c => c.body.trim() !== '' || c.title.trim() !== '');
     notificationTemplate.notificationTemplateContents.forEach(c => {
@@ -301,12 +351,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     return notificationTemplate;
   }
 
-  getSelectedDate(selectedDate: NgbDate): string {
-    let formattedDate = this.dateFormatterService.toString(selectedDate);
-    return moment(formattedDate, 'DD/MM/YYYY').locale('en').format();
-  }
-
-  goBack() {
+  cancel() {
     this.confirmDialogService
       .confirm(this.translate.instant('notification-management.cancel_confirmation_text'),
         this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
@@ -314,10 +359,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
         this.goBackToList()
       }
     });
-  }
-
-  onDateSelection(date: NgbDate) {
-    this.notificationDate = date;
   }
 
   saveAndSend() {
@@ -428,7 +469,11 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   open(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', centered: true, size: 'lg'}).result.then((result) => {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true,
+      size: 'lg'
+    }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
@@ -505,5 +550,16 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   getTotalPages(total, size): number {
     return Math.floor((total + size - 1) / size);
+  }
+
+  onSendingDateChange(event) {
+    if (event) {
+      let dateStruct = this.datePicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : this.dateFormatterService.toGregorian(event);
+      let dateStructGreg = this.datePicker.selectedDateType == DateType.Gregorian ? event : this.dateFormatterService.toGregorian(event);
+      let dateStructHijri = this.datePicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : event;
+      this.dateString = this.dateFormatterService.toString(dateStruct);
+      this.notificationForm.controls.sendingDateGregorian.setValue(this.dateFormatterService.toDate(dateStructGreg));
+      this.notificationForm.controls.sendingDateHijri.setValue(this.dateFormatterService.toString(dateStructHijri).split('/').reverse().join(''));
+    }
   }
 }

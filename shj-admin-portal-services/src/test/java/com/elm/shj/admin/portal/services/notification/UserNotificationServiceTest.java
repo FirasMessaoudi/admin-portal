@@ -33,7 +33,7 @@ public class UserNotificationServiceTest {
     public void test_find_User_Notifications() {
         String userId = "1";
         userNotificationService.findUserNotifications(userId);
-        verify(userNotificationRepository, times(1)).findByUserIdAndStatusCodeNot(anyString(), anyString());
+        verify(userNotificationRepository, times(1)).findByUserIdAndStatusCodeNotOrderByCreationDateDesc(anyString(), anyString());
     }
 
     @Test

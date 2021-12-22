@@ -411,7 +411,9 @@
     "FYI": "للإطلاع",
     "FYA": "لإتخاذ إجراء",
     "system_notifications": "تنبيهات النظام",
+    "system_notifications_management": "إدارة تنبيهات النظام",
     "user_notifications": "تنبيهات المستخدم",
+    "user_notifications_management": "إدارة تنبيهات المستخدم",
     "new_notification": "إضافة تنبيه",
     "notification_details": "تفاصيل التنبيه",
     "notification_creation_date": "تاريخ إنشاء التنبيه",
@@ -428,7 +430,7 @@
     "edit_notification_details": "تعديل بيانات التنبيه",
     "content_params_error": "محتوى الرسالة النصية غير صحيح يحتوي على متغيرات لا يمكن إحتسابها في حالة التعديل يجب أن تحتوي متغيرات من المتغيرات المعرفة والتابعة لها",
     "notification_attributes": "صفات التنبيه",
-    "notification_content_caution": "محتوى التنبيه (يحب تعبئة لغة واحدة على الأقل)",
+    "notification_content_caution": "محتوى التنبيه",
     "choose_recipients": "اختيار المرسل إليهم",
     "send_notification_to": "إرسال التنبيه إلى",
     "by_applicant_attributes": "حسب صفات الحجيج",
@@ -453,7 +455,10 @@
     "saved_successfully" : "تم حفظ البيانات بنجاح",
     "add_user_defined_notifications": "إضافة تنبيهات المستخدم",
     "save_changes_confirmation_text": "هل تريد حفظ التعديلات الحالية ؟",
-    "add_no_applicants": "إضافة {{noApplicants}} مرسل إليه"
+    "add_no_applicants": "إضافة {{noApplicants}} مرسل إليه",
+    "age_validation_min": "يجب أن تكون هذه القيمة أكبر من {{minLength}}",
+    "age_validation_max": "يجب أن تكون هذه القيمة أصغر من {{maxLength}}",
+    "age_validation_range": "يجب ألا تتجاوز القيمة الدنيا للعمر القيمة الأقصى"
   },
   "printing-management": {
     "title": "إدارة الطباعة",

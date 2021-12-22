@@ -3,9 +3,9 @@
  */
 package com.elm.shj.admin.portal.web.ws;
 
-import com.elm.dcc.foundation.commons.validation.SafeFile;
 import com.elm.shj.admin.portal.services.applicant.ApplicantChatContactService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
+import com.elm.shj.admin.portal.services.applicant.ChatMessageService;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
@@ -44,7 +44,7 @@ public class ChatContactWsController {
     private final ApplicantChatContactService applicantChatContactService;
     private final ApplicantLiteService applicantLiteService;
     private final CompanyStaffService companyStaffService;
-    private final CompanyStaffCardService companyStaffCardService;
+    private final ChatMessageService chatMessageService;
 
     /**
      * finds chat contacts by uin and applicant ritual ID
@@ -173,6 +173,16 @@ public class ChatContactWsController {
         }
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                 .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(suin).build()).build());
+
+
+    }
+
+    @GetMapping("/chat-list/{uin}")
+    public ResponseEntity<WsResponse<?>> listChatContactsWithLatestMessage(@PathVariable String uin) {
+        List<ChatMessageLiteDto> chatMessageLiteDtos = chatMessageService.listChatContactsWithLatestMessage(uin);
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
+                .body(chatMessageLiteDtos).build());
 
 
     }
