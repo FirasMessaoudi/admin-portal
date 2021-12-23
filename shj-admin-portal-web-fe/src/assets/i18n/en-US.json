@@ -489,8 +489,8 @@
     "batch_no": "Batch No.",
     "contains": "Contains",
     "cards": "Card(s)",
-    "smart_cards_for_print": "Smart Cards To Be Printed",
-    "selected_smart_card": "Smart Card Was Selected",
+    "smart_cards_for_print": "Cards To Be Printed",
+    "selected_smart_card": "Card Was Selected",
     "batch_collecting_method": "Batch Collecting Method",
     "prepare_request": "Prepare Request",
     "create_batch": "Create Batch",
@@ -515,7 +515,7 @@
     "nationality": "Nationality",
     "motawif": "Motawif",
     "btn_cancel": "Cancel",
-    "request_description": "Request description"
+    "request_description": "Request Description"
   },
   "rule-management": {
     "title": "Decision Rule Management",
