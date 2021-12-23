@@ -32,7 +32,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Controller for exposing web services for external party.
@@ -95,6 +97,7 @@ public class IntegrationWsController {
     private final IncidentTypeLookupService incidentTypeLookupService;
     private final ApplicantChatContactService applicantChatContactService;
     private final ApplicantRitualService applicantRitualService;
+    private final ApplicantPackageService applicantPackageService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -629,6 +632,16 @@ public class IntegrationWsController {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
         }
+    }
+
+    /**
+     * @param uin
+     * @return
+     */
+    @GetMapping("/applicant/applicant-ritual-seasons/{uin}")
+    public ResponseEntity<WsResponse<?>> findApplicantPackageAndRitualSeason(@PathVariable long uin) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageService.findApplicantPackageAndRitualSeason(uin)).build());
+
     }
 
 }
