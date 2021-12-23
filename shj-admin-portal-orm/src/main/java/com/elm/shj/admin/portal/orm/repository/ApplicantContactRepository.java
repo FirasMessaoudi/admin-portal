@@ -20,13 +20,13 @@ import java.util.List;
 public interface ApplicantContactRepository extends JpaRepository<JpaApplicantContact, Long> {
     @Modifying
     @Query("update JpaApplicantContact contact set contact.countryCode = :countryCode, contact.email = :email, " +
-            "contact.intlMobileNumber =:intlMobileNumber where contact.applicant.id =:applicantId and contact.applicantRitual.id=:ritualId")
+            "contact.intlMobileNumber =:intlMobileNumber, contact.updateDate = CURRENT_TIMESTAMP where contact.applicant.id =:applicantId and contact.applicantRitual.id=:ritualId")
     int updateContactIntlNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("intlMobileNumber") String intlMobileNumber, @Param("applicantId") long applicantId, @Param("ritualId") long ritualId);
 
 
     @Modifying
     @Query("update JpaApplicantContact contact set contact.countryCode = :countryCode, contact.email = :email, " +
-            "contact.localMobileNumber =:localMobileNumber where contact.applicant.id =:applicantId and contact.applicantRitual.id=:ritualId")
+            "contact.localMobileNumber =:localMobileNumber, contact.updateDate = CURRENT_TIMESTAMP where contact.applicant.id =:applicantId and contact.applicantRitual.id=:ritualId")
     int updateContactLocalNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("localMobileNumber") String localMobileNumber, @Param("applicantId") long applicantId, @Param("ritualId") long ritualId);
 
     List<JpaApplicantContact> findAllByApplicantId(Long id);

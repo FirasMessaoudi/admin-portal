@@ -467,6 +467,8 @@
     "saved_successfully" : "Saved successfully",
     "add_user_defined_notifications": "Add User Defined Notifications",
     "save_changes_confirmation_text": "Are you sure, you want to save changes ?",
+    "save_and_send_confirmation_text": "Are you sure, you want to save changes and send notifications to {{count}} applicant(s) ?",
+    "no_applicants_found_text": "No matching applicants were found. Do you want to save the notification template as a draft ?",
     "add_no_applicants": "Add {{noApplicants}} Applicant(s)",
     "age_validation_min": "This value must be greater than or equal to {{minLength}}",
     "age_validation_max": "This value must be less than or equal to {{maxLength}}",

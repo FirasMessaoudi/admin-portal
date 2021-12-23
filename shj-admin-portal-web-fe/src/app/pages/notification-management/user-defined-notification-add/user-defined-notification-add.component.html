@@ -54,7 +54,31 @@
                                           [readonly]="true"
                                           #datePicker>
               </hijri-gregorian-datepicker>
-              <ngb-timepicker class="ml-2" formControlName="sendingTime" [spinners]="false"></ngb-timepicker>
+              <ngb-timepicker class="ml-2" formControlName="sendingTime" [spinners]="false" required></ngb-timepicker>
+            </div>
+          </div>
+
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.notification-status" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
+              <label ngbButtonLabel class="btn" [class.btn-select]="notificationForm.value.enabled">
+                <input ngbButton
+                       name="enabled"
+                       type="radio"
+                       formControlName="enabled"
+                       [value]="true">
+                {{'notification-management.enabled' | translate}}
+              </label>
+              <label ngbButtonLabel class="btn" [class.btn-select]="!notificationForm.value.enabled">
+                <input ngbButton
+                       name="enabled"
+                       type="radio"
+                       formControlName="enabled"
+                       [value]="false">
+                {{'notification-management.disabled' | translate}}
+              </label>
             </div>
           </div>
 
@@ -83,30 +107,6 @@
           </div>
 
           <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.notification-status" | translate }}
-              <span class="text-danger">*</span>
-            </label>
-            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
-              <label ngbButtonLabel class="btn" [class.btn-select]="notificationForm.value.enabled">
-                <input ngbButton
-                       name="enabled"
-                       type="radio"
-                       formControlName="enabled"
-                       [value]="true">
-                {{'notification-management.enabled' | translate}}
-              </label>
-              <label ngbButtonLabel class="btn" [class.btn-select]="!notificationForm.value.enabled">
-                <input ngbButton
-                       name="enabled"
-                       type="radio"
-                       formControlName="enabled"
-                       [value]="false">
-                {{'notification-management.disabled' | translate}}
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group col">
             <label class="col-form-label">{{ "notification-management.notification-category" | translate }}
               <span class="text-danger">*</span>
             </label>
@@ -130,7 +130,9 @@
           </div>
 
           <div class="form-group col-sm-12 col-md-12 col-lg-8">
-            <label class="col-form-label">{{ "notification-management.notification_description" | translate }}</label>
+            <label class="col-form-label">{{ "notification-management.notification_description" | translate }}
+              <span class="text-danger">*</span>
+            </label>
             <input type="text" formControlName="description" class="form-control" maxlength="250"/>
           </div>
 
@@ -268,11 +270,11 @@
       </div>
 
       <div class="searchBox mb-4 animate slideIn delay" *ngIf="checkedCriteria === 1">
-        <form [formGroup]="categorizedApplicantsForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+        <form [formGroup]="categorizingForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
 
           <div class="form-group col">
             <label class="col-form-label">{{"notification-management.camp"| translate}}</label>
-            <select class="custom-select" formControlName="camp">
+            <select class="custom-select" formControlName="campId">
               <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
               <option *ngFor="let camp of camps" [ngValue]="camp.id">
                 {{currentLanguage.startsWith('ar') ? camp.locationNameAr : camp.locationNameEn}}
@@ -282,7 +284,7 @@
 
           <div class="form-group col">
             <label class="col-form-label">{{"notification-management.company"| translate}}</label>
-            <select class="custom-select" formControlName="company">
+            <select class="custom-select" formControlName="companyId">
               <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
               <option *ngFor="let company of companies" [ngValue]="company.id">
                 {{currentLanguage.startsWith('en') ? company.labelEn : company.labelAr}}
@@ -292,7 +294,7 @@
 
           <div class="form-group col">
             <label class="col-form-label">{{"notification-management.nationality"| translate}}</label>
-            <select class="custom-select" formControlName="nationality">
+            <select class="custom-select" formControlName="nationalityCode">
               <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
               <option *ngFor="let nationality of lookupService().localizedItems(nationalities)"
                       [ngValue]="nationality.code">
@@ -602,13 +604,13 @@
           {{"general.btn_cancel" | translate}}</button>
         <span>
       <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4"
-              [disabled]="!notificationForm.valid || !categorizedApplicantsForm.valid"
+              [disabled]="!notificationForm.valid || !categorizingForm.valid"
               (click)="saveAsDraft()">
         {{"notification-management.save_as_draft" | translate}}
       </button>
       <button class="btn btn-dcc-primary px-4"
-              [disabled]="!notificationForm.valid || !categorizedApplicantsForm.valid"
-              (click)="saveAndSend()">
+              [disabled]="!notificationForm.valid || !categorizingForm.valid"
+              (click)="openLg(showSend);getApplicantsCount();">
         {{"notification-management.save_and_send" | translate}}
       </button>
     </span>
@@ -628,3 +630,22 @@
   </div>
 
 </div>
+
+<ng-template #showSend let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ "general.dialog_confirmation_title" | translate }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+      <span aria-hidden="true" class="h1">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <span *ngIf="applicantsCount != null">
+    {{(applicantsCount > 0 ? 'notification-management.save_and_send_confirmation_text' : 'notification-management.no_applicants_found_text') | translate : {count: applicantsCount} }}
+    </span>
+  </div>
+  <div class="modal-footer">
+    <button type="button" (click)="dismiss()"
+            class="btn btn-outline-secondary">{{ "general.dialog_confirmation_cancel" | translate }}</button>
+    <button type="button" [disabled]="applicantsCount === null" (click)="saveAndSend()" class="btn btn-dcc-primary">{{ "general.dialog_confirmation_ok" | translate }}</button>
+  </div>
+</ng-template>
