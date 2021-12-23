@@ -135,9 +135,9 @@
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.force_sending" | translate }}</label>
           <span *ngIf="!editMode">
-             <label *ngIf="!notificationTemplate?.forceSending"
-                    class="form-control-plaintext">{{ "general.dialog_confirmation_ok" | translate }}</label>
              <label *ngIf="notificationTemplate?.forceSending"
+                    class="form-control-plaintext">{{ "general.dialog_confirmation_ok" | translate }}</label>
+             <label *ngIf="!notificationTemplate?.forceSending"
                     class="form-control-plaintext">{{"general.dialog_confirmation_cancel" | translate}}</label>
           </span>
           <select *ngIf="editMode" formControlName="forceSending" class="custom-select">
