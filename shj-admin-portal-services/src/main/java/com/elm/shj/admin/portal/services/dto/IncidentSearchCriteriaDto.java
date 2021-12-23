@@ -27,7 +27,7 @@ public class IncidentSearchCriteriaDto implements Serializable {
     private String applicantId;
     private String applicantName;
     private String incidentType;
-    private Date creationDateStart;
-    private Date creationDateEnd;
+    private Date fromDateGregorian;
+    private Date toDateGregorian;
     private String status;
 }

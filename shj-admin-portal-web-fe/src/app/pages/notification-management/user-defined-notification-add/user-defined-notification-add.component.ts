@@ -1,17 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from "@angular/router";
 import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
 import {Lookup} from "@model/lookup.model";
-import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService, CardService, NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {ToastService} from "@shared/components/toast";
-import {ModalDismissReasons, NgbCalendar, NgbDate, NgbDateParserFormatter, NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {ModalDismissReasons, NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
-import * as momentjs from 'moment';
 import {CompanyLite} from "@model/company-lite.model";
 import {PackageHousing} from "@model/package-housing.model";
 import {EAuthority, Page} from "@shared/model";
@@ -19,37 +17,15 @@ import {CategorizedNotificationVo} from "@model/categorized-notification-vo.mode
 import {Applicant} from "@model/applicant.model";
 import {Subscription} from "rxjs";
 import {ApplicantService} from "@core/services/applicant/applicant.service";
-
-const moment = momentjs;
-
-function nonEmptyBody(c: AbstractControl): { [key: string]: any } | null {
-  let title = c.get('title');
-  let body = c.get('body');
-  let lang = c.get('lang');
-  if (title.pristine || body.pristine) {
-    return null;
-  }
-  if (lang.value.toLowerCase() === 'ar' || lang.value.toLowerCase() === 'en') {
-    if (title.value.trim().length === 0) {
-      title.setErrors({'required': true});
-    }
-    if (body.value.trim().length === 0) {
-      body.setErrors({'required': true});
-    }
-  }
-  return null;
-}
-
-export function requiredArabicAndEnglishContent(): ValidatorFn {
-  return (formArray: FormArray): { [key: string]: any } | null => {
-    let valid: boolean = true;
-    formArray.controls.filter(c => c.value.lang.toLowerCase() === 'ar' || c.value.lang.toLowerCase() === 'en')
-      .forEach((contents: FormGroup) => {
-        valid = valid && contents.value.title.length > 0 && contents.value.body.length > 0;
-      });
-    return valid ? null : {requiredContent: 'Arabic and english content required'}
-  }
-}
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/datepicker/consts";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {
+  HijriGregorianDatepickerComponent
+} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datepicker.component";
+import {
+  ageRangeValidator,
+  requiredArabicAndEnglishContentValidator
+} from "@pages/notification-management/notification-custom-validator";
 
 @Component({
   selector: 'app-user-defined-notification-add',
@@ -65,15 +41,13 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   notificationCategories: Lookup[] = [];
   localizedNotificationCategories: Lookup[] = [];
   notificationForm: FormGroup;
-  categorizedApplicantsForm: FormGroup;
+  categorizingForm: FormGroup;
   languages: Lookup[] = [];
   translatedLanguages: Lookup[] = [];
   activeId;
   checkedCriteria: number = 0;
   creationDate: Date = new Date();
   notificationTemplate: NotificationTemplate;
-  today: NgbDate;
-  notificationDate: NgbDate;
   isLoading: boolean;
   nationalities: Lookup[] = [];
   companies: CompanyLite[] = [];
@@ -89,6 +63,14 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   isSelectAllClicked: boolean;
   isSelectLoading: boolean;
   isAllSelected: boolean;
+  selectedSendingDate: NgbDateStruct;
+  minSendingDateGregorian: NgbDateStruct;
+  minSendingDateHijri: NgbDateStruct;
+  dateString: string;
+  selectedDateType: any;
+  applicantsCount: number;
+
+  @ViewChild('datePicker') datePicker: HijriGregorianDatepickerComponent;
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
@@ -100,22 +82,25 @@ export class UserDefinedNotificationAddComponent implements OnInit {
               private router: Router,
               private translate: TranslateService,
               private i18nService: I18nService,
-              private calendar: NgbCalendar,
               private cardService: CardService,
               private applicantService: ApplicantService,
-              private dateFormatterService: DateFormatterService,
               private confirmDialogService: ConfirmDialogService,
               private toastr: ToastService,
               private modalService: NgbModal,
-              public formatter: NgbDateParserFormatter) {
-    this.notificationDate = calendar.getToday();
-    this.today = calendar.getToday();
+              private dateFormatterService: DateFormatterService) {
   }
 
   ngOnInit(): void {
+    // calendar default;
+    let todayGregorian = this.dateFormatterService.todayGregorian();
+    let todayHijri = this.dateFormatterService.todayHijri();
+    this.minSendingDateGregorian = todayGregorian;
+    this.minSendingDateHijri = todayHijri;
+    this.selectedDateType = DateType.Gregorian;
+
     this.loadLookups();
-    this.initForm();
-    this.initCategorizedApplicantsForm();
+    this.initCreateForm();
+    this.initCategorizingForm();
     this.initSearchForm();
 
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -124,7 +109,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     })
 
     this.notificationService.loadCompanies().subscribe(res => this.companies = res);
-
     this.notificationService.loadCamps().subscribe(res => this.camps = res);
   }
 
@@ -137,15 +121,32 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     }
   }
 
-  initForm() {
+  initCreateForm() {
     this.notificationForm = this.formBuilder.group({
       categoryCode: [null, Validators.required],
       important: false,
       enabled: true,
       userSpecific: false,
       forceSending: false,
-      description: '',
-      notificationTemplateContents: this.formBuilder.array([], requiredArabicAndEnglishContent())
+      description: ['', Validators.required],
+      sendingDateGregorian: ['', Validators.required],
+      sendingDateHijri: ['', Validators.required],
+      sendingTime: [null, Validators.required],
+      notificationTemplateContents: this.formBuilder.array([], requiredArabicAndEnglishContentValidator()),
+      notificationTemplateCategorizing: null
+    });
+  }
+
+  initCategorizingForm() {
+    this.categorizingForm = this.formBuilder.group({
+      campId: null,
+      companyId: null,
+      nationalityCode: null,
+      age: this.formBuilder.group({
+        minAge: ['', [Validators.min(0), Validators.max(120)]],
+        maxAge: ['', [Validators.min(0), Validators.max(120)]],
+      }, {validator: ageRangeValidator}),
+      gender: null
     });
   }
 
@@ -160,9 +161,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   addTemplateContents(language: string) {
     const content = this.formBuilder.group({
       lang: language,
-      title: [''],
-      body: ['']
-    }, {validator: nonEmptyBody});
+      title: '',
+      body: ''
+    });
     this.notificationTemplateContents.push(content);
   }
 
@@ -172,6 +173,10 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   get f() {
     return this.notificationForm.controls;
+  }
+
+  get cf() {
+    return this.categorizingForm.controls;
   }
 
   loadLookups() {
@@ -199,17 +204,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     return this.i18nService.language;
   }
 
-  initCategorizedApplicantsForm() {
-    this.categorizedApplicantsForm = this.formBuilder.group({
-      camp: [null, Validators.required],
-      company: [null, Validators.required],
-      nationality: [null, Validators.required],
-      minAge: [0, Validators.required],
-      maxAge: [120, Validators.required],
-      gender: [null, Validators.required]
-    });
-  }
-
   get canSeeAddUpdateUserDefinedNotification(): boolean {
     return this.authenticationService.hasAuthority(EAuthority.USER_DEFINED_NOTIFICATION_MANAGEMENT);
   }
@@ -227,26 +221,71 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.translate.instant('notification-management.save_changes_confirmation_text'),
       this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
       if (confirm) {
-        const notificationTemplate = this.createNotificationTemplate();
-
-        this.notificationService.saveAsDraft(notificationTemplate).subscribe(res => {
-          if (res.hasOwnProperty('errors') && res.errors) {
-            this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
-            Object.keys(this.notificationForm.controls).forEach(field => {
-              console.log('looking for validation errors for : ' + field);
-              if (res.errors[field]) {
-                const control = this.notificationForm.get(field);
-                control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
-                control.markAsTouched({onlySelf: true});
-              }
-            });
-          } else {
-            this.toastr.success(this.translate.instant("notification-management.saved_successfully"), this.translate.instant("general.dialog_add_title"));
-            this.router.navigate(['/user-defined-notification/list']);
-          }
-        });
+        this.proceedSavingTemplateAsDraft();
       }
     });
+  }
+
+  proceedSavingTemplateAsDraft() {
+    let notificationTemplate = this.createNotificationTemplate();
+    if (this.checkedCriteria === 1) {
+      notificationTemplate.notificationTemplateCategorizing = this.getCategorizing();
+    }
+
+    this.notificationService.saveAsDraft(notificationTemplate).subscribe(res => {
+      if (res.hasOwnProperty('errors') && res.errors) {
+        this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
+        Object.keys(this.notificationForm.controls).forEach(field => {
+          console.log('looking for validation errors for : ' + field);
+          if (res.errors[field]) {
+            const control = this.notificationForm.get(field);
+            control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
+            control.markAsTouched({onlySelf: true});
+          }
+        });
+      } else {
+        this.toastr.success(this.translate.instant("notification-management.saved_successfully"), this.translate.instant("general.dialog_add_title"));
+        this.router.navigate(['/user-defined-notification/list']);
+      }
+    });
+  }
+
+  public dismiss() {
+    this.modalService.dismissAll();
+  }
+
+  getApplicantsCount() {
+    if (this.checkedCriteria === 0) {
+      this.applicantService.countApplicantsHavingCurrentRitual().subscribe(res => this.applicantsCount = res);
+    } else if (this.checkedCriteria === 1) {
+      this.applicantService.countCategorizedApplicants(this.getCategorizing()).subscribe(res => this.applicantsCount = res);
+    } else if (this.checkedCriteria === 2) {
+      this.applicantsCount = this.addedApplicants.length;
+    }
+  }
+
+  getCategorizing() {
+    let categorizing = this.categorizingForm.value;
+    const minAge = this.categorizingForm.value.age.minAge;
+    const maxAge = this.categorizingForm.value.age.maxAge;
+    if (minAge) categorizing.minAge = minAge;
+    if (maxAge) categorizing.maxAge = maxAge;
+    return categorizing;
+  }
+
+  saveAndSend() {
+    if (this.applicantsCount > 0) {
+      if (this.checkedCriteria === 0) {
+        this.saveAndSendToAll();
+      } else if (this.checkedCriteria === 1) {
+        this.saveAndSendToCategorizedApplicants(this.categorizingForm.value);
+      } else if (this.checkedCriteria === 2) {
+        this.saveAndSendToSelectedApplicants(this.addedApplicants.map(applicant => applicant.id));
+      }
+    } else {
+      this.proceedSavingTemplateAsDraft();
+    }
+    this.dismiss();
   }
 
   saveAndSendToAll() {
@@ -272,74 +311,11 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
-  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-    const parsed = this.formatter.parse(input);
-    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
-  }
-
-  createNotificationTemplate(): NotificationTemplate {
-    Object.keys(this.notificationForm.controls).forEach(field => {
-      const control = this.notificationForm.get(field);
-      control.markAsTouched({onlySelf: true});
-    });
-
-    if (this.notificationForm.invalid) {
-      return;
-    }
-
-    let notificationTemplate = this.notificationForm.value;
-    notificationTemplate.sendingDate = this.getSelectedDate(this.notificationDate);
-    notificationTemplate.typeCode = this.USER_DEFINED;
-    notificationTemplate.statusCode = this.DRAFT;
-    notificationTemplate.notificationTemplateContents = this.notificationForm.get('notificationTemplateContents')
-      .value.filter(c => c.body.trim() !== '' || c.title.trim() !== '');
-    notificationTemplate.notificationTemplateContents.forEach(c => {
-      c.title = c.title.replace(/\s/g, " ").trim();
-      c.body = c.body.replace(/\s/g, " ").trim();
-    });
-    console.log(notificationTemplate);
-    return notificationTemplate;
-  }
-
-  getSelectedDate(selectedDate: NgbDate): string {
-    let formattedDate = this.dateFormatterService.toString(selectedDate);
-    return moment(formattedDate, 'DD/MM/YYYY').locale('en').format();
-  }
-
-  goBack() {
-    this.confirmDialogService
-      .confirm(this.translate.instant('notification-management.cancel_confirmation_text'),
-        this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
-      if (confirm) {
-        this.goBackToList()
-      }
-    });
-  }
-
-  onDateSelection(date: NgbDate) {
-    this.notificationDate = date;
-  }
-
-  saveAndSend() {
-    this.confirmDialogService.confirm(
-      this.translate.instant('notification-management.save_changes_confirmation_text'),
-      this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
-      if (confirm) {
-        if (this.checkedCriteria === 0) {
-          this.saveAndSendToAll();
-        } else if (this.checkedCriteria === 1) {
-          this.saveAndSendToCategorizedApplicants(this.categorizedApplicantsForm.value);
-        } else if (this.checkedCriteria === 2) {
-          this.saveAndSendToSelectedApplicants(this.addedApplicants.map(applicant => applicant.id));
-        }
-      }
-    });
-  }
-
   saveAndSendToCategorizedApplicants(criteria) {
     this.isLoading = true;
-    let notificationTemplate = this.createNotificationTemplate();
+    let notificationTemplate = <NotificationTemplate>this.createNotificationTemplate();
     notificationTemplate.statusCode = this.CONFIRMED;
+    notificationTemplate.notificationTemplateCategorizing = this.getCategorizing();
 
     const categorizedNotificationVo = new CategorizedNotificationVo(notificationTemplate, criteria);
 
@@ -386,6 +362,44 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
+  createNotificationTemplate(): NotificationTemplate {
+    Object.keys(this.notificationForm.controls).forEach(field => {
+      const control = this.notificationForm.get(field);
+      control.markAsTouched({onlySelf: true});
+    });
+
+    if (this.notificationForm.invalid) {
+      return;
+    }
+
+    let notificationTemplate = this.notificationForm.value;
+    notificationTemplate.typeCode = this.USER_DEFINED;
+    notificationTemplate.statusCode = this.DRAFT;
+
+    let sendingDate = this.notificationForm.value.sendingDateGregorian;
+    sendingDate.setHours(this.notificationForm.value.sendingTime.hour);
+    sendingDate.setMinutes(this.notificationForm.value.sendingTime.minute);
+    notificationTemplate.sendingDate = sendingDate;
+
+    notificationTemplate.notificationTemplateContents = this.notificationForm.get('notificationTemplateContents')
+      .value.filter(c => c.body.trim() !== '' || c.title.trim() !== '');
+    notificationTemplate.notificationTemplateContents.forEach(c => {
+      c.title = c.title.replace(/\s/g, " ").trim();
+      c.body = c.body.replace(/\s/g, " ").trim();
+    });
+    return notificationTemplate;
+  }
+
+  cancel() {
+    this.confirmDialogService
+      .confirm(this.translate.instant('notification-management.cancel_confirmation_text'),
+        this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+      if (confirm) {
+        this.goBackToList()
+      }
+    });
+  }
+
   addApplicants() {
     this.addedApplicants = [...this.addedApplicants, ...this.selectedApplicants];
     this.applicants = [];
@@ -399,6 +413,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     this.applicants = [];
     this.selectedApplicants = [];
     this.isSelectAllClicked = false;
+    this.applicantsCount = null;
     this.modalService.dismissAll();
   }
 
@@ -428,7 +443,11 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   open(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', centered: true, size: 'lg'}).result.then((result) => {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true,
+      size: 'lg'
+    }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
@@ -505,5 +524,16 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   getTotalPages(total, size): number {
     return Math.floor((total + size - 1) / size);
+  }
+
+  onSendingDateChange(event) {
+    if (event) {
+      let dateStruct = this.datePicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : this.dateFormatterService.toGregorian(event);
+      let dateStructGreg = this.datePicker.selectedDateType == DateType.Gregorian ? event : this.dateFormatterService.toGregorian(event);
+      let dateStructHijri = this.datePicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : event;
+      this.dateString = this.dateFormatterService.toString(dateStruct);
+      this.notificationForm.controls.sendingDateGregorian.setValue(this.dateFormatterService.toDate(dateStructGreg));
+      this.notificationForm.controls.sendingDateHijri.setValue(this.dateFormatterService.toString(dateStructHijri).split('/').reverse().join(''));
+    }
   }
 }

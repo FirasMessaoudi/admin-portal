@@ -64,7 +64,7 @@ public class JpaNotificationTemplate implements Serializable {
     private boolean forceSending;
 
     @Column(name = "expiration_period_in_minutes")
-    private int expirationPeriodInMinutes;
+    private Integer expirationPeriodInMinutes;
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
@@ -81,6 +81,9 @@ public class JpaNotificationTemplate implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
     private Set<JpaNotificationTemplateParameter> notificationTemplateParameters;
+
+    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
+    private JpaNotificationTemplateCategorizing notificationTemplateCategorizing;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

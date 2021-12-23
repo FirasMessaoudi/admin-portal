@@ -43,12 +43,13 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
      */
     public List<DetailedUserNotificationDto> findUserNotifications(String userId) {
         List<DetailedUserNotificationDto> detailedUserNotifications = new ArrayList<>();
-        List<JpaUserNotification> userNotifications = userNotificationRepository.findByUserIdAndStatusCodeNot(userId, EUserNotificationStatus.EXPIRED.name());
+        List<JpaUserNotification> userNotifications = userNotificationRepository
+                .findByUserIdAndStatusCodeNotOrderByCreationDateDesc(userId, EUserNotificationStatus.EXPIRED.name());
 
         if (userNotifications.isEmpty())
             return Collections.emptyList();
 
-        userNotifications.stream().forEach(
+        userNotifications.forEach(
                 notification -> {
                     Optional<JpaNotificationTemplateContent> notificationTemplateContent = notification.getNotificationTemplate().getNotificationTemplateContents().stream().filter(content -> content.getLang().equalsIgnoreCase(notification.getUserLang())).findAny();
                     detailedUserNotifications.add(DetailedUserNotificationDto.builder()
@@ -60,12 +61,12 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                             .actionRequired(notification.getNotificationTemplate().isActionRequired())
                             .userSpecific(notification.getNotificationTemplate().isUserSpecific())
                             .categoryCode(notification.getNotificationTemplate().getCategoryCode())
-                            .title(notificationTemplateContent.isPresent() ? notificationTemplateContent.get().getTitle() : null)
-                            .actionLabel(notificationTemplateContent.isPresent() ? notificationTemplateContent.get().getActionLabel() : null)
+                            .title(notificationTemplateContent.map(JpaNotificationTemplateContent::getTitle).orElse(null))
+                            .actionLabel(notificationTemplateContent.map(JpaNotificationTemplateContent::getActionLabel).orElse(null))
                             .creationDate(notification.getCreationDate())
                             .build());
                 });
-        return detailedUserNotifications.stream().sorted(Comparator.comparing(DetailedUserNotificationDto::getCreationDate).reversed()).collect(Collectors.toList());
+        return detailedUserNotifications;
     }
 
     /**

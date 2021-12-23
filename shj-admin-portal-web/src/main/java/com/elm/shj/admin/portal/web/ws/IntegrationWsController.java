@@ -32,7 +32,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Controller for exposing web services for external party.
@@ -95,6 +97,8 @@ public class IntegrationWsController {
     private final IncidentTypeLookupService incidentTypeLookupService;
     private final ApplicantChatContactService applicantChatContactService;
     private final ApplicantRitualService applicantRitualService;
+    private final ApplicantPackageService applicantPackageService;
+
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -582,6 +586,7 @@ public class IntegrationWsController {
 
     /**
      * find applicant ritual
+     *
      * @param uin
      * @param companyRitualSeasonId
      * @return
@@ -610,5 +615,33 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
     }
 
+    /**
+     * Updates user preferred language
+     *
+     * @param uin  The UIN of the applicant.
+     * @param lang the preferred language to update user with
+     * @return WsResponse of applicant (in case of success) or error (in case of failure)
+     */
+    @PutMapping("/applicant/language/{uin}/{lang}")
+    public ResponseEntity<WsResponse<?>> updateUserPreferredLanguage(@PathVariable String lang, @PathVariable String uin) {
+        Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(uin);
+        if (applicant.isPresent()) {
+            applicantService.updatePreferredLanguage(uin, lang);
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(null).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
+        }
+    }
+
+    /**
+     * @param uin
+     * @return
+     */
+    @GetMapping("/applicant/applicant-ritual-seasons/{uin}")
+    public ResponseEntity<WsResponse<?>> findApplicantPackageAndRitualSeason(@PathVariable long uin) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageService.findApplicantPackageAndRitualSeason(uin)).build());
+
+    }
 
 }

@@ -96,7 +96,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      *
      * @param applicantId the applicant ID
      * @param command     the request body
-     * @return the lite version of applicant  or empty structure
+     * @return the lite version of applicant or empty structure
      */
     @Transactional
     public int updateApplicantContacts(long applicantId, UpdateApplicantCmd command) {
@@ -110,6 +110,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             } else {
                 updatedRowsCount = applicantContactRepository.updateContactIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, applicantRitual.getId());
             }
+            updatedRowsCount += applicantRepository.markAsRegistered(applicantId);
 
         }
         return updatedRowsCount;
@@ -130,8 +131,21 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      *
      * @return the list of applicants
      */
-    public List<ApplicantDto> findAllHavingActiveRitual(Date today) {
-        return mapList(((ApplicantRepository) getRepository()).findAllApplicantsHavingActiveRitual(today));
+    public List<ApplicantDto> findAllHavingActiveRitual() {
+        return mapList(((ApplicantRepository) getRepository()).findAllApplicantsHavingActiveRitual(new Date()));
+    }
+
+    /**
+     * Count applicants having active ritual
+     *
+     * @return the number of applicants
+     */
+    public long countHavingActiveRitual() {
+        return applicantRepository.countHavingActiveRitual(new Date());
+    }
+
+    public long countAllByCriteria(ApplicantSearchCriteriaDto applicantSearchCriteria, List<Long> excludedIds) {
+        return applicantRepository.count(withApplicantFilter(applicantSearchCriteria, excludedIds));
     }
 
     public List<ApplicantDto> findAllByCriteria(ApplicantSearchCriteriaDto applicantSearchCriteria, List<Long> excludedIds) {
@@ -147,26 +161,29 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
 
+            //Filter registered applicants
+            predicates.add(criteriaBuilder.equal(root.get("registered"), true));
+
             // Retrieve only applicants having one active ritual based on applicant package start date and end date
             Date today = new Date();
             Join<JpaApplicant, JpaApplicantPackageHousing> rituals = root.join("rituals");
             predicates.add(criteriaBuilder.lessThanOrEqualTo(rituals.get("applicantPackage").get("startDate"), today));
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(rituals.get("applicantPackage").get("endDate"), today));
 
-            if (criteria.getCompany() != null) {
+            if (criteria.getCompanyId() != null) {
                 Path<String> companyId = rituals.get("applicantPackage").get("ritualPackage").get("companyRitualSeason").get("company").get("id");
-                predicates.add(criteriaBuilder.equal(companyId, criteria.getCompany()));
+                predicates.add(criteriaBuilder.equal(companyId, criteria.getCompanyId()));
             }
 
-            if (criteria.getCamp() != null) {
+            if (criteria.getCampId() != null) {
                 Join<JpaApplicant, JpaApplicantPackageHousing> applicantPackageHousings = rituals.join("applicantPackage")
                         .join("applicantPackageHousings");
                 Path<String> campId = applicantPackageHousings.get("packageHousing").get("id");
-                predicates.add(criteriaBuilder.equal(campId, criteria.getCamp()));
+                predicates.add(criteriaBuilder.equal(campId, criteria.getCampId()));
             }
 
-            if (criteria.getNationality() != null) {
-                predicates.add(criteriaBuilder.equal(criteriaBuilder.upper(root.get("nationalityCode")), criteria.getNationality().toUpperCase()));
+            if (criteria.getNationalityCode() != null) {
+                predicates.add(criteriaBuilder.equal(criteriaBuilder.upper(root.get("nationalityCode")), criteria.getNationalityCode().toUpperCase()));
             }
 
             if (criteria.getGender() != null) {
@@ -222,5 +239,11 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
 
     }
 
+    @Transactional
+    public void updatePreferredLanguage(String uin, String lang) {
+        Optional<ApplicantDto> applicant = findByUin(uin);
+        log.debug("Applicant ID: {}", applicant.get().getId());
+        applicant.ifPresent(applicantDto -> applicantRepository.updatePreferredLanguage(applicantDto.getId(), lang));
+    }
 }
 

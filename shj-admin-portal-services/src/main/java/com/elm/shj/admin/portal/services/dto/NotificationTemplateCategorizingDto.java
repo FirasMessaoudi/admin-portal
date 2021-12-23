@@ -3,14 +3,16 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * Applicant filter value object.
+ * Dto class for the notification template categorizing domain.
  *
  * @author Slim Ben Hadj
  * @since 1.1.0
@@ -18,17 +20,19 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ApplicantSearchCriteriaDto implements Serializable {
+public class NotificationTemplateCategorizingDto implements Serializable {
 
-    private static final long serialVersionUID = -954603126098503761L;
+    private static final long serialVersionUID = 35290787428528516L;
 
+    private long id;
+    @JsonBackReference
+    private NotificationTemplateDto notificationTemplate;
     private Long campId;
     private Long companyId;
     private String nationalityCode;
     private Integer minAge;
     private Integer maxAge;
     private String gender;
-    private String idNumber;
-    private String uin;
-    private String passportNumber;
+    private Date creationDate;
+    private Date updateDate;
 }

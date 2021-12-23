@@ -623,25 +623,12 @@ public class ItemWriter {
                 // if no cards for digitalId and SEASON
                 if (companyStaffCardDtos.isEmpty()) {
                     CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                    //  companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
                     companyStaffCardDto.setCompanyStaffSuin(companyStaffDigitalId.getSuin());
                     companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
                     companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                     companyStaffCardService.save(companyStaffCardDto);
                     return;
 
-                }
-
-                // find staff cards for same company and same ritual
-                List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
-                if (companyStaffCards.isEmpty()) {
-                    CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                    //companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
-                    companyStaffCardDto.setCompanyStaffSuin(companyStaffDigitalId.getSuin());
-                    companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-                    companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
-                    companyStaffCardService.save(companyStaffCardDto);
-                    return;
                 }
 
                 //find staff cards for different company or different ritual
@@ -653,6 +640,18 @@ public class ItemWriter {
                     companyStaffCardService.saveAll(companyStaffCards2);
                     return;
                 }
+
+                // find staff cards for same company and same ritual
+                List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+                if (companyStaffCards.isEmpty()) {
+                    CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                    companyStaffCardDto.setCompanyStaffSuin(companyStaffDigitalId.getSuin());
+                    companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                    companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                    companyStaffCardService.save(companyStaffCardDto);
+                    return;
+                }
+
 
             } else {
                 // create new digital id for that staff in case he has no digital id for that same season

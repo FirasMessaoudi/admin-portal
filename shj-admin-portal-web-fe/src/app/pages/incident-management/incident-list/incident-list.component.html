@@ -44,73 +44,42 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "incident-management.incident_date" | translate }}</label>
-          <div class="date-picker-range form-inline flex-nowrap">
-
-            <div class="form-group hidden">
-              <div class="input-group">
-                <input name="datepicker"
-                       class="form-control"
-                       ngbDatepicker
-                       #datepicker="ngbDatepicker"
-                       [autoClose]="'outside'"
-                       (dateSelect)="onDateSelection($event)"
-                       [displayMonths]="2"
-                       [dayTemplate]="t1"
-                       outsideDays="hidden"
-                       [footerTemplate]="footerTemplate"
-                       tabindex="-1">
-                <ng-template #t1 let-date let-focused="focused">
-                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                      [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                      (mouseleave)="hoveredDate = null">
-                    {{ date.day }}
-                </span>
-                </ng-template>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="input-group">
-                <div class="input-group-prepend" (click)="datepicker.toggle()">
-                  <span class="form-control prepend">{{'general.from' | translate}}</span>
-                </div>
-                <input #dpFromDate
-                       class="form-control"
-                       placeholder="DD/MM/YYYY"
-                       name="dpFromDate"
-                       [readOnly]="true"
-                       [value]="formatter.format(fromDate)"
-                       (click)="datepicker.toggle()"
-                       (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="input-group">
-                <div class="input-group-prepend" (click)="datepicker.toggle()">
-                  <span class="form-control prepend">{{'general.to' | translate}}</span>
-                </div>
-                <input #dpToDate
-                       class="form-control"
-                       placeholder="DD/MM/YYYY"
-                       name="dpToDate"
-                       [readOnly]="true"
-                       [value]="formatter.format(toDate)"
-                       (click)="datepicker.toggle()"
-                       (input)="toDate = validateInput(toDate, dpToDate.value)">
-                <div class="input-group-append" (click)="datepicker.toggle()">
-                  <span class="input-group-text">
-                    <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
-                  </span>
-                </div>
-              </div>
-            </div>
+          <div class="d-flex">
+          <hijri-gregorian-datepicker [showLabel]="false"
+                                      name="fromDateGregorian"
+                                      buttonClass="dcc-primary"
+                                      class="datepicker {{f.fromDateGregorian.errors && f.fromDateGregorian.touched ? 'is-invalid' : ''}}"
+                                      [(selectedDate)]="selectedFromDate"
+                                      (selectedDateChange)="onFromDateChange($event)"
+                                      [isRequired]="true"
+                                      [maxGreg]="maxFromDateGregorian"
+                                      [maxHijri]="maxFromDateHijri"
+                                      [GregLabel]="'general.cal_greg' | translate"
+                                      [hijriLabel] ="'general.cal_hijri' | translate"
+                                      [selectedDateType]="selectedDateType"
+                                      [disabled]="false"
+                                      [readonly]="true"
+                                      #fromDatePicker>
+          </hijri-gregorian-datepicker>
+          <hijri-gregorian-datepicker [showLabel]="false"
+                                      name="toDateGregorian"
+                                      buttonClass="dcc-primary"
+                                      class="datepicker {{f.toDateGregorian.errors && f.toDateGregorian.touched ? 'is-invalid' : ''}}"
+                                      [(selectedDate)]="selectedToDate"
+                                      (selectedDateChange)="onToDateChange($event)"
+                                      [isRequired]="true"
+                                      [minGreg]="minToDateGregorian"
+                                      [minHijri]="minToDateHijri"
+                                      [maxGreg]="maxToDateGregorian"
+                                      [maxHijri]="maxToDateHijri"
+                                      [GregLabel]="'general.cal_greg' | translate"
+                                      [hijriLabel] ="'general.cal_hijri' | translate"
+                                      [selectedDateType]="selectedDateType"
+                                      [disabled]="false"
+                                      [readonly]="true"
+                                      #toDatePicker>
+          </hijri-gregorian-datepicker>
           </div>
-          <ng-template #footerTemplate>
-            <hr class="my-0">
-            <button class="btn btn-outline-dcc-primary  btn-sm m-2 float-right" type="button"
-                    (click)="datepicker.close()">{{'general.btn_close'| translate}}</button>
-            <button class="btn btn-dcc-primary btn-sm m-2 float-left" type="button"
-                    (click)="clearDate()">{{'general.btn_clear'| translate}}</button>
-          </ng-template>
         </div>
 
         <div class="form-group col">
@@ -170,7 +139,7 @@
           <td
             class="ltr">{{currentLanguage?.startsWith('ar') ? incident.applicantRitual?.applicant?.fullNameAr : incident.applicantRitual?.applicant?.fullNameEn}}</td>
           <td class="ltr">{{incident.typeCode ? lookupService().localizedLabel(incidentTypes, incident.typeCode): '---'}}</td>
-          <td class="ltr">{{incident.creationDate | dateFormat}}</td>
+          <td>{{incident.creationDate | dateTimeFormat}}</td>
           <td class=" d-flex align-items-baseline">
             <span class="status {{buildStatusClass(incident?.statusCode)}} mr-1"></span>
             <span>{{incident.statusCode ? lookupService().localizedLabel(incidentStatuses, incident.statusCode): '---'}}</span>

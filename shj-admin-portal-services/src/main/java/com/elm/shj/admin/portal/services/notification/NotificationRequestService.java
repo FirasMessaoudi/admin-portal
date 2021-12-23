@@ -4,7 +4,6 @@
 package com.elm.shj.admin.portal.services.notification;
 
 import com.elm.shj.admin.portal.orm.entity.*;
-import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.orm.repository.NotificationRequestRepository;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
@@ -145,68 +144,22 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     @Transactional
     public NotificationTemplateDto sendToAllApplicants(NotificationTemplateDto notificationTemplate) {
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
-        List<ApplicantDto> applicants = applicantService.findAllHavingActiveRitual(new Date());
-        List<NotificationRequestDto> notificationRequests = applicants.parallelStream().map(applicant -> NotificationRequestDto
-                        .builder()
-                        .userId(applicant.getDigitalIds().get(0).getUin())
-                        .notificationTemplate(savedNotificationTemplate)
-                        .sendingDate(savedNotificationTemplate.getSendingDate())
-                        .userLang(notificationTemplate.getNotificationTemplateContents()
-                                .stream().filter(c -> applicant.getPreferredLanguage().equalsIgnoreCase(c.getLang()))
-                                .findFirst()
-                                .map(NotificationTemplateContentDto::getLang)
-                                .orElse("en"))
-                        .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
-                        .build())
-                .collect(Collectors.toList());
-        super.saveAll(notificationRequests);
-        return savedNotificationTemplate;
+        List<ApplicantDto> applicants = applicantService.findAllHavingActiveRitual();
+        return sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
     }
 
     @Transactional
     public NotificationTemplateDto sendToCategorizedApplicants(CategorizedNotificationVo categorizedNotificationVo) {
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(categorizedNotificationVo.getNotificationTemplate());
-
         List<ApplicantDto> applicants = applicantService.findAllByCriteria(categorizedNotificationVo.getApplicantSearchCriteria(), null);
-
-        List<NotificationRequestDto> notificationRequests = applicants.parallelStream().map(applicant -> NotificationRequestDto
-                        .builder()
-                        .userId(applicant.getDigitalIds().get(0).getUin())
-                        .notificationTemplate(savedNotificationTemplate)
-                        .sendingDate(savedNotificationTemplate.getSendingDate())
-                        .userLang(savedNotificationTemplate.getNotificationTemplateContents()
-                                .stream().filter(c -> applicant.getPreferredLanguage().equalsIgnoreCase(c.getLang()))
-                                .findFirst()
-                                .map(NotificationTemplateContentDto::getLang)
-                                .orElse("en"))
-                        .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
-                        .build())
-                .collect(Collectors.toList());
-        super.saveAll(notificationRequests);
-        return savedNotificationTemplate;
+        return sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
     }
 
     @Transactional
     public NotificationTemplateDto sendToSelectedApplicants(NotificationTemplateDto notificationTemplate, List<Long> selectedApplicants) {
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
-
         List<ApplicantDto> applicants = applicantService.findByIds(selectedApplicants);
-
-        List<NotificationRequestDto> notificationRequests = applicants.parallelStream().map(applicant -> NotificationRequestDto
-                        .builder()
-                        .userId(applicant.getDigitalIds().get(0).getUin())
-                        .notificationTemplate(savedNotificationTemplate)
-                        .sendingDate(savedNotificationTemplate.getSendingDate())
-                        .userLang(notificationTemplate.getNotificationTemplateContents()
-                                .stream().filter(c -> applicant.getPreferredLanguage().equalsIgnoreCase(c.getLang()))
-                                .findFirst()
-                                .map(NotificationTemplateContentDto::getLang)
-                                .orElse(null))
-                        .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
-                        .build())
-                .collect(Collectors.toList());
-        super.saveAll(notificationRequests);
-        return savedNotificationTemplate;
+        return sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
     }
 
     @Transactional
@@ -224,5 +177,28 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                 .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
                 .build();
         super.save(notificationRequest);
+    }
+
+    private NotificationTemplateDto sendNotificationTemplateToApplicants(NotificationTemplateDto notificationTemplate, List<ApplicantDto> applicants) {
+        List<NotificationRequestDto> notificationRequests = applicants.parallelStream().map(applicant -> NotificationRequestDto
+                        .builder()
+                        .userId(applicant.getDigitalIds().get(0).getUin())
+                        .notificationTemplate(notificationTemplate)
+                        .sendingDate(notificationTemplate.getSendingDate())
+                        .userLang(getNotificationLanguage(notificationTemplate, applicant))
+                        .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
+                        .build())
+                .collect(Collectors.toList());
+        super.saveAll(notificationRequests);
+        return notificationTemplate;
+    }
+
+    private String getNotificationLanguage(NotificationTemplateDto notificationTemplate, ApplicantDto applicant) {
+        String defaultLanguage = "en";
+        return notificationTemplate.getNotificationTemplateContents()
+                .stream().filter(c -> applicant.getPreferredLanguage().equalsIgnoreCase(c.getLang()))
+                .findFirst()
+                .map(NotificationTemplateContentDto::getLang)
+                .orElse(defaultLanguage);
     }
 }

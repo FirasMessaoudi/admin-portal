@@ -1,7 +1,7 @@
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="sectionTitle">
-      {{ "notification-management.user_notifications" | translate }}
+      {{ "notification-management.user_notifications_management" | translate }}
       <button class="btn btn-link shadow-none">
         <svg-icon styleClass="h4 pt-3" icon="search" (click)="isSearchbarCollapsed = !isSearchbarCollapsed"></svg-icon>
       </button>
@@ -268,8 +268,9 @@
             <span class="status mr-1 done severity-badge"></span>
             <span>{{'notification-management.normal' |translate}}</span>
           </td>
-          <td
-            class="ltr">{{template?.sendingDate | dateFormat}}
+          <td>{{template?.sendingDate | dateFormat}}
+            <!-- Uncomment to display notification time
+            {{template?.sendingDate | date: 'HH:mm'}}-->
           </td>
           <td
             class="ltr">{{template?.creationDate | dateFormat}}</td>
