@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
+import com.elm.shj.admin.portal.services.applicant.ApplicantGroupService;
 import com.elm.shj.admin.portal.services.applicant.RitualPackageService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -12,16 +13,16 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * Validator for {@link WithRitualPackage} annotation
+ * Validator for {@link WithGroupReferenceNumber} annotation
  *
- * @author Ahmed Elsayed
+ * @author Ahmed Ali
  * @since 1.1.0
  */
 @Slf4j
-public class WithRitualPackageValidator implements ConstraintValidator<WithRitualPackage, Object> {
+public class WithGroupReferenceNumberValidator implements ConstraintValidator<WithGroupReferenceNumber, Object> {
 
     @Autowired
-    private RitualPackageService ritualPackageService;
+    private ApplicantGroupService  applicantGroupService;
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
@@ -29,7 +30,7 @@ public class WithRitualPackageValidator implements ConstraintValidator<WithRitua
         if (value == null || StringUtils.isBlank(value.toString())) {
             return false;
         } else {
-            return ritualPackageService.existRitualPackageByReferenceNumber(value.toString());
+            return applicantGroupService.getApplicantGroupByReferenceNumber(value.toString())!=null;
         }
     }
 }

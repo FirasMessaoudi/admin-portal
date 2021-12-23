@@ -15,12 +15,13 @@ import java.util.List;
  * @since 1.1.0
  */
 public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaffCard, Long> {
-    List<JpaCompanyStaffCard> findAllByCompanyStaffSuin(String suin);
+    List<JpaCompanyStaffCard> findAllByCompanyStaffDigitalIdSuin(String suin);
 
+    JpaCompanyStaffCard findByCompanyStaffDigitalIdSuinAndStatusCode(String suin, String statusCode);
     //check those two
-    List<JpaCompanyStaffCard> findAllByCompanyStaffSuinAndStatusCodeInAndCompanyRitualSeasonCompanyCodeAndCompanyRitualSeasonRitualSeasonRitualTypeCode(String suin, List<String> statusCodes, String companyCode, String ritualTypeCode);
+    List<JpaCompanyStaffCard> findAllByCompanyStaffDigitalIdSuinAndStatusCodeInAndCompanyRitualSeasonCompanyCodeAndCompanyRitualSeasonRitualSeasonRitualTypeCode(String suin, List<String> statusCodes, String companyCode, String ritualTypeCode);
 
-    List<JpaCompanyStaffCard> findAllByCompanyStaffSuinAndStatusCodeInAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(String suin, List<String> statusCodes, String companyCode, String ritualTypeCode);
+    List<JpaCompanyStaffCard> findAllByCompanyStaffDigitalIdSuinAndStatusCodeInAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(String suin, List<String> statusCodes, String companyCode, String ritualTypeCode);
 
 
 }

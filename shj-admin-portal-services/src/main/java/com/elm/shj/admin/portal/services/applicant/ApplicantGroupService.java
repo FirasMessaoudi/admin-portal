@@ -26,4 +26,12 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         return null;
     }
 
+    public ApplicantGroupDto getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(String referenceNumber,long companyRitualSeasonId) {
+        Optional<JpaApplicantGroup> applicantGroupOptional = applicantGroupRepository.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(referenceNumber,companyRitualSeasonId);
+        if (applicantGroupOptional.isPresent()) {
+            return getMapper().fromEntity(applicantGroupOptional.get(), mappingContext);
+        }
+        return null;
+    }
+
 }

@@ -14,18 +14,18 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Validation annotation to validate that ritual package corresponds to an existing ritual package in the database
+ * Validation annotation to validate that reference number  corresponds to an existing applicant group in the database
  *
- * @author Ahmed Elsayed
+ * @author Ahmed Ali
  * @since 1.1.0
  */
 @Target({METHOD, FIELD})
 @Retention(RUNTIME)
-@Constraint(validatedBy = WithRitualPackageValidator.class)
+@Constraint(validatedBy = WithGroupReferenceNumberValidator.class)
 @Documented
-public @interface WithRitualPackage {
+public @interface WithGroupReferenceNumber {
 
-    String message() default "validation.data.constraints.msg.30009";
+    String message() default "validation.data.constraints.msg.20006";
 
     Class<?>[] groups() default {};
 

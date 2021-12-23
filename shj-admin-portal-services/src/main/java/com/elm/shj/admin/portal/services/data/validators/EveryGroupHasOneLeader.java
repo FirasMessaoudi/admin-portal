@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -14,18 +13,17 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Validation annotation to validate that ritual package corresponds to an existing ritual package in the database
+ * Validation annotation to validate that .every applicant group should have only one leader
  *
- * @author Ahmed Elsayed
+ * @author Ahmed Ali
  * @since 1.1.0
  */
 @Target({METHOD, FIELD})
 @Retention(RUNTIME)
-@Constraint(validatedBy = WithRitualPackageValidator.class)
 @Documented
-public @interface WithRitualPackage {
+public @interface EveryGroupHasOneLeader {
 
-    String message() default "validation.data.constraints.msg.30009";
+    String message() default "validation.data.constraints.msg.30005";
 
     Class<?>[] groups() default {};
 

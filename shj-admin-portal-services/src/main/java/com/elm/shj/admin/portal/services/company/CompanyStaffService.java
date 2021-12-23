@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffLiteDto;
+import com.elm.shj.admin.portal.services.dto.ECompanyStaffTitle;
 import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +57,16 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     public boolean existsByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
         return ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg);
     }
-
+    /**
+     * @param idNumber
+     * @param passportNumber
+     * @param dateGreg
+     * @param dateHijri
+     * @return
+     */
+    public boolean existsByBasicInfoAndTitleIsGroupLeader(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
+        return ((CompanyStaffRepository) getRepository()).existsByBasicInfoAndTitleIsGroupLeader(idNumber, dateHijri, passportNumber, dateGreg, ECompanyStaffTitle.GROUP_LEADER.name());
+    }
     /**
      * @param idNumber
      * @param passportNumber
@@ -67,5 +77,16 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     public CompanyStaffDto findByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
         return getMapper().fromEntity(companyStaffRepository.findByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg), mappingContext);
     }
+    /**
+     * @param idNumber
+     * @param passportNumber
+     * @param dateGreg
+     * @param dateHijri
+     * @return companyStaffDto
+     */
+    public CompanyStaffDto findGroupLeaderByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
+        return getMapper().fromEntity(companyStaffRepository.findGroupLeaderByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg, ECompanyStaffTitle.GROUP_LEADER.name()), mappingContext);
+    }
+
 
 }
