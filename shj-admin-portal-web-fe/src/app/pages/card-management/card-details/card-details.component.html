@@ -21,7 +21,7 @@
         {{'general.operations'| translate}}
         <svg-icon styleClass="h4 ml-3" icon="bars"></svg-icon>
       </button>
-      
+
       <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="operationsNav">
         <button ngbDropdownItem *ngIf="card?.statusCode==cardStatus.ACTIVE"
                 (click)="changeCardStatus(actions.SUSPEND_CARD,'card-management.dialog_suspend_card_confirm_text')">{{'card-management.suspend_card' |translate}}</button>
@@ -310,7 +310,7 @@
   </ul>
 
   <div [ngbNavOutlet]="nav" class="mt-2"></div>
-  <ng-template #elseBlock><span class="col-form-label">  ---    </span></ng-template>
+  <ng-template #elseBlock><span class="col-form-label">---</span></ng-template>
 
 
 </div>

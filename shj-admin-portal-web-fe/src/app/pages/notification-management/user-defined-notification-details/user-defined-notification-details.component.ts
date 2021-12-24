@@ -3,7 +3,7 @@ import {I18nService} from "@dcc-commons-ng/services";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastService} from "@shared/components/toast";
 import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
-import {AuthenticationService, NotificationService} from "@core/services";
+import {AuthenticationService, CardService, NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {Lookup} from "@model/lookup.model";
 import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
@@ -12,6 +12,8 @@ import {combineLatest} from "rxjs";
 import {map} from "rxjs/operators";
 import {NotificationTemplateContent} from "@model/notification-template-content.model";
 import {NgbCalendar, NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
+import {CompanyLite} from "@model/company-lite.model";
+import {PackageHousing} from "@model/package-housing.model";
 
 @Component({
   selector: 'app-user-defined-notification-details',
@@ -32,6 +34,9 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   notificationStatuses: Lookup[] = [];
   creationDate: Date = new Date();
   today: NgbDate;
+  nationalities: Lookup[] = [];
+  companies: CompanyLite[] = [];
+  camps: PackageHousing[] = [];
 
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,
@@ -42,6 +47,7 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
               private notificationService: NotificationService,
               private lookupsService: LookupService,
               private formBuilder: FormBuilder,
+              private cardService: CardService,
               private calendar: NgbCalendar,
               public formatter: NgbDateParserFormatter,
   ) {
@@ -98,6 +104,10 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       this.translatedLanguages = this.languages.filter(c =>
         event.lang.toLowerCase().substr(0, 2) === c.lang.toLowerCase().substr(0, 2));
     });
+
+    this.cardService.findCountries().subscribe(res => this.nationalities = res);
+    this.notificationService.loadCompanies().subscribe(res => this.companies = res);
+    this.notificationService.loadCamps().subscribe(res => this.camps = res);
   }
 
   get currentLanguage(): string {
@@ -180,5 +190,21 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       default:
         return 'new';
     }
+  }
+
+  getCamp(id: number, lang: string): string {
+    const camp = this.camps.find(c => id === c.id);
+    if (camp) {
+      return lang === 'ar' ? camp.locationNameAr : camp.locationNameEn;
+    }
+    return '---';
+  }
+
+  getCompany(id: number, lang: string): string {
+    const company = this.companies.find(c => id === c.id);
+    if (company) {
+      return lang === 'ar' ? company.labelAr : company.labelEn;
+    }
+    return '---';
   }
 }

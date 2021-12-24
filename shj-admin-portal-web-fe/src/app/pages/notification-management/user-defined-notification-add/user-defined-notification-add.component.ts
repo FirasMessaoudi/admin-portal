@@ -107,9 +107,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.translatedLanguages = this.languages.filter(c =>
         event.lang.toLowerCase().substr(0, 2) === c.lang.toLowerCase().substr(0, 2));
     })
-
-    this.notificationService.loadCompanies().subscribe(res => this.companies = res);
-    this.notificationService.loadCamps().subscribe(res => this.camps = res);
   }
 
   ngOnDestroy() {
@@ -195,9 +192,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.translatedLanguages.forEach(lang => this.addTemplateContents(lang.code));
     });
 
-    this.cardService.findCountries().subscribe(result => {
-      this.nationalities = result;
-    });
+    this.cardService.findCountries().subscribe(res => this.nationalities = res);
+    this.notificationService.loadCompanies().subscribe(res => this.companies = res);
+    this.notificationService.loadCamps().subscribe(res => this.camps = res);
   }
 
   get currentLanguage(): string {
@@ -418,10 +415,10 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   search(pageNumber: number): void {
-    this.isLoading = true;
+    this.isSelectLoading = true;
     this.searchSubscription = this.applicantService.search(this.searchForm.value, this.addedApplicants.map(applicant => applicant.id), pageNumber)
       .subscribe(data => {
-        this.isLoading = false;
+        this.isSelectLoading = false;
         this.applicants = [];
         this.pageArray = [];
         this.page = data;
@@ -456,10 +453,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   pageCounter(i: number): Array<number> {
     return new Array(i);
-  }
-
-  loading(): boolean {
-    return this.isLoading || this.isSelectLoading;
   }
 
   isChecked(card) {

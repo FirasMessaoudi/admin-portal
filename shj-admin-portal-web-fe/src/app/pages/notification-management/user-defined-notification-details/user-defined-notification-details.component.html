@@ -199,6 +199,75 @@
 
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
 
+    <div *ngIf="notificationTemplate?.notificationTemplateCategorizing">
+      <hr class="my-4 w-100">
+
+      <div class="content__section mb-4">
+        <label
+          class="form-control-plaintext my-2">{{ "notification-management.recipient_attributes" | translate }}</label>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.camp" | translate }}</label>
+            <label *ngIf="!editMode" class="form-control-plaintext">
+            <span *ngIf="notificationTemplate?.notificationTemplateCategorizing?.campId as value; else elseBlock">
+               {{currentLanguage.startsWith('ar') ? getCamp(value, 'ar') : getCamp(value, 'en')}}
+            </span>
+            </label>
+          </div>
+
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.company" | translate }}</label>
+            <label *ngIf="!editMode" class="form-control-plaintext">
+            <span *ngIf="notificationTemplate?.notificationTemplateCategorizing?.companyId as value; else elseBlock">
+               {{currentLanguage.startsWith('ar') ? getCompany(value, 'ar') : getCompany(value, 'en')}}
+            </span>
+            </label>
+          </div>
+
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.nationality" | translate }}</label>
+            <label *ngIf="!editMode" class="form-control-plaintext">
+            <span
+              *ngIf="notificationTemplate?.notificationTemplateCategorizing?.nationalityCode as value; else elseBlock">
+               {{lookupService().localizedLabel(nationalities, value)}}
+            </span>
+            </label>
+          </div>
+
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.age" | translate }}</label>
+            <label *ngIf="!editMode" class="form-control-plaintext">
+              <span
+                *ngIf="notificationTemplate?.notificationTemplateCategorizing?.minAge || notificationTemplate?.notificationTemplateCategorizing?.maxAge; else elseBlock">
+              <span
+                *ngIf="notificationTemplate?.notificationTemplateCategorizing?.minAge as value">
+                   {{'general.from' | translate}} {{value}}
+              </span>
+              <span
+                *ngIf="notificationTemplate?.notificationTemplateCategorizing?.maxAge as value">
+                   {{'general.to' | translate}} {{value}}
+              </span>
+                </span>
+            </label>
+          </div>
+
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.gender" | translate }}</label>
+            <label *ngIf="!editMode" class="form-control-plaintext">
+            <span
+              *ngIf="notificationTemplate?.notificationTemplateCategorizing?.gender as value; else elseBlock">
+               <span *ngIf="value === 'M'">{{"notification-management.male" | translate}}</span>
+               <span *ngIf="value === 'F'">{{"notification-management.female" | translate}}</span>
+            </span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
     <div class="d-flex justify-content-end">
       <span *ngIf="editMode">
         <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4">
@@ -217,3 +286,5 @@
 
   </div>
 </div>
+
+<ng-template #elseBlock>---</ng-template>

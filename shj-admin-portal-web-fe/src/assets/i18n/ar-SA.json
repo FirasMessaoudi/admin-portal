@@ -461,7 +461,8 @@
     "age_validation_min": "يجب أن تكون هذه القيمة أكبر من {{minLength}}",
     "age_validation_max": "يجب أن تكون هذه القيمة أصغر من {{maxLength}}",
     "age_validation_range": "يجب ألا تتجاوز القيمة الدنيا للعمر القيمة الأقصى",
-    "selected_applicants": "مرسل إليه تم اختياره"
+    "selected_applicants": "مرسل إليه تم اختياره",
+    "recipient_attributes": "صفات المرسل إليهم"
   },
   "printing-management": {
     "title": "إدارة الطباعة",
