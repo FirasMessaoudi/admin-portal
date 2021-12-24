@@ -472,7 +472,8 @@
     "add_no_applicants": "Add {{noApplicants}} Applicant(s)",
     "age_validation_min": "This value must be greater than or equal to {{minLength}}",
     "age_validation_max": "This value must be less than or equal to {{maxLength}}",
-    "age_validation_range": "The minimum age value must not exceed the maximum age value"
+    "age_validation_range": "The minimum age value must not exceed the maximum age value",
+    "selected_applicants": "Applicant(s) Selected"
   },
   "printing-management": {
     "title": "Printing Management",
@@ -492,7 +493,7 @@
     "contains": "Contains",
     "cards": "Card(s)",
     "smart_cards_for_print": "Cards To Be Printed",
-    "selected_smart_card": "Card Was Selected",
+    "selected_smart_card": "Card(s) Selected",
     "batch_collecting_method": "Batch Collecting Method",
     "prepare_request": "Prepare Request",
     "create_batch": "Create Batch",

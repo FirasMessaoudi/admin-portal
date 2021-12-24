@@ -184,31 +184,27 @@
 
                 </div>
               </div>
-
-              <div class="d-flex justify-content-end">
-                <!--            <button class="btn btn-outline-dcc-primary px-4 mr-1" [routerLink]="['/user-defined-notification/list']">
-                              {{"general.btn_back" | translate}}
-                            </button>-->
-                <span *ngIf="editMode">
-              <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4">
-              {{"general.btn_save" | translate}}
-              </button>
-              <button class="btn btn-dcc-primary px-4">
-              {{"notification-management.add_notification" | translate}}
-              </button>
-            </span>
-                <span *ngIf="!editMode">
-                <button class="btn btn-outline-dcc-primary px-4" (click)="enableEditMode()" [disabled]="true">
-                  {{ "general.btn_edit" | translate}}
-                </button>
-            </span>
-              </div>
-
             </ng-template>
           </li>
         </ul>
       </div>
     </form>
+
+    <div class="d-flex justify-content-end">
+      <span *ngIf="editMode">
+        <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4">
+          {{"general.btn_save" | translate}}
+        </button>
+        <button class="btn btn-dcc-primary px-4">
+          {{"notification-management.add_notification" | translate}}
+        </button>
+      </span>
+      <span *ngIf="!editMode">
+        <button class="btn btn-outline-dcc-primary px-4" (click)="enableEditMode()" [disabled]="true">
+          {{ "general.btn_edit" | translate}}
+        </button>
+      </span>
+    </div>
 
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
 

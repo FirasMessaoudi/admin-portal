@@ -177,15 +177,12 @@
     </nav>
 
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary"
-            *ngIf="selectedCards?.length"
-            (click)="resetModal()">
-      {{'printing-management.btn_cancel' | translate  }}
+  <div class="modal-footer" *ngIf="selectedCards?.length">
+    <button type="button" class="btn btn-outline-secondary" (click)="resetModal()">
+      {{'general.btn_cancel' | translate  }}
     </button>
-    <button type="button" class="btn btn-dcc-primary"
-            *ngIf="selectedCards?.length"
-            (click)="addCards()">{{'printing-management.add_no_cards' | translate : {noCards: selectedCards.length} }}
+    <button type="button" class="btn btn-dcc-primary" (click)="addCards()">
+      {{'printing-management.add_no_cards' | translate : {noCards: selectedCards.length} }}
     </button>
   </div>
 </ng-template>

@@ -460,7 +460,8 @@
     "add_no_applicants": "إضافة {{noApplicants}} مرسل إليه",
     "age_validation_min": "يجب أن تكون هذه القيمة أكبر من {{minLength}}",
     "age_validation_max": "يجب أن تكون هذه القيمة أصغر من {{maxLength}}",
-    "age_validation_range": "يجب ألا تتجاوز القيمة الدنيا للعمر القيمة الأقصى"
+    "age_validation_range": "يجب ألا تتجاوز القيمة الدنيا للعمر القيمة الأقصى",
+    "selected_applicants": "مرسل إليه تم اختياره"
   },
   "printing-management": {
     "title": "إدارة الطباعة",
