@@ -102,11 +102,16 @@
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification-severity" | translate }}</label>
           <span *ngIf="!editMode">
-             <label *ngIf="notificationTemplate?.important"
-                    class="form-control-plaintext">{{ "notification-management.important" | translate }}</label>
-             <label *ngIf="!notificationTemplate?.important"
-                    class="form-control-plaintext">{{'notification-management.normal' | translate}}</label>
+            <label *ngIf="notificationTemplate?.important" class="form-control-plaintext">
+              <span class="status mr-1 Suspended severity-badge"></span>
+              <span>{{'notification-management.important' | translate}}</span>
+            </label>
+            <label *ngIf="!notificationTemplate?.important" class="form-control-plaintext">
+              <span class="status mr-1 done severity-badge"></span>
+              <span>{{'notification-management.normal' | translate}}</span>
+            </label>
           </span>
+
           <select *ngIf="editMode" formControlName="severity" class="custom-select">
             <option [ngValue]="true">{{ "notification-management.important" | translate }}</option>
             <option [ngValue]="false">{{ "notification-management.normal" | translate }}</option>
@@ -123,7 +128,9 @@
         <div class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification-status" | translate }}</label>
           <label *ngIf="!editMode" class="form-control-plaintext">
-            {{notificationTemplate?.statusCode ? lookupService().localizedLabel(notificationStatuses, notificationTemplate?.statusCode) : '---'}}</label>
+            <span class="status {{buildStatusClass(notificationTemplate?.statusCode)}} mr-1"></span>
+            <span>{{notificationTemplate?.statusCode ? lookupService().localizedLabel(notificationStatuses, notificationTemplate?.statusCode) : '---'}}</span>
+          </label>
           <select *ngIf="editMode" class="custom-select" formControlName="status">
             <option *ngFor="let notificationStatus of lookupService().localizedItems(notificationStatuses)"
                     [ngValue]="notificationStatus.code">
@@ -190,6 +197,8 @@
       </div>
     </form>
 
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
     <div class="d-flex justify-content-end">
       <span *ngIf="editMode">
         <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4">
@@ -205,8 +214,6 @@
         </button>
       </span>
     </div>
-
-    <div [ngbNavOutlet]="nav" class="mt-2"></div>
 
   </div>
 </div>

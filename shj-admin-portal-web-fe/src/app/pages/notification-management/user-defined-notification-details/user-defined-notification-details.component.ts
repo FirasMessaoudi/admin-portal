@@ -170,4 +170,15 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     const localizedContent = this.notificationTemplate?.notificationTemplateContents[i];
     return !this.editMode && (localizedContent?.title?.length > 0 && localizedContent?.body?.length > 0);
   }
+
+  buildStatusClass(status: any): string {
+    switch (status) {
+      case 'DRAFT':
+        return 'warning';
+      case 'CONFIRMED':
+        return 'done';
+      default:
+        return 'new';
+    }
+  }
 }
