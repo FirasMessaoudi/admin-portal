@@ -79,12 +79,14 @@ public class JpaApplicant implements Serializable {
     @Column(name = "education_level_code")
     private String educationLevelCode;
 
+    @Column(name = "preferred_language")
+    private String preferredLanguage;
+
     @ManyToOne
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "applicant_id")
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantDigitalId> digitalIds;
 
     @LazyCollection(LazyCollectionOption.TRUE)
@@ -101,6 +103,8 @@ public class JpaApplicant implements Serializable {
 
     @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
     private JpaApplicantHealth applicantHealth;
+
+    private boolean registered;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

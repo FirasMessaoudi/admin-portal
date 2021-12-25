@@ -43,4 +43,5 @@ public class ApplicantMainDataDto implements Serializable {
     private String cardStatusCode;
     private String statusCode;
     private String uin;
+    private String preferredLanguage;
 }

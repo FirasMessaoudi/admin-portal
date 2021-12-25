@@ -3,13 +3,10 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
-import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantSearchCriteriaDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
-import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Main controller for applicant management pages
@@ -35,14 +30,7 @@ import java.util.Map;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantController {
 
-    public final static String ISO8601_DATE_PATTERN = "yyyy-MM-dd";
-    public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
-    private static final int APPLICANT_NOT_FOUND_RESPONSE_CODE = 561;
-    private static final String APPLICANT_NOT_FOUND_ERROR_MSG = "not found";
-
     private final ApplicantService applicantService;
-    private final ApplicantLiteService applicantLiteService;
-
 
     @GetMapping("/list/all")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
@@ -63,5 +51,19 @@ public class ApplicantController {
                                              Pageable pageable) {
         log.debug("Find applicants matching criteria...");
         return applicantService.findAllByCriteriaAndNotInExcludedIds(applicantSearchCriteria, excludedIds, pageable);
+    }
+
+    @GetMapping("/count/having-current-ritual")
+    @RolesAllowed(AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT)
+    public long countApplicantHavingCurrentRitual() {
+        log.debug("Count applicants having current ritual...");
+        return applicantService.countHavingActiveRitual();
+    }
+
+    @PostMapping("/count/categorized")
+    @RolesAllowed(AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT)
+    public long countCategorizedApplicants(@RequestBody ApplicantSearchCriteriaDto applicantSearchCriteria) {
+        log.debug("Count applicants having current ritual...");
+        return applicantService.countAllByCriteria(applicantSearchCriteria, null);
     }
 }

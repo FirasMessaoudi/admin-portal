@@ -4,11 +4,13 @@
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
+import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffDigitalId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository for ApplicantDigitalId Table.
@@ -21,5 +23,7 @@ public interface ApplicantDigitalIdRepository extends JpaRepository<JpaApplicant
     @Query("select substring(d.uin, 7, 7) from JpaApplicantDigitalId d where d.uin like :uin% order by substring(d.uin, 7, 7) desc")
     List<String> fetchUinByUinLike(@Param("uin") String uin);
 
-    JpaApplicantDigitalId findByApplicantId(long applicantId);
+    Optional<JpaApplicantDigitalId> findByApplicantIdAndStatusCode(long id, String statusCode);
+
+
 }

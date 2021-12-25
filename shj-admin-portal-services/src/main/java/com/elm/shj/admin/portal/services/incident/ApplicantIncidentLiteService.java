@@ -124,8 +124,7 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
         threadLocalLatestSerialList.get().addAll(0, applicantIncidentLiteRepository.fetchReferenceNumByReferenceNumLike(referenceNumPrefix));
         long nextSequence = CollectionUtils.isEmpty(threadLocalLatestSerialList.get()) ? 1 : Long.parseLong(threadLocalLatestSerialList.get().get(0)) + 1;
         String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 8, "0");
-
-        return    referenceNumPrefix+ serialDigits  ;
+        return referenceNumPrefix+ serialDigits  ;
     }
 
 }

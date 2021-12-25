@@ -26,10 +26,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -91,15 +93,35 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
             if (criteria.getStatus() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("statusCode"), criteria.getStatus()));
             }
-            if (criteria.getCreationDateStart() != null) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("creationDate"), criteria.getCreationDateStart()));
+            if (criteria.getFromDateGregorian() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("creationDate"), atStartOfDay(criteria.getFromDateGregorian())));
             }
-            if (criteria.getCreationDateEnd() != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("creationDate"), criteria.getCreationDateEnd()));
+            if (criteria.getToDateGregorian() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("creationDate"), atEndOfDay(criteria.getToDateGregorian())));
             }
             criteriaQuery.orderBy(criteriaBuilder.desc(root.get("creationDate")));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    private Date atStartOfDay(Date date) {
+        LocalDateTime localDateTime = dateToLocalDateTime(date);
+        LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
+        return localDateTimeToDate(startOfDay);
+    }
+
+    private Date atEndOfDay(Date date) {
+        LocalDateTime localDateTime = dateToLocalDateTime(date);
+        LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
+        return localDateTimeToDate(endOfDay);
+    }
+
+    private static LocalDateTime dateToLocalDateTime(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+
+    private static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     /**
@@ -138,7 +160,6 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         return sftpService.downloadFile(incidentAttachment.get().getFilePath(), APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
     }
 
-
     /**
      * Updates applicant incident
      *
@@ -161,7 +182,10 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         if (notificationTemplate == null || !notificationTemplate.isPresent()) {
             throw new NotFoundException("no Template found for  " + closeIncidentTemplateName);
         }
-        String uin = findById(incidentId).getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin();
-        notificationRequestService.sendIncidentNotification(notificationTemplate.get(), uin);
+
+        ApplicantIncidentDto applicantIncident = findById(incidentId);
+        String uin = applicantIncident.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin();
+        String preferredLanguage = applicantIncident.getApplicantRitual().getApplicant().getPreferredLanguage();
+        notificationRequestService.sendIncidentNotification(notificationTemplate.get(), uin, preferredLanguage);
     }
 }

@@ -7,6 +7,8 @@ import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffCardRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffCardDto;
 import com.elm.shj.admin.portal.services.dto.ECardStatus;
+import com.elm.shj.admin.portal.services.dto.CompanyStaffLiteDto;
+import com.elm.shj.admin.portal.services.dto.ECardStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service handling company staff card
@@ -36,9 +39,18 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public List<CompanyStaffCardDto> findByDigitalId(String suin) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuin(suin));
+        return mapList(companyStaffCardRepository.findAllByCompanyStaffDigitalIdSuin(suin));
     }
 
+    /**
+     * find company staff cards by suin
+     *
+     * @param suin
+     * @return
+     */
+    public  CompanyStaffCardDto  findByDigitalIdAndStatusCodeActive(String suin) {
+        return getMapper().fromEntity(companyStaffCardRepository.findByCompanyStaffDigitalIdSuinAndStatusCode(suin,ECardStatus.ACTIVE.name()), mappingContext);
+     }
     /**
      * find company staff cards
      *
@@ -48,7 +60,7 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public List<CompanyStaffCardDto> findByDigitalIdCompanyCodeRitualType(String suin, String companyCode, String ritualType) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndStatusCodeInAndCompanyRitualSeasonCompanyCodeAndCompanyRitualSeasonRitualSeasonRitualTypeCode(suin, cardStatus, companyCode, ritualType));
+        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndCompanyRitualSeasonCompanyCodeAndCompanyRitualSeasonRitualSeasonRitualTypeCode(suin, companyCode, ritualType, cardStatus));
     }
 
     /**
@@ -58,6 +70,10 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public List<CompanyStaffCardDto> findByDigitalIdAndDifferentCompanyOrRitual(String suin, String companyCode, String ritualType) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndStatusCodeInAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(suin, cardStatus, companyCode, ritualType));
+        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(suin, companyCode, ritualType, cardStatus));
     }
+
+
+
+
 }

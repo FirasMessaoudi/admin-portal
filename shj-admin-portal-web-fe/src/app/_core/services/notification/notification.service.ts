@@ -60,7 +60,7 @@ export class NotificationService {
   }
 
   /**
-   * Finds user notification notification Template by its ID from the server.
+   * Finds user notification template by its ID from the server.
    *
    * @param templateId the template ID
    * @return {Observable<PrintRequest>} The template identified by its ID.

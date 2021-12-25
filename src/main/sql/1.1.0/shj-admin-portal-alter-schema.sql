@@ -768,17 +768,13 @@ CREATE TABLE shc_portal.shc_user_notification
 );
 GO
 
-
-GO
 ALTER TABLE shc_portal.shc_user_notification
     ADD user_lang varchar(45) not null;
 GO
 
-
 ALTER TABLE shc_portal.shc_notification_template
-    ADD expiration_period_in_minutes INT;
+    ADD expiration_period_in_minutes INT NULL;
 GO
-
 
 ALTER TABLE shc_portal.shc_applicant_digital_id
     ADD status_code varchar(20);
@@ -1150,4 +1146,32 @@ GO
 
 Alter table shc_portal.shc_notification_category_lk
     add mandatory bit NOT NULL default 0;
+GO
+
+ALTER TABLE shc_portal.shc_applicant
+    ADD preferred_language VARCHAR(2) DEFAULT 'en' NOT NULL;
+GO
+
+ALTER TABLE shc_portal.shc_applicant
+    ADD registered bit NOT NULL default 0;
+GO
+
+/*--------------------------------------------------------
+--  ddl for notification template categorizing table
+--------------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_notification_template_categorizing')
+create table shc_portal.shc_notification_template_categorizing
+(
+    id                       int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    notification_template_id int           NOT NULL,
+    camp_id                  int           NULL,
+    company_id               int           NULL,
+    nationality_code         VARCHAR(20)   NULL,
+    min_age                  int           NULL,
+    max_age                  int           NULL,
+    gender                   varchar(1)    NULL,
+    creation_date            smalldatetime NOT NULL default current_timestamp,
+    update_date              smalldatetime NULL,
+    CONSTRAINT fk_notification_template_categorizing_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id)
+);
 GO

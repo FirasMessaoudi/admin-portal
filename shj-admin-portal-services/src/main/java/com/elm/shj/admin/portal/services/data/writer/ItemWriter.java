@@ -13,6 +13,10 @@ import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
+import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
+import com.elm.shj.admin.portal.services.data.reader.EExcelItemReaderErrorType;
+import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
+import com.elm.shj.admin.portal.services.data.validators.WithGroupReferenceNumber;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -54,10 +58,11 @@ public class ItemWriter {
     private final Map<EDataSegment, Class> repositoryRegistry = new HashMap<>();
     @SuppressWarnings("rawtypes")
     private final Map<EDataSegment, IGenericMapper> mapperRegistry = new HashMap<>();
-
+    private final Map<String,Long > uniqueGroupLeader = new HashMap<>();
     private final CycleAvoidingMappingContext mappingContext;
     private final ApplicationContext context;
     private final ApplicantService applicantService;
+    private final ApplicantGroupService applicantGroupService;
     private final ApplicantHealthRepository applicantHealthRepository;
     private final ApplicantHealthSpecialNeedsRepository applicantHealthSpecialNeedsRepository;
     private final DataRequestRecordRepository dataRequestRecordRepository;
@@ -69,7 +74,7 @@ public class ItemWriter {
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantContactService applicantContactService;
     private final CompanyStaffService companyStaffService;
-    private final CompanyStaffDigitalIdService  companyStaffDigitalIdService;
+    private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
     private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
 
@@ -87,7 +92,6 @@ public class ItemWriter {
         repositoryRegistry.put(EDataSegment.APPLICANT_DISEASE_DATA, ApplicantHealthDiseaseRepository.class);
         repositoryRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, ApplicantRitualRepository.class);
         repositoryRegistry.put(EDataSegment.STAFF_MAIN_DATA, CompanyStaffRepository.class);
-
         // mapper registry initialization
         mapperRegistry.put(EDataSegment.APPLICANT_DATA, Objects.requireNonNull(findMapper(ApplicantDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_RELATIVES_DATA, Objects.requireNonNull(findMapper(ApplicantRelativeDto.class)));
@@ -109,12 +113,13 @@ public class ItemWriter {
      */
     @Transactional
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public <T, S> void write(List<AbstractMap.SimpleEntry<Row, T>> items, DataSegmentDto dataSegment, long dataRequestId) {
-        if(dataSegment.getId()==EDataSegment.APPLICANT_EMERGENCY_DATA.getId()){
+    public <T, S> List<DataValidationResult> write(List<AbstractMap.SimpleEntry<Row, T>> items, DataSegmentDto dataSegment, long dataRequestId) {
+        List<DataValidationResult> dataValidationResults = new ArrayList<>();
+        if (dataSegment.getId() == EDataSegment.APPLICANT_EMERGENCY_DATA.getId()) {
             JpaRepository applicantRepository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.APPLICANT_DATA));
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
             List<S> savedItems = new ArrayList<>();
-            items.forEach(entry ->{
+            items.forEach(entry -> {
                 ApplicantEmergencyDto emergencyDto = (ApplicantEmergencyDto) entry.getValue();
                 ApplicantDto applicantDto = getApplicantFromEmergency(emergencyDto);
                 ApplicantRitualEmergencyDto applicantRitualEmergencyDto = emergencyDto.getApplicantRitualEmergencyDto();
@@ -131,7 +136,7 @@ public class ItemWriter {
                                 .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
                                 .itemId(Long.parseLong(BeanUtils.getProperty(item, "id")))
                                 .build());
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         ReflectionUtils.handleReflectionException(e);
                     }
                 });
@@ -155,13 +160,64 @@ public class ItemWriter {
                 });
             });
             savedItems.forEach(item -> {
-                if (item.getClass().isAssignableFrom(JpaApplicant.class)){
+                if (item.getClass().isAssignableFrom(JpaApplicant.class)) {
                     ((JpaApplicant) item).getRituals().get(0).setDataRequestRecord(((JpaApplicant) item).getDataRequestRecord());
                     applicantRepository.save(item);
                 }
 
             });
-        }else {
+        } else if (dataSegment.getId() == EDataSegment.STAFF_APPLICANT_GROUP_DATA.getId()) {
+
+            items.forEach(entry -> {
+                //mark row with error
+                Class clazz = StaffApplicantGroupDto.class;
+                int cellIndex = 0;
+                for (Field field : clazz.getDeclaredFields()) {
+                    if (field.isAnnotationPresent(WithGroupReferenceNumber.class))
+                        cellIndex = field.getAnnotation(CellIndex.class).index();
+                }
+                StaffApplicantGroupDto staffApplicantGroupDto = (StaffApplicantGroupDto) entry.getValue();
+                ApplicantBasicInfoDto applicantBasicInfoDto = new ApplicantBasicInfoDto();
+                applicantBasicInfoDto.setIdNumber(staffApplicantGroupDto.getIdNumber());
+                applicantBasicInfoDto.setPassportNumber(staffApplicantGroupDto.getPassportNumber());
+                applicantBasicInfoDto.setDateOfBirthGregorian(staffApplicantGroupDto.getDateOfBirthGregorian());
+                applicantBasicInfoDto.setDateOfBirthHijri(staffApplicantGroupDto.getDateOfBirthHijri());
+                CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(staffApplicantGroupDto.getCompanyCode(), staffApplicantGroupDto.getRitualTypeCode(), staffApplicantGroupDto.getSeason());
+                if (companyRitualSeasonDto != null) {
+                    ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(staffApplicantGroupDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
+                    if (applicantGroupDto != null) {
+                        CompanyStaffDto groupLeader = companyStaffService.findGroupLeaderByBasicInfo(staffApplicantGroupDto.getStaffIdNumber(), staffApplicantGroupDto.getStaffPassportNumber(), staffApplicantGroupDto.getStaffDateOfBirthGregorian(), staffApplicantGroupDto.getStaffDateOfBirthHijri());
+                        applicantGroupDto.setGroupLeader(groupLeader);
+                        if (uniqueGroupLeader.containsKey(applicantGroupDto.getReferenceNumber())){
+                            if(uniqueGroupLeader.get(applicantGroupDto.getReferenceNumber())!=groupLeader.getId()){
+                                dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(cellIndex + 1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_GROUP_WITH_DIFFERENT_LEADERS.getMessage())).valid(false).build());
+
+                            }
+                        }else{
+                            uniqueGroupLeader.put(applicantGroupDto.getReferenceNumber(),groupLeader.getId());
+                        }
+                        ApplicantDto applicantDto = applicantService.findByBasicInfo(applicantBasicInfoDto);
+                        if (applicantDto != null) {
+                            groupApplicantListService.registerUserToGroup(applicantDto.getDigitalIds().get(0).getUin(), staffApplicantGroupDto.getGroupReferenceNumber());
+
+                        } else {
+                            //this applicant not found in db in time of processing
+                            log.error("this applicant not found in db in time of processing");
+                        }
+                        applicantGroupService.save(applicantGroupDto);
+                    } else {
+                        //this applicant group not found in db in time of processing
+                        log.error("this applicant group not found in db in time of processing");
+                    }
+
+                } else {
+                    //no companyRitualSeason Record is found with these details  in db in time of processing
+                    log.error("no companyRitualSeason Record is found with these details  in db in time of processing");
+                    return;
+                }
+
+            });
+        } else {
             if (dataSegment.getId() < EDataSegment.STAFF_MAIN_DATA.getId()) {
                 // update applicant related attributes
                 items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
@@ -170,33 +226,32 @@ public class ItemWriter {
                 //Temporary for testing only : staff ritual
                 items.forEach(entry -> updateCompanyStaffRitualData(entry.getValue()));
 
-            }
+            } else {
+                // save all items and build data records
 
-            // save all items and build data records
-            if (dataSegment.getId() != EDataSegment.STAFF_RITUAL_DATA.getId()) {
                 List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
                 List<S> savedItems = new ArrayList<>();
                 JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
                 items.forEach(entry -> {
-                    S savedItem =null;
+                    S savedItem = null;
                     //this part is to handle staff main data
-                    if(dataSegment.getId()==EDataSegment.STAFF_MAIN_DATA.getId()){
-                        CompanyStaffDto staff =(CompanyStaffDto) entry.getValue() ;
-                        CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(),staff.getPassportNumber(),staff.getDateOfBirthGregorian(),staff.getDateOfBirthHijri());
+                    if (dataSegment.getId() == EDataSegment.STAFF_MAIN_DATA.getId()) {
+                        CompanyStaffDto staff = (CompanyStaffDto) entry.getValue();
+                        CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
                         // if record exists already in DB we need to update it
                         if (existingStaff != null) {
                             staff.setId(existingStaff.getId());
                             staff.setDigitalIds(existingStaff.getDigitalIds());
-                           // staff.setCompany(existingStaff.getCompany());
+                            // staff.setCompany(existingStaff.getCompany());
                             staff.setDataRequestRecord(existingStaff.getDataRequestRecord());
                             staff.setApplicantGroups(existingStaff.getApplicantGroups());
                             staff.setCreationDate(existingStaff.getCreationDate());
                             savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(staff, mappingContext));
-                        }else{
+                        } else {
                             savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
                         }
-                    }else{
-                          savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
+                    } else {
+                        savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
 
                     }
                     savedItems.add(savedItem);
@@ -236,6 +291,7 @@ public class ItemWriter {
                 repository.saveAll(savedItems);
             }
         }
+        return dataValidationResults;
     }
 
 
@@ -416,9 +472,9 @@ public class ItemWriter {
                         applicantRitual.setApplicantPackage(generatedApplicantRitual.getApplicantPackage());
                         applicantRitual.setCreationDate(generatedApplicantRitual.getCreationDate());
 
-                        if (applicantRitual.getGroupReferenceNumber() != null) {
-                            groupApplicantListService.registerUserToGroup(applicantUin.toString(), applicantRitual.getGroupReferenceNumber());
-                        }
+//                        if (applicantRitual.getGroupReferenceNumber() != null) {
+//                            groupApplicantListService.registerUserToGroup(applicantUin.toString(), applicantRitual.getGroupReferenceNumber());
+//                        }
                     }
 
                     if (applicantRitualField != null) {
@@ -567,36 +623,35 @@ public class ItemWriter {
                 // if no cards for digitalId and SEASON
                 if (companyStaffCardDtos.isEmpty()) {
                     CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                    //  companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
                     companyStaffCardDto.setCompanyStaffSuin(companyStaffDigitalId.getSuin());
                     companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
                     companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                     companyStaffCardService.save(companyStaffCardDto);
                     return;
 
-                }
-
-                // find staff cards for same company and same ritual
-                List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
-                if (companyStaffCards.isEmpty()) {
-                    CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                    //companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
-                    companyStaffCardDto.setCompanyStaffSuin(companyStaffDigitalId.getSuin());
-                    companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-                    companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
-                    companyStaffCardService.save(companyStaffCardDto);
-                    return;
                 }
 
                 //find staff cards for different company or different ritual
                 List<CompanyStaffCardDto> companyStaffCards2 = companyStaffCardService.findByDigitalIdAndDifferentCompanyOrRitual(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
                 if (CollectionUtils.isNotEmpty(companyStaffCards2)) {
                     companyStaffCards2.forEach(c -> {
-                            c.setStatusCode(ECardStatus.EXPIRED.name());
+                        c.setStatusCode(ECardStatus.EXPIRED.name());
                     });
                     companyStaffCardService.saveAll(companyStaffCards2);
                     return;
                 }
+
+                // find staff cards for same company and same ritual
+                List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+                if (companyStaffCards.isEmpty()) {
+                    CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                    companyStaffCardDto.setCompanyStaffSuin(companyStaffDigitalId.getSuin());
+                    companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                    companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                    companyStaffCardService.save(companyStaffCardDto);
+                    return;
+                }
+
 
             } else {
                 // create new digital id for that staff in case he has no digital id for that same season

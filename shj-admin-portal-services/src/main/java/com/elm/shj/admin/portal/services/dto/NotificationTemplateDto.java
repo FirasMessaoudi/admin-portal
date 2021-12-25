@@ -35,12 +35,13 @@ public class NotificationTemplateDto implements Serializable {
     private boolean enabled;
     private boolean userSpecific;
     private boolean forceSending;
-    private int expirationPeriodInMinutes;
+    private Integer expirationPeriodInMinutes;
 
     private Set<NotificationTemplateContentDto> notificationTemplateContents;
     private Set<NotificationRequestDto> notificationRequests;
     private Set<UserNotificationDto> userNotifications;
     private Set<NotificationTemplateParameterDto> notificationTemplateParameters;
+    private NotificationTemplateCategorizingDto notificationTemplateCategorizing;
 
     private Date creationDate;
     private Date updateDate;

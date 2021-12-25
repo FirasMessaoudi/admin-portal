@@ -3,10 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.unit.RitualUnitService;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -18,8 +15,6 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class SeasonYearValidator implements ConstraintValidator<SeasonYear, Object> {
 
-
-
     /**
      * {@inheritDoc}
      */
@@ -28,4 +23,5 @@ public class SeasonYearValidator implements ConstraintValidator<SeasonYear, Obje
         int seasonYear = (Integer) value;
         return value != null && (DateUtils.getCurrentHijriYear()-1 <= seasonYear &&  seasonYear<= (DateUtils.getCurrentHijriYear()+1));
     }
+
 }
