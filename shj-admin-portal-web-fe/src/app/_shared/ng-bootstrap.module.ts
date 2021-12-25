@@ -12,7 +12,7 @@ import { NgbModalModule,
     NgbToastModule,
     NgbTooltipModule,
     NgbAccordionModule,
-    NgbDropdownModule,
+    NgbDropdownModule
  } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({

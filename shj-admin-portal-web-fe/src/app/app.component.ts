@@ -24,7 +24,6 @@ import {environment} from "@env/environment";
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'dcc-elm-app';
-
   rippleInitListener: any;
   rippleMouseDownListener: any;
 
