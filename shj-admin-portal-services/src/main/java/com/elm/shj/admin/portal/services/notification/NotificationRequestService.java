@@ -29,8 +29,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class NotificationRequestService extends GenericService<JpaNotificationRequest, NotificationRequestDto, Long> {
+
     public static final String PASSWORD_EXPIRATION_TEMPLATE_NAME = "PASSWORD_EXPIRATION";
     public static final String PASSWORD_EXPIRY_TEMPLATE_DAYS_TO_EXPIRY_PARAMETER_NAME = "days_to_expiry";
+    private static final  String NOTIFICATION_DEFAULT_LANGUAGE = "ar";
+
     private final NotificationTemplateService notificationTemplateService;
     private final NotificationRequestRepository notificationRequestRepository;
     private final UserNotificationRepository userNotificationRepository;
@@ -144,22 +147,34 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     @Transactional
     public NotificationTemplateDto sendToAllApplicants(NotificationTemplateDto notificationTemplate) {
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
+        if (!notificationTemplate.isEnabled()) {
+            return savedNotificationTemplate;
+        }
         List<ApplicantDto> applicants = applicantService.findAllHavingActiveRitual();
-        return sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
+        sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
+        return savedNotificationTemplate;
     }
 
     @Transactional
     public NotificationTemplateDto sendToCategorizedApplicants(CategorizedNotificationVo categorizedNotificationVo) {
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(categorizedNotificationVo.getNotificationTemplate());
+        if (!categorizedNotificationVo.getNotificationTemplate().isEnabled()) {
+            return savedNotificationTemplate;
+        }
         List<ApplicantDto> applicants = applicantService.findAllByCriteria(categorizedNotificationVo.getApplicantSearchCriteria(), null);
-        return sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
+        sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
+        return savedNotificationTemplate;
     }
 
     @Transactional
     public NotificationTemplateDto sendToSelectedApplicants(NotificationTemplateDto notificationTemplate, List<Long> selectedApplicants) {
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
+        if (!notificationTemplate.isEnabled()) {
+            return savedNotificationTemplate;
+        }
         List<ApplicantDto> applicants = applicantService.findByIds(selectedApplicants);
-        return sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
+        sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
+        return savedNotificationTemplate;
     }
 
     @Transactional
@@ -172,14 +187,14 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                         .stream().filter(c -> preferredLanguage.equalsIgnoreCase(c.getLang()))
                         .findFirst()
                         .map(NotificationTemplateContentDto::getLang)
-                        .orElse("en"))
+                        .orElse(NOTIFICATION_DEFAULT_LANGUAGE))
                 .sendingDate(new Date())
                 .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
                 .build();
         super.save(notificationRequest);
     }
 
-    private NotificationTemplateDto sendNotificationTemplateToApplicants(NotificationTemplateDto notificationTemplate, List<ApplicantDto> applicants) {
+    private void sendNotificationTemplateToApplicants(NotificationTemplateDto notificationTemplate, List<ApplicantDto> applicants) {
         List<NotificationRequestDto> notificationRequests = applicants.parallelStream().map(applicant -> NotificationRequestDto
                         .builder()
                         .userId(applicant.getDigitalIds().get(0).getUin())
@@ -190,15 +205,13 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                         .build())
                 .collect(Collectors.toList());
         super.saveAll(notificationRequests);
-        return notificationTemplate;
     }
 
     private String getNotificationLanguage(NotificationTemplateDto notificationTemplate, ApplicantDto applicant) {
-        String defaultLanguage = "en";
         return notificationTemplate.getNotificationTemplateContents()
                 .stream().filter(c -> applicant.getPreferredLanguage().equalsIgnoreCase(c.getLang()))
                 .findFirst()
                 .map(NotificationTemplateContentDto::getLang)
-                .orElse(defaultLanguage);
+                .orElse(NOTIFICATION_DEFAULT_LANGUAGE);
     }
 }

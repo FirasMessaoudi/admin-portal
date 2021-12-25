@@ -219,7 +219,7 @@
     @include py(3);
 
     &.active {
-
+      font-weight: 700;
     }
   }
 
@@ -719,20 +719,6 @@ textarea {
 
 /*=======================*/
 
-.ngb-tp-hour {
-  [dir="rtl"] & {
-    order: 2 !important;
-  }
-}
-
-.ngb-tp-spacer {
-  [dir="rtl"] & {
-    order: 1 !important;
-  }
-}
-
-/*=======================*/
-
 .statistics{
   font-weight: bold;
 
@@ -745,7 +731,7 @@ textarea {
   .bg-appdownloads{
     background-color: #E5CA81;
   }
-  
+
   .text-pilgrims{
     color: #4B8747;
   }

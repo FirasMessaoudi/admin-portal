@@ -37,25 +37,22 @@
             <label class="col-form-label">{{ "notification-management.notification_date" | translate }}
               <span class="text-danger">*</span>
             </label>
-            <div class="d-flex">
-              <hijri-gregorian-datepicker [showLabel]="false"
-                                          name="sendingDateGregorian"
-                                          buttonClass="dcc-primary"
-                                          class="datepicker {{f.sendingDateGregorian.errors && f.sendingDateGregorian.touched ? 'is-invalid' : ''}}"
-                                          [(selectedDate)]="selectedSendingDate"
-                                          (selectedDateChange)="onSendingDateChange($event)"
-                                          [isRequired]="true"
-                                          [minGreg]="minSendingDateGregorian"
-                                          [minHijri]="minSendingDateHijri"
-                                          [GregLabel]="'general.cal_greg' | translate"
-                                          [hijriLabel]="'general.cal_hijri' | translate"
-                                          [selectedDateType]="selectedDateType"
-                                          [disabled]="false"
-                                          [readonly]="true"
-                                          #datePicker>
-              </hijri-gregorian-datepicker>
-              <ngb-timepicker class="ml-2" formControlName="sendingTime" [spinners]="false" required></ngb-timepicker>
-            </div>
+            <app-hijri-gregorian-datetimepicker [showLabel]="false"
+                                                placeHolder="{{currentLanguage.startsWith('ar') ? 'HH:MM DD/MM/YYYY' : 'DD/MM/YYYY HH:MM'}}"
+                                                name="sendingDate"
+                                                formControlName="sendingDate"
+                                                buttonClass="dcc-primary"
+                                                class="datepicker {{f.sendingDate.errors && f.sendingDate.touched ? 'is-invalid' : ''}}"
+                                                [isRequired]="true"
+                                                [minGreg]="minSendingDateGregorian"
+                                                [minHijri]="minSendingDateHijri"
+                                                [GregLabel]="'general.cal_greg' | translate"
+                                                [hijriLabel]="'general.cal_hijri' | translate"
+                                                [selectedDateType]="selectedDateType"
+                                                [readonly]="true"
+                                                inputDatetimeFormat="dd/MM/yyyy HH:mm"
+                                                #datePicker>
+            </app-hijri-gregorian-datetimepicker>
           </div>
 
           <div class="form-group col">
@@ -110,7 +107,8 @@
             <label class="col-form-label">{{ "notification-management.notification-category" | translate }}
               <span class="text-danger">*</span>
             </label>
-            <select class="custom-select" formControlName="categoryCode">
+            <select class="custom-select" formControlName="categoryCode"
+                    [class.is-invalid]="f.categoryCode.invalid && f.categoryCode.touched">>
               <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
               <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
                       [ngValue]="notificationCategory.code">
@@ -133,7 +131,11 @@
             <label class="col-form-label">{{ "notification-management.notification_description" | translate }}
               <span class="text-danger">*</span>
             </label>
-            <input type="text" formControlName="description" class="form-control" maxlength="250"/>
+            <input type="text" formControlName="description" class="form-control" maxlength="250"
+                   [class.is-invalid]="f.description.invalid && f.description.touched">
+            <div *ngIf="f.description.invalid && f.description.touched" class="invalid-feedback">
+              <div *ngIf="f.description.errors.required">{{'general.field_validation_required' | translate}}</div>
+            </div>
           </div>
 
           <div class="form-group col">
@@ -173,13 +175,15 @@
               <a ngbNavLink>{{language.label}}
                 <span
                   *ngIf="language.code.toLowerCase() === 'ar' || language.code.toLowerCase() === 'en'"
-                  class="text-danger">*</span>
+                  class="text-danger font-weight-normal">*</span>
                 <svg-icon
-                  *ngIf="notificationTemplateContents['controls'][i].value.title.length > 0 &&
-                  notificationTemplateContents['controls'][i].value.body.length > 0 &&
-                  notificationTemplateContents['controls'][i].valid"
+                  *ngIf="notificationTemplateContents['controls'][i]['controls'].title.value.length > 0 && notificationTemplateContents['controls'][i]['controls'].body.value.length > 0"
                   styleClass="fa-w-20 ml-2"
                   icon="check-circle"></svg-icon>
+                <svg-icon *ngIf="notificationTemplateContents['controls'][i].invalid && notificationTemplateContents['controls'][i]['controls'].title.touched
+                && notificationTemplateContents['controls'][i]['controls'].body.touched"
+                          styleClass="fa-w-20 ml-2 text-danger"
+                          icon="exclamation-circle"></svg-icon>
               </a>
               <ng-template ngbNavContent>
                 <div formArrayName="notificationTemplateContents">
@@ -194,7 +198,7 @@
                       <input type="text" formControlName="title" class="form-control" maxlength="50"
                              [class.is-invalid]="notificationTemplateContents['controls'][i]['controls']['title'].invalid &&notificationForm &&
                                  notificationTemplateContents['controls'][i]['controls']['title'].touched"
-                      />
+                      >
                       <div
                         *ngIf="notificationForm.invalid && notificationTemplateContents['controls'][i]['controls']['title'].touched"
                         class="invalid-feedback">
@@ -313,7 +317,7 @@
                   <input type="number" class="form-control" formControlName="minAge"
                          onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 2"
                          step="1"
-                         [class.is-invalid]="cf.age.touched && (cf.age['controls']['minAge'].invalid || cf.age.errors)"/>
+                         [class.is-invalid]="cf.age.touched && (cf.age['controls']['minAge'].invalid || cf.age.errors)">
                   <div *ngIf="cf.age.invalid && cf.age.touched" class="invalid-feedback">
                     <div
                       *ngIf="cf.age['controls']['minAge'].errors?.min">
@@ -336,7 +340,7 @@
                   <input type="number" class="form-control" formControlName="maxAge"
                          onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 2"
                          step="1"
-                         [class.is-invalid]="cf.age['controls']['maxAge'].invalid && cf.age['controls']['maxAge'].touched"/>
+                         [class.is-invalid]="cf.age['controls']['maxAge'].invalid && cf.age['controls']['maxAge'].touched">
                   <div *ngIf="cf.age.invalid && cf.age.touched" class="invalid-feedback">
                     <div
                       *ngIf="cf.age['controls']['maxAge'].errors?.min">
@@ -398,7 +402,7 @@
         <ng-template #showAdd let-modal>
           <div class="modal-header">
             <h4> {{ "notification-management.add_user_defined_notifications" | translate }}</h4>
-            <button type="button" class="close" aria-label="Close" (click)="resetModal()">
+            <button type="button" class="close" aria-label="Close" (click)="resetSelectionModal()">
               <span aria-hidden="true" class="h2">&times;</span>
             </button>
           </div>
@@ -409,20 +413,20 @@
                 <label class="col-form-label">{{'card-management.applicant_id' | translate }}</label>
                 <input id="uin" formControlName="uin" class="form-control"
                        onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length < 14"
-                       min="0" step="1"/>
+                       min="0" step="1">
               </div>
 
               <div class="form-group col">
                 <label class="col-form-label">{{'printing-management.id_number' | translate }}</label>
                 <input formControlName="idNumber" class="form-control"
                        onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length < 10"
-                       min="0" step="1"/>
+                       min="0" step="1">
               </div>
 
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.passport_number' | translate }}</label>
                 <input id="passportNumber" formControlName="passportNumber" type="text" class="form-control"
-                       onkeypress="return this.value.length <=9"/>
+                       onkeypress="return this.value.length <= 9">
               </div>
 
               <div class="form-group col-12">
@@ -518,7 +522,7 @@
 
           </div>
           <div class="modal-footer" *ngIf="selectedApplicants?.length">
-            <button type="button" class="btn btn-outline-secondary" (click)="resetModal()">
+            <button type="button" class="btn btn-outline-secondary" (click)="resetSelectionModal()">
               {{'general.btn_cancel' | translate }}
             </button>
 
@@ -611,18 +615,17 @@
         <button class="btn btn-outline-dcc-primary px-4 mr-1" (click)="cancel()">
           {{"general.btn_cancel" | translate}}</button>
         <span>
-      <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4"
-              [disabled]="!notificationForm.valid || !categorizingForm.valid"
-              (click)="saveAsDraft()">
-        {{"notification-management.save_as_draft" | translate}}
-      </button>
-      <button class="btn btn-dcc-primary px-4"
-              [disabled]="!notificationForm.valid || !categorizingForm.valid"
-              (click)="openLg(showSend);getApplicantsCount();">
-        {{"notification-management.save_and_send" | translate}}
-      </button>
-    </span>
+          <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4"
+                  (click)="saveAsDraft()">
+            {{"notification-management.save_as_draft" | translate}}
+          </button>
+          <button class="btn btn-dcc-primary px-4"
+                  (click)="openSaveAndSendLg(showSend);getApplicantsCount();">
+            {{"notification-management.save_and_send" | translate}}
+          </button>
+        </span>
       </div>
+
     </div>
   </div>
 </div>

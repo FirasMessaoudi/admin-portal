@@ -1,13 +1,20 @@
-import {AbstractControl, FormArray, FormGroup, ValidatorFn} from "@angular/forms";
+import {AbstractControl, FormGroup} from "@angular/forms";
 
-export function requiredArabicAndEnglishContentValidator(): ValidatorFn {
-  return (formArray: FormArray): { [key: string]: any } | null => {
-    let valid: boolean = true;
-    formArray.controls.filter(c => c.value.lang.toLowerCase() === 'ar' || c.value.lang.toLowerCase() === 'en')
-      .forEach((contents: FormGroup) => {
-        valid = valid && contents.value.title.length > 0 && contents.value.body.length > 0;
-      });
-    return valid ? null : {requiredContent: 'Arabic and english content required'}
+export function validateIsRequired(group: FormGroup) {
+  let required: boolean;
+  let lang = group.get('lang').value;
+  const title = group.get('title');
+  let body = group.get('body');
+  if (lang == "EN" || lang == "AR") {
+    if (title?.value?.length == 0) {
+      title.setErrors({required: true});
+      required = true;
+    }
+    if (body?.value?.length == 0) {
+      body.setErrors({required: true});
+      required = true
+    }
+    return required ? {required: true} : null;
   }
 }
 

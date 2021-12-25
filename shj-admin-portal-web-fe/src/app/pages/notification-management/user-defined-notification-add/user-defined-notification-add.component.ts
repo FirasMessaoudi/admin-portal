@@ -20,11 +20,10 @@ import {ApplicantService} from "@core/services/applicant/applicant.service";
 import {DateType} from "@shared/modules/hijri-gregorian-datepicker/datepicker/consts";
 import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
 import {
-  HijriGregorianDatepickerComponent
-} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datepicker.component";
+  HijriGregorianDatetimepickerComponent
+} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datetimepicker.component";
 import {
-  ageRangeValidator,
-  requiredArabicAndEnglishContentValidator
+  ageRangeValidator, validateIsRequired
 } from "@pages/notification-management/notification-custom-validator";
 
 @Component({
@@ -70,7 +69,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   selectedDateType: any;
   applicantsCount: number;
 
-  @ViewChild('datePicker') datePicker: HijriGregorianDatepickerComponent;
+  @ViewChild('datePicker') datePicker: HijriGregorianDatetimepickerComponent;
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
@@ -126,10 +125,8 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       userSpecific: false,
       forceSending: false,
       description: ['', Validators.required],
-      sendingDateGregorian: ['', Validators.required],
-      sendingDateHijri: ['', Validators.required],
-      sendingTime: [null, Validators.required],
-      notificationTemplateContents: this.formBuilder.array([], requiredArabicAndEnglishContentValidator()),
+      sendingDate: [null, Validators.required],
+      notificationTemplateContents: this.formBuilder.array([]),
       notificationTemplateCategorizing: null
     });
   }
@@ -160,7 +157,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       lang: language,
       title: '',
       body: ''
-    });
+    }, {validator: validateIsRequired});
     this.notificationTemplateContents.push(content);
   }
 
@@ -214,6 +211,10 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   saveAsDraft() {
+    this.checkFormValidity();
+    if (this.notificationForm.invalid) {
+      return;
+    }
     this.confirmDialogService.confirm(
       this.translate.instant('notification-management.save_changes_confirmation_text'),
       this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
@@ -271,6 +272,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   saveAndSend() {
+    if (this.notificationForm.invalid) {
+      return;
+    }
     if (this.applicantsCount > 0) {
       if (this.checkedCriteria === 0) {
         this.saveAndSendToAll();
@@ -359,24 +363,27 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
-  createNotificationTemplate(): NotificationTemplate {
+  checkFormValidity() {
     Object.keys(this.notificationForm.controls).forEach(field => {
       const control = this.notificationForm.get(field);
       control.markAsTouched({onlySelf: true});
     });
 
-    if (this.notificationForm.invalid) {
-      return;
+    Object.keys(this.notificationTemplateContents['controls'][0]['controls']).forEach(field => {
+      this.notificationForm.controls.notificationTemplateContents['controls'].forEach(control => control.get(field).markAsTouched({onlySelf: true}))
+    });
+
+    if (this.notificationForm.controls.notificationTemplateContents['controls'].find(c => c['errors'])) {
+      this.activeId = this.translatedLanguages
+        .findIndex(lang => lang.code == this.notificationForm.controls.notificationTemplateContents['controls'].find(c => c['errors'])?.value.lang) + 1;
     }
+  }
+
+  createNotificationTemplate(): NotificationTemplate {
 
     let notificationTemplate = this.notificationForm.value;
     notificationTemplate.typeCode = this.USER_DEFINED;
     notificationTemplate.statusCode = this.DRAFT;
-
-    let sendingDate = this.notificationForm.value.sendingDateGregorian;
-    sendingDate.setHours(this.notificationForm.value.sendingTime.hour);
-    sendingDate.setMinutes(this.notificationForm.value.sendingTime.minute);
-    notificationTemplate.sendingDate = sendingDate;
 
     notificationTemplate.notificationTemplateContents = this.notificationForm.get('notificationTemplateContents')
       .value.filter(c => c.body.trim() !== '' || c.title.trim() !== '');
@@ -405,11 +412,15 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  resetModal() {
+  resetSelectionModal() {
     this.searchForm.reset()
     this.applicants = [];
     this.selectedApplicants = [];
     this.isSelectAllClicked = false;
+    this.modalService.dismissAll();
+  }
+
+  resetConfirmationModal() {
     this.applicantsCount = null;
     this.modalService.dismissAll();
   }
@@ -502,7 +513,24 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      this.resetModal();
+      this.resetSelectionModal();
+    });
+  }
+
+  openSaveAndSendLg(content) {
+    this.checkFormValidity();
+    if (this.notificationForm.invalid) {
+      return;
+    }
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true,
+      size: 'lg'
+    }).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      this.resetConfirmationModal();
     });
   }
 
@@ -528,5 +556,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.notificationForm.controls.sendingDateGregorian.setValue(this.dateFormatterService.toDate(dateStructGreg));
       this.notificationForm.controls.sendingDateHijri.setValue(this.dateFormatterService.toString(dateStructHijri).split('/').reverse().join(''));
     }
+    console.log(event);
   }
 }

@@ -17,7 +17,9 @@
     <form [formGroup]="notificationForm">
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.creation_date" | translate }}</label>
+          <label class="col-form-label">{{ "notification-management.creation_date" | translate }}
+            <span *ngIf="editMode" class="text-danger">*</span>
+          </label>
           <div *ngIf="editMode" class="input-group">
             <label class="form-control disabled-control">{{creationDate | dateTimeFormat}}</label>
             <div class="input-group-append">
@@ -31,50 +33,67 @@
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification_date" | translate }}</label>
+          <label class="col-form-label">{{ "notification-management.notification_date" | translate }}
+            <span *ngIf="editMode" class="text-danger">*</span>
+          </label>
           <label *ngIf="!editMode"
                  class="form-control-plaintext">{{notificationTemplate?.sendingDate | dateTimeFormat}}</label>
-          <div *ngIf="editMode" class="input-group">
-            <input #dpNotificationDate
-                   class="form-control"
-                   (click)="d.toggle()"
-                   placeholder="DD/MM/YYYY"
-                   name="dpNotificationDate"
-                   ngbDatepicker #d="ngbDatepicker"
-                   [readOnly]="true"
-                   [minDate]="today">
-            <div class="input-group-append" (click)="d.toggle()">
-                  <span class="input-group-text">
-                    <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
-                  </span>
-            </div>
-          </div>
+          <app-hijri-gregorian-datetimepicker [showLabel]="false"
+                                              *ngIf="editMode"
+                                              placeHolder="{{currentLanguage.startsWith('ar') ? 'HH:MM DD/MM/YYYY' : 'DD/MM/YYYY HH:MM'}}"
+                                              name="sendingDate"
+                                              formControlName="sendingDate"
+                                              buttonClass="dcc-primary"
+                                              class="datepicker {{f.sendingDate.errors && f.sendingDate.touched ? 'is-invalid' : ''}}"
+                                              [isRequired]="true"
+                                              [minGreg]="minSendingDateGregorian"
+                                              [minHijri]="minSendingDateHijri"
+                                              [GregLabel]="'general.cal_greg' | translate"
+                                              [hijriLabel]="'general.cal_hijri' | translate"
+                                              [selectedDateType]="selectedDateType"
+                                              [readonly]="true"
+                                              inputDatetimeFormat="dd/MM/yyyy HH:mm"
+                                              #datePicker>
+          </app-hijri-gregorian-datetimepicker>
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.enabled" | translate }}</label>
+          <label class="col-form-label">{{ "notification-management.enabled" | translate }}
+            <span *ngIf="editMode" class="text-danger">*</span>
+          </label>
+
           <span *ngIf="!editMode">
              <label *ngIf="notificationTemplate?.enabled"
                     class="form-control-plaintext">{{'general.label_yes' | translate}}</label>
              <label *ngIf="!notificationTemplate?.enabled"
                     class="form-control-plaintext">{{'general.label_no' | translate}}</label>
           </span>
-          <div *ngIf="editMode" class="radio-group form-control-plaintext d-flex font-weight-normal">
-            <div class="radio-item align-items-baseline d-flex mr-5">
-              <input formControlName="enabled" class="mr-2" name="enabled" [value]="true" type="radio"
-                     id="customRadioInline01">
-              <label for="customRadioInline01">{{'general.label_yes' | translate}}</label>
-            </div>
-            <div class="radio-item align-items-baseline d-flex">
-              <input formControlName="enabled" class="mr-2" name="enabled" [value]="false" type="radio"
-                     id="customRadioInline02">
-              <label for="customRadioInline02">{{'general.label_no' | translate}}</label>
-            </div>
+
+          <div *ngIf="editMode" class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
+            <label ngbButtonLabel class="btn" [class.btn-select]="notificationForm.value.enabled">
+              <input ngbButton
+                     name="enabled"
+                     type="radio"
+                     formControlName="enabled"
+                     [value]="true">
+              {{'notification-management.enabled' | translate}}
+            </label>
+            <label ngbButtonLabel class="btn" [class.btn-select]="!notificationForm.value.enabled">
+              <input ngbButton
+                     name="enabled"
+                     type="radio"
+                     formControlName="enabled"
+                     [value]="false">
+              {{'notification-management.disabled' | translate}}
+            </label>
           </div>
+
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification_type" | translate }}</label>
+          <label class="col-form-label">{{ "notification-management.notification_type" | translate }}
+            <span *ngIf="editMode" class="text-danger">*</span>
+          </label>
           <span *ngIf="!editMode">
              <label *ngIf="!notificationTemplate?.userSpecific"
                     class="form-control-plaintext">{{ "notification-management.general" | translate }}</label>
@@ -88,7 +107,9 @@
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification-category" | translate }}</label>
+          <label class="col-form-label">{{ "notification-management.notification-category" | translate }}
+            <span *ngIf="editMode" class="text-danger">*</span>
+          </label>
           <label *ngIf="!editMode" class="form-control-plaintext">
             {{notificationTemplate?.categoryCode ? lookupService().localizedLabel(notificationCategories, notificationTemplate?.categoryCode) : '---'}}</label>
           <select *ngIf="editMode" class="custom-select" formControlName="category">
@@ -100,7 +121,9 @@
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification-severity" | translate }}</label>
+          <label class="col-form-label">{{ "notification-management.notification-severity" | translate }}
+            <span *ngIf="editMode" class="text-danger">*</span>
+          </label>
           <span *ngIf="!editMode">
             <label *ngIf="notificationTemplate?.important" class="form-control-plaintext">
               <span class="status mr-1 Suspended severity-badge"></span>
@@ -118,29 +141,31 @@
           </select>
         </div>
 
-        <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.notification_description" | translate }}</label>
-          <input *ngIf="editMode" type="text" formControlName="description" class="form-control"/>
+        <div class="form-group {{editMode ? 'col-sm-12 col-md-12 col-lg-8': 'col'}}">
+          <label class="col-form-label">{{ "notification-management.notification_description" | translate }}
+            <span *ngIf="editMode" class="text-danger">*</span>
+          </label>
+          <input *ngIf="editMode" type="text" formControlName="description" class="form-control"
+                 [class.is-invalid]="f.description.invalid && f.description.touched">
+          <div *ngIf="editMode && (f.description.invalid && f.description.touched)" class="invalid-feedback">
+            <div *ngIf="f.description.errors.required">{{'general.field_validation_required' | translate}}</div>
+          </div>
           <label *ngIf="!editMode"
                  class="form-control-plaintext text-break">{{notificationTemplate?.description ? notificationTemplate?.description : '---'}}</label>
         </div>
 
-        <div class="form-group col">
+        <div *ngIf="!editMode" class="form-group col">
           <label class="col-form-label">{{ "notification-management.notification-status" | translate }}</label>
-          <label *ngIf="!editMode" class="form-control-plaintext">
+          <label class="form-control-plaintext">
             <span class="status {{buildStatusClass(notificationTemplate?.statusCode)}} mr-1"></span>
             <span>{{notificationTemplate?.statusCode ? lookupService().localizedLabel(notificationStatuses, notificationTemplate?.statusCode) : '---'}}</span>
           </label>
-          <select *ngIf="editMode" class="custom-select" formControlName="status">
-            <option *ngFor="let notificationStatus of lookupService().localizedItems(notificationStatuses)"
-                    [ngValue]="notificationStatus.code">
-              {{notificationStatus.label}}
-            </option>
-          </select>
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "notification-management.force_sending" | translate }}</label>
+          <label class="col-form-label">{{ "notification-management.force_sending" | translate }}
+            <span *ngIf="editMode" class="text-danger">*</span>
+          </label>
           <span *ngIf="!editMode">
              <label *ngIf="notificationTemplate?.forceSending"
                     class="form-control-plaintext">{{ "general.dialog_confirmation_ok" | translate }}</label>
@@ -159,8 +184,15 @@
           <li *ngFor="let language of translatedLanguages; let i = index" [ngbNavItem]="i + 1">
             <a ngbNavLink>{{language.label}}
               <span *ngIf="editMode && (language.code.toLowerCase() === 'ar' || language.code.toLowerCase() === 'en')"
-                    class="text-danger">*</span>
-              <svg-icon *ngIf="checkContentIsValid(i)" styleClass="fa-w-20 ml-2 check" icon="check-circle"></svg-icon>
+                    class="text-danger font-weight-normal">*</span>
+              <svg-icon
+                *ngIf="checkContentIsValid(i) || (notificationTemplateContents['controls'][i]['controls'].title.value.length > 0 && notificationTemplateContents['controls'][i]['controls'].body.value.length > 0)"
+                styleClass="fa-w-20 ml-2"
+                icon="check-circle"></svg-icon>
+              <svg-icon *ngIf="notificationTemplateContents['controls'][i].invalid && notificationTemplateContents['controls'][i]['controls'].title.touched
+                && notificationTemplateContents['controls'][i]['controls'].body.touched"
+                        styleClass="fa-w-20 ml-2 text-danger"
+                        icon="exclamation-circle"></svg-icon>
             </a>
             <ng-template ngbNavContent>
               <div formArrayName="notificationTemplateContents">
@@ -171,7 +203,16 @@
                         *ngIf="editMode && (language.code.toLowerCase() === 'ar' || language.code.toLowerCase() === 'en')"
                         class="text-danger">*</span>
                     </label>
-                    <input *ngIf="editMode" type="text" formControlName="title" class="form-control"/>
+                    <input *ngIf="editMode" type="text" formControlName="title" class="form-control"
+                           [class.is-invalid]="notificationTemplateContents['controls'][i]['controls']['title'].invalid &&notificationForm &&
+                                 notificationTemplateContents['controls'][i]['controls']['title'].touched">
+                    <div
+                      *ngIf="editMode && (notificationForm.invalid && notificationTemplateContents['controls'][i]['controls']['title'].touched)"
+                      class="invalid-feedback">
+                      <div
+                        *ngIf="notificationTemplateContents['controls'][i]['controls']['title'].errors?.required">{{'general.field_validation_required' | translate}}
+                      </div>
+                    </div>
                     <label *ngIf="!editMode"
                            class="form-control-plaintext">{{notificationTemplate?.notificationTemplateContents[i]?.title ? notificationTemplate?.notificationTemplateContents[i]?.title : '---'}}</label>
                   </div>
@@ -183,7 +224,15 @@
                         class="text-danger">*</span>
                     </label>
                     <textarea *ngIf="editMode" type="text" formControlName="body" class="form-control"
-                              rows="3"></textarea>
+                              rows="3" [class.is-invalid]="notificationTemplateContents['controls'][i]['controls']['body'].invalid &&notificationForm &&
+                                 notificationTemplateContents['controls'][i]['controls']['body'].touched"></textarea>
+                    <div
+                      *ngIf="editMode && (notificationForm.invalid && notificationTemplateContents['controls'][i]['controls']['body'].touched)"
+                      class="invalid-feedback">
+                      <div
+                        *ngIf="notificationTemplateContents['controls'][i]['controls']['body'].errors?.required">{{'general.field_validation_required' | translate}}
+                      </div>
+                    </div>
                     <label *ngIf="!editMode"
                            class="form-control-plaintext text-break">{{notificationTemplate?.notificationTemplateContents[i]?.body ? notificationTemplate?.notificationTemplateContents[i]?.body : '---'}}
                     </label>
@@ -268,7 +317,9 @@
       </div>
     </div>
 
-    <div class="d-flex justify-content-end">
+    <div class="d-flex {{editMode ? 'justify-content-between' : 'justify-content-end'}}">
+      <button *ngIf="editMode" class="btn btn-outline-dcc-primary px-4 mr-1" (click)="cancel()">
+        {{"general.btn_cancel" | translate}}</button>
       <span *ngIf="editMode">
         <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4">
           {{"general.btn_save" | translate}}
@@ -278,12 +329,13 @@
         </button>
       </span>
       <span *ngIf="!editMode">
-        <button class="btn btn-outline-dcc-primary px-4" (click)="enableEditMode()" [disabled]="true">
+        <button class="btn btn-outline-dcc-primary px-4" (click)="enableEditMode()"
+                [disabled]="notificationTemplate?.statusCode !== 'DRAFT'">
           {{ "general.btn_edit" | translate}}
         </button>
       </span>
-    </div>
 
+    </div>
   </div>
 </div>
 
