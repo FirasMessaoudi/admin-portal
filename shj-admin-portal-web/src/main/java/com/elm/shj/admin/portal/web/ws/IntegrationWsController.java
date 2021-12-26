@@ -644,4 +644,14 @@ public class IntegrationWsController {
 
     }
 
+    /**
+     * @param uin
+     * @return
+     */
+    @GetMapping("/applicant/latest-ritual-season/{uin}")
+    public ResponseEntity<WsResponse<?>> findLatestApplicantRitualSeason(@PathVariable long uin) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageService.findLatestApplicantRitualSeason(uin)).build());
+
+    }
+
 }
