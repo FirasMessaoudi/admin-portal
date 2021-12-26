@@ -425,7 +425,7 @@
     "enabled": "Enabled",
     "disabled": "Disabled",
     "system_notifications": "System Notifications",
-    "system_notifications_management": "System Defined Notification Management",
+    "system_notifications_management": "System Notification Management",
     "user_notifications": "User Notifications",
     "user_notifications_management": "User Defined Notification Management",
     "new_notification": "Create Notification",

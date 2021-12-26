@@ -83,6 +83,17 @@ export class NotificationListComponent implements OnInit {
     //Trim input values and replace all whitespaces characters
     payload.notificationTitle = payload.notificationTitle.replace(/\s/g, " ").trim();
     payload.notificationBody = payload.notificationBody.replace(/\s/g, " ").trim();
+    if(payload.notificationName!=""){
+      const matchedCode = this.localizedNotificationNames.find(element => {
+        if (element.label.toLowerCase().includes(payload.notificationName?.toLowerCase())) {
+          return element;
+        }
+      });
+      payload.notificationName = matchedCode?.code;
+    }else{
+      payload.notificationName=null;
+    }
+
 
     this.searchSubscription = this.notificationService.list(0, payload).subscribe(data => {
       this.notificationTemplates = [];
