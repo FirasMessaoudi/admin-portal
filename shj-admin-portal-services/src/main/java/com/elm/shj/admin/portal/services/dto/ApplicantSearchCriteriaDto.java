@@ -22,9 +22,9 @@ public class ApplicantSearchCriteriaDto implements Serializable {
 
     private static final long serialVersionUID = -954603126098503761L;
 
-    private Long camp;
-    private Long company;
-    private String nationality;
+    private Long campId;
+    private Long companyId;
+    private String nationalityCode;
     private Integer minAge;
     private Integer maxAge;
     private String gender;

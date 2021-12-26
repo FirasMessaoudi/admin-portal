@@ -8,9 +8,7 @@ import * as moment_ from 'moment-hijri';
 
 const moment = momentjs;
 
-
 const momentHijri = moment_;
-
 
 @Component({
   encapsulation: ViewEncapsulation.None,

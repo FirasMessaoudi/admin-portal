@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from "@angular/router";
 import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
 import {Lookup} from "@model/lookup.model";
-import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService, CardService, NotificationService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
@@ -20,53 +20,11 @@ import {ApplicantService} from "@core/services/applicant/applicant.service";
 import {DateType} from "@shared/modules/hijri-gregorian-datepicker/datepicker/consts";
 import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
 import {
-  HijriGregorianDatepickerComponent
-} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datepicker.component";
-
-function nonEmptyBody(c: AbstractControl): { [key: string]: any } | null {
-  let title = c.get('title');
-  let body = c.get('body');
-  let lang = c.get('lang');
-  if (title.pristine || body.pristine) {
-    return null;
-  }
-  if (lang.value.toLowerCase() === 'ar' || lang.value.toLowerCase() === 'en') {
-    if (title.value.trim().length === 0) {
-      title.setErrors({'required': true});
-    }
-    if (body.value.trim().length === 0) {
-      body.setErrors({'required': true});
-    }
-  }
-  return null;
-}
-
-export function requiredArabicAndEnglishContent(): ValidatorFn {
-  return (formArray: FormArray): { [key: string]: any } | null => {
-    let valid: boolean = true;
-    formArray.controls.filter(c => c.value.lang.toLowerCase() === 'ar' || c.value.lang.toLowerCase() === 'en')
-      .forEach((contents: FormGroup) => {
-        valid = valid && contents.value.title.length > 0 && contents.value.body.length > 0;
-      });
-    return valid ? null : {requiredContent: 'Arabic and english content required'}
-  }
-}
-
-function invalidAgeRange(c: AbstractControl): { [key: string]: any } | null {
-  let minAge = c.get('minAge');
-  let maxAge = c.get('maxAge');
-  if (minAge.value === null || maxAge.value === null) {
-    return null;
-  }
-  if (minAge.pristine || maxAge.pristine) {
-    return null;
-  }
-  if (minAge.value > maxAge.value) {
-    c.setErrors({invalidAgeRange: 'Invalid age range'});
-    return {invalidAgeRange: 'Invalid age range'};
-  }
-  return null;
-}
+  HijriGregorianDatetimepickerComponent
+} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datetimepicker.component";
+import {
+  ageRangeValidator, validateIsRequired
+} from "@pages/notification-management/notification-custom-validator";
 
 @Component({
   selector: 'app-user-defined-notification-add',
@@ -82,7 +40,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   notificationCategories: Lookup[] = [];
   localizedNotificationCategories: Lookup[] = [];
   notificationForm: FormGroup;
-  categorizedApplicantsForm: FormGroup;
+  categorizingForm: FormGroup;
   languages: Lookup[] = [];
   translatedLanguages: Lookup[] = [];
   activeId;
@@ -104,14 +62,14 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   isSelectAllClicked: boolean;
   isSelectLoading: boolean;
   isAllSelected: boolean;
-
   selectedSendingDate: NgbDateStruct;
   minSendingDateGregorian: NgbDateStruct;
   minSendingDateHijri: NgbDateStruct;
   dateString: string;
   selectedDateType: any;
+  applicantsCount: number;
 
-  @ViewChild('datePicker') datePicker: HijriGregorianDatepickerComponent;
+  @ViewChild('datePicker') datePicker: HijriGregorianDatetimepickerComponent;
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
@@ -131,36 +89,23 @@ export class UserDefinedNotificationAddComponent implements OnInit {
               private dateFormatterService: DateFormatterService) {
   }
 
-
   ngOnInit(): void {
     // calendar default;
-    let toDayGregorian = this.dateFormatterService.todayGregorian();
-    let toDayHijri = this.dateFormatterService.todayHijri();
-    this.minSendingDateGregorian = {
-      year: toDayGregorian.year,
-      month: toDayGregorian.month,
-      day: toDayGregorian.day
-    };
-    this.minSendingDateHijri = {
-      year: toDayHijri.year,
-      month: toDayHijri.month,
-      day: toDayHijri.day
-    };
+    let todayGregorian = this.dateFormatterService.todayGregorian();
+    let todayHijri = this.dateFormatterService.todayHijri();
+    this.minSendingDateGregorian = todayGregorian;
+    this.minSendingDateHijri = todayHijri;
     this.selectedDateType = DateType.Gregorian;
 
     this.loadLookups();
-    this.initForm();
-    this.initCategorizedApplicantsForm();
+    this.initCreateForm();
+    this.initCategorizingForm();
     this.initSearchForm();
 
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.translatedLanguages = this.languages.filter(c =>
         event.lang.toLowerCase().substr(0, 2) === c.lang.toLowerCase().substr(0, 2));
     })
-
-    this.notificationService.loadCompanies().subscribe(res => this.companies = res);
-
-    this.notificationService.loadCamps().subscribe(res => this.camps = res);
   }
 
   ngOnDestroy() {
@@ -172,18 +117,30 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     }
   }
 
-  initForm() {
+  initCreateForm() {
     this.notificationForm = this.formBuilder.group({
       categoryCode: [null, Validators.required],
       important: false,
       enabled: true,
       userSpecific: false,
       forceSending: false,
-      description: '',
-      sendingDateGregorian: ['', Validators.compose([Validators.required])],
-      sendingDateHijri: ['', Validators.compose([Validators.required])],
-      sendingTime: [null, Validators.compose([Validators.required])],
-      notificationTemplateContents: this.formBuilder.array([], requiredArabicAndEnglishContent())
+      description: ['', Validators.required],
+      sendingDate: [null, Validators.required],
+      notificationTemplateContents: this.formBuilder.array([]),
+      notificationTemplateCategorizing: null
+    });
+  }
+
+  initCategorizingForm() {
+    this.categorizingForm = this.formBuilder.group({
+      campId: null,
+      companyId: null,
+      nationalityCode: null,
+      age: this.formBuilder.group({
+        minAge: ['', [Validators.min(0), Validators.max(120)]],
+        maxAge: ['', [Validators.min(0), Validators.max(120)]],
+      }, {validator: ageRangeValidator}),
+      gender: null
     });
   }
 
@@ -198,9 +155,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   addTemplateContents(language: string) {
     const content = this.formBuilder.group({
       lang: language,
-      title: [''],
-      body: ['']
-    }, {validator: nonEmptyBody});
+      title: '',
+      body: ''
+    }, {validator: validateIsRequired});
     this.notificationTemplateContents.push(content);
   }
 
@@ -213,7 +170,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   get cf() {
-    return this.categorizedApplicantsForm.controls;
+    return this.categorizingForm.controls;
   }
 
   loadLookups() {
@@ -232,26 +189,13 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.translatedLanguages.forEach(lang => this.addTemplateContents(lang.code));
     });
 
-    this.cardService.findCountries().subscribe(result => {
-      this.nationalities = result;
-    });
+    this.cardService.findCountries().subscribe(res => this.nationalities = res);
+    this.notificationService.loadCompanies().subscribe(res => this.companies = res);
+    this.notificationService.loadCamps().subscribe(res => this.camps = res);
   }
 
   get currentLanguage(): string {
     return this.i18nService.language;
-  }
-
-  initCategorizedApplicantsForm() {
-    this.categorizedApplicantsForm = this.formBuilder.group({
-      camp: null,
-      company: null,
-      nationality: null,
-      age: this.formBuilder.group({
-        minAge: ['', [Validators.min(0), Validators.max(120)]],
-        maxAge: ['', [Validators.min(0), Validators.max(120)]],
-      }, {validator: invalidAgeRange}),
-      gender: null
-    });
   }
 
   get canSeeAddUpdateUserDefinedNotification(): boolean {
@@ -267,30 +211,82 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   saveAsDraft() {
+    this.checkFormValidity();
+    if (this.notificationForm.invalid) {
+      return;
+    }
     this.confirmDialogService.confirm(
       this.translate.instant('notification-management.save_changes_confirmation_text'),
       this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
       if (confirm) {
-        const notificationTemplate = this.createNotificationTemplate();
-
-        this.notificationService.saveAsDraft(notificationTemplate).subscribe(res => {
-          if (res.hasOwnProperty('errors') && res.errors) {
-            this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
-            Object.keys(this.notificationForm.controls).forEach(field => {
-              console.log('looking for validation errors for : ' + field);
-              if (res.errors[field]) {
-                const control = this.notificationForm.get(field);
-                control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
-                control.markAsTouched({onlySelf: true});
-              }
-            });
-          } else {
-            this.toastr.success(this.translate.instant("notification-management.saved_successfully"), this.translate.instant("general.dialog_add_title"));
-            this.router.navigate(['/user-defined-notification/list']);
-          }
-        });
+        this.proceedSavingTemplateAsDraft();
       }
     });
+  }
+
+  proceedSavingTemplateAsDraft() {
+    let notificationTemplate = this.createNotificationTemplate();
+    if (this.checkedCriteria === 1) {
+      notificationTemplate.notificationTemplateCategorizing = this.getCategorizing();
+    }
+
+    this.notificationService.saveAsDraft(notificationTemplate).subscribe(res => {
+      if (res.hasOwnProperty('errors') && res.errors) {
+        this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
+        Object.keys(this.notificationForm.controls).forEach(field => {
+          console.log('looking for validation errors for : ' + field);
+          if (res.errors[field]) {
+            const control = this.notificationForm.get(field);
+            control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
+            control.markAsTouched({onlySelf: true});
+          }
+        });
+      } else {
+        this.toastr.success(this.translate.instant("notification-management.saved_successfully"), this.translate.instant("general.dialog_add_title"));
+        this.router.navigate(['/user-defined-notification/list']);
+      }
+    });
+  }
+
+  public dismiss() {
+    this.modalService.dismissAll();
+  }
+
+  getApplicantsCount() {
+    if (this.checkedCriteria === 0) {
+      this.applicantService.countApplicantsHavingCurrentRitual().subscribe(res => this.applicantsCount = res);
+    } else if (this.checkedCriteria === 1) {
+      this.applicantService.countCategorizedApplicants(this.getCategorizing()).subscribe(res => this.applicantsCount = res);
+    } else if (this.checkedCriteria === 2) {
+      this.applicantsCount = this.addedApplicants.length;
+    }
+  }
+
+  getCategorizing() {
+    let categorizing = this.categorizingForm.value;
+    const minAge = this.categorizingForm.value.age.minAge;
+    const maxAge = this.categorizingForm.value.age.maxAge;
+    if (minAge) categorizing.minAge = minAge;
+    if (maxAge) categorizing.maxAge = maxAge;
+    return categorizing;
+  }
+
+  saveAndSend() {
+    if (this.notificationForm.invalid) {
+      return;
+    }
+    if (this.applicantsCount > 0) {
+      if (this.checkedCriteria === 0) {
+        this.saveAndSendToAll();
+      } else if (this.checkedCriteria === 1) {
+        this.saveAndSendToCategorizedApplicants(this.categorizingForm.value);
+      } else if (this.checkedCriteria === 2) {
+        this.saveAndSendToSelectedApplicants(this.addedApplicants.map(applicant => applicant.id));
+      }
+    } else {
+      this.proceedSavingTemplateAsDraft();
+    }
+    this.dismiss();
   }
 
   saveAndSendToAll() {
@@ -316,71 +312,11 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
-  createNotificationTemplate(): NotificationTemplate {
-    Object.keys(this.notificationForm.controls).forEach(field => {
-      const control = this.notificationForm.get(field);
-      control.markAsTouched({onlySelf: true});
-    });
-
-    if (this.notificationForm.invalid) {
-      return;
-    }
-
-    let notificationTemplate = this.notificationForm.value;
-    notificationTemplate.typeCode = this.USER_DEFINED;
-    notificationTemplate.statusCode = this.DRAFT;
-
-    let sendingDate = this.notificationForm.value.sendingDateGregorian;
-
-    console.log(sendingDate);
-
-    sendingDate.setHours(this.notificationForm.value.sendingTime.hour);
-    sendingDate.setMinutes(this.notificationForm.value.sendingTime.minute);
-
-    console.log(sendingDate);
-
-    notificationTemplate.sendingDate = sendingDate;
-
-    notificationTemplate.notificationTemplateContents = this.notificationForm.get('notificationTemplateContents')
-      .value.filter(c => c.body.trim() !== '' || c.title.trim() !== '');
-    notificationTemplate.notificationTemplateContents.forEach(c => {
-      c.title = c.title.replace(/\s/g, " ").trim();
-      c.body = c.body.replace(/\s/g, " ").trim();
-    });
-    console.log(notificationTemplate);
-    return notificationTemplate;
-  }
-
-  cancel() {
-    this.confirmDialogService
-      .confirm(this.translate.instant('notification-management.cancel_confirmation_text'),
-        this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
-      if (confirm) {
-        this.goBackToList()
-      }
-    });
-  }
-
-  saveAndSend() {
-    this.confirmDialogService.confirm(
-      this.translate.instant('notification-management.save_changes_confirmation_text'),
-      this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
-      if (confirm) {
-        if (this.checkedCriteria === 0) {
-          this.saveAndSendToAll();
-        } else if (this.checkedCriteria === 1) {
-          this.saveAndSendToCategorizedApplicants(this.categorizedApplicantsForm.value);
-        } else if (this.checkedCriteria === 2) {
-          this.saveAndSendToSelectedApplicants(this.addedApplicants.map(applicant => applicant.id));
-        }
-      }
-    });
-  }
-
   saveAndSendToCategorizedApplicants(criteria) {
     this.isLoading = true;
-    let notificationTemplate = this.createNotificationTemplate();
+    let notificationTemplate = <NotificationTemplate>this.createNotificationTemplate();
     notificationTemplate.statusCode = this.CONFIRMED;
+    notificationTemplate.notificationTemplateCategorizing = this.getCategorizing();
 
     const categorizedNotificationVo = new CategorizedNotificationVo(notificationTemplate, criteria);
 
@@ -427,6 +363,47 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
+  checkFormValidity() {
+    Object.keys(this.notificationForm.controls).forEach(field => {
+      const control = this.notificationForm.get(field);
+      control.markAsTouched({onlySelf: true});
+    });
+
+    Object.keys(this.notificationTemplateContents['controls'][0]['controls']).forEach(field => {
+      this.notificationForm.controls.notificationTemplateContents['controls'].forEach(control => control.get(field).markAsTouched({onlySelf: true}))
+    });
+
+    if (this.notificationForm.controls.notificationTemplateContents['controls'].find(c => c['errors'])) {
+      this.activeId = this.translatedLanguages
+        .findIndex(lang => lang.code == this.notificationForm.controls.notificationTemplateContents['controls'].find(c => c['errors'])?.value.lang) + 1;
+    }
+  }
+
+  createNotificationTemplate(): NotificationTemplate {
+
+    let notificationTemplate = this.notificationForm.value;
+    notificationTemplate.typeCode = this.USER_DEFINED;
+    notificationTemplate.statusCode = this.DRAFT;
+
+    notificationTemplate.notificationTemplateContents = this.notificationForm.get('notificationTemplateContents')
+      .value.filter(c => c.body.trim() !== '' || c.title.trim() !== '');
+    notificationTemplate.notificationTemplateContents.forEach(c => {
+      c.title = c.title.replace(/\s/g, " ").trim();
+      c.body = c.body.replace(/\s/g, " ").trim();
+    });
+    return notificationTemplate;
+  }
+
+  cancel() {
+    this.confirmDialogService
+      .confirm(this.translate.instant('notification-management.cancel_confirmation_text'),
+        this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+      if (confirm) {
+        this.goBackToList()
+      }
+    });
+  }
+
   addApplicants() {
     this.addedApplicants = [...this.addedApplicants, ...this.selectedApplicants];
     this.applicants = [];
@@ -435,7 +412,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  resetModal() {
+  resetSelectionModal() {
     this.searchForm.reset()
     this.applicants = [];
     this.selectedApplicants = [];
@@ -443,11 +420,16 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
+  resetConfirmationModal() {
+    this.applicantsCount = null;
+    this.modalService.dismissAll();
+  }
+
   search(pageNumber: number): void {
-    this.isLoading = true;
+    this.isSelectLoading = true;
     this.searchSubscription = this.applicantService.search(this.searchForm.value, this.addedApplicants.map(applicant => applicant.id), pageNumber)
       .subscribe(data => {
-        this.isLoading = false;
+        this.isSelectLoading = false;
         this.applicants = [];
         this.pageArray = [];
         this.page = data;
@@ -482,10 +464,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   pageCounter(i: number): Array<number> {
     return new Array(i);
-  }
-
-  loading(): boolean {
-    return this.isLoading || this.isSelectLoading;
   }
 
   isChecked(card) {
@@ -535,7 +513,24 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      this.resetModal();
+      this.resetSelectionModal();
+    });
+  }
+
+  openSaveAndSendLg(content) {
+    this.checkFormValidity();
+    if (this.notificationForm.invalid) {
+      return;
+    }
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true,
+      size: 'lg'
+    }).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      this.resetConfirmationModal();
     });
   }
 
@@ -561,5 +556,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.notificationForm.controls.sendingDateGregorian.setValue(this.dateFormatterService.toDate(dateStructGreg));
       this.notificationForm.controls.sendingDateHijri.setValue(this.dateFormatterService.toString(dateStructHijri).split('/').reverse().join(''));
     }
+    console.log(event);
   }
 }

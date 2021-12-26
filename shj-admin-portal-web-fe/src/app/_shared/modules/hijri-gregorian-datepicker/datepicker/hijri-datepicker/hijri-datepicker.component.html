@@ -1,4 +1,3 @@
-
 <input
   class="form-control hijriInput" appNgbDatepickerI18nTitle
   [(ngModel)]="selectedDate"
@@ -11,12 +10,10 @@
   [minDate]="min"
   [maxDate]="max"
   [required]="isRequired"
-    [name]="name"
-    (blur)="onBlur()"
-    [footerTemplate]="footerTemplate"
-    [disabled]="disabled" />
-
-
+  [name]="name"
+  (blur)="onBlur()"
+  [footerTemplate]="footerTemplate"
+  [disabled]="disabled">
 
 <ng-template #footerTemplate>
   <hr class="my-0">

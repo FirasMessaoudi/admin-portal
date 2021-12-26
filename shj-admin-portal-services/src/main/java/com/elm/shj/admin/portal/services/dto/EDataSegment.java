@@ -24,8 +24,9 @@ public enum EDataSegment {
     APPLICANT_DISEASE_DATA(5),
     APPLICANT_RITUAL_DATA(6),
     APPLICANT_EMERGENCY_DATA(7),
+    STAFF_MAIN_DATA(8),
     STAFF_RITUAL_DATA(9),
-    STAFF_MAIN_DATA(8);
+    STAFF_APPLICANT_GROUP_DATA(10);
 
 
     private final long id;

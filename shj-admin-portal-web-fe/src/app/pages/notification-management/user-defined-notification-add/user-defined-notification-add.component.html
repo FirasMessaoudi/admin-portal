@@ -26,9 +26,9 @@
             <div class="input-group">
               <label class="form-control disabled-control">{{creationDate | dateFormat}}</label>
               <div class="input-group-append">
-                  <span class="input-group-text">
-                    <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
-                  </span>
+              <span class="input-group-text">
+                <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
+              </span>
               </div>
             </div>
           </div>
@@ -37,24 +37,45 @@
             <label class="col-form-label">{{ "notification-management.notification_date" | translate }}
               <span class="text-danger">*</span>
             </label>
-            <div class="d-flex">
-              <hijri-gregorian-datepicker [showLabel]="false"
-                                          name="sendingDateGregorian"
-                                          buttonClass="dcc-primary"
-                                          class="datepicker {{f.sendingDateGregorian.errors && f.sendingDateGregorian.touched ? 'is-invalid' : ''}}"
-                                          [(selectedDate)]="selectedSendingDate"
-                                          (selectedDateChange)="onSendingDateChange($event)"
-                                          [isRequired]="true"
-                                          [minGreg]="minSendingDateGregorian"
-                                          [minHijri]="minSendingDateHijri"
-                                          [GregLabel]="'general.cal_greg' | translate"
-                                          [hijriLabel]="'general.cal_hijri' | translate"
-                                          [selectedDateType]="selectedDateType"
-                                          [disabled]="false"
-                                          [readonly]="true"
-                                          #datePicker>
-              </hijri-gregorian-datepicker>
-              <ngb-timepicker class="ml-2" formControlName="sendingTime" [spinners]="false"></ngb-timepicker>
+            <app-hijri-gregorian-datetimepicker [showLabel]="false"
+                                                placeHolder="{{currentLanguage.startsWith('ar') ? 'HH:MM DD/MM/YYYY' : 'DD/MM/YYYY HH:MM'}}"
+                                                name="sendingDate"
+                                                formControlName="sendingDate"
+                                                buttonClass="dcc-primary"
+                                                class="datepicker {{f.sendingDate.errors && f.sendingDate.touched ? 'is-invalid' : ''}}"
+                                                [isRequired]="true"
+                                                [minGreg]="minSendingDateGregorian"
+                                                [minHijri]="minSendingDateHijri"
+                                                [GregLabel]="'general.cal_greg' | translate"
+                                                [hijriLabel]="'general.cal_hijri' | translate"
+                                                [selectedDateType]="selectedDateType"
+                                                [readonly]="true"
+                                                inputDatetimeFormat="dd/MM/yyyy HH:mm"
+                                                #datePicker>
+            </app-hijri-gregorian-datetimepicker>
+          </div>
+
+          <div class="form-group col">
+            <label class="col-form-label">{{ "notification-management.notification-status" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
+              <label ngbButtonLabel class="btn" [class.btn-select]="notificationForm.value.enabled">
+                <input ngbButton
+                       name="enabled"
+                       type="radio"
+                       formControlName="enabled"
+                       [value]="true">
+                {{'notification-management.enabled' | translate}}
+              </label>
+              <label ngbButtonLabel class="btn" [class.btn-select]="!notificationForm.value.enabled">
+                <input ngbButton
+                       name="enabled"
+                       type="radio"
+                       formControlName="enabled"
+                       [value]="false">
+                {{'notification-management.disabled' | translate}}
+              </label>
             </div>
           </div>
 
@@ -83,34 +104,11 @@
           </div>
 
           <div class="form-group col">
-            <label class="col-form-label">{{ "notification-management.notification-status" | translate }}
-              <span class="text-danger">*</span>
-            </label>
-            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
-              <label ngbButtonLabel class="btn" [class.btn-select]="notificationForm.value.enabled">
-                <input ngbButton
-                       name="enabled"
-                       type="radio"
-                       formControlName="enabled"
-                       [value]="true">
-                {{'notification-management.enabled' | translate}}
-              </label>
-              <label ngbButtonLabel class="btn" [class.btn-select]="!notificationForm.value.enabled">
-                <input ngbButton
-                       name="enabled"
-                       type="radio"
-                       formControlName="enabled"
-                       [value]="false">
-                {{'notification-management.disabled' | translate}}
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group col">
             <label class="col-form-label">{{ "notification-management.notification-category" | translate }}
               <span class="text-danger">*</span>
             </label>
-            <select class="custom-select" formControlName="categoryCode">
+            <select class="custom-select" formControlName="categoryCode"
+                    [class.is-invalid]="f.categoryCode.invalid && f.categoryCode.touched">>
               <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
               <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
                       [ngValue]="notificationCategory.code">
@@ -130,8 +128,14 @@
           </div>
 
           <div class="form-group col-sm-12 col-md-12 col-lg-8">
-            <label class="col-form-label">{{ "notification-management.notification_description" | translate }}</label>
-            <input type="text" formControlName="description" class="form-control" maxlength="250"/>
+            <label class="col-form-label">{{ "notification-management.notification_description" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <input type="text" formControlName="description" class="form-control" maxlength="250"
+                   [class.is-invalid]="f.description.invalid && f.description.touched">
+            <div *ngIf="f.description.invalid && f.description.touched" class="invalid-feedback">
+              <div *ngIf="f.description.errors.required">{{'general.field_validation_required' | translate}}</div>
+            </div>
           </div>
 
           <div class="form-group col">
@@ -160,7 +164,6 @@
 
         </div>
 
-
         <hr class="my-4 w-100">
 
         <label
@@ -172,13 +175,15 @@
               <a ngbNavLink>{{language.label}}
                 <span
                   *ngIf="language.code.toLowerCase() === 'ar' || language.code.toLowerCase() === 'en'"
-                  class="text-danger">*</span>
+                  class="text-danger font-weight-normal">*</span>
                 <svg-icon
-                  *ngIf="notificationTemplateContents['controls'][i].value.title.length > 0 &&
-                  notificationTemplateContents['controls'][i].value.body.length > 0 &&
-                  notificationTemplateContents['controls'][i].valid"
+                  *ngIf="notificationTemplateContents['controls'][i]['controls'].title.value.length > 0 && notificationTemplateContents['controls'][i]['controls'].body.value.length > 0"
                   styleClass="fa-w-20 ml-2"
                   icon="check-circle"></svg-icon>
+                <svg-icon *ngIf="notificationTemplateContents['controls'][i].invalid && notificationTemplateContents['controls'][i]['controls'].title.touched
+                && notificationTemplateContents['controls'][i]['controls'].body.touched"
+                          styleClass="fa-w-20 ml-2 text-danger"
+                          icon="exclamation-circle"></svg-icon>
               </a>
               <ng-template ngbNavContent>
                 <div formArrayName="notificationTemplateContents">
@@ -193,7 +198,7 @@
                       <input type="text" formControlName="title" class="form-control" maxlength="50"
                              [class.is-invalid]="notificationTemplateContents['controls'][i]['controls']['title'].invalid &&notificationForm &&
                                  notificationTemplateContents['controls'][i]['controls']['title'].touched"
-                      />
+                      >
                       <div
                         *ngIf="notificationForm.invalid && notificationTemplateContents['controls'][i]['controls']['title'].touched"
                         class="invalid-feedback">
@@ -268,11 +273,11 @@
       </div>
 
       <div class="searchBox mb-4 animate slideIn delay" *ngIf="checkedCriteria === 1">
-        <form [formGroup]="categorizedApplicantsForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+        <form [formGroup]="categorizingForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
 
           <div class="form-group col">
             <label class="col-form-label">{{"notification-management.camp"| translate}}</label>
-            <select class="custom-select" formControlName="camp">
+            <select class="custom-select" formControlName="campId">
               <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
               <option *ngFor="let camp of camps" [ngValue]="camp.id">
                 {{currentLanguage.startsWith('ar') ? camp.locationNameAr : camp.locationNameEn}}
@@ -282,7 +287,7 @@
 
           <div class="form-group col">
             <label class="col-form-label">{{"notification-management.company"| translate}}</label>
-            <select class="custom-select" formControlName="company">
+            <select class="custom-select" formControlName="companyId">
               <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
               <option *ngFor="let company of companies" [ngValue]="company.id">
                 {{currentLanguage.startsWith('en') ? company.labelEn : company.labelAr}}
@@ -292,7 +297,7 @@
 
           <div class="form-group col">
             <label class="col-form-label">{{"notification-management.nationality"| translate}}</label>
-            <select class="custom-select" formControlName="nationality">
+            <select class="custom-select" formControlName="nationalityCode">
               <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
               <option *ngFor="let nationality of lookupService().localizedItems(nationalities)"
                       [ngValue]="nationality.code">
@@ -312,7 +317,7 @@
                   <input type="number" class="form-control" formControlName="minAge"
                          onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 2"
                          step="1"
-                         [class.is-invalid]="cf.age.touched && (cf.age['controls']['minAge'].invalid || cf.age.errors)"/>
+                         [class.is-invalid]="cf.age.touched && (cf.age['controls']['minAge'].invalid || cf.age.errors)">
                   <div *ngIf="cf.age.invalid && cf.age.touched" class="invalid-feedback">
                     <div
                       *ngIf="cf.age['controls']['minAge'].errors?.min">
@@ -335,7 +340,7 @@
                   <input type="number" class="form-control" formControlName="maxAge"
                          onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 2"
                          step="1"
-                         [class.is-invalid]="cf.age['controls']['maxAge'].invalid && cf.age['controls']['maxAge'].touched"/>
+                         [class.is-invalid]="cf.age['controls']['maxAge'].invalid && cf.age['controls']['maxAge'].touched">
                   <div *ngIf="cf.age.invalid && cf.age.touched" class="invalid-feedback">
                     <div
                       *ngIf="cf.age['controls']['maxAge'].errors?.min">
@@ -385,10 +390,10 @@
 
       </div>
       <div *ngIf="checkedCriteria === 2" class="animate slideIn delay mb-4">
-        <div class="d-flex justify-content-end">
-          <button id="addApplicant"
-                  (click)="openLg(showAdd)"
-                  class="btn btn-outline-dcc-primary px-4" *ngIf="canSeeAddUpdateUserDefinedNotification">
+        <div class="dashes flex-center-column my-3 p-5" *ngIf="addedApplicants.length === 0">
+
+          <img class="my-5" src="assets/images/add-cards.jpg" alt='{{ "printing-management.new_request" | translate }}'>
+          <button id="addApplicant" (click)="openLg(showAdd)" class="btn btn-outline-dcc-primary px-4">
             <svg-icon styleClass="mr-2" icon="plus"></svg-icon>
             <span>{{ "general.btn_add" | translate }}</span>
           </button>
@@ -397,7 +402,7 @@
         <ng-template #showAdd let-modal>
           <div class="modal-header">
             <h4> {{ "notification-management.add_user_defined_notifications" | translate }}</h4>
-            <button type="button" class="close" aria-label="Close" (click)="resetModal()">
+            <button type="button" class="close" aria-label="Close" (click)="resetSelectionModal()">
               <span aria-hidden="true" class="h2">&times;</span>
             </button>
           </div>
@@ -408,20 +413,20 @@
                 <label class="col-form-label">{{'card-management.applicant_id' | translate }}</label>
                 <input id="uin" formControlName="uin" class="form-control"
                        onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length < 14"
-                       min="0" step="1"/>
+                       min="0" step="1">
               </div>
 
               <div class="form-group col">
                 <label class="col-form-label">{{'printing-management.id_number' | translate }}</label>
                 <input formControlName="idNumber" class="form-control"
                        onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length < 10"
-                       min="0" step="1"/>
+                       min="0" step="1">
               </div>
 
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.passport_number' | translate }}</label>
                 <input id="passportNumber" formControlName="passportNumber" type="text" class="form-control"
-                       onkeypress="return this.value.length <=9"/>
+                       onkeypress="return this.value.length <= 9">
               </div>
 
               <div class="form-group col-12">
@@ -454,7 +459,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr *ngIf="loading()" class="text-center">
+                  <tr *ngIf="isSelectLoading" class="text-center">
                     <td colspan="10" style="height: 200px;">
                       <div class="preloader inner_page">
                         <div></div>
@@ -463,14 +468,14 @@
                       </div>
                     </td>
                   </tr>
-                  <tr *ngIf="!page?.content  && !loading()  || applicants.length === 0 && !loading()"
+                  <tr *ngIf="(!page?.content  || applicants.length === 0) && !isSelectLoading"
                       class="text-center">
                     <td colspan="10">
                       <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
                       <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
                     </td>
                   </tr>
-                  <ng-container *ngIf="!loading()">
+                  <ng-container *ngIf="!isSelectLoading">
                     <tr *ngFor="let applicant of applicants">
                       <td>
                         <div class="custom-control custom-checkbox my-2">
@@ -516,22 +521,31 @@
             </nav>
 
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary"
-                    *ngIf="selectedApplicants?.length"
-                    (click)="resetModal()">
-              {{'printing-management.btn_cancel' | translate }}
+          <div class="modal-footer" *ngIf="selectedApplicants?.length">
+            <button type="button" class="btn btn-outline-secondary" (click)="resetSelectionModal()">
+              {{'general.btn_cancel' | translate }}
             </button>
 
-            <button type="button" class="btn btn-dcc-primary"
-                    *ngIf="selectedApplicants?.length"
-                    (click)="addApplicants()">
+            <button type="button" class="btn btn-dcc-primary" (click)="addApplicants()">
               {{'notification-management.add_no_applicants' | translate : {noApplicants: selectedApplicants.length} }}
             </button>
           </div>
         </ng-template>
 
         <div *ngIf="addedApplicants?.length > 0">
+
+          <div class="dashes flex-center-between py-2 px-4">
+
+            <div>
+              <span class="h5 font-weight-bold text-dcc-primary mr-3">{{addedApplicants.length}}</span>
+              <span>{{'notification-management.selected_applicants' | translate}}</span>
+            </div>
+
+            <button class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
+              {{ "general.btn_add" | translate }}
+            </button>
+
+          </div>
 
           <div class="table-responsive my-4">
             <table id="addedApplicantsSearchResult" class="table table-striped table-hover">
@@ -601,30 +615,48 @@
         <button class="btn btn-outline-dcc-primary px-4 mr-1" (click)="cancel()">
           {{"general.btn_cancel" | translate}}</button>
         <span>
-      <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4"
-              [disabled]="!notificationForm.valid || !categorizedApplicantsForm.valid"
-              (click)="saveAsDraft()">
-        {{"notification-management.save_as_draft" | translate}}
-      </button>
-      <button class="btn btn-dcc-primary px-4"
-              [disabled]="!notificationForm.valid || !categorizedApplicantsForm.valid"
-              (click)="saveAndSend()">
-        {{"notification-management.save_and_send" | translate}}
-      </button>
-    </span>
+          <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4"
+                  (click)="saveAsDraft()">
+            {{"notification-management.save_as_draft" | translate}}
+          </button>
+          <button class="btn btn-dcc-primary px-4"
+                  (click)="openSaveAndSendLg(showSend);getApplicantsCount();">
+            {{"notification-management.save_and_send" | translate}}
+          </button>
+        </span>
       </div>
+
     </div>
   </div>
-
-  <!-- Loading spinner placeholder -->
-  <div *ngIf="isLoading" class="text-center">
-    <div style="height: 200px;">
-      <div class="preloader inner_page">
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-    </div>
-  </div>
-
 </div>
+
+<!-- Loading spinner placeholder -->
+<div *ngIf="isLoading" class="text-center">
+  <div style="height: 200px;">
+    <div class="preloader inner_page">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+</div>
+
+<ng-template #showSend let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ "general.dialog_confirmation_title" | translate }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+      <span aria-hidden="true" class="h1">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <span *ngIf="applicantsCount != null">
+    {{(applicantsCount > 0 ? 'notification-management.save_and_send_confirmation_text' : 'notification-management.no_applicants_found_text') | translate : {count: applicantsCount} }}
+    </span>
+  </div>
+  <div class="modal-footer">
+    <button type="button" (click)="dismiss()"
+            class="btn btn-outline-secondary">{{ "general.dialog_confirmation_cancel" | translate }}</button>
+    <button type="button" [disabled]="applicantsCount === null" (click)="saveAndSend()"
+            class="btn btn-dcc-primary">{{ "general.dialog_confirmation_ok" | translate }}</button>
+  </div>
+</ng-template>

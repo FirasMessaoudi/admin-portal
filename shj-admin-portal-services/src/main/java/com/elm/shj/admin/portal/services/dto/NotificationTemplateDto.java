@@ -41,6 +41,7 @@ public class NotificationTemplateDto implements Serializable {
     private Set<NotificationRequestDto> notificationRequests;
     private Set<UserNotificationDto> userNotifications;
     private Set<NotificationTemplateParameterDto> notificationTemplateParameters;
+    private NotificationTemplateCategorizingDto notificationTemplateCategorizing;
 
     private Date creationDate;
     private Date updateDate;

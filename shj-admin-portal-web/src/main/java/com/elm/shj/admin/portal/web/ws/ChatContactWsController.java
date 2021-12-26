@@ -6,20 +6,16 @@ package com.elm.shj.admin.portal.web.ws;
 import com.elm.shj.admin.portal.services.applicant.ApplicantChatContactService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ChatMessageService;
-import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
-import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -185,6 +181,13 @@ public class ChatContactWsController {
                 .body(chatMessageLiteDtos).build());
 
 
+    }
+
+    @PostMapping("/save-chat-message")
+    public ResponseEntity<WsResponse<?>> saveChatMessage(@RequestBody ChatMessageDto chatMessage) {
+        ChatMessageDto chatMessageDto = chatMessageService.saveMessage(chatMessage);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
+                .body(chatMessageDto).build());
     }
 
 }

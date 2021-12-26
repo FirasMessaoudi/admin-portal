@@ -12,5 +12,9 @@ export const APP_ROUTES: Routes = [
   {
     path: '',
     loadChildren: () => import('@pages/home/home.module').then(m => m.HomeModule)
+  },
+  {
+    path: '',
+    loadChildren: () => import('@pages/dashboard/dashboard.module').then(m => m.DashboardModule)
   }
 ];

@@ -7,7 +7,6 @@ import {HomeRoutingModule} from './home.routing.module';
 
 import {ChartsModule} from "ng2-charts";
 
-
 @NgModule({
   imports: [
     CommonModule,
