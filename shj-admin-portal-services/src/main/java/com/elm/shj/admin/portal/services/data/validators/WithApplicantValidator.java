@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.services.data.validators;
 
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.StaffApplicantGroupDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
@@ -30,21 +32,36 @@ public class WithApplicantValidator implements ConstraintValidator<WithApplicant
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        Field applicantBasicInfoField = ReflectionUtils.findField(value.getClass(), "applicantBasicInfo");
-        if (value == null || applicantBasicInfoField == null) {
+        if (value == null) {
+            return false;
+
+        }
+        if (value instanceof StaffApplicantGroupDto) {
+            StaffApplicantGroupDto staffApplicantGroupDto =(StaffApplicantGroupDto) value;
+            ApplicantBasicInfoDto applicantBasicInfoDto = new ApplicantBasicInfoDto();
+            applicantBasicInfoDto.setIdNumber(staffApplicantGroupDto.getIdNumber());
+            applicantBasicInfoDto.setPassportNumber(staffApplicantGroupDto.getPassportNumber());
+            applicantBasicInfoDto.setDateOfBirthGregorian(staffApplicantGroupDto.getDateOfBirthGregorian());
+            applicantBasicInfoDto.setDateOfBirthHijri(staffApplicantGroupDto.getDateOfBirthHijri());
+            return applicantService.existsByBasicInfo(applicantBasicInfoDto);
+        } else {
+            Field applicantBasicInfoField = ReflectionUtils.findField(value.getClass(), "applicantBasicInfo");
+            if (applicantBasicInfoField == null) {
+                return false;
+            }
+            try {
+                // make fields accessible
+                ReflectionUtils.makeAccessible(applicantBasicInfoField);
+                // get applicant basic info from the current object
+                ApplicantBasicInfoDto applicantBasicInfo = (ApplicantBasicInfoDto) applicantBasicInfoField.get(value);
+                // search applicant by his basic info from the database
+                return applicantService.existsByBasicInfo(applicantBasicInfo);
+            } catch (IllegalAccessException e) {
+                ReflectionUtils.handleReflectionException(e);
+            }
             return false;
         }
-        try {
-            // make fields accessible
-            ReflectionUtils.makeAccessible(applicantBasicInfoField);
-            // get applicant basic info from the current object
-            ApplicantBasicInfoDto applicantBasicInfo = (ApplicantBasicInfoDto) applicantBasicInfoField.get(value);
-            // search applicant by his basic info from the database
-            return applicantService.existsByBasicInfo(applicantBasicInfo);
-        } catch (IllegalAccessException e) {
-            ReflectionUtils.handleReflectionException(e);
-        }
-        return false;
-    }
 
+
+    }
 }

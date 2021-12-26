@@ -114,6 +114,7 @@ public class ApplicantDto implements Serializable {
     @Valid
     private List<ApplicantContactDto> contacts;
     private ApplicantHealthDto applicantHealth;
+    private boolean registered;
     private Date creationDate;
     private Date updateDate;
 }

@@ -426,9 +426,9 @@
     "enabled": "Enabled",
     "disabled": "Disabled",
     "system_notifications": "System Notifications",
-    "system_notifications_management": "System Notifications Management",
+    "system_notifications_management": "System Defined Notification Management",
     "user_notifications": "User Notifications",
-    "user_notifications_management": "User Notifications Management",
+    "user_notifications_management": "User Defined Notification Management",
     "new_notification": "Create Notification",
     "notification_details": "Notification Details",
     "notification_creation_date": "Notification Creation Date",
@@ -468,10 +468,14 @@
     "saved_successfully" : "Saved successfully",
     "add_user_defined_notifications": "Add User Defined Notifications",
     "save_changes_confirmation_text": "Are you sure, you want to save changes ?",
+    "save_and_send_confirmation_text": "Are you sure, you want to save changes and send notifications to {{count}} applicant(s) ?",
+    "no_applicants_found_text": "No matching applicants were found. Do you want to save the notification template as a draft ?",
     "add_no_applicants": "Add {{noApplicants}} Applicant(s)",
     "age_validation_min": "This value must be greater than or equal to {{minLength}}",
     "age_validation_max": "This value must be less than or equal to {{maxLength}}",
-    "age_validation_range": "The minimum age value must not exceed the maximum age value"
+    "age_validation_range": "The minimum age value must not exceed the maximum age value",
+    "selected_applicants": "Applicant(s) Selected",
+    "recipient_attributes": "Recipient attributes"
   },
   "printing-management": {
     "title": "Printing Management",
@@ -490,8 +494,8 @@
     "batch_no": "Batch No.",
     "contains": "Contains",
     "cards": "Card(s)",
-    "smart_cards_for_print": "Smart Cards To Be Printed",
-    "selected_smart_card": "Smart Card Was Selected",
+    "smart_cards_for_print": "Cards To Be Printed",
+    "selected_smart_card": "Card(s) Selected",
     "batch_collecting_method": "Batch Collecting Method",
     "prepare_request": "Prepare Request",
     "create_batch": "Create Batch",
@@ -516,7 +520,7 @@
     "nationality": "Nationality",
     "motawif": "Motawif",
     "btn_cancel": "Cancel",
-    "request_description": "Request description"
+    "request_description": "Request Description"
   },
   "rule-management": {
     "title": "Decision Rule Management",

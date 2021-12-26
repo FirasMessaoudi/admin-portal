@@ -1,6 +1,7 @@
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
+import com.elm.shj.admin.portal.orm.entity.ApplicantRitualSeasonVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackage;
 import com.elm.shj.admin.portal.orm.repository.ApplicantPackageRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +33,19 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
             applicantPackage.getApplicantPackageTransportations().size();
             CycleAvoidingMappingContext mappingContext = new CycleAvoidingMappingContext();
             return getMapper().fromEntity(applicantPackage, mappingContext);
+        }
+        return null;
+    }
+
+    public List<ApplicantRitualSeasonVo> findApplicantPackageAndRitualSeason(long applicantUin) {
+        return applicantPackageRepository.findApplicantPackageAndRitualSeasonByUin(applicantUin);
+
+    }
+
+    public ApplicantRitualSeasonVo findLatestApplicantRitualSeason(long applicantUin) {
+        List<ApplicantRitualSeasonVo> applicantRitualSeasons = findApplicantPackageAndRitualSeason(applicantUin);
+        if (applicantRitualSeasons.size() > 0) {
+            return applicantRitualSeasons.get(0);
         }
         return null;
     }

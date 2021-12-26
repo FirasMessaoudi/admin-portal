@@ -1,0 +1,152 @@
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h3 class="font-weight-bold text-dark">احصائيات الجوال</h3>
+    <div>
+      <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
+        <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
+        شاشة كاملة
+      </button>
+    </div>
+  </div>
+  <div class="content__section">
+
+    <div class="row row-cols-1 row-cols-xl-2">
+      <div class="col-12">
+        <div class="h-100 p-3 border">
+          <div class="py-3">
+            <div class="row">
+              <div class="col-xl-3">
+                <div class="statistics">
+                  <div class="flex-center-between">
+                    <div>
+                      <div class="sts-title">تحميل التطبيق</div>
+                      <div class="sts-number text-dark">
+                        <ng9-odometer [number]="appdownloads"></ng9-odometer>
+                      </div>
+                    </div>
+                    <svg-icon styleClass="sts-icon fa-w-10 display-4" icon="mobile-android-alt"></svg-icon>
+                  </div>
+        
+                  <p class="py-3">
+                    <ngb-progressbar type="appdownloads" [value]="25" height="10px"></ngb-progressbar>
+                  </p>
+        
+                  <div class="flex-center-between mt-2">
+                    <div class="d-flex">
+                      <svg-icon styleClass="text-appdownloads" icon="circle"></svg-icon>
+                      <div class="px-3">مفعل</div>
+                    </div>
+                    <div>875,755</div>
+                  </div>
+                  <div class="flex-center-between mt-2">
+                    <div class="d-flex">
+                      <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+                      <div class="px-3">غير مفعل</div>
+                    </div>
+                    <div>300,755</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="h-100 bg-dcc-light flex-center">
+                  Content
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col mt-4">
+        <div class="h-100 p-3 border">
+          <div class="flex-center-between">
+            <div class="flex-center-vert flex-wrap">
+              <h5 class="sts">إستخدام التطبيق بالنسبة للاعمار</h5>
+              <button type="button" class="btn border mx-3">
+                آخر يوم
+                <svg-icon icon="calendar"></svg-icon>
+              </button>
+            </div>
+          </div>
+          <div class="py-3">Content</div>
+        </div>
+      </div>
+      <div class="col mt-4">
+        <div class="h-100 p-3 border">
+          <div class="flex-center-between">
+            <div class="flex-center-vert flex-wrap">
+              <h5 class="sts">إستخدام التطبيق بالنسبة للشركات</h5>
+              <button type="button" class="btn border mx-3">
+                اعلى استخدام
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
+            </div>
+          </div>
+          <div class="py-3">Content</div>
+        </div>
+      </div>
+      <div class="col-12 mt-4">
+        <div class="h-100 p-3 border">
+          <div class="flex-center-between">
+            <div class="flex-center-vert flex-wrap">
+              <h5 class="sts">خريطة استخدام التطبيق</h5>
+              <ul ngbNav #nav="ngbNav" class="nav-tabs groupBtn">
+                <li ngbNavItem>
+                  <a ngbNavLink>خريطة حرارية</a>
+                  <ng-template ngbNavContent>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+                      <div class="form-group col">
+                          <label class="col-form-label">المنطقة</label>
+                          <select class="custom-select">
+                            <option selected value="1">الكل</option>
+                            <option value="2">الرياض</option>
+                            <option value="2">جدة</option>
+                          </select>
+                      </div>
+                      <div class="form-group col">
+                          <label class="col-form-label">الشركة</label>
+                          <select class="custom-select">
+                            <option selected value="1">الكل</option>
+                            <option value="2">غير سعودي</option>
+                          </select>
+                      </div>
+                      <div class="form-group col">
+                          <label class="col-form-label">الفترة من - الى</label>
+                          <div class='input-group mr-3 calendar'>
+                            <input class="form-control bg-transparent" placeholder="yyyy-mm-dd" name="wp">
+                            <i class="icon"></i>
+                          </div>
+                      </div>
+                      <div class="form-group col">
+                          <label class="col-form-label">الجنسية</label>
+                          <select class="custom-select">
+                            <option selected value="1">الكل</option>
+                            <option value="2">سعودي</option>
+                            <option value="2">غير سعودي</option>
+                          </select>
+                      </div>
+                    </div>
+                    <div class="flex-center">
+                      <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
+                    </div>
+                  </ng-template>
+                </li>
+                <li ngbNavItem>
+                  <a ngbNavLink>المجموعات</a>
+                  <ng-template ngbNavContent>
+                    <div class="flex-center">
+                      <svg-icon styleClass="fa-10x text-dcc-light" icon="empty-set"></svg-icon>
+                    </div>
+                  </ng-template>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+          <div [ngbNavOutlet]="nav" class="p-3 mx-n3 mb-n3 mt-3 bg-dcc-light"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

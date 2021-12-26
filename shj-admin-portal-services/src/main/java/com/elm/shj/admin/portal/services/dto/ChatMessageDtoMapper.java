@@ -14,5 +14,5 @@ import org.mapstruct.Mapper;
  * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
-public abstract class ChatMessageDtoMapper implements IGenericMapper<ChatMessageTypeLookupDto, JpaChatMessage>, HibernateAwareMapper {
+public abstract class ChatMessageDtoMapper implements IGenericMapper<ChatMessageDto, JpaChatMessage>, HibernateAwareMapper {
 }

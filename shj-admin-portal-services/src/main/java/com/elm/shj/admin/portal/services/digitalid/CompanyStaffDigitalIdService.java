@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffDigitalId;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffDigitalIdRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffDigitalIdDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffDto;
+import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -130,7 +131,7 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
      * @return list of companyStaffDigitalId
      */
     public CompanyStaffDigitalIdDto findByBasicInfo(long staffId, int season) {
-      Optional<JpaCompanyStaffDigitalId> digitalId=  companyStaffDigitalIdRepository.findByBasicInfo(staffId,season) ;
+      Optional<JpaCompanyStaffDigitalId> digitalId=  companyStaffDigitalIdRepository.findByBasicInfo(staffId,season,EDigitalIdStatus.VALID.name()) ;
         if (digitalId.isPresent()) {
             return getMapper().fromEntity(digitalId.get(), mappingContext);
         }
@@ -138,7 +139,18 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
 
     }
 
-
+    /**
+     * @param suin
+     * @param season
+     * @return  companyStaffDigitalId
+     */
+    public CompanyStaffDigitalIdDto findBySuinAndSeasonYearAndStatusCode(String suin, int season) {
+        Optional<JpaCompanyStaffDigitalId> digitalId=  companyStaffDigitalIdRepository.findBySuinAndSeasonYearAndStatusCode(suin,season, EDigitalIdStatus.VALID.name()) ;
+        if (digitalId.isPresent()) {
+            return getMapper().fromEntity(digitalId.get(), mappingContext);
+        }
+        return null;
+    }
     /**
      * Find all staff without digital IDs
      *
