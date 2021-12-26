@@ -1151,3 +1151,7 @@ GO
 ALTER TABLE shc_portal.shc_applicant
     ADD preferred_language VARCHAR(2) DEFAULT 'en' NOT NULL;
 GO
+
+ALTER TABLE shc_portal.shc_applicant_chat_contact
+    ADD is_automatically bit DEFAULT 0 NOT NULL;;
+GO
