@@ -92,6 +92,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .deleted(applicantChatContact.getDeleted())
                 .creationDate(applicantChatContact.getCreationDate())
                 .updateDate(applicantChatContact.getUpdateDate())
+                .isAutomatically(applicantChatContact.getIsAutomatically())
                 .build();
     }
 
