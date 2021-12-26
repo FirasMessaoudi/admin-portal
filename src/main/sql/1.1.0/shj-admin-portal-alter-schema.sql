@@ -1149,7 +1149,7 @@ Alter table shc_portal.shc_notification_category_lk
 GO
 
 ALTER TABLE shc_portal.shc_applicant
-    ADD preferred_language VARCHAR(2) DEFAULT 'en' NOT NULL;
+    ADD preferred_language VARCHAR(2) NULL;
 GO
 
 ALTER TABLE shc_portal.shc_applicant
