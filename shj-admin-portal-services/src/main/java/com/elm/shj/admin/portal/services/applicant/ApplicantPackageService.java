@@ -42,4 +42,12 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
 
     }
 
+    public ApplicantRitualSeasonVo findLatestApplicantRitualSeason(long applicantUin) {
+        List<ApplicantRitualSeasonVo> applicantRitualSeasons = findApplicantPackageAndRitualSeason(applicantUin);
+        if (applicantRitualSeasons.size() > 0) {
+            return applicantRitualSeasons.get(0);
+        }
+        return null;
+    }
+
 }
