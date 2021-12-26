@@ -46,7 +46,6 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   @ViewChild('fromDatePicker') fromDatePicker: HijriGregorianDatepickerComponent;
   @ViewChild('toDatePicker') toDatePicker: HijriGregorianDatepickerComponent;
 
-
   constructor(private authenticationService: AuthenticationService,
               private incidentService: IncidentService,
               private formBuilder: FormBuilder,
@@ -146,6 +145,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   }
 
   onFromDateChange(event) {
+    // this.selectedDateType = this.fromDatePicker.selectedDateType == DateType.Gregorian ? DateType.Gregorian : DateType.Hijri;
     if (event) {
       let dateStruct = this.fromDatePicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : this.dateFormatterService.toGregorian(event);
       let dateStructGreg = this.fromDatePicker.selectedDateType == DateType.Gregorian ? event : this.dateFormatterService.toGregorian(event);
@@ -162,6 +162,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   }
 
   onToDateChange(event) {
+    // this.selectedDateType = this.toDatePicker.selectedDateType == DateType.Gregorian ? DateType.Gregorian : DateType.Hijri;
     if (event) {
       let dateStruct = this.toDatePicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : this.dateFormatterService.toGregorian(event);
       let dateStructGreg = this.toDatePicker.selectedDateType == DateType.Gregorian ? event : this.dateFormatterService.toGregorian(event);

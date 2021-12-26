@@ -24,6 +24,7 @@ import {DccCommonsNgPipesModule} from '@dcc-commons-ng/pipes';
 import {HijriGregorianDatepickerModule} from "@shared/modules/hijri-gregorian-datepicker/hijri-gregorian-datepicker.module";
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {BackButtonDirective} from "@shared/directives/back-button.directive";
+import { Ng9OdometerModule } from 'ng9-odometer';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import {BackButtonDirective} from "@shared/directives/back-button.directive";
     TranslateModule,
     NgxCaptchaModule,
     HijriGregorianDatepickerModule,
-    NgMultiSelectDropDownModule
+    NgMultiSelectDropDownModule,
+    Ng9OdometerModule.forRoot()
   ],
   providers: [DateAgoPipe, DatePipe, DateFormatPipe, HijriFormatPipe, NgxCaptchaModule],
   exports: [
@@ -66,7 +68,8 @@ import {BackButtonDirective} from "@shared/directives/back-button.directive";
     DccCommonsNgPipesModule,
     NgMultiSelectDropDownModule,
     HijriGregorianDatepickerModule,
-    BackButtonDirective
+    BackButtonDirective,
+    Ng9OdometerModule
   ],
   entryComponents: [
     NgbdDatepickerIslamicumalqura,

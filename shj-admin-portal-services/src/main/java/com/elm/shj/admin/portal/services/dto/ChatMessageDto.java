@@ -3,8 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantChatContact;
-import com.elm.shj.admin.portal.orm.entity.JpaChatMessageTypeLookup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,10 +25,10 @@ public class ChatMessageDto implements Serializable {
 
     private long id;
     private String text;
-    private JpaChatMessageTypeLookup type;
+    private ChatMessageTypeLookupDto type;
     private String contentFilePath;
-    private JpaApplicantChatContact sender;
-    private JpaApplicantChatContact receiver;
+    private ApplicantChatContactDto sender;
+    private ApplicantChatContactDto receiver;
     private Date sentDate;
     private Date receivedDate;
     private Date readDate;

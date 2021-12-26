@@ -268,12 +268,10 @@
             <span class="status mr-1 done severity-badge"></span>
             <span>{{'notification-management.normal' |translate}}</span>
           </td>
-          <td>{{template?.sendingDate | dateFormat}}
-            <!-- Uncomment to display notification time
-            {{template?.sendingDate | date: 'HH:mm'}}-->
+          <td>{{template?.sendingDate | dateTimeFormat}}
           </td>
           <td
-            class="ltr">{{template?.creationDate | dateFormat}}</td>
+            class="ltr">{{template?.creationDate | dateTimeFormat}}</td>
           <td
             class="ltr">{{template?.statusCode ? lookupService().localizedLabel(notificationTemplateStatuses, template?.statusCode) : '---'}}</td>
           <td>

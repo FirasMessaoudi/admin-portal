@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface ApplicantGroupRepository extends JpaRepository<JpaApplicantGroup, Long> {
 
     Optional<JpaApplicantGroup> findByReferenceNumber(String referenceNumber);
+    Optional<JpaApplicantGroup>  getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(String referenceNumber,long companyRitualSeasonId);
 }

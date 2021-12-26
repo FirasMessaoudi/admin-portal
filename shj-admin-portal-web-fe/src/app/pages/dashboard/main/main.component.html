@@ -1,0 +1,255 @@
+<div class="content__wrapper">
+  <div class="title__Page flex-wrap">
+    <h3 class="font-weight-bold text-dark">حج عام 1447</h3>
+    <div>
+      <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
+        <svg-icon styleClass="fa-w-18" icon="edit-light"></svg-icon>
+        تعديل
+      </button>
+      <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
+        <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
+        شاشة كاملة
+      </button>
+    </div>
+  </div>
+  <div class="content__section">
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
+
+      <div class="col mb-4">
+        <div class="statistics h-100 p-3 border">
+          <div class="flex-center-between">
+            <div>
+              <div class="sts-title">حجاج هذا العام</div>
+              <div class="sts-number text-dark">
+                <ng9-odometer [number]="externalpilgrims"></ng9-odometer>
+              </div>
+            </div>
+            <svg-icon styleClass="sts-icon fa-w-14 display-4" icon="user-solid"></svg-icon>
+          </div>
+
+          <p class="py-3">
+            <ngb-progressbar type="pilgrims" [value]="25" height="10px"></ngb-progressbar>
+          </p>
+
+          <div class="flex-center-between mt-2">
+            <div class="d-flex">
+              <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
+              <div class="px-3">حجاج الخارج</div>
+            </div>
+            <div>1,547,755</div>
+          </div>
+          <div class="flex-center-between mt-2">
+            <div class="d-flex">
+              <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+              <div class="px-3">حجاج الداخل</div>
+            </div>
+            <div>447,755</div>
+          </div>
+        </div>
+      </div>
+      <div class="col mb-4">
+        <div class="statistics h-100 p-3 border">
+          <div class="flex-center-between">
+            <div>
+              <div class="sts-title">حجاج الموسم الماضي</div>
+              <div class="sts-number text-dark">
+                <ng9-odometer [number]="internalpilgrims"></ng9-odometer>
+              </div>
+            </div>
+            <svg-icon styleClass="sts-icon fa-w-20 display-4" icon="user-clock"></svg-icon>
+          </div>
+
+          <p class="py-3">
+            <ngb-progressbar type="pilgrims" [value]="25" height="10px"></ngb-progressbar>
+          </p>
+
+          <div class="flex-center-between mt-2">
+            <div class="d-flex">
+              <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
+              <div class="px-3">حجاج الخارج</div>
+            </div>
+            <div>1,547,755</div>
+          </div>
+          <div class="flex-center-between mt-2">
+            <div class="d-flex">
+              <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+              <div class="px-3">حجاج الداخل</div>
+            </div>
+            <div>447,755</div>
+          </div>
+        </div>
+      </div>
+      <div class="col mb-4">
+        <div class="statistics h-100 p-3 border">
+          <div class="flex-center-between">
+            <div>
+              <div class="sts-title">عدد الكاميرات</div>
+              <div class="sts-number text-dark">
+                <ng9-odometer [number]="cctv"></ng9-odometer>
+              </div>
+            </div>
+            <svg-icon styleClass="sts-icon fa-w-18 display-4" icon="cctv"></svg-icon>
+          </div>
+
+          <p class="py-3">
+            <ngb-progressbar type="cctv" [value]="25" height="10px"></ngb-progressbar>
+          </p>
+
+          <div class="flex-center-between mt-2">
+            <div class="d-flex">
+              <svg-icon styleClass="text-cctv" icon="circle"></svg-icon>
+              <div class="px-3">كاميرا تعمل</div>
+            </div>
+            <div>911</div>
+          </div>
+          <div class="flex-center-between mt-2">
+            <div class="d-flex">
+              <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+              <div class="px-3">كاميرا لا تعمل</div>
+            </div>
+            <div>71</div>
+          </div>
+        </div>
+      </div>
+      <div class="col mb-4">
+        <div class="statistics h-100 p-3 border">
+          <div class="flex-center-between">
+            <div>
+              <div class="sts-title">تحميل التطبيق</div>
+              <div class="sts-number text-dark">
+                <ng9-odometer [number]="appdownloads"></ng9-odometer>
+              </div>
+            </div>
+            <svg-icon styleClass="sts-icon fa-w-10 display-4" icon="mobile-android-alt"></svg-icon>
+          </div>
+
+          <p class="py-3">
+            <ngb-progressbar type="appdownloads" [value]="25" height="10px"></ngb-progressbar>
+          </p>
+
+          <div class="flex-center-between mt-2">
+            <div class="d-flex">
+              <svg-icon styleClass="text-appdownloads" icon="circle"></svg-icon>
+              <div class="px-3">مفعل</div>
+            </div>
+            <div>875,755</div>
+          </div>
+          <div class="flex-center-between mt-2">
+            <div class="d-flex">
+              <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+              <div class="px-3">غير مفعل</div>
+            </div>
+            <div>300,755</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="row row-cols-1 row-cols-xl-2">
+      <div class="col mt-4">
+        <div class="h-100 p-3 border">
+          <div class="flex-center-between flex-wrap">
+            <div class="flex-center-vert flex-wrap">
+              <h5 class="sts">تقييم الخدمات</h5>
+            </div>
+            <a href="/" class="text-dcc-primary">
+              المزيد عن التقييم
+              <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
+            </a>
+          </div>
+          <div class="py-3">Content</div>
+        </div>
+      </div>
+      <div class="col mt-4">
+        <div class="h-100 p-3 border">
+          <div class="flex-center-between flex-wrap">
+            <div class="flex-center-vert flex-wrap">
+              <h5 class="sts">تقييم الشركات</h5>
+              <button type="button" class="btn border mx-3">
+                اعلى تقييم
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
+            </div>
+
+            <a href="/" class="text-dcc-primary">
+              المزيد عن التقييم
+              <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
+            </a>
+          </div>
+          <div class="py-3">Content</div>
+        </div>
+      </div>
+      <div class="col mt-4">
+        <div class="h-100 p-3 border">
+          <div class="flex-center-between flex-wrap">
+            <div class="flex-center-vert flex-wrap">
+              <h5 class="sts">عدد البلاغات</h5>
+            </div>
+            <a href="/" class="text-dcc-primary">
+              المزيد عن البلاغات
+              <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
+            </a>
+          </div>
+          <div class="py-3">Content</div>
+        </div>
+      </div>
+      <div class="col mt-4">
+        <div class="h-100 p-3 border">
+          <div class="flex-center-between flex-wrap">
+            <div class="flex-center-vert flex-wrap">
+              <h5 class="sts">عمليات البطاقة بالنسبة للأجهزة</h5>
+            </div>
+
+            <a href="/" class="text-dcc-primary">
+              المزيد عن العمليات
+              <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
+            </a>
+          </div>
+          <div class="py-3">Content</div>
+        </div>
+      </div>
+      <div class="col-12 mt-4">
+        <div class="border">
+          <ul ngbNav #nav="ngbNav" class="nav-tabs stsTab">
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>متابعة الحجيج</a>
+              <ng-template ngbNavContent>
+                <div class="flex-center">
+                  <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
+                </div>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>متابعة المطوفين</a>
+              <ng-template ngbNavContent>
+                <div class="flex-center">
+                  <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
+                </div>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+              <a ngbNavLink>متابعة المركبات</a>
+              <ng-template ngbNavContent>
+                <div class="flex-center">
+                  <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
+                </div>
+              </ng-template>
+            </li>
+            <li ngbDropdown class="ml-auto flex-center">
+              <a href="/" class="text-dcc-primary mr-3">
+                المزيد عن المتابعة
+                <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
+              </a>
+            </li>
+          </ul>
+
+          <div [ngbNavOutlet]="nav" class="bg-dcc-light"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

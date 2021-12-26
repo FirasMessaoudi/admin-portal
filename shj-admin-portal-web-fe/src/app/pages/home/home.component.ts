@@ -15,10 +15,9 @@ export enum PeriodType {
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-
   PeriodType = PeriodType;
 
   periodType: PeriodType = PeriodType.DAILY;
@@ -36,6 +35,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   private loadPeriodDSubscription: Subscription;
   private loadPeriodWSubscription: Subscription;
   private loadPeriodMSubscription: Subscription;
+
+  //this is a variable that hold number
+  public externalpilgrims: number = 1934323;
+  public internalpilgrims: number = 512312;
+  public cctv: number = 982;
+  public appdownloads: number = 1103402;
 
   constructor(
     private router: Router,

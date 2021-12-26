@@ -36,4 +36,21 @@ export class ApplicantService {
         })
       );
   }
+
+  countApplicantsHavingCurrentRitual(): Observable<any> {
+    return this.http.get<any>("/core/api/applicants/count/having-current-ritual");
+  }
+
+  countCategorizedApplicants(criteria: ApplicantSearchCriteria): Observable<any> {
+    return this.http.post<any>("/core/api/applicants/count/categorized", criteria)
+      .pipe(catchError((error: HttpErrorResponse) => {
+          if (error.hasOwnProperty('error')) {
+            return of(error.error);
+          } else {
+            console.error('An error happened while sending user notifications : ' + error);
+            return of(error);
+          }
+        })
+      );
+  }
 }

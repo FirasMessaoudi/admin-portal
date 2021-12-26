@@ -1,0 +1,110 @@
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h3 class="font-weight-bold text-dark">الكاميرات</h3>
+    <div>
+      <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
+        <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
+        شاشة كاملة
+      </button>
+    </div>
+  </div>
+  <div class="content__section">
+
+    <div class="row row-cols-1 row-cols-xl-2">
+      <div class="col-12">
+        <div class="p-3 border">
+          <div class="py-3">
+            <div class="row">
+              <div class="col-lg-3">
+                <div class="statistics">
+                  <div class="flex-center-between">
+                    <div>
+                      <div class="sts-title">عدد الكاميرات</div>
+                      <div class="sts-number text-dark">
+                        <ng9-odometer [number]="cctv"></ng9-odometer>
+                      </div>
+                    </div>
+                    <svg-icon styleClass="sts-icon fa-w-18 display-4" icon="cctv"></svg-icon>
+                  </div>
+        
+                  <p class="py-3">
+                    <ngb-progressbar type="cctv" [value]="25" height="10px"></ngb-progressbar>
+                  </p>
+        
+                  <div class="flex-center-between mt-2">
+                    <div class="d-flex">
+                      <svg-icon styleClass="text-cctv" icon="circle"></svg-icon>
+                      <div class="px-3">كاميرا تعمل</div>
+                    </div>
+                    <div>911</div>
+                  </div>
+                  <div class="flex-center-between mt-2">
+                    <div class="d-flex">
+                      <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+                      <div class="px-3">كاميرا لا تعمل</div>
+                    </div>
+                    <div>71</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="h-100 bg-dcc-light flex-center">
+                  Content
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mt-4">
+        <div class="p-3 border">
+          <ul ngbNav #nav="ngbNav" class="nav-tabs stsTab">
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>الحرم</a>
+              <ng-template ngbNavContent>
+                <div class="flex-center">
+                  <svg-icon icon="map-marked-alt" styleClass="fa-10x"></svg-icon>
+                </div>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>منى</a>
+              <ng-template ngbNavContent>
+                <div class="flex-center">
+                  <svg-icon icon="map-marked-alt" styleClass="text-gray-300 fa-10x"></svg-icon>
+                </div>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+              <a ngbNavLink>الجمرات</a>
+              <ng-template ngbNavContent>
+                <div class="flex-center">
+                  <svg-icon icon="map-marked-alt" styleClass="text-white fa-10x"></svg-icon>
+                </div>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="4">
+              <a ngbNavLink>مزدلفة</a>
+              <ng-template ngbNavContent>
+                <div class="flex-center">
+                  <svg-icon icon="map-marked-alt" styleClass="text-gray-300 fa-10x"></svg-icon>
+                </div>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="5">
+              <a ngbNavLink>عرفات</a>
+              <ng-template ngbNavContent>
+                <div class="flex-center">
+                  <svg-icon icon="map-marked-alt" styleClass="text-white fa-10x"></svg-icon>
+                </div>
+              </ng-template>
+            </li>
+          </ul>
+
+          <div [ngbNavOutlet]="nav" class="bg-dcc-light"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -7,6 +7,8 @@ import com.elm.shj.admin.portal.orm.entity.JpaDataRequest;
 import com.elm.shj.admin.portal.orm.repository.DataRequestRepository;
 import com.elm.shj.admin.portal.services.data.processor.DataProcessorResult;
 import com.elm.shj.admin.portal.services.data.processor.DataProcessorService;
+import com.elm.shj.admin.portal.services.data.reader.EExcelItemReaderErrorType;
+import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.data.writer.ItemWriter;
 import com.elm.shj.admin.portal.services.dto.DataRequestDto;
 import com.elm.shj.admin.portal.services.dto.DataRequestStatusLookupDto;
@@ -19,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.RandomStringGenerator;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,8 +214,12 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
             // process the file
             DataProcessorResult<T> parserResult = dataRequestProcessor.processRequestFile(originalFile, dataRequest.getDataSegment());
             // save all parsed items
-            itemWriter.write(parserResult.getParsedItems(), dataRequest.getDataSegment(), dataRequestId);
+            List<DataValidationResult> writerValidationResult =itemWriter.write(parserResult.getParsedItems(), dataRequest.getDataSegment(), dataRequestId);
             // in case of error, generate the error file and save it in the SFTP
+           if(!writerValidationResult.isEmpty()){
+                parserResult.getDataValidationResults().addAll(writerValidationResult);
+               parserResult.setWithErrors(true);
+           }
             if (parserResult.isWithErrors()) {
                 // generate error file
                 Resource errorFile = dataRequestProcessor.generateErrorFile(originalFile, parserResult.getDataValidationResults());
