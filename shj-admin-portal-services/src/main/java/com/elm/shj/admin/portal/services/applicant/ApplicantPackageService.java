@@ -1,7 +1,7 @@
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
-import com.elm.shj.admin.portal.orm.entity.ApplicantPackageVo;
+import com.elm.shj.admin.portal.orm.entity.ApplicantRitualSeasonVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackage;
 import com.elm.shj.admin.portal.orm.repository.ApplicantPackageRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
@@ -37,7 +37,7 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
         return null;
     }
 
-    public List<ApplicantPackageVo> findApplicantPackageAndRitualSeason(long applicantUin) {
+    public List<ApplicantRitualSeasonVo> findApplicantPackageAndRitualSeason(long applicantUin) {
         return applicantPackageRepository.findApplicantPackageAndRitualSeasonByUin(applicantUin);
 
     }
