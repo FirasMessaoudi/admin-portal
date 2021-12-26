@@ -66,6 +66,9 @@ public class JpaApplicantChatContact implements Serializable {
 
     private Boolean deleted;
 
+    @Column(name = "is_automatically")
+    private Boolean isAutomatically;
+
     @ManyToOne
     @JoinColumn(name = "applicant_ritual_id")
     private JpaApplicantRitual applicantRitual;

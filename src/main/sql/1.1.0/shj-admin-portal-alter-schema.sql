@@ -1149,7 +1149,7 @@ Alter table shc_portal.shc_notification_category_lk
 GO
 
 ALTER TABLE shc_portal.shc_applicant
-    ADD preferred_language VARCHAR(2) DEFAULT 'en' NOT NULL;
+    ADD preferred_language VARCHAR(2) NULL;
 GO
 
 ALTER TABLE shc_portal.shc_applicant
@@ -1174,4 +1174,10 @@ create table shc_portal.shc_notification_template_categorizing
     update_date              smalldatetime NULL,
     CONSTRAINT fk_notification_template_categorizing_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id)
 );
+GO
+
+
+
+ALTER TABLE shc_portal.shc_applicant_chat_contact
+    ADD is_automatically bit DEFAULT 0 NOT NULL;;
 GO

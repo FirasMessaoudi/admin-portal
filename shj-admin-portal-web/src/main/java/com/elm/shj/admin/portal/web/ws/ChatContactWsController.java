@@ -147,7 +147,7 @@ public class ChatContactWsController {
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
         }
         List<ApplicantChatContactLiteDto> applicantChatContactList = applicantChatContactService.listApplicantChatContacts(uin, applicantRitualId, null);
-        boolean isFound = applicantChatContactList.parallelStream().anyMatch(p -> p.getContactUin().equals(applicantUin));
+        boolean isFound = applicantChatContactList.parallelStream().anyMatch(p -> p.getContactUin().equals(applicantUin) && p.getIsAutomatically() == true);
         if (isFound)
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(uin).build()).build());
