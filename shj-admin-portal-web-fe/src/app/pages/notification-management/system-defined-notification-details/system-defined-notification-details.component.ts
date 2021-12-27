@@ -35,7 +35,6 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
   activeId;
   allParamsAreValid = true;
   selectedLang: string;
-
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,
               private router: Router,
@@ -212,6 +211,7 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
 
 
   updateNotificationTemplate() {
+
     let templateContentIndex = this.getTempContentIndex();
     this.allParamsAreValid = true;
     if (!this.editable) {
@@ -225,7 +225,9 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
         this.selectedLangTemplateContent = this.notificationTemplate.notificationTemplateContents[templateContentIndex];
         this.updateForm();
       }
+
     } else {
+
       Object.keys(this.templateForm.controls).forEach(field => {
         const control = this.templateForm.get(field);
         control.markAsTouched({onlySelf: true});
@@ -244,10 +246,16 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
         this.templateForm.controls['body'].setErrors({'invalidParams': true});
         return;
       }
-
+      this.translatedLanguages.forEach(lang =>{
+        this.showExclamationCircle(lang.code.toLowerCase(),this.notificationTemplate.notificationTemplateContents);
+      });
+      if (this.templateForm.invalid) {
+        return;
+      }
       this.notificationService.updateNotificationTemplate(this.notificationTemplate).subscribe(res => {
         if (res.status == 558) {
           this.allParamsAreValid = false;
+          this.activeId=1;
           this.templateForm.controls['body'].markAsTouched({onlySelf: true});
           this.templateForm.controls['body'].setErrors({'invalidParams': true});
         } else if (res.hasOwnProperty('errors') && res.errors) {
@@ -294,7 +302,8 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
       this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value.replace(/\s/g, " ").trim();
       this.selectedLangTemplateContent.body = this.templateForm.controls['body'].value.replace(/\s/g, " ").trim();
       this.selectedLangTemplateContent.actionLabel = this.templateForm.controls['actionLabel'].value?.replace(/\s/g, " ").trim();
-      this.notificationTemplate.notificationTemplateContents[index] = this.selectedLangTemplateContent;
+      if (this.selectedLangTemplateContent.title != '' && this.selectedLangTemplateContent.body != '')
+        this.notificationTemplate.notificationTemplateContents[index] = this.selectedLangTemplateContent;
     } else {
       this.selectedLangTemplateContent = new NotificationTemplateContent(this.selectedLang.toUpperCase(), '', '', '');
       this.selectedLangTemplateContent.title = this.templateForm.controls['title'].value.replace(/\s/g, " ").trim();
@@ -313,5 +322,42 @@ export class SystemDefinedNotificationDetailsComponent implements OnInit {
     this.templateForm.controls['body'].setErrors(null);
     this.templateForm.controls['actionLabel'].setErrors(null);
     this.templateForm.controls['title'].setErrors(null);
+  }
+
+  showCheckCircle(lang: string) {
+    if (this.notificationTemplate?.notificationTemplateContents.length > 0) {
+      let index = this.notificationTemplate.notificationTemplateContents.findIndex((value => lang.startsWith(value.lang.toLowerCase())));
+      if (index == -1) {
+        return false;
+      }
+      return this.notificationTemplate.notificationTemplateContents[index].title != '' && this.notificationTemplate.notificationTemplateContents[index].body != '';
+    } else {
+      return false;
+    }
+  }
+
+  showExclamationCircle(lang: string , notificationTemplateContents: NotificationTemplateContent[]) {
+
+    if (notificationTemplateContents?.length > 0) {
+      let index = notificationTemplateContents.findIndex((value => lang.startsWith(value.lang.toLowerCase())));
+      if (index == -1) {
+        this.selectedLang=this.translatedLanguages[notificationTemplateContents?.length].code.toLowerCase();
+        this.activeId=notificationTemplateContents?.length +1;
+        if(this.templateForm.controls['title'].value !='' && this.templateForm.controls['body'].value !=''){
+          this.templateForm.controls['title'].setValue('');
+          this.templateForm.controls['body'].setValue('');
+          this.templateForm.controls['actionLabel'].setValue('');
+          this.templateForm.controls['body'].setErrors({'incorrect': true});
+          this.templateForm.controls['actionLabel'].setErrors({'incorrect': true});
+          this.templateForm.controls['title'].setErrors({'incorrect': true});
+          this.templateForm.setErrors({
+            'invalid': true
+          });
+        }
+
+
+      }
+
+    }
   }
 }

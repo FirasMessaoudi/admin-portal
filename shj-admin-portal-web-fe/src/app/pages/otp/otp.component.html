@@ -19,7 +19,7 @@
     <div class="alert alert-danger" [hidden]="!error || loading">
       {{'login.invalid_otp' | translate }}
     </div>
-    <h3 class="text-dcc-primary font-weight-bold mb-4">{{'login.header_title' | translate}}</h3>
+    <h3 class="text-dcc-primary font-weight-bold mb-4">{{'login.confirmation_title' | translate}}</h3>
     <div id="otpNoteMsg" class="text-secondary mb-5">{{'login.otp_text' | translate}}  <div class="ltr d-inline-block">({{mask}})</div></div>
     <div id="otpInputsRow" class="row mx-auto w-75 ltr">
       <div class="form-group col-sm-3" *ngFor="let input of formInputs;  index as i">
