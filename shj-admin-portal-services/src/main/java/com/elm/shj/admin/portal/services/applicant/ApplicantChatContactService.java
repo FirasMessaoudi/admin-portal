@@ -92,7 +92,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .deleted(applicantChatContact.getDeleted())
                 .creationDate(applicantChatContact.getCreationDate())
                 .updateDate(applicantChatContact.getUpdateDate())
-                .isAutomatically(applicantChatContact.getIsAutomatically())
+                .autoAdded(applicantChatContact.getAutoAdded())
                 .build();
     }
 
@@ -118,6 +118,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .deleted(false)
                 .avatar(contact.getAvatar())
                 .applicantRitual(applicantRitual)
+                .autoAdded(false)
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
 
@@ -152,6 +153,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .avatar(companyStaff.map(CompanyStaffLiteDto::getPhoto).orElse(null))
                 .staffTitleCode(companyStaff.map(CompanyStaffLiteDto::getTitleCode).orElse(null))
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.STAFF.getId()).build())
+                .autoAdded(false)
                 .build();
 
         savedContact = save(savedContact);
@@ -185,6 +187,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         applicantChatContact.setCountryPhonePrefix(contact.getCountryPhonePrefix());
         applicantChatContact.setCountryCode(contact.getCountryCode());
         applicantChatContact.setAvatar(contact.getAvatar());
+        applicantChatContact.setAutoAdded(false);
         ApplicantChatContactDto savedContact = save(applicantChatContact);
         return mapChatContactToChatContactLite(savedContact);
     }

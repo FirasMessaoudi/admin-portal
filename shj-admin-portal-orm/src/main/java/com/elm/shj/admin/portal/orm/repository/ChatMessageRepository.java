@@ -27,4 +27,6 @@ public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Lon
                     "where contact.applicant_uin= :applicantUin and contact.deleted=0 " +
                     "group by contact.contact_uin,contact.id")
     List<Object[]> findChatContactsWithLatestMessage(@Param("applicantUin") String uin);
+
+    List<JpaChatMessage> findBySenderIdOrReceiverId(@Param("senderId") long senderId,@Param("senderId") long receiverId);
 }

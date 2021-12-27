@@ -19,16 +19,16 @@ import java.util.List;
  */
 public interface ApplicantChatContactRepository extends JpaRepository<JpaApplicantChatContact, Long> {
 
-    @Query("SELECT j FROM JpaApplicantChatContact j WHERE j.deleted = FALSE AND j.applicantUin = :applicantUin AND j.isAutomatically = FALSE " +
+    @Query("SELECT j FROM JpaApplicantChatContact j WHERE j.deleted = FALSE AND j.applicantUin = :applicantUin " +
             "AND (j.systemDefined = FALSE OR (j.systemDefined = TRUE AND j.applicantRitual.id = :applicantRitualId))")
     List<JpaApplicantChatContact> findAllByUinAndRitualIdAndSystemDefined(@Param("applicantUin") String applicantUin,
                                                                           @Param("applicantRitualId") Long applicantRitualId);
 
-    @Query("SELECT j FROM JpaApplicantChatContact j WHERE j.deleted = FALSE AND j.applicantUin = :applicantUin AND j.isAutomatically = FALSE " +
+    @Query("SELECT j FROM JpaApplicantChatContact j WHERE j.deleted = FALSE AND j.applicantUin = :applicantUin  " +
             "AND j.systemDefined = FALSE")
     List<JpaApplicantChatContact> findUserDefined(@Param("applicantUin") String applicantUin);
 
-    @Query("SELECT j FROM JpaApplicantChatContact j WHERE j.deleted = FALSE AND j.applicantUin = :applicantUin AND j.isAutomatically = FALSE " +
+    @Query("SELECT j FROM JpaApplicantChatContact j WHERE j.deleted = FALSE AND j.applicantUin = :applicantUin  " +
             "AND j.systemDefined = TRUE AND j.applicantRitual.id = :applicantRitualId")
     List<JpaApplicantChatContact> findSystemDefined(@Param("applicantUin") String applicantUin,
                                                     @Param("applicantRitualId") Long applicantRitualId);
