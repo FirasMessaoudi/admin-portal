@@ -25,7 +25,8 @@ public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Lon
                     "from shc_portal.shc_applicant_chat_contact contact " +
                     "join shc_portal.shc_chat_message messages on messages.sender_id = contact.id or messages.receiver_id = contact.id " +
                     "where contact.applicant_uin= :applicantUin and contact.deleted=0 " +
-                    "group by contact.contact_uin,contact.id")
+                    "group by contact.contact_uin,contact.id " +
+                    "order by sent_date desc")
     List<Object[]> findChatContactsWithLatestMessage(@Param("applicantUin") String uin);
 
     List<JpaChatMessage> findBySenderIdOrReceiverId(@Param("senderId") long senderId,@Param("senderId") long receiverId);

@@ -1179,5 +1179,5 @@ GO
 
 
 ALTER TABLE shc_portal.shc_applicant_chat_contact
-    ADD is_automatically bit DEFAULT 0 NOT NULL;;
+    ADD auto_added bit DEFAULT 0 NOT NULL;;
 GO
