@@ -147,7 +147,7 @@ public class ChatContactWsController {
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
         }
         List<ApplicantChatContactLiteDto> applicantChatContactList = applicantChatContactService.listApplicantChatContacts(uin, applicantRitualId, null);
-        boolean isFound = applicantChatContactList.parallelStream().anyMatch(p -> p.getContactUin().equals(applicantUin) && p.getAutoAdded() == true);
+        boolean isFound = applicantChatContactList.stream().anyMatch(p -> p.getContactUin().equals(applicantUin) && p.getAutoAdded() == true);
         if (isFound)
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(uin).build()).build());
@@ -185,7 +185,7 @@ public class ChatContactWsController {
 
     @GetMapping("/messages/{contactId}")
     public ResponseEntity<WsResponse<?>> listChatMessagesBySenderIdOrReceiverId(@PathVariable long contactId) {
-        List<ChatMessageDto> messagesList = chatMessageService.findJpaChatMessagesBySenderIdOrReceiverId(contactId);
+        List<ChatMessageDto> messagesList = chatMessageService.findChatMessagesBySenderIdOrReceiverId(contactId);
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
                 .body(messagesList).build());

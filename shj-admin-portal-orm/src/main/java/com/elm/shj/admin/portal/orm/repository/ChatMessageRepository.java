@@ -29,5 +29,5 @@ public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Lon
                     "order by sent_date desc")
     List<Object[]> findChatContactsWithLatestMessage(@Param("applicantUin") String uin);
 
-    List<JpaChatMessage> findBySenderIdOrReceiverId(@Param("senderId") long senderId,@Param("senderId") long receiverId);
+    List<JpaChatMessage> findTop20BySenderIdOrReceiverIdOrderBySentDateDescIdDesc(long senderId,long receiverId);
 }
