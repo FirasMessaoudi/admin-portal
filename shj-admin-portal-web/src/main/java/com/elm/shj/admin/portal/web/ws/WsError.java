@@ -28,7 +28,8 @@ public class WsError {
         UPDATE_APPLICANT_FAILED(104),
         COMPANY_STAFF_NOT_FOUND(105),
         APPLICANT_CHAT_CONTACT_NOT_FOUND(106),
-        INCIDENT_TYPE_NOT_FOUND(107);
+        APPLICANT_CHAT_CONTACT_ALREADY_EXIST(107),
+        INCIDENT_TYPE_NOT_FOUND(108);
         int code;
 
         EWsError(int code) {

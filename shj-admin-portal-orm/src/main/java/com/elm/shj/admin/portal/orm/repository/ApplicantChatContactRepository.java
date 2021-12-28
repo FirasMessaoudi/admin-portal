@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository for Applicant Chat Contact Table.
@@ -36,10 +37,12 @@ public interface ApplicantChatContactRepository extends JpaRepository<JpaApplica
     @Modifying
     @Query("update JpaApplicantChatContact contact set contact.deleted = true where contact.applicantUin =:applicantUin and" +
             " contact.contactUin=:contactUin   and contact.systemDefined=false")
-    int markDeleted(@Param("applicantUin") String applicantUin,@Param("contactUin") String contactUin  );
+    int markDeleted(@Param("applicantUin") String applicantUin, @Param("contactUin") String contactUin);
 
     @Modifying
     @Query("update JpaApplicantChatContact j set j.avatar = :avatar, j.updateDate = CURRENT_TIMESTAMP where j.contactUin =:contactUin")
     void updateAvatar(@Param("contactUin") String contactUin, @Param("avatar") String avatar);
 
- }
+    Optional<JpaApplicantChatContact> findByApplicantUinAndContactUin(String applicantUin, String contactUin);
+
+}
