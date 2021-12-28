@@ -60,6 +60,27 @@ public class ChatContactWsController {
     }
 
     /**
+     * Find applicant chat contact
+     *
+     * @param applicantUin applicant uin
+     * @param contactUin   applicant chat contact uin
+     * @return WsResponse of chat contact
+     */
+    @GetMapping(value = "/find/{applicantUin}/{contactUin}")
+    public ResponseEntity<WsResponse<?>> findApplicantChatByApplicantUinAndContactUin(
+            @PathVariable String applicantUin,
+            @PathVariable String contactUin
+    ) throws Exception {
+        ApplicantChatContactDto applicantChatContactDto = applicantChatContactService.findApplicantChatContact(applicantUin, contactUin);
+        if (applicantChatContactDto == null)
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(applicantUin).build()).build());
+        log.debug("Handler for {}", "Create Applicant Chat Contact");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
+                .body(applicantChatContactDto).build());
+    }
+
+    /**
      * Add new applicant chat contact
      *
      * @param contact applicant chat contact details
