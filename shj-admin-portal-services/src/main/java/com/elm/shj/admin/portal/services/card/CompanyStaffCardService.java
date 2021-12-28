@@ -39,7 +39,7 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public List<CompanyStaffCardDto> findByDigitalId(String suin) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffDigitalIdSuin(suin));
+        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuin(suin));
     }
 
     /**
@@ -49,7 +49,7 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public  CompanyStaffCardDto  findByDigitalIdAndStatusCodeActive(String suin) {
-        return getMapper().fromEntity(companyStaffCardRepository.findByCompanyStaffDigitalIdSuinAndStatusCode(suin,ECardStatus.ACTIVE.name()), mappingContext);
+        return getMapper().fromEntity(companyStaffCardRepository.findByCompanyStaffSuinAndStatusCode(suin,ECardStatus.ACTIVE.name()), mappingContext);
      }
     /**
      * find company staff cards

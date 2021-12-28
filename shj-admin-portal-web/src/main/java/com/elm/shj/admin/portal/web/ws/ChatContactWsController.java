@@ -70,6 +70,9 @@ public class ChatContactWsController {
             @PathVariable Long applicantRitualId,
             @RequestBody ApplicantChatContactLiteDto contact
     ) throws Exception {
+        if (applicantChatContactService.findApplicantChatContact(contact.getApplicantUin(), contact.getContactUin()) != null)
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_ALREADY_EXIST).referenceNumber(contact.getContactUin()).build()).build());
         log.debug("Handler for {}", "Create Applicant Chat Contact");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
                 .body(applicantChatContactService.createApplicantChatContact(applicantRitualId, contact)).build());

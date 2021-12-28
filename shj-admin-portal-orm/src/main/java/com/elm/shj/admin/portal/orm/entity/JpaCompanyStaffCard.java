@@ -38,9 +38,8 @@ public class JpaCompanyStaffCard implements Serializable {
     @Column(name = "status_code", nullable = false)
     private String statusCode;
 
-    @ManyToOne
-    @JoinColumn(name = "company_staff_digital_id_id", nullable = false)
-    private JpaCompanyStaffDigitalId  companyStaffDigitalId;
+    @Column(name = "company_staff_suin")
+    private String companyStaffSuin;
 
     @ManyToOne
     @JoinColumn(name = "company_ritual_season_id", nullable = false)

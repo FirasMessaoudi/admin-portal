@@ -15,10 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -72,6 +70,14 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
     @Transactional
     public int deleteApplicantChatContact(String applicantUin, String contactUin) {
         return applicantChatContactRepository.markDeleted(applicantUin, contactUin);
+    }
+
+    public ApplicantChatContactDto findApplicantChatContact(String applicantUin, String contactUin) {
+        Optional<JpaApplicantChatContact> applicantChatContact = applicantChatContactRepository.findByApplicantUinAndContactUin(applicantUin, contactUin);
+        if (applicantChatContact.isPresent())
+            return getMapper().fromEntity(applicantChatContact.get(), mappingContext);
+        else
+            return null;
     }
 
     private ApplicantChatContactLiteDto mapChatContactToChatContactLite(ApplicantChatContactDto applicantChatContact) {
