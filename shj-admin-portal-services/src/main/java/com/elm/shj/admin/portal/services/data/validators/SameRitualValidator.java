@@ -61,12 +61,15 @@ public class SameRitualValidator implements ConstraintValidator<SameRitual, Obje
                 CompanyStaffDto groupLeader = companyStaffService.findGroupLeaderByBasicInfo(staffApplicantGroupDto.getStaffIdNumber(), staffApplicantGroupDto.getStaffPassportNumber(), staffApplicantGroupDto.getStaffDateOfBirthGregorian(), staffApplicantGroupDto.getStaffDateOfBirthHijri());
                 if (groupLeader != null) {
                     CompanyStaffDigitalIdDto companyStaffDigitalIdDto = companyStaffDigitalIdService.findByBasicInfo(groupLeader.getId(), staffApplicantGroupDto.getSeason());
-                    CompanyStaffCardDto companyStaffCardDto = companyStaffCardService.findByDigitalIdAndStatusCodeActive(companyStaffDigitalIdDto.getSuin());
-                    if (companyStaffCardDto != null &&
-                            companyStaffCardDto.getCompanyRitualSeason().getRitualSeason().getId() == latestCompanyRitualSeason.getRitualSeason().getId()
-                    ) {
-                        return true;
-                    }
+                   if(companyStaffDigitalIdDto!=null){
+                       CompanyStaffCardDto companyStaffCardDto = companyStaffCardService.findByDigitalIdAndStatusCodeActive(companyStaffDigitalIdDto.getSuin());
+                       if (companyStaffCardDto != null &&
+                               companyStaffCardDto.getCompanyRitualSeason().getRitualSeason().getId() == latestCompanyRitualSeason.getRitualSeason().getId()
+                       ) {
+                           return true;
+                       }
+                   }
+
                     return false;
                 }
             }
