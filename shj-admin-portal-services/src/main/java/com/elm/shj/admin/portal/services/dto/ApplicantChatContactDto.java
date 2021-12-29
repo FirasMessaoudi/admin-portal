@@ -23,7 +23,7 @@ public class ApplicantChatContactDto implements Serializable {
 
     private static final long serialVersionUID = -4684813036429505035L;
 
-    private Long id;
+    private long id;
     private String applicantUin;
     private String contactUin;
     private ContactTypeLookupDto type;

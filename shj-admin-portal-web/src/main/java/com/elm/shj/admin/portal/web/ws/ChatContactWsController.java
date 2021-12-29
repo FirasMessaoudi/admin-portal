@@ -223,8 +223,10 @@ public class ChatContactWsController {
     }
 
     @GetMapping("/messages/{contactId}")
-    public ResponseEntity<WsResponse<?>> listChatMessagesBySenderIdOrReceiverId(@PathVariable long contactId) {
-        List<ChatMessageDto> messagesList = chatMessageService.findChatMessagesBySenderIdOrReceiverId(contactId);
+    public ResponseEntity<WsResponse<?>> listChatMessagesBySenderIdOrReceiverId(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                                                @RequestParam(value = "limit", defaultValue = "0") int limit,
+                                                                                @PathVariable long contactId) {
+        List<ChatMessageDto> messagesList = chatMessageService.findChatMessagesBySenderIdOrReceiverId(page, limit, contactId);
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
                 .body(messagesList).build());
