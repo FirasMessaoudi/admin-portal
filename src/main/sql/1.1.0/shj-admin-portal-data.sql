@@ -358,3 +358,12 @@ values (10, 'staff-applicant-group-data.xlsx', N'بيانات المجموعات
 SET
 IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 GO
+
+
+SET IDENTITY_INSERT shc_portal.shc_contact_type_lk ON;
+INSERT INTO shc_portal.shc_contact_type_lk (id, code)
+VALUES (1, 'STAFF');
+INSERT INTO shc_portal.shc_contact_type_lk (id, code)
+VALUES (2, 'APPLICANT');
+SET IDENTITY_INSERT shc_portal.shc_contact_type_lk OFF;
+GO
