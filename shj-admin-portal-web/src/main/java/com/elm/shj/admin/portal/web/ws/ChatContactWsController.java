@@ -91,6 +91,21 @@ public class ChatContactWsController {
             @PathVariable Long applicantRitualId,
             @RequestBody ApplicantChatContactLiteDto contact
     ) throws Exception {
+        if (contact.getContactUin().equals(contact.getApplicantUin())) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(contact.getContactUin()).build()).build());
+        }
+        List<ApplicantChatContactLiteDto> applicantChatContactList = applicantChatContactService.listApplicantChatContacts(contact.getContactUin(), applicantRitualId, null);
+        boolean isFound = applicantChatContactList.stream().anyMatch(p -> p.getContactUin().equals(contact.getApplicantUin()) && p.getAutoAdded() == true);
+        if (isFound)
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(contact.getContactUin()).build()).build());
+
+        boolean isContactPresent = applicantLiteService.existsByUin(contact.getContactUin());
+        if (!isContactPresent) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(contact.getContactUin()).build()).build());
+        }
         if (applicantChatContactService.findApplicantChatContact(contact.getApplicantUin(), contact.getContactUin()) != null)
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_ALREADY_EXIST).referenceNumber(contact.getContactUin()).build()).build());
