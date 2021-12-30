@@ -5,8 +5,8 @@ package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantSearchCriteriaDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.dto.NotificationTemplateCategorizingDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +32,11 @@ public class ApplicantController {
 
     private final ApplicantService applicantService;
 
+/*    @GetMapping("/group")
+    public List<ApplicantDto> group() {
+        return applicantService.findApplicantsWithoutGroupLeaderChatContact();
+    }*/
+
     @GetMapping("/list/all")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
     public Page<ApplicantDto> listApplicants(Pageable pageable) {
@@ -46,11 +51,18 @@ public class ApplicantController {
      */
     @PostMapping("/find")
     @RolesAllowed(AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT)
-    public Page<ApplicantDto> findApplicants(@RequestBody ApplicantSearchCriteriaDto applicantSearchCriteria,
+    public Page<ApplicantDto> findApplicants(@RequestBody NotificationTemplateCategorizingDto criteria,
                                              @RequestParam List<Long> excludedIds,
                                              Pageable pageable) {
         log.debug("Find applicants matching criteria...");
-        return applicantService.findAllByCriteriaAndNotInExcludedIds(applicantSearchCriteria, excludedIds, pageable);
+        return applicantService.findAllByCriteriaAndNotInExcludedIds(criteria, excludedIds, pageable);
+    }
+
+    @GetMapping("/find-by-ids")
+    @RolesAllowed(AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT)
+    public Page<ApplicantDto> findByIds(@RequestParam List<Long> ids, Pageable pageable) {
+        log.debug("Find applicants matching criteria...");
+        return applicantService.findByIds(ids, pageable);
     }
 
     @GetMapping("/count/having-current-ritual")
@@ -62,8 +74,8 @@ public class ApplicantController {
 
     @PostMapping("/count/categorized")
     @RolesAllowed(AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT)
-    public long countCategorizedApplicants(@RequestBody ApplicantSearchCriteriaDto applicantSearchCriteria) {
+    public long countCategorizedApplicants(@RequestBody NotificationTemplateCategorizingDto criteria) {
         log.debug("Count applicants having current ritual...");
-        return applicantService.countAllByCriteria(applicantSearchCriteria, null);
+        return applicantService.countAllByCriteria(criteria, null);
     }
 }

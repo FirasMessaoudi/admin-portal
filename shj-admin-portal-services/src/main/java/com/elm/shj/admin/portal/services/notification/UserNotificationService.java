@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaUserNotification;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
 import com.elm.shj.admin.portal.services.dto.DetailedUserNotificationDto;
 import com.elm.shj.admin.portal.services.dto.EUserNotificationStatus;
+import com.elm.shj.admin.portal.services.dto.EUserNotificationType;
 import com.elm.shj.admin.portal.services.dto.UserNotificationDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Service handling  User Notification

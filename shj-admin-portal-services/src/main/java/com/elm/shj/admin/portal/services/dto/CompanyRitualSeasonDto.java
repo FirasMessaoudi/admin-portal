@@ -34,7 +34,6 @@ public class CompanyRitualSeasonDto {
     @JsonBackReference(value = "ritualSeason")
     private RitualSeasonDto ritualSeason;
 
-
     @JsonBackReference(value = "ritualPackages")
     private List<RitualPackageDto> ritualPackages;
 

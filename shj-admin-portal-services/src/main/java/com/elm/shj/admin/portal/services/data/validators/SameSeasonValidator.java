@@ -28,14 +28,15 @@ public class SameSeasonValidator implements ConstraintValidator<SameSeason, Obje
     @Autowired
     private CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     @Autowired
-    private  CompanyStaffService companyStaffService;
+    private CompanyStaffService companyStaffService;
     @Autowired
-    private ApplicantService applicantService ;
+    private ApplicantService applicantService;
     @Autowired
-    private ApplicantDigitalIdRepository  applicantDigitalIdRepository ;
+    private ApplicantDigitalIdRepository applicantDigitalIdRepository;
 
     @Autowired
-    private CompanyStaffDigitalIdService companyStaffDigitalIdService ;
+    private CompanyStaffDigitalIdService companyStaffDigitalIdService;
+
     /**
      * {@inheritDoc}
      */
@@ -45,30 +46,30 @@ public class SameSeasonValidator implements ConstraintValidator<SameSeason, Obje
             return false;
         }
 
-        StaffApplicantGroupDto  staffApplicantGroupDto = (StaffApplicantGroupDto) value;
+        StaffApplicantGroupDto staffApplicantGroupDto = (StaffApplicantGroupDto) value;
         ApplicantBasicInfoDto applicantBasicInfoDto = new ApplicantBasicInfoDto();
         applicantBasicInfoDto.setIdNumber(staffApplicantGroupDto.getIdNumber());
         applicantBasicInfoDto.setPassportNumber(staffApplicantGroupDto.getPassportNumber());
         applicantBasicInfoDto.setDateOfBirthGregorian(staffApplicantGroupDto.getDateOfBirthGregorian());
         applicantBasicInfoDto.setDateOfBirthHijri(staffApplicantGroupDto.getDateOfBirthHijri());
         ApplicantDto applicantDto = applicantService.findByBasicInfo(applicantBasicInfoDto);
-        Optional<JpaApplicantDigitalId> applicantDigitalId= applicantDigitalIdRepository.findByApplicantIdAndStatusCode(applicantDto.getId(),EDigitalIdStatus.VALID.name());
-       if(applicantDigitalId.isPresent()){
-           CompanyRitualSeasonLiteDto latestCompanyRitualSeason = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(Long.parseLong(applicantDigitalId.get().getUin()));
-           if(latestCompanyRitualSeason != null){
-               CompanyStaffDto groupLeader = companyStaffService.findGroupLeaderByBasicInfo(staffApplicantGroupDto.getStaffIdNumber(), staffApplicantGroupDto.getStaffPassportNumber(), staffApplicantGroupDto.getStaffDateOfBirthGregorian(), staffApplicantGroupDto.getStaffDateOfBirthHijri());
-               if(groupLeader!=null){
-                   CompanyStaffDigitalIdDto  companyStaffDigitalIdDto= companyStaffDigitalIdService.findByBasicInfo(groupLeader.getId(),staffApplicantGroupDto.getSeason());
-                   if(companyStaffDigitalIdDto!=null && latestCompanyRitualSeason.getRitualSeason().getSeasonYear() ==companyStaffDigitalIdDto.getSeasonYear()){
-                       return true;
-                   }
-                   return false ;
-               }
-           }
-       }
-
-        return false ;
-
+        Optional<JpaApplicantDigitalId> applicantDigitalId = applicantDigitalIdRepository.findByApplicantIdAndStatusCode(applicantDto.getId(), EDigitalIdStatus.VALID.name());
+        if (applicantDigitalId.isPresent()) {
+            CompanyRitualSeasonLiteDto latestCompanyRitualSeason = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(Long.parseLong(applicantDigitalId.get().getUin()));
+            if (latestCompanyRitualSeason != null) {
+                CompanyStaffDto groupLeader = companyStaffService.findGroupLeaderByBasicInfo(staffApplicantGroupDto.getStaffIdNumber(), staffApplicantGroupDto.getStaffPassportNumber(), staffApplicantGroupDto.getStaffDateOfBirthGregorian(), staffApplicantGroupDto.getStaffDateOfBirthHijri());
+                if (groupLeader != null) {
+                    CompanyStaffDigitalIdDto companyStaffDigitalIdDto = companyStaffDigitalIdService.findByBasicInfo(groupLeader.getId(), staffApplicantGroupDto.getSeason());
+                    if (companyStaffDigitalIdDto != null && latestCompanyRitualSeason.getRitualSeason().getSeasonYear() == companyStaffDigitalIdDto.getSeasonYear()) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
         }
+
+        return false;
+
+    }
 
 }

@@ -31,14 +31,14 @@ public class ApplicantChatContactLiteDto implements Serializable {
     private Long typeId;
     private String alias;
     private String avatar;
-    private Boolean systemDefined;
+    private boolean systemDefined;
     private String staffTitleCode;
     private String relationshipCode;
     private String mobileNumber;
     private String countryPhonePrefix;
     private String countryCode;
-    private Boolean deleted;
-    private Boolean autoAdded;
+    private boolean deleted;
+    private boolean autoAdded;
     private Date creationDate;
     private Date updateDate;
 }

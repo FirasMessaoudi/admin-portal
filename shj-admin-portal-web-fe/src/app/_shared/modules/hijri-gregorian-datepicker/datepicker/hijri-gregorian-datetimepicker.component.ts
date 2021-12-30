@@ -59,6 +59,7 @@ export class HijriGregorianDatetimepickerComponent implements ControlValueAccess
   @Input() readonly = false;
   @Input() isRequired = false;
   @Input() disabled = false;
+  @Input() grayed = false;
 
   @Input() minHijri: NgbDateStruct;
   @Input() maxHijri: NgbDateStruct;

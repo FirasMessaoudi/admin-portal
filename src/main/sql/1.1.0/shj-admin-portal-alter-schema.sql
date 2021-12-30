@@ -682,6 +682,7 @@ CREATE TABLE shc_portal.shc_notification_template
     user_specific   BIT           NOT NULL,
     sending_date    SMALLDATETIME NULL,
     force_sending   BIT           NOT NULL,
+    is_processed    BIT           NULL,
     creation_date   SMALLDATETIME NOT NULL DEFAULT current_timestamp,
     update_date     SMALLDATETIME NULL
 );
@@ -1170,6 +1171,7 @@ create table shc_portal.shc_notification_template_categorizing
     min_age                  int           NULL,
     max_age                  int           NULL,
     gender                   varchar(1)    NULL,
+    selected_applicants      nvarchar(max) NULL,
     creation_date            smalldatetime NOT NULL default current_timestamp,
     update_date              smalldatetime NULL,
     CONSTRAINT fk_notification_template_categorizing_notification_template FOREIGN KEY (notification_template_id) REFERENCES shc_portal.shc_notification_template (id)

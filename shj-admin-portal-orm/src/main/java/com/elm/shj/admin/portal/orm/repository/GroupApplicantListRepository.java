@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface GroupApplicantListRepository extends JpaRepository<JpaGroupApplicantList, Long> {
 
-    Optional<JpaGroupApplicantList>  findByApplicantUinAndApplicantGroupReferenceNumber(String applicantUin, String applicantGroupReferenceNumber);
+    Optional<JpaGroupApplicantList> findByApplicantUinAndApplicantGroupReferenceNumber(String applicantUin, String applicantGroupReferenceNumber);
+
 }

@@ -5,7 +5,9 @@ package com.elm.shj.admin.portal.services.notification;
 
 import com.elm.shj.admin.portal.orm.entity.JpaNotificationTemplate;
 import com.elm.shj.admin.portal.orm.repository.NotificationTemplateRepository;
+import com.elm.shj.admin.portal.services.dto.ENotificationTemplateType;
 import com.elm.shj.admin.portal.services.dto.NotificationSearchCriteriaDto;
+import com.elm.shj.admin.portal.services.dto.NotificationTemplateCategorizingDto;
 import com.elm.shj.admin.portal.services.dto.NotificationTemplateDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,12 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Service handling  Notification Template
+ * Service handling Notification Template
  *
  * @author Ahmed Ali
  * @since 1.1.0
@@ -36,6 +39,7 @@ import java.util.Optional;
 public class NotificationTemplateService extends GenericService<JpaNotificationTemplate, NotificationTemplateDto, Long> {
 
     private final NotificationTemplateRepository notificationTemplateRepository;
+    private final NotificationTemplateContentService notificationTemplateContentService;
 
     /**
      * Finds Notification Template By Name
@@ -139,11 +143,66 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
 
     @Transactional
     public NotificationTemplateDto create(NotificationTemplateDto notificationTemplate) {
+        notificationTemplate.setTypeCode(ENotificationTemplateType.USER_DEFINED.name());
+        notificationTemplate.setIsProcessed(false);
         notificationTemplate.getNotificationTemplateContents().parallelStream().forEach(content -> content.setNotificationTemplate(notificationTemplate));
         if (notificationTemplate.getNotificationTemplateCategorizing() != null) {
             notificationTemplate.getNotificationTemplateCategorizing().setNotificationTemplate(notificationTemplate);
         }
         notificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
         return save(notificationTemplate);
+    }
+
+    public List<NotificationTemplateDto> findUnprocessedUserDefinedNotifications(String typeCode, Date date, Boolean isProcessed, boolean enabled) {
+        return mapList(notificationTemplateRepository.findByTypeCodeAndSendingDateAfterAndIsProcessedAndEnabled(typeCode, date, isProcessed, enabled));
+    }
+
+    public NotificationTemplateDto updateUserDefined(NotificationTemplateDto notificationTemplate) {
+
+        NotificationTemplateDto databaseNotificationTemplate = findOne(notificationTemplate.getId());
+
+        // sets form fields to database notification template instance
+        databaseNotificationTemplate.setSendingDate(notificationTemplate.getSendingDate());
+        databaseNotificationTemplate.setEnabled(notificationTemplate.isEnabled());
+        databaseNotificationTemplate.setTypeCode(notificationTemplate.getTypeCode());
+        databaseNotificationTemplate.setCategoryCode(notificationTemplate.getCategoryCode());
+        databaseNotificationTemplate.setImportant(notificationTemplate.isImportant());
+        databaseNotificationTemplate.setUserSpecific(notificationTemplate.isUserSpecific());
+        databaseNotificationTemplate.setDescription(notificationTemplate.getDescription());
+        databaseNotificationTemplate.setStatusCode(notificationTemplate.getStatusCode());
+        databaseNotificationTemplate.setForceSending(notificationTemplate.isForceSending());
+
+        notificationTemplate.getNotificationTemplateContents().stream().filter(c -> c.getTitle().length() == 0 && c.getBody().length() == 0)
+                .filter(c -> databaseNotificationTemplate.getNotificationTemplateContents().stream().anyMatch(databaseContent -> databaseContent.getId() == c.getId()))
+                        .forEach(c -> {
+                            notificationTemplateContentService.deleteById(c.getId());
+                            notificationTemplate.getNotificationTemplateContents().remove(c);
+                        });
+
+        //Update notification contents
+        notificationTemplate.getNotificationTemplateContents().forEach(content -> content.setNotificationTemplate(databaseNotificationTemplate));
+        databaseNotificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
+
+        if (notificationTemplate.getNotificationTemplateCategorizing() != null) {
+            if (notificationTemplate.getNotificationTemplateCategorizing().getSelectedApplicants() != null) {
+                NotificationTemplateCategorizingDto categorizing = new NotificationTemplateCategorizingDto();
+                categorizing.setId(databaseNotificationTemplate.getNotificationTemplateCategorizing().getId());
+                categorizing.setSelectedApplicants(notificationTemplate.getNotificationTemplateCategorizing().getSelectedApplicants());
+                categorizing.setNotificationTemplate(databaseNotificationTemplate);
+                databaseNotificationTemplate.setNotificationTemplateCategorizing(categorizing);
+            } else {
+                NotificationTemplateCategorizingDto categorizing = notificationTemplate.getNotificationTemplateCategorizing();
+                categorizing.setNotificationTemplate(databaseNotificationTemplate);
+                categorizing.setSelectedApplicants(null);
+                databaseNotificationTemplate.setNotificationTemplateCategorizing(categorizing);
+            }
+        }
+        return save(databaseNotificationTemplate);
+    }
+
+    public NotificationTemplateDto updateDescription(NotificationTemplateDto notificationTemplate) {
+        NotificationTemplateDto databaseNotificationTemplate = findOne(notificationTemplate.getId());
+        databaseNotificationTemplate.setDescription(notificationTemplate.getDescription());
+        return save(databaseNotificationTemplate);
     }
 }

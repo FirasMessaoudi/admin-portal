@@ -20,6 +20,14 @@ export class ApplicantService {
     return this.http.get<any>("/core/api/applicants/list/all", {params: params});
   }
 
+  findByIds(ids, pageNumber: any): Observable<any> {
+    let params = new HttpParams().set('page', pageNumber);
+    if (ids.length > 0) {
+      params = params.append('ids', ids);
+    }
+    return this.http.get<any>("/core/api/applicants/find-by-ids", {params: params});
+  }
+
   search(criteria: ApplicantSearchCriteria, excludedIds, pageNumber: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
     if (excludedIds.length > 0) {
