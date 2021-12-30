@@ -40,7 +40,7 @@ public class ApplicantChatContactScheduler {
     @SchedulerLock(name = "add-chat-contacts-task")
     public void updateApplicantStaffContacts() {
         log.debug("Update staff chat contacts scheduler started...");
-        String staffTitle = ECompanyStaffTitle.GROUP_LEADER.name();
+/*        String staffTitle = ECompanyStaffTitle.GROUP_LEADER.name();
 
         applicantService.findAllNotHavingChatContactWithTitle(staffTitle).forEach(applicant -> {
             // create staff chat contact for each applicant who belongs to a group
@@ -61,6 +61,6 @@ public class ApplicantChatContactScheduler {
                     .type(ContactTypeLookupDto.builder().id(EChatContactType.STAFF.getId()).build())
                     .build()
             );
-        });
+        });*/
     }
 }
