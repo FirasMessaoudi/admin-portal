@@ -52,6 +52,9 @@ public class JpaChatMessage implements Serializable {
     @Column(name = "sent_date", nullable = false)
     private Date sentDate;
 
+    @Transient
+    private long sentDateTimestamp;
+
     @Column(name = "received_date", nullable = false)
     private Date receivedDate;
 
@@ -69,6 +72,7 @@ public class JpaChatMessage implements Serializable {
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
+        sentDate = new Date(sentDateTimestamp);
     }
 
     @PreUpdate
