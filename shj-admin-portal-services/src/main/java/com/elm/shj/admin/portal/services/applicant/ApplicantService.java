@@ -110,7 +110,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         ApplicantRitualPackageVo latestPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(command.getUin()));
         int updatedRowsCount = 0;
         if (latestPackage != null) {
-            ApplicantRitualDto applicantRitual = applicantRitualService.findByApplicantUinAndApplicantPackageId(command.getUin(), latestPackage.getId());
+            ApplicantRitualDto applicantRitual = applicantRitualService.findByApplicantUinAndApplicantPackageId(command.getUin(), latestPackage.getApplicantPackageId());
 
             if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
                 updatedRowsCount = applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, applicantRitual.getId());
