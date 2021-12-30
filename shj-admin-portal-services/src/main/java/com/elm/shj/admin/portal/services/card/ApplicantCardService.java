@@ -5,7 +5,9 @@ package com.elm.shj.admin.portal.services.card;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
-import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.applicant.ApplicantPackageCateringService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantPackageHousingService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantPackageTransportationService;
 import com.elm.shj.admin.portal.services.company.CompanyLiteService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
@@ -176,18 +178,18 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
         if (digitalIds.size() > 0) {
 
             String uin = digitalIds.get(0).getUin();
-            CompanyRitualSeasonDto companyRitualSeasonDto = applicantRitualDto.getApplicantPackage().getRitualPackage().getCompanyRitualSeason();
-            if (companyRitualSeasonDto != null) {
-                applicantCardDto.getApplicantRitual().setTypeCode(companyRitualSeasonDto.getRitualSeason().getRitualTypeCode());
+            ApplicantPackageDto applicantPackageDto = applicantRitualDto.getApplicantPackage();
+            if (applicantPackageDto != null) {
+                applicantCardDto.getApplicantRitual().setTypeCode(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode());
 
-                long companyRitualSeasonId = companyRitualSeasonDto.getId();
-                applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-                applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-                applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-                applicantCardDto.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
-                List<CompanyRitualStepDto> companyRitualSteps = companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, companyRitualSeasonId);
+                long applicantPackageId = applicantPackageDto.getId();
+                applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackageId));
+                applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackageId));
+                applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackageId));
+                applicantCardDto.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId(), Long.parseLong(uin)));
+                List<CompanyRitualStepDto> companyRitualSteps = companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId());
                 applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
-                List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, companyRitualSeasonId);
+                List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId());
                 applicantCardDto.setGroupLeaders(groupLeaders);
             }
         }

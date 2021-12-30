@@ -31,11 +31,11 @@ public class ApplicantHealthLiteService extends GenericService<JpaApplicantHealt
      * Finds applicant's health details by applicant's uin and ritual id
      *
      * @param uin      the uin of the applicant
-     * @param ritualId
+     * @param applicantPackageId
      * @return the found health details or empty structure
      */
-    public Optional<ApplicantHealthLiteDto> findByUinAndRitualId(String uin, Long companyRitualSeasonId) {
-        JpaApplicantHealth healthProfile = applicantHealthRepository.findByApplicantDigitalIdsUinAndApplicantRitualApplicantPackageRitualPackageCompanyRitualSeasonId(uin, companyRitualSeasonId);
+    public Optional<ApplicantHealthLiteDto> findApplicantHealthDetailsByUinAndApplicantPackageId(String uin, Long applicantPackageId) {
+        JpaApplicantHealth healthProfile = applicantHealthRepository.findByApplicantDigitalIdsUinAndApplicantRitualApplicantPackageId(uin, applicantPackageId);
         if (healthProfile == null) {
             return Optional.empty();
         } else {

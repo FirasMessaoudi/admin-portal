@@ -3,7 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
@@ -19,7 +22,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import java.util.*;
 
 /**
@@ -37,6 +42,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     private final ApplicantContactRepository applicantContactRepository;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private final ApplicantRitualService applicantRitualService;
+    private final ApplicantPackageService applicantPackageService;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
 
     /**
@@ -100,10 +106,10 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      */
     @Transactional
     public int updateApplicantContacts(long applicantId, UpdateApplicantCmd command) {
-        CompanyRitualSeasonLiteDto latestCompanyRitualSeason = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(Long.parseLong(command.getUin()));
+        ApplicantRitualPackageVo latestPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(command.getUin()));
         int updatedRowsCount = 0;
-        if (latestCompanyRitualSeason != null) {
-            ApplicantRitualDto applicantRitual = applicantRitualService.findByApplicantUinAndCompanyRitualSeasonId(command.getUin(), latestCompanyRitualSeason.getId());
+        if (latestPackage != null) {
+            ApplicantRitualDto applicantRitual = applicantRitualService.findByApplicantUinAndApplicantPackageId(command.getUin(), latestPackage.getId());
 
             if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
                 updatedRowsCount = applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, applicantRitual.getId());

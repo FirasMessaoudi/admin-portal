@@ -275,13 +275,13 @@ public class IntegrationWsController {
      * finds applicant's health details by his UIN
      *
      * @param uin                   the applicant's uin
-     * @param companyRitualSeasonId
+     * @param applicantPackageId
      * @return the applicant health details or <code>null</code>
      */
-    @GetMapping("/health/{uin}/{companyRitualSeasonId}")
-    public ResponseEntity<WsResponse<?>> findApplicantHealthDetails(@PathVariable String uin, @PathVariable Long companyRitualSeasonId) {
+    @GetMapping("/health/{uin}/{applicantPackageId}")
+    public ResponseEntity<WsResponse<?>> findApplicantHealthDetails(@PathVariable String uin, @PathVariable Long applicantPackageId) {
         log.debug("Handler for {}", "Find applicant health details by uin and ritual id");
-        Optional<ApplicantHealthLiteDto> applicantHealth = applicantHealthLiteService.findByUinAndRitualId(uin, companyRitualSeasonId);
+        Optional<ApplicantHealthLiteDto> applicantHealth = applicantHealthLiteService.findApplicantHealthDetailsByUinAndApplicantPackageId(uin, applicantPackageId);
         if (applicantHealth.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantHealth).build());
         } else {
@@ -294,14 +294,14 @@ public class IntegrationWsController {
      * finds an applicant by his UIN and ritual id
      *
      * @param uin                   the applicant's uin to find
-     * @param companyRitualSeasonId applicant ritual id
+     * @param applicantPackageId applicant ritual id
      * @return the found applicant or <code>null</code>
      */
-    @GetMapping("/find/main-data/{uin}/{companyRitualSeasonId}")
-    public ResponseEntity<WsResponse<?>> findApplicantMainData(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
+    @GetMapping("/find/main-data/{uin}/{applicantPackageId}")
+    public ResponseEntity<WsResponse<?>> findApplicantMainData(@PathVariable String uin, @PathVariable long applicantPackageId) {
         log.debug("Handler for {}", "Find applicant main data by uin");
 
-        Optional<ApplicantMainDataDto> mainDataDtoOptional = applicantMainDataService.findByUin(uin, companyRitualSeasonId);
+        Optional<ApplicantMainDataDto> mainDataDtoOptional = applicantMainDataService.findByUin(uin, applicantPackageId);
         if (mainDataDtoOptional.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(mainDataDtoOptional.get()).build());
 
@@ -320,10 +320,10 @@ public class IntegrationWsController {
      * @param uin the applicant's card details by  uin
      * @return the found applicant card details or <code>null</code>
      */
-    @GetMapping("/details/{uin}/{companyRitualSeasonId}")
-    public ResponseEntity<WsResponse<?>> findCardDetails(@PathVariable String uin, @PathVariable String companyRitualSeasonId) {
+    @GetMapping("/details/{uin}/{applicantPackageId}")
+    public ResponseEntity<WsResponse<?>> findCardDetails(@PathVariable String uin, @PathVariable Long applicantPackageId) {
         log.debug("Handler for {}", "Find applicant card details by uin");
-        Optional<ApplicantRitualCardLiteDto> returnedApplicantRitualCardLiteDto = applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(uin, companyRitualSeasonId);
+        Optional<ApplicantRitualCardLiteDto> returnedApplicantRitualCardLiteDto = applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(uin, applicantPackageId);
 
         if (returnedApplicantRitualCardLiteDto.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(returnedApplicantRitualCardLiteDto).build());
@@ -374,22 +374,22 @@ public class IntegrationWsController {
 
 
     /**
-     * finds an applicant package by his UIN and company season ritual id
+     * finds an applicant package by his UIN and  id
      *
      * @param uin                   the applicant's uin to find
-     * @param companyRitualSeasonId applicant ritual id
+     * @param applicantPackageId applicant package id
      * @return the found applicant package data
      */
-    @GetMapping("/applicant/package/{uin}/{companyRitualSeasonId}")
-    public ResponseEntity<WsResponse<?>> findApplicantPackageData(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
+    @GetMapping("/applicant/package/{uin}/{applicantPackageId}")
+    public ResponseEntity<WsResponse<?>> findApplicantPackageData(@PathVariable String uin, @PathVariable long applicantPackageId) {
         log.debug("Handler for {}", "Find applicant package details  by uin");
 
         ApplicantPackageDetailsDto applicantPackageDetails = new ApplicantPackageDetailsDto();
-
-        applicantPackageDetails.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-        applicantPackageDetails.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-        applicantPackageDetails.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-        applicantPackageDetails.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
+        ApplicantPackageDto applicantPackageDto = applicantPackageService.findOne(applicantPackageId);
+        applicantPackageDetails.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackageId));
+        applicantPackageDetails.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackageId));
+        applicantPackageDetails.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackageId));
+        applicantPackageDetails.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId(), Long.parseLong(uin)));
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageDetails).build());
 
@@ -578,23 +578,23 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(incidentTypeLookupService.findAll()).build());
     }
 
-    @GetMapping("/housing/{uin}/{seasonRitualId}")
-    public ResponseEntity<WsResponse<?>> findCampLocation(@PathVariable long uin, @PathVariable long seasonRitualId) {
+    @GetMapping("/housing/{uin}/{companyRitualSeasonId}")
+    public ResponseEntity<WsResponse<?>> findCampLocation(@PathVariable long uin, @PathVariable long companyRitualSeasonId) {
         log.debug("Camp Location ...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageHousingService.findCamp(seasonRitualId, uin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageHousingService.findCamp(companyRitualSeasonId, uin)).build());
     }
 
     /**
      * find applicant ritual
      *
      * @param uin
-     * @param companyRitualSeasonId
+     * @param applicantPackageId
      * @return
      */
-    @GetMapping("/ritual/{uin}/{companyRitualSeasonId}")
-    public ResponseEntity<WsResponse<?>> finsApplicantRitual(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
+    @GetMapping("/ritual/{uin}/{applicantPackageId}")
+    public ResponseEntity<WsResponse<?>> finsApplicantRitual(@PathVariable String uin, @PathVariable long applicantPackageId) {
         log.debug("Handler for {}", "Find applicant ritual by uin");
-        ApplicantRitualDto applicantRitualDtO = applicantRitualService.findByApplicantUinAndCompanyRitualSeasonId(uin, companyRitualSeasonId);
+        ApplicantRitualDto applicantRitualDtO = applicantRitualService.findByApplicantUinAndApplicantPackageId(uin, applicantPackageId);
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantRitualDtO).build());
     }
@@ -636,21 +636,21 @@ public class IntegrationWsController {
 
     /**
      * @param uin
-     * @return
+     * @return list of applicant ritual package
      */
-    @GetMapping("/applicant/applicant-ritual-seasons/{uin}")
+    @GetMapping("/applicant/ritual-package/{uin}")
     public ResponseEntity<WsResponse<?>> findApplicantPackageAndRitualSeason(@PathVariable long uin) {
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageService.findApplicantPackageAndRitualSeason(uin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageService.findApplicantRitualPackageByUin(uin)).build());
 
     }
 
     /**
      * @param uin
-     * @return
+     * @return latest applicant ritual package
      */
-    @GetMapping("/applicant/latest-ritual-season/{uin}")
+    @GetMapping("/applicant/ritual-package/latest/{uin}")
     public ResponseEntity<WsResponse<?>> findLatestApplicantRitualSeason(@PathVariable long uin) {
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageService.findLatestApplicantRitualSeason(uin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageService.findLatestApplicantRitualPackage(uin)).build());
 
     }
 

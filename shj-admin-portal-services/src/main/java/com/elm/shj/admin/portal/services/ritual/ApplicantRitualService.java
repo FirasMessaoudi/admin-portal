@@ -50,9 +50,12 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
         return findOne(applicantRitualId);
     }
 
-    public ApplicantRitualDto findByApplicantUinAndCompanyRitualSeasonId(String uin, Long companyRitualSeasonId) {
-        JpaApplicantRitual applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(uin, companyRitualSeasonId);
-        return getMapper().fromEntity(applicantRitual, mappingContext);
+    public ApplicantRitualDto findByApplicantUinAndApplicantPackageId(String uin, Long applicantPackageId) {
+        Optional <JpaApplicantRitual> applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageId(uin, applicantPackageId);
+        if(applicantRitual.isPresent()) {
+            return getMapper().fromEntity(applicantRitual.get(), mappingContext);
+        }
+        return null;
     }
 
     @Transactional
