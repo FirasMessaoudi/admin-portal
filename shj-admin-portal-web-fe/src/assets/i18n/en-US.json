@@ -479,6 +479,8 @@
   },
   "printing-management": {
     "title": "Printing Management",
+    "staff-title": "Staff Printing Management",
+    "applicant-title": "Applicant Printing Management",
     "request_number": "Request Number",
     "printing_start_date": "Printing Start Date",
     "printing_end_date": "Printing End Date",
@@ -520,7 +522,10 @@
     "nationality": "Nationality",
     "motawif": "Motawif",
     "btn_cancel": "Cancel",
-    "request_description": "Request Description"
+    "request_description": "Request Description",
+    "season": "Season",
+    "company": "Company",
+    "ritual-type": "Ritual Type"
   },
   "rule-management": {
     "title": "Decision Rule Management",

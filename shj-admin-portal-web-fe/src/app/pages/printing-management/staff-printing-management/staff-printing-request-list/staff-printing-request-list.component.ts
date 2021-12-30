@@ -2,19 +2,20 @@ import {Component, OnInit} from '@angular/core';
 import {EAuthority, Page} from "@shared/model";
 import {AuthenticationService} from "@core/services";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {PrintService} from "@core/services/printing/print.service";
 import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {PrintRequestLite} from "@model/print-request-card-lite.model";
+import {StaffPrintService} from "@core/services/printing/staff-print.service";
+import {CompanyLite} from "@model/company-lite.model";
 
 @Component({
   selector: 'app-printing-request-list',
-  templateUrl: './printing-request-list.component.html',
-  styleUrls: ['./printing-request-list.component.scss']
+  templateUrl: './staff-printing-request-list.component.html',
+  styleUrls: ['./staff-printing-request-list.component.scss']
 })
-export class PrintingRequestListComponent implements OnInit {
+export class StaffPrintingRequestListComponent implements OnInit {
   public isSearchbarCollapsed = true;
   pageArray: Array<number>;
   page: Page;
@@ -22,12 +23,14 @@ export class PrintingRequestListComponent implements OnInit {
   searchForm: FormGroup;
   printRequestStatuses: Lookup[];
   localizedPrintRequestStatuses: Lookup[];
-
+  ritualTypes: Lookup[];
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
+  ritualSeasons: any[];
+  companyNames: CompanyLite[];
 
   constructor(private authenticationService: AuthenticationService,
-              private printService: PrintService,
+              private staffPrintService: StaffPrintService,
               private lookupsService: LookupService,
               private i18nService: I18nService,
               private formBuilder: FormBuilder) {
@@ -43,7 +46,16 @@ export class PrintingRequestListComponent implements OnInit {
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
       statusCode: [null],
-      description: ['']
+      description: [''],
+      season: [null],
+      companyCode: [null],
+      requestNumber: [''],
+      batchNumber: [''],
+      cardNumber: [''],
+      printingStartDate: [null],
+      printingEndDate: [null],
+      idNumber: [''],
+      ritualTypeCode: [null],
     });
   }
 
@@ -57,10 +69,25 @@ export class PrintingRequestListComponent implements OnInit {
   }
 
   loadLookups() {
-    this.printService.findPrintRequestStatuses().subscribe(result => {
+    this.staffPrintService.findPrintRequestStatuses().subscribe(result => {
       this.printRequestStatuses = result;
       this.localizedPrintRequestStatuses = this.lookupsService.localizedItems(this.printRequestStatuses);
     });
+
+    this.staffPrintService.findRitualTypes().subscribe(result => {
+      this.ritualTypes = result
+    });
+
+
+    this.staffPrintService.findRitualSeasons().subscribe(result => {
+      this.ritualSeasons = result;
+    });
+
+    this.staffPrintService.findCompanyNames().subscribe(result => {
+      this.companyNames = result;
+    });
+
+
   }
 
   lookupService(): LookupService {
@@ -79,15 +106,15 @@ export class PrintingRequestListComponent implements OnInit {
   }
 
   get canSeePrintRequestsList(): boolean {
-    return this.authenticationService.hasAuthority(EAuthority.APPLICANT_PRINTING_REQUEST_MANAGEMENT);
+    return this.authenticationService.hasAuthority(EAuthority.STAFF_PRINTING_REQUEST_MANAGEMENT);
   }
 
-  get canCreateNewRequest(): boolean {
-    return this.authenticationService.hasAuthority(EAuthority.ADD_PRINTING_REQUEST);
-  }
+  // get canCreateNewRequest(): boolean {
+  //   return this.authenticationService.hasAuthority(EAuthority.ADD_PRINTING_REQUEST);
+  // }
 
   loadPage(page: number) {
-    this.searchSubscription = this.printService.listFiltered(page, this.searchForm.value).subscribe(data => {
+    this.searchSubscription = this.staffPrintService.listFiltered(page, this.searchForm.value).subscribe(data => {
       this.fillPageWithData(data);
     });
 
@@ -102,7 +129,7 @@ export class PrintingRequestListComponent implements OnInit {
       this.loadPage(0);
       return;
     }
-    this.searchSubscription = this.printService.listFiltered(0, this.searchForm.value).subscribe(data => {
+    this.searchSubscription = this.staffPrintService.listFiltered(0, this.searchForm.value).subscribe(data => {
       this.printRequests = [];
       this.pageArray = [];
       this.fillPageWithData(data);

@@ -30,6 +30,8 @@ public final class AuthorityConstants {
 
     //Printing Request Management
     public static final String PRINTING_REQUEST_MANAGEMENT = "PRINTING_REQUEST_MANAGEMENT";
+    public static final String APPLICANT_PRINTING_REQUEST_MANAGEMENT = "STAFF_PRINTING_REQUEST_MANAGEMENT";
+    public static final String STAFF_PRINTING_REQUEST_MANAGEMENT = "STAFF_PRINTING_REQUEST_MANAGEMENT";
     public static final String VIEW_PRINTING_REQUEST_DETAILS = "VIEW_PRINTING_REQUEST_DETAILS";
     public static final String ADD_PRINTING_REQUEST = "ADD_PRINTING_REQUEST";
 

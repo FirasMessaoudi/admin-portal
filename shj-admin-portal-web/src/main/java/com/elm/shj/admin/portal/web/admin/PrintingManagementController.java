@@ -44,7 +44,7 @@ public class PrintingManagementController {
      * @return paginated print requests.
      */
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('"+AuthorityConstants.PRINTING_REQUEST_MANAGEMENT+"')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.APPLICANT_PRINTING_REQUEST_MANAGEMENT + "')")
     public Page<PrintRequestLiteDto> list(Pageable pageable, Authentication authentication) {
         log.debug("List print requests based on search criteria...");
         return printRequestLiteService.findAll(pageable);
@@ -57,7 +57,7 @@ public class PrintingManagementController {
      * @return the list of print requests
      */
     @PostMapping("/list")
-    @PreAuthorize("hasAuthority('"+AuthorityConstants.PRINTING_REQUEST_MANAGEMENT+"')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.APPLICANT_PRINTING_REQUEST_MANAGEMENT + "')")
     public Page<PrintRequestLiteDto> list(@RequestBody PrintRequestFilterVo filterVo, Pageable pageable, Authentication authentication) {
         log.debug("List print requests based on search criteria...");
         return printRequestLiteService.findByFilter(filterVo, pageable);

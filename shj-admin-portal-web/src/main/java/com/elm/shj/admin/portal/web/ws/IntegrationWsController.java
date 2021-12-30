@@ -5,10 +5,7 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.*;
-import com.elm.shj.admin.portal.services.company.CompanyLiteService;
-import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
-import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
-import com.elm.shj.admin.portal.services.company.CompanyStaffService;
+import com.elm.shj.admin.portal.services.company.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
@@ -98,6 +95,7 @@ public class IntegrationWsController {
     private final ApplicantChatContactService applicantChatContactService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantPackageService applicantPackageService;
+    private final CompanyService companyService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -389,7 +387,7 @@ public class IntegrationWsController {
         applicantPackageDetails.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
         applicantPackageDetails.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
         applicantPackageDetails.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-        applicantPackageDetails.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
+        applicantPackageDetails.setCompanyLite(companyService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageDetails).build());
 
@@ -515,7 +513,7 @@ public class IntegrationWsController {
     @GetMapping("/company-details/{uin}/{seasonRitualId}")
     public ResponseEntity<WsResponse<?>> findApplicantCompanyDetailsByUinAndRitualId(@PathVariable String uin, @PathVariable long seasonRitualId) {
         log.info("company details...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(seasonRitualId, Long.parseLong(uin))).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(seasonRitualId, Long.parseLong(uin))).build());
     }
 
     @GetMapping("/health-immunization/list")

@@ -13,10 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.1.0
  **/
 public interface CompanyRepository extends JpaRepository<JpaCompany, Long> {
-
     JpaCompany findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsRitualPackagesApplicantPackagesApplicantUin(long companyRitualSeasonsId, long applicantUin);
-
-    boolean existsByCode(String code);
-
 
 }

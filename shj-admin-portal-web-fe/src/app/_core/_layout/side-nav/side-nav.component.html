@@ -8,14 +8,15 @@
   <ul class="sideNav mt-4">
     <li *ngFor="let link of links">
       <a class="item" *ngIf="link.display && !link.submenu" routerLink="{{ link.routerLink }}"
-      routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+         routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
           <span class="navIcon">
             <svg-icon styleClass="mx-3 {{ link.iconFa }}" icon="{{ link.icon }}"></svg-icon>
           </span>
         {{ link.title | translate }}
       </a>
 
-      <a *ngIf="link.submenu" class="item pointer submenuHdr" (click)="isCollapsed = !isCollapsed" [ngClass]="isCollapsed ? '' : 'active'">
+      <a *ngIf="link.submenu" class="item pointer submenuHdr" (click)="isCollapsed = !isCollapsed"
+         [ngClass]="isCollapsed ? '' : 'active'">
         <span class="d-flex justify-content-between align-items-baseline">
           <span>
             <span class="navIcon">
@@ -24,20 +25,22 @@
             {{ link.title | translate }}
           </span>
           <svg-icon class="chevron mx-3" [icon]="isCollapsed ? 'chevron-left-light' : 'chevron-down-light'"
-            [ngClass]="isCollapsed ? '' : 'flip'"></svg-icon>
+                    [ngClass]="isCollapsed ? '' : 'flip'"></svg-icon>
         </span>
       </a>
       <div *ngIf="link.submenu" class="submenu_items" [ngbCollapse]="isCollapsed">
-        <a class="item submenu_item pointer border-0 px-md-5" *ngFor="let menuItem of link.menuItems"
-          routerLinkActive="active" routerLink="{{ menuItem.routerLink }}">
+        <span *ngFor="let menuItem of link.menuItems">
+        <a class="item submenu_item pointer border-0 px-md-5" *ngIf="menuItem.display"
+           routerLinkActive="active" routerLink="{{ menuItem.routerLink }}">
           {{ menuItem.title | translate }}
+
         </a>
+      </span>
       </div>
     </li>
 
   </ul>
 </nav>
-
 
 
 <!-- <a *ngIf="link.submenu" href="javascript:void(0)" (click)="isCollapsed = !isCollapsed">

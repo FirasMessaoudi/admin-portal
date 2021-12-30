@@ -3,8 +3,10 @@
  */
 package com.elm.shj.admin.portal.web.lookup;
 
+import com.elm.shj.admin.portal.services.company.CompanyLiteService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
+import com.elm.shj.admin.portal.services.ritual.RitualSeasonService;
 import com.elm.shj.admin.portal.services.utils.MapUtils;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +60,9 @@ public class LookupController {
     private final IncidentTypeLookupService incidentTypeLookupService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final MapUtils mapUtils;
+    private final CompanyLiteService companyLiteService;
+    private final RitualSeasonService ritualSeasonService;
+
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -231,6 +236,20 @@ public class LookupController {
     public String loadGoogleMapsApiKey() {
         log.debug("load google maps api key...");
         return mapUtils.retrieveGoogleMapsApiKey();
+    }
+
+    @GetMapping("/company-names/list")
+    public List<CompanyLiteDto> listCompanyNames() {
+        log.debug("list company names...");
+        return companyLiteService.findAll();
+
+    }
+
+    @GetMapping("/ritual-seasons/list")
+    public List<RitualSeasonDto> listRitualSeasons() {
+        log.debug("list ritual seasons...");
+        return ritualSeasonService.findAll();
+
     }
 
 }

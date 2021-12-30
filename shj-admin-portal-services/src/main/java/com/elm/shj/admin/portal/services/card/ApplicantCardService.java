@@ -5,9 +5,12 @@ package com.elm.shj.admin.portal.services.card;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
-import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.applicant.ApplicantPackageCateringService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantPackageHousingService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantPackageTransportationService;
 import com.elm.shj.admin.portal.services.company.CompanyLiteService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
+import com.elm.shj.admin.portal.services.company.CompanyService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -50,7 +53,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     private final ApplicantPackageTransportationService applicantPackageTransportationService;
     private final CompanyStaffService companyStaffService;
     private final CompanyLiteService companyLiteService;
-
+    private final CompanyService companyService;
     @PostConstruct
     private void postConstruct() {
         //build map of allowed actions per current status for the card
@@ -184,7 +187,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
                 applicantCardDto.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
                 applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndCompanyRitualSeasonId(Long.parseLong(uin), companyRitualSeasonId));
-                applicantCardDto.setCompanyLite(companyLiteService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
+                applicantCardDto.setCompanyLite(companyService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin)));
                 List<CompanyRitualStepDto> companyRitualSteps = companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(uin, companyRitualSeasonId);
                 applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
                 List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, companyRitualSeasonId);

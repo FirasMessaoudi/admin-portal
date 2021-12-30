@@ -40,12 +40,25 @@ export class SideNavComponent implements OnInit {
       },
       {
         title: 'printing-management.title',
-        roles: [EAuthority.PRINTING_REQUEST_MANAGEMENT],
+        roles: [EAuthority.STAFF_PRINTING_REQUEST_MANAGEMENT, EAuthority.APPLICANT_PRINTING_REQUEST_MANAGEMENT],
         display: false,
         icon: 'print',
-        iconFa:'fa-w-16',
-        routerLink: '/print-requests/list',
-        submenu: false,
+        iconFa: 'fa-w-16',
+        submenu: true,
+        menuItems: [
+          {
+            title: 'printing-management.applicant-title',
+            display: false,
+            roles: [EAuthority.APPLICANT_PRINTING_REQUEST_MANAGEMENT],
+            routerLink: '/print-requests/list'
+          },
+          {
+            title: 'printing-management.staff-title',
+            display: false,
+            roles: [EAuthority.STAFF_PRINTING_REQUEST_MANAGEMENT],
+            routerLink: '/staff-print-requests/list',
+          }
+        ]
       },
       {
         title: 'incident-management.title',
@@ -105,11 +118,13 @@ export class SideNavComponent implements OnInit {
           {
             title: 'notification-management.system_notifications',
             roles: [EAuthority.NOTIFICATION_MANAGEMENT],
+            display: false,
             routerLink: '/notification/list'
           },
           {
             title: 'notification-management.user_notifications',
             roles: [EAuthority.NOTIFICATION_MANAGEMENT],
+            display: false,
             routerLink: '/user-defined-notification/list',
           }
         ]
@@ -150,6 +165,20 @@ export class SideNavComponent implements OnInit {
               link['display'] = true;
             }
           });
+
+          if (link.submenu) {
+            link.menuItems.forEach((menuItem: any) => {
+              // loop on link submenu roles
+              menuItem.roles.forEach((role: any) => {
+                if (role == auth.authority) {
+                  menuItem['display'] = true;
+                }
+              });
+
+            });
+          }
+
+
         });
       });
     }

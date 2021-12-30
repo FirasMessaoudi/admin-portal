@@ -365,5 +365,19 @@ INSERT INTO shc_portal.shc_contact_type_lk (id, code)
 VALUES (1, 'STAFF');
 INSERT INTO shc_portal.shc_contact_type_lk (id, code)
 VALUES (2, 'APPLICANT');
-SET IDENTITY_INSERT shc_portal.shc_contact_type_lk OFF;
+SET
+IDENTITY_INSERT shc_portal.shc_contact_type_lk OFF;
 GO
+update shc_portal.shc_authority_lk
+set label_ar =N'إدارة طلبات الطباعة لموظفى الشركه',
+    label_en ='Applicant Printing Request Management',
+    code='APPLICANT_PRINTING_REQUEST_MANAGEMENT'
+where id = 24 SET IDENTITY_INSERT shc_portal.shc_authority_lk
+ON;
+INSERT INTO shc_portal.shc_authority_lk(id, label_ar, label_en, code, parent_id)
+VALUES (38, N'إدارة طلبات الطباعة لموظفى الشركات', 'Staff Printing Request Management',
+        'STAFF_PRINTING_REQUEST_MANAGEMENT', NULL);
+SET
+IDENTITY_INSERT shc_portal.shc_authority_lk OFF ;
+insert into shc_portal.shc_role_authority (role_id, authority_id)
+values (1, 38)

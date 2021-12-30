@@ -327,5 +327,3 @@ INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
 VALUES  ('04_12'  ,'ar'  ,N'ثالث ايام التشريق' )
 GO
 
-
-
