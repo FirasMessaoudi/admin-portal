@@ -61,7 +61,7 @@ public class JpaApplicantRitual implements Serializable {
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "applicant_package_id")
     private JpaApplicantPackage applicantPackage;
 

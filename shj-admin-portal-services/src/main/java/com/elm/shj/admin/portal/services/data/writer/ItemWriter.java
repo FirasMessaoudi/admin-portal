@@ -556,8 +556,8 @@ public class ItemWriter {
 
                 applicantPackageTransportationService.saveAll(applicantPackageTransportations);
             }
-            if (applicantPackageDto.getApplicantRituals() != null && !applicantPackageDto.getApplicantRituals().isEmpty()) {
-                applicantRitualDto = applicantPackageDto.getApplicantRituals().get(0);
+            if (applicantPackageDto.getApplicantRitual() != null ) {
+                applicantRitualDto = applicantPackageDto.getApplicantRitual();
             } else {
                 applicantRitualDto = ApplicantRitualDto.builder().applicantPackage(applicantPackageDto).applicant(applicant).build();
             }
