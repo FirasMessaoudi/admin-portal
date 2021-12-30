@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ChatMessageService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class ChatContactWsController {
     private final ApplicantLiteService applicantLiteService;
     private final CompanyStaffService companyStaffService;
     private final ChatMessageService chatMessageService;
+    private final ApplicantRitualService applicantRitualService;
 
     /**
      * finds chat contacts by uin and applicant ritual ID
@@ -91,6 +93,11 @@ public class ChatContactWsController {
             @PathVariable Long applicantRitualId,
             @RequestBody ApplicantChatContactLiteDto contact
     ) throws Exception {
+        boolean isRitualPresent = applicantRitualService.exitsByRitualId(applicantRitualId);
+        if (!isRitualPresent) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_RITUAL_NOT_FOUND).referenceNumber(applicantRitualId.toString()).build()).build());
+        }
         if (contact.getContactUin().equals(contact.getApplicantUin())) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(contact.getContactUin()).build()).build());
@@ -223,8 +230,10 @@ public class ChatContactWsController {
     }
 
     @GetMapping("/messages/{contactId}")
-    public ResponseEntity<WsResponse<?>> listChatMessagesBySenderIdOrReceiverId(@PathVariable long contactId) {
-        List<ChatMessageDto> messagesList = chatMessageService.findChatMessagesBySenderIdOrReceiverId(contactId);
+    public ResponseEntity<WsResponse<?>> listChatMessagesBySenderIdOrReceiverId(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                                                @RequestParam(value = "limit", defaultValue = "0") int limit,
+                                                                                @PathVariable long contactId) {
+        List<ChatMessageDto> messagesList = chatMessageService.findChatMessagesBySenderIdOrReceiverId(page, limit, contactId);
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
                 .body(messagesList).build());

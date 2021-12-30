@@ -30,6 +30,7 @@ public class ChatMessageDto implements Serializable {
     private ApplicantChatContactDto sender;
     private ApplicantChatContactDto receiver;
     private Date sentDate;
+    private long sentDateTimestamp;
     private Date receivedDate;
     private Date readDate;
     private Boolean deleted;
