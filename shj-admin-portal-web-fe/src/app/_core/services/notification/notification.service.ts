@@ -6,7 +6,6 @@ import {NotificationSearchCriteria} from "@model/notification-search-criteria.mo
 import {catchError} from "rxjs/internal/operators";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {CookieService} from "ngx-cookie-service";
-import {CategorizedNotificationVo} from "@model/categorized-notification-vo.model";
 
 @Injectable({
   providedIn: 'root'
@@ -82,75 +81,13 @@ export class NotificationService {
    * @param notificationTemplate the notification template to be saved
    * @return {Observable<notificationTemplate>} created notificationTemplate.
    */
-  saveAsDraft(notificationTemplate: NotificationTemplate): Observable<any> {
+  save(notificationTemplate: NotificationTemplate): Observable<any> {
     return this.http.post<any>('/core/api/notification/template/user-defined/create', notificationTemplate)
       .pipe(catchError((error: HttpErrorResponse) => {
           if (error.hasOwnProperty('error')) {
             return of(error.error);
           } else {
             console.error('An error happened while creating the notification template : ' + error);
-            return of(error);
-          }
-        })
-      );
-  }
-
-  /**
-   * Creates user defined notification template and sends it to all applicants having active ritual.
-   *
-   * @param notificationTemplate the notification template to be saved
-   * @return {Observable<notificationTemplate>} created notificationTemplate.
-   */
-  saveAndSendToAll(notificationTemplate: NotificationTemplate): Observable<any> {
-    return this.http.post<any>('/core/api/notification/template/send-to-all', notificationTemplate)
-      .pipe(catchError((error: HttpErrorResponse) => {
-          if (error.hasOwnProperty('error')) {
-            return of(error.error);
-          } else {
-            console.error('An error happened while sending user notifications : ' + error);
-            return of(error);
-          }
-        })
-      );
-  }
-
-  /**
-   * Creates user defined notification template and sends it to categorized applicants.
-   *
-   * @param categorizedNotification
-   * @return {Observable<notificationTemplate>} created notificationTemplate.
-   */
-  saveAndSendToCategorizedApplicants(categorizedNotification: CategorizedNotificationVo): Observable<any> {
-    return this.http.post<any>('/core/api/notification/template/send-to-categorized', categorizedNotification)
-      .pipe(catchError((error: HttpErrorResponse) => {
-          if (error.hasOwnProperty('error')) {
-            return of(error.error);
-          } else {
-            console.error('An error happened while sending user notifications : ' + error);
-            return of(error);
-          }
-        })
-      );
-  }
-
-  /**
-   * Creates user defined notification template and sends it to categorized applicants.
-   *
-   * @return {Observable<notificationTemplate>} created notificationTemplate.
-   * @param notificationTemplate created notificationTemplate.
-   * @param selectedApplicants
-   */
-  saveAndSendToSelectedApplicants(notificationTemplate: NotificationTemplate, selectedApplicants): Observable<any> {
-    let params = new HttpParams();
-    if (selectedApplicants.length > 0) {
-      params = params.append('selectedApplicants', selectedApplicants);
-    }
-    return this.http.post<any>('/core/api/notification/template/send-to-selected', notificationTemplate, {params: params})
-      .pipe(catchError((error: HttpErrorResponse) => {
-          if (error.hasOwnProperty('error')) {
-            return of(error.error);
-          } else {
-            console.error('An error happened while sending user notifications : ' + error);
             return of(error);
           }
         })
@@ -175,6 +112,27 @@ export class NotificationService {
             return of(error.error);
           } else {
             console.error('An error happened while updating the notification Template : ' + error);
+            return of(error);
+          }
+        })
+      );
+  }
+
+  /**
+   * Updates user defined notification template details in the server.
+   *
+   * @param notificationTemplate the notification template to update
+   * @return {Observable<notificationTemplate>} updated notificationTemplate.
+   */
+  updateUserDefined(notificationTemplate: NotificationTemplate): Observable<any> {
+    let headers = new HttpHeaders();
+    headers = headers.set('X-XSRF-TOKEN', this.cookieService.get("XSRF-TOKEN"));
+    return this.http.put<any>('/core/api/notification/template/user-defined/update', notificationTemplate, {'headers': headers})
+      .pipe(catchError((error: HttpErrorResponse) => {
+          if (error.hasOwnProperty('error')) {
+            return of(error.error);
+          } else {
+            console.error('An error happened while updating the notification template : ' + error);
             return of(error);
           }
         })

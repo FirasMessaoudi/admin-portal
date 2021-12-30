@@ -32,7 +32,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
 
     public static final String PASSWORD_EXPIRATION_TEMPLATE_NAME = "PASSWORD_EXPIRATION";
     public static final String PASSWORD_EXPIRY_TEMPLATE_DAYS_TO_EXPIRY_PARAMETER_NAME = "days_to_expiry";
-    private static final  String NOTIFICATION_DEFAULT_LANGUAGE = "ar";
+    private static final String NOTIFICATION_DEFAULT_LANGUAGE = "ar";
 
     private final NotificationTemplateService notificationTemplateService;
     private final NotificationRequestRepository notificationRequestRepository;
@@ -40,7 +40,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     private final ApplicantService applicantService;
 
     /**
-     * will handle processing of  user Notifications in notification processing scheduler
+     * will handle processing of user Notifications in notification processing scheduler
      *
      * @param notificationRequest the   notification request to be processed
      */
@@ -62,7 +62,6 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
         userNotificationRepository.save(userNotification);
         notificationRequestRepository.delete(notificationRequest);
         log.debug("End processing notification request with ID   {} ", notificationRequest.getId());
-
     }
 
     //private method to resolve notification request body by replacing every parameter by it's value
@@ -145,36 +144,21 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     }
 
     @Transactional
-    public NotificationTemplateDto sendToAllApplicants(NotificationTemplateDto notificationTemplate) {
+    public void createUserDefinedNotificationRequest(NotificationTemplateDto notificationTemplate) {
+        List<ApplicantDto> applicants;
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
-        if (!notificationTemplate.isEnabled()) {
-            return savedNotificationTemplate;
+        NotificationTemplateCategorizingDto categorizing = notificationTemplate.getNotificationTemplateCategorizing();
+        if (categorizing != null) {
+            if (categorizing.getSelectedApplicants() != null) {
+                List<Long> applicantIds = Arrays.stream(categorizing.getSelectedApplicants().split(",")).map(Long::parseLong).collect(Collectors.toList());
+                applicants = applicantService.findAllByIds(applicantIds);
+            } else {
+                applicants = applicantService.findAllByCriteria(notificationTemplate.getNotificationTemplateCategorizing(), null);
+            }
+        } else {
+            applicants = applicantService.findAllRegisteredAndHavingActiveRitual();
         }
-        List<ApplicantDto> applicants = applicantService.findAllHavingActiveRitual();
         sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
-        return savedNotificationTemplate;
-    }
-
-    @Transactional
-    public NotificationTemplateDto sendToCategorizedApplicants(CategorizedNotificationVo categorizedNotificationVo) {
-        NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(categorizedNotificationVo.getNotificationTemplate());
-        if (!categorizedNotificationVo.getNotificationTemplate().isEnabled()) {
-            return savedNotificationTemplate;
-        }
-        List<ApplicantDto> applicants = applicantService.findAllByCriteria(categorizedNotificationVo.getApplicantSearchCriteria(), null);
-        sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
-        return savedNotificationTemplate;
-    }
-
-    @Transactional
-    public NotificationTemplateDto sendToSelectedApplicants(NotificationTemplateDto notificationTemplate, List<Long> selectedApplicants) {
-        NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
-        if (!notificationTemplate.isEnabled()) {
-            return savedNotificationTemplate;
-        }
-        List<ApplicantDto> applicants = applicantService.findByIds(selectedApplicants);
-        sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
-        return savedNotificationTemplate;
     }
 
     @Transactional

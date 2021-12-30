@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.criteria.*;
 import java.util.*;
@@ -131,8 +132,8 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      *
      * @return the list of applicants
      */
-    public List<ApplicantDto> findAllHavingActiveRitual() {
-        return mapList(((ApplicantRepository) getRepository()).findAllApplicantsHavingActiveRitual(new Date()));
+    public List<ApplicantDto> findAllRegisteredAndHavingActiveRitual() {
+        return mapList(((ApplicantRepository) getRepository()).findAllApplicantsRegisteredAndHavingActiveRitual(new Date()));
     }
 
     /**
@@ -144,19 +145,19 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return applicantRepository.countHavingActiveRitual(new Date());
     }
 
-    public long countAllByCriteria(ApplicantSearchCriteriaDto applicantSearchCriteria, List<Long> excludedIds) {
+    public long countAllByCriteria(NotificationTemplateCategorizingDto applicantSearchCriteria, List<Long> excludedIds) {
         return applicantRepository.count(withApplicantFilter(applicantSearchCriteria, excludedIds));
     }
 
-    public List<ApplicantDto> findAllByCriteria(ApplicantSearchCriteriaDto applicantSearchCriteria, List<Long> excludedIds) {
+    public List<ApplicantDto> findAllByCriteria(NotificationTemplateCategorizingDto applicantSearchCriteria, List<Long> excludedIds) {
         return mapList(applicantRepository.findAll(withApplicantFilter(applicantSearchCriteria, excludedIds)));
     }
 
-    public Page<ApplicantDto> findAllByCriteriaAndNotInExcludedIds(ApplicantSearchCriteriaDto applicantSearchCriteria, List<Long> excludedIds, Pageable pageable) {
+    public Page<ApplicantDto> findAllByCriteriaAndNotInExcludedIds(NotificationTemplateCategorizingDto applicantSearchCriteria, List<Long> excludedIds, Pageable pageable) {
         return mapPage(applicantRepository.findAll(withApplicantFilter(applicantSearchCriteria, excludedIds), pageable));
     }
 
-    private Specification<JpaApplicant> withApplicantFilter(final ApplicantSearchCriteriaDto criteria, List<Long> excludedIds) {
+    private Specification<JpaApplicant> withApplicantFilter(final NotificationTemplateCategorizingDto criteria, List<Long> excludedIds) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
@@ -230,8 +231,12 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     }
 
 
-    public List<ApplicantDto> findByIds(List<Long> selectedApplicants) {
-        return mapList(applicantRepository.findByIds(selectedApplicants));
+    public List<ApplicantDto> findAllByIds(List<Long> selectedApplicants) {
+        return mapList(applicantRepository.findAllByIds(selectedApplicants));
+    }
+
+    public Page<ApplicantDto> findByIds(@RequestParam List<Long> selectedApplicants, Pageable pageable) {
+        return mapPage(applicantRepository.findByIds(selectedApplicants, pageable));
     }
 
     public boolean existsByBasicInfoAndPackageCode(ApplicantBasicInfoDto applicantBasicInfo) {
@@ -244,6 +249,10 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         Optional<ApplicantDto> applicant = findByUin(uin);
         log.debug("Applicant ID: {}", applicant.get().getId());
         applicant.ifPresent(applicantDto -> applicantRepository.updatePreferredLanguage(applicantDto.getId(), lang));
+    }
+
+    public List<ApplicantDto> findAllNotHavingChatContactWithTitle(String title) {
+        return mapList(applicantRepository.findAllNotHavingChatContactWithTitle(title));
     }
 }
 

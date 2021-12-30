@@ -331,7 +331,7 @@ public abstract class AbstractControllerTestSuite {
     protected ItemWriter itemWriter;
 
     @MockBean
-    protected NotificationProcessingScheduler notificationProcessingScheduler;
+    protected NotificationRequestProcessingScheduler notificationRequestProcessingScheduler;
 
     @MockBean
     protected UserNotificationRepository userNotificationRepository;

@@ -57,29 +57,30 @@
   }
 }
 
-.operations{
+.operations {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 44px;
   width: 160px;
 
-  svg{
+  svg {
     font-size: 20px;
     padding-top: 0.35rem;
   }
 }
-.operationsNav{
+
+.operationsNav {
   width: 160px;
   padding: 0;
   margin-top: 0;
   border: 0;
   box-shadow: $box-shadow-sm;
 
-  .dropdown-item{
+  .dropdown-item {
     padding: 0.5rem 1rem;
 
-    &:hover{
+    &:hover {
       background-color: #F5F8F4;
     }
   }
@@ -136,6 +137,7 @@
 .calendar,
 .download {
   background-color: #fff;
+
   input {
     cursor: pointer;
   }
@@ -617,6 +619,7 @@ textarea {
 
     display: grid;
     place-content: center;
+
   }
 
   input[type="radio"]::before {
@@ -637,10 +640,24 @@ textarea {
     color: #3B7937;
   }
 
+  &.disabled-radio-group {
+    input[type="radio"] {
+      background-color: #D8D8D8 !important;
+      opacity: 0.7 !important;
+    }
+
+    input[type="radio"]::before {
+      background-color: #6c757d !important;
+    }
+  }
+
 }
 
 .disabled-control {
-  background-color: rgb(250, 250, 250);
+  color: #6c757d !important;
+  background-color: #D8D8D8 !important;
+  border: 1px solid #ced4da !important;
+  opacity: 0.7 !important;
 }
 
 
@@ -672,11 +689,11 @@ textarea {
 /*=============================================================================
     Modal
 ================================================================================*/
-.modal-content{
+.modal-content {
   @include p(5);
 }
 
-.modal-body{
+.modal-body {
   @include py(4);
   @include px(0);
 }
@@ -686,7 +703,7 @@ textarea {
   display: flex;
   align-items: flex-end;
 
-  .modal-title{
+  .modal-title {
     font-weight: bold;
     color: #0C4008;
   }
@@ -698,14 +715,14 @@ textarea {
   }
 }
 
-.modal-footer{
+.modal-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: row-reverse;
   background-color: $light;
 
-  button{
+  button {
     @include px(5);
     min-width: 110px;
   }
@@ -719,58 +736,62 @@ textarea {
 
 /*=======================*/
 
-.statistics{
+.statistics {
   font-weight: bold;
 
-  .bg-pilgrims{
+  .bg-pilgrims {
     background-color: #4B8747;
   }
-  .bg-cctv{
+
+  .bg-cctv {
     background-color: #657DA5;
   }
-  .bg-appdownloads{
+
+  .bg-appdownloads {
     background-color: #E5CA81;
   }
 
-  .text-pilgrims{
+  .text-pilgrims {
     color: #4B8747;
   }
-  .text-cctv{
+
+  .text-cctv {
     color: #657DA5;
   }
-  .text-appdownloads{
+
+  .text-appdownloads {
     color: #E5CA81;
   }
 }
 
-.sts-title{
+.sts-title {
   font-size: 1.1rem;
 }
 
-.sts-number{
+.sts-number {
   font-size: 2.3rem;
   direction: ltr;
 }
 
-.sts-icon{
+.sts-icon {
   color: #E1E6DE;
 }
 
-.progress{
+.progress {
   border-radius: 50rem;
   background-color: #F3F5F2;
 }
 
 
-.sts{
+.sts {
   font-size: 1.2rem;
   font-weight: bold;
   color: #000;
 }
 
-.stsTab{
+.stsTab {
 
-  .nav-link{
+  .nav-link {
     font-size: 1.2rem;
     font-weight: bold;
     color: #9EA79E;
@@ -780,28 +801,35 @@ textarea {
       @include py(3);
     }
 
-    &.active{
+    &.active {
       color: #000;
     }
   }
 }
 
 
-.nav-tabs.groupBtn{
+.nav-tabs.groupBtn {
   border: 1px #CBCBCB solid;
 
   @include media-breakpoint-up(sm) {
     @include mx(3);
   }
-  .nav-link{
-    border:0;
-    margin-bottom:0;
+
+  .nav-link {
+    border: 0;
+    margin-bottom: 0;
     @include px(3);
 
-    &:hover, &.active{
+    &:hover, &.active {
       background-color: #F5F8F5;
     }
   }
 }
 
-/*========== =============*/
+/*=======================*/
+.input-error {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+}
+

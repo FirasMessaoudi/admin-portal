@@ -24,24 +24,24 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing class for service {@link NotificationProcessingScheduler}
+ * Testing class for service {@link NotificationRequestProcessingScheduler}
  *
  * @author Ahmed Ali
  * @since 1.1.0
  */
 @ExtendWith(MockitoExtension.class)
-public class NotificationProcessingSchedulerTest {
+public class NotificationRequestProcessingSchedulerTest {
 
     @Mock
     private NotificationRequestRepository notificationRequestRepository;
     @Mock
     private NotificationRequestService notificationRequestService;
     @InjectMocks
-    private NotificationProcessingScheduler notificationProcessingScheduler;
+    private NotificationRequestProcessingScheduler notificationRequestProcessingScheduler;
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        ReflectionTestUtils.setField(notificationProcessingScheduler, "notificationProcessingBatchSize", 1000);
+        ReflectionTestUtils.setField(notificationRequestProcessingScheduler, "notificationProcessingBatchSize", 1000);
 
 
     }
@@ -53,7 +53,7 @@ public class NotificationProcessingSchedulerTest {
         Page<JpaNotificationRequest> notificationRequests = buildNotificationRequests();
         when(notificationRequestRepository.findNotificationRequests(any(), any(), any())).thenReturn(notificationRequests);
         doNothing().when(notificationRequestService).processNotificationRequest(any());
-        notificationProcessingScheduler.sendUserNotifications();
+        notificationRequestProcessingScheduler.sendUserNotifications();
         verify(notificationRequestRepository, times(1)).save(notificationRequests.getContent().get(0));
         verify(notificationRequestService, times(1)).processNotificationRequest(notificationRequests.getContent().get(0));
 
@@ -66,7 +66,7 @@ public class NotificationProcessingSchedulerTest {
         Page<JpaNotificationRequest> notificationRequests = buildNotificationRequests();
         when(notificationRequestRepository.findNotificationRequests(any(), any(), any())).thenReturn(notificationRequests);
         doThrow(new RuntimeException()).when(notificationRequestService).processNotificationRequest(any());
-        notificationProcessingScheduler.sendUserNotifications();
+        notificationRequestProcessingScheduler.sendUserNotifications();
         verify(notificationRequestRepository, times(2)).save(notificationRequests.getContent().get(0));
         Assert.assertEquals(notificationRequests.getContent().get(0).getProcessingStatus().getId(), ENotificationProcessingStatus.FAILED.getId());
     }

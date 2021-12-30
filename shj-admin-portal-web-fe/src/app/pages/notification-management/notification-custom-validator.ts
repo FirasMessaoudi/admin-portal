@@ -21,15 +21,11 @@ export function validateIsRequired(group: FormGroup) {
 export function ageRangeValidator(c: AbstractControl): { [key: string]: any } | null {
   let minAge = c.get('minAge');
   let maxAge = c.get('maxAge');
-  if (minAge.value === null || maxAge.value === null) {
+  if (minAge.pristine && maxAge.pristine) {
     return null;
   }
-  if (minAge.pristine || maxAge.pristine) {
-    return null;
-  }
-  if (minAge.value > maxAge.value) {
-    c.setErrors({invalidAgeRange: 'Invalid age range'});
-    return {invalidAgeRange: 'Invalid age range'};
+  if (minAge.value && maxAge.value && minAge.value > maxAge.value) {
+    return {'range': 'Invalid age range'};
   }
   return null;
 }

@@ -4,7 +4,6 @@
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
-import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffDigitalId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,6 +23,5 @@ public interface ApplicantDigitalIdRepository extends JpaRepository<JpaApplicant
     List<String> fetchUinByUinLike(@Param("uin") String uin);
 
     Optional<JpaApplicantDigitalId> findByApplicantIdAndStatusCode(long id, String statusCode);
-
 
 }

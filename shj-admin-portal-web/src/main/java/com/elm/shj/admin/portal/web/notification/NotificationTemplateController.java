@@ -3,8 +3,8 @@
  */
 package com.elm.shj.admin.portal.web.notification;
 
-import com.elm.shj.admin.portal.services.company.CompanyLiteService;
 import com.elm.shj.admin.portal.services.applicant.PackageHousingService;
+import com.elm.shj.admin.portal.services.company.CompanyLiteService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
 import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
@@ -21,7 +21,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -91,25 +93,17 @@ public class NotificationTemplateController {
         return ResponseEntity.ok(updatedNotificationTemplate);
     }
 
-    @PostMapping("/send-to-all")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
-    public NotificationTemplateDto sendToAllApplicants(@RequestBody NotificationTemplateDto notificationTemplate, Authentication authentication) {
-        return notificationRequestService.sendToAllApplicants(notificationTemplate);
-    }
-
-    @PostMapping("/send-to-categorized")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
-    public NotificationTemplateDto sendToCategorizedApplicants(@RequestBody CategorizedNotificationVo categorizedNotificationVo,
-                                                               Authentication authentication) {
-        return notificationRequestService.sendToCategorizedApplicants(categorizedNotificationVo);
-    }
-
-    @PostMapping("/send-to-selected")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
-    public NotificationTemplateDto sendToSelectedApplicants(@RequestBody NotificationTemplateDto notificationTemplate,
-                                                            @RequestParam List<Long> selectedApplicants,
-                                                            Authentication authentication) {
-        return notificationRequestService.sendToSelectedApplicants(notificationTemplate, selectedApplicants);
+    @PutMapping("/user-defined/update")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.EDIT_USER + "')")
+    public ResponseEntity<NotificationTemplateDto> updateUserDefinedNotificationTemplate(@RequestBody @Validated NotificationTemplateDto notificationTemplate) {
+        log.debug("Handler for {}", "Update User Defined Notification");
+        NotificationTemplateDto savedNotificationTemplate;
+        if (new Date().after(notificationTemplate.getSendingDate())) {
+            savedNotificationTemplate = notificationTemplateService.updateDescription(notificationTemplate);
+        } else {
+            savedNotificationTemplate = notificationTemplateService.updateUserDefined(notificationTemplate);
+        }
+        return ResponseEntity.ok(Objects.requireNonNull(savedNotificationTemplate));
     }
 
     @GetMapping("/company/list")

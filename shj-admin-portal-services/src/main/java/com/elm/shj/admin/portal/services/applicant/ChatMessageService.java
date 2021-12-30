@@ -11,6 +11,10 @@ import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -47,9 +51,11 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
         return chatMessageDtoList;
     }
 
-    public List<ChatMessageDto> findChatMessagesBySenderIdOrReceiverId(long contactId) {
-        List<JpaChatMessage> chatMessages = chatMessageRepository.findTop20BySenderIdOrReceiverIdOrderBySentDateDescIdDesc(contactId, contactId);
-        List<ChatMessageDto> chatMessageDtoList = mapList(chatMessages);
+    public List<ChatMessageDto> findChatMessagesBySenderIdOrReceiverId(int page, int limit, long contactId) {
+        Pageable pageableRequest = PageRequest.of(page, limit, Sort.by("sentDate").ascending());
+        Page<JpaChatMessage> chatMessagesPage = chatMessageRepository.findBySenderIdOrReceiverId(contactId, contactId, pageableRequest);
+        List<JpaChatMessage> chatMessageList = chatMessagesPage.getContent();
+        List<ChatMessageDto> chatMessageDtoList = mapList(chatMessageList);
         return chatMessageDtoList;
     }
 
