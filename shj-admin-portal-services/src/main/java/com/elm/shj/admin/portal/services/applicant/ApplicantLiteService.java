@@ -49,4 +49,9 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
             return Optional.of(applicantLiteDto);
         } else return Optional.empty();
     }
+
+    public boolean existsByUin(String uin) {
+        return ((ApplicantLiteRepository) getRepository()).existsByUin(uin);
+
+    }
 }

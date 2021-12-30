@@ -4,6 +4,8 @@
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaChatMessage;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,5 +31,5 @@ public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Lon
                     "order by sent_date desc")
     List<Object[]> findChatContactsWithLatestMessage(@Param("applicantUin") String uin);
 
-    List<JpaChatMessage> findTop20BySenderIdOrReceiverIdOrderBySentDateDescIdDesc(long senderId,long receiverId);
+    Page<JpaChatMessage> findBySenderIdOrReceiverId(long senderId, long receiverId, Pageable pageable);
 }

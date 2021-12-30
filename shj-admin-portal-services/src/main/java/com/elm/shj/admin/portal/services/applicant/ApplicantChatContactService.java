@@ -95,10 +95,10 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .mobileNumber(applicantChatContact.getMobileNumber())
                 .countryPhonePrefix(applicantChatContact.getCountryPhonePrefix())
                 .countryCode(applicantChatContact.getCountryCode())
-                .deleted(applicantChatContact.getDeleted())
+                .deleted(applicantChatContact.isDeleted())
                 .creationDate(applicantChatContact.getCreationDate())
                 .updateDate(applicantChatContact.getUpdateDate())
-                .autoAdded(applicantChatContact.getAutoAdded())
+                .autoAdded(applicantChatContact.isAutoAdded())
                 .build();
     }
 
@@ -121,10 +121,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .countryPhonePrefix(contact.getCountryPhonePrefix())
                 .countryCode(contact.getCountryCode())
                 .systemDefined(false)
-                .deleted(false)
                 .avatar(contact.getAvatar())
                 .applicantRitual(applicantRitual)
-                .autoAdded(false)
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
 
@@ -150,16 +148,13 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         ApplicantChatContactDto savedContact = ApplicantChatContactDto
                 .builder()
                 .applicantUin(applicantUin)
-                .contactUin(companyStaff.get().getSuin())
+                .contactUin(companyStaff.map(CompanyStaffLiteDto::getSuin).orElse(null))
                 .mobileNumber(companyStaff.map(CompanyStaffLiteDto::getMobileNumber).orElse(null))
                 .countryCode(companyStaff.map(CompanyStaffLiteDto::getNationalityCode).orElse(null))
-                .systemDefined(false)
-                .deleted(false)
                 .applicantRitual(applicantRitual)
                 .avatar(companyStaff.map(CompanyStaffLiteDto::getPhoto).orElse(null))
                 .staffTitleCode(companyStaff.map(CompanyStaffLiteDto::getTitleCode).orElse(null))
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.STAFF.getId()).build())
-                .autoAdded(false)
                 .build();
 
         savedContact = save(savedContact);

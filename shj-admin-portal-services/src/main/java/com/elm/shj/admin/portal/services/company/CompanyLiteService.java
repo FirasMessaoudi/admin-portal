@@ -1,7 +1,7 @@
 package com.elm.shj.admin.portal.services.company;
 
-import com.elm.shj.admin.portal.orm.entity.JpaCompany;
-import com.elm.shj.admin.portal.orm.repository.CompanyRepository;
+import com.elm.shj.admin.portal.orm.entity.JpaCompanyLite;
+import com.elm.shj.admin.portal.orm.repository.CompanyLiteRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +18,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class CompanyLiteService extends GenericService<JpaCompany, CompanyLiteDto, Long> {
+public class CompanyLiteService extends GenericService<JpaCompanyLite, CompanyLiteDto, Long> {
 
-    private final CompanyRepository companyRepository;
-
-    public CompanyLiteDto findCompanyByCompanyRitualSeasonsIdAndApplicantUin(long companyRitualSeasonsId, long applicantUin) {
-        return getMapper().fromEntity(companyRepository.findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsRitualPackagesApplicantPackagesApplicantUin(companyRitualSeasonsId, applicantUin), mappingContext);
-    }
+    private final CompanyLiteRepository companyLiteRepository;
 
     /**
      * Checks if a company exists by its code
@@ -33,7 +29,7 @@ public class CompanyLiteService extends GenericService<JpaCompany, CompanyLiteDt
      * @return if the company is found
      */
     public boolean existsByCode(String companyCode) {
-        return ((CompanyRepository) getRepository()).existsByCode(companyCode);
+        return companyLiteRepository.existsByCode(companyCode);
     }
 
 }

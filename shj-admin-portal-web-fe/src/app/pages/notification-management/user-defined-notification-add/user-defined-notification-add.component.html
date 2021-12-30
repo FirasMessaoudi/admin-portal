@@ -59,7 +59,7 @@
             <label class="col-form-label">{{ "notification-management.notification-status" | translate }}
               <span class="text-danger">*</span>
             </label>
-            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
+            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioEnabled">
               <label ngbButtonLabel class="btn" [class.btn-select]="notificationForm.value.enabled">
                 <input ngbButton
                        name="enabled"
@@ -83,7 +83,7 @@
             <label class="col-form-label">{{ "notification-management.notification_type" | translate }}
               <span class="text-danger">*</span>
             </label>
-            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
+            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioUserSpecific">
               <label ngbButtonLabel class="btn" [class.btn-select]="!notificationForm.value.userSpecific">
                 <input ngbButton
                        name="userSpecific"
@@ -142,7 +142,7 @@
             <label class="col-form-label">{{ "notification-management.force_sending" | translate }}
               <span class="text-danger">*</span>
             </label>
-            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
+            <div class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioForceSending">
               <label ngbButtonLabel class="btn" [class.btn-select]="notificationForm.value.forceSending">
                 <input ngbButton
                        name="forceSending"
@@ -317,7 +317,7 @@
                   <input type="number" class="form-control" formControlName="minAge"
                          onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 2"
                          step="1"
-                         [class.is-invalid]="cf.age.touched && (cf.age['controls']['minAge'].invalid || cf.age.errors)">
+                         [class.is-invalid]="cf.age['controls']['minAge'].invalid && cf.age['controls']['minAge'].touched">
                   <div *ngIf="cf.age.invalid && cf.age.touched" class="invalid-feedback">
                     <div
                       *ngIf="cf.age['controls']['minAge'].errors?.min">
@@ -327,8 +327,11 @@
                       *ngIf="cf.age['controls']['minAge'].errors?.max">
                       {{"notification-management.age_validation_max" | translate: {maxLength: 120} }}
                     </div>
-                    <div *ngIf="cf.age.errors?.invalidAgeRange">
-                      {{'notification-management.age_validation_range' | translate}}</div>
+                  </div>
+                  <div class="text-danger input-error"
+                       *ngIf="cf.age.invalid && cf.age['controls']['minAge'].touched && cf.age['controls']['maxAge'].touched">
+                    <div
+                      *ngIf="cf.age.errors?.range">{{'notification-management.age_validation_range' | translate}}</div>
                   </div>
                 </div>
               </div>
@@ -393,7 +396,7 @@
         <div class="dashes flex-center-column my-3 p-5" *ngIf="addedApplicants.length === 0">
 
           <img class="my-5" src="assets/images/add-cards.jpg" alt='{{ "printing-management.new_request" | translate }}'>
-          <button id="addApplicant" (click)="openLg(showAdd)" class="btn btn-outline-dcc-primary px-4">
+          <button id="addApplicant" (click)="openSearchModal(showAdd)" class="btn btn-outline-dcc-primary px-4">
             <svg-icon styleClass="mr-2" icon="plus"></svg-icon>
             <span>{{ "general.btn_add" | translate }}</span>
           </button>
@@ -538,10 +541,10 @@
 
             <div>
               <span class="h5 font-weight-bold text-dcc-primary mr-3">{{addedApplicants.length}}</span>
-              <span>{{'notification-management.selected_applicants' | translate}}</span>
+              <span>{{'notification-management.applicants_were_selected' | translate}}</span>
             </div>
 
-            <button class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
+            <button class="btn btn-outline-dcc-primary px-4" (click)="openSearchModal(showAdd)">
               {{ "general.btn_add" | translate }}
             </button>
 
@@ -616,11 +619,11 @@
           {{"general.btn_cancel" | translate}}</button>
         <span>
           <button class="btn btn-outline-dcc-primary ml-auto mr-1 mr-lg-3 mr-md-2 px-4"
-                  (click)="saveAsDraft()">
+                  (click)="save(DRAFT)">
             {{"notification-management.save_as_draft" | translate}}
           </button>
           <button class="btn btn-dcc-primary px-4"
-                  (click)="openSaveAndSendLg(showSend);getApplicantsCount();">
+                  (click)="openSendModal(showSend);getApplicantsCount();">
             {{"notification-management.save_and_send" | translate}}
           </button>
         </span>
@@ -656,7 +659,7 @@
   <div class="modal-footer">
     <button type="button" (click)="dismiss()"
             class="btn btn-outline-secondary">{{ "general.dialog_confirmation_cancel" | translate }}</button>
-    <button type="button" [disabled]="applicantsCount === null" (click)="saveAndSend()"
+    <button type="button" [disabled]="applicantsCount === null" (click)="save(CONFIRMED)"
             class="btn btn-dcc-primary">{{ "general.dialog_confirmation_ok" | translate }}</button>
   </div>
 </ng-template>

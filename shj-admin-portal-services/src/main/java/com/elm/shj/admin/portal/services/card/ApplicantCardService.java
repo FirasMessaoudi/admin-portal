@@ -10,6 +10,7 @@ import com.elm.shj.admin.portal.services.applicant.ApplicantPackageHousingServic
 import com.elm.shj.admin.portal.services.applicant.ApplicantPackageTransportationService;
 import com.elm.shj.admin.portal.services.company.CompanyLiteService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
+import com.elm.shj.admin.portal.services.company.CompanyService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -52,7 +53,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     private final ApplicantPackageTransportationService applicantPackageTransportationService;
     private final CompanyStaffService companyStaffService;
     private final CompanyLiteService companyLiteService;
-
+    private final CompanyService companyService;
     @PostConstruct
     private void postConstruct() {
         //build map of allowed actions per current status for the card

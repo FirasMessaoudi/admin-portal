@@ -4,7 +4,8 @@ import {AuthenticationGuard} from "@core/guards/authentication.guard";
 import {PrintingRequestListComponent} from "@pages/printing-management/printing-request-list/printing-request-list.component";
 import {PrintingRequestDetailsComponent} from "@pages/printing-management/printing-request-details/printing-request-details.component";
 import {PrintingRequestAddUpdateComponent} from "@pages/printing-management/printing-request-add-update/printing-request-add-update.component";
-import { SuccessComponent } from '@pages/printing-management/printing-request-add-update/success/success.component';
+import {SuccessComponent} from '@pages/printing-management/printing-request-add-update/success/success.component';
+import {StaffPrintingRequestListComponent} from "@pages/printing-management/staff-printing-management/staff-printing-request-list/staff-printing-request-list.component";
 
 
 const routes: Routes = [
@@ -12,7 +13,9 @@ const routes: Routes = [
   {path: 'print-requests/details/:id', component: PrintingRequestDetailsComponent, canActivate: [AuthenticationGuard]},
   {path: 'print-requests/create', component: PrintingRequestAddUpdateComponent, canActivate: [AuthenticationGuard]},
   {path: 'print-requests/success', component: SuccessComponent, canActivate: [AuthenticationGuard]},
-  {path: 'print-requests/update/:id', component: PrintingRequestAddUpdateComponent, canActivate: [AuthenticationGuard]}
+  {path: 'print-requests/update/:id', component: PrintingRequestAddUpdateComponent, canActivate: [AuthenticationGuard]},
+  {path: 'staff-print-requests/list', component: StaffPrintingRequestListComponent, canActivate: [AuthenticationGuard]},
+
 ];
 
 @NgModule({

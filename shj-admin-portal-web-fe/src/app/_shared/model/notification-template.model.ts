@@ -14,6 +14,7 @@ export class NotificationTemplate {
   enabled: boolean;
   userSpecific: boolean;
   forceSending: boolean;
+  isProcessed: boolean;
   expirationPeriodInMinutes: number;
   notificationTemplateContents: NotificationTemplateContent [];
   notificationTemplateParameters: NotificationTemplateParameter [];

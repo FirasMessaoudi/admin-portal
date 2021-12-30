@@ -33,10 +33,10 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "((a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
             "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian)) AND a.titleCode=:titleCode")
     boolean existsByBasicInfoAndTitleIsGroupLeader(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
-                              @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian, @Param("titleCode") String titleCode);
+                                                   @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian, @Param("titleCode") String titleCode);
 
     @Query("select s from JpaCompanyStaff s where s.id not in (select sdi.companyStaff.id from JpaCompanyStaffDigitalId sdi where sdi.seasonYear =:season)")
-    List<JpaCompanyStaff> findAllWithoutSuin(@Param("season") int season );
+    List<JpaCompanyStaff> findAllWithoutSuin(@Param("season") int season);
 
     @Query(value = "SELECT a " +
             "FROM JpaCompanyStaff a WHERE " +
@@ -51,9 +51,12 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "((a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
             "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian)) AND a.titleCode=:titleCode")
     JpaCompanyStaff findGroupLeaderByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
-                                    @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian, @Param("titleCode") String titleCode);
+                                               @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian, @Param("titleCode") String titleCode);
 
 
     @Query(value = "SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE sdi.suin = :suin AND sdi.statusCode=:statusCode")
-    JpaCompanyStaff findBySuin(@Param("suin") String suin ,@Param("statusCode") String statusCode);
+    JpaCompanyStaff findBySuin(@Param("suin") String suin, @Param("statusCode") String statusCode);
+
+    JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(String applicantUin, long companyRitualSeason, String titleCode);
+
 }

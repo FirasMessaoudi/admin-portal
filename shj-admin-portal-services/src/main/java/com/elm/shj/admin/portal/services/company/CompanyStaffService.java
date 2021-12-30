@@ -47,6 +47,14 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return mapList(companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(uin, sid));
     }
 
+    public Optional<CompanyStaffDto> findGroupLeaderByApplicantUin(String applicantUin, long companyRitualSeasonId) {
+        JpaCompanyStaff companyStaff = companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(applicantUin, companyRitualSeasonId, ECompanyStaffTitle.GROUP_LEADER.name());
+        if (companyStaff != null) {
+            return Optional.of(getMapper().fromEntity(companyStaff, mappingContext));
+        }
+        return Optional.empty();
+    }
+
     /**
      * @param idNumber
      * @param passportNumber

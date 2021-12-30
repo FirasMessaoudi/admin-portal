@@ -79,7 +79,7 @@ export class PrintingRequestListComponent implements OnInit {
   }
 
   get canSeePrintRequestsList(): boolean {
-    return this.authenticationService.hasAuthority(EAuthority.PRINTING_REQUEST_MANAGEMENT);
+    return this.authenticationService.hasAuthority(EAuthority.APPLICANT_PRINTING_REQUEST_MANAGEMENT);
   }
 
   get canCreateNewRequest(): boolean {

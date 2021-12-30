@@ -13,7 +13,6 @@ import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 import {CompanyLite} from "@model/company-lite.model";
 import {PackageHousing} from "@model/package-housing.model";
 import {EAuthority, Page} from "@shared/model";
-import {CategorizedNotificationVo} from "@model/categorized-notification-vo.model";
 import {Applicant} from "@model/applicant.model";
 import {Subscription} from "rxjs";
 import {ApplicantService} from "@core/services/applicant/applicant.service";
@@ -22,9 +21,8 @@ import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/d
 import {
   HijriGregorianDatetimepickerComponent
 } from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datetimepicker.component";
-import {
-  ageRangeValidator, validateIsRequired
-} from "@pages/notification-management/notification-custom-validator";
+import {ageRangeValidator, validateIsRequired} from "@pages/notification-management/notification-custom-validator";
+import {NotificationTemplateCategorizing} from "@model/notification-template-categorizing.model";
 
 @Component({
   selector: 'app-user-defined-notification-add',
@@ -32,10 +30,8 @@ import {
   styleUrls: ['./user-defined-notification-add.component.scss']
 })
 export class UserDefinedNotificationAddComponent implements OnInit {
-  USER_DEFINED: string = 'USER_DEFINED';
   DRAFT: string = 'DRAFT';
   CONFIRMED: string = 'CONFIRMED';
-
   closeResult = '';
   notificationCategories: Lookup[] = [];
   localizedNotificationCategories: Lookup[] = [];
@@ -68,6 +64,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   dateString: string;
   selectedDateType: any;
   applicantsCount: number;
+  show: boolean;
 
   @ViewChild('datePicker') datePicker: HijriGregorianDatetimepickerComponent;
 
@@ -210,27 +207,41 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     this.router.navigate(['/user-defined-notification/list']);
   }
 
-  saveAsDraft() {
-    this.checkFormValidity();
-    if (this.notificationForm.invalid) {
-      return;
-    }
-    this.confirmDialogService.confirm(
-      this.translate.instant('notification-management.save_changes_confirmation_text'),
-      this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
-      if (confirm) {
-        this.proceedSavingTemplateAsDraft();
+  save(statusCode: string) {
+    let notificationTemplate = this.createNotificationTemplate();
+    if (this.DRAFT === statusCode) {
+
+      this.notificationForm.markAllAsTouched();
+      if (this.checkedCriteria === 1) {
+        this.categorizingForm.markAllAsTouched();
+        if (this.categorizingForm.invalid) {
+          return;
+        }
       }
-    });
+      if (this.notificationForm.invalid) {
+        return;
+      }
+      if (this.checkedCriteria === 2 && this.addedApplicants.length === 0) {
+        return;
+      }
+
+      notificationTemplate.statusCode = this.DRAFT;
+      this.confirmDialogService
+        .confirm(this.translate.instant('notification-management.save_changes_confirmation_text'),
+          this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
+        if (confirm) {
+          this.proceedSaving(notificationTemplate);
+        }
+      });
+    } else if (this.CONFIRMED === statusCode) {
+      notificationTemplate.statusCode = this.CONFIRMED;
+      this.proceedSaving(notificationTemplate);
+      this.dismiss();
+    }
   }
 
-  proceedSavingTemplateAsDraft() {
-    let notificationTemplate = this.createNotificationTemplate();
-    if (this.checkedCriteria === 1) {
-      notificationTemplate.notificationTemplateCategorizing = this.getCategorizing();
-    }
-
-    this.notificationService.saveAsDraft(notificationTemplate).subscribe(res => {
+  proceedSaving(notificationTemplate: NotificationTemplate) {
+    this.notificationService.save(notificationTemplate).subscribe(res => {
       if (res.hasOwnProperty('errors') && res.errors) {
         this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
         Object.keys(this.notificationForm.controls).forEach(field => {
@@ -248,7 +259,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
-  public dismiss() {
+  dismiss() {
     this.modalService.dismissAll();
   }
 
@@ -271,122 +282,20 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     return categorizing;
   }
 
-  saveAndSend() {
-    if (this.notificationForm.invalid) {
-      return;
-    }
-    if (this.applicantsCount > 0) {
-      if (this.checkedCriteria === 0) {
-        this.saveAndSendToAll();
-      } else if (this.checkedCriteria === 1) {
-        this.saveAndSendToCategorizedApplicants(this.categorizingForm.value);
-      } else if (this.checkedCriteria === 2) {
-        this.saveAndSendToSelectedApplicants(this.addedApplicants.map(applicant => applicant.id));
-      }
-    } else {
-      this.proceedSavingTemplateAsDraft();
-    }
-    this.dismiss();
-  }
-
-  saveAndSendToAll() {
-    this.isLoading = true;
-    let notificationTemplate = this.createNotificationTemplate();
-    notificationTemplate.statusCode = this.CONFIRMED;
-    this.notificationService.saveAndSendToAll(notificationTemplate).subscribe(res => {
-      this.isLoading = false;
-      if (res.hasOwnProperty('errors') && res.errors) {
-        this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
-        Object.keys(this.notificationForm.controls).forEach(field => {
-          console.log('looking for validation errors for : ' + field);
-          if (res.errors[field]) {
-            const control = this.notificationForm.get(field);
-            control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
-            control.markAsTouched({onlySelf: true});
-          }
-        });
-      } else {
-        this.toastr.success(this.translate.instant("notification-management.saved_successfully"), this.translate.instant("general.dialog_add_title"));
-        this.router.navigate(['/user-defined-notification/list']);
-      }
-    });
-  }
-
-  saveAndSendToCategorizedApplicants(criteria) {
-    this.isLoading = true;
-    let notificationTemplate = <NotificationTemplate>this.createNotificationTemplate();
-    notificationTemplate.statusCode = this.CONFIRMED;
-    notificationTemplate.notificationTemplateCategorizing = this.getCategorizing();
-
-    const categorizedNotificationVo = new CategorizedNotificationVo(notificationTemplate, criteria);
-
-    this.notificationService.saveAndSendToCategorizedApplicants(categorizedNotificationVo).subscribe(res => {
-      this.isLoading = false;
-      if (res.hasOwnProperty('errors') && res.errors) {
-        this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
-        Object.keys(this.notificationForm.controls).forEach(field => {
-          console.log('looking for validation errors for : ' + field);
-          if (res.errors[field]) {
-            const control = this.notificationForm.get(field);
-            control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
-            control.markAsTouched({onlySelf: true});
-          }
-        });
-      } else {
-        this.toastr.success(this.translate.instant("notification-management.saved_successfully"), this.translate.instant("general.dialog_add_title"));
-        this.router.navigate(['/user-defined-notification/list']);
-      }
-    });
-  }
-
-  saveAndSendToSelectedApplicants(selectedApplicants) {
-    this.isLoading = true;
-    let notificationTemplate = this.createNotificationTemplate();
-    notificationTemplate.statusCode = this.CONFIRMED;
-
-    this.notificationService.saveAndSendToSelectedApplicants(notificationTemplate, selectedApplicants).subscribe(res => {
-      this.isLoading = false;
-      if (res.hasOwnProperty('errors') && res.errors) {
-        this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_add_title"));
-        Object.keys(this.notificationForm.controls).forEach(field => {
-          console.log('looking for validation errors for : ' + field);
-          if (res.errors[field]) {
-            const control = this.notificationForm.get(field);
-            control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
-            control.markAsTouched({onlySelf: true});
-          }
-        });
-      } else {
-        this.toastr.success(this.translate.instant("notification-management.saved_successfully"), this.translate.instant("general.dialog_add_title"));
-        this.router.navigate(['/user-defined-notification/list']);
-      }
-    });
-  }
-
-  checkFormValidity() {
-    Object.keys(this.notificationForm.controls).forEach(field => {
-      const control = this.notificationForm.get(field);
-      control.markAsTouched({onlySelf: true});
-    });
-
-    Object.keys(this.notificationTemplateContents['controls'][0]['controls']).forEach(field => {
-      this.notificationForm.controls.notificationTemplateContents['controls'].forEach(control => control.get(field).markAsTouched({onlySelf: true}))
-    });
-
-    if (this.notificationForm.controls.notificationTemplateContents['controls'].find(c => c['errors'])) {
-      this.activeId = this.translatedLanguages
-        .findIndex(lang => lang.code == this.notificationForm.controls.notificationTemplateContents['controls'].find(c => c['errors'])?.value.lang) + 1;
-    }
-  }
-
   createNotificationTemplate(): NotificationTemplate {
+    let notificationTemplate: NotificationTemplate = this.notificationForm.value;
+    notificationTemplate.notificationTemplateContents = this.notificationForm.get('notificationTemplateContents').value
+      .filter(c => c.body.trim() !== '' || c.title.trim() !== '');
 
-    let notificationTemplate = this.notificationForm.value;
-    notificationTemplate.typeCode = this.USER_DEFINED;
-    notificationTemplate.statusCode = this.DRAFT;
+    if (this.checkedCriteria === 1) {
+      notificationTemplate.notificationTemplateCategorizing = this.getCategorizing();
+    } else if (this.checkedCriteria === 2 && this.addedApplicants?.length > 0) {
+      const selectedApplicantsCSV = this.addedApplicants.map(applicant => applicant.id).join(",");
+      let notificationTemplateCategorizing = new NotificationTemplateCategorizing(selectedApplicantsCSV)
+      notificationTemplate.notificationTemplateCategorizing = notificationTemplateCategorizing;
+      notificationTemplateCategorizing.selectedApplicants = selectedApplicantsCSV;
+    }
 
-    notificationTemplate.notificationTemplateContents = this.notificationForm.get('notificationTemplateContents')
-      .value.filter(c => c.body.trim() !== '' || c.title.trim() !== '');
     notificationTemplate.notificationTemplateContents.forEach(c => {
       c.title = c.title.replace(/\s/g, " ").trim();
       c.body = c.body.replace(/\s/g, " ").trim();
@@ -466,8 +375,8 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     return new Array(i);
   }
 
-  isChecked(card) {
-    return this.selectedApplicants.some(c => c.id === card.id);
+  isChecked(applicant) {
+    return this.selectedApplicants.some(c => c.id === applicant.id);
   }
 
   isAllChecked() {
@@ -504,7 +413,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     this.isAllSelected = this.selectedApplicants.length === this.page.totalElements;
   }
 
-  openLg(content) {
+  openSearchModal(content) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       centered: true,
@@ -517,9 +426,18 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
-  openSaveAndSendLg(content) {
-    this.checkFormValidity();
+  openSendModal(content) {
+    this.notificationForm.markAllAsTouched();
+    if (this.checkedCriteria === 1) {
+      this.categorizingForm.markAllAsTouched();
+      if (this.categorizingForm.invalid) {
+        return;
+      }
+    }
     if (this.notificationForm.invalid) {
+      return;
+    }
+    if (this.checkedCriteria === 2 && this.addedApplicants.length === 0) {
       return;
     }
     this.modalService.open(content, {

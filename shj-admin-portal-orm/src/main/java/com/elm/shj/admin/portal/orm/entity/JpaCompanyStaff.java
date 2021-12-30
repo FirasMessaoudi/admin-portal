@@ -28,7 +28,6 @@ import java.util.List;
 @NoArgsConstructor
 public class JpaCompanyStaff implements Serializable {
 
-
     private static final long serialVersionUID = -8603753627078284482L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -96,7 +95,6 @@ public class JpaCompanyStaff implements Serializable {
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupLeader")
     private List<JpaApplicantGroup> applicantGroups;
-
 
     @PrePersist
     public void prePersist() {

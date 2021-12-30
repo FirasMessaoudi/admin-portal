@@ -132,7 +132,7 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
      */
     public CompanyStaffDigitalIdDto findByBasicInfo(long staffId, int season) {
       Optional<JpaCompanyStaffDigitalId> digitalId=  companyStaffDigitalIdRepository.findByBasicInfo(staffId,season,EDigitalIdStatus.VALID.name()) ;
-        if (digitalId.isPresent()) {
+        if (digitalId!=null && digitalId.isPresent()) {
             return getMapper().fromEntity(digitalId.get(), mappingContext);
         }
         return null;

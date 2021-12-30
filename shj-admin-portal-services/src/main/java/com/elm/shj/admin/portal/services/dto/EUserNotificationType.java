@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2021 ELM. All rights reserved.
  */
-package com.elm.shj.admin.portal.services.notification;
+package com.elm.shj.admin.portal.services.dto;
 
 /**
  * Enum for user notification type

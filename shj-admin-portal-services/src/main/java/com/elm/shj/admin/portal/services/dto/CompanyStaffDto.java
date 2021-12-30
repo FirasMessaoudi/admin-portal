@@ -91,7 +91,6 @@ public class CompanyStaffDto {
     @CellIndex(index = 6)
     private String fullNameOrigin;
 
-
     @NullOrNotBlank(min = 5, max = 16)
     @CellIndex(index =13)
     private String mobileNumber;
