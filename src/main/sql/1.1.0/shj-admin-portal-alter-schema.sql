@@ -1186,3 +1186,9 @@ GO
 
 ALTER TABLE shc_portal.shc_chat_message ALTER COLUMN type_id int NULL;
 GO
+
+ALTER TABLE shc_portal.shc_chat_message ALTER COLUMN sent_date datetime;
+GO
+
+ALTER TABLE shc_portal.shc_chat_message ALTER COLUMN received_date datetime;
+GO
