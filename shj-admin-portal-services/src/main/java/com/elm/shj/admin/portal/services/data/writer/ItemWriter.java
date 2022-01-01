@@ -77,6 +77,7 @@ public class ItemWriter {
     private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
     private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
+    private final ApplicantChatContactService applicantChatContactService;
 
 
     /**
@@ -480,6 +481,13 @@ public class ItemWriter {
                     if (applicantRitualField != null) {
                         ReflectionUtils.makeAccessible(applicantRitualField);
                         applicantRitualField.set(item, generatedApplicantRitual);
+                    }
+
+                    if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
+                        ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
+                        ApplicantDto relativeApplicant = applicantRelative.getRelativeApplicant();
+                        relativeApplicant.setContacts(applicantContactService.findByApplicantId(relativeApplicant.getId()));
+                         applicantChatContactService.createSystemDefinedApplicantChatContact(applicantRelative);
                     }
 
                     if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {

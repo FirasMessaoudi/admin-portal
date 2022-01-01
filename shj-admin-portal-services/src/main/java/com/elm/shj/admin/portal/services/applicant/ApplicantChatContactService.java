@@ -192,4 +192,47 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         ApplicantChatContactDto savedContact = save(applicantChatContact);
         return mapChatContactToChatContactLite(savedContact);
     }
+
+    public void createSystemDefinedApplicantChatContact(ApplicantRelativeDto applicantRelative) {
+        String applicantUin = applicantRelative.getApplicant().getDigitalIds().get(0).getUin();
+        String contactUin = applicantRelative.getRelativeApplicant().getDigitalIds().get(0).getUin();
+        Optional<JpaApplicantChatContact> chatContact = applicantChatContactRepository.findByApplicantUinAndContactUinAndDeleted(applicantUin, contactUin, false);
+        if(chatContact.isPresent()){
+           log.debug(" create System Defined Applicant Chat Contact applicantUin: {} contactUin: {} already exist ",applicantUin,contactUin);
+           return;
+        }
+        else{
+            String mobileNumber = null;
+            String countryCode = null;
+            Optional<ApplicantContactDto> first = applicantRelative.getRelativeApplicant().getContacts().stream().findFirst();
+            if(first.isPresent()){
+                if(first.get().getLocalMobileNumber() != null){
+                    mobileNumber = first.get().getLocalMobileNumber();
+                    countryCode = "SA";
+                }else {
+                    mobileNumber = first.get().getIntlMobileNumber();
+                    countryCode = first.get().getCountryCode();
+                }
+            }
+            ApplicantChatContactDto savedContact = ApplicantChatContactDto
+                    .builder()
+                    .applicantUin(applicantUin)
+                    .contactUin(contactUin)
+                    .alias(null)
+                    .mobileNumber(mobileNumber)
+                    .countryCode(countryCode)
+                    .systemDefined(true)
+                    .deleted(false)
+                    .avatar(applicantRelative.getRelativeApplicant().getPhoto())
+                    .applicantRitual(applicantRelative.getApplicantRitual())
+                    .autoAdded(false)
+                    .relationshipCode(applicantRelative.getRelationshipCode())
+                    .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
+                    .build();
+
+            save(savedContact);
+            log.debug(" create System Defined Applicant Chat Contact applicantUin: {} contactUin: {} saved successfully ",applicantUin,contactUin);
+        }
+
+    }
 }
