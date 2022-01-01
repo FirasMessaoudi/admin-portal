@@ -184,18 +184,18 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         databaseNotificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
 
         if (notificationTemplate.getNotificationTemplateCategorizing() != null) {
+            NotificationTemplateCategorizingDto categorizing;
             if (notificationTemplate.getNotificationTemplateCategorizing().getSelectedApplicants() != null) {
-                NotificationTemplateCategorizingDto categorizing = new NotificationTemplateCategorizingDto();
-                categorizing.setId(databaseNotificationTemplate.getNotificationTemplateCategorizing().getId());
+                categorizing = new NotificationTemplateCategorizingDto();
                 categorizing.setSelectedApplicants(notificationTemplate.getNotificationTemplateCategorizing().getSelectedApplicants());
-                categorizing.setNotificationTemplate(databaseNotificationTemplate);
-                databaseNotificationTemplate.setNotificationTemplateCategorizing(categorizing);
             } else {
-                NotificationTemplateCategorizingDto categorizing = notificationTemplate.getNotificationTemplateCategorizing();
-                categorizing.setNotificationTemplate(databaseNotificationTemplate);
+                categorizing = notificationTemplate.getNotificationTemplateCategorizing();
                 categorizing.setSelectedApplicants(null);
-                databaseNotificationTemplate.setNotificationTemplateCategorizing(categorizing);
             }
+            categorizing.setId(databaseNotificationTemplate.getNotificationTemplateCategorizing().getId());
+            categorizing.setCreationDate(databaseNotificationTemplate.getNotificationTemplateCategorizing().getCreationDate());
+            categorizing.setNotificationTemplate(databaseNotificationTemplate);
+            databaseNotificationTemplate.setNotificationTemplateCategorizing(categorizing);
         }
         return save(databaseNotificationTemplate);
     }

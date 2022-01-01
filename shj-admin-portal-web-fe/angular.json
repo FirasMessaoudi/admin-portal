@@ -273,5 +273,8 @@
       }
     }
   },
-  "defaultProject": "shj-admin-portal"
+  "defaultProject": "shj-admin-portal",
+  "cli": {
+    "analytics": false
+  }
 }

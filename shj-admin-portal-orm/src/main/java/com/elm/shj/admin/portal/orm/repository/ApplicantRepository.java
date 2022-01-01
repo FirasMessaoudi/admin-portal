@@ -67,27 +67,4 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Query("UPDATE JpaApplicant a SET a.registered = TRUE, a.updateDate = CURRENT_TIMESTAMP WHERE a.id = :applicantId")
     int markAsRegistered(@Param("applicantId") long applicantId);
 
-    @Query(value = "SELECT DISTINCT applicant.* " +
-            "FROM shc_applicant applicant " +
-            "         JOIN shc_applicant_digital_id digital_id ON applicant.id = digital_id.applicant_id " +
-            "         JOIN shc_applicant_package applicant_package ON digital_id.uin = applicant_package.applicant_uin " +
-            "         JOIN shc_group_applicant_list group_applicant ON applicant_package.applicant_uin = group_applicant.applicant_uin " +
-            "         LEFT JOIN shc_applicant_chat_contact chat_contact ON digital_id.uin = chat_contact.applicant_uin " +
-            "WHERE applicant.registered = 1 " +
-            "  AND applicant_package.start_date <= CURRENT_TIMESTAMP " +
-            "  AND applicant_package.end_date >= CURRENT_TIMESTAMP " +
-            "  AND group_applicant.applicant_uin NOT IN " +
-            "      (SELECT chat_contact.applicant_uin " +
-            "       FROM shc_applicant_chat_contact chat_contact " +
-            "       WHERE chat_contact.staff_title_code = :title " +
-            "         AND chat_contact.applicant_ritual_id = " +
-            "             (SELECT sar.id " +
-            "              FROM shc_portal.shc_company_ritual_season company_ritual_season " +
-            "                       JOIN shc_ritual_package ritual_package ON company_ritual_season.id = ritual_package.company_ritual_season_id " +
-            "                       JOIN shc_applicant_package applicant_package ON ritual_package.id = applicant_package.ritual_package_id " +
-            "                       JOIN shc_applicant_ritual sar ON applicant_package.id = sar.applicant_package_id " +
-            "              WHERE applicant_package.applicant_uin = digital_id.uin " +
-            "              ORDER BY company_ritual_season.season_start DESC " +
-            "              OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY) ) ;", nativeQuery = true)
-    List<JpaApplicant> findAllNotHavingChatContactWithTitle(@Param("title") String title);
 }

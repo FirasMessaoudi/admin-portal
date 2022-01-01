@@ -83,7 +83,8 @@ export class UserDefinedNotificationAddComponent implements OnInit {
               private confirmDialogService: ConfirmDialogService,
               private toastr: ToastService,
               private modalService: NgbModal,
-              private dateFormatterService: DateFormatterService) {
+              private dateFormatterService: DateFormatterService,
+  ) {
   }
 
   ngOnInit(): void {
@@ -219,6 +220,10 @@ export class UserDefinedNotificationAddComponent implements OnInit {
         }
       }
       if (this.notificationForm.invalid) {
+        if (this.notificationTemplateContents.invalid) {
+          // Set focus on tab containing errors
+          this.activeId = this.translatedLanguages.findIndex(lang => lang.code === this.notificationTemplateContents.controls.find(control => control.invalid).value.lang) + 1;
+        }
         return;
       }
       if (this.checkedCriteria === 2 && this.addedApplicants.length === 0) {
@@ -475,5 +480,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.notificationForm.controls.sendingDateHijri.setValue(this.dateFormatterService.toString(dateStructHijri).split('/').reverse().join(''));
     }
     console.log(event);
+  }
+
+  updateTabIndex(activeId) {
+    this.activeId = activeId;
   }
 }

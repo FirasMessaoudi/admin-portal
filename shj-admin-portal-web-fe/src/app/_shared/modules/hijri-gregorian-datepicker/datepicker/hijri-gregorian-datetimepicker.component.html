@@ -4,7 +4,6 @@
   <div class="input-group position-relative">
 
     <input class="form-control m-0 ngb-date-picker position-absolute"
-           [class.disabled-control]="grayed"
            [placeholder]="placeHolder ? placeHolder : 'DD/MM/YYYY HH:MM'"
            [name]="name"
            *ngIf="selectedDateType == DateType.Gregorian"
