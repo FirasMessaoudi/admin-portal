@@ -114,8 +114,8 @@
     "operations": "Operations",
     "export_to_excel": "Export to Excel",
     "export_to_pdf": "Export to PDF",
-    "from": "from",
-    "to": "to"
+    "from": "From",
+    "to": "To"
   },
 
   "header": {

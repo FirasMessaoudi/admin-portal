@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository for Company Staff data.
@@ -21,14 +22,14 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
     List<JpaCompanyStaff> findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(String applicantUin, long sid);
 
-    @Query(value = "SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
+    @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
             "FROM JpaCompanyStaff a WHERE " +
             "(a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
             "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian)")
     boolean existsByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                               @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
-    @Query(value = "SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
+    @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
             "FROM JpaCompanyStaff a WHERE " +
             "((a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
             "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian)) AND a.titleCode=:titleCode")
@@ -38,7 +39,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     @Query("select s from JpaCompanyStaff s where s.id not in (select sdi.companyStaff.id from JpaCompanyStaffDigitalId sdi where sdi.seasonYear =:season)")
     List<JpaCompanyStaff> findAllWithoutSuin(@Param("season") int season);
 
-    @Query(value = "SELECT a " +
+    @Query("SELECT a " +
             "FROM JpaCompanyStaff a WHERE " +
             "(a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
             "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian)")
@@ -46,7 +47,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
                                     @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
 
-    @Query(value = "SELECT a " +
+    @Query("SELECT a " +
             "FROM JpaCompanyStaff a WHERE " +
             "((a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
             "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian)) AND a.titleCode=:titleCode")
@@ -54,7 +55,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
                                                @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian, @Param("titleCode") String titleCode);
 
 
-    @Query(value = "SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE sdi.suin = :suin AND sdi.statusCode=:statusCode")
+    @Query("SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE sdi.suin = :suin AND sdi.statusCode=:statusCode")
     JpaCompanyStaff findBySuin(@Param("suin") String suin, @Param("statusCode") String statusCode);
 
     JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(String applicantUin, long companyRitualSeason, String titleCode);

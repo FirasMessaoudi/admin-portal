@@ -69,9 +69,8 @@ public class JpaApplicantChatContact implements Serializable {
     @Column(name = "auto_added")
     private boolean autoAdded;
 
-    @ManyToOne
-    @JoinColumn(name = "applicant_ritual_id")
-    private JpaApplicantRitual applicantRitual;
+    @Column(name = "applicant_ritual_id")
+    private Long applicantRitualId;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;

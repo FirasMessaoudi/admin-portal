@@ -54,7 +54,8 @@ CREATE TABLE shc_portal.shc_company_ritual_step_lk
     code          varchar(20)   NOT NULL,
     lang          varchar(45)   NOT NULL,
     label         nvarchar(50) NOT NULL,
-    description   varchar(255)  NOT NULL,
+    description   nvarchar(255)  NOT NULL,
+    summary       nvarchar(100)  ,
     creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
     CONSTRAINT tafweej_step_lk_unique UNIQUE (code ASC, lang ASC)
 );
@@ -509,10 +510,6 @@ ALTER TABLE shc_portal.shc_applicant_ritual
         CONSTRAINT fk_shc_applicant_ritual_applicant_package FOREIGN KEY (applicant_package_id) REFERENCES shc_portal.shc_applicant_package (id);
 GO
 
-ALTER TABLE shc_portal.shc_company_ritual_step_lk
-    ADD summary VARCHAR(100);
-GO
-
 ALTER TABLE shc_portal.shc_print_request
     ADD description NVARCHAR(150) NULL;
 GO
@@ -841,9 +838,6 @@ ALTER TABLE shc_portal.shc_applicant_package
 
 ALTER TABLE shc_portal.shc_applicant_package
     ADD end_date DATE;
-GO
-
-alter table shc_portal.shc_company_ritual_step_lk alter column summary nvarchar(100);
 GO
 
 
@@ -1181,10 +1175,19 @@ GO
 
 
 ALTER TABLE shc_portal.shc_applicant_chat_contact
-    ADD auto_added bit DEFAULT 0 NOT NULL;;
+    ADD auto_added bit DEFAULT 0 NOT NULL;
 GO
 
 ALTER TABLE shc_portal.shc_chat_message ALTER COLUMN type_id int NULL;
+GO
+
+ALTER TABLE shc_portal.shc_chat_message ALTER COLUMN sent_date datetime;
+GO
+
+ALTER TABLE shc_portal.shc_chat_message ALTER COLUMN received_date datetime;
+GO
+
+ALTER TABLE shc_portal.shc_company_ritual_step_lk ALTER COLUMN description NVARCHAR(255);
 GO
 
 

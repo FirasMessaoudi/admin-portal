@@ -16,11 +16,11 @@ import {EAuthority, Page} from "@shared/model";
 import {Applicant} from "@model/applicant.model";
 import {Subscription} from "rxjs";
 import {ApplicantService} from "@core/services/applicant/applicant.service";
-import {DateType} from "@shared/modules/hijri-gregorian-datepicker/datepicker/consts";
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {
   HijriGregorianDatetimepickerComponent
-} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datetimepicker.component";
+} from "@shared/modules/hijri-gregorian-datepicker/datetimepicker/hijri-gregorian-datetimepicker.component";
 import {ageRangeValidator, validateIsRequired} from "@pages/notification-management/notification-custom-validator";
 import {NotificationTemplateCategorizing} from "@model/notification-template-categorizing.model";
 
@@ -57,7 +57,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   addedApplicantsPageSize: number = 10;
   isSelectAllClicked: boolean;
   isSelectLoading: boolean;
-  isAllSelected: boolean;
   selectedSendingDate: NgbDateStruct;
   minSendingDateGregorian: NgbDateStruct;
   minSendingDateHijri: NgbDateStruct;
@@ -83,7 +82,8 @@ export class UserDefinedNotificationAddComponent implements OnInit {
               private confirmDialogService: ConfirmDialogService,
               private toastr: ToastService,
               private modalService: NgbModal,
-              private dateFormatterService: DateFormatterService) {
+              private dateFormatterService: DateFormatterService,
+  ) {
   }
 
   ngOnInit(): void {
@@ -219,6 +219,10 @@ export class UserDefinedNotificationAddComponent implements OnInit {
         }
       }
       if (this.notificationForm.invalid) {
+        if (this.notificationTemplateContents.invalid) {
+          // Set focus on tab containing errors
+          this.activeId = this.translatedLanguages.findIndex(lang => lang.code === this.notificationTemplateContents.controls.find(control => control.invalid).value.lang) + 1;
+        }
         return;
       }
       if (this.checkedCriteria === 2 && this.addedApplicants.length === 0) {
@@ -379,28 +383,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     return this.selectedApplicants.some(c => c.id === applicant.id);
   }
 
-  isAllChecked() {
-    if (this.applicants.length > 0)
-      return this.applicants.map(c => c.id).every(id => this.selectedApplicants.map(c => c.id).includes(id));
-  }
-
-  selectApplicantsInThePage(event) {
-    this.isSelectAllClicked = true;
-    if (event.target.checked) {
-      this.applicants.forEach(card => {
-        if (!this.selectedApplicants.map(c => c.id).includes(card.id)) {
-          this.selectedApplicants.push(card);
-        }
-      })
-    } else {
-      this.applicants.forEach(card => {
-        this.selectedApplicants.splice(this.selectedApplicants.findIndex(c => c.id === card.id), 1);
-      })
-    }
-
-    this.isAllSelected = this.selectedApplicants.length === this.page.totalElements;
-  }
-
   selectOne(event, id) {
     const selectedIndex = this.applicants.findIndex(card => card.id === id);
 
@@ -410,7 +392,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.selectedApplicants.splice(this.selectedApplicants.findIndex(card => card.id === id), 1);
     }
 
-    this.isAllSelected = this.selectedApplicants.length === this.page.totalElements;
   }
 
   openSearchModal(content) {
@@ -475,5 +456,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.notificationForm.controls.sendingDateHijri.setValue(this.dateFormatterService.toString(dateStructHijri).split('/').reverse().join(''));
     }
     console.log(event);
+  }
+
+  updateTabIndex(activeId) {
+    this.activeId = activeId;
   }
 }

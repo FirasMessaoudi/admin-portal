@@ -85,7 +85,7 @@ public class JpaNotificationTemplate implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
     private Set<JpaNotificationTemplateParameter> notificationTemplateParameters;
 
-    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "notificationTemplate")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "notificationTemplate")
     private JpaNotificationTemplateCategorizing notificationTemplateCategorizing;
 
     @Column(name = "creation_date", nullable = false)

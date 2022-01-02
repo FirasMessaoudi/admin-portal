@@ -140,7 +140,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
      * @return notification Template parameter id.
      */
     private long findNotificationTemplateParameterId(Optional<NotificationTemplateDto> notificationTemplate, String parameterName) {
-        return notificationTemplate.get().getNotificationTemplateParameters().parallelStream().filter(nt -> nt.getParameterName().equalsIgnoreCase(parameterName)).findAny().get().getId();
+        return notificationTemplate.get().getNotificationTemplateParameters().stream().filter(nt -> nt.getParameterName().equalsIgnoreCase(parameterName)).findAny().get().getId();
     }
 
     @Transactional
