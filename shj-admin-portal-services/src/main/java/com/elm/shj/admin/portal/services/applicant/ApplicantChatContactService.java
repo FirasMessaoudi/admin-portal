@@ -167,7 +167,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .systemDefined(true)
                 .deleted(false)
                 .avatar(applicantRelative.getRelativeApplicant().getPhoto())
-                .applicantRitual(applicantRelative.getApplicantRitual())
+                .applicantRitualId(applicantRelative.getApplicantRitual().getId())
                 .autoAdded(false)
                 .relationshipCode(applicantRelative.getRelationshipCode())
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
