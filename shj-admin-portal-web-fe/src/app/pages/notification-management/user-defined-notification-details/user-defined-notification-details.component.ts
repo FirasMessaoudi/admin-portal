@@ -14,8 +14,8 @@ import {NotificationTemplateContent} from "@model/notification-template-content.
 import {ModalDismissReasons, NgbCalendar, NgbDate, NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CompanyLite} from "@model/company-lite.model";
 import {PackageHousing} from "@model/package-housing.model";
-import {DateType} from "@shared/modules/hijri-gregorian-datepicker/datepicker/consts";
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {ageRangeValidator, validateIsRequired} from "@pages/notification-management/notification-custom-validator";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 import {Applicant} from "@model/applicant.model";

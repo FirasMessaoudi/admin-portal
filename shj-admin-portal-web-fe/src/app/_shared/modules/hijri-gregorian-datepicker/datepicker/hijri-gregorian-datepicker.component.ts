@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import {DateType} from './consts';
-import {DateFormatterService} from './date-formatter.service';
+import {DateType} from '../consts';
+import {DateFormatterService} from '../date-formatter.service';
 
 import * as momentjs from 'moment';
 import * as moment_ from 'moment-hijri';
@@ -45,6 +45,8 @@ export class HijriGregorianDatepickerComponent implements OnInit {
   @Input() GregLabel: string;
 
   @Input() placeHolder: string;
+
+  @Input() hideToggleButton = false;
 
   get DateType() {
     return DateType;

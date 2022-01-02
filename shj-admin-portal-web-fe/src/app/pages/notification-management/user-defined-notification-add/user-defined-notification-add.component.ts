@@ -16,11 +16,11 @@ import {EAuthority, Page} from "@shared/model";
 import {Applicant} from "@model/applicant.model";
 import {Subscription} from "rxjs";
 import {ApplicantService} from "@core/services/applicant/applicant.service";
-import {DateType} from "@shared/modules/hijri-gregorian-datepicker/datepicker/consts";
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {
   HijriGregorianDatetimepickerComponent
-} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datetimepicker.component";
+} from "@shared/modules/hijri-gregorian-datepicker/datetimepicker/hijri-gregorian-datetimepicker.component";
 import {ageRangeValidator, validateIsRequired} from "@pages/notification-management/notification-custom-validator";
 import {NotificationTemplateCategorizing} from "@model/notification-template-categorizing.model";
 

@@ -8,8 +8,8 @@ import {DEFAULT_MAX_USER_AGE, UserService} from "@core/services";
 import {environment} from "@env/environment";
 import {ToastService} from "@shared/components/toast/toast-service";
 import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
-import {DateType} from "@shared/modules/hijri-gregorian-datepicker/datepicker/consts";
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {HijriGregorianDatepickerComponent} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datepicker.component";
 import {DccValidators, IdType} from "@shared/validators";
 

@@ -49,7 +49,7 @@
           <button class="btn btn-dcc-primary btn-sm m-2 float-left" type="button"
                   (click)="clear()">{{'general.btn_clear'| translate}}</button>
         </ng-template>
-        <div class="input-group-append">
+        <div *ngIf="!hideToggleButton" class="input-group-append">
           <button
             class="btn btn-sm shadow-none {{selectedDateType == DateType.Hijri ? 'btn-'+buttonClass+' focus active' :  'btn-outline-'+ buttonClass }}"
             (click)="hijriClick()" [disabled]="disabled" type="button">

@@ -37,22 +37,22 @@
             <label class="col-form-label">{{ "notification-management.notification_date" | translate }}
               <span class="text-danger">*</span>
             </label>
-            <app-hijri-gregorian-datetimepicker [showLabel]="false"
-                                                placeHolder="{{currentLanguage.startsWith('ar') ? 'HH:MM DD/MM/YYYY' : 'DD/MM/YYYY HH:MM'}}"
-                                                name="sendingDate"
-                                                formControlName="sendingDate"
-                                                buttonClass="dcc-primary"
-                                                class="datepicker {{f.sendingDate.errors && f.sendingDate.touched ? 'is-invalid' : ''}}"
-                                                [isRequired]="true"
-                                                [minGreg]="minSendingDateGregorian"
-                                                [minHijri]="minSendingDateHijri"
-                                                [GregLabel]="'general.cal_greg' | translate"
-                                                [hijriLabel]="'general.cal_hijri' | translate"
-                                                [selectedDateType]="selectedDateType"
-                                                [readonly]="true"
-                                                inputDatetimeFormat="dd/MM/yyyy HH:mm"
-                                                #datePicker>
-            </app-hijri-gregorian-datetimepicker>
+            <hijri-gregorian-datetimepicker [showLabel]="false"
+                                            placeHolder="{{currentLanguage.startsWith('ar') ? 'HH:MM DD/MM/YYYY' : 'DD/MM/YYYY HH:MM'}}"
+                                            name="sendingDate"
+                                            formControlName="sendingDate"
+                                            buttonClass="dcc-primary"
+                                            class="datepicker {{f.sendingDate.errors && f.sendingDate.touched ? 'is-invalid' : ''}}"
+                                            [isRequired]="true"
+                                            [minGreg]="minSendingDateGregorian"
+                                            [minHijri]="minSendingDateHijri"
+                                            [GregLabel]="'general.cal_greg' | translate"
+                                            [hijriLabel]="'general.cal_hijri' | translate"
+                                            [selectedDateType]="selectedDateType"
+                                            [readonly]="true"
+                                            inputDatetimeFormat="dd/MM/yyyy HH:mm"
+                                            #datePicker>
+            </hijri-gregorian-datetimepicker>
           </div>
 
           <div class="form-group col">

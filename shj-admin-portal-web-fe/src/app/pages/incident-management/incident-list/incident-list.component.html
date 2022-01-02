@@ -44,42 +44,11 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "incident-management.incident_date" | translate }}</label>
-          <div class="d-flex">
-          <hijri-gregorian-datepicker [showLabel]="false"
-                                      name="fromDateGregorian"
-                                      buttonClass="dcc-primary"
-                                      class="datepicker {{f.fromDateGregorian.errors && f.fromDateGregorian.touched ? 'is-invalid' : ''}}"
-                                      [(selectedDate)]="selectedFromDate"
-                                      (selectedDateChange)="onFromDateChange($event)"
-                                      [isRequired]="true"
-                                      [maxGreg]="maxFromDateGregorian"
-                                      [maxHijri]="maxFromDateHijri"
-                                      [GregLabel]="'general.cal_greg' | translate"
-                                      [hijriLabel] ="'general.cal_hijri' | translate"
-                                      [selectedDateType]="selectedDateType"
-                                      [disabled]="false"
-                                      [readonly]="true"
-                                      #fromDatePicker>
-          </hijri-gregorian-datepicker>
-          <hijri-gregorian-datepicker [showLabel]="false"
-                                      name="toDateGregorian"
-                                      buttonClass="dcc-primary"
-                                      class="datepicker {{f.toDateGregorian.errors && f.toDateGregorian.touched ? 'is-invalid' : ''}}"
-                                      [(selectedDate)]="selectedToDate"
-                                      (selectedDateChange)="onToDateChange($event)"
-                                      [isRequired]="true"
-                                      [minGreg]="minToDateGregorian"
-                                      [minHijri]="minToDateHijri"
-                                      [maxGreg]="maxToDateGregorian"
-                                      [maxHijri]="maxToDateHijri"
-                                      [GregLabel]="'general.cal_greg' | translate"
-                                      [hijriLabel] ="'general.cal_hijri' | translate"
-                                      [selectedDateType]="selectedDateType"
-                                      [disabled]="false"
-                                      [readonly]="true"
-                                      #toDatePicker>
-          </hijri-gregorian-datepicker>
-          </div>
+          <hijri-greogrian-range-picker
+            (selectedFromDateChange)="patchValue($event, f.fromDate)"
+            (selectedToDateChange)="patchValue($event, f.toDate)"
+          >
+          </hijri-greogrian-range-picker>
         </div>
 
         <div class="form-group col">
@@ -138,11 +107,12 @@
           <td class="ltr">{{incident.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
           <td
             class="ltr">{{currentLanguage?.startsWith('ar') ? incident.applicantRitual?.applicant?.fullNameAr : incident.applicantRitual?.applicant?.fullNameEn}}</td>
-          <td class="ltr">{{incident.typeCode ? lookupService().localizedLabel(incidentTypes, incident.typeCode): '---'}}</td>
+          <td
+            class="ltr">{{incident.typeCode ? lookupService().localizedLabel(incidentTypes, incident.typeCode) : '---'}}</td>
           <td>{{incident.creationDate | dateTimeFormat}}</td>
           <td class=" d-flex align-items-baseline">
             <span class="status {{buildStatusClass(incident?.statusCode)}} mr-1"></span>
-            <span>{{incident.statusCode ? lookupService().localizedLabel(incidentStatuses, incident.statusCode): '---'}}</span>
+            <span>{{incident.statusCode ? lookupService().localizedLabel(incidentStatuses, incident.statusCode) : '---'}}</span>
           </td>
           <td>
             <button [routerLink]="['/incidents/details', incident.id]"
