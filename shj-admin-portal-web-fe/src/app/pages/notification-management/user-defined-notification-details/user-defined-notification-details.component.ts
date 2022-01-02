@@ -63,7 +63,6 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   checkedCriteria: number = 0;
   isSelectAllClicked: boolean;
   isSelectLoading: boolean;
-  isAllSelected: boolean;
   selectedApplicants: Array<Applicant> = [];
 
   private listSubscription: Subscription;
@@ -98,6 +97,7 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     this.selectedDateType = DateType.Gregorian;
 
     this.initForm();
+    this.initCategorizingForm();
     combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
@@ -114,9 +114,9 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
                 this.listApplicants(data.notificationTemplateCategorizing?.selectedApplicants, 0);
                 this.checkedCriteria = 2;
               } else {
-                this.updateCategorizingForm();
                 this.checkedCriteria = 1;
               }
+              this.updateCategorizingForm();
             }
             //Enable edit if sending time is less or equal than current datetime and notification is not processed
             this.canEdit = (new Date(this.notificationTemplate?.sendingDate) > this.now) && !data.isProcessed;
@@ -132,7 +132,6 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
         this.goBackToList();
       }
     });
-    this.initCategorizingForm();
     this.loadLookups();
   }
 
@@ -153,28 +152,6 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     }
   }
 
-  isAllChecked() {
-    if (this.applicants.length > 0)
-      return this.applicants.map(c => c.id).every(id => this.selectedApplicants.map(c => c.id).includes(id));
-  }
-
-  selectApplicantsInThePage(event) {
-    this.isSelectAllClicked = true;
-    if (event.target.checked) {
-      this.applicants.forEach(card => {
-        if (!this.selectedApplicants.map(c => c.id).includes(card.id)) {
-          this.selectedApplicants.push(card);
-        }
-      })
-    } else {
-      this.applicants.forEach(card => {
-        this.selectedApplicants.splice(this.selectedApplicants.findIndex(c => c.id === card.id), 1);
-      })
-    }
-
-    this.isAllSelected = this.selectedApplicants.length === this.page.totalElements;
-  }
-
   selectOne(event, id) {
     const selectedIndex = this.applicants.findIndex(card => card.id === id);
 
@@ -184,7 +161,6 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       this.selectedApplicants.splice(this.selectedApplicants.findIndex(card => card.id === id), 1);
     }
 
-    this.isAllSelected = this.selectedApplicants.length === this.page.totalElements;
   }
 
   loadLookups() {
@@ -361,19 +337,16 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   }
 
   updateCategorizingForm() {
-    if (this.notificationTemplate?.notificationTemplateCategorizing?.selectedApplicants) {
-    } else {
-      this.categorizingForm.patchValue({
-        campId: this.notificationTemplate?.notificationTemplateCategorizing?.campId,
-        companyId: this.notificationTemplate?.notificationTemplateCategorizing?.companyId,
-        nationalityCode: this.notificationTemplate?.notificationTemplateCategorizing?.nationalityCode,
-        age: {
-          minAge: this.notificationTemplate?.notificationTemplateCategorizing?.minAge,
-          maxAge: this.notificationTemplate?.notificationTemplateCategorizing?.maxAge
-        },
-        gender: this.notificationTemplate?.notificationTemplateCategorizing.gender
-      });
-    }
+    this.categorizingForm.patchValue({
+      campId: this.notificationTemplate?.notificationTemplateCategorizing?.campId,
+      companyId: this.notificationTemplate?.notificationTemplateCategorizing?.companyId,
+      nationalityCode: this.notificationTemplate?.notificationTemplateCategorizing?.nationalityCode,
+      age: {
+        minAge: this.notificationTemplate?.notificationTemplateCategorizing?.minAge,
+        maxAge: this.notificationTemplate?.notificationTemplateCategorizing?.maxAge
+      },
+      gender: this.notificationTemplate?.notificationTemplateCategorizing.gender
+    });
   }
 
   save() {

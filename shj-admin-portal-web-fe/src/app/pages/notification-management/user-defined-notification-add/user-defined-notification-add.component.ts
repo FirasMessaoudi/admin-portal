@@ -57,7 +57,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   addedApplicantsPageSize: number = 10;
   isSelectAllClicked: boolean;
   isSelectLoading: boolean;
-  isAllSelected: boolean;
   selectedSendingDate: NgbDateStruct;
   minSendingDateGregorian: NgbDateStruct;
   minSendingDateHijri: NgbDateStruct;
@@ -384,28 +383,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     return this.selectedApplicants.some(c => c.id === applicant.id);
   }
 
-  isAllChecked() {
-    if (this.applicants.length > 0)
-      return this.applicants.map(c => c.id).every(id => this.selectedApplicants.map(c => c.id).includes(id));
-  }
-
-  selectApplicantsInThePage(event) {
-    this.isSelectAllClicked = true;
-    if (event.target.checked) {
-      this.applicants.forEach(card => {
-        if (!this.selectedApplicants.map(c => c.id).includes(card.id)) {
-          this.selectedApplicants.push(card);
-        }
-      })
-    } else {
-      this.applicants.forEach(card => {
-        this.selectedApplicants.splice(this.selectedApplicants.findIndex(c => c.id === card.id), 1);
-      })
-    }
-
-    this.isAllSelected = this.selectedApplicants.length === this.page.totalElements;
-  }
-
   selectOne(event, id) {
     const selectedIndex = this.applicants.findIndex(card => card.id === id);
 
@@ -415,7 +392,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.selectedApplicants.splice(this.selectedApplicants.findIndex(card => card.id === id), 1);
     }
 
-    this.isAllSelected = this.selectedApplicants.length === this.page.totalElements;
   }
 
   openSearchModal(content) {
