@@ -28,34 +28,34 @@ public interface ApplicantChatContactRepository extends JpaRepository<JpaApplica
     int markDeleted(@Param("applicantUin") String applicantUin, @Param("contactUin") String contactUin);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantChatContactVo(j.id, j.applicantUin, j.contactUin, a.fullNameAr, a.fullNameEn, " +
-            "j.type, j.alias, j.avatar, j.systemDefined, j.staffTitleCode, j.relationshipCode, j.mobileNumber, j.countryPhonePrefix, j.countryCode, " +
+            "j.type.id, j.alias, j.avatar, j.systemDefined, j.staffTitleCode, j.relationshipCode, j.mobileNumber, j.countryPhonePrefix, j.countryCode, " +
             "j.autoAdded, j.applicantRitualId, j.creationDate, j.updateDate) FROM JpaApplicantChatContact j " +
             "JOIN JpaApplicantDigitalId adi ON j.applicantUin = adi.uin JOIN adi.applicant a WHERE j.applicantUin = :applicantUin " +
             "AND (j.systemDefined = FALSE OR (j.systemDefined = TRUE AND j.applicantRitualId = :ritualId)) AND j.deleted = FALSE")
     List<ApplicantChatContactVo> list(@Param("applicantUin") String applicantUin, @Param("ritualId") Long ritualId);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantChatContactVo(j.id, j.applicantUin, j.contactUin, a.fullNameAr, a.fullNameEn, " +
-            "j.type, j.alias, j.avatar, j.systemDefined, j.staffTitleCode, j.relationshipCode, j.mobileNumber, j.countryPhonePrefix, j.countryCode, " +
+            "j.type.id, j.alias, j.avatar, j.systemDefined, j.staffTitleCode, j.relationshipCode, j.mobileNumber, j.countryPhonePrefix, j.countryCode, " +
             "j.autoAdded, j.applicantRitualId, j.creationDate, j.updateDate) FROM JpaApplicantChatContact j " +
             "JOIN JpaApplicantDigitalId adi ON j.applicantUin = adi.uin JOIN adi.applicant a WHERE j.applicantUin = :applicantUin " +
             "AND j.systemDefined = TRUE AND j.applicantRitualId = :ritualId AND j.deleted = FALSE")
     List<ApplicantChatContactVo> findBySystemDefinedTrue(@Param("applicantUin") String applicantUin, @Param("ritualId") Long ritualId);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantChatContactVo(j.id, j.applicantUin, j.contactUin, a.fullNameAr, a.fullNameEn, " +
-            "j.type, j.alias, j.avatar, j.systemDefined, j.staffTitleCode, j.relationshipCode, j.mobileNumber, j.countryPhonePrefix, j.countryCode, " +
+            "j.type.id, j.alias, j.avatar, j.systemDefined, j.staffTitleCode, j.relationshipCode, j.mobileNumber, j.countryPhonePrefix, j.countryCode, " +
             "j.autoAdded, j.applicantRitualId, j.creationDate, j.updateDate) FROM JpaApplicantChatContact j " +
             "JOIN JpaApplicantDigitalId adi ON j.applicantUin = adi.uin JOIN adi.applicant a WHERE j.applicantUin = :applicantUin " +
             "AND j.systemDefined = FALSE AND j.deleted = FALSE")
     List<ApplicantChatContactVo> findBySystemDefinedFalse(@Param("applicantUin") String applicantUin);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantChatContactVo(j.id, j.applicantUin, j.contactUin, a.fullNameAr, a.fullNameEn, " +
-            "j.type, j.alias, j.avatar, j.systemDefined, j.staffTitleCode, j.relationshipCode, j.mobileNumber, j.countryPhonePrefix, j.countryCode, " +
+            "j.type.id, j.alias, j.avatar, j.systemDefined, j.staffTitleCode, j.relationshipCode, j.mobileNumber, j.countryPhonePrefix, j.countryCode, " +
             "j.autoAdded, j.applicantRitualId, j.creationDate, j.updateDate) FROM JpaApplicantChatContact j " +
             "JOIN JpaApplicantDigitalId adi ON j.applicantUin = adi.uin JOIN adi.applicant a WHERE j.id = :id")
     Optional<ApplicantChatContactVo> findApplicantContactVoById(@Param("id") Long id);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantChatContactVo(j.id, j.applicantUin, j.contactUin, cs.fullNameAr, cs.fullNameEn, " +
-            "j.type, j.alias, j.avatar, j.systemDefined, j.staffTitleCode, j.relationshipCode, j.mobileNumber, j.countryPhonePrefix, j.countryCode, " +
+            "j.type.id, j.alias, j.avatar, j.systemDefined, j.staffTitleCode, j.relationshipCode, j.mobileNumber, j.countryPhonePrefix, j.countryCode, " +
             "j.autoAdded, j.applicantRitualId, j.creationDate, j.updateDate) FROM JpaApplicantChatContact j " +
             "JOIN JpaCompanyStaffDigitalId csdi ON j.applicantUin = csdi.suin JOIN csdi.companyStaff cs WHERE cs.id = :id")
     Optional<ApplicantChatContactVo> findStaffContactVoById(@Param("id") Long id);

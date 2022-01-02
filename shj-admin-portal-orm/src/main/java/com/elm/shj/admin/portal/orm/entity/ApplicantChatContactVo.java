@@ -30,7 +30,7 @@ public class ApplicantChatContactVo implements Serializable {
     private String contactUin;
     private String contactFullNameAr;
     private String contactFullNameEn;
-    private JpaContactTypeLookup type;
+    private long typeId;
     private String alias;
     private String avatar;
     private Boolean systemDefined;
