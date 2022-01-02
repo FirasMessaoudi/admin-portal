@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantChatContactVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantChatContact;
 import com.elm.shj.admin.portal.orm.repository.ApplicantChatContactRepository;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
@@ -16,10 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Service handling applicant chat contacts
@@ -33,38 +32,23 @@ import java.util.stream.Collectors;
 public class ApplicantChatContactService extends GenericService<JpaApplicantChatContact, ApplicantChatContactDto, Long> {
 
     private final ApplicantChatContactRepository applicantChatContactRepository;
-    private final ApplicantLiteService applicantLiteService;
-    private final ApplicantRitualService applicantRitualService;
-    private final CompanyStaffService companyStaffService;
 
     /**
      * List all chat contacts of a specific applicant.
      *
-     * @param applicantUin the UIN of the applicant
+     * @param applicantUin  the UIN of the applicant
+     * @param ritualId      the selected ritual ID
+     * @param systemDefined a boolean flag to define whether the chat contact is added by system or not
      * @return the list of chat contacts
      */
-    public List<ApplicantChatContactLiteDto> listApplicantChatContacts(String applicantUin, Long applicantRitualId, Boolean systemDefined) {
-        List<ApplicantChatContactDto> contacts;
+    public List<ApplicantChatContactVo> list(String applicantUin, Long ritualId, Boolean systemDefined) {
         if (systemDefined == null) {
-            contacts = mapList(applicantChatContactRepository.findAllByUinAndRitualIdAndSystemDefined(applicantUin, applicantRitualId));
+            return ((ApplicantChatContactRepository) getRepository()).list(applicantUin, ritualId);
         } else if (systemDefined) {
-            contacts = mapList(applicantChatContactRepository.findSystemDefined(applicantUin, applicantRitualId));
+            return ((ApplicantChatContactRepository) getRepository()).findBySystemDefinedTrue(applicantUin, ritualId);
         } else {
-            contacts = mapList(applicantChatContactRepository.findUserDefined(applicantUin));
+            return ((ApplicantChatContactRepository) getRepository()).findBySystemDefinedFalse(applicantUin);
         }
-        return contacts.parallelStream().map(c -> {
-            ApplicantChatContactLiteDto contact = mapChatContactToChatContactLite(c);
-            if (EChatContactType.APPLICANT.getId() == c.getType().getId()) {
-                Optional<ApplicantLiteDto> applicantLite = applicantLiteService.findByUin(c.getContactUin());
-                contact.setContactFullNameAr(applicantLite.map(ApplicantLiteDto::getFullNameAr).orElse(null));
-                contact.setContactFullNameEn(applicantLite.map(ApplicantLiteDto::getFullNameEn).orElse(null));
-            } else if (EChatContactType.STAFF.getId() == c.getType().getId()) {
-                Optional<CompanyStaffLiteDto> staffLite = companyStaffService.findBySuin(c.getContactUin());
-                contact.setContactFullNameAr(staffLite.map(CompanyStaffLiteDto::getFullNameAr).orElse(null));
-                contact.setContactFullNameEn(staffLite.map(CompanyStaffLiteDto::getFullNameEn).orElse(null));
-            }
-            return contact;
-        }).collect(Collectors.toList());
     }
 
     @Transactional
@@ -74,46 +58,19 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
 
     public ApplicantChatContactDto findApplicantChatContact(String applicantUin, String contactUin) {
         Optional<JpaApplicantChatContact> applicantChatContact = applicantChatContactRepository.findByApplicantUinAndContactUin(applicantUin, contactUin);
-        if (applicantChatContact.isPresent())
-            return getMapper().fromEntity(applicantChatContact.get(), mappingContext);
-        else
-            return null;
-    }
-
-    private ApplicantChatContactLiteDto mapChatContactToChatContactLite(ApplicantChatContactDto applicantChatContact) {
-        return ApplicantChatContactLiteDto.builder()
-                .id(applicantChatContact.getId())
-                .applicantUin(applicantChatContact.getApplicantUin())
-                .contactUin(applicantChatContact.getContactUin())
-                .typeId(applicantChatContact.getType().getId())
-                .alias(applicantChatContact.getAlias())
-                .relationshipCode(applicantChatContact.getRelationshipCode())
-                .staffTitleCode(applicantChatContact.getStaffTitleCode())
-                .avatar(applicantChatContact.getAvatar())
-                .systemDefined(applicantChatContact.getSystemDefined())
-                .staffTitleCode(applicantChatContact.getStaffTitleCode())
-                .mobileNumber(applicantChatContact.getMobileNumber())
-                .countryPhonePrefix(applicantChatContact.getCountryPhonePrefix())
-                .countryCode(applicantChatContact.getCountryCode())
-                .deleted(applicantChatContact.isDeleted())
-                .creationDate(applicantChatContact.getCreationDate())
-                .updateDate(applicantChatContact.getUpdateDate())
-                .autoAdded(applicantChatContact.isAutoAdded())
-                .build();
+        return applicantChatContact.map(chatContact -> getMapper().fromEntity(chatContact, mappingContext)).orElse(null);
     }
 
     /**
      * Creates a new chat contact
      *
-     * @param contact the chat contact to save
-     * @return savedContact saved one
+     * @param ritualId the selected ritual ID
+     * @param contact  the chat contact to save
+     * @return the value object of the saved applicant contact chat
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantChatContactLiteDto createApplicantChatContact(Long applicantRitualId, ApplicantChatContactLiteDto contact) throws IOException {
-        ApplicantRitualDto applicantRitual = applicantRitualService.findById(applicantRitualId);
-
-        ApplicantChatContactDto savedContact = ApplicantChatContactDto
-                .builder()
+    public ApplicantChatContactVo createApplicantContact(Long ritualId, ApplicantChatContactDto contact) {
+        ApplicantChatContactDto contactBuilder = ApplicantChatContactDto.builder()
                 .applicantUin(contact.getApplicantUin())
                 .contactUin(contact.getContactUin())
                 .alias(contact.getAlias())
@@ -122,46 +79,38 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .countryCode(contact.getCountryCode())
                 .systemDefined(false)
                 .avatar(contact.getAvatar())
-                .applicantRitual(applicantRitual)
+                .applicantRitualId(ritualId)
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
-
-        savedContact = save(savedContact);
-        ApplicantChatContactLiteDto chatContactLite = mapChatContactToChatContactLite(savedContact);
-        chatContactLite.setContactFullNameAr(applicantRitual.getApplicant().getFullNameAr());
-        chatContactLite.setContactFullNameEn(applicantRitual.getApplicant().getFullNameEn());
-
-        return chatContactLite;
+        ApplicantChatContactDto savedContact = save(contactBuilder);
+        return ((ApplicantChatContactRepository) getRepository()).findApplicantContactVoById(savedContact.getId()).orElse(null);
     }
 
     /**
      * Creates a new staff chat contact
      *
-     * @param applicantUin      the chat contact uin
-     * @param applicantRitualId the applicant ritual id
-     * @param companyStaff      the company staff
-     * @return savedContact saved one
+     * @param applicantUin the uin of the relationship owner
+     * @param ritualId     the selected ritual ID
+     * @param companyStaff the company staff
+     * @return the value object of the saved staff contact chat
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantChatContactLiteDto createStaffChatContact(String applicantUin, Long applicantRitualId, Optional<CompanyStaffLiteDto> companyStaff) {
-        ApplicantRitualDto applicantRitual = applicantRitualService.findById(applicantRitualId);
-        ApplicantChatContactDto savedContact = ApplicantChatContactDto
-                .builder()
+    public ApplicantChatContactVo createStaffContact(String applicantUin, Long ritualId, Optional<CompanyStaffLiteDto> companyStaff) {
+        ApplicantChatContactDto contactBuilder = ApplicantChatContactDto.builder()
                 .applicantUin(applicantUin)
                 .contactUin(companyStaff.map(CompanyStaffLiteDto::getSuin).orElse(null))
                 .mobileNumber(companyStaff.map(CompanyStaffLiteDto::getMobileNumber).orElse(null))
+                //TODO country code and nationality code may not match
+                //TODO Missing country code prefix and country code
                 .countryCode(companyStaff.map(CompanyStaffLiteDto::getNationalityCode).orElse(null))
-                .applicantRitual(applicantRitual)
+                .applicantRitualId(ritualId)
                 .avatar(companyStaff.map(CompanyStaffLiteDto::getPhoto).orElse(null))
                 .staffTitleCode(companyStaff.map(CompanyStaffLiteDto::getTitleCode).orElse(null))
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.STAFF.getId()).build())
                 .build();
 
-        savedContact = save(savedContact);
-        ApplicantChatContactLiteDto chatContactLite = mapChatContactToChatContactLite(savedContact);
-        chatContactLite.setContactFullNameAr(companyStaff.map(CompanyStaffLiteDto::getFullNameAr).orElse(null));
-        chatContactLite.setContactFullNameEn(companyStaff.map(CompanyStaffLiteDto::getFullNameEn).orElse(null));
-        return chatContactLite;
+        ApplicantChatContactDto savedContact = save(contactBuilder);
+        return ((ApplicantChatContactRepository) getRepository()).findStaffContactVoById(savedContact.getId()).orElse(null);
     }
 
     /**
@@ -181,16 +130,14 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @param contact the chat contact to save
      * @return savedContact saved one
      */
-    public ApplicantChatContactLiteDto updateUserDefinedChatContact(Long id, ApplicantChatContactLiteDto contact) throws IOException {
+    public ApplicantChatContactDto updateUserDefinedChatContact(Long id, ApplicantChatContactDto contact) {
         ApplicantChatContactDto applicantChatContact = findOne(id);
         applicantChatContact.setAlias(contact.getAlias());
         applicantChatContact.setMobileNumber(contact.getMobileNumber());
         applicantChatContact.setCountryPhonePrefix(contact.getCountryPhonePrefix());
         applicantChatContact.setCountryCode(contact.getCountryCode());
         applicantChatContact.setAvatar(contact.getAvatar());
-        applicantChatContact.setAutoAdded(false);
-        ApplicantChatContactDto savedContact = save(applicantChatContact);
-        return mapChatContactToChatContactLite(savedContact);
+        return save(applicantChatContact);
     }
 
     public void createSystemDefinedApplicantChatContact(ApplicantRelativeDto applicantRelative) {
@@ -220,7 +167,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .systemDefined(true)
                 .deleted(false)
                 .avatar(applicantRelative.getRelativeApplicant().getPhoto())
-                .applicantRitual(applicantRelative.getApplicantRitual())
+                .applicantRitualId(applicantRelative.getApplicantRitual().getId())
                 .autoAdded(false)
                 .relationshipCode(applicantRelative.getRelationshipCode())
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())

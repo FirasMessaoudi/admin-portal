@@ -104,6 +104,7 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     }))).subscribe(results => {
       this.notificationTemplateId = +results.params; // (+) converts string 'id' to a number
       if (this.notificationTemplateId) {
+        this.editMode = false;
         this.notificationService.findUserDefinedNotificationTemplateById(this.notificationTemplateId).subscribe(data => {
           if (data && data.id) {
             this.notificationTemplate = data;
@@ -345,11 +346,13 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
         this.notificationForm.get('statusCode').disable();
         this.notificationForm.get('forceSending').disable();
         this.notificationForm.get('notificationTemplateContents').disable();
-        this.notificationForm.controls.notificationTemplateContents['controls']
-          .forEach(field => {
-            field.controls.title.disable();
-            field.controls.body.disable();
-          });
+
+        this.categorizingForm.controls.campId.disable();
+        this.categorizingForm.controls.companyId.disable();
+        this.categorizingForm.controls.nationalityCode.disable();
+        this.categorizingForm.controls.gender.disable();
+        this.categorizingForm.get('age')['controls']['minAge'].disable();
+        this.categorizingForm.get('age')['controls']['maxAge'].disable();
       }
 
       this.notificationForm.markAllAsTouched();
@@ -359,7 +362,6 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
 
   updateCategorizingForm() {
     if (this.notificationTemplate?.notificationTemplateCategorizing?.selectedApplicants) {
-      //TODO
     } else {
       this.categorizingForm.patchValue({
         campId: this.notificationTemplate?.notificationTemplateCategorizing?.campId,
@@ -371,9 +373,6 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
         },
         gender: this.notificationTemplate?.notificationTemplateCategorizing.gender
       });
-    }
-    if (!this.canEdit) {
-      this.categorizingForm.controls.campId.disable();
     }
   }
 
@@ -387,6 +386,10 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       }
     }
     if (this.notificationForm.invalid) {
+      if (this.notificationTemplateContents.invalid) {
+        // Set focus on tab containing errors
+        this.activeId = this.translatedLanguages.findIndex(lang => lang.code === this.notificationTemplateContents.controls.find(control => control.invalid).value.lang) + 1;
+      }
       return;
     }
     if (this.checkedCriteria === 2 && this.addedApplicants.length === 0) {
@@ -555,6 +558,10 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
         this.activeId = 1;
       }
     });
+  }
+
+  updateTabIndex(activeId) {
+    this.activeId = activeId;
   }
 
 }

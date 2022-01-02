@@ -37,7 +37,7 @@ public class ApplicantChatContactDto implements Serializable {
     private String countryCode;
     private boolean deleted;
     private boolean autoAdded;
-    private ApplicantRitualDto applicantRitual;
+    private Long applicantRitualId;
     private Date creationDate;
     private Date updateDate;
 }

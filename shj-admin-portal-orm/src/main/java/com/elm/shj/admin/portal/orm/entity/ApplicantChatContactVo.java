@@ -1,15 +1,18 @@
 /*
  * Copyright (c) 2021 ELM. All rights reserved.
  */
-package com.elm.shj.admin.portal.services.dto;
+package com.elm.shj.admin.portal.orm.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Dto class for the applicant chat contact lite domain.
+ * Value object class for returned applicant chat contact.
  *
  * @author Slim Ben Hadj
  * @since 1.1.0
@@ -18,27 +21,26 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ApplicantChatContactLiteDto implements Serializable {
+public class ApplicantChatContactVo implements Serializable {
 
-    private static final long serialVersionUID = -3274483957064433720L;
+    private static final long serialVersionUID = 8160457570099912194L;
 
-    private Long id;
+    private long id;
     private String applicantUin;
     private String contactUin;
     private String contactFullNameAr;
     private String contactFullNameEn;
-    private Long typeId;
+    private JpaContactTypeLookup type;
     private String alias;
     private String avatar;
-    private boolean systemDefined;
+    private Boolean systemDefined;
     private String staffTitleCode;
     private String relationshipCode;
     private String mobileNumber;
     private String countryPhonePrefix;
     private String countryCode;
-    private boolean deleted;
     private boolean autoAdded;
+    private Long applicantRitualId;
     private Date creationDate;
     private Date updateDate;
 }

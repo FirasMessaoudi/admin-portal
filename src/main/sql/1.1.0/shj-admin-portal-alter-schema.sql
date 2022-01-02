@@ -55,7 +55,7 @@ CREATE TABLE shc_portal.shc_company_ritual_step_lk
     lang          varchar(45)   NOT NULL,
     label         nvarchar(50) NOT NULL,
     description   nvarchar(255)  NOT NULL,
-    summary   nvarchar(100)  NOT NULL,
+    summary       nvarchar(100)  ,
     creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
     CONSTRAINT tafweej_step_lk_unique UNIQUE (code ASC, lang ASC)
 );
@@ -1175,7 +1175,7 @@ GO
 
 
 ALTER TABLE shc_portal.shc_applicant_chat_contact
-    ADD auto_added bit DEFAULT 0 NOT NULL;;
+    ADD auto_added bit DEFAULT 0 NOT NULL;
 GO
 
 ALTER TABLE shc_portal.shc_chat_message ALTER COLUMN type_id int NULL;
