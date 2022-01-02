@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -146,7 +147,7 @@ public class ChatContactWsController {
      */
     @PutMapping(value = "/update/{id}")
     public ResponseEntity<WsResponse<?>> update(@PathVariable Long id,
-                                                @RequestBody ApplicantChatContactDto contact) throws Exception {
+                                                @RequestBody @Valid ApplicantChatContactDto contact) throws Exception {
         ApplicantChatContactDto applicantChatContact = applicantChatContactService.findById(id);
         if (applicantChatContact == null) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
@@ -208,7 +209,6 @@ public class ChatContactWsController {
         }
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                 .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(suin).build()).build());
-
     }
 
     @GetMapping("/chat-list/{uin}")

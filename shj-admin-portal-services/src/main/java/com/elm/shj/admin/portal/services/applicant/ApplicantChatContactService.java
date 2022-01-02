@@ -32,6 +32,7 @@ import java.util.Optional;
 public class ApplicantChatContactService extends GenericService<JpaApplicantChatContact, ApplicantChatContactDto, Long> {
 
     private final ApplicantChatContactRepository applicantChatContactRepository;
+    private final ApplicantRitualService applicantRitualService;
 
     /**
      * List all chat contacts of a specific applicant.
@@ -141,6 +142,24 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         return save(applicantChatContact);
     }
 
+    public void createGroupLeaderContact(String applicantUin, CompanyStaffDto companyStaff, CompanyRitualSeasonDto latestCompanyRitualSeason) {
+        ApplicantChatContactDto contactBuilder = ApplicantChatContactDto.builder()
+                .applicantUin(applicantUin)
+                .contactUin(companyStaff.getDigitalIds().get(0).getSuin())
+                .mobileNumber(companyStaff.getMobileNumber() != null ? companyStaff.getMobileNumber() : companyStaff.getMobileNumberIntl())
+                //TODO country code and nationality code may not match
+                //TODO Missing country code prefix and country code
+                .countryCode(companyStaff.getMobileNumber() != null ? "SA" : companyStaff.getNationalityCode())
+                .applicantRitualId(applicantRitualService.findByApplicantUinAndCompanyRitualSeasonId(applicantUin, latestCompanyRitualSeason.getId()).getId())
+                .avatar(companyStaff.getPhoto())
+                .systemDefined(true)
+                .staffTitleCode(companyStaff.getTitleCode())
+                .type(ContactTypeLookupDto.builder().id(EChatContactType.STAFF.getId()).build())
+                .build();
+
+        save(contactBuilder);
+    }
+
     public void createSystemDefinedApplicantChatContact(ApplicantRelativeDto applicantRelative) {
         String applicantUin = applicantRelative.getApplicant().getDigitalIds().get(0).getUin();
         String contactUin = applicantRelative.getRelativeApplicant().getDigitalIds().get(0).getUin();
@@ -173,7 +192,6 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .relationshipCode(applicantRelative.getRelationshipCode())
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
-
 
         if (chatContact != null) {
             savedContact.setId(chatContact.getId());
