@@ -60,7 +60,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
      */
     public NotificationTemplateDto updateNotificationTemplate(NotificationTemplateDto notificationTemplate) {
 
-        notificationTemplate.getNotificationTemplateContents().parallelStream().forEach(content -> {
+        notificationTemplate.getNotificationTemplateContents().stream().forEach(content -> {
             content.setNotificationTemplate(notificationTemplate);
         });
         NotificationTemplateDto savedNotificationTemplate = findOne(notificationTemplate.getId());
@@ -145,7 +145,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
     public NotificationTemplateDto create(NotificationTemplateDto notificationTemplate) {
         notificationTemplate.setTypeCode(ENotificationTemplateType.USER_DEFINED.name());
         notificationTemplate.setIsProcessed(false);
-        notificationTemplate.getNotificationTemplateContents().parallelStream().forEach(content -> content.setNotificationTemplate(notificationTemplate));
+        notificationTemplate.getNotificationTemplateContents().stream().forEach(content -> content.setNotificationTemplate(notificationTemplate));
         if (notificationTemplate.getNotificationTemplateCategorizing() != null) {
             notificationTemplate.getNotificationTemplateCategorizing().setNotificationTemplate(notificationTemplate);
         }
