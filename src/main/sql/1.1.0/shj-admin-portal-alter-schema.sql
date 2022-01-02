@@ -1189,3 +1189,8 @@ GO
 
 ALTER TABLE shc_portal.shc_company_ritual_step_lk ALTER COLUMN description NVARCHAR(255);
 GO
+
+
+ALTER TABLE shc_portal.shc_print_request
+    ADD type_code VARCHAR(20) NOT NULL DEFAULT 'APPLICANT_REQUEST';
+GO
