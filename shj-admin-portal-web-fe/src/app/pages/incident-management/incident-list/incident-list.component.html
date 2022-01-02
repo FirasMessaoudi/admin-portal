@@ -47,6 +47,8 @@
           <hijri-greogrian-range-picker
             (selectedFromDateChange)="patchValue($event, f.fromDate)"
             (selectedToDateChange)="patchValue($event, f.toDate)"
+            (selectedDateTypeChange)="setSelectedDateType($event)"
+            [selectedDateType]="selectedDateType"
           >
           </hijri-greogrian-range-picker>
         </div>
@@ -109,7 +111,9 @@
             class="ltr">{{currentLanguage?.startsWith('ar') ? incident.applicantRitual?.applicant?.fullNameAr : incident.applicantRitual?.applicant?.fullNameEn}}</td>
           <td
             class="ltr">{{incident.typeCode ? lookupService().localizedLabel(incidentTypes, incident.typeCode) : '---'}}</td>
-          <td>{{incident.creationDate | dateTimeFormat}}</td>
+          <td>{{formatDate(incident?.creationDate)}}
+            {{incident?.creationDate | date: 'HH:mm'}}
+          </td>
           <td class=" d-flex align-items-baseline">
             <span class="status {{buildStatusClass(incident?.statusCode)}} mr-1"></span>
             <span>{{incident.statusCode ? lookupService().localizedLabel(incidentStatuses, incident.statusCode) : '---'}}</span>

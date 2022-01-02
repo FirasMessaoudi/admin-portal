@@ -1,0 +1,38 @@
+<div class="d-flex">
+  <hijri-gregorian-datepicker [showLabel]="false"
+                              name="fromDateGregorian"
+                              buttonClass="dcc-primary"
+                              class="datepicker"
+                              [placeHolder]="('general.from' | translate) + ' DD/MM/YYYY'"
+                              [(selectedDate)]="selectedFromDate"
+                              (selectedDateChange)="onFromDateChange($event)"
+                              (selectedDateTypeChange)="onDateTypeChange($event)"
+                              [isRequired]="true"
+                              [maxGreg]="maxFromDateGregorian"
+                              [maxHijri]="maxFromDateHijri"
+                              [GregLabel]="'general.cal_greg' | translate"
+                              [hijriLabel]="'general.cal_hijri' | translate"
+                              [selectedDateType]="selectedDateType"
+                              [readonly]="true"
+                              [hideToggleButton]="true"
+                              #fromDatePicker>
+  </hijri-gregorian-datepicker>
+  <hijri-gregorian-datepicker [showLabel]="false"
+                              name="toDateGregorian"
+                              buttonClass="dcc-primary"
+                              class="datepicker"
+                              [placeHolder]="('general.to' | translate) + ' DD/MM/YYYY'"
+                              [(selectedDate)]="selectedToDate"
+                              (selectedDateChange)="onToDateChange($event)"
+                              (selectedDateTypeChange)="onDateTypeChange($event)"
+                              [isRequired]="true"
+                              [maxGreg]="maxToDateGregorian"
+                              [maxHijri]="maxToDateHijri"
+                              [GregLabel]="'general.cal_greg' | translate"
+                              [hijriLabel]="'general.cal_hijri' | translate"
+                              [selectedDateType]="selectedDateType"
+                              [readonly]="true"
+                              [hideToggleButton]="false"
+                              #toDatePicker>
+  </hijri-gregorian-datepicker>
+</div>

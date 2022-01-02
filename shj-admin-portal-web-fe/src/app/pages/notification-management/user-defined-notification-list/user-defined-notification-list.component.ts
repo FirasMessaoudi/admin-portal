@@ -8,7 +8,9 @@ import {LookupService} from "@core/utilities/lookup.service";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {NotificationTemplateContent} from "@model/notification-template-content.model";
 import {I18nService} from "@dcc-commons-ng/services";
-import {NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
+import {DatePipe} from "@angular/common";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 
 @Component({
   selector: 'app-user-defined-notification-list',
@@ -16,8 +18,7 @@ import {NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./user-defined-notification-list.component.scss']
 })
 export class UserDefinedNotificationListComponent implements OnInit {
-
-  public isSearchbarCollapsed = true;
+  isSearchbarCollapsed = true;
   pageArray: Array<number>;
   page: Page;
   searchForm: FormGroup;
@@ -25,9 +26,11 @@ export class UserDefinedNotificationListComponent implements OnInit {
   notificationCategories: Lookup[] = [];
   notificationNames: Lookup[] = [];
   notificationTemplateStatuses: Lookup[] = [];
+  dateType: DateType;
+  selectedDateType: DateType;
 
-  @ViewChild('datepicker') datePicker: any;
-  @ViewChild('notificationDatepicker') notificationDatePicker: any;
+  @ViewChild('sendingDatePicker') sendingDatePicker: any;
+  @ViewChild('creationDatePicker') creationDatePicker: any;
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
@@ -37,10 +40,12 @@ export class UserDefinedNotificationListComponent implements OnInit {
               private lookupsService: LookupService,
               private notificationService: NotificationService,
               private i18nService: I18nService,
-              public formatter: NgbDateParserFormatter) {
+              private dateFormatterService: DateFormatterService,
+  ) {
   }
 
   ngOnInit(): void {
+    this.selectedDateType = DateType.Gregorian;
     this.initForm();
     this.loadLookups();
     this.loadPage(0);
@@ -143,5 +148,40 @@ export class UserDefinedNotificationListComponent implements OnInit {
 
   patchValue(event: Date, c: AbstractControl) {
     c.setValue(event);
+  }
+
+  formatDate(date: Date): string {
+    const datePipe = new DatePipe('en-US');
+    // Hijri Date Type
+    if (this.selectedDateType === 1) {
+      let hijriDate = this.dateFormatterService.toDate(this.dateFormatterService.toHijri(this.dateFormatterService.fromDate(date)));
+      return this.currentLanguage.startsWith('ar') ? datePipe.transform(hijriDate, 'yyyy/MM/dd') : datePipe.transform(hijriDate, 'dd/MM/yyyy');
+    }
+    // Gregorian Date Type
+    else {
+      return this.currentLanguage.startsWith('ar') ? datePipe.transform(date, 'yyyy/MM/dd') : datePipe.transform(date, 'dd/MM/yyyy');
+    }
+  }
+
+  setCreationDateType(event: DateType) {
+    this.selectedDateType = event;
+    if (event == DateType.Gregorian) {
+      this.sendingDatePicker.fromDatePicker.gregClick();
+      this.sendingDatePicker.toDatePicker.gregClick();
+    } else {
+      this.sendingDatePicker.fromDatePicker.hijriClick();
+      this.sendingDatePicker.toDatePicker.hijriClick();
+    }
+  }
+
+  setSendingDateType(event: DateType) {
+    this.selectedDateType = event;
+    if (event == DateType.Gregorian) {
+      this.creationDatePicker.fromDatePicker.gregClick();
+      this.creationDatePicker.toDatePicker.gregClick();
+    } else {
+      this.creationDatePicker.fromDatePicker.hijriClick();
+      this.creationDatePicker.toDatePicker.hijriClick();
+    }
   }
 }

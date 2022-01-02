@@ -58,6 +58,9 @@
             <hijri-greogrian-range-picker
               (selectedFromDateChange)="patchValue($event, f.sendingDateStart)"
               (selectedToDateChange)="patchValue($event, f.sendingDateEnd)"
+              (selectedDateTypeChange)="setSendingDateType($event)"
+              [selectedDateType]="selectedDateType"
+              #sendingDatePicker
             >
             </hijri-greogrian-range-picker>
           </div>
@@ -67,6 +70,9 @@
             <hijri-greogrian-range-picker
               (selectedFromDateChange)="patchValue($event, f.creationDateStart)"
               (selectedToDateChange)="patchValue($event, f.creationDateEnd)"
+              (selectedDateTypeChange)="setCreationDateType($event)"
+              [selectedDateType]="selectedDateType"
+              #creationDatePicker
             >
             </hijri-greogrian-range-picker>
           </div>
@@ -137,10 +143,12 @@
             <span class="status mr-1 done severity-badge"></span>
             <span>{{'notification-management.normal' |translate}}</span>
           </td>
-          <td>{{template?.sendingDate | date: 'dd/MM/yyyy HH:mm'}}
+          <td>{{formatDate(template?.sendingDate)}}
+            {{template?.sendingDate | date: 'HH:mm'}}
           </td>
-          <td
-            class="ltr">{{template?.creationDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+          <td>{{formatDate(template?.creationDate)}}
+            {{template?.sendingDate | date: 'HH:mm'}}
+          </td>
           <td
             class="ltr">{{template?.statusCode ? lookupService().localizedLabel(notificationTemplateStatuses, template?.statusCode) : '---'}}</td>
           <td>

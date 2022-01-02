@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {EAuthority, Page} from "@shared/model";
 import {AuthenticationService} from "@core/services";
 import {AbstractControl, FormBuilder, FormGroup} from "@angular/forms";
@@ -8,6 +8,9 @@ import {IncidentService} from "@core/services/incident/incident.service";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
+import {DatePipe} from "@angular/common";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
 
 @Component({
   selector: 'app-incident-list',
@@ -15,7 +18,7 @@ import {I18nService} from "@dcc-commons-ng/services";
   styleUrls: ['./incident-list.component.scss']
 })
 export class IncidentListComponent implements OnInit, OnDestroy {
-  public isSearchbarCollapsed = true;
+  isSearchbarCollapsed = true;
   pageArray: Array<number>;
   page: Page;
   searchForm: FormGroup;
@@ -24,16 +27,21 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   incidentStatuses: Lookup[] = [];
   listSubscription: Subscription;
   searchSubscription: Subscription;
-  selectedDateType: any;
+  selectedDateType: DateType;
+
+  @ViewChild('picker') picker: any;
 
   constructor(private authenticationService: AuthenticationService,
               private incidentService: IncidentService,
               private formBuilder: FormBuilder,
               private lookupsService: LookupService,
-              private i18nService: I18nService) {
+              private i18nService: I18nService,
+              private dateFormatterService: DateFormatterService
+              ) {
   }
 
   ngOnInit(): void {
+    this.selectedDateType = DateType.Gregorian;
     this.loadLookups();
     this.initForm();
     this.loadPage(0);
@@ -98,8 +106,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    const payload = this.searchForm.value;
-    this.searchSubscription = this.incidentService.list(0, payload).subscribe(data => {
+    this.searchSubscription = this.incidentService.list(0, this.searchForm.value).subscribe(data => {
       this.incidents = [];
       this.pageArray = [];
       this.page = data;
@@ -135,5 +142,22 @@ export class IncidentListComponent implements OnInit, OnDestroy {
 
   patchValue(event: Date, c: AbstractControl) {
     c.setValue(event);
+  }
+
+  setSelectedDateType(event: DateType) {
+    this.selectedDateType = event;
+  }
+
+  formatDate(date: Date): string {
+    const datePipe = new DatePipe('en-US');
+    // Hijri Date Type
+    if (this.selectedDateType === 1) {
+      let hijriDate = this.dateFormatterService.toDate(this.dateFormatterService.toHijri(this.dateFormatterService.fromDate(date)));
+      return this.currentLanguage.startsWith('ar') ? datePipe.transform(hijriDate, 'yyyy/MM/dd') : datePipe.transform(hijriDate, 'dd/MM/yyyy');
+    }
+    // Gregorian Date Type
+    else {
+      return this.currentLanguage.startsWith('ar') ? datePipe.transform(date, 'yyyy/MM/dd') : datePipe.transform(date, 'dd/MM/yyyy');
+    }
   }
 }
