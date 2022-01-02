@@ -123,7 +123,7 @@ public class NotificationTemplateController {
     private boolean validateTemplateContentParams(NotificationTemplateDto notificationTemplate) {
         boolean allParamsValid = true;
         Pattern pattern = Pattern.compile("\\<(.*?)\\>");
-        List templateParams = notificationTemplate.getNotificationTemplateParameters().parallelStream().map(param -> param.getParameterName()).collect(Collectors.toList());
+        List templateParams = notificationTemplate.getNotificationTemplateParameters().stream().map(param -> param.getParameterName()).collect(Collectors.toList());
         if (notificationTemplate.getNotificationTemplateContents() != null && notificationTemplate.getNotificationTemplateContents().size() > 0) {
             for (NotificationTemplateContentDto notificationTemplateContentDto : notificationTemplate.getNotificationTemplateContents()) {
 

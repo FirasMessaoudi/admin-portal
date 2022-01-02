@@ -162,7 +162,7 @@ public class ApplicantCardController {
 
     private boolean isUserAuthorizedToChangeCardStatus(ApplicantCardDto card, String actionCode, Authentication authentication) {
         Set<GrantedAuthority> userAuthorities = (Set<GrantedAuthority>) ((User) authentication.getPrincipal()).getAuthorities();
-        boolean isUserAllowed = userAuthorities.parallelStream().anyMatch(auth -> auth.getAuthority().equalsIgnoreCase(actionCode));
+        boolean isUserAllowed = userAuthorities.stream().anyMatch(auth -> auth.getAuthority().equalsIgnoreCase(actionCode));
         if (!isUserAllowed) {
             log.error("this user does not have the authority to take this action on  card status");
             return false;
