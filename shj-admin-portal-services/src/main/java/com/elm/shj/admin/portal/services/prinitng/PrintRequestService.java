@@ -43,7 +43,6 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         PrintRequestDto printRequest = new PrintRequestDto();
         printRequest.setReferenceNumber(generateReferenceNumber());
         printRequest.setStatusCode(EPrintRequestStatus.NEW.name());
-
         cardsIds.forEach(id -> {
             ApplicantCardDto card = cardService.findOne(id);
             PrintRequestCardDto printRequestCard = new PrintRequestCardDto();
@@ -122,6 +121,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         });
 
         printRequest.setStatusCode(EPrintRequestStatus.CONFIRMED.name());
+        printRequest.setTypeCode(EPrintingRequestType.APPLICANT_REQUEST.name());
         printRequest.setConfirmationDate(new Date());
         return super.save(printRequest);
     }

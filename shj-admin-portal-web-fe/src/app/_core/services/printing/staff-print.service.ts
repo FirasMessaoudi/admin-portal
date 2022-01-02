@@ -26,7 +26,7 @@ export class StaffPrintService {
    */
   list(pageNumber: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
-    return this.http.get<any>("/core/api/print/requests/list", {params: params});
+    return this.http.get<any>("/core/api/staff/print/requests/list", {params: params});
   }
 
   /**
@@ -37,7 +37,7 @@ export class StaffPrintService {
    */
   listFiltered(pageNumber: any, filter: PrintRequestFilter): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
-    return this.http.post<any>("/core/api/print/requests/list", filter, {params: params});
+    return this.http.post<any>("/core/api/staff/print/requests/list", filter, {params: params});
   }
 
   /**
@@ -47,7 +47,7 @@ export class StaffPrintService {
    * @return {Observable<PrintRequest>} The request identified by its ID.
    */
   find(requestId: number): Observable<any> {
-    return this.http.get<any>('/core/api/print/requests/find/' + requestId).pipe(
+    return this.http.get<any>('/core/api/staff/print/requests/find/' + requestId).pipe(
       catchError(
         (error: any, caught: Observable<HttpEvent<any>>) => {
           console.error(error);
@@ -58,7 +58,7 @@ export class StaffPrintService {
   }
 
   preapre(cardsIds: Number[]): Observable<any> {
-    return this.http.post<any>("/core/api/print/requests/prepare", cardsIds).pipe(
+    return this.http.post<any>("/core/api/staff/print/requests/prepare", cardsIds).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.hasOwnProperty('error')) {
           return of(error.error);
@@ -94,7 +94,7 @@ export class StaffPrintService {
     if (batchTypes.length > 0) {
       params = params.append("types", batchTypes.join(","));
     }
-    return this.http.post<any>("/core/api/print/requests/batch", printRequest, {params: params}).pipe(
+    return this.http.post<any>("/core/api/staff/print/requests/batch", printRequest, {params: params}).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.hasOwnProperty('error')) {
           return of(error.error);
@@ -106,7 +106,7 @@ export class StaffPrintService {
   }
 
   confirm(printRequest: PrintRequest) {
-    return this.http.post<any>("/core/api/print/requests/confirm", printRequest).pipe(
+    return this.http.post<any>("/core/api/staff/print/requests/confirm", printRequest).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.hasOwnProperty('error')) {
           return of(error.error);

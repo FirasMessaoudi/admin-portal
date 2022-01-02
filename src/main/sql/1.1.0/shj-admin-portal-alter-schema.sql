@@ -1186,3 +1186,8 @@ GO
 
 ALTER TABLE shc_portal.shc_chat_message ALTER COLUMN type_id int NULL;
 GO
+
+
+ALTER TABLE shc_portal.shc_print_request
+    ADD type_code VARCHAR(20) NOT NULL DEFAULT 'APPLICANT_REQUEST';
+GO

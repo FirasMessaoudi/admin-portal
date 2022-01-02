@@ -35,14 +35,16 @@ public class Navigation {
 	public static final String API_CARDS = "/api/cards";
 	// Printing Requests
 	public static final String API_PRINTING_REQUESTS = "/api/print/requests";
+	// Staff Printing Requests
+	public static final String API_STAFF_PRINTING_REQUESTS = "/api/staff/print/requests";
 	// Dashboard
 	public static final String API_DASHBOARD = "/api/dashboard";
 	// Error
 	public static final String ERROR = "/error";
 	// Password Change
-	public static final String API_USERS_CHANGE_PWRD = API_USERS+"/change-password";
+	public static final String API_USERS_CHANGE_PWRD = API_USERS + "/change-password";
 	// Password Reset
-	public static final String API_USERS_RESET_PWRD = API_USERS+"/reset-password";
+	public static final String API_USERS_RESET_PWRD = API_USERS + "/reset-password";
 	// Lookup
 	public static final String API_LOOKUP = "/api/lookup";
 	// Registration
