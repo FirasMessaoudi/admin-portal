@@ -150,12 +150,10 @@ export class IncidentListComponent implements OnInit, OnDestroy {
 
   formatDate(date: Date): string {
     const datePipe = new DatePipe('en-US');
-    // Hijri Date Type
-    if (this.selectedDateType === 1) {
+    if (this.selectedDateType === DateType.Hijri) {
       let hijriDate = this.dateFormatterService.toDate(this.dateFormatterService.toHijri(this.dateFormatterService.fromDate(date)));
       return this.currentLanguage.startsWith('ar') ? datePipe.transform(hijriDate, 'yyyy/MM/dd') : datePipe.transform(hijriDate, 'dd/MM/yyyy');
     }
-    // Gregorian Date Type
     else {
       return this.currentLanguage.startsWith('ar') ? datePipe.transform(date, 'yyyy/MM/dd') : datePipe.transform(date, 'dd/MM/yyyy');
     }
