@@ -79,6 +79,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .countryCode(contact.getCountryCode())
                 .avatar(contact.getAvatar())
                 .applicantRitualId(ritualId)
+                .systemDefined(contact.getSystemDefined())
+                .autoAdded(contact.isAutoAdded())
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
         ApplicantChatContactDto savedContact = save(contactBuilder);
