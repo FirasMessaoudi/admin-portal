@@ -354,36 +354,34 @@ SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
 insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
 values (10, 'staff-applicant-group-data.xlsx', N'بيانات المجموعات',
         'Staff Applicant Group Data');
-SET
-IDENTITY_INSERT shc_portal.shc_data_segment OFF;
+SET IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 GO
-
 
 SET IDENTITY_INSERT shc_portal.shc_contact_type_lk ON;
 INSERT INTO shc_portal.shc_contact_type_lk (id, code)
 VALUES (1, 'STAFF');
 INSERT INTO shc_portal.shc_contact_type_lk (id, code)
 VALUES (2, 'APPLICANT');
-
-SET
-IDENTITY_INSERT shc_portal.shc_contact_type_lk OFF;
+SET IDENTITY_INSERT shc_portal.shc_contact_type_lk OFF;
 GO
+
 update shc_portal.shc_authority_lk
 set label_ar =N'إدارة طلبات الطباعة لضيوف الرحمن',
     label_en ='Applicant Printing Request Management',
     code='APPLICANT_PRINTING_REQUEST_MANAGEMENT'
 where id = 24;
+GO
 
-SET
-IDENTITY_INSERT shc_portal.shc_authority_lk ON;
-
+SET IDENTITY_INSERT shc_portal.shc_authority_lk ON;
 INSERT INTO shc_portal.shc_authority_lk(id, label_ar, label_en, code, parent_id)
 VALUES (38, N'إدارة طلبات الطباعة لموظفى الشركات', 'Staff Printing Request Management',
         'STAFF_PRINTING_REQUEST_MANAGEMENT', NULL);
-
-SET
-IDENTITY_INSERT shc_portal.shc_authority_lk OFF ;
+SET IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
+GO
 
 insert into shc_portal.shc_role_authority (role_id, authority_id)
-values (1, 38)
-    GO
+values (1, 38);
+GO
+
+UPDATE shc_portal.shc_data_segment SET label_ar = REPLACE(label_ar, N'الرحمان', N'الرحمن') WHERE id > 0;
+GO
