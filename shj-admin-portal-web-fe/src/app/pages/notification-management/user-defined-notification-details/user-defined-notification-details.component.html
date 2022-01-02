@@ -102,7 +102,7 @@
              <label *ngIf="notificationTemplate?.userSpecific"
                     class="form-control-plaintext">{{'notification-management.user_specific' | translate}}</label>
           </span>
-          <select *ngIf="editMode" formControlName="userSpecific" class="custom-select">
+          <select *ngIf="editMode" formControlName="userSpecific" [class.disabled-control]="!canEdit" class="custom-select">
             <option [ngValue]="false">{{ "notification-management.general" | translate }}</option>
             <option [ngValue]="true">{{ "notification-management.user_specific" | translate }}</option>
           </select>
@@ -114,7 +114,7 @@
           </label>
           <label *ngIf="!editMode" class="form-control-plaintext">
             {{notificationTemplate?.categoryCode ? lookupService().localizedLabel(notificationCategories, notificationTemplate?.categoryCode) : '---'}}</label>
-          <select *ngIf="editMode" class="custom-select" formControlName="categoryCode">
+          <select *ngIf="editMode" class="custom-select" [class.disabled-control]="!canEdit" formControlName="categoryCode">
             <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
                     [ngValue]="notificationCategory.code">
               {{notificationCategory.label}}
@@ -137,7 +137,7 @@
             </label>
           </span>
 
-          <select *ngIf="editMode" formControlName="severity" class="custom-select">
+          <select *ngIf="editMode" formControlName="severity" [class.disabled-control]="!canEdit" class="custom-select">
             <option [ngValue]="true">{{ "notification-management.important" | translate }}</option>
             <option [ngValue]="false">{{ "notification-management.normal" | translate }}</option>
           </select>
@@ -173,7 +173,7 @@
              <label *ngIf="!notificationTemplate?.forceSending"
                     class="form-control-plaintext">{{"general.dialog_confirmation_cancel" | translate}}</label>
           </span>
-          <select *ngIf="editMode" formControlName="forceSending" class="custom-select">
+          <select *ngIf="editMode" formControlName="forceSending" [class.disabled-control]="!canEdit" class="custom-select">
             <option [ngValue]="true">{{ "general.dialog_confirmation_ok" | translate }}</option>
             <option [ngValue]="false">{{ "general.dialog_confirmation_cancel" | translate }}</option>
           </select>
@@ -308,7 +308,7 @@
                {{currentLanguage.startsWith('ar') ? getCamp(value, 'ar') : getCamp(value, 'en')}}
                 </span>
               </label>
-              <select *ngIf="editMode" class="custom-select" formControlName="campId">
+              <select *ngIf="editMode" class="custom-select" [class.disabled-control]="!canEdit" formControlName="campId">
                 <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
                 <option *ngFor="let camp of camps" [ngValue]="camp.id">
                   {{currentLanguage.startsWith('ar') ? camp.locationNameAr : camp.locationNameEn}}
@@ -324,7 +324,7 @@
                {{currentLanguage.startsWith('ar') ? getCompany(value, 'ar') : getCompany(value, 'en')}}
                 </span>
               </label>
-              <select *ngIf="editMode" class="custom-select" formControlName="companyId">
+              <select *ngIf="editMode" class="custom-select" [class.disabled-control]="!canEdit" formControlName="companyId">
                 <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
                 <option *ngFor="let company of companies" [ngValue]="company.id">
                   {{currentLanguage.startsWith('en') ? company.labelEn : company.labelAr}}
@@ -340,7 +340,7 @@
                   {{lookupService().localizedLabel(nationalities, value)}}
                 </span>
               </label>
-              <select *ngIf="editMode" class="custom-select" formControlName="nationalityCode">
+              <select *ngIf="editMode" class="custom-select" [class.disabled-control]="!canEdit" formControlName="nationalityCode">
                 <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
                 <option *ngFor="let nationality of lookupService().localizedItems(nationalities)"
                         [ngValue]="nationality.code">
