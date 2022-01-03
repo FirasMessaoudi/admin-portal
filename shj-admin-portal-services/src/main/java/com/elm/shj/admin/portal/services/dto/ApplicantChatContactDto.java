@@ -38,7 +38,7 @@ public class ApplicantChatContactDto implements Serializable {
     private String countryPhonePrefix;
     private String countryCode;
     private Boolean deleted;
-    private Boolean autoAdded;
+    private boolean autoAdded;
     private Long applicantRitualId;
     private Date creationDate;
     private Date updateDate;
