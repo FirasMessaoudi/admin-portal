@@ -6,7 +6,6 @@ package com.elm.shj.admin.portal.services.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -38,8 +37,8 @@ public class ApplicantChatContactDto implements Serializable {
     private String mobileNumber;
     private String countryPhonePrefix;
     private String countryCode;
-    private boolean deleted;
-    private boolean autoAdded;
+    private Boolean deleted;
+    private Boolean autoAdded;
     private Long applicantRitualId;
     private Date creationDate;
     private Date updateDate;
