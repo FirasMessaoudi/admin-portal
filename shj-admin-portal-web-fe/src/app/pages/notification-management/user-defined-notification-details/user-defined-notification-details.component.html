@@ -21,7 +21,7 @@
             <span *ngIf="editMode" class="text-danger">*</span>
           </label>
           <div *ngIf="editMode" class="input-group">
-            <label class="form-control disabled-control">{{now | date: 'dd/MM/yyyy HH:mm'}}</label>
+            <label class="form-control" [class.disabled-control]="!canEdit">{{now | date: 'dd/MM/yyyy HH:mm'}}</label>
             <div class="input-group-append">
                   <span class="input-group-text">
                     <svg-icon styleClass="fa-w-18 h6" icon="calendar"></svg-icon>
@@ -38,23 +38,23 @@
           </label>
           <label *ngIf="!editMode"
                  class="form-control-plaintext">{{notificationTemplate?.sendingDate | date: 'dd/MM/yyyy HH:mm'}}</label>
-          <app-hijri-gregorian-datetimepicker [showLabel]="false"
-                                              *ngIf="editMode"
-                                              placeHolder="{{currentLanguage.startsWith('ar') ? 'HH:MM DD/MM/YYYY' : 'DD/MM/YYYY HH:MM'}}"
-                                              name="sendingDate"
-                                              formControlName="sendingDate"
-                                              buttonClass="dcc-primary"
-                                              class="datepicker {{f.sendingDate.errors && f.sendingDate.touched ? 'is-invalid' : ''}}"
-                                              [isRequired]="true"
-                                              [minGreg]="minSendingDateGregorian"
-                                              [minHijri]="minSendingDateHijri"
-                                              [GregLabel]="'general.cal_greg' | translate"
-                                              [hijriLabel]="'general.cal_hijri' | translate"
-                                              [selectedDateType]="selectedDateType"
-                                              [grayed]="!canEdit"
-                                              inputDatetimeFormat="dd/MM/yyyy HH:mm"
-                                              #datePicker>
-          </app-hijri-gregorian-datetimepicker>
+          <hijri-gregorian-datetimepicker [showLabel]="false"
+                                          *ngIf="editMode"
+                                          placeHolder="{{currentLanguage.startsWith('ar') ? 'HH:MM DD/MM/YYYY' : 'DD/MM/YYYY HH:MM'}}"
+                                          name="sendingDate"
+                                          formControlName="sendingDate"
+                                          buttonClass="dcc-primary"
+                                          class="datepicker {{f.sendingDate.errors && f.sendingDate.touched ? 'is-invalid' : ''}}"
+                                          [isRequired]="true"
+                                          [minGreg]="minSendingDateGregorian"
+                                          [minHijri]="minSendingDateHijri"
+                                          [GregLabel]="'general.cal_greg' | translate"
+                                          [hijriLabel]="'general.cal_hijri' | translate"
+                                          [selectedDateType]="selectedDateType"
+                                          [grayed]="!canEdit"
+                                          inputDatetimeFormat="dd/MM/yyyy HH:mm"
+                                          #datePicker>
+          </hijri-gregorian-datetimepicker>
         </div>
 
         <div class="form-group col">
@@ -69,7 +69,7 @@
                     class="form-control-plaintext">{{'general.label_no' | translate}}</label>
           </span>
 
-          <div *ngIf="editMode" class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioGender">
+          <div *ngIf="editMode" class="form-control p-0 btn-group btn-group-toggle" ngbRadioGroup name="radioEnabled">
             <label ngbButtonLabel class="btn" [class.disabled]="!canEdit"
                    [class.btn-select]="notificationForm.value.enabled">
               <input ngbButton
@@ -102,7 +102,8 @@
              <label *ngIf="notificationTemplate?.userSpecific"
                     class="form-control-plaintext">{{'notification-management.user_specific' | translate}}</label>
           </span>
-          <select *ngIf="editMode" formControlName="userSpecific" class="custom-select">
+          <select *ngIf="editMode" formControlName="userSpecific" [class.disabled-control]="!canEdit"
+                  class="custom-select">
             <option [ngValue]="false">{{ "notification-management.general" | translate }}</option>
             <option [ngValue]="true">{{ "notification-management.user_specific" | translate }}</option>
           </select>
@@ -114,7 +115,8 @@
           </label>
           <label *ngIf="!editMode" class="form-control-plaintext">
             {{notificationTemplate?.categoryCode ? lookupService().localizedLabel(notificationCategories, notificationTemplate?.categoryCode) : '---'}}</label>
-          <select *ngIf="editMode" class="custom-select" formControlName="categoryCode">
+          <select *ngIf="editMode" class="custom-select" [class.disabled-control]="!canEdit"
+                  formControlName="categoryCode">
             <option *ngFor="let notificationCategory of lookupService().localizedItems(notificationCategories)"
                     [ngValue]="notificationCategory.code">
               {{notificationCategory.label}}
@@ -137,7 +139,7 @@
             </label>
           </span>
 
-          <select *ngIf="editMode" formControlName="severity" class="custom-select">
+          <select *ngIf="editMode" formControlName="severity" [class.disabled-control]="!canEdit" class="custom-select">
             <option [ngValue]="true">{{ "notification-management.important" | translate }}</option>
             <option [ngValue]="false">{{ "notification-management.normal" | translate }}</option>
           </select>
@@ -173,7 +175,8 @@
              <label *ngIf="!notificationTemplate?.forceSending"
                     class="form-control-plaintext">{{"general.dialog_confirmation_cancel" | translate}}</label>
           </span>
-          <select *ngIf="editMode" formControlName="forceSending" class="custom-select">
+          <select *ngIf="editMode" formControlName="forceSending" [class.disabled-control]="!canEdit"
+                  class="custom-select">
             <option [ngValue]="true">{{ "general.dialog_confirmation_ok" | translate }}</option>
             <option [ngValue]="false">{{ "general.dialog_confirmation_cancel" | translate }}</option>
           </select>
@@ -183,7 +186,7 @@
       <div>
         <ul ngbNav #nav="ngbNav" class="nav-tabs langTab" [activeId]="activeId">
           <li *ngFor="let language of translatedLanguages; let i = index" [ngbNavItem]="i + 1">
-            <a ngbNavLink>{{language.label}}
+            <a ngbNavLink (click)="updateTabIndex(i + 1)">{{language.label}}
               <span *ngIf="editMode && (language.code.toLowerCase() === 'ar' || language.code.toLowerCase() === 'en')"
                     class="text-danger font-weight-normal">*</span>
               <svg-icon
@@ -308,7 +311,8 @@
                {{currentLanguage.startsWith('ar') ? getCamp(value, 'ar') : getCamp(value, 'en')}}
                 </span>
               </label>
-              <select *ngIf="editMode" class="custom-select" formControlName="campId">
+              <select *ngIf="editMode" class="custom-select" [class.disabled-control]="!canEdit"
+                      formControlName="campId">
                 <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
                 <option *ngFor="let camp of camps" [ngValue]="camp.id">
                   {{currentLanguage.startsWith('ar') ? camp.locationNameAr : camp.locationNameEn}}
@@ -324,7 +328,8 @@
                {{currentLanguage.startsWith('ar') ? getCompany(value, 'ar') : getCompany(value, 'en')}}
                 </span>
               </label>
-              <select *ngIf="editMode" class="custom-select" formControlName="companyId">
+              <select *ngIf="editMode" class="custom-select" [class.disabled-control]="!canEdit"
+                      formControlName="companyId">
                 <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
                 <option *ngFor="let company of companies" [ngValue]="company.id">
                   {{currentLanguage.startsWith('en') ? company.labelEn : company.labelAr}}
@@ -340,7 +345,8 @@
                   {{lookupService().localizedLabel(nationalities, value)}}
                 </span>
               </label>
-              <select *ngIf="editMode" class="custom-select" formControlName="nationalityCode">
+              <select *ngIf="editMode" class="custom-select" [class.disabled-control]="!canEdit"
+                      formControlName="nationalityCode">
                 <option [ngValue]="null" selected>{{ "notification-management.all" | translate }}</option>
                 <option *ngFor="let nationality of lookupService().localizedItems(nationalities)"
                         [ngValue]="nationality.code">
@@ -370,7 +376,7 @@
                     </div>
                     <input type="number" class="form-control" formControlName="minAge"
                            onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 2"
-                           step="1"
+                           step="1" [class.disabled-control]="!canEdit"
                            [class.is-invalid]="cf.age['controls']['minAge'].invalid && cf.age['controls']['minAge'].touched">
                     <div *ngIf="cf.age.invalid && cf.age.touched" class="invalid-feedback">
                       <div
@@ -396,7 +402,7 @@
                     </div>
                     <input type="number" class="form-control" formControlName="maxAge"
                            onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 2"
-                           step="1"
+                           step="1" [class.disabled-control]="!canEdit"
                            [class.is-invalid]="cf.age['controls']['maxAge'].invalid && cf.age['controls']['maxAge'].touched">
                     <div *ngIf="cf.age.invalid && cf.age.touched" class="invalid-feedback">
                       <div
@@ -675,15 +681,7 @@
         <table id="selectedApplicantsSearchResult" class="table table-striped table-hover">
           <thead>
           <tr>
-            <th scope="col">
-              <div class="custom-control custom-checkbox my-2">
-                <input name="selectAllApplicants" type="checkbox" class="custom-control-input"
-                       id="selectedApplicantCheck-01"
-                       [checked]="isAllChecked()"
-                       (change)="selectApplicantsInThePage($event)">
-                <label class="custom-control-label mx-3" for="selectedApplicantCheck-01"></label>
-              </div>
-            </th>
+            <th scope="col"></th>
             <th scope="col">{{'card-management.applicant_name' | translate}}</th>
             <th scope="col">{{'card-management.applicant_id' | translate}}</th>
             <th scope="col">{{'printing-management.id_number' | translate}}</th>

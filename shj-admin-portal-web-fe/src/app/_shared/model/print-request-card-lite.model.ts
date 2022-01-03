@@ -4,6 +4,8 @@ export class PrintRequestLite {
   statusCode: string;
   cardsCount: number;
   batchesCount: number;
+  seasonYear: number;
+  ritualTypeCode: string;
   creationDate: Date;
   updateDate: Date;
   confirmationDate: Date;

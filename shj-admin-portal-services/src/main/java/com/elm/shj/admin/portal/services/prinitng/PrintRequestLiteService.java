@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestBatchRepository;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestCardRepository;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestLiteRepository;
+import com.elm.shj.admin.portal.services.dto.EPrintingRequestType;
 import com.elm.shj.admin.portal.services.dto.PrintRequestLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequestLite,
      * @return the list of print requests
      */
     public Page<PrintRequestLiteDto> findAll(Pageable pageable) {
-        Page<PrintRequestLiteDto> litePrintRequests = mapPage(getRepository().findAll(pageable));
+        Page<PrintRequestLiteDto> litePrintRequests = mapPage(printRequestLiteRepository.findAll(withApplicantRequestType(), pageable));
         litePrintRequests.forEach(p -> {
             p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
             p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
@@ -78,11 +79,21 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequestLite,
             if (statusCode != null) {
                 predicates.add(criteriaBuilder.equal(root.get("statusCode"), statusCode));
             }
+            predicates.add(criteriaBuilder.equal(root.get("target"), EPrintingRequestType.APPLICANT.name()));
 
             if (description != null && description.length() > 0) {
                 predicates.add(criteriaBuilder.like(root.get("description"), "%" + description.trim() + "%"));
             }
 
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    private Specification<JpaPrintRequestLite> withApplicantRequestType() {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            //Create atomic predicates
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.equal(root.get("target"), EPrintingRequestType.APPLICANT.name()));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }

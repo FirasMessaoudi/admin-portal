@@ -9,9 +9,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Dto class for the print request lite domain.
+ * Dto class for the staff print request lite domain.
  *
- * @author Slim Ben Hadj
+ * @author Ahmed Ali
  * @since 1.1.0
  */
 @Builder
@@ -19,18 +19,19 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PrintRequestLiteDto implements Serializable {
+public class StaffPrintRequestLiteDto implements Serializable {
 
-    private static final long serialVersionUID = 6135830787465871921L;
 
+    private static final long serialVersionUID = -2424483294508748152L;
     private long id;
     private String referenceNumber;
     private String description;
     private String statusCode;
     private Date creationDate;
     private int cardsCount;
+    private int season;
+    private String ritualTypeCode;
     private int batchesCount;
-    private String target;
     private Date updateDate;
     private Date confirmationDate;
 

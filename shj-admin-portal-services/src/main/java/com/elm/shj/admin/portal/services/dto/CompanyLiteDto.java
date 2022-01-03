@@ -19,14 +19,11 @@ import java.io.Serializable;
 public class CompanyLiteDto implements Serializable {
 
     private static final long serialVersionUID = -2782740641877406749L;
+
     private long id;
     private String code;
-
     private String labelAr;
-
     private String labelEn;
-
     private String contactNumber;
-
 
 }

@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaGroupApplicantList;
@@ -12,6 +15,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Service handling group applicant lite domain.
+ *
+ * @author Ahmed Elsayed
+ * @since 1.1.0
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})

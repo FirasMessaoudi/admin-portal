@@ -1,0 +1,105 @@
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
+import {
+  HijriGregorianDatepickerComponent
+} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datepicker.component";
+
+@Component({
+  selector: 'hijri-greogrian-range-picker',
+  templateUrl: './hijri-greogrian-range-picker.component.html',
+  styleUrls: ['./hijri-greogrian-range-picker.component.scss']
+})
+export class HijriGreogrianRangePickerComponent implements OnInit {
+  maxFromDateGregorian: NgbDateStruct;
+  maxFromDateHijri: NgbDateStruct;
+  maxToDateGregorian: NgbDateStruct;
+  maxToDateHijri: NgbDateStruct;
+  todayGregorian: NgbDateStruct;
+  todayHijri: NgbDateStruct;
+  dateString: string;
+
+  @Input() selectedDateType: DateType;
+  @Input() selectedFromDate: NgbDateStruct;
+  @Input() selectedToDate: NgbDateStruct;
+
+  @Output() selectedFromDateChange: EventEmitter<Date> = new EventEmitter();
+  @Output() selectedToDateChange: EventEmitter<Date> = new EventEmitter();
+  @Output() selectedDateTypeChange: EventEmitter<DateType> = new EventEmitter();
+
+  @ViewChild('fromDatePicker') fromDatePicker: HijriGregorianDatepickerComponent;
+  @ViewChild('toDatePicker') toDatePicker: HijriGregorianDatepickerComponent;
+
+  constructor(private dateFormatterService: DateFormatterService) {
+  }
+
+  ngOnInit(): void {
+    this.todayGregorian = this.dateFormatterService.todayGregorian();
+    this.todayHijri = this.dateFormatterService.todayHijri();
+    this.maxFromDateGregorian = this.todayGregorian;
+    this.maxFromDateHijri = this.todayHijri;
+    this.maxToDateGregorian = this.todayGregorian;
+    this.maxToDateHijri = this.todayHijri;
+    this.selectedDateType = DateType.Gregorian;
+  }
+
+  onFromDateChange(event) {
+    if (this.fromDatePicker.selectedDateType == DateType.Gregorian) {
+      this.selectedDateType = DateType.Gregorian;
+      this.toDatePicker.gregClick()
+    } else {
+      this.selectedDateType = DateType.Hijri;
+      this.toDatePicker.hijriClick();
+    }
+
+    if (event) {
+      let dateStruct = this.fromDatePicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : this.dateFormatterService.toGregorian(event);
+      let dateStructGreg = this.fromDatePicker.selectedDateType == DateType.Gregorian ? event : this.dateFormatterService.toGregorian(event);
+      this.dateString = this.dateFormatterService.toString(dateStruct);
+
+      this.selectedFromDateChange.emit(this.dateFormatterService.toDate(dateStructGreg));
+
+      // If toDate exceed fromDate then set toDate to the selected fromDate
+      if (this.selectedToDate && this.dateFormatterService.toDate(this.selectedToDate) < this.dateFormatterService.toDate(event)) {
+        this.selectedToDate = event;
+      }
+
+    } else {
+
+      this.selectedFromDateChange.emit(null);
+
+    }
+  }
+
+  onToDateChange(event) {
+    if (this.toDatePicker.selectedDateType == DateType.Gregorian) {
+      this.selectedDateType = DateType.Gregorian;
+      this.fromDatePicker.gregClick();
+    } else {
+      this.selectedDateType = DateType.Hijri;
+      this.fromDatePicker.hijriClick();
+    }
+
+    if (event) {
+      let dateStruct = this.toDatePicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : this.dateFormatterService.toGregorian(event);
+      let dateStructGreg = this.toDatePicker.selectedDateType == DateType.Gregorian ? event : this.dateFormatterService.toGregorian(event);
+      this.dateString = this.dateFormatterService.toString(dateStruct);
+
+      this.selectedToDateChange.emit(this.dateFormatterService.toDate(dateStructGreg));
+
+      // If toDate exceed fromDate then set fromDate to the selected toDate
+      if (this.selectedFromDate && this.dateFormatterService.toDate(this.selectedFromDate) > this.dateFormatterService.toDate(event)) {
+        this.selectedFromDate = event;
+      }
+
+    } else {
+      this.selectedToDateChange.emit(null);
+    }
+  }
+
+  onDateTypeChange($event) {
+    this.selectedDateTypeChange.emit($event);
+  }
+
+}

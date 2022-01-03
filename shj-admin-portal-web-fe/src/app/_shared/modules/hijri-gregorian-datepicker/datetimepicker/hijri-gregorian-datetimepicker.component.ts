@@ -11,10 +11,10 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {NgbDateStruct, NgbTimeStruct} from "@ng-bootstrap/ng-bootstrap";
-import {DateType} from './consts';
+import {DateType} from '../consts';
 import * as momentjs from 'moment';
 import * as moment_ from 'moment-hijri';
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {noop} from "rxjs";
 import {DatePipe} from "@angular/common";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
@@ -25,7 +25,7 @@ const momentHijri = moment_;
 
 @Component({
   encapsulation: ViewEncapsulation.None,
-  selector: 'app-hijri-gregorian-datetimepicker',
+  selector: 'hijri-gregorian-datetimepicker',
   templateUrl: './hijri-gregorian-datetimepicker.component.html',
   styleUrls: ['./hijri-gregorian-datetimepicker.component.scss'],
   providers: [
@@ -35,7 +35,7 @@ const momentHijri = moment_;
       useExisting: forwardRef(() => HijriGregorianDatetimepickerComponent),
       multi: true
     }
-    ]
+  ]
 })
 export class HijriGregorianDatetimepickerComponent implements ControlValueAccessor, OnInit, AfterViewInit {
 

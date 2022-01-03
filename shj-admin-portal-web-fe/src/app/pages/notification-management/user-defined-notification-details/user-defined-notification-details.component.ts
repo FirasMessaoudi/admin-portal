@@ -14,8 +14,8 @@ import {NotificationTemplateContent} from "@model/notification-template-content.
 import {ModalDismissReasons, NgbCalendar, NgbDate, NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CompanyLite} from "@model/company-lite.model";
 import {PackageHousing} from "@model/package-housing.model";
-import {DateType} from "@shared/modules/hijri-gregorian-datepicker/datepicker/consts";
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {ageRangeValidator, validateIsRequired} from "@pages/notification-management/notification-custom-validator";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 import {Applicant} from "@model/applicant.model";
@@ -63,7 +63,6 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   checkedCriteria: number = 0;
   isSelectAllClicked: boolean;
   isSelectLoading: boolean;
-  isAllSelected: boolean;
   selectedApplicants: Array<Applicant> = [];
 
   private listSubscription: Subscription;
@@ -98,12 +97,14 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     this.selectedDateType = DateType.Gregorian;
 
     this.initForm();
+    this.initCategorizingForm();
     combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
       params: results[0].id,
       qParams: results[1]
     }))).subscribe(results => {
       this.notificationTemplateId = +results.params; // (+) converts string 'id' to a number
       if (this.notificationTemplateId) {
+        this.editMode = false;
         this.notificationService.findUserDefinedNotificationTemplateById(this.notificationTemplateId).subscribe(data => {
           if (data && data.id) {
             this.notificationTemplate = data;
@@ -113,9 +114,9 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
                 this.listApplicants(data.notificationTemplateCategorizing?.selectedApplicants, 0);
                 this.checkedCriteria = 2;
               } else {
-                this.updateCategorizingForm();
                 this.checkedCriteria = 1;
               }
+              this.updateCategorizingForm();
             }
             //Enable edit if sending time is less or equal than current datetime and notification is not processed
             this.canEdit = (new Date(this.notificationTemplate?.sendingDate) > this.now) && !data.isProcessed;
@@ -131,7 +132,6 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
         this.goBackToList();
       }
     });
-    this.initCategorizingForm();
     this.loadLookups();
   }
 
@@ -152,28 +152,6 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     }
   }
 
-  isAllChecked() {
-    if (this.applicants.length > 0)
-      return this.applicants.map(c => c.id).every(id => this.selectedApplicants.map(c => c.id).includes(id));
-  }
-
-  selectApplicantsInThePage(event) {
-    this.isSelectAllClicked = true;
-    if (event.target.checked) {
-      this.applicants.forEach(card => {
-        if (!this.selectedApplicants.map(c => c.id).includes(card.id)) {
-          this.selectedApplicants.push(card);
-        }
-      })
-    } else {
-      this.applicants.forEach(card => {
-        this.selectedApplicants.splice(this.selectedApplicants.findIndex(c => c.id === card.id), 1);
-      })
-    }
-
-    this.isAllSelected = this.selectedApplicants.length === this.page.totalElements;
-  }
-
   selectOne(event, id) {
     const selectedIndex = this.applicants.findIndex(card => card.id === id);
 
@@ -183,7 +161,6 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       this.selectedApplicants.splice(this.selectedApplicants.findIndex(card => card.id === id), 1);
     }
 
-    this.isAllSelected = this.selectedApplicants.length === this.page.totalElements;
   }
 
   loadLookups() {
@@ -345,11 +322,13 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
         this.notificationForm.get('statusCode').disable();
         this.notificationForm.get('forceSending').disable();
         this.notificationForm.get('notificationTemplateContents').disable();
-        this.notificationForm.controls.notificationTemplateContents['controls']
-          .forEach(field => {
-            field.controls.title.disable();
-            field.controls.body.disable();
-          });
+
+        this.categorizingForm.controls.campId.disable();
+        this.categorizingForm.controls.companyId.disable();
+        this.categorizingForm.controls.nationalityCode.disable();
+        this.categorizingForm.controls.gender.disable();
+        this.categorizingForm.get('age')['controls']['minAge'].disable();
+        this.categorizingForm.get('age')['controls']['maxAge'].disable();
       }
 
       this.notificationForm.markAllAsTouched();
@@ -358,23 +337,16 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   }
 
   updateCategorizingForm() {
-    if (this.notificationTemplate?.notificationTemplateCategorizing?.selectedApplicants) {
-      //TODO
-    } else {
-      this.categorizingForm.patchValue({
-        campId: this.notificationTemplate?.notificationTemplateCategorizing?.campId,
-        companyId: this.notificationTemplate?.notificationTemplateCategorizing?.companyId,
-        nationalityCode: this.notificationTemplate?.notificationTemplateCategorizing?.nationalityCode,
-        age: {
-          minAge: this.notificationTemplate?.notificationTemplateCategorizing?.minAge,
-          maxAge: this.notificationTemplate?.notificationTemplateCategorizing?.maxAge
-        },
-        gender: this.notificationTemplate?.notificationTemplateCategorizing.gender
-      });
-    }
-    if (!this.canEdit) {
-      this.categorizingForm.controls.campId.disable();
-    }
+    this.categorizingForm.patchValue({
+      campId: this.notificationTemplate?.notificationTemplateCategorizing?.campId,
+      companyId: this.notificationTemplate?.notificationTemplateCategorizing?.companyId,
+      nationalityCode: this.notificationTemplate?.notificationTemplateCategorizing?.nationalityCode,
+      age: {
+        minAge: this.notificationTemplate?.notificationTemplateCategorizing?.minAge,
+        maxAge: this.notificationTemplate?.notificationTemplateCategorizing?.maxAge
+      },
+      gender: this.notificationTemplate?.notificationTemplateCategorizing.gender
+    });
   }
 
   save() {
@@ -387,6 +359,10 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       }
     }
     if (this.notificationForm.invalid) {
+      if (this.notificationTemplateContents.invalid) {
+        // Set focus on tab containing errors
+        this.activeId = this.translatedLanguages.findIndex(lang => lang.code === this.notificationTemplateContents.controls.find(control => control.invalid).value.lang) + 1;
+      }
       return;
     }
     if (this.checkedCriteria === 2 && this.addedApplicants.length === 0) {
@@ -555,6 +531,10 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
         this.activeId = 1;
       }
     });
+  }
+
+  updateTabIndex(activeId) {
+    this.activeId = activeId;
   }
 
 }

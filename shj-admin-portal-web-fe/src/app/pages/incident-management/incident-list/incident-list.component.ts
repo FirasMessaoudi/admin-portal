@@ -1,19 +1,16 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {EAuthority, Page} from "@shared/model";
 import {AuthenticationService} from "@core/services";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormGroup} from "@angular/forms";
 import {ApplicantIncident} from "@model/applicant-incident.model";
 import {Subscription} from "rxjs";
 import {IncidentService} from "@core/services/incident/incident.service";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
-import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 import {I18nService} from "@dcc-commons-ng/services";
-import {
-  HijriGregorianDatepickerComponent
-} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datepicker.component";
-import {DateType} from "@shared/modules/hijri-gregorian-datepicker/datepicker/consts";
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {DatePipe} from "@angular/common";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
 
 @Component({
   selector: 'app-incident-list',
@@ -21,7 +18,7 @@ import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/d
   styleUrls: ['./incident-list.component.scss']
 })
 export class IncidentListComponent implements OnInit, OnDestroy {
-  public isSearchbarCollapsed = true;
+  isSearchbarCollapsed = true;
   pageArray: Array<number>;
   page: Page;
   searchForm: FormGroup;
@@ -30,37 +27,20 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   incidentStatuses: Lookup[] = [];
   listSubscription: Subscription;
   searchSubscription: Subscription;
-  selectedFromDate: NgbDateStruct;
-  selectedToDate: NgbDateStruct;
-  minToDateGregorian: NgbDateStruct;
-  minToDateHijri: NgbDateStruct;
-  maxFromDateGregorian: NgbDateStruct;
-  maxFromDateHijri: NgbDateStruct;
-  maxToDateGregorian: NgbDateStruct;
-  maxToDateHijri: NgbDateStruct;
-  dateString: string;
-  selectedDateType: any;
-  todayGregorian: NgbDateStruct;
-  todayHijri: NgbDateStruct;
+  selectedDateType: DateType;
 
-  @ViewChild('fromDatePicker') fromDatePicker: HijriGregorianDatepickerComponent;
-  @ViewChild('toDatePicker') toDatePicker: HijriGregorianDatepickerComponent;
+  @ViewChild('picker') picker: any;
 
   constructor(private authenticationService: AuthenticationService,
               private incidentService: IncidentService,
               private formBuilder: FormBuilder,
               private lookupsService: LookupService,
               private i18nService: I18nService,
-              private dateFormatterService: DateFormatterService) {
+              private dateFormatterService: DateFormatterService
+              ) {
   }
 
   ngOnInit(): void {
-    this.todayGregorian = this.dateFormatterService.todayGregorian();
-    this.todayHijri = this.dateFormatterService.todayHijri();
-    this.maxFromDateGregorian = this.todayGregorian;
-    this.maxFromDateHijri = this.todayHijri;
-    this.maxToDateGregorian = this.todayGregorian;
-    this.maxToDateHijri = this.todayHijri;
     this.selectedDateType = DateType.Gregorian;
     this.loadLookups();
     this.initForm();
@@ -83,10 +63,8 @@ export class IncidentListComponent implements OnInit, OnDestroy {
       applicantName: '',
       incidentType: null,
       status: null,
-      fromDateGregorian: '',
-      fromDateHijri: '',
-      toDateGregorian: '',
-      toDateHijri: ''
+      fromDate: null,
+      toDate: null,
     });
   }
 
@@ -128,8 +106,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    const payload = this.searchForm.value;
-    this.searchSubscription = this.incidentService.list(0, payload).subscribe(data => {
+    this.searchSubscription = this.incidentService.list(0, this.searchForm.value).subscribe(data => {
       this.incidents = [];
       this.pageArray = [];
       this.page = data;
@@ -144,46 +121,13 @@ export class IncidentListComponent implements OnInit, OnDestroy {
     return this.i18nService.language;
   }
 
-  onFromDateChange(event) {
-    // this.selectedDateType = this.fromDatePicker.selectedDateType == DateType.Gregorian ? DateType.Gregorian : DateType.Hijri;
-    if (event) {
-      let dateStruct = this.fromDatePicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : this.dateFormatterService.toGregorian(event);
-      let dateStructGreg = this.fromDatePicker.selectedDateType == DateType.Gregorian ? event : this.dateFormatterService.toGregorian(event);
-      let dateStructHijri = this.fromDatePicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : event;
-      this.dateString = this.dateFormatterService.toString(dateStruct);
-      this.searchForm.controls.fromDateGregorian.setValue(this.dateFormatterService.toDate(dateStructGreg));
-      this.searchForm.controls.fromDateHijri.setValue(this.dateFormatterService.toString(dateStructHijri).split('/').reverse().join(''));
-      this.minToDateGregorian = dateStructGreg;
-      this.minToDateHijri = dateStructHijri;
-    } else {
-      this.minToDateGregorian = null;
-      this.minToDateHijri = null;
-    }
-  }
-
-  onToDateChange(event) {
-    // this.selectedDateType = this.toDatePicker.selectedDateType == DateType.Gregorian ? DateType.Gregorian : DateType.Hijri;
-    if (event) {
-      let dateStruct = this.toDatePicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : this.dateFormatterService.toGregorian(event);
-      let dateStructGreg = this.toDatePicker.selectedDateType == DateType.Gregorian ? event : this.dateFormatterService.toGregorian(event);
-      let dateStructHijri = this.toDatePicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : event;
-      this.dateString = this.dateFormatterService.toString(dateStruct);
-      this.searchForm.controls.toDateGregorian.setValue(this.dateFormatterService.toDate(dateStructGreg));
-      this.searchForm.controls.toDateHijri.setValue(this.dateFormatterService.toString(dateStructHijri).split('/').reverse().join(''));
-      this.maxFromDateGregorian = dateStructGreg;
-      this.maxFromDateHijri = dateStructHijri;
-    } else {
-      this.maxFromDateGregorian = this.todayGregorian;
-      this.maxFromDateHijri = this.todayHijri;
-    }
-  }
-
   /**
    * Returns the css class for the given status
    *
    * @param status the current applicant incident status
    */
-  buildStatusClass(status: any): string {
+  buildStatusClass(status: any):
+    string {
     switch (status) {
       case 'UNDER_PROCESSING':
         return 'ready';
@@ -193,6 +137,25 @@ export class IncidentListComponent implements OnInit, OnDestroy {
         return 'warning';
       default:
         return 'new';
+    }
+  }
+
+  patchValue(event: Date, c: AbstractControl) {
+    c.setValue(event);
+  }
+
+  setSelectedDateType(event: DateType) {
+    this.selectedDateType = event;
+  }
+
+  formatDate(date: Date): string {
+    const datePipe = new DatePipe('en-US');
+    if (this.selectedDateType === DateType.Hijri) {
+      let hijriDate = this.dateFormatterService.toDate(this.dateFormatterService.toHijri(this.dateFormatterService.fromDate(date)));
+      return this.currentLanguage.startsWith('ar') ? datePipe.transform(hijriDate, 'yyyy/MM/dd') : datePipe.transform(hijriDate, 'dd/MM/yyyy');
+    }
+    else {
+      return this.currentLanguage.startsWith('ar') ? datePipe.transform(date, 'yyyy/MM/dd') : datePipe.transform(date, 'dd/MM/yyyy');
     }
   }
 }

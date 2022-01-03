@@ -51,9 +51,9 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
         return chatMessageDtoList;
     }
 
-    public List<ChatMessageDto> findChatMessagesBySenderIdOrReceiverId(int page, int limit, long contactId) {
-        Pageable pageableRequest = PageRequest.of(page, limit, Sort.by("sentDate").ascending());
-        Page<JpaChatMessage> chatMessagesPage = chatMessageRepository.findBySenderIdOrReceiverId(contactId, contactId, pageableRequest);
+    public List<ChatMessageDto> findChatMessagesBySenderIdOrReceiverId(int page, int limit, long contactId, long time) {
+        Pageable pageableRequest = PageRequest.of(page, limit, Sort.by("sentDate").descending());
+        Page<JpaChatMessage> chatMessagesPage = chatMessageRepository.findBySenderIdOrReceiverIdAndSentDateLessThanEqual(contactId, contactId, new Date(time), pageableRequest);
         List<JpaChatMessage> chatMessageList = chatMessagesPage.getContent();
         List<ChatMessageDto> chatMessageDtoList = mapList(chatMessageList);
         return chatMessageDtoList;

@@ -257,8 +257,5 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         applicant.ifPresent(applicantDto -> applicantRepository.updatePreferredLanguage(applicantDto.getId(), lang));
     }
 
-    public List<ApplicantDto> findAllNotHavingChatContactWithTitle(String title) {
-        return mapList(applicantRepository.findAllNotHavingChatContactWithTitle(title));
-    }
 }
 

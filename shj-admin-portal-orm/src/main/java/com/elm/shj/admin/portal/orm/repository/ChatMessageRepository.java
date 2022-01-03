@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,5 +32,5 @@ public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Lon
                     "order by sent_date desc")
     List<Object[]> findChatContactsWithLatestMessage(@Param("applicantUin") String uin);
 
-    Page<JpaChatMessage> findBySenderIdOrReceiverId(long senderId, long receiverId, Pageable pageable);
+    Page<JpaChatMessage> findBySenderIdOrReceiverIdAndSentDateLessThanEqual(long senderId, long receiverId, Date time, Pageable pageable);
 }

@@ -58,7 +58,7 @@ public class ItemWriter {
     private final Map<EDataSegment, Class> repositoryRegistry = new HashMap<>();
     @SuppressWarnings("rawtypes")
     private final Map<EDataSegment, IGenericMapper> mapperRegistry = new HashMap<>();
-    private final Map<String,Long > uniqueGroupLeader = new HashMap<>();
+    private final Map<String, Long> uniqueGroupLeader = new HashMap<>();
     private final CycleAvoidingMappingContext mappingContext;
     private final ApplicationContext context;
     private final ApplicantService applicantService;
@@ -77,6 +77,7 @@ public class ItemWriter {
     private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
     private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
+    private final ApplicantChatContactService applicantChatContactService;
 
 
     /**
@@ -188,18 +189,18 @@ public class ItemWriter {
                     if (applicantGroupDto != null) {
                         CompanyStaffDto groupLeader = companyStaffService.findGroupLeaderByBasicInfo(staffApplicantGroupDto.getStaffIdNumber(), staffApplicantGroupDto.getStaffPassportNumber(), staffApplicantGroupDto.getStaffDateOfBirthGregorian(), staffApplicantGroupDto.getStaffDateOfBirthHijri());
                         applicantGroupDto.setGroupLeader(groupLeader);
-                        if (uniqueGroupLeader.containsKey(applicantGroupDto.getReferenceNumber())){
-                            if(uniqueGroupLeader.get(applicantGroupDto.getReferenceNumber())!=groupLeader.getId()){
+                        if (uniqueGroupLeader.containsKey(applicantGroupDto.getReferenceNumber())) {
+                            if (uniqueGroupLeader.get(applicantGroupDto.getReferenceNumber()) != groupLeader.getId()) {
                                 dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(cellIndex + 1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_GROUP_WITH_DIFFERENT_LEADERS.getMessage())).valid(false).build());
 
                             }
-                        }else{
-                            uniqueGroupLeader.put(applicantGroupDto.getReferenceNumber(),groupLeader.getId());
+                        } else {
+                            uniqueGroupLeader.put(applicantGroupDto.getReferenceNumber(), groupLeader.getId());
                         }
                         ApplicantDto applicantDto = applicantService.findByBasicInfo(applicantBasicInfoDto);
                         if (applicantDto != null) {
+                            applicantChatContactService.createGroupLeaderContact(applicantDto.getDigitalIds().get(0).getUin(), groupLeader, companyRitualSeasonDto);
                             groupApplicantListService.registerUserToGroup(applicantDto.getDigitalIds().get(0).getUin(), staffApplicantGroupDto.getGroupReferenceNumber());
-
                         } else {
                             //this applicant not found in db in time of processing
                             log.error("this applicant not found in db in time of processing");
@@ -480,6 +481,13 @@ public class ItemWriter {
                     if (applicantRitualField != null) {
                         ReflectionUtils.makeAccessible(applicantRitualField);
                         applicantRitualField.set(item, generatedApplicantRitual);
+                    }
+
+                    if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
+                        ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
+                        ApplicantDto relativeApplicant = applicantRelative.getRelativeApplicant();
+                        relativeApplicant.setContacts(applicantContactService.findByApplicantId(relativeApplicant.getId()));
+                        applicantChatContactService.createSystemDefinedApplicantChatContact(applicantRelative);
                     }
 
                     if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {

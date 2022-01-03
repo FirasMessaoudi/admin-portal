@@ -1,18 +1,16 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {EAuthority, Page} from "@shared/model";
 import {AuthenticationService, NotificationService} from "@core/services";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormGroup} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {NotificationTemplate} from "@model/notification-template.model";
 import {NotificationTemplateContent} from "@model/notification-template-content.model";
 import {I18nService} from "@dcc-commons-ng/services";
-import {NgbCalendar, NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
-import * as momentjs from 'moment';
-
-const moment = momentjs;
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
+import {DatePipe} from "@angular/common";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 
 @Component({
   selector: 'app-user-defined-notification-list',
@@ -20,26 +18,19 @@ const moment = momentjs;
   styleUrls: ['./user-defined-notification-list.component.scss']
 })
 export class UserDefinedNotificationListComponent implements OnInit {
-
-  public isSearchbarCollapsed = true;
+  isSearchbarCollapsed = true;
   pageArray: Array<number>;
   page: Page;
   searchForm: FormGroup;
   notificationTemplates: Array<NotificationTemplate>;
   notificationCategories: Lookup[] = [];
   notificationNames: Lookup[] = [];
-  localizedNotificationCategories: Lookup[] = [];
-  localizedNotificationNames: Lookup[] = [];
-  hoveredDate: NgbDate | null = null;
-  fromDate: NgbDate | null;
-  toDate: NgbDate | null;
-  notificationHoveredDate: NgbDate | null = null;
-  notificationFromDate: NgbDate | null;
-  notificationToDate: NgbDate | null;
   notificationTemplateStatuses: Lookup[] = [];
+  dateType: DateType;
+  selectedDateType: DateType;
 
-  @ViewChild('datepicker') datePicker: any;
-  @ViewChild('notificationDatepicker') notificationDatePicker: any;
+  @ViewChild('sendingDatePicker') sendingDatePicker: any;
+  @ViewChild('creationDatePicker') creationDatePicker: any;
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
@@ -49,12 +40,12 @@ export class UserDefinedNotificationListComponent implements OnInit {
               private lookupsService: LookupService,
               private notificationService: NotificationService,
               private i18nService: I18nService,
-              private calendar: NgbCalendar,
-              public formatter: NgbDateParserFormatter,
-              private dateFormatterService: DateFormatterService) {
+              private dateFormatterService: DateFormatterService,
+  ) {
   }
 
   ngOnInit(): void {
+    this.selectedDateType = DateType.Gregorian;
     this.initForm();
     this.loadLookups();
     this.loadPage(0);
@@ -63,11 +54,9 @@ export class UserDefinedNotificationListComponent implements OnInit {
   loadLookups() {
     this.notificationService.findNotificationCategories().subscribe(result => {
       this.notificationCategories = result;
-      this.localizedNotificationCategories = this.lookupsService.localizedItems(this.notificationCategories);
     });
     this.notificationService.findNotificationTemplateNames().subscribe(result => {
       this.notificationNames = result;
-      this.localizedNotificationNames = this.lookupsService.localizedItems(this.notificationNames);
     });
     this.notificationService.findNotificationTemplateStatuses().subscribe(result => {
       this.notificationTemplateStatuses = result;
@@ -76,11 +65,15 @@ export class UserDefinedNotificationListComponent implements OnInit {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
-      notificationTitle: [''],
-      notificationBody: [''],
-      notificationCategory: [null],
-      severity: [null],
-      description: ['']
+      notificationTitle: '',
+      notificationBody: '',
+      notificationCategory: null,
+      severity: null,
+      description: '',
+      creationDateStart: null,
+      creationDateEnd: null,
+      sendingDateStart: null,
+      sendingDateEnd: null
     });
   }
 
@@ -97,33 +90,13 @@ export class UserDefinedNotificationListComponent implements OnInit {
     return this.authenticationService.hasAuthority(EAuthority.USER_DEFINED_NOTIFICATION_MANAGEMENT);
   }
 
-  getSelectedDate(selectedDate: NgbDate): string {
-    if (selectedDate) {
-      let formattedDate = this.dateFormatterService.toString(selectedDate);
-      return moment(formattedDate, 'DD/MM/YYYY').locale('en').format();
-    }
-    return null;
-  }
-
   search(): void {
-    const fromDate = this.getSelectedDate(this.fromDate)
-    const toDate = this.getSelectedDate(this.toDate);
-
-    const notificationFromDate = this.getSelectedDate(this.notificationFromDate)
-    const notificationToDate = this.getSelectedDate(this.notificationToDate);
-
     const payload = this.searchForm.value;
-    payload.creationDateStart = fromDate;
-    payload.creationDateEnd = toDate;
-    payload.sendingDateStart = notificationFromDate;
-    payload.sendingDateEnd = notificationToDate;
     //Trim input values and replace all whitespaces characters
     payload.notificationTitle = payload.notificationTitle.replace(/\s/g, " ").trim();
     payload.notificationBody = payload.notificationBody.replace(/\s/g, " ").trim();
     payload.description = payload.description.replace(/\s/g, " ").trim();
-
     this.searchSubscription = this.notificationService.listUserDefined(0, payload).subscribe(data => {
-
       this.notificationTemplates = [];
       this.pageArray = [];
       this.page = data;
@@ -156,6 +129,11 @@ export class UserDefinedNotificationListComponent implements OnInit {
     return this.i18nService.language;
   }
 
+  // convenience getter for easy access to form fields
+  get f() {
+    return this.searchForm.controls;
+  }
+
   getNotificationContentForCurrentLanguage(notificationContents: NotificationTemplateContent []) {
     if (notificationContents.length > 0) {
       let contents = notificationContents.filter(value => this.i18nService.language.toLowerCase().startsWith(value.lang.toLowerCase()));
@@ -168,69 +146,40 @@ export class UserDefinedNotificationListComponent implements OnInit {
     }
   }
 
-  onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
-      this.toDate = date;
-      this.datePicker.close();
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
+  patchValue(event: Date, c: AbstractControl) {
+    c.setValue(event);
+  }
+
+  formatDate(date: Date): string {
+    const datePipe = new DatePipe('en-US');
+    if (this.selectedDateType === DateType.Hijri) {
+      let hijriDate = this.dateFormatterService.toDate(this.dateFormatterService.toHijri(this.dateFormatterService.fromDate(date)));
+      return this.currentLanguage.startsWith('ar') ? datePipe.transform(hijriDate, 'yyyy/MM/dd') : datePipe.transform(hijriDate, 'dd/MM/yyyy');
+    }
+    else {
+      return this.currentLanguage.startsWith('ar') ? datePipe.transform(date, 'yyyy/MM/dd') : datePipe.transform(date, 'dd/MM/yyyy');
     }
   }
 
-  onNotificationDateSelection(date: NgbDate) {
-    if (!this.notificationFromDate && !this.notificationToDate) {
-      this.notificationFromDate = date;
-    } else if (this.notificationFromDate && !this.notificationToDate && date && date.after(this.notificationFromDate)) {
-      this.notificationToDate = date;
-      this.notificationDatePicker.close();
+  setCreationDateType(event: DateType) {
+    this.selectedDateType = event;
+    if (event == DateType.Gregorian) {
+      this.sendingDatePicker.fromDatePicker.gregClick();
+      this.sendingDatePicker.toDatePicker.gregClick();
     } else {
-      this.notificationToDate = null;
-      this.notificationFromDate = date;
+      this.sendingDatePicker.fromDatePicker.hijriClick();
+      this.sendingDatePicker.toDatePicker.hijriClick();
     }
   }
 
-  isHovered(date: NgbDate) {
-    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
-  }
-
-  isInside(date: NgbDate) {
-    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
-  }
-
-  isRange(date: NgbDate) {
-    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
-  }
-
-  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-    const parsed = this.formatter.parse(input);
-    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
-  }
-
-  isNotificationDateHovered(date: NgbDate) {
-    return this.notificationFromDate && !this.notificationToDate && this.notificationHoveredDate && date.after(this.notificationFromDate) && date.before(this.notificationHoveredDate);
-  }
-
-  isNotificationDateInside(date: NgbDate) {
-    return this.notificationToDate && date.after(this.notificationFromDate) && date.before(this.notificationToDate);
-  }
-
-  isNotificationDateInRange(date: NgbDate) {
-    return date.equals(this.notificationFromDate) || (this.notificationToDate && date.equals(this.notificationToDate)) || this.isNotificationDateInside(date) || this.isNotificationDateHovered(date);
-  }
-
-
-  clearCreationDate() {
-      this.fromDate = undefined;
-      this.toDate = undefined;
-      this.onDateSelection(null);
-  }
-
-  clearNotificationDate() {
-    this.notificationFromDate = undefined;
-    this.notificationToDate = undefined;
-    this.onNotificationDateSelection(null);
+  setSendingDateType(event: DateType) {
+    this.selectedDateType = event;
+    if (event == DateType.Gregorian) {
+      this.creationDatePicker.fromDatePicker.gregClick();
+      this.creationDatePicker.toDatePicker.gregClick();
+    } else {
+      this.creationDatePicker.fromDatePicker.hijriClick();
+      this.creationDatePicker.toDatePicker.hijriClick();
+    }
   }
 }

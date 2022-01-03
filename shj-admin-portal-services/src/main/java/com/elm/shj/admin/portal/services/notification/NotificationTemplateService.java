@@ -60,7 +60,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
      */
     public NotificationTemplateDto updateNotificationTemplate(NotificationTemplateDto notificationTemplate) {
 
-        notificationTemplate.getNotificationTemplateContents().parallelStream().forEach(content -> {
+        notificationTemplate.getNotificationTemplateContents().stream().forEach(content -> {
             content.setNotificationTemplate(notificationTemplate);
         });
         NotificationTemplateDto savedNotificationTemplate = findOne(notificationTemplate.getId());
@@ -145,7 +145,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
     public NotificationTemplateDto create(NotificationTemplateDto notificationTemplate) {
         notificationTemplate.setTypeCode(ENotificationTemplateType.USER_DEFINED.name());
         notificationTemplate.setIsProcessed(false);
-        notificationTemplate.getNotificationTemplateContents().parallelStream().forEach(content -> content.setNotificationTemplate(notificationTemplate));
+        notificationTemplate.getNotificationTemplateContents().stream().forEach(content -> content.setNotificationTemplate(notificationTemplate));
         if (notificationTemplate.getNotificationTemplateCategorizing() != null) {
             notificationTemplate.getNotificationTemplateCategorizing().setNotificationTemplate(notificationTemplate);
         }
@@ -184,18 +184,18 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         databaseNotificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
 
         if (notificationTemplate.getNotificationTemplateCategorizing() != null) {
+            NotificationTemplateCategorizingDto categorizing;
             if (notificationTemplate.getNotificationTemplateCategorizing().getSelectedApplicants() != null) {
-                NotificationTemplateCategorizingDto categorizing = new NotificationTemplateCategorizingDto();
-                categorizing.setId(databaseNotificationTemplate.getNotificationTemplateCategorizing().getId());
+                categorizing = new NotificationTemplateCategorizingDto();
                 categorizing.setSelectedApplicants(notificationTemplate.getNotificationTemplateCategorizing().getSelectedApplicants());
-                categorizing.setNotificationTemplate(databaseNotificationTemplate);
-                databaseNotificationTemplate.setNotificationTemplateCategorizing(categorizing);
             } else {
-                NotificationTemplateCategorizingDto categorizing = notificationTemplate.getNotificationTemplateCategorizing();
-                categorizing.setNotificationTemplate(databaseNotificationTemplate);
+                categorizing = notificationTemplate.getNotificationTemplateCategorizing();
                 categorizing.setSelectedApplicants(null);
-                databaseNotificationTemplate.setNotificationTemplateCategorizing(categorizing);
             }
+            categorizing.setId(databaseNotificationTemplate.getNotificationTemplateCategorizing().getId());
+            categorizing.setCreationDate(databaseNotificationTemplate.getNotificationTemplateCategorizing().getCreationDate());
+            categorizing.setNotificationTemplate(databaseNotificationTemplate);
+            databaseNotificationTemplate.setNotificationTemplateCategorizing(categorizing);
         }
         return save(databaseNotificationTemplate);
     }

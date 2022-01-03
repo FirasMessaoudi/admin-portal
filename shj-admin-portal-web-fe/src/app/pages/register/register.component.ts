@@ -9,9 +9,9 @@ import {InvisibleReCaptchaComponent} from "ngx-captcha";
 import {ToastService} from "@shared/components/toast/toast-service";
 import {TranslateService} from "@ngx-translate/core";
 import {RegisterService} from "@core/services/register/register.service";
-import {DateType} from "@shared/modules/hijri-gregorian-datepicker/datepicker/consts";
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
 import {HijriGregorianDatepickerComponent} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datepicker.component";
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/datepicker/date-formatter.service";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {DEFAULT_MAX_USER_AGE} from "@core/services";
 import {DccValidators, IdType} from "@shared/validators";
 
