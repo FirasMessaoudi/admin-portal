@@ -48,9 +48,6 @@ public class ApplicantBasicInfoDto implements Serializable {
     @CellIndex(index = 3)
     private Long dateOfBirthHijri;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
-    private String packageReferenceNumber;
-
     public static ApplicantBasicInfoDto fromRelative(ApplicantRelativeDto applicantRelative) {
         ApplicantBasicInfoDto applicantBasicInfo = new ApplicantBasicInfoDto();
         applicantBasicInfo.setIdNumber(applicantRelative.getRelativeIdNumber());
@@ -66,7 +63,21 @@ public class ApplicantBasicInfoDto implements Serializable {
         applicantBasicInfo.setPassportNumber(applicant.getPassportNumber());
         applicantBasicInfo.setDateOfBirthGregorian(applicant.getDateOfBirthGregorian());
         applicantBasicInfo.setDateOfBirthHijri(applicant.getDateOfBirthHijri());
-        applicantBasicInfo.setPackageReferenceNumber(applicant.getPackageReferenceNumber());
+        return applicantBasicInfo;
+    }
+
+    /**
+     * Get applicant basic info from applicant emergency.
+     *
+     * @param applicant
+     * @return
+     */
+    public static ApplicantBasicInfoDto fromApplicantEmergency(ApplicantEmergencyDto applicant) {
+        ApplicantBasicInfoDto applicantBasicInfo = new ApplicantBasicInfoDto();
+        applicantBasicInfo.setIdNumber(applicant.getIdNumber());
+        applicantBasicInfo.setPassportNumber(applicant.getPassportNumber());
+        applicantBasicInfo.setDateOfBirthGregorian(applicant.getDateOfBirthGregorian());
+        applicantBasicInfo.setDateOfBirthHijri(applicant.getDateOfBirthHijri());
         return applicantBasicInfo;
     }
 }

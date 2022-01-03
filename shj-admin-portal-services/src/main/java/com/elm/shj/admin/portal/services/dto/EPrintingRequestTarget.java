@@ -9,7 +9,7 @@ package com.elm.shj.admin.portal.services.dto;
  * @author Ahmed Ali
  * @since 1.1.0
  */
-public enum EPrintingRequestType {
+public enum EPrintingRequestTarget {
 
 	APPLICANT, STAFF
 }

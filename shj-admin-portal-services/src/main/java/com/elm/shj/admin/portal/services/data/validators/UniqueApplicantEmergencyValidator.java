@@ -37,17 +37,7 @@ public class UniqueApplicantEmergencyValidator implements ConstraintValidator<Un
             return false;
         }
         // applicant should not exist or override flag should be true
-        return overrideApplicantData || !applicantService.existsByBasicInfoAndPackageCode(fromApplicant((ApplicantEmergencyDto) value));
-    }
-
-    private ApplicantBasicInfoDto fromApplicant(ApplicantEmergencyDto applicant) {
-        ApplicantBasicInfoDto applicantBasicInfo = new ApplicantBasicInfoDto();
-        applicantBasicInfo.setIdNumber(applicant.getIdNumber());
-        applicantBasicInfo.setPassportNumber(applicant.getPassportNumber());
-        applicantBasicInfo.setDateOfBirthGregorian(applicant.getDateOfBirthGregorian());
-        applicantBasicInfo.setDateOfBirthHijri(applicant.getDateOfBirthHijri());
-        applicantBasicInfo.setPackageReferenceNumber(applicant.getPackageReferenceNumber());
-        return applicantBasicInfo;
+        return overrideApplicantData || !applicantService.existsByBasicInfoAndPackageCode(ApplicantBasicInfoDto.fromApplicantEmergency((ApplicantEmergencyDto) value), ((ApplicantEmergencyDto) value).getPackageReferenceNumber());
     }
 
 }

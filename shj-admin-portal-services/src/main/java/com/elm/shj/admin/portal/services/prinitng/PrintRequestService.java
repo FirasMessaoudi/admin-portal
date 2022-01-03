@@ -121,7 +121,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         });
 
         printRequest.setStatusCode(EPrintRequestStatus.CONFIRMED.name());
-        printRequest.setTarget(EPrintingRequestType.APPLICANT.name());
+        printRequest.setTarget(EPrintingRequestTarget.APPLICANT.name());
         printRequest.setConfirmationDate(new Date());
         return super.save(printRequest);
     }

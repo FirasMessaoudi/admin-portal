@@ -663,6 +663,7 @@ textarea {
 
 .form-group {
   .append {
+    color: #848484;
 
     [dir='ltr'] & {
       border-left: 0 !important;
@@ -832,4 +833,14 @@ textarea {
   margin-top: 0.25rem;
   font-size: 80%;
 }
+
+/*=======================*/
+.date-range-picker {
+  .input-group {
+    input {
+      margin-left: -1px !important;
+    }
+  }
+}
+
 

@@ -11,6 +11,7 @@ import {I18nService} from "@dcc-commons-ng/services";
 import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
 import {DatePipe} from "@angular/common";
 import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
+import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-user-defined-notification-list',
@@ -28,6 +29,8 @@ export class UserDefinedNotificationListComponent implements OnInit {
   notificationTemplateStatuses: Lookup[] = [];
   dateType: DateType;
   selectedDateType: DateType;
+  todayGregorian: NgbDateStruct;
+  todayHijri: NgbDateStruct;
 
   @ViewChild('sendingDatePicker') sendingDatePicker: any;
   @ViewChild('creationDatePicker') creationDatePicker: any;
@@ -46,6 +49,10 @@ export class UserDefinedNotificationListComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedDateType = DateType.Gregorian;
+
+    this.todayGregorian = this.dateFormatterService.todayGregorian();
+    this.todayHijri = this.dateFormatterService.todayHijri();
+
     this.initForm();
     this.loadLookups();
     this.loadPage(0);

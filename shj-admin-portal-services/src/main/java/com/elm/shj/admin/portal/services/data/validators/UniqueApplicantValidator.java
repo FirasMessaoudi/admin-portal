@@ -37,7 +37,7 @@ public class UniqueApplicantValidator implements ConstraintValidator<UniqueAppli
             return false;
         }
         // applicant should not exist or override flag should be true
-        return overrideApplicantData || !applicantService.existsByBasicInfoAndPackageCode(ApplicantBasicInfoDto.fromApplicant((ApplicantDto) value));
+        return overrideApplicantData || !applicantService.existsByBasicInfoAndPackageCode(ApplicantBasicInfoDto.fromApplicant((ApplicantDto) value), ((ApplicantDto) value).getPackageReferenceNumber());
     }
 
 }

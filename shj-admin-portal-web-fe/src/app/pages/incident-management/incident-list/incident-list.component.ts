@@ -11,6 +11,7 @@ import {I18nService} from "@dcc-commons-ng/services";
 import {DatePipe} from "@angular/common";
 import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
+import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-incident-list',
@@ -28,6 +29,8 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   listSubscription: Subscription;
   searchSubscription: Subscription;
   selectedDateType: DateType;
+  todayGregorian: NgbDateStruct;
+  todayHijri: NgbDateStruct;
 
   @ViewChild('picker') picker: any;
 
@@ -37,11 +40,15 @@ export class IncidentListComponent implements OnInit, OnDestroy {
               private lookupsService: LookupService,
               private i18nService: I18nService,
               private dateFormatterService: DateFormatterService
-              ) {
+  ) {
   }
 
   ngOnInit(): void {
     this.selectedDateType = DateType.Gregorian;
+
+    this.todayGregorian = this.dateFormatterService.todayGregorian();
+    this.todayHijri = this.dateFormatterService.todayHijri();
+
     this.loadLookups();
     this.initForm();
     this.loadPage(0);
@@ -153,8 +160,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
     if (this.selectedDateType === DateType.Hijri) {
       let hijriDate = this.dateFormatterService.toDate(this.dateFormatterService.toHijri(this.dateFormatterService.fromDate(date)));
       return this.currentLanguage.startsWith('ar') ? datePipe.transform(hijriDate, 'yyyy/MM/dd') : datePipe.transform(hijriDate, 'dd/MM/yyyy');
-    }
-    else {
+    } else {
       return this.currentLanguage.startsWith('ar') ? datePipe.transform(date, 'yyyy/MM/dd') : datePipe.transform(date, 'dd/MM/yyyy');
     }
   }

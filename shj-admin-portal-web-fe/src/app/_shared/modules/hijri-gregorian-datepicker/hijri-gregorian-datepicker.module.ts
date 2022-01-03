@@ -14,8 +14,8 @@ import {
 } from "@shared/modules/hijri-gregorian-datepicker/datetimepicker/hijri-gregorian-datetimepicker.component";
 import {
   HijriDatetimePickerComponent
-} from "@shared/modules/hijri-gregorian-datepicker/hijri-datetimpicker/hijri-datetime-picker.component";
-import {HijriGreogrianRangePickerComponent} from './rangepicker/hijri-greogrian-range-picker.component';
+} from "@shared/modules/hijri-gregorian-datepicker/hijri-datetimepicker/hijri-datetime-picker.component";
+import {HijriGregorianRangePickerComponent} from './rangepicker/hijri-gregorian-range-picker.component';
 
 // https://eslamelmadny.github.io/HijriGregorianDatepicker/
 // https://github.com/EslamElmadny/HijriGregorianDatepicker
@@ -28,7 +28,7 @@ import {HijriGreogrianRangePickerComponent} from './rangepicker/hijri-greogrian-
     HijriDatetimePickerComponent,
     ProvideParentFormDirective,
     NgbDatepickerI18nTitleDirective,
-    HijriGreogrianRangePickerComponent
+    HijriGregorianRangePickerComponent
   ],
   imports: [
     CommonModule,
@@ -41,7 +41,7 @@ import {HijriGreogrianRangePickerComponent} from './rangepicker/hijri-greogrian-
     {provide: NgbDateParserFormatter, useClass: CustomNgbDateParserFormatter},
     DateFormatterService
   ],
-  exports: [HijriGregorianDatepickerComponent, HijriGregorianDatetimepickerComponent, HijriGreogrianRangePickerComponent]
+  exports: [HijriGregorianDatepickerComponent, HijriGregorianDatetimepickerComponent, HijriGregorianRangePickerComponent]
 })
 export class HijriGregorianDatepickerModule {
 }
