@@ -93,26 +93,26 @@ public class ChatContactWsController {
         boolean isRitualPresent = applicantRitualService.exitsByRitualId(ritualId);
         if (!isRitualPresent) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_RITUAL_NOT_FOUND).referenceNumber(ritualId.toString()).build()).build());
+                    .body(WsError.builder().errorCode(WsError.EWsError.APPLICANT_RITUAL_NOT_FOUND.getCode()).referenceNumber(ritualId.toString()).build()).build());
         }
         if (contact.getContactUin().equals(contact.getApplicantUin())) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(contact.getContactUin()).build()).build());
+                    .body(WsError.builder().errorCode(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(contact.getContactUin()).build()).build());
         }
         List<ApplicantChatContactVo> applicantChatContactList = applicantChatContactService.list(contact.getContactUin(), ritualId, null);
         boolean isFound = applicantChatContactList.stream().anyMatch(p -> p.getContactUin().equals(contact.getApplicantUin()) && p.isAutoAdded());
         if (isFound)
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(contact.getContactUin()).build()).build());
+                    .body(WsError.builder().errorCode(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(contact.getContactUin()).build()).build());
 
         boolean isContactPresent = applicantLiteService.existsByUin(contact.getContactUin());
         if (!isContactPresent) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(contact.getContactUin()).build()).build());
+                    .body(WsError.builder().errorCode(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND.getCode()).referenceNumber(contact.getContactUin()).build()).build());
         }
         if (applicantChatContactService.findApplicantChatContact(contact.getApplicantUin(), contact.getContactUin()) != null)
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_ALREADY_EXIST).referenceNumber(contact.getContactUin()).build()).build());
+                    .body(WsError.builder().errorCode(WsError.EWsError.APPLICANT_CHAT_CONTACT_ALREADY_EXIST.getCode()).referenceNumber(contact.getContactUin()).build()).build());
         log.debug("Handler for {}", "Create Applicant Chat Contact");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS)
                 .body(applicantChatContactService.createApplicantContact(ritualId, contact)).build());
