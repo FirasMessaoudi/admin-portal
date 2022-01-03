@@ -1192,5 +1192,5 @@ GO
 
 
 ALTER TABLE shc_portal.shc_print_request
-    ADD type_code VARCHAR(20) NOT NULL DEFAULT 'APPLICANT_REQUEST';
+    ADD target VARCHAR(20) NOT NULL DEFAULT 'APPLICANT';
 GO

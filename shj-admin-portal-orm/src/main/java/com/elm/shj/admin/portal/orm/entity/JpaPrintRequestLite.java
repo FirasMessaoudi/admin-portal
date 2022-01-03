@@ -45,8 +45,9 @@ public class JpaPrintRequestLite implements Serializable {
 
     @Column(name = "update_date")
     private Date updateDate;
-    @Column(name = "type_code", nullable = false)
-    private String typeCode;
+
+    @Column(name = "target", nullable = false)
+    private String target;
 
     @Column(name = "confirmation_date")
     private Date confirmationDate;

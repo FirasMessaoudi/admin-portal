@@ -30,7 +30,7 @@ public class PrintRequestLiteDto implements Serializable {
     private Date creationDate;
     private int cardsCount;
     private int batchesCount;
-    private String typeCode;
+    private String target;
     private Date updateDate;
     private Date confirmationDate;
 

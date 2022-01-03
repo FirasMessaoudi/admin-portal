@@ -11,5 +11,5 @@ package com.elm.shj.admin.portal.services.dto;
  */
 public enum EPrintingRequestType {
 
-	APPLICANT_REQUEST, STAFF_REQUEST
+	APPLICANT, STAFF
 }

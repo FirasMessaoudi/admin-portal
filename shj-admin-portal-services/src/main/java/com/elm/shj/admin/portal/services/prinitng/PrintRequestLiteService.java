@@ -79,7 +79,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequestLite,
             if (statusCode != null) {
                 predicates.add(criteriaBuilder.equal(root.get("statusCode"), statusCode));
             }
-            predicates.add(criteriaBuilder.equal(root.get("typeCode"), EPrintingRequestType.APPLICANT_REQUEST.name()));
+            predicates.add(criteriaBuilder.equal(root.get("target"), EPrintingRequestType.APPLICANT.name()));
 
             if (description != null && description.length() > 0) {
                 predicates.add(criteriaBuilder.like(root.get("description"), "%" + description.trim() + "%"));
@@ -93,7 +93,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequestLite,
         return (root, criteriaQuery, criteriaBuilder) -> {
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
-            predicates.add(criteriaBuilder.equal(root.get("typeCode"), EPrintingRequestType.APPLICANT_REQUEST.name()));
+            predicates.add(criteriaBuilder.equal(root.get("target"), EPrintingRequestType.APPLICANT.name()));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }

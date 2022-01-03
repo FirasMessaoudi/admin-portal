@@ -60,8 +60,8 @@ public class JpaPrintRequest implements Serializable {
     @Column(name = "confirmation_date")
     private Date confirmationDate;
 
-    @Column(name = "type_code", nullable = false)
-    private String typeCode;
+    @Column(name = "target", nullable = false)
+    private String target;
 
     @PrePersist
     public void prePersist() {
