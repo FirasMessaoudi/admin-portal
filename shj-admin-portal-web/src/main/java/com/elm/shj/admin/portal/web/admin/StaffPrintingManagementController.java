@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.dto.EPrintingRequestTarget;
 import com.elm.shj.admin.portal.services.dto.PrintRequestLiteDto;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
@@ -43,7 +44,7 @@ public class StaffPrintingManagementController {
     @PreAuthorize("hasAuthority('" + AuthorityConstants.STAFF_PRINTING_REQUEST_MANAGEMENT + "')")
     public Page<PrintRequestLiteDto> list(Pageable pageable, Authentication authentication) {
         log.debug("List print requests based on search criteria...");
-        return printRequestLiteService.findAll(pageable);
+        return printRequestLiteService.findAll(EPrintingRequestTarget.STAFF.name(), pageable);
     }
 
     /**
@@ -56,7 +57,7 @@ public class StaffPrintingManagementController {
     @PreAuthorize("hasAuthority('" + AuthorityConstants.STAFF_PRINTING_REQUEST_MANAGEMENT + "')")
     public Page<PrintRequestLiteDto> list(@RequestBody PrintRequestFilterVo filterVo, Pageable pageable, Authentication authentication) {
         log.debug("List print requests based on search criteria...");
-        return printRequestLiteService.findByFilter(filterVo, pageable);
+        return printRequestLiteService.findByFilter(filterVo, EPrintingRequestTarget.STAFF.name(), pageable);
     }
 
 //    /**
