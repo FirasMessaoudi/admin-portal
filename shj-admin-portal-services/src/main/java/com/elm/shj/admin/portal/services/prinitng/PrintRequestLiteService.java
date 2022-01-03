@@ -8,7 +8,7 @@ import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestBatchRepository;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestCardRepository;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestLiteRepository;
-import com.elm.shj.admin.portal.services.dto.EPrintingRequestType;
+import com.elm.shj.admin.portal.services.dto.EPrintingRequestTarget;
 import com.elm.shj.admin.portal.services.dto.PrintRequestLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +41,11 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequestLite,
     /**
      * Find the lite version of all print requests.
      *
-     * @param pageable the current page information
+     * @param target the target print request type
      * @return the list of print requests
      */
-    public Page<PrintRequestLiteDto> findAll(Pageable pageable) {
-        Page<PrintRequestLiteDto> litePrintRequests = mapPage(printRequestLiteRepository.findAll(withApplicantRequestType(), pageable));
+    public Page<PrintRequestLiteDto> findAll(String target, Pageable pageable) {
+        Page<PrintRequestLiteDto> litePrintRequests = mapPage(printRequestLiteRepository.findByTarget(target, pageable));
         litePrintRequests.forEach(p -> {
             p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
             p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
@@ -60,10 +60,15 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequestLite,
      * @param filterVo filter value object
      * @return
      */
-    public Page<PrintRequestLiteDto> findByFilter(PrintRequestFilterVo filterVo, Pageable pageable) {
-        // at the time being, filter has only status code and description.
-        Page<PrintRequestLiteDto> litePrintRequests =
-                mapPage(printRequestLiteRepository.findAll(withPrintRequestFilter(filterVo.getStatusCode(), filterVo.getDescription()), pageable));
+    public Page<PrintRequestLiteDto> findByFilter(PrintRequestFilterVo filterVo, String target, Pageable pageable) {
+        Page<PrintRequestLiteDto> litePrintRequests = null;
+        if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
+            // at the time being, filter has only status code and description.
+            litePrintRequests = mapPage(printRequestLiteRepository.findAll(withApplicantPrintRequestFilter(filterVo.getStatusCode(), filterVo.getDescription()), pageable));
+        } else {
+            litePrintRequests = mapPage(printRequestLiteRepository.findAll(withStaffPrintRequestFilter(filterVo.getStatusCode(), filterVo.getDescription()), pageable));
+
+        }
         litePrintRequests.forEach(p -> {
             p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
             p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
@@ -71,7 +76,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequestLite,
         return litePrintRequests;
     }
 
-    private Specification<JpaPrintRequestLite> withPrintRequestFilter(final String statusCode, final String description) {
+    private Specification<JpaPrintRequestLite> withApplicantPrintRequestFilter(final String statusCode, final String description) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
@@ -79,7 +84,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequestLite,
             if (statusCode != null) {
                 predicates.add(criteriaBuilder.equal(root.get("statusCode"), statusCode));
             }
-            predicates.add(criteriaBuilder.equal(root.get("target"), EPrintingRequestType.APPLICANT.name()));
+            predicates.add(criteriaBuilder.equal(root.get("target"), EPrintingRequestTarget.APPLICANT.name()));
 
             if (description != null && description.length() > 0) {
                 predicates.add(criteriaBuilder.like(root.get("description"), "%" + description.trim() + "%"));
@@ -89,13 +94,23 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequestLite,
         };
     }
 
-    private Specification<JpaPrintRequestLite> withApplicantRequestType() {
+    private Specification<JpaPrintRequestLite> withStaffPrintRequestFilter(final String statusCode, final String description) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
-            predicates.add(criteriaBuilder.equal(root.get("target"), EPrintingRequestType.APPLICANT.name()));
+
+            if (statusCode != null) {
+                predicates.add(criteriaBuilder.equal(root.get("statusCode"), statusCode));
+            }
+            predicates.add(criteriaBuilder.equal(root.get("target"), EPrintingRequestTarget.STAFF.name()));
+
+            if (description != null && description.length() > 0) {
+                predicates.add(criteriaBuilder.like(root.get("description"), "%" + description.trim() + "%"));
+            }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
+
 
 }

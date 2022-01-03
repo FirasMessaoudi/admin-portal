@@ -53,28 +53,32 @@
             </select>
           </div>
 
-          <div class="form-group col">
+          <div class="form-group col m-0">
             <label class="col-form-label">{{ "notification-management.notification_date" | translate }}</label>
-            <hijri-greogrian-range-picker
+            <hijri-gregorian-range-picker
+              class="date-range-picker"
               (selectedFromDateChange)="patchValue($event, f.sendingDateStart)"
               (selectedToDateChange)="patchValue($event, f.sendingDateEnd)"
               (selectedDateTypeChange)="setSendingDateType($event)"
               [selectedDateType]="selectedDateType"
               #sendingDatePicker
             >
-            </hijri-greogrian-range-picker>
+            </hijri-gregorian-range-picker>
           </div>
 
-          <div class="form-group col">
+          <div class="form-group col m-0">
             <label class="col-form-label">{{ "notification-management.notification_creation_date" | translate }}</label>
-            <hijri-greogrian-range-picker
+            <hijri-gregorian-range-picker
+              class="date-range-picker"
               (selectedFromDateChange)="patchValue($event, f.creationDateStart)"
               (selectedToDateChange)="patchValue($event, f.creationDateEnd)"
               (selectedDateTypeChange)="setCreationDateType($event)"
               [selectedDateType]="selectedDateType"
+              [maxGreg]="todayGregorian"
+              [maxHijri]="todayHijri"
               #creationDatePicker
             >
-            </hijri-greogrian-range-picker>
+            </hijri-gregorian-range-picker>
           </div>
 
         </div>
