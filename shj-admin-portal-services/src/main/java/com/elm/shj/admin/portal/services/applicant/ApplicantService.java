@@ -239,9 +239,8 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return mapPage(applicantRepository.findByIds(selectedApplicants, pageable));
     }
 
-    public boolean existsByBasicInfoAndPackageCode(ApplicantBasicInfoDto applicantBasicInfo) {
-        return ((ApplicantRepository) getRepository()).findByBasicInfoAndPackageCode(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian(), applicantBasicInfo.getPackageReferenceNumber());
-
+    public boolean existsByBasicInfoAndPackageCode(ApplicantBasicInfoDto applicantBasicInfo, String packageReferenceNumber) {
+        return ((ApplicantRepository) getRepository()).findByBasicInfoAndPackageCode(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian(), packageReferenceNumber);
     }
 
     @Transactional
