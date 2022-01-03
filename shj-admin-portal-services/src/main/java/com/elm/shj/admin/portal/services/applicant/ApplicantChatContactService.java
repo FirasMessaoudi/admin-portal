@@ -4,9 +4,9 @@
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantChatContactVo;
+import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantChatContact;
 import com.elm.shj.admin.portal.orm.repository.ApplicantChatContactRepository;
-import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -33,6 +33,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
 
     private final ApplicantChatContactRepository applicantChatContactRepository;
     private final ApplicantRitualService applicantRitualService;
+    private final ApplicantPackageService applicantPackageService;
 
     /**
      * List all chat contacts of a specific applicant.
@@ -142,7 +143,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         return save(applicantChatContact);
     }
 
-    public void createGroupLeaderContact(String applicantUin, CompanyStaffDto companyStaff, CompanyRitualSeasonDto latestCompanyRitualSeason) {
+    public void createGroupLeaderContact(String applicantUin, CompanyStaffDto companyStaff) {
+        ApplicantRitualPackageVo latestApplicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(applicantUin));
         ApplicantChatContactDto contactBuilder = ApplicantChatContactDto.builder()
                 .applicantUin(applicantUin)
                 .contactUin(companyStaff.getDigitalIds().get(0).getSuin())
@@ -150,7 +152,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 //TODO country code and nationality code may not match
                 //TODO Missing country code prefix and country code
                 .countryCode(companyStaff.getMobileNumber() != null ? "SA" : companyStaff.getNationalityCode())
-                .applicantRitualId(applicantRitualService.findByApplicantUinAndCompanyRitualSeasonId(applicantUin, latestCompanyRitualSeason.getId()).getId())
+                .applicantRitualId(applicantRitualService.findByApplicantUinAndApplicantPackageId(applicantUin, latestApplicantPackage.getApplicantPackageId()).getId())
                 .avatar(companyStaff.getPhoto())
                 .systemDefined(true)
                 .staffTitleCode(companyStaff.getTitleCode())

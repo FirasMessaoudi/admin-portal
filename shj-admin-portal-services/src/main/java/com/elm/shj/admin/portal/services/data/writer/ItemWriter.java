@@ -199,7 +199,7 @@ public class ItemWriter {
                         }
                         ApplicantDto applicantDto = applicantService.findByBasicInfo(applicantBasicInfoDto);
                         if (applicantDto != null) {
-                            applicantChatContactService.createGroupLeaderContact(applicantDto.getDigitalIds().get(0).getUin(), groupLeader, companyRitualSeasonDto);
+                            applicantChatContactService.createGroupLeaderContact(applicantDto.getDigitalIds().get(0).getUin(), groupLeader);
                             groupApplicantListService.registerUserToGroup(applicantDto.getDigitalIds().get(0).getUin(), staffApplicantGroupDto.getGroupReferenceNumber());
                         } else {
                             //this applicant not found in db in time of processing

@@ -510,10 +510,10 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin)).build());
     }
 
-    @GetMapping("/company-details/{uin}/{seasonRitualId}")
-    public ResponseEntity<WsResponse<?>> findApplicantCompanyDetailsByUinAndRitualId(@PathVariable String uin, @PathVariable long seasonRitualId) {
+    @GetMapping("/company-details/{uin}/{companyRitualSeasonId}")
+    public ResponseEntity<WsResponse<?>> findApplicantCompanyDetailsByUinAndCompanyRitualSeasonId(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
         log.info("company details...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(seasonRitualId, Long.parseLong(uin))).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin))).build());
     }
 
     @GetMapping("/health-immunization/list")

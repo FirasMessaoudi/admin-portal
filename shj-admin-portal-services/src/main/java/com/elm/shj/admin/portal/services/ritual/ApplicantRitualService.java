@@ -4,7 +4,6 @@
 package com.elm.shj.admin.portal.services.ritual;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
-import com.elm.shj.admin.portal.orm.repository.ApplicantLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -58,6 +57,7 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
         }
         return null;
     }
+
 
     @Transactional
     public ApplicantRitualDto findApplicantRitualWithContactsAndRelatives(Long applicantRitualId) {
