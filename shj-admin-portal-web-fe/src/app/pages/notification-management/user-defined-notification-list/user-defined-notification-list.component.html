@@ -74,6 +74,8 @@
               (selectedToDateChange)="patchValue($event, f.creationDateEnd)"
               (selectedDateTypeChange)="setCreationDateType($event)"
               [selectedDateType]="selectedDateType"
+              [maxGreg]="todayGregorian"
+              [maxHijri]="todayHijri"
               #creationDatePicker
             >
             </hijri-gregorian-range-picker>

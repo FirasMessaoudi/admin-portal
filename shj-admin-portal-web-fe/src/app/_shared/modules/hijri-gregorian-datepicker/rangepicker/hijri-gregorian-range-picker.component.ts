@@ -12,12 +12,7 @@ import {
   styleUrls: ['./hijri-gregorian-range-picker.component.scss']
 })
 export class HijriGregorianRangePickerComponent implements OnInit {
-  maxFromDateGregorian: NgbDateStruct;
-  maxFromDateHijri: NgbDateStruct;
-  maxToDateGregorian: NgbDateStruct;
-  maxToDateHijri: NgbDateStruct;
-  todayGregorian: NgbDateStruct;
-  todayHijri: NgbDateStruct;
+
   dateString: string;
 
   @Input() selectedDateType: DateType;
@@ -28,6 +23,11 @@ export class HijriGregorianRangePickerComponent implements OnInit {
   @Output() selectedToDateChange: EventEmitter<Date> = new EventEmitter();
   @Output() selectedDateTypeChange: EventEmitter<DateType> = new EventEmitter();
 
+  @Input() minHijri: NgbDateStruct;
+  @Input() maxHijri: NgbDateStruct;
+  @Input() minGreg: NgbDateStruct;
+  @Input() maxGreg: NgbDateStruct;
+
   @ViewChild('fromDatePicker') fromDatePicker: HijriGregorianDatepickerComponent;
   @ViewChild('toDatePicker') toDatePicker: HijriGregorianDatepickerComponent;
 
@@ -35,12 +35,6 @@ export class HijriGregorianRangePickerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.todayGregorian = this.dateFormatterService.todayGregorian();
-    this.todayHijri = this.dateFormatterService.todayHijri();
-    this.maxFromDateGregorian = this.todayGregorian;
-    this.maxFromDateHijri = this.todayHijri;
-    this.maxToDateGregorian = this.todayGregorian;
-    this.maxToDateHijri = this.todayHijri;
     this.selectedDateType = DateType.Gregorian;
   }
 

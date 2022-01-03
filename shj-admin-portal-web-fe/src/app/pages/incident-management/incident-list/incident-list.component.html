@@ -50,6 +50,8 @@
             (selectedToDateChange)="patchValue($event, f.toDate)"
             (selectedDateTypeChange)="setSelectedDateType($event)"
             [selectedDateType]="selectedDateType"
+            [maxGreg]="todayGregorian"
+            [maxHijri]="todayHijri"
           >
           </hijri-gregorian-range-picker>
         </div>
