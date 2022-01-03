@@ -62,14 +62,14 @@
 
     <div class="input-group-append gregorian-hijri-buttons">
       <button
-        class="btn btn-sm shadow-none {{selectedDateType == DateType.Hijri ? 'btn-'+buttonClass+' focus active' :  'btn-outline-'+ buttonClass }}"
-        (click)="hijriClick()" [disabled]="true" type="button">
-        {{hijriLabel ? hijriLabel : 'Hijri' }}
+        class="btn btn-sm shadow-none {{selectedDateType == DateType.Hijri ? 'btn-'+buttonClass+' focus active' :  'btn-outline-'+ buttonClass}}"
+        (click)="hijriClick()" type="button" [disabled]="true">
+        {{hijriLabel ? hijriLabel : 'Hijri'}}
       </button>
       <button
-        class="btn btn-sm shadow-none {{selectedDateType == DateType.Gregorian ? 'btn-'+buttonClass+' focus active' :  'btn-outline-'+ buttonClass }}"
+        class="btn btn-sm shadow-none {{selectedDateType == DateType.Gregorian ? 'btn-'+buttonClass+' focus active' :  'btn-outline-'+ buttonClass}}"
         (click)="gregClick()" [disabled]="disabled" type="button">
-        {{GregLabel ? GregLabel : 'Gregorian' }}
+        {{GregLabel ? GregLabel : 'Gregorian'}}
       </button>
     </div>
 

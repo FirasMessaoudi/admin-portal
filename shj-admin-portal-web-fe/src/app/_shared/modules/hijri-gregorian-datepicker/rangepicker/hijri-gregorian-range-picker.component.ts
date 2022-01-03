@@ -7,11 +7,11 @@ import {
 } from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datepicker.component";
 
 @Component({
-  selector: 'hijri-greogrian-range-picker',
-  templateUrl: './hijri-greogrian-range-picker.component.html',
-  styleUrls: ['./hijri-greogrian-range-picker.component.scss']
+  selector: 'hijri-gregorian-range-picker',
+  templateUrl: './hijri-gregorian-range-picker.component.html',
+  styleUrls: ['./hijri-gregorian-range-picker.component.scss']
 })
-export class HijriGreogrianRangePickerComponent implements OnInit {
+export class HijriGregorianRangePickerComponent implements OnInit {
   maxFromDateGregorian: NgbDateStruct;
   maxFromDateHijri: NgbDateStruct;
   maxToDateGregorian: NgbDateStruct;

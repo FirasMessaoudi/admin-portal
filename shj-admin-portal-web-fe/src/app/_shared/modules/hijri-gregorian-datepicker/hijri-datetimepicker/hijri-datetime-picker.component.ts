@@ -1,7 +1,7 @@
 import {
   AfterViewInit,
   Component,
-  EventEmitter, Injector,
+  EventEmitter, forwardRef, Injector,
   Input,
   OnInit,
   Output,
@@ -17,20 +17,24 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import {IslamicI18n} from '../IslamicI18n';
 import {noop} from "rxjs";
-import {ControlValueAccessor, NgControl} from "@angular/forms";
+import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
 import * as momentjs from 'moment';
-import * as moment_ from 'moment-hijri';
+import {DatePipe} from "@angular/common";
 
 const moment = momentjs;
-
-const momentHijri = moment_;
 
 @Component({
   selector: 'hijri-datetime-picker',
   templateUrl: './hijri-datetime-picker.component.html',
   providers: [
     {provide: NgbCalendar, useClass: NgbCalendarIslamicUmalqura},
-    {provide: NgbDatepickerI18n, useClass: IslamicI18n}
+    {provide: NgbDatepickerI18n, useClass: IslamicI18n},
+    DatePipe,
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => HijriDatetimePickerComponent),
+      multi: true
+    }
   ],
   styleUrls: [
     './hijri-datetime-picker.component.scss'
