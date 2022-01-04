@@ -22,6 +22,7 @@ import {Applicant} from "@model/applicant.model";
 import {ApplicantService} from "@core/services/applicant/applicant.service";
 import {Page} from "@shared/model";
 import {NotificationTemplateCategorizing} from "@model/notification-template-categorizing.model";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-user-defined-notification-details',
@@ -535,6 +536,17 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
 
   updateTabIndex(activeId) {
     this.activeId = activeId;
+  }
+
+  formatDate(date: Date): string {
+    const datePipe = new DatePipe('en-US');
+    return this.currentLanguage.startsWith('ar') ? datePipe.transform(date, 'yyyy/MM/dd') : datePipe.transform(date, 'dd/MM/yyyy');
+  }
+
+  formatHijriDate(date: Date): string {
+    const datePipe = new DatePipe('en-US');
+    let hijriDate = this.dateFormatterService.toDate(this.dateFormatterService.toHijri(this.dateFormatterService.fromDate(date)));
+    return this.currentLanguage.startsWith('ar') ? datePipe.transform(hijriDate, 'yyyy/MM/dd') : datePipe.transform(hijriDate, 'dd/MM/yyyy');
   }
 
 }

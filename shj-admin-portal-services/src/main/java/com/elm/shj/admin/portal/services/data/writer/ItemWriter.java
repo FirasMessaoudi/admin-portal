@@ -43,6 +43,8 @@ import java.time.chrono.HijrahDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.elm.shj.admin.portal.services.dto.ERelativeRelationship.*;
+
 /**
  * Generic Item writer to save read items based on their data segment
  *
@@ -78,6 +80,7 @@ public class ItemWriter {
     private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
     private final ApplicantChatContactService applicantChatContactService;
+    private final ApplicantRelativeService applicantRelativeService;
 
 
     /**
@@ -219,7 +222,11 @@ public class ItemWriter {
 
             });
         } else {
-            if (dataSegment.getId() < EDataSegment.STAFF_MAIN_DATA.getId()) {
+            if (dataSegment.getId() == EDataSegment.APPLICANT_RELATIVES_DATA.getId()) {
+                handleApplicantRelativeInfo(items);//.collect(Collectors.toList()))
+                return dataValidationResults;
+                // items.forEach(entry -> updateNestedApplicantInfoRelative(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
+            } else if (dataSegment.getId() < EDataSegment.STAFF_MAIN_DATA.getId()) {
                 // update applicant related attributes
                 items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
             }
@@ -540,6 +547,153 @@ public class ItemWriter {
         } catch (IllegalAccessException e) {
             ReflectionUtils.handleReflectionException(e);
         }
+    }
+
+
+    private <T> void handleApplicantRelativeInfo(List<AbstractMap.SimpleEntry<Row, T>> items) {
+        List<AbstractMap.SimpleEntry<Row, T>> resultItems = new ArrayList<>();
+
+        items.forEach(entry -> {
+            T item = entry.getValue();
+            if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
+                ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
+                applicantRelative.setRelativeApplicant(applicantService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative)));
+            }
+
+            Field applicantBasicInfoField = ReflectionUtils.findField(item.getClass(), "applicantBasicInfo");
+            Field applicantField = ReflectionUtils.findField(item.getClass(), "applicant");
+            Field packageReferenceNumberField = ReflectionUtils.findField(item.getClass(), "packageReferenceNumber");
+            Field applicantRitualField = ReflectionUtils.findField(item.getClass(), "applicantRitual");
+
+            if (item == null || applicantBasicInfoField == null || (applicantField == null)) {
+                return;
+            }
+            try {
+                // make fields accessible
+                ReflectionUtils.makeAccessible(applicantBasicInfoField);
+                // get applicant basic info from the current object
+                ApplicantBasicInfoDto applicantBasicInfo = (ApplicantBasicInfoDto) applicantBasicInfoField.get(item);
+                // search applicant by his basic info from the database
+                ApplicantDto applicant = applicantService.findByBasicInfo(applicantBasicInfo);
+                if (applicant == null) {
+                    return;
+                }
+
+
+                if (applicantField != null) {
+                    // make fields accessible
+                    ReflectionUtils.makeAccessible(applicantField);
+                    // set the found applicant into the object
+                    applicantField.set(item, applicant);
+
+                }
+
+                if (packageReferenceNumberField == null) {
+                    return;
+                }
+                ReflectionUtils.makeAccessible(packageReferenceNumberField);
+                String packageReferenceNumber = (String) packageReferenceNumberField.get(item);
+                Long applicantUin = Long.parseLong(applicant.getDigitalIds().get(0).getUin());
+                ApplicantRitualDto generatedApplicantRitual = addRitualPackageToApplicant(applicant, applicantUin, packageReferenceNumber, null, null);
+
+
+                if (applicantRitualField != null) {
+                    ReflectionUtils.makeAccessible(applicantRitualField);
+                    applicantRitualField.set(item, generatedApplicantRitual);
+                }
+
+                if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
+                    ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
+                    ApplicantDto relativeApplicant = applicantRelative.getRelativeApplicant();
+                    applicant = applicantRelative.getApplicant();
+                    relativeApplicant.setContacts(applicantContactService.findByApplicantId(relativeApplicant.getId()));
+                    applicant.setContacts(applicantContactService.findByApplicantId(applicant.getId()));
+
+                    String relationshipCode = applicantRelative.getRelationshipCode();
+                    String reflectedRelationshipCode = mapRelationship(relationshipCode, applicantRelative.getApplicant().getGender());
+                    ApplicantRelativeDto reflectedApplicantRelative = new ApplicantRelativeDto();
+                    reflectedApplicantRelative.setApplicant(relativeApplicant);
+                    reflectedApplicantRelative.setRelativeApplicant(applicant);
+                    reflectedApplicantRelative.setRelationshipCode(reflectedRelationshipCode);
+                    reflectedApplicantRelative.setDataRequestRecord(applicantRelative.getDataRequestRecord());
+                    reflectedApplicantRelative.setApplicantBasicInfo(applicantRelative.getApplicantBasicInfo());
+                    reflectedApplicantRelative.setApplicantRitual(applicantRelative.getApplicantRitual());
+                    reflectedApplicantRelative.setPackageReferenceNumber(applicantRelative.getPackageReferenceNumber());
+                    reflectedApplicantRelative.setRelativeIdNumber(applicantRelative.getRelativeIdNumber());
+                    updateApplicantRelativeIfAlreadyExist(applicantRelative);
+                    updateApplicantRelativeIfAlreadyExist(reflectedApplicantRelative);
+                }
+
+
+            } catch (IllegalAccessException e) {
+                ReflectionUtils.handleReflectionException(e);
+            }
+        });
+    }
+
+    private void updateApplicantRelativeIfAlreadyExist(ApplicantRelativeDto applicantRelative) {
+        JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.APPLICANT_RELATIVES_DATA));
+        ApplicantRelativeDto applicantRelativeFromDB = applicantRelativeService.findByApplicantIdAndRelativeApplicantId(applicantRelative.getApplicant().getId(), applicantRelative.getRelativeApplicant().getId());
+        if (applicantRelativeFromDB == null) {
+            repository.save(mapperRegistry.get(EDataSegment.APPLICANT_RELATIVES_DATA).toEntity(applicantRelative, mappingContext));
+            applicantChatContactService.createSystemDefinedApplicantChatContact(applicantRelative);
+            return;
+        }
+        if (applicantRelativeFromDB.getRelationshipCode().equals(applicantRelative.getRelationshipCode())) {
+            return;
+        }
+        if (!applicantRelativeFromDB.getRelationshipCode().equals(applicantRelative.getRelationshipCode())) {
+            applicantRelative.setId(applicantRelativeFromDB.getId());
+            applicantRelative.setCreationDate(applicantRelativeFromDB.getCreationDate());
+            repository.save(mapperRegistry.get(EDataSegment.APPLICANT_RELATIVES_DATA).toEntity(applicantRelative, mappingContext));
+            applicantChatContactService.createSystemDefinedApplicantChatContact(applicantRelative);
+            return;
+        }
+    }
+
+    public String mapRelationship(String relationshipCode, String Gender) {
+        if (relationshipCode.equals(FATHER.toString()) && Gender.equals("M")) {
+            return SON.toString();
+        }
+        if (relationshipCode.equals(FATHER.toString()) && Gender.equals("F")) {
+            return DAUGHTER.toString();
+        }
+        if (relationshipCode.equals(SON.toString()) && Gender.equals("M")) {
+            return FATHER.toString();
+        }
+        if (relationshipCode.equals(SON.toString()) && Gender.equals("F")) {
+            return MOTHER.toString();
+        }
+        if (relationshipCode.equals(MOTHER.toString()) && Gender.equals("M")) {
+            return SON.toString();
+        }
+        if (relationshipCode.equals(MOTHER.toString()) && Gender.equals("F")) {
+            return DAUGHTER.toString();
+        }
+        if (relationshipCode.equals(HUSBAND.toString())) {
+            return WIFE.toString();
+        }
+        if (relationshipCode.equals(WIFE.toString())) {
+            return HUSBAND.toString();
+        }
+        if (relationshipCode.equals(SISTER.toString()) && Gender.equals("M")) {
+            return BROTHER.toString();
+        }
+        if (relationshipCode.equals(SISTER.toString()) && Gender.equals("F")) {
+            return SISTER.toString();
+        }
+        if (relationshipCode.equals(BROTHER.toString()) && Gender.equals("M")) {
+            return BROTHER.toString();
+        }
+        if (relationshipCode.equals(BROTHER.toString()) && Gender.equals("F")) {
+            return SISTER.toString();
+        }if (relationshipCode.equals(COMPANION.toString())) {
+            return COMPANION.toString();
+        }if (relationshipCode.equals(RELATIVE.toString()) ) {
+            return RELATIVE.toString();
+        }
+
+        return COMPANION.toString();
     }
 
     private ApplicantRitualDto addRitualPackageToApplicant(ApplicantDto applicant, Long applicantUin, String packageReferenceNumber, String busNumber, String seatNumber) {
