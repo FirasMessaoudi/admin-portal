@@ -43,7 +43,10 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      */
     public List<ApplicantChatContactVo> list(String applicantUin, Long ritualId, Boolean systemDefined) {
         if (systemDefined == null) {
-            return ((ApplicantChatContactRepository) getRepository()).list(applicantUin, ritualId);
+            List<ApplicantChatContactVo> applicantList = ((ApplicantChatContactRepository) getRepository()).findContactApplicantList(applicantUin, ritualId);
+            List<ApplicantChatContactVo> staffList = ((ApplicantChatContactRepository) getRepository()).findContactStaffList(applicantUin, ritualId);
+            applicantList.addAll(staffList);
+            return applicantList;
         } else if (systemDefined) {
             return ((ApplicantChatContactRepository) getRepository()).findBySystemDefinedTrue(applicantUin, ritualId);
         } else {
