@@ -11,7 +11,6 @@ import {AuthenticationService} from '@app/_core/services';
 export class SideNavComponent implements OnInit {
   currentUser: any;
   links: {}[];
-  public isCollapsed = true;
   constructor(
     public router: Router,
     private authenticationService: AuthenticationService
@@ -45,6 +44,7 @@ export class SideNavComponent implements OnInit {
         icon: 'print',
         iconFa: 'fa-w-16',
         submenu: true,
+        isCollapsed: true,
         menuItems: [
           {
             title: 'printing-management.applicant-title',
@@ -114,6 +114,7 @@ export class SideNavComponent implements OnInit {
         icon: 'megaphone',
         iconFa: 'fa-w-16',
         submenu: true,
+        isCollapsed: true,
         menuItems: [
           {
             title: 'notification-management.system_notifications',
@@ -167,9 +168,7 @@ export class SideNavComponent implements OnInit {
           });
 
           if (link.submenu) {
-            if (link.menuItems.length == 1) {
-              this.isCollapsed = true;
-            }
+
             link.menuItems.forEach((menuItem: any) => {
               // loop on link submenu roles
               menuItem.roles.forEach((role: any) => {
@@ -186,4 +185,13 @@ export class SideNavComponent implements OnInit {
       });
     }
   }
+
+  setCollapsed(index: number) {
+    let updateItem: any = this.links[index]
+    updateItem.isCollapsed = !updateItem.isCollapsed;
+    this.links[index] = updateItem;
+
+  }
+
+
 }
