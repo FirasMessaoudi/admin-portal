@@ -1,19 +1,19 @@
-import {Component, OnInit} from '@angular/core';
-import {EAuthority, Page} from "@shared/model";
-import {AuthenticationService} from "@core/services";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {Lookup} from "@model/lookup.model";
-import {LookupService} from "@core/utilities/lookup.service";
-import {I18nService} from "@dcc-commons-ng/services";
-import {PrintRequestLite} from "@model/print-request-card-lite.model";
-import {StaffPrintService} from "@core/services/printing/staff-print.service";
-import {CompanyLite} from "@model/company-lite.model";
+import { Component, OnInit } from '@angular/core';
+import { EAuthority, Page } from '@shared/model';
+import { AuthenticationService } from '@core/services';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { Lookup } from '@model/lookup.model';
+import { LookupService } from '@core/utilities/lookup.service';
+import { I18nService } from '@dcc-commons-ng/services';
+import { PrintRequestLite } from '@model/print-request-card-lite.model';
+import { StaffPrintService } from '@core/services/printing/staff-print.service';
+import { CompanyLite } from '@model/company-lite.model';
 
 @Component({
   selector: 'app-printing-request-list',
   templateUrl: './staff-printing-request-list.component.html',
-  styleUrls: ['./staff-printing-request-list.component.scss']
+  styleUrls: ['./staff-printing-request-list.component.scss'],
 })
 export class StaffPrintingRequestListComponent implements OnInit {
   public isSearchbarCollapsed = true;
@@ -21,23 +21,24 @@ export class StaffPrintingRequestListComponent implements OnInit {
   page: Page;
   printRequests: Array<PrintRequestLite> = [];
   searchForm: FormGroup;
-  printRequestStatuses: Lookup[];
-  localizedPrintRequestStatuses: Lookup[];
-  ritualTypes: Lookup[];
+  printRequestStatuses: Lookup[] = [];
+  localizedPrintRequestStatuses: Lookup[] = [];
+  ritualTypes: Lookup[] = [];
+  ritualSeasons: any[] = [];
+  companyNames: CompanyLite[] = [];
+
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
-  ritualSeasons: any[];
-  companyNames: CompanyLite[];
 
-  constructor(private authenticationService: AuthenticationService,
-              private staffPrintService: StaffPrintService,
-              private lookupsService: LookupService,
-              private i18nService: I18nService,
-              private formBuilder: FormBuilder) {
-  }
+  constructor(
+    private authenticationService: AuthenticationService,
+    private staffPrintService: StaffPrintService,
+    private lookupsService: LookupService,
+    private i18nService: I18nService,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
-
     this.initForm();
     this.loadLookups();
     this.loadPage(0);
@@ -69,25 +70,24 @@ export class StaffPrintingRequestListComponent implements OnInit {
   }
 
   loadLookups() {
-    this.staffPrintService.findPrintRequestStatuses().subscribe(result => {
+    this.staffPrintService.findPrintRequestStatuses().subscribe((result) => {
       this.printRequestStatuses = result;
-      this.localizedPrintRequestStatuses = this.lookupsService.localizedItems(this.printRequestStatuses);
+      this.localizedPrintRequestStatuses = this.lookupsService.localizedItems(
+        this.printRequestStatuses
+      );
     });
 
-    this.staffPrintService.findRitualTypes().subscribe(result => {
-      this.ritualTypes = result
+    this.staffPrintService.findRitualTypes().subscribe((result) => {
+      this.ritualTypes = result;
     });
 
-
-    this.staffPrintService.findRitualSeasons().subscribe(result => {
+    this.staffPrintService.findRitualSeasons().subscribe((result) => {
       this.ritualSeasons = result;
     });
 
-    this.staffPrintService.findCompanyNames().subscribe(result => {
+    this.staffPrintService.findCompanyNames().subscribe((result) => {
       this.companyNames = result;
     });
-
-
   }
 
   lookupService(): LookupService {
@@ -102,11 +102,15 @@ export class StaffPrintingRequestListComponent implements OnInit {
    * Reload print request statuses to accept language change for example.
    */
   reloadPrintRequestStatuses() {
-    this.localizedPrintRequestStatuses = this.lookupsService.localizedItems(this.printRequestStatuses);
+    this.localizedPrintRequestStatuses = this.lookupsService.localizedItems(
+      this.printRequestStatuses
+    );
   }
 
   get canSeePrintRequestsList(): boolean {
-    return this.authenticationService.hasAuthority(EAuthority.STAFF_PRINTING_REQUEST_MANAGEMENT);
+    return this.authenticationService.hasAuthority(
+      EAuthority.STAFF_PRINTING_REQUEST_MANAGEMENT
+    );
   }
 
   // get canCreateNewRequest(): boolean {
@@ -114,10 +118,11 @@ export class StaffPrintingRequestListComponent implements OnInit {
   // }
 
   loadPage(page: number) {
-    this.searchSubscription = this.staffPrintService.listFiltered(page, this.searchForm.value).subscribe(data => {
-      this.fillPageWithData(data);
-    });
-
+    this.searchSubscription = this.staffPrintService
+      .listFiltered(page, this.searchForm.value)
+      .subscribe((data) => {
+        this.fillPageWithData(data);
+      });
   }
 
   pageCounter(i: number): Array<number> {
@@ -129,13 +134,14 @@ export class StaffPrintingRequestListComponent implements OnInit {
       this.loadPage(0);
       return;
     }
-    this.searchSubscription = this.staffPrintService.listFiltered(0, this.searchForm.value).subscribe(data => {
-      this.printRequests = [];
-      this.pageArray = [];
-      this.fillPageWithData(data);
-    });
+    this.searchSubscription = this.staffPrintService
+      .listFiltered(0, this.searchForm.value)
+      .subscribe((data) => {
+        this.printRequests = [];
+        this.pageArray = [];
+        this.fillPageWithData(data);
+      });
   }
-
 
   fillPageWithData(pageData: any) {
     this.page = pageData;
@@ -144,5 +150,4 @@ export class StaffPrintingRequestListComponent implements OnInit {
       this.printRequests = this.page.content;
     }
   }
-
 }

@@ -77,12 +77,9 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .mobileNumber(contact.getMobileNumber())
                 .countryPhonePrefix(contact.getCountryPhonePrefix())
                 .countryCode(contact.getCountryCode())
-                .systemDefined(false)
                 .avatar(contact.getAvatar())
                 .applicantRitualId(ritualId)
-                .systemDefined(contact.getSystemDefined())
                 .autoAdded(contact.isAutoAdded())
-                .deleted(false)
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
         ApplicantChatContactDto savedContact = save(contactBuilder);
@@ -186,10 +183,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .mobileNumber(mobileNumber)
                 .countryCode(countryCode)
                 .systemDefined(true)
-                .deleted(false)
                 .avatar(applicantRelative.getRelativeApplicant().getPhoto())
                 .applicantRitualId(applicantRelative.getApplicantRitual().getId())
-                .autoAdded(false)
                 .relationshipCode(applicantRelative.getRelationshipCode())
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
