@@ -280,6 +280,7 @@ export class StepOneComponent implements OnInit {
     this.searchForm.reset()
     this.cards = [];
     this.selectedCards = [];
+    this.cards = [];
     this.isSelectAllClicked = false;
     this.modalService.dismissAll();
   }

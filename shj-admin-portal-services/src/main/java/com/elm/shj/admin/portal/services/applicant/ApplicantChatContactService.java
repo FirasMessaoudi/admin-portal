@@ -6,7 +6,6 @@ package com.elm.shj.admin.portal.services.applicant;
 import com.elm.shj.admin.portal.orm.entity.ApplicantChatContactVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantChatContact;
 import com.elm.shj.admin.portal.orm.repository.ApplicantChatContactRepository;
-import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -83,6 +82,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .applicantRitualId(ritualId)
                 .systemDefined(contact.getSystemDefined())
                 .autoAdded(contact.isAutoAdded())
+                .deleted(false)
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
         ApplicantChatContactDto savedContact = save(contactBuilder);
