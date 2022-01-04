@@ -621,7 +621,8 @@ public class ItemWriter {
                     reflectedApplicantRelative.setPackageReferenceNumber(applicantRelative.getPackageReferenceNumber());
                     reflectedApplicantRelative.setRelativeIdNumber(applicantRelative.getRelativeIdNumber());
                     updateApplicantRelativeIfAlreadyExist(applicantRelative);
-                    updateApplicantRelativeIfAlreadyExist(reflectedApplicantRelative);
+                    applicantChatContactService.createSystemDefinedApplicantChatContact(applicantRelative);
+                    applicantChatContactService.createSystemDefinedApplicantChatContact(reflectedApplicantRelative);
                 }
 
 
@@ -636,7 +637,7 @@ public class ItemWriter {
         ApplicantRelativeDto applicantRelativeFromDB = applicantRelativeService.findByApplicantIdAndRelativeApplicantId(applicantRelative.getApplicant().getId(), applicantRelative.getRelativeApplicant().getId());
         if (applicantRelativeFromDB == null) {
             repository.save(mapperRegistry.get(EDataSegment.APPLICANT_RELATIVES_DATA).toEntity(applicantRelative, mappingContext));
-            applicantChatContactService.createSystemDefinedApplicantChatContact(applicantRelative);
+
             return;
         }
         if (applicantRelativeFromDB.getRelationshipCode().equals(applicantRelative.getRelationshipCode())) {
@@ -646,7 +647,6 @@ public class ItemWriter {
             applicantRelative.setId(applicantRelativeFromDB.getId());
             applicantRelative.setCreationDate(applicantRelativeFromDB.getCreationDate());
             repository.save(mapperRegistry.get(EDataSegment.APPLICANT_RELATIVES_DATA).toEntity(applicantRelative, mappingContext));
-            applicantChatContactService.createSystemDefinedApplicantChatContact(applicantRelative);
             return;
         }
     }
