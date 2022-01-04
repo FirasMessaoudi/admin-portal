@@ -153,7 +153,7 @@ public class ChatContactWsController {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(id.toString()).build()).build());
         }
-        if (applicantChatContact.getSystemDefined()) {
+        if (applicantChatContact.isSystemDefined()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND).referenceNumber(id.toString()).build()).build());
         }

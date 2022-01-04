@@ -31,13 +31,13 @@ public class ApplicantChatContactDto implements Serializable {
     @NotBlank(message = "validation.data.validation.field.required")
     private String alias;
     private String avatar;
-    private Boolean systemDefined;
+    private boolean systemDefined;
     private String staffTitleCode;
     private String relationshipCode;
     private String mobileNumber;
     private String countryPhonePrefix;
     private String countryCode;
-    private Boolean deleted;
+    private boolean deleted;
     private boolean autoAdded;
     private Long applicantRitualId;
     private Date creationDate;

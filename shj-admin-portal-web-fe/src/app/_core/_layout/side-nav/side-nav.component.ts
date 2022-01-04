@@ -11,7 +11,7 @@ import {AuthenticationService} from '@app/_core/services';
 export class SideNavComponent implements OnInit {
   currentUser: any;
   links: {}[];
-  public isCollapsed = false;
+  public isCollapsed = true;
   constructor(
     public router: Router,
     private authenticationService: AuthenticationService
@@ -167,6 +167,9 @@ export class SideNavComponent implements OnInit {
           });
 
           if (link.submenu) {
+            if (link.menuItems.length == 1) {
+              this.isCollapsed = true;
+            }
             link.menuItems.forEach((menuItem: any) => {
               // loop on link submenu roles
               menuItem.roles.forEach((role: any) => {

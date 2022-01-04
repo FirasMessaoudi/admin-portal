@@ -1,7 +1,8 @@
 import {Component, Input} from "@angular/core";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
-import { groupeLeader } from "@app/_shared/model/groupe-leader.model";
+import {groupeLeader} from "@app/_shared/model/groupe-leader.model";
+import {I18nService} from "@dcc-commons-ng/services";
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
@@ -15,11 +16,14 @@ export class GroupLeadersComponent {
   @Input('groupLeadersTitle') groupLeaderTitleLookups: Lookup[]
   lookupService: LookupService
 
-  constructor(lookupsService: LookupService, private translate: TranslateService,) {
+  constructor(lookupsService: LookupService,
+              private translate: TranslateService,
+              private i18nService: I18nService) {
     this.lookupService = lookupsService;
   }
 
-
-
+  get currentLanguage(): string {
+    return this.i18nService.language;
+  }
 
 }
