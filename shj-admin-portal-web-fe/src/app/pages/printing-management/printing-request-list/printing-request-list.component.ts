@@ -8,6 +8,7 @@ import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {PrintRequestLite} from "@model/print-request-card-lite.model";
+import {PrintingRequestTarget} from "@model/enum/printing-request-target";
 
 @Component({
   selector: 'app-printing-request-list',
@@ -25,6 +26,7 @@ export class PrintingRequestListComponent implements OnInit {
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
+  applicant = PrintingRequestTarget.APPLICANT;
 
   constructor(private authenticationService: AuthenticationService,
               private printService: PrintService,

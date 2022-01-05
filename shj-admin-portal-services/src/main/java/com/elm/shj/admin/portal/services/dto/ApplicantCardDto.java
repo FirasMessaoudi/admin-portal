@@ -3,13 +3,11 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
 /**
  * Dto class for the applicant card domain.
  *
@@ -24,13 +22,10 @@ import java.util.List;
 public class ApplicantCardDto implements Serializable, HibernateAwareMapper {
 
     private static final long serialVersionUID = -5830783313676682718L;
-
     private long id;
     private ApplicantRitualDto applicantRitual;
     private String referenceNumber;
     private Long batchId;
-    @JsonBackReference
-    private List<PrintRequestCardDto> printRequestCards;
     private List<CompanyStaffDto> groupLeaders;
     private String statusCode;
     private Date creationDate;
