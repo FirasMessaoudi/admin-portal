@@ -74,7 +74,6 @@ public class JpaCompany implements Serializable {
     @Column(name = "update_date")
     private Date updateDate;
 
-    @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "company")
     private List<JpaCompanyRitualSeason> companyRitualSeasons;
 

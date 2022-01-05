@@ -4,6 +4,8 @@
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,5 +31,6 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
             "(c.companyRitualSeason.company.code != :companyCode or c.companyRitualSeason.ritualSeason.ritualTypeCode != :ritualCode) and c.statusCode in :cardStatus")
     List<JpaCompanyStaffCard> findAllByCompanyStaffSuinAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(@Param("suin") String suin, @Param("companyCode") String companyCode, @Param("ritualCode") String ritualTypeCode, @Param("cardStatus") List<String> cardStatus);
 
-
+    @Query("SELECT c FROM JpaCompanyStaffCard c WHERE  c.statusCode <> :reissuedStatusCode ")
+    Page<JpaCompanyStaffCard> findStaffCards(@Param("reissuedStatusCode") String reissuedStatusCode, Pageable pageable);
 }

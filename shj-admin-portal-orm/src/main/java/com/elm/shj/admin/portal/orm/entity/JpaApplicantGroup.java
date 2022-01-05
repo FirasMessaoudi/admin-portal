@@ -68,11 +68,9 @@ public class JpaApplicantGroup implements Serializable {
     @Column(name = "update_date")
     private Date updateDate;
 
-    @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantGroup")
     private List<JpaGroupApplicantList> groupApplicantLists;
 
-    @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantGroup")
     private List<JpaCompanyRitualStep> companyRitualSteps;
 

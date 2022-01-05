@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,6 +38,7 @@ public class ApplicantGroupDto implements Serializable {
 
     private CompanyStaffDto groupLeader;
 
+    @JsonManagedReference
     private CompanyRitualSeasonDto companyRitualSeason;
 
     private String groupTypeCode;

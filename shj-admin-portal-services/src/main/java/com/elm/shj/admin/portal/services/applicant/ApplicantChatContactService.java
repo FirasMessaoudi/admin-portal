@@ -45,7 +45,10 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      */
     public List<ApplicantChatContactVo> list(String applicantUin, Long ritualId, Boolean systemDefined) {
         if (systemDefined == null) {
-            return ((ApplicantChatContactRepository) getRepository()).list(applicantUin, ritualId);
+            List<ApplicantChatContactVo> applicantList = ((ApplicantChatContactRepository) getRepository()).findContactApplicantList(applicantUin, ritualId);
+            List<ApplicantChatContactVo> staffList = ((ApplicantChatContactRepository) getRepository()).findContactStaffList(applicantUin, ritualId);
+            applicantList.addAll(staffList);
+            return applicantList;
         } else if (systemDefined) {
             return ((ApplicantChatContactRepository) getRepository()).findBySystemDefinedTrue(applicantUin, ritualId);
         } else {
@@ -79,12 +82,9 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .mobileNumber(contact.getMobileNumber())
                 .countryPhonePrefix(contact.getCountryPhonePrefix())
                 .countryCode(contact.getCountryCode())
-                .systemDefined(false)
                 .avatar(contact.getAvatar())
                 .applicantRitualId(ritualId)
-                .systemDefined(contact.getSystemDefined())
                 .autoAdded(contact.isAutoAdded())
-                .deleted(false)
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
         ApplicantChatContactDto savedContact = save(contactBuilder);
@@ -189,10 +189,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .mobileNumber(mobileNumber)
                 .countryCode(countryCode)
                 .systemDefined(true)
-                .deleted(false)
                 .avatar(applicantRelative.getRelativeApplicant().getPhoto())
                 .applicantRitualId(applicantRelative.getApplicantRitual().getId())
-                .autoAdded(false)
                 .relationshipCode(applicantRelative.getRelationshipCode())
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();

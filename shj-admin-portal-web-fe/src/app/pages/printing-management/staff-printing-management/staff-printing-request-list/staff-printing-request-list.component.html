@@ -25,11 +25,11 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.request_number" | translate }}</label>
-          <input id="requestNumber" type="text" class="form-control"/>
+          <input disabled id="requestNumber" type="text" class="form-control"/>
         </div>
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.season" | translate }}</label>
-          <select id="season" formControlName="season" class="custom-select">
+          <select disabled id="season" formControlName="season" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
             <option *ngFor="let season of ritualSeasons" [ngValue]="season.seasonYear">
               {{season.seasonYear}}
@@ -38,7 +38,7 @@
         </div>
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.company" | translate }}</label>
-          <select id="company" formControlName="companyCode" class="custom-select">
+          <select disabled id="company" formControlName="companyCode" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
             <option *ngFor="let company of companyNames" [ngValue]="company.code">
               <span *ngIf="currentLanguage.startsWith('ar')">{{company.labelAr}}</span>
@@ -48,7 +48,7 @@
         </div>
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.ritual-type" | translate }}</label>
-          <select id="ritualTypeCode" formControlName="ritualTypeCode" class="custom-select">
+          <select disabled id="ritualTypeCode" formControlName="ritualTypeCode" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
             <option *ngFor="let ritualType of  lookupService().localizedItems(ritualTypes)" [ngValue]="ritualType.code">
               {{ritualType.label}}
@@ -64,7 +64,7 @@
                                       [isRequired]="false"
                                       [GregLabel]="'general.cal_greg' | translate"
                                       [hijriLabel]="'general.cal_hijri' | translate"
-                                      [disabled]="false"
+                                      [disabled]="true"
                                       [readonly]="true"
                                       #datePicker>
           </hijri-gregorian-datepicker>
@@ -79,7 +79,7 @@
                                       [isRequired]="false"
                                       [GregLabel]="'general.cal_greg' | translate"
                                       [hijriLabel]="'general.cal_hijri' | translate"
-                                      [disabled]="false"
+                                      [disabled]="true"
                                       [readonly]="true"
                                       #datePicker>
           </hijri-gregorian-datepicker>
@@ -87,17 +87,17 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.batch_number" | translate }}</label>
-          <input id="batchNumber" type="text" class="form-control"/>
+          <input disabled id="batchNumber" type="text" class="form-control"/>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "printing-management.id_number" | translate }}</label>
-          <input id="idNumber" type="text" class="form-control"/>
+          <input disabled id="idNumber" type="text" class="form-control"/>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "card-management.card_number" | translate }}</label>
-          <input id="cardNumber" type="text" class="form-control"/>
+          <input disabled id="cardNumber" type="text" class="form-control"/>
         </div>
 
         <div class="form-group col">

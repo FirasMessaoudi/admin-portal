@@ -47,7 +47,7 @@ public class JpaApplicantChatContact implements Serializable {
     private String avatar;
 
     @Column(name = "system_defined")
-    private Boolean systemDefined;
+    private boolean systemDefined;
 
     @Column(name = "staff_title_code")
     private String staffTitleCode;
@@ -64,7 +64,7 @@ public class JpaApplicantChatContact implements Serializable {
     @Column(name = "country_code")
     private String countryCode;
 
-    private Boolean deleted;
+    private boolean deleted;
 
     @Column(name = "auto_added")
     private boolean autoAdded;
