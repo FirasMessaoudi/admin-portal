@@ -16,5 +16,5 @@ import org.mapstruct.Mapper;
  */
 
 @Mapper(componentModel = "spring")
-public abstract class CompanyRitualStepDtoMapper implements IGenericMapper<CompanyRitualStepDto, JpaCompanyRitualStep> {
+public abstract class CompanyRitualStepDtoMapper implements IGenericMapper<CompanyRitualStepDto, JpaCompanyRitualStep>, HibernateAwareMapper {
 }

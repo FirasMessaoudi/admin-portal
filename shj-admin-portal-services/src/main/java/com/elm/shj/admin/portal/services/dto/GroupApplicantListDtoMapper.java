@@ -15,5 +15,5 @@ import org.mapstruct.Mapper;
  */
 
 @Mapper(componentModel = "spring")
-public abstract class GroupApplicantListDtoMapper implements IGenericMapper<GroupApplicantListDto, JpaGroupApplicantList> {
+public abstract class GroupApplicantListDtoMapper implements IGenericMapper<GroupApplicantListDto, JpaGroupApplicantList>, HibernateAwareMapper {
 }

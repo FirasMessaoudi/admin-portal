@@ -61,4 +61,6 @@ public class Navigation {
 	public static final String API_INCIDENTS_INTEGRATION = "/api/ws/incidents";
 	// Chat Contact Integration
 	public static final String API_CHAT_CONTACT_INTEGRATION = "/api/ws/chat-contact";
+	// Applicant Cards
+	public static final String API_STAFF_CARDS = "/api/staff-cards";
 }

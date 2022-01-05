@@ -5,15 +5,16 @@ package com.elm.shj.admin.portal.services.card;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffCardRepository;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffCardDto;
-import com.elm.shj.admin.portal.services.dto.ECardStatus;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffLiteDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.dto.ECardStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -73,7 +74,10 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
         return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(suin, companyCode, ritualType, cardStatus));
     }
 
-
+    @Transactional
+    public Page<CompanyStaffCardDto> searchStaffCards(String uin, String idNumber, String passportNumber, Pageable pageable) {
+        return mapPage(companyStaffCardRepository.findStaffCards(ECardStatus.REISSUED.name(), pageable));
+    }
 
 
 }

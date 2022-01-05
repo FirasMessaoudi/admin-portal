@@ -14,5 +14,5 @@ import org.mapstruct.Mapper;
  * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
-public abstract class CompanyStaffCardDtoMapper implements IGenericMapper<CompanyStaffCardDto, JpaCompanyStaffCard> {
+public abstract class CompanyStaffCardDtoMapper implements IGenericMapper<CompanyStaffCardDto, JpaCompanyStaffCard>,HibernateAwareMapper {
 }

@@ -31,13 +31,10 @@ public class CompanyRitualSeasonDto {
     private CompanyDto company;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @JsonBackReference(value = "ritualSeason")
     private RitualSeasonDto ritualSeason;
 
-    @JsonBackReference(value = "ritualPackages")
     private List<RitualPackageDto> ritualPackages;
 
-    @JsonBackReference(value = "applicantGroups")
     private List<ApplicantGroupDto> applicantGroups;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
