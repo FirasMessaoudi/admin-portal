@@ -785,7 +785,7 @@ public class ItemWriter {
                 // if no cards for digitalId and SEASON
                 if (companyStaffCardDtos.isEmpty()) {
                     CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                    companyStaffCardDto.setCompanyStaffSuin(companyStaffDigitalId.getSuin());
+                    companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
                     companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
                     companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                     companyStaffCardService.save(companyStaffCardDto);
@@ -807,7 +807,7 @@ public class ItemWriter {
                 List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
                 if (companyStaffCards.isEmpty()) {
                     CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                    companyStaffCardDto.setCompanyStaffSuin(companyStaffDigitalId.getSuin());
+                    companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
                     companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
                     companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                     companyStaffCardService.save(companyStaffCardDto);
@@ -825,7 +825,7 @@ public class ItemWriter {
                 staffDigitalId.setStatusCode(EStaffDigitalIdStatus.VALID.name());
                 CompanyStaffDigitalIdDto savedDigitalId = companyStaffDigitalIdService.save(staffDigitalId);
                 CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                companyStaffCardDto.setCompanyStaffSuin(savedDigitalId.getSuin());
+                companyStaffCardDto.setCompanyStaffDigitalId(savedDigitalId);
                 companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
                 companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                 companyStaffCardService.save(companyStaffCardDto);

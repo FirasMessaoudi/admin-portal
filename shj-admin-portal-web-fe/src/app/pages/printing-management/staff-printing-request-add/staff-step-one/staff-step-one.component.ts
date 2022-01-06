@@ -116,7 +116,9 @@ export class StaffStepOneComponent implements OnInit {
 
   search(pageNumber: number): void {
     this.isLoading = true;
-    this.searchSubscription = this.cardService.findStaffCards(pageNumber).subscribe(data => {
+    this.searchSubscription = this.cardService.searchStaffCardsToPrint(this.searchForm.value.uin, this.searchForm.value.idNumber,
+      this.searchForm.value.hamlahNumber, this.searchForm.value.motawefNumber, this.searchForm.value.passportNumber,
+      this.searchForm.value.nationality, this.addedCards.map(card => card.id), pageNumber).subscribe(data => {
       this.isLoading = false;
       this.cards = [];
       this.pageArray = [];
@@ -170,7 +172,9 @@ export class StaffStepOneComponent implements OnInit {
 
   selectAllCards() {
     this.isSelectLoading = true;
-    this.searchSubscription = this.cardService.findStaffCards(0).subscribe(data => {
+    this.searchSubscription = this.cardService.searchAllCardsToPrint(this.searchForm.value.uin, this.searchForm.value.idNumber,
+      this.searchForm.value.hamlahNumber, this.searchForm.value.motawefNumber, this.searchForm.value.passportNumber,
+      this.searchForm.value.nationality, this.addedCards.map(card => card.id)).subscribe(data => {
       this.isSelectLoading = false;
       this.isSelectAllClicked = true;
       this.isAllSelected = true;

@@ -105,6 +105,7 @@ public class CompanyStaffDto {
     private String email;
 
     private DataRequestRecordDto dataRequestRecord;
+    @JsonBackReference(value = "digitalIds")
     private List<CompanyStaffDigitalIdDto> digitalIds;
 
     private Date creationDate;

@@ -5,7 +5,7 @@ package com.elm.shj.admin.portal.services.card;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffCardRepository;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.CompanyStaffCardDto;
 import com.elm.shj.admin.portal.services.dto.ECardStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service handling company staff card
@@ -40,7 +39,7 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public List<CompanyStaffCardDto> findByDigitalId(String suin) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuin(suin));
+        return mapList(companyStaffCardRepository.findAllByCompanyStaffDigitalIdSuin(suin));
     }
 
     /**
@@ -50,7 +49,7 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public  CompanyStaffCardDto  findByDigitalIdAndStatusCodeActive(String suin) {
-        return getMapper().fromEntity(companyStaffCardRepository.findByCompanyStaffSuinAndStatusCode(suin,ECardStatus.ACTIVE.name()), mappingContext);
+        return getMapper().fromEntity(companyStaffCardRepository.findByCompanyStaffDigitalIdSuinAndStatusCode(suin, ECardStatus.ACTIVE.name()), mappingContext);
      }
     /**
      * find company staff cards
@@ -79,5 +78,19 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
         return mapPage(companyStaffCardRepository.findStaffCards(ECardStatus.REISSUED.name(), pageable));
     }
 
+    public List<CompanyStaffCardDto> findAllPrintingCards(String uin, String idNumber, String hamlahNumber, String motawefNumber,
+                                                          String passportNumber, String nationalityCode, List<Long> excludedCardsIds) {
+        log.debug("Find all printing cards...");
+        return mapList(companyStaffCardRepository.findAllPrintingCards(ECardStatus.READY_TO_PRINT.name(), uin, idNumber, passportNumber, nationalityCode,
+                excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds));
+    }
+
+    public Page<CompanyStaffCardDto> findPrintingCards(String uin, String idNumber, String hamlahNumber, String motawefNumber,
+                                                       String passportNumber, String nationalityCode, List<Long> excludedCardsIds, Pageable pageable) {
+        log.debug("Find all printing cards...");
+        return mapPage(companyStaffCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(),
+                uin, idNumber, passportNumber, nationalityCode,
+                excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
+    }
 
 }

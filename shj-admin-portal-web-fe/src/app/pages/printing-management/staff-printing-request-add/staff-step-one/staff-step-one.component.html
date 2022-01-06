@@ -140,16 +140,16 @@
                   <label class="custom-control-label mx-3" for="applicantCheck-{{card.id}}"></label>
                 </div>
               </td>
-              <td *ngIf="currentLanguage.startsWith('ar')">NameAr
-                <br>NameEn
+              <td *ngIf="currentLanguage.startsWith('ar')">{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}}
+                <br>{{card?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
               </td>
-              <td *ngIf="currentLanguage.startsWith('en')">NameEn
-                <br>NameAr
+              <td *ngIf="currentLanguage.startsWith('en')">{{card?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
+                <br>{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}}
               </td>
 
               <td>{{card?.companyStaffSuin}}</td>
-              <td>Id Number</td>
-              <td class="ltr">Passport</td>
+              <td>{{card?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
+              <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
             </tr>
           </ng-container>
           </tbody>
@@ -226,10 +226,10 @@
       </tr>
       <tr
         *ngFor="let card of addedCards | slice: (addedCardsCurrentPage * addedCardsPageSize) - addedCardsPageSize :addedCardsCurrentPage * addedCardsPageSize">
-        <td>NameAr NameEn</td>
+        <td>{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}} {{card?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</td>
         <td>{{card?.companyStaffSuin}}</td>
-        <td>IdNumber</td>
-        <td class="ltr">PassportNumber</td>
+        <td>{{card?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
+        <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
         <td>
           <button (click)="undoAddCard(card?.id)"
                   class="btn btn-sm btn-outline-danger tblView"> {{"general.btn_delete" | translate}}

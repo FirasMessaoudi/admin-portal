@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import java.io.Serializable;
@@ -32,7 +31,7 @@ public class CompanyStaffDigitalIdDto implements Serializable {
 
     private int seasonYear;
 
-    @JsonBackReference
+   // @JsonBackReference
     private CompanyStaffDto companyStaff;
 
     private Date creationDate;
