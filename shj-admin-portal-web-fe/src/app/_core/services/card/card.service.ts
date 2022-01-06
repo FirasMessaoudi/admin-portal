@@ -124,4 +124,11 @@ export class CardService {
     return this.http.post('/core/api/cards/change-status/' + id + "/" + actionCode, null);
   }
 
+  findStaffCards(pageNumber): Observable<any> {
+    let params = new HttpParams().set('StaffCardSearchCriteria', '')
+      .set('page', pageNumber);
+    return this.http.get<any>('/core/api/staff-cards/list', {params: params});
+  }
+
+
 }

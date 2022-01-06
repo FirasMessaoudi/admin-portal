@@ -9,7 +9,6 @@ import {I18nService} from '@dcc-commons-ng/services';
 import {PrintRequestLite} from '@model/print-request-card-lite.model';
 import {StaffPrintService} from '@core/services/printing/staff-print.service';
 import {CompanyLite} from '@model/company-lite.model';
-import {PrintingRequestTarget} from '@model/enum/printing-request-target';
 
 @Component({
   selector: 'app-printing-request-list',
@@ -27,8 +26,6 @@ export class StaffPrintingRequestListComponent implements OnInit {
   ritualTypes: Lookup[] = [];
   ritualSeasons: any[] = [];
   companyNames: CompanyLite[] = [];
-  staff = PrintingRequestTarget.STAFF;
-
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 

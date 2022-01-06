@@ -8,6 +8,7 @@ import {SharedModule} from "@shared/shared.module";
 import {PrintingRequestAddUpdateComponent} from './printing-request-add-update/printing-request-add-update.component';
 import {PrintingRequestAddUpdateModule} from './printing-request-add-update/printing-request-add-update.module';
 import {StaffPrintingRequestListComponent} from "@pages/printing-management/staff-printing-management/staff-printing-request-list/staff-printing-request-list.component";
+import {StaffPrintingRequestAddModule} from "@pages/printing-management/staff-printing-request-add/staff-printing-request-add.module";
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import {StaffPrintingRequestListComponent} from "@pages/printing-management/staf
     CommonModule,
     PrintingManagementRoutingModule,
     SharedModule,
-    PrintingRequestAddUpdateModule
+    PrintingRequestAddUpdateModule,
+    StaffPrintingRequestAddModule
   ]
 })
 export class PrintingManagementModule { }

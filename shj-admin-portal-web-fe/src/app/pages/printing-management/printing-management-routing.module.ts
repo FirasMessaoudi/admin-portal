@@ -6,17 +6,25 @@ import {PrintingRequestDetailsComponent} from "@pages/printing-management/printi
 import {PrintingRequestAddUpdateComponent} from "@pages/printing-management/printing-request-add-update/printing-request-add-update.component";
 import {SuccessComponent} from '@pages/printing-management/printing-request-add-update/success/success.component';
 import {StaffPrintingRequestListComponent} from "@pages/printing-management/staff-printing-management/staff-printing-request-list/staff-printing-request-list.component";
+import {StaffPrintingRequestAddComponent} from "@pages/printing-management/staff-printing-request-add/staff-printing-request-add.component";
+import {StaffSuccessComponent} from "@pages/printing-management/staff-printing-request-add/staff-success/staff-success.component";
 
 
 const routes: Routes = [
   {path: 'print-requests/list', component: PrintingRequestListComponent, canActivate: [AuthenticationGuard]},
   {path: 'print-requests/details/:id', component: PrintingRequestDetailsComponent, canActivate: [AuthenticationGuard]},
   {
-    path: 'print-requests/create/:target',
+    path: 'print-requests/create',
     component: PrintingRequestAddUpdateComponent,
     canActivate: [AuthenticationGuard]
   },
+  {
+    path: 'staff-print-requests/create',
+    component: StaffPrintingRequestAddComponent,
+    canActivate: [AuthenticationGuard]
+  },
   {path: 'print-requests/success', component: SuccessComponent, canActivate: [AuthenticationGuard]},
+  {path: 'staff-print-requests/success', component: StaffSuccessComponent, canActivate: [AuthenticationGuard]},
   {path: 'print-requests/update/:id', component: PrintingRequestAddUpdateComponent, canActivate: [AuthenticationGuard]},
   {path: 'staff-print-requests/list', component: StaffPrintingRequestListComponent, canActivate: [AuthenticationGuard]},
 
