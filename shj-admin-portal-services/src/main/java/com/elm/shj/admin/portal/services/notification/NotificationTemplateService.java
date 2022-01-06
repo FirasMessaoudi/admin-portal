@@ -22,6 +22,9 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -126,7 +129,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
             }
 
             if (notificationSearchCriteria.getCreationDateEnd() != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("creationDate"), notificationSearchCriteria.getCreationDateEnd()));
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("creationDate"), atEndOfDay(notificationSearchCriteria.getCreationDateEnd())));
             }
 
             if (notificationSearchCriteria.getSendingDateStart() != null) {
@@ -134,11 +137,25 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
             }
 
             if (notificationSearchCriteria.getSendingDateEnd() != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("sendingDate"), notificationSearchCriteria.getSendingDateEnd()));
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("sendingDate"), atEndOfDay(notificationSearchCriteria.getSendingDateEnd())));
             }
             criteriaQuery.distinct(true);
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    private Date atEndOfDay(Date date) {
+        LocalDateTime localDateTime = dateToLocalDateTime(date);
+        LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
+        return localDateTimeToDate(endOfDay);
+    }
+
+    private static LocalDateTime dateToLocalDateTime(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+
+    private static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     @Transactional
@@ -174,10 +191,10 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
 
         notificationTemplate.getNotificationTemplateContents().stream().filter(c -> c.getTitle().length() == 0 && c.getBody().length() == 0)
                 .filter(c -> databaseNotificationTemplate.getNotificationTemplateContents().stream().anyMatch(databaseContent -> databaseContent.getId() == c.getId()))
-                        .forEach(c -> {
-                            notificationTemplateContentService.deleteById(c.getId());
-                            notificationTemplate.getNotificationTemplateContents().remove(c);
-                        });
+                .forEach(c -> {
+                    notificationTemplateContentService.deleteById(c.getId());
+                    notificationTemplate.getNotificationTemplateContents().remove(c);
+                });
 
         //Update notification contents
         notificationTemplate.getNotificationTemplateContents().forEach(content -> content.setNotificationTemplate(databaseNotificationTemplate));
