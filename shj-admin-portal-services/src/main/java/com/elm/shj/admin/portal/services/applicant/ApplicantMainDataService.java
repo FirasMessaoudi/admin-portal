@@ -39,6 +39,7 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
     private final ApplicantMainDataDtoMapper applicantMainDataDtoMapper;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private final ApplicantRitualRepository applicantRitualRepository;
+    private final ApplicantPackageService applicantPackageService;
 
     /**
      * Finds an applicant by his uin
@@ -47,7 +48,7 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
      * @return the found applicant or empty structure
      */
     @Transactional
-    public Optional<ApplicantMainDataDto> findByUin(String uin, long companyRitualSeasonId) {
+    public Optional<ApplicantMainDataDto> findByUin(String uin, long applicantPackageId) {
         JpaApplicantMainData applicant = applicantMainDataRepository.findByUin(uin);
 
         if (applicant != null) {
@@ -58,21 +59,20 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
             applicantMainDataDto.setStatusCode(statusCode);
             applicantMainDataDto.setUin(uin);
 
-            CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.findOne(companyRitualSeasonId);
+            ApplicantPackageDto applicantPackageDto = applicantPackageService.findByIdAndApplicantUin(applicantPackageId,Long.parseLong(uin));
 
-            if (companyRitualSeasonLiteDto != null) {
-                applicantMainDataDto.setRitualTypeCode(companyRitualSeasonLiteDto.getRitualSeason().getRitualTypeCode());
+            if (applicantPackageDto != null) {
+                applicantMainDataDto.setRitualTypeCode(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode());
+                Optional<JpaApplicantRitual> applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageId(uin, applicantPackageDto.getId());
+                if (applicantRitual.isPresent()) {
+                    applicantRitual.get().getRelatives().size();
+                    applicantRitual.get().getContacts().size();
 
-                JpaApplicantRitual applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(uin, companyRitualSeasonLiteDto.getId());
-                if (applicantRitual != null) {
-                    applicantRitual.getRelatives().size();
-                    applicantRitual.getContacts().size();
-
-                    applicantMainDataDto.setRelatives(applicantRelativeDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.getRelatives()), mappingContext));
-                    applicantMainDataDto.setContacts(applicantContactDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.getContacts()), mappingContext));
+                    applicantMainDataDto.setRelatives(applicantRelativeDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.get().getRelatives()), mappingContext));
+                    applicantMainDataDto.setContacts(applicantContactDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.get().getContacts()), mappingContext));
 
 
-                    JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualIdAndStatusCodeNot(applicantRitual.getId(), ECardStatus.REISSUED.name());
+                    JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualIdAndStatusCodeNot(applicantRitual.get().getId(), ECardStatus.REISSUED.name());
                     if (jpaApplicantCard != null) {
                         applicantMainDataDto.setCardReferenceNumber(jpaApplicantCard.getReferenceNumber());
                         applicantMainDataDto.setCardStatusCode(jpaApplicantCard.getStatusCode());

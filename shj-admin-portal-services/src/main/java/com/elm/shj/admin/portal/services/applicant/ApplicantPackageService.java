@@ -1,7 +1,7 @@
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
-import com.elm.shj.admin.portal.orm.entity.ApplicantRitualSeasonVo;
+import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackage;
 import com.elm.shj.admin.portal.orm.repository.ApplicantPackageRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
@@ -27,9 +27,6 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
         Optional<JpaApplicantPackage> applicantPackageOptional = applicantPackageRepository.findByApplicantUinAndRitualPackageReferenceNumber(applicantUin, packageReferenceNumber);
         if (applicantPackageOptional.isPresent()) {
             JpaApplicantPackage applicantPackage = applicantPackageOptional.get();
-            if (applicantPackage.getApplicantRituals() != null) {
-                applicantPackage.getApplicantRituals().size();
-            }
             applicantPackage.getApplicantPackageTransportations().size();
             CycleAvoidingMappingContext mappingContext = new CycleAvoidingMappingContext();
             return getMapper().fromEntity(applicantPackage, mappingContext);
@@ -37,17 +34,25 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
         return null;
     }
 
-    public List<ApplicantRitualSeasonVo> findApplicantPackageAndRitualSeason(long applicantUin) {
-        return applicantPackageRepository.findApplicantPackageAndRitualSeasonByUin(applicantUin);
+    public List<ApplicantRitualPackageVo> findApplicantRitualPackageByUin(long applicantUin) {
+        return applicantPackageRepository.findApplicantRitualPackageByUin(applicantUin);
 
     }
 
-    public ApplicantRitualSeasonVo findLatestApplicantRitualSeason(long applicantUin) {
-        List<ApplicantRitualSeasonVo> applicantRitualSeasons = findApplicantPackageAndRitualSeason(applicantUin);
+    public ApplicantRitualPackageVo findLatestApplicantRitualPackage(long applicantUin) {
+        List<ApplicantRitualPackageVo> applicantRitualSeasons = findApplicantRitualPackageByUin(applicantUin);
         if (applicantRitualSeasons.size() > 0) {
             return applicantRitualSeasons.get(0);
         }
         return null;
+    }
+
+    public ApplicantPackageDto findByIdAndApplicantUin(Long id, Long applicantUin){
+        Optional<JpaApplicantPackage>  applicantPackage = applicantPackageRepository.findByIdAndApplicantUin(id,applicantUin);
+        if(applicantPackage.isPresent()){
+            return getMapper().fromEntity(applicantPackage.get(),mappingContext);
+        }
+        return  null;
     }
 
 }

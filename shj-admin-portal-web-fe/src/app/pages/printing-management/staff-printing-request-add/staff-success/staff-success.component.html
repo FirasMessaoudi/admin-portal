@@ -1,0 +1,30 @@
+<div class="flex-center-column">
+
+  <img class="my-5" src="assets/images/printer-succes.svg" alt="Printer Succes">
+  <div class="text-center">
+    <h4 name="printRequestSuccess"
+        class="text-dcc-primary">{{'printing-management.print_request_done_successfully' | translate }}</h4>
+    <span name="printRequestNumber"> {{'printing-management.print_request_number' | translate }}
+      <span>{{printRequest?.referenceNumber}}</span></span>
+
+    <div class="dashes p-3 my-3">
+      <span>
+        {{'printing-management.no_batches' | translate }}
+        <span name="noBatches"
+              class="h5 font-weight-bold text-dcc-primary mx-3">{{printRequest?.printRequestBatches?.length}}</span>
+      </span>
+      <span>
+        {{'printing-management.no_cards' | translate }}
+        <span name="noCards"
+              class="h5 font-weight-bold text-dcc-primary mx-3">{{printRequest?.printRequestCards?.length}}</span>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="bg-lighter mx-30 p-4 text-center">
+  <button name="viewRequestDetails" type="button" [routerLink]="['/print-requests/details', printRequest?.id]"
+          class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'printing-management.btn_view_print_request_details' | translate}}</button>
+  <button name="backToPrintManagement" type="button" routerLink="/staff-print-requests/list"
+          class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3">{{'printing-management.btn_back_to_printing_management' | translate}}</button>
+</div>

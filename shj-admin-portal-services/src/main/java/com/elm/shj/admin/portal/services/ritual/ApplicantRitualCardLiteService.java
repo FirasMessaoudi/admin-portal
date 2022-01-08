@@ -5,10 +5,11 @@ package com.elm.shj.admin.portal.services.ritual;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
+import com.elm.shj.admin.portal.services.applicant.ApplicantPackageService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
+import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
-import com.elm.shj.admin.portal.services.dto.CompanyRitualSeasonLiteDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -33,29 +34,30 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
     private final ApplicantRitualRepository applicantRitualRepository;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private final CompanyStaffService companyStaffService;
+    private final ApplicantPackageService applicantPackageService;
 
-    public Optional<ApplicantRitualCardLiteDto> findCardDetailsByUinAndRitualId(String uin, String companyRitualSeasonId) {
+    public Optional<ApplicantRitualCardLiteDto> findCardDetailsByUinAndRitualId(String uin, long applicantPackageId) {
 
-        CompanyRitualSeasonLiteDto companyRitualSeasonLiteDto = companyRitualSeasonLiteService.findOne(Long.parseLong(companyRitualSeasonId));
+        ApplicantPackageDto applicantPackageDto = applicantPackageService.findOne(applicantPackageId);
 
-        if (companyRitualSeasonLiteDto == null) {
+        if (applicantPackageDto == null) {
             return Optional.empty();
         }
 
-        JpaApplicantRitual applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(uin, Long.parseLong(companyRitualSeasonId));
+        Optional<JpaApplicantRitual> applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageId(uin, applicantPackageId);
 
-        if (applicantRitual == null)
+        if (!applicantRitual.isPresent())
             return Optional.empty();
 
-        List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, Long.parseLong(companyRitualSeasonId));
+        List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId());
 
-        ApplicantRitualCardLiteDto returnedDto = getMapper().fromEntity(applicantRitual, mappingContext);
-        returnedDto.setRitualType(companyRitualSeasonLiteDto.getRitualSeason().getRitualTypeCode().toUpperCase());
-        returnedDto.setFullNameEn(applicantRitual.getApplicant().getFullNameEn());
-        returnedDto.setFullNameAr(applicantRitual.getApplicant().getFullNameAr());
-        returnedDto.setNationalityCode(applicantRitual.getApplicant().getNationalityCode().toUpperCase());
-        returnedDto.setPhoto(applicantRitual.getApplicant().getPhoto());
-        returnedDto.setHijriSeason(companyRitualSeasonLiteDto.getRitualSeason().getSeasonYear());
+        ApplicantRitualCardLiteDto returnedDto = getMapper().fromEntity(applicantRitual.get(), mappingContext);
+        returnedDto.setRitualType(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode().toUpperCase());
+        returnedDto.setFullNameEn(applicantRitual.get().getApplicant().getFullNameEn());
+        returnedDto.setFullNameAr(applicantRitual.get().getApplicant().getFullNameAr());
+        returnedDto.setNationalityCode(applicantRitual.get().getApplicant().getNationalityCode().toUpperCase());
+        returnedDto.setPhoto(applicantRitual.get().getApplicant().getPhoto());
+        returnedDto.setHijriSeason(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getSeasonYear());
         //TODO: get the first leader, this logic has to be reviewed when card business requirement is more clear.
         returnedDto.setLeaderMobile(groupLeaders.get(0).getMobileNumber());
         returnedDto.setLeaderNameAr(groupLeaders.get(0).getFullNameAr());

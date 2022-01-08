@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { EAuthority, Page } from '@shared/model';
-import { AuthenticationService } from '@core/services';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { Lookup } from '@model/lookup.model';
-import { LookupService } from '@core/utilities/lookup.service';
-import { I18nService } from '@dcc-commons-ng/services';
-import { PrintRequestLite } from '@model/print-request-card-lite.model';
-import { StaffPrintService } from '@core/services/printing/staff-print.service';
-import { CompanyLite } from '@model/company-lite.model';
+import {Component, OnInit} from '@angular/core';
+import {EAuthority, Page} from '@shared/model';
+import {AuthenticationService} from '@core/services';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {Lookup} from '@model/lookup.model';
+import {LookupService} from '@core/utilities/lookup.service';
+import {I18nService} from '@dcc-commons-ng/services';
+import {PrintRequestLite} from '@model/print-request-card-lite.model';
+import {StaffPrintService} from '@core/services/printing/staff-print.service';
+import {CompanyLite} from '@model/company-lite.model';
 
 @Component({
   selector: 'app-printing-request-list',
@@ -26,7 +26,6 @@ export class StaffPrintingRequestListComponent implements OnInit {
   ritualTypes: Lookup[] = [];
   ritualSeasons: any[] = [];
   companyNames: CompanyLite[] = [];
-
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
@@ -113,9 +112,9 @@ export class StaffPrintingRequestListComponent implements OnInit {
     );
   }
 
-  // get canCreateNewRequest(): boolean {
-  //   return this.authenticationService.hasAuthority(EAuthority.ADD_PRINTING_REQUEST);
-  // }
+  get canCreateNewRequest(): boolean {
+    return this.authenticationService.hasAuthority(EAuthority.ADD_PRINTING_REQUEST);
+  }
 
   loadPage(page: number) {
     this.searchSubscription = this.staffPrintService

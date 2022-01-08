@@ -1194,3 +1194,15 @@ GO
 ALTER TABLE shc_portal.shc_print_request
     ADD target VARCHAR(20) NOT NULL DEFAULT 'APPLICANT';
 GO
+
+alter table shc_portal.shc_company_staff_card
+    add company_staff_digital_id_id int;
+Go
+alter table shc_portal.shc_company_staff_card
+    add constraint fk_company_staff_card_company_staff_digital_id FOREIGN KEY (company_staff_digital_id_id) REFERENCES shc_portal.shc_company_staff_digital_id (id);
+go
+
+alter table shc_portal.shc_company_staff_card
+drop
+column company_staff_suin;
+go

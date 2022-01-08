@@ -4,7 +4,6 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
-import com.elm.shj.admin.portal.services.dto.ApplicantCardSearchCriteriaDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffCardDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffCardFilterDto;
@@ -12,18 +11,15 @@ import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Main controller for applicant card management pages
@@ -52,6 +48,32 @@ public class StaffCardManagementController {
         log.info("list search result cards.");
         final CompanyStaffCardFilterDto searchCriteria =  new ObjectMapper().readValue(staffCardSearchCriteria, CompanyStaffCardFilterDto.class);
         return companyStaffCardService.searchStaffCards(searchCriteria, pageable);
+    }
+
+    @GetMapping("/list/ready-to-print/all/{uin}/{idNumber}/{hamlahNumber}/{motawefNumber}/{passportNumber}/{nationality}")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
+    public List<CompanyStaffCardDto> listReadyToPrintCards(@PathVariable String uin, @PathVariable String idNumber, @PathVariable String hamlahNumber,
+                                                           @PathVariable String motawefNumber, @PathVariable String passportNumber,
+                                                           @PathVariable String nationality, @RequestParam List<Long> excludedCardsIds,
+                                                           Authentication authentication) {
+        log.info("list all printing cards.");
+        return companyStaffCardService.findAllPrintingCards("-1".equals(uin) ? null : uin,
+                "-1".equals(idNumber) ? null : idNumber, "-1".equals(hamlahNumber) ? null : hamlahNumber,
+                "-1".equals(motawefNumber) ? null : motawefNumber, "-1".equals(passportNumber) ? null : passportNumber,
+                "-1".equals(nationality) ? null : nationality, excludedCardsIds);
+    }
+
+    @GetMapping("/list/ready-to-print/{uin}/{idNumber}/{hamlahNumber}/{motawefNumber}/{passportNumber}/{nationality}")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
+    public Page<CompanyStaffCardDto> listReadyToPrintCards(@PathVariable String uin, @PathVariable String idNumber, @PathVariable String hamlahNumber,
+                                                           @PathVariable String motawefNumber, @PathVariable String passportNumber,
+                                                           @PathVariable String nationality, @RequestParam List<Long> excludedCardsIds,
+                                                           Authentication authentication, Pageable pageable) {
+        log.info("list all printing cards.");
+        return companyStaffCardService.findPrintingCards("-1".equals(uin) ? null : uin,
+                "-1".equals(idNumber) ? null : idNumber, "-1".equals(hamlahNumber) ? null : hamlahNumber,
+                "-1".equals(motawefNumber) ? null : motawefNumber, "-1".equals(passportNumber) ? null : passportNumber,
+                "-1".equals(nationality) ? null : nationality, excludedCardsIds, pageable);
     }
 
 }

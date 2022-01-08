@@ -27,8 +27,8 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
 
     private final ApplicantPackageHousingRepository applicantPackageHousingRepository;
 
-    public List<ApplicantPackageHousingDto> findApplicantPackageHousingByUinAndCompanyRitualSeasonId(long applicantUin, long companyRitualSeasonId) {
-        List<JpaApplicantPackageHousing> jpaApplicantPackageHousings = applicantPackageHousingRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(applicantUin, companyRitualSeasonId);
+    public List<ApplicantPackageHousingDto> findApplicantPackageHousingByUinAndApplicantPackageId(long applicantUin, long companyRitualSeasonId) {
+        List<JpaApplicantPackageHousing> jpaApplicantPackageHousings = applicantPackageHousingRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageId(applicantUin, companyRitualSeasonId);
         return getMapper().fromEntityList(jpaApplicantPackageHousings, mappingContext);
     }
 }

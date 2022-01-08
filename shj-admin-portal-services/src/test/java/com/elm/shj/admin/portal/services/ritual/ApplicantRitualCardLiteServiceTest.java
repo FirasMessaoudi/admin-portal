@@ -50,7 +50,7 @@ public class ApplicantRitualCardLiteServiceTest {
         JpaApplicantRitual applicantRituals = new JpaApplicantRitual();
         applicantRituals.setBorderNumber("2");
         Mockito.when(applicantRitualRepository.findCardDetailsByUinAndRitualId(EXIST_USER_UIN, Long.parseLong(EXIST_RITUAL_ID))).thenReturn(applicantRituals);
-        Optional<ApplicantRitualCardLiteDto> applicantRitualLiteDtos = applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(EXIST_USER_UIN, EXIST_RITUAL_ID);
+        Optional<ApplicantRitualCardLiteDto> applicantRitualLiteDtos = applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(EXIST_USER_UIN, Long.parseLong(EXIST_RITUAL_ID));
         Assert.assertNotNull(applicantRitualLiteDtos);
     }
 
@@ -58,7 +58,7 @@ public class ApplicantRitualCardLiteServiceTest {
     @Test
     public void test_find_applicant_card_details_by_uin_not_found() {
         Mockito.when(applicantRitualRepository.findCardDetailsByUinAndRitualId(FAKE_USER_UIN, Long.parseLong(EXIST_RITUAL_ID))).thenReturn(null);
-        Optional<ApplicantRitualCardLiteDto> returnedCard = applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(FAKE_USER_UIN, EXIST_RITUAL_ID);
+        Optional<ApplicantRitualCardLiteDto> returnedCard = applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(FAKE_USER_UIN, Long.parseLong(EXIST_RITUAL_ID));
         Assert.assertEquals(returnedCard, Optional.empty());
     }
 }

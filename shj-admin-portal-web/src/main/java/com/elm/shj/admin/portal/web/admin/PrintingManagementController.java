@@ -18,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 /**
  * Main controller for printing management pages
  *
@@ -33,7 +32,6 @@ public class PrintingManagementController {
 
     private final PrintRequestService printRequestService;
     private final PrintRequestLiteService printRequestLiteService;
-
     /**
      * List paginated print requests.
      *
@@ -52,6 +50,7 @@ public class PrintingManagementController {
      * @param pageable the page configuration for the pagination
      * @return the list of print requests
      */
+
     @PostMapping("/list")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.APPLICANT_PRINTING_REQUEST_MANAGEMENT + "')")
     public Page<PrintRequestLiteDto> list(@RequestBody PrintRequestFilterVo filterVo, Pageable pageable, Authentication authentication) {
@@ -75,8 +74,7 @@ public class PrintingManagementController {
     /**
      * Add new print request
      *
-     * @param cardsIds TODO Complete documentation
-     * @return the created request
+     * @param cardsIds TODO Complete documentation     * @return the created request
      */
     @PostMapping("/prepare")
     @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
@@ -89,14 +87,15 @@ public class PrintingManagementController {
     @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
     public PrintRequestDto batch(@RequestBody PrintRequestDto printRequest, @RequestParam List<EPrintBatchType> types) {
         log.debug("Batching print request");
-        return printRequestService.processBatching(printRequest, types);
+        return printRequestService.processBatching(printRequest, types, EPrintingRequestTarget.APPLICANT.name());
     }
 
     @PostMapping("/confirm")
     @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
     public PrintRequestDto confirm(@RequestBody PrintRequestDto printRequest) {
         log.debug("Confirming print request");
-        return printRequestService.confirm(printRequest);
+        return printRequestService.confirm(printRequest, EPrintingRequestTarget.APPLICANT.name());
     }
 
 }
+

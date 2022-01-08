@@ -6,7 +6,8 @@
         <svg-icon styleClass="h4 pt-3" icon="search" (click)="isSearchbarCollapsed = !isSearchbarCollapsed"></svg-icon>
       </button>
     </h3>
-    <button id="createPrintingRequest" routerLink="/print-requests/create" class="btn btn-outline-dcc-primary px-4"
+    <button id="createPrintingRequest" routerLink="/print-requests/create"
+            class="btn btn-outline-dcc-primary px-4"
             *ngIf="canCreateNewRequest">
       <svg-icon styleClass="mr-2" icon="plus"></svg-icon>
       <span>{{ "printing-management.new_request" | translate }}</span>

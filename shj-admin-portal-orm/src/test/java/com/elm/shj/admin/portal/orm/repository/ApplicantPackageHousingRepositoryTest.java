@@ -29,9 +29,9 @@ public class ApplicantPackageHousingRepositoryTest extends AbstractJpaTest {
     private ApplicantPackageHousingRepository applicantPackageHousingRepository;
 
     @Test
-    public void test_find_all_by_ApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId_found() {
+    public void test_find_all_by_ApplicantPackageApplicantUinAndApplicantPackageId_found() {
 
-        List<JpaApplicantPackageHousing> applicantPackageHousings = applicantPackageHousingRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(EXIST_USER_UIN, 1);
+        List<JpaApplicantPackageHousing> applicantPackageHousings = applicantPackageHousingRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageId(EXIST_USER_UIN, 1);
 
         assertNotNull(applicantPackageHousings);
         assertEquals(1, applicantPackageHousings.size());
@@ -39,9 +39,9 @@ public class ApplicantPackageHousingRepositoryTest extends AbstractJpaTest {
     }
 
     @Test
-    public void test_find_all_by_ApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanySeasonPackagesCompanyRitualSeasonId_notFound() {
+    public void test_find_all_by_ApplicantPackageApplicantUinAndApplicantPackageId_notFound() {
 
-        List<JpaApplicantPackageHousing> applicantPackageHousings = applicantPackageHousingRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(FAKE_USER_UIN, 1);
+        List<JpaApplicantPackageHousing> applicantPackageHousings = applicantPackageHousingRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageId(FAKE_USER_UIN, 1);
 
         assertNotNull(applicantPackageHousings);
         assertEquals(0, applicantPackageHousings.size());

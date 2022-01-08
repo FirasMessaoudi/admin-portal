@@ -54,7 +54,7 @@ public class ApplicantMainDataServiceTest {
         ApplicantMainDataDto applicantMainDataDto = new ApplicantMainDataDto();
         Mockito.when(applicantMainDataDtoMapper.fromEntity(Mockito.any(), Mockito.any())).thenReturn(applicantMainDataDto);
 
-        Optional<ApplicantMainDataDto> optionalDto = applicantMainDataService.findByUin(UIN_USER_EXIST, 2);
+        Optional<ApplicantMainDataDto> optionalDto = applicantMainDataService.findByUin(UIN_USER_EXIST, 1);
         assertTrue(optionalDto.isPresent());
     }
 }

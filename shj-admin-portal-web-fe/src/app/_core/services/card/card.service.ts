@@ -6,7 +6,6 @@ import {catchError} from "rxjs/internal/operators";
 import {Lookup} from "@model/lookup.model";
 import {CountryLookup} from "@model/country-lookup.model";
 import {ApplicantCardSearchCriteria} from "@model/applicant-card-search-criteria.model";
-import {StaffCardSearchCriteria} from "@model/staff-card-search-criteria.model";
 
 @Injectable({
   providedIn: 'root'
@@ -31,12 +30,6 @@ export class CardService {
     let params = new HttpParams().set('applicantCardSearchCriteria', JSON.stringify(applicantCardSearchCriteria))
       .set('page', pageNumber);
     return this.http.get<any>("/core/api/cards/list-applicant-cards", {params: params});
-  }
-
-  staffCardlist(pageNumber: any, staffCardSearchCriteria: StaffCardSearchCriteria): Observable<any> {
-    let params = new HttpParams().set('staffCardSearchCriteria', JSON.stringify(staffCardSearchCriteria))
-      .set('page', pageNumber);
-    return this.http.get<any>("/core/api/staff-cards/list", {params: params});
   }
 
   searchAllCardsToPrint(uin: any, idNumber: number, hamlahNumber: any, motawefNumber: any, passportNumber: any,
@@ -131,8 +124,32 @@ export class CardService {
     return this.http.post('/core/api/cards/change-status/' + id + "/" + actionCode, null);
   }
 
-  findRitualSeasons(): Observable<any[]> {
-    return this.http.get<any>('/core/api/lookup/ritual-seasons/list');
+  findStaffCards(pageNumber): Observable<any> {
+    let params = new HttpParams().set('StaffCardSearchCriteria', '')
+      .set('page', pageNumber);
+    return this.http.get<any>('/core/api/staff-cards/list', {params: params});
+  }
+
+  searchStaffCardsToPrint(uin: any, idNumber: number, hamlahNumber: any, motawefNumber: any, passportNumber: any,
+                          nationality: any, excludedCardsIds, pageNumber: any): Observable<any> {
+    let params = new HttpParams().set('page', pageNumber);
+    if (excludedCardsIds.length > 0) {
+      params = params.append('excludedCardsIds', excludedCardsIds);
+    }
+    return this.http.get('/core/api/staff-cards/list/ready-to-print/' + (uin ? uin : -1) + '/' + (idNumber ? idNumber : -1) + '/' +
+      (hamlahNumber ? hamlahNumber : -1) + '/' + (motawefNumber ? motawefNumber : -1) + '/' +
+      (passportNumber ? passportNumber : -1) + '/' + (nationality ? nationality : -1), {params: params});
+  }
+
+  searchAllStaffCardsToPrint(uin: any, idNumber: number, hamlahNumber: any, motawefNumber: any, passportNumber: any,
+                             nationality: any, excludedCardsIds): Observable<any> {
+    let params = new HttpParams();
+    if (excludedCardsIds.length > 0) {
+      params = params.append('excludedCardsIds', excludedCardsIds);
+    }
+    return this.http.get('/core/api/staff-cards/list/ready-to-print/all/' + (uin ? uin : -1) + '/' + (idNumber ? idNumber : -1) + '/' +
+      (hamlahNumber ? hamlahNumber : -1) + '/' + (motawefNumber ? motawefNumber : -1) + '/' +
+      (passportNumber ? passportNumber : -1) + '/' + (nationality ? nationality : -1), {params: params});
   }
 
 }

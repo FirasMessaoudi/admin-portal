@@ -25,7 +25,6 @@ export class PrintingRequestListComponent implements OnInit {
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
-
   constructor(private authenticationService: AuthenticationService,
               private printService: PrintService,
               private lookupsService: LookupService,

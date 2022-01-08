@@ -4,9 +4,7 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
-import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
-import com.elm.shj.admin.portal.services.dto.EPrintingRequestTarget;
-import com.elm.shj.admin.portal.services.dto.PrintRequestLiteDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -18,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Main controller for staff printing management pages
@@ -60,44 +60,44 @@ public class StaffPrintingManagementController {
         return printRequestLiteService.findByFilter(filterVo, EPrintingRequestTarget.STAFF.name(), pageable);
     }
 
-//    /**
-//     * finds a print request by his ID
-//     *
-//     * @param printRequestId the request id to find
-//     * @return the found user or <code>null</code>
-//     */
-//    @GetMapping("/find/{printRequestId}")
-//    @PreAuthorize("hasAuthority('"+AuthorityConstants.VIEW_PRINTING_REQUEST_DETAILS+"')")
-//    public PrintRequestDto find(@PathVariable long printRequestId) {
-//        log.debug("Handler for {}", "Find Print Request");
-//        return printRequestService.findOne(printRequestId);
-//    }
-//
-//    /**
-//     * Add new print request
-//     *
-//     * @param cardsIds TODO Complete documentation
-//     * @return the created request
-//     */
-//    @PostMapping("/prepare")
-//    @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
-//    public PrintRequestDto prepare(@RequestBody List<Long> cardsIds) {
-//        log.debug("Preparing print request");
-//        return printRequestService.prepare(cardsIds);
-//    }
-//
-//    @PostMapping("/batch")
-//    @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
-//    public PrintRequestDto batch(@RequestBody PrintRequestDto printRequest, @RequestParam List<EPrintBatchType> types) {
-//        log.debug("Batching print request");
-//        return printRequestService.processBatching(printRequest, types);
-//    }
-//
-//    @PostMapping("/confirm")
-//    @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
-//    public PrintRequestDto confirm(@RequestBody PrintRequestDto printRequest) {
-//        log.debug("Confirming print request");
-//        return printRequestService.confirm(printRequest);
-//    }
+    /**
+     * finds a print request by his ID
+     *
+     * @param printRequestId the request id to find
+     * @return the found user or <code>null</code>
+     */
+    @GetMapping("/find/{printRequestId}")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.VIEW_PRINTING_REQUEST_DETAILS + "')")
+    public PrintRequestDto find(@PathVariable long printRequestId) {
+        log.debug("Handler for {}", "Find Print Request");
+        return printRequestService.findOne(printRequestId);
+    }
+
+    /**
+     * Add new print request
+     *
+     * @param cardsIds TODO Complete documentation
+     * @return the created request
+     */
+    @PostMapping("/prepare")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
+    public PrintRequestDto prepare(@RequestBody List<Long> cardsIds) {
+        log.debug("Preparing print request");
+        return printRequestService.prepare(cardsIds);
+    }
+
+    @PostMapping("/batch")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
+    public PrintRequestDto batch(@RequestBody PrintRequestDto printRequest, @RequestParam List<EPrintBatchType> types) {
+        log.debug("Batching print request");
+        return printRequestService.processBatching(printRequest, types, EPrintingRequestTarget.STAFF.name());
+    }
+
+    @PostMapping("/confirm")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
+    public PrintRequestDto confirm(@RequestBody PrintRequestDto printRequest) {
+        log.debug("Confirming print request");
+        return printRequestService.confirm(printRequest, EPrintingRequestTarget.STAFF.name());
+    }
 
 }

@@ -1,0 +1,270 @@
+<a class="d-block button_back" href="javascript:void(0);" (click)="goBack()">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
+
+<div class="dashes flex-center-column my-5 p-5" *ngIf="addedCards.length === 0">
+
+  <img class="my-5" src="assets/images/add-cards.jpg" alt='{{ "printing-management.new_request" | translate }}'>
+
+  <button name="addCards" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
+    {{ "printing-management.add_cards" | translate }}
+  </button>
+
+</div>
+
+<ng-template #showAdd let-modal>
+  <div class="modal-header">
+    <h4> {{ "printing-management.title" | translate }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="resetModal()">
+      <span aria-hidden="true" class="h2">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <form [formGroup]="searchForm" name="searchCard" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+      <div class="form-group col">
+        <label class="col-form-label">{{'card-management.applicant_id' | translate }}</label>
+        <input id="uin" type="number" formControlName="uin" class="form-control"
+               onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length<=9"
+               min="0" step="1"/>
+      </div>
+      <div class="form-group col">
+        <label class="col-form-label">{{'printing-management.id_number' | translate }}</label>
+        <input type="number" formControlName="idNumber" class="form-control"
+               onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length<=9"
+               min="0" step="1"/>
+      </div>
+      <div class="form-group col">
+        <label class="col-form-label">{{'printing-management.hamlah_number' | translate }}</label>
+        <input id="hamlahNumber" formControlName="hamlahNumber" type="text" class="form-control"/>
+      </div>
+      <div class="form-group col">
+        <label class="col-form-label">{{'printing-management.motawef_number' | translate }}</label>
+        <input id="motawefNumber" formControlName="motawefNumber" type="text" class="form-control"/>
+      </div>
+      <div class="form-group col">
+        <label class="col-form-label">{{'card-management.passport_number' | translate }}</label>
+        <input id="passportNumber" formControlName="passportNumber" type="text" class="form-control"/>
+      </div>
+      <div class="form-group col">
+        <label class="col-form-label">{{'card-management.nationality' | translate }}</label>
+        <select id="nationality" class="custom-select" formControlName="nationality" (click)="reloadNationalities()">
+          <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+          <option *ngFor="let nationality of localizedNationalities" [ngValue]="nationality.code">
+            {{nationality.label}}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group col-12">
+        <button id="searchCard" type="submit" [disabled]="isLoading" (click)="search(0)"
+                class="btn btn-dcc-primary px-5 mr-3">
+          {{ "general.btn_search" | translate }}
+        </button>
+      </div>
+
+    </form>
+
+
+    <div class="table-responsive my-4">
+      <div [ngStyle]="{'visibility': isSelectAllClicked ? 'visible': 'hidden'}"
+           class="d-flex align-items-center pb-3 px-4 border-bottom w-100">
+        <div class="selectAll_label" id="selectAll_count">
+
+          <span>{{splitString('printing-management.cards_selected_on_the_current_page' | translate, ' X ')[0]}}</span>
+          <span class="font-weight-bold text-dcc-primary px-2">{{numberOfSelectedCardsInCurrentPage()}}</span>
+          <span>{{splitString('printing-management.cards_selected_on_the_current_page' | translate, ' X ')[1]}}</span>
+        </div>
+        <div id="selectbtns">
+          <button [disabled]="isSelectLoading"
+                  [ngStyle]="{'display': isSelectAllClicked && !isAllSelected ? 'inline-flex': 'none'}"
+                  (click)="selectAllCards()"
+                  class="btn btn-dcc-primary px-5 mr-3">
+            {{'general.select' | translate}}<span
+            class="font-weight-bold px-2">{{page?.totalElements}}</span>{{'printing-management.cards_from_all_pages' | translate}}
+
+          </button>
+          <button [disabled]="isSelectLoading"
+                  [ngStyle]="{'display': isSelectAllClicked && isAllSelected ? 'inline-flex': 'none'}"
+                  (click)="deselectAllCards()"
+                  class="btn btn-dcc-primary px-5 mr-3">
+            {{'general.deselect' | translate}}<span
+            class="font-weight-bold px-2">{{page?.totalElements}}</span>{{'printing-management.cards_from_all_pages' | translate}}
+
+          </button>
+        </div>
+      </div>
+
+      <div class="table_scroll">
+        <table id="selectedApplicantsSearchResult" class="table table-striped table-hover">
+          <thead>
+          <tr>
+            <th scope="col">
+              <div class="custom-control custom-checkbox my-2">
+                <input name="selectAllCards" type="checkbox" class="custom-control-input" id="selectedApplicantCheck-01"
+                       [checked]="isAllChecked()"
+                       (change)="selectCardsInThePage($event)">
+                <label class="custom-control-label mx-3" for="selectedApplicantCheck-01"></label>
+              </div>
+            </th>
+            <th scope="col">{{'card-management.applicant_name' | translate}}</th>
+            <th scope="col">{{'card-management.applicant_id' | translate}}</th>
+            <th scope="col">{{'printing-management.id_number' | translate}}</th>
+            <th scope="col">{{'card-management.passport_number' | translate}}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngIf="loading()" class="text-center">
+            <td colspan="10" style="height: 200px;">
+              <div class="preloader inner_page">
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="!page?.content  && !loading()  || cards.length === 0 && !loading()" class="text-center">
+            <td colspan="10">
+              <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
+              <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+            </td>
+          </tr>
+          <ng-container *ngIf="!loading()">
+            <tr *ngFor="let card of cards">
+              <td>
+                <div class="custom-control custom-checkbox my-2">
+                  <input type="checkbox" class="custom-control-input" id="applicantCheck-{{card.id}}"
+                         [checked]="isChecked(card)"
+                         (change)="selectOneCard($event, card.id)">
+                  <label class="custom-control-label mx-3" for="applicantCheck-{{card.id}}"></label>
+                </div>
+              </td>
+              <td *ngIf="currentLanguage.startsWith('ar')">{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}}
+                <br>{{card?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
+              </td>
+              <td *ngIf="currentLanguage.startsWith('en')">{{card?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
+                <br>{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}}
+              </td>
+
+              <td>{{card?.companyStaffSuin}}</td>
+              <td>{{card?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
+              <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
+            </tr>
+          </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="cards.length > 0">
+      <nav aria-label="Page navigation example" *ngIf="page?.content && page?.totalElements > 0">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="page?.first">
+            <a class="page-link" (click)="search(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>
+          </li>
+          <li class="page-item" [class.disabled]="page?.first">
+            <a class="page-link" (click)="search(page?.number-1)"
+               tabindex="-1">{{'general.nav_previous' | translate}}</a>
+          </li>
+          <li class="page-item active">
+            <a class="page-link">{{(page?.number + 1) + ' / ' + page?.totalPages}}</a>
+          </li>
+          <li class="page-item" [class.disabled]="page?.last">
+            <a class="page-link" (click)="search(page?.number+1)">{{'general.nav_next' | translate}}</a>
+          </li>
+          <li class="page-item" [class.disabled]="page?.last">
+            <a class="page-link" (click)="search(page?.totalPages-1)">{{'general.nav_last' | translate}}</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+  <div class="modal-footer" *ngIf="selectedCards?.length">
+    <button type="button" class="btn btn-outline-secondary" (click)="resetModal()">
+      {{'general.btn_cancel' | translate  }}
+    </button>
+    <button type="button" class="btn btn-dcc-primary" (click)="addCards()">
+      {{'printing-management.add_no_cards' | translate : {noCards: selectedCards.length} }}
+    </button>
+  </div>
+</ng-template>
+
+<div *ngIf="addedCards.length > 0">
+
+  <div class="dashes flex-center-between py-3 px-4">
+
+    <div>
+      <span class="h5 font-weight-bold text-dcc-primary mr-3">{{addedCards.length}}</span>
+      <span>{{'printing-management.selected_smart_card' | translate}}</span>
+    </div>
+
+    <button id="addCards" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
+      {{ "printing-management.add_cards" | translate }}
+    </button>
+
+  </div>
+
+  <div class="table-responsive my-4">
+    <table id="addedApplicantsSearchResult" class="table table-striped table-hover">
+      <thead>
+      <tr>
+        <th scope="col">{{'card-management.applicant_name' | translate}}</th>
+        <th scope="col">{{'card-management.applicant_id' | translate}}</th>
+        <th scope="col">{{'printing-management.id_number' | translate}}</th>
+        <th scope="col">{{'card-management.passport_number' | translate}}</th>
+        <th scope="col" class="text-center"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="false" class="text-center">
+        <td colspan="10">
+          <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
+          <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+        </td>
+      </tr>
+      <tr
+        *ngFor="let card of addedCards | slice: (addedCardsCurrentPage * addedCardsPageSize) - addedCardsPageSize :addedCardsCurrentPage * addedCardsPageSize">
+        <td>{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}} {{card?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</td>
+        <td>{{card?.companyStaffSuin}}</td>
+        <td>{{card?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
+        <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
+        <td>
+          <button (click)="undoAddCard(card?.id)"
+                  class="btn btn-sm btn-outline-danger tblView"> {{"general.btn_delete" | translate}}
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="addedCardsCurrentPage === 1">
+        <a class="page-link" (click)="setCurrentPage(1)" tabindex="-1">{{'general.nav_first' | translate}}</a>
+      </li>
+      <li class="page-item" [class.disabled]="addedCardsCurrentPage === 1">
+        <a class="page-link" (click)="setCurrentPage(addedCardsCurrentPage - 1)"
+           tabindex="-1">{{'general.nav_previous' | translate}}</a>
+      </li>
+      <li class="page-item active">
+        <a
+          class="page-link">{{addedCardsCurrentPage + ' / ' + getTotalPages(addedCards.length, addedCardsPageSize)}}</a>
+      </li>
+      <li class="page-item"
+          [class.disabled]="addedCardsCurrentPage === getTotalPages(addedCards.length, addedCardsPageSize)">
+        <a class="page-link" (click)="setCurrentPage(addedCardsCurrentPage + 1)">{{'general.nav_next' | translate}}</a>
+      </li>
+      <li class="page-item"
+          [class.disabled]="addedCardsCurrentPage === getTotalPages(addedCards.length, addedCardsPageSize)">
+        <a class="page-link"
+           (click)="setCurrentPage(getTotalPages(addedCards.length, addedCardsPageSize))">{{'general.nav_last' | translate}}</a>
+      </li>
+    </ul>
+  </nav>
+
+</div>
+
+
