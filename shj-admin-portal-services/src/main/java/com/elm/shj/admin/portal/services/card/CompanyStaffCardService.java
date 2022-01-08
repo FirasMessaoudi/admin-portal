@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.card;
 
-import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
+import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffCardRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.dto.ECardStatus;
@@ -13,12 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import java.util.*;
 
 /**
  * Service handling company staff card
@@ -75,8 +77,40 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
     }
 
     @Transactional
-    public Page<CompanyStaffCardDto> searchStaffCards(String uin, String idNumber, String passportNumber, Pageable pageable) {
-        return mapPage(companyStaffCardRepository.findStaffCards(ECardStatus.REISSUED.name(), pageable));
+    public Page<CompanyStaffCardDto> searchStaffCards(CompanyStaffCardFilterDto companyStaffCardFilter, Pageable pageable) {
+        return mapPage(companyStaffCardRepository.findAll(withStaffCardFilter(companyStaffCardFilter), pageable));
+    }
+
+    private Specification<JpaCompanyStaffCard> withStaffCardFilter(final CompanyStaffCardFilterDto criteria) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            //Create atomic predicates
+            List<Predicate> predicates = new ArrayList<>();
+          Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = root.join("companyRitualSeason");
+            if (criteria.getRitualType() != null) {
+                Join<JpaCompanyRitualSeason, JpaRitualSeason> ritualSeason = companyRitualSeason.join("ritualSeason");
+                Path<String> ritualTypeCode = ritualSeason.get("ritualTypeCode");
+                predicates.add(criteriaBuilder.equal(ritualTypeCode, criteria.getRitualType()));
+            }
+
+            if (criteria.getHajjCompany() != null) {
+                Join<JpaCompanyRitualSeason, JpaCompany> company = companyRitualSeason.join("company");
+                Path<Long> companyId = company.get("id");
+                predicates.add(criteriaBuilder.equal(companyId, criteria.getHajjCompany()));
+            }
+
+            if (criteria.getCardStatus() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("statusCode"), criteria.getCardStatus()));
+            }
+
+            if (criteria.getSuin() != null && !criteria.getSuin().equals("")) {
+                predicates.add(criteriaBuilder.equal(root.get("companyStaffSuin"), criteria.getSuin()));
+            }
+
+            if (criteria.getCardNumber() != null && !criteria.getCardNumber().equals("")) {
+                predicates.add(criteriaBuilder.equal(root.get("referenceNumber"), criteria.getCardNumber()));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
 

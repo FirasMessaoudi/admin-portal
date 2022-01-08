@@ -20,24 +20,17 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompanyStaffCardDto implements Serializable {
+public class CompanyStaffCardFilterDto implements Serializable {
 
     private static final long serialVersionUID = 6897431323864677377L;
 
-    private long id;
-
-    private String referenceNumber;
-
-    private String statusCode;
-
-   //@JsonBackReference(value = "companyRitualSeason")
-    private CompanyRitualSeasonDto companyRitualSeason;
-
-    private String companyStaffSuin;
-
-    private Date creationDate;
-
-    private Date updateDate;
+    private Long ritualSeason;
+    private String ritualType;
+    private Long hajjCompany;
+    private Long batchNumber;
+    private String cardStatus;
+    private String suin;
+    private String cardNumber;
 
 
 }

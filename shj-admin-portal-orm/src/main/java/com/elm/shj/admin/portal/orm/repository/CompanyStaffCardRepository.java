@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * @author f.messaoudi
  * @since 1.1.0
  */
-public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaffCard, Long> {
+public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaffCard, Long>, JpaSpecificationExecutor<JpaCompanyStaffCard> {
     List<JpaCompanyStaffCard> findAllByCompanyStaffSuin(String suin);
 
     JpaCompanyStaffCard findByCompanyStaffSuinAndStatusCode(String suin, String statusCode);

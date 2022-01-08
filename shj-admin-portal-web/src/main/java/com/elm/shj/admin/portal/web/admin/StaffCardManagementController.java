@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardSearchCriteriaDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffCardDto;
+import com.elm.shj.admin.portal.services.dto.CompanyStaffCardFilterDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
@@ -48,10 +49,9 @@ public class StaffCardManagementController {
     //@PreAuthorize("hasAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "')")
     public Page<CompanyStaffCardDto> searchApplicantCards(@RequestParam(value = "staffCardSearchCriteria") String staffCardSearchCriteria,
                                                           Pageable pageable, Authentication authentication) throws IOException {
-
         log.info("list search result cards.");
-        return companyStaffCardService.searchStaffCards("", "idNum", "passportNumber", pageable);
-
+        final CompanyStaffCardFilterDto searchCriteria =  new ObjectMapper().readValue(staffCardSearchCriteria, CompanyStaffCardFilterDto.class);
+        return companyStaffCardService.searchStaffCards(searchCriteria, pageable);
     }
 
 }

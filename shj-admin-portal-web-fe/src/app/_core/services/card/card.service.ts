@@ -6,6 +6,7 @@ import {catchError} from "rxjs/internal/operators";
 import {Lookup} from "@model/lookup.model";
 import {CountryLookup} from "@model/country-lookup.model";
 import {ApplicantCardSearchCriteria} from "@model/applicant-card-search-criteria.model";
+import {StaffCardSearchCriteria} from "@model/staff-card-search-criteria.model";
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,12 @@ export class CardService {
     let params = new HttpParams().set('applicantCardSearchCriteria', JSON.stringify(applicantCardSearchCriteria))
       .set('page', pageNumber);
     return this.http.get<any>("/core/api/cards/list-applicant-cards", {params: params});
+  }
+
+  staffCardlist(pageNumber: any, staffCardSearchCriteria: StaffCardSearchCriteria): Observable<any> {
+    let params = new HttpParams().set('staffCardSearchCriteria', JSON.stringify(staffCardSearchCriteria))
+      .set('page', pageNumber);
+    return this.http.get<any>("/core/api/staff-cards/list", {params: params});
   }
 
   searchAllCardsToPrint(uin: any, idNumber: number, hamlahNumber: any, motawefNumber: any, passportNumber: any,
@@ -122,6 +129,10 @@ export class CardService {
 
   changeCardStatus(id: number, actionCode: string): Observable<any> {
     return this.http.post('/core/api/cards/change-status/' + id + "/" + actionCode, null);
+  }
+
+  findRitualSeasons(): Observable<any[]> {
+    return this.http.get<any>('/core/api/lookup/ritual-seasons/list');
   }
 
 }

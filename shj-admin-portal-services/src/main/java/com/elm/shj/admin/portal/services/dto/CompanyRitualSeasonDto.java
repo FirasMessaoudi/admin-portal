@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,7 +28,7 @@ public class CompanyRitualSeasonDto {
     private long id;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @JsonBackReference(value = "company")
+    //@JsonBackReference(value = "company")
     private CompanyDto company;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
@@ -35,6 +36,7 @@ public class CompanyRitualSeasonDto {
 
     private List<RitualPackageDto> ritualPackages;
 
+    @JsonManagedReference
     private List<ApplicantGroupDto> applicantGroups;
 
     @NotNull(message = "validation.data.constraints.msg.20001")

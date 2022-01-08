@@ -287,6 +287,7 @@
   },
   "card-management": {
     "title": "إدارة البطاقات",
+    "staff_title": "Staff Card Management",
     "add_exceptional_card": "اضافة بطاقة",
     "cards_list": "قائمة البطاقات",
     "card_details": "تفاصيل البطاقة",
@@ -391,7 +392,12 @@
     "dialog_activated_card_success_text": "تم تفعيل البطاقة بنجاح",
     "dialog_suspended_card_success_text": "تم إيقاف البطاقة بنجاح",
     "dialog_canceled_card_success_text": "تم إلغاء البطاقة بنجاح",
-    "dialog_reissued_card_success_text": "تم إعادة إصدارة بطاقة جديدة بنجاح ويمكن طباعتها"
+    "dialog_reissued_card_success_text": "تم إعادة إصدارة بطاقة جديدة بنجاح ويمكن طباعتها",
+    "hajj_company": "Hajj Company",
+    "smart_digital_id": "Smart Digital ID",
+    "batch_number": "رقم الحزمة",
+    "name_ar": "الاسم بالعربي",
+    "name_en": "الاسم بالانجليزي"
   },
   "notification-management": {
     "title": "إدارة التنبيهات",
