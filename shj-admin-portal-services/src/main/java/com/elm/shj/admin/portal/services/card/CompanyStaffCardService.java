@@ -89,16 +89,21 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
             Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = root.join("companyRitualSeason");
+            Join<JpaCompanyRitualSeason, JpaRitualSeason> ritualSeason = companyRitualSeason.join("ritualSeason");
             if (criteria.getRitualType() != null) {
-                Join<JpaCompanyRitualSeason, JpaRitualSeason> ritualSeason = companyRitualSeason.join("ritualSeason");
                 Path<String> ritualTypeCode = ritualSeason.get("ritualTypeCode");
                 predicates.add(criteriaBuilder.equal(ritualTypeCode, criteria.getRitualType()));
             }
 
-            if (criteria.getHajjCompany() != null) {
+            if (criteria.getRitualSeason() != null) {
+                Path<Long> seasonYear = ritualSeason.get("seasonYear");
+                predicates.add(criteriaBuilder.equal(seasonYear, criteria.getRitualSeason()));
+            }
+
+            if (criteria.getCompanyCode() != null) {
                 Join<JpaCompanyRitualSeason, JpaCompany> company = companyRitualSeason.join("company");
-                Path<Long> companyId = company.get("id");
-                predicates.add(criteriaBuilder.equal(companyId, criteria.getHajjCompany()));
+                Path<String> companyCode = company.get("code");
+                predicates.add(criteriaBuilder.equal(companyCode, criteria.getCompanyCode()));
             }
 
             if (criteria.getCardStatus() != null) {
@@ -112,6 +117,10 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
 
             if (criteria.getCardNumber() != null && !criteria.getCardNumber().equals("")) {
                 predicates.add(criteriaBuilder.equal(root.get("referenceNumber"), criteria.getCardNumber()));
+            }
+
+            if (criteria.getBatchNumber() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("batchNumber"), criteria.getBatchNumber()));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };

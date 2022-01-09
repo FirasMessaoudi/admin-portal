@@ -2,7 +2,7 @@ export class StaffCardSearchCriteria {
   ritualType: any;
   cardNumber: any;
   cardStatus: any;
-  hajjCompany: any;
+  companyCode: any;
   batchNumber: any;
   suin: any;
   ritualSeason: any;
