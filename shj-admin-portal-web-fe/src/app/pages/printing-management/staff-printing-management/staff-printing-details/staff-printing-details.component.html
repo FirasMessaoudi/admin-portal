@@ -1,0 +1,133 @@
+<a class="d-block button_back" href="javascript:void(0);" (click)="goBack()">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h3 class="sectionTitle">View Staff Data
+      <b class="text-dcc-primary"><!-- {{user?.firstName + " " + user?.familyName}} --></b>
+    </h3>
+  </div>
+  <hr class="my-4 w-100">
+  <section>
+    <div class="content__section">
+      <form enctype="multipart/form-data">
+        <span class="form-control-plaintext ">{{'card-management.main_details' | translate}}</span>
+        <div class="row">
+          <div class="col-md-9">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+              <div class="form-group col">
+                <label class="col-form-label">Digital ID</label>
+                <span class="form-control-plaintext ">{{ staff?.suin }}</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'printing-management.season' | translate}}</label>
+                <span class="form-control-plaintext ltr">
+                {{ staff?.season }}
+            </span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'general.email' | translate}}</label>
+                <span class="form-control-plaintext ">{{ staff?.email }}</span>
+              </div>
+
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.ritual_type' | translate}}</label>
+                <span class="form-control-plaintext"><!-- {{ user?.firstName + ' ' + user?.familyName }} --></span>
+              </div>
+              <div class="form-group col">
+
+              </div>
+
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.passport_number' | translate}}</label>
+                <span class="form-control-plaintext">{{ staff?.passportNumber }}</span>
+
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'role-management.role_name_ar' | translate}}</label>
+                <span class="form-control-plaintext font-weight-bold">{{ staff?.fullNameAr }}</span>
+              </div>
+              <div class="form-group col">
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'printing-management.id_number' | translate}}</label>
+                <span class="form-control-plaintext ">{{ staff?.idNumber }}</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'role-management.role_name_en' | translate}}</label>
+                <span class="form-control-plaintext ">{{ staff?.fullNameEn }}</span>
+              </div>
+              <div class="form-group col">
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.applicant_original_name' | translate}}</label>
+                <span class="form-control-plaintext ">{{ staff?.fullNameOrigin }}</span>
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'general.date_of_birth' | translate}}</label>
+                <span class="form-control-plaintext ">{{ staff?.dateOfBirthGregorian | gregorianDateFormat }}</span>
+              </div>
+              <div class="form-group col">
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.nationality' | translate}}</label>
+                <span class="form-control-plaintext "><!-- {{ user?.lastLoginDate | gregorianDateFormat }} --></span>
+              </div>
+              <div class="form-group col" [ngSwitch]="staff?.gender?.toUpperCase()">
+                <label class="col-form-label">{{
+                  "general.gender" | translate
+                  }}</label>
+                <span class="form-control-plaintext" *ngSwitchCase="'F'">{{
+                "user-management.female" | translate
+                }}</span>
+                <span class="form-control-plaintext" *ngSwitchCase="'M'">{{
+                "user-management.male" | translate
+                }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="avatarBox">
+              <div class="avatar">
+
+                <!-- <img [src]="user?.avatar ? 'data:image/jpeg;base64,'+user?.avatar : url"/> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </section>
+  <hr class="my-4 w-100">
+  <section>
+    <div class="content__section">
+      <form enctype="multipart/form-data">
+        <span class="form-control-plaintext ">Company Details</span>
+        <div class="row">
+          <div class="col-md-9">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.company_number' | translate}}</label>
+                <span class="form-control-plaintext "><!-- {{ user?.nin }} --></span>
+              </div>
+              <div class="form-group col">
+              </div>
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.company_name' | translate}}</label>
+                <span class="form-control-plaintext ">{{ staff?.email }}</span>
+              </div>
+
+              <div class="form-group col">
+                <label class="col-form-label">Job title</label>
+                <span class="form-control-plaintext"><!-- {{ user?.firstName + ' ' + user?.familyName }} --></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </section>
+</div>
