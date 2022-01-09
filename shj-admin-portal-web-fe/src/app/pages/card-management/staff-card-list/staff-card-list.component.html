@@ -42,10 +42,13 @@
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "card-management.hajj_company" | translate }}</label>
-          <select formControlName="hajjCompany" class="custom-select">
+          <label class="col-form-label">{{ "card-management.company" | translate }}</label>
+          <select formControlName="companyCode" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option>Riydah Hamalt</option>
+            <option *ngFor="let company of companyNames" [ngValue]="company.code">
+              <span *ngIf="currentLanguage.startsWith('ar')">{{company.labelAr}}</span>
+              <span *ngIf="currentLanguage.startsWith('en')">{{company.labelEn}}</span>
+            </option>
           </select>
         </div>
 
@@ -65,7 +68,7 @@
         </div>
 
         <div class="form-group col">
-          <label class="col-form-label">{{ "card-management.smart_digital_id" | translate }}</label>
+          <label class="col-form-label">{{ "card-management.applicant_id" | translate }}</label>
           <input type="text" formControlName="suin" class="form-control"/>
         </div>
 
@@ -117,7 +120,7 @@
           <th scope="col">{{'card-management.ritual_type' | translate}}</th>
           <th scope="col">{{'card-management.ritual_season' | translate}}</th>
           <th scope="col">{{ "card-management.passport_number" | translate }}</th>
-          <th scope="col">{{ "card-management.smart_digital_id" | translate }}</th>
+          <th scope="col">{{ "card-management.applicant_id" | translate }}</th>
           <th scope="col">{{'card-management.card_number' | translate}}</th>
           <th scope="col">{{'card-management.name_ar' | translate}}</th>
           <th scope="col">{{'card-management.name_en' | translate}}</th>

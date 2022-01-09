@@ -405,8 +405,7 @@
     "dialog_suspended_card_success_text": "Card has been suspended successfully",
     "dialog_canceled_card_success_text": "Card has been canceled successfully",
     "dialog_reissued_card_success_text": "Card has been reissued successfully , you can print the new card",
-    "hajj_company": "Hajj Company",
-    "smart_digital_id": "Smart Digital ID",
+    "company": "Company",
     "batch_number": "Batch Number",
     "name_ar": "Name Arabic",
     "name_en": "Name English"

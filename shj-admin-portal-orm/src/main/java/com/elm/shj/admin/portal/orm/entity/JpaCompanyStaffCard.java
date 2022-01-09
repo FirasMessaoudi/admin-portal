@@ -52,6 +52,9 @@ public class JpaCompanyStaffCard implements Serializable {
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 
+    @Column(name = "batch_number")
+    private long batchNumber;
+
     @PrePersist
     public void prePersist() {
         this.creationDate = new Date();

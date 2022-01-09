@@ -26,7 +26,7 @@ public class CompanyStaffCardFilterDto implements Serializable {
 
     private Long ritualSeason;
     private String ritualType;
-    private Long hajjCompany;
+    private String companyCode;
     private Long batchNumber;
     private String cardStatus;
     private String suin;

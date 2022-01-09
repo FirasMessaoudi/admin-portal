@@ -37,5 +37,7 @@ public class CompanyStaffCardDto implements Serializable {
 
     private Date updateDate;
 
+    private long batchNumber;
+
 
 }

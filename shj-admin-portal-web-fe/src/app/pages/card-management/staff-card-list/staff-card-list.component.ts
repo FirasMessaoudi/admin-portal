@@ -9,6 +9,7 @@ import {NavigationService} from "@core/utilities/navigation.service";
 import {AuthenticationService, CardService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {CompanyStaffCard} from "@model/staff-card.model";
+import {CompanyLite} from "@model/company-lite.model";
 
 @Component({
   selector: 'app-staff-card-list',
@@ -23,6 +24,7 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
   searchForm: FormGroup;
   ritualTypes: Lookup[];
   cardStatuses: Lookup[];
+  companyNames: CompanyLite[] = [];
   ritualSeasons: any[];
   masterSelected: boolean;
   private listSubscription: Subscription;
@@ -54,6 +56,10 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
     this.cardService.findRitualSeasons().subscribe((result) => {
       this.ritualSeasons = result;
     });
+
+    this.cardService.findCompanyNames().subscribe((result) => {
+      this.companyNames = result;
+    });
   }
 
   ngOnDestroy() {
@@ -71,10 +77,10 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
-      ritualSeason: {value: null, disabled: true},
+      ritualSeason: null,
       ritualType: null,
-      hajjCompany: {value: null, disabled: true},
-      batchNumber: {value: null, disabled: true},
+      companyCode: null,
+      batchNumber: null,
       suin: '',
       cardNumber: '',
       cardStatus: null
