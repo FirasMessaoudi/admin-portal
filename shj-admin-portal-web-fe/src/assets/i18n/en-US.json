@@ -299,6 +299,7 @@
   },
   "card-management": {
     "title": "Card Management",
+    "staff_title": "Staff Card Management",
     "add_exceptional_card": "Add Card",
     "cards_list": "Cards List",
     "card_details": "Card Details",
@@ -403,7 +404,12 @@
     "dialog_activated_card_success_text": "Card has been activated successfully",
     "dialog_suspended_card_success_text": "Card has been suspended successfully",
     "dialog_canceled_card_success_text": "Card has been canceled successfully",
-    "dialog_reissued_card_success_text": "Card has been reissued successfully , you can print the new card"
+    "dialog_reissued_card_success_text": "Card has been reissued successfully , you can print the new card",
+    "hajj_company": "Hajj Company",
+    "smart_digital_id": "Smart Digital ID",
+    "batch_number": "Batch Number",
+    "name_ar": "Name Arabic",
+    "name_en": "Name English"
   },
   "notification-management": {
     "title": "Notification Management",

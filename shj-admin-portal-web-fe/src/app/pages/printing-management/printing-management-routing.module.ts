@@ -6,6 +6,7 @@ import {PrintingRequestDetailsComponent} from "@pages/printing-management/printi
 import {PrintingRequestAddUpdateComponent} from "@pages/printing-management/printing-request-add-update/printing-request-add-update.component";
 import {SuccessComponent} from '@pages/printing-management/printing-request-add-update/success/success.component';
 import {StaffPrintingRequestListComponent} from "@pages/printing-management/staff-printing-management/staff-printing-request-list/staff-printing-request-list.component";
+import { StaffPrintingDetailsComponent } from './staff-printing-management/staff-printing-details/staff-printing-details.component';
 import {StaffPrintingRequestAddComponent} from "@pages/printing-management/staff-printing-request-add/staff-printing-request-add.component";
 import {StaffSuccessComponent} from "@pages/printing-management/staff-printing-request-add/staff-success/staff-success.component";
 
@@ -27,6 +28,7 @@ const routes: Routes = [
   {path: 'staff-print-requests/success', component: StaffSuccessComponent, canActivate: [AuthenticationGuard]},
   {path: 'print-requests/update/:id', component: PrintingRequestAddUpdateComponent, canActivate: [AuthenticationGuard]},
   {path: 'staff-print-requests/list', component: StaffPrintingRequestListComponent, canActivate: [AuthenticationGuard]},
+  {path: 'staff-print-requests/details', component: StaffPrintingDetailsComponent, canActivate: [AuthenticationGuard]},
 
 ];
 

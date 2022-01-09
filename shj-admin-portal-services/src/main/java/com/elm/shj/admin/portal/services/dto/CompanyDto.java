@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -78,7 +79,7 @@ public class CompanyDto {
     private Date creationDate;
     private Date updateDate;
 
-    @JsonBackReference(value = "companyRitualSeasons")
+    //@JsonManagedReference(value = "companyRitualSeasons")
     private List<CompanyRitualSeasonDto> companyRitualSeasons;
 
 

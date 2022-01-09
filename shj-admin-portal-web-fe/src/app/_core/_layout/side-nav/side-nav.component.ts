@@ -35,7 +35,22 @@ export class SideNavComponent implements OnInit {
         icon: 'address-card',
         iconFa: 'fa-w-18',
         routerLink: '/cards/list',
-        submenu: false,
+        submenu: true,
+        isCollapsed: true,
+        menuItems: [
+          {
+            title: 'card-management.title',
+            display: false,
+            roles: [EAuthority.CARD_MANAGEMENT],
+            routerLink: '/cards/list'
+          },
+          {
+            title: 'card-management.staff_title',
+            display: false,
+            roles: [EAuthority.CARD_MANAGEMENT],
+            routerLink: '/staff-cards/list'
+          }
+        ]
       },
       {
         title: 'printing-management.title',

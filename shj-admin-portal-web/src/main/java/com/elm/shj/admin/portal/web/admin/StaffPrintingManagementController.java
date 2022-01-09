@@ -4,6 +4,8 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
+import com.elm.shj.admin.portal.services.company.CompanyService;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
@@ -33,6 +35,8 @@ public class StaffPrintingManagementController {
 
     private final PrintRequestService printRequestService;
     private final PrintRequestLiteService printRequestLiteService;
+    private final CompanyService companyService;
+    private final CompanyStaffService companyStaffService;
 
     /**
      * List paginated print requests.
@@ -99,5 +103,16 @@ public class StaffPrintingManagementController {
         log.debug("Confirming print request");
         return printRequestService.confirm(printRequest, EPrintingRequestTarget.STAFF.name());
     }
+
+    @GetMapping("/staff-company-details/{suin}")
+    public CompanyLiteDto findCompanyDetails(@PathVariable String suin) {
+        return companyService.findCompanyByStaffSuin(suin);
+    }
+
+    @GetMapping("/staff-details/{id}/{season}")
+    public CompanyStaffDto findStaffDetails(@PathVariable long id, @PathVariable int season) {
+        return companyStaffService.findById(id, season);
+    }
+
 
 }

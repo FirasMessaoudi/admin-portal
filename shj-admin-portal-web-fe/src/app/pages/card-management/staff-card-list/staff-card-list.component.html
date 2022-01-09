@@ -1,0 +1,181 @@
+
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h3 class="sectionTitle">
+      {{ "card-management.staff_title" | translate }}
+      <button class="btn btn-link shadow-none" (click)="isSearchbarCollapsed = !isSearchbarCollapsed">
+        <svg-icon styleClass="h4 pt-3" icon="search"></svg-icon>
+      </button>
+    </h3>
+    <button disabled id="addExceptionalCard" class="btn btn-outline-dcc-primary px-4" *ngIf="canAddCard">
+      <svg-icon styleClass="mr-2" icon="plus"></svg-icon>
+      <span>{{ "card-management.add_exceptional_card" | translate }}</span>
+    </button>
+  </div>
+  <div class="content__section" *ngIf="!canSeeCardsList">
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
+
+  <div class="content__section" *ngIf="canSeeCardsList">
+    <div class="searchBox collapse" [ngbCollapse]="isSearchbarCollapsed">
+      <form [formGroup]="searchForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.ritual_season" | translate }}</label>
+          <select formControlName="ritualSeason" class="custom-select">
+            <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+            <option *ngFor="let season of ritualSeasons" [ngValue]="season.seasonYear">
+              {{season.seasonYear}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.ritual_type" | translate }}</label>
+          <select formControlName="ritualType" class="custom-select">
+            <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+            <option *ngFor="let type of lookupService().localizedItems(ritualTypes)" [ngValue]="type.code">
+              {{type.label}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.hajj_company" | translate }}</label>
+          <select formControlName="hajjCompany" class="custom-select">
+            <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+            <option>Riydah Hamalt</option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.batch_number" | translate }}</label>
+          <input type="text" formControlName="batchNumber" class="form-control"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.card_status" | translate }}</label>
+          <select formControlName="cardStatus" class="custom-select">
+            <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+            <option *ngFor="let type of lookupService().localizedItems(cardStatuses)" [ngValue]="type.code">
+              {{type.label}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.smart_digital_id" | translate }}</label>
+          <input type="text" formControlName="suin" class="form-control"/>
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.card_number" | translate }}</label>
+          <input type="text" formControlName="cardNumber" class="form-control"/>
+        </div>
+
+        <div class="form-group col-12">
+          <button id="searchCard" type="submit" (click)="search()" class="btn btn-dcc-primary px-5 mr-3">
+            {{ "general.btn_search" | translate }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+
+    <div class="d-flex justify-content-between bg-dcc-light mt-7 actionBar">
+      <div class="bg-white">
+        <a id="activateCards" class="btn btn-dcc-light btn-action m-w-r" href="">
+          <svg-icon styleClass="mx-3 fa-w-18" icon="magic"></svg-icon>
+          <span>تنشيط {{page?.totalElements}} بطاقة</span>
+        </a>
+      </div>
+      <div class="bg-white">
+        <a id="exportExcel" class="btn btn-dcc-light btn-action m-w-l" href="/">
+          <svg-icon styleClass="mx-3 fa-w-18" icon="file-excel"></svg-icon>
+          {{'general.export_to_excel' | translate}}
+        </a>
+        <a id="exportPDF" class="btn btn-dcc-light btn-action m-w-l" href="/">
+          <svg-icon styleClass="mx-3 fa-w-18" icon="file-pdf"></svg-icon>
+          {{'general.export_to_pdf' | translate}}
+        </a>
+      </div>
+    </div>
+
+    <div class="table-responsive mb-4">
+      <table id="staffCardSearchResult" class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th scope="col">
+            <div class="custom-control custom-checkbox my-2">
+              <input type="checkbox" [(ngModel)]="masterSelected" class="custom-control-input" id="customCheck-01"
+                     (change)="checkUncheckAllCards()">
+              <label class="custom-control-label mx-3" for="customCheck-01"></label>
+            </div>
+          </th>
+          <th scope="col">{{'card-management.ritual_type' | translate}}</th>
+          <th scope="col">{{'card-management.ritual_season' | translate}}</th>
+          <th scope="col">{{ "card-management.passport_number" | translate }}</th>
+          <th scope="col">{{ "card-management.smart_digital_id" | translate }}</th>
+          <th scope="col">{{'card-management.card_number' | translate}}</th>
+          <th scope="col">{{'card-management.name_ar' | translate}}</th>
+          <th scope="col">{{'card-management.name_en' | translate}}</th>
+          <th scope="col">{{'card-management.card_status' | translate}}</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngIf="!page?.content || page?.totalElements === 0" class="text-center">
+          <td colspan="10">
+            <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
+            <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+          </td>
+        </tr>
+        <tr *ngFor="let card of page?.content">
+
+          <td scope="row">
+            <div class="custom-control custom-checkbox my-2">
+              <input type="checkbox" class="custom-control-input" [(ngModel)]="card.isSelected"
+                     id="customCheck-{{card.id}}" value="{{card.id}}">
+              <label class="custom-control-label mx-3" for="customCheck-{{card.id}}"></label>
+            </div>
+          </td>
+          <td>{{lookupService().localizedLabel(ritualTypes, card?.companyRitualSeason?.ritualSeason?.ritualTypeCode)}}</td>
+          <td class="ltr">{{card?.companyRitualSeason?.ritualSeason?.seasonYear}}</td>
+          <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
+          <td class="ltr">{{card?.companyStaffDigitalId?.suin}}</td>
+          <td class="ltr">{{card?.referenceNumber}}</td>
+          <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}}</td>
+          <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</td>
+          <td class="ltr">{{lookupService().localizedLabel(cardStatuses, card?.statusCode)}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <nav aria-label="Page navigation example" *ngIf="page?.content && page?.totalElements > 0">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="page?.first">
+          <a class="page-link" (click)="loadPage(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>
+        </li>
+
+        <li class="page-item" [class.disabled]="page?.first">
+          <a class="page-link" (click)="loadPage(page?.number-1)"
+             tabindex="-1">{{'general.nav_previous' | translate}}</a>
+        </li>
+        <li class="page-item active">
+          <a class="page-link" [class.disabled]="true">{{(page?.number + 1) + ' / ' + page?.totalPages}}</a>
+        </li>
+        <li class="page-item" [class.disabled]="page?.last">
+          <a class="page-link" (click)="loadPage(page?.number+1)">{{'general.nav_next' | translate}}</a>
+        </li>
+
+        <li class="page-item" [class.disabled]="page?.last">
+          <a class="page-link" (click)="loadPage(page?.totalPages-1)">{{'general.nav_last' | translate}}</a>
+        </li>
+      </ul>
+    </nav>
+
+  </div>
+
+</div>
