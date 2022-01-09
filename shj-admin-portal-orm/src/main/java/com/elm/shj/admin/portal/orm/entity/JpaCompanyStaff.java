@@ -89,7 +89,7 @@ public class JpaCompanyStaff implements Serializable {
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "companyStaff")
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyStaff")
     private List<JpaCompanyStaffDigitalId> digitalIds;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupLeader")
