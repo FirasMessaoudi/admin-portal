@@ -4,7 +4,9 @@
 package com.elm.shj.admin.portal.services.company;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualStep;
+import com.elm.shj.admin.portal.orm.entity.JpaGroupApplicantList;
 import com.elm.shj.admin.portal.orm.repository.CompanyRitualStepRepository;
+import com.elm.shj.admin.portal.orm.repository.GroupApplicantListRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualStepDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service handling company ritual step
@@ -25,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyRitualStepService extends GenericService<JpaCompanyRitualStep, CompanyRitualStepDto, Long> {
     private final CompanyRitualStepRepository companyRitualStepRepository;
+    private final GroupApplicantListRepository groupApplicantListRepository;
 
     /**
      * find company ritual steps by applicant uin
@@ -33,6 +37,7 @@ public class CompanyRitualStepService extends GenericService<JpaCompanyRitualSte
      */
     public List<CompanyRitualStepDto> findCompanyRitualStepsByApplicantUinAndRitualId(String applicantUin, long ritualSeasonId) {
         try {
+            Optional<JpaGroupApplicantList> groupApplicantList = groupApplicantListRepository.findByApplicantUin(Long.parseLong(applicantUin));
             List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(applicantUin, ritualSeasonId);
             List<CompanyRitualStepDto> result = mapList(companyRitualSteps);
             result.forEach(companyRitualStep -> companyRitualStep.setReferenceNumber(companyRitualSteps.get(0).getApplicantGroup().getReferenceNumber()));
