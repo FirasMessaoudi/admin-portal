@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffDigitalId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,7 +22,7 @@ public interface CompanyStaffDigitalIdRepository extends JpaRepository<JpaCompan
     @Query(value = "select c from JpaCompanyStaffDigitalId c where " +
             "(c.companyStaff.id = :staffId and c.seasonYear = :seasonYear and c.statusCode=:statusCode )"
     )
-    Optional<JpaCompanyStaffDigitalId> findByBasicInfo(@Param("staffId") long staffId, @Param("seasonYear") int seasonYear,@Param("statusCode")  String statusCode);
+    Optional<JpaCompanyStaffDigitalId> findByBasicInfo(@Param("staffId") long staffId, @Param("seasonYear") int seasonYear, @Param("statusCode") String statusCode);
 
 
     @Query("select substring(sd.suin,6, 6) from JpaCompanyStaffDigitalId sd where sd.suin like :suin% order by substring(sd.suin, 6, 6) desc")
@@ -31,6 +30,8 @@ public interface CompanyStaffDigitalIdRepository extends JpaRepository<JpaCompan
 
     List<JpaCompanyStaffDigitalId> findBySuinIsNull();
 
-    Optional<JpaCompanyStaffDigitalId> findBySuinAndSeasonYearAndStatusCode( String suin, int seasonYear, String statusCode);
+    Optional<JpaCompanyStaffDigitalId> findBySuinAndSeasonYearAndStatusCode(String suin, int seasonYear, String statusCode);
+
+    JpaCompanyStaffDigitalId findByCompanyStaffIdAndSeasonYear(long id, int season);
 
 }

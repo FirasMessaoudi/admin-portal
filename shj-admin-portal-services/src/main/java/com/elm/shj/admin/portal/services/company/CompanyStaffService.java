@@ -4,6 +4,8 @@
 package com.elm.shj.admin.portal.services.company;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
+import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffDigitalId;
+import com.elm.shj.admin.portal.orm.repository.CompanyStaffDigitalIdRepository;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffLiteDto;
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class CompanyStaffService extends GenericService<JpaCompanyStaff, CompanyStaffDto, Long> {
 
     private final CompanyStaffRepository companyStaffRepository;
+    private final CompanyStaffDigitalIdRepository companyStaffDigitalIdRepository;
 
     public Optional<CompanyStaffLiteDto> findBySuin(String suin) {
         CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findBySuin(suin, EDigitalIdStatus.VALID.name()), mappingContext);
@@ -94,6 +97,15 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
      */
     public CompanyStaffDto findGroupLeaderByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
         return getMapper().fromEntity(companyStaffRepository.findGroupLeaderByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg, ECompanyStaffTitle.GROUP_LEADER.name()), mappingContext);
+    }
+
+    public CompanyStaffDto findById(long id, int season) {
+        CompanyStaffDto companyStaffDto = findOne(id);
+        JpaCompanyStaffDigitalId companyStaffDigitalId = companyStaffDigitalIdRepository.findByCompanyStaffIdAndSeasonYear(id, season);
+        companyStaffDto.setSuin(companyStaffDigitalId.getSuin());
+        companyStaffDto.setSeason(companyStaffDigitalId.getSeasonYear());
+
+        return companyStaffDto;
     }
 
 

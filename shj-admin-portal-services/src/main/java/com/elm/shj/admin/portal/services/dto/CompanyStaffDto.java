@@ -75,6 +75,8 @@ public class CompanyStaffDto {
     @CellIndex(index = 0)
     private String idNumber;
 
+    private String suin;
+
     @JsonBackReference(value = "applicantGroups")
     private List<ApplicantGroupDto> applicantGroups;
 
@@ -107,6 +109,7 @@ public class CompanyStaffDto {
     private DataRequestRecordDto dataRequestRecord;
     @JsonBackReference(value = "digitalIds")
     private List<CompanyStaffDigitalIdDto> digitalIds;
+
 
     private Date creationDate;
     private Date updateDate;

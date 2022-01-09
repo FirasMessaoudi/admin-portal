@@ -7,6 +7,7 @@ import {PrintBatchType} from "@model/print-batch-type.model";
 import {PrintRequest} from "@model/print-request.model";
 import {PrintRequestFilter} from "@model/print-request-filter.model";
 import {CompanyLite} from "@model/company-lite.model";
+import { Staff } from "@app/_shared/model/staff.model";
 
 /**
  * Provides a base for Staff printing operations.
@@ -115,5 +116,16 @@ export class StaffPrintService {
           return of(error);
         }
       }));
+  }
+
+  findStaff(staffId: number, season:number): Observable<Staff> {
+    return this.http.get<any>('/core/api/staff/print/requests/staff-details/' + staffId + '/'+season).pipe(
+      catchError(
+        (error: any, caught: Observable<HttpEvent<any>>) => {
+          console.error(error);
+          return of(null);
+        }
+      )
+    );
   }
 }

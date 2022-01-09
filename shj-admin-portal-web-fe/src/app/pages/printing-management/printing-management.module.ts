@@ -9,10 +9,11 @@ import {PrintingRequestAddUpdateComponent} from './printing-request-add-update/p
 import {PrintingRequestAddUpdateModule} from './printing-request-add-update/printing-request-add-update.module';
 import {StaffPrintingRequestListComponent} from "@pages/printing-management/staff-printing-management/staff-printing-request-list/staff-printing-request-list.component";
 import {StaffPrintingRequestAddModule} from "@pages/printing-management/staff-printing-request-add/staff-printing-request-add.module";
+import { StaffPrintingDetailsComponent } from './staff-printing-management/staff-printing-details/staff-printing-details.component';
 
 
 @NgModule({
-  declarations: [PrintingRequestListComponent, PrintingRequestDetailsComponent, PrintingRequestAddUpdateComponent, StaffPrintingRequestListComponent],
+  declarations: [PrintingRequestListComponent, PrintingRequestDetailsComponent, PrintingRequestAddUpdateComponent, StaffPrintingRequestListComponent, StaffPrintingDetailsComponent],
   imports: [
     CommonModule,
     PrintingManagementRoutingModule,
