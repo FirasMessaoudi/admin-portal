@@ -9,11 +9,14 @@ import {StaffPrintingRequestListComponent} from "@pages/printing-management/staf
 import { StaffPrintingDetailsComponent } from './staff-printing-management/staff-printing-details/staff-printing-details.component';
 import {StaffPrintingRequestAddComponent} from "@pages/printing-management/staff-printing-request-add/staff-printing-request-add.component";
 import {StaffSuccessComponent} from "@pages/printing-management/staff-printing-request-add/staff-success/staff-success.component";
+import { ApplicantCardDetailsComponent } from './applicant-card-details/applicant-card-details.component';
 
 
 const routes: Routes = [
   {path: 'print-requests/list', component: PrintingRequestListComponent, canActivate: [AuthenticationGuard]},
   {path: 'print-requests/details/:id', component: PrintingRequestDetailsComponent, canActivate: [AuthenticationGuard]},
+  {path: 'print-requests/applicant-card-details/:id', component: ApplicantCardDetailsComponent, canActivate: [AuthenticationGuard]},
+
   {
     path: 'print-requests/create',
     component: PrintingRequestAddUpdateComponent,
