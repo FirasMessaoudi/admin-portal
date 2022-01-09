@@ -1206,3 +1206,7 @@ alter table shc_portal.shc_company_staff_card
 drop
 column company_staff_suin;
 go
+
+alter table shc_portal.shc_company_staff_card
+    add batch_number int
+go
