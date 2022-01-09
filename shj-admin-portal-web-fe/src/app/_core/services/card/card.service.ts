@@ -6,6 +6,7 @@ import {catchError} from "rxjs/internal/operators";
 import {Lookup} from "@model/lookup.model";
 import {CountryLookup} from "@model/country-lookup.model";
 import {ApplicantCardSearchCriteria} from "@model/applicant-card-search-criteria.model";
+import {StaffCardSearchCriteria} from "@model/staff-card-search-criteria.model";
 
 @Injectable({
   providedIn: 'root'
@@ -150,6 +151,16 @@ export class CardService {
     return this.http.get('/core/api/staff-cards/list/ready-to-print/all/' + (uin ? uin : -1) + '/' + (idNumber ? idNumber : -1) + '/' +
       (hamlahNumber ? hamlahNumber : -1) + '/' + (motawefNumber ? motawefNumber : -1) + '/' +
       (passportNumber ? passportNumber : -1) + '/' + (nationality ? nationality : -1), {params: params});
+  }
+
+  findRitualSeasons(): Observable<any[]> {
+    return this.http.get<any>('/core/api/lookup/ritual-seasons/list');
+  }
+
+  staffCardlist(pageNumber: any, staffCardSearchCriteria: StaffCardSearchCriteria): Observable<any> {
+    let params = new HttpParams().set('staffCardSearchCriteria', JSON.stringify(staffCardSearchCriteria))
+      .set('page', pageNumber);
+    return this.http.get<any>("/core/api/staff-cards/list", {params: params});
   }
 
 }

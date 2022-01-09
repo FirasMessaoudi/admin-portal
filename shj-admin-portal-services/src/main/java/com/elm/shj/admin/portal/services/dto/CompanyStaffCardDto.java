@@ -29,7 +29,6 @@ public class CompanyStaffCardDto implements Serializable {
 
     private String statusCode;
 
-   //@JsonBackReference(value = "companyRitualSeason")
     private CompanyRitualSeasonDto companyRitualSeason;
 
     private CompanyStaffDigitalIdDto companyStaffDigitalId;

@@ -6,14 +6,14 @@ import {ApplicantPackageHousing} from "@model/applicant-package-housing.model";
 import {ApplicantPackageTransportation} from "@model/applicant-package-transportation.model";
 import {CompanyLite} from "@model/company-lite.model";
 import {CompanyRitualSeason} from "@model/company-ritual-season.model";
-import {CompanyStaffDigitalId} from "@model/company-staff-digital-id.model";
+import {CompanyStaff} from "@model/company-staff.model";
 
-export class CompanyStaffCard {
+export class CompanyStaffDigitalId {
     id: number;
-    referenceNumber: string;
-    statusCode: any;
-    companyRitualSeason: CompanyRitualSeason;
-    companyStaffDigitalId: CompanyStaffDigitalId;
+    suin: string;
+    statusCode: string;
+    seasonYear: number;
+    companyStaff: CompanyStaff;
     creationDate: Date;
     updateDate: Date;
 

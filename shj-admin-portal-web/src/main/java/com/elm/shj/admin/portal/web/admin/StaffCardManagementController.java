@@ -9,6 +9,7 @@ import com.elm.shj.admin.portal.services.dto.CompanyStaffCardDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffCardFilterDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class StaffCardManagementController {
 
 
     @GetMapping("/list")
-    //@PreAuthorize("hasAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "')")
     public Page<CompanyStaffCardDto> searchApplicantCards(@RequestParam(value = "staffCardSearchCriteria") String staffCardSearchCriteria,
                                                           Pageable pageable, Authentication authentication) throws IOException {
         log.info("list search result cards.");
