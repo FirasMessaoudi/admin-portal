@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository for applicant package housing
@@ -19,4 +20,5 @@ public interface ApplicantPackageHousingRepository extends JpaRepository<JpaAppl
 
     List<JpaApplicantPackageHousing> findAllByApplicantPackageApplicantUinAndApplicantPackageId(long applicantUin, long applicantPackageId);
 
+    Optional<JpaApplicantPackageHousing> findTopByApplicantPackageApplicantUinAndApplicantPackageIdOrderByCreationDateDesc(long applicantUin, long applicantPackageId);
 }

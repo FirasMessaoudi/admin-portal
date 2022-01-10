@@ -17,13 +17,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.ReflectionUtils;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
 
 
 /**
@@ -63,17 +64,17 @@ public class CompanyRitualStepServiceTest {
     public void test_find_company_ritual_step_by_uin_success(){
         List<JpaCompanyRitualStep> jpaCompanyRitualStepList = new ArrayList<>();
         List<CompanyRitualStepDto> companyRitualStepDtos = new ArrayList<>();
-        Mockito.when(companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(anyString(),anyLong())).thenReturn(jpaCompanyRitualStepList);
-        Mockito.when(companyRitualStepDtoMapper.fromEntityList(any(),any())).thenReturn(companyRitualStepDtos);
+        Mockito.when(companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupIdOrderByStepIndexAsc(anyString(), anyLong())).thenReturn(jpaCompanyRitualStepList);
+        Mockito.when(companyRitualStepDtoMapper.fromEntityList(any(), any())).thenReturn(companyRitualStepDtos);
 
-        List<CompanyRitualStepDto> result = serviceToTest.findCompanyRitualStepsByApplicantUinAndRitualId(UIN,RITUAL_SEASON_ID);
+        List<CompanyRitualStepDto> result = serviceToTest.findCompanyRitualStepsByApplicantUin(UIN);
         assertEquals(1,result.size());
     }
     @Test
     public void test_find_company_ritual_step_by_uin_fail(){
-        Mockito.when(companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(anyString(),anyLong())).thenReturn(null);
+        Mockito.when(companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupIdOrderByStepIndexAsc(anyString(), anyLong())).thenReturn(null);
 
-        List<CompanyRitualStepDto> result = serviceToTest.findCompanyRitualStepsByApplicantUinAndRitualId(UIN,RITUAL_SEASON_ID);
+        List<CompanyRitualStepDto> result = serviceToTest.findCompanyRitualStepsByApplicantUin(UIN);
         assertNull(result);
     }
 }

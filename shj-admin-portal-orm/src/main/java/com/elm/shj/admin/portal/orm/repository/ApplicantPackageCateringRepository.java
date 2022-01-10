@@ -18,4 +18,6 @@ public interface ApplicantPackageCateringRepository extends JpaRepository<JpaApp
 
     List<JpaApplicantPackageCatering> findAllByApplicantPackageApplicantUinAndApplicantPackageId(long applicantUin, long applicantPackageId);
 
+    List<JpaApplicantPackageCatering> findAllByApplicantPackageApplicantUinAndPackageCateringPackageHousingId(long applicantUin, long packageHousingId);
+
 }

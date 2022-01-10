@@ -2,8 +2,8 @@ package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaRitualPackage;
 import com.elm.shj.admin.portal.orm.repository.RitualPackageRepository;
+import com.elm.shj.admin.portal.services.dto.ApplicantPackageCateringDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
-import com.elm.shj.admin.portal.services.dto.PackageCateringDto;
 import com.elm.shj.admin.portal.services.dto.PackageHousingDto;
 import com.elm.shj.admin.portal.services.dto.RitualPackageDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -16,7 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +28,9 @@ import java.util.stream.Collectors;
 public class RitualPackageService extends GenericService<JpaRitualPackage, RitualPackageDto, Long> {
 
     private final RitualPackageRepository ritualPackageRepository;
+    private final ApplicantPackageService applicantPackageService;
+    private final ApplicantPackageCateringService applicantPackageCateringService;
+    private final PackageHousingService packageHousingService;
 
     public boolean existRitualPackageByReferenceNumber(String referenceNumber) {
         Optional<JpaRitualPackage> ritualPackageOptional = ritualPackageRepository.findByReferenceNumber(referenceNumber);
@@ -67,7 +73,7 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
             if(CollectionUtils.isNotEmpty(ritualPackage.getPackageHousings())){
                 ritualPackage.getPackageHousings().forEach(ph -> ph.getPackageCatering().size());
                 ritualPackage.getPackageHousings().forEach(ph -> ph.getPackageCatering().forEach(
-                        c-> c.getApplicantPackageCaterings().size()
+                        c -> c.getApplicantPackageCaterings().size()
                 ));
             }
 
@@ -77,44 +83,21 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         return null;
     }
 
-    public List<PackageCateringDto> findPackageCateringFromRitualPackage(long uin, RitualPackageDto ritualPackage){
-        List<PackageCateringDto> packageCateringDtoList = new ArrayList<>();
+    public List<ApplicantPackageCateringDto> findPackageCateringFromRitualPackage(long uin, long applicantPackageId) {
+        List<ApplicantPackageCateringDto> applicantPackageCateringDtos = new ArrayList<>();
+        ApplicantPackageDto applicantPackage = applicantPackageService.findOne(applicantPackageId);
+        List<PackageHousingDto> packageHousingDtos = packageHousingService.findByRitualPackageId(applicantPackage.getRitualPackage().getId());
 
-        Optional<ApplicantPackageDto> applicantPackageDto = ritualPackage.getApplicantPackages().stream()
-                .filter(p-> p.getApplicantUin() == uin)
-                .filter(p -> LocalDateTime.now().minusDays(1).isBefore(DateUtils.convertToLocalDate(p.getEndDate()))
-                        && LocalDateTime.now().plusDays(1).isAfter(DateUtils.convertToLocalDate(p.getStartDate()))).findFirst();
-        if(!applicantPackageDto.isPresent()){
-           return packageCateringDtoList;
-        }
-
-        Optional<PackageHousingDto> packageHousingDto = ritualPackage.getPackageHousings().stream()
+        Optional<PackageHousingDto> packageHousingDto = packageHousingDtos.stream()
                 .filter(p -> LocalDateTime.now().isAfter(DateUtils.convertToLocalDate(p.getValidityStart()))
                         && LocalDateTime.now().isBefore(DateUtils.convertToLocalDate(p.getValidityEnd()))).findFirst();
-        if(!packageHousingDto.isPresent()){
-            return packageCateringDtoList;
+        if (!packageHousingDto.isPresent()) {
+            return applicantPackageCateringDtos;
         }
 
-        ApplicantPackageDto applicantPackage = applicantPackageDto.get();
-        PackageHousingDto packageHousing = packageHousingDto.get();
-        packageHousing.getPackageCatering().forEach(c-> {
-            if(c.getApplicantPackageCaterings().stream()
-                    .filter(pc-> pc.getApplicantPackage().getId() == applicantPackage.getId()).collect(Collectors.toList()).size()==0){
-                if(c.isDefault())
-                    packageCateringDtoList.add(c);
-            }else{
-                StringBuilder descriptionEn = new StringBuilder();
-                StringBuilder descriptionAr = new StringBuilder();
-                c.getApplicantPackageCaterings().stream().filter(pc-> pc.getApplicantPackage().getId() == applicantPackage.getId()).forEach(pc -> {
-                    descriptionEn.append(pc.getOptionEn()).append(" , ");
-                    descriptionAr.append(pc.getOptionAr()).append(" , ");
-                });
-                c.setDescriptionEn(descriptionEn.substring(0,descriptionEn.length()-3));
-                c.setDescriptionAr(descriptionAr.substring(0,descriptionAr.length()-3));
-                packageCateringDtoList.add(c);
-            }
+        //today's catering
+        applicantPackageCateringDtos = applicantPackageCateringService.findAllByApplicantPackageApplicantUinAndPackageCateringPackageHousingId(uin, packageHousingDto.get().getId());
 
-        });
-        return packageCateringDtoList.stream().sorted(Comparator.comparing(PackageCateringDto::getMealTime)).collect(Collectors.toList());
+        return applicantPackageCateringDtos.stream().sorted(Comparator.comparing(o -> o.getPackageCatering().getMealTime())).collect(Collectors.toList());
     }
 }

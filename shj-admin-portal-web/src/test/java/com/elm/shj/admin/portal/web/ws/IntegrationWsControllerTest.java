@@ -141,7 +141,7 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
     public void test_find_company_ritual_step_success() throws Exception {
         String url = Navigation.API_INTEGRATION + "/company-ritual-step/" + UIN + "/" + COMPANY_RITUAL_ID;
         List<CompanyRitualStepDto> companyRitualSteps = new ArrayList<>();
-        when(companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(UIN, COMPANY_RITUAL_ID)).thenReturn(companyRitualSteps);
+        when(companyRitualStepService.findCompanyRitualStepsByApplicantUin(UIN)).thenReturn(companyRitualSteps);
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk());
     }
 
@@ -163,7 +163,7 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
     @Test
     public void test_find_company_ritual_step_fail() throws Exception {
         String url = Navigation.API_INTEGRATION + "/company-ritual-step/" + FAKE_USER_UIN + "/" + COMPANY_RITUAL_ID;
-        when(companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(any(), any())).thenReturn(null);
+        when(companyRitualStepService.findCompanyRitualStepsByApplicantUin(any())).thenReturn(null);
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
     }
 
@@ -188,13 +188,13 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
     public void test_find_program_table_success() throws Exception {
         String url = Navigation.API_INTEGRATION + "/program-time-table/" + UIN + "/" + COMPANY_RITUAL_ID;
         List<CompanyRitualStepDto> companyRitualSteps = new ArrayList<>();
-        when(companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(UIN, COMPANY_RITUAL_ID)).thenReturn(companyRitualSteps);
+        when(companyRitualStepService.findCompanyRitualStepsByApplicantUin(UIN)).thenReturn(companyRitualSteps);
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk());
     }
     @Test
     public void test_find_program_table_fail() throws Exception {
         String url = Navigation.API_INTEGRATION + "/program-time-table/" + FAKE_USER_UIN + "/" + COMPANY_RITUAL_ID;
-        when(companyRitualStepService.findCompanyRitualStepsByApplicantUinAndRitualId(any(), any())).thenReturn(null);
+        when(companyRitualStepService.findCompanyRitualStepsByApplicantUin(any())).thenReturn(null);
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
     }
 

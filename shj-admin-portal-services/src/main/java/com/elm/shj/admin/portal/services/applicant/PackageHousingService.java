@@ -3,7 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import com.elm.shj.admin.portal.orm.entity.JpaPackageHousing;
+import com.elm.shj.admin.portal.orm.repository.ApplicantPackageHousingRepository;
 import com.elm.shj.admin.portal.orm.repository.PackageHousingRepository;
 import com.elm.shj.admin.portal.services.dto.PackageHousingDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service handling package housing
@@ -26,12 +29,22 @@ import java.util.List;
 public class PackageHousingService extends GenericService<JpaPackageHousing, PackageHousingDto, Long> {
 
     private final PackageHousingRepository packageHousingRepository;
+    private final ApplicantPackageHousingRepository applicantPackageHousingRepository;
 
     public List<PackageHousingDto> findAllCamps() {
         return mapList(packageHousingRepository.findAllCamps());
     }
 
-    public PackageHousingDto findCamp(long companyRitualSeasonsId, long uin) {
-        return getMapper().fromEntity(packageHousingRepository.findPackageHousing(companyRitualSeasonsId, uin), mappingContext);
+    public PackageHousingDto findCamp(long applicantPackageId, long uin) {
+        Optional<JpaApplicantPackageHousing> applicantPackageHousing = applicantPackageHousingRepository.findTopByApplicantPackageApplicantUinAndApplicantPackageIdOrderByCreationDateDesc(uin, applicantPackageId);
+        if (applicantPackageHousing.isPresent()) {
+            return getMapper().fromEntity(applicantPackageHousing.get().getPackageHousing(), mappingContext);
+        } else {
+            return null;
+        }
+    }
+
+    public List<PackageHousingDto> findByRitualPackageId(long id) {
+        return mapList(packageHousingRepository.findByRitualPackageId(id));
     }
 }

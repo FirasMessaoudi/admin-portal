@@ -35,13 +35,17 @@ public class CompanyRitualStepService extends GenericService<JpaCompanyRitualSte
      *
      * @return list of company ritual steps
      */
-    public List<CompanyRitualStepDto> findCompanyRitualStepsByApplicantUinAndRitualId(String applicantUin, long ritualSeasonId) {
+    public List<CompanyRitualStepDto> findCompanyRitualStepsByApplicantUin(String applicantUin) {
         try {
-            Optional<JpaGroupApplicantList> groupApplicantList = groupApplicantListRepository.findByApplicantUin(Long.parseLong(applicantUin));
-            List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupCompanyRitualSeasonIdOrderByStepIndexAsc(applicantUin, ritualSeasonId);
-            List<CompanyRitualStepDto> result = mapList(companyRitualSteps);
-            result.forEach(companyRitualStep -> companyRitualStep.setReferenceNumber(companyRitualSteps.get(0).getApplicantGroup().getReferenceNumber()));
-            return result;
+            Optional<JpaGroupApplicantList> groupApplicantList = groupApplicantListRepository.findTopByApplicantUinOrderByCreationDateDesc(applicantUin);
+            if (groupApplicantList.isPresent()) {
+                List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupIdOrderByStepIndexAsc(applicantUin, groupApplicantList.get().getId());
+                List<CompanyRitualStepDto> result = mapList(companyRitualSteps);
+                result.forEach(companyRitualStep -> companyRitualStep.setReferenceNumber(companyRitualSteps.get(0).getApplicantGroup().getReferenceNumber()));
+                return result;
+            } else {
+                return null;
+            }
         } catch (Exception e) {
             return null;
         }
