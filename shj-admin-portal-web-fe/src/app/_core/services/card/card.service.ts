@@ -8,6 +8,7 @@ import {CountryLookup} from "@model/country-lookup.model";
 import {ApplicantCardSearchCriteria} from "@model/applicant-card-search-criteria.model";
 import {StaffCardSearchCriteria} from "@model/staff-card-search-criteria.model";
 import {CompanyLite} from "@model/company-lite.model";
+import { CompanyStaffCard } from '@app/_shared/model/staff-card.model';
 
 @Injectable({
   providedIn: 'root'
@@ -62,6 +63,17 @@ export class CardService {
     );
   }
 
+  findStaffCard(cardId: number): Observable<CompanyStaffCard> {
+    return this.http.get<any>('/core/api/staff-cards/find/' + cardId).pipe(
+      catchError(
+        (error: any, caught: Observable<HttpEvent<any>>) => {
+          console.error(error);
+          return of(null);
+        }
+      )
+    );
+  }
+
   findRitualTypes(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/ritual-type/list');
   }
@@ -91,7 +103,7 @@ export class CardService {
   }
 
   findGroupLeaderTitleLabels(): Observable<Lookup[]> {
-    return this.http.get<any>('/core/api/lookup/company_staff_title/list');
+    return this.http.get<any>('/core/api/lookup/company-staff-title/list');
   }
 
   findHousingCategories(): Observable<Lookup[]> {

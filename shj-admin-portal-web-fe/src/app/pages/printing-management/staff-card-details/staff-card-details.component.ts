@@ -17,6 +17,7 @@ import {CardStatus} from "@model/enum/card-status.enum";
 import {DigitalIdStatus} from "@model/enum/digital-id-status.enum";
 import {CardStatusActions} from "@model/enum/card-status-actions.enum";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
+import { CompanyStaffCard } from '@app/_shared/model/staff-card.model';
 @Component({
   selector: 'app-staff-card-details',
   templateUrl: './staff-card-details.component.html',
@@ -26,7 +27,7 @@ export class StaffCardDetailsComponent implements OnInit {
 
 
   cardId: number;
-  card: ApplicantCard;
+  card: CompanyStaffCard;
   url: any = 'assets/images/default-avatar.svg';
   ritualTypes: Lookup[];
   housingCategories: Lookup[];
@@ -72,7 +73,7 @@ export class StaffCardDetailsComponent implements OnInit {
       // this.isLoading = false;
       if (this.cardId) {
         // load user details
-        this.cardService.find(this.cardId).subscribe(data => {
+        this.cardService.findStaffCard(this.cardId).subscribe(data => {
           if (data && data.id) {
             this.card = data;
 
@@ -114,6 +115,7 @@ export class StaffCardDetailsComponent implements OnInit {
     });
     this.cardService.findGroupLeaderTitleLabels().subscribe(result => {
       this.groupLeaderTitle = result;
+      console.log(this.groupLeaderTitle);
     })
 
     this.cardService.findHousingTypes().subscribe(result => {

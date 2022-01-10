@@ -104,15 +104,5 @@ public class StaffPrintingManagementController {
         return printRequestService.confirm(printRequest, EPrintingRequestTarget.STAFF.name());
     }
 
-    @GetMapping("/staff-company-details/{suin}")
-    public CompanyLiteDto findCompanyDetails(@PathVariable String suin) {
-        return companyService.findCompanyByStaffSuin(suin);
-    }
-
-    @GetMapping("/staff-details/{id}/{season}")
-    public CompanyStaffDto findStaffDetails(@PathVariable long id, @PathVariable int season) {
-        return companyStaffService.findById(id, season);
-    }
-
 
 }

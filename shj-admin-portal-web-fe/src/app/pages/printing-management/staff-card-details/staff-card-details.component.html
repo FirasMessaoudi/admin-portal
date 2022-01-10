@@ -50,10 +50,10 @@
   <div class="row cardBox">
     <div class="col-12 col-md-4 order-md-1 order-1 order-md-0">
       <div class="col-form-label text-center text-md-left">
-        <span>{{card?.applicantRitual?.applicant?.fullNameAr}}</span>
+        <span>{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}}</span>
       </div>
       <div class="form-control-plaintext text-center text-md-left">
-        <span>{{card?.applicantRitual?.applicant?.fullNameEn}}</span>
+        <span>{{card?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</span>
       </div>
     </div>
 
@@ -61,12 +61,12 @@
       <div class="col-form-label text-center text-md-left">{{'card-management.applicant_id' | translate }}</div>
       <div
         class="form-control-plaintext text-center text-md-left">
-          <span *ngIf="card?.applicantRitual?.applicant?.digitalIds[0]?.uin as value; else elseBlock"
+          <span *ngIf="card?.companyStaffDigitalId?.suin as value; else elseBlock"
                 class="mr-3">{{value}}</span>
         <span>
              <span
-               class="status {{buildDigitalIdClass(card?.applicantRitual?.applicant?.digitalIds[0]?.statusCode)}} mr-2"></span>
-              <span>{{card?.applicantRitual?.applicant?.digitalIds[0]?.statusCode ? lookupService().localizedLabel(applicantStatuses, card?.applicantRitual?.applicant?.digitalIds[0]?.statusCode) : ' --- '}}</span>
+               class="status {{buildDigitalIdClass(card?.statusCode)}} mr-2"></span>
+              <span>{{card?.statusCode ? lookupService().localizedLabel(applicantStatuses, card?.statusCode) : ' --- '}}</span>
           </span>
       </div>
     </div>
@@ -84,7 +84,7 @@
     <div class="col-12 col-md-4 order-0 order-md-3 d-flex justify-content-center maskAv">
         <span class="avatar">
           <img
-            [src]="card?.applicantRitual?.applicant?.photo ? 'data:image/jpeg;base64,'+card?.applicantRitual?.applicant?.photo : url"/>
+            [src]="card?.companyStaffDigitalId?.companyStaff?.photo ? 'data:image/jpeg;base64,'+ card?.companyStaffDigitalId?.companyStaff?.photo : url"/>
         </span>
     </div>
   </div>
@@ -98,23 +98,23 @@
           <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
             <div class="form-group col">
               <label class="col-form-label">{{'card-management.applicant_original_name' | translate}}</label>
-              <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.fullNameOrigin }}</span>
+              <span class="form-control-plaintext ">{{card?.companyStaffDigitalId?.companyStaff?.fullNameOrigin}}</span>
             </div>
             <div class="form-group col">
               <label class="col-form-label">{{'general.date_of_birth' | translate}}</label>
               <span
-                class="form-control-plaintext">{{ card?.applicantRitual?.applicant?.dateOfBirthGregorian | gregorianDateFormat }}
-                  <span *ngIf="card?.applicantRitual?.applicant?.dateOfBirthGregorian">-</span>
-                  {{ card?.applicantRitual?.applicant?.dateOfBirthHijri |  hijriDateFormat }}
+                class="form-control-plaintext">{{ card?.companyStaffDigitalId?.companyStaff?.dateOfBirthGregorian | gregorianDateFormat }}
+                  <span *ngIf="card?.companyStaffDigitalId?.companyStaff?.dateOfBirthGregorian">-</span>
+                  {{ card?.companyStaffDigitalId?.companyStaff?.dateOfBirthHijri |  hijriDateFormat }}
                 </span>
             </div>
             <div class="form-group col">
               <label class="col-form-label">{{'card-management.ritual_type' | translate}}</label>
               <span
-                class="form-control-plaintext ">{{card?.applicantRitual?.typeCode ? lookupService().localizedLabel(ritualTypes, card?.applicantRitual?.typeCode) : ''}}</span>
+                class="form-control-plaintext ">{{card?.companyRitualSeason?.ritualSeason?.ritualTypeCode ? lookupService().localizedLabel(ritualTypes, card?.companyRitualSeason?.ritualSeason?.ritualTypeCode) : ''}}</span>
             </div>
 
-            <div class="form-group col" [ngSwitch]="card?.applicantRitual?.applicant?.gender">
+            <div class="form-group col" [ngSwitch]="card?.companyStaffDigitalId?.companyStaff?.gender">
               <label class="col-form-label">{{'general.gender' | translate}}</label>
               <span class="form-control-plaintext"
                     *ngSwitchCase="'F'">{{'user-management.female' | translate}}</span>
@@ -124,98 +124,50 @@
             <div class="form-group col">
               <label class="col-form-label">{{'card-management.nationality' | translate}}</label>
               <span
-                class="form-control-plaintext">{{card?.applicantRitual?.applicant?.nationalityCode ? lookupService().localizedLabel(countries, card?.applicantRitual?.applicant?.nationalityCode) : ''}}</span>
+                class="form-control-plaintext">{{card?.companyStaffDigitalId?.companyStaff?.nationalityCode ? lookupService().localizedLabel(countries, card?.companyStaffDigitalId?.companyStaff?.nationalityCode) : ''}}</span>
             </div>
             <div class="form-group col">
               <label class="col-form-label">{{'card-management.passport_number' | translate}}</label>
-              <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.passportNumber }}</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.marital_status' | translate}}</label>
               <span
-                class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.maritalStatusCode ? lookupService().localizedLabel(maritalStatuses, card?.applicantRitual?.applicant?.maritalStatusCode) : ''}}</span>
-            </div>
-            <div *ngIf="card?.applicantRitual?.applicant?.idNumberOriginal" class="form-group col">
-              <label class="col-form-label">{{'card-management.applicant_original_id' | translate}}</label>
-              <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.idNumberOriginal}}</span>
-            </div>
-            <div *ngIf="card?.applicantRitual?.applicant?.idNumber" class="form-group col">
-              <label class="col-form-label">{{'general.nin_or_iqama' | translate}}</label>
-              <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.idNumber}}</span>
+                class="form-control-plaintext ">{{ card?.companyStaffDigitalId?.companyStaff?.passportNumber }}</span>
             </div>
             <div class="form-group col">
-              <label class="col-form-label">{{'card-management.applicant_languages' | translate}}</label>
-              <span class="form-control-plaintext">
-                    <span
-                      *ngFor="let lang of card?.applicantRitual?.applicant?.contacts[0]?.languageList.split(','); let lastItem = last;">
-                      {{languageNativeName[lang.trim()]}}<span *ngIf="!lastItem">-</span></span>
-                    </span>
+              <label class="col-form-label">{{'role-management.role_name_ar' | translate}}</label>
+              <span
+                class="form-control-plaintext ">{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}}</span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'role-management.role_name_en' | translate}}</label>
+              <span class="form-control-plaintext ">{{card?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'printing-management.season' | translate}}</label>
+              <span class="form-control-plaintext ">{{card?.companyStaffDigitalId?.seasonYear}}</span>
             </div>
           </div>
         </section>
         <hr class="my-4 w-100">
         <section>
-          <span class="form-control-plaintext ">{{'card-management.applicant_original_address' | translate}}</span>
+          <span class="form-control-plaintext ">{{'card-management.company_details' | translate}}</span>
 
           <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
             <div class="form-group col">
-              <label class="col-form-label">{{'card-management.country' | translate}}</label>
+              <label class="col-form-label">{{'card-management.company_number' | translate}}</label>
               <span
-                class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.countryCode ? lookupService().localizedLabel(countries, card?.applicantRitual?.applicant?.contacts[0]?.countryCode) : ''}}</span>
+                class="form-control-plaintext ">{{card?.companyRitualSeason?.company?.code}}</span>
             </div>
             <div class="form-group col">
-              <label class="col-form-label">{{'card-management.city' | translate}}</label>
-              <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.cityName}}</span>
+              <label class="col-form-label">{{'card-management.company_name' | translate}}</label>
+              <span class="form-control-plaintext ">{{card?.companyRitualSeason?.company?.labelAr}}</span>
             </div>
             <div class="form-group col">
-              <label class="col-form-label">{{'card-management.district' | translate}}</label>
+              <label class="col-form-label">{{'card-management.job_title' | translate}}</label>
               <span
-                class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.districtName}}</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.street' | translate}}</label>
-              <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.streetName}}</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.building_number' | translate}}</label>
-              <span
-                class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.buildingNumber}}</span>
-            </div>
-            <div class="form-group col">
-              <label class="col-form-label">{{'card-management.postal_code' | translate}}</label>
-              <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.postalCode}}</span>
+                class="form-control-plaintext ">{{ lookupService().localizedLabel(groupLeaderTitle, card?.companyStaffDigitalId?.companyStaff?.titleCode)}}</span>
             </div>
           </div>
         </section>
         <hr class="my-4 w-100">
-        <section *ngIf="card?.applicantRitual?.applicant?.relatives?.length > 0">
-          <span class="form-control-plaintext ">{{'card-management.applicant_relatives' | translate}}</span>
-
-          <div class="table-responsive my-4">
-            <table class="table table-striped table-hover">
-              <thead>
-              <tr>
-                <th scope="col">{{'card-management.applicant_name' | translate}}</th>
-                <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-                <th scope="col">{{'card-management.applicant_relative_type' | translate}}</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let relative of card?.applicantRitual?.applicant?.relatives">
-                <td
-                  class="ltr">{{relative.relativeApplicant?.fullNameAr}} {{relative.relativeApplicant?.fullNameEn}}
-                </td>
-                <td class="ltr">{{relative.relativeApplicant?.digitalIds[0]?.uin}}</td>
-
-                <td
-                  class="ltr">{{relative.relationshipCode ? lookupService().localizedLabel(relativeRelationships,
-                  relative.relationshipCode) : ''}}
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
       </ng-template>
     </li>
   </ul>

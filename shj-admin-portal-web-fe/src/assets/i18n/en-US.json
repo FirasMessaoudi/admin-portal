@@ -408,7 +408,9 @@
     "company": "Company",
     "batch_number": "Batch Number",
     "name_ar": "Name Arabic",
-    "name_en": "Name English"
+    "name_en": "Name English",
+    "company_details": "Company Details",
+    "job_title": "Job Title"
   },
   "notification-management": {
     "title": "Notification Management",

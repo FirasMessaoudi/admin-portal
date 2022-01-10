@@ -28,9 +28,5 @@ public class CompanyService extends GenericService<JpaCompany, CompanyLiteDto, L
         return getMapper().fromEntity(companyRepository.findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsRitualPackagesApplicantPackagesApplicantUin(companyRitualSeasonsId, applicantUin), mappingContext);
     }
 
-    public CompanyLiteDto findCompanyByStaffSuin(String companyStaffSuin) {
-        return getMapper().fromEntity(companyRepository.findByCompanyRitualSeasonsCompanyStaffCardsCompanyStaffDigitalIdSuin(companyStaffSuin), mappingContext);
-    }
-
 
 }

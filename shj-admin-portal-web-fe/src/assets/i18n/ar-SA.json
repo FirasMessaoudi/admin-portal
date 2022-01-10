@@ -396,7 +396,9 @@
     "company": "الشركة",
     "batch_number": "رقم الحزمة",
     "name_ar": "الاسم بالعربي",
-    "name_en": "الاسم بالانجليزي"
+    "name_en": "الاسم بالانجليزي",
+    "company_details": "تفاصيل الشركة",
+    "job_title": "الوضيفة"
   },
   "notification-management": {
     "title": "إدارة التنبيهات",

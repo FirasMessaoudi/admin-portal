@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffCardDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffCardFilterDto;
+import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -78,11 +79,28 @@ public class StaffCardManagementController {
     }
 
 
-    @GetMapping("/find/{id}")
+/*    @GetMapping("/find/{id}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "')")
     public CompanyStaffCardDto findById(@PathVariable long id, Authentication authentication) throws IOException {
         log.info("list search result cards.");
         return companyStaffCardService.findOne(id);
+    }*/
+
+    /**
+     * Finds a card by its ID
+     *
+     * @param cardId the card ID to find
+     * @return the found card or <code>null</code>
+     */
+    @GetMapping("/find/{cardId}")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.VIEW_CARD_DETAILS + "')")
+    public CompanyStaffCardDto findStaffCard(@PathVariable long cardId) {
+        log.debug("Handler for {}", "Find Applicant Card");
+        CompanyStaffCardDto companyStaffCardDto = companyStaffCardService.findStaffCardById(cardId);
+        if (companyStaffCardDto == null) {
+            throw new CardDetailsNotFoundException("no card found with id : " + cardId);
+        }
+        return companyStaffCardDto;
     }
 
 }

@@ -124,9 +124,8 @@ public class LookupController {
         return companyRitualStepLookupService.findAll();
     }
 
-    //TODO: remove "label" word from the method name and replace underscore in URL by dash
-    @GetMapping("/company_staff_title/list")
-    public List<CompanyStaffTitleLookupDto> listCompanyStaffTitleLabel(Authentication authentication) {
+    @GetMapping("/company-staff-title/list")
+    public List<CompanyStaffTitleLookupDto> listCompanyStaffTitles(Authentication authentication) {
         log.debug("list company staff title labels...");
         return companyStaffTitleLookupService.findAll();
     }
@@ -251,5 +250,6 @@ public class LookupController {
         return ritualSeasonService.findAll();
 
     }
+
 
 }

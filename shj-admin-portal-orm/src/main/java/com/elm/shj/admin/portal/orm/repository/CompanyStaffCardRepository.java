@@ -46,4 +46,6 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
             "and (c.companyStaffDigitalId.companyStaff.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL)" +
             "and (c.companyStaffDigitalId.companyStaff.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
     Page<JpaCompanyStaffCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("uin") String uin, @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds, Pageable pageable);
+
+    JpaCompanyStaffCard findByIdAndStatusCodeNot(long id, String statusCode);
 }
