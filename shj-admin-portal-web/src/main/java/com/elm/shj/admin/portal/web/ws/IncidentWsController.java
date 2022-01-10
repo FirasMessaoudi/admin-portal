@@ -90,11 +90,11 @@ public class IncidentWsController {
         if(incidentAttachment != null && !applicantIncidentLiteService.validateFileType(incidentAttachment.getContentType())){
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(WsError.builder().errorCode(WsError.EWsError.INVALID_FILE_TYPE.getCode()).build()).build());
         }
-        //validate latitude cordinates, it should be between -90 and +90
+        // validate latitude cordinates, it should be between -90 and +90
         if(applicantIncidentRequest.getLocationLat().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLat().intValue() > MAX_GEO_CORDINATES){
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(WsError.builder().errorCode(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
         }
-        //validate longitude cordinates, it should be between -90 and +90
+        // validate longitude cordinates, it should be between -90 and +90
         if(applicantIncidentRequest.getLocationLng().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLng().intValue() > MAX_GEO_CORDINATES){
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(WsError.builder().errorCode(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
         }
