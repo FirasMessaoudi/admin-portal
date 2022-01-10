@@ -167,8 +167,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
     public void createSystemDefinedApplicantChatContact(ApplicantRelativeDto applicantRelative) {
         String applicantUin = applicantRelative.getApplicant().getDigitalIds().get(0).getUin();
         String contactUin = applicantRelative.getRelativeApplicant().getDigitalIds().get(0).getUin();
-        Optional<JpaApplicantChatContact> jpaApplicantChatContact = applicantChatContactRepository.findByApplicantUinAndContactUinAndDeleted(applicantUin, contactUin, false);
-        ApplicantChatContactDto chatContact = jpaApplicantChatContact.isPresent() ? getMapper().fromEntity(jpaApplicantChatContact.get(), mappingContext) : null;
+        Optional<JpaApplicantChatContact> applicantChatContact = applicantChatContactRepository.findByApplicantUinAndContactUinAndDeleted(applicantUin, contactUin, false);
+        ApplicantChatContactDto chatContact = applicantChatContact.isPresent() ? getMapper().fromEntity(applicantChatContact.get(), mappingContext) : null;
         String mobileNumber = null;
         String countryCode = null;
         Optional<ApplicantContactDto> first = applicantRelative.getRelativeApplicant().getContacts().stream().findFirst();
