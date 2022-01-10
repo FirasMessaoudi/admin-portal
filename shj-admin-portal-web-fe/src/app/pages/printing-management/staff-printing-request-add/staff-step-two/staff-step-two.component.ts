@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {PrintRequest} from "@model/print-request.model";
 import {PrintBatchType} from "@model/print-batch-type.model";
 import {CountryLookup} from "@model/country-lookup.model";
@@ -15,7 +15,7 @@ import {StaffPrintRequestStorage} from "@pages/printing-management/staff-printin
   templateUrl: './staff-step-two.component.html',
   styleUrls: ['./staff-step-two.component.scss']
 })
-export class StaffStepTwoComponent implements OnInit {
+export class StaffStepTwoComponent implements OnInit, OnChanges {
 
 
   @Input()
@@ -51,6 +51,19 @@ export class StaffStepTwoComponent implements OnInit {
   ngOnInit(): void {
     this.printRequestStorage.storage = null;
     this.loadLookups();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.printRequest) {
+      this.printRequest = changes.printRequest.currentValue;
+      if (this.printRequest && this.printRequest.printRequestCards.length > 0) {
+        this.printRequest.printRequestCards.forEach(element => {
+          this.cardService.findStaffCardById(element.cardId).subscribe(
+            res => element.staffCard = res,
+          )
+        })
+      }
+    }
   }
 
   get currentLanguage(): string {

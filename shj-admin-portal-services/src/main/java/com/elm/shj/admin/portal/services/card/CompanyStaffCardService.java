@@ -135,7 +135,7 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
 
     public Page<CompanyStaffCardDto> findPrintingCards(String uin, String idNumber, String hamlahNumber, String motawefNumber,
                                                        String passportNumber, String nationalityCode, List<Long> excludedCardsIds, Pageable pageable) {
-        log.debug("Find all printing cards...");
+        log.debug("search printing cards...");
         return mapPage(companyStaffCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(),
                 uin, idNumber, passportNumber, nationalityCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));

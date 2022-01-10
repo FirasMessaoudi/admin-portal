@@ -147,7 +147,7 @@
                 <br>{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}}
               </td>
 
-              <td>{{card?.companyStaffSuin}}</td>
+              <td>{{card?.companyStaffDigitalId?.suin}}</td>
               <td>{{card?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
               <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
             </tr>
@@ -227,7 +227,7 @@
       <tr
         *ngFor="let card of addedCards | slice: (addedCardsCurrentPage * addedCardsPageSize) - addedCardsPageSize :addedCardsCurrentPage * addedCardsPageSize">
         <td>{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}} {{card?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</td>
-        <td>{{card?.companyStaffSuin}}</td>
+        <td>{{card?.companyStaffDigitalId?.suin}}</td>
         <td>{{card?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
         <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
         <td>

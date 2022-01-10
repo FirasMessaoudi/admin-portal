@@ -53,7 +53,7 @@ public class JpaCompanyStaffCard implements Serializable {
     private Date updateDate;
 
     @Column(name = "batch_number")
-    private long batchNumber;
+    private Long batchNumber;
 
     @PrePersist
     public void prePersist() {

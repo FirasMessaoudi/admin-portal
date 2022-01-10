@@ -168,4 +168,9 @@ export class CardService {
     return this.http.get<any>('/core/api/lookup/company-names/list');
   }
 
+  findStaffCardById(id: number): Observable<any> {
+    return this.http.get<any>("/core/api/staff-cards/find/" + id);
+  }
+
+
 }

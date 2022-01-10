@@ -77,4 +77,12 @@ public class StaffCardManagementController {
                 "-1".equals(nationality) ? null : nationality, excludedCardsIds, pageable);
     }
 
+
+    @GetMapping("/find/{id}")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "')")
+    public CompanyStaffCardDto findById(@PathVariable long id, Authentication authentication) throws IOException {
+        log.info("list search result cards.");
+        return companyStaffCardService.findOne(id);
+    }
+
 }

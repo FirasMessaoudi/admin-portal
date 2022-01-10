@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {PrintBatchType} from "@model/print-batch-type.model";
 import {CountryLookup} from "@model/country-lookup.model";
 import {BatchType} from "@model/enum/batch-type.enum";
@@ -18,7 +18,7 @@ import {StaffPrintRequestStorage} from "@pages/printing-management/staff-printin
   templateUrl: './staff-step-three.component.html',
   styleUrls: ['./staff-step-three.component.scss']
 })
-export class StaffStepThreeComponent implements OnInit {
+export class StaffStepThreeComponent implements OnInit, OnChanges {
 
   public isCollapsed: boolean[] = [];
   batchTypes: PrintBatchType[];
@@ -49,6 +49,20 @@ export class StaffStepThreeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadLookups();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.printRequest) {
+      this.printRequest = changes.printRequest.currentValue;
+      console.log(this.printRequest);
+      if (this.printRequest && this.printRequest.printRequestCards.length > 0) {
+        this.printRequest.printRequestCards.forEach(element => {
+          this.cardService.findStaffCardById(element.cardId).subscribe(
+            res => element.staffCard = res,
+          )
+        })
+      }
+    }
   }
 
   get canSeeCardDetails(): boolean {

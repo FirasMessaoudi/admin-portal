@@ -172,7 +172,7 @@ export class StaffStepOneComponent implements OnInit {
 
   selectAllCards() {
     this.isSelectLoading = true;
-    this.searchSubscription = this.cardService.searchAllCardsToPrint(this.searchForm.value.uin, this.searchForm.value.idNumber,
+    this.searchSubscription = this.cardService.searchAllStaffCardsToPrint(this.searchForm.value.uin, this.searchForm.value.idNumber,
       this.searchForm.value.hamlahNumber, this.searchForm.value.motawefNumber, this.searchForm.value.passportNumber,
       this.searchForm.value.nationality, this.addedCards.map(card => card.id)).subscribe(data => {
       this.isSelectLoading = false;

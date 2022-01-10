@@ -61,18 +61,19 @@
       </tr>
       </thead>
       <tbody [ngbCollapse]="!isCollapsed[i]" class="collapse">
-      <tr *ngFor="let batchCard of batch.printRequestBatchCards">
+      <tr *ngFor="let batchCard of printRequest.printRequestCards">
         <td class="nameCol" style="width: 55%">
-          <a *ngIf="canSeeCardDetails" [routerLink]="['/cards/details', batchCard?.card?.id]" target="_blank"
-             class="text-dcc-primary font-weight-bold">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
+          <a *ngIf="canSeeCardDetails" [routerLink]="['/cards/details', batchCard?.cardId]" target="_blank"
+             class="text-dcc-primary font-weight-bold">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}} {{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
           </a>
           <p *ngIf="!canSeeCardDetails"
-             class=" font-weight-bold">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
+             class=" font-weight-bold">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}} {{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
           </p>
         </td>
-        <td class="ltr" style="width: 15%">{{batchCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
-        <td class="ltr" style="width: 15%">{{batchCard?.card?.applicantRitual?.applicant?.idNumber}}</td>
-        <td class="ltr" style="width: 15%">{{batchCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
+        <td class="ltr" style="width: 15%">{{batchCard?.staffCard?.companyStaffDigitalId?.suin}}</td>
+        <td class="ltr" style="width: 15%">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
+        <td class="ltr"
+            style="width: 15%">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
       </tr>
       </tbody>
     </ng-template>
