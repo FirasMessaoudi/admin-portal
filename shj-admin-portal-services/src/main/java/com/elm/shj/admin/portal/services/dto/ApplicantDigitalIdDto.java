@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,7 +31,6 @@ public class ApplicantDigitalIdDto implements Serializable {
     private long id;
     private String uin;
     private String statusCode;
-    @JsonBackReference
-    private ApplicantDto applicant;
+    private long applicantId;
     private Date creationDate;
 }
