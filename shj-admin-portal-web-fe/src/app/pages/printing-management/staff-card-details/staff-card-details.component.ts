@@ -18,11 +18,11 @@ import {DigitalIdStatus} from "@model/enum/digital-id-status.enum";
 import {CardStatusActions} from "@model/enum/card-status-actions.enum";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
 @Component({
-  selector: 'app-applicant-card-details',
-  templateUrl: './applicant-card-details.component.html',
-  styleUrls: ['./applicant-card-details.component.scss']
+  selector: 'app-staff-card-details',
+  templateUrl: './staff-card-details.component.html',
+  styleUrls: ['./staff-card-details.component.scss']
 })
-export class ApplicantCardDetailsComponent implements OnInit {
+export class StaffCardDetailsComponent implements OnInit {
 
 
   cardId: number;

@@ -54,8 +54,6 @@ public class JpaApplicantLite implements Serializable {
     private String preferredLanguage;
 
     private String gender;
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "applicant")
-    private List<JpaApplicantDigitalId> digitalIds;
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")

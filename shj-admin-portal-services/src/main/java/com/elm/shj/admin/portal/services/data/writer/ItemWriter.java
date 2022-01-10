@@ -374,8 +374,8 @@ public class ItemWriter {
                 applicant.setCreationDate(existingApplicant.getCreationDate());
 
             } else {
-                applicant.setDigitalIds(Arrays.asList(ApplicantDigitalIdDto.builder().uin(digitalIdService.generate(applicant)).applicant(applicant).build()));
-                applicant.getDigitalIds().get(0).setStatusCode("VALID");
+                applicant.setDigitalIds(Arrays.asList(ApplicantDigitalIdDto.builder().uin(digitalIdService.generate(applicant)).applicantId(applicant.getId()).build()));
+                applicant.getDigitalIds().get(0).setStatusCode(EDigitalIdStatus.VALID.name());
             }
             Long applicantUin = Long.parseLong(applicant.getDigitalIds().get(0).getUin());
 
@@ -704,12 +704,6 @@ public class ItemWriter {
         if (applicantPackageDto != null) {
             if (CollectionUtils.isNotEmpty(applicantPackageDto.getApplicantPackageTransportations()) && (busNumber != null || seatNumber != null)) {
                 ApplicantPackageDto finalApplicantPackageDto1 = applicantPackageDto;
-//                applicantPackageDto.getApplicantPackageTransportations().forEach(pt->{
-//                    pt.setSeatNumber(seatNumber);
-//                    pt.setVehicleNumber(busNumber);
-//                    pt.setApplicantPackage(ApplicantPackageDto.builder().id(finalApplicantPackageDto1.getId()).build());
-//
-//                });
 
                 List<ApplicantPackageTransportationDto> applicantPackageTransportations = applicantPackageDto.getApplicantPackageTransportations().stream().map(pt ->
                         ApplicantPackageTransportationDto.builder().id(pt.getId()).creationDate(pt.getCreationDate()).packageTransportation(PackageTransportationDto.builder().id(pt.getPackageTransportation().getId()).build())

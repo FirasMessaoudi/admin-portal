@@ -24,4 +24,6 @@ public interface ApplicantDigitalIdRepository extends JpaRepository<JpaApplicant
 
     Optional<JpaApplicantDigitalId> findByApplicantIdAndStatusCode(long id, String statusCode);
 
+    JpaApplicantDigitalId findByApplicantId(long applicantId);
+
 }
