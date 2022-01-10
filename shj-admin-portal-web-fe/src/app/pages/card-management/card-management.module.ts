@@ -7,7 +7,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "@shared/shared.module";
 import {TranslateModule} from "@ngx-translate/core";
 import {CardDetailsModule} from './card-details/card-details.module';
-import { StaffCardListComponent } from './staff-card-list/staff-card-list.component';
+import {StaffCardListComponent} from './staff-card-list/staff-card-list.component';
 
 @NgModule({
   declarations: [CardListComponent, StaffCardListComponent],

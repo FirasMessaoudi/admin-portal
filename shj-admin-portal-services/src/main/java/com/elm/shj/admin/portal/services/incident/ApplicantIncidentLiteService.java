@@ -22,6 +22,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,6 +126,31 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
         long nextSequence = CollectionUtils.isEmpty(threadLocalLatestSerialList.get()) ? 1 : Long.parseLong(threadLocalLatestSerialList.get().get(0)) + 1;
         String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 8, "0");
         return referenceNumPrefix+ serialDigits  ;
+    }
+
+    public Boolean validateFileType(String contentType){
+        switch (contentType){
+            case MediaType.IMAGE_JPEG_VALUE:
+                return true;
+            case MediaType.IMAGE_PNG_VALUE:
+                return true;
+            case MediaType.IMAGE_GIF_VALUE:
+                return true;
+            case Constants.VIDEO_TYPE_FLV:
+                return true;
+            case Constants.VIDEO_TYPE_MP4:
+                return true;
+            case Constants.VIDEO_TYPE_3GP:
+                return true;
+            case Constants.VIDEO_TYPE_MOV:
+                return true;
+            case Constants.VIDEO_TYPE_AVI:
+                return true;
+            case Constants.VIDEO_TYPE_WMV:
+                return true;
+            default:
+                return false;
+        }
     }
 
 }

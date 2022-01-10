@@ -43,6 +43,9 @@ import java.util.Objects;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class IncidentWsController {
 
+    private static final int MIN_GEO_CORDINATES = -90;
+    private static final int MAX_GEO_CORDINATES = 90;
+
     private final ApplicantIncidentService applicantIncidentService;
     private final ApplicantIncidentLiteService applicantIncidentLiteService;
     private final IncidentTypeLookupService incidentTypeLookupService;
@@ -83,8 +86,20 @@ public class IncidentWsController {
                                                 @RequestPart(value = "attachment", required = false) MultipartFile incidentAttachment) throws Exception {
 
         log.info("adding  applicant incident");
+        //validate file type, allow only images and video
+        if(incidentAttachment != null && !applicantIncidentLiteService.validateFileType(incidentAttachment.getContentType())){
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(WsError.builder().errorCode(WsError.EWsError.INVALID_FILE_TYPE.getCode()).build()).build());
+        }
+        // validate latitude cordinates, it should be between -90 and +90
+        if(applicantIncidentRequest.getLocationLat().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLat().intValue() > MAX_GEO_CORDINATES){
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(WsError.builder().errorCode(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
+        }
+        // validate longitude cordinates, it should be between -90 and +90
+        if(applicantIncidentRequest.getLocationLng().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLng().intValue() > MAX_GEO_CORDINATES){
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(WsError.builder().errorCode(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
+        }
         IncidentTypeLookupDto incidentTypeLookupDto= incidentTypeLookupService.findByCode(applicantIncidentRequest.getTypeCode());
-       if(incidentTypeLookupDto ==null)
+        if(incidentTypeLookupDto ==null)
            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(WsError.builder().error(WsError.EWsError.INCIDENT_TYPE_NOT_FOUND).build()).build());
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantIncidentLiteService.addApplicantIncident(applicantIncidentRequest, incidentAttachment)).build());
     }

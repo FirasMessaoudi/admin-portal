@@ -1,0 +1,228 @@
+<a class="d-block button_back" *ngIf="renderBackLink" href="javascript:void(0);" (click)="goBack()">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
+<div class="content__wrapper" *ngIf="!canSeeCardDetails">
+  <div class="title__Page">
+    <h3 class="sectionTitle">{{'card-management.card_details' | translate }}</h3>
+  </div>
+  <div class="content__section">
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
+</div>
+
+<div class="content__wrapper" *ngIf="canSeeCardDetails">
+  <div class="title__Page">
+    <h3 class="sectionTitle">{{'card-management.card_details' | translate }}</h3>
+    <div ngbDropdown>
+      <button type="submit" class="btn btn-dcc-primary noArrow operations" id="dropdownBasic1"
+              ngbDropdownToggle>
+        {{'general.operations'| translate}}
+        <svg-icon styleClass="h4 ml-3" icon="bars"></svg-icon>
+      </button>
+
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="operationsNav">
+        <button ngbDropdownItem *ngIf="card?.statusCode==cardStatus.ACTIVE"
+                (click)="changeCardStatus(actions.SUSPEND_CARD,'card-management.dialog_suspend_card_confirm_text')">
+          {{'card-management.suspend_card' |translate}}
+        </button>
+        <button ngbDropdownItem *ngIf="card?.statusCode==cardStatus.ACTIVE || card?.statusCode==cardStatus.READY_TO_PRINT
+                                  || card?.statusCode==cardStatus.SUSPENDED || card?.statusCode==cardStatus.SENT_FOR_PRINT
+                                  || card?.statusCode==cardStatus.DISTRIBUTED || card?.statusCode==cardStatus.PRINTED
+                                  || card?.statusCode==cardStatus.WAITING_TO_SEND"
+                (click)="changeCardStatus(actions.CANCEL_CARD,'card-management.dialog_cancel_card_confirm_text')">
+          {{'card-management.cancel_card' |translate}}
+        </button>
+        <button ngbDropdownItem
+                *ngIf="card?.statusCode==cardStatus.SUSPENDED || card?.statusCode==cardStatus.PRINTED || card?.statusCode==cardStatus.DISTRIBUTED"
+                (click)="changeCardStatus(actions.ACTIVATE_CARD,'card-management.dialog_activate_card_confirm_text')">
+          {{'card-management.activate_card' |translate}}
+        </button>
+        <button ngbDropdownItem *ngIf="card?.statusCode==cardStatus.CANCELLED "
+                (click)="changeCardStatus(actions.REISSUE_CARD,'card-management.dialog_reissue_card_confirm_text')">
+          {{'card-management.reissue_card' |translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row cardBox">
+    <div class="col-12 col-md-4 order-md-1 order-1 order-md-0">
+      <div class="col-form-label text-center text-md-left">
+        <span>{{card?.applicantRitual?.applicant?.fullNameAr}}</span>
+      </div>
+      <div class="form-control-plaintext text-center text-md-left">
+        <span>{{card?.applicantRitual?.applicant?.fullNameEn}}</span>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-2 order-2 order-md-1">
+      <div class="col-form-label text-center text-md-left">{{'card-management.applicant_id' | translate }}</div>
+      <div
+        class="form-control-plaintext text-center text-md-left">
+          <span *ngIf="card?.applicantRitual?.applicant?.digitalIds[0]?.uin as value; else elseBlock"
+                class="mr-3">{{value}}</span>
+        <span>
+             <span
+               class="status {{buildDigitalIdClass(card?.applicantRitual?.applicant?.digitalIds[0]?.statusCode)}} mr-2"></span>
+              <span>{{card?.applicantRitual?.applicant?.digitalIds[0]?.statusCode ? lookupService().localizedLabel(applicantStatuses, card?.applicantRitual?.applicant?.digitalIds[0]?.statusCode) : ' --- '}}</span>
+          </span>
+      </div>
+    </div>
+    <div class="col-12 col-md-2 order-2 order-md-1">
+      <div class="col-form-label text-center text-md-left">{{'card-management.card_number' | translate }}</div>
+      <div
+        class="form-control-plaintext text-center text-md-left">
+        <span *ngIf="card?.referenceNumber as value; else elseBlock" class="mr-3">{{value}}</span>
+        <span>
+             <span class="status {{buildStatusClass(card?.statusCode)  }} mr-2"></span>
+            <span>{{ card?.statusCode ? lookupService().localizedLabel(cardStatuses, card?.statusCode) : ' --- '}}</span>
+          </span>
+      </div>
+    </div>
+    <div class="col-12 col-md-4 order-0 order-md-3 d-flex justify-content-center maskAv">
+        <span class="avatar">
+          <img
+            [src]="card?.applicantRitual?.applicant?.photo ? 'data:image/jpeg;base64,'+card?.applicantRitual?.applicant?.photo : url"/>
+        </span>
+    </div>
+  </div>
+
+
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li [ngbNavItem]="1">
+      <a ngbNavLink>{{ 'card-management.main_details' | translate }}</a>
+      <ng-template ngbNavContent>
+        <section>
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+            <div class="form-group col">
+              <label class="col-form-label">{{'card-management.applicant_original_name' | translate}}</label>
+              <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.fullNameOrigin }}</span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'general.date_of_birth' | translate}}</label>
+              <span
+                class="form-control-plaintext">{{ card?.applicantRitual?.applicant?.dateOfBirthGregorian | gregorianDateFormat }}
+                  <span *ngIf="card?.applicantRitual?.applicant?.dateOfBirthGregorian">-</span>
+                  {{ card?.applicantRitual?.applicant?.dateOfBirthHijri |  hijriDateFormat }}
+                </span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'card-management.ritual_type' | translate}}</label>
+              <span
+                class="form-control-plaintext ">{{card?.applicantRitual?.typeCode ? lookupService().localizedLabel(ritualTypes, card?.applicantRitual?.typeCode) : ''}}</span>
+            </div>
+
+            <div class="form-group col" [ngSwitch]="card?.applicantRitual?.applicant?.gender">
+              <label class="col-form-label">{{'general.gender' | translate}}</label>
+              <span class="form-control-plaintext"
+                    *ngSwitchCase="'F'">{{'user-management.female' | translate}}</span>
+              <span class="form-control-plaintext"
+                    *ngSwitchCase="'M'">{{'user-management.male' | translate}}</span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'card-management.nationality' | translate}}</label>
+              <span
+                class="form-control-plaintext">{{card?.applicantRitual?.applicant?.nationalityCode ? lookupService().localizedLabel(countries, card?.applicantRitual?.applicant?.nationalityCode) : ''}}</span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'card-management.passport_number' | translate}}</label>
+              <span class="form-control-plaintext ">{{ card?.applicantRitual?.applicant?.passportNumber }}</span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'card-management.marital_status' | translate}}</label>
+              <span
+                class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.maritalStatusCode ? lookupService().localizedLabel(maritalStatuses, card?.applicantRitual?.applicant?.maritalStatusCode) : ''}}</span>
+            </div>
+            <div *ngIf="card?.applicantRitual?.applicant?.idNumberOriginal" class="form-group col">
+              <label class="col-form-label">{{'card-management.applicant_original_id' | translate}}</label>
+              <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.idNumberOriginal}}</span>
+            </div>
+            <div *ngIf="card?.applicantRitual?.applicant?.idNumber" class="form-group col">
+              <label class="col-form-label">{{'general.nin_or_iqama' | translate}}</label>
+              <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.idNumber}}</span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'card-management.applicant_languages' | translate}}</label>
+              <span class="form-control-plaintext">
+                    <span
+                      *ngFor="let lang of card?.applicantRitual?.applicant?.contacts[0]?.languageList.split(','); let lastItem = last;">
+                      {{languageNativeName[lang.trim()]}}<span *ngIf="!lastItem">-</span></span>
+                    </span>
+            </div>
+          </div>
+        </section>
+        <hr class="my-4 w-100">
+        <section>
+          <span class="form-control-plaintext ">{{'card-management.applicant_original_address' | translate}}</span>
+
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+            <div class="form-group col">
+              <label class="col-form-label">{{'card-management.country' | translate}}</label>
+              <span
+                class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.countryCode ? lookupService().localizedLabel(countries, card?.applicantRitual?.applicant?.contacts[0]?.countryCode) : ''}}</span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'card-management.city' | translate}}</label>
+              <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.cityName}}</span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'card-management.district' | translate}}</label>
+              <span
+                class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.districtName}}</span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'card-management.street' | translate}}</label>
+              <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.streetName}}</span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'card-management.building_number' | translate}}</label>
+              <span
+                class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.buildingNumber}}</span>
+            </div>
+            <div class="form-group col">
+              <label class="col-form-label">{{'card-management.postal_code' | translate}}</label>
+              <span class="form-control-plaintext ">{{card?.applicantRitual?.applicant?.contacts[0]?.postalCode}}</span>
+            </div>
+          </div>
+        </section>
+        <hr class="my-4 w-100">
+        <section *ngIf="card?.applicantRitual?.applicant?.relatives?.length > 0">
+          <span class="form-control-plaintext ">{{'card-management.applicant_relatives' | translate}}</span>
+
+          <div class="table-responsive my-4">
+            <table class="table table-striped table-hover">
+              <thead>
+              <tr>
+                <th scope="col">{{'card-management.applicant_name' | translate}}</th>
+                <th scope="col">{{'card-management.applicant_id' | translate}}</th>
+                <th scope="col">{{'card-management.applicant_relative_type' | translate}}</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let relative of card?.applicantRitual?.applicant?.relatives">
+                <td
+                  class="ltr">{{relative.relativeApplicant?.fullNameAr}} {{relative.relativeApplicant?.fullNameEn}}
+                </td>
+                <td class="ltr">{{relative.relativeApplicant?.digitalIds[0]?.uin}}</td>
+
+                <td
+                  class="ltr">{{relative.relationshipCode ? lookupService().localizedLabel(relativeRelationships,
+                  relative.relationshipCode) : ''}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </ng-template>
+    </li>
+  </ul>
+
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+  <ng-template #elseBlock><span class="col-form-label">---</span></ng-template>
+
+
+</div>
+
