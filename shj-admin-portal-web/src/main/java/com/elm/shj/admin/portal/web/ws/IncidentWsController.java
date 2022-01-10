@@ -92,11 +92,11 @@ public class IncidentWsController {
         }
         //validate latitude cordinates, it should be between -90 and +90
         if(applicantIncidentRequest.getLocationLat().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLat().intValue() > MAX_GEO_CORDINATES){
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(WsError.builder().errorCode(WsError.EWsError.INVALID_COORDINATES.getCode()).build()).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(WsError.builder().errorCode(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
         }
         //validate longitude cordinates, it should be between -90 and +90
         if(applicantIncidentRequest.getLocationLng().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLng().intValue() > MAX_GEO_CORDINATES){
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(WsError.builder().errorCode(WsError.EWsError.INVALID_COORDINATES.getCode()).build()).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(WsError.builder().errorCode(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
         }
         IncidentTypeLookupDto incidentTypeLookupDto= incidentTypeLookupService.findByCode(applicantIncidentRequest.getTypeCode());
         if(incidentTypeLookupDto ==null)
