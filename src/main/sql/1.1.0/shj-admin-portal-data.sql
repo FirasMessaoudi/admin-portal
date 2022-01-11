@@ -385,3 +385,7 @@ GO
 
 UPDATE shc_portal.shc_data_segment SET label_ar = REPLACE(label_ar, N'الرحمان', N'الرحمن') WHERE id > 0;
 GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('incident.file.allowed.extensions', 'apng,avif,gif,jpeg,jpg,png,svg,webp,bmp,tiff,mp4,mov,wmv,avi,flv,avchd,mkv');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('incident.file.allowed.max.size', '15');
+GO
