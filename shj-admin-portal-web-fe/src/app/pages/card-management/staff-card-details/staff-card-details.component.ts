@@ -168,7 +168,7 @@ export class StaffCardDetailsComponent implements OnInit {
         .then((confirm) => {
           if (confirm) {
             this.cardService
-              .changeCardStatus(this.card.id, actionCode)
+              .changeStaffCardStatus(this.card.id, actionCode)
               .subscribe(
                 (result) => {
                   this.card = result;

@@ -50,7 +50,6 @@ public class JpaApplicantRitual implements Serializable {
     @Column(name = "border_number")
     private String borderNumber;
 
-
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
@@ -69,7 +68,6 @@ public class JpaApplicantRitual implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "applicantRitual")
     private Set<JpaApplicantRelative> relatives;
 
-
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.ALL,  mappedBy = "applicantRitual")
     private Set<JpaApplicantContact> contacts;
@@ -80,7 +78,6 @@ public class JpaApplicantRitual implements Serializable {
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "applicantRitual")
     private Set<JpaApplicantIncident> applicantIncidents;
-
 
     @PrePersist
     public void prePersist() {

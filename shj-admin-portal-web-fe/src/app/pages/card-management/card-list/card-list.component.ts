@@ -1,19 +1,19 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {I18nService} from "@dcc-commons-ng/services";
-import {AuthenticationService} from "@core/services";
-import {EAuthority, Page} from "@shared/model";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {ApplicantCard} from "@model/card.model";
-import {CardService} from "@core/services/card/card.service";
-import {Subscription} from "rxjs";
-import {Lookup} from "@model/lookup.model";
-import {LookupService} from "@core/utilities/lookup.service";
-import {NavigationService} from "@core/utilities/navigation.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { I18nService } from '@dcc-commons-ng/services';
+import { AuthenticationService } from '@core/services';
+import { EAuthority, Page } from '@shared/model';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ApplicantCard } from '@model/card.model';
+import { CardService } from '@core/services/card/card.service';
+import { Subscription } from 'rxjs';
+import { Lookup } from '@model/lookup.model';
+import { LookupService } from '@core/utilities/lookup.service';
+import { NavigationService } from '@core/utilities/navigation.service';
 
 @Component({
   selector: 'app-card-list',
   templateUrl: './card-list.component.html',
-  styleUrls: ['./card-list.component.scss']
+  styleUrls: ['./card-list.component.scss'],
 })
 export class CardListComponent implements OnInit, OnDestroy {
   public isSearchbarCollapsed = true;
@@ -21,20 +21,20 @@ export class CardListComponent implements OnInit, OnDestroy {
   pageArray: Array<number>;
   page: Page;
   searchForm: FormGroup;
-  ritualTypes: Lookup[];
-  cardStatuses: Lookup[];
+  ritualTypes: Lookup[] = [];
+  cardStatuses: Lookup[] = [];
   masterSelected: boolean;
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
-
-  constructor(private i18nService: I18nService,
-              private formBuilder: FormBuilder,
-              private navigationService: NavigationService,
-              private cardService: CardService,
-              private lookupsService: LookupService,
-              private authenticationService: AuthenticationService) {
-  }
+  constructor(
+    private i18nService: I18nService,
+    private formBuilder: FormBuilder,
+    private navigationService: NavigationService,
+    private cardService: CardService,
+    private lookupsService: LookupService,
+    private authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -44,10 +44,10 @@ export class CardListComponent implements OnInit, OnDestroy {
   }
 
   loadLookups() {
-    this.cardService.findRitualTypes().subscribe(result => {
+    this.cardService.findRitualTypes().subscribe((result) => {
       this.ritualTypes = result;
     });
-    this.cardService.findCardStatuses().subscribe(result => {
+    this.cardService.findCardStatuses().subscribe((result) => {
       this.cardStatuses = result;
     });
   }
@@ -67,20 +67,20 @@ export class CardListComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
-      ritualSeason: {value: null, disabled: true},
-      ritualType: {value: null, disabled: true},
-      hamlah: {value: null, disabled: true},
-      motawef: {value: null, disabled: true},
+      ritualSeason: { value: null, disabled: true },
+      ritualType: { value: null, disabled: true },
+      hamlah: { value: null, disabled: true },
+      motawef: { value: null, disabled: true },
       uin: [null],
       idNumber: [null],
-      cardNumber: {value: null, disabled: true},
-      cardStatus: {value: null, disabled: true},
-      applicantIdStatus: {value: null, disabled: true},
-      gender: {value: null, disabled: true},
-      nationality: {value: null, disabled: true},
+      cardNumber: { value: null, disabled: true },
+      cardStatus: { value: null, disabled: true },
+      applicantIdStatus: { value: null, disabled: true },
+      gender: { value: null, disabled: true },
+      nationality: { value: null, disabled: true },
       passportNumber: [null],
-      tafweejNumber: {value: null, disabled: true},
-      idType: {value: null, disabled: true}
+      tafweejNumber: { value: null, disabled: true },
+      idType: { value: null, disabled: true },
     });
   }
 
@@ -96,30 +96,34 @@ export class CardListComponent implements OnInit, OnDestroy {
     return this.lookupsService;
   }
 
-/*
-  this method is used to search applicant cards based upon user entered search criteria
-  in applicant card management page
-*/
+  /*
+    this method is used to search applicant cards based upon user entered search criteria
+    in applicant card management page
+  */
   search(): void {
-    this.searchSubscription = this.cardService.list(0, this.searchForm.value).subscribe(data => {
-      this.cards = [];
-      this.pageArray = [];
-      this.page = data;
-      if (this.page != null) {
-        this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
-        this.cards = this.page.content;
-      }
-    });
+    this.searchSubscription = this.cardService
+      .list(0, this.searchForm.value)
+      .subscribe((data) => {
+        this.cards = [];
+        this.pageArray = [];
+        this.page = data;
+        if (this.page != null) {
+          this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
+          this.cards = this.page.content;
+        }
+      });
   }
 
   loadPage(page: number) {
-    this.listSubscription = this.cardService.list(page, this.searchForm.value).subscribe(data => {
-      this.page = data;
-      if (this.page != null) {
-        this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
-        this.cards = this.page.content;
-      }
-    })
+    this.listSubscription = this.cardService
+      .list(page, this.searchForm.value)
+      .subscribe((data) => {
+        this.page = data;
+        if (this.page != null) {
+          this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
+          this.cards = this.page.content;
+        }
+      });
   }
 
   checkUncheckAllCards() {
@@ -127,7 +131,6 @@ export class CardListComponent implements OnInit, OnDestroy {
       this.page.content[i].isSelected = this.masterSelected;
     }
   }
-
 
   get canSeeCardsList(): boolean {
     return this.authenticationService.hasAuthority(EAuthority.CARD_MANAGEMENT);

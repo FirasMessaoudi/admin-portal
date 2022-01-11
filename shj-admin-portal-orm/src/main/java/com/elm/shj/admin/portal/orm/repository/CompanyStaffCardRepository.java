@@ -3,14 +3,17 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,4 +53,5 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
     Page<JpaCompanyStaffCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus, @Param("uin") String uin, @Param("companyCode") String companyCode, @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds, Pageable pageable);
 
     JpaCompanyStaffCard findByIdAndStatusCodeNot(long id, String statusCode);
+
 }

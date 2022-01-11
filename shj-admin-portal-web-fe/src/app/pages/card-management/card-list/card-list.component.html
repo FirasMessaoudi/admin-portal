@@ -179,7 +179,7 @@
           <th scope="col">{{'general.nin' | translate }}</th>
           <th scope="col">{{'card-management.passport_number' | translate }}</th>
           <th scope="col">{{'card-management.card_number' | translate}}</th>
-          <!--          <th scope="col">{{'card-management.ritual_type' | translate}}</th>-->
+          <th scope="col">{{'card-management.ritual_type' | translate}}</th>
           <th scope="col">{{'card-management.card_status' | translate}}</th>
         </tr>
         </thead>
@@ -207,8 +207,9 @@
           <td class="ltr">{{card?.applicantRitual?.applicant?.idNumber}}</td>
           <td class="ltr">{{card?.applicantRitual?.applicant?.passportNumber}}</td>
           <td class="ltr">{{card?.referenceNumber}}</td>
-          <!--          <td-->
-          <!--            class="ltr">{{card?.applicantRitual?.typeCode ? lookupService().localizedLabel(ritualTypes, card?.applicantRitual?.typeCode) : ''}}</td>-->
+          <td
+            class="ltr">{{card?.applicantRitual?.typeCode ? lookupService().localizedLabel(ritualTypes, card?.applicantRitual?.typeCode) : ''}}
+          </td>
           <td class="ltr">{{lookupService().localizedLabel(cardStatuses, card?.statusCode)}}</td>
         </tr>
         </tbody>

@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -143,7 +144,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
         return notificationTemplate.get().getNotificationTemplateParameters().stream().filter(nt -> nt.getParameterName().equalsIgnoreCase(parameterName)).findAny().get().getId();
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void createUserDefinedNotificationRequest(NotificationTemplateDto notificationTemplate) {
         List<ApplicantDto> applicants;
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
@@ -199,7 +200,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                 .orElse(NOTIFICATION_DEFAULT_LANGUAGE);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void processNotificationTemplates() {
         List<NotificationTemplateDto> notificationTemplates = notificationTemplateService.findUnprocessedUserDefinedNotifications(ENotificationTemplateType.USER_DEFINED.name(), new Date(), false, true);
         notificationTemplates.forEach(

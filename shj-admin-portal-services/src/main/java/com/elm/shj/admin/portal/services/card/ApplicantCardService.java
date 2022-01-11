@@ -54,6 +54,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     private final CompanyStaffService companyStaffService;
     private final CompanyLiteService companyLiteService;
     private final CompanyService companyService;
+
     @PostConstruct
     private void postConstruct() {
         //build map of allowed actions per current status for the card
@@ -117,13 +118,19 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @return the list of applicant cards
      */
     public Page<ApplicantCardDto> searchApplicantCards(String uin, String idNumber, String passportNumber, Pageable pageable) {
+        Page<ApplicantCardDto> applicantCards;
         if (uin == null && idNumber == null && passportNumber == null) {
-            return mapPage(applicantCardRepository.findAllApplicantCards(ECardStatus.REISSUED.name(), pageable));
+            applicantCards = mapPage(applicantCardRepository.findAllApplicantCards(ECardStatus.REISSUED.name(), pageable));
         } else {
-
-            return mapPage(applicantCardRepository.searchApplicantCards(uin, idNumber, passportNumber, ECardStatus.REISSUED.name(), pageable));
-
+            applicantCards = mapPage(applicantCardRepository.searchApplicantCards(uin, idNumber, passportNumber, ECardStatus.REISSUED.name(), pageable));
         }
+        applicantCards.forEach(card -> {
+            ApplicantPackageDto applicantPackageDto = card.getApplicantRitual().getApplicantPackage();
+            if (applicantPackageDto != null) {
+                card.getApplicantRitual().setTypeCode(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode());
+            }
+        });
+        return applicantCards;
     }
 
     /**
@@ -153,7 +160,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
             return savedCard;
         }
         userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
-         return save(card);
+        return save(card);
 
     }
 
