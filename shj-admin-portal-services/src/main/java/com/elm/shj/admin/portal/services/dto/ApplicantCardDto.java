@@ -22,6 +22,7 @@ import java.util.List;
 public class ApplicantCardDto implements Serializable, HibernateAwareMapper {
 
     private static final long serialVersionUID = -5830783313676682718L;
+
     private long id;
     private ApplicantRitualDto applicantRitual;
     private String referenceNumber;
