@@ -161,7 +161,7 @@
           </td>
         </tr>
         <tr *ngFor="let request of printRequests">
-          <td><a name="requestID" [routerLink]="['/print-requests/details', request.id]"
+          <td><a name="requestID" [routerLink]="['/staff-print-requests/details', request.id]"
                  class="text-dcc-primary font-weight-bold">{{request.referenceNumber}}</a></td>
           <td>{{request.batchesCount}}</td>
           <td class="ltr">{{request.cardsCount}}</td>
@@ -177,7 +177,7 @@
             <span class="status mr-1 done"></span>
           </td>
           <td>
-            <button [routerLink]="['/print-requests/details', request.id]"
+            <button [routerLink]="['/staff-print-requests/details', request.id]"
                     class="btn btn-sm btn-outline-dcc-primary tblView">
               {{"general.btn_view" | translate}}
             </button>

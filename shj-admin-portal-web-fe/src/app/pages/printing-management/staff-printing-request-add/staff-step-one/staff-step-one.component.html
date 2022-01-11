@@ -30,22 +30,14 @@
                min="0" step="1"/>
       </div>
       <div class="form-group col">
-        <label class="col-form-label">{{'printing-management.id_number' | translate }}</label>
-        <input type="number" formControlName="idNumber" class="form-control"
-               onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length<=9"
-               min="0" step="1"/>
-      </div>
-      <div class="form-group col">
-        <label class="col-form-label">{{'printing-management.hamlah_number' | translate }}</label>
-        <input id="hamlahNumber" formControlName="hamlahNumber" type="text" class="form-control"/>
-      </div>
-      <div class="form-group col">
-        <label class="col-form-label">{{'printing-management.motawef_number' | translate }}</label>
-        <input id="motawefNumber" formControlName="motawefNumber" type="text" class="form-control"/>
-      </div>
-      <div class="form-group col">
-        <label class="col-form-label">{{'card-management.passport_number' | translate }}</label>
-        <input id="passportNumber" formControlName="passportNumber" type="text" class="form-control"/>
+        <label class="col-form-label">{{ "card-management.company" | translate }}</label>
+        <select formControlName="companyCode" class="custom-select">
+          <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+          <option *ngFor="let company of companyNames" [ngValue]="company.code">
+            <span *ngIf="currentLanguage.startsWith('ar')">{{company.labelAr}}</span>
+            <span *ngIf="currentLanguage.startsWith('en')">{{company.labelEn}}</span>
+          </option>
+        </select>
       </div>
       <div class="form-group col">
         <label class="col-form-label">{{'card-management.nationality' | translate }}</label>

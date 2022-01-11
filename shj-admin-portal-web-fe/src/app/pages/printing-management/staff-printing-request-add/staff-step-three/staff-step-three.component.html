@@ -61,9 +61,10 @@
       </tr>
       </thead>
       <tbody [ngbCollapse]="!isCollapsed[i]" class="collapse">
-      <tr *ngFor="let batchCard of printRequest.printRequestCards">
+      <tr *ngFor="let batchCard of batch?.printRequestBatchCards">
         <td class="nameCol" style="width: 55%">
-          <a *ngIf="canSeeCardDetails" [routerLink]="['/cards/details', batchCard?.cardId]" target="_blank"
+          <a *ngIf="canSeeCardDetails" [routerLink]="['/staff-print-requests/staff-card-details', batchCard?.cardId]"
+             target="_blank"
              class="text-dcc-primary font-weight-bold">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}} {{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
           </a>
           <p *ngIf="!canSeeCardDetails"

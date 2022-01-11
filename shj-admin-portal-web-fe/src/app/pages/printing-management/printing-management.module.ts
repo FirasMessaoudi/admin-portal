@@ -9,12 +9,13 @@ import {PrintingRequestAddUpdateComponent} from './printing-request-add-update/p
 import {PrintingRequestAddUpdateModule} from './printing-request-add-update/printing-request-add-update.module';
 import {StaffPrintingRequestListComponent} from "@pages/printing-management/staff-printing-management/staff-printing-request-list/staff-printing-request-list.component";
 import {StaffPrintingRequestAddModule} from "@pages/printing-management/staff-printing-request-add/staff-printing-request-add.module";
-import { StaffPrintingDetailsComponent } from './staff-printing-management/staff-printing-details/staff-printing-details.component';
-import { StaffCardDetailsComponent } from './staff-card-details/staff-card-details.component';
+import {StaffPrintingDetailsComponent} from './staff-printing-management/staff-printing-details/staff-printing-details.component';
+import {StaffCardDetailsComponent} from './staff-card-details/staff-card-details.component';
+import {StaffPrintRequestDetailsComponent} from './staff-printing-management/staff-print-request-details/staff-print-request-details.component';
 
 
 @NgModule({
-  declarations: [PrintingRequestListComponent, PrintingRequestDetailsComponent, PrintingRequestAddUpdateComponent, StaffPrintingRequestListComponent, StaffPrintingDetailsComponent, StaffCardDetailsComponent],
+  declarations: [PrintingRequestListComponent, PrintingRequestDetailsComponent, PrintingRequestAddUpdateComponent, StaffPrintingRequestListComponent, StaffPrintingDetailsComponent, StaffCardDetailsComponent, StaffPrintRequestDetailsComponent],
   imports: [
     CommonModule,
     PrintingManagementRoutingModule,
