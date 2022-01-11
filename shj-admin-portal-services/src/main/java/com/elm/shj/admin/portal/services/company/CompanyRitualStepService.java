@@ -39,7 +39,7 @@ public class CompanyRitualStepService extends GenericService<JpaCompanyRitualSte
         try {
             Optional<JpaGroupApplicantList> groupApplicantList = groupApplicantListRepository.findTopByApplicantUinOrderByCreationDateDesc(applicantUin);
             if (groupApplicantList.isPresent()) {
-                List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupIdOrderByStepIndexAsc(applicantUin, groupApplicantList.get().getId());
+                List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupIdOrderByStepIndexAsc(groupApplicantList.get().getApplicantGroup().getId());
                 List<CompanyRitualStepDto> result = mapList(companyRitualSteps);
                 result.forEach(companyRitualStep -> companyRitualStep.setReferenceNumber(companyRitualSteps.get(0).getApplicantGroup().getReferenceNumber()));
                 return result;

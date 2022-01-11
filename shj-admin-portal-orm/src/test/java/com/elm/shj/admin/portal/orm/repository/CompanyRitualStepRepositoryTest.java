@@ -31,14 +31,14 @@ public class CompanyRitualStepRepositoryTest extends AbstractJpaTest {
 
     @Test
     public void test_find_by_uin_and_company_ritual_season_success() {
-        List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupIdOrderByStepIndexAsc(EXIST_USER_UIN, COMPANY_RITUAL_SEASON_ID);
+        List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupIdOrderByStepIndexAsc(COMPANY_RITUAL_SEASON_ID);
         assertFalse(companyRitualSteps.isEmpty());
 
     }
 
     @Test
     public void test_find_by_uin_and_company_ritual_season_fail() {
-        List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupIdOrderByStepIndexAsc(FAKE_USER_UIN, COMPANY_RITUAL_SEASON_ID);
+        List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupIdOrderByStepIndexAsc(COMPANY_RITUAL_SEASON_ID);
         assertTrue(companyRitualSteps.isEmpty());
     }
 
