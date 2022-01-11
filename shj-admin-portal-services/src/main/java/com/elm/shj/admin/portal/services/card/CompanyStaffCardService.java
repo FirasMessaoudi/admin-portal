@@ -5,10 +5,7 @@ package com.elm.shj.admin.portal.services.card;
 
 import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffCardRepository;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffCardDto;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffCardFilterDto;
-import com.elm.shj.admin.portal.services.dto.ECardStatus;
-import com.elm.shj.admin.portal.services.dto.EPrintRequestStatus;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,14 +14,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service handling company staff card
@@ -55,9 +55,10 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @param suin
      * @return
      */
-    public  CompanyStaffCardDto  findByDigitalIdAndStatusCodeActive(String suin) {
+    public CompanyStaffCardDto findByDigitalIdAndStatusCodeActive(String suin) {
         return getMapper().fromEntity(companyStaffCardRepository.findByCompanyStaffDigitalIdSuinAndStatusCode(suin, ECardStatus.ACTIVE.name()), mappingContext);
-     }
+    }
+
     /**
      * find company staff cards
      *
@@ -144,6 +145,40 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
 
     public CompanyStaffCardDto findStaffCardById(long cardId) {
         return getMapper().fromEntity(companyStaffCardRepository.findByIdAndStatusCodeNot(cardId, ECardStatus.REISSUED.name()), mappingContext);
+    }
+
+    @Transactional
+    public CompanyStaffCardDto changeCardStatus(CompanyStaffCardDto card, String actionCode, Optional<Long> userId) {
+        if (actionCode.equalsIgnoreCase(ECardStatusAction.CANCEL_CARD.name())) {
+            card.setStatusCode(ECardStatus.CANCELLED.name());
+        } else if (actionCode.equalsIgnoreCase(ECardStatusAction.ACTIVATE_CARD.name())) {
+            card.setStatusCode(ECardStatus.ACTIVE.name());
+        } else if (actionCode.equalsIgnoreCase(ECardStatusAction.SUSPEND_CARD.name())) {
+            card.setStatusCode(ECardStatus.SUSPENDED.name());
+        } else {
+            card.setStatusCode(ECardStatus.REISSUED.name());
+            save(card);
+            log.debug("Generate new staff card after marking the old one as reissued...");
+            //TODO Audit Staff Card Logs
+            //userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
+            CompanyStaffCardDto savedCard = save(CompanyStaffCardDto
+                    .builder()
+                    .referenceNumber(card.getReferenceNumber())
+                    .companyRitualSeason(card.getCompanyRitualSeason())
+                    .companyStaffDigitalId(card.getCompanyStaffDigitalId())
+                    .statusCode(ECardStatus.READY_TO_PRINT.name())
+                    .build());
+            //userCardStatusAuditService.saveUserCardStatusAudit(savedCard, userId);
+            return savedCard;
+        }
+        //userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
+        return save(card);
+
+    }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public CompanyStaffCardDto findById(long cardId) {
+        return findOne(cardId);
     }
 
 }
