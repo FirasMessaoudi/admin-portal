@@ -1,0 +1,132 @@
+<a class="d-block button_back" href="javascript:void(0);" (click)="goBack()">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h3 class="sectionTitle">{{'printing-management.request_details' | translate }}</h3>
+  </div>
+  <div class="content__section" *ngIf="!canSeePrintRequestDetails">
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
+
+  <div class="content__section" *ngIf="canSeePrintRequestDetails">
+    <div class="cardBox row row-cols-1 row-cols-md-2 row-cols-lg-6">
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{'printing-management.request_number' | translate}}</label>
+        <span class="form-control-plaintext ">{{printRequest?.referenceNumber}}</span>
+      </div>
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{'printing-management.no_batches' | translate}}</label>
+        <span class="form-control-plaintext ">{{printRequest?.printRequestBatches?.length}}</span>
+      </div>
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{'printing-management.no_cards' | translate}}</label>
+        <span class="form-control-plaintext ">{{printRequest?.printRequestCards?.length}}</span>
+      </div>
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{'printing-management.creation_date' | translate}}</label>
+        <span class="form-control-plaintext ">{{printRequest?.creationDate | gregorianDateFormat}}</span>
+      </div>
+      <div *ngIf="printRequest?.statusCode !== printRequestStatus.NEW" class="form-group col mb-lg-0">
+        <label class="col-form-label">{{'printing-management.request_confirmation_date' | translate}}</label>
+        <span class="form-control-plaintext ">{{printRequest?.confirmationDate | gregorianDateFormat}}</span>
+      </div>
+      <div class="form-group col mb-lg-0">
+        <label class="col-form-label">{{'printing-management.request_status' | translate}}</label>
+        <span class="form-control-plaintext "><span
+          class="status mr-1 done"></span> {{printRequest?.statusCode ? lookupService().localizedLabel(printRequestStatuses, printRequest?.statusCode) : ''}}</span>
+      </div>
+      <div class="form-group col-lg-12 mt-lg-2 mb-lg-0" *ngIf="printRequest?.description">
+        <label class="col-form-label">{{'printing-management.request_description' | translate}}</label>
+        <span class="form-control-plaintext ">{{printRequest?.description}}</span>
+      </div>
+    </div>
+
+    <div class="mt-5 d-flex">
+      <div class="table_header_col--fixed" style="width: 50%">{{'card-management.applicant_name' | translate}}</div>
+      <div class="table_header_col--fixed" style="width: 10%">{{'card-management.applicant_id' | translate}}</div>
+      <div class="table_header_col--fixed" style="width: 10%">{{'printing-management.id_number' | translate}}</div>
+      <div class="table_header_col--fixed" style="width: 10%">{{'card-management.card_number' | translate}}</div>
+      <div class="table_header_col--fixed" style="width: 10%">{{'card-management.passport_number' | translate}}</div>
+      <div class="table_header_col--fixed" style="width: 10%">{{'card-management.card_status' | translate}}</div>
+    </div>
+    <div class="table-responsive mb-4 table_scroll">
+      <table id="selectedApplicantsCards" class="table table-striped table-hover">
+        <tr *ngIf="false" class="text-center">
+          <td colspan="10">
+            <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
+            <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+          </td>
+        </tr>
+        <tr *ngIf="isLoading" class="text-center">
+          <td colspan="10" style="height: 200px;">
+            <div class="preloader inner_page">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </td>
+        </tr>
+        <ng-template [ngIf]="!isLoading" *ngFor="let batch of printRequest?.printRequestBatches; let i=index">
+          <thead>
+          <tr>
+            <th class="p-0" colspan="10">
+              <a class="packageBox" href="javascript:void(0)" (click)="isCollapsed[i] = !isCollapsed[i]"
+                 [ngClass]="isCollapsed[i] ? '' : 'active'">
+              <span class="">{{'printing-management.batch_no' | translate}}<span
+                class="packageNo">{{i + 1}}</span></span>
+                <span class="">{{'printing-management.contains' | translate}}
+                  <b>{{batch.printRequestBatchCards?.length}}</b> {{'printing-management.cards' | translate}}</span>
+                <span class="badge m-2 text-muted"
+                      *ngFor="let requestBatch of batch.batchTypeCodes?.split(','); let i = index; let lastBatch = last;">
+                  {{currentLanguage.startsWith("en") ? getBatchType(batch.batchTypeCodes?.split(',')[i]).labelEn : getBatchType(batch.batchTypeCodes?.split(',')[i]).labelAr}}
+                  :
+                  {{batch.batchTypeCodes?.split(',')[i] === batchType.NATIONALITY ? lookupService().localizedLabel(countries, batch.batchTypeValues?.split(',')[i]) : batch.batchTypeValues?.split(',')[i]}}
+                  <span *ngIf="!lastBatch">,</span>
+                </span>
+              </a>
+            </th>
+          </tr>
+          </thead>
+          <tbody [ngbCollapse]="!isCollapsed[i]" class="collapse">
+          <tr *ngFor="let batchCard of batch?.printRequestBatchCards">
+            <td class="nameCol" style="width: 50%">
+              <a *ngIf="canSeeCardDetails"
+                 [routerLink]="['/staff-print-requests/staff-card-details', batchCard?.cardId]" target="_blank"
+                 class="text-dcc-primary font-weight-bold">
+                <span
+                  *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}}
+                  <br>{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</span>
+                <span
+                  *ngIf="currentLanguage.startsWith('en')">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
+                  <br>{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}}</span>
+              </a>
+              <p *ngIf="!canSeeCardDetails" class=" font-weight-bold">
+                <span
+                  *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}}
+                  <br>{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</span>
+                <span
+                  *ngIf="currentLanguage.startsWith('en')">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
+                  <br>{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}}</span>
+              </p>
+            </td>
+            <td class="ltr" style="width: 10%">{{batchCard?.staffCard?.companyStaffDigitalId?.suin}}</td>
+            <td class="ltr"
+                style="width: 10%">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
+            <td class="ltr" style="width: 10%">{{batchCard?.staffCard?.referenceNumber}}</td>
+            <td class="ltr"
+                style="width: 10%">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
+            <td class="ltr"
+                style="width: 10%">{{lookupService().localizedLabel(cardStatuses, batchCard?.staffCard?.statusCode)}}</td>
+          </tr>
+          </tbody>
+        </ng-template>
+      </table>
+    </div>
+
+
+  </div>
+
+</div>

@@ -52,29 +52,25 @@ public class StaffCardManagementController {
         return companyStaffCardService.searchStaffCards(searchCriteria, pageable);
     }
 
-    @GetMapping("/list/ready-to-print/all/{uin}/{idNumber}/{hamlahNumber}/{motawefNumber}/{passportNumber}/{nationality}")
+    @GetMapping("/list/ready-to-print/all/{uin}/{companyCode}//{nationality}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
-    public List<CompanyStaffCardDto> listReadyToPrintCards(@PathVariable String uin, @PathVariable String idNumber, @PathVariable String hamlahNumber,
-                                                           @PathVariable String motawefNumber, @PathVariable String passportNumber,
+    public List<CompanyStaffCardDto> listReadyToPrintCards(@PathVariable String uin, @PathVariable String companyCode,
                                                            @PathVariable String nationality, @RequestParam List<Long> excludedCardsIds,
                                                            Authentication authentication) {
         log.info("list all printing cards.");
-        return companyStaffCardService.findAllPrintingCards("-1".equals(uin) ? null : uin,
-                "-1".equals(idNumber) ? null : idNumber, "-1".equals(hamlahNumber) ? null : hamlahNumber,
-                "-1".equals(motawefNumber) ? null : motawefNumber, "-1".equals(passportNumber) ? null : passportNumber,
+        return companyStaffCardService.findAllPrintingCards("-1".equals(uin) ? null : uin
+                , "-1".equals(companyCode) ? null : companyCode,
                 "-1".equals(nationality) ? null : nationality, excludedCardsIds);
     }
 
-    @GetMapping("/list/ready-to-print/{uin}/{idNumber}/{hamlahNumber}/{motawefNumber}/{passportNumber}/{nationality}")
+    @GetMapping("/list/ready-to-print/{uin}/{companyCode}/{nationality}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
-    public Page<CompanyStaffCardDto> listReadyToPrintCards(@PathVariable String uin, @PathVariable String idNumber, @PathVariable String hamlahNumber,
-                                                           @PathVariable String motawefNumber, @PathVariable String passportNumber,
+    public Page<CompanyStaffCardDto> listReadyToPrintCards(@PathVariable String uin, @PathVariable String companyCode,
                                                            @PathVariable String nationality, @RequestParam List<Long> excludedCardsIds,
                                                            Authentication authentication, Pageable pageable) {
         log.info("list all printing cards.");
-        return companyStaffCardService.findPrintingCards("-1".equals(uin) ? null : uin,
-                "-1".equals(idNumber) ? null : idNumber, "-1".equals(hamlahNumber) ? null : hamlahNumber,
-                "-1".equals(motawefNumber) ? null : motawefNumber, "-1".equals(passportNumber) ? null : passportNumber,
+        return companyStaffCardService.findPrintingCards("-1".equals(uin) ? null : uin
+                , "-1".equals(companyCode) ? null : companyCode,
                 "-1".equals(nationality) ? null : nationality, excludedCardsIds, pageable);
     }
 

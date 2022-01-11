@@ -12,6 +12,7 @@ import {PrintService} from "@core/services/printing/print.service";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {NavigationService} from "@core/utilities/navigation.service";
+import {CompanyLite} from "@model/company-lite.model";
 
 @Component({
   selector: 'app-staff-step-one',
@@ -35,6 +36,7 @@ export class StaffStepOneComponent implements OnInit {
   isLoading: boolean;
   isSelectAllClicked: boolean;
   isSelectLoading: boolean;
+  companyNames: CompanyLite[];
 
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();
@@ -69,6 +71,10 @@ export class StaffStepOneComponent implements OnInit {
       this.nationalities = result;
       this.localizedNationalities = this.lookupsService.localizedItems(this.nationalities);
     });
+
+    this.cardService.findCompanyNames().subscribe((result) => {
+      this.companyNames = result;
+    });
   }
 
   /**
@@ -94,11 +100,9 @@ export class StaffStepOneComponent implements OnInit {
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
       uin: [null],
-      idNumber: [null],
-      hamlahNumber: {value: null, disabled: true},
-      motawefNumber: {value: null, disabled: true},
-      passportNumber: [null],
-      nationality: [null]
+      nationality: [null],
+      companyCode: [null]
+
     });
   }
 
@@ -116,8 +120,8 @@ export class StaffStepOneComponent implements OnInit {
 
   search(pageNumber: number): void {
     this.isLoading = true;
-    this.searchSubscription = this.cardService.searchStaffCardsToPrint(this.searchForm.value.uin, this.searchForm.value.idNumber,
-      this.searchForm.value.hamlahNumber, this.searchForm.value.motawefNumber, this.searchForm.value.passportNumber,
+    this.searchSubscription = this.cardService.searchStaffCardsToPrint(this.searchForm.value.uin,
+      this.searchForm.value.companyCode,
       this.searchForm.value.nationality, this.addedCards.map(card => card.id), pageNumber).subscribe(data => {
       this.isLoading = false;
       this.cards = [];
@@ -172,8 +176,8 @@ export class StaffStepOneComponent implements OnInit {
 
   selectAllCards() {
     this.isSelectLoading = true;
-    this.searchSubscription = this.cardService.searchAllStaffCardsToPrint(this.searchForm.value.uin, this.searchForm.value.idNumber,
-      this.searchForm.value.hamlahNumber, this.searchForm.value.motawefNumber, this.searchForm.value.passportNumber,
+    this.searchSubscription = this.cardService.searchAllStaffCardsToPrint(this.searchForm.value.uin,
+      this.searchForm.value.companyCode,
       this.searchForm.value.nationality, this.addedCards.map(card => card.id)).subscribe(data => {
       this.isSelectLoading = false;
       this.isSelectAllClicked = true;

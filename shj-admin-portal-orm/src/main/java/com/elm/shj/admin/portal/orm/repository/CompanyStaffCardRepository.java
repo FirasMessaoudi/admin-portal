@@ -36,16 +36,18 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
     Page<JpaCompanyStaffCard> findStaffCards(@Param("reissuedStatusCode") String reissuedStatusCode, Pageable pageable);
 
     @Query("select c from JpaCompanyStaffCard c where c.statusCode = :cardStatus and c.id NOT IN :excludedCardsIds " +
-            "and (c.companyStaffDigitalId.suin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (c.companyStaffDigitalId.companyStaff.idNumber LIKE '%'+:idNumber+'%' OR :idNumber IS NULL)" +
-            "and (c.companyStaffDigitalId.companyStaff.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL)" +
+            "and (c.id NOT IN(select p.cardId from JpaPrintRequestCard p where p.printRequest.statusCode <> :printRequestStatus or c.statusCode <> :cardStatus)) " +
+            "and (c.companyStaffDigitalId.suin LIKE '%'+:uin+'%' OR :uin IS NULL)" +
+            "and (c.companyRitualSeason.company.code = :companyCode OR :companyCode IS NULL)" +
             "and (c.companyStaffDigitalId.companyStaff.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
-    List<JpaCompanyStaffCard> findAllPrintingCards(@Param("cardStatus") String cardStatus, @Param("uin") String uin, @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds);
+    List<JpaCompanyStaffCard> findAllPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus, @Param("uin") String uin, @Param("companyCode") String companyCode, @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds);
 
     @Query("select c from JpaCompanyStaffCard c where c.statusCode = :cardStatus and c.id NOT IN :excludedCardsIds " +
-            "and (c.companyStaffDigitalId.suin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (c.companyStaffDigitalId.companyStaff.idNumber LIKE '%'+:idNumber+'%' OR :idNumber IS NULL)" +
-            "and (c.companyStaffDigitalId.companyStaff.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL)" +
+            "and (c.id NOT IN(select p.cardId from JpaPrintRequestCard p where p.printRequest.statusCode <> :printRequestStatus or c.statusCode <> :cardStatus)) " +
+            "and (c.companyStaffDigitalId.suin LIKE '%'+:uin+'%' OR :uin IS NULL)" +
+            "and (c.companyRitualSeason.company.code = :companyCode OR :companyCode IS NULL)" +
             "and (c.companyStaffDigitalId.companyStaff.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
-    Page<JpaCompanyStaffCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("uin") String uin, @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds, Pageable pageable);
+    Page<JpaCompanyStaffCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus, @Param("uin") String uin, @Param("companyCode") String companyCode, @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds, Pageable pageable);
 
     JpaCompanyStaffCard findByIdAndStatusCodeNot(long id, String statusCode);
 }
