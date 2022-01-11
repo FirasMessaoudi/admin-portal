@@ -24,7 +24,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 
 /**
@@ -64,7 +65,7 @@ public class CompanyRitualStepServiceTest {
     public void test_find_company_ritual_step_by_uin_success(){
         List<JpaCompanyRitualStep> jpaCompanyRitualStepList = new ArrayList<>();
         List<CompanyRitualStepDto> companyRitualStepDtos = new ArrayList<>();
-        Mockito.when(companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupIdOrderByStepIndexAsc(anyString(), anyLong())).thenReturn(jpaCompanyRitualStepList);
+        Mockito.when(companyRitualStepRepository.findByApplicantGroupIdOrderByStepIndexAsc(anyLong())).thenReturn(jpaCompanyRitualStepList);
         Mockito.when(companyRitualStepDtoMapper.fromEntityList(any(), any())).thenReturn(companyRitualStepDtos);
 
         List<CompanyRitualStepDto> result = serviceToTest.findCompanyRitualStepsByApplicantUin(UIN);
@@ -72,7 +73,7 @@ public class CompanyRitualStepServiceTest {
     }
     @Test
     public void test_find_company_ritual_step_by_uin_fail(){
-        Mockito.when(companyRitualStepRepository.findByApplicantGroupGroupApplicantListsApplicantUinAndApplicantGroupIdOrderByStepIndexAsc(anyString(), anyLong())).thenReturn(null);
+        Mockito.when(companyRitualStepRepository.findByApplicantGroupIdOrderByStepIndexAsc(anyLong())).thenReturn(null);
 
         List<CompanyRitualStepDto> result = serviceToTest.findCompanyRitualStepsByApplicantUin(UIN);
         assertNull(result);
