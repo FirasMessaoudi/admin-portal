@@ -9,8 +9,8 @@ import {StaffPrintingRequestListComponent} from "@pages/printing-management/staf
 import {StaffPrintingDetailsComponent} from './staff-printing-management/staff-printing-details/staff-printing-details.component';
 import {StaffPrintingRequestAddComponent} from "@pages/printing-management/staff-printing-request-add/staff-printing-request-add.component";
 import {StaffSuccessComponent} from "@pages/printing-management/staff-printing-request-add/staff-success/staff-success.component";
-import {StaffCardDetailsComponent} from './staff-card-details/staff-card-details.component';
 import {StaffPrintRequestDetailsComponent} from "@pages/printing-management/staff-printing-management/staff-print-request-details/staff-print-request-details.component";
+import {StaffCardDetailsComponent} from "@pages/card-management/staff-card-details/staff-card-details.component";
 
 
 const routes: Routes = [

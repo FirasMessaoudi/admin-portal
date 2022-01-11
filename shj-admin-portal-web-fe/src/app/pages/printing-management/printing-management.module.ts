@@ -10,8 +10,8 @@ import {PrintingRequestAddUpdateModule} from './printing-request-add-update/prin
 import {StaffPrintingRequestListComponent} from "@pages/printing-management/staff-printing-management/staff-printing-request-list/staff-printing-request-list.component";
 import {StaffPrintingRequestAddModule} from "@pages/printing-management/staff-printing-request-add/staff-printing-request-add.module";
 import {StaffPrintingDetailsComponent} from './staff-printing-management/staff-printing-details/staff-printing-details.component';
-import {StaffCardDetailsComponent} from './staff-card-details/staff-card-details.component';
 import {StaffPrintRequestDetailsComponent} from './staff-printing-management/staff-print-request-details/staff-print-request-details.component';
+import {StaffCardDetailsComponent} from "@pages/card-management/staff-card-details/staff-card-details.component";
 
 
 @NgModule({
