@@ -3,11 +3,11 @@
  */
 package com.elm.shj.admin.portal.services.incident;
 
-import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncidentLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentLiteRepository;
-import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentRepository;
-import com.elm.shj.admin.portal.orm.repository.IncidentAttachmentRepository;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantIncidentLiteDto;
+import com.elm.shj.admin.portal.services.dto.EIncidentStatus;
+import com.elm.shj.admin.portal.services.dto.IncidentAttachmentLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
@@ -16,28 +16,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.RandomStringGenerator;
+import org.apache.velocity.shaded.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service handling Applicant Incident operations
@@ -50,6 +42,11 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantIncidentLiteService extends GenericService<JpaApplicantIncidentLite, ApplicantIncidentLiteDto, Long> {
 
+    @Value("${incident.file.allowed.extensions}")
+    private String allowedFileExtensions;
+
+    @Value("${incident.file.allowed.max.size}")
+    private long maxFileSize;
 
     private final SftpService sftpService;
     private final  ApplicantIncidentLiteRepository applicantIncidentLiteRepository ;
@@ -128,29 +125,13 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
         return referenceNumPrefix+ serialDigits  ;
     }
 
-    public Boolean validateFileType(String contentType){
-        switch (contentType){
-            case MediaType.IMAGE_JPEG_VALUE:
-                return true;
-            case MediaType.IMAGE_PNG_VALUE:
-                return true;
-            case MediaType.IMAGE_GIF_VALUE:
-                return true;
-            case Constants.VIDEO_TYPE_FLV:
-                return true;
-            case Constants.VIDEO_TYPE_MP4:
-                return true;
-            case Constants.VIDEO_TYPE_3GP:
-                return true;
-            case Constants.VIDEO_TYPE_MOV:
-                return true;
-            case Constants.VIDEO_TYPE_AVI:
-                return true;
-            case Constants.VIDEO_TYPE_WMV:
-                return true;
-            default:
-                return false;
-        }
+    public Boolean validateFileExtension(String fileName){
+        String fileExtension = FilenameUtils.getExtension(fileName);
+        return Arrays.stream(allowedFileExtensions.split(",")).anyMatch(fileExtension:: equalsIgnoreCase);
+    }
+
+    public Boolean validateFileSize(long fileSize){
+        return fileSize > maxFileSize ? false : true;
     }
 
 }

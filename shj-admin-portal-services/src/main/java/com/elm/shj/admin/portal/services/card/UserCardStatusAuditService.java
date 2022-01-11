@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Service handling applicant card
+ * Service handling card audit logs
  *
  * @author Ahnmed Ali
  * @since 1.1.0

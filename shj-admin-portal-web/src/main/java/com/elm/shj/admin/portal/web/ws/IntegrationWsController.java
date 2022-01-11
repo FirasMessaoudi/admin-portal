@@ -110,7 +110,7 @@ public class IntegrationWsController {
         String callerType = request.getHeader(JwtTokenService.CALLER_TYPE_HEADER_NAME);
         if (callerType == null || !callerType.equals(JwtTokenService.WEB_SERVICE_CALLER_TYPE)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body("Access denied").build());
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body("Access denied").build());
         }
 
         JwtToken authentication;
@@ -119,12 +119,12 @@ public class IntegrationWsController {
                     .authenticate(new UsernamePasswordAuthenticationToken(credentials.get("username"), credentials.get("password")));
         } catch (RecaptchaException rex) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body("Multiple failed login attempts").build());
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body("Multiple failed login attempts").build());
         }
 
         jwtTokenService.attachTokenCookie(response, authentication);
 
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(authentication.getToken()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(authentication.getToken()).build());
     }
 
     /**
@@ -135,7 +135,7 @@ public class IntegrationWsController {
     @GetMapping("/ritual-type/list")
     public ResponseEntity<WsResponse<?>> listRitualTypes() {
         log.info("list ritual types...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(ritualTypeLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(ritualTypeLookupService.findAll()).build());
     }
 
     /**
@@ -146,7 +146,7 @@ public class IntegrationWsController {
     @GetMapping("/card-status/list")
     public ResponseEntity<WsResponse<?>> listCardStatuses() {
         log.debug("list card statuses...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(cardStatusLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(cardStatusLookupService.findAll()).build());
     }
 
     /**
@@ -157,7 +157,7 @@ public class IntegrationWsController {
     @GetMapping("/relative-relationship/list")
     public ResponseEntity<WsResponse<?>> listRelativeRelationships() {
         log.debug("list relative relationships...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(relativeRelationshipLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(relativeRelationshipLookupService.findAll()).build());
     }
 
     /**
@@ -168,7 +168,7 @@ public class IntegrationWsController {
     @GetMapping("/marital-status/list")
     public ResponseEntity<WsResponse<?>> listMaritalStatuses() {
         log.debug("list marital statuses...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(maritalStatusLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(maritalStatusLookupService.findAll()).build());
     }
 
     /**
@@ -179,7 +179,7 @@ public class IntegrationWsController {
     @GetMapping("/country/list")
     public ResponseEntity<WsResponse<?>> listCountries() {
         log.debug("list countries...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(countryLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(countryLookupService.findAll()).build());
     }
 
     /**
@@ -190,7 +190,7 @@ public class IntegrationWsController {
     @GetMapping("/language/list")
     public ResponseEntity<WsResponse<?>> listLanguages() {
         log.debug("list languages...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(languageLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(languageLookupService.findAll()).build());
     }
 
     /**
@@ -201,7 +201,7 @@ public class IntegrationWsController {
     @GetMapping("/health-special-needs/list")
     public ResponseEntity<WsResponse<?>> listHealthSpecialNeeds() {
         log.debug("list health special needs...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(healthSpecialNeedsLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(healthSpecialNeedsLookupService.findAll()).build());
     }
 
 
@@ -228,13 +228,13 @@ public class IntegrationWsController {
             if (!dateOfBirthMatched) {
                 log.debug("unmatched data for {} uin and {} hijri date of birth and {} gregorian date of birth.",
                         command.getUin(), command.getDateOfBirthHijri(), command.getDateOfBirthGregorian());
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                        .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(command.getUin()).build()).build());
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                        .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getUin()).build()).build());
             }
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicant).build());
         } else {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(command.getUin()).build()).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(command.getUin()).build()).build());
         }
     }
 
@@ -251,21 +251,21 @@ public class IntegrationWsController {
             dateOfBirthMatched = command.getDateOfBirthHijri() == databaseApplicant.get().getDateOfBirthHijri();
             if (!dateOfBirthMatched) {
                 log.error("invalid data for uin {} and date of birth {}", command.getUin(), command.getDateOfBirthHijri());
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                        .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(command.getUin()).build()).build());
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                        .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getUin()).build()).build());
             }
             int updatedRowsCount = applicantService.updateApplicantContacts(databaseApplicant.get().getId(), command);
             if (updatedRowsCount < 1) {
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                        .body(WsError.builder().error(WsError.EWsError.UPDATE_APPLICANT_FAILED).referenceNumber(command.getUin()).build()).build());
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                        .body(WsError.builder().error(WsError.EWsError.UPDATE_APPLICANT_FAILED.getCode()).referenceNumber(command.getUin()).build()).build());
             }
             ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + command.getUin()));
 
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantLite).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantLite).build());
         } else {
             log.error("invalid data for uin {}", command.getUin());
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(command.getUin()).build()).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(command.getUin()).build()).build());
         }
     }
 
@@ -281,10 +281,10 @@ public class IntegrationWsController {
         log.debug("Handler for {}", "Find applicant health details by uin and ritual id");
         Optional<ApplicantHealthLiteDto> applicantHealth = applicantHealthLiteService.findApplicantHealthDetailsByUinAndApplicantPackageId(uin, applicantPackageId);
         if (applicantHealth.isPresent()) {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantHealth).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantHealth).build());
         } else {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(uin).build()).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(uin).build()).build());
         }
     }
 
@@ -301,11 +301,11 @@ public class IntegrationWsController {
 
         Optional<ApplicantMainDataDto> mainDataDtoOptional = applicantMainDataService.findByUin(uin, applicantPackageId);
         if (mainDataDtoOptional.isPresent()) {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(mainDataDtoOptional.get()).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(mainDataDtoOptional.get()).build());
 
         } else {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED).referenceNumber(uin).build()).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(uin).build()).build());
 
         }
 
@@ -324,10 +324,10 @@ public class IntegrationWsController {
         Optional<ApplicantRitualCardLiteDto> returnedApplicantRitualCardLiteDto = applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(uin, applicantPackageId);
 
         if (returnedApplicantRitualCardLiteDto.isPresent()) {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(returnedApplicantRitualCardLiteDto).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(returnedApplicantRitualCardLiteDto).build());
         } else {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.CARD_DETAILS_NOT_FOUND).referenceNumber(uin).build()).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.CARD_DETAILS_NOT_FOUND.getCode()).referenceNumber(uin).build()).build());
         }
 
     }
@@ -340,7 +340,7 @@ public class IntegrationWsController {
     @GetMapping("/company-ritual-step/{uin}")
     public ResponseEntity<WsResponse<?>> listCompanyRitualStep(@PathVariable String uin) {
         log.info("list company ritual step...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepService.findCompanyRitualStepsByApplicantUin(uin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyRitualStepService.findCompanyRitualStepsByApplicantUin(uin)).build());
     }
 
     /**
@@ -354,20 +354,20 @@ public class IntegrationWsController {
     @GetMapping("/find/company-employees/{uin}/{seasonId}")
     public ResponseEntity<WsResponse<?>> findCompanyEmployeesByUinAndSeasonId(@PathVariable String uin, @PathVariable long seasonId) {
         log.debug("Handler for {}", "Find company employee by uin and season ");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, seasonId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, seasonId)).build());
     }
 
     @GetMapping("/company_ritual_step_label/list")
     public ResponseEntity<WsResponse<?>> listCompanyRitualStepsLabel() {
         log.debug("list company ritual step labels...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepLookupService.findAllWithDescription()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyRitualStepLookupService.findAllWithDescription()).build());
 
     }
 
     @GetMapping("/company_staff_title_label/list")
     public ResponseEntity<WsResponse<?>> listCompanyStaffTitlesLabel() {
         log.debug("list company Staff title labels...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyStaffTitleLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffTitleLookupService.findAll()).build());
     }
 
 
@@ -389,7 +389,7 @@ public class IntegrationWsController {
         applicantPackageDetails.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackageId));
         applicantPackageDetails.setCompanyLite(companyService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId(), Long.parseLong(uin)));
 
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageDetails).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageDetails).build());
 
     }
 
@@ -405,7 +405,7 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findApplicantPackageCatering(@PathVariable String uin, @PathVariable long applicantPackageId) {
         log.debug("Handler for {}", "Find package Catering  by uin");
         List<ApplicantPackageCateringDto> packageCateringDtoList = ritualPackageService.findPackageCateringFromRitualPackage(Long.parseLong(uin), applicantPackageId);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageCateringDtoList).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(packageCateringDtoList).build());
     }
 
     /**
@@ -416,7 +416,7 @@ public class IntegrationWsController {
     @GetMapping("/housing-category/list")
     public ResponseEntity<WsResponse<?>> listHousingCategories() {
         log.debug("list housing category...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(housingCategoryLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(housingCategoryLookupService.findAll()).build());
     }
 
     /**
@@ -427,7 +427,7 @@ public class IntegrationWsController {
     @GetMapping("/housing-type/list")
     public ResponseEntity<WsResponse<?>> listHousingTypes() {
         log.debug("list housing types...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(housingTypeLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(housingTypeLookupService.findAll()).build());
     }
 
     /**
@@ -438,7 +438,7 @@ public class IntegrationWsController {
     @GetMapping("/package-type/list")
     public ResponseEntity<WsResponse<?>> listPackageTypes() {
         log.debug("list package types...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageTypeLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(packageTypeLookupService.findAll()).build());
     }
 
     /**
@@ -449,7 +449,7 @@ public class IntegrationWsController {
     @GetMapping("/program-time-table/{uin}")
     public ResponseEntity<WsResponse<?>> programTimeTable(@PathVariable String uin) {
         log.info("list company ritual step...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualStepService.findCompanyRitualStepsByApplicantUin(uin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyRitualStepService.findCompanyRitualStepsByApplicantUin(uin)).build());
     }
 
     /**
@@ -460,7 +460,7 @@ public class IntegrationWsController {
     @GetMapping("/housing-site/list")
     public ResponseEntity<WsResponse<?>> listHousingSites() {
         log.debug("list housing sites...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(housingSiteLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(housingSiteLookupService.findAll()).build());
     }
 
     /**
@@ -471,7 +471,7 @@ public class IntegrationWsController {
     @GetMapping("/transportation-type/list")
     public ResponseEntity<WsResponse<?>> listTransportationTypes() {
         log.debug("list transportation types...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(transportationTypeLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(transportationTypeLookupService.findAll()).build());
     }
 
     /**
@@ -482,7 +482,7 @@ public class IntegrationWsController {
     @GetMapping("/digital-id-status/list")
     public ResponseEntity<WsResponse<?>> listDigitalIdStatuses() {
         log.debug("list digital ID statuses...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantDigitalIdStatusLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantDigitalIdStatusLookupService.findAll()).build());
     }
 
     /**
@@ -494,7 +494,7 @@ public class IntegrationWsController {
     @GetMapping("/applicant/ritual-season/{uin}")
     public ResponseEntity<WsResponse<?>> findApplicantRitualSeasonByUin(@PathVariable Long uin) {
         log.debug("Handler for {}", "Find all applicant ritual season by uin");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualSeasonLiteService.getListCompanyRitualSeasonByApplicantUin(uin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyRitualSeasonLiteService.getListCompanyRitualSeasonByApplicantUin(uin)).build());
     }
 
     /**
@@ -506,43 +506,43 @@ public class IntegrationWsController {
     @GetMapping("/applicant/ritual-season/latest/{uin}")
     public ResponseEntity<WsResponse<?>> findLatestApplicantRitualSeasonByUin(@PathVariable Long uin) {
         log.debug("Handler for {}", "Find all applicant ritual season by uin");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(uin)).build());
     }
 
     @GetMapping("/company-details/{uin}/{companyRitualSeasonId}")
     public ResponseEntity<WsResponse<?>> findApplicantCompanyDetailsByUinAndCompanyRitualSeasonId(@PathVariable String uin, @PathVariable long companyRitualSeasonId) {
         log.info("company details...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(companyService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin))).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(companyRitualSeasonId, Long.parseLong(uin))).build());
     }
 
     @GetMapping("/health-immunization/list")
     public ResponseEntity<WsResponse<?>> listImmunization() {
         log.debug("list health immunizations...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(healthImmunizationLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(healthImmunizationLookupService.findAll()).build());
     }
 
     @GetMapping("/religious-occasions-day/list")
     public ResponseEntity<WsResponse<?>> listReligiousOccasionsDay() {
         log.debug("list religious occasions day...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(religiousOccasionsDayLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(religiousOccasionsDayLookupService.findAll()).build());
     }
 
     @GetMapping("/notification-category/list")
     public ResponseEntity<WsResponse<?>> listNotificationCategories() {
         log.debug("list notification categories...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationCategoryLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(notificationCategoryLookupService.findAll()).build());
     }
 
     @GetMapping("/notification-name/list")
     public ResponseEntity<WsResponse<?>> listNotificationNames() {
         log.debug("list notification template name...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationTemplateNameLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(notificationTemplateNameLookupService.findAll()).build());
     }
 
     @GetMapping("/meal-type/list")
     public ResponseEntity<WsResponse<?>> listMealTypes() {
         log.debug("list meal types...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(mealTypeLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(mealTypeLookupService.findAll()).build());
     }
 
     /**
@@ -557,28 +557,28 @@ public class IntegrationWsController {
         List<ApplicantIncidentDto> applicantIncidents = applicantIncidentService.listApplicantRelatedIncidents(applicantRitualId);
         if (applicantIncidents == null || applicantIncidents.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(null).build());
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(null).build());
         } else {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantIncidents).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantIncidents).build());
         }
     }
 
     @GetMapping("/incident-status/list")
     public ResponseEntity<WsResponse<?>> listIncidentStatus() {
         log.debug("list incident status...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(incidentStatusLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(incidentStatusLookupService.findAll()).build());
     }
 
     @GetMapping("/incident-type/list")
     public ResponseEntity<WsResponse<?>> listIncidentType() {
         log.debug("list incident type...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(incidentTypeLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(incidentTypeLookupService.findAll()).build());
     }
 
     @GetMapping("/housing/{uin}/{applicantPackageId}")
     public ResponseEntity<WsResponse<?>> findCampLocation(@PathVariable long uin, @PathVariable long applicantPackageId) {
         log.debug("Camp Location ...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(packageHousingService.findCamp(applicantPackageId, uin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(packageHousingService.findCamp(applicantPackageId, uin)).build());
     }
 
     /**
@@ -593,7 +593,7 @@ public class IntegrationWsController {
         log.debug("Handler for {}", "Find applicant ritual by uin");
         ApplicantRitualDto applicantRitualDtO = applicantRitualService.findByApplicantUinAndApplicantPackageId(uin, applicantPackageId);
 
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantRitualDtO).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantRitualDtO).build());
     }
 
     /**
@@ -606,10 +606,10 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findApplicantBasicDetailsByUin(@PathVariable String uin) {
         Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(uin);
         if (!applicant.isPresent()) {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(uin).build()).build());
         }
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicant).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicant).build());
     }
 
     /**
@@ -624,10 +624,10 @@ public class IntegrationWsController {
         Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(uin);
         if (applicant.isPresent()) {
             applicantService.updatePreferredLanguage(uin, lang);
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(null).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(null).build());
         } else {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE)
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND).referenceNumber(uin).build()).build());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(uin).build()).build());
         }
     }
 
@@ -637,7 +637,7 @@ public class IntegrationWsController {
      */
     @GetMapping("/applicant/ritual-package/{uin}")
     public ResponseEntity<WsResponse<?>> findApplicantPackageAndRitualSeason(@PathVariable long uin) {
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageService.findApplicantRitualPackageByUin(uin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageService.findApplicantRitualPackageByUin(uin)).build());
 
     }
 
@@ -647,7 +647,7 @@ public class IntegrationWsController {
      */
     @GetMapping("/applicant/ritual-package/latest/{uin}")
     public ResponseEntity<WsResponse<?>> findLatestApplicantRitualSeason(@PathVariable long uin) {
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(applicantPackageService.findLatestApplicantRitualPackage(uin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageService.findLatestApplicantRitualPackage(uin)).build());
 
     }
 

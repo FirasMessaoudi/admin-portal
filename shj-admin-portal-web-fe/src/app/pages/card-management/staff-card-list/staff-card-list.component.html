@@ -1,4 +1,3 @@
-
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="sectionTitle">
@@ -117,13 +116,13 @@
               <label class="custom-control-label mx-3" for="customCheck-01"></label>
             </div>
           </th>
-          <th scope="col">{{'card-management.ritual_type' | translate}}</th>
-          <th scope="col">{{'card-management.ritual_season' | translate}}</th>
-          <th scope="col">{{ "card-management.passport_number" | translate }}</th>
-          <th scope="col">{{ "card-management.applicant_id" | translate }}</th>
+          <th scope="col">{{'card-management.name' | translate}}</th>
+          <th scope="col">{{'card-management.applicant_id' | translate }}</th>
+          <th scope="col">{{'general.nin' | translate }}</th>
+          <th scope="col">{{'card-management.passport_number' | translate }}</th>
           <th scope="col">{{'card-management.card_number' | translate}}</th>
-          <th scope="col">{{'card-management.name_ar' | translate}}</th>
-          <th scope="col">{{'card-management.name_en' | translate}}</th>
+          <th scope="col">{{'card-management.ritual_season' | translate}}</th>
+          <th scope="col">{{'card-management.ritual_type' | translate}}</th>
           <th scope="col">{{'card-management.card_status' | translate}}</th>
         </tr>
         </thead>
@@ -144,13 +143,15 @@
               <label class="custom-control-label mx-3" for="customCheck-{{card.id}}"></label>
             </div>
           </td>
-          <td>{{lookupService().localizedLabel(ritualTypes, card?.companyRitualSeason?.ritualSeason?.ritualTypeCode)}}</td>
-          <td class="ltr">{{card?.companyRitualSeason?.ritualSeason?.seasonYear}}</td>
-          <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
+          <td><a id="cardDetails" href="javascript:void(0)" [routerLink]="['/staff-cards/details', card?.id]"
+                 class="text-dcc-primary font-weight-bold">{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}} {{card?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</a>
+          </td>
           <td class="ltr">{{card?.companyStaffDigitalId?.suin}}</td>
+          <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
+          <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
           <td class="ltr">{{card?.referenceNumber}}</td>
-          <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.fullNameAr}}</td>
-          <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</td>
+          <td class="ltr">{{card?.companyRitualSeason?.ritualSeason?.seasonYear}}</td>
+          <td>{{lookupService().localizedLabel(ritualTypes, card?.companyRitualSeason?.ritualSeason?.ritualTypeCode)}}</td>
           <td class="ltr">{{lookupService().localizedLabel(cardStatuses, card?.statusCode)}}</td>
         </tr>
         </tbody>
