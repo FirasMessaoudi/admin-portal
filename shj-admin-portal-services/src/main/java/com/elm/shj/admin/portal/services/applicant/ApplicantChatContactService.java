@@ -142,6 +142,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         applicantChatContact.setCountryPhonePrefix(contact.getCountryPhonePrefix());
         applicantChatContact.setCountryCode(contact.getCountryCode());
         applicantChatContact.setAvatar(contact.getAvatar());
+        applicantChatContact.setAutoAdded(contact.isAutoAdded());
         return save(applicantChatContact);
     }
 
