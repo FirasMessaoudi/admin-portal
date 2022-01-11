@@ -318,7 +318,7 @@
     "applicant_id_status": "Rahman Guest ID Status",
     "nationality": "Nationality",
     "passport_number": "Passport Number",
-    "applicant_name": "Name",
+    "name": "Name",
     "activate_cards": "Activate {{noCards}} cards",
     "export_to_excel": "Export Excel",
     "export_to_pdf": "Export PDF",

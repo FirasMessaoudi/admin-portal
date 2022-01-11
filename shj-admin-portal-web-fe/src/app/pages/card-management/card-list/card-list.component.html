@@ -1,8 +1,7 @@
-
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="sectionTitle">
-      {{ "card-management.cards_list" | translate }}
+      {{ "card-management.applicant_title" | translate }}
       <button class="btn btn-link shadow-none" (click)="isSearchbarCollapsed = !isSearchbarCollapsed">
         <svg-icon styleClass="h4 pt-3" icon="search"></svg-icon>
       </button>
@@ -65,7 +64,7 @@
         <div class="form-group col">
           <label class="col-form-label">{{ "card-management.applicant_id" | translate }}</label>
           <input type="number" formControlName="uin" class="form-control"
-                 onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length<=9"
+                 onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length<14"
                  min="0" step="1"/>
 
         </div>
@@ -175,12 +174,12 @@
               <label class="custom-control-label mx-3" for="customCheck-01"></label>
             </div>
           </th>
-          <th scope="col">{{'card-management.applicant_name' | translate}}</th>
+          <th scope="col">{{'card-management.name' | translate}}</th>
           <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-          <th scope="col">{{ "general.nin" | translate }}</th>
-          <th scope="col">{{ "card-management.passport_number" | translate }}</th>
+          <th scope="col">{{'general.nin' | translate }}</th>
+          <th scope="col">{{'card-management.passport_number' | translate }}</th>
           <th scope="col">{{'card-management.card_number' | translate}}</th>
-          <th scope="col">{{'card-management.ritual_type' | translate}}</th>
+          <!--          <th scope="col">{{'card-management.ritual_type' | translate}}</th>-->
           <th scope="col">{{'card-management.card_status' | translate}}</th>
         </tr>
         </thead>
@@ -208,8 +207,8 @@
           <td class="ltr">{{card?.applicantRitual?.applicant?.idNumber}}</td>
           <td class="ltr">{{card?.applicantRitual?.applicant?.passportNumber}}</td>
           <td class="ltr">{{card?.referenceNumber}}</td>
-          <td
-            class="ltr">{{card?.applicantRitual?.typeCode ? lookupService().localizedLabel(ritualTypes, card?.applicantRitual?.typeCode) : ''}}</td>
+          <!--          <td-->
+          <!--            class="ltr">{{card?.applicantRitual?.typeCode ? lookupService().localizedLabel(ritualTypes, card?.applicantRitual?.typeCode) : ''}}</td>-->
           <td class="ltr">{{lookupService().localizedLabel(cardStatuses, card?.statusCode)}}</td>
         </tr>
         </tbody>

@@ -1,13 +1,13 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-import {CardManagementRoutingModule} from './card-management-routing.module';
-import {CardListComponent} from './card-list/card-list.component';
-import {ReactiveFormsModule} from "@angular/forms";
-import {SharedModule} from "@shared/shared.module";
-import {TranslateModule} from "@ngx-translate/core";
-import {CardDetailsModule} from './card-details/card-details.module';
-import {StaffCardListComponent} from './staff-card-list/staff-card-list.component';
+import { CardManagementRoutingModule } from './card-management-routing.module';
+import { CardListComponent } from './card-list/card-list.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '@shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { CardDetailsModule } from './card-details/card-details.module';
+import { StaffCardListComponent } from './staff-card-list/staff-card-list.component';
 
 @NgModule({
   declarations: [CardListComponent, StaffCardListComponent],
@@ -17,7 +17,7 @@ import {StaffCardListComponent} from './staff-card-list/staff-card-list.componen
     SharedModule,
     CardManagementRoutingModule,
     TranslateModule,
-    CardDetailsModule
-  ]
+    CardDetailsModule,
+  ],
 })
-export class CardManagementModule { }
+export class CardManagementModule {}
