@@ -1,49 +1,36 @@
 import {
   AfterViewInit,
   Component,
-  EventEmitter, forwardRef, Injector,
+  EventEmitter,
+  Injector,
   Input,
   OnInit,
   Output,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   NgbCalendar,
   NgbCalendarIslamicUmalqura,
   NgbDatepickerI18n,
   NgbDateStruct,
-  NgbTimeStruct
+  NgbTimeStruct,
 } from '@ng-bootstrap/ng-bootstrap';
-import {IslamicI18n} from '../IslamicI18n';
-import {noop} from "rxjs";
-import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
-import * as momentjs from 'moment';
-import {DatePipe} from "@angular/common";
-
-const moment = momentjs;
+import { IslamicI18n } from '../IslamicI18n';
+import { noop } from 'rxjs';
+import { NgControl } from '@angular/forms';
 
 @Component({
   selector: 'hijri-datetime-picker',
-  templateUrl: './hijri-datetime-picker.component.html',
+  templateUrl:  './hijri-datetime-picker.component.html',
   providers: [
-    {provide: NgbCalendar, useClass: NgbCalendarIslamicUmalqura},
-    {provide: NgbDatepickerI18n, useClass: IslamicI18n},
-    DatePipe,
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => HijriDatetimePickerComponent),
-      multi: true
-    }
+    { provide: NgbCalendar, useClass: NgbCalendarIslamicUmalqura },
+    { provide: NgbDatepickerI18n, useClass: IslamicI18n },
   ],
-  styleUrls: [
-    './hijri-datetime-picker.component.scss'
-  ],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./hijri-datetime-picker.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
-
-export class HijriDatetimePickerComponent implements ControlValueAccessor, OnInit, AfterViewInit {
-
+export class HijriDatetimePickerComponent implements OnInit, AfterViewInit {
   @Input()
   inputDatetimeFormat = 'dd/MM/yyyy HH:mm';
 
@@ -51,7 +38,8 @@ export class HijriDatetimePickerComponent implements ControlValueAccessor, OnIni
 
   @Input() selectedDate: NgbDateStruct;
 
-  @Output() selectedDateChange: EventEmitter<NgbDateStruct> = new EventEmitter();
+  @Output() selectedDateChange: EventEmitter<NgbDateStruct> =
+    new EventEmitter();
 
   @Input() readonly = false;
   @Input() isRequired = false;
@@ -70,44 +58,14 @@ export class HijriDatetimePickerComponent implements ControlValueAccessor, OnIni
   timeStruct: NgbTimeStruct;
   date: Date;
 
-  constructor(private inj: Injector) {
-  }
+  constructor(private inj: Injector) {}
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
     this.ngControl = this.inj.get(NgControl);
   }
 
-  ngAfterViewInit(): void {
-  }
-
-  writeValue(newModel: string) {
-    if (newModel) {
-      const myDate = moment(newModel).toDate();
-
-      this.selectedDate = {
-        year: myDate.getFullYear(),
-        month: myDate.getMonth() + 1,
-        day: myDate.getDate()
-      };
-
-      this.timeStruct = {
-        hour: myDate.getHours(),
-        minute: myDate.getMinutes(),
-        second: myDate.getSeconds()
-      };
-
-      this.setDateStringModel();
-    }
-  }
-
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
-  }
+  ngAfterViewInit(): void {}
 
   onDateChange(event: NgbDateStruct) {
     this.setDateStringModel();
@@ -142,6 +100,7 @@ export class HijriDatetimePickerComponent implements ControlValueAccessor, OnIni
     }
   }
 
+
   onBlur() {
     if (!this.selectedDate) {
       this.selectedDateChange.emit(null);
@@ -162,7 +121,5 @@ export class HijriDatetimePickerComponent implements ControlValueAccessor, OnIni
     this.onTouched();
   }
 
-  onInputChange(event: any) {
-  }
-
+  onInputChange(event: any) {}
 }

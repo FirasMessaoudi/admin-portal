@@ -12,8 +12,7 @@
            (dateSelect)="onDateChange($event)"
            autocomplete="off"
            [readonly]="readonly"
-           [minDate]="minGreg"
-           [maxDate]="maxGreg"
+           [minDate]="minGreg" [maxDate]="maxGreg"
            [required]="isRequired"
            [disabled]="grayed"
            autoClose="autoClose"
@@ -47,16 +46,16 @@
               (click)="clear()">{{'general.btn_clear'| translate}}</button>
     </ng-template>
 
-    <hijri-datetime-picker *ngIf="selectedDateType == DateType.Hijri"
+    <hijri-datetime-picker [placeHolder]="placeHolder ? placeHolder : 'DD/MM/YYYY HH:MM'"
+                           [min]="minHijri" [max]="maxHijri"
+                           *ngIf="selectedDateType == DateType.Hijri"
                            [(ngModel)]="selectedDate"
                            (selectedDateChange)="onDateChange($event)"
                            [readonly]="readonly"
-                           [min]="minHijri" [max]="maxHijri"
                            style="flex: 1 1 auto; border: none;"
                            class="form-control p-0"
                            [name]="name"
                            [isRequired]="isRequired"
-                           [placeHolder]="placeHolder ? placeHolder : 'DD/MM/YYYY HH:MM'"
                            [disabled]="grayed">
     </hijri-datetime-picker>
 

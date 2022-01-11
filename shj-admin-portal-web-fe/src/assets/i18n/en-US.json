@@ -300,6 +300,7 @@
   "card-management": {
     "title": "Card Management",
     "staff_title": "Staff Card Management",
+    "applicant_title": "Applicant Card Management",
     "add_exceptional_card": "Add Card",
     "cards_list": "Cards List",
     "card_details": "Card Details",
@@ -487,8 +488,8 @@
   },
   "printing-management": {
     "title": "Printing Management",
-    "staff-title": "Staff Printing Management",
-    "applicant-title": "Applicant Printing Management",
+    "staff_title": "Staff Printing Management",
+    "applicant_title": "Applicant Printing Management",
     "request_number": "Request Number",
     "printing_start_date": "Printing Start Date",
     "printing_end_date": "Printing End Date",

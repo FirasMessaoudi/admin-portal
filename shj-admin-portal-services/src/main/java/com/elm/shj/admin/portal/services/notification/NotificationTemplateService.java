@@ -171,7 +171,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
     }
 
     public List<NotificationTemplateDto> findUnprocessedUserDefinedNotifications(String typeCode, Date date, Boolean isProcessed, boolean enabled) {
-        return mapList(notificationTemplateRepository.findByTypeCodeAndSendingDateAfterAndIsProcessedAndEnabled(typeCode, date, isProcessed, enabled));
+        return mapList(notificationTemplateRepository.findByTypeCodeAndSendingDateBeforeAndIsProcessedAndEnabled(typeCode, date, isProcessed, enabled));
     }
 
     public NotificationTemplateDto updateUserDefined(NotificationTemplateDto notificationTemplate) {

@@ -1,12 +1,12 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {IncidentListComponent} from './incident-list/incident-list.component';
-import {IncidentDetailsComponent} from './incident-details/incident-details.component';
-import {ReactiveFormsModule} from "@angular/forms";
-import {SharedModule} from "@shared/shared.module";
-import {IncidentManagementRoutingModule} from "@pages/incident-management/incident-management-routing.module";
-import {TranslateModule} from "@ngx-translate/core";
-import {GoogleMapsModule} from "@angular/google-maps";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { IncidentListComponent } from './incident-list/incident-list.component';
+import { IncidentDetailsComponent } from './incident-details/incident-details.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '@shared/shared.module';
+import { IncidentManagementRoutingModule } from '@pages/incident-management/incident-management-routing.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
   declarations: [IncidentListComponent, IncidentDetailsComponent],
@@ -16,8 +16,7 @@ import {GoogleMapsModule} from "@angular/google-maps";
     SharedModule,
     IncidentManagementRoutingModule,
     TranslateModule,
-    GoogleMapsModule
-  ]
+    GoogleMapsModule,
+  ],
 })
-export class IncidentManagementModule {
-}
+export class IncidentManagementModule {}

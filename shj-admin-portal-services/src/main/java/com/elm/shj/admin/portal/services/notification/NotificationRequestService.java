@@ -100,7 +100,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
             throw new NotFoundException("no Template found for  " + PASSWORD_EXPIRATION_TEMPLATE_NAME);
         }
 
-        passwordExpiryNotificationRequest.getUserParametersList().parallelStream().forEach(
+        passwordExpiryNotificationRequest.getUserParametersList().forEach(
                 param -> {
                     NotificationRequestDto notificationRequest = new NotificationRequestDto();
                     notificationRequest.setNotificationTemplate(notificationTemplate.get());
@@ -179,7 +179,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     }
 
     private void sendNotificationTemplateToApplicants(NotificationTemplateDto notificationTemplate, List<ApplicantDto> applicants) {
-        List<NotificationRequestDto> notificationRequests = applicants.parallelStream().map(applicant -> NotificationRequestDto
+        List<NotificationRequestDto> notificationRequests = applicants.stream().map(applicant -> NotificationRequestDto
                         .builder()
                         .userId(applicant.getDigitalIds().get(0).getUin())
                         .notificationTemplate(notificationTemplate)
@@ -197,5 +197,17 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                 .findFirst()
                 .map(NotificationTemplateContentDto::getLang)
                 .orElse(NOTIFICATION_DEFAULT_LANGUAGE);
+    }
+
+    @Transactional
+    public void processNotificationTemplates() {
+        List<NotificationTemplateDto> notificationTemplates = notificationTemplateService.findUnprocessedUserDefinedNotifications(ENotificationTemplateType.USER_DEFINED.name(), new Date(), false, true);
+        notificationTemplates.forEach(
+                notificationTemplate -> {
+                    createUserDefinedNotificationRequest(notificationTemplate);
+                    notificationTemplate.setIsProcessed(true);
+                    notificationTemplateService.save(notificationTemplate);
+                }
+        );
     }
 }

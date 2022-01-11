@@ -19,5 +19,5 @@ import java.util.List;
 public interface NotificationTemplateRepository extends JpaRepository<JpaNotificationTemplate, Long>, JpaSpecificationExecutor<JpaNotificationTemplate> {
     JpaNotificationTemplate findByNameCodeAndEnabledTrue(String nameCode);
 
-    List<JpaNotificationTemplate> findByTypeCodeAndSendingDateAfterAndIsProcessedAndEnabled(String typeCode, Date date, Boolean isProcessed, boolean enabled);
+    List<JpaNotificationTemplate> findByTypeCodeAndSendingDateBeforeAndIsProcessedAndEnabled(String typeCode, Date date, Boolean isProcessed, boolean enabled);
 }

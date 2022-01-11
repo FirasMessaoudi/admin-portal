@@ -8,18 +8,25 @@ import {
   OnInit,
   Output,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import {NgbDateStruct, NgbTimeStruct} from "@ng-bootstrap/ng-bootstrap";
-import {DateType} from '../consts';
+import {
+  NgbDate,
+  NgbDateStruct,
+  NgbTimeStruct,
+} from '@ng-bootstrap/ng-bootstrap';
+import { DateType } from '../consts';
 import * as momentjs from 'moment';
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
-import {noop} from "rxjs";
-import {DatePipe} from "@angular/common";
-import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
+import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import { noop } from 'rxjs';
+import { DatePipe } from '@angular/common';
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  NgControl,
+} from '@angular/forms';
 
 const moment = momentjs;
-
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -31,12 +38,13 @@ const moment = momentjs;
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => HijriGregorianDatetimepickerComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
-export class HijriGregorianDatetimepickerComponent implements ControlValueAccessor, OnInit, AfterViewInit {
-
+export class HijriGregorianDatetimepickerComponent
+  implements ControlValueAccessor, OnInit, AfterViewInit
+{
   @Input()
   inputDatetimeFormat = 'dd/MM/yyyy HH:mm';
 
@@ -45,7 +53,8 @@ export class HijriGregorianDatetimepickerComponent implements ControlValueAccess
 
   @Input() selectedDateType: DateType;
   @Input() selectedDate: NgbDateStruct;
-  @Output() selectedDateChange: EventEmitter<Date> = new EventEmitter();
+  @Output() dateChange: EventEmitter<Date> = new EventEmitter();
+  @Output() selectedDateChange: EventEmitter<NgbDate> = new EventEmitter();
 
   @Input() name: string;
 
@@ -84,9 +93,10 @@ export class HijriGregorianDatetimepickerComponent implements ControlValueAccess
     return DateType;
   }
 
-  constructor(private inj: Injector,
-              private dateFormatterService: DateFormatterService) {
-  }
+  constructor(
+    private inj: Injector,
+    private dateFormatterService: DateFormatterService
+  ) {}
 
   ngOnInit() {
     if (!this.selectedDateType) {
@@ -96,8 +106,7 @@ export class HijriGregorianDatetimepickerComponent implements ControlValueAccess
     this.ngControl = this.inj.get(NgControl);
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
   close() {
     this.datePicker.close();
@@ -118,8 +127,7 @@ export class HijriGregorianDatetimepickerComponent implements ControlValueAccess
     this.selectedDateType = DateType.Hijri;
     //to hijri
     this.selectedDate = this.dateFormatterService.toHijri(this.selectedDate);
-    this.setDateStringModel();
-    this.selectedDateChange.emit(this.date);
+    this.dateChange.emit(this.date);
   }
 
   gregClick() {
@@ -128,9 +136,10 @@ export class HijriGregorianDatetimepickerComponent implements ControlValueAccess
     }
     this.selectedDateType = DateType.Gregorian;
     //to Gregorian
-    this.selectedDate = this.dateFormatterService.toGregorian(this.selectedDate);
-    this.setDateStringModel();
-    this.selectedDateChange.emit(this.date);
+    this.selectedDate = this.dateFormatterService.toGregorian(
+      this.selectedDate
+    );
+    this.dateChange.emit(this.date);
   }
 
   onDateChange(event: NgbDateStruct) {
@@ -141,8 +150,7 @@ export class HijriGregorianDatetimepickerComponent implements ControlValueAccess
     this.setDateStringModel();
   }
 
-  onInputChange($event: any) {
-  }
+  onInputChange($event: any) {}
 
   setDateStringModel() {
     if (!this.timeStruct) {
@@ -150,7 +158,7 @@ export class HijriGregorianDatetimepickerComponent implements ControlValueAccess
       this.timeStruct = {
         hour: dateA.getHours(),
         minute: dateA.getMinutes(),
-        second: 0
+        second: 0,
       };
     }
 
@@ -164,8 +172,6 @@ export class HijriGregorianDatetimepickerComponent implements ControlValueAccess
         this.timeStruct.second
       );
 
-      console.log(this.date);
-
       this.onChange(this.date);
     }
   }
@@ -177,13 +183,13 @@ export class HijriGregorianDatetimepickerComponent implements ControlValueAccess
       this.selectedDate = {
         year: myDate.getFullYear(),
         month: myDate.getMonth() + 1,
-        day: myDate.getDate()
+        day: myDate.getDate(),
       };
 
       this.timeStruct = {
         hour: myDate.getHours(),
         minute: myDate.getMinutes(),
-        second: myDate.getSeconds()
+        second: myDate.getSeconds(),
       };
 
       this.setDateStringModel();
@@ -201,5 +207,4 @@ export class HijriGregorianDatetimepickerComponent implements ControlValueAccess
   toggle() {
     this.datePicker.toggle();
   }
-
 }

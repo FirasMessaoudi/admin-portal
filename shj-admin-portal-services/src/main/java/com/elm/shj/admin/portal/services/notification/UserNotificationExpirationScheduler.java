@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.notification;
 
-
 import com.elm.shj.admin.portal.orm.entity.JpaUserNotification;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
 import com.elm.shj.admin.portal.services.dto.ENotificationTemplateType;
@@ -51,7 +50,7 @@ public class UserNotificationExpirationScheduler {
             if (userNotifications.getContent().isEmpty()) {
                 break;
             }
-            userNotifications.stream().parallel().forEach(
+            userNotifications.forEach(
                     notification -> {
                         if (notification.getNotificationTemplate().getTypeCode() == ENotificationTemplateType.SYSTEM_DEFINED.name()) {
                             long diffInMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), notification.getCreationDate().toInstant()

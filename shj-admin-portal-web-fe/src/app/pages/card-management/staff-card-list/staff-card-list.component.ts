@@ -18,14 +18,14 @@ import {CompanyLite} from "@model/company-lite.model";
 })
 export class StaffCardListComponent implements OnInit, OnDestroy {
   public isSearchbarCollapsed = true;
-  cards: Array<CompanyStaffCard>;
-  pageArray: Array<number>;
+  cards: Array<CompanyStaffCard> = [];
+  pageArray: Array<number> = [];
   page: Page;
   searchForm: FormGroup;
-  ritualTypes: Lookup[];
-  cardStatuses: Lookup[];
+  ritualTypes: Lookup[] = [];
+  cardStatuses: Lookup[] = [];
   companyNames: CompanyLite[] = [];
-  ritualSeasons: any[];
+  ritualSeasons: any[] = [];
   masterSelected: boolean;
   private listSubscription: Subscription;
   private searchSubscription: Subscription;

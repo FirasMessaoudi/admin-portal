@@ -1,22 +1,22 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {EAuthority, Page} from "@shared/model";
-import {AuthenticationService, NotificationService} from "@core/services";
-import {AbstractControl, FormBuilder, FormGroup} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {Lookup} from "@model/lookup.model";
-import {LookupService} from "@core/utilities/lookup.service";
-import {NotificationTemplate} from "@model/notification-template.model";
-import {NotificationTemplateContent} from "@model/notification-template-content.model";
-import {I18nService} from "@dcc-commons-ng/services";
-import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
-import {DatePipe} from "@angular/common";
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
-import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { EAuthority, Page } from '@shared/model';
+import { AuthenticationService, NotificationService } from '@core/services';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { Lookup } from '@model/lookup.model';
+import { LookupService } from '@core/utilities/lookup.service';
+import { NotificationTemplate } from '@model/notification-template.model';
+import { NotificationTemplateContent } from '@model/notification-template-content.model';
+import { I18nService } from '@dcc-commons-ng/services';
+import { DateType } from '@shared/modules/hijri-gregorian-datepicker/consts';
+import { DatePipe } from '@angular/common';
+import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-user-defined-notification-list',
   templateUrl: './user-defined-notification-list.component.html',
-  styleUrls: ['./user-defined-notification-list.component.scss']
+  styleUrls: ['./user-defined-notification-list.component.scss'],
 })
 export class UserDefinedNotificationListComponent implements OnInit {
   isSearchbarCollapsed = true;
@@ -38,14 +38,14 @@ export class UserDefinedNotificationListComponent implements OnInit {
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
-  constructor(private authenticationService: AuthenticationService,
-              private formBuilder: FormBuilder,
-              private lookupsService: LookupService,
-              private notificationService: NotificationService,
-              private i18nService: I18nService,
-              private dateFormatterService: DateFormatterService,
-  ) {
-  }
+  constructor(
+    private authenticationService: AuthenticationService,
+    private formBuilder: FormBuilder,
+    private lookupsService: LookupService,
+    private notificationService: NotificationService,
+    private i18nService: I18nService,
+    private dateFormatterService: DateFormatterService
+  ) {}
 
   ngOnInit(): void {
     this.selectedDateType = DateType.Gregorian;
@@ -59,15 +59,21 @@ export class UserDefinedNotificationListComponent implements OnInit {
   }
 
   loadLookups() {
-    this.notificationService.findNotificationCategories().subscribe(result => {
-      this.notificationCategories = result;
-    });
-    this.notificationService.findNotificationTemplateNames().subscribe(result => {
-      this.notificationNames = result;
-    });
-    this.notificationService.findNotificationTemplateStatuses().subscribe(result => {
-      this.notificationTemplateStatuses = result;
-    });
+    this.notificationService
+      .findNotificationCategories()
+      .subscribe((result) => {
+        this.notificationCategories = result;
+      });
+    this.notificationService
+      .findNotificationTemplateNames()
+      .subscribe((result) => {
+        this.notificationNames = result;
+      });
+    this.notificationService
+      .findNotificationTemplateStatuses()
+      .subscribe((result) => {
+        this.notificationTemplateStatuses = result;
+      });
   }
 
   private initForm(): void {
@@ -80,7 +86,7 @@ export class UserDefinedNotificationListComponent implements OnInit {
       creationDateStart: null,
       creationDateEnd: null,
       sendingDateStart: null,
-      sendingDateEnd: null
+      sendingDateEnd: null,
     });
   }
 
@@ -94,34 +100,44 @@ export class UserDefinedNotificationListComponent implements OnInit {
   }
 
   get canSeeAddUpdateUserDefinedNotification(): boolean {
-    return this.authenticationService.hasAuthority(EAuthority.USER_DEFINED_NOTIFICATION_MANAGEMENT);
+    return this.authenticationService.hasAuthority(
+      EAuthority.USER_DEFINED_NOTIFICATION_MANAGEMENT
+    );
   }
 
   search(): void {
     const payload = this.searchForm.value;
     //Trim input values and replace all whitespaces characters
-    payload.notificationTitle = payload.notificationTitle.replace(/\s/g, " ").trim();
-    payload.notificationBody = payload.notificationBody.replace(/\s/g, " ").trim();
-    payload.description = payload.description.replace(/\s/g, " ").trim();
-    this.searchSubscription = this.notificationService.listUserDefined(0, payload).subscribe(data => {
-      this.notificationTemplates = [];
-      this.pageArray = [];
-      this.page = data;
-      if (this.page != null) {
-        this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
-        this.notificationTemplates = this.page.content;
-      }
-    });
+    payload.notificationTitle = payload.notificationTitle
+      .replace(/\s/g, ' ')
+      .trim();
+    payload.notificationBody = payload.notificationBody
+      .replace(/\s/g, ' ')
+      .trim();
+    payload.description = payload.description.replace(/\s/g, ' ').trim();
+    this.searchSubscription = this.notificationService
+      .listUserDefined(0, payload)
+      .subscribe((data) => {
+        this.notificationTemplates = [];
+        this.pageArray = [];
+        this.page = data;
+        if (this.page != null) {
+          this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
+          this.notificationTemplates = this.page.content;
+        }
+      });
   }
 
   loadPage(page: number) {
-    this.listSubscription = this.notificationService.listUserDefined(page, this.searchForm.value).subscribe(data => {
-      this.page = data;
-      if (this.page != null) {
-        this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
-        this.notificationTemplates = this.page.content;
-      }
-    })
+    this.listSubscription = this.notificationService
+      .listUserDefined(page, this.searchForm.value)
+      .subscribe((data) => {
+        this.page = data;
+        if (this.page != null) {
+          this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
+          this.notificationTemplates = this.page.content;
+        }
+      });
   }
 
   pageCounter(i: number): Array<number> {
@@ -141,9 +157,15 @@ export class UserDefinedNotificationListComponent implements OnInit {
     return this.searchForm.controls;
   }
 
-  getNotificationContentForCurrentLanguage(notificationContents: NotificationTemplateContent []) {
+  getNotificationContentForCurrentLanguage(
+    notificationContents: NotificationTemplateContent[]
+  ) {
     if (notificationContents.length > 0) {
-      let contents = notificationContents.filter(value => this.i18nService.language.toLowerCase().startsWith(value.lang.toLowerCase()));
+      let contents = notificationContents.filter((value) =>
+        this.i18nService.language
+          .toLowerCase()
+          .startsWith(value.lang.toLowerCase())
+      );
       if (!contents) {
         return notificationContents[0];
       }
@@ -160,11 +182,18 @@ export class UserDefinedNotificationListComponent implements OnInit {
   formatDate(date: Date): string {
     const datePipe = new DatePipe('en-US');
     if (this.selectedDateType === DateType.Hijri) {
-      let hijriDate = this.dateFormatterService.toDate(this.dateFormatterService.toHijri(this.dateFormatterService.fromDate(date)));
-      return this.currentLanguage.startsWith('ar') ? datePipe.transform(hijriDate, 'yyyy/MM/dd') : datePipe.transform(hijriDate, 'dd/MM/yyyy');
-    }
-    else {
-      return this.currentLanguage.startsWith('ar') ? datePipe.transform(date, 'yyyy/MM/dd') : datePipe.transform(date, 'dd/MM/yyyy');
+      let hijriDate = this.dateFormatterService.toDate(
+        this.dateFormatterService.toHijri(
+          this.dateFormatterService.fromDate(date)
+        )
+      );
+      return this.currentLanguage.startsWith('ar')
+        ? datePipe.transform(hijriDate, 'yyyy/MM/dd')
+        : datePipe.transform(hijriDate, 'dd/MM/yyyy');
+    } else {
+      return this.currentLanguage.startsWith('ar')
+        ? datePipe.transform(date, 'yyyy/MM/dd')
+        : datePipe.transform(date, 'dd/MM/yyyy');
     }
   }
 

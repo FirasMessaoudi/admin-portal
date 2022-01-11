@@ -1,30 +1,31 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {EAuthority} from "@model/enum/authority.enum";
-import {AuthenticationService} from '@app/_core/services';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { EAuthority } from '@model/enum/authority.enum';
+import { AuthenticationService } from '@app/_core/services';
 
 @Component({
   selector: 'app-side-nav',
   templateUrl: './side-nav.component.html',
-  styleUrls: ['./side-nav.component.scss']
+  styleUrls: ['./side-nav.component.scss'],
 })
 export class SideNavComponent implements OnInit {
   currentUser: any;
   links: {}[];
+
   constructor(
     public router: Router,
     private authenticationService: AuthenticationService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.currentUser = this.authenticationService.currentUser
+    this.currentUser = this.authenticationService.currentUser;
     this.links = [
       {
         title: 'home.title',
         roles: [EAuthority.ADMIN_DASHBOARD],
         display: false,
         icon: 'home',
-        iconFa:'fa-w-18',
+        iconFa: 'fa-w-18',
         routerLink: '/',
         submenu: false,
       },
@@ -39,22 +40,25 @@ export class SideNavComponent implements OnInit {
         isCollapsed: true,
         menuItems: [
           {
-            title: 'card-management.title',
+            title: 'card-management.applicant_title',
             display: false,
             roles: [EAuthority.CARD_MANAGEMENT],
-            routerLink: '/cards/list'
+            routerLink: '/cards/list',
           },
           {
             title: 'card-management.staff_title',
             display: false,
             roles: [EAuthority.CARD_MANAGEMENT],
-            routerLink: '/staff-cards/list'
-          }
-        ]
+            routerLink: '/staff-cards/list',
+          },
+        ],
       },
       {
         title: 'printing-management.title',
-        roles: [EAuthority.STAFF_PRINTING_REQUEST_MANAGEMENT, EAuthority.APPLICANT_PRINTING_REQUEST_MANAGEMENT],
+        roles: [
+          EAuthority.STAFF_PRINTING_REQUEST_MANAGEMENT,
+          EAuthority.APPLICANT_PRINTING_REQUEST_MANAGEMENT,
+        ],
         display: false,
         icon: 'print',
         iconFa: 'fa-w-16',
@@ -62,18 +66,18 @@ export class SideNavComponent implements OnInit {
         isCollapsed: true,
         menuItems: [
           {
-            title: 'printing-management.applicant-title',
+            title: 'printing-management.applicant_title',
             display: false,
             roles: [EAuthority.APPLICANT_PRINTING_REQUEST_MANAGEMENT],
-            routerLink: '/print-requests/list'
+            routerLink: '/print-requests/list',
           },
           {
-            title: 'printing-management.staff-title',
+            title: 'printing-management.staff_title',
             display: false,
             roles: [EAuthority.STAFF_PRINTING_REQUEST_MANAGEMENT],
             routerLink: '/staff-print-requests/list',
-          }
-        ]
+          },
+        ],
       },
       {
         title: 'incident-management.title',
@@ -81,7 +85,7 @@ export class SideNavComponent implements OnInit {
         roles: [EAuthority.USER_MANAGEMENT],
         display: false,
         icon: 'flag',
-        iconFa:'fa-w-16',
+        iconFa: 'fa-w-16',
         routerLink: '/incidents/list',
         submenu: false,
       },
@@ -90,7 +94,7 @@ export class SideNavComponent implements OnInit {
         roles: [EAuthority.ROLE_MANAGEMENT],
         display: false,
         icon: 'file-alt',
-        iconFa:'fa-w-12',
+        iconFa: 'fa-w-12',
         routerLink: '/roles/list',
         submenu: false,
       },
@@ -99,20 +103,20 @@ export class SideNavComponent implements OnInit {
         roles: [EAuthority.USER_MANAGEMENT],
         display: false,
         icon: 'users',
-        iconFa:'fa-w-20',
+        iconFa: 'fa-w-20',
         routerLink: '/users/list',
         submenu: false,
       },
-/*
-      TODO Uncomment the following block
-      {
-        title: 'rule-management.title',
-        roles: [EAuthority.USER_MANAGEMENT],
-        display: false,
-        icon: 'users',
-        iconFa:'fa-w-20',
-        routerLink: '/rules/list',
-      },*/
+      /*
+            TODO Uncomment the following block
+            {
+              title: 'rule-management.title',
+              roles: [EAuthority.USER_MANAGEMENT],
+              display: false,
+              icon: 'users',
+              iconFa:'fa-w-20',
+              routerLink: '/rules/list',
+            },*/
       {
         title: 'data-request-management.title',
         roles: [EAuthority.DATA_REQUEST_MANAGEMENT],
@@ -135,17 +139,17 @@ export class SideNavComponent implements OnInit {
             title: 'notification-management.system_notifications',
             roles: [EAuthority.NOTIFICATION_MANAGEMENT],
             display: false,
-            routerLink: '/notification/list'
+            routerLink: '/notification/list',
           },
           {
             title: 'notification-management.user_notifications',
             roles: [EAuthority.NOTIFICATION_MANAGEMENT],
             display: false,
             routerLink: '/user-defined-notification/list',
-          }
-        ]
-      }
-     // ,
+          },
+        ],
+      },
+      // ,
       // {
       //   title: 'notification-management.title',
       //   roles: [EAuthority.NOTIFICATION_MANAGEMENT],
@@ -169,21 +173,19 @@ export class SideNavComponent implements OnInit {
     // filtering access according to connected user authorities
     let user: any = this.authenticationService.currentUser;
 
-    if (user && user.authorities && (user.authorities instanceof Array)) {
+    if (user && user.authorities && user.authorities instanceof Array) {
       // loop on links
       this.links.forEach((link: any) => {
         // loop on authorities
         user.authorities.forEach((auth: any) => {
           // loop on link roles
           link.roles.forEach((role: any) => {
-
             if (role == auth.authority) {
               link['display'] = true;
             }
           });
 
           if (link.submenu) {
-
             link.menuItems.forEach((menuItem: any) => {
               // loop on link submenu roles
               menuItem.roles.forEach((role: any) => {
@@ -191,22 +193,16 @@ export class SideNavComponent implements OnInit {
                   menuItem['display'] = true;
                 }
               });
-
             });
           }
-
-
         });
       });
     }
   }
 
   setCollapsed(index: number) {
-    let updateItem: any = this.links[index]
+    let updateItem: any = this.links[index];
     updateItem.isCollapsed = !updateItem.isCollapsed;
     this.links[index] = updateItem;
-
   }
-
-
 }

@@ -1,33 +1,46 @@
-import {Component, OnInit} from '@angular/core';
-import {I18nService} from "@dcc-commons-ng/services";
-import {ActivatedRoute, Router} from "@angular/router";
-import {ToastService} from "@shared/components/toast";
-import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
-import {AuthenticationService, CardService, NotificationService} from "@core/services";
-import {LookupService} from "@core/utilities/lookup.service";
-import {Lookup} from "@model/lookup.model";
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {NotificationTemplate} from "@model/notification-template.model";
-import {combineLatest, Subscription} from "rxjs";
-import {map} from "rxjs/operators";
-import {NotificationTemplateContent} from "@model/notification-template-content.model";
-import {ModalDismissReasons, NgbCalendar, NgbDate, NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {CompanyLite} from "@model/company-lite.model";
-import {PackageHousing} from "@model/package-housing.model";
-import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
-import {ageRangeValidator, validateIsRequired} from "@pages/notification-management/notification-custom-validator";
-import {ConfirmDialogService} from "@shared/components/confirm-dialog";
-import {Applicant} from "@model/applicant.model";
-import {ApplicantService} from "@core/services/applicant/applicant.service";
-import {Page} from "@shared/model";
-import {NotificationTemplateCategorizing} from "@model/notification-template-categorizing.model";
-import {DatePipe} from "@angular/common";
+import { Component, OnInit } from '@angular/core';
+import { I18nService } from '@dcc-commons-ng/services';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastService } from '@shared/components/toast';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import {
+  AuthenticationService,
+  CardService,
+  NotificationService,
+} from '@core/services';
+import { LookupService } from '@core/utilities/lookup.service';
+import { Lookup } from '@model/lookup.model';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NotificationTemplate } from '@model/notification-template.model';
+import { combineLatest, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { NotificationTemplateContent } from '@model/notification-template-content.model';
+import {
+  ModalDismissReasons,
+  NgbCalendar,
+  NgbDate,
+  NgbDateStruct,
+  NgbModal,
+} from '@ng-bootstrap/ng-bootstrap';
+import { CompanyLite } from '@model/company-lite.model';
+import { PackageHousing } from '@model/package-housing.model';
+import { DateType } from '@shared/modules/hijri-gregorian-datepicker/consts';
+import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import {
+  ageRangeValidator,
+  validateIsRequired,
+} from '@pages/notification-management/notification-custom-validator';
+import { ConfirmDialogService } from '@shared/components/confirm-dialog';
+import { Applicant } from '@model/applicant.model';
+import { ApplicantService } from '@core/services/applicant/applicant.service';
+import { Page } from '@shared/model';
+import { NotificationTemplateCategorizing } from '@model/notification-template-categorizing.model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-user-defined-notification-details',
   templateUrl: './user-defined-notification-details.component.html',
-  styleUrls: ['./user-defined-notification-details.component.scss']
+  styleUrls: ['./user-defined-notification-details.component.scss'],
 })
 export class UserDefinedNotificationDetailsComponent implements OnInit {
   closeResult = '';
@@ -69,22 +82,23 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
-  constructor(private i18nService: I18nService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private toastr: ToastService,
-              private translate: TranslateService,
-              private authenticationService: AuthenticationService,
-              private notificationService: NotificationService,
-              private lookupsService: LookupService,
-              private formBuilder: FormBuilder,
-              private cardService: CardService,
-              private calendar: NgbCalendar,
-              private dateFormatterService: DateFormatterService,
-              private confirmDialogService: ConfirmDialogService,
-              private applicantService: ApplicantService,
-              private modalService: NgbModal,
-              private activeRoute: ActivatedRoute,
+  constructor(
+    private i18nService: I18nService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private toastr: ToastService,
+    private translate: TranslateService,
+    private authenticationService: AuthenticationService,
+    private notificationService: NotificationService,
+    private lookupsService: LookupService,
+    private formBuilder: FormBuilder,
+    private cardService: CardService,
+    private calendar: NgbCalendar,
+    private dateFormatterService: DateFormatterService,
+    private confirmDialogService: ConfirmDialogService,
+    private applicantService: ApplicantService,
+    private modalService: NgbModal,
+    private activeRoute: ActivatedRoute
   ) {
     this.today = calendar.getToday();
   }
@@ -99,45 +113,70 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
 
     this.initForm();
     this.initCategorizingForm();
-    combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
-      params: results[0].id,
-      qParams: results[1]
-    }))).subscribe(results => {
-      this.notificationTemplateId = +results.params; // (+) converts string 'id' to a number
-      if (this.notificationTemplateId) {
-        this.editMode = false;
-        this.notificationService.findUserDefinedNotificationTemplateById(this.notificationTemplateId).subscribe(data => {
-          if (data && data.id) {
-            this.notificationTemplate = data;
-            if (data.notificationTemplateCategorizing) {
-              if (data.notificationTemplateCategorizing?.selectedApplicants) {
-                this.ids = data.notificationTemplateCategorizing?.selectedApplicants;
-                this.listApplicants(data.notificationTemplateCategorizing?.selectedApplicants, 0);
-                this.checkedCriteria = 2;
+    combineLatest([this.route.params, this.route.queryParams])
+      .pipe(
+        map((results) => ({
+          params: results[0].id,
+          qParams: results[1],
+        }))
+      )
+      .subscribe((results) => {
+        this.notificationTemplateId = +results.params; // (+) converts string 'id' to a number
+        if (this.notificationTemplateId) {
+          this.editMode = false;
+          this.notificationService
+            .findUserDefinedNotificationTemplateById(
+              this.notificationTemplateId
+            )
+            .subscribe((data) => {
+              if (data && data.id) {
+                this.notificationTemplate = data;
+                if (data.notificationTemplateCategorizing) {
+                  if (
+                    data.notificationTemplateCategorizing?.selectedApplicants
+                  ) {
+                    this.ids =
+                      data.notificationTemplateCategorizing?.selectedApplicants;
+                    this.listApplicants(
+                      data.notificationTemplateCategorizing?.selectedApplicants,
+                      0
+                    );
+                    this.checkedCriteria = 2;
+                  } else {
+                    this.checkedCriteria = 1;
+                  }
+                  this.updateCategorizingForm();
+                }
+                //Enable edit if sending time is less or equal than current datetime and notification is not processed
+                this.canEdit =
+                  new Date(this.notificationTemplate?.sendingDate) > this.now &&
+                  !data.isProcessed;
               } else {
-                this.checkedCriteria = 1;
+                this.toastr.error(
+                  this.translate.instant('general.route_item_not_found', {
+                    itemId: this.notificationTemplateId,
+                  }),
+                  this.translate.instant('general.dialog_error_title')
+                );
+                this.goBackToList();
               }
-              this.updateCategorizingForm();
-            }
-            //Enable edit if sending time is less or equal than current datetime and notification is not processed
-            this.canEdit = (new Date(this.notificationTemplate?.sendingDate) > this.now) && !data.isProcessed;
-          } else {
-            this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.notificationTemplateId}),
-              this.translate.instant('general.dialog_error_title'));
-            this.goBackToList();
-          }
-        });
-      } else {
-        this.toastr.error(this.translate.instant('general.route_id_param_not_found'),
-          this.translate.instant('general.dialog_error_title'));
-        this.goBackToList();
-      }
-    });
+            });
+        } else {
+          this.toastr.error(
+            this.translate.instant('general.route_id_param_not_found'),
+            this.translate.instant('general.dialog_error_title')
+          );
+          this.goBackToList();
+        }
+      });
     this.loadLookups();
   }
 
   addApplicants() {
-    this.addedApplicants = [...this.addedApplicants, ...this.selectedApplicants];
+    this.addedApplicants = [
+      ...this.addedApplicants,
+      ...this.selectedApplicants,
+    ];
     this.applicants = [];
     this.selectedApplicants = [];
     this.isSelectAllClicked = false;
@@ -154,44 +193,61 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   }
 
   selectOne(event, id) {
-    const selectedIndex = this.applicants.findIndex(card => card.id === id);
+    const selectedIndex = this.applicants.findIndex((card) => card.id === id);
 
     if (event.target.checked) {
       this.selectedApplicants.push(this.applicants[selectedIndex]);
     } else {
-      this.selectedApplicants.splice(this.selectedApplicants.findIndex(card => card.id === id), 1);
+      this.selectedApplicants.splice(
+        this.selectedApplicants.findIndex((card) => card.id === id),
+        1
+      );
     }
-
   }
 
   loadLookups() {
-    this.notificationService.findNotificationCategories().subscribe(result => {
-      this.notificationCategories = result;
-      this.localizedNotificationCategories = this.lookupsService.localizedItems(this.notificationCategories);
-    });
+    this.notificationService
+      .findNotificationCategories()
+      .subscribe((result) => {
+        this.notificationCategories = result;
+        this.localizedNotificationCategories =
+          this.lookupsService.localizedItems(this.notificationCategories);
+      });
 
-    this.notificationService.findNotificationTemplateStatuses().subscribe(result => {
-      this.notificationStatuses = result;
-    });
+    this.notificationService
+      .findNotificationTemplateStatuses()
+      .subscribe((result) => {
+        this.notificationStatuses = result;
+      });
 
-    this.notificationService.findLanguages().subscribe(result => {
+    this.notificationService.findLanguages().subscribe((result) => {
       this.languages = result;
-      this.translatedLanguages = this.languages
-        .filter(c =>
-          this.currentLanguage.toLowerCase().substr(0, 2) === c.lang.toLowerCase().substr(0, 2)
-        );
-      this.translatedLanguages.forEach(lang => this.addTemplateContents(lang.code));
+      this.translatedLanguages = this.languages.filter(
+        (c) =>
+          this.currentLanguage.toLowerCase().substr(0, 2) ===
+          c.lang.toLowerCase().substr(0, 2)
+      );
+      this.translatedLanguages.forEach((lang) =>
+        this.addTemplateContents(lang.code)
+      );
       this.activeId = 1;
     });
 
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.translatedLanguages = this.languages.filter(c =>
-        event.lang.toLowerCase().substr(0, 2) === c.lang.toLowerCase().substr(0, 2));
+      this.translatedLanguages = this.languages.filter(
+        (c) =>
+          event.lang.toLowerCase().substr(0, 2) ===
+          c.lang.toLowerCase().substr(0, 2)
+      );
     });
 
-    this.cardService.findCountries().subscribe(res => this.nationalities = res);
-    this.notificationService.loadCompanies().subscribe(res => this.companies = res);
-    this.notificationService.loadCamps().subscribe(res => this.camps = res);
+    this.cardService
+      .findCountries()
+      .subscribe((res) => (this.nationalities = res));
+    this.notificationService
+      .loadCompanies()
+      .subscribe((res) => (this.companies = res));
+    this.notificationService.loadCamps().subscribe((res) => (this.camps = res));
   }
 
   get currentLanguage(): string {
@@ -215,18 +271,21 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       userSpecific: false,
       forceSending: false,
       statusCode: null,
-      notificationTemplateContents: this.formBuilder.array([])
+      notificationTemplateContents: this.formBuilder.array([]),
     });
   }
 
   addTemplateContents(language: string) {
-    const content = this.formBuilder.group({
-      id: 0,
-      creationDate: null,
-      lang: language,
-      title: '',
-      body: '',
-    }, {validator: validateIsRequired});
+    const content = this.formBuilder.group(
+      {
+        id: 0,
+        creationDate: null,
+        lang: language,
+        title: '',
+        body: '',
+      },
+      { validator: validateIsRequired }
+    );
     this.notificationTemplateContents.push(content);
   }
 
@@ -235,11 +294,14 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
       campId: null,
       companyId: null,
       nationalityCode: null,
-      age: this.formBuilder.group({
-        minAge: [null, [Validators.min(0), Validators.max(120)]],
-        maxAge: [null, [Validators.min(0), Validators.max(120)]],
-      }, {validator: ageRangeValidator}),
-      gender: null
+      age: this.formBuilder.group(
+        {
+          minAge: [null, [Validators.min(0), Validators.max(120)]],
+          maxAge: [null, [Validators.min(0), Validators.max(120)]],
+        },
+        { validator: ageRangeValidator }
+      ),
+      gender: null,
     });
   }
 
@@ -247,7 +309,7 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     this.searchForm = this.formBuilder.group({
       uin: '',
       idNumber: '',
-      passportNumber: ''
+      passportNumber: '',
     });
   }
 
@@ -274,9 +336,13 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   }
 
   listApplicants(selectedApplicants: string, pageNumber: number): void {
-    const ids = selectedApplicants.split(",").filter(x => x.trim().length).map(Number);
-    this.listSubscription = this.applicantService.findByIds(ids, pageNumber)
-      .subscribe(data => {
+    const ids = selectedApplicants
+      .split(',')
+      .filter((x) => x.trim().length)
+      .map(Number);
+    this.listSubscription = this.applicantService
+      .findByIds(ids, pageNumber)
+      .subscribe((data) => {
         this.applicants = [];
         this.pageArray = [];
         this.page = data;
@@ -304,10 +370,13 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
         description: this.notificationTemplate?.description,
         typeCode: this.notificationTemplate?.typeCode,
         statusCode: this.notificationTemplate?.statusCode,
-        forceSending: this.notificationTemplate?.forceSending
+        forceSending: this.notificationTemplate?.forceSending,
       });
-      this.notificationTemplate.notificationTemplateContents.forEach(c => {
-        let content = this.notificationForm.controls.notificationTemplateContents['controls'].find(field => field['controls'].lang.value === c.lang);
+      this.notificationTemplate.notificationTemplateContents.forEach((c) => {
+        let content =
+          this.notificationForm.controls.notificationTemplateContents[
+            'controls'
+          ].find((field) => field['controls'].lang.value === c.lang);
         content.controls.id.setValue(c.id);
         content.controls.creationDate.setValue(c.creationDate);
         content.controls.title.setValue(c.title);
@@ -339,14 +408,21 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
 
   updateCategorizingForm() {
     this.categorizingForm.patchValue({
-      campId: this.notificationTemplate?.notificationTemplateCategorizing?.campId,
-      companyId: this.notificationTemplate?.notificationTemplateCategorizing?.companyId,
-      nationalityCode: this.notificationTemplate?.notificationTemplateCategorizing?.nationalityCode,
+      campId:
+        this.notificationTemplate?.notificationTemplateCategorizing?.campId,
+      companyId:
+        this.notificationTemplate?.notificationTemplateCategorizing?.companyId,
+      nationalityCode:
+        this.notificationTemplate?.notificationTemplateCategorizing
+          ?.nationalityCode,
       age: {
-        minAge: this.notificationTemplate?.notificationTemplateCategorizing?.minAge,
-        maxAge: this.notificationTemplate?.notificationTemplateCategorizing?.maxAge
+        minAge:
+          this.notificationTemplate?.notificationTemplateCategorizing?.minAge,
+        maxAge:
+          this.notificationTemplate?.notificationTemplateCategorizing?.maxAge,
       },
-      gender: this.notificationTemplate?.notificationTemplateCategorizing.gender
+      gender:
+        this.notificationTemplate?.notificationTemplateCategorizing.gender,
     });
   }
 
@@ -362,7 +438,14 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     if (this.notificationForm.invalid) {
       if (this.notificationTemplateContents.invalid) {
         // Set focus on tab containing errors
-        this.activeId = this.translatedLanguages.findIndex(lang => lang.code === this.notificationTemplateContents.controls.find(control => control.invalid).value.lang) + 1;
+        this.activeId =
+          this.translatedLanguages.findIndex(
+            (lang) =>
+              lang.code ===
+              this.notificationTemplateContents.controls.find(
+                (control) => control.invalid
+              ).value.lang
+          ) + 1;
       }
       return;
     }
@@ -371,48 +454,73 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     }
 
     this.confirmDialogService
-      .confirm(this.translate.instant('notification-management.save_changes_confirmation_text'),
-        this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
-      if (confirm) {
-        this.notificationService.updateUserDefined(notificationTemplate).subscribe(res => {
-          if (res.hasOwnProperty('errors') && res.errors) {
-            this.toastr.warning(this.translate.instant('general.dialog_form_error_text'), this.translate.instant("general.dialog_edit_title"));
-            Object.keys(this.notificationForm.controls).forEach(field => {
-              console.log('looking for validation errors for : ' + field);
-              if (res.errors[field]) {
-                const control = this.notificationForm.get(field);
-                control.setErrors({invalid: res.errors[field].replace(/\{/, '').replace(/\}/, '')});
-                control.markAsTouched({onlySelf: true});
+      .confirm(
+        this.translate.instant(
+          'notification-management.save_changes_confirmation_text'
+        ),
+        this.translate.instant('general.dialog_confirmation_title')
+      )
+      .then((confirm) => {
+        if (confirm) {
+          this.notificationService
+            .updateUserDefined(notificationTemplate)
+            .subscribe((res) => {
+              if (res.hasOwnProperty('errors') && res.errors) {
+                this.toastr.warning(
+                  this.translate.instant('general.dialog_form_error_text'),
+                  this.translate.instant('general.dialog_edit_title')
+                );
+                Object.keys(this.notificationForm.controls).forEach((field) => {
+                  console.log('looking for validation errors for : ' + field);
+                  if (res.errors[field]) {
+                    const control = this.notificationForm.get(field);
+                    control.setErrors({
+                      invalid: res.errors[field]
+                        .replace(/\{/, '')
+                        .replace(/\}/, ''),
+                    });
+                    control.markAsTouched({ onlySelf: true });
+                  }
+                });
+              } else {
+                this.toastr.success(
+                  this.translate.instant('general.dialog_edit_success_text'),
+                  this.translate.instant('general.dialog_edit_title')
+                );
+                this.router.navigate(['/user-defined-notification/list']);
               }
             });
-          } else {
-            this.toastr.success(this.translate.instant("general.dialog_edit_success_text"), this.translate.instant("general.dialog_edit_title"));
-            this.router.navigate(['/user-defined-notification/list']);
-          }
-        });
-      }
-    });
+        }
+      });
   }
 
   createNotificationTemplate(): NotificationTemplate {
-    let notificationTemplate: NotificationTemplate = this.notificationForm.value;
+    let notificationTemplate: NotificationTemplate =
+      this.notificationForm.value;
 
     if (this.canEdit) {
-      notificationTemplate.notificationTemplateContents = this.notificationForm.get('notificationTemplateContents').value
-        .filter(c => c.body.trim() !== '' || c.title.trim() !== '');
-      notificationTemplate.notificationTemplateContents.forEach(c => {
-        c.title = c.title.replace(/\s/g, " ").trim();
-        c.body = c.body.replace(/\s/g, " ").trim();
+      notificationTemplate.notificationTemplateContents = this.notificationForm
+        .get('notificationTemplateContents')
+        .value.filter((c) => c.body.trim() !== '' || c.title.trim() !== '');
+      notificationTemplate.notificationTemplateContents.forEach((c) => {
+        c.title = c.title.replace(/\s/g, ' ').trim();
+        c.body = c.body.replace(/\s/g, ' ').trim();
       });
     }
 
     if (this.checkedCriteria === 1) {
-      notificationTemplate.notificationTemplateCategorizing = this.getCategorizing();
+      notificationTemplate.notificationTemplateCategorizing =
+        this.getCategorizing();
     } else if (this.checkedCriteria === 2 && this.addedApplicants?.length > 0) {
-      const selectedApplicantsCSV = this.addedApplicants.map(applicant => applicant.id).join(",");
-      let notificationTemplateCategorizing = new NotificationTemplateCategorizing(selectedApplicantsCSV)
-      notificationTemplate.notificationTemplateCategorizing = notificationTemplateCategorizing;
-      notificationTemplateCategorizing.selectedApplicants = selectedApplicantsCSV;
+      const selectedApplicantsCSV = this.addedApplicants
+        .map((applicant) => applicant.id)
+        .join(',');
+      let notificationTemplateCategorizing =
+        new NotificationTemplateCategorizing(selectedApplicantsCSV);
+      notificationTemplate.notificationTemplateCategorizing =
+        notificationTemplateCategorizing;
+      notificationTemplateCategorizing.selectedApplicants =
+        selectedApplicantsCSV;
     }
 
     return notificationTemplate;
@@ -428,20 +536,25 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   }
 
   openSearchModal(content) {
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      centered: true,
-      size: 'lg'
-    }).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      this.resetSelectionModal();
-    });
+    this.modalService
+      .open(content, {
+        ariaLabelledBy: 'modal-basic-title',
+        centered: true,
+        size: 'lg',
+      })
+      .result.then(
+        (result) => {
+          this.closeResult = `Closed with: ${result}`;
+        },
+        (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+          this.resetSelectionModal();
+        }
+      );
   }
 
   resetSelectionModal() {
-    this.searchForm.reset()
+    this.searchForm.reset();
     this.applicants = [];
     this.selectedApplicants = [];
     this.isSelectAllClicked = false;
@@ -479,14 +592,24 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   }
 
   checkContentIsValid(i): boolean {
-    const localizedContent = this.notificationTemplate?.notificationTemplateContents[i];
-    return !this.editMode && (localizedContent?.title?.length > 0 && localizedContent?.body?.length > 0);
+    const localizedContent =
+      this.notificationTemplate?.notificationTemplateContents[i];
+    return (
+      !this.editMode &&
+      localizedContent?.title?.length > 0 &&
+      localizedContent?.body?.length > 0
+    );
   }
 
   search(pageNumber: number): void {
     this.isSelectLoading = true;
-    this.searchSubscription = this.applicantService.search(this.searchForm.value, this.addedApplicants.map(applicant => applicant.id), pageNumber)
-      .subscribe(data => {
+    this.searchSubscription = this.applicantService
+      .search(
+        this.searchForm.value,
+        this.addedApplicants.map((applicant) => applicant.id),
+        pageNumber
+      )
+      .subscribe((data) => {
         this.isSelectLoading = false;
         this.applicants = [];
         this.pageArray = [];
@@ -499,16 +622,25 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   }
 
   isChecked(applicant) {
-    return this.selectedApplicants.some(c => c.id === applicant.id);
+    return this.selectedApplicants.some((c) => c.id === applicant.id);
   }
 
   undoAddApplicant(applicantId: number) {
-    this.addedApplicants.splice(this.addedApplicants.findIndex(applicant => applicant.id === applicantId), 1);
-    if (this.addedApplicantsCurrentPage !== 1 && this.addedApplicants.length % this.addedApplicantsPageSize === 0) this.addedApplicantsCurrentPage--;
+    this.addedApplicants.splice(
+      this.addedApplicants.findIndex(
+        (applicant) => applicant.id === applicantId
+      ),
+      1
+    );
+    if (
+      this.addedApplicantsCurrentPage !== 1 &&
+      this.addedApplicants.length % this.addedApplicantsPageSize === 0
+    )
+      this.addedApplicantsCurrentPage--;
   }
 
   getCamp(id: number, lang: string): string {
-    const camp = this.camps.find(c => id === c.id);
+    const camp = this.camps.find((c) => id === c.id);
     if (camp) {
       return lang === 'ar' ? camp.locationNameAr : camp.locationNameEn;
     }
@@ -516,7 +648,7 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   }
 
   getCompany(id: number, lang: string): string {
-    const company = this.companies.find(c => id === c.id);
+    const company = this.companies.find((c) => id === c.id);
     if (company) {
       return lang === 'ar' ? company.labelAr : company.labelEn;
     }
@@ -525,13 +657,18 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
 
   cancel() {
     this.confirmDialogService
-      .confirm(this.translate.instant('notification-management.cancel_confirmation_text'),
-        this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
-      if (confirm) {
-        this.editMode = false;
-        this.activeId = 1;
-      }
-    });
+      .confirm(
+        this.translate.instant(
+          'notification-management.cancel_confirmation_text'
+        ),
+        this.translate.instant('general.dialog_confirmation_title')
+      )
+      .then((confirm) => {
+        if (confirm) {
+          this.editMode = false;
+          this.activeId = 1;
+        }
+      });
   }
 
   updateTabIndex(activeId) {
@@ -540,13 +677,20 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
 
   formatDate(date: Date): string {
     const datePipe = new DatePipe('en-US');
-    return this.currentLanguage.startsWith('ar') ? datePipe.transform(date, 'yyyy/MM/dd') : datePipe.transform(date, 'dd/MM/yyyy');
+    return this.currentLanguage.startsWith('ar')
+      ? datePipe.transform(date, 'yyyy/MM/dd')
+      : datePipe.transform(date, 'dd/MM/yyyy');
   }
 
   formatHijriDate(date: Date): string {
     const datePipe = new DatePipe('en-US');
-    let hijriDate = this.dateFormatterService.toDate(this.dateFormatterService.toHijri(this.dateFormatterService.fromDate(date)));
-    return this.currentLanguage.startsWith('ar') ? datePipe.transform(hijriDate, 'yyyy/MM/dd') : datePipe.transform(hijriDate, 'dd/MM/yyyy');
+    let hijriDate = this.dateFormatterService.toDate(
+      this.dateFormatterService.toHijri(
+        this.dateFormatterService.fromDate(date)
+      )
+    );
+    return this.currentLanguage.startsWith('ar')
+      ? datePipe.transform(hijriDate, 'yyyy/MM/dd')
+      : datePipe.transform(hijriDate, 'dd/MM/yyyy');
   }
-
 }

@@ -1,22 +1,22 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {EAuthority, Page} from "@shared/model";
-import {AuthenticationService} from "@core/services";
-import {AbstractControl, FormBuilder, FormGroup} from "@angular/forms";
-import {ApplicantIncident} from "@model/applicant-incident.model";
-import {Subscription} from "rxjs";
-import {IncidentService} from "@core/services/incident/incident.service";
-import {Lookup} from "@model/lookup.model";
-import {LookupService} from "@core/utilities/lookup.service";
-import {I18nService} from "@dcc-commons-ng/services";
-import {DatePipe} from "@angular/common";
-import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
-import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
-import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { EAuthority, Page } from '@shared/model';
+import { AuthenticationService } from '@core/services';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { ApplicantIncident } from '@model/applicant-incident.model';
+import { Subscription } from 'rxjs';
+import { IncidentService } from '@core/services/incident/incident.service';
+import { Lookup } from '@model/lookup.model';
+import { LookupService } from '@core/utilities/lookup.service';
+import { I18nService } from '@dcc-commons-ng/services';
+import { DatePipe } from '@angular/common';
+import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import { DateType } from '@shared/modules/hijri-gregorian-datepicker/consts';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-incident-list',
   templateUrl: './incident-list.component.html',
-  styleUrls: ['./incident-list.component.scss']
+  styleUrls: ['./incident-list.component.scss'],
 })
 export class IncidentListComponent implements OnInit, OnDestroy {
   isSearchbarCollapsed = true;
@@ -34,14 +34,14 @@ export class IncidentListComponent implements OnInit, OnDestroy {
 
   @ViewChild('picker') picker: any;
 
-  constructor(private authenticationService: AuthenticationService,
-              private incidentService: IncidentService,
-              private formBuilder: FormBuilder,
-              private lookupsService: LookupService,
-              private i18nService: I18nService,
-              private dateFormatterService: DateFormatterService
-  ) {
-  }
+  constructor(
+    private authenticationService: AuthenticationService,
+    private incidentService: IncidentService,
+    private formBuilder: FormBuilder,
+    private lookupsService: LookupService,
+    private i18nService: I18nService,
+    private dateFormatterService: DateFormatterService
+  ) {}
 
   ngOnInit(): void {
     this.selectedDateType = DateType.Gregorian;
@@ -81,10 +81,10 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   }
 
   loadLookups() {
-    this.incidentService.findIncidentTypes().subscribe(result => {
+    this.incidentService.findIncidentTypes().subscribe((result) => {
       this.incidentTypes = result;
     });
-    this.incidentService.findIncidentStatuses().subscribe(result => {
+    this.incidentService.findIncidentStatuses().subscribe((result) => {
       this.incidentStatuses = result;
     });
   }
@@ -95,17 +95,21 @@ export class IncidentListComponent implements OnInit, OnDestroy {
 
   get canSeeIncidentList(): boolean {
     //TODO Change this
-    return this.authenticationService.hasAuthority(EAuthority.NOTIFICATION_MANAGEMENT);
+    return this.authenticationService.hasAuthority(
+      EAuthority.NOTIFICATION_MANAGEMENT
+    );
   }
 
   loadPage(page: number) {
-    this.listSubscription = this.incidentService.list(page, this.searchForm.value).subscribe(data => {
-      this.page = data;
-      if (this.page != null) {
-        this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
-        this.incidents = this.page.content;
-      }
-    })
+    this.listSubscription = this.incidentService
+      .list(page, this.searchForm.value)
+      .subscribe((data) => {
+        this.page = data;
+        if (this.page != null) {
+          this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
+          this.incidents = this.page.content;
+        }
+      });
   }
 
   pageCounter(i: number): Array<number> {
@@ -113,15 +117,17 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    this.searchSubscription = this.incidentService.list(0, this.searchForm.value).subscribe(data => {
-      this.incidents = [];
-      this.pageArray = [];
-      this.page = data;
-      if (this.page != null) {
-        this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
-        this.incidents = this.page.content;
-      }
-    });
+    this.searchSubscription = this.incidentService
+      .list(0, this.searchForm.value)
+      .subscribe((data) => {
+        this.incidents = [];
+        this.pageArray = [];
+        this.page = data;
+        if (this.page != null) {
+          this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
+          this.incidents = this.page.content;
+        }
+      });
   }
 
   get currentLanguage(): string {
@@ -133,8 +139,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
    *
    * @param status the current applicant incident status
    */
-  buildStatusClass(status: any):
-    string {
+  buildStatusClass(status: any): string {
     switch (status) {
       case 'UNDER_PROCESSING':
         return 'ready';
@@ -158,10 +163,18 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   formatDate(date: Date): string {
     const datePipe = new DatePipe('en-US');
     if (this.selectedDateType === DateType.Hijri) {
-      let hijriDate = this.dateFormatterService.toDate(this.dateFormatterService.toHijri(this.dateFormatterService.fromDate(date)));
-      return this.currentLanguage.startsWith('ar') ? datePipe.transform(hijriDate, 'yyyy/MM/dd') : datePipe.transform(hijriDate, 'dd/MM/yyyy');
+      let hijriDate = this.dateFormatterService.toDate(
+        this.dateFormatterService.toHijri(
+          this.dateFormatterService.fromDate(date)
+        )
+      );
+      return this.currentLanguage.startsWith('ar')
+        ? datePipe.transform(hijriDate, 'yyyy/MM/dd')
+        : datePipe.transform(hijriDate, 'dd/MM/yyyy');
     } else {
-      return this.currentLanguage.startsWith('ar') ? datePipe.transform(date, 'yyyy/MM/dd') : datePipe.transform(date, 'dd/MM/yyyy');
+      return this.currentLanguage.startsWith('ar')
+        ? datePipe.transform(date, 'yyyy/MM/dd')
+        : datePipe.transform(date, 'dd/MM/yyyy');
     }
   }
 }
