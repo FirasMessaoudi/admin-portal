@@ -3,9 +3,9 @@
  */
 package com.elm.shj.admin.portal.web.ws;
 
+import com.elm.shj.admin.portal.services.dto.EUserNotificationType;
 import com.elm.shj.admin.portal.services.dto.PasswordExpiryNotificationRequest;
 import com.elm.shj.admin.portal.services.dto.UserNotificationCategoryPreferenceDto;
-import com.elm.shj.admin.portal.services.dto.EUserNotificationType;
 import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
 import com.elm.shj.admin.portal.services.notification.UserNotificationCategoryPreferenceService;
 import com.elm.shj.admin.portal.services.notification.UserNotificationService;
@@ -52,7 +52,7 @@ public class NotificationWsController {
     @GetMapping("/count-new-notifications/{userId}")
     public ResponseEntity<WsResponse<?>> countUserNewNotifications(@PathVariable String userId) {
         log.debug("Handler for count un-read user notifications.");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(userNotificationService.retrieveUserNewNotificationsCount(userId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(userNotificationService.retrieveUserNewNotificationsCount(userId)).build());
     }
 
 
@@ -68,10 +68,10 @@ public class NotificationWsController {
                                                                Pageable pageable) {
         log.debug("Handler for {}", "Find all user notifications by user Id");
         if (type != null) {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
                     userNotificationService.findTypedUserNotifications(userId, type, pageable)).build());
         }
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
                 userNotificationService.findUserNotifications(userId)).build());
     }
 
@@ -88,9 +88,9 @@ public class NotificationWsController {
             notificationRequestService.savePasswordExpiryNotificationRequest(passwordExpiryNotificationRequest);
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(e.getMessage()).build());
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(e.getMessage()).build());
         }
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(null).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(null).build());
     }
 
 
@@ -108,9 +108,9 @@ public class NotificationWsController {
             numberOfRowsAffected = userNotificationService.markUserNotificationAsRead(notificationId);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE).body(e.getMessage()).build());
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(e.getMessage()).build());
         }
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(numberOfRowsAffected).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(numberOfRowsAffected).build());
     }
 
     /**
@@ -122,7 +122,7 @@ public class NotificationWsController {
     @GetMapping("/user-notification-category-preference/{userId}")
     public ResponseEntity<WsResponse<?>> findUserNotificationCategoryPreference(@PathVariable String userId) {
         log.debug("Handler for {}", "Find user notification category preference by user Id");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationCategoryPreferenceService.findUserNotificationCategoryPreference(userId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(notificationCategoryPreferenceService.findUserNotificationCategoryPreference(userId)).build());
     }
 
     /**
@@ -134,6 +134,6 @@ public class NotificationWsController {
     @PostMapping("/update-user-notification-category-preference")
     public ResponseEntity<WsResponse<?>> updateUserNotificationCategoryPreference(@RequestBody UserNotificationCategoryPreferenceDto userNotificationCategoryPreference) {
         log.debug("Handler for {}", "Update user notification category preference");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS).body(notificationCategoryPreferenceService.save(userNotificationCategoryPreference)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(notificationCategoryPreferenceService.save(userNotificationCategoryPreference)).build());
     }
 }
