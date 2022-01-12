@@ -26,13 +26,13 @@ public class NotificationTemplateProcessingScheduler {
 
     private final NotificationRequestService notificationRequestService;
 
-    @PostConstruct
+/*    @PostConstruct
     @Scheduled(cron = "${scheduler.notification.processing.cron}")
     @SchedulerLock(name = "notification-template-processing-task")
     public void createNotificationRequests() {
         log.debug("create notification requests scheduler started ...");
         LockAssert.assertLocked();
         notificationRequestService.processNotificationTemplates();
-    }
+    }*/
 
 }
