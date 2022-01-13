@@ -20,6 +20,7 @@ import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +29,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -649,6 +652,42 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findLatestApplicantRitualSeason(@PathVariable long uin) {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageService.findLatestApplicantRitualPackage(uin)).build());
 
+    }
+
+    @GetMapping("/verify-staff")
+    public ResponseEntity<WsResponse<?>> verifyStaff(@RequestParam(value = "suin") String suin,
+                                                     @RequestParam(value = "dateOfBirthGregorian", required = false) String dateOfBirthGregorian,
+                                                     @RequestParam(value = "dateOfBirthHijri", required = false) int dateOfBirthHijri) {
+        Optional<CompanyStaffLiteDto> staff = companyStaffService.findBySuin(suin);
+        if (staff.isPresent()) {
+            boolean dateOfBirthMatched;
+            SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
+            // decide which date of birth to use
+            if (dateOfBirthGregorian != null && !dateOfBirthGregorian.equals("")) {
+                try {
+                    Date gregorianDate = sdf.parse(dateOfBirthGregorian);
+                    String applicantDateFormatted = sdf.format(staff.get().getDateOfBirthGregorian());
+                    String commandDataOfBirthFormatted = sdf.format(gregorianDate);
+                    dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
+                } catch (ParseException e){
+                    return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(suin).build()).build());
+                }
+
+            } else {
+                dateOfBirthMatched = dateOfBirthHijri == staff.get().getDateOfBirthHijri();
+            }
+            if (!dateOfBirthMatched) {
+                log.debug("unmatched data for {} suin and {} hijri date of birth and {} gregorian date of birth.",
+                        suin, dateOfBirthHijri, dateOfBirthGregorian);
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                        .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(suin).build()).build());
+            }
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(staff).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(suin).build()).build());
+        }
     }
 
 }

@@ -40,6 +40,9 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .nationalityCode(companyStaff.getNationalityCode())
                     .photo(companyStaff.getPhoto())
                     .titleCode(companyStaff.getTitleCode())
+                    .dateOfBirthGregorian(companyStaff.getDateOfBirthGregorian())
+                    .dateOfBirthHijri(companyStaff.getDateOfBirthHijri())
+                    .gender(companyStaff.getGender())
                     .build();
             return Optional.of(companyStaffLite);
         } else return Optional.empty();
