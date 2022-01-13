@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Page} from "@shared/model";
 import {CountryLookup} from "@model/country-lookup.model";
 import {Lookup} from "@model/lookup.model";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CardService} from "@core/services";
@@ -37,6 +37,10 @@ export class StaffStepOneComponent implements OnInit {
   isSelectAllClicked: boolean;
   isSelectLoading: boolean;
   companyNames: CompanyLite[];
+  seasonYear: number;
+  ritualType: string;
+  ritualForm: FormGroup;
+
 
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();
@@ -52,6 +56,8 @@ export class StaffStepOneComponent implements OnInit {
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
+  ritualTypes: Lookup[] = [];
+  ritualSeasons: any[] = [];
 
   constructor(private modalService: NgbModal,
               private cardService: CardService,
@@ -74,6 +80,14 @@ export class StaffStepOneComponent implements OnInit {
 
     this.cardService.findCompanyNames().subscribe((result) => {
       this.companyNames = result;
+    });
+
+    this.printService.findRitualTypes().subscribe((result) => {
+      this.ritualTypes = result;
+    });
+
+    this.printService.findRitualSeasons().subscribe((result) => {
+      this.ritualSeasons = result;
     });
   }
 
@@ -104,6 +118,12 @@ export class StaffStepOneComponent implements OnInit {
       companyCode: [null]
 
     });
+    this.ritualForm = this.formBuilder.group({
+      seasonYear: [null, Validators.required],
+      ritualCode: [null, Validators.required],
+    });
+
+
   }
 
   pageCounter(i: number): Array<number> {
@@ -122,7 +142,7 @@ export class StaffStepOneComponent implements OnInit {
     this.isLoading = true;
     this.searchSubscription = this.cardService.searchStaffCardsToPrint(this.searchForm.value.uin,
       this.searchForm.value.companyCode,
-      this.searchForm.value.nationality, this.addedCards.map(card => card.id), pageNumber).subscribe(data => {
+      this.searchForm.value.nationality, this.ritualForm.getRawValue().seasonYear, this.ritualForm.getRawValue().ritualCode, this.addedCards.map(card => card.id), pageNumber).subscribe(data => {
       this.isLoading = false;
       this.cards = [];
       this.pageArray = [];
@@ -178,7 +198,7 @@ export class StaffStepOneComponent implements OnInit {
     this.isSelectLoading = true;
     this.searchSubscription = this.cardService.searchAllStaffCardsToPrint(this.searchForm.value.uin,
       this.searchForm.value.companyCode,
-      this.searchForm.value.nationality, this.addedCards.map(card => card.id)).subscribe(data => {
+      this.searchForm.value.nationality, this.ritualForm.getRawValue().seasonYear, this.ritualForm.getRawValue().ritualCode, this.addedCards.map(card => card.id)).subscribe(data => {
       this.isSelectLoading = false;
       this.isSelectAllClicked = true;
       this.isAllSelected = true;
@@ -226,6 +246,7 @@ export class StaffStepOneComponent implements OnInit {
     this.selectedCards = [];
     this.isSelectAllClicked = false;
     this.modalService.dismissAll();
+    this.ritualForm.disable();
   }
 
   lookupService(): LookupService {
@@ -237,6 +258,7 @@ export class StaffStepOneComponent implements OnInit {
     if (this.addedCardsCurrentPage !== 1 && this.addedCards.length % this.addedCardsPageSize === 0) this.addedCardsCurrentPage--;
     if (this.addedCards.length == 0)
       this.onDeleteAllCards.emit(false);
+    this.ritualForm.enable();
   }
 
   isChecked(card) {

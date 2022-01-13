@@ -20,11 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Service handling company staff card
@@ -129,17 +128,17 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
     }
 
     public List<CompanyStaffCardDto> findAllPrintingCards(String uin,
-                                                          String companyCode, String nationalityCode, List<Long> excludedCardsIds) {
+                                                          String companyCode, String nationalityCode, int seasonYear, String ritualCode, List<Long> excludedCardsIds) {
         log.debug("Find all printing cards...");
-        return mapList(companyStaffCardRepository.findAllPrintingCards(ECardStatus.READY_TO_PRINT.name(), EPrintRequestStatus.NEW.name(), uin, companyCode, nationalityCode,
+        return mapList(companyStaffCardRepository.findAllPrintingCards(ECardStatus.READY_TO_PRINT.name(), EPrintRequestStatus.NEW.name(), uin, companyCode, nationalityCode, seasonYear, ritualCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds));
     }
 
     public Page<CompanyStaffCardDto> findPrintingCards(String uin,
-                                                       String companyCode, String nationalityCode, List<Long> excludedCardsIds, Pageable pageable) {
+                                                       String companyCode, String nationalityCode, int seasonYear, String ritualCode, List<Long> excludedCardsIds, Pageable pageable) {
         log.debug("search printing cards...");
         return mapPage(companyStaffCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(), EPrintRequestStatus.NEW.name(), uin,
-                companyCode, nationalityCode,
+                companyCode, nationalityCode, seasonYear, ritualCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
     }
 

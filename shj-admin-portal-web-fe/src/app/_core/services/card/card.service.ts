@@ -1,20 +1,21 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { ApplicantCard } from '@model/card.model';
-import { catchError } from 'rxjs/internal/operators';
-import { Lookup } from '@model/lookup.model';
-import { CountryLookup } from '@model/country-lookup.model';
-import { ApplicantCardSearchCriteria } from '@model/applicant-card-search-criteria.model';
-import { StaffCardSearchCriteria } from '@model/staff-card-search-criteria.model';
-import { CompanyLite } from '@model/company-lite.model';
-import { CompanyStaffCard } from '@app/_shared/model/staff-card.model';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpEvent, HttpParams} from '@angular/common/http';
+import {Observable, of} from 'rxjs';
+import {ApplicantCard} from '@model/card.model';
+import {catchError} from 'rxjs/internal/operators';
+import {Lookup} from '@model/lookup.model';
+import {CountryLookup} from '@model/country-lookup.model';
+import {ApplicantCardSearchCriteria} from '@model/applicant-card-search-criteria.model';
+import {StaffCardSearchCriteria} from '@model/staff-card-search-criteria.model';
+import {CompanyLite} from '@model/company-lite.model';
+import {CompanyStaffCard} from '@app/_shared/model/staff-card.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CardService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   searchCardsToPrint(
     uin: any,
@@ -201,6 +202,8 @@ export class CardService {
     uin: any,
     companyCode: any,
     nationality: any,
+    seasonYear: any,
+    ritualCode: any,
     excludedCardsIds,
     pageNumber: any
   ): Observable<any> {
@@ -210,12 +213,16 @@ export class CardService {
     }
     return this.http.get(
       '/core/api/staff-cards/list/ready-to-print/' +
-        (uin ? uin : -1) +
-        '/' +
-        (companyCode ? companyCode : -1) +
-        '/' +
-        (nationality ? nationality : -1),
-      { params: params }
+      (uin ? uin : -1) +
+      '/' +
+      (companyCode ? companyCode : -1) +
+      '/' +
+      (nationality ? nationality : -1) +
+      '/' +
+      (seasonYear ? seasonYear : -1) +
+      '/' +
+      (ritualCode ? ritualCode : -1),
+      {params: params}
     );
   }
 
@@ -223,6 +230,8 @@ export class CardService {
     uin: any,
     companyCode: any,
     nationality: any,
+    seasonYear: any,
+    ritualCode: any,
     excludedCardsIds
   ): Observable<any> {
     let params = new HttpParams();
@@ -231,12 +240,16 @@ export class CardService {
     }
     return this.http.get(
       '/core/api/staff-cards/list/ready-to-print/all/' +
-        (uin ? uin : -1) +
-        '/' +
-        (companyCode ? companyCode : -1) +
-        '/' +
-        (nationality ? nationality : -1),
-      { params: params }
+      (uin ? uin : -1) +
+      '/' +
+      (companyCode ? companyCode : -1) +
+      '/' +
+      (nationality ? nationality : -1) +
+      '/' +
+      (seasonYear ? seasonYear : -1) +
+      '/' +
+      (ritualCode ? ritualCode : -1),
+      {params: params}
     );
   }
 

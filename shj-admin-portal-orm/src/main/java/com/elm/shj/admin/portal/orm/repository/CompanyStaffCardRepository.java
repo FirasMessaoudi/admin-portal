@@ -3,17 +3,14 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,15 +39,19 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
             "and (c.id NOT IN(select p.cardId from JpaPrintRequestCard p where p.printRequest.statusCode <> :printRequestStatus or c.statusCode <> :cardStatus)) " +
             "and (c.companyStaffDigitalId.suin LIKE '%'+:uin+'%' OR :uin IS NULL)" +
             "and (c.companyRitualSeason.company.code = :companyCode OR :companyCode IS NULL)" +
-            "and (c.companyStaffDigitalId.companyStaff.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
-    List<JpaCompanyStaffCard> findAllPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus, @Param("uin") String uin, @Param("companyCode") String companyCode, @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds);
+            "and (c.companyStaffDigitalId.companyStaff.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)" +
+            "and (c.companyRitualSeason.ritualSeason.seasonYear = :seasonYear OR :seasonYear IS NULL)" +
+            "and (c.companyRitualSeason.ritualSeason.ritualTypeCode = :ritualCode OR :ritualCode IS NULL)")
+    List<JpaCompanyStaffCard> findAllPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus, @Param("uin") String uin, @Param("companyCode") String companyCode, @Param("nationalityCode") String nationalityCode, @Param("seasonYear") int seasonYear, @Param("ritualCode") String ritualCode, @Param("excludedCardsIds") List<Long> excludedCardsIds);
 
     @Query("select c from JpaCompanyStaffCard c where c.statusCode = :cardStatus and c.id NOT IN :excludedCardsIds " +
             "and (c.id NOT IN(select p.cardId from JpaPrintRequestCard p where p.printRequest.statusCode <> :printRequestStatus or c.statusCode <> :cardStatus)) " +
             "and (c.companyStaffDigitalId.suin LIKE '%'+:uin+'%' OR :uin IS NULL)" +
             "and (c.companyRitualSeason.company.code = :companyCode OR :companyCode IS NULL)" +
-            "and (c.companyStaffDigitalId.companyStaff.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
-    Page<JpaCompanyStaffCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus, @Param("uin") String uin, @Param("companyCode") String companyCode, @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds, Pageable pageable);
+            "and (c.companyStaffDigitalId.companyStaff.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)" +
+            "and (c.companyRitualSeason.ritualSeason.seasonYear = :seasonYear OR :seasonYear IS NULL)" +
+            "and (c.companyRitualSeason.ritualSeason.ritualTypeCode = :ritualCode OR :ritualCode IS NULL)")
+    Page<JpaCompanyStaffCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus, @Param("uin") String uin, @Param("companyCode") String companyCode, @Param("nationalityCode") String nationalityCode, @Param("seasonYear") int seasonYear, @Param("ritualCode") String ritualCode, @Param("excludedCardsIds") List<Long> excludedCardsIds, Pageable pageable);
 
     JpaCompanyStaffCard findByIdAndStatusCodeNot(long id, String statusCode);
 

@@ -2,12 +2,37 @@
   <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
   <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
 </a>
+<!-- ritual form -->
+<form [formGroup]="ritualForm" name="searchCard" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+  <div class="form-group col">
+    <label class="col-form-label">{{ "printing-management.season" | translate }}</label>
+    <select id="" season formControlName="seasonYear" class="custom-select">
+      <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+      <option *ngFor="let season of ritualSeasons" [ngValue]="season.seasonYear">
+        {{season.seasonYear}}
+      </option>
+    </select>
+  </div>
+  <div class="form-group col">
+    <label class="col-form-label">{{ "printing-management.ritual-type" | translate }}</label>
+    <select [disabled]="addedCards.length>0" id="ritualType" class="custom-select" formControlName="ritualCode">
+      <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+      <option *ngFor="let ritual of lookupService().localizedItems(ritualTypes)" [ngValue]="ritual.code">
+        {{ritual.label}}
+      </option>
+    </select>
+  </div>
+
+</form>
+
+<!-- end ritual form -->
 
 <div class="dashes flex-center-column my-5 p-5" *ngIf="addedCards.length === 0">
 
   <img class="my-5" src="assets/images/add-cards.jpg" alt='{{ "printing-management.new_request" | translate }}'>
 
-  <button name="addCards" class="btn btn-outline-dcc-primary px-4" (click)="openLg(showAdd)">
+  <button [disabled]="ritualForm.invalid" name="addCards" class="btn btn-outline-dcc-primary px-4"
+          (click)="openLg(showAdd)">
     {{ "printing-management.add_cards" | translate }}
   </button>
 
