@@ -90,6 +90,18 @@ public class ChatContactWsController {
     @PostMapping( "/create/{ritualId}")
     public ResponseEntity<WsResponse<?>> createApplicant(@PathVariable Long ritualId,
                                                          @RequestBody ApplicantChatContactDto contact) throws Exception {
+        if(contact.getAlias().length() > 50 || contact.getAlias().equals("") || null == contact.getAlias()){
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(ritualId.toString()).build()).build());
+        }
+        if(contact.getApplicantUin().equals("") || null == contact.getApplicantUin()){
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(contact.getApplicantUin()).build()).build());
+        }
+        if(contact.getContactUin().equals("") || null == contact.getContactUin()){
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND.getCode()).referenceNumber(contact.getContactUin()).build()).build());
+        }
         boolean isRitualPresent = applicantRitualService.exitsByRitualId(ritualId);
         if (!isRitualPresent) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())

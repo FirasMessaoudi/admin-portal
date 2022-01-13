@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.dto;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Dto class for the applicant company staff lite domain.
@@ -29,4 +30,7 @@ public class CompanyStaffLiteDto implements Serializable {
     private String mobileNumber;
     private String nationalityCode;
     private String photo;
+    private Date dateOfBirthGregorian;
+    private Long dateOfBirthHijri;
+    private String gender;
 }
