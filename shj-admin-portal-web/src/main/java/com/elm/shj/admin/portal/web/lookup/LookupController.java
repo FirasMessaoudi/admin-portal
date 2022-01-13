@@ -114,7 +114,7 @@ public class LookupController {
     @GetMapping("/print-batch-type/list")
     public List<PrintBatchTypeLookupDto> listPrintRequestBatchTypes(Authentication authentication) {
         log.debug("list print batch types...");
-        return printBatchTypeLookupService.findAll();
+        return printBatchTypeLookupService.findBatchTypeByTarget(EPrintingRequestTarget.APPLICANT.name());
     }
 
     //TODO: remove "label" word from the method name and replace underscore in URL by dash
@@ -249,6 +249,12 @@ public class LookupController {
         log.debug("list ritual seasons...");
         return ritualSeasonService.findAll();
 
+    }
+
+    @GetMapping("/staff-print-batch-type/list")
+    public List<PrintBatchTypeLookupDto> listStaffPrintRequestBatchTypes(Authentication authentication) {
+        log.debug("list print batch types...");
+        return printBatchTypeLookupService.findBatchTypeByTarget(EPrintingRequestTarget.STAFF.name());
     }
 
 

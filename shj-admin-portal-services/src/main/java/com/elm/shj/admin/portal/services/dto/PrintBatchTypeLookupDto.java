@@ -27,5 +27,6 @@ public class PrintBatchTypeLookupDto implements Serializable {
     private String labelAr;
     private String labelEn;
     private String code;
+    private String target;
     private Date creationDate;
 }

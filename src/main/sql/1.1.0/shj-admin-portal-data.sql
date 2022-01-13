@@ -383,9 +383,30 @@ insert into shc_portal.shc_role_authority (role_id, authority_id)
 values (1, 38);
 GO
 
-UPDATE shc_portal.shc_data_segment SET label_ar = REPLACE(label_ar, N'الرحمان', N'الرحمن') WHERE id > 0;
+UPDATE shc_portal.shc_data_segment
+SET label_ar = REPLACE(label_ar, N'الرحمان', N'الرحمن')
+WHERE id > 0;
 GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('incident.file.allowed.extensions', 'apng,avif,gif,jpeg,jpg,png,svg,webp,bmp,tiff,mp4,mov,wmv,avi,flv,avchd,mkv');
-INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('incident.file.allowed.max.size', '15');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('incident.file.allowed.max.size', '15');
 GO
+
+alter table shc_portal.shc_print_batch_type_lk
+    add target varchar(20) null;
+go
+
+update shc_portal.shc_print_batch_type_lk
+set shc_print_batch_type_lk.target ='APPLICANT'
+where id <= 5;
+Go
+SET IDENTITY_INSERT shc_portal.shc_print_batch_type_lk ON;
+
+insert into shc_portal.shc_print_batch_type_lk (id, label_ar, label_en, code, target)
+values (6, N'الجنسية', 'Nationality', 'STAFF_NATIONALITY', 'STAFF');
+insert into shc_portal.shc_print_batch_type_lk (id, label_ar, label_en, code, target)
+values (7, N'الشركة', 'Company', 'COMPANY', 'STAFF');
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_print_batch_type_lk OFF;

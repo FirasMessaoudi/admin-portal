@@ -2,13 +2,13 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {PrintRequest} from "@model/print-request.model";
 import {PrintBatchType} from "@model/print-batch-type.model";
 import {CountryLookup} from "@model/country-lookup.model";
-import {PrintService} from "@core/services/printing/print.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
 import {CardService} from "@core/services";
 import {LookupService} from "@core/utilities/lookup.service";
 import {StaffPrintRequestStorage} from "@pages/printing-management/staff-printing-request-add/staff-print-request-storage";
+import {StaffPrintService} from "@core/services/printing/staff-print.service";
 
 @Component({
   selector: 'app-staff-step-two',
@@ -39,7 +39,7 @@ export class StaffStepTwoComponent implements OnInit, OnChanges {
   @Output()
   public onChangeLoading: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private printService: PrintService,
+  constructor(private printService: StaffPrintService,
               private i18nService: I18nService,
               private toastr: ToastService,
               private translate: TranslateService,
@@ -95,7 +95,7 @@ export class StaffStepTwoComponent implements OnInit, OnChanges {
 
   batch() {
     this.onChangeLoading.emit(true);
-    this.printService.batchStaff(this.printRequest, this.selectedBatchTypes).subscribe(
+    this.printService.batch(this.printRequest, this.selectedBatchTypes).subscribe(
       result => {
         this.onChangeLoading.emit(false);
         if (result.hasOwnProperty("errors") && result.errors) {

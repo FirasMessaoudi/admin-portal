@@ -7,7 +7,7 @@ import {PrintBatchType} from "@model/print-batch-type.model";
 import {PrintRequest} from "@model/print-request.model";
 import {PrintRequestFilter} from "@model/print-request-filter.model";
 import {CompanyLite} from "@model/company-lite.model";
-import { Staff } from "@app/_shared/model/staff.model";
+import {Staff} from "@app/_shared/model/staff.model";
 
 /**
  * Provides a base for Staff printing operations.
@@ -87,7 +87,7 @@ export class StaffPrintService {
   }
 
   findPrintBatchTypes(): Observable<PrintBatchType[]> {
-    return this.http.get<any>('/core/api/lookup/print-batch-type/list');
+    return this.http.get<any>('/core/api/lookup/staff-print-batch-type/list');
   }
 
   batch(printRequest: PrintRequest, batchTypes): Observable<any> {

@@ -8,6 +8,6 @@ package com.elm.shj.admin.portal.services.dto;
  */
 public enum EPrintBatchType {
 
-    GROUP_LEADER, HAMLAH, FAWJ_NUMBER, NATIONALITY, MOTAWIF
+    GROUP_LEADER, HAMLAH, FAWJ_NUMBER, NATIONALITY, MOTAWIF, STAFF_NATIONALITY, COMPANY
 
 }

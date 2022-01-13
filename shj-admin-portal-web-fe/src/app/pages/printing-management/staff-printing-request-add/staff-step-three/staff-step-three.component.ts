@@ -3,7 +3,6 @@ import {PrintBatchType} from "@model/print-batch-type.model";
 import {CountryLookup} from "@model/country-lookup.model";
 import {BatchType} from "@model/enum/batch-type.enum";
 import {PrintRequest} from "@model/print-request.model";
-import {PrintService} from "@core/services/printing/print.service";
 import {Router} from "@angular/router";
 import {ToastService} from "@shared/components/toast";
 import {I18nService} from "@dcc-commons-ng/services";
@@ -12,6 +11,7 @@ import {LookupService} from "@core/utilities/lookup.service";
 import {AuthenticationService, CardService} from "@core/services";
 import {EAuthority} from "@shared/model";
 import {StaffPrintRequestStorage} from "@pages/printing-management/staff-printing-request-add/staff-print-request-storage";
+import {StaffPrintService} from "@core/services/printing/staff-print.service";
 
 @Component({
   selector: 'app-staff-step-three',
@@ -35,7 +35,7 @@ export class StaffStepThreeComponent implements OnInit, OnChanges {
   @Output()
   public onChangeLoading: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private printService: PrintService,
+  constructor(private printService: StaffPrintService,
               private router: Router,
               private toastr: ToastService,
               private i18nService: I18nService,
@@ -88,7 +88,7 @@ export class StaffStepThreeComponent implements OnInit, OnChanges {
     console.log("confirm batching");
     this.onChangeLoading.emit(true);
     this.printRequest.description = this.description;
-    this.printService.confirmStaff(this.printRequest).subscribe(result => {
+    this.printService.confirm(this.printRequest).subscribe(result => {
       this.onChangeLoading.emit(false);
       if (result.hasOwnProperty("errors") && result.errors) {
         console.log("Error");

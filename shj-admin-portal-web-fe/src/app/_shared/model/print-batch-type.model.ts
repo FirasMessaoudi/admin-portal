@@ -3,5 +3,6 @@ export class PrintBatchType {
   labelAr: string;
   labelEn: string;
   code: string;
+  target: string;
   creationDate: Date;
 }

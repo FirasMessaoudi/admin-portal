@@ -84,8 +84,11 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
                         } else {
                             CompanyStaffCardDto card = staffCardService.findOne(requestCard.getCardId());
                             selectedBatchTypes.forEach(type -> {
-                                if (type.equals(EPrintBatchType.NATIONALITY)) {
-                                    groupingByCriteriaList.add(String.valueOf(card.getCompanyRitualSeason().getRitualSeason().getSeasonYear()));
+                                if (type.equals(EPrintBatchType.STAFF_NATIONALITY)) {
+                                    groupingByCriteriaList.add(String.valueOf(card.getCompanyStaffDigitalId().getCompanyStaff().getNationalityCode()));
+                                }
+                                if (type.equals(EPrintBatchType.COMPANY)) {
+                                    groupingByCriteriaList.add(String.valueOf(card.getCompanyRitualSeason().getCompany().getCode()));
                                 }
                                 //TODO ADD THE REMAINING CRITERIA
                             });

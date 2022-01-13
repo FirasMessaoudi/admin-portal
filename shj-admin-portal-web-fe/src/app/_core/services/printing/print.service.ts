@@ -68,18 +68,6 @@ export class PrintService {
       }));
   }
 
-  preapreStaff(cardsIds: Number[]): Observable<any> {
-    return this.http.post<any>("/core/api/staff/print/requests/prepare", cardsIds).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.hasOwnProperty('error')) {
-          return of(error.error);
-        } else {
-          console.error('An error happen while preparing print request : ' + error);
-          return of(error);
-        }
-      }));
-  }
-
   findPrintRequestStatuses(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/print-request-status/list');
   }
@@ -104,21 +92,6 @@ export class PrintService {
       }));
   }
 
-  batchStaff(printRequest: PrintRequest, batchTypes): Observable<any> {
-    let params = new HttpParams();
-    if (batchTypes.length > 0) {
-      params = params.append("types", batchTypes.join(","));
-    }
-    return this.http.post<any>("/core/api/staff/print/requests/batch", printRequest, {params: params}).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.hasOwnProperty('error')) {
-          return of(error.error);
-        } else {
-          console.error('An error happen while batching print request : ' + error);
-          return of(error);
-        }
-      }));
-  }
 
   confirm(printRequest: PrintRequest) {
     return this.http.post<any>("/core/api/print/requests/confirm", printRequest).pipe(
@@ -132,15 +105,4 @@ export class PrintService {
       }));
   }
 
-  confirmStaff(printRequest: PrintRequest) {
-    return this.http.post<any>("/core/api/staff/print/requests/confirm", printRequest).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.hasOwnProperty('error')) {
-          return of(error.error);
-        } else {
-          console.error('An error happen while confirming print request : ' + error);
-          return of(error);
-        }
-      }));
-  }
 }

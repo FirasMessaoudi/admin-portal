@@ -81,9 +81,9 @@
                   <b>{{batch.printRequestBatchCards?.length}}</b> {{'printing-management.cards' | translate}}</span>
                 <span class="badge m-2 text-muted"
                       *ngFor="let requestBatch of batch.batchTypeCodes?.split(','); let i = index; let lastBatch = last;">
-                  {{currentLanguage.startsWith("en") ? getBatchType(batch.batchTypeCodes?.split(',')[i]).labelEn : getBatchType(batch.batchTypeCodes?.split(',')[i]).labelAr}}
+                  {{currentLanguage.startsWith("en") ? getBatchType(batch.batchTypeCodes?.split(',')[i])?.labelEn : getBatchType(batch?.batchTypeCodes?.split(',')[i])?.labelAr}}
                   :
-                  {{batch.batchTypeCodes?.split(',')[i] === batchType.NATIONALITY ? lookupService().localizedLabel(countries, batch.batchTypeValues?.split(',')[i]) : batch.batchTypeValues?.split(',')[i]}}
+                  {{batch.batchTypeCodes?.split(',')[i] === batchType.NATIONALITY ? lookupService().localizedLabel(countries, batch?.batchTypeValues?.split(',')[i]) : batch.batchTypeValues?.split(',')[i]}}
                   <span *ngIf="!lastBatch">,</span>
                 </span>
               </a>

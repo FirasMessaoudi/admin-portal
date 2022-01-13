@@ -8,11 +8,11 @@ import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CardService} from "@core/services";
 import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
-import {PrintService} from "@core/services/printing/print.service";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {NavigationService} from "@core/utilities/navigation.service";
 import {CompanyLite} from "@model/company-lite.model";
+import {StaffPrintService} from "@core/services/printing/staff-print.service";
 
 @Component({
   selector: 'app-staff-step-one',
@@ -57,7 +57,7 @@ export class StaffStepOneComponent implements OnInit {
               private cardService: CardService,
               private toastr: ToastService,
               private translate: TranslateService,
-              private printService: PrintService,
+              private printService: StaffPrintService,
               private lookupsService: LookupService,
               private formBuilder: FormBuilder,
               private i18nService: I18nService,
@@ -206,7 +206,7 @@ export class StaffStepOneComponent implements OnInit {
 
   create() {
     this.onChangeLoading.emit(true);
-    this.printService.preapreStaff(this.addedCards.map(card => card.id)).subscribe(
+    this.printService.preapre(this.addedCards.map(card => card.id)).subscribe(
       result => {
         if (result.hasOwnProperty("errors") && result.errors) {
           console.log("Error");

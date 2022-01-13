@@ -12,7 +12,7 @@
 
     <div class="form-control-plaintext text-dcc-primary">
       <div *ngFor="let type of batchTypes" class="custom-control custom-checkbox custom-control-inline">
-        <input type="checkbox" [disabled]="type.code != 'NATIONALITY'" class="custom-control-input"
+        <input type="checkbox" class="custom-control-input"
                id="batchType-{{clearSpaces(type.labelEn)}}"
                (change)="selectBatchType($event, type.code)">
         <label class="custom-control-label mx-3"

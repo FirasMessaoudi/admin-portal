@@ -23,7 +23,8 @@
 </div>
 
 <div class="bg-lighter mx-30 p-4 text-center">
-  <button name="viewRequestDetails" type="button" [routerLink]="['/print-requests/details', printRequest?.id]"
+  <button name="viewRequestDetails" type="button"
+          [routerLink]="['/staff-print-requests/staff-card-details', printRequest?.id]"
           class="btn btn-dcc-primary rounded-22 px-5 mr-3">{{'printing-management.btn_view_print_request_details' | translate}}</button>
   <button name="backToPrintManagement" type="button" routerLink="/staff-print-requests/list"
           class="btn btn-outline-dcc-primary rounded-22 px-5 mr-3">{{'printing-management.btn_back_to_printing_management' | translate}}</button>

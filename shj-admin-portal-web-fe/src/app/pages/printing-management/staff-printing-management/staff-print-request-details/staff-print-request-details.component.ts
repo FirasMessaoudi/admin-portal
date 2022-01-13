@@ -9,13 +9,13 @@ import {I18nService} from "@dcc-commons-ng/services";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
-import {PrintService} from "@core/services/printing/print.service";
 import {LookupService} from "@core/utilities/lookup.service";
 import {AuthenticationService, CardService} from "@core/services";
 import {NavigationService} from "@core/utilities/navigation.service";
 import {combineLatest} from "rxjs";
 import {map} from "rxjs/operators";
 import {EAuthority} from "@shared/model";
+import {StaffPrintService} from "@core/services/printing/staff-print.service";
 
 @Component({
   selector: 'app-staff-print-request-details',
@@ -41,7 +41,7 @@ export class StaffPrintRequestDetailsComponent implements OnInit {
               private router: Router,
               private toastr: ToastService,
               private translate: TranslateService,
-              private printService: PrintService,
+              private printService: StaffPrintService,
               private lookupsService: LookupService,
               private cardService: CardService,
               private authenticationService: AuthenticationService,
