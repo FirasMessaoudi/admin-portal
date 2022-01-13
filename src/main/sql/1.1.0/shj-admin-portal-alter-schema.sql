@@ -1210,3 +1210,7 @@ go
 alter table shc_portal.shc_company_staff_card
     add batch_number int;
 go
+
+alter table shc_portal.shc_print_batch_type_lk
+    add target varchar(20) null;
+go
