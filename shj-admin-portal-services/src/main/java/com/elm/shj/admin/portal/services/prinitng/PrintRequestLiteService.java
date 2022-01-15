@@ -69,11 +69,11 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
      */
     public Page<PrintRequestDto> findByFilter(PrintRequestCriteriaDto criteria, String target, Pageable pageable) {
         Page<PrintRequestDto> litePrintRequests = null;
+        List<PrintRequestDto> reFilteredList = new ArrayList<PrintRequestDto>();
         if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
             // at the time being, filter has only status code and description.
             litePrintRequests = mapPage(printRequestRepository.findAll(withApplicantPrintRequestFilter(criteria), pageable));
             if (criteria.getCardNumber() != null && criteria.getCardNumber().trim().length() > 0) {
-                List<PrintRequestDto> filteredList = new ArrayList<PrintRequestDto>();
                 litePrintRequests.forEach(p -> {
                     if (!p.getPrintRequestCards().stream().filter(c -> {
                         String cardNumber = applicantCardRepository.findById(c.getCardId()).get().getReferenceNumber();
@@ -81,15 +81,14 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
                     }).collect(Collectors.toList()).isEmpty()) {
                         p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
                         p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
-                        filteredList.add(p);
+                        reFilteredList.add(p);
                     }
                 });
-                log.debug(String.valueOf(filteredList.size()));
-                return new PageImpl<>(filteredList, pageable, filteredList.size());
+                log.debug(String.valueOf(reFilteredList.size()));
+                return new PageImpl<>(reFilteredList, pageable, reFilteredList.size());
             }
 
             if (criteria.getIdNumber() != null && criteria.getIdNumber().trim().length() > 0) {
-                List<PrintRequestDto> filteredList = new ArrayList<PrintRequestDto>();
                 litePrintRequests.forEach(p -> {
                     if (!p.getPrintRequestCards().stream().filter(c -> {
                         String idNumber = applicantCardRepository.findById(c.getCardId()).get().getApplicantRitual().getApplicant().getIdNumber();
@@ -97,11 +96,11 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
                     }).collect(Collectors.toList()).isEmpty()) {
                         p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
                         p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
-                        filteredList.add(p);
+                        reFilteredList.add(p);
                     }
                 });
-                log.debug(String.valueOf(filteredList.size()));
-                return new PageImpl<>(filteredList, pageable, filteredList.size());
+                log.debug(String.valueOf(reFilteredList.size()));
+                return new PageImpl<>(reFilteredList, pageable, reFilteredList.size());
             }
         } else {
             litePrintRequests = mapPage(printRequestRepository.findAll(withStaffPrintRequestFilter(criteria.getStatusCode(), criteria.getDescription()), pageable));
