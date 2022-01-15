@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
-import com.elm.shj.admin.portal.orm.entity.PrintRequestFilterVo;
 import com.elm.shj.admin.portal.services.company.CompanyService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -46,23 +45,23 @@ public class StaffPrintingManagementController {
      */
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.STAFF_PRINTING_REQUEST_MANAGEMENT + "')")
-    public Page<PrintRequestLiteDto> list(Pageable pageable, Authentication authentication) {
+    public Page<PrintRequestDto> list(Pageable pageable, Authentication authentication) {
         log.debug("List print requests based on search criteria...");
         return printRequestLiteService.findAll(EPrintingRequestTarget.STAFF.name(), pageable);
     }
 
-    /**
+    /*    *//**
      * List paginated print requests based on search criteria.
      *
      * @param pageable the page configuration for the pagination
      * @return the list of print requests
-     */
+     *//*
     @PostMapping("/list")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.STAFF_PRINTING_REQUEST_MANAGEMENT + "')")
     public Page<PrintRequestLiteDto> list(@RequestBody PrintRequestFilterVo filterVo, Pageable pageable, Authentication authentication) {
         log.debug("List print requests based on search criteria...");
         return printRequestLiteService.findByFilter(filterVo, EPrintingRequestTarget.STAFF.name(), pageable);
-    }
+    }*/
 
     /**
      * finds a print request by his ID
@@ -102,6 +101,19 @@ public class StaffPrintingManagementController {
     public PrintRequestDto confirm(@RequestBody PrintRequestDto printRequest) {
         log.debug("Confirming print request");
         return printRequestService.confirm(printRequest, EPrintingRequestTarget.STAFF.name());
+    }
+
+    /**
+     * List paginated print requests based on search criteria.
+     *
+     * @param pageable the page configuration for the pagination
+     * @return the list of print requests
+     */
+    @PostMapping("/list")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.STAFF_PRINTING_REQUEST_MANAGEMENT + "')")
+    public Page<PrintRequestDto> list(@RequestBody PrintRequestCriteriaDto criteria, Pageable pageable, Authentication authentication) {
+        log.debug("List print requests based on search criteria...");
+        return printRequestLiteService.findByFilter(criteria, EPrintingRequestTarget.STAFF.name(), pageable);
     }
 
 

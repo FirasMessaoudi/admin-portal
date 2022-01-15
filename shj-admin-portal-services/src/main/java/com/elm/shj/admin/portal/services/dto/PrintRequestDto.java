@@ -32,6 +32,8 @@ public class PrintRequestDto implements Serializable {
     private Set<PrintRequestCardDto> printRequestCards = new HashSet<>();
     private Set<PrintRequestBatchDto> printRequestBatches = new HashSet<>();
     private String target;
+    private int cardsCount;
+    private int batchesCount;
     private Date creationDate;
     private Date updateDate;
     private Date confirmationDate;

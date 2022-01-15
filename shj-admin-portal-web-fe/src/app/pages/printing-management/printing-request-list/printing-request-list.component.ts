@@ -1,13 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {EAuthority, Page} from "@shared/model";
 import {AuthenticationService} from "@core/services";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {AbstractControl,FormBuilder, FormGroup} from "@angular/forms";
 import {PrintService} from "@core/services/printing/print.service";
 import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {PrintRequestLite} from "@model/print-request-card-lite.model";
+import { DateType } from '@app/_shared/modules/hijri-gregorian-datepicker/consts';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-printing-request-list',
@@ -22,6 +24,9 @@ export class PrintingRequestListComponent implements OnInit {
   searchForm: FormGroup;
   printRequestStatuses: Lookup[];
   localizedPrintRequestStatuses: Lookup[];
+  selectedDateType: DateType;
+  todayGregorian: NgbDateStruct;
+  todayHijri: NgbDateStruct;
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
@@ -41,8 +46,15 @@ export class PrintingRequestListComponent implements OnInit {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
+      requestNumber: [''],
       statusCode: [null],
-      description: ['']
+      description: [''],
+      fromDate: null,
+      toDate: null,
+      batchNumber: [''],
+      cardNumber: [''],
+      idNumber: [''],
+
     });
   }
 
@@ -60,6 +72,19 @@ export class PrintingRequestListComponent implements OnInit {
       this.printRequestStatuses = result;
       this.localizedPrintRequestStatuses = this.lookupsService.localizedItems(this.printRequestStatuses);
     });
+  }
+
+  setSelectedDateType(event: DateType) {
+    this.selectedDateType = event;
+  }
+
+  
+  get f() {
+    return this.searchForm.controls;
+  }
+
+  patchValue(event: Date, c: AbstractControl) {
+    c.setValue(event);
   }
 
   lookupService(): LookupService {
@@ -97,6 +122,7 @@ export class PrintingRequestListComponent implements OnInit {
   }
 
   search(): void {
+    console.log(this.searchForm.value);
     if (!this.searchForm.value.statusCode) {
       this.loadPage(0);
       return;
