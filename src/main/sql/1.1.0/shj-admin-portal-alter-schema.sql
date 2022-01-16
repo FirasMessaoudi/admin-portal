@@ -213,6 +213,7 @@ CREATE TABLE shc_portal.shc_package_catering
     type               varchar(45) NULL,
     description_ar     nvarchar(250) NULL,
     description_en     varchar(125) NULL,
+    is_default         bit          NULL DEFAULT 0,
     creation_date      smalldatetime NOT NULL DEFAULT current_timestamp,
     update_date        smalldatetime NULL,
     CONSTRAINT fk_shc_package_catering_housing FOREIGN KEY (package_housing_id) REFERENCES shc_portal.shc_package_housing (id)
@@ -245,7 +246,6 @@ CREATE TABLE shc_portal.shc_applicant_package_catering
     ritual_package_catering_id int           NOT NULL,
     option_ar                  nvarchar(250) NULL,
     option_en                  varchar(125)  NULL,
-    is_default                 bit           NOT NULL DEFAULT 0,
     creation_date              smalldatetime NOT NULL DEFAULT current_timestamp,
     update_date                smalldatetime NULL,
     CONSTRAINT fk_shc_applicant_package_catering_ritual_catering FOREIGN KEY (ritual_package_catering_id) REFERENCES shc_portal.shc_package_catering (id),
@@ -1214,3 +1214,9 @@ go
 alter table shc_portal.shc_print_batch_type_lk
     add target varchar(20) null;
 go
+
+ALTER TABLE shc_portal.shc_applicant_ritual ADD package_reference_number VARCHAR(45);
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD package_reference_number VARCHAR(45);
+GO
