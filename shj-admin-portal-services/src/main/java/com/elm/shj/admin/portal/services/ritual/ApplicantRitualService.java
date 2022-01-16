@@ -82,8 +82,9 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
         return mapList(applicantRitualRepository.findAllByApplicantId(id));
     }
 
-    public boolean exitsByRitualId(Long applicantRitualId){
-        return applicantRitualRepository.existsById(applicantRitualId);
+    public boolean findByRitualIdAndApplicantUin(Long applicantRitualId, String uin){
+        JpaApplicantRitual ritual = applicantRitualRepository.findCardDetailsByUinAndRitualId(uin, applicantRitualId);
+        return ritual != null ? true : false;
     }
 
     /**
