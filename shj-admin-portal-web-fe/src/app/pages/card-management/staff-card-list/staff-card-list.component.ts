@@ -48,7 +48,7 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
 
   loadLookups() {
     this.cardService.findRitualTypes().subscribe(result => {
-     this.ritualTypes = result.filter(ritualType => ritualType.code === 'INTERNAL_HAJJ' );
+     this.ritualTypes = result;
     });
     this.cardService.findCardStatuses().subscribe(result => {
       this.cardStatuses = result;
