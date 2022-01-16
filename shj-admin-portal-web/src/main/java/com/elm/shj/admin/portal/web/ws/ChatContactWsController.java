@@ -102,7 +102,7 @@ public class ChatContactWsController {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND.getCode()).referenceNumber(contact.getContactUin()).build()).build());
         }
-        boolean isRitualPresent = applicantRitualService.exitsByRitualId(ritualId);
+        boolean isRitualPresent = applicantRitualService.findByRitualIdAndApplicantUin(ritualId, contact.getApplicantUin());
         if (!isRitualPresent) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_RITUAL_NOT_FOUND.getCode()).referenceNumber(ritualId.toString()).build()).build());
