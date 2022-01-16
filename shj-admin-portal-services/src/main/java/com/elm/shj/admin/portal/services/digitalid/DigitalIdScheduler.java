@@ -55,13 +55,15 @@ public class DigitalIdScheduler {
                     .build());
 
             // create applicant package
-            ApplicantPackageDto savedApplicantPackage = applicantPackageService.createApplicantPackage(applicant.getPackageReferenceNumber(), Long.parseLong(applicantDigitalId.getUin()));
+            ApplicantPackageDto savedApplicantPackage = null;
 
             //create or update applicant ritual;
             ApplicantRitualDto applicantRitual = applicantRitualService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), applicant.getPackageReferenceNumber());
             if (applicantRitual != null) {
+                savedApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantDigitalId.getUin()));
                 applicantRitual.setApplicantPackage(savedApplicantPackage);
             } else {
+                savedApplicantPackage = applicantPackageService.createApplicantPackage(applicant.getPackageReferenceNumber(), Long.parseLong(applicantDigitalId.getUin()));
                 applicantRitual = ApplicantRitualDto.builder().applicant(applicant).applicantPackage(savedApplicantPackage).packageReferenceNumber(applicant.getPackageReferenceNumber()).build();
             }
             applicantRitual = applicantRitualService.save(applicantRitual);
