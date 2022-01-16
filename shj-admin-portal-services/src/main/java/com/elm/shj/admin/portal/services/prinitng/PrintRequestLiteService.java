@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.prinitng;
 
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.dto.EPrintingRequestTarget;
@@ -77,9 +78,9 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
             if (criteria.getCardNumber() != null && criteria.getCardNumber().trim().length() > 0 && criteria.getIdNumber() != null && criteria.getIdNumber().trim().length() > 0) {
                 litePrintRequests.forEach(p -> {
                     if (!p.getPrintRequestCards().stream().filter(c -> {
-                        String idNumber = applicantCardRepository.findById(c.getCardId()).get().getApplicantRitual().getApplicant().getIdNumber();
+                        List<JpaApplicantDigitalId> idNumbersList = applicantCardRepository.findById(c.getCardId()).get().getApplicantRitual().getApplicant().getDigitalIds();
                         String cardNumber = applicantCardRepository.findById(c.getCardId()).get().getReferenceNumber();
-                        return cardNumber != null && Objects.equals(cardNumber, criteria.getCardNumber()) && idNumber != null && Objects.equals(idNumber, criteria.getIdNumber());
+                        return cardNumber != null && Objects.equals(cardNumber, criteria.getCardNumber()) && idNumbersList != null && idNumbersList.stream().filter(o -> o.getUin().equals(criteria.getIdNumber())).findFirst().isPresent();
                     }).collect(Collectors.toList()).isEmpty()) {
                         p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
                         p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
@@ -108,8 +109,8 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
             if (criteria.getIdNumber() != null && criteria.getIdNumber().trim().length() > 0) {
                 litePrintRequests.forEach(p -> {
                     if (!p.getPrintRequestCards().stream().filter(c -> {
-                        String idNumber = applicantCardRepository.findById(c.getCardId()).get().getApplicantRitual().getApplicant().getIdNumber();
-                        return idNumber != null && Objects.equals(idNumber, criteria.getIdNumber());
+                        List<JpaApplicantDigitalId> idNumbersList = applicantCardRepository.findById(c.getCardId()).get().getApplicantRitual().getApplicant().getDigitalIds();
+                        return idNumbersList != null && idNumbersList.stream().filter(o -> o.getUin().equals(criteria.getIdNumber())).findFirst().isPresent();
                     }).collect(Collectors.toList()).isEmpty()) {
                         p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
                         p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
