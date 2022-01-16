@@ -64,6 +64,9 @@ public class JpaApplicantRitual implements Serializable {
     @JoinColumn(name = "applicant_package_id")
     private JpaApplicantPackage applicantPackage;
 
+    @Column(name = "package_reference_number")
+    private String packageReferenceNumber;
+
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "applicantRitual")
     private Set<JpaApplicantRelative> relatives;
@@ -75,6 +78,7 @@ public class JpaApplicantRitual implements Serializable {
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE} ,  mappedBy = "applicantRitual")
     private Set<JpaApplicantHealth>  applicantHealths;
+
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "applicantRitual")
     private Set<JpaApplicantIncident> applicantIncidents;
