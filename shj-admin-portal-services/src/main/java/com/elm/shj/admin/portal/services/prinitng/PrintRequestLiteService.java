@@ -73,6 +73,23 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
         if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
             // at the time being, filter has only status code and description.
             litePrintRequests = mapPage(printRequestRepository.findAll(withApplicantPrintRequestFilter(criteria), pageable));
+
+            if (criteria.getCardNumber() != null && criteria.getCardNumber().trim().length() > 0 && criteria.getIdNumber() != null && criteria.getIdNumber().trim().length() > 0) {
+                litePrintRequests.forEach(p -> {
+                    if (!p.getPrintRequestCards().stream().filter(c -> {
+                        String idNumber = applicantCardRepository.findById(c.getCardId()).get().getApplicantRitual().getApplicant().getIdNumber();
+                        String cardNumber = applicantCardRepository.findById(c.getCardId()).get().getReferenceNumber();
+                        return cardNumber != null && Objects.equals(cardNumber, criteria.getCardNumber()) && idNumber != null && Objects.equals(idNumber, criteria.getIdNumber());
+                    }).collect(Collectors.toList()).isEmpty()) {
+                        p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
+                        p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
+                        reFilteredList.add(p);
+                    }
+                });
+                log.debug(String.valueOf(reFilteredList.size()));
+                return new PageImpl<>(reFilteredList, pageable, reFilteredList.size());
+            }
+
             if (criteria.getCardNumber() != null && criteria.getCardNumber().trim().length() > 0) {
                 litePrintRequests.forEach(p -> {
                     if (!p.getPrintRequestCards().stream().filter(c -> {
