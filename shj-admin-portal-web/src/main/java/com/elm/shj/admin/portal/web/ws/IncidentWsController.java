@@ -86,13 +86,15 @@ public class IncidentWsController {
                                                 @RequestPart(value = "attachment", required = false) MultipartFile incidentAttachment) throws Exception {
 
         log.info("adding  applicant incident");
-        //validate file type, allow only images and video
-        if(incidentAttachment != null && !applicantIncidentLiteService.validateFileExtension(incidentAttachment.getOriginalFilename())){
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_FILE_EXTENSION.getCode()).build()).build());
-        }
-        //validate file size, max size is allowed 15MB
-        if(incidentAttachment != null && !applicantIncidentLiteService.validateFileSize(incidentAttachment.getSize() / (1024 * 1024))){
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.ExCEED_MAX_SIZE.getCode()).build()).build());
+        if(incidentAttachment != null) {
+            //validate file type, allow only images and video
+            if (!incidentAttachment.getOriginalFilename().equals("") && !applicantIncidentLiteService.validateFileExtension(incidentAttachment.getOriginalFilename())) {
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_FILE_EXTENSION.getCode()).build()).build());
+            }
+            //validate file size, max size is allowed 15MB
+            if (!incidentAttachment.getOriginalFilename().equals("") && !applicantIncidentLiteService.validateFileSize(incidentAttachment.getSize() / (1024 * 1024))) {
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.ExCEED_MAX_SIZE.getCode()).build()).build());
+            }
         }
         // validate latitude cordinates, it should be between -90 and +90
         if(applicantIncidentRequest.getLocationLat().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLat().intValue() > MAX_GEO_CORDINATES){
