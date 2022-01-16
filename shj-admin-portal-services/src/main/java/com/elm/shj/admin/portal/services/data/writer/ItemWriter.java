@@ -451,7 +451,7 @@ public class ItemWriter {
                             // if yes then create a new applicant package and link it with the applicant ritual
                             String applicantUin = digitalIdService.findApplicantUin(applicant.getId());
                             if (applicantUin != null && !applicantUin.isEmpty()) {
-                                ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicant.getPackageReferenceNumber(), Long.parseLong(applicantUin));
+                                ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantUin));
                                 applicantRitual.setApplicantPackage(createdApplicantPackage);
                             }
                             if (CollectionUtils.isNotEmpty(applicantRitual.getContacts())) {

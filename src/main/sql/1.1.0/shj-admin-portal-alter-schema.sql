@@ -1220,3 +1220,6 @@ GO
 
 ALTER TABLE shc_portal.shc_applicant ADD package_reference_number VARCHAR(45);
 GO
+
+EXEC sp_rename 'shc_portal.shc_applicant.package_reference_number', 'first_package_reference_number', 'COLUMN';
+GO
