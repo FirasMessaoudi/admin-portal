@@ -36,7 +36,9 @@ public class ApplicantRitualDto implements Serializable {
     }
 
     private long id;
+
     private ApplicantDto applicant;
+
     private ApplicantPackageDto applicantPackage;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
@@ -74,7 +76,9 @@ public class ApplicantRitualDto implements Serializable {
     private String seatNumber;
 
     private Date creationDate;
+
     private Date updateDate;
+
     private DataRequestRecordDto dataRequestRecord;
 
     // used in data requests either through file upload or integration
@@ -83,7 +87,10 @@ public class ApplicantRitualDto implements Serializable {
     private ApplicantBasicInfoDto applicantBasicInfo;
 
     private Set<ApplicantContactDto> contacts;
+
     private Set<ApplicantRelativeDto> relatives;
+
     private Set<ApplicantHealthDto> applicantHealths;
+
     private String typeCode;
 }

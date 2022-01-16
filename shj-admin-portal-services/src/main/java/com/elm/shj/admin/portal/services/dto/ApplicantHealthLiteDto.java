@@ -35,5 +35,4 @@ public class ApplicantHealthLiteDto implements Serializable {
     private List<ApplicantHealthImmunizationLiteDto> immunizations;
     private Boolean hasSpecialNeeds;
     private String insurancePolicyNumber;
-
 }

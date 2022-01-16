@@ -20,7 +20,6 @@ import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -407,7 +406,7 @@ public class IntegrationWsController {
     @GetMapping("/package/catering/{uin}/{applicantPackageId}")
     public ResponseEntity<WsResponse<?>> findApplicantPackageCatering(@PathVariable String uin, @PathVariable long applicantPackageId) {
         log.debug("Handler for {}", "Find package Catering  by uin");
-        List<ApplicantPackageCateringDto> packageCateringDtoList = ritualPackageService.findPackageCateringFromRitualPackage(Long.parseLong(uin), applicantPackageId);
+        List<ApplicantPackageCateringDto> packageCateringDtoList = applicantPackageService.findPackageCateringFromRitualPackage(Long.parseLong(uin), applicantPackageId);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(packageCateringDtoList).build());
     }
 

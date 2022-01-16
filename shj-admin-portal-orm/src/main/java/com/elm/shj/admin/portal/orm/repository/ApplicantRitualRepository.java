@@ -28,8 +28,12 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
 
     Optional<JpaApplicantRitual> findByApplicantDigitalIdsUinAndApplicantPackageId(String uin, Long applicantPackageId);
 
-    JpaApplicantRitual findByApplicantDigitalIdsUinAndApplicantPackageRitualPackageCompanyRitualSeasonId(String uin, Long companyRitualSeasonId);
-
     List<JpaApplicantRitual> findAllByApplicantId(Long id);
+
+    JpaApplicantRitual findFirstByApplicantIdOrderByCreationDateDesc(long id);
+
+    JpaApplicantRitual findByApplicantIdAndApplicantPackageRitualPackageReferenceNumber(long applicantId, String referenceNumber);
+
+    JpaApplicantRitual findByApplicantIdAndPackageReferenceNumber(long applicantId, String referenceNumber);
 
 }

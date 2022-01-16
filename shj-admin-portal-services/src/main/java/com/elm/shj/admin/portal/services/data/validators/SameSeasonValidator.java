@@ -7,11 +7,9 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
-import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
-import com.elm.shj.admin.portal.services.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
@@ -25,6 +23,7 @@ import java.util.Optional;
  * @since 1.1.0
  */
 public class SameSeasonValidator implements ConstraintValidator<SameSeason, Object> {
+
     @Autowired
     private CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     @Autowired
@@ -33,7 +32,6 @@ public class SameSeasonValidator implements ConstraintValidator<SameSeason, Obje
     private ApplicantService applicantService;
     @Autowired
     private ApplicantDigitalIdRepository applicantDigitalIdRepository;
-
     @Autowired
     private CompanyStaffDigitalIdService companyStaffDigitalIdService;
 
@@ -67,9 +65,6 @@ public class SameSeasonValidator implements ConstraintValidator<SameSeason, Obje
                 }
             }
         }
-
         return false;
-
     }
-
 }

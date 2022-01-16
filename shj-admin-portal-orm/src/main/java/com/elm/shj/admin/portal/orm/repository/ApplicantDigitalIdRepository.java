@@ -26,4 +26,7 @@ public interface ApplicantDigitalIdRepository extends JpaRepository<JpaApplicant
 
     JpaApplicantDigitalId findByApplicantId(long applicantId);
 
+    @Query("SELECT adi.uin FROM JpaApplicantDigitalId adi WHERE adi.applicantId = :applicantId AND adi.statusCode = :statusCode")
+    String findUinByApplicantIdAndStatusCode(@Param("applicantId") long applicantId, @Param("statusCode") String statusCode);
+
 }

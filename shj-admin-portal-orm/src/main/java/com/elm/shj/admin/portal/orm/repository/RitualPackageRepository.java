@@ -2,6 +2,8 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaRitualPackage;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -13,20 +15,9 @@ import java.util.Optional;
  */
 public interface RitualPackageRepository extends JpaRepository<JpaRitualPackage, Long> {
 
-
     Optional<JpaRitualPackage> findByReferenceNumber(String referenceNumber);
 
-    Optional<JpaRitualPackage> findByApplicantPackagesApplicantUinAndCompanyRitualSeasonId(long uin,long companyRitualSeasonId);
+    @Query("SELECT rp.id FROM JpaRitualPackage rp WHERE rp.referenceNumber = :referenceNumber")
+    Long findIdByReferenceNumber(@Param("referenceNumber") String referenceNumber);
 
-   /* @Query("SELECT ritualPackage FROM JpaRitualPackage ritualPackage " +
-            "join ritualPackage.companyRitualSeason companyRitualSeason " +
-            "JOIN ritualPackage.applicantPackages  applicantPackages " +
-            "JOIN ritualPackage.packageHousings packageHousings " +
-            "JOIN packageHousings.packageCatering packageCatering " +
-            "LEFT JOIN packageCatering.applicantPackageCaterings applicantPackageCaterings " +
-            "ON applicantPackageCaterings.packageCatering.id = packageCatering.id " +
-            "AND applicantPackageCaterings.applicantPackage.id = applicantPackages.id " +
-            "WHERE companyRitualSeason.id = :companyRitualSeasonId " +
-            "AND applicantPackages.applicantUin = :uin")
-    Optional<JpaRitualPackage> findByApplicantPackagesApplicantUinAndCompanyRitualSeasonIdNew(@Param("uin") long uin,@Param("companyRitualSeasonId") long companyRitualSeasonId);*/
 }

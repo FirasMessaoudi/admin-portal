@@ -6,7 +6,6 @@ package com.elm.shj.admin.portal.services.data.writer;
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthSpecialNeeds;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
@@ -65,10 +64,8 @@ public class ItemWriter {
     private final ApplicationContext context;
     private final ApplicantService applicantService;
     private final ApplicantGroupService applicantGroupService;
-    private final ApplicantHealthRepository applicantHealthRepository;
     private final ApplicantHealthSpecialNeedsRepository applicantHealthSpecialNeedsRepository;
     private final DataRequestRecordRepository dataRequestRecordRepository;
-    private final DigitalIdService digitalIdService;
     private final ApplicantPackageService applicantPackageService;
     private final RitualPackageService ritualPackageService;
     private final ApplicantPackageTransportationService applicantPackageTransportationService;
@@ -81,7 +78,8 @@ public class ItemWriter {
     private final CompanyRitualSeasonService companyRitualSeasonService;
     private final ApplicantChatContactService applicantChatContactService;
     private final ApplicantRelativeService applicantRelativeService;
-
+    private final ApplicantHealthService applicantHealthService;
+    private final DigitalIdService digitalIdService;
 
     /**
      * Populates the registry
@@ -128,6 +126,7 @@ public class ItemWriter {
                 ApplicantDto applicantDto = getApplicantFromEmergency(emergencyDto);
                 ApplicantRitualEmergencyDto applicantRitualEmergencyDto = emergencyDto.getApplicantRitualEmergencyDto();
                 updateNestedApplicantInfo(applicantDto, Collections.emptyList(), applicantRitualEmergencyDto.getBusNumber(), applicantRitualEmergencyDto.getSeatNumber());
+                // create applicant ritual and update applicant
                 updateApplicantRitualInfo(applicantDto, applicantRitualEmergencyDto);
                 S savedApplicant = (S) applicantRepository.save(mapperRegistry.get(EDataSegment.APPLICANT_DATA).toEntity(applicantDto, mappingContext));
                 savedItems.add(savedApplicant);
@@ -223,9 +222,8 @@ public class ItemWriter {
             });
         } else {
             if (dataSegment.getId() == EDataSegment.APPLICANT_RELATIVES_DATA.getId()) {
-                handleApplicantRelativeInfo(items);//.collect(Collectors.toList()))
+                handleApplicantRelativeInfo(items);
                 return dataValidationResults;
-                // items.forEach(entry -> updateNestedApplicantInfoRelative(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
             } else if (dataSegment.getId() < EDataSegment.STAFF_MAIN_DATA.getId()) {
                 // update applicant related attributes
                 items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
@@ -371,49 +369,16 @@ public class ItemWriter {
                 applicant.setDigitalIds(existingApplicant.getDigitalIds());
                 applicant.setRituals(applicantRitualService.findAllByApplicantId(existingApplicant.getId()));
                 applicant.setRelatives(existingApplicant.getRelatives());
-                applicant.setCreationDate(existingApplicant.getCreationDate());
-
-            } else {
-                applicant.setDigitalIds(Arrays.asList(ApplicantDigitalIdDto.builder().uin(digitalIdService.generate(applicant)).applicantId(applicant.getId()).build()));
-                applicant.getDigitalIds().get(0).setStatusCode(EDigitalIdStatus.VALID.name());
-            }
-            Long applicantUin = Long.parseLong(applicant.getDigitalIds().get(0).getUin());
-
-            // this case is for emergency data to insert bus number and seat number in applicant package transportation
-            if (busAndSeatNumbers.length > 0) {
-                ApplicantRitualDto applicantRitualDto = addRitualPackageToApplicant(applicant, applicantUin, applicant.getPackageReferenceNumber(), busAndSeatNumbers[0], busAndSeatNumbers[1]);
-                if (existingApplicant != null) {
-                    applicant.getRituals().add(applicantRitualDto);
-                } else {
-                    applicant.setRituals(Arrays.asList(applicantRitualDto));
-                }
-                if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
-                    applicant.getContacts().forEach(sn -> {
-                        sn.setApplicant(applicant);
-                        sn.setApplicantRitual(applicantRitualDto);
-                    });
-                }
-                // digital id will bw generated automatically by the scheduler
-
-            }
-            // this case is for applicant data upload
-            else {
-                ApplicantRitualDto applicantRitualDto = addRitualPackageToApplicant(applicant, applicantUin, applicant.getPackageReferenceNumber(), null, null);
-                if (existingApplicant != null) {
-                    applicant.getRituals().add(applicantRitualDto);
-                } else {
-                    applicant.setRituals(Arrays.asList(applicantRitualDto));
-                }
-                if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
-                    applicant.getContacts().forEach(sn -> {
-                        sn.setApplicant(applicant);
-                        sn.setApplicantRitual(applicantRitualDto);
-                    });
-                }
-            }
-            //add existing contacts to new contact
-            if (existingApplicant != null) {
                 applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicant.getId()));
+                applicant.setCreationDate(existingApplicant.getCreationDate());
+            }
+            // this case is for emergency data to insert bus number and seat number in applicant package transportation
+
+            // this case is for applicant data upload
+            if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
+                applicant.getContacts().forEach(ac -> {
+                    ac.setApplicant(applicant);
+                });
             }
         }
 
@@ -440,18 +405,14 @@ public class ItemWriter {
             // search applicant by his basic info from the database
             ApplicantDto applicant = applicantService.findByBasicInfo(applicantBasicInfo);
             if (applicant != null) {
-
-
                 if (applicantField != null) {
                     // make fields accessible
                     ReflectionUtils.makeAccessible(applicantField);
                     // set the found applicant into the object
                     applicantField.set(item, applicant);
-
                 }
 
                 if (packageReferenceNumberField != null) {
-
                     String seatNumber = null;
                     String busNumber = null;
 
@@ -470,24 +431,42 @@ public class ItemWriter {
 
                     ReflectionUtils.makeAccessible(packageReferenceNumberField);
                     String packageReferenceNumber = (String) packageReferenceNumberField.get(item);
-                    Long applicantUin = Long.parseLong(applicant.getDigitalIds().get(0).getUin());
-                    ApplicantRitualDto generatedApplicantRitual = addRitualPackageToApplicant(applicant, applicantUin, packageReferenceNumber, busNumber, seatNumber);
+
+                    ApplicantRitualDto savedApplicantRitual = applicantRitualService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
 
                     if (item.getClass().isAssignableFrom(ApplicantRitualDto.class)) {
-
                         ApplicantRitualDto applicantRitual = (ApplicantRitualDto) item;
-                        applicantRitual.setId(generatedApplicantRitual.getId());
-                        applicantRitual.setApplicantPackage(generatedApplicantRitual.getApplicantPackage());
-                        applicantRitual.setCreationDate(generatedApplicantRitual.getCreationDate());
+                        applicantRitual.setApplicant(applicant);
+                        applicantRitual.setContacts(new HashSet<>(applicant.getContacts()));
+                        //check if applicant ritual was created before by the digital id scheduler
+                        if (savedApplicantRitual != null) {
+                            applicantRitual.setId(savedApplicantRitual.getId());
+                            applicantRitual.setCreationDate(savedApplicantRitual.getCreationDate());
+                            applicantRitual.setApplicantPackage(savedApplicantRitual.getApplicantPackage());
+                            //set applicant ritual id for applicant contacts
+                            applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
+                            // TODO: update existing applicant health and relatives and set applicant ritual
+                        } else {
+                            // applicant ritual not created before, check if digital id is exists,
+                            // if yes then create a new applicant package and link it with the applicant ritual
+                            String applicantUin = digitalIdService.findApplicantUin(applicant.getId());
+                            if (applicantUin != null && !applicantUin.isEmpty()) {
+                                ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicant.getPackageReferenceNumber(), Long.parseLong(applicantUin));
+                                applicantRitual.setApplicantPackage(createdApplicantPackage);
+                            }
+                            if (CollectionUtils.isNotEmpty(applicantRitual.getContacts())) {
+                                applicantRitual.getContacts().forEach(ac -> {
+                                    ac.setApplicantRitual(applicantRitual);
+                                });
+                            }
+                            // TODO: loop over applicant health and relatives and set applicant ritual
+                        }
 
-//                        if (applicantRitual.getGroupReferenceNumber() != null) {
-//                            groupApplicantListService.registerUserToGroup(applicantUin.toString(), applicantRitual.getGroupReferenceNumber());
-//                        }
                     }
 
                     if (applicantRitualField != null) {
                         ReflectionUtils.makeAccessible(applicantRitualField);
-                        applicantRitualField.set(item, generatedApplicantRitual);
+                        applicantRitualField.set(item, savedApplicantRitual);
                     }
 
                     if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
@@ -499,9 +478,9 @@ public class ItemWriter {
 
                     if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
                         ApplicantHealthDto curApplicantHealth = (ApplicantHealthDto) item;
-                        JpaApplicantHealth jpaApplicantHealth = applicantHealthRepository.findByUinAndRitualId(applicantUin.toString(), generatedApplicantRitual.getId());
-                        if (jpaApplicantHealth != null) {
-                            curApplicantHealth.setId(jpaApplicantHealth.getId());
+                        ApplicantHealthDto applicantHealthLite = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+                        if (applicantHealthLite != null) {
+                            curApplicantHealth.setId(applicantHealthLite.getId());
                             if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
                                 // get the special needs and if it is a list then create a list of special needs dtos
                                 List<ApplicantHealthSpecialNeedsDto> applicantHealthSpecialNeeds = Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
@@ -510,9 +489,8 @@ public class ItemWriter {
                                 IGenericMapper<ApplicantHealthSpecialNeedsDto, JpaApplicantHealthSpecialNeeds> mapper = findMapper(ApplicantHealthSpecialNeedsDto.class);
                                 applicantHealthSpecialNeedsRepository.saveAll(mapper.toEntityList(applicantHealthSpecialNeeds, mappingContext));
                                 curApplicantHealth.setSpecialNeeds(null);
-                                curApplicantHealth.setCreationDate(jpaApplicantHealth.getCreationDate());
+                                curApplicantHealth.setCreationDate(applicantHealthLite.getCreationDate());
                             }
-
                         } else {
                             if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
                                 // get the special needs and if it is a list then create a list of special needs dtos
@@ -521,23 +499,16 @@ public class ItemWriter {
                                 ).collect(Collectors.toList()));
                             }
                         }
-
                     }
                     if (applicantHealthField != null) {
-                        ApplicantHealthDto applicantHealth = null;
-                        JpaApplicantHealth jpaApplicantHealth = applicantHealthRepository.findByUinAndRitualId(applicantUin.toString(), generatedApplicantRitual.getId());
+                        ApplicantHealthDto applicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
 
-                        IGenericMapper<ApplicantHealthDto, JpaApplicantHealth> mapper = findMapper(ApplicantHealthDto.class);
-                        if (jpaApplicantHealth != null) {
-                            applicantHealth = mapper.fromEntity(jpaApplicantHealth, mappingContext);
-
-                        } else {
-                            applicantHealth = ApplicantHealthDto.builder().applicantRitual(generatedApplicantRitual).applicant(applicant).build();
-                            applicantHealth = mapper.fromEntity(applicantHealthRepository.save(mapper.toEntity(applicantHealth, mappingContext)), mappingContext);
+                        if (applicantHealth == null) {
+                            applicantHealth = ApplicantHealthDto.builder().applicant(applicant).applicantRitual(savedApplicantRitual).build();
+                            applicantHealth = applicantHealthService.save(applicantHealth);
                         }
                         // make fields accessible
                         ReflectionUtils.makeAccessible(applicantHealthField);
-
                         // set the found applicant health into the object
                         applicantHealthField.set(item, applicantHealth);
                     }
@@ -811,7 +782,6 @@ public class ItemWriter {
 
             } else {
                 // create new digital id for that staff in case he has no digital id for that same season
-
                 CompanyStaffDigitalIdDto staffDigitalId = new CompanyStaffDigitalIdDto();
                 staffDigitalId.setCompanyStaff(existingStaff);
                 staffDigitalId.setSeasonYear(companyStaffRitual.getSeason());
@@ -825,7 +795,6 @@ public class ItemWriter {
                 companyStaffCardService.save(companyStaffCardDto);
 
             }
-
         }
     }
 
@@ -840,6 +809,5 @@ public class ItemWriter {
         List<IGenericMapper> foundMappers = this.context.getBeansOfType(IGenericMapper.class).values().stream().filter(mapper -> Objects.requireNonNull(GenericTypeResolver.resolveTypeArguments(mapper.getClass(), IGenericMapper.class))[0].getSimpleName().equals(clazz.getSimpleName())).collect(Collectors.toList());
         return CollectionUtils.size(foundMappers) == 1 ? foundMappers.get(0) : null;
     }
-
 
 }
