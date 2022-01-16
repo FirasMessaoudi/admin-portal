@@ -30,7 +30,6 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
 
-
   constructor(private i18nService: I18nService,
               private formBuilder: FormBuilder,
               private navigationService: NavigationService,
