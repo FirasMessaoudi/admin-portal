@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantDigitalIdDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.CountryLookupDto;
+import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.lookup.CountryLookupService;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
@@ -146,5 +147,15 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
     @Override
     public ApplicantDigitalIdDto save(ApplicantDigitalIdDto dto) {
         return super.save(dto);
+    }
+
+    /**
+     * Find active applicant UIN by applicant id.
+     *
+     * @param applicantId
+     * @return
+     */
+    public String findApplicantUin(long applicantId) {
+        return applicantDigitalIdRepository.findUinByApplicantIdAndStatusCode(applicantId, EDigitalIdStatus.VALID.name());
     }
 }

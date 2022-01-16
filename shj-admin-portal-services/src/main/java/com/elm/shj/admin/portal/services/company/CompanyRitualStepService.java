@@ -37,6 +37,7 @@ public class CompanyRitualStepService extends GenericService<JpaCompanyRitualSte
      */
     public List<CompanyRitualStepDto> findCompanyRitualStepsByApplicantUin(String applicantUin) {
         try {
+            //TODO: aflaifel: get the group id only, no need to get the group applicant list object.
             Optional<JpaGroupApplicantList> groupApplicantList = groupApplicantListRepository.findTopByApplicantUinOrderByCreationDateDesc(applicantUin);
             if (groupApplicantList.isPresent()) {
                 List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupIdOrderByStepIndexAsc(groupApplicantList.get().getApplicantGroup().getId());

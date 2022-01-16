@@ -36,7 +36,7 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
      * @return the list of applicants
      */
     public List<ApplicantRitualDto> findAllWithoutCards() {
-        return mapList(((ApplicantRitualRepository) getRepository()).findAllApplicantRitualsWithoutCard());
+        return mapList(applicantRitualRepository.findAllApplicantRitualsWithoutCard());
     }
 
     /**
@@ -79,11 +79,31 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
      * @return the list of applicants
      */
     public List<ApplicantRitualDto> findAllByApplicantId(Long id) {
-        return mapList(((ApplicantRitualRepository) getRepository()).findAllByApplicantId(id));
+        return mapList(applicantRitualRepository.findAllByApplicantId(id));
     }
 
-    public boolean findByRitualIdAndApplicantUin(Long applicantRitualId, String uin){
-        JpaApplicantRitual ritual = applicantRitualRepository.findCardDetailsByUinAndRitualId(uin, applicantRitualId);
-        return ritual != null ? true : false;
+    public boolean exitsByRitualId(Long applicantRitualId){
+        return applicantRitualRepository.existsById(applicantRitualId);
+    }
+
+    /**
+     * Find latest applicant ritual.
+     *
+     * @param applicantId
+     * @return
+     */
+    public ApplicantRitualDto findLatestApplicantRitual(long applicantId) {
+        return getMapper().fromEntity(applicantRitualRepository.findFirstByApplicantIdOrderByCreationDateDesc(applicantId), mappingContext);
+    }
+
+    /**
+     * Find applicant ritual based on applicant id and package reference number.
+     *
+     * @param applicantId
+     * @param referenceNumber
+     * @return
+     */
+    public ApplicantRitualDto findByApplicantIdAndPackageReferenceNumber(long applicantId, String referenceNumber) {
+        return getMapper().fromEntity(applicantRitualRepository.findByApplicantIdAndPackageReferenceNumber(applicantId, referenceNumber), mappingContext);
     }
 }

@@ -30,4 +30,8 @@ public interface ApplicantContactRepository extends JpaRepository<JpaApplicantCo
     int updateContactLocalNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("localMobileNumber") String localMobileNumber, @Param("applicantId") long applicantId, @Param("ritualId") long ritualId);
 
     List<JpaApplicantContact> findAllByApplicantId(Long id);
+
+    @Modifying
+    @Query("UPDATE JpaApplicantContact ac SET ac.applicantRitual.id = :applicantRitualId WHERE ac.applicant.id = :applicantId")
+    int updateContactApplicantRitual(@Param("applicantRitualId") long applicantRitualId, @Param("applicantId") long applicantId);
 }

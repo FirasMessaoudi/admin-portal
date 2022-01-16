@@ -3,9 +3,15 @@
  */
 package com.elm.shj.admin.portal.services.digitalid;
 
+import com.elm.shj.admin.portal.services.applicant.ApplicantContactService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantPackageService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.applicant.RitualPackageService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDigitalIdDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;
 import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockAssert;
@@ -27,6 +33,10 @@ public class DigitalIdScheduler {
 
     private final ApplicantService applicantService;
     private final DigitalIdService digitalIdService;
+    private final ApplicantPackageService applicantPackageService;
+    private final ApplicantRitualService applicantRitualService;
+    private final ApplicantContactService applicantContactService;
+    private final RitualPackageService ritualPackageService;
 
     /**
      * Scheduled job to create digital IDs for new applicants
@@ -38,9 +48,25 @@ public class DigitalIdScheduler {
         LockAssert.assertLocked();
         applicantService.findAllWithoutDigitalId().forEach(applicant -> {
             // generate and save digital id for each applicant
-            digitalIdService.save(ApplicantDigitalIdDto.builder().statusCode(EDigitalIdStatus.VALID.name()).applicantId(applicant.getId()).uin(digitalIdService.generate(applicant)).build());
+            ApplicantDigitalIdDto applicantDigitalId = digitalIdService.save(ApplicantDigitalIdDto.builder()
+                    .statusCode(EDigitalIdStatus.VALID.name())
+                    .applicantId(applicant.getId())
+                    .uin(digitalIdService.generate(applicant))
+                    .build());
+
+            // create applicant package
+            ApplicantPackageDto savedApplicantPackage = applicantPackageService.createApplicantPackage(applicant.getPackageReferenceNumber(), Long.parseLong(applicantDigitalId.getUin()));
+
+            //create or update applicant ritual;
+            ApplicantRitualDto applicantRitual = applicantRitualService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), applicant.getPackageReferenceNumber());
+            if (applicantRitual != null) {
+                applicantRitual.setApplicantPackage(savedApplicantPackage);
+            } else {
+                applicantRitual = ApplicantRitualDto.builder().applicant(applicant).applicantPackage(savedApplicantPackage).packageReferenceNumber(applicant.getPackageReferenceNumber()).build();
+            }
+            applicantRitual = applicantRitualService.save(applicantRitual);
+            //set applicant ritual id for applicant contacts
+            applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
         });
     }
-
-
 }

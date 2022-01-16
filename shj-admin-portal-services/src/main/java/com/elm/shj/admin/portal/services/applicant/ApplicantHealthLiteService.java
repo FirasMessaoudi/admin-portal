@@ -43,5 +43,4 @@ public class ApplicantHealthLiteService extends GenericService<JpaApplicantHealt
             return Optional.of(returnedDto);
         }
     }
-
 }

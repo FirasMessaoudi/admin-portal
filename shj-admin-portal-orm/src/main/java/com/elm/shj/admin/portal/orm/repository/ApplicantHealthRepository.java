@@ -21,4 +21,6 @@ public interface ApplicantHealthRepository extends JpaRepository<JpaApplicantHea
     JpaApplicantHealth findByUinAndRitualId(@Param("uin") String uin, @Param("ritualId") Long ritualId);
 
     JpaApplicantHealth findByApplicantDigitalIdsUinAndApplicantRitualApplicantPackageId(String uin, Long applicantPackageId);
+
+    JpaApplicantHealth findByApplicantIdAndApplicantRitualPackageReferenceNumber(long applicantId, String referenceNumber);
 }
