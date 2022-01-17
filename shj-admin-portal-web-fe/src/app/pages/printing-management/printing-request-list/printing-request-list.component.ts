@@ -46,14 +46,14 @@ export class PrintingRequestListComponent implements OnInit {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
-      requestNumber: [''],
-      statusCode: [null],
-      description: [''],
+      requestNumber: null,
+      statusCode: null,
+      description: null,
       fromDate: null,
       toDate: null,
-      batchNumber: [''],
-      cardNumber: [''],
-      idNumber: [''],
+      batchNumber: null,
+      cardNumber: null,
+      idNumber: null,
 
     });
   }
