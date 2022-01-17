@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service handling applicant health
@@ -37,4 +38,18 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
                         findByApplicantIdAndApplicantRitualPackageReferenceNumber(applicantId, packageReferenceNumber),
                 mappingContext);
     }
+
+    /**
+     * Set applicant ritual id for the applicant health.
+     *
+     * @param applicantRitualId
+     * @param applicantId
+     * @param packageReferenceNumber
+     * @return
+     */
+    @Transactional
+    public int updateApplicantHealthApplicantRitual(long applicantRitualId, long applicantId, String packageReferenceNumber) {
+        return applicantHealthRepository.updateApplicantHealthApplicantRitual(applicantRitualId, applicantId, packageReferenceNumber);
+    }
+
 }

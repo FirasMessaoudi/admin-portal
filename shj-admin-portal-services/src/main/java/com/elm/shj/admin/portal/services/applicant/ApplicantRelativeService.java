@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -26,6 +27,19 @@ public class ApplicantRelativeService  extends GenericService<JpaApplicantRelati
     public ApplicantRelativeDto findByApplicantIdAndRelativeApplicantId(long applicantId, long relativeApplicantId){
         Optional<JpaApplicantRelative> applicantRelative = applicantRelativeRepository.findByApplicantIdAndRelativeApplicantId(applicantId, relativeApplicantId);
         return applicantRelative.map(r -> getMapper().fromEntity(r, mappingContext)).orElse(null);
+    }
+
+    /**
+     * Set applicant ritual id for the applicant relative.
+     *
+     * @param applicantRitualId
+     * @param applicantId
+     * @param packageReferenceNumber
+     * @return
+     */
+    @Transactional
+    public int updateApplicantRelativeApplicantRitual(long applicantRitualId, long applicantId, String packageReferenceNumber) {
+        return applicantRelativeRepository.updateApplicantRelativeApplicantRitual(applicantRitualId, applicantId, packageReferenceNumber);
     }
 
 }

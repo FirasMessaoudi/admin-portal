@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -23,4 +24,10 @@ public interface ApplicantHealthRepository extends JpaRepository<JpaApplicantHea
     JpaApplicantHealth findByApplicantDigitalIdsUinAndApplicantRitualApplicantPackageId(String uin, Long applicantPackageId);
 
     JpaApplicantHealth findByApplicantIdAndApplicantRitualPackageReferenceNumber(long applicantId, String referenceNumber);
+
+    @Modifying
+    @Query("UPDATE JpaApplicantHealth ah SET ah.applicantRitual.id = :applicantRitualId " +
+            "WHERE ah.applicant.id = :applicantId AND ah.packageReferenceNumber = :packageReferenceNumber")
+    int updateApplicantHealthApplicantRitual(@Param("applicantRitualId") long applicantRitualId, @Param("applicantId") long applicantId,
+                                             @Param("packageReferenceNumber") String packageReferenceNumber);
 }

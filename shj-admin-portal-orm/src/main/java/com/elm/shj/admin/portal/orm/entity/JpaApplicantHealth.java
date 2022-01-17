@@ -74,6 +74,9 @@ public class JpaApplicantHealth implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthImmunization> immunizations;
 
+    @Column(name = "package_reference_number")
+    private String packageReferenceNumber;
+
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
