@@ -71,14 +71,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
         Date endDate = new GregorianCalendar(5000, 01, 01).getTime();
         ;
         if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
-            if (criteria.getFromDate() != null && criteria.getToDate() != null) {
-                startDate = atStartOfDay(criteria.getFromDate());
-                endDate = atEndOfDay(criteria.getToDate());
-            }
-            // at the time being, filter has only status code and description.
-            litePrintRequests = mapPage(printRequestRepository.findByFilters(criteria.getStatusCode(), criteria.getDescription(),
-                    criteria.getRequestNumber(), criteria.getBatchNumber(), criteria.getCardNumber(), criteria.getIdNumber()
-                    , startDate, endDate, pageable));
+            litePrintRequests = findApplicantPrintRequests(criteria, startDate, endDate, pageable);
 
         } else {
             litePrintRequests = mapPage(printRequestRepository.findAll(withStaffPrintRequestFilter(criteria.getStatusCode(), criteria.getDescription()), pageable));
@@ -89,6 +82,18 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
             p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
         });
         return litePrintRequests;
+    }
+
+    private Page<PrintRequestDto> findApplicantPrintRequests(PrintRequestCriteriaDto criteria, Date startDate, Date endDate, Pageable pageable) {
+        if (criteria.getFromDate() != null)
+            startDate = atStartOfDay(criteria.getFromDate());
+
+        if (criteria.getToDate() != null)
+            endDate = atEndOfDay(criteria.getToDate());
+
+        return mapPage(printRequestRepository.findByFilters(criteria.getStatusCode(), criteria.getDescription(),
+                criteria.getRequestNumber(), criteria.getBatchNumber(), criteria.getCardNumber(), criteria.getIdNumber()
+                , startDate, endDate, pageable));
     }
 
     private Specification<JpaPrintRequest> withApplicantPrintRequestFilter(PrintRequestCriteriaDto criteria) {
