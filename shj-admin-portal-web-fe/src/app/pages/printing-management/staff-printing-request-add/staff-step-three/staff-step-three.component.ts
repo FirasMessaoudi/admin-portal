@@ -87,7 +87,8 @@ export class StaffStepThreeComponent implements OnInit, OnChanges {
   confirm() {
     console.log("confirm batching");
     this.onChangeLoading.emit(true);
-    this.printRequest.description = this.description;
+    let arrayOfDesc = this.description.split("\n");
+    this.printRequest.description = arrayOfDesc.join(' ');
     this.printService.confirm(this.printRequest).subscribe(result => {
       this.onChangeLoading.emit(false);
       if (result.hasOwnProperty("errors") && result.errors) {

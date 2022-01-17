@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatch;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  * Repository for print request batch table.
@@ -14,4 +15,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface PrintRequestBatchRepository extends JpaRepository<JpaPrintRequestBatch, Long> {
     int countAllByPrintRequestId(long printRequestId);
+
+    @Query("select max (p.sequenceNumber) from JpaPrintRequestBatch p")
+    int maxSequenceNumber();
 }

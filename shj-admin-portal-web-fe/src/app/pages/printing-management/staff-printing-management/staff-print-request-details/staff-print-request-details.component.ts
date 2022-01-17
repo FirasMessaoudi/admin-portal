@@ -16,6 +16,7 @@ import {combineLatest} from "rxjs";
 import {map} from "rxjs/operators";
 import {EAuthority} from "@shared/model";
 import {StaffPrintService} from "@core/services/printing/staff-print.service";
+import {CompanyStaffCard} from "@model/staff-card.model";
 
 @Component({
   selector: 'app-staff-print-request-details',
@@ -35,6 +36,8 @@ export class StaffPrintRequestDetailsComponent implements OnInit {
   batchType = BatchType;
   printRequestStatus = PrintRequestStatus;
   isLoading: boolean;
+  staffCard: CompanyStaffCard;
+  ritualTypes: Lookup[];
 
   constructor(private i18nService: I18nService,
               private route: ActivatedRoute,
@@ -60,10 +63,15 @@ export class StaffPrintRequestDetailsComponent implements OnInit {
         if (this.printRequestId) {
           this.isLoading = true;
           // load user details
+
+
           this.printService.find(this.printRequestId).subscribe(data => {
             if (data && data.id) {
               this.isLoading = false;
               this.printRequest = data;
+              this.cardService.findStaffCardById(this.printRequest.printRequestCards[0].cardId).subscribe(
+                res => this.staffCard = res
+              );
               this.printRequest.printRequestBatches.forEach(element => {
                 element.printRequestBatchCards.forEach(batch => {
                   this.cardService.findStaffCardById(batch.cardId).subscribe(
@@ -105,7 +113,7 @@ export class StaffPrintRequestDetailsComponent implements OnInit {
   }
 
   goToList() {
-    this.router.navigate(['/print-requests/list']);
+    this.router.navigate(['/staff-print-requests/list']);
   }
 
   goBack() {
@@ -129,13 +137,14 @@ export class StaffPrintRequestDetailsComponent implements OnInit {
     this.cardService.findCardStatuses().subscribe(result => {
       this.cardStatuses = result;
     });
+    this.printService.findRitualTypes().subscribe((result) => {
+      this.ritualTypes = result;
+    });
+
   }
 
   getBatchType(batchType) {
     return this.batchTypes.find(b => b.code === batchType);
   }
 
-  goToCardDetails(cardId: number) {
-    this.router.navigateByUrl('staff-print-requests/staff-card-details/' + cardId);
-  }
 }

@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
+import com.elm.shj.admin.portal.orm.repository.PrintRequestBatchRepository;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestRepository;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
@@ -37,6 +38,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     private final PrintRequestRepository printRequestRepository;
     private final ApplicantCardService applicantCardService;
     private final CompanyStaffCardService staffCardService;
+    private final PrintRequestBatchRepository printRequestBatchRepository;
 
     public PrintRequestDto prepare(List<Long> cardsIds) {
         // create and save the print request
@@ -104,6 +106,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
                         // Save batching values as comma-separated string
                         .batchTypeValues(String.join(",", key))
                         .printRequestBatchCards(value.stream().map(requestCard -> PrintRequestBatchCardDto.builder().cardId(requestCard.getCardId()).build()).collect(Collectors.toList())).build();
+                printRequestBatch.setSequenceNumber(printRequestBatchRepository.maxSequenceNumber() + 1);
                 printRequest.getPrintRequestBatches().add(printRequestBatch);
             });
         } else {

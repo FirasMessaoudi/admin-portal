@@ -107,6 +107,8 @@ export class StaffPrintService {
   }
 
   confirm(printRequest: PrintRequest) {
+    printRequest.description.replace(/\n/g, '').trim();
+    console.log(printRequest.description);
     return this.http.post<any>("/core/api/staff/print/requests/confirm", printRequest).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.hasOwnProperty('error')) {
