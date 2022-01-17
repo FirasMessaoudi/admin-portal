@@ -58,6 +58,9 @@ public class JpaApplicantRelative implements Serializable {
     @JoinColumn(name = "applicant_ritual_id")
     private JpaApplicantRitual applicantRitual;
 
+    @Column(name = "package_reference_number")
+    private String packageReferenceNumber;
+
     @PrePersist
     public void prePersist() {
         creationDate = new Date();

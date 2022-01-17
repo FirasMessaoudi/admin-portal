@@ -443,9 +443,10 @@ public class ItemWriter {
                             applicantRitual.setId(savedApplicantRitual.getId());
                             applicantRitual.setCreationDate(savedApplicantRitual.getCreationDate());
                             applicantRitual.setApplicantPackage(savedApplicantRitual.getApplicantPackage());
-                            //set applicant ritual id for applicant contacts
+                            //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
                             applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
-                            // TODO: update existing applicant health and relatives and set applicant ritual
+                            applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
+                            applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
                         } else {
                             // applicant ritual not created before, check if digital id is exists,
                             // if yes then create a new applicant package and link it with the applicant ritual
@@ -459,9 +460,7 @@ public class ItemWriter {
                                     ac.setApplicantRitual(applicantRitual);
                                 });
                             }
-                            // TODO: loop over applicant health and relatives and set applicant ritual
                         }
-
                     }
 
                     if (applicantRitualField != null) {
@@ -471,6 +470,9 @@ public class ItemWriter {
 
                     if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
                         ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
+                        if (savedApplicantRitual != null) {
+                            applicantRelative.setApplicantRitual(savedApplicantRitual);
+                        }
                         ApplicantDto relativeApplicant = applicantRelative.getRelativeApplicant();
                         relativeApplicant.setContacts(applicantContactService.findByApplicantId(relativeApplicant.getId()));
                         applicantChatContactService.createSystemDefinedApplicantChatContact(applicantRelative);
@@ -478,6 +480,9 @@ public class ItemWriter {
 
                     if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
                         ApplicantHealthDto curApplicantHealth = (ApplicantHealthDto) item;
+                        if (savedApplicantRitual != null) {
+                            curApplicantHealth.setApplicantRitual(savedApplicantRitual);
+                        }
                         ApplicantHealthDto applicantHealthLite = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
                         if (applicantHealthLite != null) {
                             curApplicantHealth.setId(applicantHealthLite.getId());
@@ -513,7 +518,6 @@ public class ItemWriter {
                         applicantHealthField.set(item, applicantHealth);
                     }
                 }
-
             }
         } catch (IllegalAccessException e) {
             ReflectionUtils.handleReflectionException(e);
@@ -522,7 +526,6 @@ public class ItemWriter {
 
 
     private <T> void handleApplicantRelativeInfo(List<AbstractMap.SimpleEntry<Row, T>> items) {
-        List<AbstractMap.SimpleEntry<Row, T>> resultItems = new ArrayList<>();
 
         items.forEach(entry -> {
             T item = entry.getValue();
@@ -562,15 +565,15 @@ public class ItemWriter {
                 if (packageReferenceNumberField == null) {
                     return;
                 }
+
                 ReflectionUtils.makeAccessible(packageReferenceNumberField);
                 String packageReferenceNumber = (String) packageReferenceNumberField.get(item);
-                Long applicantUin = Long.parseLong(applicant.getDigitalIds().get(0).getUin());
-                ApplicantRitualDto generatedApplicantRitual = addRitualPackageToApplicant(applicant, applicantUin, packageReferenceNumber, null, null);
 
+                ApplicantRitualDto savedApplicantRitual = applicantRitualService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
 
-                if (applicantRitualField != null) {
+                if (applicantRitualField != null && savedApplicantRitual != null) {
                     ReflectionUtils.makeAccessible(applicantRitualField);
-                    applicantRitualField.set(item, generatedApplicantRitual);
+                    applicantRitualField.set(item, savedApplicantRitual);
                 }
 
                 if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
@@ -665,69 +668,6 @@ public class ItemWriter {
         }
 
         return COMPANION.toString();
-    }
-
-    private ApplicantRitualDto addRitualPackageToApplicant(ApplicantDto applicant, Long applicantUin, String packageReferenceNumber, String busNumber, String seatNumber) {
-
-        ApplicantPackageDto applicantPackageDto = applicantPackageService.findApplicantPackageByUinAndReferenceNumber(applicantUin, packageReferenceNumber);
-        ApplicantRitualDto applicantRitualDto = null;
-
-        if (applicantPackageDto != null) {
-            if (CollectionUtils.isNotEmpty(applicantPackageDto.getApplicantPackageTransportations()) && (busNumber != null || seatNumber != null)) {
-                ApplicantPackageDto finalApplicantPackageDto1 = applicantPackageDto;
-
-                List<ApplicantPackageTransportationDto> applicantPackageTransportations = applicantPackageDto.getApplicantPackageTransportations().stream().map(pt ->
-                        ApplicantPackageTransportationDto.builder().id(pt.getId()).creationDate(pt.getCreationDate()).packageTransportation(PackageTransportationDto.builder().id(pt.getPackageTransportation().getId()).build())
-                                .applicantPackage(ApplicantPackageDto.builder().id(finalApplicantPackageDto1.getId()).build()).vehicleNumber(busNumber).seatNumber(seatNumber).build()
-                ).collect(Collectors.toList());
-
-                applicantPackageTransportationService.saveAll(applicantPackageTransportations);
-            }
-            if (applicantPackageDto.getApplicantRitual() != null ) {
-                applicantRitualDto = applicantPackageDto.getApplicantRitual();
-            } else {
-                applicantRitualDto = ApplicantRitualDto.builder().applicantPackage(applicantPackageDto).applicant(applicant).build();
-            }
-        } else {
-            RitualPackageDto ritualPackage = ritualPackageService.findRitualPackageByReferenceNumber(packageReferenceNumber);
-            List<ApplicantPackageHousingDto> applicantPackageHousings = null;
-            List<ApplicantPackageCateringDto> applicantPackageCaterings = new ArrayList<>();
-            List<ApplicantPackageTransportationDto> applicantPackageTransportations = null;
-
-            applicantPackageDto = ApplicantPackageDto.builder().applicantUin(applicantUin).ritualPackage(RitualPackageDto.builder().id(ritualPackage.getId()).build()).build();
-
-            ApplicantPackageDto finalApplicantPackageDto = applicantPackageDto;
-
-            if (CollectionUtils.isNotEmpty(ritualPackage.getPackageHousings())) {
-                applicantPackageHousings = ritualPackage.getPackageHousings().stream().map(ph ->
-                        ApplicantPackageHousingDto.builder().packageHousing(PackageHousingDto.builder().id(ph.getId()).build()).applicantPackage(finalApplicantPackageDto).build()
-                ).collect(Collectors.toList());
-
-                ritualPackage.getPackageHousings().forEach(ph -> {
-                    if (CollectionUtils.isNotEmpty(ph.getPackageCatering())) {
-                        applicantPackageCaterings.addAll(ph.getPackageCatering().stream().map(pc ->
-                                ApplicantPackageCateringDto.builder().packageCatering(PackageCateringDto.builder().id(pc.getId()).build()).applicantPackage(finalApplicantPackageDto).build()
-                        ).collect(Collectors.toList()));
-                    }
-                });
-            }
-
-            if (CollectionUtils.isNotEmpty(ritualPackage.getPackageTransportations())) {
-                applicantPackageTransportations = ritualPackage.getPackageTransportations().stream().map(pt ->
-                        ApplicantPackageTransportationDto.builder().packageTransportation(PackageTransportationDto.builder().id(pt.getId()).build())
-                                .applicantPackage(finalApplicantPackageDto).vehicleNumber(busNumber).seatNumber(seatNumber).build()
-                ).collect(Collectors.toList());
-            }
-            finalApplicantPackageDto.setApplicantPackageCaterings(applicantPackageCaterings);
-            finalApplicantPackageDto.setApplicantPackageHousings(applicantPackageHousings);
-            finalApplicantPackageDto.setApplicantPackageTransportations(applicantPackageTransportations);
-
-            applicantPackageDto = applicantPackageService.save(finalApplicantPackageDto);
-
-            applicantRitualDto = ApplicantRitualDto.builder().applicantPackage(applicantPackageDto).applicant(applicant).build();
-        }
-
-        return applicantRitualDto;
     }
 
     /**

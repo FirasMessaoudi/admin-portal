@@ -3,10 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.digitalid;
 
-import com.elm.shj.admin.portal.services.applicant.ApplicantContactService;
-import com.elm.shj.admin.portal.services.applicant.ApplicantPackageService;
-import com.elm.shj.admin.portal.services.applicant.ApplicantService;
-import com.elm.shj.admin.portal.services.applicant.RitualPackageService;
+import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.dto.ApplicantDigitalIdDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;
@@ -36,7 +33,8 @@ public class DigitalIdScheduler {
     private final ApplicantPackageService applicantPackageService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantContactService applicantContactService;
-    private final RitualPackageService ritualPackageService;
+    private final ApplicantHealthService applicantHealthService;
+    private final ApplicantRelativeService applicantRelativeService;
 
     /**
      * Scheduled job to create digital IDs for new applicants
@@ -62,13 +60,16 @@ public class DigitalIdScheduler {
             if (applicantRitual != null) {
                 savedApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantDigitalId.getUin()));
                 applicantRitual.setApplicantPackage(savedApplicantPackage);
+                applicantRitualService.save(applicantRitual);
             } else {
                 savedApplicantPackage = applicantPackageService.createApplicantPackage(applicant.getPackageReferenceNumber(), Long.parseLong(applicantDigitalId.getUin()));
                 applicantRitual = ApplicantRitualDto.builder().applicant(applicant).applicantPackage(savedApplicantPackage).packageReferenceNumber(applicant.getPackageReferenceNumber()).build();
+                applicantRitual = applicantRitualService.save(applicantRitual);
+                //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
+                applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
+                applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
+                applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
             }
-            applicantRitual = applicantRitualService.save(applicantRitual);
-            //set applicant ritual id for applicant contacts
-            applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
         });
     }
 }
