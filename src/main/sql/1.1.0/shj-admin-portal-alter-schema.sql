@@ -1223,3 +1223,8 @@ GO
 
 EXEC sp_rename 'shc_portal.shc_applicant.package_reference_number', 'first_package_reference_number', 'COLUMN';
 GO
+
+ALTER TABLE shc_portal.shc_applicant_health ADD package_reference_number VARCHAR(45);
+GO
+ALTER TABLE shc_portal.shc_applicant_relative ADD package_reference_number VARCHAR(45);
+GO
