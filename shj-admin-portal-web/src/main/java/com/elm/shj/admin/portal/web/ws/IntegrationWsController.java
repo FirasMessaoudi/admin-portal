@@ -702,7 +702,7 @@ public class IntegrationWsController {
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(command.getMobileNumber()).build()).build());
         }
-        if(command.getEmail().length() < 5 || command.getEmail().length() > 50){
+        if(command.getEmail().length() < 5 || command.getEmail().length() > 50 || !companyStaffService.validateStaffEmail(command.getEmail())){
             return ResponseEntity.ok(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(command.getEmail()).build()).build());

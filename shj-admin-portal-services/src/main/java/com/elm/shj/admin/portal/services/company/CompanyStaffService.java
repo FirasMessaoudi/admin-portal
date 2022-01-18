@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -31,6 +33,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     private final ApplicantPackageService applicantPackageService;
     private final ApplicantRitualService applicantRitualService;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
+    public final static Pattern  EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     public Optional<CompanyStaffLiteDto> findBySuin(String suin) {
         CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findBySuin(suin, EDigitalIdStatus.VALID.name()), mappingContext);
@@ -122,4 +125,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return (staff != null) ? Optional.of(getMapper().fromEntity(staff, mappingContext)) : Optional.empty();
     }
 
+    public boolean validateStaffEmail(String email){
+        Matcher matcher = EMAIL_ADDRESS_REGEX.matcher(email);
+        return matcher.find();
+    }
 }
