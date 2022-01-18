@@ -27,12 +27,8 @@ public class UpdateStaffCmd implements Serializable {
 
     private String suin;
 
-    @NullOrNotBlank(min = 5, max = 50)
-    @Email(message = "validation.data.constraints.msg.20003")
     private String email;
 
-    @NotNull
-    @Size(min = 5, max = 20)
     private String mobileNumber;
 
     @Length(max = 20)

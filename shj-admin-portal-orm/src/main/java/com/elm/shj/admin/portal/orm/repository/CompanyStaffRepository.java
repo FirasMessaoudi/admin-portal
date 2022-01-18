@@ -72,4 +72,5 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "staff.mobileNumber =:localMobileNumber, staff.registered = TRUE, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
     int updateCompanyStaffLocalNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("localMobileNumber") String localMobileNumber, @Param("staffId") long staffId);
 
+    JpaCompanyStaff findByIdAndRegisteredTrue(long id);
 }

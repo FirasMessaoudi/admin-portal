@@ -691,8 +691,31 @@ public class IntegrationWsController {
 
     @PostMapping("/update-staff")
     public ResponseEntity<WsResponse<?>> updateStaff(@RequestBody @Validated UpdateStaffCmd command) {
+        if(command.getEmail().equals("") || command.getCountryCode().equals("")){
+            return ResponseEntity.ok(
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).build()).build());
+
+        }
+        if(command.getMobileNumber().equals("") || command.getMobileNumber().length() < 5 || command.getMobileNumber().length() > 20){
+            return ResponseEntity.ok(
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(command.getMobileNumber()).build()).build());
+        }
+        if(command.getEmail().length() < 5 || command.getEmail().length() > 50){
+            return ResponseEntity.ok(
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(command.getEmail()).build()).build());
+        }
         Optional<CompanyStaffLiteDto> companyStaff = companyStaffService.findBySuin(command.getSuin());
         if (companyStaff.isPresent()) {
+            Optional<CompanyStaffDto> staffInAdminPortal = companyStaffService.findByStaffId(companyStaff.get().getId());
+            if (staffInAdminPortal.isPresent()) {
+                return ResponseEntity.ok(
+                        WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                                .body(WsError.builder().error(WsError.EWsError.ALREADY_REGISTERED.getCode()).referenceNumber(command.getSuin()).build()).build());
+
+            }
             boolean dateOfBirthMatched;
             dateOfBirthMatched = command.getDateOfBirthHijri() == companyStaff.get().getDateOfBirthHijri();
             if (!dateOfBirthMatched) {

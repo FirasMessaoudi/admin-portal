@@ -117,4 +117,9 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return updatedRowsCount;
     }
 
+    public Optional<CompanyStaffDto> findByStaffId(long staffId) {
+        JpaCompanyStaff staff = companyStaffRepository.findByIdAndRegisteredTrue(staffId);
+        return (staff != null) ? Optional.of(getMapper().fromEntity(staff, mappingContext)) : Optional.empty();
+    }
+
 }
