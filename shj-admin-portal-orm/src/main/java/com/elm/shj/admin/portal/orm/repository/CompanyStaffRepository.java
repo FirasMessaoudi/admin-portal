@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -59,5 +60,16 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     JpaCompanyStaff findBySuin(@Param("suin") String suin, @Param("statusCode") String statusCode);
 
     JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(String applicantUin, long companyRitualSeason, String titleCode);
+
+    @Modifying
+    @Query("update JpaCompanyStaff staff set staff.nationalityCode = :countryCode, staff.email = :email, " +
+            "staff.mobileNumberIntl =:intlMobileNumber, staff.registered = TRUE, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
+    int updateCompanyStaffIntlNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("intlMobileNumber") String intlMobileNumber, @Param("staffId") long staffId);
+
+
+    @Modifying
+    @Query("update JpaCompanyStaff staff set staff.nationalityCode = :countryCode, staff.email = :email, " +
+            "staff.mobileNumber =:localMobileNumber, staff.registered = TRUE, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
+    int updateCompanyStaffLocalNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("localMobileNumber") String localMobileNumber, @Param("staffId") long staffId);
 
 }

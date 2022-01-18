@@ -40,13 +40,11 @@ public class StaffApplicantGroupDto implements Serializable {
 
     private static final long serialVersionUID = -55631653517681858L;
 
-    @UniquePerRequest
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     @CellIndex(index = 0)
     private String staffIdNumber;
 
 
-    @UniquePerRequest
     @PassportNumber
     @CellIndex(index = 1)
     private String staffPassportNumber;

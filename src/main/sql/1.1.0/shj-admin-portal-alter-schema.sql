@@ -1228,3 +1228,5 @@ ALTER TABLE shc_portal.shc_applicant_health ADD package_reference_number VARCHAR
 GO
 ALTER TABLE shc_portal.shc_applicant_relative ADD package_reference_number VARCHAR(45);
 GO
+ALTER TABLE shc_portal.shc_company_staff ADD registered bit default 0 not null;
+GO

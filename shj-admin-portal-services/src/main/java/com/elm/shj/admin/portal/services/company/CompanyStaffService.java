@@ -3,18 +3,19 @@
  */
 package com.elm.shj.admin.portal.services.company;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffDigitalIdRepository;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffDto;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffLiteDto;
-import com.elm.shj.admin.portal.services.dto.ECompanyStaffTitle;
-import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
+import com.elm.shj.admin.portal.services.applicant.ApplicantPackageService;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -27,11 +28,15 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
     private final CompanyStaffRepository companyStaffRepository;
     private final CompanyStaffDigitalIdRepository companyStaffDigitalIdRepository;
+    private final ApplicantPackageService applicantPackageService;
+    private final ApplicantRitualService applicantRitualService;
+    public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
 
     public Optional<CompanyStaffLiteDto> findBySuin(String suin) {
         CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findBySuin(suin, EDigitalIdStatus.VALID.name()), mappingContext);
         if (companyStaff != null) {
             CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
+                    .id(companyStaff.getId())
                     .suin(suin)
                     .fullNameAr(companyStaff.getFullNameAr())
                     .fullNameEn(companyStaff.getFullNameEn())
@@ -101,5 +106,15 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return getMapper().fromEntity(companyStaffRepository.findGroupLeaderByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg, ECompanyStaffTitle.GROUP_LEADER.name()), mappingContext);
     }
 
+    @Transactional
+    public int updateCompanyStaff(long staffId, UpdateStaffCmd command) {
+        int updatedRowsCount = 0;
+        if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
+            updatedRowsCount += companyStaffRepository.updateCompanyStaffLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), staffId);
+        } else {
+            updatedRowsCount += companyStaffRepository.updateCompanyStaffIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), staffId);
+        }
+        return updatedRowsCount;
+    }
 
 }

@@ -95,6 +95,8 @@ public class JpaCompanyStaff implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupLeader")
     private List<JpaApplicantGroup> applicantGroups;
 
+    private boolean registered;
+
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
