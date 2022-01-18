@@ -689,4 +689,30 @@ public class IntegrationWsController {
         }
     }
 
+    @PostMapping("/update-staff")
+    public ResponseEntity<WsResponse<?>> updateStaff(@RequestBody @Validated UpdateStaffCmd command) {
+        Optional<CompanyStaffLiteDto> companyStaff = companyStaffService.findBySuin(command.getSuin());
+        if (companyStaff.isPresent()) {
+            boolean dateOfBirthMatched;
+            dateOfBirthMatched = command.getDateOfBirthHijri() == companyStaff.get().getDateOfBirthHijri();
+            if (!dateOfBirthMatched) {
+                log.error("invalid data for suin {} and date of birth {}", command.getSuin(), command.getDateOfBirthHijri());
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                        .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(command.getSuin()).build()).build());
+            }
+            int updatedRowsCount = companyStaffService.updateCompanyStaff(companyStaff.get().getId(), command);
+            if (updatedRowsCount < 1) {
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                        .body(WsError.builder().error(WsError.EWsError.UPDATE_STAFF_FAILED.getCode()).referenceNumber(command.getSuin()).build()).build());
+            }
+            CompanyStaffLiteDto companyStaffLiteDto = companyStaffService.findBySuin(command.getSuin()).orElseThrow(() -> new ApplicantNotFoundException("No staff found with suin " + command.getSuin()));
+
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffLiteDto).build());
+        } else {
+            log.error("invalid data for suin {}", command.getSuin());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(command.getSuin()).build()).build());
+        }
+    }
+
 }

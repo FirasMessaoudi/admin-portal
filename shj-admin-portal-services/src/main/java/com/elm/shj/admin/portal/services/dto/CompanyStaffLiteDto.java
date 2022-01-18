@@ -22,6 +22,7 @@ import java.util.Date;
 public class CompanyStaffLiteDto implements Serializable {
 
     private static final long serialVersionUID = 531849258704172988L;
+    private long id;
     private String suin;
     private String fullNameAr;
     private String fullNameEn;
