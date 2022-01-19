@@ -33,7 +33,7 @@ public class CompanyStaffExpirationScheduler {
     private final ApplicantChatContactService applicantChatContactService;
 
     @PostConstruct
-    @Scheduled(cron = "${scheduler.staff.digitalId.card.invalidate.cron}")
+    @Scheduled(cron = "${scheduler.staff.digitalId.invalidate.cron}")
     @SchedulerLock(name = "staff-digitalId-card-expiration-task")
     void markStaffDigitalIdAsInvalid() {
         log.debug("verify staff expiration scheduler started ...");
