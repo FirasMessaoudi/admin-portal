@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.elm.shj.admin.portal.services.dto.ERelativeRelationship.*;
+
 /**
  * Service handling applicant chat contacts
  *
@@ -165,45 +167,120 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         save(contactBuilder);
     }
 
-    public void createSystemDefinedApplicantChatContact(ApplicantRelativeDto applicantRelative) {
-        String applicantUin = applicantRelative.getApplicant().getDigitalIds().get(0).getUin();
-        String contactUin = applicantRelative.getRelativeApplicant().getDigitalIds().get(0).getUin();
-        Optional<JpaApplicantChatContact> applicantChatContact = applicantChatContactRepository.findByApplicantUinAndContactUinAndDeleted(applicantUin, contactUin, false);
-        ApplicantChatContactDto chatContact = applicantChatContact.isPresent() ? getMapper().fromEntity(applicantChatContact.get(), mappingContext) : null;
-        String mobileNumber = null;
-        String countryCode = null;
-        Optional<ApplicantContactDto> first = applicantRelative.getRelativeApplicant().getContacts().stream().findFirst();
-        if (first.isPresent()) {
-            if (first.get().getLocalMobileNumber() != null) {
-                mobileNumber = first.get().getLocalMobileNumber();
-                countryCode = "SA";
-            } else {
-                mobileNumber = first.get().getIntlMobileNumber();
-                countryCode = first.get().getCountryCode();
-            }
+    /**
+     * Create chat contacts for applicant relatives,
+     * add applicant relatives chat contacts to the main applicant and
+     * add main applicant chat contact for the relative applicant.
+     *
+     * @param applicantRelative
+     * @param applicantRitualId
+     */
+    public void createApplicantRelativesChatContacts(ApplicantRelativeDto applicantRelative, long applicantRitualId) {
+        ApplicantDto relativeApplicant = applicantRelative.getRelativeApplicant();
+        String relativeApplicantUin = relativeApplicant.getDigitalIds().get(0).getUin();
+
+        ApplicantDto mainApplicant = applicantRelative.getApplicant();
+        String mainApplicantUin = mainApplicant.getDigitalIds().get(0).getUin();
+
+        // create applicant relatives chat contacts for the main applicant
+        createChatContact(mainApplicantUin, relativeApplicant, applicantRitualId, applicantRelative.getRelationshipCode());
+        // create main applicant chat contact for the relative applicant
+        String mainApplicantRelationshipCode = mapOwnerRelationship(applicantRelative.getRelationshipCode(), mainApplicant.getGender());
+        createChatContact(relativeApplicantUin, mainApplicant, applicantRitualId, mainApplicantRelationshipCode);
+    }
+
+    /**
+     * Create a chat contact.
+     *
+     * @param contactOwnerUin
+     * @param contactApplicant
+     * @param applicantRitualId
+     * @param relationshipCode
+     */
+    private void createChatContact(String contactOwnerUin, ApplicantDto contactApplicant, long applicantRitualId, String relationshipCode) {
+        String contactUin = contactApplicant.getDigitalIds().get(0).getUin();
+        String mobileNumber, countryCode;
+        ApplicantContactDto relativeApplicantContact = contactApplicant.getContacts().get(0);
+        if (relativeApplicantContact.getLocalMobileNumber() != null) {
+            mobileNumber = relativeApplicantContact.getLocalMobileNumber();
+            countryCode = "SA";
+        } else {
+            mobileNumber = relativeApplicantContact.getIntlMobileNumber();
+            countryCode = relativeApplicantContact.getCountryCode();
         }
-        ApplicantChatContactDto savedContact = ApplicantChatContactDto
+        ApplicantChatContactDto createdContact = ApplicantChatContactDto
                 .builder()
-                .applicantUin(applicantUin)
+                .applicantUin(contactOwnerUin)
                 .contactUin(contactUin)
                 .alias(null)
                 .mobileNumber(mobileNumber)
                 .countryCode(countryCode)
                 .systemDefined(true)
-                .avatar(applicantRelative.getRelativeApplicant().getPhoto())
-                .applicantRitualId(applicantRelative.getApplicantRitual().getId())
-                .relationshipCode(applicantRelative.getRelationshipCode())
+                .avatar(contactApplicant.getPhoto())
+                .applicantRitualId(applicantRitualId)
+                .relationshipCode(relationshipCode)
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
 
+        Optional<JpaApplicantChatContact> applicantChatContact = applicantChatContactRepository.findByApplicantUinAndContactUinAndDeletedFalse(contactOwnerUin, contactUin);
+        ApplicantChatContactDto chatContact = applicantChatContact.isPresent() ? getMapper().fromEntity(applicantChatContact.get(), mappingContext) : null;
         if (chatContact != null) {
-            savedContact.setId(chatContact.getId());
-            savedContact.setCreationDate(chatContact.getCreationDate());
-            log.debug(" update System Defined Applicant Chat Contact applicantUin: {} contactUin: {}", applicantUin, contactUin);
-        } else {
-            log.debug(" create System Defined Applicant Chat Contact applicantUin: {} contactUin: {}", applicantUin, contactUin);
+            log.debug("update System Defined Applicant Chat Contact applicantUin: {} contactUin: {}", contactOwnerUin, contactUin);
+            createdContact.setId(chatContact.getId());
+            createdContact.setCreationDate(chatContact.getCreationDate());
         }
-        save(savedContact);
+        save(createdContact);
+    }
 
+    /**
+     * Map main applicant relationship code based on the main applicant gender and relative relationship code.
+     *
+     * @param relativeRelationshipCode
+     * @param Gender
+     * @return
+     */
+    private String mapOwnerRelationship(String relativeRelationshipCode, String Gender) {
+        if (relativeRelationshipCode.equals(FATHER.toString()) && Gender.equals("M")) {
+            return SON.toString();
+        }
+        if (relativeRelationshipCode.equals(FATHER.toString()) && Gender.equals("F")) {
+            return DAUGHTER.toString();
+        }
+        if (relativeRelationshipCode.equals(SON.toString()) && Gender.equals("M")) {
+            return FATHER.toString();
+        }
+        if (relativeRelationshipCode.equals(SON.toString()) && Gender.equals("F")) {
+            return MOTHER.toString();
+        }
+        if (relativeRelationshipCode.equals(MOTHER.toString()) && Gender.equals("M")) {
+            return SON.toString();
+        }
+        if (relativeRelationshipCode.equals(MOTHER.toString()) && Gender.equals("F")) {
+            return DAUGHTER.toString();
+        }
+        if (relativeRelationshipCode.equals(HUSBAND.toString())) {
+            return WIFE.toString();
+        }
+        if (relativeRelationshipCode.equals(WIFE.toString())) {
+            return HUSBAND.toString();
+        }
+        if (relativeRelationshipCode.equals(SISTER.toString()) && Gender.equals("M")) {
+            return BROTHER.toString();
+        }
+        if (relativeRelationshipCode.equals(SISTER.toString()) && Gender.equals("F")) {
+            return SISTER.toString();
+        }
+        if (relativeRelationshipCode.equals(BROTHER.toString()) && Gender.equals("M")) {
+            return BROTHER.toString();
+        }
+        if (relativeRelationshipCode.equals(BROTHER.toString()) && Gender.equals("F")) {
+            return SISTER.toString();
+        }if (relativeRelationshipCode.equals(COMPANION.toString())) {
+            return COMPANION.toString();
+        }if (relativeRelationshipCode.equals(RELATIVE.toString()) ) {
+            return RELATIVE.toString();
+        }
+
+        return COMPANION.toString();
     }
 }

@@ -69,7 +69,7 @@ public interface ApplicantChatContactRepository extends JpaRepository<JpaApplica
 
     Optional<JpaApplicantChatContact> findByApplicantUinAndContactUin(String applicantUin, String contactUin);
 
-    Optional<JpaApplicantChatContact> findByApplicantUinAndContactUinAndDeleted(String applicantUin, String contactUin, boolean isDeleted);
+    Optional<JpaApplicantChatContact> findByApplicantUinAndContactUinAndDeletedFalse(String applicantUin, String contactUin);
 
 
 }
