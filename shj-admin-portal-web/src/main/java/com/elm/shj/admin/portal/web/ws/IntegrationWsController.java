@@ -696,7 +696,7 @@ public class IntegrationWsController {
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).build()).build());
 
         }
-        if(command.getMobileNumber().equals("") || command.getMobileNumber().length() < 5 || command.getMobileNumber().length() > 20){
+        if(command.getMobileNumber().equals("") || command.getMobileNumber().length() < 5 || command.getMobileNumber().length() > 10){
             return ResponseEntity.ok(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(command.getMobileNumber()).build()).build());
@@ -716,7 +716,15 @@ public class IntegrationWsController {
 
             }
             boolean dateOfBirthMatched;
-            dateOfBirthMatched = command.getDateOfBirthHijri() == companyStaff.get().getDateOfBirthHijri();
+            SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
+            // decide which date of birth to use
+            if (command.getDateOfBirthGregorian() != null) {
+                String applicantDateFormatted = sdf.format(companyStaff.get().getDateOfBirthGregorian());
+                String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
+                dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
+            } else {
+                dateOfBirthMatched = command.getDateOfBirthHijri() == companyStaff.get().getDateOfBirthHijri();
+            }
             if (!dateOfBirthMatched) {
                 log.error("invalid data for suin {} and date of birth {}", command.getSuin(), command.getDateOfBirthHijri());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())

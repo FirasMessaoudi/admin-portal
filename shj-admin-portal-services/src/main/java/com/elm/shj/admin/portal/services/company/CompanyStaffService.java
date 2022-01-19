@@ -43,6 +43,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .suin(suin)
                     .fullNameAr(companyStaff.getFullNameAr())
                     .fullNameEn(companyStaff.getFullNameEn())
+                    .countryCode(companyStaff.getCountryCode())
                     .mobileNumber(companyStaff.getMobileNumber())
                     .email(companyStaff.getEmail())
                     .nationalityCode(companyStaff.getNationalityCode())

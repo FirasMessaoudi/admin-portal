@@ -10,8 +10,10 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Update Staff MVC Command
@@ -35,5 +37,8 @@ public class UpdateStaffCmd implements Serializable {
     private String countryCode;
 
     private int dateOfBirthHijri;
+
+    @Past
+    private Date dateOfBirthGregorian;
 
 }
