@@ -248,27 +248,26 @@ public class IntegrationWsController {
     @PostMapping("/update")
     public ResponseEntity<WsResponse<?>> update(@RequestBody @Validated UpdateApplicantCmd command) {
         Optional<ApplicantDto> databaseApplicant = applicantService.findByUin(command.getUin());
-        if (databaseApplicant.isPresent()) {
-            boolean dateOfBirthMatched;
-            dateOfBirthMatched = command.getDateOfBirthHijri() == databaseApplicant.get().getDateOfBirthHijri();
-            if (!dateOfBirthMatched) {
-                log.error("invalid data for uin {} and date of birth {}", command.getUin(), command.getDateOfBirthHijri());
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                        .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getUin()).build()).build());
-            }
-            int updatedRowsCount = applicantService.updateApplicantContacts(databaseApplicant.get().getId(), command);
-            if (updatedRowsCount < 1) {
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                        .body(WsError.builder().error(WsError.EWsError.UPDATE_APPLICANT_FAILED.getCode()).referenceNumber(command.getUin()).build()).build());
-            }
-            ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + command.getUin()));
-
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantLite).build());
-        } else {
+        if (!databaseApplicant.isPresent()) {
             log.error("invalid data for uin {}", command.getUin());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(command.getUin()).build()).build());
         }
+
+        boolean dateOfBirthMatched = command.getDateOfBirthHijri() == databaseApplicant.get().getDateOfBirthHijri();
+        if (!dateOfBirthMatched) {
+            log.error("invalid data for uin {} and date of birth {}", command.getUin(), command.getDateOfBirthHijri());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getUin()).build()).build());
+        }
+        int updatedRowsCount = applicantService.updateApplicantContacts(databaseApplicant.get().getId(), command);
+        if (updatedRowsCount < 1) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.UPDATE_APPLICANT_FAILED.getCode()).referenceNumber(command.getUin()).build()).build());
+        }
+        ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + command.getUin()));
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantLite).build());
     }
 
     /**
