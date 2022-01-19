@@ -63,6 +63,11 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         return applicantChatContactRepository.markDeleted(applicantUin, contactUin);
     }
 
+    @Transactional
+    public int deleteInvalidStaffChatContact(String staffUin) {
+        return applicantChatContactRepository.markStaffDeleted(staffUin);
+    }
+
     public ApplicantChatContactDto findApplicantChatContact(String applicantUin, String contactUin) {
         Optional<JpaApplicantChatContact> applicantChatContact = applicantChatContactRepository.findByApplicantUinAndContactUin(applicantUin, contactUin);
         return applicantChatContact.map(chatContact -> getMapper().fromEntity(chatContact, mappingContext)).orElse(null);

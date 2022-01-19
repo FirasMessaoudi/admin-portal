@@ -410,3 +410,7 @@ values (7, N'الشركة', 'Company', 'COMPANY', 'STAFF');
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_print_batch_type_lk OFF;
+GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('scheduler.staff.digitalId.card.invalidate.cron', '0 0 0 * * ?');
+GO

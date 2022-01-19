@@ -6,10 +6,13 @@ package com.elm.shj.admin.portal.orm.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the shc_company_staff_digital_id database table.
@@ -44,6 +47,10 @@ public class JpaCompanyStaffDigitalId implements Serializable {
     @ManyToOne
     @JoinColumn(name = "company_staff_id", nullable = false)
     private JpaCompanyStaff companyStaff;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, mappedBy = "companyStaffDigitalId")
+    private List<JpaCompanyStaffCard> companyStaffCards;
 
     @Column(name = "update_date")
     private Date updateDate;
