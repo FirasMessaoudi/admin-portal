@@ -43,14 +43,12 @@ public class CompanyStaffExpirationScheduler {
         companyStaffDigitalIdList.forEach(companyStaffDigitalId -> {
             companyStaffDigitalId.setStatusCode(EStaffDigitalIdStatus.INVALID.name());
             companyStaffDigitalId.getCompanyStaffCards().forEach(companyStaffCard -> {
-                log.debug(companyStaffCard.getStatusCode());
                 companyStaffCard.setStatusCode(ECardStatus.EXPIRED.name());
             });
             try {
                 applicantChatContactService.deleteInvalidStaffChatContact(companyStaffDigitalId.getSuin());
             } catch (Exception e) {
                 log.error("Failed to delete staff contact with suin  >>  {}", companyStaffDigitalId.getSuin());
-
             }
         });
         companyStaffDigitalIdRepository.saveAll(companyStaffDigitalIdList);
