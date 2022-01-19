@@ -57,18 +57,24 @@ public class ApplicantHealthDto implements Serializable {
     @CellIndex(index = 8)
     private String packageReferenceNumber;
 
-    private Date creationDate;
-    private Date updateDate;
     @JsonBackReference(value = "applicantRitual")
     private ApplicantRitualDto applicantRitual;
+
     private DataRequestRecordDto dataRequestRecord;
+
     private List<ApplicantHealthDiseaseDto> diseases;
+
     @Valid
     @NestedCells
     private List<ApplicantHealthSpecialNeedsDto> specialNeeds;
+
     private List<ApplicantHealthImmunizationDto> immunizations;
+
     // used in data requests either through file upload or integration
     @Valid
     @NestedCells
     private ApplicantBasicInfoDto applicantBasicInfo;
+
+    private Date creationDate;
+    private Date updateDate;
 }

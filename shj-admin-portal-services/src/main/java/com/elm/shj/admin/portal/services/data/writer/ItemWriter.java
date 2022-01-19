@@ -494,12 +494,10 @@ public class ItemWriter {
 
             if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
                 ApplicantHealthDto curApplicantHealth = (ApplicantHealthDto) item;
-                if (savedApplicantRitual != null) {
-                    curApplicantHealth.setApplicantRitual(savedApplicantRitual);
-                }
                 ApplicantHealthDto applicantHealthLite = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
                 if (applicantHealthLite != null) {
                     curApplicantHealth.setId(applicantHealthLite.getId());
+                    curApplicantHealth.setCreationDate(applicantHealthLite.getCreationDate());
                     if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
                         // get the special needs and if it is a list then create a list of special needs dtos
                         List<ApplicantHealthSpecialNeedsDto> applicantHealthSpecialNeeds = Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
@@ -508,7 +506,6 @@ public class ItemWriter {
                         IGenericMapper<ApplicantHealthSpecialNeedsDto, JpaApplicantHealthSpecialNeeds> mapper = findMapper(ApplicantHealthSpecialNeedsDto.class);
                         applicantHealthSpecialNeedsRepository.saveAll(mapper.toEntityList(applicantHealthSpecialNeeds, mappingContext));
                         curApplicantHealth.setSpecialNeeds(null);
-                        curApplicantHealth.setCreationDate(applicantHealthLite.getCreationDate());
                     }
                 } else {
                     if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
