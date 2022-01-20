@@ -93,7 +93,7 @@ public class ChatContactWsController {
         if (contact.isAutoAdded() == false) {
             if (contact.getAlias().length() > 50 || contact.getAlias().equals("") || null == contact.getAlias()) {
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                        .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(ritualId.toString()).build()).build());
+                        .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(contact.getAlias()).build()).build());
             }
             boolean isRitualPresent = applicantRitualService.findByRitualIdAndApplicantUin(ritualId, contact.getApplicantUin());
             if (!isRitualPresent) {
@@ -163,6 +163,18 @@ public class ChatContactWsController {
     @PutMapping(value = "/update/{id}")
     public ResponseEntity<WsResponse<?>> update(@PathVariable Long id,
                                                 @RequestBody @Valid ApplicantChatContactDto contact) throws Exception {
+        if (contact.getAlias().length() > 50 || contact.getAlias().equals("") || null == contact.getAlias()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(contact.getAlias()).build()).build());
+        }
+
+        if(null != contact.getMobileNumber()){
+            if(contact.getMobileNumber().length() < 5 || contact.getMobileNumber().length() > 16){
+                return ResponseEntity.ok(
+                        WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                                .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(contact.getMobileNumber()).build()).build());
+            }
+        }
         ApplicantChatContactDto applicantChatContact = applicantChatContactService.findById(id);
         if (applicantChatContact == null) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
