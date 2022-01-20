@@ -696,7 +696,7 @@ public class IntegrationWsController {
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).build()).build());
 
         }
-        if(command.getMobileNumber().equals("") || command.getMobileNumber().length() < 5 || command.getMobileNumber().length() > 10){
+        if(command.getMobileNumber().equals("") || command.getMobileNumber().length() < 5 || command.getMobileNumber().length() > 16){
             return ResponseEntity.ok(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(command.getMobileNumber()).build()).build());
