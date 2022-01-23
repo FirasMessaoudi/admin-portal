@@ -6,12 +6,13 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.JpaUser;
 import com.elm.shj.admin.portal.orm.test.AbstractJpaTest;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing class for {@link UserRepository}

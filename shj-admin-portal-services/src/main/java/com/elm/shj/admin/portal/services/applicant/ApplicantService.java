@@ -9,7 +9,6 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
-import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -41,7 +40,6 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
 
     private final ApplicantRepository applicantRepository;
     private final ApplicantContactRepository applicantContactRepository;
-    private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantPackageService applicantPackageService;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";

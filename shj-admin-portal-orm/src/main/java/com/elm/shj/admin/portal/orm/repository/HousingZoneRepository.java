@@ -1,7 +1,6 @@
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaHousingZone;
-import com.elm.shj.admin.portal.orm.entity.JpaPackageHousing;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

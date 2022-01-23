@@ -4,12 +4,7 @@
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.test.AbstractJpaTest;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class ApplicantCardRepositoryTest extends AbstractJpaTest {
 

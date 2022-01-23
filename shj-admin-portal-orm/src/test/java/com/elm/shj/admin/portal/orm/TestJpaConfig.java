@@ -1,6 +1,5 @@
 package com.elm.shj.admin.portal.orm;
 
-import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.bean.DatabaseConfigBean;
 import com.github.springtestdbunit.bean.DatabaseDataSourceConnectionFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;

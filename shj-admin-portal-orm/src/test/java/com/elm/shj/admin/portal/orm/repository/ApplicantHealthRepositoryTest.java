@@ -3,12 +3,13 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
 import com.elm.shj.admin.portal.orm.test.AbstractJpaTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Testing class for {@link ApplicantHealthRepository}
