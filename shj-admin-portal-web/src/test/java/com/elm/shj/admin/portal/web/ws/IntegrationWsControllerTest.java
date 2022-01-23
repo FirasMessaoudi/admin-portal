@@ -125,7 +125,7 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
     public void test_find_applicant_card_details_success() throws Exception {
         String url = Navigation.API_INTEGRATION + "/details/" + EXIST_USER_UIN + "/" + EXIST_RITUAL_ID;
         ApplicantRitualCardLiteDto applicantRituals = new ApplicantRitualCardLiteDto();
-        when(applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(EXIST_USER_UIN, Long.parseLong(EXIST_RITUAL_ID))).thenReturn(Optional.of(applicantRituals));
+        when(applicantRitualCardLiteService.findCardDetailsByUinAndPackageId(EXIST_USER_UIN, Long.parseLong(EXIST_RITUAL_ID))).thenReturn(Optional.of(applicantRituals));
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk());
     }
 
@@ -133,7 +133,7 @@ public class IntegrationWsControllerTest extends AbstractControllerTestSuite {
     public void test_find_applicant_card_details_fail() throws Exception {
         Map<String, String> errors = new HashMap<>();
         String url = Navigation.API_INTEGRATION + "/details/" + FAKE_USER_UIN + "/" + EXIST_RITUAL_ID;
-        when(applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(any(), any())).thenReturn(Optional.empty());
+        when(applicantRitualCardLiteService.findCardDetailsByUinAndPackageId(any(), any())).thenReturn(Optional.empty());
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.status", is("FAILURE")));
     }
 

@@ -15,14 +15,14 @@ export class LookupService {
   }
 
   localizedLabel(lookupItems: Lookup[], code: string): string {
-    let item: Lookup = lookupItems.find(type => type.code === code && this.i18nService.language.startsWith(type.lang));
+    let item: Lookup = lookupItems?.find(type => type.code === code && this.i18nService.language.startsWith(type.lang));
     if (!item)
       item = lookupItems.find(type => type.code === code && type.lang.startsWith(defaultLang));
     return item?.label;
   }
 
   localizedItems(lookupItems: Lookup[]): Lookup[] {
-    let items: Lookup[] = lookupItems.filter(value => this.i18nService.language.startsWith(value.lang));
+    let items: Lookup[] = lookupItems?.filter(value => this.i18nService.language.startsWith(value.lang));
     if (!items)
       items = lookupItems.filter(value => value.lang.startsWith(defaultLang));
     return items;

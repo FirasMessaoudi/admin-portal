@@ -323,7 +323,7 @@ public class IntegrationWsController {
     @GetMapping("/details/{uin}/{applicantPackageId}")
     public ResponseEntity<WsResponse<?>> findCardDetails(@PathVariable String uin, @PathVariable Long applicantPackageId) {
         log.debug("Handler for {}", "Find applicant card details by uin");
-        Optional<ApplicantRitualCardLiteDto> returnedApplicantRitualCardLiteDto = applicantRitualCardLiteService.findCardDetailsByUinAndRitualId(uin, applicantPackageId);
+        Optional<ApplicantRitualCardLiteDto> returnedApplicantRitualCardLiteDto = applicantRitualCardLiteService.findCardDetailsByUinAndPackageId(uin, applicantPackageId);
 
         if (returnedApplicantRitualCardLiteDto.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(returnedApplicantRitualCardLiteDto).build());

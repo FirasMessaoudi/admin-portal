@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,7 +35,7 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
     private final CompanyStaffService companyStaffService;
     private final ApplicantPackageService applicantPackageService;
 
-    public Optional<ApplicantRitualCardLiteDto> findCardDetailsByUinAndRitualId(String uin, long applicantPackageId) {
+    public Optional<ApplicantRitualCardLiteDto> findCardDetailsByUinAndPackageId(String uin, long applicantPackageId) {
 
         ApplicantPackageDto applicantPackageDto = applicantPackageService.findOne(applicantPackageId);
 
@@ -49,8 +48,9 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
         if (!applicantRitual.isPresent())
             return Optional.empty();
 
-        List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId());
-
+        Optional<CompanyStaffDto> groupLeader = companyStaffService.findGroupLeaderByApplicantUin(uin, applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId());
+        if (!groupLeader.isPresent())
+            return Optional.empty();
         ApplicantRitualCardLiteDto returnedDto = getMapper().fromEntity(applicantRitual.get(), mappingContext);
         returnedDto.setRitualType(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode().toUpperCase());
         returnedDto.setFullNameEn(applicantRitual.get().getApplicant().getFullNameEn());
@@ -59,9 +59,9 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
         returnedDto.setPhoto(applicantRitual.get().getApplicant().getPhoto());
         returnedDto.setHijriSeason(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getSeasonYear());
         //TODO: get the first leader, this logic has to be reviewed when card business requirement is more clear.
-        returnedDto.setLeaderMobile(groupLeaders.get(0).getMobileNumber());
-        returnedDto.setLeaderNameAr(groupLeaders.get(0).getFullNameAr());
-        returnedDto.setLeaderNameEn(groupLeaders.get(0).getFullNameEn());
+        returnedDto.setLeaderMobile(groupLeader.get().getMobileNumber());
+        returnedDto.setLeaderNameAr(groupLeader.get().getFullNameAr());
+        returnedDto.setLeaderNameEn(groupLeader.get().getFullNameEn());
 
         return Optional.of(returnedDto);
     }
