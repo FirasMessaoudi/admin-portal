@@ -19,9 +19,9 @@ import java.util.Optional;
  */
 public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRitual, Long> {
 
-    @Query("select ar from JpaApplicantRitual ar where ar.id not in (select ac.applicantRitual.id from JpaApplicantCard ac)")
-    List<JpaApplicantRitual> findAllApplicantRitualsWithoutCard();
-
+    @Query("select ar from JpaApplicantRitual ar where ar.id not in (select ac.applicantRitual.id from JpaApplicantCard ac) " +
+            "and ar.applicant.id in (select adi.applicantId from JpaApplicantDigitalId adi)")
+    List<JpaApplicantRitual> findWithExistingDigitalIdAndWithoutCard();
 
     @Query("select ar   from JpaApplicantRitual ar join ar.applicant a join a.digitalIds di where di.uin=:uin and ar.id=:rid")
     JpaApplicantRitual findCardDetailsByUinAndRitualId(@Param("uin") String uin, @Param("rid") long rid);

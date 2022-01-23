@@ -124,27 +124,52 @@ public class ItemWriter {
                 ApplicantEmergencyDto emergencyDto = (ApplicantEmergencyDto) entry.getValue();
                 ApplicantDto applicantDto = getApplicantFromEmergency(emergencyDto);
                 ApplicantRitualEmergencyDto applicantRitualEmergencyDto = emergencyDto.getApplicantRitualEmergencyDto();
+
                 updateNestedApplicantInfo(applicantDto, applicantRitualEmergencyDto.getBusNumber(), applicantRitualEmergencyDto.getSeatNumber());
-                // create applicant ritual and update applicant
-                updateApplicantRitualInfo(applicantDto, applicantRitualEmergencyDto);
+
+                ApplicantDigitalIdDto applicantDigitalId = CollectionUtils.isNotEmpty(applicantDto.getDigitalIds()) ? applicantDto.getDigitalIds().get(0) : null;
+                String applicantUin = applicantDigitalId != null ? applicantDigitalId.getUin() : null;
+
+                // create a new applicant ritual
+                ApplicantRitualDto applicantRitual = ApplicantRitualDto.builder().applicant(applicantDto).packageReferenceNumber(emergencyDto.getPackageReferenceNumber()).build();
+                applicantRitual.setContacts(new HashSet<>(applicantDto.getContacts()));
+                // update applicant ritual from the emergency data and update applicant with the new ritual.
+                updateApplicantRitualInfo(applicantRitual, applicantRitualEmergencyDto);
+
+                // check if digital id is exists, if yes then create a new applicant package and link it with the applicant ritual
+                if (applicantUin != null && !applicantUin.isEmpty()) {
+                    ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantUin));
+                    applicantRitual.setApplicantPackage(createdApplicantPackage);
+                }
+
+                if (CollectionUtils.isNotEmpty(applicantRitual.getContacts())) {
+                    applicantRitual.getContacts().forEach(ac -> {
+                        ac.setApplicantRitual(applicantRitual);
+                    });
+                }
+
+                if (CollectionUtils.isNotEmpty(applicantDto.getRituals())) {
+                    applicantDto.getRituals().add(applicantRitual);
+                } else {
+                    applicantDto.setRituals(Collections.singletonList(applicantRitual));
+                }
+
                 S savedApplicant = (S) applicantRepository.save(mapperRegistry.get(EDataSegment.APPLICANT_DATA).toEntity(applicantDto, mappingContext));
                 savedItems.add(savedApplicant);
-                savedItems.forEach(item -> {
-                    try {
-                        dataRequestRecords.add(DataRequestRecordDto.builder()
-                                .createDataRequestId(dataRequestId)
-                                .lastUpdateDataRequestId(dataRequestId)
-                                .createDataRequestRowNum((long) entry.getKey().getRowNum())
-                                .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
-                                .itemId(Long.parseLong(BeanUtils.getProperty(item, "id")))
-                                .build());
-                    } catch (Exception e) {
-                        ReflectionUtils.handleReflectionException(e);
-                    }
-                });
-
+                try {
+                    dataRequestRecords.add(DataRequestRecordDto.builder()
+                            .createDataRequestId(dataRequestId)
+                            .lastUpdateDataRequestId(dataRequestId)
+                            .createDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .itemId(Long.parseLong(BeanUtils.getProperty(savedApplicant, "id")))
+                            .build());
+                } catch (Exception e) {
+                    ReflectionUtils.handleReflectionException(e);
+                }
             });
             List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+            //set data request record for the saved items (applicants)
             savedItems.forEach(s -> {
                 savedRecords.stream().filter(r -> {
                     try {
@@ -156,17 +181,13 @@ public class ItemWriter {
                 }).forEach(r -> {
                     try {
                         BeanUtils.setProperty(s, "dataRequestRecord", r);
+                        //set data request record for the saved applicants ritual
+                        ((JpaApplicant) s).getRituals().get(0).setDataRequestRecord(((JpaApplicant) s).getDataRequestRecord());
+                        applicantRepository.save(s);
                     } catch (Exception e) {
                         ReflectionUtils.handleReflectionException(e);
                     }
                 });
-            });
-            savedItems.forEach(item -> {
-                if (item.getClass().isAssignableFrom(JpaApplicant.class)) {
-                    ((JpaApplicant) item).getRituals().get(0).setDataRequestRecord(((JpaApplicant) item).getDataRequestRecord());
-                    applicantRepository.save(item);
-                }
-
             });
             return Collections.emptyList();
         }
@@ -224,17 +245,17 @@ public class ItemWriter {
             return dataValidationResults;
         }
 
+        if (dataSegment.getId() == EDataSegment.STAFF_RITUAL_DATA.getId()) {
+            //Temporary for testing only : staff ritual
+            items.forEach(entry -> updateCompanyStaffRitualData(entry.getValue()));
+            return Collections.emptyList();
+        }
+
         if (dataSegment.getId() == EDataSegment.APPLICANT_DATA.getId() || dataSegment.getId() == EDataSegment.APPLICANT_HEALTH_DATA.getId() ||
                 dataSegment.getId() == EDataSegment.APPLICANT_IMMUNIZATION_DATA.getId() || dataSegment.getId() == EDataSegment.APPLICANT_DISEASE_DATA.getId() ||
                 dataSegment.getId() == EDataSegment.APPLICANT_RITUAL_DATA.getId() || dataSegment.getId() == EDataSegment.APPLICANT_RELATIVES_DATA.getId()) {
             // update applicant related attributes
             items.forEach(entry -> updateNestedApplicantInfo(entry.getValue()));
-        }
-
-        if (dataSegment.getId() == EDataSegment.STAFF_RITUAL_DATA.getId()) {
-            //Temporary for testing only : staff ritual
-            items.forEach(entry -> updateCompanyStaffRitualData(entry.getValue()));
-            return Collections.emptyList();
         }
 
         // save all items and build data records
@@ -308,19 +329,18 @@ public class ItemWriter {
     /**
      * update related applicant ritual from applicant emergency
      *
-     * @param applicantDto
+     * @param applicantRitualDto
      * @param applicantRitualEmergencyDto
      */
 
-    private <T> void updateApplicantRitualInfo(ApplicantDto applicantDto, ApplicantRitualEmergencyDto applicantRitualEmergencyDto) {
-        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setBorderNumber(applicantRitualEmergencyDto.getBorderNumber());
-        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setVisaNumber(applicantRitualEmergencyDto.getVisaNumber());
-        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setPermitNumber(applicantRitualEmergencyDto.getPermitNumber());
-        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setInsuranceNumber(applicantRitualEmergencyDto.getInsuranceNumber());
-        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setBusNumber(applicantRitualEmergencyDto.getBusNumber());
-        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setSeatNumber(applicantRitualEmergencyDto.getSeatNumber());
-        applicantDto.getRituals().get(applicantDto.getRituals().size() - 1).setGroupReferenceNumber(applicantRitualEmergencyDto.getGroupReferenceNumber());
-
+    private void updateApplicantRitualInfo(ApplicantRitualDto applicantRitualDto, ApplicantRitualEmergencyDto applicantRitualEmergencyDto) {
+        applicantRitualDto.setBorderNumber(applicantRitualEmergencyDto.getBorderNumber());
+        applicantRitualDto.setVisaNumber(applicantRitualEmergencyDto.getVisaNumber());
+        applicantRitualDto.setPermitNumber(applicantRitualEmergencyDto.getPermitNumber());
+        applicantRitualDto.setInsuranceNumber(applicantRitualEmergencyDto.getInsuranceNumber());
+        applicantRitualDto.setBusNumber(applicantRitualEmergencyDto.getBusNumber());
+        applicantRitualDto.setSeatNumber(applicantRitualEmergencyDto.getSeatNumber());
+        applicantRitualDto.setGroupReferenceNumber(applicantRitualEmergencyDto.getGroupReferenceNumber());
     }
 
     /**
@@ -379,7 +399,7 @@ public class ItemWriter {
                 applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicant.getId()));
                 applicant.setCreationDate(existingApplicant.getCreationDate());
             }
-            // this case is for emergency data to insert bus number and seat number in applicant package transportation
+            // TODO: this case is for emergency data to insert bus number and seat number in applicant package transportation
 
             // this case is for applicant data upload
             if (CollectionUtils.isNotEmpty(applicant.getContacts())) {

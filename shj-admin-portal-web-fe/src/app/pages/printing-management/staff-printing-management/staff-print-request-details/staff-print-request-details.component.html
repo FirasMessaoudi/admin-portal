@@ -38,11 +38,6 @@
         <span class="form-control-plaintext "><span
           class="status mr-1 done"></span> {{printRequest?.statusCode ? lookupService().localizedLabel(printRequestStatuses, printRequest?.statusCode) : ''}}</span>
       </div>
-      <div class="form-group col mb-lg-0" *ngIf="printRequest?.description">
-        <label class="col-form-label">{{'printing-management.request_description' | translate}}</label>
-        <span class="form-control-plaintext ">{{printRequest?.description}}</span>
-      </div>
-
       <div class="form-group col mb-lg-0" *ngIf="staffCard">
         <label class="col-form-label">{{'printing-management.season' | translate}}</label>
         <span class="form-control-plaintext ">{{staffCard?.companyRitualSeason?.ritualSeason?.seasonYear}}</span>
@@ -52,6 +47,10 @@
         <label class="col-form-label">{{'printing-management.ritual-type' | translate}}</label>
         <span
           class="form-control-plaintext ">{{staffCard?.companyRitualSeason?.ritualSeason?.ritualTypeCode ? lookupService().localizedLabel(ritualTypes, staffCard?.companyRitualSeason?.ritualSeason?.ritualTypeCode) : "---"}}</span>
+      </div>
+      <div class="form-group col-md-3" *ngIf="printRequest?.description">
+        <label class="col-form-label">{{'printing-management.request_description' | translate}}</label>
+        <p class="form-control-plaintext ">{{printRequest?.description}}</p>
       </div>
     </div>
 
