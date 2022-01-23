@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,10 +39,10 @@ public class CompanyRitualSeasonDto {
     private List<ApplicantGroupDto> applicantGroups;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private int seasonStart;
+    private long seasonStart;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private int seasonEnd;
+    private long seasonEnd;
 
     private int totalQuota;
     private int airQuota;

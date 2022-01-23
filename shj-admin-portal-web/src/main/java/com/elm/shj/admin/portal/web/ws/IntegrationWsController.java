@@ -12,6 +12,7 @@ import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
+import com.elm.shj.admin.portal.web.admin.ValidateStaffCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
@@ -248,27 +249,26 @@ public class IntegrationWsController {
     @PostMapping("/update")
     public ResponseEntity<WsResponse<?>> update(@RequestBody @Validated UpdateApplicantCmd command) {
         Optional<ApplicantDto> databaseApplicant = applicantService.findByUin(command.getUin());
-        if (databaseApplicant.isPresent()) {
-            boolean dateOfBirthMatched;
-            dateOfBirthMatched = command.getDateOfBirthHijri() == databaseApplicant.get().getDateOfBirthHijri();
-            if (!dateOfBirthMatched) {
-                log.error("invalid data for uin {} and date of birth {}", command.getUin(), command.getDateOfBirthHijri());
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                        .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getUin()).build()).build());
-            }
-            int updatedRowsCount = applicantService.updateApplicantContacts(databaseApplicant.get().getId(), command);
-            if (updatedRowsCount < 1) {
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                        .body(WsError.builder().error(WsError.EWsError.UPDATE_APPLICANT_FAILED.getCode()).referenceNumber(command.getUin()).build()).build());
-            }
-            ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + command.getUin()));
-
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantLite).build());
-        } else {
+        if (!databaseApplicant.isPresent()) {
             log.error("invalid data for uin {}", command.getUin());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(command.getUin()).build()).build());
         }
+
+        boolean dateOfBirthMatched = command.getDateOfBirthHijri() == databaseApplicant.get().getDateOfBirthHijri();
+        if (!dateOfBirthMatched) {
+            log.error("invalid data for uin {} and date of birth {}", command.getUin(), command.getDateOfBirthHijri());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getUin()).build()).build());
+        }
+        int updatedRowsCount = applicantService.updateApplicantContacts(databaseApplicant.get().getId(), command);
+        if (updatedRowsCount < 1) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.UPDATE_APPLICANT_FAILED.getCode()).referenceNumber(command.getUin()).build()).build());
+        }
+        ApplicantLiteDto applicantLite = applicantLiteService.findByUin(command.getUin()).orElseThrow(() -> new ApplicantNotFoundException("No applicant found with uin " + command.getUin()));
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantLite).build());
     }
 
     /**
@@ -653,39 +653,37 @@ public class IntegrationWsController {
 
     }
 
-    @GetMapping("/verify-staff")
-    public ResponseEntity<WsResponse<?>> verifyStaff(@RequestParam(value = "suin") String suin,
-                                                     @RequestParam(value = "dateOfBirthGregorian", required = false) String dateOfBirthGregorian,
-                                                     @RequestParam(value = "dateOfBirthHijri", required = false) int dateOfBirthHijri) {
-        Optional<CompanyStaffLiteDto> staff = companyStaffService.findBySuin(suin);
+    @PostMapping("/verify-staff")
+    public ResponseEntity<WsResponse<?>> verifyStaff(@RequestBody ValidateStaffCmd validateStaffCmd) {
+        Optional<CompanyStaffLiteDto> staff = companyStaffService.findBySuin(validateStaffCmd.getSuin());
         if (staff.isPresent()) {
             boolean dateOfBirthMatched;
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
             // decide which date of birth to use
-            if (dateOfBirthGregorian != null && !dateOfBirthGregorian.equals("")) {
+            if (validateStaffCmd.getDateOfBirthGregorian() != null && !validateStaffCmd.getDateOfBirthGregorian().equals("")) {
                 try {
-                    Date gregorianDate = sdf.parse(dateOfBirthGregorian);
+                    Date gregorianDate = sdf.parse(validateStaffCmd.getDateOfBirthGregorian());
                     String applicantDateFormatted = sdf.format(staff.get().getDateOfBirthGregorian());
                     String commandDataOfBirthFormatted = sdf.format(gregorianDate);
                     dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
-                } catch (ParseException e){
+                } catch (ParseException e) {
                     return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                            .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(suin).build()).build());
+                            .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getSuin()).build()).build());
                 }
 
             } else {
-                dateOfBirthMatched = dateOfBirthHijri == staff.get().getDateOfBirthHijri();
+                dateOfBirthMatched = validateStaffCmd.getDateOfBirthHijri() == staff.get().getDateOfBirthHijri();
             }
             if (!dateOfBirthMatched) {
                 log.debug("unmatched data for {} suin and {} hijri date of birth and {} gregorian date of birth.",
-                        suin, dateOfBirthHijri, dateOfBirthGregorian);
+                        validateStaffCmd.getSuin(), validateStaffCmd.getDateOfBirthHijri(), validateStaffCmd.getDateOfBirthGregorian());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                        .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(suin).build()).build());
+                        .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getSuin()).build()).build());
             }
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(staff).build());
         } else {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                    .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(suin).build()).build());
+                    .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(validateStaffCmd.getSuin()).build()).build());
         }
     }
 
@@ -697,7 +695,7 @@ public class IntegrationWsController {
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).build()).build());
 
         }
-        if(command.getMobileNumber().equals("") || command.getMobileNumber().length() < 5 || command.getMobileNumber().length() > 20){
+        if(command.getMobileNumber().equals("") || command.getMobileNumber().length() < 5 || command.getMobileNumber().length() > 16){
             return ResponseEntity.ok(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(command.getMobileNumber()).build()).build());
@@ -717,7 +715,15 @@ public class IntegrationWsController {
 
             }
             boolean dateOfBirthMatched;
-            dateOfBirthMatched = command.getDateOfBirthHijri() == companyStaff.get().getDateOfBirthHijri();
+            SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
+            // decide which date of birth to use
+            if (command.getDateOfBirthGregorian() != null) {
+                String applicantDateFormatted = sdf.format(companyStaff.get().getDateOfBirthGregorian());
+                String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
+                dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
+            } else {
+                dateOfBirthMatched = command.getDateOfBirthHijri() == companyStaff.get().getDateOfBirthHijri();
+            }
             if (!dateOfBirthMatched) {
                 log.error("invalid data for suin {} and date of birth {}", command.getSuin(), command.getDateOfBirthHijri());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())

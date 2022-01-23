@@ -23,10 +23,10 @@ public class CompanyRitualSeasonLiteDto implements Serializable {
     private long id;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private int seasonStart;
+    private long seasonStart;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private int seasonEnd;
+    private long seasonEnd;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     private RitualSeasonDto ritualSeason;

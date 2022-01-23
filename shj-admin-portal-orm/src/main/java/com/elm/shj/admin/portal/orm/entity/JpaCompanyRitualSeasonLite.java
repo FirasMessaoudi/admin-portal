@@ -44,10 +44,10 @@ public class JpaCompanyRitualSeasonLite implements Serializable {
     private List<JpaRitualPackage> ritualPackages;
 
     @Column(name = "season_start", nullable = false)
-    private int seasonStart;
+    private long seasonStart;
 
     @Column(name = "season_end", nullable = false)
-    private int seasonEnd;
+    private long seasonEnd;
 
 
     @Column(name = "creation_date")

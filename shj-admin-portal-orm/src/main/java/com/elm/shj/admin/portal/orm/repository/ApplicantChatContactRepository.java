@@ -71,5 +71,10 @@ public interface ApplicantChatContactRepository extends JpaRepository<JpaApplica
 
     Optional<JpaApplicantChatContact> findByApplicantUinAndContactUinAndDeletedFalse(String applicantUin, String contactUin);
 
+    @Modifying
+    @Query("UPDATE JpaApplicantChatContact contact SET contact.deleted = TRUE WHERE" +
+            " contact.contactUin=:StaffUin")
+    int markStaffDeleted(@Param("StaffUin") String suin);
+
 
 }

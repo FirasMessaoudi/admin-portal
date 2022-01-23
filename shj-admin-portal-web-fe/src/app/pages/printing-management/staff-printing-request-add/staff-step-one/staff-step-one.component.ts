@@ -121,6 +121,7 @@ export class StaffStepOneComponent implements OnInit {
     this.ritualForm = this.formBuilder.group({
       seasonYear: [null, Validators.required],
       ritualCode: [null, Validators.required],
+      description: [null]
     });
 
 
@@ -233,6 +234,8 @@ export class StaffStepOneComponent implements OnInit {
           this.toastr.warning(this.translate.instant("printing-management.dialog_confirm_request_error_text"), this.translate.instant("general.dialog_error_title"));
         } else {
           this.onChangeLoading.emit(false);
+          let arrayOfDesc = this.ritualForm.value.description.split("\n");
+          result.description = arrayOfDesc.join(' ');
           this.onSetPrintRequest.emit(result);
         }
       }

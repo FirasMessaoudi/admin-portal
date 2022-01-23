@@ -63,6 +63,11 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         return applicantChatContactRepository.markDeleted(applicantUin, contactUin);
     }
 
+    @Transactional
+    public int deleteInvalidStaffChatContact(String staffUin) {
+        return applicantChatContactRepository.markStaffDeleted(staffUin);
+    }
+
     public ApplicantChatContactDto findApplicantChatContact(String applicantUin, String contactUin) {
         Optional<JpaApplicantChatContact> applicantChatContact = applicantChatContactRepository.findByApplicantUinAndContactUin(applicantUin, contactUin);
         return applicantChatContact.map(chatContact -> getMapper().fromEntity(chatContact, mappingContext)).orElse(null);
@@ -240,47 +245,47 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @return
      */
     private String mapOwnerRelationship(String relativeRelationshipCode, String Gender) {
-        if (relativeRelationshipCode.equals(FATHER.toString()) && Gender.equals("M")) {
-            return SON.toString();
+        if (relativeRelationshipCode.equalsIgnoreCase(FATHER.name()) && Gender.equalsIgnoreCase("M")) {
+            return SON.name();
         }
-        if (relativeRelationshipCode.equals(FATHER.toString()) && Gender.equals("F")) {
-            return DAUGHTER.toString();
+        if (relativeRelationshipCode.equalsIgnoreCase(FATHER.name()) && Gender.equalsIgnoreCase("F")) {
+            return DAUGHTER.name();
         }
-        if (relativeRelationshipCode.equals(SON.toString()) && Gender.equals("M")) {
-            return FATHER.toString();
+        if (relativeRelationshipCode.equalsIgnoreCase(SON.name()) && Gender.equalsIgnoreCase("M")) {
+            return FATHER.name();
         }
-        if (relativeRelationshipCode.equals(SON.toString()) && Gender.equals("F")) {
-            return MOTHER.toString();
+        if (relativeRelationshipCode.equalsIgnoreCase(SON.name()) && Gender.equalsIgnoreCase("F")) {
+            return MOTHER.name();
         }
-        if (relativeRelationshipCode.equals(MOTHER.toString()) && Gender.equals("M")) {
-            return SON.toString();
+        if (relativeRelationshipCode.equalsIgnoreCase(MOTHER.name()) && Gender.equalsIgnoreCase("M")) {
+            return SON.name();
         }
-        if (relativeRelationshipCode.equals(MOTHER.toString()) && Gender.equals("F")) {
-            return DAUGHTER.toString();
+        if (relativeRelationshipCode.equalsIgnoreCase(MOTHER.name()) && Gender.equalsIgnoreCase("F")) {
+            return DAUGHTER.name();
         }
-        if (relativeRelationshipCode.equals(HUSBAND.toString())) {
-            return WIFE.toString();
+        if (relativeRelationshipCode.equalsIgnoreCase(HUSBAND.name())) {
+            return WIFE.name();
         }
-        if (relativeRelationshipCode.equals(WIFE.toString())) {
-            return HUSBAND.toString();
+        if (relativeRelationshipCode.equalsIgnoreCase(WIFE.name())) {
+            return HUSBAND.name();
         }
-        if (relativeRelationshipCode.equals(SISTER.toString()) && Gender.equals("M")) {
-            return BROTHER.toString();
+        if (relativeRelationshipCode.equalsIgnoreCase(SISTER.name()) && Gender.equalsIgnoreCase("M")) {
+            return BROTHER.name();
         }
-        if (relativeRelationshipCode.equals(SISTER.toString()) && Gender.equals("F")) {
-            return SISTER.toString();
+        if (relativeRelationshipCode.equalsIgnoreCase(SISTER.name()) && Gender.equalsIgnoreCase("F")) {
+            return SISTER.name();
         }
-        if (relativeRelationshipCode.equals(BROTHER.toString()) && Gender.equals("M")) {
-            return BROTHER.toString();
+        if (relativeRelationshipCode.equalsIgnoreCase(BROTHER.name()) && Gender.equalsIgnoreCase("M")) {
+            return BROTHER.name();
         }
-        if (relativeRelationshipCode.equals(BROTHER.toString()) && Gender.equals("F")) {
-            return SISTER.toString();
-        }if (relativeRelationshipCode.equals(COMPANION.toString())) {
-            return COMPANION.toString();
-        }if (relativeRelationshipCode.equals(RELATIVE.toString()) ) {
-            return RELATIVE.toString();
+        if (relativeRelationshipCode.equalsIgnoreCase(BROTHER.name()) && Gender.equalsIgnoreCase("F")) {
+            return SISTER.name();
+        }if (relativeRelationshipCode.equalsIgnoreCase(COMPANION.name())) {
+            return COMPANION.name();
+        }if (relativeRelationshipCode.equalsIgnoreCase(RELATIVE.name()) ) {
+            return RELATIVE.name();
         }
 
-        return COMPANION.toString();
+        return COMPANION.name();
     }
 }

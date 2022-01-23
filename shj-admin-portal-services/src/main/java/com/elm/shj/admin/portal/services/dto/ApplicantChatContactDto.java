@@ -28,7 +28,6 @@ public class ApplicantChatContactDto implements Serializable {
     private String applicantUin;
     private String contactUin;
     private ContactTypeLookupDto type;
-    @NotBlank(message = "validation.data.validation.field.required")
     private String alias;
     private String avatar;
     private boolean systemDefined;
