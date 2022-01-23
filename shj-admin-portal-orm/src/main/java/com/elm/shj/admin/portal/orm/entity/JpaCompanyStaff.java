@@ -97,6 +97,9 @@ public class JpaCompanyStaff implements Serializable {
 
     private boolean registered;
 
+    @Column(name = "country_code")
+    private String countryCode;
+
     @PrePersist
     public void prePersist() {
         creationDate = new Date();

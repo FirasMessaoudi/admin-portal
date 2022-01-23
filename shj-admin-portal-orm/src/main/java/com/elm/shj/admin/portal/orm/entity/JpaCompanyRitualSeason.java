@@ -54,10 +54,10 @@ public class JpaCompanyRitualSeason implements Serializable {
     private List<JpaCompanyStaffCard> companyStaffCards;
 
     @Column(name = "season_start", nullable = false)
-    private int seasonStart;
+    private long seasonStart;
 
     @Column(name = "season_end", nullable = false)
-    private int seasonEnd;
+    private long seasonEnd;
 
     @Column(name = "total_quota")
     private int totalQuota;

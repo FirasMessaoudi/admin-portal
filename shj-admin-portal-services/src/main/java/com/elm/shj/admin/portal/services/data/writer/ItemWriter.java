@@ -116,7 +116,6 @@ public class ItemWriter {
     @Transactional
     @SuppressWarnings({"rawtypes", "unchecked"})
     public <T, S> List<DataValidationResult> write(List<AbstractMap.SimpleEntry<Row, T>> items, DataSegmentDto dataSegment, long dataRequestId) {
-        List<DataValidationResult> dataValidationResults = new ArrayList<>();
         if (dataSegment.getId() == EDataSegment.APPLICANT_EMERGENCY_DATA.getId()) {
             JpaRepository applicantRepository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.APPLICANT_DATA));
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
@@ -125,7 +124,7 @@ public class ItemWriter {
                 ApplicantEmergencyDto emergencyDto = (ApplicantEmergencyDto) entry.getValue();
                 ApplicantDto applicantDto = getApplicantFromEmergency(emergencyDto);
                 ApplicantRitualEmergencyDto applicantRitualEmergencyDto = emergencyDto.getApplicantRitualEmergencyDto();
-                updateNestedApplicantInfo(applicantDto, Collections.emptyList(), applicantRitualEmergencyDto.getBusNumber(), applicantRitualEmergencyDto.getSeatNumber());
+                updateNestedApplicantInfo(applicantDto, applicantRitualEmergencyDto.getBusNumber(), applicantRitualEmergencyDto.getSeatNumber());
                 // create applicant ritual and update applicant
                 updateApplicantRitualInfo(applicantDto, applicantRitualEmergencyDto);
                 S savedApplicant = (S) applicantRepository.save(mapperRegistry.get(EDataSegment.APPLICANT_DATA).toEntity(applicantDto, mappingContext));
@@ -169,8 +168,11 @@ public class ItemWriter {
                 }
 
             });
-        } else if (dataSegment.getId() == EDataSegment.STAFF_APPLICANT_GROUP_DATA.getId()) {
+            return Collections.emptyList();
+        }
 
+        if (dataSegment.getId() == EDataSegment.STAFF_APPLICANT_GROUP_DATA.getId()) {
+            List<DataValidationResult> dataValidationResults = new ArrayList<>();
             items.forEach(entry -> {
                 //mark row with error
                 Class clazz = StaffApplicantGroupDto.class;
@@ -194,7 +196,6 @@ public class ItemWriter {
                         if (uniqueGroupLeader.containsKey(applicantGroupDto.getReferenceNumber())) {
                             if (uniqueGroupLeader.get(applicantGroupDto.getReferenceNumber()) != groupLeader.getId()) {
                                 dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(cellIndex + 1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_GROUP_WITH_DIFFERENT_LEADERS.getMessage())).valid(false).build());
-
                             }
                         } else {
                             uniqueGroupLeader.put(applicantGroupDto.getReferenceNumber(), groupLeader.getId());
@@ -220,84 +221,87 @@ public class ItemWriter {
                 }
 
             });
-        } else {
-            if (dataSegment.getId() == EDataSegment.APPLICANT_RELATIVES_DATA.getId()) {
-                handleApplicantRelativeInfo(items);
-                return dataValidationResults;
-            } else if (dataSegment.getId() < EDataSegment.STAFF_MAIN_DATA.getId()) {
-                // update applicant related attributes
-                items.forEach(entry -> updateNestedApplicantInfo(entry.getValue(), items.stream().map(AbstractMap.SimpleEntry::getValue).collect(Collectors.toList())));
-            }
-            if (dataSegment.getId() == EDataSegment.STAFF_RITUAL_DATA.getId()) {
-                //Temporary for testing only : staff ritual
-                items.forEach(entry -> updateCompanyStaffRitualData(entry.getValue()));
-
-            } else {
-                // save all items and build data records
-
-                List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
-                List<S> savedItems = new ArrayList<>();
-                JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
-                items.forEach(entry -> {
-                    S savedItem = null;
-                    //this part is to handle staff main data
-                    if (dataSegment.getId() == EDataSegment.STAFF_MAIN_DATA.getId()) {
-                        CompanyStaffDto staff = (CompanyStaffDto) entry.getValue();
-                        CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
-                        // if record exists already in DB we need to update it
-                        if (existingStaff != null) {
-                            staff.setId(existingStaff.getId());
-                            staff.setDigitalIds(existingStaff.getDigitalIds());
-                            // staff.setCompany(existingStaff.getCompany());
-                            staff.setDataRequestRecord(existingStaff.getDataRequestRecord());
-                            staff.setApplicantGroups(existingStaff.getApplicantGroups());
-                            staff.setCreationDate(existingStaff.getCreationDate());
-                            savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(staff, mappingContext));
-                        } else {
-                            savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
-                        }
-                    } else {
-                        savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
-
-                    }
-                    savedItems.add(savedItem);
-
-                    try {
-                        dataRequestRecords.add(DataRequestRecordDto.builder()
-                                .createDataRequestId(dataRequestId)
-                                .lastUpdateDataRequestId(dataRequestId)
-                                .createDataRequestRowNum((long) entry.getKey().getRowNum())
-                                .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
-                                .itemId(Long.parseLong(BeanUtils.getProperty(savedItem, "id")))
-                                .build());
-                    } catch (Exception e) {
-                        ReflectionUtils.handleReflectionException(e);
-                    }
-                });
-                // save all records
-                List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
-                // update all items with record ids
-                savedItems.forEach(s -> {
-                    savedRecords.stream().filter(r -> {
-                        try {
-                            return StringUtils.equals(BeanUtils.getProperty(r, "itemId"), BeanUtils.getProperty(s, "id"));
-                        } catch (Exception e) {
-                            ReflectionUtils.handleReflectionException(e);
-                            return false;
-                        }
-                    }).forEach(r -> {
-                        try {
-                            BeanUtils.setProperty(s, "dataRequestRecord", r);
-                        } catch (Exception e) {
-                            ReflectionUtils.handleReflectionException(e);
-                        }
-                    });
-                });
-                // update saved items
-                repository.saveAll(savedItems);
-            }
+            return dataValidationResults;
         }
-        return dataValidationResults;
+
+        if (dataSegment.getId() == EDataSegment.APPLICANT_DATA.getId() || dataSegment.getId() == EDataSegment.APPLICANT_HEALTH_DATA.getId() ||
+                dataSegment.getId() == EDataSegment.APPLICANT_IMMUNIZATION_DATA.getId() || dataSegment.getId() == EDataSegment.APPLICANT_DISEASE_DATA.getId() ||
+                dataSegment.getId() == EDataSegment.APPLICANT_RITUAL_DATA.getId() || dataSegment.getId() == EDataSegment.APPLICANT_RELATIVES_DATA.getId()) {
+            // update applicant related attributes
+            items.forEach(entry -> updateNestedApplicantInfo(entry.getValue()));
+        }
+
+        if (dataSegment.getId() == EDataSegment.STAFF_RITUAL_DATA.getId()) {
+            //Temporary for testing only : staff ritual
+            items.forEach(entry -> updateCompanyStaffRitualData(entry.getValue()));
+            return Collections.emptyList();
+        }
+
+        // save all items and build data records
+        List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
+        List<S> savedItems = new ArrayList<>();
+        JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
+        items.forEach(entry -> {
+            S savedItem = null;
+            //this part is to handle staff main data
+            if (dataSegment.getId() == EDataSegment.STAFF_MAIN_DATA.getId()) {
+                CompanyStaffDto staff = (CompanyStaffDto) entry.getValue();
+                CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
+                // if record exists already in DB we need to update it
+                if (existingStaff != null) {
+                    staff.setId(existingStaff.getId());
+                    staff.setDigitalIds(existingStaff.getDigitalIds());
+                    // staff.setCompany(existingStaff.getCompany());
+                    staff.setDataRequestRecord(existingStaff.getDataRequestRecord());
+                    staff.setApplicantGroups(existingStaff.getApplicantGroups());
+                    staff.setCreationDate(existingStaff.getCreationDate());
+                    savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(staff, mappingContext));
+                } else {
+                    savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
+                }
+            } else {
+                savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
+
+            }
+            savedItems.add(savedItem);
+
+            try {
+                dataRequestRecords.add(DataRequestRecordDto.builder()
+                        .createDataRequestId(dataRequestId)
+                        .lastUpdateDataRequestId(dataRequestId)
+                        .createDataRequestRowNum((long) entry.getKey().getRowNum())
+                        .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
+                        .itemId(Long.parseLong(BeanUtils.getProperty(savedItem, "id")))
+                        .build());
+            } catch (Exception e) {
+                ReflectionUtils.handleReflectionException(e);
+            }
+        });
+
+        // save all records
+        List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+        // update all items with record ids
+        savedItems.forEach(s -> {
+            savedRecords.stream().filter(r -> {
+                try {
+                    return StringUtils.equals(BeanUtils.getProperty(r, "itemId"), BeanUtils.getProperty(s, "id"));
+                } catch (Exception e) {
+                    ReflectionUtils.handleReflectionException(e);
+                    return false;
+                }
+            }).forEach(r -> {
+                try {
+                    BeanUtils.setProperty(s, "dataRequestRecord", r);
+                } catch (Exception e) {
+                    ReflectionUtils.handleReflectionException(e);
+                }
+            });
+        });
+
+        // update saved items
+        repository.saveAll(savedItems);
+
+        return Collections.emptyList();
     }
 
 
@@ -352,9 +356,12 @@ public class ItemWriter {
      * @param item the item to update
      */
     @SuppressWarnings("unchecked")
-    private <T> void updateNestedApplicantInfo(T item, List<T> bulkList, String... busAndSeatNumbers) {
+    private <T> void updateNestedApplicantInfo(T item, String... busAndSeatNumbers) {
+
+        if (item == null) return;
+
         // Special treatment for ApplicantDto and contact info as they come in the same sheet
-        if (item != null && item.getClass().isAssignableFrom(ApplicantDto.class)) {
+        if (item.getClass().isAssignableFrom(ApplicantDto.class)) {
             ApplicantDto applicant = (ApplicantDto) item;
             if (applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) {
                 Calendar cl = Calendar.getInstance();
@@ -382,21 +389,16 @@ public class ItemWriter {
             }
         }
 
-        // special treatment for applicant relative
-        if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
-            ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
-            applicantRelative.setRelativeApplicant(applicantService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative)));
-        }
-
         Field applicantBasicInfoField = ReflectionUtils.findField(item.getClass(), "applicantBasicInfo");
         Field applicantHealthField = ReflectionUtils.findField(item.getClass(), "applicantHealth");
         Field applicantField = ReflectionUtils.findField(item.getClass(), "applicant");
         Field packageReferenceNumberField = ReflectionUtils.findField(item.getClass(), "packageReferenceNumber");
         Field applicantRitualField = ReflectionUtils.findField(item.getClass(), "applicantRitual");
 
-        if (item == null || applicantBasicInfoField == null || (applicantField == null && applicantHealthField == null)) {
+        if (applicantBasicInfoField == null || packageReferenceNumberField == null || (applicantField == null && applicantHealthField == null)) {
             return;
         }
+
         try {
             // make fields accessible
             ReflectionUtils.makeAccessible(applicantBasicInfoField);
@@ -404,206 +406,131 @@ public class ItemWriter {
             ApplicantBasicInfoDto applicantBasicInfo = (ApplicantBasicInfoDto) applicantBasicInfoField.get(item);
             // search applicant by his basic info from the database
             ApplicantDto applicant = applicantService.findByBasicInfo(applicantBasicInfo);
-            if (applicant != null) {
-                if (applicantField != null) {
-                    // make fields accessible
-                    ReflectionUtils.makeAccessible(applicantField);
-                    // set the found applicant into the object
-                    applicantField.set(item, applicant);
-                }
+            if (applicant == null) {
+                return;
+            }
 
-                if (packageReferenceNumberField != null) {
-                    String seatNumber = null;
-                    String busNumber = null;
+            ApplicantDigitalIdDto applicantDigitalId = CollectionUtils.isNotEmpty(applicant.getDigitalIds()) ? applicant.getDigitalIds().get(0) : null;
+            String applicantUin = applicantDigitalId != null ? applicantDigitalId.getUin() : null;
 
-                    Field busNumberField = ReflectionUtils.findField(item.getClass(), "busNumber");
-                    Field seatNumberField = ReflectionUtils.findField(item.getClass(), "seatNumber");
+            if (applicantField != null) {
+                // make fields accessible
+                ReflectionUtils.makeAccessible(applicantField);
+                // set the found applicant into the object
+                applicantField.set(item, applicant);
+            }
 
-                    if (busNumberField != null) {
-                        ReflectionUtils.makeAccessible(busNumberField);
-                        busNumber = (String) busNumberField.get(item);
+            String seatNumber = null;
+            String busNumber = null;
+
+            Field busNumberField = ReflectionUtils.findField(item.getClass(), "busNumber");
+            Field seatNumberField = ReflectionUtils.findField(item.getClass(), "seatNumber");
+
+            if (busNumberField != null) {
+                ReflectionUtils.makeAccessible(busNumberField);
+                busNumber = (String) busNumberField.get(item);
+            }
+
+            if (seatNumberField != null) {
+                ReflectionUtils.makeAccessible(seatNumberField);
+                seatNumber = (String) seatNumberField.get(item);
+            }
+
+            ReflectionUtils.makeAccessible(packageReferenceNumberField);
+            String packageReferenceNumber = (String) packageReferenceNumberField.get(item);
+
+            // retrieve the applicant ritual if it is saved before by the digital id scheduler.
+            ApplicantRitualDto savedApplicantRitual = applicantRitualService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+
+            if (item.getClass().isAssignableFrom(ApplicantRitualDto.class)) {
+                ApplicantRitualDto applicantRitual = (ApplicantRitualDto) item;
+                applicantRitual.setContacts(new HashSet<>(applicant.getContacts()));
+                if (savedApplicantRitual != null) {
+                    applicantRitual.setId(savedApplicantRitual.getId());
+                    applicantRitual.setCreationDate(savedApplicantRitual.getCreationDate());
+                    applicantRitual.setApplicantPackage(savedApplicantRitual.getApplicantPackage());
+                    //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
+                    applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
+                    applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
+                    applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
+                } else {
+                    // applicant ritual not created yet, check if digital id is exists,
+                    // if yes then create a new applicant package and link it with the applicant ritual
+                    if (applicantUin != null && !applicantUin.isEmpty()) {
+                        ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantUin));
+                        applicantRitual.setApplicantPackage(createdApplicantPackage);
                     }
-
-                    if (seatNumberField != null) {
-                        ReflectionUtils.makeAccessible(seatNumberField);
-                        seatNumber = (String) seatNumberField.get(item);
-                    }
-
-                    ReflectionUtils.makeAccessible(packageReferenceNumberField);
-                    String packageReferenceNumber = (String) packageReferenceNumberField.get(item);
-
-                    ApplicantRitualDto savedApplicantRitual = applicantRitualService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
-
-                    if (item.getClass().isAssignableFrom(ApplicantRitualDto.class)) {
-                        ApplicantRitualDto applicantRitual = (ApplicantRitualDto) item;
-                        applicantRitual.setApplicant(applicant);
-                        applicantRitual.setContacts(new HashSet<>(applicant.getContacts()));
-                        //check if applicant ritual was created before by the digital id scheduler
-                        if (savedApplicantRitual != null) {
-                            applicantRitual.setId(savedApplicantRitual.getId());
-                            applicantRitual.setCreationDate(savedApplicantRitual.getCreationDate());
-                            applicantRitual.setApplicantPackage(savedApplicantRitual.getApplicantPackage());
-                            //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
-                            applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
-                            applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
-                            applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
-                        } else {
-                            // applicant ritual not created before, check if digital id is exists,
-                            // if yes then create a new applicant package and link it with the applicant ritual
-                            String applicantUin = digitalIdService.findApplicantUin(applicant.getId());
-                            if (applicantUin != null && !applicantUin.isEmpty()) {
-                                ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantUin));
-                                applicantRitual.setApplicantPackage(createdApplicantPackage);
-                            }
-                            if (CollectionUtils.isNotEmpty(applicantRitual.getContacts())) {
-                                applicantRitual.getContacts().forEach(ac -> {
-                                    ac.setApplicantRitual(applicantRitual);
-                                });
-                            }
-                        }
-                    }
-
-                    if (applicantRitualField != null) {
-                        ReflectionUtils.makeAccessible(applicantRitualField);
-                        applicantRitualField.set(item, savedApplicantRitual);
-                    }
-
-                    if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
-                        ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
-                        if (savedApplicantRitual != null) {
-                            applicantRelative.setApplicantRitual(savedApplicantRitual);
-                        }
-                        ApplicantDto relativeApplicant = applicantRelative.getRelativeApplicant();
-                        relativeApplicant.setContacts(applicantContactService.findByApplicantId(relativeApplicant.getId()));
-                        applicantChatContactService.createSystemDefinedApplicantChatContact(applicantRelative);
-                    }
-
-                    if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
-                        ApplicantHealthDto curApplicantHealth = (ApplicantHealthDto) item;
-                        if (savedApplicantRitual != null) {
-                            curApplicantHealth.setApplicantRitual(savedApplicantRitual);
-                        }
-                        ApplicantHealthDto applicantHealthLite = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
-                        if (applicantHealthLite != null) {
-                            curApplicantHealth.setId(applicantHealthLite.getId());
-                            if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
-                                // get the special needs and if it is a list then create a list of special needs dtos
-                                List<ApplicantHealthSpecialNeedsDto> applicantHealthSpecialNeeds = Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
-                                        ApplicantHealthSpecialNeedsDto.builder().applicantHealth(ApplicantHealthDto.builder().id(curApplicantHealth.getId()).build()).specialNeedTypeCode(sn).build()
-                                ).collect(Collectors.toList());
-                                IGenericMapper<ApplicantHealthSpecialNeedsDto, JpaApplicantHealthSpecialNeeds> mapper = findMapper(ApplicantHealthSpecialNeedsDto.class);
-                                applicantHealthSpecialNeedsRepository.saveAll(mapper.toEntityList(applicantHealthSpecialNeeds, mappingContext));
-                                curApplicantHealth.setSpecialNeeds(null);
-                                curApplicantHealth.setCreationDate(applicantHealthLite.getCreationDate());
-                            }
-                        } else {
-                            if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
-                                // get the special needs and if it is a list then create a list of special needs dtos
-                                curApplicantHealth.setSpecialNeeds(Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
-                                        ApplicantHealthSpecialNeedsDto.builder().applicantHealth(curApplicantHealth).specialNeedTypeCode(sn).build()
-                                ).collect(Collectors.toList()));
-                            }
-                        }
-                    }
-                    if (applicantHealthField != null) {
-                        ApplicantHealthDto applicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
-
-                        if (applicantHealth == null) {
-                            applicantHealth = ApplicantHealthDto.builder().applicant(applicant).applicantRitual(savedApplicantRitual).build();
-                            applicantHealth = applicantHealthService.save(applicantHealth);
-                        }
-                        // make fields accessible
-                        ReflectionUtils.makeAccessible(applicantHealthField);
-                        // set the found applicant health into the object
-                        applicantHealthField.set(item, applicantHealth);
+                    if (CollectionUtils.isNotEmpty(applicantRitual.getContacts())) {
+                        applicantRitual.getContacts().forEach(ac -> {
+                            ac.setApplicantRitual(applicantRitual);
+                        });
                     }
                 }
+            }
+
+            if (applicantRitualField != null) {
+                ReflectionUtils.makeAccessible(applicantRitualField);
+                applicantRitualField.set(item, savedApplicantRitual);
+            }
+
+            if (item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
+                ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
+                ApplicantDto relativeApplicant = applicantService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative));
+                applicantRelative.setRelativeApplicant(relativeApplicant);
+                applicantRelative.setApplicant(applicant);
+
+                String relativeApplicantUin = CollectionUtils.isNotEmpty(relativeApplicant.getDigitalIds()) ? relativeApplicant.getDigitalIds().get(0).getUin() : null;
+
+                // if the applicant digital id and the relative applicant digital id and the applicant ritual are created then add chat contacts
+                // check if digital ids are created for the applicant and the relative applicant and applicant ritual is already created.
+                if (applicantUin == null || relativeApplicantUin == null || savedApplicantRitual == null) {
+                    return;
+                }
+                //TODO: line below to update applicant relative has to be discussed
+                updateApplicantRelativeIfAlreadyExist(applicantRelative);
+
+                applicantChatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitual.getId());
+            }
+
+            if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
+                ApplicantHealthDto curApplicantHealth = (ApplicantHealthDto) item;
+                ApplicantHealthDto applicantHealthLite = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+                if (applicantHealthLite != null) {
+                    curApplicantHealth.setId(applicantHealthLite.getId());
+                    curApplicantHealth.setCreationDate(applicantHealthLite.getCreationDate());
+                    if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
+                        // get the special needs and if it is a list then create a list of special needs dtos
+                        List<ApplicantHealthSpecialNeedsDto> applicantHealthSpecialNeeds = Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
+                                ApplicantHealthSpecialNeedsDto.builder().applicantHealth(ApplicantHealthDto.builder().id(curApplicantHealth.getId()).build()).specialNeedTypeCode(sn).build()
+                        ).collect(Collectors.toList());
+                        IGenericMapper<ApplicantHealthSpecialNeedsDto, JpaApplicantHealthSpecialNeeds> mapper = findMapper(ApplicantHealthSpecialNeedsDto.class);
+                        applicantHealthSpecialNeedsRepository.saveAll(mapper.toEntityList(applicantHealthSpecialNeeds, mappingContext));
+                        curApplicantHealth.setSpecialNeeds(null);
+                    }
+                } else {
+                    if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
+                        // get the special needs and if it is a list then create a list of special needs dtos
+                        curApplicantHealth.setSpecialNeeds(Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
+                                ApplicantHealthSpecialNeedsDto.builder().applicantHealth(curApplicantHealth).specialNeedTypeCode(sn).build()
+                        ).collect(Collectors.toList()));
+                    }
+                }
+            }
+            if (applicantHealthField != null) {
+                ApplicantHealthDto applicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+
+                if (applicantHealth == null) {
+                    applicantHealth = ApplicantHealthDto.builder().applicant(applicant).applicantRitual(savedApplicantRitual).build();
+                    applicantHealth = applicantHealthService.save(applicantHealth);
+                }
+                // make fields accessible
+                ReflectionUtils.makeAccessible(applicantHealthField);
+                // set the found applicant health into the object
+                applicantHealthField.set(item, applicantHealth);
             }
         } catch (IllegalAccessException e) {
             ReflectionUtils.handleReflectionException(e);
         }
-    }
-
-
-    private <T> void handleApplicantRelativeInfo(List<AbstractMap.SimpleEntry<Row, T>> items) {
-
-        items.forEach(entry -> {
-            T item = entry.getValue();
-            if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
-                ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
-                applicantRelative.setRelativeApplicant(applicantService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative)));
-            }
-
-            Field applicantBasicInfoField = ReflectionUtils.findField(item.getClass(), "applicantBasicInfo");
-            Field applicantField = ReflectionUtils.findField(item.getClass(), "applicant");
-            Field packageReferenceNumberField = ReflectionUtils.findField(item.getClass(), "packageReferenceNumber");
-            Field applicantRitualField = ReflectionUtils.findField(item.getClass(), "applicantRitual");
-
-            if (item == null || applicantBasicInfoField == null || (applicantField == null)) {
-                return;
-            }
-            try {
-                // make fields accessible
-                ReflectionUtils.makeAccessible(applicantBasicInfoField);
-                // get applicant basic info from the current object
-                ApplicantBasicInfoDto applicantBasicInfo = (ApplicantBasicInfoDto) applicantBasicInfoField.get(item);
-                // search applicant by his basic info from the database
-                ApplicantDto applicant = applicantService.findByBasicInfo(applicantBasicInfo);
-                if (applicant == null) {
-                    return;
-                }
-
-
-                if (applicantField != null) {
-                    // make fields accessible
-                    ReflectionUtils.makeAccessible(applicantField);
-                    // set the found applicant into the object
-                    applicantField.set(item, applicant);
-
-                }
-
-                if (packageReferenceNumberField == null) {
-                    return;
-                }
-
-                ReflectionUtils.makeAccessible(packageReferenceNumberField);
-                String packageReferenceNumber = (String) packageReferenceNumberField.get(item);
-
-                ApplicantRitualDto savedApplicantRitual = applicantRitualService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
-
-                if (applicantRitualField != null && savedApplicantRitual != null) {
-                    ReflectionUtils.makeAccessible(applicantRitualField);
-                    applicantRitualField.set(item, savedApplicantRitual);
-                }
-
-                if (item != null && item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
-                    ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
-                    ApplicantDto relativeApplicant = applicantRelative.getRelativeApplicant();
-                    applicant = applicantRelative.getApplicant();
-                    relativeApplicant.setContacts(applicantContactService.findByApplicantId(relativeApplicant.getId()));
-                    applicant.setContacts(applicantContactService.findByApplicantId(applicant.getId()));
-
-                    String relationshipCode = applicantRelative.getRelationshipCode();
-                    String reflectedRelationshipCode = mapRelationship(relationshipCode, applicantRelative.getApplicant().getGender());
-                    ApplicantRelativeDto reflectedApplicantRelative = new ApplicantRelativeDto();
-                    reflectedApplicantRelative.setApplicant(relativeApplicant);
-                    reflectedApplicantRelative.setRelativeApplicant(applicant);
-                    reflectedApplicantRelative.setRelationshipCode(reflectedRelationshipCode);
-                    reflectedApplicantRelative.setDataRequestRecord(applicantRelative.getDataRequestRecord());
-                    reflectedApplicantRelative.setApplicantBasicInfo(applicantRelative.getApplicantBasicInfo());
-                    reflectedApplicantRelative.setApplicantRitual(applicantRelative.getApplicantRitual());
-                    reflectedApplicantRelative.setPackageReferenceNumber(applicantRelative.getPackageReferenceNumber());
-                    reflectedApplicantRelative.setRelativeIdNumber(applicantRelative.getRelativeIdNumber());
-                    updateApplicantRelativeIfAlreadyExist(applicantRelative);
-                    applicantChatContactService.createSystemDefinedApplicantChatContact(applicantRelative);
-                    applicantChatContactService.createSystemDefinedApplicantChatContact(reflectedApplicantRelative);
-                }
-
-
-            } catch (IllegalAccessException e) {
-                ReflectionUtils.handleReflectionException(e);
-            }
-        });
     }
 
     private void updateApplicantRelativeIfAlreadyExist(ApplicantRelativeDto applicantRelative) {
@@ -625,50 +552,7 @@ public class ItemWriter {
         }
     }
 
-    public String mapRelationship(String relationshipCode, String Gender) {
-        if (relationshipCode.equals(FATHER.toString()) && Gender.equals("M")) {
-            return SON.toString();
-        }
-        if (relationshipCode.equals(FATHER.toString()) && Gender.equals("F")) {
-            return DAUGHTER.toString();
-        }
-        if (relationshipCode.equals(SON.toString()) && Gender.equals("M")) {
-            return FATHER.toString();
-        }
-        if (relationshipCode.equals(SON.toString()) && Gender.equals("F")) {
-            return MOTHER.toString();
-        }
-        if (relationshipCode.equals(MOTHER.toString()) && Gender.equals("M")) {
-            return SON.toString();
-        }
-        if (relationshipCode.equals(MOTHER.toString()) && Gender.equals("F")) {
-            return DAUGHTER.toString();
-        }
-        if (relationshipCode.equals(HUSBAND.toString())) {
-            return WIFE.toString();
-        }
-        if (relationshipCode.equals(WIFE.toString())) {
-            return HUSBAND.toString();
-        }
-        if (relationshipCode.equals(SISTER.toString()) && Gender.equals("M")) {
-            return BROTHER.toString();
-        }
-        if (relationshipCode.equals(SISTER.toString()) && Gender.equals("F")) {
-            return SISTER.toString();
-        }
-        if (relationshipCode.equals(BROTHER.toString()) && Gender.equals("M")) {
-            return BROTHER.toString();
-        }
-        if (relationshipCode.equals(BROTHER.toString()) && Gender.equals("F")) {
-            return SISTER.toString();
-        }if (relationshipCode.equals(COMPANION.toString())) {
-            return COMPANION.toString();
-        }if (relationshipCode.equals(RELATIVE.toString()) ) {
-            return RELATIVE.toString();
-        }
 
-        return COMPANION.toString();
-    }
 
     /**
      * update company staff properties

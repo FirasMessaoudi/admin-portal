@@ -31,4 +31,7 @@ public interface CompanyStaffDigitalIdRepository extends JpaRepository<JpaCompan
     List<JpaCompanyStaffDigitalId> findBySuinIsNull();
 
     Optional<JpaCompanyStaffDigitalId> findBySuinAndSeasonYearAndStatusCode(String suin, int seasonYear, String statusCode);
+
+    List<JpaCompanyStaffDigitalId> findByStatusCodeAndCompanyStaffCardsCompanyRitualSeasonSeasonEndLessThan(String status, long hijriDate);
+
 }
