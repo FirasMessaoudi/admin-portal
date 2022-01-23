@@ -45,6 +45,7 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
                     chatMessageLiteDto.setContactUin((String) element[1]);
                     chatMessageLiteDto.setMessageText((String) element[2]);
                     chatMessageLiteDto.setSentDate((Date) element[3]);
+                    chatMessageLiteDto.setDeleted((boolean) element[4]);
                     chatMessageDtoList.add(chatMessageLiteDto);
                 }
         );

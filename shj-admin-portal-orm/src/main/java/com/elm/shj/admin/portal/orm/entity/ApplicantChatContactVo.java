@@ -43,4 +43,5 @@ public class ApplicantChatContactVo implements Serializable {
     private Long applicantRitualId;
     private Date creationDate;
     private Date updateDate;
+    private String statusCode;
 }
