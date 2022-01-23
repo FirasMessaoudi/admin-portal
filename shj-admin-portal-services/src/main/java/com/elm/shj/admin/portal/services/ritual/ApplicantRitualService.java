@@ -36,7 +36,7 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
      * @return the list of applicants
      */
     public List<ApplicantRitualDto> findAllWithoutCards() {
-        return mapList(applicantRitualRepository.findAllApplicantRitualsWithoutCard());
+        return mapList(applicantRitualRepository.findWithExistingDigitalIdAndWithoutCard());
     }
 
     /**
