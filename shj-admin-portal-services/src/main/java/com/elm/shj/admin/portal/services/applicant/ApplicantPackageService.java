@@ -106,7 +106,7 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
      * @param applicantUin
      * @return saved applicant package
      */
-    public ApplicantPackageDto createApplicantPackage(String packageReferenceNumber, Long applicantUin) {
+    public ApplicantPackageDto createApplicantPackage(String packageReferenceNumber, Long applicantUin, String busNumber, String seatNumber) {
 
         List<ApplicantPackageHousingDto> applicantPackageHousings;
         List<ApplicantPackageCateringDto> applicantPackageCaterings = new ArrayList<>();
@@ -122,7 +122,7 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
         if (CollectionUtils.isNotEmpty(ritualPackage.getPackageTransportations())) {
             applicantPackageTransportations = ritualPackage.getPackageTransportations().stream().map(pt ->
                     ApplicantPackageTransportationDto.builder().packageTransportation(PackageTransportationDto.builder().id(pt.getId()).build())
-                            .applicantPackage(applicantPackage).build()
+                            .applicantPackage(applicantPackage).seatNumber(seatNumber).vehicleNumber(busNumber).build()
             ).collect(Collectors.toList());
         }
         applicantPackage.setApplicantPackageTransportations(applicantPackageTransportations);

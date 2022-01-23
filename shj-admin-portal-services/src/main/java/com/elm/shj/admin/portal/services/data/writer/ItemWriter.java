@@ -17,7 +17,6 @@ import com.elm.shj.admin.portal.services.data.reader.EExcelItemReaderErrorType;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.data.validators.WithGroupReferenceNumber;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
-import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +41,6 @@ import java.time.chrono.HijrahDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.elm.shj.admin.portal.services.dto.ERelativeRelationship.*;
-
 /**
  * Generic Item writer to save read items based on their data segment
  *
@@ -67,8 +64,6 @@ public class ItemWriter {
     private final ApplicantHealthSpecialNeedsRepository applicantHealthSpecialNeedsRepository;
     private final DataRequestRecordRepository dataRequestRecordRepository;
     private final ApplicantPackageService applicantPackageService;
-    private final RitualPackageService ritualPackageService;
-    private final ApplicantPackageTransportationService applicantPackageTransportationService;
     private final GroupApplicantListService groupApplicantListService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantContactService applicantContactService;
@@ -79,7 +74,7 @@ public class ItemWriter {
     private final ApplicantChatContactService applicantChatContactService;
     private final ApplicantRelativeService applicantRelativeService;
     private final ApplicantHealthService applicantHealthService;
-    private final DigitalIdService digitalIdService;
+    private final ApplicantEmergencyDataUploadService applicantEmergencyDataUploadService;
 
     /**
      * Populates the registry
@@ -125,7 +120,7 @@ public class ItemWriter {
                 ApplicantDto applicantDto = getApplicantFromEmergency(emergencyDto);
                 ApplicantRitualEmergencyDto applicantRitualEmergencyDto = emergencyDto.getApplicantRitualEmergencyDto();
 
-                updateNestedApplicantInfo(applicantDto, applicantRitualEmergencyDto.getBusNumber(), applicantRitualEmergencyDto.getSeatNumber());
+                updateNestedApplicantInfo(applicantDto);
 
                 ApplicantDigitalIdDto applicantDigitalId = CollectionUtils.isNotEmpty(applicantDto.getDigitalIds()) ? applicantDto.getDigitalIds().get(0) : null;
                 String applicantUin = applicantDigitalId != null ? applicantDigitalId.getUin() : null;
@@ -138,8 +133,15 @@ public class ItemWriter {
 
                 // check if digital id is exists, if yes then create a new applicant package and link it with the applicant ritual
                 if (applicantUin != null && !applicantUin.isEmpty()) {
-                    ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantUin));
+                    ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(),
+                            Long.parseLong(applicantUin), applicantRitualEmergencyDto.getBusNumber(), applicantRitualEmergencyDto.getSeatNumber());
                     applicantRitual.setApplicantPackage(createdApplicantPackage);
+                } else {
+                    // create an applicant emergency data upload record to persist transportation details (bus number and seat number) which will be used in digital id scheduler
+                    applicantEmergencyDataUploadService.save(ApplicantEmergencyDataUploadDto.builder().idNumber(applicantDto.getIdNumber())
+                            .passportNumber(applicantDto.getPassportNumber()).dateOfBirthHijri(applicantDto.getDateOfBirthHijri())
+                            .dateOfBirthGregorian(applicantDto.getDateOfBirthGregorian()).packageReferenceNumber(emergencyDto.getPackageReferenceNumber())
+                            .busNumber(applicantRitualEmergencyDto.getBusNumber()).seatNumber(applicantRitualEmergencyDto.getSeatNumber()).build());
                 }
 
                 if (CollectionUtils.isNotEmpty(applicantRitual.getContacts())) {
@@ -376,7 +378,7 @@ public class ItemWriter {
      * @param item the item to update
      */
     @SuppressWarnings("unchecked")
-    private <T> void updateNestedApplicantInfo(T item, String... busAndSeatNumbers) {
+    private <T> void updateNestedApplicantInfo(T item) {
 
         if (item == null) return;
 
@@ -477,7 +479,7 @@ public class ItemWriter {
                     // applicant ritual not created yet, check if digital id is exists,
                     // if yes then create a new applicant package and link it with the applicant ritual
                     if (applicantUin != null && !applicantUin.isEmpty()) {
-                        ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantUin));
+                        ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantUin), null, null);
                         applicantRitual.setApplicantPackage(createdApplicantPackage);
                     }
                     if (CollectionUtils.isNotEmpty(applicantRitual.getContacts())) {
