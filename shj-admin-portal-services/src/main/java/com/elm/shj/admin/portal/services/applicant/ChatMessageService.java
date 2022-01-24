@@ -3,10 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
+import com.elm.shj.admin.portal.orm.entity.ChatMessageVo;
 import com.elm.shj.admin.portal.orm.entity.JpaChatMessage;
 import com.elm.shj.admin.portal.orm.repository.ChatMessageRepository;
 import com.elm.shj.admin.portal.services.dto.ChatMessageDto;
-import com.elm.shj.admin.portal.services.dto.ChatMessageLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,21 +35,13 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
 
     private final ChatMessageRepository chatMessageRepository;
 
-    public List<ChatMessageLiteDto> listChatContactsWithLatestMessage(String uin) {
-        List<ChatMessageLiteDto> chatMessageDtoList = new ArrayList<>();
-        List<Object[]> chatListWithLatestMessage = chatMessageRepository.findChatContactsWithLatestMessage(uin);
 
-        chatListWithLatestMessage.forEach(element -> {
-                    ChatMessageLiteDto chatMessageLiteDto = new ChatMessageLiteDto();
-                    chatMessageLiteDto.setContactId((int) element[0]);
-                    chatMessageLiteDto.setContactUin((String) element[1]);
-                    chatMessageLiteDto.setMessageText((String) element[2]);
-                    chatMessageLiteDto.setSentDate((Date) element[3]);
-                    chatMessageLiteDto.setDeleted((boolean) element[4]);
-                    chatMessageDtoList.add(chatMessageLiteDto);
-                }
-        );
-        return chatMessageDtoList;
+
+    public List<ChatMessageVo> listChatContactsWithLatestMessage(String uin) {
+        return chatMessageRepository.findChatContactsWithLatestMessage(uin);
+
+
+
     }
 
     public List<ChatMessageDto> findChatMessagesBySenderIdOrReceiverId(int page, int limit, long contactId, long time) {

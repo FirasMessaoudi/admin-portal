@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.ChatMessageVo;
 import com.elm.shj.admin.portal.orm.entity.JpaChatMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,17 +22,15 @@ import java.util.List;
  */
 public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Long> {
 
-    @Query(nativeQuery = true,
-            value = "select contact.id,contact.contact_uin , " +
-            "(select top 1 latest_message.text from shc_portal.shc_chat_message latest_message where  latest_message.sender_id = contact.id or latest_message.receiver_id = contact.id  order by latest_message.sent_date desc,latest_message.id desc) text , " +
-            "(select top 1 latest_message.sent_date from shc_portal.shc_chat_message latest_message where  latest_message.sender_id = contact.id or latest_message.receiver_id = contact.id   order by latest_message.sent_date desc,latest_message.id desc) sent_date , " +
-                    "contact.deleted " +
-                    "from shc_portal.shc_applicant_chat_contact contact " +
-                    "join shc_portal.shc_chat_message messages on messages.sender_id = contact.id or messages.receiver_id = contact.id " +
-                    "where contact.applicant_uin= :applicantUin " +
-                    "group by contact.contact_uin,contact.id, contact.deleted " +
-                    "order by sent_date desc")
-    List<Object[]> findChatContactsWithLatestMessage(@Param("applicantUin") String uin);
-
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ChatMessageVo(  " +
+            " contact.id, contact.contactUin, message.text, message.sentDate, message.receivedDate,message.readDate, contact.deleted ) " +
+            "FROM JpaChatMessage message " +
+            "JOIN JpaApplicantChatContact  contact ON contact.id = message.sender.id OR contact.id = message.receiver.id " +
+            "WHERE contact.applicantUin= :applicantUin " +
+            "AND message.id IN ( SELECT max(messages.id) FROM JpaChatMessage messages " +
+            "JOIN JpaApplicantChatContact  contact ON contact.id = messages.sender.id OR contact.id = messages.receiver.id " +
+            "GROUP BY contact.id) " +
+            "ORDER BY message.sentDate desc ")
+    List<ChatMessageVo> findChatContactsWithLatestMessage(@Param("applicantUin") String uin);
     Page<JpaChatMessage> findBySenderIdOrReceiverIdAndSentDateLessThanEqual(long senderId, long receiverId, Date time, Pageable pageable);
 }

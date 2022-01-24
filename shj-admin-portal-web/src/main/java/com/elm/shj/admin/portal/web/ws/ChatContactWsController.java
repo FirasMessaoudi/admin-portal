@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantChatContactVo;
+import com.elm.shj.admin.portal.orm.entity.ChatMessageVo;
 import com.elm.shj.admin.portal.services.applicant.ApplicantChatContactService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ChatMessageService;
@@ -245,9 +246,9 @@ public class ChatContactWsController {
 
     @GetMapping("/chat-list/{uin}")
     public ResponseEntity<WsResponse<?>> listChatContactsWithLatestMessage(@PathVariable String uin) {
-        List<ChatMessageLiteDto> chatMessageLiteDtos = chatMessageService.listChatContactsWithLatestMessage(uin);
+        List<ChatMessageVo> chatMessageList = chatMessageService.listChatContactsWithLatestMessage(uin);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(chatMessageLiteDtos).build());
+                .body(chatMessageList).build());
     }
 
     @GetMapping("/messages/{contactId}")
