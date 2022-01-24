@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardSearchCriteriaDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.dto.NotificationSearchCriteriaDto;
 import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
@@ -46,9 +47,6 @@ public class ApplicantCardController {
 
     private final JwtTokenService jwtTokenService;
 
-    private static final String APPLICANT_CARD_DETAILS_NOT_FOUND_ERROR_MSG = "no card details found for applicant with this uin";
-    private static final int CARD_DETAILS_NOT_FOUND_RESPONSE_CODE = 561;
-
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "')")
     public Page<ApplicantCardDto> listApplicantCards(Pageable pageable, Authentication authentication) {
@@ -56,22 +54,11 @@ public class ApplicantCardController {
         return applicantCardService.findAll(pageable);
     }
 
-    @GetMapping("/list-applicant-cards")
+    @PostMapping("/list-applicant-cards")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "')")
-    public Page<ApplicantCardDto> searchApplicantCards(@RequestParam(value = "applicantCardSearchCriteria") String applicantCardSearchCriteria,
-                                                       Pageable pageable, Authentication authentication) throws IOException {
-
+    public Page<ApplicantCardDto> searchApplicantCards(@RequestBody ApplicantCardSearchCriteriaDto criteria, Pageable pageable, Authentication authentication) {
         log.info("list search result cards.");
-        final ApplicantCardSearchCriteriaDto searchCriteria =
-                new ObjectMapper().readValue(applicantCardSearchCriteria, ApplicantCardSearchCriteriaDto.class);
-
-
-        String uin = searchCriteria.getUin() != null && !searchCriteria.getUin().trim().equals("") ? searchCriteria.getUin().trim() : null;
-        String idNum = searchCriteria.getIdNumber() != null && !searchCriteria.getIdNumber().trim().equals("") ? searchCriteria.getIdNumber().trim() : null;
-        String passportNumber = searchCriteria.getPassportNumber() != null && !searchCriteria.getPassportNumber().trim().equals("") ? searchCriteria.getPassportNumber().trim() : null;
-
-        return applicantCardService.searchApplicantCards(uin, idNum, passportNumber, pageable);
-
+        return applicantCardService.searchApplicantCards(criteria, pageable);
     }
 
 

@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.card;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
+import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantPackageCateringService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantPackageHousingService;
@@ -21,10 +21,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -112,26 +115,65 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     /**
      * Find Applicant Cards based on search criteria.
      *
-     * @param uin
-     * @param idNumber
+     * @param criteria search criteria filter
      * @param pageable the current page information
      * @return the list of applicant cards
      */
-    public Page<ApplicantCardDto> searchApplicantCards(String uin, String idNumber, String passportNumber, Pageable pageable) {
-        Page<ApplicantCardDto> applicantCards;
-        if (uin == null && idNumber == null && passportNumber == null) {
-            applicantCards = mapPage(applicantCardRepository.findAllApplicantCards(ECardStatus.REISSUED.name(), pageable));
-        } else {
-            applicantCards = mapPage(applicantCardRepository.searchApplicantCards(uin, idNumber, passportNumber, ECardStatus.REISSUED.name(), pageable));
-        }
-        applicantCards.forEach(card -> {
-            ApplicantPackageDto applicantPackageDto = card.getApplicantRitual().getApplicantPackage();
-            if (applicantPackageDto != null) {
-                card.getApplicantRitual().setTypeCode(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode());
-            }
-        });
-        return applicantCards;
+    public Page<ApplicantCardDto> searchApplicantCards(ApplicantCardSearchCriteriaDto criteria, Pageable pageable) {
+        return mapPage(applicantCardRepository.findAll(withApplicantCardFilter(criteria), pageable));
     }
+
+    private Specification<JpaApplicantCard> withApplicantCardFilter(final ApplicantCardSearchCriteriaDto criteria) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            //Create atomic predicates
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (criteria.getRitualSeason() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("applicantRitual").get("applicantPackage").get("ritualPackage").get("companyRitualSeason").get("ritualSeason").get("seasonYear"), criteria.getRitualSeason()));
+            }
+
+            if (criteria.getRitualTypeCode() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("applicantRitual").get("applicantPackage").get("ritualPackage").get("companyRitualSeason").get("ritualSeason").get("ritualTypeCode"), criteria.getRitualTypeCode()));
+            }
+
+            if (criteria.getUin() != null && criteria.getUin().trim().length() > 0) {
+                Join<JpaApplicant, JpaApplicantDigitalId> digitalIds = root.join("applicantRitual").join("applicant").join("digitalIds");
+                predicates.add(criteriaBuilder.like(digitalIds.get("uin"), "%" + criteria.getUin().trim() + "%"));
+            }
+
+            if (criteria.getIdNumber() != null && criteria.getIdNumber().trim().length() > 0) {
+                predicates.add(criteriaBuilder.like(root.get("applicantRitual").get("applicant").get("idNumber"), "%" + criteria.getIdNumber() + "%"));
+            }
+
+            if (criteria.getReferenceNumber() != null && criteria.getReferenceNumber().trim().length() > 0) {
+                predicates.add(criteriaBuilder.like(root.get("referenceNumber"), "%" + criteria.getReferenceNumber() + "%"));
+            }
+
+            if (criteria.getStatusCode() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("statusCode"), criteria.getStatusCode()));
+            }
+
+            if (criteria.getDigitalIdStatus() != null && criteria.getDigitalIdStatus().trim().length() > 0) {
+                Join<JpaApplicant, JpaApplicantDigitalId> digitalIds = root.join("applicantRitual").join("applicant").join("digitalIds");
+                predicates.add(criteriaBuilder.like(digitalIds.get("statusCode"), "%" + criteria.getDigitalIdStatus().trim() + "%"));
+            }
+
+            if (criteria.getGender() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("applicantRitual").get("applicant").get("gender"), criteria.getGender()));
+            }
+
+            if (criteria.getNationalityCode() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("applicantRitual").get("applicant").get("nationalityCode"), criteria.getNationalityCode()));
+            }
+
+            if (criteria.getPassportNumber() != null && criteria.getPassportNumber().trim().length() > 0) {
+                predicates.add(criteriaBuilder.like(root.get("applicantRitual").get("applicant").get("passportNumber"), "%" + criteria.getPassportNumber() + "%"));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
 
     /**
      * change card status
@@ -161,9 +203,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
         }
         userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
         return save(card);
-
     }
-
 
     /**
      * Build Applicant Card

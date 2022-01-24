@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { Lookup } from '@model/lookup.model';
 import { LookupService } from '@core/utilities/lookup.service';
 import { NavigationService } from '@core/utilities/navigation.service';
+import { StaffPrintService } from '@core/services/printing/staff-print.service';
 
 @Component({
   selector: 'app-card-list',
@@ -23,6 +24,9 @@ export class CardListComponent implements OnInit, OnDestroy {
   searchForm: FormGroup;
   ritualTypes: Lookup[] = [];
   cardStatuses: Lookup[] = [];
+  nationalities: Lookup[] = [];
+  ritualSeasons: any[] = [];
+  digitalIdStatuses: Lookup[] = [];
   masterSelected: boolean;
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
@@ -32,6 +36,7 @@ export class CardListComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private navigationService: NavigationService,
     private cardService: CardService,
+    private printService: StaffPrintService,
     private lookupsService: LookupService,
     private authenticationService: AuthenticationService
   ) {}
@@ -50,6 +55,15 @@ export class CardListComponent implements OnInit, OnDestroy {
     this.cardService.findCardStatuses().subscribe((result) => {
       this.cardStatuses = result;
     });
+    this.cardService.findCountries().subscribe((result) => {
+      this.nationalities = result;
+    });
+    this.printService.findRitualSeasons().subscribe((result) => {
+      this.ritualSeasons = result;
+    });
+    this.cardService.findDigitalIdStatuses().subscribe((result) => {
+      this.digitalIdStatuses = result;
+    });
   }
 
   ngOnDestroy() {
@@ -67,20 +81,18 @@ export class CardListComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.searchForm = this.formBuilder.group({
-      ritualSeason: { value: null, disabled: true },
-      ritualType: { value: null, disabled: true },
+      ritualSeason: null,
+      ritualTypeCode: null,
       hamlah: { value: null, disabled: true },
-      motawef: { value: null, disabled: true },
-      uin: [null],
-      idNumber: [null],
-      cardNumber: { value: null, disabled: true },
-      cardStatus: { value: null, disabled: true },
-      applicantIdStatus: { value: null, disabled: true },
-      gender: { value: null, disabled: true },
-      nationality: { value: null, disabled: true },
-      passportNumber: [null],
+      uin: '',
+      idNumber: '',
+      cardNumber: '',
+      statusCode: null,
+      digitalIdStatus: null,
+      gender: null,
+      nationalityCode: null,
+      passportNumber: '',
       tafweejNumber: { value: null, disabled: true },
-      idType: { value: null, disabled: true },
     });
   }
 
