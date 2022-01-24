@@ -24,40 +24,30 @@
           <label class="col-form-label">{{ "card-management.ritual_season" | translate }}</label>
           <select formControlName="ritualSeason" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option>2021</option>
-            <option>2020</option>
-            <option>2019</option>
+            <option *ngFor="let season of ritualSeasons" [ngValue]="season.seasonYear">
+              {{season.seasonYear}}
+            </option>
           </select>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "card-management.ritual_type" | translate }}</label>
-          <select formControlName="ritualType" class="custom-select">
+          <select formControlName="ritualTypeCode" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option>عمرة داخلية</option>
-            <option>عمرة خارجية</option>
-            <option>حج داخلي</option>
-            <option>حج خارجي</option>
+            <option *ngFor="let ritualType of lookupService().localizedItems(ritualTypes)"
+                    [ngValue]="ritualType.code">
+              {{ritualType.label}}
+            </option>
           </select>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "card-management.hamlah" | translate }}</label>
-          <select formControlName="hamlah" class="custom-select">
+          <select formControlName="hamlah" class="custom-select disabled-control">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
             <option>سيف الاسلام</option>
             <option>ضيوف الرحمن</option>
             <option>المشاعر المقدسة</option>
-          </select>
-        </div>
-
-        <div class="form-group col">
-          <label class="col-form-label">{{ "card-management.motawef" | translate }}</label>
-          <select formControlName="motawef" class="custom-select">
-            <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option>مطوف 1</option>
-            <option>مطوف 2</option>
-            <option>مطوف 3</option>
           </select>
         </div>
 
@@ -84,22 +74,23 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "card-management.card_status" | translate }}</label>
-          <select formControlName="cardStatus" class="custom-select">
+          <select formControlName="statusCode" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option>جاهز للطباعة</option>
-            <option>موقوفة</option>
-            <option>منتهية</option>
-            <option>ملغية</option>
+            <option *ngFor="let cardStatus of lookupService().localizedItems(cardStatuses)"
+                    [ngValue]="cardStatus.code">
+              {{cardStatus.label}}
+            </option>
           </select>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "card-management.applicant_id_status" | translate }}</label>
-          <select formControlName="applicantIdStatus" class="custom-select">
+          <select formControlName="digitalIdStatus" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option>نشطة</option>
-            <option>غير نشطة</option>
-            <option>منتهية</option>
+            <option *ngFor="let digitalIdStatus of lookupService().localizedItems(digitalIdStatuses)"
+                    [ngValue]="digitalIdStatus.code">
+              {{digitalIdStatus.label}}
+            </option>
           </select>
         </div>
 
@@ -107,20 +98,19 @@
           <label class="col-form-label">{{ "general.gender" | translate }}</label>
           <select formControlName="gender" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option>ذكر</option>
-            <option>أنثى</option>
+            <option [ngValue]="'M'">{{"user-management.male"| translate}}</option>
+            <option [ngValue]="'F'">{{"user-management.female"| translate}}</option>
           </select>
         </div>
 
         <div class="form-group col">
           <label class="col-form-label">{{ "card-management.nationality" | translate }}</label>
-          <select formControlName="nationality" class="custom-select">
+          <select formControlName="nationalityCode" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option>سعودية</option>
-            <option>مصرية</option>
-            <option>تونسية</option>
-            <option>هندية</option>
-            <option>أردنية</option>
+            <option *ngFor="let nationality of lookupService().localizedItems(nationalities)"
+                    [ngValue]="nationality.code">
+              {{nationality.label}}
+            </option>
           </select>
         </div>
 
@@ -131,7 +121,7 @@
 
         <div class="form-group col">
           <label class="col-form-label">{{ "card-management.tafweej_number" | translate }}</label>
-          <input type="text" formControlName="tafweejNumber" class="form-control"/>
+          <input type="text" formControlName="tafweejNumber" class="form-control disabled-control"/>
         </div>
 
         <div class="form-group col-12">

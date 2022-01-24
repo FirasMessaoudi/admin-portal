@@ -24,11 +24,12 @@ public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Lon
     @Query(nativeQuery = true,
             value = "select contact.id,contact.contact_uin , " +
             "(select top 1 latest_message.text from shc_portal.shc_chat_message latest_message where  latest_message.sender_id = contact.id or latest_message.receiver_id = contact.id  order by latest_message.sent_date desc,latest_message.id desc) text , " +
-            "(select top 1 latest_message.sent_date from shc_portal.shc_chat_message latest_message where  latest_message.sender_id = contact.id or latest_message.receiver_id = contact.id   order by latest_message.sent_date desc,latest_message.id desc) sent_date " +
+            "(select top 1 latest_message.sent_date from shc_portal.shc_chat_message latest_message where  latest_message.sender_id = contact.id or latest_message.receiver_id = contact.id   order by latest_message.sent_date desc,latest_message.id desc) sent_date , " +
+                    "contact.deleted " +
                     "from shc_portal.shc_applicant_chat_contact contact " +
                     "join shc_portal.shc_chat_message messages on messages.sender_id = contact.id or messages.receiver_id = contact.id " +
-                    "where contact.applicant_uin= :applicantUin and contact.deleted=0 " +
-                    "group by contact.contact_uin,contact.id " +
+                    "where contact.applicant_uin= :applicantUin " +
+                    "group by contact.contact_uin,contact.id, contact.deleted " +
                     "order by sent_date desc")
     List<Object[]> findChatContactsWithLatestMessage(@Param("applicantUin") String uin);
 

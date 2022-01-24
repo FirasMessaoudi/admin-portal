@@ -44,7 +44,7 @@ export class NotificationService {
   /**
    * Finds notification Template by his ID from the server.
    *
-   *@param templateId the template Id
+   * @param templateId the template ID
    * @return {Observable<PrintRequest>} The template identified by its ID.
    */
   findNotificationTemplateById(templateId: number): Observable<any> {

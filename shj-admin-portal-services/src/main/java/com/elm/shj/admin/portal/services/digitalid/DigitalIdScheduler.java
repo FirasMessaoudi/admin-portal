@@ -4,10 +4,7 @@
 package com.elm.shj.admin.portal.services.digitalid;
 
 import com.elm.shj.admin.portal.services.applicant.*;
-import com.elm.shj.admin.portal.services.dto.ApplicantDigitalIdDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;
-import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +32,7 @@ public class DigitalIdScheduler {
     private final ApplicantContactService applicantContactService;
     private final ApplicantHealthService applicantHealthService;
     private final ApplicantRelativeService applicantRelativeService;
+    private final ApplicantEmergencyDataUploadService applicantEmergencyDataUploadService;
 
     /**
      * Scheduled job to create digital IDs for new applicants
@@ -53,16 +51,22 @@ public class DigitalIdScheduler {
                     .build());
 
             // create applicant package
-            ApplicantPackageDto savedApplicantPackage = null;
+            ApplicantPackageDto savedApplicantPackage;
+
+            // check if there is a record for applicant emergency data upload to get transportation details.
+            ApplicantEmergencyDataUploadDto applicantEmergencyDataUpload = applicantEmergencyDataUploadService.findByBasicInfoAndPackageCode(ApplicantBasicInfoDto.fromApplicant(applicant),
+                    applicant.getPackageReferenceNumber());
+            String busNumber = applicantEmergencyDataUpload != null ? applicantEmergencyDataUpload.getBusNumber() : null;
+            String seatNumber = applicantEmergencyDataUpload != null ? applicantEmergencyDataUpload.getSeatNumber() : null;
 
             //create or update applicant ritual;
             ApplicantRitualDto applicantRitual = applicantRitualService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), applicant.getPackageReferenceNumber());
             if (applicantRitual != null) {
-                savedApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantDigitalId.getUin()));
+                savedApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantDigitalId.getUin()), busNumber, seatNumber);
                 applicantRitual.setApplicantPackage(savedApplicantPackage);
                 applicantRitualService.save(applicantRitual);
             } else {
-                savedApplicantPackage = applicantPackageService.createApplicantPackage(applicant.getPackageReferenceNumber(), Long.parseLong(applicantDigitalId.getUin()));
+                savedApplicantPackage = applicantPackageService.createApplicantPackage(applicant.getPackageReferenceNumber(), Long.parseLong(applicantDigitalId.getUin()), null, null);
                 applicantRitual = ApplicantRitualDto.builder().applicant(applicant).applicantPackage(savedApplicantPackage).packageReferenceNumber(applicant.getPackageReferenceNumber()).build();
                 applicantRitual = applicantRitualService.save(applicantRitual);
                 //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)

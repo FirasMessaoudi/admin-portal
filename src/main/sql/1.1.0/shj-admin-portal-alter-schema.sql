@@ -1232,3 +1232,18 @@ ALTER TABLE shc_portal.shc_company_staff ADD registered bit default 0 not null;
 GO
 ALTER TABLE shc_portal.shc_company_staff ADD country_code varchar(20);
 GO
+
+if not exists(select * from sys.tables where name = 'shc_applicant_emergency_data_upload')
+CREATE TABLE shc_portal.shc_applicant_emergency_data_upload
+(
+    id                       int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    id_number                varchar(16)   NULL,
+    passport_number          varchar(30)   NULL,
+    date_of_birth_hijri      int           NULL,
+    date_of_birth_gregorian  date          NULL,
+    package_reference_number VARCHAR(45)   NOT NULL,
+    bus_number               nvarchar(50)  NULL,
+    seat_number              varchar(10)   NULL,
+    creation_date            smalldatetime NOT NULL DEFAULT current_timestamp
+);
+GO

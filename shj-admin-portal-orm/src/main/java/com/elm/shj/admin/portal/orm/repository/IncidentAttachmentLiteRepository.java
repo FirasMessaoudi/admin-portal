@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.JpaIncidentAttachment;
 import com.elm.shj.admin.portal.orm.entity.JpaIncidentAttachmentLite;
 import org.springframework.data.jpa.repository.JpaRepository;
 
