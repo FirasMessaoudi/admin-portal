@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,4 +27,7 @@ public interface ApplicantRelativeRepository extends JpaRepository<JpaApplicantR
             "WHERE ar.applicant.id = :applicantId AND ar.packageReferenceNumber = :packageReferenceNumber")
     int updateApplicantRelativeApplicantRitual(@Param("applicantRitualId") long applicantRitualId, @Param("applicantId") long applicantId,
                                                @Param("packageReferenceNumber") String packageReferenceNumber);
+
+    @Query(value = "SELECT ar FROM JpaApplicantRelative ar JOIN ar.applicant.digitalIds adi WHERE adi.uin = :applicantUin AND ar.packageReferenceNumber=:packageReferenceNumber")
+    List<JpaApplicantRelative> findByApplicantUinAndPackageReferenceNumber(@Param("applicantUin") String applicantUin, @Param("packageReferenceNumber") String packageReferenceNumber);
 }

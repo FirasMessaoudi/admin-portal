@@ -3,11 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Dto class for the company staff card domain.

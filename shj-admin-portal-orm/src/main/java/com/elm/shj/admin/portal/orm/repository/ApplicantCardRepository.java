@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,7 +20,7 @@ import java.util.List;
  * @author ahmad flaifel
  * @since 1.0.0
  */
-public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard, Long>   {
+public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard, Long>, JpaSpecificationExecutor<JpaApplicantCard> {
 
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi WHERE card.id " +
             "NOT IN (SELECT card2.id FROM JpaApplicantCard card2 LEFT JOIN JpaPrintRequestCard prc  ON card2.id= prc.cardId  LEFT JOIN JpaPrintRequest pr ON prc.printRequest.id=pr.id " +

@@ -6,7 +6,7 @@
 <form [formGroup]="ritualForm" name="searchCard" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
   <div class="form-group col">
     <label class="col-form-label">{{ "printing-management.season" | translate }}</label>
-    <select id="" season formControlName="seasonYear" class="custom-select">
+    <select id="season" formControlName="seasonYear" class="custom-select">
       <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
       <option *ngFor="let season of ritualSeasons" [ngValue]="season.seasonYear">
         {{season.seasonYear}}

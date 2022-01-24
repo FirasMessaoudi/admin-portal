@@ -30,7 +30,6 @@ public class JpaRitualPackage implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-
     @Column(name = "type_code", nullable = false)
     private String typeCode;
 
@@ -54,7 +53,6 @@ public class JpaRitualPackage implements Serializable {
     @ManyToOne
     @JoinColumn(name = "company_ritual_season_id")
     private JpaCompanyRitualSeason companyRitualSeason;
-
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "ritualPackage")
