@@ -30,7 +30,7 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
 
     List<JpaApplicantRitual> findAllByApplicantId(Long id);
 
-    JpaApplicantRitual findFirstByApplicantIdOrderByCreationDateDesc(long id);
+    JpaApplicantRitual findFirstByApplicantDigitalIdsUinOrderByCreationDateDesc(String uin);
 
     JpaApplicantRitual findByApplicantIdAndApplicantPackageRitualPackageReferenceNumber(long applicantId, String referenceNumber);
 

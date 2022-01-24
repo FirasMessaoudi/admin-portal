@@ -90,11 +90,11 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
     /**
      * Find latest applicant ritual.
      *
-     * @param applicantId
+     * @param uin
      * @return
      */
-    public ApplicantRitualDto findLatestApplicantRitual(long applicantId) {
-        return getMapper().fromEntity(applicantRitualRepository.findFirstByApplicantIdOrderByCreationDateDesc(applicantId), mappingContext);
+    public ApplicantRitualDto findLatestApplicantRitual(String uin) {
+        return getMapper().fromEntity(applicantRitualRepository.findFirstByApplicantDigitalIdsUinOrderByCreationDateDesc(uin), mappingContext);
     }
 
     /**

@@ -68,6 +68,7 @@ public class IntegrationWsController {
     private final ApplicantService applicantService;
     private final ApplicantHealthLiteService applicantHealthLiteService;
     private final ApplicantRitualCardLiteService applicantRitualCardLiteService;
+    private final ApplicantRelativeService applicantRelativesService;
     private final ApplicantMainDataService applicantMainDataService;
     private final CompanyRitualStepService companyRitualStepService;
     private final CompanyStaffService companyStaffService;
@@ -271,10 +272,38 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantLite).build());
     }
 
+
+    /**
+     * Verify an applicant based on cross-check factor, uin and date of birth.
+     *
+     * @param applicantUin uin  .
+     * @return WsResponse
+     */
+    @PostMapping("/create-relatives-chat-contact")
+    public ResponseEntity<WsResponse<?>> createApplicantRelativesChatContacts(@RequestBody String applicantUin) {
+        //find relatives for this applicant , check if they are not in the contacts  and add them one by one
+        ApplicantRitualDto latestApplicantRitual = applicantRitualService.findLatestApplicantRitual(applicantUin);
+        List<ApplicantRelativeDto> relatives = applicantRelativesService.findApplicantRelativesInLastRitual(applicantUin, latestApplicantRitual.getPackageReferenceNumber());
+        if (!relatives.isEmpty()) {
+            relatives.stream().forEach(relative -> {
+                ApplicantChatContactDto applicantChatContact = applicantChatContactService.findApplicantChatContact(applicantUin, relative.getRelativeApplicant().getDigitalIds().get(0).getUin());
+                if (applicantChatContact == null) {
+                    applicantChatContactService.createApplicantRelativesChatContacts(relative, relative.getApplicantRitual().getId());
+                }
+            });
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).build());
+        } else {
+            log.error("no relatives for this  applicant in this ritual");
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_RELATIVE_NOT_FOUND.code)).build());
+        }
+    }
+
+
     /**
      * finds applicant's health details by his UIN
      *
-     * @param uin                   the applicant's uin
+     * @param uin                the applicant's uin
      * @param applicantPackageId
      * @return the applicant health details or <code>null</code>
      */
