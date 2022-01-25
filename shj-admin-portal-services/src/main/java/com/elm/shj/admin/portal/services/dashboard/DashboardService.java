@@ -10,17 +10,20 @@ import com.elm.shj.admin.portal.orm.repository.RoleRepository;
 import com.elm.shj.admin.portal.orm.repository.UserRepository;
 import com.elm.shj.admin.portal.services.dto.EGender;
 import com.elm.shj.admin.portal.services.dto.ERitualType;
+import com.elm.shj.admin.portal.services.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.*;
+import java.sql.Timestamp;
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Service handling dashboard related operations
@@ -32,6 +35,9 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DashboardService {
+
+    @Value("${applicants.counter.ages.range}")
+    private String agesRange;
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -161,9 +167,9 @@ public class DashboardService {
         long totalNumberOfFemaleApplicants = applicantRepository.countAllApplicantsByGenderByHijriSeason(EGender.FEMALE.getCode(), hijriSeason);
 
         long totalNumberOfInternalApplicants = applicantRepository
-                .countAllApplicantBySeasonAndRitualType(hijriSeason, List.of(ERitualType.INTERNAL_HAJJ.name()));
+                .countAllApplicantBySeasonAndRitualType(hijriSeason, new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name())));
         long totalNumberOfExternalApplicants = applicantRepository
-                .countAllApplicantBySeasonAndRitualType(hijriSeason, List.of(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
+                .countAllApplicantBySeasonAndRitualType(hijriSeason, new ArrayList<>(Arrays.asList(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
 
         return DashboardGeneralNumbersVo.builder()
                 .totalNumberOfApplicants(totalNumberOfApplicants)
@@ -186,6 +192,33 @@ public class DashboardService {
                 .totalNumberOfUnResolvedIncidents(totalNumberOfUnResolvedIncidents)
                 .countIncidentByCompany(countIncidentByCompany)
                 .build();
+    }
+
+    private Date getDateFromAge(Integer age) {
+        Date date = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.YEAR, -age);
+        return c.getTime();
+    }
+
+    public List<CountVo> pilgrimsCountListsByAgesRange() {
+        List<CountVo> countVoList = new ArrayList<CountVo>();
+        String[] arrOfRanges = this.agesRange.split(",");
+        long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason((int) DateUtils.getCurrentHijriYear(), new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
+        for (String range : arrOfRanges) {
+            CountVo countVo = new CountVo();
+            String[] ages = range.split("-");
+            Date from = new Timestamp(getDateFromAge(Integer.valueOf(ages[0])).getTime());
+            Date to = new Timestamp(getDateFromAge(Integer.valueOf(ages[1])).getTime());
+            long applicantsNumber = applicantRepository
+                    .countPilgrimsFromCurrentSeasonByAgeRange(from, to, (int) DateUtils.getCurrentHijriYear(), new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
+            countVo.setLabel(range);
+            countVo.setCount(applicantsNumber);
+            countVo.setPercentage("%" + String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
+            countVoList.add(countVo);
+        }
+        return countVoList;
     }
 
 }
