@@ -18,13 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Service handling dashboard related operations
@@ -204,7 +200,7 @@ public class DashboardService {
     }
 
     public List<CountVo> pilgrimsCountListsByAgesRange() {
-        List<CountVo> countVoList = new ArrayList<CountVo>();
+        List<CountVo> countVoList = new ArrayList<>();
         String[] arrOfRanges = this.agesRange.split(",");
         long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason((int) DateUtils.getCurrentHijriYear(), new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
         for (String range : arrOfRanges) {
