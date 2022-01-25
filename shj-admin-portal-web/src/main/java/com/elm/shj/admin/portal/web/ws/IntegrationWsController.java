@@ -718,7 +718,12 @@ public class IntegrationWsController {
 
     @PostMapping("/update-staff")
     public ResponseEntity<WsResponse<?>> updateStaff(@RequestBody @Validated UpdateStaffCmd command) {
-        if(command.getEmail().equals("") || command.getCountryCode().equals("")){
+        if(command.getCountryCode().equals("") || !command.getCountryCode().matches("^[a-zA-Z]*$") || command.getCountryCode().length() > 5){
+            return ResponseEntity.ok(
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(command.getCountryCode()).build()).build());
+        }
+        if(command.getEmail().equals("")){
             return ResponseEntity.ok(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).build()).build());
