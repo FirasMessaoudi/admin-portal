@@ -23,7 +23,7 @@ public interface ApplicantHealthRepository extends JpaRepository<JpaApplicantHea
 
     JpaApplicantHealth findByApplicantDigitalIdsUinAndApplicantRitualApplicantPackageId(String uin, Long applicantPackageId);
 
-    JpaApplicantHealth findByApplicantIdAndApplicantRitualPackageReferenceNumber(long applicantId, String referenceNumber);
+    JpaApplicantHealth findByApplicantIdAndPackageReferenceNumber(long applicantId, String referenceNumber);
 
     @Modifying
     @Query("UPDATE JpaApplicantHealth ah SET ah.applicantRitual.id = :applicantRitualId " +
