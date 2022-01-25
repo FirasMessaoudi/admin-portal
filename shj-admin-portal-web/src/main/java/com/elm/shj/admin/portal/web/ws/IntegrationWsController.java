@@ -5,7 +5,10 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.*;
-import com.elm.shj.admin.portal.services.company.*;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
+import com.elm.shj.admin.portal.services.company.CompanyService;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
@@ -77,7 +80,6 @@ public class IntegrationWsController {
     private final ApplicantPackageCateringService applicantPackageCateringService;
     private final ApplicantPackageHousingService applicantPackageHousingService;
     private final ApplicantPackageTransportationService applicantPackageTransportationService;
-    private final CompanyLiteService companyLiteService;
     private final HousingCategoryLookupService housingCategoryLookupService;
     private final HousingTypeLookupService housingTypeLookupService;
     private final PackageTypeLookupService packageTypeLookupService;
@@ -91,7 +93,6 @@ public class IntegrationWsController {
     private final NotificationTemplateNameLookupService notificationTemplateNameLookupService;
     private final MealTypeLookupService mealTypeLookupService;
     private final LanguageLookupService languageLookupService;
-    private final RitualPackageService ritualPackageService;
     private final PackageHousingService packageHousingService;
     private final ApplicantIncidentService applicantIncidentService;
     private final IncidentStatusLookupService incidentStatusLookupService;

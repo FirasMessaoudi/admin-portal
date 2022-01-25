@@ -35,7 +35,7 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
      */
     public ApplicantHealthDto findByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
         return getMapper().fromEntity(applicantHealthRepository.
-                        findByApplicantIdAndApplicantRitualPackageReferenceNumber(applicantId, packageReferenceNumber),
+                        findByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber),
                 mappingContext);
     }
 

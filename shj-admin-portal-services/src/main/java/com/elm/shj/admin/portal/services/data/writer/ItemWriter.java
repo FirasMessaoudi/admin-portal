@@ -508,8 +508,6 @@ public class ItemWriter {
                 if (applicantUin == null || relativeApplicantUin == null || savedApplicantRitual == null) {
                     return;
                 }
-                //TODO: line below to update applicant relative has to be discussed
-                updateApplicantRelativeIfAlreadyExist(applicantRelative);
 
                 applicantChatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitual.getId());
             }
@@ -542,7 +540,7 @@ public class ItemWriter {
                 ApplicantHealthDto applicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
 
                 if (applicantHealth == null) {
-                    applicantHealth = ApplicantHealthDto.builder().applicant(applicant).applicantRitual(savedApplicantRitual).build();
+                    applicantHealth = ApplicantHealthDto.builder().applicant(applicant).applicantRitual(savedApplicantRitual).packageReferenceNumber(packageReferenceNumber).build();
                     applicantHealth = applicantHealthService.save(applicantHealth);
                 }
                 // make fields accessible
@@ -554,27 +552,6 @@ public class ItemWriter {
             ReflectionUtils.handleReflectionException(e);
         }
     }
-
-    private void updateApplicantRelativeIfAlreadyExist(ApplicantRelativeDto applicantRelative) {
-        JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.APPLICANT_RELATIVES_DATA));
-        ApplicantRelativeDto applicantRelativeFromDB = applicantRelativeService.findByApplicantIdAndRelativeApplicantId(applicantRelative.getApplicant().getId(), applicantRelative.getRelativeApplicant().getId());
-        if (applicantRelativeFromDB == null) {
-            repository.save(mapperRegistry.get(EDataSegment.APPLICANT_RELATIVES_DATA).toEntity(applicantRelative, mappingContext));
-
-            return;
-        }
-        if (applicantRelativeFromDB.getRelationshipCode().equals(applicantRelative.getRelationshipCode())) {
-            return;
-        }
-        if (!applicantRelativeFromDB.getRelationshipCode().equals(applicantRelative.getRelationshipCode())) {
-            applicantRelative.setId(applicantRelativeFromDB.getId());
-            applicantRelative.setCreationDate(applicantRelativeFromDB.getCreationDate());
-            repository.save(mapperRegistry.get(EDataSegment.APPLICANT_RELATIVES_DATA).toEntity(applicantRelative, mappingContext));
-            return;
-        }
-    }
-
-
 
     /**
      * update company staff properties
