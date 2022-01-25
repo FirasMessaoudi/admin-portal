@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.dashboard;
 
 import com.elm.shj.admin.portal.orm.entity.CountVo;
+import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.orm.repository.RoleRepository;
 import com.elm.shj.admin.portal.orm.repository.UserRepository;
@@ -35,6 +36,7 @@ public class DashboardService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ApplicantRepository applicantRepository;
+    private final ApplicantIncidentRepository applicantIncidentRepository;
 
     public DashboardVo loadDashboardData() {
         log.info("Start loading dashboard data");
@@ -169,6 +171,20 @@ public class DashboardService {
                 .totalNumberOfFemaleApplicants(totalNumberOfFemaleApplicants)
                 .totalNumberOfInternalApplicants(totalNumberOfInternalApplicants)
                 .totalNumberOfExternalApplicants(totalNumberOfExternalApplicants)
+                .build();
+    }
+
+    public DashboardIncidentNumbersVo loadDashboardIncidentNumbers() {
+        long totalNumberOfRegisteredIncidents = applicantIncidentRepository.count();
+        long totalNumberOfResolvedIncidents = applicantIncidentRepository.countAllResolvedIncidents();
+        long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents();
+        List<CountVo> countIncidentByCompany = applicantIncidentRepository.countIncidentByCompany();
+
+        return DashboardIncidentNumbersVo.builder()
+                .totalNumberOfRegisteredIncidents(totalNumberOfRegisteredIncidents)
+                .totalNumberOfResolvedIncidents(totalNumberOfResolvedIncidents)
+                .totalNumberOfUnResolvedIncidents(totalNumberOfUnResolvedIncidents)
+                .countIncidentByCompany(countIncidentByCompany)
                 .build();
     }
 
