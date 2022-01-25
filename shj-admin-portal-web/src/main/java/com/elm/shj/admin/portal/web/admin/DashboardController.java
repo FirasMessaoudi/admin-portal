@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.dashboard.DashboardGeneralNumbersVo;
+import com.elm.shj.admin.portal.services.dashboard.DashboardIncidentNumbersVo;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.dashboard.DashboardVo;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
@@ -71,6 +72,13 @@ public class DashboardController {
     public DashboardGeneralNumbersVo loadGeneralNumbers() {
         log.info("Handling loadDashboardGeneralNumbers endpoint.");
         return dashboardService.loadDashboardGeneralNumbers();
+    }
+
+    @GetMapping("/incident-numbers")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public DashboardIncidentNumbersVo loadIncidentNumbers() {
+        log.info("Handling loadDashboardGeneralNumbers endpoint.");
+        return dashboardService.loadDashboardIncidentNumbers();
     }
 
 }
