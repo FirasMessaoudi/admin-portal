@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.dashboard;
 
 import com.elm.shj.admin.portal.orm.entity.CountVo;
+import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.orm.repository.RoleRepository;
 import com.elm.shj.admin.portal.orm.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class DashboardService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final ApplicantRepository applicantRepository;
 
     public DashboardVo loadDashboardData() {
         log.info("Start loading dashboard data");
@@ -138,6 +140,24 @@ public class DashboardService {
                 .activeUsersCountVoList(activeUsersCountVoList)
                 .inactiveUsersCountVoList(inactiveUsersCountVoList)
                 .deletedUsersCountVoList(deletedUsersCountVoList)
+                .build();
+    }
+
+    /**
+     * Load dashboard general numbers.
+     *
+     * @return
+     */
+    public DashboardGeneralNumbersVo loadDashboardGeneralNumbers() {
+
+        long totalNumberOfPilgrims = applicantRepository.countAllPilgrimsFromCurrentSeason();
+        long totalNumberOfMalePilgrims = applicantRepository.countAllPilgrimsFromCurrentSeasonByGender("M");
+        long totalNumberOfFemalePilgrims = applicantRepository.countAllPilgrimsFromCurrentSeasonByGender("F");
+
+        return DashboardGeneralNumbersVo.builder()
+                .totalNumberOfPilgrims(totalNumberOfPilgrims)
+                .totalNumberOfMalePilgrims(totalNumberOfMalePilgrims)
+                .totalNumberOfFemalePilgrims(totalNumberOfFemalePilgrims)
                 .build();
     }
 }

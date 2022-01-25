@@ -4,7 +4,7 @@
 package com.elm.shj.admin.portal.services.dto;
 
 /**
- * Enum for Digital Id Status
+ * Enum for Digital ID Status
  *
  * @author Ahmed Ali
  * @since 1.1.0

@@ -28,7 +28,6 @@ public enum EDataSegment {
     STAFF_RITUAL_DATA(9),
     STAFF_APPLICANT_GROUP_DATA(10);
 
-
     private final long id;
 
     EDataSegment(long id) {

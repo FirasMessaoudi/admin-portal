@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.services.dashboard.DashboardGeneralNumbersVo;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.dashboard.DashboardVo;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
@@ -63,6 +64,13 @@ public class DashboardController {
                 return dashboardService.loadMonthlyDashboardData();
         }
         return null;
+    }
+
+    @GetMapping("/general-numbers")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public DashboardGeneralNumbersVo loadGeneralNumbers() {
+        log.info("Handling loadDashboardGeneralNumbers endpoint.");
+        return dashboardService.loadDashboardGeneralNumbers();
     }
 
 }
