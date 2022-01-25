@@ -3,7 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -12,7 +15,6 @@ import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
-import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -36,9 +37,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto, Long> {
-
-    @Value("${applicants.counter.ages.range}")
-    private String agesRange;
 
     private final ApplicantRepository applicantRepository;
     private final ApplicantContactRepository applicantContactRepository;
@@ -254,24 +252,6 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         Optional<ApplicantDto> applicant = findByUin(uin);
         log.debug("Applicant ID: {}", applicant.get().getId());
         applicant.ifPresent(applicantDto -> applicantRepository.updatePreferredLanguage(applicantDto.getId(), lang));
-    }
-
-    public List<CountVo> listCountApplicantsByAgesRange() {
-        List<CountVo> countVoList = new ArrayList<CountVo>();
-        String[] arrOfRanges = this.agesRange.split(",");
-        long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason();
-        for (String range : arrOfRanges) {
-            CountVo countVo = new CountVo();
-            String[] ages = range.split("-");
-            Date from = new Timestamp(getDateFromAge(Integer.valueOf(ages[0])).getTime());
-            Date to = new Timestamp(getDateFromAge(Integer.valueOf(ages[1])).getTime());
-            long applicantsNumber = applicantRepository.countApplicantsFromCurrentSeasonByAgeRange(from, to);
-            countVo.setLabel(range);
-            countVo.setCount(applicantsNumber);
-            countVo.setPercentage("%" + String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
-            countVoList.add(countVo);
-        }
-        return countVoList;
     }
 
 }

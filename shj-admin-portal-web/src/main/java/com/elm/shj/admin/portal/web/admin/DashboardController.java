@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.services.dashboard.DashboardGeneralNumbersVo;
 import com.elm.shj.admin.portal.services.dashboard.DashboardIncidentNumbersVo;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.security.RolesAllowed;
+import java.util.List;
 
 
 /**
@@ -87,6 +91,13 @@ public class DashboardController {
     public DashboardIncidentNumbersVo loadIncidentNumbers() {
         log.info("Handling loadDashboardGeneralNumbers endpoint.");
         return dashboardService.loadDashboardIncidentNumbers();
+    }
+
+    @GetMapping("/general-numbers/applicant/count-per-age")
+    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT)
+    public List<CountVo> countPilgrimsFromCurrentSeasonByAgeRanges() {
+        log.debug("Count applicants based on age range...");
+        return dashboardService.pilgrimsCountListsByAgesRange();
     }
 
 }

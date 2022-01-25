@@ -34,7 +34,7 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
     @Query("SELECT COUNT(a) FROM JpaApplicantIncident a where a.statusCode IN ('RESOLVED', 'CLOSED')")
     long countAllResolvedIncidents();
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(ai), '')" +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(ai),'') " +
             "FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c WHERE  c.labelAr is NOT NULL GROUP BY c.labelAr")
     List<CountVo> countIncidentByCompany();
