@@ -77,4 +77,9 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "AND rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXETERNAL_HAJJ', 'COURTESY_HAJJ') AND a.gender = :gender")
     long countAllPilgrimsFromCurrentSeasonByGender(@Param("gender") String gender);
 
+    @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear " +
+            "AND rs.ritualTypeCode IN (:ritualTypeCodeList) ")
+    long countAllApplicantBySeasonAndRitualType(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
+
 }

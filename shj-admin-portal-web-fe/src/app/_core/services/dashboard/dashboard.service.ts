@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {DashboardVo} from "@model/dashboard-vo.model";
 import {Observable} from "rxjs";
+import {GeneralDashboardVo} from "@model/general-dashboard-vo.model";
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,21 @@ export class DashboardService {
    */
   loadPeriodData(periodType: string): Observable<DashboardVo> {
     return this.http.get<DashboardVo>('/core/api/dashboard/period/' + periodType);
+  }
+
+
+  /**
+   * Load dashboard data for counting applicants in current season
+   */
+  loadApplicantsCountForCurrentSeason(): Observable<GeneralDashboardVo> {
+    return this.http.get<GeneralDashboardVo>('/core/api/dashboard/applicant/current-season');
+  }
+
+  /**
+   * Load dashboard data for counting applicants in previous season
+   */
+  loadApplicantsCountForPreviousSeason(): Observable<GeneralDashboardVo> {
+    return this.http.get<GeneralDashboardVo>('/core/api/dashboard/applicant/previous-season');
   }
 
 }

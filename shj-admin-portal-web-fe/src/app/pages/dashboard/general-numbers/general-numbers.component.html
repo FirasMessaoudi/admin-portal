@@ -18,14 +18,15 @@
             <div>
               <div class="sts-title">حجاج هذا العام</div>
               <div class="sts-number text-dark">
-                <ng9-odometer [number]="externalpilgrims"></ng9-odometer>
+                <ng9-odometer [number]="totalApplicantsCurrentSeason"></ng9-odometer>
               </div>
             </div>
             <svg-icon styleClass="sts-icon fa-w-14 display-4" icon="user-solid"></svg-icon>
           </div>
 
           <p class="py-3">
-            <ngb-progressbar type="pilgrims" [value]="25" height="10px"></ngb-progressbar>
+            <ngb-progressbar type="pilgrims" [value]="externalApplicantsCurrentSeason/internalApplicantsCurrentSeason"
+                             height="10px"></ngb-progressbar>
           </p>
 
           <div class="row row-cols-1 row-cols-xl-2">
@@ -33,17 +34,17 @@
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
                 <div class="px-3">حجاج الخارج</div>
-                <div>1,547,755</div>
+                <div>{{externalApplicantsCurrentSeason}}</div>
               </div>
-              
+
             </div>
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
                 <div class="px-3">حجاج الداخل</div>
-                <div>447,755</div>
+                <div>{{internalApplicantsCurrentSeason}}</div>
               </div>
-              
+
             </div>
             <div class="col my-2">
               <div class="d-flex align-items-center">
@@ -51,7 +52,7 @@
                 <div class="px-3">عدد الذكور</div>
                 <div>1,547,755</div>
               </div>
-              
+
             </div>
             <div class="col my-2">
               <div class="d-flex align-items-center">
@@ -59,7 +60,7 @@
                 <div class="px-3">عدد الاناث</div>
                 <div>447,755</div>
               </div>
-              
+
             </div>
           </div>
         </div>
@@ -70,14 +71,15 @@
             <div>
               <div class="sts-title">حجاج الموسم الماضي</div>
               <div class="sts-number text-dark">
-                <ng9-odometer [number]="internalpilgrims"></ng9-odometer>
+                <ng9-odometer [number]="totalApplicantsPreviousSeason"></ng9-odometer>
               </div>
             </div>
             <svg-icon styleClass="sts-icon fa-w-20 display-4" icon="user-clock"></svg-icon>
           </div>
 
           <p class="py-3">
-            <ngb-progressbar type="pilgrims" [value]="25" height="10px"></ngb-progressbar>
+            <ngb-progressbar type="pilgrims" [value]="internalApplicantsPreviousSeason/externalApplicantsPreviousSeason"
+                             height="10px"></ngb-progressbar>
           </p>
 
           <div class="row row-cols-1 row-cols-xl-2">
@@ -85,17 +87,17 @@
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
                 <div class="px-3">حجاج الخارج</div>
-                <div>1,547,755</div>
+                <div>{{externalApplicantsPreviousSeason}}</div>
               </div>
-              
+
             </div>
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
                 <div class="px-3">حجاج الداخل</div>
-                <div>447,755</div>
+                <div>{{internalApplicantsPreviousSeason}}</div>
               </div>
-              
+
             </div>
             <div class="col my-2">
               <div class="d-flex align-items-center">
@@ -103,7 +105,7 @@
                 <div class="px-3">عدد الذكور</div>
                 <div>1,547,755</div>
               </div>
-              
+
             </div>
             <div class="col my-2">
               <div class="d-flex align-items-center">
@@ -111,7 +113,7 @@
                 <div class="px-3">عدد الاناث</div>
                 <div>447,755</div>
               </div>
-              
+
             </div>
           </div>
 

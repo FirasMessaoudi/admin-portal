@@ -26,4 +26,8 @@ public class DashboardGeneralNumbersVo implements Serializable {
     private long totalNumberOfPilgrims;
     private long totalNumberOfMalePilgrims;
     private long totalNumberOfFemalePilgrims;
+
+    private long totalNumberOfInternalApplicantCountForHijriSeason;
+    private long totalNumberOfExternalApplicantCountForHijriSeason;
+
 }
