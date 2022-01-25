@@ -63,13 +63,13 @@ public class DateUtils {
     }
 
 
-    public static LocalDateTime convertToLocalDate(Date targetDate){
+    public static LocalDateTime convertToLocalDate(Date targetDate) {
         return targetDate.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
     }
 
-public static long getCurrentHijriYear(){
-   return Long.valueOf(Long.toString(toHijri(new Date())).substring(0,4));
-}
+    public static long getCurrentHijriYear() {
+        return Long.parseLong(Long.toString(toHijri(new Date())).substring(0, 4));
+    }
 }

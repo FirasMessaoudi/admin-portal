@@ -1,16 +1,14 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {DashboardVo} from "@model/dashboard-vo.model";
-import {Observable} from "rxjs";
-import {GeneralDashboardVo} from "@model/general-dashboard-vo.model";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { DashboardVo } from '@model/dashboard-vo.model';
+import { Observable } from 'rxjs';
+import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DashboardService {
-
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   /**
    * Load dashboard data for logged in user agency
@@ -25,22 +23,26 @@ export class DashboardService {
    * @param periodType     the period type to load
    */
   loadPeriodData(periodType: string): Observable<DashboardVo> {
-    return this.http.get<DashboardVo>('/core/api/dashboard/period/' + periodType);
-  }
-
-
-  /**
-   * Load dashboard data for counting applicants in current season
-   */
-  loadApplicantsCountForCurrentSeason(): Observable<GeneralDashboardVo> {
-    return this.http.get<GeneralDashboardVo>('/core/api/dashboard/applicant/current-season');
+    return this.http.get<DashboardVo>(
+      '/core/api/dashboard/period/' + periodType
+    );
   }
 
   /**
-   * Load dashboard data for counting applicants in previous season
+   * Load dashboard general numbers for current season
    */
-  loadApplicantsCountForPreviousSeason(): Observable<GeneralDashboardVo> {
-    return this.http.get<GeneralDashboardVo>('/core/api/dashboard/applicant/previous-season');
+  loadGeneralNumbersForCurrentSeason(): Observable<GeneralDashboardVo> {
+    return this.http.get<GeneralDashboardVo>(
+      '/core/api/dashboard/general-numbers/current-season'
+    );
   }
 
+  /**
+   * Load dashboard general numbers for previous season
+   */
+  loadGeneralNumbersForPreviousSeason(): Observable<GeneralDashboardVo> {
+    return this.http.get<GeneralDashboardVo>(
+      '/core/api/dashboard/general-numbers/previous-season'
+    );
+  }
 }

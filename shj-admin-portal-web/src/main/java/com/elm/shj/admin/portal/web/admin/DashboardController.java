@@ -67,25 +67,18 @@ public class DashboardController {
         return null;
     }
 
-    @GetMapping("/general-numbers")
+    @GetMapping("/general-numbers/current-season")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public DashboardGeneralNumbersVo loadGeneralNumbers() {
-        log.info("Handling loadDashboardGeneralNumbers endpoint.");
-        return dashboardService.loadDashboardGeneralNumbers();
+    public DashboardGeneralNumbersVo loadCurrentSeasonGeneralNumbers() {
+        log.info("Load Dashboard General Numbers for Current Season.");
+        return dashboardService.loadDashboardGeneralNumbersByHijriSeason((int) DateUtils.getCurrentHijriYear());
     }
 
-    @GetMapping("/applicant/current-season")
+    @GetMapping("/general-numbers/previous-season")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public DashboardGeneralNumbersVo loadApplicantsCountForCurrentSeason() {
-        log.info("Handling load Applicants Count For Current Season endpoint.");
-        return dashboardService.loadApplicantsCountForHijriSeason((int) DateUtils.getCurrentHijriYear());
-    }
-
-    @GetMapping("/applicant/previous-season")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public DashboardGeneralNumbersVo loadApplicantsCountForPreviousSeason() {
-        log.info("Handling load Applicants Count For Previous Season endpoint.");
-        return dashboardService.loadApplicantsCountForHijriSeason((int) (DateUtils.getCurrentHijriYear() - 1));
+    public DashboardGeneralNumbersVo loadPreviousSeasonGeneralNumbers() {
+        log.info("Load Dashboard General Numbers for Previous Season.");
+        return dashboardService.loadDashboardGeneralNumbersByHijriSeason((int) DateUtils.getCurrentHijriYear() - 1);
     }
 
 }

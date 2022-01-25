@@ -7,16 +7,14 @@ import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.orm.repository.RoleRepository;
 import com.elm.shj.admin.portal.orm.repository.UserRepository;
+import com.elm.shj.admin.portal.services.dto.EGender;
 import com.elm.shj.admin.portal.services.dto.ERitualType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -150,53 +148,27 @@ public class DashboardService {
     }
 
     /**
-     * Load dashboard general numbers.
+     * Load dashboard general numbers by hijri season.
      *
      * @return
      */
-    public DashboardGeneralNumbersVo loadDashboardGeneralNumbers() {
+    public DashboardGeneralNumbersVo loadDashboardGeneralNumbersByHijriSeason(int hijriSeason) {
 
-        long totalNumberOfPilgrims = applicantRepository.countAllPilgrimsFromCurrentSeason();
-        long totalNumberOfMalePilgrims = applicantRepository.countAllPilgrimsFromCurrentSeasonByGender("M");
-        long totalNumberOfFemalePilgrims = applicantRepository.countAllPilgrimsFromCurrentSeasonByGender("F");
+        long totalNumberOfApplicants = applicantRepository.countAllApplicantsByHijriSeason(hijriSeason);
+        long totalNumberOfMaleApplicants = applicantRepository.countAllApplicantsByGenderByHijriSeason(EGender.MALE.getCode(), hijriSeason);
+        long totalNumberOfFemaleApplicants = applicantRepository.countAllApplicantsByGenderByHijriSeason(EGender.FEMALE.getCode(), hijriSeason);
 
-        return DashboardGeneralNumbersVo.builder()
-                .totalNumberOfPilgrims(totalNumberOfPilgrims)
-                .totalNumberOfMalePilgrims(totalNumberOfMalePilgrims)
-                .totalNumberOfFemalePilgrims(totalNumberOfFemalePilgrims)
-                .build();
-    }
-
-    /**
-     * Load dashboard general numbers.
-     *
-     * @return
-     */
-    public DashboardGeneralNumbersVo loadExternalApplicantCountForCurrentSeason() {
-
-        long totalNumberOfPilgrims = applicantRepository.countAllPilgrimsFromCurrentSeason();
-        long totalNumberOfMalePilgrims = applicantRepository.countAllPilgrimsFromCurrentSeasonByGender("M");
-        long totalNumberOfFemalePilgrims = applicantRepository.countAllPilgrimsFromCurrentSeasonByGender("F");
+        long totalNumberOfInternalApplicants = applicantRepository
+                .countAllApplicantBySeasonAndRitualType(hijriSeason, List.of(ERitualType.INTERNAL_HAJJ.name()));
+        long totalNumberOfExternalApplicants = applicantRepository
+                .countAllApplicantBySeasonAndRitualType(hijriSeason, List.of(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
 
         return DashboardGeneralNumbersVo.builder()
-                .totalNumberOfPilgrims(totalNumberOfPilgrims)
-                .totalNumberOfMalePilgrims(totalNumberOfMalePilgrims)
-                .totalNumberOfFemalePilgrims(totalNumberOfFemalePilgrims)
-                .build();
-    }
-
-
-    /**
-     * Load Applicants Count For Hijri season.
-     *
-     * @return total number of applicant (internal / external) in Hijri season
-     */
-    public DashboardGeneralNumbersVo loadApplicantsCountForHijriSeason(int hijriSeason) {
-        long totalNumberOfInternalApplicantCountForHijriSeason = applicantRepository.countAllApplicantBySeasonAndRitualType(hijriSeason, new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name())));
-        long totalNumberOfExternalApplicantCountForHijriSeason = applicantRepository.countAllApplicantBySeasonAndRitualType(hijriSeason, new ArrayList<>(Arrays.asList(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
-        return DashboardGeneralNumbersVo.builder()
-                .totalNumberOfInternalApplicantCountForHijriSeason(totalNumberOfInternalApplicantCountForHijriSeason)
-                .totalNumberOfExternalApplicantCountForHijriSeason(totalNumberOfExternalApplicantCountForHijriSeason)
+                .totalNumberOfApplicants(totalNumberOfApplicants)
+                .totalNumberOfMaleApplicants(totalNumberOfMaleApplicants)
+                .totalNumberOfFemaleApplicants(totalNumberOfFemaleApplicants)
+                .totalNumberOfInternalApplicants(totalNumberOfInternalApplicants)
+                .totalNumberOfExternalApplicants(totalNumberOfExternalApplicants)
                 .build();
     }
 

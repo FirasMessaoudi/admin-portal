@@ -22,12 +22,12 @@ public class DashboardGeneralNumbersVo implements Serializable {
 
     private static final long serialVersionUID = -1117150721646949784L;
 
-    // Pilgrims
-    private long totalNumberOfPilgrims;
-    private long totalNumberOfMalePilgrims;
-    private long totalNumberOfFemalePilgrims;
+    // Applicants
+    private long totalNumberOfApplicants;
+    private long totalNumberOfMaleApplicants;
+    private long totalNumberOfFemaleApplicants;
 
-    private long totalNumberOfInternalApplicantCountForHijriSeason;
-    private long totalNumberOfExternalApplicantCountForHijriSeason;
+    private long totalNumberOfInternalApplicants;
+    private long totalNumberOfExternalApplicants;
 
 }

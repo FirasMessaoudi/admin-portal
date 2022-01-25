@@ -1,55 +1,50 @@
-import {Component, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
-import {DashboardService} from "@core/services";
+import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { DashboardService } from '@core/services';
+import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
 
 @Component({
   selector: 'app-general-numbers',
   templateUrl: './general-numbers.component.html',
-  styleUrls: ['./general-numbers.component.scss']
+  styleUrls: ['./general-numbers.component.scss'],
 })
 export class GeneralNumbersComponent implements OnInit {
+  currentSeasonData: GeneralDashboardVo;
+  previousSeasonData: GeneralDashboardVo;
+  currentSeasonPercentage: number;
+  previousSeasonPercentage: number;
 
+  private currentSeasonSubscription: Subscription;
+  private previousSeasonSubscription: Subscription;
 
-  totalApplicantsCurrentSeason: number;
-  externalApplicantsCurrentSeason: number;
-  internalApplicantsCurrentSeason: number;
-
-  totalApplicantsPreviousSeason: number;
-  externalApplicantsPreviousSeason: number;
-  internalApplicantsPreviousSeason: number;
-
-
-  private loadApplicantsCurrentSeasonSubscription: Subscription;
-  private loadApplicantsPreviousSeasonSubscription: Subscription;
-
-  constructor(private dashboardService: DashboardService) {
-  }
+  constructor(private dashboardService: DashboardService) {}
 
   ngOnInit() {
+    this.currentSeasonSubscription = this.dashboardService
+      .loadGeneralNumbersForCurrentSeason()
+      .subscribe((data) => {
+        this.currentSeasonData = data;
+        this.currentSeasonPercentage =
+          (100 * data.totalNumberOfExternalApplicants) /
+          data.totalNumberOfApplicants;
+      });
 
-    this.loadApplicantsCurrentSeasonSubscription = this.dashboardService.loadApplicantsCountForCurrentSeason().subscribe(data => {
-      this.externalApplicantsCurrentSeason = data.totalNumberOfExternalApplicantCountForHijriSeason;
-      this.internalApplicantsCurrentSeason = data.totalNumberOfInternalApplicantCountForHijriSeason;
-      this.totalApplicantsCurrentSeason = this.externalApplicantsCurrentSeason + this.internalApplicantsCurrentSeason;
-
-    });
-
-    this.loadApplicantsPreviousSeasonSubscription = this.dashboardService.loadApplicantsCountForPreviousSeason().subscribe(data => {
-      this.externalApplicantsPreviousSeason = data.totalNumberOfExternalApplicantCountForHijriSeason;
-      this.internalApplicantsPreviousSeason = data.totalNumberOfInternalApplicantCountForHijriSeason;
-      this.totalApplicantsPreviousSeason = this.externalApplicantsPreviousSeason + this.internalApplicantsPreviousSeason;
-
-    });
+    this.previousSeasonSubscription = this.dashboardService
+      .loadGeneralNumbersForPreviousSeason()
+      .subscribe((data) => {
+        this.previousSeasonData = data;
+        this.previousSeasonPercentage =
+          (100 * data.totalNumberOfExternalApplicants) /
+          data.totalNumberOfApplicants;
+      });
   }
 
   ngOnDestroy() {
-    if (this.loadApplicantsCurrentSeasonSubscription) {
-      this.loadApplicantsCurrentSeasonSubscription.unsubscribe();
+    if (this.currentSeasonSubscription) {
+      this.currentSeasonSubscription.unsubscribe();
     }
-    if (this.loadApplicantsPreviousSeasonSubscription) {
-      this.loadApplicantsPreviousSeasonSubscription.unsubscribe();
+    if (this.previousSeasonSubscription) {
+      this.previousSeasonSubscription.unsubscribe();
     }
-
   }
-
 }
