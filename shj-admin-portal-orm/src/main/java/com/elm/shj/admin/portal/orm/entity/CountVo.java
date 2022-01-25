@@ -24,4 +24,5 @@ public class CountVo {
     private String label;
     private int labelNumber;
     private long count;
+    private String percentage;
 }

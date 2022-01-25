@@ -414,3 +414,6 @@ GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('scheduler.staff.digitalId.invalidate.cron', '0 0 0 * * ?');
 GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('applicants.counter.ages.range', '0-12,12-18,18-30,30-50,50-70,70-200');
+GO

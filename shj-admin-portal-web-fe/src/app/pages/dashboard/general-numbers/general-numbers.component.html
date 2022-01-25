@@ -1,6 +1,6 @@
 <div class="content__wrapper">
   <div class="title__Page">
-    <h3 class="font-weight-bold text-dark">احصائيات عامة</h3>
+    <h3 class="font-weight-bold text-dark">إحصائيات عامة</h3>
     <div>
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
@@ -18,14 +18,16 @@
             <div>
               <div class="sts-title">حجاج هذا العام</div>
               <div class="sts-number text-dark">
-                <ng9-odometer [number]="externalpilgrims"></ng9-odometer>
+                <ng9-odometer [number]="currentSeasonData?.totalNumberOfApplicants"></ng9-odometer>
               </div>
             </div>
             <svg-icon styleClass="sts-icon fa-w-14 display-4" icon="user-solid"></svg-icon>
           </div>
 
           <p class="py-3">
-            <ngb-progressbar type="pilgrims" [value]="25" height="10px"></ngb-progressbar>
+            <ngb-progressbar type="pilgrims"
+                             [value]="currentSeasonPercentage"
+                             height="10px"></ngb-progressbar>
           </p>
 
           <div class="row row-cols-1 row-cols-xl-2">
@@ -33,33 +35,33 @@
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
                 <div class="px-3">حجاج الخارج</div>
-                <div>1,547,755</div>
+                <div>{{currentSeasonData?.totalNumberOfExternalApplicants | number}}</div>
               </div>
-              
+
             </div>
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
                 <div class="px-3">حجاج الداخل</div>
-                <div>447,755</div>
+                <div>{{currentSeasonData?.totalNumberOfInternalApplicants | number}}</div>
               </div>
-              
+
             </div>
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="fa-w-6 h2 text-gray-300" icon="male-solid"></svg-icon>
                 <div class="px-3">عدد الذكور</div>
-                <div>1,547,755</div>
+                <div>{{currentSeasonData?.totalNumberOfMaleApplicants | number}}</div>
               </div>
-              
+
             </div>
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="fa-w-8 h2 text-gray-300" icon="female-solid"></svg-icon>
-                <div class="px-3">عدد الاناث</div>
-                <div>447,755</div>
+                <div class="px-3">عدد الإناث</div>
+                <div>{{currentSeasonData?.totalNumberOfFemaleApplicants | number}}</div>
               </div>
-              
+
             </div>
           </div>
         </div>
@@ -70,14 +72,16 @@
             <div>
               <div class="sts-title">حجاج الموسم الماضي</div>
               <div class="sts-number text-dark">
-                <ng9-odometer [number]="internalpilgrims"></ng9-odometer>
+                <ng9-odometer [number]="previousSeasonData?.totalNumberOfApplicants"></ng9-odometer>
               </div>
             </div>
             <svg-icon styleClass="sts-icon fa-w-20 display-4" icon="user-clock"></svg-icon>
           </div>
 
           <p class="py-3">
-            <ngb-progressbar type="pilgrims" [value]="25" height="10px"></ngb-progressbar>
+            <ngb-progressbar type="pilgrims"
+                             [value]="previousSeasonPercentage"
+                             height="10px"></ngb-progressbar>
           </p>
 
           <div class="row row-cols-1 row-cols-xl-2">
@@ -85,17 +89,17 @@
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
                 <div class="px-3">حجاج الخارج</div>
-                <div>1,547,755</div>
+                <div>{{previousSeasonData?.totalNumberOfExternalApplicants | number}}</div>
               </div>
-              
+
             </div>
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
                 <div class="px-3">حجاج الداخل</div>
-                <div>447,755</div>
+                <div>{{previousSeasonData?.totalNumberOfInternalApplicants | number}}</div>
               </div>
-              
+
             </div>
             <div class="col my-2">
               <div class="d-flex align-items-center">
@@ -103,15 +107,15 @@
                 <div class="px-3">عدد الذكور</div>
                 <div>1,547,755</div>
               </div>
-              
+
             </div>
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="fa-w-8 h2 text-gray-300" icon="female-solid"></svg-icon>
-                <div class="px-3">عدد الاناث</div>
-                <div>447,755</div>
+                <div class="px-3">عدد الإناث</div>
+                <div>{{previousSeasonData?.totalNumberOfFemaleApplicants | number}}</div>
               </div>
-              
+
             </div>
           </div>
 

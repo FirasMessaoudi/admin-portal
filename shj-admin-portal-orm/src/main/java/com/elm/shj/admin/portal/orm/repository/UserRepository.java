@@ -103,7 +103,7 @@ public interface UserRepository extends JpaRepository<JpaUser, Long> {
     // --------------------------------
     // -------- USERS BY AUTHORITY
     // --------------------------------
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ra.authority.labelAr, 0, COUNT(DISTINCT u)) " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ra.authority.labelAr, 0, COUNT(DISTINCT u),'') " +
             "FROM JpaUser u LEFT JOIN JpaUserRole ur ON ur.user.id = u.id LEFT JOIN JpaRoleAuthority ra ON ur.role.id = ra.role.id " +
             "WHERE u.deleted = false AND ra.authority.parent IS NULL " +
             "GROUP BY ra.authority.labelAr")
@@ -111,51 +111,51 @@ public interface UserRepository extends JpaRepository<JpaUser, Long> {
     // --------------------------------
     // -------- HOURLY USERS BY STATUS
     // --------------------------------
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('HOUR', u.creationDate), COUNT(u)) FROM JpaUser u " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('HOUR', u.creationDate), COUNT(u),'') FROM JpaUser u " +
             "WHERE u.deleted = false AND u.creationDate >= :currentDate " +
             "GROUP BY FUNCTION('HOUR', u.creationDate) ORDER BY FUNCTION('HOUR', u.creationDate)")
     List<CountVo> countHourlyCreatedUsers(@Param("currentDate") Date currentDate);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('HOUR', u.actionDate), COUNT(u)) FROM JpaUser u " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('HOUR', u.actionDate), COUNT(u),'') FROM JpaUser u " +
             "WHERE u.activated = :activated AND u.deleted = false AND u.actionDate >= :currentDate " +
             "GROUP BY FUNCTION('HOUR', u.actionDate) ORDER BY FUNCTION('HOUR', u.actionDate)")
     List<CountVo> countHourlyActiveInactiveUsers(@Param("currentDate") Date currentDate, @Param("activated") boolean activated);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('HOUR', u.actionDate), COUNT(u)) FROM JpaUser u " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('HOUR', u.actionDate), COUNT(u),'') FROM JpaUser u " +
             "WHERE u.deleted = true AND u.actionDate >= :currentDate " +
             "GROUP BY FUNCTION('HOUR', u.actionDate) ORDER BY FUNCTION('HOUR', u.actionDate)")
     List<CountVo> countHourlyDeletedUsers(@Param("currentDate") Date currentDate);
     // --------------------------------
     // -------- WEEKLY USERS BY STATUS
     // --------------------------------
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', EXTRACT(DW FROM u.creationDate), COUNT(u)) FROM JpaUser u " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', EXTRACT(DW FROM u.creationDate), COUNT(u),'') FROM JpaUser u " +
             "WHERE u.deleted = false AND u.creationDate >= :currentDate " +
             "GROUP BY EXTRACT(DW FROM u.creationDate) ORDER BY EXTRACT(DW FROM u.creationDate)")
     List<CountVo> countWeekDayCreatedUsers(@Param("currentDate") Date startOfWeekDate);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', EXTRACT(DW FROM u.actionDate), COUNT(u)) FROM JpaUser u " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', EXTRACT(DW FROM u.actionDate), COUNT(u),'') FROM JpaUser u " +
             "WHERE u.activated = :activated AND u.deleted = false AND u.actionDate >= :currentDate " +
             "GROUP BY EXTRACT(DW FROM u.actionDate) ORDER BY EXTRACT(DW FROM u.actionDate)")
     List<CountVo> countWeekDayActiveInactiveUsers(@Param("currentDate") Date startOfWeekDate, @Param("activated") boolean activated);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', EXTRACT(DW FROM u.actionDate), COUNT(u)) FROM JpaUser u " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', EXTRACT(DW FROM u.actionDate), COUNT(u),'') FROM JpaUser u " +
             "WHERE u.deleted = true AND u.actionDate >= :currentDate " +
             "GROUP BY EXTRACT(DW FROM u.actionDate) ORDER BY EXTRACT(DW FROM u.actionDate)")
     List<CountVo> countWeekDayDeletedUsers(@Param("currentDate") Date startOfWeekDate);
     // --------------------------------
     // -------- MONTHLY USERS BY STATUS
     // --------------------------------
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('DAY', u.creationDate), COUNT(u)) FROM JpaUser u " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('DAY', u.creationDate), COUNT(u),'') FROM JpaUser u " +
             "WHERE u.deleted = false AND u.creationDate >= :currentDate " +
             "GROUP BY FUNCTION('DAY', u.creationDate) ORDER BY FUNCTION('DAY', u.creationDate)")
     List<CountVo> countMonthDayCreatedUsers(@Param("currentDate") Date startOfMonthDate);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('DAY', u.actionDate), COUNT(u)) FROM JpaUser u " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('DAY', u.actionDate), COUNT(u),'') FROM JpaUser u " +
             "WHERE u.activated = :activated AND u.deleted = false AND u.actionDate >= :currentDate " +
             "GROUP BY FUNCTION('DAY', u.actionDate) ORDER BY FUNCTION('DAY', u.actionDate)")
     List<CountVo> countMonthDayActiveInactiveUsers(@Param("currentDate") Date startOfMonthDate, @Param("activated") boolean activated);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('DAY', u.actionDate), COUNT(u)) FROM JpaUser u " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('DAY', u.actionDate), COUNT(u),'') FROM JpaUser u " +
             "WHERE u.deleted = true AND u.actionDate >= :currentDate " +
             "GROUP BY FUNCTION('DAY', u.actionDate) ORDER BY FUNCTION('DAY', u.actionDate)")
     List<CountVo> countMonthDayDeletedUsers(@Param("currentDate") Date startOfMonthDate);

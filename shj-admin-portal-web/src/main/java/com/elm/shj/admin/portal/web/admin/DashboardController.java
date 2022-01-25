@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.services.dashboard.DashboardIncidentNumbersVo;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.dashboard.DashboardVo;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.utils.DateUtils;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,11 +68,18 @@ public class DashboardController {
         return null;
     }
 
-    @GetMapping("/general-numbers")
+    @GetMapping("/general-numbers/current-season")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public DashboardGeneralNumbersVo loadGeneralNumbers() {
-        log.info("Handling loadDashboardGeneralNumbers endpoint.");
-        return dashboardService.loadDashboardGeneralNumbers();
+    public DashboardGeneralNumbersVo loadCurrentSeasonGeneralNumbers() {
+        log.info("Load Dashboard General Numbers for Current Season.");
+        return dashboardService.loadDashboardGeneralNumbersByHijriSeason((int) DateUtils.getCurrentHijriYear());
+    }
+
+    @GetMapping("/general-numbers/previous-season")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public DashboardGeneralNumbersVo loadPreviousSeasonGeneralNumbers() {
+        log.info("Load Dashboard General Numbers for Previous Season.");
+        return dashboardService.loadDashboardGeneralNumbersByHijriSeason((int) DateUtils.getCurrentHijriYear() - 1);
     }
 
     @GetMapping("/incident-numbers")
