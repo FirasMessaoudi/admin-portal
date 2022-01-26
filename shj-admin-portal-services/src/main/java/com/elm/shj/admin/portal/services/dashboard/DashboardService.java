@@ -18,7 +18,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.*;
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
@@ -211,6 +214,21 @@ public class DashboardService {
             long applicantsNumber = applicantRepository
                     .countPilgrimsFromCurrentSeasonByAgeRange(from, to, (int) DateUtils.getCurrentHijriYear(), new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
             countVo.setLabel(range);
+            countVo.setCount(applicantsNumber);
+            countVo.setPercentage("%" + String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
+            countVoList.add(countVo);
+        }
+        return countVoList;
+    }
+
+    public List<CountVo> listCountApplicantsByNationalities() {
+        List<CountVo> countVoList = new ArrayList<CountVo>();
+        List<String> nationalities = applicantRepository.findAllNationalities();
+        long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason((int) DateUtils.getCurrentHijriYear(), new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
+        for (String nat : nationalities) {
+            CountVo countVo = new CountVo();
+            long applicantsNumber = applicantRepository.countTotalApplicantsFromCurrentSeasonByNationality(nat);
+            countVo.setLabel(nat);
             countVo.setCount(applicantsNumber);
             countVo.setPercentage("%" + String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
             countVoList.add(countVo);

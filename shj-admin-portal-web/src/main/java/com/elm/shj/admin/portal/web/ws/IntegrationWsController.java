@@ -719,23 +719,24 @@ public class IntegrationWsController {
 
     @PostMapping("/update-staff")
     public ResponseEntity<WsResponse<?>> updateStaff(@RequestBody @Validated UpdateStaffCmd command) {
-        if(command.getCountryCode().equals("") || !command.getCountryCode().matches("^[a-zA-Z]*$") || command.getCountryCode().length() > 5){
+        // TODO: 26/01/2022 should be refactored same as applicant
+        if (command.getCountryCode() != null && command.getCountryCode().equals("") || !command.getCountryCode().matches("^[a-zA-Z]*$") || command.getCountryCode().length() > 5) {
             return ResponseEntity.ok(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(command.getCountryCode()).build()).build());
         }
-        if(command.getEmail().equals("")){
+        if (command.getEmail() != null && command.getEmail().equals("")) {
             return ResponseEntity.ok(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).build()).build());
 
         }
-        if(command.getMobileNumber().equals("") || command.getMobileNumber().length() < 5 || command.getMobileNumber().length() > 16){
+        if (command.getMobileNumber() != null && command.getMobileNumber().equals("") || command.getMobileNumber().length() < 5 || command.getMobileNumber().length() > 16) {
             return ResponseEntity.ok(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(command.getMobileNumber()).build()).build());
         }
-        if(command.getEmail().length() < 5 || command.getEmail().length() > 50 || !companyStaffService.validateStaffEmail(command.getEmail())){
+        if (command.getEmail() != null && command.getEmail().length() < 5 || command.getEmail().length() > 50 || !companyStaffService.validateStaffEmail(command.getEmail())) {
             return ResponseEntity.ok(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                             .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(command.getEmail()).build()).build());

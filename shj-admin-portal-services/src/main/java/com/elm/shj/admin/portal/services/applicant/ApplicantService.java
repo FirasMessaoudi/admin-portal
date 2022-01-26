@@ -255,4 +255,3 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     }
 
 }
-

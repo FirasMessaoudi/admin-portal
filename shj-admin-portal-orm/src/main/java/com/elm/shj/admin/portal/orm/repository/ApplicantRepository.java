@@ -91,4 +91,11 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "AND rs.ritualTypeCode IN (:ritualTypeCodeList) ")
     long countAllApplicantBySeasonAndRitualType(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 
+    @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = (SELECT MAX(jrs.seasonYear) FROM JpaRitualSeason jrs) and a.nationalityCode =:nationalityCode")
+    long countTotalApplicantsFromCurrentSeasonByNationality(@Param("nationalityCode") String nationalityCode);
+
+    @Query("select distinct (a.nationalityCode) from JpaApplicant a")
+    List<String> findAllNationalities();
+
 }

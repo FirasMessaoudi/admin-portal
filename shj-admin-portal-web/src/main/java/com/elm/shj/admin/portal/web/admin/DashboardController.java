@@ -100,4 +100,11 @@ public class DashboardController {
         return dashboardService.pilgrimsCountListsByAgesRange();
     }
 
+    @GetMapping("/general-numbers/applicant/count-per-nationalities")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CountVo> loadNumberOfApplicantsByNationalities() {
+        log.info("Handling loadDashboardGeneralNumbers endpoint.");
+        return dashboardService.listCountApplicantsByNationalities();
+    }
+
 }
