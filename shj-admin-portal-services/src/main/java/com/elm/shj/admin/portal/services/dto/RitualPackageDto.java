@@ -41,6 +41,9 @@ public class RitualPackageDto implements Serializable {
     private int countryId;
     private String referenceNumber;
 
+    private Date startDate;
+    private Date endDate;
+
     @JsonBackReference(value = "ritualSeason")
     private CompanyRitualSeasonDto companyRitualSeason;
 

@@ -38,7 +38,7 @@ public class JpaApplicantPackage implements Serializable {
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
-    @Column(name = "UPDATE_DATE")
+    @Column(name = "update_date")
     private Date updateDate;
 
     @Column(name = "start_date")

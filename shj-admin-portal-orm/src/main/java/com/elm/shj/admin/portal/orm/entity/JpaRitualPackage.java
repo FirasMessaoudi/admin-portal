@@ -44,6 +44,12 @@ public class JpaRitualPackage implements Serializable {
     @Column(name = "country_id")
     private int countryId;
 
+    @Column(name = "start_date")
+    private Date startDate;
+
+    @Column(name = "end_date")
+    private Date endDate;
+
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
