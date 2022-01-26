@@ -274,5 +274,20 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return countVoList;
     }
 
+    public List<CountVo> listCountApplicantsByNationalities() {
+        List<CountVo> countVoList = new ArrayList<CountVo>();
+        List<String> nationalities = applicantRepository.findAllNationalities();
+        long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason();
+        for (String nat : nationalities) {
+            CountVo countVo = new CountVo();
+            long applicantsNumber = applicantRepository.countTotalApplicantsFromCurrentSeasonByNationality(nat);
+            countVo.setLabel(nat);
+            countVo.setCount(applicantsNumber);
+            countVo.setPercentage("%" + String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
+            countVoList.add(countVo);
+        }
+        return countVoList;
+    }
+
 }
 

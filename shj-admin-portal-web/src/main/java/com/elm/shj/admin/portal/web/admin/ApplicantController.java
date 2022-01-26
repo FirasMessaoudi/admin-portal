@@ -86,4 +86,12 @@ public class ApplicantController {
         log.debug("Count applicants based on age range...");
         return applicantService.listCountApplicantsByAgesRange();
     }
+
+
+    @GetMapping("/count/per-nationality")
+    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT)
+    public List<CountVo> countApplicantsFromCurrentSeasonByNationality() {
+        log.debug("Count applicants based on nationalities...");
+        return applicantService.listCountApplicantsByNationalities();
+    }
 }
