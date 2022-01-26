@@ -105,12 +105,11 @@ GO
 
 SET IDENTITY_INSERT shc_portal.shc_notification_template_content ON;
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
-INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
 VALUES (1, 1, 'AR', N'قرب انتهاء كلمة المرور', N'سوف تنتهي صلاحية كلمة المرور خلال <days_to_expiry> أيام من الأن',
         N'تغيير كلمة المرور');
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
 VALUES (2, 1, 'EN', 'Password will expire soon', 'Password will expire after <days_to_expiry> days', 'Change Password');
-INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body, action_label)
+INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body)
 VALUES (3, 4, 'AR', N'حل شكوى',
         N'عزيزي ضيف الرحمن نفيدكم بأن راحتكم هي أولويتنا تم دراسة الشكوى المقدمة وتم حلها وفي حالة عدم رضاكم عن الحل أو استمرار الشكوى نأمل رفع شكوى جديدة');
 INSERT INTO shc_portal.shc_notification_template_content (id, notification_template_id, lang, title, body)
@@ -329,25 +328,34 @@ from shc_portal.shc_config
 where conf_key = 'scheduler.generate.staff.digital.ids.cron';
 Go
 
-update shc_notification_category_lk
+update shc_portal.shc_notification_category_lk
 set shc_notification_category_lk.mandatory = 1
 where code in ('HEALTH', 'RITUAL');
 Go
 
-update shc_notification_category_lk
+update shc_portal.shc_notification_category_lk
 set shc_notification_category_lk.mandatory = 0
 where code not in ('HEALTH', 'RITUAL');
 GO
 
-INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value   ) VALUES (   'sftp.incident.client.protocol',  'sftp'   );
-INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value   ) VALUES (   'sftp.incident.client.host',  '127.0.0.1'  );
-INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value  ) VALUES (   'sftp.incident.client.port',  '22' );
-INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value   ) VALUES (   'sftp.incident.client.username',  'sftp-user' );
-INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value  ) VALUES (   'sftp.incident.client.password',  'Aa123456' );
-INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value   ) VALUES (   'sftp.incident.client.root-folder',  '/data/smart-hajj/applicant-incidents/' );
-INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value  ) VALUES (   'sftp.incident.client.session-strict-host-key-checking',  'no' );
-INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value   ) VALUES (   'sftp.incident.client.session-connect-timeout',  '15000' );
-INSERT INTO shc_portal.shc_portal.shc_config (  conf_key, conf_value  ) VALUES (   'sftp.incident.client.channel-connected-timeout',  '15000' );
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.incident.client.protocol', 'sftp');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.incident.client.host', '127.0.0.1');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.incident.client.port', '22');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.incident.client.username', 'sftp-user');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.incident.client.password', 'Aa123456');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.incident.client.root-folder', '/data/smart-hajj/applicant-incidents/');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.incident.client.session-strict-host-key-checking', 'no');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.incident.client.session-connect-timeout', '15000');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.incident.client.channel-connected-timeout', '15000');
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
@@ -388,7 +396,9 @@ SET label_ar = REPLACE(label_ar, N'الرحمان', N'الرحمن')
 WHERE id > 0;
 GO
 
-INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('incident.file.allowed.extensions', 'apng,avif,gif,jpeg,jpg,png,svg,webp,bmp,tiff,mp4,mov,wmv,avi,flv,avchd,mkv');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('incident.file.allowed.extensions',
+        'apng,avif,gif,jpeg,jpg,png,svg,webp,bmp,tiff,mp4,mov,wmv,avi,flv,avchd,mkv');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('incident.file.allowed.max.size', '15');
 GO
@@ -401,8 +411,8 @@ update shc_portal.shc_print_batch_type_lk
 set shc_print_batch_type_lk.target ='APPLICANT'
 where id <= 5;
 Go
-SET IDENTITY_INSERT shc_portal.shc_print_batch_type_lk ON;
 
+SET IDENTITY_INSERT shc_portal.shc_print_batch_type_lk ON;
 insert into shc_portal.shc_print_batch_type_lk (id, label_ar, label_en, code, target)
 values (6, N'الجنسية', 'Nationality', 'STAFF_NATIONALITY', 'STAFF');
 insert into shc_portal.shc_print_batch_type_lk (id, label_ar, label_en, code, target)
@@ -413,6 +423,18 @@ SET IDENTITY_INSERT shc_portal.shc_print_batch_type_lk OFF;
 GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('scheduler.staff.digitalId.invalidate.cron', '0 0 0 * * ?');
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_applicant_digital_id_status_lk ON;
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label)
+VALUES (1, 'VALID', 'ar', N'نشط');
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label)
+VALUES (2, 'VALID', 'en', 'Active');
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label)
+VALUES (3, 'INVALID', 'ar', N'متوقف');
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label)
+VALUES (4, 'INVALID', 'en', 'Invalid');
+SET IDENTITY_INSERT shc_portal.shc_applicant_digital_id_status_lk OFF;
 GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('applicants.counter.ages.range', '0-12,12-18,18-30,30-50,50-70,70-200');

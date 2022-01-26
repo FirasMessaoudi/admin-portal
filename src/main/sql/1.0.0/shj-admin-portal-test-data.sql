@@ -1,6 +1,6 @@
-USE
-shc_portal
+USE shc_portal
 GO
+
 SET IDENTITY_INSERT shc_portal.shc_ritual_zone ON;
 INSERT INTO shc_portal.shc_ritual_zone (id, code, lang, label)
 VALUES (1, 'A', 'ar', N'منطقة أ');
