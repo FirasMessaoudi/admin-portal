@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {GeneralDashboardVo} from "@model/dashboard-general-numbers-vo.model";
+import {Subscription} from "rxjs";
+import {DashboardService} from "@core/services";
 
 @Component({
   selector: 'app-main',
@@ -7,15 +10,51 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  //this is a variable that hold number
-  public externalpilgrims: number = 1934323;
-  public internalpilgrims: number = 512312;
+
   public cctv: number = 982;
   public appdownloads: number = 1103402;
-  
-  constructor() { }
 
-  ngOnInit() {
+  currentSeasonData: GeneralDashboardVo;
+  previousSeasonData: GeneralDashboardVo;
+  currentSeasonPercentage: number;
+  previousSeasonPercentage: number;
+
+  private currentSeasonSubscription: Subscription;
+  private previousSeasonSubscription: Subscription;
+
+  constructor(private dashboardService: DashboardService) {
   }
 
+  ngOnInit() {
+    this.currentSeasonSubscription = this.dashboardService
+      .loadGeneralNumbersForCurrentSeason()
+      .subscribe((data) => {
+        this.currentSeasonData = data;
+        this.currentSeasonPercentage =
+          (100 * data.totalNumberOfExternalApplicants) /
+          data.totalNumberOfApplicants;
+        this.currentSeasonData.totalNumberOfApplicants = this.currentSeasonData.totalNumberOfExternalApplicants + this.currentSeasonData.totalNumberOfInternalApplicants;
+
+      });
+
+    this.previousSeasonSubscription = this.dashboardService
+      .loadGeneralNumbersForPreviousSeason()
+      .subscribe((data) => {
+        this.previousSeasonData = data;
+        this.previousSeasonPercentage =
+          (100 * data.totalNumberOfExternalApplicants) /
+          data.totalNumberOfApplicants;
+        this.previousSeasonData.totalNumberOfApplicants = this.previousSeasonData.totalNumberOfExternalApplicants + this.previousSeasonData.totalNumberOfInternalApplicants;
+
+      });
+  }
+
+  ngOnDestroy() {
+    if (this.currentSeasonSubscription) {
+      this.currentSeasonSubscription.unsubscribe();
+    }
+    if (this.previousSeasonSubscription) {
+      this.previousSeasonSubscription.unsubscribe();
+    }
+  }
 }
