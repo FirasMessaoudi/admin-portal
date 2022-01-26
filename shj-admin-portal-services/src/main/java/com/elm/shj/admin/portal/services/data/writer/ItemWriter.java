@@ -401,7 +401,6 @@ public class ItemWriter {
                 applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicant.getId()));
                 applicant.setCreationDate(existingApplicant.getCreationDate());
             }
-            // TODO: this case is for emergency data to insert bus number and seat number in applicant package transportation
 
             // this case is for applicant data upload
             if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
@@ -440,22 +439,6 @@ public class ItemWriter {
                 ReflectionUtils.makeAccessible(applicantField);
                 // set the found applicant into the object
                 applicantField.set(item, applicant);
-            }
-
-            String seatNumber = null;
-            String busNumber = null;
-
-            Field busNumberField = ReflectionUtils.findField(item.getClass(), "busNumber");
-            Field seatNumberField = ReflectionUtils.findField(item.getClass(), "seatNumber");
-
-            if (busNumberField != null) {
-                ReflectionUtils.makeAccessible(busNumberField);
-                busNumber = (String) busNumberField.get(item);
-            }
-
-            if (seatNumberField != null) {
-                ReflectionUtils.makeAccessible(seatNumberField);
-                seatNumber = (String) seatNumberField.get(item);
             }
 
             ReflectionUtils.makeAccessible(packageReferenceNumberField);

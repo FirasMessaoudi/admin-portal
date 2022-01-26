@@ -1247,3 +1247,6 @@ CREATE TABLE shc_portal.shc_applicant_emergency_data_upload
     creation_date            smalldatetime NOT NULL DEFAULT current_timestamp
 );
 GO
+
+ALTER TABLE shc_portal.shc_ritual_package ADD start_date DATE, end_date DATE;
+GO

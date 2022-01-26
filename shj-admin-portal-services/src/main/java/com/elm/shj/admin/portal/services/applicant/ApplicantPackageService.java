@@ -116,7 +116,8 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
 
         // initiate applicant package
         ApplicantPackageDto applicantPackage = ApplicantPackageDto.builder().applicantUin(applicantUin)
-                .ritualPackage(RitualPackageDto.builder().id(ritualPackage.getId()).build()).build();
+                .ritualPackage(RitualPackageDto.builder().id(ritualPackage.getId()).build())
+                .startDate(ritualPackage.getStartDate()).endDate(ritualPackage.getEndDate()).build();
 
         // create applicant package transportation
         if (CollectionUtils.isNotEmpty(ritualPackage.getPackageTransportations())) {
