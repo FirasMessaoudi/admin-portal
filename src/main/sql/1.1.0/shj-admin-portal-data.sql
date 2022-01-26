@@ -403,10 +403,6 @@ INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('incident.file.allowed.max.size', '15');
 GO
 
-alter table shc_portal.shc_print_batch_type_lk
-    add target varchar(20) null;
-go
-
 update shc_portal.shc_print_batch_type_lk
 set shc_print_batch_type_lk.target ='APPLICANT'
 where id <= 5;
