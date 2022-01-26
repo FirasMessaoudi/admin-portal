@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { DashboardService } from '@core/services';
-import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
+import {Component, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {DashboardService} from '@core/services';
+import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
 
 @Component({
   selector: 'app-general-numbers',
@@ -27,6 +27,8 @@ export class GeneralNumbersComponent implements OnInit {
         this.currentSeasonPercentage =
           (100 * data.totalNumberOfExternalApplicants) /
           data.totalNumberOfApplicants;
+        this.currentSeasonData.totalNumberOfApplicants = this.currentSeasonData.totalNumberOfExternalApplicants + this.currentSeasonData.totalNumberOfInternalApplicants;
+
       });
 
     this.previousSeasonSubscription = this.dashboardService
@@ -36,6 +38,8 @@ export class GeneralNumbersComponent implements OnInit {
         this.previousSeasonPercentage =
           (100 * data.totalNumberOfExternalApplicants) /
           data.totalNumberOfApplicants;
+        this.previousSeasonData.totalNumberOfApplicants = this.previousSeasonData.totalNumberOfExternalApplicants + this.previousSeasonData.totalNumberOfInternalApplicants;
+
       });
   }
 
