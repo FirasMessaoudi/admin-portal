@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {DashboardService} from '@core/services';
 import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
+import { CountVo } from '@app/_shared/model/countVo.model';
 
 @Component({
   selector: 'app-general-numbers',
@@ -13,9 +14,10 @@ export class GeneralNumbersComponent implements OnInit {
   previousSeasonData: GeneralDashboardVo;
   currentSeasonPercentage: number;
   previousSeasonPercentage: number;
-
+  countVoList: CountVo[];
   private currentSeasonSubscription: Subscription;
   private previousSeasonSubscription: Subscription;
+  private previousonSubscription: Subscription;
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -29,6 +31,10 @@ export class GeneralNumbersComponent implements OnInit {
           data.totalNumberOfApplicants;
         this.currentSeasonData.totalNumberOfApplicants = this.currentSeasonData.totalNumberOfExternalApplicants + this.currentSeasonData.totalNumberOfInternalApplicants;
 
+      });
+
+      this.dashboardService.loadApplicantsCountByAgeCurrentSeason().subscribe((data)=>{
+        this.countVoList = data;
       });
 
     this.previousSeasonSubscription = this.dashboardService

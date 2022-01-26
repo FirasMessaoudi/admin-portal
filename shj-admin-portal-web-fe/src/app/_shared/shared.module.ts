@@ -25,7 +25,8 @@ import {HijriGregorianDatepickerModule} from "@shared/modules/hijri-gregorian-da
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {BackButtonDirective} from "@shared/directives/back-button.directive";
 import { Ng9OdometerModule } from 'ng9-odometer';
-
+import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
+import {ChartsModule} from "ng2-charts";
 @NgModule({
   declarations: [
     ToastsContainer,
@@ -35,10 +36,12 @@ import { Ng9OdometerModule } from 'ng9-odometer';
     DateFormatPipe,
     HijriFormatPipe,
     IbanStatusPipe,
-    BackButtonDirective
+    BackButtonDirective,
+    DoughnutChartComponent
   ],
   imports: [
     CommonModule,
+    ChartsModule,
     NgBootstrapModule,
     ArchwizardModule,
     SvgIconModule,
@@ -59,6 +62,7 @@ import { Ng9OdometerModule } from 'ng9-odometer';
     TranslateModule,
     NgxCaptchaModule,
     DateAgoPipe,
+    DoughnutChartComponent,
     ConfirmDialogComponent,
     ToastsContainer,
     DateFormatPipe,
