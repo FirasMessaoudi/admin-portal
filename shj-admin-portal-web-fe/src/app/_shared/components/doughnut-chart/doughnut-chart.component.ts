@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ChartsConfig } from '@app/pages/home/charts.config';
 import { CountVo } from '@app/_shared/model/countVo.model';
 import { ChartOptions, ChartType } from 'chart.js';
-import { Label, SingleDataSet } from 'ng2-charts';
+import { Label, PluginServiceGlobalRegistrationAndOptions, SingleDataSet } from 'ng2-charts';
 
 @Component({
   selector: 'app-doughnut-chart',
@@ -21,8 +21,27 @@ export class DoughnutChartComponent implements OnInit {
     previousSeasonPercentage: number;
     public doughnutChartOptions: ChartOptions = {
       responsive: true,
-      cutoutPercentage: 70
+      cutoutPercentage: 70,
     };
+    public doughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[] = [{
+      beforeDraw(chart) {
+        var data = chart.data.datasets[0].data;
+        var width = chart.width,
+            height = (chart.chartArea.top + chart.chartArea.bottom) ,
+            ctx = chart.ctx;
+        ctx.restore();
+        var fontSize = (height / 15).toFixed(2);
+        ctx.font = fontSize + "px Arial";
+        ctx.textBaseline = "middle";
+        var text = `sum lplp`,
+            textX = Math.round((width - ctx.measureText(text).width) / 2),
+            textY = height / 2;
+        var textZ = height / 2.5;
+        ctx.fillText(text, textX, textZ);
+        ctx.fillText(text, textX, textY);
+        ctx.save();
+      }
+    }];
   constructor() { }
 
   ngOnInit(){
