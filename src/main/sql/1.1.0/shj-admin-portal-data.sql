@@ -435,3 +435,43 @@ GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('applicants.counter.ages.range', '0-12,12-18,18-30,30-50,50-70,70-200');
 GO
+
+SET IDENTITY_INSERT shc_portal.shc_housing_site_lk ON;
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (1, 'MAKKAH', 'en', 'Makkah', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (2, 'MAKKAH', 'ar', N'مكة المكرمة', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (3, 'MADINA', 'en', 'Madina', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (4, 'MADINA', 'ar', N'المدينة المنورة', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (5, 'MAKKAH_HOLY_MOSQUE', 'en', 'Holy Mosque in Mecca', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (6, 'MAKKAH_HOLY_MOSQUE', 'ar', N'المسجد الحرام في مكة', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (7, 'MADINA_HOLY_MOSQUE', 'en', 'Holy Mosque in Madina', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (8, 'MADINA_HOLY_MOSQUE', 'ar', N'المسجد الحرام في المدينة', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (9, 'MENA', 'en', 'Mena', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (10, 'MENA', 'ar', N'منى', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (11, 'GAMARAT', 'en', 'Gamarat', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (12, 'GAMARAT', 'ar', N'الجمرات', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (13, 'MUZDALIFA', 'en', 'Muzdalifah', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (14, 'MUZDALIFA', 'ar', N'مزدلفة', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (15, 'ARAFAT', 'en', 'Arafat', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (16, 'ARAFAT', 'ar', N'عرفات', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (17, 'JABAL_ALRAHMA', 'en', 'Alrahma Mountain', GETDATE());
+INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+VALUES (18, 'JABAL_ALRAHMA', 'ar', N'جبل الرحمة', GETDATE());
+SET IDENTITY_INSERT shc_portal.shc_housing_site_lk OFF;
+GO

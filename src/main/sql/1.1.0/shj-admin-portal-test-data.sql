@@ -27,22 +27,17 @@ INSERT INTO shc_portal.shc_housing_type_lk(id, code, label, lang)
 VALUES (3, 'CAMP', 'Camp', 'en');
 INSERT INTO shc_portal.shc_housing_type_lk(id, code, label, lang)
 VALUES (4, 'CAMP', N'مخيم', 'ar');
+INSERT INTO shc_portal.shc_housing_type_lk(id, code, label, lang)
+VALUES (5, 'APARTMENT', 'Apartment', 'en');
+INSERT INTO shc_portal.shc_housing_type_lk(id, code, label, lang)
+VALUES (6, 'APARTMENT', N'شقق فندقية', 'ar');
 SET IDENTITY_INSERT shc_portal.shc_housing_type_lk OFF;
-GO
-
-----------------      shc_housing_site_lk           --------------------------------------
-SET IDENTITY_INSERT shc_portal.shc_housing_site_lk ON;
-INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
-VALUES (1, N'MAKKAH', N'en', N'Makkah', N'2021-09-19 15:22:00');
-INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
-VALUES (2, N'MAKKAH', N'ar', N'مكة', N'2021-09-19 15:22:00');
-SET IDENTITY_INSERT shc_portal.shc_housing_site_lk OFF;
 GO
 
 ----------------      shc_housing_zone           --------------------------------------
 SET IDENTITY_INSERT shc_portal.shc_housing_zone ON;
 INSERT INTO shc_portal.shc_housing_zone (id, label_ar, label_en, color)
-VALUES (1, N'مكة', N'Macka', N'red');
+VALUES (1, N'مكة', 'Macka', 'red');
 SET IDENTITY_INSERT shc_portal.shc_housing_zone OFF;
 GO
 
@@ -103,7 +98,7 @@ GO
 ----------------      shc_ritual_season           --------------------------------------
 SET IDENTITY_INSERT shc_portal.shc_ritual_season ON;
 INSERT INTO shc_portal.shc_ritual_season (id, season_year, ritual_type_code, active, season_start, season_end)
-VALUES (2, 1443, N'INTERNAL_HAJJ', 1, 14430210, 14430710);
+VALUES (2, 1443, N'INTERNAL_HAJJ', 1, 14430210, 14431210);
 SET IDENTITY_INSERT shc_portal.shc_ritual_season OFF;
 GO
 
@@ -111,7 +106,7 @@ GO
 SET IDENTITY_INSERT shc_portal.shc_company_ritual_season ON;
 INSERT INTO shc_portal.shc_company_ritual_season (id, company_id, ritual_season_id, active, total_quota, air_quota,
                                                   sea_quota, land_quota, season_start, season_end)
-VALUES (1, 1, 2, 1, 1, 1, 1, 1, 14430210, 14430710);
+VALUES (1, 1, 2, 1, 1, 1, 1, 1, 14430210, 14431210);
 SET IDENTITY_INSERT shc_portal.shc_company_ritual_season OFF;
 GO
 
@@ -172,7 +167,7 @@ VALUES (1, 1, 1, '43431', 'A', 'HOTEL', 'MAKKAH', N'فندق دار التوحي
 INSERT shc_portal.shc_package_housing (id, package_id, zone_id, reference_number, category_code, type_code, site_code,
                                        location_name_ar, location_name_en, validity_start, validity_end, address_ar,
                                        address_en, is_default, lat, lng)
-VALUES (2, 1, 1, N'43432', 'A', 'APARTMENT', 'MENA', 'شقق دار التوحيد', 'Dar al Tawhid Apartment', GETDATE() + 4, GETDATE() + 7,
+VALUES (2, 1, 1, N'43432', 'A', 'APARTMENT', 'MENA', N'شقق دار التوحيد', 'Dar al Tawhid Apartment', GETDATE() + 4, GETDATE() + 7,
         N'مخيمات منى ،مكة المكرمة', 'Ibrahim El Khalil Street, Makkah', 1, 21.41691157, 39.89633679);
 
 INSERT shc_portal.shc_package_housing (id, package_id, zone_id, reference_number, category_code, type_code, site_code,
@@ -217,10 +212,6 @@ INSERT INTO shc_portal.shc_portal.shc_package_catering (id, package_housing_id, 
 VALUES (3, 1, '133', '23:00:00', 'DINNER', 'DINNER', N'عشاء', 'Open Dinner', GETDATE(), 1);
 SET IDENTITY_INSERT shc_portal.shc_package_catering OFF;
 GO
-
--- UPDATE shc_portal.shc_applicant_package SET start_date = GETDATE() - 1 ,end_date = GETDATE() + 13 WHERE id = 1
--- GO
-
 
 INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
 VALUES ('04_10','en','First days of Tashriq');
