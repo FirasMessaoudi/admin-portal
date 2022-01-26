@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
-import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
@@ -78,20 +77,5 @@ public class ApplicantController {
     public long countCategorizedApplicants(@RequestBody NotificationTemplateCategorizingDto criteria) {
         log.debug("Count applicants having current ritual...");
         return applicantService.countAllByCriteria(criteria, null);
-    }
-
-    @GetMapping("/count/per-age")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT)
-    public List<CountVo> countApplicantsFromCurrentSeasonByAgeRanges() {
-        log.debug("Count applicants based on age range...");
-        return applicantService.listCountApplicantsByAgesRange();
-    }
-
-
-    @GetMapping("/count/per-nationality")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT)
-    public List<CountVo> countApplicantsFromCurrentSeasonByNationality() {
-        log.debug("Count applicants based on nationalities...");
-        return applicantService.listCountApplicantsByNationalities();
     }
 }

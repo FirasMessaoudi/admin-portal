@@ -3,7 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -34,9 +37,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto, Long> {
-
-    @Value("${applicants.counter.ages.range}")
-    private String agesRange;
 
     private final ApplicantRepository applicantRepository;
     private final ApplicantContactRepository applicantContactRepository;
@@ -254,38 +254,4 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         applicant.ifPresent(applicantDto -> applicantRepository.updatePreferredLanguage(applicantDto.getId(), lang));
     }
 
-    public List<CountVo> listCountApplicantsByAgesRange() {
-        List<CountVo> countVoList = new ArrayList<CountVo>();
-        String[] arrOfRanges = this.agesRange.split(",");
-        long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason();
-        for (String range : arrOfRanges) {
-            CountVo countVo = new CountVo();
-            String[] ages = range.split("-");
-            Date from = new Timestamp(getDateFromAge(Integer.valueOf(ages[0])).getTime());
-            Date to = new Timestamp(getDateFromAge(Integer.valueOf(ages[1])).getTime());
-            long applicantsNumber = applicantRepository.countApplicantsFromCurrentSeasonByAgeRange(from, to);
-            countVo.setLabel(range);
-            countVo.setCount(applicantsNumber);
-            countVo.setPercentage("%" + String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
-            countVoList.add(countVo);
-        }
-        return countVoList;
-    }
-
-    public List<CountVo> listCountApplicantsByNationalities() {
-        List<CountVo> countVoList = new ArrayList<CountVo>();
-        List<String> nationalities = applicantRepository.findAllNationalities();
-        long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason();
-        for (String nat : nationalities) {
-            CountVo countVo = new CountVo();
-            long applicantsNumber = applicantRepository.countTotalApplicantsFromCurrentSeasonByNationality(nat);
-            countVo.setLabel(nat);
-            countVo.setCount(applicantsNumber);
-            countVo.setPercentage("%" + String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
-            countVoList.add(countVo);
-        }
-        return countVoList;
-    }
-
 }
-
