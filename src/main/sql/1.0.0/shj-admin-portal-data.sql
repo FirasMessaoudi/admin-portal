@@ -595,16 +595,16 @@ GO
 
 SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
 INSERT INTO shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en, creation_date, update_date)
-VALUES (1, 'applicant-data.xlsx', N'بيانات ضيف الرحمان', 'Applicant Data', N'2021-04-13 13:38', null),
-       (2, 'applicant-relatives-data.xlsx', N'بيانات أقارب ضيف الرحمان', 'Applicant Relatives Data',
+VALUES (1, 'applicant-data.xlsx', N'بيانات ضيف الرحمن', 'Applicant Data', N'2021-04-13 13:38', null),
+       (2, 'applicant-relatives-data.xlsx', N'بيانات أقارب ضيف الرحمن', 'Applicant Relatives Data',
         N'2021-04-13 13:38', null),
-       (3, 'applicant-health-data.xlsx', N'البيانات الصحية لضيف الرحمان', 'Applicant Health Data', N'2021-04-13 13:38',
+       (3, 'applicant-health-data.xlsx', N'البيانات الصحية لضيف الرحمن', 'Applicant Health Data', N'2021-04-13 13:38',
         null),
-       (4, 'applicant-vaccination-data.xlsx', N'بيانات تطعيمات ضيف الرحمان', 'Applicant Vaccination Data',
+       (4, 'applicant-vaccination-data.xlsx', N'بيانات تطعيمات ضيف الرحمن', 'Applicant Vaccination Data',
         N'2021-04-13 13:38', null),
-       (5, 'applicant-disease-data.xlsx', N'بيانات أمراض ضيف الرحمان', 'Applicant Disease Data', N'2021-04-13 13:38',
+       (5, 'applicant-disease-data.xlsx', N'بيانات أمراض ضيف الرحمن', 'Applicant Disease Data', N'2021-04-13 13:38',
         null),
-       (6, 'applicant-ritual-data.xlsx', N'بيانات الشعيرة لضيف الرحمان', 'Applicant Ritual Data', N'2021-05-13 13:38',
+       (6, 'applicant-ritual-data.xlsx', N'بيانات الشعيرة لضيف الرحمن', 'Applicant Ritual Data', N'2021-05-13 13:38',
         null);
 SET
 IDENTITY_INSERT shc_portal.shc_data_segment OFF;
