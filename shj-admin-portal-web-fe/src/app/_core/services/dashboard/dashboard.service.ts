@@ -1,14 +1,16 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { DashboardVo } from '@model/dashboard-vo.model';
-import { Observable } from 'rxjs';
-import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {DashboardVo} from '@model/dashboard-vo.model';
+import {Observable} from 'rxjs';
+import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
+import {CountVo} from "@model/count-vo.model";
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   /**
    * Load dashboard data for logged in user agency
@@ -43,6 +45,15 @@ export class DashboardService {
   loadGeneralNumbersForPreviousSeason(): Observable<GeneralDashboardVo> {
     return this.http.get<GeneralDashboardVo>(
       '/core/api/dashboard/general-numbers/previous-season'
+    );
+  }
+
+  /**
+   * Load dashboard general numbers for number of applicant per nationalities
+   */
+  loadGeneralNumbersForApplicantPerNationalities(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/general-numbers/applicant/count-per-nationalities'
     );
   }
 }
