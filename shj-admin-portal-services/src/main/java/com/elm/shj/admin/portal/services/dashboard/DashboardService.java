@@ -230,7 +230,7 @@ public class DashboardService {
             long applicantsNumber = applicantRepository.countTotalApplicantsFromCurrentSeasonByNationality(nat, (int) DateUtils.getCurrentHijriYear());
             countVo.setLabel(nat);
             countVo.setCount(applicantsNumber);
-            countVo.setPercentage("%" + String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
+            countVo.setPercentage(String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
             countVoList.add(countVo);
         }
         return countVoList;

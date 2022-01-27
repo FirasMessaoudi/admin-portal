@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { DashboardVo } from '@model/dashboard-vo.model';
-import { Observable } from 'rxjs';
-import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
-import { CountVo} from '@app/_shared/model/countVo.model';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {DashboardVo} from '@model/dashboard-vo.model';
+import {Observable} from 'rxjs';
+import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
+import {CountVo} from '@app/_shared/model/countVo.model';
+import {Lookup} from "@model/lookup.model";
 
 @Injectable({
   providedIn: 'root',
@@ -57,12 +58,16 @@ export class DashboardService {
     );
   }
 
-    /**
+  /**
    * Load dashboard applicants numbers for current season
    */
-     loadApplicantsCountByAgeCurrentSeason(): Observable<CountVo[]> {
-      return this.http.get<CountVo[]>(
-        '/core/api/dashboard/general-numbers/applicant/count-per-age'
-      );
-    }
+  loadApplicantsCountByAgeCurrentSeason(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/general-numbers/applicant/count-per-age'
+    );
+  }
+
+  findNationalities(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/country/list');
+  }
 }

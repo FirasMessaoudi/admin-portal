@@ -2,7 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {DashboardService} from '@core/services';
 import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
-import { CountVo } from '@app/_shared/model/countVo.model';
+import {CountVo} from '@app/_shared/model/countVo.model';
+import {Lookup} from "@model/lookup.model";
+import {LookupService} from "@core/utilities/lookup.service";
 
 @Component({
   selector: 'app-general-numbers',
@@ -15,15 +17,19 @@ export class GeneralNumbersComponent implements OnInit {
   applicantsPerNationalities: CountVo[];
   currentSeasonPercentage: number;
   previousSeasonPercentage: number;
+  noSaoudiApplicantCounts: number = 0;
+  countryList: Lookup[];
   countVoList: CountVo[];
   private currentSeasonSubscription: Subscription;
   private previousSeasonSubscription: Subscription;
   private applicantsPerNationalitiesSubscription: Subscription;
   private previousonSubscription: Subscription;
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(private dashboardService: DashboardService, private lookupService: LookupService) {
+  }
 
   ngOnInit() {
+    this.loadLookups();
     this.currentSeasonSubscription = this.dashboardService
       .loadGeneralNumbersForCurrentSeason()
       .subscribe((data) => {
@@ -54,8 +60,19 @@ export class GeneralNumbersComponent implements OnInit {
       .loadGeneralNumbersForApplicantPerNationalities()
       .subscribe(data => {
         this.applicantsPerNationalities = data;
-        console.log(this.applicantsPerNationalities);
+        this.applicantsPerNationalities.forEach(element => {
+          if (element.label != 'SA') {
+            this.noSaoudiApplicantCounts += element.count
+          }
+          element.label = this.lookupService.localizedLabel(this.countryList, element.label)
+        })
       })
+  }
+
+  loadLookups() {
+    this.dashboardService.findNationalities().subscribe(
+      data => this.countryList = data
+    )
   }
 
   ngOnDestroy() {
