@@ -4,7 +4,7 @@
       <h5 class="sts">{{title}}</h5>
     </div>
     <div class="card-body canv-container p-2" style="height: 330px;">
-      <canvas baseChart
+      <canvas #mycanvas baseChart
               [data]="doughnutChartData"
               [labels]="doughnutChartLabels"
               [chartType]="doughnutChartType"
