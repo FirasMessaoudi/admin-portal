@@ -215,7 +215,7 @@ public class DashboardService {
                     .countPilgrimsFromCurrentSeasonByAgeRange(from, to, (int) DateUtils.getCurrentHijriYear(), new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
             countVo.setLabel(range);
             countVo.setCount(applicantsNumber);
-            countVo.setPercentage("%" + String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
+            countVo.setPercentage(String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
             countVoList.add(countVo);
         }
         return countVoList;
