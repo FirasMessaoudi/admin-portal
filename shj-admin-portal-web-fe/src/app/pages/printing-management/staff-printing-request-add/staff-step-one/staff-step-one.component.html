@@ -4,6 +4,11 @@
 </a>
 <!-- ritual form -->
 <form [formGroup]="ritualForm" name="searchCard" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+  <div class="form-group col-lg-10">
+    <label class="form-label">{{'printing-management.request_description' | translate}}</label>
+    <textarea maxlength="150" id="description" name="description" formControlName="description" rows="4" cols="50"
+              class="form-control"></textarea>
+  </div>
   <div class="form-group col">
     <label class="col-form-label">{{ "printing-management.season" | translate }}</label>
     <select id="season" formControlName="seasonYear" class="custom-select">
@@ -23,11 +28,6 @@
     </select>
   </div>
 
-  <div class="form-group col">
-    <label class="form-label">{{'printing-management.request_description' | translate}}</label>
-    <textarea maxlength="150" id="description" name="description" formControlName="description" rows="4" cols="50"
-              class="form-control"></textarea>
-  </div>
 </form>
 
 <!-- end ritual form -->

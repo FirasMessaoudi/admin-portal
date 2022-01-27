@@ -215,7 +215,7 @@ public class DashboardService {
                     .countPilgrimsFromCurrentSeasonByAgeRange(from, to, (int) DateUtils.getCurrentHijriYear(), new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
             countVo.setLabel(range);
             countVo.setCount(applicantsNumber);
-            countVo.setPercentage("%" + String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
+            countVo.setPercentage(String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
             countVoList.add(countVo);
         }
         return countVoList;
@@ -227,10 +227,10 @@ public class DashboardService {
         long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason((int) DateUtils.getCurrentHijriYear(), new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
         for (String nat : nationalities) {
             CountVo countVo = new CountVo();
-            long applicantsNumber = applicantRepository.countTotalApplicantsFromCurrentSeasonByNationality(nat);
+            long applicantsNumber = applicantRepository.countTotalApplicantsFromCurrentSeasonByNationality(nat, (int) DateUtils.getCurrentHijriYear());
             countVo.setLabel(nat);
             countVo.setCount(applicantsNumber);
-            countVo.setPercentage("%" + String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
+            countVo.setPercentage(String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
             countVoList.add(countVo);
         }
         return countVoList;

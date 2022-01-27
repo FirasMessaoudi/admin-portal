@@ -127,24 +127,15 @@
 
     <div class="row row-cols-1 row-cols-xl-2">
       <div class="col mt-4">
-        <div class="h-100 p-3 border">
-          <div class="flex-center-between">
-            <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">توزيع الاعمار</h5>
-            </div>
-          </div>
-          <div class="py-3">Content</div>
-        </div>
+        <app-doughnut-chart *ngIf="countVoList != undefined" [title]="'توزيع الاعمار'"
+                            [countData]="countVoList"></app-doughnut-chart>
       </div>
       <div class="col mt-4">
-        <div class="h-100 p-3 border">
-          <div class="flex-center-between">
-            <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">توزيع اعلى الجنسيات</h5>
-            </div>
-          </div>
-          <div class="py-3">Content</div>
-        </div>
+        <app-doughnut-chart *ngIf="applicantsPerNationalities != undefined"
+                            [centerTitle]="'معتمر غير سعودي'"
+                            [centerValue]="noSaoudiApplicantCounts"
+                            [title]="'توزيع اعلى الجنسيات'"
+                            [countData]="applicantsPerNationalities"></app-doughnut-chart>
       </div>
       <div class="col-12 mt-4">
         <div class="h-100 p-3 border">
