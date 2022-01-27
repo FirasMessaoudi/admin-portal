@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.web.AbstractControllerTestSuite;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import org.junit.jupiter.api.Test;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -57,6 +58,21 @@ public class DashboardControllerTest extends AbstractControllerTestSuite {
         mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+
+    @Test
+    public void test_loadCurrentSeasonGeneralNumbers() throws Exception {
+        String url = Navigation.API_DASHBOARD + "/general-numbers/current-season";
+        mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk());
+        verify(dashboardService, times(1)).loadDashboardGeneralNumbersByHijriSeason(anyInt());
+    }
+
+    @Test
+    public void test_loadPreviousSeasonGeneralNumbers() throws Exception {
+        String url = Navigation.API_DASHBOARD + "/general-numbers/previous-season";
+        mockMvc.perform(get(url).cookie(tokenCookie).with(csrf())).andDo(print()).andExpect(status().isOk());
+        verify(dashboardService, times(1)).loadDashboardGeneralNumbersByHijriSeason(anyInt());
+    }
+
 
     /**
      * {@inheritDoc}
