@@ -233,6 +233,10 @@ public class DashboardService {
             countVo.setPercentage(String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
             countVoList.add(countVo);
         }
+        countVoList.sort(Comparator.comparing(CountVo::getCount).reversed());
+        if (countVoList.size() > 5) {
+            return countVoList.subList(0, 4);
+        }
         return countVoList;
     }
 
