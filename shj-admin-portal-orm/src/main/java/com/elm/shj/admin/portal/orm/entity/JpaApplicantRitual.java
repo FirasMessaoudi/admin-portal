@@ -72,7 +72,7 @@ public class JpaApplicantRitual implements Serializable {
     private Set<JpaApplicantRelative> relatives;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.ALL,  mappedBy = "applicantRitual")
+    @OneToMany(cascade = CascadeType.REFRESH,  mappedBy = "applicantRitual")
     private Set<JpaApplicantContact> contacts;
 
     @LazyCollection(LazyCollectionOption.TRUE)

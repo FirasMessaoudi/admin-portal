@@ -284,7 +284,6 @@ public class ItemWriter {
                 }
             } else {
                 savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
-
             }
             savedItems.add(savedItem);
 
@@ -450,6 +449,11 @@ public class ItemWriter {
             if (item.getClass().isAssignableFrom(ApplicantRitualDto.class)) {
                 ApplicantRitualDto applicantRitual = (ApplicantRitualDto) item;
                 applicantRitual.setContacts(new HashSet<>(applicant.getContacts()));
+                if (CollectionUtils.isNotEmpty(applicantRitual.getContacts())) {
+                    applicantRitual.getContacts().forEach(ac -> {
+                        ac.setApplicantRitual(applicantRitual);
+                    });
+                }
                 if (savedApplicantRitual != null) {
                     applicantRitual.setId(savedApplicantRitual.getId());
                     applicantRitual.setCreationDate(savedApplicantRitual.getCreationDate());
@@ -464,11 +468,6 @@ public class ItemWriter {
                     if (applicantUin != null && !applicantUin.isEmpty()) {
                         ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantUin), null, null);
                         applicantRitual.setApplicantPackage(createdApplicantPackage);
-                    }
-                    if (CollectionUtils.isNotEmpty(applicantRitual.getContacts())) {
-                        applicantRitual.getContacts().forEach(ac -> {
-                            ac.setApplicantRitual(applicantRitual);
-                        });
                     }
                 }
             }

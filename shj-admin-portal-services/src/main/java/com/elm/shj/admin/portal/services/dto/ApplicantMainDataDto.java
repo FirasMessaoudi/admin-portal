@@ -23,6 +23,7 @@ import java.util.List;
 public class ApplicantMainDataDto implements Serializable {
 
     private static final long serialVersionUID = -211394632324992513L;
+
     private long id;
     private String gender;
     private String nationalityCode;
