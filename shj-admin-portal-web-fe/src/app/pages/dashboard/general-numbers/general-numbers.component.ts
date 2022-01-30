@@ -17,7 +17,7 @@ export class GeneralNumbersComponent implements OnInit {
   applicantsPerNationalities: CountVo[];
   currentSeasonPercentage: number;
   previousSeasonPercentage: number;
-  noSaoudiApplicantCounts: number = 0;
+  totalCounts: number = 0;
   countryList: Lookup[];
   countVoList: CountVo[];
   private currentSeasonSubscription: Subscription;
@@ -61,9 +61,7 @@ export class GeneralNumbersComponent implements OnInit {
       .subscribe(data => {
         this.applicantsPerNationalities = data;
         this.applicantsPerNationalities.forEach(element => {
-          if (element.label != 'SA') {
-            this.noSaoudiApplicantCounts += element.count
-          }
+          this.totalCounts += element.count
           element.label = this.lookupService.localizedLabel(this.countryList, element.label)
         })
       })
