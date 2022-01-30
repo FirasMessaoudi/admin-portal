@@ -107,4 +107,18 @@ public class DashboardController {
         return dashboardService.listCountApplicantsByNationalities();
     }
 
+    @GetMapping("/general-numbers/max-companies")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CountVo> loadCompaniesWithMaxApplicantsCount() {
+        log.info("Load Companies with max applicants' count for current season.");
+        return dashboardService.loadCompaniesWithMaxApplicantsCountByHijriSeason((int) DateUtils.getCurrentHijriYear());
+    }
+
+    @GetMapping("/general-numbers/min-companies")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CountVo> loadCompaniesWithMinApplicantsCount() {
+        log.info("Load Companies with min applicants' count for current season.");
+        return dashboardService.loadCompaniesWithMinApplicantsCountByHijriSeason((int) DateUtils.getCurrentHijriYear());
+    }
+
 }
