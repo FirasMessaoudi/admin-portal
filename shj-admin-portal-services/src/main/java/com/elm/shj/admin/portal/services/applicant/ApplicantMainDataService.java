@@ -57,36 +57,33 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
         JpaApplicantMainData applicant = applicantMainDataRepository.findByUin(uin);
         JpaApplicantDigitalId applicantDigitalId = applicantDigitalIdRepository.findByApplicantId(applicant.getId());
 
-        if (applicant != null) {
-            String statusCode = applicantDigitalId == null ? "" : applicantDigitalId.getStatusCode();
-            ApplicantMainDataDto applicantMainDataDto = applicantMainDataDtoMapper.fromEntity(applicant, mappingContext);
-            applicantMainDataDto.setStatusCode(statusCode);
+        if (applicant == null) return Optional.empty();
 
-            applicantMainDataDto.setStatusCode(statusCode);
-            applicantMainDataDto.setUin(uin);
+        String statusCode = applicantDigitalId == null ? "" : applicantDigitalId.getStatusCode();
+        ApplicantMainDataDto applicantMainDataDto = applicantMainDataDtoMapper.fromEntity(applicant, mappingContext);
+        applicantMainDataDto.setStatusCode(statusCode);
+        applicantMainDataDto.setUin(uin);
 
-            ApplicantPackageDto applicantPackageDto = applicantPackageService.findByIdAndApplicantUin(applicantPackageId,Long.parseLong(uin));
+        ApplicantPackageDto applicantPackageDto = applicantPackageService.findByIdAndApplicantUin(applicantPackageId,Long.parseLong(uin));
 
-            if (applicantPackageDto != null) {
-                applicantMainDataDto.setRitualTypeCode(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode());
-                Optional<JpaApplicantRitual> applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageId(uin, applicantPackageDto.getId());
-                if (applicantRitual.isPresent()) {
-                    applicantRitual.get().getRelatives().size();
-                    applicantRitual.get().getContacts().size();
+        if (applicantPackageDto != null) {
+            applicantMainDataDto.setRitualTypeCode(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode());
+            Optional<JpaApplicantRitual> applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageId(uin, applicantPackageDto.getId());
+            if (applicantRitual.isPresent()) {
+                applicantRitual.get().getRelatives().size();
+                applicantRitual.get().getContacts().size();
 
-                    applicantMainDataDto.setRelatives(applicantRelativeDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.get().getRelatives()), mappingContext));
-                    applicantMainDataDto.setContacts(applicantContactDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.get().getContacts()), mappingContext));
+                applicantMainDataDto.setRelatives(applicantRelativeDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.get().getRelatives()), mappingContext));
+                applicantMainDataDto.setContacts(applicantContactDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.get().getApplicant().getContacts()), mappingContext));
 
 
-                    JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualIdAndStatusCodeNot(applicantRitual.get().getId(), ECardStatus.REISSUED.name());
-                    if (jpaApplicantCard != null) {
-                        applicantMainDataDto.setCardReferenceNumber(jpaApplicantCard.getReferenceNumber());
-                        applicantMainDataDto.setCardStatusCode(jpaApplicantCard.getStatusCode());
-                    }
+                JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualIdAndStatusCodeNot(applicantRitual.get().getId(), ECardStatus.REISSUED.name());
+                if (jpaApplicantCard != null) {
+                    applicantMainDataDto.setCardReferenceNumber(jpaApplicantCard.getReferenceNumber());
+                    applicantMainDataDto.setCardStatusCode(jpaApplicantCard.getStatusCode());
                 }
             }
-            return Optional.of(applicantMainDataDto);
-        } else
-            return Optional.empty();
+        }
+        return Optional.of(applicantMainDataDto);
     }
 }
