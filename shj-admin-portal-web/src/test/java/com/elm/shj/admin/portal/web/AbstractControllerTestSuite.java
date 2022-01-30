@@ -16,18 +16,18 @@ import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.audit.AuditLogService;
 import com.elm.shj.admin.portal.services.card.ApplicantCardScheduler;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
+import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.card.UserCardStatusAuditService;
-import com.elm.shj.admin.portal.services.company.CompanyLiteService;
-import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
-import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
-import com.elm.shj.admin.portal.services.company.CompanyStaffService;
+import com.elm.shj.admin.portal.services.company.*;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.data.request.DataRequestService;
 import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
 import com.elm.shj.admin.portal.services.data.writer.ItemWriter;
+import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.group.RitualGroupService;
+import com.elm.shj.admin.portal.services.incident.ApplicantIncidentLiteService;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.notification.*;
@@ -37,11 +37,13 @@ import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.services.ritual.RitualSeasonService;
 import com.elm.shj.admin.portal.services.role.RoleService;
 import com.elm.shj.admin.portal.services.rule.RuleService;
 import com.elm.shj.admin.portal.services.unit.RitualUnitService;
 import com.elm.shj.admin.portal.services.user.PasswordHistoryService;
 import com.elm.shj.admin.portal.services.user.UserService;
+import com.elm.shj.admin.portal.services.utils.MapUtils;
 import com.elm.shj.admin.portal.services.zone.RitualZoneService;
 import com.elm.shj.admin.portal.web.boot.BootApplication;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -362,11 +364,35 @@ public abstract class AbstractControllerTestSuite {
     protected ApplicantCardScheduler applicantCardScheduler;
 
     @MockBean
-    protected ApplicantContactService applicantContactService ;
+    protected ApplicantContactService applicantContactService;
     @MockBean
     protected IncidentTypeLookupService incidentTypeLookupService;
     @MockBean
     protected ApplicantChatContactService applicantChatContactService;
+    @MockBean
+    protected CompanyStaffCardService companyStaffCardService;
+    @MockBean
+    protected CompanyService companyService;
+    @MockBean
+    protected MapUtils mapUtils;
+    @MockBean
+    protected RitualSeasonService ritualSeasonService;
+    @MockBean
+    protected ChatMessageService chatMessageService;
+    @MockBean
+    protected ApplicantIncidentLiteService applicantIncidentLiteService;
+    @MockBean
+    protected ApplicantRelativeService applicantRelativesService;
+    @MockBean
+    protected ApplicantEmergencyDataUploadService applicantEmergencyDataUploadService;
+    @MockBean
+    protected CompanyRitualSeasonService companyRitualSeasonService;
+    @MockBean
+    protected CompanyStaffExpirationScheduler companyStaffExpirationScheduler;
+    @MockBean
+    protected CompanyStaffDigitalIdService companyStaffDigitalIdService;
+    @MockBean
+    protected NotificationTemplateContentService notificationTemplateContentService;
 
     /**
      * Method which is executed before each test
@@ -467,7 +493,12 @@ public abstract class AbstractControllerTestSuite {
         roleAuthorityIntegration.setAuthority(authorityIntegration);
         authorityIntegration.setCode(AuthorityConstants.INTEGRATION_WEB_SERVICE_CALL);
 
-        role.setRoleAuthorities(new HashSet<>((Arrays.asList(roleAuthority, roleAuthorityDelete, roleAuthorityEdit, roleAuthorityResetPassword, roleAuthorityResetUserPassword, roleAuthorityAdd, roleAuthorityUserStatus, roleAuthorityIntegration))));
+        RoleAuthorityDto roleAuthorityDashboard = new RoleAuthorityDto();
+        AuthorityLookupDto authorityDashboard = new AuthorityLookupDto();
+        roleAuthorityDashboard.setAuthority(authorityDashboard);
+        authorityDashboard.setCode(AuthorityConstants.ADMIN_DASHBOARD);
+
+        role.setRoleAuthorities(new HashSet<>((Arrays.asList(roleAuthority, roleAuthorityDelete, roleAuthorityEdit, roleAuthorityResetPassword, roleAuthorityResetUserPassword, roleAuthorityAdd, roleAuthorityUserStatus, roleAuthorityIntegration, roleAuthorityDashboard))));
         UserRoleDto userRole = new UserRoleDto();
         userRole.setUser(loggedInUser);
         userRole.setRole(role);

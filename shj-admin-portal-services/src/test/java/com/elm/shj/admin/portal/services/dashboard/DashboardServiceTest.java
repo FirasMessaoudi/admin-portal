@@ -3,8 +3,12 @@
  */
 package com.elm.shj.admin.portal.services.dashboard;
 
+import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
 import com.elm.shj.admin.portal.orm.repository.RoleRepository;
 import com.elm.shj.admin.portal.orm.repository.UserRepository;
+import com.elm.shj.admin.portal.services.dto.EGender;
+import com.elm.shj.admin.portal.services.dto.ERitualType;
+import com.elm.shj.admin.portal.services.utils.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +20,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -38,6 +44,8 @@ class DashboardServiceTest {
 
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private ApplicantRepository applicantRepository;
 
     @Test
     void test_load_dashboard_data() {
@@ -89,5 +97,16 @@ class DashboardServiceTest {
         verify(userRepository).countMonthDayActiveInactiveUsers(startOfMonthDate, true);
         verify(userRepository).countMonthDayActiveInactiveUsers(startOfMonthDate, false);
         verify(userRepository).countMonthDayDeletedUsers(startOfMonthDate);
+    }
+
+
+    @Test
+    void test_loadDashboardGeneralNumbersByHijriSeason() {
+        int hijriSeason = (int) DateUtils.getCurrentHijriYear();
+        serviceToTest.loadDashboardGeneralNumbersByHijriSeason(hijriSeason);
+        verify(applicantRepository).countAllApplicantsByGenderByHijriSeason(EGender.MALE.getCode(), hijriSeason);
+        verify(applicantRepository).countAllApplicantsByGenderByHijriSeason(EGender.FEMALE.getCode(), hijriSeason);
+        verify(applicantRepository).countAllApplicantBySeasonAndRitualType(hijriSeason, new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name())));
+        verify(applicantRepository).countAllApplicantBySeasonAndRitualType(hijriSeason, new ArrayList<>(Arrays.asList(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
     }
 }
