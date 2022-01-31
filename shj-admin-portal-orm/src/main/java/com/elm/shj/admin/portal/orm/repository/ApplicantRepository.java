@@ -99,8 +99,8 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "JOIN crs.ritualSeason rs where rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ')")
     List<String> findAllNationalities();
 
-    long countAllByInstallMobileAppIsNotNull();
-    long countAllByInstallMobileAppTrue();
+    long countAllByMobileLoginIsNotNull();
+    long countAllByMobileLoginTrue();
 
     @Modifying
     @Query("UPDATE JpaApplicant a SET a.mobileLogin = :mobileLogin, a.updateDate = CURRENT_TIMESTAMP WHERE a.id = :applicantId")

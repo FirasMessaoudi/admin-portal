@@ -22,6 +22,7 @@ import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service handling dashboard related operations
@@ -170,8 +171,8 @@ public class DashboardService {
         long totalNumberOfExternalApplicants = applicantRepository
                 .countAllApplicantBySeasonAndRitualType(hijriSeason, List.of(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
 
-        long totalNumberOfUsersInstalledApp = applicantRepository.countAllByInstallMobileAppIsNotNull();
-        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByInstallMobileAppTrue();
+        long totalNumberOfUsersInstalledApp = applicantRepository.countAllByMobileLoginIsNotNull();
+        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoginTrue();
         long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfUsersInstalledApp-totalNumberOfLoggedInUsersFromMobile ;
 
         return DashboardGeneralNumbersVo.builder()
