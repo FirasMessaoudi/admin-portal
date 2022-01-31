@@ -13,7 +13,7 @@ export class MainComponent implements OnInit {
 
 
   public cctv: number = 982;
-  public appdownloads: number = 1103402;
+
 
   currentSeasonData: GeneralDashboardVo;
   previousSeasonData: GeneralDashboardVo;

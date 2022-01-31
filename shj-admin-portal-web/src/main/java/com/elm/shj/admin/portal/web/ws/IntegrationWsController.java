@@ -653,6 +653,7 @@ public class IntegrationWsController {
      */
     @PutMapping("/applicant/language/{uin}/{lang}")
     public ResponseEntity<WsResponse<?>> updateUserPreferredLanguage(@PathVariable String lang, @PathVariable String uin) {
+        //FixMe: performance enhancement why here use applicantLiteService.findByUin and inside  applicantService.updatePreferredLanguage call findByUin again, here called unnecessary two queries, we can handle them in one query
         Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(uin);
         if (applicant.isPresent()) {
             applicantService.updatePreferredLanguage(uin, lang);
@@ -756,6 +757,24 @@ public class IntegrationWsController {
             log.error("invalid data for suin {}", command.getSuin());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(command.getSuin()).build()).build());
+        }
+    }
+
+    /**
+     * Updates user mobileLogin flag to tue when login, and false when logout
+     *
+     * @param uin  The UIN of the applicant.
+     * @param mobileLogin flag set to true when login, and false when logout
+     */
+    @PutMapping("/applicant/mobile-login/{uin}/{mobileLogin}")
+    public ResponseEntity<WsResponse<?>> updateLoggedInFromMobileAppFlag( @PathVariable String uin,@PathVariable boolean mobileLogin) {
+        Optional<ApplicantDto> applicant = applicantService.findByUin(uin);
+        if (applicant.isPresent()) {
+            applicantService.updateLoggedInFromMobileAppFlag( mobileLogin,applicant.get().getId());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(null).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(uin).build()).build());
         }
     }
 

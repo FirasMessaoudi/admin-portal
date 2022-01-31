@@ -1250,3 +1250,6 @@ GO
 
 ALTER TABLE shc_portal.shc_ritual_package ADD start_date DATE, end_date DATE;
 GO
+
+ALTER TABLE shc_portal.shc_applicant ADD mobile_login bit NULL
+GO

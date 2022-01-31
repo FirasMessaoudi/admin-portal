@@ -170,12 +170,20 @@ public class DashboardService {
         long totalNumberOfExternalApplicants = applicantRepository
                 .countAllApplicantBySeasonAndRitualType(hijriSeason, List.of(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
 
+        long totalNumberOfUsersInstalledApp = applicantRepository.countAllByInstallMobileAppIsNotNull();
+        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByInstallMobileAppTrue();
+        long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfUsersInstalledApp-totalNumberOfLoggedInUsersFromMobile ;
+
         return DashboardGeneralNumbersVo.builder()
                 .totalNumberOfApplicants(totalNumberOfApplicants)
                 .totalNumberOfMaleApplicants(totalNumberOfMaleApplicants)
                 .totalNumberOfFemaleApplicants(totalNumberOfFemaleApplicants)
                 .totalNumberOfInternalApplicants(totalNumberOfInternalApplicants)
                 .totalNumberOfExternalApplicants(totalNumberOfExternalApplicants)
+                .totalNumberOfUsersInstalledApp(totalNumberOfUsersInstalledApp)
+                .totalNumberOfLoggedInUsers(totalNumberOfLoggedInUsersFromMobile)
+                .totalNumberOfLoggedOutUsers(totalNumberOfLoggedOutUsersFromMobile)
+
                 .build();
     }
 
