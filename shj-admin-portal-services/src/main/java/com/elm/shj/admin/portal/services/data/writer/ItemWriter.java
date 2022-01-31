@@ -496,10 +496,10 @@ public class ItemWriter {
 
             if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
                 ApplicantHealthDto curApplicantHealth = (ApplicantHealthDto) item;
-                ApplicantHealthDto applicantHealthLite = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
-                if (applicantHealthLite != null) {
-                    curApplicantHealth.setId(applicantHealthLite.getId());
-                    curApplicantHealth.setCreationDate(applicantHealthLite.getCreationDate());
+                ApplicantHealthDto applicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+                if (applicantHealth != null) {
+                    curApplicantHealth.setId(applicantHealth.getId());
+                    curApplicantHealth.setCreationDate(applicantHealth.getCreationDate());
                     if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
                         // get the special needs and if it is a list then create a list of special needs dtos
                         List<ApplicantHealthSpecialNeedsDto> applicantHealthSpecialNeeds = Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
