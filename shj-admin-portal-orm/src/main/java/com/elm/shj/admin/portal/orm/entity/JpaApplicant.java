@@ -117,7 +117,7 @@ public class JpaApplicant implements Serializable {
     private Date updateDate;
 
     @Column(name = "mobile_login")
-    private boolean mobileLogin;
+    private Boolean mobileLogin;
 
     @PrePersist
     public void prePersist() {

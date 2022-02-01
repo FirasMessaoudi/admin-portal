@@ -295,9 +295,11 @@ public class IntegrationWsController {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).build());
         } else {
             log.error("no relatives for this  applicant in this ritual");
+
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_RELATIVE_NOT_FOUND.code)).build());
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_RELATIVE_NOT_FOUND.getCode()).referenceNumber(applicantUin).build()).build());
         }
+
     }
 
 
