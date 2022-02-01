@@ -127,13 +127,14 @@
 
     <div class="row row-cols-1 row-cols-xl-2">
       <div class="col mt-4">
-        <app-doughnut-chart *ngIf="countVoList != undefined" [title]="'توزيع الاعمار'"
+        <app-doughnut-chart [centerValue]="totalCountAges" [centerTitle]="'عملية بالبطاقة'"
+                            *ngIf="countVoList != undefined" [title]="'توزيع الاعمار'"
                             [countData]="countVoList"></app-doughnut-chart>
       </div>
       <div class="col mt-4">
         <app-doughnut-chart *ngIf="applicantsPerNationalities != undefined"
                             [centerTitle]="'حاج'"
-                            [centerValue]="totalCounts"
+                            [centerValue]="totalCountsNationalities"
                             [title]="'توزيع اعلى الجنسيات'"
                             [countData]="applicantsPerNationalities"></app-doughnut-chart>
       </div>

@@ -17,7 +17,8 @@ export class GeneralNumbersComponent implements OnInit {
   applicantsPerNationalities: CountVo[];
   currentSeasonPercentage: number;
   previousSeasonPercentage: number;
-  totalCounts: number = 0;
+  totalCountsNationalities: number = 0;
+  totalCountAges: number = 0;
   countryList: Lookup[];
   countVoList: CountVo[];
   private currentSeasonSubscription: Subscription;
@@ -41,8 +42,11 @@ export class GeneralNumbersComponent implements OnInit {
 
       });
 
-      this.dashboardService.loadApplicantsCountByAgeCurrentSeason().subscribe((data)=>{
+      this.dashboardService.loadApplicantsCountByAgeCurrentSeason().subscribe((data)=> {
         this.countVoList = data;
+        this.countVoList.forEach(element => {
+          this.totalCountAges += element.count
+        })
       });
 
     this.previousSeasonSubscription = this.dashboardService
@@ -61,7 +65,7 @@ export class GeneralNumbersComponent implements OnInit {
       .subscribe(data => {
         this.applicantsPerNationalities = data;
         this.applicantsPerNationalities.forEach(element => {
-          this.totalCounts += element.count
+          this.totalCountsNationalities += element.count
           element.label = this.lookupService.localizedLabel(this.countryList, element.label)
         })
       })

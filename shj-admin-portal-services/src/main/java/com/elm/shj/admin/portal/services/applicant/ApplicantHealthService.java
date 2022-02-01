@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -33,6 +34,7 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
      * @param packageReferenceNumber
      * @return
      */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ApplicantHealthDto findByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
         return getMapper().fromEntity(applicantHealthRepository.
                         findByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber),
