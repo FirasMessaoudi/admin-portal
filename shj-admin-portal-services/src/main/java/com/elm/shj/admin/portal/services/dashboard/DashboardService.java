@@ -171,8 +171,8 @@ public class DashboardService {
         long totalNumberOfExternalApplicants = applicantRepository
                 .countAllApplicantBySeasonAndRitualType(hijriSeason, List.of(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
 
-        long totalNumberOfUsersInstalledApp = applicantRepository.countAllByMobileLoginIsNotNull();
-        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoginTrue();
+        long totalNumberOfUsersInstalledApp = applicantRepository.countAllByMobileLoggedInIsNotNull();
+        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue();
         long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfUsersInstalledApp-totalNumberOfLoggedInUsersFromMobile ;
 
         return DashboardGeneralNumbersVo.builder()

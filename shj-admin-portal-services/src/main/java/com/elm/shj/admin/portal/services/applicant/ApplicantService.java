@@ -255,7 +255,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     }
 
     @Transactional
-    public void updateLoggedInFromMobileAppFlag(boolean mobileLogin, long applicantId) {
-        applicantRepository.updateLoggedInFromMobileAppFlag(applicantId, mobileLogin);
+    public void updateLoggedInFromMobileAppFlag(boolean mobileLoggedIn, long applicantId) {
+        applicantRepository.updateLoggedInFromMobileAppFlag(applicantId, mobileLoggedIn);
     }
 }

@@ -764,13 +764,13 @@ public class IntegrationWsController {
      * Updates user mobileLogin flag to tue when login, and false when logout
      *
      * @param uin  The UIN of the applicant.
-     * @param mobileLogin flag set to true when login, and false when logout
+     * @param mobileLoggedIn flag set to true when login, and false when logout
      */
-    @PutMapping("/applicant/mobile-login/{uin}/{mobileLogin}")
-    public ResponseEntity<WsResponse<?>> updateLoggedInFromMobileAppFlag( @PathVariable String uin,@PathVariable boolean mobileLogin) {
+    @PutMapping("/applicant/mobile-login/{uin}/{mobileLoggedIn}")
+    public ResponseEntity<WsResponse<?>> updateLoggedInFromMobileAppFlag( @PathVariable String uin,@PathVariable boolean mobileLoggedIn) {
         Optional<ApplicantDto> applicant = applicantService.findByUin(uin);
         if (applicant.isPresent()) {
-            applicantService.updateLoggedInFromMobileAppFlag( mobileLogin,applicant.get().getId());
+            applicantService.updateLoggedInFromMobileAppFlag( mobileLoggedIn,applicant.get().getId());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(null).build());
         } else {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
