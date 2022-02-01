@@ -444,7 +444,7 @@ public class ItemWriter {
             String packageReferenceNumber = (String) packageReferenceNumberField.get(item);
 
             // retrieve the applicant ritual if it is saved before by the digital id scheduler.
-            ApplicantRitualDto savedApplicantRitual = applicantRitualService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+            ApplicantRitualDto savedApplicantRitual = applicantRitualService.findDirtyByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
 
             if (item.getClass().isAssignableFrom(ApplicantRitualDto.class)) {
                 ApplicantRitualDto applicantRitual = (ApplicantRitualDto) item;
