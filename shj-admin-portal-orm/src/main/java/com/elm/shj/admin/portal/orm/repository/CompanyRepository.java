@@ -3,8 +3,13 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.JpaCompany;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 /**
  * Repository for company data.
@@ -14,4 +19,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
  **/
 public interface CompanyRepository extends JpaRepository<JpaCompany, Long> {
     JpaCompany findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsRitualPackagesApplicantPackagesApplicantUin(long companyRitualSeasonsId, long applicantUin);
+
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(c.labelAr), '') " +
+            "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
+            "WHERE rs.seasonYear = :hijriSeason " +
+            "GROUP BY c.labelAr")
+    List<CountVo> findCompaniesByHijriSeason(@Param("hijriSeason") int hijriSeason);
 }

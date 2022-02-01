@@ -12,7 +12,7 @@
       </button>
     </div>
   </div>
-  <div class="content__section">
+  <div class="content__section" (click)="navigateToGeneralNumbers()">
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
 
@@ -118,7 +118,7 @@
             <div>
               <div class="sts-title">تحميل التطبيق</div>
               <div class="sts-number text-dark">
-                <ng9-odometer [number]="appdownloads"></ng9-odometer>
+                <ng9-odometer [number]="currentSeasonData?.totalNumberOfUsersInstalledApp | number"></ng9-odometer>
               </div>
             </div>
             <svg-icon styleClass="sts-icon fa-w-10 display-4" icon="mobile-android-alt"></svg-icon>
@@ -133,14 +133,14 @@
               <svg-icon styleClass="text-appdownloads" icon="circle"></svg-icon>
               <div class="px-3">مفعل</div>
             </div>
-            <div>875,755</div>
+            <div>{{currentSeasonData?.totalNumberOfLoggedInUsersFromMobile}}</div>
           </div>
           <div class="flex-center-between mt-2">
             <div class="d-flex">
               <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
               <div class="px-3">غير مفعل</div>
             </div>
-            <div>300,755</div>
+            <div>{{currentSeasonData?.totalNumberOfLoggedOutUsersFromMobile}}</div>
           </div>
         </div>
       </div>

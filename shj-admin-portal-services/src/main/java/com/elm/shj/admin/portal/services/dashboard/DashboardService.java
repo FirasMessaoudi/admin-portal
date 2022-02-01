@@ -4,10 +4,7 @@
 package com.elm.shj.admin.portal.services.dashboard;
 
 import com.elm.shj.admin.portal.orm.entity.CountVo;
-import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentRepository;
-import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
-import com.elm.shj.admin.portal.orm.repository.RoleRepository;
-import com.elm.shj.admin.portal.orm.repository.UserRepository;
+import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.dto.EGender;
 import com.elm.shj.admin.portal.services.dto.ERitualType;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
@@ -24,6 +21,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service handling dashboard related operations
@@ -43,6 +42,7 @@ public class DashboardService {
     private final RoleRepository roleRepository;
     private final ApplicantRepository applicantRepository;
     private final ApplicantIncidentRepository applicantIncidentRepository;
+    private final CompanyRepository companyRepository;
 
     public DashboardVo loadDashboardData() {
         log.info("Start loading dashboard data");
@@ -171,12 +171,20 @@ public class DashboardService {
         long totalNumberOfExternalApplicants = applicantRepository
                 .countAllApplicantBySeasonAndRitualType(hijriSeason, List.of(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
 
+        long totalNumberOfUsersInstalledApp = applicantRepository.countAllByMobileLoginIsNotNull();
+        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoginTrue();
+        long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfUsersInstalledApp-totalNumberOfLoggedInUsersFromMobile ;
+
         return DashboardGeneralNumbersVo.builder()
                 .totalNumberOfApplicants(totalNumberOfApplicants)
                 .totalNumberOfMaleApplicants(totalNumberOfMaleApplicants)
                 .totalNumberOfFemaleApplicants(totalNumberOfFemaleApplicants)
                 .totalNumberOfInternalApplicants(totalNumberOfInternalApplicants)
                 .totalNumberOfExternalApplicants(totalNumberOfExternalApplicants)
+                .totalNumberOfUsersInstalledApp(totalNumberOfUsersInstalledApp)
+                .totalNumberOfLoggedInUsers(totalNumberOfLoggedInUsersFromMobile)
+                .totalNumberOfLoggedOutUsers(totalNumberOfLoggedOutUsersFromMobile)
+
                 .build();
     }
 
@@ -240,4 +248,13 @@ public class DashboardService {
         return countVoList;
     }
 
+    public List<CountVo> loadCompaniesWithMaxApplicantsCountByHijriSeason(int currentHijriYear) {
+        List<CountVo> countVoList = companyRepository.findCompaniesByHijriSeason(currentHijriYear);
+        return countVoList.stream().sorted(Comparator.comparingLong(CountVo::getCount).reversed()).collect(Collectors.toList()).subList(0, 14);
+    }
+
+    public List<CountVo> loadCompaniesWithMinApplicantsCountByHijriSeason(int currentHijriYear) {
+        List<CountVo> countVoList = companyRepository.findCompaniesByHijriSeason(currentHijriYear);
+        return countVoList.stream().sorted(Comparator.comparingLong(CountVo::getCount)).collect(Collectors.toList()).subList(0, 14);
+    }
 }

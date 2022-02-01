@@ -5,4 +5,8 @@ export class GeneralDashboardVo {
   totalNumberOfFemaleApplicants: number;
   totalNumberOfInternalApplicants: number;
   totalNumberOfExternalApplicants: number;
+  totalNumberOfLoggedInUsersFromMobile: number;
+  totalNumberOfLoggedOutUsersFromMobile: number;
+  totalNumberOfUsersInstalledApp: number;
+
 }

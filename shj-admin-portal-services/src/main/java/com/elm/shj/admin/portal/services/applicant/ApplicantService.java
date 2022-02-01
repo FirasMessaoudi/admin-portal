@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -59,8 +60,9 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      *
      * @return the list of applicants
      */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public List<ApplicantDto> findAllWithoutDigitalId() {
-        return mapList(((ApplicantRepository) getRepository()).findAllApplicantsWithoutDigitalId());
+        return mapList(applicantRepository.findAllApplicantsWithoutDigitalId());
     }
 
     /**
@@ -69,8 +71,9 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      * @param applicantBasicInfo the applicant basic info
      * @return the found applicant with the same basic info exists
      */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ApplicantDto findByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
-        return getMapper().fromEntity(((ApplicantRepository) getRepository()).findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian()), mappingContext);
+        return getMapper().fromEntity(applicantRepository.findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian()), mappingContext);
     }
 
     /**
@@ -79,8 +82,9 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      * @param applicantBasicInfo the applicant basic info
      * @return if applicant with the same basic info exists
      */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public boolean existsByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
-        return ((ApplicantRepository) getRepository()).existsByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
+        return applicantRepository.existsByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
     }
 
 
@@ -137,7 +141,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      * @return the list of applicants
      */
     public List<ApplicantDto> findAllRegisteredAndHavingActiveRitual() {
-        return mapList(((ApplicantRepository) getRepository()).findAllApplicantsRegisteredAndHavingActiveRitual(new Date()));
+        return mapList(applicantRepository.findAllApplicantsRegisteredAndHavingActiveRitual(new Date()));
     }
 
     /**
@@ -244,7 +248,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     }
 
     public boolean existsByBasicInfoAndPackageCode(ApplicantBasicInfoDto applicantBasicInfo, String packageReferenceNumber) {
-        return ((ApplicantRepository) getRepository()).findByBasicInfoAndPackageCode(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian(), packageReferenceNumber);
+        return applicantRepository.findByBasicInfoAndPackageCode(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian(), packageReferenceNumber);
     }
 
     @Transactional
@@ -254,4 +258,8 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         applicant.ifPresent(applicantDto -> applicantRepository.updatePreferredLanguage(applicantDto.getId(), lang));
     }
 
+    @Transactional
+    public void updateLoggedInFromMobileAppFlag(boolean mobileLogin, long applicantId) {
+        applicantRepository.updateLoggedInFromMobileAppFlag(applicantId, mobileLogin);
+    }
 }

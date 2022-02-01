@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {ChartsConfig} from '@app/pages/home/charts.config';
+import {ChartsConfig} from '@pages/dashboard/charts.config';
 import {CountVo} from '@app/_shared/model/countVo.model';
 import {ChartOptions, ChartType} from 'chart.js';
 import {Label, PluginServiceGlobalRegistrationAndOptions, SingleDataSet} from 'ng2-charts';

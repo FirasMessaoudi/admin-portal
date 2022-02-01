@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {GeneralDashboardVo} from "@model/dashboard-general-numbers-vo.model";
 import {Subscription} from "rxjs";
 import {DashboardService} from "@core/services";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-main',
@@ -12,7 +13,7 @@ export class MainComponent implements OnInit {
 
 
   public cctv: number = 982;
-  public appdownloads: number = 1103402;
+
 
   currentSeasonData: GeneralDashboardVo;
   previousSeasonData: GeneralDashboardVo;
@@ -22,7 +23,8 @@ export class MainComponent implements OnInit {
   private currentSeasonSubscription: Subscription;
   private previousSeasonSubscription: Subscription;
 
-  constructor(private dashboardService: DashboardService) {
+  constructor(private dashboardService: DashboardService,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -56,5 +58,9 @@ export class MainComponent implements OnInit {
     if (this.previousSeasonSubscription) {
       this.previousSeasonSubscription.unsubscribe();
     }
+  }
+
+  navigateToGeneralNumbers() {
+    this.router.navigate(['/dashboard/general-numbers'], {replaceUrl: true});
   }
 }
