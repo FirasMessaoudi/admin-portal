@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -29,7 +30,7 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         return ritualPackageRepository.findIdByReferenceNumber(referenceNumber);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public RitualPackageDto findRitualPackageByReferenceNumber(String referenceNumber) {
         Optional<JpaRitualPackage> ritualPackageOptional = ritualPackageRepository.findByReferenceNumber(referenceNumber);
         if (ritualPackageOptional.isPresent()) {
