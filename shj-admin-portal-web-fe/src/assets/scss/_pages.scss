@@ -591,6 +591,16 @@ tr:hover .tblView {
 
 }
 
+
+.modal{
+  .table th, .table td {
+    padding: 0.5rem;
+  }
+  .form-group {
+    margin-bottom: 1rem;
+}
+}
+
 textarea {
   resize: none;
 }
@@ -779,8 +789,10 @@ textarea {
 }
 
 .progress {
-  border-radius: 50rem;
+  border-radius: 0;
   background-color: #F3F5F2;
+  width: 100%;
+  height: 20px;
 }
 
 
@@ -842,3 +854,10 @@ textarea {
     }
   }
 }
+
+
+
+.bg-lighter{
+  background-color: #F6F7F5;
+}
+

@@ -20,7 +20,7 @@
       <span aria-hidden="true" class="h2">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body pb-0">
 
     <form [formGroup]="searchForm" name="searchCard" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       <div class="form-group col">
@@ -67,9 +67,9 @@
     </form>
 
 
-    <div class="table-responsive my-4">
+    <div class="table-responsive mb-4">
       <div [ngStyle]="{'visibility': isSelectAllClicked ? 'visible': 'hidden'}"
-           class="d-flex align-items-center pb-3 px-4 border-bottom w-100">
+           class="dashes flex-center-between p-3">
         <div class="selectAll_label" id="selectAll_count">
 
           <span>{{splitString('printing-management.cards_selected_on_the_current_page' | translate, ' X ')[0]}}</span>
@@ -80,7 +80,7 @@
           <button [disabled]="isSelectLoading"
                   [ngStyle]="{'display': isSelectAllClicked && !isAllSelected ? 'inline-flex': 'none'}"
                   (click)="selectAllCards()"
-                  class="btn btn-dcc-primary px-5 mr-3">
+                  class="btn btn-outline-dcc-primary btn-sm">
             {{'general.select' | translate}}<span
             class="font-weight-bold px-2">{{page?.totalElements}}</span>{{'printing-management.cards_from_all_pages' | translate}}
 
@@ -88,7 +88,7 @@
           <button [disabled]="isSelectLoading"
                   [ngStyle]="{'display': isSelectAllClicked && isAllSelected ? 'inline-flex': 'none'}"
                   (click)="deselectAllCards()"
-                  class="btn btn-dcc-primary px-5 mr-3">
+                  class="btn btn-outline-dcc-primary btn-sm">
             {{'general.deselect' | translate}}<span
             class="font-weight-bold px-2">{{page?.totalElements}}</span>{{'printing-management.cards_from_all_pages' | translate}}
 
@@ -101,17 +101,17 @@
           <thead>
           <tr>
             <th scope="col">
-              <div class="custom-control custom-checkbox my-2">
+              <div class="custom-control custom-checkbox">
                 <input name="selectAllCards" type="checkbox" class="custom-control-input" id="selectedApplicantCheck-01"
                        [checked]="isAllChecked()"
                        (change)="selectCardsInThePage($event)">
                 <label class="custom-control-label mx-3" for="selectedApplicantCheck-01"></label>
               </div>
             </th>
-            <th scope="col">{{'card-management.name' | translate}}</th>
-            <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-            <th scope="col">{{'printing-management.id_number' | translate}}</th>
-            <th scope="col">{{'card-management.passport_number' | translate}}</th>
+            <th class="text-nowrap" scope="col">{{'card-management.name' | translate}}</th>
+            <th class="text-nowrap" scope="col">{{'card-management.applicant_id' | translate}}</th>
+            <th class="text-nowrap" scope="col">{{'printing-management.id_number' | translate}}</th>
+            <th class="text-nowrap" scope="col">{{'card-management.passport_number' | translate}}</th>
           </tr>
           </thead>
           <tbody>
@@ -133,7 +133,7 @@
           <ng-container *ngIf="!loading()">
             <tr *ngFor="let card of cards">
               <td>
-                <div class="custom-control custom-checkbox my-2">
+                <div class="custom-control custom-checkbox">
                   <input type="checkbox" class="custom-control-input" id="applicantCheck-{{card.id}}"
                          [checked]="isChecked(card)"
                          (change)="selectOneCard($event, card.id)">
