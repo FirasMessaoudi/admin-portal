@@ -116,8 +116,6 @@ VALUES ('elm.providers.recaptcha.invisible.key.site', '6Le30G0UAAAAAM3Kwdf4V_feW
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('elm.providers.recaptcha.invisible.key.secret', '6Le30G0UAAAAAIBhhUZ-TtNdmbCRqzoxNftB5W1w');
 GO
-USE shc_portal
-GO
 INSERT INTO shc_portal.shc_user_password_history (user_id, old_password_hash) values (1, '$2a$10$MLt2QkqgBSo5WdVu5UJXjunvi0t/h.BKDJQWzO2tyrQKBysLmc9ou');
 
 DELETE FROM shc_portal.shc_config
@@ -126,8 +124,6 @@ DELETE FROM shc_portal.shc_config
 where conf_key = 'elm.engines.filescan.port';
 GO
 
-USE shc_portal
-GO
 UPDATE shc_portal.shc_config
 SET conf_value='http://192.168.2.149:8080/dcc-engines-filescan/scan-file'
 where conf_key = 'elm.providers.filescan.rest.url';
