@@ -1,25 +1,12 @@
-<div class="h-100 p-3 border">
-  <div class="shadow-sm rounded text-center text-dark total-card">
-    <div class="card-header">
-      <h5 class="sts">{{title}}</h5>
-    </div>
-    <div class="card-body canv-container p-2" style="height: 330px;">
-      <canvas #mycanvas baseChart
-              [data]="doughnutChartData"
-              [labels]="doughnutChartLabels"
-              [chartType]="doughnutChartType"
-              [plugins]="doughnutChartPlugins"
-              [colors]="chartsConfig.doughnutChartColors"
-              [options]="doughnutChartOptions"
-      >
-      </canvas>
-    </div>
-    <!--       <div class="text-center pb-3">
-            <a download="{{'home.total_users_by_authority' | translate}}.png"
-               class="btn btn-outline-secondary btn-sm mt-0" href="javascript:void(0)"
-               title="{{'home.total_users_in_a_period' | translate}}">
-              {{'home.download_image' | translate}} <i class="far fa-arrow-alt-circle-down"></i>
-            </a>
-          </div> -->
-  </div>
+<div class="w-100">
+  <canvas #mycanvas baseChart
+          [data]="doughnutChartData"
+          [labels]="doughnutChartLabels"
+          [chartType]="doughnutChartType"
+          [plugins]="doughnutChartPlugins"
+          [colors]="chartsConfig.doughnutChartColors"
+          [options]="doughnutChartOptions"
+  >
+  </canvas>
+
 </div>
