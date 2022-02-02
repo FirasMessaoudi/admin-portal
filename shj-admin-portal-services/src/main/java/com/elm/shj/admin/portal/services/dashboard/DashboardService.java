@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -22,7 +23,6 @@ import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Service handling dashboard related operations
@@ -43,6 +43,7 @@ public class DashboardService {
     private final ApplicantRepository applicantRepository;
     private final ApplicantIncidentRepository applicantIncidentRepository;
     private final CompanyRepository companyRepository;
+    private final PackageHousingRepository packageHousingRepository;
 
     public DashboardVo loadDashboardData() {
         log.info("Start loading dashboard data");
@@ -249,12 +250,18 @@ public class DashboardService {
     }
 
     public List<CountVo> loadCompaniesWithMaxApplicantsCountByHijriSeason(int currentHijriYear) {
-        List<CountVo> countVoList = companyRepository.findCompaniesByHijriSeason(currentHijriYear);
-        return countVoList.stream().sorted(Comparator.comparingLong(CountVo::getCount).reversed()).collect(Collectors.toList()).subList(0, 14);
+        return companyRepository.findCompaniesWithMaxApplicantsByHijriSeason(currentHijriYear, PageRequest.of(0, 15)).getContent();
     }
 
     public List<CountVo> loadCompaniesWithMinApplicantsCountByHijriSeason(int currentHijriYear) {
-        List<CountVo> countVoList = companyRepository.findCompaniesByHijriSeason(currentHijriYear);
-        return countVoList.stream().sorted(Comparator.comparingLong(CountVo::getCount)).collect(Collectors.toList()).subList(0, 14);
+        return companyRepository.findCompaniesWithMinApplicantsByHijriSeason(currentHijriYear, PageRequest.of(0, 15)).getContent();
+    }
+
+    public List<CountVo> loadCampsWithMaxApplicantsCountByHijriSeason(int currentHijriYear) {
+        return packageHousingRepository.findCampsWithMaxApplicantsByHijriSeason(currentHijriYear, PageRequest.of(0, 15)).getContent();
+    }
+
+    public List<CountVo> loadCampsWithMinApplicantsCountByHijriSeason(int currentHijriYear) {
+        return packageHousingRepository.findCampsWithMinApplicantsByHijriSeason(currentHijriYear, PageRequest.of(0, 15)).getContent();
     }
 }

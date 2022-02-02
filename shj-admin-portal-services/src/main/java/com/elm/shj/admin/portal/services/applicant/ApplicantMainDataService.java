@@ -11,7 +11,6 @@ import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantMainDataRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
-import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -41,10 +40,8 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
 
     private final ApplicantRelativeDtoMapper applicantRelativeDtoMapper;
     private final ApplicantContactDtoMapper applicantContactDtoMapper;
-    private final ApplicantMainDataDtoMapper applicantMainDataDtoMapper;
 
     private final ApplicantPackageService applicantPackageService;
-    private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
 
     /**
      * Finds an applicant by his uin
@@ -60,7 +57,7 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
         if (applicant == null) return Optional.empty();
 
         String statusCode = applicantDigitalId == null ? "" : applicantDigitalId.getStatusCode();
-        ApplicantMainDataDto applicantMainDataDto = applicantMainDataDtoMapper.fromEntity(applicant, mappingContext);
+        ApplicantMainDataDto applicantMainDataDto = getMapper().fromEntity(applicant, mappingContext);
         applicantMainDataDto.setStatusCode(statusCode);
         applicantMainDataDto.setUin(uin);
 

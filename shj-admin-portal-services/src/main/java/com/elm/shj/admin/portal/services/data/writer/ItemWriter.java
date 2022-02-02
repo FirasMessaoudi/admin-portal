@@ -17,6 +17,7 @@ import com.elm.shj.admin.portal.services.data.reader.EExcelItemReaderErrorType;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.data.validators.WithGroupReferenceNumber;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
+import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
@@ -75,6 +76,7 @@ public class ItemWriter {
     private final ApplicantRelativeService applicantRelativeService;
     private final ApplicantHealthService applicantHealthService;
     private final ApplicantEmergencyDataUploadService applicantEmergencyDataUploadService;
+    private final DigitalIdService digitalIdService;
 
     /**
      * Populates the registry
@@ -430,9 +432,6 @@ public class ItemWriter {
                 return;
             }
 
-            ApplicantDigitalIdDto applicantDigitalId = CollectionUtils.isNotEmpty(applicant.getDigitalIds()) ? applicant.getDigitalIds().get(0) : null;
-            String applicantUin = applicantDigitalId != null ? applicantDigitalId.getUin() : null;
-
             if (applicantField != null) {
                 // make fields accessible
                 ReflectionUtils.makeAccessible(applicantField);
@@ -444,7 +443,14 @@ public class ItemWriter {
             String packageReferenceNumber = (String) packageReferenceNumberField.get(item);
 
             // retrieve the applicant ritual if it is saved before by the digital id scheduler.
-            ApplicantRitualDto savedApplicantRitual = applicantRitualService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+            ApplicantRitualDto savedApplicantRitual = applicantRitualService.findDirtyByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+
+            if (applicantRitualField != null) {
+                ReflectionUtils.makeAccessible(applicantRitualField);
+                applicantRitualField.set(item, savedApplicantRitual);
+            }
+
+            String applicantUin = digitalIdService.findApplicantUin(applicant.getId());
 
             if (item.getClass().isAssignableFrom(ApplicantRitualDto.class)) {
                 ApplicantRitualDto applicantRitual = (ApplicantRitualDto) item;
@@ -470,11 +476,6 @@ public class ItemWriter {
                         applicantRitual.setApplicantPackage(createdApplicantPackage);
                     }
                 }
-            }
-
-            if (applicantRitualField != null) {
-                ReflectionUtils.makeAccessible(applicantRitualField);
-                applicantRitualField.set(item, savedApplicantRitual);
             }
 
             if (item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {

@@ -91,6 +91,4 @@ public class JpaApplicantContact implements Serializable {
         countryCode = StringUtils.upperCase(countryCode);
         languageList = StringUtils.upperCase(languageList);
     }
-
-
 }
