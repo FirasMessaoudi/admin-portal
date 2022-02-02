@@ -33,6 +33,7 @@ public class ApplicantChatContactVo implements Serializable {
     private long typeId;
     private String alias;
     private String avatar;
+    //TODO why use wrapper type
     private Boolean systemDefined;
     private String staffTitleCode;
     private String relationshipCode;
@@ -44,4 +45,5 @@ public class ApplicantChatContactVo implements Serializable {
     private Date creationDate;
     private Date updateDate;
     private String statusCode;
+    private boolean deleted;
 }
