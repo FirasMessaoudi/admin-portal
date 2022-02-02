@@ -1,6 +1,9 @@
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.JpaPackageHousing;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,5 +26,17 @@ public interface PackageHousingRepository extends JpaRepository<JpaPackageHousin
     JpaPackageHousing findPackageHousing(@Param("companyRitualSeasonsId") long companyRitualSeasonsId, @Param("uin") long uin);
 
     List<JpaPackageHousing> findByRitualPackageId(long id);
+
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ph.locationNameAr, 0, COUNT(ph.locationNameAr), '') " +
+            "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.packageHousings ph " +
+            "WHERE ph.typeCode = 'CAMP' " +
+            "GROUP BY ph.locationNameAr ORDER BY COUNT(ph.locationNameAr) DESC")
+    Page<CountVo> findCampsWithMaxApplicantsByHijriSeason(@Param("hijriSeason") int hijriSeason, Pageable pageable);
+
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ph.locationNameAr, 0, COUNT(ph.locationNameAr), '') " +
+            "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.packageHousings ph " +
+            "WHERE ph.typeCode = 'CAMP' " +
+            "GROUP BY ph.locationNameAr ORDER BY COUNT(ph.locationNameAr)")
+    Page<CountVo> findCampsWithMinApplicantsByHijriSeason(@Param("hijriSeason") int hijriSeason, Pageable pageable);
 
 }

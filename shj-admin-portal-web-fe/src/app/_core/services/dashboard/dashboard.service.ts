@@ -1,17 +1,16 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {DashboardVo} from '@model/dashboard-vo.model';
-import {Observable} from 'rxjs';
-import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
-import {CountVo} from '@app/_shared/model/countVo.model';
-import {Lookup} from "@model/lookup.model";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { DashboardVo } from '@model/dashboard-vo.model';
+import { Observable } from 'rxjs';
+import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
+import { CountVo } from '@app/_shared/model/countVo.model';
+import { Lookup } from '@model/lookup.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardService {
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   /**
    * Load dashboard data for logged in user agency
@@ -69,5 +68,41 @@ export class DashboardService {
 
   findNationalities(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/country/list');
+  }
+
+  /**
+   * Load companies with max applicant count for current season
+   */
+  loadCompaniesWithMaxApplicantCountForCurrentSeason(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/general-numbers/max-companies'
+    );
+  }
+
+  /**
+   * Load companies with min applicant count for current season
+   */
+  loadCompaniesWithMinApplicantCountForCurrentSeason(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/general-numbers/min-companies'
+    );
+  }
+
+  /**
+   * Load camps with max applicant count for current season
+   */
+  loadCampsWithMaxApplicantCountForCurrentSeason(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/general-numbers/max-camps'
+    );
+  }
+
+  /**
+   * Load camps with min applicant count for current season
+   */
+  loadCampsWithMinApplicantCountForCurrentSeason(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/general-numbers/min-camps'
+    );
   }
 }

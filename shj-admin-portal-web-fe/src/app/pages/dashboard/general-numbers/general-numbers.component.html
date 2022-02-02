@@ -135,17 +135,44 @@
         <app-doughnut-chart *ngIf="applicantsPerNationalities != undefined"
                             [centerTitle]="'حاج'"
                             [centerValue]="totalCountsNationalities"
-                            [title]="'توزيع اعلى الجنسيات'"
+                            [title]="'توزيع أعلى الجنسيات'"
                             [countData]="applicantsPerNationalities"></app-doughnut-chart>
       </div>
       <div class="col-12 mt-4">
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">التوزيع علي الشركات</h5>
+              <h5 class="sts">التوزيع على الشركات</h5>
+              <button *ngIf="minCompanies" type="button" class="btn border mx-3" (click)="loadMaxCompanies()">
+                أعلى الشركات
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
+              <button *ngIf="!minCompanies" type="button" class="btn border mx-3" (click)="loadMinCompanies()">
+                أقل الشركات
+                <!--TODO Rotate icon-->
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
             </div>
           </div>
-          <div class="py-3">Content</div>
+          <div class="py-3">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between">
+            </div>
+
+            <div class="col-12">
+              <div class="w-100">
+                <canvas baseChart #companiesByApplicantCount
+                        [datasets]="[{data: companyCounts, maxBarThickness: 15}]"
+                        [options]="chartsConfig.barChartOptions"
+                        [labels]="companyLabels"
+                        [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#b1bdd2'}]"
+                        chartType="bar" height="100"></canvas>
+                <div class="text-center">
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
       <div class="col-12 mt-4">
@@ -153,9 +180,36 @@
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">التوزيع على المخيمات</h5>
+              <button *ngIf="minCamps" type="button" class="btn border mx-3" (click)="loadMaxCamps()">
+                أعلى المخيمات
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
+              <button *ngIf="!minCamps" type="button" class="btn border mx-3" (click)="loadMinCamps()">
+                أقل المخيمات
+                <!--TODO Rotate icon-->
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
             </div>
           </div>
-          <div class="py-3">Content</div>
+          <div class="py-3">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between">
+            </div>
+
+            <div class="col-12">
+              <div class="w-100">
+                <canvas baseChart #campsByApplicantCount
+                        [datasets]="[{data: campCounts, maxBarThickness: 15}]"
+                        [options]="chartsConfig.barChartOptions"
+                        [labels]="campLabels"
+                        [colors]="[{backgroundColor: '#649D61', hoverBackgroundColor: '#b1ceaf'}]"
+                        chartType="bar" height="100"></canvas>
+                <div class="text-center">
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
