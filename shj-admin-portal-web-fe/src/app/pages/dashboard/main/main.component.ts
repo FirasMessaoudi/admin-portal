@@ -1,19 +1,21 @@
-import {Component, OnInit} from '@angular/core';
-import {GeneralDashboardVo} from "@model/dashboard-general-numbers-vo.model";
-import {Subscription} from "rxjs";
-import {DashboardService} from "@core/services";
-import {Router} from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
+import { Subscription } from 'rxjs';
+import { DashboardService } from '@core/services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
-
-
-  public cctv: number = 982;
-
+  //TODO Dummy Data
+  dashboardCameras = {
+    totalCount: 782,
+    activeCameras: 609,
+    inactiveCameras: 176,
+  };
 
   currentSeasonData: GeneralDashboardVo;
   previousSeasonData: GeneralDashboardVo;
@@ -23,9 +25,10 @@ export class MainComponent implements OnInit {
   private currentSeasonSubscription: Subscription;
   private previousSeasonSubscription: Subscription;
 
-  constructor(private dashboardService: DashboardService,
-              private router: Router) {
-  }
+  constructor(
+    private dashboardService: DashboardService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.currentSeasonSubscription = this.dashboardService
@@ -35,8 +38,9 @@ export class MainComponent implements OnInit {
         this.currentSeasonPercentage =
           (100 * data.totalNumberOfExternalApplicants) /
           data.totalNumberOfApplicants;
-        this.currentSeasonData.totalNumberOfApplicants = this.currentSeasonData.totalNumberOfExternalApplicants + this.currentSeasonData.totalNumberOfInternalApplicants;
-
+        this.currentSeasonData.totalNumberOfApplicants =
+          this.currentSeasonData.totalNumberOfExternalApplicants +
+          this.currentSeasonData.totalNumberOfInternalApplicants;
       });
 
     this.previousSeasonSubscription = this.dashboardService
@@ -46,8 +50,9 @@ export class MainComponent implements OnInit {
         this.previousSeasonPercentage =
           (100 * data.totalNumberOfExternalApplicants) /
           data.totalNumberOfApplicants;
-        this.previousSeasonData.totalNumberOfApplicants = this.previousSeasonData.totalNumberOfExternalApplicants + this.previousSeasonData.totalNumberOfInternalApplicants;
-
+        this.previousSeasonData.totalNumberOfApplicants =
+          this.previousSeasonData.totalNumberOfExternalApplicants +
+          this.previousSeasonData.totalNumberOfInternalApplicants;
       });
   }
 
@@ -61,6 +66,6 @@ export class MainComponent implements OnInit {
   }
 
   navigateToGeneralNumbers() {
-    this.router.navigate(['/dashboard/general-numbers'], {replaceUrl: true});
+    this.router.navigate(['/dashboard/general-numbers'], { replaceUrl: true });
   }
 }
