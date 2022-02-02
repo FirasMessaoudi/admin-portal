@@ -12,11 +12,11 @@
       </button>
     </div>
   </div>
-  <div class="content__section" (click)="navigateToGeneralNumbers()">
+  <div class="content__section">
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
 
-      <div class="col mb-4">
+      <div class="col mb-4" [routerLink]="['/dashboard/general-numbers']">
         <div class="statistics h-100 p-3 border">
           <div class="flex-center-between">
             <div>
@@ -48,7 +48,8 @@
           </div>
         </div>
       </div>
-      <div class="col mb-4">
+
+      <div class="col mb-4" [routerLink]="['/dashboard/general-numbers']">
         <div class="statistics h-100 p-3 border">
           <div class="flex-center-between">
             <div>
@@ -80,7 +81,8 @@
           </div>
         </div>
       </div>
-      <div class="col mb-4">
+
+      <div class="col mb-4" [routerLink]="['/dashboard/cameras']">
         <div class="statistics h-100 p-3 border">
           <div class="flex-center-between">
             <div>
@@ -113,7 +115,8 @@
           </div>
         </div>
       </div>
-      <div class="col mb-4">
+
+      <div class="col mb-4" [routerLink]="['/dashboard/mobile']">
         <div class="statistics h-100 p-3 border">
           <div class="flex-center-between">
             <div>
@@ -151,7 +154,6 @@
 
     </div>
 
-
     <div class="row row-cols-1 row-cols-xl-2">
       <div class="col mt-4">
         <div class="h-100 p-3 border">
@@ -159,7 +161,7 @@
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">تقييم الخدمات</h5>
             </div>
-            <a href="/" class="text-dcc-primary">
+            <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
               المزيد عن التقييم
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
@@ -182,7 +184,7 @@
               </button>
             </div>
 
-            <a href="/" class="text-dcc-primary">
+            <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
               المزيد عن التقييم
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
@@ -196,7 +198,7 @@
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">عدد البلاغات</h5>
             </div>
-            <a href="/" class="text-dcc-primary">
+            <a [routerLink]="['/dashboard/incidents']" class="text-dcc-primary">
               المزيد عن البلاغات
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
@@ -211,7 +213,7 @@
               <h5 class="sts">عمليات البطاقة بالنسبة للأجهزة</h5>
             </div>
 
-            <a href="/" class="text-dcc-primary">
+            <a [routerLink]="['/dashboard/transactions']" class="text-dcc-primary">
               المزيد عن العمليات
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
