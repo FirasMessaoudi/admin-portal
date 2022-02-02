@@ -10,7 +10,7 @@ import {Lookup} from "@model/lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {CountryLookup} from "@model/country-lookup.model";
 import {Language} from "@model/enum/language.enum";
-import {ApplicantCard} from "@model/card.model";
+import {ApplicantCard} from "@model/applicant-card.model";
 import {EAuthority} from "@shared/model";
 import {NavigationService} from "@core/utilities/navigation.service";
 import {CardStatus} from "@model/enum/card-status.enum";

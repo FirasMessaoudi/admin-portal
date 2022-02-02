@@ -57,11 +57,11 @@ export class StaffStepTwoComponent implements OnInit, OnChanges {
     if (changes.printRequest) {
       this.printRequest = changes.printRequest.currentValue;
       if (this.printRequest && this.printRequest.printRequestCards.length > 0) {
-        this.printRequest.printRequestCards.forEach(element => {
-          this.cardService.findStaffCardById(element.cardId).subscribe(
-            res => element.staffCard = res,
-          )
-        })
+        // this.printRequest.printRequestCards.forEach(element => {
+        //   this.cardService.findStaffCardById(element.cardId).subscribe(
+        //     res => element.staffCard = res,
+        //   )
+        // })
       }
     }
   }

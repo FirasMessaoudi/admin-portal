@@ -1,15 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { I18nService } from '@dcc-commons-ng/services';
-import { AuthenticationService } from '@core/services';
-import { EAuthority, Page } from '@shared/model';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ApplicantCard } from '@model/card.model';
-import { CardService } from '@core/services/card/card.service';
-import { Subscription } from 'rxjs';
-import { Lookup } from '@model/lookup.model';
-import { LookupService } from '@core/utilities/lookup.service';
-import { NavigationService } from '@core/utilities/navigation.service';
-import { StaffPrintService } from '@core/services/printing/staff-print.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {I18nService} from '@dcc-commons-ng/services';
+import {AuthenticationService} from '@core/services';
+import {EAuthority, Page} from '@shared/model';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {ApplicantCard} from '@model/applicant-card.model';
+import {CardService} from '@core/services/card/card.service';
+import {Subscription} from 'rxjs';
+import {Lookup} from '@model/lookup.model';
+import {LookupService} from '@core/utilities/lookup.service';
+import {NavigationService} from '@core/utilities/navigation.service';
+import {StaffPrintService} from '@core/services/printing/staff-print.service';
 
 @Component({
   selector: 'app-card-list',

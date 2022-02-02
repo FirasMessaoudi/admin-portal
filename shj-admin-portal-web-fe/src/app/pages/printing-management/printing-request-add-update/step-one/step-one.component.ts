@@ -1,9 +1,9 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Subscription} from "rxjs";
 import {Page} from "@shared/model";
 import {CardService} from "@core/services";
-import {ApplicantCard} from "@model/card.model";
+import {ApplicantCard} from "@model/applicant-card.model";
 import {CountryLookup} from "@model/country-lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {Lookup} from "@model/lookup.model";
@@ -13,6 +13,7 @@ import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
 import {I18nService} from "@dcc-commons-ng/services";
 import {NavigationService} from "@core/utilities/navigation.service";
+import {Card} from "@model/card.model";
 
 @Component({
   selector: 'app-step-one',
@@ -50,6 +51,7 @@ export class StepOneComponent implements OnInit {
 
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
+  cardsToSend: Array<Card> = [];
 
   constructor(private modalService: NgbModal,
               private cardService: CardService,
@@ -202,7 +204,8 @@ export class StepOneComponent implements OnInit {
 
   create() {
     this.onChangeLoading.emit(true);
-    this.printService.preapre(this.addedCards.map(card => card.id)).subscribe(
+    this.mapApplicantCardToGeneralCard();
+    this.printService.preapre(this.cardsToSend).subscribe(
       result => {
         if (result.hasOwnProperty("errors") && result.errors) {
           console.log("Error");
@@ -210,9 +213,29 @@ export class StepOneComponent implements OnInit {
         } else {
           this.onChangeLoading.emit(false);
           this.onSetPrintRequest.emit(result);
+
         }
       }
     );
+  }
+
+  private mapApplicantCardToGeneralCard() {
+    this.cardsToSend = [];
+    this.addedCards.map(card => {
+      let cardVO: Card = new Card();
+      cardVO.id = card.id;
+      cardVO.fullNameAr = card?.applicantRitual?.applicant?.fullNameAr;
+      cardVO.fullNameEn = card?.applicantRitual?.applicant?.fullNameEn;
+      cardVO.digitalId = card?.applicantRitual?.applicant?.digitalIds[0]?.uin;
+      cardVO.idNumber = card?.applicantRitual?.applicant?.idNumber;
+      cardVO.passportNumber = card?.applicantRitual?.applicant?.passportNumber;
+      cardVO.hamlahPackageCode = card?.applicantRitual?.hamlahPackageCode;
+      cardVO.tafweejCode = card?.applicantRitual?.tafweejCode;
+      cardVO.nationalityCode = card?.applicantRitual?.applicant?.nationalityCode;
+      cardVO.referenceNumber = card.referenceNumber;
+      cardVO.statusCode = card.statusCode;
+      this.cardsToSend.push(cardVO);
+    })
   }
 
   addCards() {

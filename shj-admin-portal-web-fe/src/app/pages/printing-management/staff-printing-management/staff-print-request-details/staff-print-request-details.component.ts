@@ -69,9 +69,9 @@ export class StaffPrintRequestDetailsComponent implements OnInit {
             if (data && data.id) {
               this.isLoading = false;
               this.printRequest = data;
-              this.cardService.findStaffCardById(this.printRequest.printRequestCards[0].cardId).subscribe(
-                res => this.staffCard = res
-              );
+              // this.cardService.findStaffCardById(this.printRequest.printRequestCards[0].cardId).subscribe(
+              //   res => this.staffCard = res
+              // );
               this.printRequest.printRequestBatches.forEach(element => {
                 element.printRequestBatchCards.forEach(batch => {
                   this.cardService.findStaffCardById(batch.cardId).subscribe(

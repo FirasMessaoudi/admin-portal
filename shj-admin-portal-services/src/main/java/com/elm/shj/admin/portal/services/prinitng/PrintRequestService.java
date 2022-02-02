@@ -40,14 +40,14 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     private final CompanyStaffCardService staffCardService;
     private final PrintRequestBatchRepository printRequestBatchRepository;
 
-    public PrintRequestDto prepare(List<Long> cardsIds) {
+    public PrintRequestDto prepare(List<CardVO> cards) {
         // create and save the print request
         PrintRequestDto printRequest = new PrintRequestDto();
         printRequest.setReferenceNumber(generateReferenceNumber());
         printRequest.setStatusCode(EPrintRequestStatus.NEW.name());
-        cardsIds.forEach(id -> {
+        cards.forEach(card -> {
             PrintRequestCardDto printRequestCard = new PrintRequestCardDto();
-            printRequestCard.setCardId(id);
+            printRequestCard.setCard(card);
             printRequestCard.setPrintRequest(printRequest);
             printRequest.getPrintRequestCards().add(printRequestCard);
         });
@@ -76,18 +76,18 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
                     .stream().collect(Collectors.groupingBy(requestCard -> {
                         List<String> groupingByCriteriaList = new ArrayList<>();
                         if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
-                            ApplicantCardDto card = applicantCardService.findOne(requestCard.getCardId());
+
                             selectedBatchTypes.forEach(type -> {
                                 if (type.equals(EPrintBatchType.NATIONALITY)) {
-                                    groupingByCriteriaList.add(card.getApplicantRitual().getApplicant().getNationalityCode());
+                                    groupingByCriteriaList.add(requestCard.getCard().getNationalityCode());
                                 }
                                 //TODO ADD THE REMAINING CRITERIA
                             });
                         } else {
-                            CompanyStaffCardDto card = staffCardService.findOne(requestCard.getCardId());
+                            CompanyStaffCardDto card = staffCardService.findOne(requestCard.getCard().getId());
                             selectedBatchTypes.forEach(type -> {
                                 if (type.equals(EPrintBatchType.STAFF_NATIONALITY)) {
-                                    groupingByCriteriaList.add(String.valueOf(card.getCompanyStaffDigitalId().getCompanyStaff().getNationalityCode()));
+                                    groupingByCriteriaList.add(String.valueOf(requestCard.getCard().getNationalityCode()));
                                 }
                                 if (type.equals(EPrintBatchType.COMPANY)) {
                                     groupingByCriteriaList.add(String.valueOf(card.getCompanyRitualSeason().getCompany().getCode()));
@@ -105,13 +105,13 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
                         .batchTypeCodes(selectedBatchTypes.stream().map(EPrintBatchType::name).collect(Collectors.joining(",")))
                         // Save batching values as comma-separated string
                         .batchTypeValues(String.join(",", key))
-                        .printRequestBatchCards(value.stream().map(requestCard -> PrintRequestBatchCardDto.builder().cardId(requestCard.getCardId()).build()).collect(Collectors.toList())).build();
+                        .printRequestBatchCards(value.stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
                 printRequestBatch.setSequenceNumber(printRequestBatchRepository.maxSequenceNumber() + 1);
                 printRequest.getPrintRequestBatches().add(printRequestBatch);
             });
         } else {
             // No batching criteria selected save all printing cards as one batch
-            PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder().printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().cardId(requestCard.getCardId()).build()).collect(Collectors.toList())).build();
+            PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder().printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
             printRequest.getPrintRequestBatches().add(printRequestBatch);
         }
         // Return nested object
@@ -122,12 +122,10 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
 
         printRequest.getPrintRequestCards().forEach(requestCard -> {
             requestCard.setPrintRequest(printRequest);
-            requestCard.setCardId(requestCard.getCardId());
         });
         printRequest.getPrintRequestBatches().forEach(requestBatch -> {
             requestBatch.setPrintRequest(printRequest);
             requestBatch.getPrintRequestBatchCards().forEach(batchCard -> {
-                batchCard.setCardId(batchCard.getCardId());
                 batchCard.setPrintRequestBatch(requestBatch);
             });
         });

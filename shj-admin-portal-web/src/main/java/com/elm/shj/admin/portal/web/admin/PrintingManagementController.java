@@ -73,13 +73,13 @@ public class PrintingManagementController {
     /**
      * Add new print request
      *
-     * @param cardsIds TODO Complete documentation     * @return the created request
+     * @param cards TODO Complete documentation     * @return the created request
      */
     @PostMapping("/prepare")
-    @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
-    public PrintRequestDto prepare(@RequestBody List<Long> cardsIds) {
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
+    public PrintRequestDto prepare(@RequestBody List<CardVO> cards) {
         log.debug("Preparing print request");
-        return printRequestService.prepare(cardsIds);
+        return printRequestService.prepare(cards);
     }
 
     @PostMapping("/batch")

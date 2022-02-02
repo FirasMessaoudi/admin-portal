@@ -96,25 +96,25 @@
               <a *ngIf="canSeeCardDetails" [routerLink]="['/cards/details', batchCard?.card?.id]" target="_blank"
                  class="text-dcc-primary font-weight-bold">
                 <span
-                  *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}
-                  <br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}</span>
+                  *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.card?.fullNameAr}}
+                  <br>{{batchCard?.card?.fullNameEn}}</span>
                 <span
-                  *ngIf="currentLanguage.startsWith('en')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
-                  <br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}</span>
+                  *ngIf="currentLanguage.startsWith('en')">{{batchCard?.card?.fullNameEn}}
+                  <br>{{batchCard?.card?.fullNameAr}}</span>
               </a>
               <p *ngIf="!canSeeCardDetails" class=" font-weight-bold">
                 <span
-                  *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}
-                  <br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}</span>
+                  *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.card?.fullNameAr}}
+                  <br>{{batchCard?.card?.fullNameEn}}</span>
                 <span
-                  *ngIf="currentLanguage.startsWith('en')">{{batchCard?.card?.applicantRitual?.applicant?.fullNameEn}}
-                  <br>{{batchCard?.card?.applicantRitual?.applicant?.fullNameAr}}</span>
+                  *ngIf="currentLanguage.startsWith('en')">{{batchCard?.card?.fullNameEn}}
+                  <br>{{batchCard?.card?.fullNameAr}}</span>
               </p>
             </td>
-            <td class="ltr" style="width: 10%">{{batchCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
-            <td class="ltr" style="width: 10%">{{batchCard?.card?.applicantRitual?.applicant?.idNumber}}</td>
+            <td class="ltr" style="width: 10%">{{batchCard?.card?.digitalId}}</td>
+            <td class="ltr" style="width: 10%">{{batchCard?.card?.idNumber}}</td>
             <td class="ltr" style="width: 10%">{{batchCard?.card?.referenceNumber}}</td>
-            <td class="ltr" style="width: 10%">{{batchCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
+            <td class="ltr" style="width: 10%">{{batchCard?.card?.passportNumber}}</td>
             <td class="ltr"
                 style="width: 10%">{{lookupService().localizedLabel(cardStatuses, batchCard?.card?.statusCode)}}</td>
           </tr>

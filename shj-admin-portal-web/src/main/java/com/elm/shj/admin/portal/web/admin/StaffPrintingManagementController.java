@@ -3,8 +3,6 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
-import com.elm.shj.admin.portal.services.company.CompanyService;
-import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
@@ -34,8 +32,7 @@ public class StaffPrintingManagementController {
 
     private final PrintRequestService printRequestService;
     private final PrintRequestLiteService printRequestLiteService;
-    private final CompanyService companyService;
-    private final CompanyStaffService companyStaffService;
+
 
     /**
      * List paginated print requests.
@@ -79,14 +76,14 @@ public class StaffPrintingManagementController {
     /**
      * Add new print request
      *
-     * @param cardsIds TODO Complete documentation
+     * @param cards list of cards in this print request TODO Complete documentation
      * @return the created request
      */
     @PostMapping("/prepare")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
-    public PrintRequestDto prepare(@RequestBody List<Long> cardsIds) {
+    public PrintRequestDto prepare(@RequestBody List<CardVO> cards) {
         log.debug("Preparing print request");
-        return printRequestService.prepare(cardsIds);
+        return printRequestService.prepare(cards);
     }
 
     @PostMapping("/batch")
