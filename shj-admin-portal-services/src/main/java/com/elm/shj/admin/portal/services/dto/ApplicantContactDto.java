@@ -34,8 +34,10 @@ public class ApplicantContactDto implements Serializable {
     private long id;
     @JsonBackReference(value = "applicant")
     private ApplicantDto applicant;
+
     @JsonBackReference(value = "applicantRitual")
     private ApplicantRitualDto applicantRitual;
+
     @LanguageCodeList
     @CellIndex(index = 15)
     private String languageList;
@@ -81,6 +83,7 @@ public class ApplicantContactDto implements Serializable {
     @NullOrNotBlank(min = 3, max = 30)
     @CellIndex(index = 24)
     private String postalCode;
+
     private Date creationDate;
     private Date updateDate;
 }

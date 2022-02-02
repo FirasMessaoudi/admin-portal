@@ -121,4 +121,18 @@ public class DashboardController {
         return dashboardService.loadCompaniesWithMinApplicantsCountByHijriSeason((int) DateUtils.getCurrentHijriYear());
     }
 
+    @GetMapping("/general-numbers/max-camps")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CountVo> loadCampsWithMaxApplicantsCount() {
+        log.info("Load Camps with max applicants' count for current season.");
+        return dashboardService.loadCampsWithMaxApplicantsCountByHijriSeason((int) DateUtils.getCurrentHijriYear());
+    }
+
+    @GetMapping("/general-numbers/min-camps")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CountVo> loadCampsWithMinApplicantsCount() {
+        log.info("Load Camps with min applicants' count for current season.");
+        return dashboardService.loadCampsWithMinApplicantsCountByHijriSeason((int) DateUtils.getCurrentHijriYear());
+    }
+
 }
