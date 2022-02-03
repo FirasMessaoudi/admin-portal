@@ -197,14 +197,23 @@ public class DashboardService {
         long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents();
         List<CountVo> countIncidentByCompany = applicantIncidentRepository.countIncidentByCompany();
 
+        Date mostIncidentDate = new Date();
         Map<Long, Long> mostIncidentDateCount = allApplicantIncident.stream().collect(Collectors.groupingBy(d -> DateUtils.toHijri(d.getCreationDate()), Collectors.counting()));
-        Map.Entry<Long,Long> dateEntry = mostIncidentDateCount.entrySet().iterator().next();
-        Date mostIncidentDate = DateUtils.toGregorian(dateEntry.getKey());
+        if(!mostIncidentDateCount.isEmpty()){
+            if(mostIncidentDateCount.entrySet().iterator().hasNext() && null != mostIncidentDateCount.entrySet().iterator()) {
+                Map.Entry<Long, Long> dateEntry = mostIncidentDateCount.entrySet().iterator().next();
+                mostIncidentDate = DateUtils.toGregorian(dateEntry.getKey());
+            }
+        }
 
+        String mostIncidentsArea = "";
         Map<String, Long> incidentByArea = allApplicantIncident.stream().collect(Collectors.groupingBy(JpaApplicantIncident::getAreaCode, Collectors.counting()));
-        Map.Entry<String,Long> incidentByAreaMapEntry = incidentByArea.entrySet().iterator().next();
-        String mostIncidentsArea = incidentByAreaMapEntry.getKey();
-
+        if(!incidentByArea.isEmpty()) {
+            if(incidentByArea.entrySet().iterator().hasNext()) {
+                Map.Entry<String, Long> incidentByAreaMapEntry = incidentByArea.entrySet().iterator().next();
+                mostIncidentsArea = incidentByAreaMapEntry.getKey();
+            }
+        }
         Map<String, Long> incidentByType = allApplicantIncident.stream().collect(Collectors.groupingBy(JpaApplicantIncident::getTypeCode, Collectors.counting()));
         List<CountVo> countVoList = new ArrayList<CountVo>();
         for (Map.Entry<String,Long> entry : incidentByType.entrySet()){
