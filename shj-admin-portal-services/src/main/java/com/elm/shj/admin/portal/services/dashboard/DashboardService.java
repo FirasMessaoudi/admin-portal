@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.dashboard;
 
 import com.elm.shj.admin.portal.orm.entity.CountVo;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.dto.EGender;
 import com.elm.shj.admin.portal.services.dto.ERitualType;
@@ -190,16 +191,46 @@ public class DashboardService {
     }
 
     public DashboardIncidentNumbersVo loadDashboardIncidentNumbers() {
+        List<JpaApplicantIncident> allApplicantIncident = applicantIncidentRepository.findAll();
         long totalNumberOfRegisteredIncidents = applicantIncidentRepository.count();
         long totalNumberOfResolvedIncidents = applicantIncidentRepository.countAllResolvedIncidents();
         long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents();
         List<CountVo> countIncidentByCompany = applicantIncidentRepository.countIncidentByCompany();
 
+        Date mostIncidentDate = new Date();
+        Map<Long, Long> mostIncidentDateCount = allApplicantIncident.stream().collect(Collectors.groupingBy(d -> DateUtils.toHijri(d.getCreationDate()), Collectors.counting()));
+        if(!mostIncidentDateCount.isEmpty()){
+            if(mostIncidentDateCount.entrySet().iterator().hasNext() && null != mostIncidentDateCount.entrySet().iterator()) {
+                Map.Entry<Long, Long> dateEntry = mostIncidentDateCount.entrySet().iterator().next();
+                mostIncidentDate = DateUtils.toGregorian(dateEntry.getKey());
+            }
+        }
+
+        String mostIncidentsArea = "";
+        Map<String, Long> incidentByArea = allApplicantIncident.stream().collect(Collectors.groupingBy(JpaApplicantIncident::getAreaCode, Collectors.counting()));
+        if(!incidentByArea.isEmpty()) {
+            if(incidentByArea.entrySet().iterator().hasNext()) {
+                Map.Entry<String, Long> incidentByAreaMapEntry = incidentByArea.entrySet().iterator().next();
+                mostIncidentsArea = incidentByAreaMapEntry.getKey();
+            }
+        }
+        Map<String, Long> incidentByType = allApplicantIncident.stream().collect(Collectors.groupingBy(JpaApplicantIncident::getTypeCode, Collectors.counting()));
+        List<CountVo> countVoList = new ArrayList<CountVo>();
+        for (Map.Entry<String,Long> entry : incidentByType.entrySet()){
+            CountVo countVo = new CountVo();
+            countVo.setLabel(entry.getKey());
+            countVo.setCount(entry.getValue());
+            countVo.setPercentage(String.format("%.2f", (double) entry.getValue() / totalNumberOfRegisteredIncidents * 100));
+            countVoList.add(countVo);
+        }
         return DashboardIncidentNumbersVo.builder()
                 .totalNumberOfRegisteredIncidents(totalNumberOfRegisteredIncidents)
                 .totalNumberOfResolvedIncidents(totalNumberOfResolvedIncidents)
                 .totalNumberOfUnResolvedIncidents(totalNumberOfUnResolvedIncidents)
                 .countIncidentByCompany(countIncidentByCompany)
+                .countIncidentByTypes(countVoList)
+                .mostIncidentDate(mostIncidentDate)
+                .mostIncidentsArea(mostIncidentsArea)
                 .build();
     }
 

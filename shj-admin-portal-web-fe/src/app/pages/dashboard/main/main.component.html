@@ -12,11 +12,11 @@
       </button>
     </div>
   </div>
-  <div class="content__section" (click)="navigateToGeneralNumbers()">
+  <div class="content__section">
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
 
-      <div class="col mb-4">
+      <div class="col mb-4" [routerLink]="['/dashboard/general-numbers']">
         <div class="statistics h-100 p-3 border">
           <div class="flex-center-between">
             <div>
@@ -48,7 +48,8 @@
           </div>
         </div>
       </div>
-      <div class="col mb-4">
+
+      <div class="col mb-4" [routerLink]="['/dashboard/general-numbers']">
         <div class="statistics h-100 p-3 border">
           <div class="flex-center-between">
             <div>
@@ -80,20 +81,22 @@
           </div>
         </div>
       </div>
-      <div class="col mb-4">
+
+      <div class="col mb-4" [routerLink]="['/dashboard/cameras']">
         <div class="statistics h-100 p-3 border">
           <div class="flex-center-between">
             <div>
               <div class="sts-title">عدد الكاميرات</div>
               <div class="sts-number text-dark">
-                <ng9-odometer [number]="cctv"></ng9-odometer>
+                <ng9-odometer [number]="dashboardCameras.totalCount"></ng9-odometer>
               </div>
             </div>
             <svg-icon styleClass="sts-icon fa-w-18 display-4" icon="cctv"></svg-icon>
           </div>
 
           <p class="py-3">
-            <ngb-progressbar type="cctv" [value]="25" height="10px"></ngb-progressbar>
+            <ngb-progressbar type="cctv" [value]="dashboardCameras.activeCameras / dashboardCameras.totalCount * 100"
+                             height="10px"></ngb-progressbar>
           </p>
 
           <div class="flex-center-between mt-2">
@@ -101,31 +104,34 @@
               <svg-icon styleClass="text-cctv" icon="circle"></svg-icon>
               <div class="px-3">كاميرا تعمل</div>
             </div>
-            <div>911</div>
+            <div>{{dashboardCameras.activeCameras}}</div>
           </div>
           <div class="flex-center-between mt-2">
             <div class="d-flex">
               <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
               <div class="px-3">كاميرا لا تعمل</div>
             </div>
-            <div>71</div>
+            <div>{{dashboardCameras.inactiveCameras}}</div>
           </div>
         </div>
       </div>
-      <div class="col mb-4">
+
+      <div class="col mb-4" [routerLink]="['/dashboard/mobile']">
         <div class="statistics h-100 p-3 border">
           <div class="flex-center-between">
             <div>
               <div class="sts-title">تحميل التطبيق</div>
               <div class="sts-number text-dark">
-                <ng9-odometer [number]="currentSeasonData?.totalNumberOfUsersInstalledApp | number"></ng9-odometer>
+                <ng9-odometer [number]="currentSeasonData?.totalNumberOfUsersInstalledApp"></ng9-odometer>
               </div>
             </div>
             <svg-icon styleClass="sts-icon fa-w-10 display-4" icon="mobile-android-alt"></svg-icon>
           </div>
 
           <p class="py-3">
-            <ngb-progressbar type="appdownloads" [value]="currentSeasonData?.totalNumberOfLoggedInUsers/currentSeasonData?.totalNumberOfUsersInstalledApp*100" height="10px"></ngb-progressbar>
+            <ngb-progressbar type="appdownloads"
+                             [value]="currentSeasonData?.totalNumberOfLoggedInUsers / currentSeasonData?.totalNumberOfUsersInstalledApp * 100"
+                             height="10px"></ngb-progressbar>
           </p>
 
           <div class="flex-center-between mt-2">
@@ -148,7 +154,6 @@
 
     </div>
 
-
     <div class="row row-cols-1 row-cols-xl-2">
       <div class="col mt-4">
         <div class="h-100 p-3 border">
@@ -156,7 +161,7 @@
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">تقييم الخدمات</h5>
             </div>
-            <a href="/" class="text-dcc-primary">
+            <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
               المزيد عن التقييم
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
@@ -170,12 +175,16 @@
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">تقييم الشركات</h5>
               <button type="button" class="btn border mx-3">
-                اعلى تقييم
+                أعلى تقييم
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
+              <button type="button" class="btn border mx-3">
+                أقل تقييم
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
             </div>
 
-            <a href="/" class="text-dcc-primary">
+            <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
               المزيد عن التقييم
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
@@ -189,12 +198,33 @@
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">عدد البلاغات</h5>
             </div>
-            <a href="/" class="text-dcc-primary">
+            <a [routerLink]="['/dashboard/incidents']" class="text-dcc-primary">
               المزيد عن البلاغات
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
           </div>
-          <div class="py-3">Content</div>
+          <div class="py-3">
+            <canvas #incidentCanvas baseChart *ngIf="incidents != undefined"
+                    [datasets]="incidentDoughnutChartData"
+                    [labels]="incidentDoughnutChartLabels"
+                    [chartType]="incidentDoughnutChartType"
+                    [plugins]="incidentDoughnutChartPlugins"
+                    [colors]="chartsConfig.doughnutChartColors"
+                    [options]="incidentDoughnutChartOptions"
+            >
+            </canvas>
+            <div>
+              <p>
+                <b class="text-dark ml-3">{{mostIncidentsArea}}</b> <span>اكثر المناطق التي يوجد بها بلاغات هي</span>
+              </p>
+
+              <p>
+                <span>اكثر يوم تم تسجيل به اكبر عدد من البلاغات هو </span>
+                <b class="text-dark ml-3">{{mostIncidentDate}}</b>
+              </p>
+
+            </div>
+          </div>
         </div>
       </div>
       <div class="col mt-4">
@@ -204,7 +234,7 @@
               <h5 class="sts">عمليات البطاقة بالنسبة للأجهزة</h5>
             </div>
 
-            <a href="/" class="text-dcc-primary">
+            <a [routerLink]="['/dashboard/transactions']" class="text-dcc-primary">
               المزيد عن العمليات
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>

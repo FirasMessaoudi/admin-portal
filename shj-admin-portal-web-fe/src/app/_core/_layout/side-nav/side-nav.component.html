@@ -30,7 +30,7 @@
       </a>
       <div *ngIf="link.submenu" class="submenu_items" [ngbCollapse]="link.isCollapsed">
         <span *ngFor="let menuItem of link.menuItems">
-        <a class="item submenu_item pointer border-0 px-md-5" *ngIf="menuItem.display"
+        <a class="item submenu_item pointer border-0 pl-md-5" *ngIf="menuItem.display"
            routerLinkActive="active" routerLink="{{ menuItem.routerLink }}">
           {{ menuItem.title | translate }}
 
