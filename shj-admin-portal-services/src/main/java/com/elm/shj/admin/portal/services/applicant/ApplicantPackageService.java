@@ -113,6 +113,10 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
         List<ApplicantPackageTransportationDto> applicantPackageTransportations = new ArrayList<>();
 
         RitualPackageDto ritualPackage = ritualPackageService.findRitualPackageByReferenceNumber(packageReferenceNumber);
+        if (ritualPackage == null) {
+            log.error("Unable to find ritual package with this {} package reference number.", packageReferenceNumber);
+            return null;
+        }
 
         // initiate applicant package
         ApplicantPackageDto applicantPackage = ApplicantPackageDto.builder().applicantUin(applicantUin)
