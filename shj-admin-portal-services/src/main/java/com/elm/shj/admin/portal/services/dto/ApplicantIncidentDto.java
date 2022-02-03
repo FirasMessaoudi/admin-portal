@@ -40,4 +40,5 @@ public class ApplicantIncidentDto implements Serializable {
     private List<IncidentAttachmentDto> incidentAttachments;
     private Date creationDate;
     private Date updateDate;
+    private String areaCode;
 }
