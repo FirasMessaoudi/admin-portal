@@ -1253,3 +1253,6 @@ GO
 
 ALTER TABLE shc_portal.shc_applicant ADD mobile_logged_in bit NULL
 GO
+
+ALTER TABLE shc_portal.shc_applicant_incident ADD area_code varchar(20)
+GO
