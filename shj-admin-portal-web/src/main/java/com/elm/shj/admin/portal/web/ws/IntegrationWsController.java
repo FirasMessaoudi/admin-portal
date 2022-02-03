@@ -263,6 +263,7 @@ public class IntegrationWsController {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getUin()).build()).build());
         }
+        applicantService.updatePreferredLanguage(command.getUin(),"en");
         int updatedRowsCount = applicantService.updateApplicantContacts(databaseApplicant.get().getId(), command);
         if (updatedRowsCount < 1) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
