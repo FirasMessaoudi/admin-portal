@@ -58,20 +58,20 @@
     <ng-container *ngIf="!isLoading">
       <tr
         *ngFor="let printRequestCard of printRequest?.printRequestCards | slice: (currentPage * pageSize) - pageSize :currentPage * pageSize">
-        <td> {{printRequestCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}}
-          {{printRequestCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</td>
-        <td>{{printRequestCard?.staffCard?.companyStaffDigitalId?.suin}}</td>
-        <td>{{printRequestCard?.staffCard?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
-        <td class="ltr">{{printRequestCard?.staffCard?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
+        <td> {{printRequestCard?.card?.fullNameAr}}
+          {{printRequestCard?.card?.fullNameEn}}</td>
+        <td>{{printRequestCard?.card?.digitalId}}</td>
+        <td>{{printRequestCard?.card?.idNumber}}</td>
+        <td class="ltr">{{printRequestCard?.card?.passportNumber}}</td>
 
         <td></td>
-        <td>{{printRequestCard?.card?.applicantRitual?.hamlahPackageCode}}</td>
-        <td>{{printRequestCard?.card?.applicantRitual?.tafweejCode}}</td>
+        <td>{{printRequestCard?.card?.hamlahPackageCode}}</td>
+        <td>{{printRequestCard?.card?.tafweejCode}}</td>
         <td>{{
-          printRequestCard?.staffCard?.companyStaffDigitalId?.companyStaff?.nationalityCode
+          printRequestCard?.card?.nationalityCode
             ? lookupService().localizedLabel(
-              countries,
-              printRequestCard?.staffCard?.companyStaffDigitalId?.companyStaff?.nationalityCode?.toUpperCase()
+            countries,
+            printRequestCard?.card?.nationalityCode?.toUpperCase()
             ) : ""
           }}</td>
         <td></td>

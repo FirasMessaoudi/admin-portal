@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
@@ -17,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Main controller for staff printing management pages
@@ -32,7 +34,7 @@ public class StaffPrintingManagementController {
 
     private final PrintRequestService printRequestService;
     private final PrintRequestLiteService printRequestLiteService;
-
+    private final CompanyStaffCardService companyStaffCardService;
 
     /**
      * List paginated print requests.
@@ -70,8 +72,24 @@ public class StaffPrintingManagementController {
     @PreAuthorize("hasAuthority('" + AuthorityConstants.VIEW_PRINTING_REQUEST_DETAILS + "')")
     public PrintRequestDto find(@PathVariable long printRequestId) {
         log.debug("Handler for {}", "Find Print Request");
-        return printRequestService.findOne(printRequestId);
+        PrintRequestDto printRequestDto = printRequestService.findOne(printRequestId);
+        printRequestDto.getPrintRequestBatches().stream().forEach(batch -> {
+            // will be called for each print request batch, get all applicant cards for that batch
+            List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
+            // to get applicant cards based on the ids list from DB by JPQL Query
+            List<CompanyStaffCardDto> staffCards = companyStaffCardService.findStaffCards(cardIds);
+            // map between applicant card and batch card
+            batch.getPrintRequestBatchCards().stream().forEach(batchCard -> {
+                long cardId = batchCard.getCardId();
+                //get the applicant card by id through findAny on stream of applicantCards
+                staffCards.stream().filter(staffCard -> staffCard.getId() == cardId).findAny()
+                        .ifPresent(staffCardDto -> batchCard.setCard(mapStaffCardToCardVO(staffCardDto)));
+                //map applicantCard to CardVO and attach it to batch card like below
+            });
+        });
+        return printRequestDto;
     }
+
 
     /**
      * Add new print request
@@ -113,5 +131,14 @@ public class StaffPrintingManagementController {
         return printRequestLiteService.findByFilter(criteria, EPrintingRequestTarget.STAFF.name(), pageable);
     }
 
-
+    private CardVO mapStaffCardToCardVO(CompanyStaffCardDto companyStaffCardDto) {
+        return CardVO.builder().digitalId(companyStaffCardDto.getCompanyStaffDigitalId().getSuin())
+                .id(companyStaffCardDto.getId())
+                .passportNumber(companyStaffCardDto.getCompanyStaffDigitalId().getCompanyStaff().getPassportNumber())
+                .fullNameAr(companyStaffCardDto.getCompanyStaffDigitalId().getCompanyStaff().getFullNameAr())
+                .fullNameEn(companyStaffCardDto.getCompanyStaffDigitalId().getCompanyStaff().getFullNameEn())
+                .idNumber(companyStaffCardDto.getCompanyStaffDigitalId().getCompanyStaff().getIdNumber())
+                .referenceNumber(companyStaffCardDto.getReferenceNumber())
+                .statusCode(companyStaffCardDto.getStatusCode()).build();
+    }
 }

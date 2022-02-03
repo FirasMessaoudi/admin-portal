@@ -26,5 +26,6 @@ public class PrintRequestCardDto implements Serializable {
     @JsonBackReference
     private PrintRequestDto printRequest;
     private CardVO card;
+    private long cardId;
     private Date creationDate;
 }

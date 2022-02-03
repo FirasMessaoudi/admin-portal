@@ -69,16 +69,7 @@ export class StaffPrintRequestDetailsComponent implements OnInit {
             if (data && data.id) {
               this.isLoading = false;
               this.printRequest = data;
-              // this.cardService.findStaffCardById(this.printRequest.printRequestCards[0].cardId).subscribe(
-              //   res => this.staffCard = res
-              // );
-              this.printRequest.printRequestBatches.forEach(element => {
-                element.printRequestBatchCards.forEach(batch => {
-                  this.cardService.findStaffCardById(batch.cardId).subscribe(
-                    res => batch.staffCard = res
-                  )
-                })
-              })
+
             } else {
               this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.printRequestId}),
                 this.translate.instant('general.dialog_error_title'));
@@ -92,9 +83,9 @@ export class StaffPrintRequestDetailsComponent implements OnInit {
         }
       },
       error => {
-      },
-      () => {
-
+        this.toastr.error(this.translate.instant('general.route_id_param_not_found'),
+          this.translate.instant('general.dialog_error_title'));
+        this.goToList();
       }
     );
   }

@@ -52,19 +52,20 @@ export class StaffStepThreeComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.printRequest) {
-      this.printRequest = changes.printRequest.currentValue;
-      console.log(this.printRequest);
-      if (this.printRequest && this.printRequest.printRequestBatches.length > 0) {
-        this.printRequest.printRequestBatches.forEach(element => {
-          element.printRequestBatchCards.forEach(batch => {
-            this.cardService.findStaffCardById(batch.cardId).subscribe(
-              res => batch.staffCard = res
-            )
-          })
-        })
-      }
-    }
+    //TODO: check why it is needed
+    // if (changes.printRequest) {
+    //   this.printRequest = changes.printRequest.currentValue;
+    //   console.log(this.printRequest);
+    //   if (this.printRequest && this.printRequest.printRequestBatches.length > 0) {
+    //     this.printRequest.printRequestBatches.forEach(element => {
+    //       element.printRequestBatchCards.forEach(batch => {
+    //         this.cardService.findStaffCardById(batch.cardId).subscribe(
+    //           res => batch.staffCard = res
+    //         )
+    //       })
+    //     })
+    //   }
+    // }
   }
 
   get canSeeCardDetails(): boolean {

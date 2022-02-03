@@ -63,4 +63,6 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
 
     JpaCompanyStaffCard findByIdAndStatusCodeNot(long id, String statusCode);
 
+    @Query("SELECT staffCard FROM JpaCompanyStaffCard staffCard WHERE   staffCard.id IN :cardsIds ")
+    List<JpaCompanyStaffCard> findStaffCards(@Param("cardsIds") List<Long> cardsIds);
 }

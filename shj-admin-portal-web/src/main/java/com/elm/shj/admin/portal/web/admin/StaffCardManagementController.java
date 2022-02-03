@@ -60,7 +60,7 @@ public class StaffCardManagementController {
         return companyStaffCardService.searchStaffCards(searchCriteria, pageable);
     }
 
-    @GetMapping("/list/ready-to-print/all/{uin}/{companyCode}//{nationality}/{seasonYear}/{ritualCode}")
+    @GetMapping("/list/ready-to-print/all/{uin}/{companyCode}/{nationality}/{seasonYear}/{ritualCode}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
     public List<CompanyStaffCardDto> listReadyToPrintCards(@PathVariable String uin, @PathVariable String companyCode,
                                                            @PathVariable String nationality, @PathVariable int seasonYear, @PathVariable String ritualCode, @RequestParam List<Long> excludedCardsIds,

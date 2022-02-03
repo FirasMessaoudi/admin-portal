@@ -13,6 +13,7 @@ import {I18nService} from "@dcc-commons-ng/services";
 import {NavigationService} from "@core/utilities/navigation.service";
 import {CompanyLite} from "@model/company-lite.model";
 import {StaffPrintService} from "@core/services/printing/staff-print.service";
+import {Card} from "@model/card.model";
 
 @Component({
   selector: 'app-staff-step-one',
@@ -40,7 +41,7 @@ export class StaffStepOneComponent implements OnInit {
   seasonYear: number;
   ritualType: string;
   ritualForm: FormGroup;
-
+  cardsToSend: Array<Card> = [];
 
   @Output()
   public onAddCards: EventEmitter<any[]> = new EventEmitter<any[]>();
@@ -58,6 +59,7 @@ export class StaffStepOneComponent implements OnInit {
   private searchSubscription: Subscription;
   ritualTypes: Lookup[] = [];
   ritualSeasons: any[] = [];
+
 
   constructor(private modalService: NgbModal,
               private cardService: CardService,
@@ -121,7 +123,7 @@ export class StaffStepOneComponent implements OnInit {
     this.ritualForm = this.formBuilder.group({
       seasonYear: [null, Validators.required],
       ritualCode: [null, Validators.required],
-      description: [null]
+      description: [""]
     });
 
 
@@ -227,19 +229,37 @@ export class StaffStepOneComponent implements OnInit {
 
   create() {
     this.onChangeLoading.emit(true);
-    this.printService.preapre(this.addedCards.map(card => card.id)).subscribe(
+    this.mapApplicantCardToGeneralCard();
+    this.printService.preapre(this.cardsToSend).subscribe(
       result => {
         if (result.hasOwnProperty("errors") && result.errors) {
           console.log("Error");
           this.toastr.warning(this.translate.instant("printing-management.dialog_confirm_request_error_text"), this.translate.instant("general.dialog_error_title"));
         } else {
           this.onChangeLoading.emit(false);
-          let arrayOfDesc = this.ritualForm.value.description.split("\n");
+          let arrayOfDesc = this.ritualForm.value.description?.split("\n");
           result.description = arrayOfDesc.join(' ');
           this.onSetPrintRequest.emit(result);
         }
       }
     );
+  }
+
+  private mapApplicantCardToGeneralCard() {
+    this.cardsToSend = [];
+    this.addedCards.map(card => {
+      let cardVO: Card = new Card();
+      cardVO.id = card.id;
+      cardVO.fullNameAr = card?.companyStaffDigitalId?.companyStaff?.fullNameAr;
+      cardVO.fullNameEn = card?.companyStaffDigitalId?.companyStaff?.fullNameEn;
+      cardVO.digitalId = card?.companyStaffDigitalId?.suin;
+      cardVO.idNumber = card?.companyStaffDigitalId?.companyStaff?.idNumber;
+      cardVO.passportNumber = card?.companyStaffDigitalId?.companyStaff?.passportNumber;
+      cardVO.nationalityCode = card?.companyStaffDigitalId?.companyStaff?.countryCode;
+      cardVO.referenceNumber = card.referenceNumber;
+      cardVO.statusCode = card.statusCode;
+      this.cardsToSend.push(cardVO);
+    })
   }
 
   addCards() {

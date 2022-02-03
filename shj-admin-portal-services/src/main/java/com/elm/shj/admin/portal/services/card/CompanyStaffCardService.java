@@ -180,4 +180,8 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
         return findOne(cardId);
     }
 
+    public List<CompanyStaffCardDto> findStaffCards(List<Long> cardIds) {
+        log.debug("Find cards by ids  ...");
+        return mapList(companyStaffCardRepository.findStaffCards(cardIds));
+    }
 }
