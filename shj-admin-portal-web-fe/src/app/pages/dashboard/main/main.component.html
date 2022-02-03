@@ -203,7 +203,28 @@
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
           </div>
-          <div class="py-3">Content</div>
+          <div class="py-3">
+            <canvas #incidentCanvas baseChart *ngIf="incidents != undefined"
+                    [datasets]="incidentDoughnutChartData"
+                    [labels]="incidentDoughnutChartLabels"
+                    [chartType]="incidentDoughnutChartType"
+                    [plugins]="incidentDoughnutChartPlugins"
+                    [colors]="chartsConfig.doughnutChartColors"
+                    [options]="incidentDoughnutChartOptions"
+            >
+            </canvas>
+            <div>
+              <p>
+                <b class="text-dark ml-3">{{mostIncidentsArea}}</b> <span>اكثر المناطق التي يوجد بها بلاغات هي</span>
+              </p>
+
+              <p>
+                <span>اكثر يوم تم تسجيل به اكبر عدد من البلاغات هو </span>
+                <b class="text-dark ml-3">{{mostIncidentDate}}</b>
+              </p>
+
+            </div>
+          </div>
         </div>
       </div>
       <div class="col mt-4">

@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.dashboard;
 
 import com.elm.shj.admin.portal.orm.entity.CountVo;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.dto.EGender;
 import com.elm.shj.admin.portal.services.dto.ERitualType;
@@ -190,16 +191,37 @@ public class DashboardService {
     }
 
     public DashboardIncidentNumbersVo loadDashboardIncidentNumbers() {
+        List<JpaApplicantIncident> allApplicantIncident = applicantIncidentRepository.findAll();
         long totalNumberOfRegisteredIncidents = applicantIncidentRepository.count();
         long totalNumberOfResolvedIncidents = applicantIncidentRepository.countAllResolvedIncidents();
         long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents();
         List<CountVo> countIncidentByCompany = applicantIncidentRepository.countIncidentByCompany();
 
+        Map<Long, Long> mostIncidentDateCount = allApplicantIncident.stream().collect(Collectors.groupingBy(d -> DateUtils.toHijri(d.getCreationDate()), Collectors.counting()));
+        Map.Entry<Long,Long> dateEntry = mostIncidentDateCount.entrySet().iterator().next();
+        Date mostIncidentDate = DateUtils.toGregorian(dateEntry.getKey());
+
+        Map<String, Long> incidentByArea = allApplicantIncident.stream().collect(Collectors.groupingBy(JpaApplicantIncident::getAreaCode, Collectors.counting()));
+        Map.Entry<String,Long> incidentByAreaMapEntry = incidentByArea.entrySet().iterator().next();
+        String mostIncidentsArea = incidentByAreaMapEntry.getKey();
+
+        Map<String, Long> incidentByType = allApplicantIncident.stream().collect(Collectors.groupingBy(JpaApplicantIncident::getTypeCode, Collectors.counting()));
+        List<CountVo> countVoList = new ArrayList<CountVo>();
+        for (Map.Entry<String,Long> entry : incidentByType.entrySet()){
+            CountVo countVo = new CountVo();
+            countVo.setLabel(entry.getKey());
+            countVo.setCount(entry.getValue());
+            countVo.setPercentage(String.format("%.2f", (double) entry.getValue() / totalNumberOfRegisteredIncidents * 100));
+            countVoList.add(countVo);
+        }
         return DashboardIncidentNumbersVo.builder()
                 .totalNumberOfRegisteredIncidents(totalNumberOfRegisteredIncidents)
                 .totalNumberOfResolvedIncidents(totalNumberOfResolvedIncidents)
                 .totalNumberOfUnResolvedIncidents(totalNumberOfUnResolvedIncidents)
                 .countIncidentByCompany(countIncidentByCompany)
+                .countIncidentByTypes(countVoList)
+                .mostIncidentDate(mostIncidentDate)
+                .mostIncidentsArea(mostIncidentsArea)
                 .build();
     }
 

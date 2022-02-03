@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.CountVo;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,4 +30,7 @@ public class DashboardIncidentNumbersVo implements Serializable {
     private long totalNumberOfResolvedIncidents;
     private long totalNumberOfUnResolvedIncidents;
     private List<CountVo> countIncidentByCompany;
+    private List<CountVo> countIncidentByTypes;
+    private Date mostIncidentDate;
+    private String mostIncidentsArea;
 }

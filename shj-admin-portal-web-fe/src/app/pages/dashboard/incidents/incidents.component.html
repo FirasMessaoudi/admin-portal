@@ -38,24 +38,29 @@
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">عدد البلاغات</h5>
             </div>
-            <a href="/" class="text-dcc-primary">
-              المزيد عن البلاغات
-              <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
-            </a>
+
           </div>
           <div class="py-3">
-            <div>Content</div>
+            <canvas #incidentCanvas baseChart *ngIf="incidents != undefined"
+                    [datasets]="incidentDoughnutChartData"
+                    [labels]="incidentDoughnutChartLabels"
+                    [chartType]="incidentDoughnutChartType"
+                    [plugins]="incidentDoughnutChartPlugins"
+                    [colors]="chartsConfig.doughnutChartColors"
+                    [options]="incidentDoughnutChartOptions"
+            >
+            </canvas>
             <div>
               <p>
-                <span>اكثر المناطق التي يوجد بها بلاغات هي</span>
-                <b class="text-dark ml-3">مخيمات منى</b>
+                <b class="text-dark ml-3">{{mostIncidentsArea}}</b> <span>اكثر المناطق التي يوجد بها بلاغات هي</span>
+
               </p>
-  
+
               <p>
-                <span>اكثر يوم تم تسجيل به اكبر عدد من البلاغات هو</span>
-                <b class="text-dark ml-3">11 ذو الحجة 1447</b>
+                <span>اكثر يوم تم تسجيل به اكبر عدد من البلاغات هو </span>
+                <b class="text-dark ml-3">{{mostIncidentDate}}</b>
               </p>
-  
+
             </div>
           </div>
         </div>
@@ -67,7 +72,16 @@
               <h5 class="sts">أنواع البلاغات</h5>
             </div>
           </div>
-          <div class="py-3">Content</div>
+
+          <canvas #incidentTypeCanvas baseChart *ngIf="incidents != undefined"
+                  [datasets]="[{data: incidentTypeCounts}]"
+                  [labels]="incidentTypeLabels"
+                  [chartType]="incidentDoughnutChartType"
+                  [plugins]="incidentTypeDoughnutChartPlugins"
+                  [colors]="chartsConfig.doughnutChartColors"
+                  [options]="incidentTypeDoughnutChartOptions"
+          >
+          </canvas>
         </div>
       </div>
       <div class="col-12 mt-4">
@@ -77,7 +91,16 @@
               <h5 class="sts">توزيع البلاغات على الشركات</h5>
             </div>
           </div>
-          <div class="py-3">Content</div>
+            <div class="w-100">
+            <canvas baseChart #companiesByApplicantCount
+                      [datasets]="[{data: companyCounts, maxBarThickness: 15}]"
+                      [options]="chartsConfig.barChartOptions"
+                      [labels]="companyLabels"
+                      [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#b1bdd2'}]"
+                      chartType="bar" height="100"></canvas>
+            <div class="text-center">
+            </div>
+            </div>
         </div>
       </div>
       <div class="col-12 mt-4">
