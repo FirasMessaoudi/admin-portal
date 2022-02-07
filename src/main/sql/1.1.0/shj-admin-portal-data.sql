@@ -475,3 +475,8 @@ INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date
 VALUES (18, 'JABAL_ALRAHMA', 'ar', N'جبل الرحمة', GETDATE());
 SET IDENTITY_INSERT shc_portal.shc_housing_site_lk OFF;
 GO
+
+UPDATE shc_portal.shc_applicant_incident
+SET shc_applicant_incident.area_code = 'ARAFAT'
+WHERE id > 0;
+GO
