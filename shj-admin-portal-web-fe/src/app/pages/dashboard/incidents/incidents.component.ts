@@ -1,13 +1,14 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {AfterViewInit, Component, Inject, OnChanges, OnInit, Renderer2, SimpleChanges, ViewChild} from '@angular/core';
 import {Label, PluginServiceGlobalRegistrationAndOptions, SingleDataSet} from "ng2-charts";
 import {ChartOptions, ChartType} from "chart.js";
 import {ChartsConfig} from "@pages/dashboard/charts.config";
 import {DashboardService} from "@core/services";
+import {GoogleMap} from '@angular/google-maps';
 import {LookupService} from "@core/utilities/lookup.service";
 import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
 import {CountVo} from "@model/countVo.model";
-import {DatePipe} from "@angular/common";
+import {DatePipe, DOCUMENT} from "@angular/common";
 import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {DashboardIncidentNumbersVo} from "@model/dashboardIncidentNumbersVo.model";
@@ -19,7 +20,7 @@ const FONTS: string = '"Elm-font", sans-serif';
   templateUrl: './incidents.component.html',
   styleUrls: ['./incidents.component.scss']
 })
-export class IncidentsComponent implements OnInit  {
+export class IncidentsComponent implements OnInit, AfterViewInit  {
   private incidentSubscription: Subscription;
   incidents: DashboardIncidentNumbersVo;
   incidentTypeList: Lookup[];
@@ -33,8 +34,19 @@ export class IncidentsComponent implements OnInit  {
   incidentTypeCounts: Array<any>;
   companyLabels: Array<any>;
   companyCounts: Array<any>;
+  MAP_ZOOM_OUT = 10;
+  MAP_ZOOM_IN = 25;
+  mapIsReady = false;
   mostIncidentDate: any;
   mostIncidentsArea: string;
+  mapOptions: google.maps.MapOptions = {
+    center: {lat: 21.423461874376475, lng: 39.825553299746616},
+    zoom: this.MAP_ZOOM_OUT,
+    disableDefaultUI: true,
+    zoomControl: true,
+    scrollwheel: true,
+  }
+  @ViewChild(GoogleMap, { static: false }) map: GoogleMap;
   public incidentDoughnutChartOptions: ChartOptions = {
     responsive: true,
     cutoutPercentage: 70,
@@ -51,11 +63,17 @@ export class IncidentsComponent implements OnInit  {
   constructor(private dashboardService: DashboardService,
               private lookupService: LookupService,
               private dateFormatterService: DateFormatterService,
-              private i18nService: I18nService) {
+              private i18nService: I18nService,
+              @Inject(DOCUMENT) private document: Document,
+              private renderer2: Renderer2) {
 
+  }
+  ngAfterViewInit(): void {
+    throw new Error('Method not implemented.');
   }
 
   ngOnInit() {
+    this.loadMapkey();
     this.loadLookups();
     this.chartsConfig.barChartOptions = {
       ...this.chartsConfig.barChartOptions,
@@ -105,7 +123,6 @@ export class IncidentsComponent implements OnInit  {
       this.mostIncidentDate = this.formatHijriDate(this.incidents.mostIncidentDate);
       this.mostIncidentsArea = this.incidents.mostIncidentsArea;
     })
-
   }
 
   setIncidentCenterTitle(title:string, countText:number) {
@@ -169,6 +186,30 @@ export class IncidentsComponent implements OnInit  {
     this.dashboardService.findIncidentStatus().subscribe(
       data => this.incidentStatusList = data
     )
+  }
+
+  async loadMapkey() {
+    this.lookupService.loadGoogleMapsApiKey().subscribe(result => {
+      this.loadScript(result).then(() => {
+        this.mapIsReady = true;
+        console.log(JSON.stringify(this.map.getCenter()))
+
+      });
+    });
+  }
+
+  private loadScript(key) {
+    return new Promise((resolve, reject) => {
+      const script = this.renderer2.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'https://maps.googleapis.com/maps/api/js?key=' + key;
+      script.text = ``;
+      script.async = true;
+      script.defer = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      this.renderer2.appendChild(this.document.body, script);
+    })
   }
 
   formatHijriDate(date: Date): string {

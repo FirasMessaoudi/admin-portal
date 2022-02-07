@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.dashboard;
 
 import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
+import com.elm.shj.admin.portal.orm.entity.LocationVo;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.dto.EGender;
 import com.elm.shj.admin.portal.services.dto.ERitualType;
@@ -294,5 +295,9 @@ public class DashboardService {
 
     public List<CountVo> loadCampsWithMinApplicantsCountByHijriSeason(int currentHijriYear) {
         return packageHousingRepository.findCampsWithMinApplicantsByHijriSeason(currentHijriYear, PageRequest.of(0, 15)).getContent();
+    }
+
+    public List<LocationVo> getIncidentsLocationsFromCurrentSeason() {
+        return applicantIncidentRepository.getIncidentsLocationsBySeasonAndRitualType((int) DateUtils.getCurrentHijriYear(), List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
     }
 }

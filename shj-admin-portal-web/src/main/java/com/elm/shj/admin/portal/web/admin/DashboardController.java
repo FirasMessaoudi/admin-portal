@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.orm.entity.CountVo;
+import com.elm.shj.admin.portal.orm.entity.LocationVo;
 import com.elm.shj.admin.portal.services.dashboard.DashboardGeneralNumbersVo;
 import com.elm.shj.admin.portal.services.dashboard.DashboardIncidentNumbersVo;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
@@ -133,6 +134,13 @@ public class DashboardController {
     public List<CountVo> loadCampsWithMinApplicantsCount() {
         log.info("Load Camps with min applicants' count for current season.");
         return dashboardService.loadCampsWithMinApplicantsCountByHijriSeason((int) DateUtils.getCurrentHijriYear());
+    }
+
+    @GetMapping("/incidents-locations")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<LocationVo> loadIncidentsLocationsFromCurrentSeasons() {
+        log.info("Handling loadDashboardGeneralNumbers endpoint.");
+        return dashboardService.getIncidentsLocationsFromCurrentSeason();
     }
 
 }
