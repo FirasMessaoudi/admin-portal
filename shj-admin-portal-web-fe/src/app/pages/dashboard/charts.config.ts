@@ -81,14 +81,29 @@ export class ChartsConfig {
     },
     scales: {
       xAxes: [{
-        stacked: true
-      }],
-      yAxes: [{
         stacked: true,
-        ticks: {
-          beginAtZero: true
-        }
-      }]
+        gridLines: {
+          color: 'rgba(0, 0, 0, 0)',
+        },
+      }],
+      yAxes: [
+        {
+          stacked: true,
+          gridLines: {
+            borderDash: [8, 6],
+            color: '#F3F5F2',
+          },
+          ticks: {
+            fontFamily: FONTS,
+            beginAtZero: true,
+            callback: function (value) {
+              if (value % 1 === 0) {
+                return value;
+              }
+            },
+          },
+        },
+      ],
     }
   };
   pieChartColors: Color[] = [
