@@ -121,4 +121,22 @@ export class DashboardService {
     return this.http.get<any>('/core/api/lookup/incident-status/list');
   }
 
+  /**
+   * Load companies with max incident count
+   */
+  loadCompaniesWithMaxIncidentCount(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/incident-numbers/max-companies'
+    );
+  }
+
+  /**
+   * Load companies with min incident count
+   */
+  loadCompaniesWithMinIncidentCount(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/incident-numbers/min-companies'
+    );
+  }
+
 }

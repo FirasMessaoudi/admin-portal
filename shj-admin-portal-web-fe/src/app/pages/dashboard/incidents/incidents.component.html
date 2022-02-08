@@ -89,6 +89,15 @@
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">توزيع البلاغات على الشركات</h5>
+              <button *ngIf="minCompanies" type="button" class="btn border mx-3" (click)="loadMaxCompanies()">
+                أقل الشركات
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
+              <button *ngIf="!minCompanies" type="button" class="btn border mx-3" (click)="loadMinCompanies()">
+                أعلى الشركات
+                <!--TODO Rotate icon-->
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
             </div>
           </div>
             <div class="w-100">

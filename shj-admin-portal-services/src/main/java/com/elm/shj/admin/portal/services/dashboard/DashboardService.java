@@ -40,6 +40,9 @@ public class DashboardService {
     @Value("${applicants.counter.ages.range}")
     private String agesRange;
 
+    @Value("${dashboard.incident.company.chart.size}")
+    private int maxCompanyChartSize;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ApplicantRepository applicantRepository;
@@ -196,7 +199,6 @@ public class DashboardService {
         long totalNumberOfRegisteredIncidents = applicantIncidentRepository.count();
         long totalNumberOfResolvedIncidents = applicantIncidentRepository.countAllResolvedIncidents();
         long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents();
-        List<CountVo> countIncidentByCompany = applicantIncidentRepository.countIncidentByCompany();
 
         Date mostIncidentDate = new Date();
         Map<Long, Long> mostIncidentDateCount = allApplicantIncident.stream().collect(Collectors.groupingBy(d -> DateUtils.toHijri(d.getCreationDate()), Collectors.counting()));
@@ -228,7 +230,6 @@ public class DashboardService {
                 .totalNumberOfRegisteredIncidents(totalNumberOfRegisteredIncidents)
                 .totalNumberOfResolvedIncidents(totalNumberOfResolvedIncidents)
                 .totalNumberOfUnResolvedIncidents(totalNumberOfUnResolvedIncidents)
-                .countIncidentByCompany(countIncidentByCompany)
                 .countIncidentByTypes(countVoList)
                 .mostIncidentDate(mostIncidentDate)
                 .mostIncidentsArea(mostIncidentsArea)
@@ -299,5 +300,13 @@ public class DashboardService {
 
     public List<LocationVo> getIncidentsLocationsFromCurrentSeason() {
         return applicantIncidentRepository.getIncidentsLocationsBySeasonAndRitualType((int) DateUtils.getCurrentHijriYear(), List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
+    }
+
+    public List<CountVo> loadCompaniesWithMaxIncidentsCount() {
+        return applicantIncidentRepository.findCompaniesWithMaxIncidents(PageRequest.of(0, maxCompanyChartSize)).getContent();
+    }
+
+    public List<CountVo> loadCompaniesWithMinIncidentsCount() {
+        return applicantIncidentRepository.findCompaniesWithMinIncidents(PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 }

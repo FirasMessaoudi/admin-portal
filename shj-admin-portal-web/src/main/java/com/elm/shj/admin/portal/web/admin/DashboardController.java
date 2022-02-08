@@ -94,6 +94,20 @@ public class DashboardController {
         return dashboardService.loadDashboardIncidentNumbers();
     }
 
+    @GetMapping("/incident-numbers/max-companies")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CountVo> loadCompaniesWithMaxIncidentsCount() {
+        log.info("Load Companies with max incident count");
+        return dashboardService.loadCompaniesWithMaxIncidentsCount();
+    }
+
+    @GetMapping("/incident-numbers/min-companies")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CountVo> loadCompaniesWithMinIncidentsCount() {
+        log.info("Load Companies with min incident count.");
+        return dashboardService.loadCompaniesWithMinIncidentsCount();
+    }
+
     @GetMapping("/general-numbers/applicant/count-per-age")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT)
     public List<CountVo> countPilgrimsFromCurrentSeasonByAgeRanges() {

@@ -39,6 +39,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
   mapIsReady = false;
   mostIncidentDate: any;
   mostIncidentsArea: string;
+  minCompanies: boolean;
   mapOptions: google.maps.MapOptions = {
     center: {lat: 21.423461874376475, lng: 39.825553299746616},
     zoom: this.MAP_ZOOM_OUT,
@@ -118,11 +119,32 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
       this.setIncidentCenterTitle('مجموع البلاغات',this.incidents.totalNumberOfRegisteredIncidents);
       this.setIncidentTypeCenterTitle('مجموع البلاغات',this.incidents.totalNumberOfRegisteredIncidents);
 
-      this.companyCounts = this.incidents.countIncidentByCompany.map((i) => i.count);
-      this.companyLabels = this.incidents.countIncidentByCompany.map((d) => d.label);
       this.mostIncidentDate = this.formatHijriDate(this.incidents.mostIncidentDate);
       this.mostIncidentsArea = this.incidents.mostIncidentsArea;
+
+      this.loadMaxCompanies();
+      this.loadMinCompanies();
     })
+  }
+
+  loadMinCompanies() {
+    this.minCompanies = true;
+    this.dashboardService
+      .loadCompaniesWithMinIncidentCount()
+      .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
+    this.dashboardService
+      .loadCompaniesWithMinIncidentCount()
+      .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
+  }
+
+  loadMaxCompanies() {
+    this.minCompanies = false;
+    this.dashboardService
+      .loadCompaniesWithMaxIncidentCount()
+      .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
+    this.dashboardService
+      .loadCompaniesWithMaxIncidentCount()
+      .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
   }
 
   setIncidentCenterTitle(title:string, countText:number) {
