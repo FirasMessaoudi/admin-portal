@@ -481,6 +481,6 @@ SET shc_applicant_incident.area_code = 'ARAFAT'
 WHERE id > 0;
 GO
 
-INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('dashboard.incident.company.chart.size', 15);
 GO
