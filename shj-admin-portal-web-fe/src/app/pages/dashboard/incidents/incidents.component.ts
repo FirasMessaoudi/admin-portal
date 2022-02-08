@@ -3,7 +3,9 @@ import {Label, PluginServiceGlobalRegistrationAndOptions, SingleDataSet} from "n
 import {ChartOptions, ChartType} from "chart.js";
 import {ChartsConfig} from "@pages/dashboard/charts.config";
 import {DashboardService} from "@core/services";
-import {GoogleMap} from '@angular/google-maps';
+import { Loader } from "@googlemaps/js-api-loader";
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
+//import {GoogleMap, MapMarkerClusterer} from '@angular/google-maps';
 import {LookupService} from "@core/utilities/lookup.service";
 import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
@@ -12,6 +14,7 @@ import {DatePipe, DOCUMENT} from "@angular/common";
 import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {I18nService} from "@dcc-commons-ng/services";
 import {DashboardIncidentNumbersVo} from "@model/dashboardIncidentNumbersVo.model";
+import { Position } from '@app/_shared/model/marker.model';
 
 const FONTS: string = '"Elm-font", sans-serif';
 
@@ -34,6 +37,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
   incidentTypeCounts: Array<any>;
   companyLabels: Array<any>;
   companyCounts: Array<any>;
+  locations: Position[];
   MAP_ZOOM_OUT = 10;
   MAP_ZOOM_IN = 25;
   mapIsReady = false;
@@ -47,7 +51,6 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
     zoomControl: true,
     scrollwheel: true,
   }
-  @ViewChild(GoogleMap, { static: false }) map: GoogleMap;
   public incidentDoughnutChartOptions: ChartOptions = {
     responsive: true,
     cutoutPercentage: 70,
@@ -70,11 +73,13 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
 
   }
   ngAfterViewInit(): void {
-    throw new Error('Method not implemented.');
   }
 
   ngOnInit() {
-    this.loadMapkey();
+    this.dashboardService.loadIncidentsLocationsForCurrentSeason().subscribe(
+      data =>{ this.locations = data;
+        this.loadMapkey();                 }
+    );
     this.loadLookups();
     this.chartsConfig.barChartOptions = {
       ...this.chartsConfig.barChartOptions,
@@ -212,26 +217,24 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
 
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe(result => {
-      this.loadScript(result).then(() => {
-        this.mapIsReady = true;
-        console.log(JSON.stringify(this.map.getCenter()))
-
-      });
+      let loader = new Loader({apiKey: result})
+      loader.load().then(()=>{
+        const map = new google.maps.Map(document.getElementById("map"),{
+          center:{lat: 21.423461874376475, lng: 39.825553299746616},
+          zoom: 5,
+          scrollwheel: true,
+        });
+            // Add some markers to the map.
+          const markers = this.locations.map((position, i) => {
+          const marker = new google.maps.Marker({
+          position,
+          });
+        return marker;
+        });
+        // Add a marker clusterer to manage the markers.
+        new MarkerClusterer({ markers, map });
+      })
     });
-  }
-
-  private loadScript(key) {
-    return new Promise((resolve, reject) => {
-      const script = this.renderer2.createElement('script');
-      script.type = 'text/javascript';
-      script.src = 'https://maps.googleapis.com/maps/api/js?key=' + key;
-      script.text = ``;
-      script.async = true;
-      script.defer = true;
-      script.onload = resolve;
-      script.onerror = reject;
-      this.renderer2.appendChild(this.document.body, script);
-    })
   }
 
   formatHijriDate(date: Date): string {

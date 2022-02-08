@@ -120,9 +120,8 @@
             </div>
           </div>
           <!--Start MAP-->
-          <div class="map mt-1" *ngIf="mapIsReady">
-            <google-map [width]="'100%'" [height]="'100%'" [options]="mapOptions">
-            </google-map>
+          <div class="map mt-1">
+            <div id="map" style="height: 100%; width: 100%;"></div>
           </div>
           <!--End Map-->
         </div>
