@@ -1,3 +1,7 @@
+<a class="d-block button_back" href="javascript:void(0);" [routerLink]="['/']">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="font-weight-bold text-dark">البلاغات</h3>
@@ -57,7 +61,7 @@
               </p>
 
               <p>
-                <span>اكثر يوم تم تسجيل به اكبر عدد من البلاغات هو </span>
+                <span>أكثر يوم تم فيه تسجيل أكبر عدد من البلاغات هو </span>
                 <b class="text-dark ml-3">{{mostIncidentDate}}</b>
               </p>
 
@@ -100,16 +104,16 @@
               </button>
             </div>
           </div>
-            <div class="w-100">
+          <div class="w-100">
             <canvas baseChart #companiesByApplicantCount
-                      [datasets]="[{data: companyCounts, maxBarThickness: 15}]"
-                      [options]="chartsConfig.barChartOptions"
-                      [labels]="companyLabels"
-                      [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#b1bdd2'}]"
-                      chartType="bar" height="100"></canvas>
+                    [datasets]="[{data: companyCounts, maxBarThickness: 15}]"
+                    [options]="chartsConfig.barChartOptions"
+                    [labels]="companyLabels"
+                    [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#b1bdd2'}]"
+                    chartType="bar" height="100"></canvas>
             <div class="text-center">
             </div>
-            </div>
+          </div>
         </div>
       </div>
       <div class="col-12 mt-4">
