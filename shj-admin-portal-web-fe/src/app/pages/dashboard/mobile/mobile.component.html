@@ -42,20 +42,25 @@
                       <svg-icon styleClass="text-appdownloads" icon="circle"></svg-icon>
                       <div class="px-3">مفعل</div>
                     </div>
-                    <div>{{mobileAppDownloadsData.totalNumberOfLoggedInUsers}}</div>
+                    <div>{{mobileAppDownloadsData?.totalNumberOfLoggedInUsers}}</div>
                   </div>
                   <div class="flex-center-between mt-2">
                     <div class="d-flex">
                       <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
                       <div class="px-3">غير مفعل</div>
                     </div>
-                    <div>{{mobileAppDownloadsData.totalNumberOfLoggedOutUsers}}</div>
+                    <div>{{mobileAppDownloadsData?.totalNumberOfLoggedOutUsers}}</div>
                   </div>
                 </div>
               </div>
-              <div class="col">
-                <div class="h-100 bg-dcc-light flex-center">
-                  Content
+              <div class="col-xl-9">
+                <div class="py-3">
+                  <canvas baseChart #companiesByApplicantCount
+                          [datasets]="datasets"
+                          [labels]="this.weekDays"
+                          [options]="chartsConfig.lineChartOptions"
+                          [colors]="chartsConfig.lineChartColors"
+                          chartType="line" height="60"></canvas>
                 </div>
               </div>
             </div>

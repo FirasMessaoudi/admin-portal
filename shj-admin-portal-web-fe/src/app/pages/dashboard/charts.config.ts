@@ -106,6 +106,58 @@ export class ChartsConfig {
       ],
     }
   };
+  lineChartOptions: any = {
+    responsive: true,
+    maintainAspectRatio: true,
+    elements: {
+      line: {
+        fill: false
+      },
+      point: {
+        hoverRadius: 7,
+        radius: 5
+      }
+    },
+    plugins: {
+      datalabels: {
+        display: false,
+      },
+    },
+    legend: {
+      labels: {
+        fontFamily: FONTS,
+        fontSize: 12,
+        padding: 6,
+        fontColor: '#777',
+        boxWidth: 10,
+      },
+      position: 'bottom'
+    },
+    scales: {
+      xAxes: [{
+        stacked: true,
+        gridLines: {
+          color: 'rgba(0, 0, 0, 0)',
+        },
+      }],
+      yAxes: [
+        {
+          gridLines: {
+            borderDash: [8, 6],
+            color: '#F3F5F2',
+          },
+          ticks: {
+            fontFamily: FONTS,
+            callback: function (value) {
+              if (value % 10 === 0) {
+                return value;
+              }
+            },
+          },
+        },
+      ],
+    }
+  };
   pieChartColors: Color[] = [
     {
       backgroundColor: ['#289E9A', '#FE9B43', '#AD323B', '#767676', '#FF4B12', '#7ABE6C', '#67C7E0', '#5E56A2'],
@@ -136,11 +188,16 @@ export class ChartsConfig {
     {backgroundColor: '#5E56A2', hoverBackgroundColor: '#B5AEEF'}
   ];
 
+  lineChartColors: Color[] = [
+    {backgroundColor: '#E5CA81', hoverBackgroundColor: '#E5CA81'},
+    {backgroundColor: '#D5D5DD', hoverBackgroundColor: '#D5D5DD'},
+  ];
+
   // doughnut
   doughnutChartLabels: string[] = [ACTIVE_LABEL, INACTIVE_LABEL, DELETED_LABEL];
   doughnutChartOptions: any = {
     circumference: Math.PI,
-    rotation: 1.0 * Math.PI,
+    rotation: Math.PI,
     cutoutPercentage: 95,
     responsive: true,
     maintainAspectRatio: false,

@@ -8,8 +8,6 @@ import {LookupService} from '@core/utilities/lookup.service';
 import {ChartsConfig} from '@pages/dashboard/charts.config';
 import {DashboardVo} from '@shared/model';
 
-const FONTS: string = '"Elm-font", sans-serif';
-
 @Component({
   selector: 'app-general-numbers',
   templateUrl: './general-numbers.component.html',
