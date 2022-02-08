@@ -45,8 +45,8 @@ export class MainComponent implements OnInit {
   public incidentDoughnutChartOptions: ChartOptions = {
     responsive: true,
     cutoutPercentage: 70,
-    rotation: 1 * Math.PI,
-    circumference: 1 * Math.PI,
+    rotation: Math.PI,
+    circumference: Math.PI,
   };
   public incidentDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
 

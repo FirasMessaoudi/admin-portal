@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {DashboardService} from "@core/services";
+import {DashboardMobileNumbersVo} from "@model/dashboard-mobile-numbers-vo.model";
 
 @Component({
   selector: 'app-mobile',
@@ -7,10 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MobileComponent implements OnInit {
   model = 1;
-  public appdownloads: number = 1103402;
-  constructor() { }
+  mobileAppDownloadsData: DashboardMobileNumbersVo;
+
+  constructor(private dashboardService: DashboardService) {
+  }
 
   ngOnInit() {
+    this.dashboardService.loadMobileAppDownloadsNumbers().subscribe(data => this.mobileAppDownloadsData = data);
   }
 
 }

@@ -5,10 +5,7 @@ package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.LocationVo;
-import com.elm.shj.admin.portal.services.dashboard.DashboardGeneralNumbersVo;
-import com.elm.shj.admin.portal.services.dashboard.DashboardIncidentNumbersVo;
-import com.elm.shj.admin.portal.services.dashboard.DashboardService;
-import com.elm.shj.admin.portal.services.dashboard.DashboardVo;
+import com.elm.shj.admin.portal.services.dashboard.*;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -155,6 +152,13 @@ public class DashboardController {
     public List<LocationVo> loadIncidentsLocationsFromCurrentSeasons() {
         log.info("Handling loadDashboardGeneralNumbers endpoint.");
         return dashboardService.getIncidentsLocationsFromCurrentSeason();
+    }
+
+    @GetMapping("/mobile/app-downloads")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public DashboardMobileNumbersVo loadMobileAppDownloadNumbers() {
+        log.info("Handling loadMobileAppDownloadNumbers endpoint.");
+        return dashboardService.getMobileAppDownloadsFromCurrentSeason();
     }
 
 }
