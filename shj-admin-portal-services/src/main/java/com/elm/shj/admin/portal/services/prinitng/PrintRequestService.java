@@ -5,8 +5,6 @@ package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestBatchRepository;
-import com.elm.shj.admin.portal.orm.repository.PrintRequestRepository;
-import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -35,19 +33,18 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
 
     private static final SimpleDateFormat REF_NUMBER_FORMAT = new SimpleDateFormat("SSS");
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
-    private final PrintRequestRepository printRequestRepository;
-    private final ApplicantCardService applicantCardService;
     private final CompanyStaffCardService staffCardService;
     private final PrintRequestBatchRepository printRequestBatchRepository;
 
-    public PrintRequestDto prepare(List<Long> cardsIds) {
+    public PrintRequestDto prepare(List<CardVO> cards) {
         // create and save the print request
         PrintRequestDto printRequest = new PrintRequestDto();
         printRequest.setReferenceNumber(generateReferenceNumber());
         printRequest.setStatusCode(EPrintRequestStatus.NEW.name());
-        cardsIds.forEach(id -> {
+        cards.forEach(card -> {
             PrintRequestCardDto printRequestCard = new PrintRequestCardDto();
-            printRequestCard.setCardId(id);
+            printRequestCard.setCard(card);
+            printRequestCard.setCardId(card.getId());
             printRequestCard.setPrintRequest(printRequest);
             printRequest.getPrintRequestCards().add(printRequestCard);
         });
@@ -76,18 +73,18 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
                     .stream().collect(Collectors.groupingBy(requestCard -> {
                         List<String> groupingByCriteriaList = new ArrayList<>();
                         if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
-                            ApplicantCardDto card = applicantCardService.findOne(requestCard.getCardId());
+
                             selectedBatchTypes.forEach(type -> {
                                 if (type.equals(EPrintBatchType.NATIONALITY)) {
-                                    groupingByCriteriaList.add(card.getApplicantRitual().getApplicant().getNationalityCode());
+                                    groupingByCriteriaList.add(requestCard.getCard().getNationalityCode());
                                 }
                                 //TODO ADD THE REMAINING CRITERIA
                             });
                         } else {
-                            CompanyStaffCardDto card = staffCardService.findOne(requestCard.getCardId());
+                            CompanyStaffCardDto card = staffCardService.findOne(requestCard.getCard().getId());
                             selectedBatchTypes.forEach(type -> {
                                 if (type.equals(EPrintBatchType.STAFF_NATIONALITY)) {
-                                    groupingByCriteriaList.add(String.valueOf(card.getCompanyStaffDigitalId().getCompanyStaff().getNationalityCode()));
+                                    groupingByCriteriaList.add(String.valueOf(requestCard.getCard().getNationalityCode()));
                                 }
                                 if (type.equals(EPrintBatchType.COMPANY)) {
                                     groupingByCriteriaList.add(String.valueOf(card.getCompanyRitualSeason().getCompany().getCode()));
@@ -105,13 +102,13 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
                         .batchTypeCodes(selectedBatchTypes.stream().map(EPrintBatchType::name).collect(Collectors.joining(",")))
                         // Save batching values as comma-separated string
                         .batchTypeValues(String.join(",", key))
-                        .printRequestBatchCards(value.stream().map(requestCard -> PrintRequestBatchCardDto.builder().cardId(requestCard.getCardId()).build()).collect(Collectors.toList())).build();
+                        .printRequestBatchCards(value.stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
                 printRequestBatch.setSequenceNumber(printRequestBatchRepository.maxSequenceNumber() + 1);
                 printRequest.getPrintRequestBatches().add(printRequestBatch);
             });
         } else {
             // No batching criteria selected save all printing cards as one batch
-            PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder().printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().cardId(requestCard.getCardId()).build()).collect(Collectors.toList())).build();
+            PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder().printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
             printRequest.getPrintRequestBatches().add(printRequestBatch);
         }
         // Return nested object
@@ -122,12 +119,12 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
 
         printRequest.getPrintRequestCards().forEach(requestCard -> {
             requestCard.setPrintRequest(printRequest);
-            requestCard.setCardId(requestCard.getCardId());
+            requestCard.setCardId(requestCard.getCard().getId());
         });
         printRequest.getPrintRequestBatches().forEach(requestBatch -> {
             requestBatch.setPrintRequest(printRequest);
             requestBatch.getPrintRequestBatchCards().forEach(batchCard -> {
-                batchCard.setCardId(batchCard.getCardId());
+                batchCard.setCardId(batchCard.getCard().getId());
                 batchCard.setPrintRequestBatch(requestBatch);
             });
         });

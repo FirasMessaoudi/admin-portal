@@ -1,5 +1,4 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ApplicantCard} from "@model/card.model";
 import {EAuthority, Page} from "@shared/model";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Lookup} from "@model/lookup.model";

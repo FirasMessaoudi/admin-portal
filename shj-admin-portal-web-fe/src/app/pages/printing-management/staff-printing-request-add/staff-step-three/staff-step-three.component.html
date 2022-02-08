@@ -53,18 +53,18 @@
       <tbody [ngbCollapse]="!isCollapsed[i]" class="collapse">
       <tr *ngFor="let batchCard of batch?.printRequestBatchCards">
         <td class="nameCol" style="width: 55%">
-          <a *ngIf="canSeeCardDetails" [routerLink]="['/staff-print-requests/staff-card-details', batchCard?.cardId]"
+          <a *ngIf="canSeeCardDetails" [routerLink]="['/staff-print-requests/staff-card-details', batchCard?.card?.id]"
              target="_blank"
-             class="text-dcc-primary font-weight-bold">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}} {{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
+             class="text-dcc-primary font-weight-bold">{{batchCard?.card?.fullNameAr}} {{batchCard?.card?.fullNameEn}}
           </a>
           <p *ngIf="!canSeeCardDetails"
-             class=" font-weight-bold">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}} {{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
+             class=" font-weight-bold">{{batchCard?.card?.fullNameAr}} {{batchCard?.card?.fullNameEn}}
           </p>
         </td>
-        <td class="ltr" style="width: 15%">{{batchCard?.staffCard?.companyStaffDigitalId?.suin}}</td>
-        <td class="ltr" style="width: 15%">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
+        <td class="ltr" style="width: 15%">{{batchCard?.card?.digitalId}}</td>
+        <td class="ltr" style="width: 15%">{{batchCard?.card?.idNumber}}</td>
         <td class="ltr"
-            style="width: 15%">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
+            style="width: 15%">{{batchCard?.card?.passportNumber}}</td>
       </tr>
       </tbody>
     </ng-template>

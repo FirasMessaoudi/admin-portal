@@ -264,6 +264,7 @@ public class IntegrationWsController {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getUin()).build()).build());
         }
+        applicantService.updatePreferredLanguage(command.getUin(),"en");
         int updatedRowsCount = applicantService.updateApplicantContacts(databaseApplicant.get().getId(), command);
         if (updatedRowsCount < 1) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
@@ -726,13 +727,14 @@ public class IntegrationWsController {
         // TODO: 26/01/2022 should be refactored same as applicant
         Optional<CompanyStaffLiteDto> companyStaff = companyStaffService.findBySuin(command.getSuin());
         if (companyStaff.isPresent()) {
-            Optional<CompanyStaffDto> staffInAdminPortal = companyStaffService.findByStaffId(companyStaff.get().getId());
+            //TODO I commented out this code because it is prevent us from update staff mobile number and email
+            /*Optional<CompanyStaffDto> staffInAdminPortal = companyStaffService.findByStaffId(companyStaff.get().getId());
             if (staffInAdminPortal.isPresent()) {
                 return ResponseEntity.ok(
                         WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                                 .body(WsError.builder().error(WsError.EWsError.ALREADY_REGISTERED.getCode()).referenceNumber(command.getSuin()).build()).build());
 
-            }
+            }*/
             boolean dateOfBirthMatched;
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
             // decide which date of birth to use

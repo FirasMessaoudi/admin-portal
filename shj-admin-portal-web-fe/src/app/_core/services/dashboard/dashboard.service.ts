@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
 import { CountVo } from '@app/_shared/model/countVo.model';
 import { Lookup } from '@model/lookup.model';
+import {DashboardIncidentNumbersVo} from "@model/dashboardIncidentNumbersVo.model";
 
 @Injectable({
   providedIn: 'root',
@@ -105,4 +106,37 @@ export class DashboardService {
       '/core/api/dashboard/general-numbers/min-camps'
     );
   }
+
+  loadIncidents(): Observable<DashboardIncidentNumbersVo> {
+    return this.http.get<DashboardIncidentNumbersVo>(
+      '/core/api/dashboard/incident-numbers'
+    );
+  }
+
+  findIncidentTypes(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/incident-type/list');
+  }
+
+  findIncidentStatus(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/incident-status/list');
+  }
+
+  /**
+   * Load companies with max incident count
+   */
+  loadCompaniesWithMaxIncidentCount(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/incident-numbers/max-companies'
+    );
+  }
+
+  /**
+   * Load companies with min incident count
+   */
+  loadCompaniesWithMinIncidentCount(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/incident-numbers/min-companies'
+    );
+  }
+
 }

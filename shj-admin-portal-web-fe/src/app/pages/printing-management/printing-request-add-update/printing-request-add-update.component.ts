@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {ApplicantCard} from "@model/card.model";
+import {ApplicantCard} from "@model/applicant-card.model";
 import {PrintRequest} from "@model/print-request.model";
 import {StepOneComponent} from "@pages/printing-management/printing-request-add-update/step-one/step-one.component";
 import {StepTwoComponent} from "@pages/printing-management/printing-request-add-update/step-two/step-two.component";

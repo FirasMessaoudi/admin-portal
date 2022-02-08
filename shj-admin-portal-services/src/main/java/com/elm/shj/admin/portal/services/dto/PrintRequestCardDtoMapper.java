@@ -15,4 +15,16 @@ import org.mapstruct.Mapper;
  */
 @Mapper(componentModel = "spring")
 public abstract class PrintRequestCardDtoMapper implements IGenericMapper<PrintRequestCardDto, JpaPrintRequestCard> {
+
+//    @AfterMapping
+//    void afterToDTO(JpaPrintRequestCard jpaPrintRequestCard, @MappingTarget PrintRequestCardDto printRequestCardDto) {
+//        CardVO cardVO = new CardVO();
+//        cardVO.setId(jpaPrintRequestCard.getCardId());
+//        printRequestCardDto.setCard(cardVO);
+//    }
+//
+//    @AfterMapping
+//    void afterToEntity(PrintRequestCardDto printRequestCardDto, @MappingTarget JpaPrintRequestCard jpaPrintRequestCard) {
+//        jpaPrintRequestCard.setCardId(printRequestCardDto.getCard().getId());
+//    }
 }

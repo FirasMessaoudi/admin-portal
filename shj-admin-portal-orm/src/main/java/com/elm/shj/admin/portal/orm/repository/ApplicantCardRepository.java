@@ -65,4 +65,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
             "INNER JOIN ritual.applicantPackage package " +
             "WHERE :todayDate > package.endDate AND appCard.statusCode NOT IN :excludedCardsStatuses ")
     List<JpaApplicantCard> findApplicantCardsEligibleToExpire(@Param("todayDate") Date todayDate, @Param("excludedCardsStatuses") List<String> excludedCardsStatuses);
+
+    @Query("SELECT appCard FROM JpaApplicantCard appCard WHERE   appCard.id IN :cardsIds ")
+    List<JpaApplicantCard> findApplicantCards(@Param("cardsIds") List<Long> cardsIds);
 }

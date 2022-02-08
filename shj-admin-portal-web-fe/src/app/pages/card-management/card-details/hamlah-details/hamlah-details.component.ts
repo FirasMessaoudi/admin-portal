@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Lookup} from "@model/lookup.model";
-import {ApplicantCard} from "@model/card.model";
+import {ApplicantCard} from "@model/applicant-card.model";
 import {LookupService} from "@core/utilities/lookup.service";
 
 @Component({

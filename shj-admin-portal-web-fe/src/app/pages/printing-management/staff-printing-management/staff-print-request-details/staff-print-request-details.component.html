@@ -104,32 +104,32 @@
           <tr *ngFor="let batchCard of batch?.printRequestBatchCards">
             <td class="nameCol" style="width: 50%">
               <a *ngIf="canSeeCardDetails"
-                 [routerLink]="['/staff-print-requests/staff-card-details', batchCard?.cardId]" target="_blank"
+                 [routerLink]="['/staff-print-requests/staff-card-details', batchCard?.card?.id]" target="_blank"
                  class="text-dcc-primary font-weight-bold">
                 <span
-                  *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}}
-                  <br>{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</span>
+                  *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.card?.fullNameAr}}
+                  <br>{{batchCard?.card?.fullNameEn}}</span>
                 <span
-                  *ngIf="currentLanguage.startsWith('en')">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
-                  <br>{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}}</span>
+                  *ngIf="currentLanguage.startsWith('en')">{{batchCard?.card?.fullNameEn}}
+                  <br>{{batchCard?.card?.fullNameAr}}</span>
               </a>
               <p *ngIf="!canSeeCardDetails" class=" font-weight-bold">
                 <span
-                  *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}}
-                  <br>{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}</span>
+                  *ngIf="currentLanguage.startsWith('ar')">{{batchCard?.card?.fullNameAr}}
+                  <br>{{batchCard?.card?.fullNameEn}}</span>
                 <span
-                  *ngIf="currentLanguage.startsWith('en')">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameEn}}
-                  <br>{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.fullNameAr}}</span>
+                  *ngIf="currentLanguage.startsWith('en')">{{batchCard?.card?.fullNameEn}}
+                  <br>{{batchCard?.card?.fullNameAr}}</span>
               </p>
             </td>
-            <td class="ltr" style="width: 10%">{{batchCard?.staffCard?.companyStaffDigitalId?.suin}}</td>
+            <td class="ltr" style="width: 10%">{{batchCard?.card?.digitalId}}</td>
             <td class="ltr"
-                style="width: 10%">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
-            <td class="ltr" style="width: 10%">{{batchCard?.staffCard?.referenceNumber}}</td>
+                style="width: 10%">{{batchCard?.card?.idNumber}}</td>
+            <td class="ltr" style="width: 10%">{{batchCard?.card?.referenceNumber}}</td>
             <td class="ltr"
-                style="width: 10%">{{batchCard?.staffCard?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
+                style="width: 10%">{{batchCard?.card?.passportNumber}}</td>
             <td class="ltr"
-                style="width: 10%">{{lookupService().localizedLabel(cardStatuses, batchCard?.staffCard?.statusCode)}}</td>
+                style="width: 10%">{{lookupService().localizedLabel(cardStatuses, batchCard?.card?.statusCode)}}</td>
           </tr>
           </tbody>
         </ng-template>

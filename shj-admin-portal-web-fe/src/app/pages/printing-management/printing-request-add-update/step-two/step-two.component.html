@@ -55,21 +55,22 @@
       </td>
     </tr>
     <ng-container *ngIf="!isLoading">
-    <tr *ngFor="let printRequestCard of printRequest?.printRequestCards | slice: (currentPage * pageSize) - pageSize :currentPage * pageSize">
-      <td>{{printRequestCard?.card?.applicantRitual?.applicant?.fullNameAr}} {{printRequestCard?.card?.applicantRitual?.applicant?.fullNameEn}}</td>
-      <td>{{printRequestCard?.card?.applicantRitual?.applicant?.digitalIds[0]?.uin}}</td>
-      <td>{{printRequestCard?.card?.applicantRitual?.applicant?.idNumber}}</td>
-      <td class="ltr">{{printRequestCard?.card?.applicantRitual?.applicant?.passportNumber}}</td>
+    <tr
+      *ngFor="let printRequestCard of printRequest?.printRequestCards | slice: (currentPage * pageSize) - pageSize :currentPage * pageSize">
+      <td>{{printRequestCard?.card?.fullNameAr}} {{printRequestCard?.card?.fullNameEn}}</td>
+      <td>{{printRequestCard?.card?.digitalId}}</td>
+      <td>{{printRequestCard?.card?.idNumber}}</td>
+      <td class="ltr">{{printRequestCard?.card?.passportNumber}}</td>
 
       <td></td>
-      <td>{{printRequestCard?.card?.applicantRitual?.hamlahPackageCode}}</td>
-      <td>{{printRequestCard?.card?.applicantRitual?.tafweejCode}}</td>
+      <td>{{printRequestCard?.card?.hamlahPackageCode}}</td>
+      <td>{{printRequestCard?.card?.tafweejCode}}</td>
       <td>{{
-        printRequestCard?.card?.applicantRitual?.applicant?.nationalityCode
+        printRequestCard?.card?.nationalityCode
           ? lookupService().localizedLabel(
           countries,
-          printRequestCard?.card?.applicantRitual?.applicant?.nationalityCode?.toUpperCase()
-          ):""
+          printRequestCard?.card?.nationalityCode?.toUpperCase()
+          ) : ""
         }}</td>
       <td></td>
     </tr>

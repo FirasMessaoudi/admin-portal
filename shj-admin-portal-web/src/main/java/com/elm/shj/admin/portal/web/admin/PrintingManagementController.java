@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestService;
@@ -17,6 +18,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Main controller for printing management pages
  *
@@ -31,6 +34,8 @@ public class PrintingManagementController {
 
     private final PrintRequestService printRequestService;
     private final PrintRequestLiteService printRequestLiteService;
+    private final ApplicantCardService applicantCardService;
+
     /**
      * List paginated print requests.
      *
@@ -64,37 +69,63 @@ public class PrintingManagementController {
      * @return the found user or <code>null</code>
      */
     @GetMapping("/find/{printRequestId}")
-    @PreAuthorize("hasAuthority('"+AuthorityConstants.VIEW_PRINTING_REQUEST_DETAILS+"')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.VIEW_PRINTING_REQUEST_DETAILS + "')")
     public PrintRequestDto find(@PathVariable long printRequestId) {
         log.debug("Handler for {}", "Find Print Request");
-        return printRequestService.findOne(printRequestId);
+        PrintRequestDto printRequestDto = printRequestService.findOne(printRequestId);
+        printRequestDto.getPrintRequestBatches().stream().forEach(batch -> {
+            // will be called for each print request batch, get all applicant cards for that batch
+            List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
+            // to get applicant cards based on the ids list from DB by JPQL Query
+            List<ApplicantCardDto> applicantCards = applicantCardService.findApplicantCards(cardIds);
+            // map between applicant card and batch card
+            batch.getPrintRequestBatchCards().stream().forEach(batchCard -> {
+                long cardId = batchCard.getCardId();
+                //get the applicant card by id through findAny on stream of applicantCards
+                applicantCards.stream().filter(appCard -> appCard.getId() == cardId).findAny()
+                        .ifPresent(applicantCardDto -> batchCard.setCard(mapApplicantCardToCardVO(applicantCardDto)));
+                //map applicantCard to CardVO and attach it to batch card like below
+            });
+        });
+        return printRequestDto;
     }
+
 
     /**
      * Add new print request
      *
-     * @param cardsIds TODO Complete documentation     * @return the created request
+     * @param cards TODO Complete documentation     * @return the created request
      */
     @PostMapping("/prepare")
-    @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
-    public PrintRequestDto prepare(@RequestBody List<Long> cardsIds) {
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
+    public PrintRequestDto prepare(@RequestBody List<CardVO> cards) {
         log.debug("Preparing print request");
-        return printRequestService.prepare(cardsIds);
+        return printRequestService.prepare(cards);
     }
 
     @PostMapping("/batch")
-    @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
     public PrintRequestDto batch(@RequestBody PrintRequestDto printRequest, @RequestParam List<EPrintBatchType> types) {
         log.debug("Batching print request");
         return printRequestService.processBatching(printRequest, types, EPrintingRequestTarget.APPLICANT.name());
     }
 
     @PostMapping("/confirm")
-    @PreAuthorize("hasAuthority('"+AuthorityConstants.ADD_PRINTING_REQUEST+"')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADD_PRINTING_REQUEST + "')")
     public PrintRequestDto confirm(@RequestBody PrintRequestDto printRequest) {
         log.debug("Confirming print request");
         return printRequestService.confirm(printRequest, EPrintingRequestTarget.APPLICANT.name());
     }
 
+    private CardVO mapApplicantCardToCardVO(ApplicantCardDto applicantCardDto) {
+        return CardVO.builder().digitalId(applicantCardDto.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin())
+                .id(applicantCardDto.getId())
+                .passportNumber(applicantCardDto.getApplicantRitual().getApplicant().getPassportNumber())
+                .fullNameAr(applicantCardDto.getApplicantRitual().getApplicant().getFullNameAr())
+                .fullNameEn(applicantCardDto.getApplicantRitual().getApplicant().getFullNameEn())
+                .idNumber(applicantCardDto.getApplicantRitual().getApplicant().getIdNumber())
+                .referenceNumber(applicantCardDto.getReferenceNumber())
+                .statusCode(applicantCardDto.getStatusCode()).build();
+    }
 }
 

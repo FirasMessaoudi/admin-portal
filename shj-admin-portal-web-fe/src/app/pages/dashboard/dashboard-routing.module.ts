@@ -1,6 +1,6 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {AuthenticationGuard} from '@core/guards/authentication.guard';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { AuthenticationGuard } from '@core/guards/authentication.guard';
 import {
   CamerasComponent,
   GeneralNumbersComponent,
@@ -8,22 +8,49 @@ import {
   MainComponent,
   MobileComponent,
   RatingComponent,
-  TransactionsComponent
+  TransactionsComponent,
 } from '.';
 
-
 const routes: Routes = [
-  {path: 'home', component: MainComponent, canActivate: [AuthenticationGuard]},
-  {path: 'dashboard/transactions', component: TransactionsComponent, canActivate: [AuthenticationGuard]},
-  {path: 'dashboard/rating', component: RatingComponent, canActivate: [AuthenticationGuard]},
-  {path: 'dashboard/mobile', component: MobileComponent, canActivate: [AuthenticationGuard]},
-  {path: 'dashboard/incidents', component: IncidentsComponent, canActivate: [AuthenticationGuard]},
-  {path: 'dashboard/general-numbers', component: GeneralNumbersComponent, canActivate: [AuthenticationGuard]},
-  {path: 'dashboard/cameras', component: CamerasComponent, canActivate: [AuthenticationGuard]},
+  {
+    path: 'home',
+    component: MainComponent,
+    canActivate: [AuthenticationGuard],
+  },
+  {
+    path: 'dashboard/transactions',
+    component: TransactionsComponent,
+    canActivate: [AuthenticationGuard],
+  },
+  {
+    path: 'dashboard/rating',
+    component: RatingComponent,
+    canActivate: [AuthenticationGuard],
+  },
+  {
+    path: 'dashboard/mobile',
+    component: MobileComponent,
+    canActivate: [AuthenticationGuard],
+  },
+  {
+    path: 'dashboard/incidents',
+    component: IncidentsComponent,
+    canActivate: [AuthenticationGuard],
+  },
+  {
+    path: 'dashboard/general-numbers',
+    component: GeneralNumbersComponent,
+    canActivate: [AuthenticationGuard],
+  },
+  {
+    path: 'dashboard/cameras',
+    component: CamerasComponent,
+    canActivate: [AuthenticationGuard],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class DashboardRoutingModule { }
+export class DashboardRoutingModule {}

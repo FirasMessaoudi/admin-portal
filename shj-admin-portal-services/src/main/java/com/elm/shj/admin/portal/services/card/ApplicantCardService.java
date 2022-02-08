@@ -3,7 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.card;
 
-import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantPackageCateringService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantPackageHousingService;
@@ -263,6 +265,17 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     @Transactional
     public void updateCardStatusesAsExpired(List<Long> cardsIds) {
         applicantCardRepository.updateCardStatusesAsExpired(ECardStatus.EXPIRED.name(), cardsIds);
+    }
+
+    /**
+     * Find applicant cards  by ids.
+     *
+     * @param cardsIds
+     * @return the list of printing cards
+     */
+    public List<ApplicantCardDto> findApplicantCards(List<Long> cardsIds) {
+        log.debug("Find cards by ids  ...");
+        return mapList(applicantCardRepository.findApplicantCards(cardsIds));
     }
 
 }

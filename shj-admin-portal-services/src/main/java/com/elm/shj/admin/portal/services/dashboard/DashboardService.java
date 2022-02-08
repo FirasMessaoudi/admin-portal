@@ -4,6 +4,8 @@
 package com.elm.shj.admin.portal.services.dashboard;
 
 import com.elm.shj.admin.portal.orm.entity.CountVo;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
+import com.elm.shj.admin.portal.orm.entity.LocationVo;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.dto.EGender;
 import com.elm.shj.admin.portal.services.dto.ERitualType;
@@ -37,6 +39,9 @@ public class DashboardService {
 
     @Value("${applicants.counter.ages.range}")
     private String agesRange;
+
+    @Value("${dashboard.incident.company.chart.size}")
+    private int maxCompanyChartSize;
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -168,9 +173,9 @@ public class DashboardService {
         long totalNumberOfFemaleApplicants = applicantRepository.countAllApplicantsByGenderByHijriSeason(EGender.FEMALE.getCode(), hijriSeason);
 
         long totalNumberOfInternalApplicants = applicantRepository
-                .countAllApplicantBySeasonAndRitualType(hijriSeason, List.of(ERitualType.INTERNAL_HAJJ.name()));
+                .countAllApplicantBySeasonAndRitualType(hijriSeason, new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name())));
         long totalNumberOfExternalApplicants = applicantRepository
-                .countAllApplicantBySeasonAndRitualType(hijriSeason, List.of(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
+                .countAllApplicantBySeasonAndRitualType(hijriSeason, new ArrayList<>(Arrays.asList(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
 
         long totalNumberOfUsersInstalledApp = applicantRepository.countAllByMobileLoggedInIsNotNull();
         long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue();
@@ -190,16 +195,44 @@ public class DashboardService {
     }
 
     public DashboardIncidentNumbersVo loadDashboardIncidentNumbers() {
+        List<JpaApplicantIncident> allApplicantIncident = applicantIncidentRepository.findAll();
         long totalNumberOfRegisteredIncidents = applicantIncidentRepository.count();
         long totalNumberOfResolvedIncidents = applicantIncidentRepository.countAllResolvedIncidents();
         long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents();
-        List<CountVo> countIncidentByCompany = applicantIncidentRepository.countIncidentByCompany();
 
+        Date mostIncidentDate = new Date();
+        Map<Long, Long> mostIncidentDateCount = allApplicantIncident.stream().collect(Collectors.groupingBy(d -> DateUtils.toHijri(d.getCreationDate()), Collectors.counting()));
+        if(!mostIncidentDateCount.isEmpty()){
+            if(mostIncidentDateCount.entrySet().iterator().hasNext() && null != mostIncidentDateCount.entrySet().iterator()) {
+                Map.Entry<Long, Long> dateEntry = mostIncidentDateCount.entrySet().iterator().next();
+                mostIncidentDate = DateUtils.toGregorian(dateEntry.getKey());
+            }
+        }
+
+        String mostIncidentsArea = "";
+        Map<String, Long> incidentByArea = allApplicantIncident.stream().collect(Collectors.groupingBy(JpaApplicantIncident::getAreaCode, Collectors.counting()));
+        if(!incidentByArea.isEmpty()) {
+            if(incidentByArea.entrySet().iterator().hasNext()) {
+                Map.Entry<String, Long> incidentByAreaMapEntry = incidentByArea.entrySet().iterator().next();
+                mostIncidentsArea = incidentByAreaMapEntry.getKey();
+            }
+        }
+        Map<String, Long> incidentByType = allApplicantIncident.stream().collect(Collectors.groupingBy(JpaApplicantIncident::getTypeCode, Collectors.counting()));
+        List<CountVo> countVoList = new ArrayList<CountVo>();
+        for (Map.Entry<String,Long> entry : incidentByType.entrySet()){
+            CountVo countVo = new CountVo();
+            countVo.setLabel(entry.getKey());
+            countVo.setCount(entry.getValue());
+            countVo.setPercentage(String.format("%.2f", (double) entry.getValue() / totalNumberOfRegisteredIncidents * 100));
+            countVoList.add(countVo);
+        }
         return DashboardIncidentNumbersVo.builder()
                 .totalNumberOfRegisteredIncidents(totalNumberOfRegisteredIncidents)
                 .totalNumberOfResolvedIncidents(totalNumberOfResolvedIncidents)
                 .totalNumberOfUnResolvedIncidents(totalNumberOfUnResolvedIncidents)
-                .countIncidentByCompany(countIncidentByCompany)
+                .countIncidentByTypes(countVoList)
+                .mostIncidentDate(mostIncidentDate)
+                .mostIncidentsArea(mostIncidentsArea)
                 .build();
     }
 
@@ -263,5 +296,17 @@ public class DashboardService {
 
     public List<CountVo> loadCampsWithMinApplicantsCountByHijriSeason(int currentHijriYear) {
         return packageHousingRepository.findCampsWithMinApplicantsByHijriSeason(currentHijriYear, PageRequest.of(0, 15)).getContent();
+    }
+
+    public List<LocationVo> getIncidentsLocationsFromCurrentSeason() {
+        return applicantIncidentRepository.getIncidentsLocationsBySeasonAndRitualType((int) DateUtils.getCurrentHijriYear(), List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
+    }
+
+    public List<CountVo> loadCompaniesWithMaxIncidentsCount() {
+        return applicantIncidentRepository.findCompaniesWithMaxIncidents(PageRequest.of(0, maxCompanyChartSize)).getContent();
+    }
+
+    public List<CountVo> loadCompaniesWithMinIncidentsCount() {
+        return applicantIncidentRepository.findCompaniesWithMinIncidents(PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 }

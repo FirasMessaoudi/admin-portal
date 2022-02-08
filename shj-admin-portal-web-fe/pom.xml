@@ -52,6 +52,7 @@
               <arguments>
                 <argument>install</argument>
                 <argument>--no-package-lock</argument>
+                <argument>--legacy-peer-deps</argument>
               </arguments>
               <environmentVariables>
                 <PUPPETEER_SKIP_CHROMIUM_DOWNLOAD>true</PUPPETEER_SKIP_CHROMIUM_DOWNLOAD>
@@ -75,6 +76,22 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>12</source>
+          <target>12</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>12</source>
+          <target>12</target>
+        </configuration>
       </plugin>
     </plugins>
   </build>

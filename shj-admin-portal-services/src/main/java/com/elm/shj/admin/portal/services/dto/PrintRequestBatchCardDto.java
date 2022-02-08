@@ -25,6 +25,7 @@ public class PrintRequestBatchCardDto implements Serializable {
     private long id;
     @JsonBackReference
     private PrintRequestBatchDto printRequestBatch;
+    private CardVO card;
     private long cardId;
     private Date creationDate;
 }

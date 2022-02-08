@@ -38,24 +38,29 @@
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">عدد البلاغات</h5>
             </div>
-            <a href="/" class="text-dcc-primary">
-              المزيد عن البلاغات
-              <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
-            </a>
+
           </div>
           <div class="py-3">
-            <div>Content</div>
+            <canvas #incidentCanvas baseChart *ngIf="incidents != undefined"
+                    [datasets]="incidentDoughnutChartData"
+                    [labels]="incidentDoughnutChartLabels"
+                    [chartType]="incidentDoughnutChartType"
+                    [plugins]="incidentDoughnutChartPlugins"
+                    [colors]="chartsConfig.doughnutChartColors"
+                    [options]="incidentDoughnutChartOptions"
+            >
+            </canvas>
             <div>
               <p>
-                <span>اكثر المناطق التي يوجد بها بلاغات هي</span>
-                <b class="text-dark ml-3">مخيمات منى</b>
+                <b class="text-dark ml-3">{{mostIncidentsArea}}</b> <span>اكثر المناطق التي يوجد بها بلاغات هي</span>
+
               </p>
-  
+
               <p>
-                <span>اكثر يوم تم تسجيل به اكبر عدد من البلاغات هو</span>
-                <b class="text-dark ml-3">11 ذو الحجة 1447</b>
+                <span>اكثر يوم تم تسجيل به اكبر عدد من البلاغات هو </span>
+                <b class="text-dark ml-3">{{mostIncidentDate}}</b>
               </p>
-  
+
             </div>
           </div>
         </div>
@@ -67,7 +72,16 @@
               <h5 class="sts">أنواع البلاغات</h5>
             </div>
           </div>
-          <div class="py-3">Content</div>
+
+          <canvas #incidentTypeCanvas baseChart *ngIf="incidents != undefined"
+                  [datasets]="[{data: incidentTypeCounts}]"
+                  [labels]="incidentTypeLabels"
+                  [chartType]="incidentDoughnutChartType"
+                  [plugins]="incidentTypeDoughnutChartPlugins"
+                  [colors]="chartsConfig.doughnutChartColors"
+                  [options]="incidentTypeDoughnutChartOptions"
+          >
+          </canvas>
         </div>
       </div>
       <div class="col-12 mt-4">
@@ -75,9 +89,27 @@
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">توزيع البلاغات على الشركات</h5>
+              <button *ngIf="minCompanies" type="button" class="btn border mx-3" (click)="loadMaxCompanies()">
+                أقل الشركات
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
+              <button *ngIf="!minCompanies" type="button" class="btn border mx-3" (click)="loadMinCompanies()">
+                أعلى الشركات
+                <!--TODO Rotate icon-->
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
             </div>
           </div>
-          <div class="py-3">Content</div>
+            <div class="w-100">
+            <canvas baseChart #companiesByApplicantCount
+                      [datasets]="[{data: companyCounts, maxBarThickness: 15}]"
+                      [options]="chartsConfig.barChartOptions"
+                      [labels]="companyLabels"
+                      [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#b1bdd2'}]"
+                      chartType="bar" height="100"></canvas>
+            <div class="text-center">
+            </div>
+            </div>
         </div>
       </div>
       <div class="col-12 mt-4">
@@ -87,9 +119,12 @@
               <h5 class="sts">توزيع البلاغات على الخريطة</h5>
             </div>
           </div>
-          <div class="p-3 mx-n3 mb-n3 mt-3 bg-dcc-light flex-center">
-            <svg-icon styleClass="fa-10x text-dcc-light" icon="empty-set"></svg-icon>
+          <!--Start MAP-->
+          <div class="map mt-1" *ngIf="mapIsReady">
+            <google-map [width]="'100%'" [height]="'100%'" [options]="mapOptions">
+            </google-map>
           </div>
+          <!--End Map-->
         </div>
       </div>
     </div>

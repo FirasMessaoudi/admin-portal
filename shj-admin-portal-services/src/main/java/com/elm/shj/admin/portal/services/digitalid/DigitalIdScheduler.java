@@ -63,16 +63,20 @@ public class DigitalIdScheduler {
             ApplicantRitualDto applicantRitual = applicantRitualService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), applicant.getPackageReferenceNumber());
             if (applicantRitual != null) {
                 savedApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantDigitalId.getUin()), busNumber, seatNumber);
-                applicantRitual.setApplicantPackage(savedApplicantPackage);
-                applicantRitualService.save(applicantRitual);
+                if (savedApplicantPackage != null) {
+                    applicantRitual.setApplicantPackage(savedApplicantPackage);
+                    applicantRitualService.save(applicantRitual);
+                }
             } else {
                 savedApplicantPackage = applicantPackageService.createApplicantPackage(applicant.getPackageReferenceNumber(), Long.parseLong(applicantDigitalId.getUin()), null, null);
-                applicantRitual = ApplicantRitualDto.builder().applicant(applicant).applicantPackage(savedApplicantPackage).packageReferenceNumber(applicant.getPackageReferenceNumber()).build();
-                applicantRitual = applicantRitualService.save(applicantRitual);
-                //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
-                applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
-                applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
-                applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
+                if (savedApplicantPackage != null) {
+                    applicantRitual = ApplicantRitualDto.builder().applicant(applicant).applicantPackage(savedApplicantPackage).packageReferenceNumber(applicant.getPackageReferenceNumber()).build();
+                    applicantRitual = applicantRitualService.save(applicantRitual);
+                    //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
+                    applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
+                    applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
+                    applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
+                }
             }
         });
     }

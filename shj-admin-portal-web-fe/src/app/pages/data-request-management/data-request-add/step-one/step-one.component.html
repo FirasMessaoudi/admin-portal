@@ -2,9 +2,9 @@
   <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
   <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
 </a>
-<form [formGroup]="dataRequestForm" class="row row-cols-1 row-cols-md-3 row-cols-lg-3" enctype="multipart/form-data">
+<form [formGroup]="dataRequestForm" class="row-cols-xl-2" enctype="multipart/form-data">
 
-  <div class="form-group col">
+  <div class="form-group">
     <label class="col-form-label">{{'data-request-management.choose_segment' | translate }}</label>
     <select formControlName="dataSegment" (ngModelChange)="onSegmentChange($event)" class="custom-select">
       <option [ngValue]="null">{{"general.select_option" | translate}}</option>
@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <div class="form-group col">
+  <div class="form-group">
     <label class="col-form-label">{{'data-request-management.download_template' | translate }}</label>
     <div class="col-form-control text-center">
       <button class="btn btn-outline-dcc-primary px-6 py-2 border w-100 d-flex flex-center-column" (click)="downloadTemplate(selectedDataSegment.id)" [disabled]="!selectedDataSegment" >
@@ -27,27 +27,35 @@
     </div>
   </div>
 
-  <div class="form-group col">
+  <div class="form-group">
     <label class="col-form-label">{{'data-request-management.upload_filled_document' | translate }}</label>
+
     <div class="input-group">
-      <div class="custom-file mb-2">
+      <div class="custom-file">
         <input title="{{'data-request-management.choose_file' | translate}}" type="file" class="custom-file-input" id="fileData" [required]="true" (change)="onFileChange($event)"
                accept=".xls,.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
         />
         <label class="custom-file-label" for="fileData"><i class="fas fa-search"></i> {{(f.fileData && f.fileData.value ? f.fileData.value.name : 'data-request-management.choose_file') | translate}}</label>
       </div>
+      <div class="input-group-append">
+        <button name="save_banner_image_button" type="button" (click)="uploadDataFile()" [disabled]="dataRequestForm.invalid"
+              class="btn btn-dcc-light btn-light px-4 shadow-none">{{'general.btn_upload' | translate }}</button>
+      </div>
     </div>
 
-    <div class="mt-1">
-      <div *ngIf="errorMessage" class="border border-warning bg-warning py-1 px-2 mb-2">
-        {{errorMessage}}
-      </div>
-      <div *ngIf="progress > 0" class="progress text-center mb-2">
-        <ngb-progressbar type="success" textType="white" [value]="progress" [showValue]="true"></ngb-progressbar>
-      </div>
-      <button name="save_banner_image_button" type="button" (click)="uploadDataFile()" [disabled]="dataRequestForm.invalid"
-              class="btn btn-dcc-primary rounded-22 px-5">{{'general.btn_upload' | translate }}</button>
-    </div>
+    
+      <ng-container *ngIf="errorMessage">
+        <div class="alert alert-warning mt-1">
+          {{errorMessage}}
+        </div>
+      </ng-container>
+      <ng-container *ngIf="progress > 0">
+        <div class="progress text-center mt-1 mb-2">
+          <ngb-progressbar type="success" textType="white" class="progress" [value]="progress" [striped]="true" [animated]="true" [showValue]="true"></ngb-progressbar>
+        </div>
+      </ng-container>
+   
+
   </div>
 
 

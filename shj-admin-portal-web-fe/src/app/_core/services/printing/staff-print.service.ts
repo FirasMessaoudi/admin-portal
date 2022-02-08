@@ -8,6 +8,7 @@ import {PrintRequest} from "@model/print-request.model";
 import {PrintRequestFilter} from "@model/print-request-filter.model";
 import {CompanyLite} from "@model/company-lite.model";
 import {Staff} from "@app/_shared/model/staff.model";
+import {Card} from "@model/card.model";
 
 /**
  * Provides a base for Staff printing operations.
@@ -58,8 +59,8 @@ export class StaffPrintService {
     );
   }
 
-  preapre(cardsIds: Number[]): Observable<any> {
-    return this.http.post<any>("/core/api/staff/print/requests/prepare", cardsIds).pipe(
+  preapre(cards: Card[]): Observable<any> {
+    return this.http.post<any>("/core/api/staff/print/requests/prepare", cards).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.hasOwnProperty('error')) {
           return of(error.error);

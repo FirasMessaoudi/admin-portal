@@ -102,9 +102,6 @@ public class JpaApplicant implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantContact> contacts;
 
-    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
-    private JpaApplicantHealth applicantHealth;
-
     private boolean registered;
 
     @Column(name = "first_package_reference_number")

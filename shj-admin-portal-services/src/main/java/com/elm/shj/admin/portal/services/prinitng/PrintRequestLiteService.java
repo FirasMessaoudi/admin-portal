@@ -71,7 +71,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
         Date endDate = new GregorianCalendar(5000, 01, 01).getTime();
         ;
         if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
-            litePrintRequests = findApplicantPrintRequests(criteria, startDate, endDate, pageable);
+            litePrintRequests = mapPage(printRequestRepository.findAll(withApplicantPrintRequestFilter(criteria), pageable));
 
         } else {
             litePrintRequests = mapPage(printRequestRepository.findAll(withStaffPrintRequestFilter(criteria.getStatusCode(), criteria.getDescription()), pageable));
@@ -112,7 +112,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
             if (criteria.getRequestNumber() != null && criteria.getRequestNumber().trim().length() > 0) {
                 predicates.add(criteriaBuilder.like(root.get("referenceNumber"), "%" + criteria.getRequestNumber().trim() + "%"));
             }
-            if (criteria.getBatchNumber() > -1) {
+            if (criteria.getBatchNumber() > 0) {
                 predicates.add(criteriaBuilder.equal(root.join("printRequestBatches").get("sequenceNumber"), criteria.getBatchNumber()));
             }
             if (criteria.getFromDate() != null) {
