@@ -8,7 +8,11 @@
       </button>
     </div>
   </div>
-  <div class="content__section">
+  <div class="content__section" *ngIf="!canSeeMobileTrackingDashboard">
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
+  <div class="content__section" *ngIf="canSeeMobileTrackingDashboard">
 
     <div class="row row-cols-1 row-cols-xl-2">
       <div class="col-12">
@@ -26,11 +30,11 @@
                     </div>
                     <svg-icon styleClass="sts-icon fa-w-10 display-4" icon="mobile-android-alt"></svg-icon>
                   </div>
-        
+
                   <p class="py-3">
                     <ngb-progressbar type="appdownloads" [value]="25" height="10px"></ngb-progressbar>
                   </p>
-        
+
                   <div class="flex-center-between mt-2">
                     <div class="d-flex">
                       <svg-icon styleClass="text-appdownloads" icon="circle"></svg-icon>

@@ -8,7 +8,11 @@
       </button>
     </div>
   </div>
-  <div class="content__section">
+  <div class="content__section" *ngIf="!canSeeStatisticalDashboard">
+    {{'header.welcome' | translate}} <span
+    class="font-weight-bold text-dcc-primary">{{'general.app_name' | translate}}</span>
+  </div>
+  <div class="content__section" *ngIf="canSeeStatisticalDashboard">
     <div class="row row-cols-1 row-cols-xl-2">
 
       <div class="col-12">
@@ -19,38 +23,38 @@
             </div>
           </div>
           <div class="py-3">
-            
+
             <div class="row">
               <div class="col-md-3">
                 <p>
                   <span>وجبات الغداء</span>
                   <b class="text-dark ml-3">843,108</b>
                 </p>
-    
+
                 <p>
                   <span>الاكثر اختياراً</span>
                   <b class="text-dark ml-3">فطور الطازج</b>
                 </p>
-    
+
                 <hr>
-    
+
                 <p>
                   <span>وجبات الغداء</span>
                   <b class="text-dark ml-3">944,042</b>
                 </p>
-    
+
                 <p>
                   <span>الاكثر اختياراً</span>
                   <b class="text-dark ml-3">غداء البيك</b>
                 </p>
-    
+
                 <hr>
-    
+
                 <p>
                   <span>وجبات الغداء</span>
                   <b class="text-dark ml-3">754,356</b>
                 </p>
-    
+
                 <p>
                   <span>الاكثر اختياراً</span>
                   <b class="text-dark ml-3">عشاء بيت الشاورما</b>
@@ -115,7 +119,7 @@
           <div class="py-3">Content</div>
         </div>
       </div>
-      
+
     </div>
 
   </div>

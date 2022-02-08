@@ -11,7 +11,7 @@ package com.elm.shj.admin.portal.services.dto;
  */
 public final class AuthorityConstants {
 
-    public static final String ADMIN_DASHBOARD = "ADMIN_DASHBOARD";
+
     public static final String USER_MANAGEMENT = "USER_MANAGEMENT";
     public static final String ADD_USER = "ADD_USER";
     public static final String EDIT_USER = "EDIT_USER";
@@ -57,6 +57,10 @@ public final class AuthorityConstants {
     public static final String NOTIFICATION_MANAGEMENT = "NOTIFICATION_MANAGEMENT";
     public static final String SYSTEM_DEFINED_NOTIFICATION_DETAILS = "SYSTEM_DEFINED_NOTIFICATION_DETAILS";
     public static final String USER_DEFINED_NOTIFICATION_MANAGEMENT = "USER_DEFINED_NOTIFICATION_MANAGEMENT";
+    //Dashboard
+    public static final String ADMIN_DASHBOARD = "ADMIN_DASHBOARD";
+    public static final String MOBILE_TRACKING_DASHBOARD = "MOBILE_TRACKING_DASHBOARD";
+    public static final String STATISTICAL_DASHBOARD = "STATISTICAL_DASHBOARD";
 
     private AuthorityConstants() {
         // creating instances is not allowed

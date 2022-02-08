@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {EAuthority} from "@shared/model";
+import {AuthenticationService} from "@core/services";
 
 @Component({
   selector: 'app-mobile',
@@ -8,9 +10,14 @@ import { Component, OnInit } from '@angular/core';
 export class MobileComponent implements OnInit {
   model = 1;
   public appdownloads: number = 1103402;
-  constructor() { }
+
+  constructor(private authenticationService: AuthenticationService) {
+  }
 
   ngOnInit() {
   }
 
+  get canSeeMobileTrackingDashboard(): boolean {
+    return this.authenticationService.hasAuthority(EAuthority.MOBILE_TRACKING_DASHBOARD);
+  }
 }
