@@ -4,7 +4,7 @@ import {ChartOptions, ChartType} from "chart.js";
 import {ChartsConfig} from "@pages/dashboard/charts.config";
 import {DashboardService} from "@core/services";
 import { Loader } from "@googlemaps/js-api-loader";
-import { MarkerClusterer } from "@googlemaps/markerclusterer";
+import { Cluster, ClusterStats, MarkerClusterer , Renderer} from "@googlemaps/markerclusterer";
 //import {GoogleMap, MapMarkerClusterer} from '@angular/google-maps';
 import {LookupService} from "@core/utilities/lookup.service";
 import {Subscription} from "rxjs";
@@ -13,6 +13,7 @@ import {CountVo} from "@model/countVo.model";
 import {DatePipe, DOCUMENT} from "@angular/common";
 import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {I18nService} from "@dcc-commons-ng/services";
+import { interpolateRgb } from "d3-interpolate";
 import {DashboardIncidentNumbersVo} from "@model/dashboardIncidentNumbersVo.model";
 import { Position } from '@app/_shared/model/marker.model';
 
@@ -231,8 +232,42 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
           });
         return marker;
         });
+        const interpolatedRenderer = {
+          palette: interpolateRgb("red", "blue"),
+          render: function (
+            { count, position }: Cluster,
+            stats: ClusterStats
+          ): google.maps.Marker {
+            // use d3-interpolateRgb to interpolate between red and blue
+            const color = this.palette(count / stats.clusters.markers.max);
+        
+            // create svg url with fill color
+            const svg = window.btoa(`
+          <svg fill="${color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+            <circle cx="120" cy="120" opacity=".8" r="70" />    
+          </svg>`);
+        
+            // create marker using svg icon
+            return new google.maps.Marker({
+              position,
+              icon: {
+                url: `data:image/svg+xml;base64,${svg}`,
+                scaledSize: new google.maps.Size(75, 75),
+              },
+              label: {
+                text: String(count),
+                color: "rgba(255,255,255,0.9)",
+                fontSize: "12px",
+              },
+              // adjust zIndex to be above other markers
+              zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
+            });
+          },
+        };
+        const panel: [Renderer] = [ interpolatedRenderer]
+        const render = panel[0];
         // Add a marker clusterer to manage the markers.
-        new MarkerClusterer({ markers, map });
+        new MarkerClusterer({ markers, map, renderer : render });
       })
     });
   }
