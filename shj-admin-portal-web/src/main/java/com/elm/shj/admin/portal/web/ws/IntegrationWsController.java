@@ -9,6 +9,7 @@ import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
 import com.elm.shj.admin.portal.services.company.CompanyService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
+import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
@@ -101,7 +102,7 @@ public class IntegrationWsController {
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantPackageService applicantPackageService;
     private final CompanyService companyService;
-
+    private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -772,12 +773,18 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> updateLoggedInFromMobileAppFlag( @PathVariable String uin,@PathVariable boolean mobileLoggedIn) {
         Optional<ApplicantDto> applicant = applicantService.findByUin(uin);
         if (applicant.isPresent()) {
-            applicantService.updateLoggedInFromMobileAppFlag( mobileLoggedIn,applicant.get().getId());
+            applicantService.updateLoggedInFromMobileAppFlag(mobileLoggedIn, applicant.get().getId());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(null).build());
         } else {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(uin).build()).build());
         }
+    }
+
+    @GetMapping("/validate-suin/{suin}")
+    public ResponseEntity<WsResponse<?>> validateSuin(@PathVariable String suin) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffDigitalIdService.findStaffSuinStatusCode(suin)).build());
+
     }
 
 }
