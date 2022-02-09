@@ -36,6 +36,8 @@
     "@angular/platform-browser-dynamic": "~9.1.6",
     "@angular/router": "~9.1.6",
     "@angular/service-worker": "~9.1.6",
+    "@dcc-commons-ng/pipes": "^2.0.0",
+    "@dcc-commons-ng/services": "^2.0.8",
     "@googlemaps/js-api-loader": "^1.13.4",
     "@googlemaps/markerclusterer": "^1.0.22",
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
