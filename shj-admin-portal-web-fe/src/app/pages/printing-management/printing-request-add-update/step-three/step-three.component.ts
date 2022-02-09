@@ -71,7 +71,7 @@ export class StepThreeComponent implements OnInit {
   confirm() {
     console.log("confirm batching");
     this.onChangeLoading.emit(true);
-    this.printRequest.description = this.description;
+    this.printRequest.description = this.description.replace(/\s/g, " ").trim();
     this.printService.confirm(this.printRequest).subscribe(result => {
       this.onChangeLoading.emit(false);
       if (result.hasOwnProperty("errors") && result.errors) {
