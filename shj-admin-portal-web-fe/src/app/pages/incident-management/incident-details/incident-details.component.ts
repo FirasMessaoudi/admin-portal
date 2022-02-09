@@ -3,6 +3,7 @@ import {DOCUMENT} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
 import {combineLatest} from "rxjs";
 import {map} from "rxjs/operators";
+import { Loader } from "@googlemaps/js-api-loader";
 import {ApplicantIncident} from "@model/applicant-incident.model";
 import {IncidentService} from "@core/services/incident/incident.service";
 import {TranslateService} from "@ngx-translate/core";
@@ -131,13 +132,18 @@ export class IncidentDetailsComponent implements OnInit {
 
   async loadGoogleMapsApiKey() {
     this.lookupsService.loadGoogleMapsApiKey().subscribe(result => {
-      this.loadScript(result).then(() => {
-        this.mapIsReady = true;
-        this.icon = {
-          url: 'assets/images/svg-icons/map-marker-alt-solid.svg', // url
-          scaledSize: new google.maps.Size(50, 50), // scaled size
-        };
-      });
+      let loader = new Loader({apiKey: result})
+      loader.load().then(()=>{
+        const map = new google.maps.Map(document.getElementById("map"),{
+          center:{lat: 21.423461874376475, lng: 39.825553299746616},
+          zoom: 5,
+          scrollwheel: true,
+        });
+        new google.maps.Marker({
+          position: {lat: this.incident?.locationLat, lng: this.incident?.locationLng},
+          map,
+        });
+      })
     });
   }
 

@@ -100,11 +100,10 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     List<String> findAllNationalities();
 
     long countAllByMobileLoggedInIsNotNull();
+
     long countAllByMobileLoggedInTrue();
 
     @Modifying
     @Query("UPDATE JpaApplicant a SET a.mobileLoggedIn = :mobileLoggedIn, a.updateDate = CURRENT_TIMESTAMP WHERE a.id = :applicantId")
-    void updateLoggedInFromMobileAppFlag(@Param("applicantId") long applicantId, @Param("mobileLoggedIn") boolean mobileLoggedIn );
-
-
+    void updateLoggedInFromMobileAppFlag(@Param("applicantId") long applicantId, @Param("mobileLoggedIn") boolean mobileLoggedIn);
 }

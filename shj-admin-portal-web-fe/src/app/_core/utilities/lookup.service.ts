@@ -31,4 +31,8 @@ export class LookupService {
   loadGoogleMapsApiKey(): Observable<any> {
     return this.http.get<any>('/core/api/lookup/google-maps/api-key', {responseType: 'text' as 'json'});
   }
+
+  loadDashboardRefreshInterval(): Observable<any> {
+    return this.http.get<any>('/core/api/lookup/dashboard/refresh-interval', {responseType: 'number' as 'json'});
+  }
 }

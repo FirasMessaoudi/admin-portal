@@ -31,6 +31,6 @@ public class DashboardGeneralNumbersVo implements Serializable {
     private long totalNumberOfExternalApplicants;
     private long totalNumberOfLoggedInUsers;
     private long totalNumberOfLoggedOutUsers;
-    private long totalNumberOfUsersInstalledApp;
+    private long totalNumberOfMobileAppDownloads;
 
 }

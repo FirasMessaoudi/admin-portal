@@ -1,6 +1,10 @@
+<a class="d-block button_back" href="javascript:void(0);" [routerLink]="['/']">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
 <div class="content__wrapper">
   <div class="title__Page">
-    <h3 class="font-weight-bold text-dark">احصائيات الجوال</h3>
+    <h3 class="font-weight-bold text-dark">إحصائيات الجوال</h3>
     <div>
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
@@ -25,14 +29,16 @@
                     <div>
                       <div class="sts-title">تحميل التطبيق</div>
                       <div class="sts-number text-dark">
-                        <ng9-odometer [number]="appdownloads"></ng9-odometer>
+                        <ng9-odometer [number]="mobileAppDownloadsData?.totalNumberOfLoggedInUsers"></ng9-odometer>
                       </div>
                     </div>
                     <svg-icon styleClass="sts-icon fa-w-10 display-4" icon="mobile-android-alt"></svg-icon>
                   </div>
 
                   <p class="py-3">
-                    <ngb-progressbar type="appdownloads" [value]="25" height="10px"></ngb-progressbar>
+                    <ngb-progressbar type="appdownloads"
+                                     [value]="mobileAppDownloadsData?.totalNumberOfLoggedInUsers / mobileAppDownloadsData?.totalNumberOfMobileAppDownloads * 100"
+                                     height="10px"></ngb-progressbar>
                   </p>
 
                   <div class="flex-center-between mt-2">
@@ -40,20 +46,25 @@
                       <svg-icon styleClass="text-appdownloads" icon="circle"></svg-icon>
                       <div class="px-3">مفعل</div>
                     </div>
-                    <div>875,755</div>
+                    <div>{{mobileAppDownloadsData?.totalNumberOfLoggedInUsers}}</div>
                   </div>
                   <div class="flex-center-between mt-2">
                     <div class="d-flex">
                       <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
                       <div class="px-3">غير مفعل</div>
                     </div>
-                    <div>300,755</div>
+                    <div>{{mobileAppDownloadsData?.totalNumberOfLoggedOutUsers}}</div>
                   </div>
                 </div>
               </div>
-              <div class="col">
-                <div class="h-100 bg-dcc-light flex-center">
-                  Content
+              <div class="col-xl-9">
+                <div class="py-3">
+                  <canvas baseChart #companiesByApplicantCount
+                          [datasets]="datasets"
+                          [labels]="this.weekDays"
+                          [options]="chartsConfig.lineChartOptions"
+                          [colors]="chartsConfig.lineChartColors"
+                          chartType="line" height="60"></canvas>
                 </div>
               </div>
             </div>
@@ -64,7 +75,7 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">إستخدام التطبيق بالنسبة للاعمار</h5>
+              <h5 class="sts">استخدام التطبيق بالنسبة للأعمار</h5>
               <button type="button" class="btn border mx-3">
                 آخر يوم
                 <svg-icon icon="calendar"></svg-icon>
@@ -78,9 +89,9 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">إستخدام التطبيق بالنسبة للشركات</h5>
+              <h5 class="sts">استخدام التطبيق بالنسبة للشركات</h5>
               <button type="button" class="btn border mx-3">
-                اعلى استخدام
+                أعلى استخدام
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
             </div>
@@ -99,34 +110,34 @@
                   <ng-template ngbNavContent>
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
                       <div class="form-group col">
-                          <label class="col-form-label">المنطقة</label>
-                          <select class="custom-select">
-                            <option selected value="1">الكل</option>
-                            <option value="2">الرياض</option>
-                            <option value="2">جدة</option>
-                          </select>
+                        <label class="col-form-label">المنطقة</label>
+                        <select class="custom-select">
+                          <option selected value="1">الكل</option>
+                          <option value="2">الرياض</option>
+                          <option value="2">جدة</option>
+                        </select>
                       </div>
                       <div class="form-group col">
-                          <label class="col-form-label">الشركة</label>
-                          <select class="custom-select">
-                            <option selected value="1">الكل</option>
-                            <option value="2">غير سعودي</option>
-                          </select>
+                        <label class="col-form-label">الشركة</label>
+                        <select class="custom-select">
+                          <option selected value="1">الكل</option>
+                          <option value="2">غير سعودي</option>
+                        </select>
                       </div>
                       <div class="form-group col">
-                          <label class="col-form-label">الفترة من - الى</label>
-                          <div class='input-group mr-3 calendar'>
-                            <input class="form-control bg-transparent" placeholder="yyyy-mm-dd" name="wp">
-                            <i class="icon"></i>
-                          </div>
+                        <label class="col-form-label">الفترة من - إلى</label>
+                        <div class='input-group mr-3 calendar'>
+                          <input class="form-control bg-transparent" placeholder="yyyy-mm-dd" name="wp">
+                          <i class="icon"></i>
+                        </div>
                       </div>
                       <div class="form-group col">
-                          <label class="col-form-label">الجنسية</label>
-                          <select class="custom-select">
-                            <option selected value="1">الكل</option>
-                            <option value="2">سعودي</option>
-                            <option value="2">غير سعودي</option>
-                          </select>
+                        <label class="col-form-label">الجنسية</label>
+                        <select class="custom-select">
+                          <option selected value="1">الكل</option>
+                          <option value="2">سعودي</option>
+                          <option value="2">غير سعودي</option>
+                        </select>
                       </div>
                     </div>
                     <div class="flex-center">
