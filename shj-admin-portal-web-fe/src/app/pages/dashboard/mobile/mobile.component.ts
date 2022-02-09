@@ -4,6 +4,10 @@ import {DashboardMobileNumbersVo} from "@model/dashboard-mobile-numbers-vo.model
 import {ChartsConfig} from "@pages/dashboard/charts.config";
 import {ChartDataSets} from "chart.js";
 
+import * as momentjs from 'moment';
+
+const moment = momentjs;
+
 @Component({
   selector: 'app-mobile',
   templateUrl: './mobile.component.html',
@@ -14,15 +18,17 @@ export class MobileComponent implements OnInit {
   mobileAppDownloadsData: DashboardMobileNumbersVo;
 
   chartsConfig: ChartsConfig = new ChartsConfig();
-  weekDays: Array<any>;
+  weekDays: Array<any> = [];
   datasets: ChartDataSets[];
 
   constructor(private dashboardService: DashboardService) {
   }
 
   ngOnInit() {
+    this.chartsConfig.lineChartOptions.legend = false;
     this.dashboardService.loadMobileAppDownloadsNumbers().subscribe(data => this.mobileAppDownloadsData = data);
-    this.weekDays = ['اﻷحد', 'اﻷثنين', 'الثلاثاء', 'اﻷربعاء', 'الخميس', 'الجمعة', 'السبت'];
+    this.getWeekDays();
+
     this.datasets = [
       {
         //TODO Dummy Data
@@ -39,7 +45,15 @@ export class MobileComponent implements OnInit {
         // @ts-ignore
         tension: 0
       }];
-    this.chartsConfig.lineChartOptions.legend = false;
+
+  }
+
+  getWeekDays() {
+    let day = moment();
+    for (let i = 1; i < 8; i++) {
+      this.weekDays.unshift(day.locale('ar').format('dddd'));
+      day = day.clone().subtract(1, 'd');
+    }
   }
 
 }

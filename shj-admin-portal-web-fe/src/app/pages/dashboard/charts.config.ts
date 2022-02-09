@@ -55,6 +55,9 @@ export class ChartsConfig {
         radius: 5
       }
     },
+    tooltips: {
+      bodyFontFamily: FONTS,
+    },
     plugins: // [ChartDataLabels],
       {
         datalabels: {
@@ -67,7 +70,7 @@ export class ChartsConfig {
             weight: 'bold'
           },
           formatter: Math.round
-        }
+        },
       },
     legend: {
       labels: {
@@ -91,10 +94,11 @@ export class ChartsConfig {
           stacked: true,
           gridLines: {
             borderDash: [8, 6],
-            color: '#F3F5F2',
+            color: '#EDEDED',
           },
           ticks: {
             fontFamily: FONTS,
+            fontColor: '#8A8A96',
             beginAtZero: true,
             callback: function (value) {
               if (value % 1 === 0) {
@@ -117,6 +121,9 @@ export class ChartsConfig {
         hoverRadius: 7,
         radius: 5
       }
+    },
+    tooltips: {
+      bodyFontFamily: FONTS,
     },
     plugins: {
       datalabels: {
@@ -144,10 +151,11 @@ export class ChartsConfig {
         {
           gridLines: {
             borderDash: [8, 6],
-            color: '#F3F5F2',
+            color: '#EDEDED',
           },
           ticks: {
             fontFamily: FONTS,
+            fontColor: '#8A8A96',
             callback: function (value) {
               if (value % 10 === 0) {
                 return value;
