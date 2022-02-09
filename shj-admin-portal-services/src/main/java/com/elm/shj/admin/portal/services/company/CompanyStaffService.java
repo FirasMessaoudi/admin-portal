@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.company;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
+import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffDigitalIdRepository;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
@@ -29,9 +29,6 @@ import java.util.regex.Pattern;
 public class CompanyStaffService extends GenericService<JpaCompanyStaff, CompanyStaffDto, Long> {
 
     private final CompanyStaffRepository companyStaffRepository;
-    private final CompanyStaffDigitalIdRepository companyStaffDigitalIdRepository;
-    private final ApplicantPackageService applicantPackageService;
-    private final ApplicantRitualService applicantRitualService;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
     public final static Pattern  EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
@@ -130,4 +127,11 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         Matcher matcher = EMAIL_ADDRESS_REGEX.matcher(email);
         return matcher.find();
     }
+
+    public Optional<CompanyStaffVO> findStaffRitualBySuin(String suin) {
+        CompanyStaffVO staffRitual = companyStaffRepository.findStaffRitual(suin);
+        return staffRitual == null? Optional.empty(): Optional.of(staffRitual);
+    }
+
+
 }

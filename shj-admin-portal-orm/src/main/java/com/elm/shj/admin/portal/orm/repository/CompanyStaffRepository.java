@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -72,4 +73,16 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     int updateCompanyStaffLocalNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("localMobileNumber") String localMobileNumber, @Param("staffId") long staffId);
 
     JpaCompanyStaff findByIdAndRegisteredTrue(long id);
+
+@Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffVO(" +
+        " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode,staff.photo, " +
+        " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr ) " +
+        "from JpaCompanyStaff staff " +
+        "join staff.digitalIds digitalId " +
+        "join digitalId.companyStaffCards cards " +
+        "join cards.companyRitualSeason companyRitualSeason " +
+        "join companyRitualSeason.ritualSeason ritualSeason " +
+        "join companyRitualSeason.company company " +
+        "where digitalId.suin = :suin ")
+CompanyStaffVO findStaffRitual(@Param("suin") String suin);
 }
