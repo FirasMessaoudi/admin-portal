@@ -473,5 +473,35 @@ INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date
 VALUES (17, 'JABAL_ALRAHMA', 'en', 'Alrahma Mountain', GETDATE());
 INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
 VALUES (18, 'JABAL_ALRAHMA', 'ar', N'جبل الرحمة', GETDATE());
-SET IDENTITY_INSERT shc_portal.shc_housing_site_lk OFF;
+SET
+IDENTITY_INSERT shc_portal.shc_housing_site_lk OFF;
+
+SET
+IDENTITY_INSERT shc_portal.shc_authority_lk ON;
+GO
+INSERT INTO shc_portal.shc_authority_lk (id, label_ar, label_en, code, parent_id)
+VALUES (39, N'احصائيات الجوال', N'Mobile Tracking Dashboard', N'MOBILE_TRACKING_DASHBOARD', 1);
+INSERT INTO shc_portal.shc_authority_lk (id, label_ar, label_en, code, parent_id)
+VALUES (40, N'احصائيات العمليات', N'Statistical Dashboard', N'STATISTICAL_DASHBOARD', 1);
+
+GO
+SET IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
+
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
+VALUES (1, 39);
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
+VALUES (1, 40);
+
+
+UPDATE shc_portal.shc_applicant_incident
+SET shc_applicant_incident.area_code = 'ARAFAT'
+WHERE id > 0;
+GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('dashboard.incident.company.chart.size', 15);
+GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('dashboard.refresh-interval', 10*60*1000); -- 10 minutes
 GO

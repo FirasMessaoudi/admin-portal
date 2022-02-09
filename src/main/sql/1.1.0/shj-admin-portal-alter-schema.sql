@@ -1248,11 +1248,18 @@ CREATE TABLE shc_portal.shc_applicant_emergency_data_upload
 );
 GO
 
-ALTER TABLE shc_portal.shc_ritual_package ADD start_date DATE, end_date DATE;
+ALTER TABLE shc_portal.shc_ritual_package
+    ADD start_date DATE, end_date DATE;
 GO
 
-ALTER TABLE shc_portal.shc_applicant ADD mobile_logged_in bit NULL
+ALTER TABLE shc_portal.shc_applicant
+    ADD mobile_logged_in bit NULL
 GO
 
-ALTER TABLE shc_portal.shc_applicant_incident ADD area_code varchar(20)
-GO
+ALTER TABLE shc_portal.shc_applicant_incident
+    ADD area_code varchar(20)
+    GO
+
+
+alter table shc_portal.shc_print_request_batch_card drop CONSTRAINT fk_print_request_batch_card_card;
+alter table shc_portal.shc_print_request_card drop CONSTRAINT fk_print_request_card_applicant_card;

@@ -18,13 +18,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.*;
-
-import java.util.List;
 
 /**
  * Service handling company staff digital id
@@ -45,7 +46,6 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
             ));
 
     private final CompanyStaffDigitalIdRepository  companyStaffDigitalIdRepository;
-
 
 
     /**
@@ -74,7 +74,7 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
         String suinPrefix = genderDigit + seasonYear;
         List<String> latestSerialList = companyStaffDigitalIdRepository.fetchSuinBySuinLike(suinPrefix);
         long nextSequence = CollectionUtils.isEmpty(latestSerialList) ? 1 : Long.parseLong(latestSerialList.get(0)) + 1;
-          String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 6, "0");
+        String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 6, "0");
         // generate checksum digit
         String partialSmartId = suinPrefix + serialDigits;
         String checkDigit = calculateCheckDigit(partialSmartId);
@@ -82,7 +82,6 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
         return partialSmartId + checkDigit;
 
     }
-
 
 
     /**
@@ -125,13 +124,14 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
     public CompanyStaffDigitalIdDto save(CompanyStaffDigitalIdDto dto) {
         return super.save(dto);
     }
+
     /**
      * @param staffId
      * @param season
      * @return list of companyStaffDigitalId
      */
     public CompanyStaffDigitalIdDto findByBasicInfo(long staffId, int season) {
-      Optional<JpaCompanyStaffDigitalId> digitalId=  companyStaffDigitalIdRepository.findByBasicInfo(staffId,season,EDigitalIdStatus.VALID.name()) ;
+        Optional<JpaCompanyStaffDigitalId> digitalId=  companyStaffDigitalIdRepository.findByBasicInfo(staffId,season,EDigitalIdStatus.VALID.name()) ;
         if (digitalId!=null && digitalId.isPresent()) {
             return getMapper().fromEntity(digitalId.get(), mappingContext);
         }
@@ -151,6 +151,7 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
         }
         return null;
     }
+
     /**
      * Find all staff without digital IDs
      *
@@ -158,5 +159,13 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
      */
     public List<CompanyStaffDigitalIdDto> findAllWithoutDigitalId() {
         return mapList(companyStaffDigitalIdRepository.findBySuinIsNull());
+    }
+
+    /**
+     * @param suin
+     * @return status code of the give suin
+     */
+    public String findStaffSuinStatusCode(String suin) {
+        return companyStaffDigitalIdRepository.findStaffSuinStatusCode(suin);
     }
 }

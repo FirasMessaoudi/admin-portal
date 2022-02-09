@@ -34,4 +34,8 @@ public interface CompanyStaffDigitalIdRepository extends JpaRepository<JpaCompan
 
     List<JpaCompanyStaffDigitalId> findByStatusCodeAndCompanyStaffCardsCompanyRitualSeasonSeasonEndLessThan(String status, long hijriDate);
 
+    @Query("select c.statusCode from JpaCompanyStaffDigitalId  c where c.suin = :suin")
+    String findStaffSuinStatusCode(@Param("suin") String suin);
+
+    ;
 }

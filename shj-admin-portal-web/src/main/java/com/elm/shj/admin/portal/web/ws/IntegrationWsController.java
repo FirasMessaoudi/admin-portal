@@ -6,6 +6,11 @@ package com.elm.shj.admin.portal.web.ws;
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.company.*;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
+import com.elm.shj.admin.portal.services.company.CompanyService;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
+import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
@@ -99,7 +104,7 @@ public class IntegrationWsController {
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantPackageService applicantPackageService;
     private final CompanyService companyService;
-
+    private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -283,18 +288,25 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> createApplicantRelativesChatContacts(@RequestBody String applicantUin) {
         //find relatives for this applicant , check if they are not in the contacts  and add them one by one
         ApplicantRitualDto latestApplicantRitual = applicantRitualService.findLatestApplicantRitual(applicantUin);
-        List<ApplicantRelativeDto> relatives = applicantRelativesService.findApplicantRelativesInLastRitual(applicantUin, latestApplicantRitual.getPackageReferenceNumber());
+        List<ApplicantRelativeDto> relatives = applicantRelativesService
+                .findApplicantRelativesInLastRitual(applicantUin, latestApplicantRitual.getPackageReferenceNumber());
         if (!relatives.isEmpty()) {
             relatives.stream().forEach(relative -> {
-                ApplicantChatContactDto applicantChatContact = applicantChatContactService.findApplicantChatContact(applicantUin, relative.getRelativeApplicant().getDigitalIds().get(0).getUin());
+                if (relative.getApplicantRitual() == null) {
+                    log.error("no ritual id for this relative {}", relative.getId());
+                    return;
+                }
+                ApplicantChatContactDto applicantChatContact = applicantChatContactService
+                        .findApplicantChatContact(applicantUin, relative.getRelativeApplicant().getDigitalIds().get(0).getUin());
                 if (applicantChatContact == null) {
-                    applicantChatContactService.createApplicantRelativesChatContacts(relative, relative.getApplicantRitual().getId());
+                    applicantChatContactService.createApplicantRelativesChatContacts(relative, latestApplicantRitual.getId());
+                } else {
+                    log.error("applicant chat contact already found for this relative {}", relative.getId());
                 }
             });
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).build());
         } else {
             log.error("no relatives for this  applicant in this ritual");
-
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_RELATIVE_NOT_FOUND.getCode()).referenceNumber(applicantUin).build()).build());
         }
@@ -772,12 +784,18 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> updateLoggedInFromMobileAppFlag( @PathVariable String uin,@PathVariable boolean mobileLoggedIn) {
         Optional<ApplicantDto> applicant = applicantService.findByUin(uin);
         if (applicant.isPresent()) {
-            applicantService.updateLoggedInFromMobileAppFlag( mobileLoggedIn,applicant.get().getId());
+            applicantService.updateLoggedInFromMobileAppFlag(mobileLoggedIn, applicant.get().getId());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(null).build());
         } else {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(uin).build()).build());
         }
+    }
+
+    @GetMapping("/validate-suin/{suin}")
+    public ResponseEntity<WsResponse<?>> validateSuin(@PathVariable String suin) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffDigitalIdService.findStaffSuinStatusCode(suin)).build());
+
     }
 
 

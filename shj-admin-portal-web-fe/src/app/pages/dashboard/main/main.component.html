@@ -122,7 +122,7 @@
             <div>
               <div class="sts-title">تحميل التطبيق</div>
               <div class="sts-number text-dark">
-                <ng9-odometer [number]="currentSeasonData?.totalNumberOfUsersInstalledApp"></ng9-odometer>
+                <ng9-odometer [number]="currentSeasonData?.totalNumberOfMobileAppDownloads"></ng9-odometer>
               </div>
             </div>
             <svg-icon styleClass="sts-icon fa-w-10 display-4" icon="mobile-android-alt"></svg-icon>
@@ -130,7 +130,7 @@
 
           <p class="py-3">
             <ngb-progressbar type="appdownloads"
-                             [value]="currentSeasonData?.totalNumberOfLoggedInUsers / currentSeasonData?.totalNumberOfUsersInstalledApp * 100"
+                             [value]="currentSeasonData?.totalNumberOfLoggedInUsers / currentSeasonData?.totalNumberOfMobileAppDownloads * 100"
                              height="10px"></ngb-progressbar>
           </p>
 
@@ -215,11 +215,11 @@
             </canvas>
             <div>
               <p>
-                <b class="text-dark ml-3">{{mostIncidentsArea}}</b> <span>اكثر المناطق التي يوجد بها بلاغات هي</span>
+                <b class="text-dark ml-3">{{mostIncidentsArea}}</b> <span>أكثر المناطق التي يوجد بها بلاغات هي</span>
               </p>
 
               <p>
-                <span>اكثر يوم تم تسجيل به اكبر عدد من البلاغات هو </span>
+                <span>أكثر يوم تم فيه تسجيل أكبر عدد من البلاغات هو </span>
                 <b class="text-dark ml-3">{{mostIncidentDate}}</b>
               </p>
 

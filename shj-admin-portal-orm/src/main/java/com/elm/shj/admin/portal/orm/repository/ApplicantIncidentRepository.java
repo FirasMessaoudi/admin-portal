@@ -5,6 +5,9 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
+import com.elm.shj.admin.portal.orm.entity.LocationVo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -36,7 +39,19 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(ai),'') " +
             "FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
-            "JOIN rp.companyRitualSeason crs JOIN crs.company c WHERE  c.labelAr is NOT NULL GROUP BY c.labelAr")
-    List<CountVo> countIncidentByCompany();
+            "JOIN rp.companyRitualSeason crs JOIN crs.company c WHERE  c.labelAr is NOT NULL GROUP BY c.labelAr ORDER BY COUNT(c.labelAr) DESC")
+    Page<CountVo> findCompaniesWithMaxIncidents(Pageable pageable);
+
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(ai),'') " +
+            "FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
+            "JOIN rp.companyRitualSeason crs JOIN crs.company c WHERE  c.labelAr is NOT NULL GROUP BY c.labelAr ORDER BY COUNT(c.labelAr)")
+    Page<CountVo> findCompaniesWithMinIncidents(Pageable pageable);
+
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocationVo(i.locationLat, i.locationLng) " +
+            "FROM JpaApplicantIncident i JOIN i.applicantRitual ar JOIN ar.applicantPackage ap " +
+            "JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs  where rs.seasonYear = :seasonYear " +
+            "and rs.ritualTypeCode IN (:ritualTypeCodeList)")
+    List<LocationVo> getIncidentsLocationsBySeasonAndRitualType(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
+
 
 }

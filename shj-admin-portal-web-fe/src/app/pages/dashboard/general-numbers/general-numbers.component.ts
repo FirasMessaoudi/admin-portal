@@ -1,14 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { DashboardService } from '@core/services';
-import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
-import { CountVo } from '@app/_shared/model/countVo.model';
-import { Lookup } from '@model/lookup.model';
-import { LookupService } from '@core/utilities/lookup.service';
-import { ChartsConfig } from '@pages/dashboard/charts.config';
-import { DashboardVo } from '@shared/model';
-
-const FONTS: string = '"Elm-font", sans-serif';
+import {Component, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {DashboardService} from '@core/services';
+import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
+import {CountVo} from '@app/_shared/model/countVo.model';
+import {Lookup} from '@model/lookup.model';
+import {LookupService} from '@core/utilities/lookup.service';
+import {ChartsConfig} from '@pages/dashboard/charts.config';
+import {DashboardVo} from '@shared/model';
 
 @Component({
   selector: 'app-general-numbers',
@@ -45,42 +43,12 @@ export class GeneralNumbersComponent implements OnInit {
   constructor(
     private dashboardService: DashboardService,
     private lookupService: LookupService
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.loadLookups();
-
-    this.chartsConfig.barChartOptions = {
-      ...this.chartsConfig.barChartOptions,
-      legend: false,
-      scales: {
-        ...this.chartsConfig.barChartOptions.scales,
-        xAxes: [
-          {
-            gridLines: {
-              color: 'rgba(0, 0, 0, 0)',
-            },
-          },
-        ],
-        yAxes: [
-          {
-            gridLines: {
-              borderDash: [8, 6],
-              color: '#F3F5F2',
-            },
-            ticks: {
-              fontFamily: FONTS,
-              beginAtZero: true,
-              callback: function (value) {
-                if (value % 1 === 0) {
-                  return value;
-                }
-              },
-            },
-          },
-        ],
-      },
-    };
+    this.chartsConfig.barChartOptions.legend = false;
 
     this.currentSeasonSubscription = this.dashboardService
       .loadGeneralNumbersForCurrentSeason()

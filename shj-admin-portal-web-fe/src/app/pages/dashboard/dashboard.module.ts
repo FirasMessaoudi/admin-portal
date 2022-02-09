@@ -5,6 +5,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {ChartsModule} from "ng2-charts";
 import { SharedModule } from '@app/_shared/shared.module';
+//import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
   imports: [

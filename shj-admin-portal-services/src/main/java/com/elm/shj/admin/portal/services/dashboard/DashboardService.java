@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.dashboard;
 
 import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
+import com.elm.shj.admin.portal.orm.entity.LocationVo;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.dto.EGender;
 import com.elm.shj.admin.portal.services.dto.ERitualType;
@@ -38,6 +39,12 @@ public class DashboardService {
 
     @Value("${applicants.counter.ages.range}")
     private String agesRange;
+
+    @Value("${dashboard.incident.company.chart.size}")
+    private int maxCompanyChartSize;
+
+    @Value("${dashboard.refresh-interval}")
+    private int refreshInterval;
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -175,7 +182,7 @@ public class DashboardService {
 
         long totalNumberOfUsersInstalledApp = applicantRepository.countAllByMobileLoggedInIsNotNull();
         long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue();
-        long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfUsersInstalledApp-totalNumberOfLoggedInUsersFromMobile ;
+        long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfUsersInstalledApp - totalNumberOfLoggedInUsersFromMobile;
 
         return DashboardGeneralNumbersVo.builder()
                 .totalNumberOfApplicants(totalNumberOfApplicants)
@@ -183,7 +190,7 @@ public class DashboardService {
                 .totalNumberOfFemaleApplicants(totalNumberOfFemaleApplicants)
                 .totalNumberOfInternalApplicants(totalNumberOfInternalApplicants)
                 .totalNumberOfExternalApplicants(totalNumberOfExternalApplicants)
-                .totalNumberOfUsersInstalledApp(totalNumberOfUsersInstalledApp)
+                .totalNumberOfMobileAppDownloads(totalNumberOfUsersInstalledApp)
                 .totalNumberOfLoggedInUsers(totalNumberOfLoggedInUsersFromMobile)
                 .totalNumberOfLoggedOutUsers(totalNumberOfLoggedOutUsersFromMobile)
 
@@ -195,12 +202,11 @@ public class DashboardService {
         long totalNumberOfRegisteredIncidents = applicantIncidentRepository.count();
         long totalNumberOfResolvedIncidents = applicantIncidentRepository.countAllResolvedIncidents();
         long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents();
-        List<CountVo> countIncidentByCompany = applicantIncidentRepository.countIncidentByCompany();
 
         Date mostIncidentDate = new Date();
         Map<Long, Long> mostIncidentDateCount = allApplicantIncident.stream().collect(Collectors.groupingBy(d -> DateUtils.toHijri(d.getCreationDate()), Collectors.counting()));
-        if(!mostIncidentDateCount.isEmpty()){
-            if(mostIncidentDateCount.entrySet().iterator().hasNext() && null != mostIncidentDateCount.entrySet().iterator()) {
+        if (!mostIncidentDateCount.isEmpty()) {
+            if (mostIncidentDateCount.entrySet().iterator().hasNext() && null != mostIncidentDateCount.entrySet().iterator()) {
                 Map.Entry<Long, Long> dateEntry = mostIncidentDateCount.entrySet().iterator().next();
                 mostIncidentDate = DateUtils.toGregorian(dateEntry.getKey());
             }
@@ -208,15 +214,15 @@ public class DashboardService {
 
         String mostIncidentsArea = "";
         Map<String, Long> incidentByArea = allApplicantIncident.stream().collect(Collectors.groupingBy(JpaApplicantIncident::getAreaCode, Collectors.counting()));
-        if(!incidentByArea.isEmpty()) {
-            if(incidentByArea.entrySet().iterator().hasNext()) {
+        if (!incidentByArea.isEmpty()) {
+            if (incidentByArea.entrySet().iterator().hasNext()) {
                 Map.Entry<String, Long> incidentByAreaMapEntry = incidentByArea.entrySet().iterator().next();
                 mostIncidentsArea = incidentByAreaMapEntry.getKey();
             }
         }
         Map<String, Long> incidentByType = allApplicantIncident.stream().collect(Collectors.groupingBy(JpaApplicantIncident::getTypeCode, Collectors.counting()));
         List<CountVo> countVoList = new ArrayList<CountVo>();
-        for (Map.Entry<String,Long> entry : incidentByType.entrySet()){
+        for (Map.Entry<String, Long> entry : incidentByType.entrySet()) {
             CountVo countVo = new CountVo();
             countVo.setLabel(entry.getKey());
             countVo.setCount(entry.getValue());
@@ -227,7 +233,6 @@ public class DashboardService {
                 .totalNumberOfRegisteredIncidents(totalNumberOfRegisteredIncidents)
                 .totalNumberOfResolvedIncidents(totalNumberOfResolvedIncidents)
                 .totalNumberOfUnResolvedIncidents(totalNumberOfUnResolvedIncidents)
-                .countIncidentByCompany(countIncidentByCompany)
                 .countIncidentByTypes(countVoList)
                 .mostIncidentDate(mostIncidentDate)
                 .mostIncidentsArea(mostIncidentsArea)
@@ -294,5 +299,32 @@ public class DashboardService {
 
     public List<CountVo> loadCampsWithMinApplicantsCountByHijriSeason(int currentHijriYear) {
         return packageHousingRepository.findCampsWithMinApplicantsByHijriSeason(currentHijriYear, PageRequest.of(0, 15)).getContent();
+    }
+
+    public List<LocationVo> getIncidentsLocationsFromCurrentSeason() {
+        return applicantIncidentRepository.getIncidentsLocationsBySeasonAndRitualType((int) DateUtils.getCurrentHijriYear(), List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
+    }
+
+    public List<CountVo> loadCompaniesWithMaxIncidentsCount() {
+        return applicantIncidentRepository.findCompaniesWithMaxIncidents(PageRequest.of(0, maxCompanyChartSize)).getContent();
+    }
+
+    public List<CountVo> loadCompaniesWithMinIncidentsCount() {
+        return applicantIncidentRepository.findCompaniesWithMinIncidents(PageRequest.of(0, maxCompanyChartSize)).getContent();
+    }
+
+    public DashboardMobileNumbersVo getMobileAppDownloadsFromCurrentSeason() {
+        long totalNumberOfMobileAppDownloads = applicantRepository.countAllByMobileLoggedInIsNotNull();
+        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue();
+        long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfMobileAppDownloads - totalNumberOfLoggedInUsersFromMobile;
+        return DashboardMobileNumbersVo.builder()
+                .totalNumberOfMobileAppDownloads(totalNumberOfMobileAppDownloads)
+                .totalNumberOfLoggedInUsers(totalNumberOfLoggedInUsersFromMobile)
+                .totalNumberOfLoggedOutUsers(totalNumberOfLoggedOutUsersFromMobile)
+                .build();
+    }
+
+    public int getRefreshInterval() {
+        return refreshInterval;
     }
 }

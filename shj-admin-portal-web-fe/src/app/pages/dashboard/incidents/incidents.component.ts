@@ -1,16 +1,21 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {AfterViewInit, Component, Inject, OnChanges, OnInit, Renderer2, SimpleChanges, ViewChild} from '@angular/core';
 import {Label, PluginServiceGlobalRegistrationAndOptions, SingleDataSet} from "ng2-charts";
 import {ChartOptions, ChartType} from "chart.js";
 import {ChartsConfig} from "@pages/dashboard/charts.config";
 import {DashboardService} from "@core/services";
+import { Loader } from "@googlemaps/js-api-loader";
+import { Cluster, ClusterStats, MarkerClusterer , Renderer} from "@googlemaps/markerclusterer";
+//import {GoogleMap, MapMarkerClusterer} from '@angular/google-maps';
 import {LookupService} from "@core/utilities/lookup.service";
 import {Subscription} from "rxjs";
 import {Lookup} from "@model/lookup.model";
 import {CountVo} from "@model/countVo.model";
-import {DatePipe} from "@angular/common";
+import {DatePipe, DOCUMENT} from "@angular/common";
 import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {I18nService} from "@dcc-commons-ng/services";
+import { interpolateRgb } from "d3-interpolate";
 import {DashboardIncidentNumbersVo} from "@model/dashboardIncidentNumbersVo.model";
+import { Position } from '@app/_shared/model/marker.model';
 
 const FONTS: string = '"Elm-font", sans-serif';
 
@@ -19,7 +24,7 @@ const FONTS: string = '"Elm-font", sans-serif';
   templateUrl: './incidents.component.html',
   styleUrls: ['./incidents.component.scss']
 })
-export class IncidentsComponent implements OnInit  {
+export class IncidentsComponent implements OnInit, AfterViewInit  {
   private incidentSubscription: Subscription;
   incidents: DashboardIncidentNumbersVo;
   incidentTypeList: Lookup[];
@@ -33,8 +38,20 @@ export class IncidentsComponent implements OnInit  {
   incidentTypeCounts: Array<any>;
   companyLabels: Array<any>;
   companyCounts: Array<any>;
+  locations: Position[];
+  MAP_ZOOM_OUT = 10;
+  MAP_ZOOM_IN = 25;
+  mapIsReady = false;
   mostIncidentDate: any;
   mostIncidentsArea: string;
+  minCompanies: boolean;
+  mapOptions: google.maps.MapOptions = {
+    center: {lat: 21.423461874376475, lng: 39.825553299746616},
+    zoom: this.MAP_ZOOM_OUT,
+    disableDefaultUI: true,
+    zoomControl: true,
+    scrollwheel: true,
+  }
   public incidentDoughnutChartOptions: ChartOptions = {
     responsive: true,
     cutoutPercentage: 70,
@@ -51,11 +68,19 @@ export class IncidentsComponent implements OnInit  {
   constructor(private dashboardService: DashboardService,
               private lookupService: LookupService,
               private dateFormatterService: DateFormatterService,
-              private i18nService: I18nService) {
+              private i18nService: I18nService,
+              @Inject(DOCUMENT) private document: Document,
+              private renderer2: Renderer2) {
 
+  }
+  ngAfterViewInit(): void {
   }
 
   ngOnInit() {
+    this.dashboardService.loadIncidentsLocationsForCurrentSeason().subscribe(
+      data =>{ this.locations = data;
+        this.loadMapkey();                 }
+    );
     this.loadLookups();
     this.chartsConfig.barChartOptions = {
       ...this.chartsConfig.barChartOptions,
@@ -100,12 +125,32 @@ export class IncidentsComponent implements OnInit  {
       this.setIncidentCenterTitle('مجموع البلاغات',this.incidents.totalNumberOfRegisteredIncidents);
       this.setIncidentTypeCenterTitle('مجموع البلاغات',this.incidents.totalNumberOfRegisteredIncidents);
 
-      this.companyCounts = this.incidents.countIncidentByCompany.map((i) => i.count);
-      this.companyLabels = this.incidents.countIncidentByCompany.map((d) => d.label);
       this.mostIncidentDate = this.formatHijriDate(this.incidents.mostIncidentDate);
       this.mostIncidentsArea = this.incidents.mostIncidentsArea;
-    })
 
+      this.loadMaxCompanies();
+      this.loadMinCompanies();
+    })
+  }
+
+  loadMinCompanies() {
+    this.minCompanies = true;
+    this.dashboardService
+      .loadCompaniesWithMinIncidentCount()
+      .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
+    this.dashboardService
+      .loadCompaniesWithMinIncidentCount()
+      .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
+  }
+
+  loadMaxCompanies() {
+    this.minCompanies = false;
+    this.dashboardService
+      .loadCompaniesWithMaxIncidentCount()
+      .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
+    this.dashboardService
+      .loadCompaniesWithMaxIncidentCount()
+      .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
   }
 
   setIncidentCenterTitle(title:string, countText:number) {
@@ -169,6 +214,62 @@ export class IncidentsComponent implements OnInit  {
     this.dashboardService.findIncidentStatus().subscribe(
       data => this.incidentStatusList = data
     )
+  }
+
+  async loadMapkey() {
+    this.lookupService.loadGoogleMapsApiKey().subscribe(result => {
+      let loader = new Loader({apiKey: result})
+      loader.load().then(()=>{
+        const map = new google.maps.Map(document.getElementById("map"),{
+          center:{lat: 21.423461874376475, lng: 39.825553299746616},
+          zoom: 5,
+          scrollwheel: true,
+        });
+            // Add some markers to the map.
+          const markers = this.locations.map((position, i) => {
+          const marker = new google.maps.Marker({
+          position,
+          });
+        return marker;
+        });
+        const interpolatedRenderer = {
+          palette: interpolateRgb("blue", "red"),
+          render: function (
+            { count, position }: Cluster,
+            stats: ClusterStats
+          ): google.maps.Marker {
+            // use d3-interpolateRgb to interpolate between red and blue
+            const color = this.palette(count / stats.clusters.markers.max);
+        
+            // create svg url with fill color
+            const svg = window.btoa(`
+          <svg fill="${color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+            <circle cx="120" cy="120" opacity=".8" r="70" />    
+          </svg>`);
+        
+            // create marker using svg icon
+            return new google.maps.Marker({
+              position,
+              icon: {
+                url: `data:image/svg+xml;base64,${svg}`,
+                scaledSize: new google.maps.Size(75, 75),
+              },
+              label: {
+                text: String(count),
+                color: "rgba(255,255,255,0.9)",
+                fontSize: "12px",
+              },
+              // adjust zIndex to be above other markers
+              zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
+            });
+          },
+        };
+        const panel: [Renderer] = [ interpolatedRenderer]
+        const render = panel[0];
+        // Add a marker clusterer to manage the markers.
+        new MarkerClusterer({ markers, map, renderer : render });
+      })
+    });
   }
 
   formatHijriDate(date: Date): string {

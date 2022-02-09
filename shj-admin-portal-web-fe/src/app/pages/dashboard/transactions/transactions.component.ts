@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {EAuthority} from "@shared/model";
+import {AuthenticationService} from "@core/services";
 
 @Component({
   selector: 'app-transactions',
@@ -7,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TransactionsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private authenticationService: AuthenticationService) {
+  }
 
   ngOnInit() {
   }
 
+  get canSeeStatisticalDashboard(): boolean {
+    return this.authenticationService.hasAuthority(EAuthority.STATISTICAL_DASHBOARD);
+  }
 }

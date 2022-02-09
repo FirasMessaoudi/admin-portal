@@ -6,6 +6,8 @@ import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
 import { CountVo } from '@app/_shared/model/countVo.model';
 import { Lookup } from '@model/lookup.model';
 import {DashboardIncidentNumbersVo} from "@model/dashboardIncidentNumbersVo.model";
+import { Position } from '@app/_shared/model/marker.model';
+import {DashboardMobileNumbersVo} from "@model/dashboard-mobile-numbers-vo.model";
 
 @Injectable({
   providedIn: 'root',
@@ -119,6 +121,42 @@ export class DashboardService {
 
   findIncidentStatus(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/incident-status/list');
+  }
+
+    /**
+   * Load incidents location for current season
+   */
+     loadIncidentsLocationsForCurrentSeason(): Observable<Position[]> {
+      return this.http.get<Position[]>(
+        '/core/api/dashboard/incidents-locations'
+      );
+    }
+
+  /**
+   * Load companies with max incident count
+   */
+  loadCompaniesWithMaxIncidentCount(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/incident-numbers/max-companies'
+    );
+  }
+
+  /**
+   * Load companies with min incident count
+   */
+  loadCompaniesWithMinIncidentCount(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/incident-numbers/min-companies'
+    );
+  }
+
+  /**
+   * Load dashboard mobile app downloads numbers
+   */
+  loadMobileAppDownloadsNumbers(): Observable<DashboardMobileNumbersVo> {
+    return this.http.get<DashboardMobileNumbersVo>(
+      '/core/api/dashboard/mobile/app-downloads'
+    );
   }
 
 }
