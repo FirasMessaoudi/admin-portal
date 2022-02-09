@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {DashboardService} from "@core/services";
+import {EAuthority} from "@shared/model";
+import {AuthenticationService, DashboardService} from "@core/services";
 import {DashboardMobileNumbersVo} from "@model/dashboard-mobile-numbers-vo.model";
 import {ChartsConfig} from "@pages/dashboard/charts.config";
 import {ChartDataSets} from "chart.js";
@@ -21,7 +22,10 @@ export class MobileComponent implements OnInit {
   weekDays: Array<any> = [];
   datasets: ChartDataSets[];
 
-  constructor(private dashboardService: DashboardService) {
+
+  public appdownloads: number = 1103402;
+
+  constructor(private authenticationService: AuthenticationService, private dashboardService: DashboardService) {
   }
 
   ngOnInit() {
@@ -56,4 +60,7 @@ export class MobileComponent implements OnInit {
     }
   }
 
+  get canSeeMobileTrackingDashboard(): boolean {
+    return this.authenticationService.hasAuthority(EAuthority.MOBILE_TRACKING_DASHBOARD);
+  }
 }

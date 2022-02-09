@@ -72,12 +72,12 @@ public class DigitalIdScheduler {
                 if (savedApplicantPackage != null) {
                     applicantRitual = ApplicantRitualDto.builder().applicant(applicant).applicantPackage(savedApplicantPackage).packageReferenceNumber(applicant.getPackageReferenceNumber()).build();
                     applicantRitual = applicantRitualService.save(applicantRitual);
-                    //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
-                    applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
-                    applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
-                    applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
                 }
             }
+            //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
+            applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
+            applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
+            applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
         });
     }
 }

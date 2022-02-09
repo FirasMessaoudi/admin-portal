@@ -233,7 +233,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
         return marker;
         });
         const interpolatedRenderer = {
-          palette: interpolateRgb("red", "blue"),
+          palette: interpolateRgb("blue", "red"),
           render: function (
             { count, position }: Cluster,
             stats: ClusterStats
