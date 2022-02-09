@@ -286,18 +286,26 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> createApplicantRelativesChatContacts(@RequestBody String applicantUin) {
         //find relatives for this applicant , check if they are not in the contacts  and add them one by one
         ApplicantRitualDto latestApplicantRitual = applicantRitualService.findLatestApplicantRitual(applicantUin);
-        List<ApplicantRelativeDto> relatives = applicantRelativesService.findApplicantRelativesInLastRitual(applicantUin, latestApplicantRitual.getPackageReferenceNumber());
+        List<ApplicantRelativeDto> relatives = applicantRelativesService
+                .findApplicantRelativesInLastRitual(applicantUin, latestApplicantRitual.getPackageReferenceNumber());
         if (!relatives.isEmpty()) {
             relatives.stream().forEach(relative -> {
-                ApplicantChatContactDto applicantChatContact = applicantChatContactService.findApplicantChatContact(applicantUin, relative.getRelativeApplicant().getDigitalIds().get(0).getUin());
+                if (relative.getApplicantRitual() == null) {
+                    log.error("no ritual id for this relative {}", relative.getId());
+                    return;
+                }
+                ApplicantChatContactDto applicantChatContact = applicantChatContactService
+                        .findApplicantChatContact(applicantUin, relative.getRelativeApplicant().getDigitalIds().get(0).getUin());
                 if (applicantChatContact == null) {
+
                     applicantChatContactService.createApplicantRelativesChatContacts(relative, relative.getApplicantRitual().getId());
+                } else {
+                    log.error("applicant chat contact already found for this relative {}", relative.getId());
                 }
             });
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).build());
         } else {
             log.error("no relatives for this  applicant in this ritual");
-
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_RELATIVE_NOT_FOUND.getCode()).referenceNumber(applicantUin).build()).build());
         }
