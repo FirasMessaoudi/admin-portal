@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.company.*;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
 import com.elm.shj.admin.portal.services.company.CompanyService;
@@ -87,6 +88,7 @@ public class IntegrationWsController {
     private final HousingSiteLookupService housingSiteLookupService;
     private final TransportationTypeLookupService transportationTypeLookupService;
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
+    private final CompanyRitualSeasonService companyRitualSeasonService;
     private final HealthImmunizationLookupService healthImmunizationLookupService;
     private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
     private final ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
@@ -793,6 +795,27 @@ public class IntegrationWsController {
     @GetMapping("/validate-suin/{suin}")
     public ResponseEntity<WsResponse<?>> validateSuin(@PathVariable String suin) {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffDigitalIdService.findStaffSuinStatusCode(suin)).build());
+
+    }
+
+
+    /**
+     * @param companyRitualSeasonId
+     * @return list of today ritual steps
+     */
+    @GetMapping("/ritual-steps/today/{companyRitualSeasonId}")
+    public ResponseEntity<WsResponse<?>> findTodayCompanyRitualStepsByCompanyRitualSeasonId(@PathVariable long companyRitualSeasonId) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyRitualStepService.findTodayCompanyRitualStepsByCompanyRitualSeasonId(companyRitualSeasonId)).build());
+
+    }
+
+    /**
+     * @param suin
+     * @return company ritual season
+     */
+    @GetMapping("/company-ritual-season/{suin}")
+    public ResponseEntity<WsResponse<?>> findLatestCompanyRitualSeasonIdBySuin(@PathVariable String suin) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyRitualSeasonService.findLatestCompanyRitualSeasonIdBySuin(suin)).build());
 
     }
 

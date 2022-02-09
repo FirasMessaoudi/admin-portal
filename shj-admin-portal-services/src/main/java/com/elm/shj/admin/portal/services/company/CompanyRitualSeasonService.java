@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static  java.util.AbstractMap.SimpleEntry;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -31,5 +33,13 @@ public class CompanyRitualSeasonService extends GenericService<JpaCompanyRitualS
         else
             return null;
     }
+    public Optional<Long> findLatestCompanyRitualSeasonIdBySuin(String suin) {
+        Optional<JpaCompanyRitualSeason> companyRitualSeason = companyRitualSeasonRepository.findTopByCompanyStaffCardsCompanyStaffDigitalIdSuin(suin);
+        if (companyRitualSeason.isPresent())
+            return Optional.of( getMapper().fromEntity(companyRitualSeason.get(), mappingContext).getId());
+        else
+            return Optional.empty();
+    }
+
 
 }

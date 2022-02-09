@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CompanyRitualStepRepository extends JpaRepository<JpaCompanyRitualStep, Long> {
     List<JpaCompanyRitualStep> findByApplicantGroupIdOrderByStepIndexAsc(long id);
+    List<JpaCompanyRitualStep> findByApplicantGroupCompanyRitualSeasonId(long id);
 }

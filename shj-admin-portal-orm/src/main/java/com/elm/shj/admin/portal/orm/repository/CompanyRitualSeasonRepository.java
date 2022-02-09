@@ -17,4 +17,6 @@ import java.util.Optional;
 public interface CompanyRitualSeasonRepository extends JpaRepository<JpaCompanyRitualSeason, Long> {
 
     Optional<JpaCompanyRitualSeason> findTopByCompanyCodeAndRitualSeasonRitualTypeCodeAndRitualSeasonSeasonYearAndRitualSeasonActiveTrueOrderBySeasonStartDesc(String companyCode, String ritualTypeCode, int seasonYear);
+
+    Optional<JpaCompanyRitualSeason> findTopByCompanyStaffCardsCompanyStaffDigitalIdSuin(String suin);
 }

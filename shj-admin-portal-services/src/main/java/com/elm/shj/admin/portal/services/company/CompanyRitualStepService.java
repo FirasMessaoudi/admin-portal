@@ -8,12 +8,16 @@ import com.elm.shj.admin.portal.orm.entity.JpaGroupApplicantList;
 import com.elm.shj.admin.portal.orm.repository.CompanyRitualStepRepository;
 import com.elm.shj.admin.portal.orm.repository.GroupApplicantListRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualStepDto;
+import com.elm.shj.admin.portal.services.dto.CompanyStaffLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +33,7 @@ import java.util.Optional;
 public class CompanyRitualStepService extends GenericService<JpaCompanyRitualStep, CompanyRitualStepDto, Long> {
     private final CompanyRitualStepRepository companyRitualStepRepository;
     private final GroupApplicantListRepository groupApplicantListRepository;
+
 
     /**
      * find company ritual steps by applicant uin
@@ -51,5 +56,37 @@ public class CompanyRitualStepService extends GenericService<JpaCompanyRitualSte
             return null;
         }
 
+    }
+
+
+    /**
+     * find company ritual steps by staff uin
+     *
+     * @return company ritual step that is active for current day
+     */
+    public List<CompanyRitualStepDto> findTodayCompanyRitualStepsByCompanyRitualSeasonId(long companyRitualSeasonId) {
+        List<CompanyRitualStepDto> result = new ArrayList<>();
+        List<JpaCompanyRitualStep> jpaRitualSteps = companyRitualStepRepository.findByApplicantGroupCompanyRitualSeasonId(companyRitualSeasonId);
+        List<CompanyRitualStepDto> ritualSteps = mapList(jpaRitualSteps);
+        for (int i = 0; i < ritualSteps.size(); i++) {
+            LocalDate ritualStepDate = ritualSteps.get(i).getTime().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            LocalDate nextRitualStepDate = null;
+            if (i + 1 < ritualSteps.size())
+                nextRitualStepDate = ritualSteps.get(i + 1).getTime().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+            else
+                nextRitualStepDate = ritualSteps.get(i).getTime().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+            LocalDate today = LocalDate.now();
+            if (today.getDayOfMonth() >= ritualStepDate.getDayOfMonth() &&
+                    today.getDayOfMonth() <= nextRitualStepDate.getDayOfMonth()) {
+                result.add(ritualSteps.get(i));
+            }
+        }
+        return result;
     }
 }
