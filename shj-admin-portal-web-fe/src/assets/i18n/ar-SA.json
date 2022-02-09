@@ -458,7 +458,7 @@
     "female": "إناث",
     "minute": "دقيقة",
     "minutes": "دقائق",
-    "saved_successfully" : "تم حفظ البيانات بنجاح",
+    "saved_successfully": "تم حفظ البيانات بنجاح",
     "add_user_defined_notifications": "إضافة تنبيهات المستخدم",
     "save_changes_confirmation_text": "هل تريد حفظ التعديلات الحالية؟",
     "save_and_send_confirmation_text": "هل تريد حفظ التعديلات الحالية وإرسال التنبيهات إلى {{count}} ضيف رحمن (عدد تقديري، سيتم احتساب العدد الفعلي للمرسل إليهم عند إرسال التنبيه)؟",
@@ -589,5 +589,68 @@
     "dialog_resolve_complaint_success_text": "تم تحويل حالة الشكوى إلى تم الحل",
     "dialog_close_complaint_success_text": "تم تحويل حالة الشكوى إلى مغلقة",
     "operation_date": "تاريخ الإجراء"
+  },
+  "dashboard": {
+    "general": {
+      "hajj": "حج",
+      "full_screen": "شاشة كاملة",
+      "current_season_pilgrims": "حجاج هذا العام",
+      "previous_season_pilgrims": "حجاج الموسم الماضي",
+      "internal_pilgrims": "حجاج الداخل",
+      "external_pilgrims": "حجاج الخارج",
+      "number_of_cameras": "عدد الكاميرات",
+      "active_cameras": "كاميرا تعمل",
+      "inactive_cameras": "كاميرا لا تعمل",
+      "mobile_app_downloads": "تحميل التطبيق",
+      "logged_in": "مفعل",
+      "logged_out": "غير مفعل",
+      "min_companies": "أقل الشركات",
+      "max_companies": "أعلى الشركات"
+    },
+    "main": {
+      "service_rating": "تقييم الخدمات",
+      "more_on_rating": "المزيد عن التقييم",
+      "company_rating": "تقييم الشركات",
+      "max_rating": "أعلى تقييم",
+      "min_rating": "أقل تقييم",
+      "number_of_incidents": "عدد البلاغات",
+      "total_incidents": "مجموع البلاغات",
+      "area_with_most_incidents": "أكثر المناطق التي سجلت فيها بلاغات هي",
+      "largest_number_of_incidents_reported": "تم تسجيل أكبر عدد من البلاغات يوم",
+      "more_on_incidents": "المزيد عن البلاغات",
+      "more_on_transactions": "المزيد عن العمليات",
+      "pilgrims_tracking": "متابعة الحجيج",
+      "motawif_tracking": "متابعة المطوفين",
+      "more_on_tracking": "المزيد عن المتابعة"
+    },
+    "transactions": {
+      "title": ""
+    },
+    "rating": {
+      "title": "التقييم"
+    },
+    "mobile": {
+      "title": "إحصائيات الجوال"
+    },
+    "incidents": {
+      "title": "البلاغات",
+      "types_of_incidents": "أنواع البلاغات",
+      "distribution_on_companies": "توزيع البلاغات على الشركات",
+      "distribution_on_the_map": "توزيع البلاغات على الخريطة"
+    },
+    "general-numbers": {
+      "title": "إحصائيات عامة",
+      "males": "عدد الذكور",
+      "females": "عدد الإناث",
+      "age_distribution": "توزيع الأعمار",
+      "distribution_of_highest_nationalities": "توزيع أعلى الجنسيات",
+      "distribution_on_companies": "التوزيع على الشركات",
+      "distribution_on_mina_camps": "التوزيع على مخيمات منى",
+      "min_camps": "أقل المخيمات",
+      "max_camps": "أعلى المخيمات"
+    },
+    "cameras": {
+      "title": "الكاميرات"
+    }
   }
 }

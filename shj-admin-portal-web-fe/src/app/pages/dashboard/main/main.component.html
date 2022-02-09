@@ -1,14 +1,17 @@
 <div class="content__wrapper">
   <div class="title__Page flex-wrap">
-    <h3 class="font-weight-bold text-dark">حج عام 1447</h3>
+    <h3 class="font-weight-bold text-dark">
+      {{'dashboard.general.hajj' | translate}}
+      <span *ngIf="currentLanguage.startsWith('ar')">عام</span>
+      {{seasonYear}}</h3>
     <div>
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-18" icon="edit-light"></svg-icon>
-        تعديل
+        {{'general.btn_edit' | translate}}
       </button>
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
-        شاشة كاملة
+        {{'dashboard.general.full_screen' | translate}}
       </button>
     </div>
   </div>
@@ -17,10 +20,10 @@
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
 
       <div class="col mb-4" [routerLink]="['/dashboard/general-numbers']">
-        <div class="statistics h-100 p-3 border">
+        <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
-              <div class="sts-title">حجاج هذا العام</div>
+              <div class="sts-title">{{'dashboard.general.current_season_pilgrims' | translate}}</div>
               <div class="sts-number text-dark">
                 <ng9-odometer [number]="currentSeasonData?.totalNumberOfApplicants"></ng9-odometer>
               </div>
@@ -35,14 +38,14 @@
           <div class="flex-center-between mt-2">
             <div class="d-flex">
               <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
-              <div class="px-3">حجاج الخارج</div>
+              <div class="px-3">{{'dashboard.general.external_pilgrims' | translate}}</div>
             </div>
             <div>{{currentSeasonData?.totalNumberOfExternalApplicants | number}}</div>
           </div>
           <div class="flex-center-between mt-2">
             <div class="d-flex">
               <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-              <div class="px-3">حجاج الداخل</div>
+              <div class="px-3">{{'dashboard.general.internal_pilgrims' | translate}}</div>
             </div>
             <div>{{currentSeasonData?.totalNumberOfInternalApplicants | number}}</div>
           </div>
@@ -50,10 +53,10 @@
       </div>
 
       <div class="col mb-4" [routerLink]="['/dashboard/general-numbers']">
-        <div class="statistics h-100 p-3 border">
+        <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
-              <div class="sts-title">حجاج الموسم الماضي</div>
+              <div class="sts-title">{{'dashboard.general.previous_season_pilgrims' | translate}}</div>
               <div class="sts-number text-dark">
                 <ng9-odometer [number]="previousSeasonData?.totalNumberOfApplicants"></ng9-odometer>
               </div>
@@ -68,14 +71,14 @@
           <div class="flex-center-between mt-2">
             <div class="d-flex">
               <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
-              <div class="px-3">حجاج الخارج</div>
+              <div class="px-3">{{'dashboard.general.external_pilgrims' | translate}}</div>
             </div>
             <div>{{previousSeasonData?.totalNumberOfExternalApplicants | number}}</div>
           </div>
           <div class="flex-center-between mt-2">
             <div class="d-flex">
               <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-              <div class="px-3">حجاج الداخل</div>
+              <div class="px-3">{{'dashboard.general.internal_pilgrims' | translate}}</div>
             </div>
             <div>{{previousSeasonData?.totalNumberOfInternalApplicants | number}}</div>
           </div>
@@ -83,10 +86,10 @@
       </div>
 
       <div class="col mb-4" [routerLink]="['/dashboard/cameras']">
-        <div class="statistics h-100 p-3 border">
+        <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
-              <div class="sts-title">عدد الكاميرات</div>
+              <div class="sts-title">{{'dashboard.general.number_of_cameras' | translate}}</div>
               <div class="sts-number text-dark">
                 <ng9-odometer [number]="dashboardCameras.totalCount"></ng9-odometer>
               </div>
@@ -102,14 +105,14 @@
           <div class="flex-center-between mt-2">
             <div class="d-flex">
               <svg-icon styleClass="text-cctv" icon="circle"></svg-icon>
-              <div class="px-3">كاميرا تعمل</div>
+              <div class="px-3">{{'dashboard.general.active_cameras' | translate}}</div>
             </div>
             <div>{{dashboardCameras.activeCameras}}</div>
           </div>
           <div class="flex-center-between mt-2">
             <div class="d-flex">
               <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-              <div class="px-3">كاميرا لا تعمل</div>
+              <div class="px-3">{{'dashboard.general.inactive_cameras' | translate}}</div>
             </div>
             <div>{{dashboardCameras.inactiveCameras}}</div>
           </div>
@@ -117,10 +120,10 @@
       </div>
 
       <div class="col mb-4" [routerLink]="['/dashboard/mobile']">
-        <div class="statistics h-100 p-3 border">
+        <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
-              <div class="sts-title">تحميل التطبيق</div>
+              <div class="sts-title">{{'dashboard.general.mobile_app_downloads' | translate}}</div>
               <div class="sts-number text-dark">
                 <ng9-odometer [number]="currentSeasonData?.totalNumberOfMobileAppDownloads"></ng9-odometer>
               </div>
@@ -137,7 +140,7 @@
           <div class="flex-center-between mt-2">
             <div class="d-flex">
               <svg-icon styleClass="text-appdownloads" icon="circle"></svg-icon>
-              <div class="px-3">مفعل</div>
+              <div class="px-3">{{'dashboard.general.logged_in' | translate}}</div>
             </div>
             <div>{{currentSeasonData?.totalNumberOfLoggedInUsers}}</div>
 
@@ -145,7 +148,7 @@
           <div class="flex-center-between mt-2">
             <div class="d-flex">
               <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-              <div class="px-3">غير مفعل</div>
+              <div class="px-3">{{'dashboard.general.logged_out' | translate}}</div>
             </div>
             <div>{{currentSeasonData?.totalNumberOfLoggedOutUsers}}</div>
           </div>
@@ -159,10 +162,10 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between flex-wrap">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">تقييم الخدمات</h5>
+              <h5 class="sts">{{'dashboard.main.service_rating' | translate}}</h5>
             </div>
             <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
-              المزيد عن التقييم
+              {{'dashboard.main.more_on_rating' | translate}}
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
           </div>
@@ -173,19 +176,19 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between flex-wrap">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">تقييم الشركات</h5>
+              <h5 class="sts">{{'dashboard.main.company_rating' | translate}}</h5>
               <button type="button" class="btn border mx-3">
-                أعلى تقييم
+                {{'dashboard.main.max_rating' | translate}}
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
               <button type="button" class="btn border mx-3">
-                أقل تقييم
+                {{'dashboard.main.min_rating' | translate}}
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
             </div>
 
             <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
-              المزيد عن التقييم
+              {{'dashboard.main.more_on_rating' | translate}}
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
           </div>
@@ -196,10 +199,10 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between flex-wrap">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">عدد البلاغات</h5>
+              <h5 class="sts">{{'dashboard.main.number_of_incidents' | translate}}</h5>
             </div>
             <a [routerLink]="['/dashboard/incidents']" class="text-dcc-primary">
-              المزيد عن البلاغات
+              {{'dashboard.main.more_on_incidents' | translate}}
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
           </div>
@@ -211,18 +214,17 @@
                     [plugins]="incidentDoughnutChartPlugins"
                     [colors]="chartsConfig.doughnutChartColors"
                     [options]="incidentDoughnutChartOptions"
-            >
+                    height="100">
             </canvas>
-            <div>
-              <p>
-                <b class="text-dark ml-3">{{mostIncidentsArea}}</b> <span>أكثر المناطق التي يوجد بها بلاغات هي</span>
-              </p>
-
-              <p>
-                <span>أكثر يوم تم فيه تسجيل أكبر عدد من البلاغات هو </span>
-                <b class="text-dark ml-3">{{mostIncidentDate}}</b>
-              </p>
-
+            <div class="mt-4">
+              <div>
+                {{'dashboard.main.area_with_most_incidents' | translate}}
+                <b class="text-dark">{{mostIncidentsArea}}</b>
+              </div>
+              <div>
+                {{'dashboard.main.largest_number_of_incidents_reported' | translate}}
+                <b class="text-dark">{{mostIncidentDate}}</b>
+              </div>
             </div>
           </div>
         </div>
@@ -235,7 +237,7 @@
             </div>
 
             <a [routerLink]="['/dashboard/transactions']" class="text-dcc-primary">
-              المزيد عن العمليات
+              {{'dashboard.main.more_on_transactions' | translate}}
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
           </div>
@@ -246,7 +248,7 @@
         <div class="border">
           <ul ngbNav #nav="ngbNav" class="nav-tabs stsTab">
             <li [ngbNavItem]="1">
-              <a ngbNavLink>متابعة الحجيج</a>
+              <a ngbNavLink>{{'dashboard.main.pilgrims_tracking' | translate}}</a>
               <ng-template ngbNavContent>
                 <div class="flex-center">
                   <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
@@ -254,7 +256,7 @@
               </ng-template>
             </li>
             <li [ngbNavItem]="2">
-              <a ngbNavLink>متابعة المطوفين</a>
+              <a ngbNavLink>{{'dashboard.main.motawif_tracking' | translate}}</a>
               <ng-template ngbNavContent>
                 <div class="flex-center">
                   <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
@@ -271,7 +273,7 @@
             </li>
             <li ngbDropdown class="ml-auto flex-center">
               <a href="/" class="text-dcc-primary mr-3">
-                المزيد عن المتابعة
+                {{'dashboard.main.more_on_tracking' | translate}}
                 <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
               </a>
             </li>

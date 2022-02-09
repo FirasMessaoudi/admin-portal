@@ -4,11 +4,11 @@
 </a>
 <div class="content__wrapper">
   <div class="title__Page">
-    <h3 class="font-weight-bold text-dark">البلاغات</h3>
+    <h3 class="font-weight-bold text-dark">{{'dashboard.incidents.title' | translate}}</h3>
     <div>
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
-        شاشة كاملة
+        {{'dashboard.general.full_screen' | translate}}
       </button>
     </div>
   </div>
@@ -31,7 +31,7 @@
           </div>
           <div class="col my-3">
             <button type="button" class="btn btn-outline-dcc-primary px-4">
-              عرض
+              {{'general.btn_view' | translate}}
             </button>
           </div>
         </div>
@@ -40,7 +40,7 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">عدد البلاغات</h5>
+              <h5 class="sts">{{'dashboard.main.number_of_incidents' | translate}}</h5>
             </div>
 
           </div>
@@ -52,19 +52,18 @@
                     [plugins]="incidentDoughnutChartPlugins"
                     [colors]="chartsConfig.doughnutChartColors"
                     [options]="incidentDoughnutChartOptions"
+                    height="100"
             >
             </canvas>
-            <div>
-              <p>
-                <b class="text-dark ml-3">{{mostIncidentsArea}}</b> <span>اكثر المناطق التي يوجد بها بلاغات هي</span>
-
-              </p>
-
-              <p>
-                <span>أكثر يوم تم فيه تسجيل أكبر عدد من البلاغات هو </span>
-                <b class="text-dark ml-3">{{mostIncidentDate}}</b>
-              </p>
-
+            <div class="mt-4">
+              <div>
+                {{'dashboard.main.area_with_most_incidents' | translate}}
+                <b class="text-dark">{{mostIncidentsArea}}</b>
+              </div>
+              <div>
+                {{'dashboard.main.largest_number_of_incidents_reported' | translate}}
+                <b class="text-dark">{{mostIncidentDate}}</b>
+              </div>
             </div>
           </div>
         </div>
@@ -73,7 +72,7 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">أنواع البلاغات</h5>
+              <h5 class="sts">{{'dashboard.incidents.types_of_incidents' | translate}}</h5>
             </div>
           </div>
 
@@ -92,13 +91,13 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">توزيع البلاغات على الشركات</h5>
+              <h5 class="sts">{{'dashboard.incidents.distribution_on_companies' | translate}}</h5>
               <button *ngIf="minCompanies" type="button" class="btn border mx-3" (click)="loadMaxCompanies()">
-                أقل الشركات
+                {{'dashboard.general.min_companies' | translate}}
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
               <button *ngIf="!minCompanies" type="button" class="btn border mx-3" (click)="loadMinCompanies()">
-                أعلى الشركات
+                {{'dashboard.general.max_companies' | translate}}
                 <!--TODO Rotate icon-->
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
@@ -110,7 +109,7 @@
                     [options]="chartsConfig.barChartOptions"
                     [labels]="companyLabels"
                     [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#b1bdd2'}]"
-                    chartType="bar" height="100"></canvas>
+                    chartType="bar" height="80"></canvas>
             <div class="text-center">
             </div>
           </div>
@@ -120,7 +119,7 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">توزيع البلاغات على الخريطة</h5>
+              <h5 class="sts">{{'dashboard.incidents.distribution_on_the_map' | translate}}</h5>
             </div>
           </div>
           <!--Start MAP-->

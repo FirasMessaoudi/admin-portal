@@ -267,7 +267,7 @@ public class DashboardService {
     }
 
     public List<CountVo> listCountApplicantsByNationalities() {
-        List<CountVo> countVoList = new ArrayList<CountVo>();
+        List<CountVo> countVoList = new ArrayList<>();
         List<String> nationalities = applicantRepository.findAllNationalities();
         long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason((int) DateUtils.getCurrentHijriYear(), new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
         for (String nat : nationalities) {

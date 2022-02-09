@@ -1,37 +1,39 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { Lookup } from '@model/lookup.model';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
+import {Lookup} from '@model/lookup.model';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {
   AuthenticationService,
   CardService,
   NotificationService,
 } from '@core/services';
-import { LookupService } from '@core/utilities/lookup.service';
-import { I18nService } from '@dcc-commons-ng/services';
-import { NotificationTemplate } from '@model/notification-template.model';
-import { ToastService } from '@shared/components/toast';
+import {LookupService} from '@core/utilities/lookup.service';
+import {I18nService} from '@dcc-commons-ng/services';
+import {NotificationTemplate} from '@model/notification-template.model';
+import {ToastService} from '@shared/components/toast';
 import {
   ModalDismissReasons,
   NgbDateStruct,
   NgbModal,
 } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmDialogService } from '@shared/components/confirm-dialog';
-import { CompanyLite } from '@model/company-lite.model';
-import { PackageHousing } from '@model/package-housing.model';
-import { EAuthority, Page } from '@shared/model';
-import { Applicant } from '@model/applicant.model';
-import { Subscription } from 'rxjs';
-import { ApplicantService } from '@core/services/applicant/applicant.service';
-import { DateType } from '@shared/modules/hijri-gregorian-datepicker/consts';
-import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
-import { HijriGregorianDatetimepickerComponent } from '@shared/modules/hijri-gregorian-datepicker/datetimepicker/hijri-gregorian-datetimepicker.component';
+import {ConfirmDialogService} from '@shared/components/confirm-dialog';
+import {CompanyLite} from '@model/company-lite.model';
+import {PackageHousing} from '@model/package-housing.model';
+import {EAuthority, Page} from '@shared/model';
+import {Applicant} from '@model/applicant.model';
+import {Subscription} from 'rxjs';
+import {ApplicantService} from '@core/services/applicant/applicant.service';
+import {DateType} from '@shared/modules/hijri-gregorian-datepicker/consts';
+import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import {
+  HijriGregorianDatetimepickerComponent
+} from '@shared/modules/hijri-gregorian-datepicker/datetimepicker/hijri-gregorian-datetimepicker.component';
 import {
   ageRangeValidator,
   validateIsRequired,
 } from '@pages/notification-management/notification-custom-validator';
-import { NotificationTemplateCategorizing } from '@model/notification-template-categorizing.model';
+import {NotificationTemplateCategorizing} from '@model/notification-template-categorizing.model';
 
 @Component({
   selector: 'app-user-defined-notification-add',
@@ -93,7 +95,8 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     private toastr: ToastService,
     private modalService: NgbModal,
     private dateFormatterService: DateFormatterService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     // calendar default;
@@ -150,7 +153,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
           minAge: ['', [Validators.min(0), Validators.max(120)]],
           maxAge: ['', [Validators.min(0), Validators.max(120)]],
         },
-        { validator: ageRangeValidator }
+        {validator: ageRangeValidator}
       ),
       gender: null,
     });
@@ -171,7 +174,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
         title: '',
         body: '',
       },
-      { validator: validateIsRequired }
+      {validator: validateIsRequired}
     );
     this.notificationTemplateContents.push(content);
   }
@@ -299,7 +302,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
             control.setErrors({
               invalid: res.errors[field].replace(/\{/, '').replace(/\}/, ''),
             });
-            control.markAsTouched({ onlySelf: true });
+            control.markAsTouched({onlySelf: true});
           }
         });
       } else {
@@ -445,13 +448,13 @@ export class UserDefinedNotificationAddComponent implements OnInit {
         size: 'lg',
       })
       .result.then(
-        (result) => {
-          this.closeResult = `Closed with: ${result}`;
-        },
-        (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        }
-      );
+      (result) => {
+        this.closeResult = `Closed with: ${result}`;
+      },
+      (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      }
+    );
   }
 
   pageCounter(i: number): Array<number> {
@@ -483,14 +486,14 @@ export class UserDefinedNotificationAddComponent implements OnInit {
         size: 'lg',
       })
       .result.then(
-        (result) => {
-          this.closeResult = `Closed with: ${result}`;
-        },
-        (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-          this.resetSelectionModal();
-        }
-      );
+      (result) => {
+        this.closeResult = `Closed with: ${result}`;
+      },
+      (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        this.resetSelectionModal();
+      }
+    );
   }
 
   openSendModal(content) {
@@ -514,14 +517,14 @@ export class UserDefinedNotificationAddComponent implements OnInit {
         size: 'lg',
       })
       .result.then(
-        (result) => {
-          this.closeResult = `Closed with: ${result}`;
-        },
-        (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-          this.resetConfirmationModal();
-        }
-      );
+      (result) => {
+        this.closeResult = `Closed with: ${result}`;
+      },
+      (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        this.resetConfirmationModal();
+      }
+    );
   }
 
   undoAddApplicant(applicantId: number) {

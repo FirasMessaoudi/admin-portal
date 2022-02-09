@@ -56,7 +56,9 @@ export class ChartsConfig {
       }
     },
     tooltips: {
+      titleFontFamily: FONTS,
       bodyFontFamily: FONTS,
+      footerFontFamily: FONTS,
     },
     plugins: // [ChartDataLabels],
       {
@@ -123,7 +125,9 @@ export class ChartsConfig {
       }
     },
     tooltips: {
+      titleFontFamily: FONTS,
       bodyFontFamily: FONTS,
+      footerFontFamily: FONTS,
     },
     plugins: {
       datalabels: {

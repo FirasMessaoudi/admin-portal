@@ -22,9 +22,6 @@ export class MobileComponent implements OnInit {
   weekDays: Array<any> = [];
   datasets: ChartDataSets[];
 
-
-  public appdownloads: number = 1103402;
-
   constructor(private authenticationService: AuthenticationService, private dashboardService: DashboardService) {
   }
 
