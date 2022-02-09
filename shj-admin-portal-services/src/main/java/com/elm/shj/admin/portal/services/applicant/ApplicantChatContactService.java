@@ -191,7 +191,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         createChatContact(mainApplicantUin, relativeApplicant, applicantRitualId, applicantRelative.getRelationshipCode());
         // create main applicant chat contact for the relative applicant
         String mainApplicantRelationshipCode = mapOwnerRelationship(applicantRelative.getRelationshipCode(), mainApplicant.getGender());
-        createChatContact(relativeApplicantUin, mainApplicant, applicantRitualId, mainApplicantRelationshipCode);
+        createChatContact(relativeApplicantUin, mainApplicant, applicantRelative.getApplicantRitual().getId(), mainApplicantRelationshipCode);
     }
 
     /**
