@@ -297,8 +297,7 @@ public class IntegrationWsController {
                 ApplicantChatContactDto applicantChatContact = applicantChatContactService
                         .findApplicantChatContact(applicantUin, relative.getRelativeApplicant().getDigitalIds().get(0).getUin());
                 if (applicantChatContact == null) {
-
-                    applicantChatContactService.createApplicantRelativesChatContacts(relative, relative.getApplicantRitual().getId());
+                    applicantChatContactService.createApplicantRelativesChatContacts(relative, latestApplicantRitual.getId());
                 } else {
                     log.error("applicant chat contact already found for this relative {}", relative.getId());
                 }
