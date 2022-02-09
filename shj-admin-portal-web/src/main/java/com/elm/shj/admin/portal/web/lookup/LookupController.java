@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.lookup;
 
 import com.elm.shj.admin.portal.services.company.CompanyLiteService;
+import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.RitualSeasonService;
@@ -62,7 +63,7 @@ public class LookupController {
     private final MapUtils mapUtils;
     private final CompanyLiteService companyLiteService;
     private final RitualSeasonService ritualSeasonService;
-
+    private final DashboardService dashboardService;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -257,5 +258,10 @@ public class LookupController {
         return printBatchTypeLookupService.findBatchTypeByTarget(EPrintingRequestTarget.STAFF.name());
     }
 
+    @GetMapping("/dashboard/refresh-interval")
+    public Integer loadDashboardRefreshInterval() {
+        log.debug("load dashboard refresh interval...");
+        return dashboardService.getRefreshInterval();
+    }
 
 }

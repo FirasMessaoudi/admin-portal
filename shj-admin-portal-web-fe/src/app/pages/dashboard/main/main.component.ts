@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
-import { Subscription } from 'rxjs';
+import {interval, timer , Subscription} from 'rxjs';
 import { DashboardService } from '@core/services';
 import {DashboardIncidentNumbersVo} from "@model/dashboardIncidentNumbersVo.model";
 import {Lookup} from "@model/lookup.model";
@@ -50,45 +50,19 @@ export class MainComponent implements OnInit {
   };
   public incidentDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
 
+  private refreshSubscription:Subscription
+
   constructor(private dashboardService: DashboardService,
               private lookupService: LookupService,
               private dateFormatterService: DateFormatterService,
               private i18nService: I18nService) {}
 
   ngOnInit() {
-    this.loadLookups();
-    this.currentSeasonSubscription = this.dashboardService
-      .loadGeneralNumbersForCurrentSeason()
-      .subscribe((data) => {
-        this.currentSeasonData = data;
-        this.currentSeasonPercentage =
-          (100 * data.totalNumberOfExternalApplicants) /
-          data.totalNumberOfApplicants;
-        this.currentSeasonData.totalNumberOfApplicants =
-          this.currentSeasonData.totalNumberOfExternalApplicants +
-          this.currentSeasonData.totalNumberOfInternalApplicants;
+    this.lookupService.loadDashboardRefreshInterval().subscribe( timeInterval => {
+      this.refreshSubscription = timer(0,timeInterval)
+      .subscribe(()=> {
+        this.loadDashboardData();
       });
-
-    this.previousSeasonSubscription = this.dashboardService
-      .loadGeneralNumbersForPreviousSeason()
-      .subscribe((data) => {
-        this.previousSeasonData = data;
-        this.previousSeasonPercentage =
-          (100 * data.totalNumberOfExternalApplicants) /
-          data.totalNumberOfApplicants;
-        this.previousSeasonData.totalNumberOfApplicants =
-          this.previousSeasonData.totalNumberOfExternalApplicants +
-          this.previousSeasonData.totalNumberOfInternalApplicants;
-      });
-
-    this.incidentSubscription = this.dashboardService.loadIncidents().subscribe((data)=> {
-      this.incidents = data;
-
-      this.incidentDoughnutChartLabels = [this.lookupService.localizedLabel(this.incidentStatusList, 'RESOLVED'), this.lookupService.localizedLabel(this.incidentStatusList, 'UNDER_PROCESSING')];
-      this.incidentDoughnutChartData = [{ data: [this.incidents.totalNumberOfResolvedIncidents, this.incidents.totalNumberOfUnResolvedIncidents], steppedLine: 'after'}];
-      this.setIncidentCenterTitle('مجموع البلاغات',this.incidents.totalNumberOfRegisteredIncidents);
-      this.mostIncidentDate = this.formatHijriDate(this.incidents.mostIncidentDate);
-      this.mostIncidentsArea = this.incidents.mostIncidentsArea;
     })
   }
 
@@ -98,6 +72,9 @@ export class MainComponent implements OnInit {
     }
     if (this.previousSeasonSubscription) {
       this.previousSeasonSubscription.unsubscribe();
+    }
+    if(this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
     }
   }
 
@@ -148,5 +125,41 @@ export class MainComponent implements OnInit {
 
   get currentLanguage(): string {
     return this.i18nService.language;
+  }
+  loadDashboardData() {
+    this.loadLookups();
+    this.currentSeasonSubscription = this.dashboardService
+      .loadGeneralNumbersForCurrentSeason()
+      .subscribe((data) => {
+        this.currentSeasonData = data;
+        this.currentSeasonPercentage =
+          (100 * data.totalNumberOfExternalApplicants) /
+          data.totalNumberOfApplicants;
+        this.currentSeasonData.totalNumberOfApplicants =
+          this.currentSeasonData.totalNumberOfExternalApplicants +
+          this.currentSeasonData.totalNumberOfInternalApplicants;
+      });
+
+    this.previousSeasonSubscription = this.dashboardService
+      .loadGeneralNumbersForPreviousSeason()
+      .subscribe((data) => {
+        this.previousSeasonData = data;
+        this.previousSeasonPercentage =
+          (100 * data.totalNumberOfExternalApplicants) /
+          data.totalNumberOfApplicants;
+        this.previousSeasonData.totalNumberOfApplicants =
+          this.previousSeasonData.totalNumberOfExternalApplicants +
+          this.previousSeasonData.totalNumberOfInternalApplicants;
+      });
+
+    this.incidentSubscription = this.dashboardService.loadIncidents().subscribe((data)=> {
+      this.incidents = data;
+
+      this.incidentDoughnutChartLabels = [this.lookupService.localizedLabel(this.incidentStatusList, 'RESOLVED'), this.lookupService.localizedLabel(this.incidentStatusList, 'UNDER_PROCESSING')];
+      this.incidentDoughnutChartData = [{ data: [this.incidents.totalNumberOfResolvedIncidents, this.incidents.totalNumberOfUnResolvedIncidents], steppedLine: 'after'}];
+      this.setIncidentCenterTitle('مجموع البلاغات',this.incidents.totalNumberOfRegisteredIncidents);
+      this.mostIncidentDate = this.formatHijriDate(this.incidents.mostIncidentDate);
+      this.mostIncidentsArea = this.incidents.mostIncidentsArea;
+    })
   }
 }

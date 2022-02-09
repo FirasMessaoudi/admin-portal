@@ -484,3 +484,7 @@ GO
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('dashboard.incident.company.chart.size', 15);
 GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('dashboard.refresh-interval', 10*60*1000); -- 10 minutes
+GO

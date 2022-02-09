@@ -43,6 +43,9 @@ public class DashboardService {
     @Value("${dashboard.incident.company.chart.size}")
     private int maxCompanyChartSize;
 
+    @Value("${dashboard.refresh-interval}")
+    private int refreshInterval;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ApplicantRepository applicantRepository;
@@ -319,5 +322,9 @@ public class DashboardService {
                 .totalNumberOfLoggedInUsers(totalNumberOfLoggedInUsersFromMobile)
                 .totalNumberOfLoggedOutUsers(totalNumberOfLoggedOutUsersFromMobile)
                 .build();
+    }
+
+    public int getRefreshInterval() {
+        return refreshInterval;
     }
 }
