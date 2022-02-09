@@ -150,6 +150,9 @@ export class ChartsConfig {
         gridLines: {
           color: 'rgba(0, 0, 0, 0)',
         },
+        ticks: {
+          fontFamily: FONTS,
+        }
       }],
       yAxes: [
         {

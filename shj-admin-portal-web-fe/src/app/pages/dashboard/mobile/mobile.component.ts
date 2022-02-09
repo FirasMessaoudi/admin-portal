@@ -6,6 +6,8 @@ import {ChartsConfig} from "@pages/dashboard/charts.config";
 import {ChartDataSets} from "chart.js";
 
 import * as momentjs from 'moment';
+import {I18nService} from "@dcc-commons-ng/services";
+import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
 
 const moment = momentjs;
 
@@ -22,7 +24,11 @@ export class MobileComponent implements OnInit {
   weekDays: Array<any> = [];
   datasets: ChartDataSets[];
 
-  constructor(private authenticationService: AuthenticationService, private dashboardService: DashboardService) {
+  constructor(private authenticationService: AuthenticationService,
+              private dashboardService: DashboardService,
+              private i18nService: I18nService,
+              private translate: TranslateService,
+  ) {
   }
 
   ngOnInit() {
@@ -47,12 +53,21 @@ export class MobileComponent implements OnInit {
         tension: 0
       }];
 
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.getWeekDays();
+    });
+
+  }
+
+  get currentLanguage(): string {
+    return this.i18nService.language;
   }
 
   getWeekDays() {
+    this.weekDays = [];
     let day = moment();
     for (let i = 1; i < 8; i++) {
-      this.weekDays.unshift(day.locale('ar').format('dddd'));
+      this.weekDays.unshift(day.locale(this.currentLanguage.toLowerCase().substr(0, 2)).format('dddd'));
       day = day.clone().subtract(1, 'd');
     }
   }
