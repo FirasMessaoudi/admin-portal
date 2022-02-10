@@ -499,28 +499,29 @@ public class ItemWriter {
             }
 
             if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
-                ApplicantHealthDto curApplicantHealth = (ApplicantHealthDto) item;
-                ApplicantHealthDto applicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
-                if (applicantHealth != null) {
-                    curApplicantHealth.setId(applicantHealth.getId());
-                    curApplicantHealth.setCreationDate(applicantHealth.getCreationDate());
-                    if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
+                ApplicantHealthDto applicantHealth = (ApplicantHealthDto) item;
+                ApplicantHealthDto savedApplicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+                if (savedApplicantHealth != null) {
+                    applicantHealth.setId(savedApplicantHealth.getId());
+                    applicantHealth.setCreationDate(savedApplicantHealth.getCreationDate());
+                    if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
                         // get the special needs and if it is a list then create a list of special needs dtos
-                        List<ApplicantHealthSpecialNeedsDto> applicantHealthSpecialNeeds = Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
-                                ApplicantHealthSpecialNeedsDto.builder().applicantHealth(ApplicantHealthDto.builder().id(curApplicantHealth.getId()).build()).specialNeedTypeCode(sn).build()
+                        List<ApplicantHealthSpecialNeedsDto> applicantHealthSpecialNeeds = Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
+                                ApplicantHealthSpecialNeedsDto.builder().applicantHealth(ApplicantHealthDto.builder().id(applicantHealth.getId()).build()).specialNeedTypeCode(sn).build()
                         ).collect(Collectors.toList());
                         IGenericMapper<ApplicantHealthSpecialNeedsDto, JpaApplicantHealthSpecialNeeds> mapper = findMapper(ApplicantHealthSpecialNeedsDto.class);
                         applicantHealthSpecialNeedsRepository.saveAll(mapper.toEntityList(applicantHealthSpecialNeeds, mappingContext));
-                        curApplicantHealth.setSpecialNeeds(null);
+                        applicantHealth.setSpecialNeeds(null);
                     }
                 } else {
-                    if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
+                    if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
                         // get the special needs and if it is a list then create a list of special needs dtos
-                        curApplicantHealth.setSpecialNeeds(Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
-                                ApplicantHealthSpecialNeedsDto.builder().applicantHealth(curApplicantHealth).specialNeedTypeCode(sn).build()
+                        applicantHealth.setSpecialNeeds(Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
+                                ApplicantHealthSpecialNeedsDto.builder().applicantHealth(applicantHealth).specialNeedTypeCode(sn).build()
                         ).collect(Collectors.toList()));
                     }
                 }
+                applicantHealth.setApplicantRitual(savedApplicantRitual);
             }
             if (applicantHealthField != null) {
                 ApplicantHealthDto applicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
