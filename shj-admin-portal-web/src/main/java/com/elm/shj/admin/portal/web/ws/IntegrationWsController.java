@@ -6,10 +6,6 @@ package com.elm.shj.admin.portal.web.ws;
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.company.*;
-import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
-import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
-import com.elm.shj.admin.portal.services.company.CompanyService;
-import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
@@ -292,10 +288,6 @@ public class IntegrationWsController {
                 .findApplicantRelativesInLastRitual(applicantUin, latestApplicantRitual.getPackageReferenceNumber());
         if (!relatives.isEmpty()) {
             relatives.stream().forEach(relative -> {
-                if (relative.getApplicantRitual() == null) {
-                    log.error("no ritual id for this relative {}", relative.getId());
-                    return;
-                }
                 ApplicantChatContactDto applicantChatContact = applicantChatContactService
                         .findApplicantChatContact(applicantUin, relative.getRelativeApplicant().getDigitalIds().get(0).getUin());
                 if (applicantChatContact == null) {
