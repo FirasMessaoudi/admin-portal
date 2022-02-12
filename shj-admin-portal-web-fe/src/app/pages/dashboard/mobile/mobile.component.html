@@ -90,13 +90,25 @@
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">استخدام التطبيق بالنسبة للشركات</h5>
-              <button type="button" class="btn border mx-3">
-                أعلى استخدام
+              <button *ngIf="minCompanies" type="button" class="btn border mx-3" (click)="loadMaxCompanies()">
+                {{'dashboard.general.min_companies' | translate}}
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
+              <button *ngIf="!minCompanies" type="button" class="btn border mx-3" (click)="loadMinCompanies()">
+                {{'dashboard.general.max_companies' | translate}}
+                <!--TODO Rotate icon-->
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
             </div>
           </div>
-          <div class="py-3">Content</div>
+          <div class="w-80">
+            <canvas baseChart #companiesByApplicantCount
+                    [datasets]="[{data: companyCounts, maxBarThickness: 15}]"
+                    [options]="chartsConfig.barChartOptions"
+                    [labels]="companyLabels"
+                    [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#b1bdd2'}]"
+                    chartType="bar" height="80"></canvas>
+            <div class="text-center"></div>
         </div>
       </div>
       <div class="col-12 mt-4">

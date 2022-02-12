@@ -10,6 +10,7 @@ import {I18nService} from "@dcc-commons-ng/services";
 import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
 
 const moment = momentjs;
+const FONTS: string = '"Elm-font", sans-serif';
 
 @Component({
   selector: 'app-mobile',
@@ -23,6 +24,10 @@ export class MobileComponent implements OnInit {
   chartsConfig: ChartsConfig = new ChartsConfig();
   weekDays: Array<any> = [];
   datasets: ChartDataSets[];
+
+  minCompanies: boolean;
+  companyLabels: Array<any>;
+  companyCounts: Array<any>;
 
   constructor(private authenticationService: AuthenticationService,
               private dashboardService: DashboardService,
@@ -53,10 +58,65 @@ export class MobileComponent implements OnInit {
         tension: 0
       }];
 
+    this.chartsConfig.barChartOptions = {
+      ...this.chartsConfig.barChartOptions,
+      legend: false,
+      scales: {
+        ...this.chartsConfig.barChartOptions.scales,
+        xAxes: [
+          {
+            gridLines: {
+              color: 'rgba(0, 0, 0, 0)',
+            },
+          },
+        ],
+        yAxes: [
+          {
+            gridLines: {
+              borderDash: [8, 6],
+              color: '#F3F5F2',
+            },
+            ticks: {
+              fontFamily: FONTS,
+              beginAtZero: true,
+              callback: function (value) {
+                if (value % 1 === 0) {
+                  return value;
+                }
+              },
+            },
+          },
+        ],
+      },
+    };
+
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.getWeekDays();
     });
 
+    this.loadMaxCompanies();
+    this.loadMinCompanies();
+
+  }
+
+  loadMinCompanies() {
+    this.minCompanies = true;
+    this.dashboardService
+      .loadCompaniesWithMinApplicantsRegisteredCount()
+      .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
+    this.dashboardService
+      .loadCompaniesWithMinApplicantsRegisteredCount()
+      .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
+  }
+
+  loadMaxCompanies() {
+    this.minCompanies = false;
+    this.dashboardService
+      .loadCompaniesWithMaxApplicantsRegisteredCount()
+      .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
+    this.dashboardService
+      .loadCompaniesWithMaxApplicantsRegisteredCount()
+      .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
   }
 
   get currentLanguage(): string {

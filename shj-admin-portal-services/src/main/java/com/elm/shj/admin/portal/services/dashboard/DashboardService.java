@@ -46,6 +46,9 @@ public class DashboardService {
     @Value("${dashboard.refresh-interval}")
     private int refreshInterval;
 
+    @Value("${dashboard.mobile.registered.applicant.by.company.size}")
+    private int maxApplicantRegistereByCompanySize;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ApplicantRepository applicantRepository;
@@ -326,5 +329,13 @@ public class DashboardService {
 
     public int getRefreshInterval() {
         return refreshInterval;
+    }
+
+    public List<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount() {
+        return applicantRepository.loadCompaniesWithMaxApplicantsRegisteredCount(PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
+    }
+
+    public List<CountVo> loadCompaniesWithMinApplicantsRegisteredCount() {
+        return applicantRepository.loadCompaniesWithMinApplicantsRegisteredCount(PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
     }
 }

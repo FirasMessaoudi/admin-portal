@@ -161,4 +161,18 @@ public class DashboardController {
         return dashboardService.getMobileAppDownloadsFromCurrentSeason();
     }
 
+    @GetMapping("/applicant-numbers/max-companies")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount() {
+        log.info("Load Companies with max applicant registered count");
+        return dashboardService.loadCompaniesWithMaxApplicantsRegisteredCount();
+    }
+
+    @GetMapping("/applicant-numbers/min-companies")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CountVo> loadCompaniesWithMinApplicantsRegisteredCount() {
+        log.info("Load Companies with min applicant registered count.");
+        return dashboardService.loadCompaniesWithMinApplicantsRegisteredCount();
+    }
+
 }

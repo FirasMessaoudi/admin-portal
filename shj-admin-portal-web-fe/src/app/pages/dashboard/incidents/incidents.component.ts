@@ -127,10 +127,10 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
 
       this.mostIncidentDate = this.formatHijriDate(this.incidents.mostIncidentDate);
       this.mostIncidentsArea = this.incidents.mostIncidentsArea;
-
-      this.loadMaxCompanies();
-      this.loadMinCompanies();
     })
+
+    this.loadMaxCompanies();
+    this.loadMinCompanies();
   }
 
   loadMinCompanies() {
@@ -240,13 +240,13 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
           ): google.maps.Marker {
             // use d3-interpolateRgb to interpolate between red and blue
             const color = this.palette(count / stats.clusters.markers.max);
-        
+
             // create svg url with fill color
             const svg = window.btoa(`
           <svg fill="${color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
-            <circle cx="120" cy="120" opacity=".8" r="70" />    
+            <circle cx="120" cy="120" opacity=".8" r="70" />
           </svg>`);
-        
+
             // create marker using svg icon
             return new google.maps.Marker({
               position,
