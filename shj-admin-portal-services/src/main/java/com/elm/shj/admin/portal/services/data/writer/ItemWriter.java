@@ -484,9 +484,9 @@ public class ItemWriter {
                 applicantRelative.setRelativeApplicant(relativeApplicant);
                 applicantRelative.setApplicant(applicant);
                 // get the applicant ritual for the relative applicant
-                ApplicantRitualDto relativeApplicantRitual = applicantRitualService.findDirtyByApplicantIdAndPackageReferenceNumber(relativeApplicant.getId(), packageReferenceNumber);
-                log.info("set the applicant ritual {} for the relative applicant {}", relativeApplicantRitual == null ? null : relativeApplicantRitual.getId(), applicantRelative.getRelativeApplicant().getId());
-                applicantRelative.setApplicantRitual(relativeApplicantRitual);
+                Long relativeApplicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(relativeApplicant.getId(), packageReferenceNumber);
+                log.info("set the applicant ritual id {} for the relative applicant id {}", relativeApplicantRitualId, applicantRelative.getRelativeApplicant().getId());
+                applicantRelative.setApplicantRitual(ApplicantRitualDto.builder().id(relativeApplicantRitualId).build());
 
                 String relativeApplicantUin = CollectionUtils.isNotEmpty(relativeApplicant.getDigitalIds()) ? relativeApplicant.getDigitalIds().get(0).getUin() : null;
 
