@@ -35,10 +35,10 @@ export class MainComponent implements OnInit {
   previousSeasonData: GeneralDashboardVo;
   currentSeasonPercentage: number;
   previousSeasonPercentage: number;
-
+  ritualSeasons: any[] = [];
   private currentSeasonSubscription: Subscription;
   private previousSeasonSubscription: Subscription;
-
+  isSeasonYearSelected: boolean = true;
   private incidentSubscription: Subscription;
   incidents: DashboardIncidentNumbersVo;
   incidentStatusList: Lookup[];
@@ -58,6 +58,7 @@ export class MainComponent implements OnInit {
 
   private refreshSubscription: Subscription
   seasonYear: number;
+
 
   constructor(private dashboardService: DashboardService,
               private lookupService: LookupService,
@@ -133,6 +134,9 @@ export class MainComponent implements OnInit {
     this.dashboardService.findIncidentStatus().subscribe(
       data => this.incidentStatusList = data
     )
+    this.dashboardService.findRitualSeasonYears().subscribe((result) => {
+      this.ritualSeasons = result;
+    });
   }
 
   formatHijriDate(date: Date): string {
@@ -153,7 +157,7 @@ export class MainComponent implements OnInit {
 
   loadDashboardData() {
     this.currentSeasonSubscription = this.dashboardService
-      .loadGeneralNumbersForCurrentSeason()
+      .loadGeneralNumbersForHijriSeason(this.seasonYear)
       .subscribe((data) => {
         this.currentSeasonData = data;
         this.currentSeasonPercentage =
@@ -165,7 +169,7 @@ export class MainComponent implements OnInit {
       });
 
     this.previousSeasonSubscription = this.dashboardService
-      .loadGeneralNumbersForPreviousSeason()
+      .loadGeneralNumbersForPreviousSeason(this.seasonYear - 1)
       .subscribe((data) => {
         this.previousSeasonData = data;
         this.previousSeasonPercentage =
@@ -176,7 +180,7 @@ export class MainComponent implements OnInit {
           this.previousSeasonData.totalNumberOfInternalApplicants;
       });
 
-    this.incidentSubscription = this.dashboardService.loadIncidents().subscribe((data) => {
+    this.incidentSubscription = this.dashboardService.loadIncidents(this.seasonYear).subscribe((data) => {
       this.incidents = data;
 
       this.incidentDoughnutChartLabels = [
@@ -193,5 +197,14 @@ export class MainComponent implements OnInit {
       this.mostIncidentDate = this.formatHijriDate(this.incidents.mostIncidentDate);
       this.mostIncidentsArea = this.incidents.mostIncidentsArea;
     });
+  }
+
+  onCurrentSeasonYearsSelected(value: string) {
+    if (value != null) {
+      this.seasonYear = +value;
+      this.isSeasonYearSelected = true;
+      this.loadDashboardData();
+    }
+
   }
 }

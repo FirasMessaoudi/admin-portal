@@ -3,7 +3,21 @@
     <h3 class="font-weight-bold text-dark">
       {{'dashboard.general.hajj' | translate}}
       <span *ngIf="currentLanguage.startsWith('ar')">عام</span>
-      {{seasonYear}}</h3>
+      <span *ngIf="isSeasonYearSelected">{{seasonYear}}</span>
+
+      <select class="custom-select" *ngIf="!isSeasonYearSelected" #currentSeasonYear
+              (change)="onCurrentSeasonYearsSelected(currentSeasonYear.value)">
+        <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+        <option *ngFor="let season of ritualSeasons" [ngValue]="season">
+          {{season}}
+        </option>
+      </select>
+
+      <svg-icon styleClass="fa-w-18" icon="edit-light" *ngIf="isSeasonYearSelected==true"
+                (click)="isSeasonYearSelected=false"></svg-icon>
+
+    </h3>
+
     <div>
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-18" icon="edit-light"></svg-icon>
@@ -19,7 +33,7 @@
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
 
-      <div class="col mb-4" [routerLink]="['/dashboard/general-numbers']">
+      <div class="col mb-4" [routerLink]="['/dashboard/general-numbers',seasonYear]">
         <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
@@ -51,8 +65,8 @@
           </div>
         </div>
       </div>
-
-      <div class="col mb-4" [routerLink]="['/dashboard/general-numbers']">
+      <!-- <div class="col mb-4" [routerLink]="['/dashboard/general-numbers',seasonYear]">-->
+      <div class="col mb-4">
         <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>

@@ -7,7 +7,6 @@ import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.LocationVo;
 import com.elm.shj.admin.portal.services.dashboard.*;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
-import com.elm.shj.admin.portal.services.utils.DateUtils;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,39 +69,39 @@ public class DashboardController {
         return null;
     }
 
-    @GetMapping("/general-numbers/current-season")
+    @GetMapping("/general-numbers/current-season/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public DashboardGeneralNumbersVo loadCurrentSeasonGeneralNumbers() {
+    public DashboardGeneralNumbersVo loadCurrentSeasonGeneralNumbers(@PathVariable("seasonYear") int seasonYear) {
         log.info("Load Dashboard General Numbers for Current Season.");
-        return dashboardService.loadDashboardGeneralNumbersByHijriSeason((int) DateUtils.getCurrentHijriYear());
+        return dashboardService.loadDashboardGeneralNumbersByHijriSeason(seasonYear);
     }
 
-    @GetMapping("/general-numbers/previous-season")
+    @GetMapping("/general-numbers/previous-season/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public DashboardGeneralNumbersVo loadPreviousSeasonGeneralNumbers() {
+    public DashboardGeneralNumbersVo loadPreviousSeasonGeneralNumbers(@PathVariable("seasonYear") int seasonYear) {
         log.info("Load Dashboard General Numbers for Previous Season.");
-        return dashboardService.loadDashboardGeneralNumbersByHijriSeason((int) DateUtils.getCurrentHijriYear() - 1);
+        return dashboardService.loadDashboardGeneralNumbersByHijriSeason(seasonYear);
     }
 
-    @GetMapping("/incident-numbers")
+    @GetMapping("/incident-numbers/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.INCIDENT_DASHBOARD + "')")
-    public DashboardIncidentNumbersVo loadIncidentNumbers() {
+    public DashboardIncidentNumbersVo loadIncidentNumbers(@PathVariable("seasonYear") int seasonYear) {
         log.info("Handling loadDashboardGeneralNumbers endpoint.");
-        return dashboardService.loadDashboardIncidentNumbers();
+        return dashboardService.loadDashboardIncidentNumbers(seasonYear);
     }
 
-    @GetMapping("/incident-numbers/max-companies")
+    @GetMapping("/incident-numbers/max-companies/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.INCIDENT_DASHBOARD + "')")
-    public List<CountVo> loadCompaniesWithMaxIncidentsCount() {
+    public List<CountVo> loadCompaniesWithMaxIncidentsCount(@PathVariable("seasonYear") int seasonYear) {
         log.info("Load Companies with max incident count");
-        return dashboardService.loadCompaniesWithMaxIncidentsCount();
+        return dashboardService.loadCompaniesWithMaxIncidentsCount(seasonYear);
     }
 
-    @GetMapping("/incident-numbers/min-companies")
+    @GetMapping("/incident-numbers/min-companies/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.INCIDENT_DASHBOARD + "')")
-    public List<CountVo> loadCompaniesWithMinIncidentsCount() {
+    public List<CountVo> loadCompaniesWithMinIncidentsCount(@PathVariable("seasonYear") int seasonYear) {
         log.info("Load Companies with min incident count.");
-        return dashboardService.loadCompaniesWithMinIncidentsCount();
+        return dashboardService.loadCompaniesWithMinIncidentsCount(seasonYear);
     }
 
     @GetMapping("/general-numbers/applicant/count-per-age/{seasonYear}")
@@ -119,32 +118,32 @@ public class DashboardController {
         return dashboardService.listCountApplicantsByNationalities(seasonYear);
     }
 
-    @GetMapping("/general-numbers/max-companies")
+    @GetMapping("/general-numbers/max-companies/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CountVo> loadCompaniesWithMaxApplicantsCount() {
+    public List<CountVo> loadCompaniesWithMaxApplicantsCount(@PathVariable("seasonYear") int seasonYear) {
         log.info("Load Companies with max applicants' count for current season.");
-        return dashboardService.loadCompaniesWithMaxApplicantsCountByHijriSeason((int) DateUtils.getCurrentHijriYear());
+        return dashboardService.loadCompaniesWithMaxApplicantsCountByHijriSeason(seasonYear);
     }
 
-    @GetMapping("/general-numbers/min-companies")
+    @GetMapping("/general-numbers/min-companies/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CountVo> loadCompaniesWithMinApplicantsCount() {
+    public List<CountVo> loadCompaniesWithMinApplicantsCount(@PathVariable("seasonYear") int seasonYear) {
         log.info("Load Companies with min applicants' count for current season.");
-        return dashboardService.loadCompaniesWithMinApplicantsCountByHijriSeason((int) DateUtils.getCurrentHijriYear());
+        return dashboardService.loadCompaniesWithMinApplicantsCountByHijriSeason(seasonYear);
     }
 
-    @GetMapping("/general-numbers/max-camps")
+    @GetMapping("/general-numbers/max-camps/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CountVo> loadCampsWithMaxApplicantsCount() {
+    public List<CountVo> loadCampsWithMaxApplicantsCount(@PathVariable("seasonYear") int seasonYear) {
         log.info("Load Camps with max applicants' count for current season.");
-        return dashboardService.loadCampsWithMaxApplicantsCountByHijriSeason((int) DateUtils.getCurrentHijriYear());
+        return dashboardService.loadCampsWithMaxApplicantsCountByHijriSeason(seasonYear);
     }
 
-    @GetMapping("/general-numbers/min-camps")
+    @GetMapping("/general-numbers/min-camps/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CountVo> loadCampsWithMinApplicantsCount() {
+    public List<CountVo> loadCampsWithMinApplicantsCount(@PathVariable("seasonYear") int seasonYear) {
         log.info("Load Camps with min applicants' count for current season.");
-        return dashboardService.loadCampsWithMinApplicantsCountByHijriSeason((int) DateUtils.getCurrentHijriYear());
+        return dashboardService.loadCampsWithMinApplicantsCountByHijriSeason(seasonYear);
     }
 
     @GetMapping("/incidents-locations/{seasonYear}")
@@ -154,25 +153,25 @@ public class DashboardController {
         return dashboardService.getIncidentsLocationsFromCurrentSeason(seasonYear);
     }
 
-    @GetMapping("/mobile/app-downloads")
+    @GetMapping("/mobile/app-downloads/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public DashboardMobileNumbersVo loadMobileAppDownloadNumbers() {
+    public DashboardMobileNumbersVo loadMobileAppDownloadNumbers(@PathVariable("seasonYear") int seasonYear) {
         log.info("Handling loadMobileAppDownloadNumbers endpoint.");
-        return dashboardService.getMobileAppDownloadsFromCurrentSeason();
+        return dashboardService.getMobileAppDownloadsFromCurrentSeason(seasonYear);
     }
 
-    @GetMapping("/applicant-numbers/max-companies")
+    @GetMapping("/applicant-numbers/max-companies/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount() {
+    public List<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount(@PathVariable("seasonYear") int seasonYear) {
         log.info("Load Companies with max applicant registered count");
-        return dashboardService.loadCompaniesWithMaxApplicantsRegisteredCount();
+        return dashboardService.loadCompaniesWithMaxApplicantsRegisteredCount(seasonYear);
     }
 
-    @GetMapping("/applicant-numbers/min-companies")
+    @GetMapping("/applicant-numbers/min-companies/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CountVo> loadCompaniesWithMinApplicantsRegisteredCount() {
+    public List<CountVo> loadCompaniesWithMinApplicantsRegisteredCount(@PathVariable("seasonYear") int seasonYear) {
         log.info("Load Companies with min applicant registered count.");
-        return dashboardService.loadCompaniesWithMinApplicantsRegisteredCount();
+        return dashboardService.loadCompaniesWithMinApplicantsRegisteredCount(seasonYear);
     }
 
 }
