@@ -4,11 +4,11 @@
 </a>
 <div class="content__wrapper">
   <div class="title__Page">
-    <h3 class="font-weight-bold text-dark">الكاميرات</h3>
+    <h3 class="font-weight-bold text-dark">{{'dashboard.cameras.title' | translate}}</h3>
     <div>
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
-        شاشة كاملة
+        {{'dashboard.general.full_screen' | translate}}
       </button>
     </div>
   </div>
@@ -23,7 +23,7 @@
                 <div class="statistics">
                   <div class="flex-center-between">
                     <div>
-                      <div class="sts-title">عدد الكاميرات</div>
+                      <div class="sts-title">{{'dashboard.general.number_of_cameras' | translate}}</div>
                       <div class="sts-number text-dark">
                         <ng9-odometer [number]="dashboardCameras.totalCount"></ng9-odometer>
                       </div>
@@ -40,14 +40,14 @@
                   <div class="flex-center-between mt-2">
                     <div class="d-flex">
                       <svg-icon styleClass="text-cctv" icon="circle"></svg-icon>
-                      <div class="px-3">كاميرا تعمل</div>
+                      <div class="px-3">{{'dashboard.general.active_cameras' | translate}}</div>
                     </div>
                     <div>{{dashboardCameras.activeCameras}}</div>
                   </div>
                   <div class="flex-center-between mt-2">
                     <div class="d-flex">
                       <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-                      <div class="px-3">كاميرا لا تعمل</div>
+                      <div class="px-3">{{'dashboard.general.inactive_cameras' | translate}}</div>
                     </div>
                     <div>{{dashboardCameras.inactiveCameras}}</div>
                   </div>

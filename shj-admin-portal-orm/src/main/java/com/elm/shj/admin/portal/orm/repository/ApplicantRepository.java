@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -106,4 +107,14 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Modifying
     @Query("UPDATE JpaApplicant a SET a.mobileLoggedIn = :mobileLoggedIn, a.updateDate = CURRENT_TIMESTAMP WHERE a.id = :applicantId")
     void updateLoggedInFromMobileAppFlag(@Param("applicantId") long applicantId, @Param("mobileLoggedIn") boolean mobileLoggedIn);
+
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(a),'') " +
+            "FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
+            "JOIN rp.companyRitualSeason crs JOIN crs.company c WHERE  c.labelAr is NOT NULL AND a.registered = TRUE GROUP BY c.labelAr ORDER BY COUNT(c.labelAr) DESC")
+    Page<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount(Pageable pageable);
+
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(a),'') " +
+            "FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
+            "JOIN rp.companyRitualSeason crs JOIN crs.company c WHERE  c.labelAr is NOT NULL AND a.registered = TRUE GROUP BY c.labelAr ORDER BY COUNT(c.labelAr)")
+    Page<CountVo> loadCompaniesWithMinApplicantsRegisteredCount(Pageable pageable);
 }

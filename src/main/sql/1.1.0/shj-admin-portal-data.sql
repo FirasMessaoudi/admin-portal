@@ -491,11 +491,6 @@ INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
 VALUES (1, 39);
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
 VALUES (1, 40);
-
-
-UPDATE shc_portal.shc_applicant_incident
-SET shc_applicant_incident.area_code = 'ARAFAT'
-WHERE id > 0;
 GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
@@ -504,4 +499,19 @@ GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('dashboard.refresh-interval', 10*60*1000); -- 10 minutes
+GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('dashboard.mobile.registered.applicant.by.company.size', 5);
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_authority_lk ON;
+GO
+INSERT INTO shc_portal.shc_authority_lk (id, label_ar, label_en, code, parent_id)
+VALUES (41, N'لوحة معلومات البلاغات', N'Incident Dashboards', N'INCIDENT_DASHBOARD', 1);
+
+SET IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
+
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
+VALUES (1, 41);
 GO

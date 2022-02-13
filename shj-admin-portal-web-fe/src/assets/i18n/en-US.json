@@ -27,7 +27,6 @@
     "password-confirmation-mismatch": "Password and Confirm Password Mismatch",
     "invalid": "The value you have entered is invalid"
   },
-
   "general": {
     "app_name": "Elm Product",
     "app_title": "Shaaer",
@@ -117,7 +116,6 @@
     "from": "From",
     "to": "To"
   },
-
   "header": {
     "welcome": "Welcome",
     "change_password": "Change Password",
@@ -125,7 +123,6 @@
     "logout": "Logout",
     "my_information": "My Information"
   },
-
   "home": {
     "title": "Home",
     "period": "Period",
@@ -148,7 +145,6 @@
     "welcome": "Welcome to:",
     "legend": "Legend"
   },
-
   "role-management": {
     "title": "Role Management",
     "roles_list": "Roles List",
@@ -173,7 +169,6 @@
     "dialog_delete_success_text": "Role has been successfully deleted",
     "add_role_no_authorities_error": "At least one authority should be selected"
   },
-
   "user-management": {
     "title": "User Management",
     "users_list": "Users List",
@@ -217,7 +212,6 @@
     "select_all": "Select All",
     "deselect_all": "Deselect All"
   },
-
   "login": {
     "header_title": "Login",
     "side_info": "The DCC template aims to unify efforts and standardize the way we implement our products in ELM.\n          It can reduce efforts related to common project activities like project structure, technology stack, error handling strategy, coding standards, ...\n          In our last survey, effort saved can go up to 20% of the total project effort.",
@@ -233,7 +227,6 @@
     "invalid_otp": "Invalid OTP! Please try again...",
     "user_is_deactivated": "User is not active"
   },
-
   "register": {
     "header_title": "Create New Account",
     "btn_register": "Register",
@@ -243,7 +236,6 @@
     "link_legal_accept": "Please read and accept Terms and Conditions to proceed!",
     "terms_and_conditions_text": "To view the terms and conditions, please click on the <a target='_blank' href='{{url}}'>link</a>"
   },
-
   "change-password": {
     "title": "Change Password",
     "header_text": "Your password has expired, please create a new one.",
@@ -253,19 +245,16 @@
     "new-password-confirm-mismatch": "Confirm password does not match password, please check",
     "success_text": "Password has been changed Successfully, please login with the new password"
   },
-
   "reset-password": {
     "title": "Reset Password",
     "btn_reset_password": "Reset Password",
     "btn_back_to_login": "Back to Login"
   },
-
   "footer": {
     "copyright": "* Trial Version * All Rights Reserved, Elm {{year}}",
     "terms_and_conditions": "Terms & Conditions",
     "channels": "channels "
   },
-
   "support": {
     "header_title": "Support",
     "header_text": "Our team is ready to support you. To contact Support Team please use on the below channels:",
@@ -470,7 +459,7 @@
     "female": "Female",
     "minute": "Minute",
     "minutes": "Minutes",
-    "saved_successfully" : "Saved successfully",
+    "saved_successfully": "Saved successfully",
     "add_user_defined_notifications": "Add User Defined Notifications",
     "save_changes_confirmation_text": "Are you sure, you want to save changes ?",
     "save_and_send_confirmation_text": "Are you sure, you want to save changes and send notifications to {{count}} applicant(s) (Estimated number, the actual number of recipients will be counted when the notification is sent) ?",
@@ -599,5 +588,68 @@
     "dialog_resolve_complaint_success_text": "The complaint status changed to resolved",
     "dialog_close_complaint_success_text": "The complaint status changed to closed",
     "operation_date": "Operation Date"
+  },
+  "dashboard": {
+    "general": {
+      "hajj": "Hajj",
+      "full_screen": "Full Screen",
+      "current_season_pilgrims": "Current Season Pilgrims",
+      "previous_season_pilgrims": "Previous Season Pilgrims",
+      "internal_pilgrims": "Internal Pilgrims",
+      "external_pilgrims": "External Pilgrims",
+      "number_of_cameras": "Number of Cameras",
+      "active_cameras": "Active Cameras",
+      "inactive_cameras": "Inactive Cameras",
+      "mobile_app_downloads": "Mobile App Downloads",
+      "logged_in": "Logged in",
+      "logged_out": "Logged out",
+      "min_companies": "Min Companies",
+      "max_companies": "Max Companies"
+    },
+    "main": {
+      "service_rating": "Service Rating",
+      "more_on_rating": "More on Rating",
+      "company_rating": "Company Rating",
+      "max_rating": "Max Rating",
+      "min_rating": "Min Rating",
+      "number_of_incidents": "Number of Incidents",
+      "total_incidents": "Total Incidents",
+      "area_with_most_incidents": "The area in which the most incidents were reported is",
+      "largest_number_of_incidents_reported": "The largest number of incidents were reported on",
+      "more_on_incidents": "More on Incidents",
+      "more_on_transactions": "More on Transactions",
+      "pilgrims_tracking": "Pilgrims Tracking",
+      "motawif_tracking": "Mutawif Tracking",
+      "more_on_tracking": "More on Tracking"
+    },
+    "transactions": {
+      "title": ""
+    },
+    "rating": {
+      "title": "Rating"
+    },
+    "mobile": {
+      "title": "Mobile Statistics"
+    },
+    "incidents": {
+      "title": "Incidents",
+      "types_of_incidents": "Types of Incidents",
+      "distribution_on_companies": "Distribution of Incidents on Companies",
+      "distribution_on_the_map": "Distribution of Incidents on the Map"
+    },
+    "general-numbers": {
+      "title": "General Statistics",
+      "males": "Males",
+      "females": "Females",
+      "age_distribution": "Age Distribution",
+      "distribution_of_highest_nationalities": "Distribution of Highest Nationalities",
+      "distribution_on_companies": "Distribution on Companies",
+      "distribution_on_mina_camps": "Distribution on Mina Camps",
+      "min_camps": "Min Camps",
+      "max_camps": "Max Camps"
+    },
+    "cameras": {
+      "title": "Cameras"
+    }
   }
 }

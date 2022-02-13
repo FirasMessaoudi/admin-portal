@@ -442,12 +442,12 @@ public class ItemWriter {
             ReflectionUtils.makeAccessible(packageReferenceNumberField);
             String packageReferenceNumber = (String) packageReferenceNumberField.get(item);
 
-            // retrieve the applicant ritual if it is saved before by the digital id scheduler.
-            ApplicantRitualDto savedApplicantRitual = applicantRitualService.findDirtyByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+            // retrieve the applicant ritual id if the applicant ritual is saved before by the digital id scheduler.
+            Long savedApplicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
 
-            if (applicantRitualField != null) {
+            if (applicantRitualField != null && savedApplicantRitualId != null) {
                 ReflectionUtils.makeAccessible(applicantRitualField);
-                applicantRitualField.set(item, savedApplicantRitual);
+                applicantRitualField.set(item, ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
             }
 
             String applicantUin = digitalIdService.findApplicantUin(applicant.getId());
@@ -460,10 +460,11 @@ public class ItemWriter {
                         ac.setApplicantRitual(applicantRitual);
                     });
                 }
-                if (savedApplicantRitual != null) {
-                    applicantRitual.setId(savedApplicantRitual.getId());
-                    applicantRitual.setCreationDate(savedApplicantRitual.getCreationDate());
-                    applicantRitual.setApplicantPackage(savedApplicantRitual.getApplicantPackage());
+
+                if (savedApplicantRitualId != null) {
+                    applicantRitual.setId(savedApplicantRitualId);
+                    Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
+                    applicantRitual.setApplicantPackage(ApplicantPackageDto.builder().id(applicantPackageId).build());
                     //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
                     applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
                     applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
@@ -483,50 +484,51 @@ public class ItemWriter {
                 ApplicantDto relativeApplicant = applicantService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative));
                 applicantRelative.setRelativeApplicant(relativeApplicant);
                 applicantRelative.setApplicant(applicant);
-                // get the applicant ritual for the relative applicant
-                ApplicantRitualDto relativeApplicantRitual = applicantRitualService.findDirtyByApplicantIdAndPackageReferenceNumber(relativeApplicant.getId(), packageReferenceNumber);
-                applicantRelative.setApplicantRitual(relativeApplicantRitual);
 
                 String relativeApplicantUin = CollectionUtils.isNotEmpty(relativeApplicant.getDigitalIds()) ? relativeApplicant.getDigitalIds().get(0).getUin() : null;
 
                 // if the applicant digital id and the relative applicant digital id and the applicant ritual are created then add chat contacts
                 // check if digital ids are created for the applicant and the relative applicant and applicant ritual is already created.
-                if (applicantUin == null || relativeApplicantUin == null || savedApplicantRitual == null) {
+                if (applicantUin == null || relativeApplicantUin == null || savedApplicantRitualId == null) {
                     return;
                 }
 
-                applicantChatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitual.getId());
+                applicantChatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitualId);
             }
 
             if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
-                ApplicantHealthDto curApplicantHealth = (ApplicantHealthDto) item;
-                ApplicantHealthDto applicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
-                if (applicantHealth != null) {
-                    curApplicantHealth.setId(applicantHealth.getId());
-                    curApplicantHealth.setCreationDate(applicantHealth.getCreationDate());
-                    if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
+                ApplicantHealthDto applicantHealth = (ApplicantHealthDto) item;
+                ApplicantHealthDto savedApplicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+                if (savedApplicantHealth != null) {
+                    applicantHealth.setId(savedApplicantHealth.getId());
+                    applicantHealth.setCreationDate(savedApplicantHealth.getCreationDate());
+                    if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
                         // get the special needs and if it is a list then create a list of special needs dtos
-                        List<ApplicantHealthSpecialNeedsDto> applicantHealthSpecialNeeds = Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
-                                ApplicantHealthSpecialNeedsDto.builder().applicantHealth(ApplicantHealthDto.builder().id(curApplicantHealth.getId()).build()).specialNeedTypeCode(sn).build()
+                        List<ApplicantHealthSpecialNeedsDto> applicantHealthSpecialNeeds = Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
+                                ApplicantHealthSpecialNeedsDto.builder().applicantHealth(ApplicantHealthDto.builder().id(applicantHealth.getId()).build()).specialNeedTypeCode(sn).build()
                         ).collect(Collectors.toList());
                         IGenericMapper<ApplicantHealthSpecialNeedsDto, JpaApplicantHealthSpecialNeeds> mapper = findMapper(ApplicantHealthSpecialNeedsDto.class);
                         applicantHealthSpecialNeedsRepository.saveAll(mapper.toEntityList(applicantHealthSpecialNeeds, mappingContext));
-                        curApplicantHealth.setSpecialNeeds(null);
+                        applicantHealth.setSpecialNeeds(null);
                     }
                 } else {
-                    if (CollectionUtils.isNotEmpty(curApplicantHealth.getSpecialNeeds())) {
+                    if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
                         // get the special needs and if it is a list then create a list of special needs dtos
-                        curApplicantHealth.setSpecialNeeds(Arrays.stream(curApplicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
-                                ApplicantHealthSpecialNeedsDto.builder().applicantHealth(curApplicantHealth).specialNeedTypeCode(sn).build()
+                        applicantHealth.setSpecialNeeds(Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
+                                ApplicantHealthSpecialNeedsDto.builder().applicantHealth(applicantHealth).specialNeedTypeCode(sn).build()
                         ).collect(Collectors.toList()));
                     }
                 }
             }
+
             if (applicantHealthField != null) {
                 ApplicantHealthDto applicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
 
                 if (applicantHealth == null) {
-                    applicantHealth = ApplicantHealthDto.builder().applicant(applicant).applicantRitual(savedApplicantRitual).packageReferenceNumber(packageReferenceNumber).build();
+                    applicantHealth = ApplicantHealthDto.builder().applicant(applicant).packageReferenceNumber(packageReferenceNumber).build();
+                    if (savedApplicantRitualId != null) {
+                        applicantHealth.setApplicantRitual(ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
+                    }
                     applicantHealth = applicantHealthService.save(applicantHealth);
                 }
                 // make fields accessible

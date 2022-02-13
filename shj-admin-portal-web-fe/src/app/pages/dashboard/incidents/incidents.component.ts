@@ -2,7 +2,7 @@ import {AfterViewInit, Component, Inject, OnChanges, OnInit, Renderer2, SimpleCh
 import {Label, PluginServiceGlobalRegistrationAndOptions, SingleDataSet} from "ng2-charts";
 import {ChartOptions, ChartType} from "chart.js";
 import {ChartsConfig} from "@pages/dashboard/charts.config";
-import {DashboardService} from "@core/services";
+import {AuthenticationService, DashboardService} from "@core/services";
 import { Loader } from "@googlemaps/js-api-loader";
 import { Cluster, ClusterStats, MarkerClusterer , Renderer} from "@googlemaps/markerclusterer";
 //import {GoogleMap, MapMarkerClusterer} from '@angular/google-maps';
@@ -16,6 +16,7 @@ import {I18nService} from "@dcc-commons-ng/services";
 import { interpolateRgb } from "d3-interpolate";
 import {DashboardIncidentNumbersVo} from "@model/dashboardIncidentNumbersVo.model";
 import { Position } from '@app/_shared/model/marker.model';
+import {EAuthority} from "@shared/model";
 
 const FONTS: string = '"Elm-font", sans-serif';
 
@@ -65,7 +66,8 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
   public incidentDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
   public incidentTypeDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
 
-  constructor(private dashboardService: DashboardService,
+  constructor(private authenticationService: AuthenticationService,
+              private dashboardService: DashboardService,
               private lookupService: LookupService,
               private dateFormatterService: DateFormatterService,
               private i18nService: I18nService,
@@ -127,10 +129,10 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
 
       this.mostIncidentDate = this.formatHijriDate(this.incidents.mostIncidentDate);
       this.mostIncidentsArea = this.incidents.mostIncidentsArea;
-
-      this.loadMaxCompanies();
-      this.loadMinCompanies();
     })
+
+    this.loadMaxCompanies();
+    this.loadMinCompanies();
   }
 
   loadMinCompanies() {
@@ -240,13 +242,13 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
           ): google.maps.Marker {
             // use d3-interpolateRgb to interpolate between red and blue
             const color = this.palette(count / stats.clusters.markers.max);
-        
+
             // create svg url with fill color
             const svg = window.btoa(`
           <svg fill="${color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
-            <circle cx="120" cy="120" opacity=".8" r="70" />    
+            <circle cx="120" cy="120" opacity=".8" r="70" />
           </svg>`);
-        
+
             // create marker using svg icon
             return new google.maps.Marker({
               position,
@@ -286,5 +288,9 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
 
   get currentLanguage(): string {
     return this.i18nService.language;
+  }
+
+  get canSeeIncidentDashboard(): boolean {
+    return this.authenticationService.hasAuthority(EAuthority.INCIDENT_DASHBOARD);
   }
 }

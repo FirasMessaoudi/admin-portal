@@ -56,7 +56,9 @@ export class ChartsConfig {
       }
     },
     tooltips: {
+      titleFontFamily: FONTS,
       bodyFontFamily: FONTS,
+      footerFontFamily: FONTS,
     },
     plugins: // [ChartDataLabels],
       {
@@ -123,7 +125,9 @@ export class ChartsConfig {
       }
     },
     tooltips: {
+      titleFontFamily: FONTS,
       bodyFontFamily: FONTS,
+      footerFontFamily: FONTS,
     },
     plugins: {
       datalabels: {
@@ -146,6 +150,9 @@ export class ChartsConfig {
         gridLines: {
           color: 'rgba(0, 0, 0, 0)',
         },
+        ticks: {
+          fontFamily: FONTS,
+        }
       }],
       yAxes: [
         {

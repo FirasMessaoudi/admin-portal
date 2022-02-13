@@ -85,38 +85,38 @@ public class DashboardController {
     }
 
     @GetMapping("/incident-numbers")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.INCIDENT_DASHBOARD + "')")
     public DashboardIncidentNumbersVo loadIncidentNumbers() {
         log.info("Handling loadDashboardGeneralNumbers endpoint.");
         return dashboardService.loadDashboardIncidentNumbers();
     }
 
     @GetMapping("/incident-numbers/max-companies")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.INCIDENT_DASHBOARD + "')")
     public List<CountVo> loadCompaniesWithMaxIncidentsCount() {
         log.info("Load Companies with max incident count");
         return dashboardService.loadCompaniesWithMaxIncidentsCount();
     }
 
     @GetMapping("/incident-numbers/min-companies")
-    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.INCIDENT_DASHBOARD + "')")
     public List<CountVo> loadCompaniesWithMinIncidentsCount() {
         log.info("Load Companies with min incident count.");
         return dashboardService.loadCompaniesWithMinIncidentsCount();
     }
 
-    @GetMapping("/general-numbers/applicant/count-per-age")
+    @GetMapping("/general-numbers/applicant/count-per-age/{seasonYear}")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT)
-    public List<CountVo> countPilgrimsFromCurrentSeasonByAgeRanges() {
+    public List<CountVo> countPilgrimsFromCurrentSeasonByAgeRanges(@PathVariable("seasonYear") int seasonYear) {
         log.debug("Count applicants based on age range...");
-        return dashboardService.pilgrimsCountListsByAgesRange();
+        return dashboardService.pilgrimsCountListsByAgesRange(seasonYear);
     }
 
-    @GetMapping("/general-numbers/applicant/count-per-nationalities")
+    @GetMapping("/general-numbers/applicant/count-per-nationalities/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CountVo> loadNumberOfApplicantsByNationalities() {
+    public List<CountVo> loadNumberOfApplicantsByNationalities(@PathVariable int seasonYear) {
         log.info("Handling loadDashboardGeneralNumbers endpoint.");
-        return dashboardService.listCountApplicantsByNationalities();
+        return dashboardService.listCountApplicantsByNationalities(seasonYear);
     }
 
     @GetMapping("/general-numbers/max-companies")
@@ -147,11 +147,11 @@ public class DashboardController {
         return dashboardService.loadCampsWithMinApplicantsCountByHijriSeason((int) DateUtils.getCurrentHijriYear());
     }
 
-    @GetMapping("/incidents-locations")
+    @GetMapping("/incidents-locations/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<LocationVo> loadIncidentsLocationsFromCurrentSeasons() {
+    public List<LocationVo> loadIncidentsLocationsFromCurrentSeasons(@PathVariable("seasonYear") int seasonYear) {
         log.info("Handling loadDashboardGeneralNumbers endpoint.");
-        return dashboardService.getIncidentsLocationsFromCurrentSeason();
+        return dashboardService.getIncidentsLocationsFromCurrentSeason(seasonYear);
     }
 
     @GetMapping("/mobile/app-downloads")
@@ -159,6 +159,20 @@ public class DashboardController {
     public DashboardMobileNumbersVo loadMobileAppDownloadNumbers() {
         log.info("Handling loadMobileAppDownloadNumbers endpoint.");
         return dashboardService.getMobileAppDownloadsFromCurrentSeason();
+    }
+
+    @GetMapping("/applicant-numbers/max-companies")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount() {
+        log.info("Load Companies with max applicant registered count");
+        return dashboardService.loadCompaniesWithMaxApplicantsRegisteredCount();
+    }
+
+    @GetMapping("/applicant-numbers/min-companies")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CountVo> loadCompaniesWithMinApplicantsRegisteredCount() {
+        log.info("Load Companies with min applicant registered count.");
+        return dashboardService.loadCompaniesWithMinApplicantsRegisteredCount();
     }
 
 }

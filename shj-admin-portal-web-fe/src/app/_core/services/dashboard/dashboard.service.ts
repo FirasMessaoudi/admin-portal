@@ -159,4 +159,22 @@ export class DashboardService {
     );
   }
 
+  /**
+   * Load companies with max applicant registered count
+   */
+  loadCompaniesWithMaxApplicantsRegisteredCount(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/applicant-numbers/max-companies'
+    );
+  }
+
+  /**
+   * Load companies with min applicant registered count
+   */
+  loadCompaniesWithMinApplicantsRegisteredCount(): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/applicant-numbers/min-companies'
+    );
+  }
+
 }

@@ -110,13 +110,25 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
     }
 
     /**
-     * Find applicant ritual based on applicant id and package reference number.
+     * Set applicant package for the applicant ritual.
+     *
+     * @param newApplicantPackageId
+     * @param applicantRitualId
+     */
+    @Transactional
+    public void updateApplicantRitualApplicantPackage(long newApplicantPackageId, long applicantRitualId) {
+        applicantRitualRepository.updateApplicantRitualApplicantPackage(newApplicantPackageId, applicantRitualId);
+    }
+
+    /**
+     * Find applicant ritual id based on applicant id and package reference number.
      *
      * @param applicantId
-     * @param referenceNumber
+     * @param packageReferenceNumber
      * @return
      */
-    public ApplicantRitualDto findByApplicantIdAndPackageReferenceNumber(long applicantId, String referenceNumber) {
-        return getMapper().fromEntity(applicantRitualRepository.findByApplicantIdAndPackageReferenceNumber(applicantId, referenceNumber), mappingContext);
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public Long findIdByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
+        return applicantRitualRepository.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber);
     }
 }

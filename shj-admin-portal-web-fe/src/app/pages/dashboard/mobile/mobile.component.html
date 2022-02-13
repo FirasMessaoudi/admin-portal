@@ -4,11 +4,11 @@
 </a>
 <div class="content__wrapper">
   <div class="title__Page">
-    <h3 class="font-weight-bold text-dark">إحصائيات الجوال</h3>
+    <h3 class="font-weight-bold text-dark">{{'dashboard.mobile.title' | translate}}</h3>
     <div>
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
-        شاشة كاملة
+        {{'dashboard.general.full_screen' | translate}}
       </button>
     </div>
   </div>
@@ -27,9 +27,9 @@
                 <div class="statistics">
                   <div class="flex-center-between">
                     <div>
-                      <div class="sts-title">تحميل التطبيق</div>
+                      <div class="sts-title">{{'dashboard.general.mobile_app_downloads' | translate}}</div>
                       <div class="sts-number text-dark">
-                        <ng9-odometer [number]="mobileAppDownloadsData?.totalNumberOfLoggedInUsers"></ng9-odometer>
+                        <ng9-odometer [number]="mobileAppDownloadsData?.totalNumberOfMobileAppDownloads"></ng9-odometer>
                       </div>
                     </div>
                     <svg-icon styleClass="sts-icon fa-w-10 display-4" icon="mobile-android-alt"></svg-icon>
@@ -44,14 +44,14 @@
                   <div class="flex-center-between mt-2">
                     <div class="d-flex">
                       <svg-icon styleClass="text-appdownloads" icon="circle"></svg-icon>
-                      <div class="px-3">مفعل</div>
+                      <div class="px-3">{{'dashboard.general.logged_in' | translate}}</div>
                     </div>
                     <div>{{mobileAppDownloadsData?.totalNumberOfLoggedInUsers}}</div>
                   </div>
                   <div class="flex-center-between mt-2">
                     <div class="d-flex">
                       <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-                      <div class="px-3">غير مفعل</div>
+                      <div class="px-3">{{'dashboard.general.logged_out' | translate}}</div>
                     </div>
                     <div>{{mobileAppDownloadsData?.totalNumberOfLoggedOutUsers}}</div>
                   </div>
@@ -90,13 +90,25 @@
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">استخدام التطبيق بالنسبة للشركات</h5>
-              <button type="button" class="btn border mx-3">
-                أعلى استخدام
+              <button *ngIf="minCompanies" type="button" class="btn border mx-3" (click)="loadMaxCompanies()">
+                {{'dashboard.general.min_companies' | translate}}
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
+              <button *ngIf="!minCompanies" type="button" class="btn border mx-3" (click)="loadMinCompanies()">
+                {{'dashboard.general.max_companies' | translate}}
+                <!--TODO Rotate icon-->
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
             </div>
           </div>
-          <div class="py-3">Content</div>
+          <div class="w-80">
+            <canvas baseChart #companiesByApplicantCount
+                    [datasets]="[{data: companyCounts, maxBarThickness: 15}]"
+                    [options]="chartsConfig.barChartOptions"
+                    [labels]="companyLabels"
+                    [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#b1bdd2'}]"
+                    chartType="bar" height="80"></canvas>
+            <div class="text-center"></div>
         </div>
       </div>
       <div class="col-12 mt-4">

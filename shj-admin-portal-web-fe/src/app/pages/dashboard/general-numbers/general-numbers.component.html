@@ -4,11 +4,11 @@
 </a>
 <div class="content__wrapper">
   <div class="title__Page">
-    <h3 class="font-weight-bold text-dark">إحصائيات عامة</h3>
+    <h3 class="font-weight-bold text-dark">{{'dashboard.general-numbers.title' | translate}}</h3>
     <div>
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
-        شاشة كاملة
+        {{'dashboard.general.full_screen' | translate}}
       </button>
     </div>
   </div>
@@ -20,7 +20,7 @@
         <div class="statistics h-100 p-3 border">
           <div class="flex-center-between">
             <div>
-              <div class="sts-title">حجاج هذا العام</div>
+              <div class="sts-title">{{'dashboard.general.current_season_pilgrims' | translate}}</div>
               <div class="sts-number text-dark">
                 <ng9-odometer [number]="currentSeasonData?.totalNumberOfApplicants"></ng9-odometer>
               </div>
@@ -38,7 +38,7 @@
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
-                <div class="px-3">حجاج الخارج</div>
+                <div class="px-3">{{'dashboard.general.external_pilgrims' | translate}}</div>
                 <div>{{currentSeasonData?.totalNumberOfExternalApplicants | number}}</div>
               </div>
 
@@ -46,7 +46,7 @@
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-                <div class="px-3">حجاج الداخل</div>
+                <div class="px-3">{{'dashboard.general.internal_pilgrims' | translate}}</div>
                 <div>{{currentSeasonData?.totalNumberOfInternalApplicants | number}}</div>
               </div>
 
@@ -54,7 +54,7 @@
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="fa-w-6 h2 text-gray-300" icon="male-solid"></svg-icon>
-                <div class="px-3">عدد الذكور</div>
+                <div class="px-3">{{'dashboard.general-numbers.males' | translate}}</div>
                 <div>{{currentSeasonData?.totalNumberOfMaleApplicants | number}}</div>
               </div>
 
@@ -62,7 +62,7 @@
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon class="text-pink" styleClass="fa-w-8 h2" icon="female-solid"></svg-icon>
-                <div class="px-3">عدد الإناث</div>
+                <div class="px-3">{{'dashboard.general-numbers.females' | translate}}</div>
                 <div>{{currentSeasonData?.totalNumberOfFemaleApplicants | number}}</div>
               </div>
 
@@ -74,7 +74,7 @@
         <div class="statistics h-100 p-3 border">
           <div class="flex-center-between">
             <div>
-              <div class="sts-title">حجاج الموسم الماضي</div>
+              <div class="sts-title">{{'dashboard.general.previous_season_pilgrims' | translate}}</div>
               <div class="sts-number text-dark">
                 <ng9-odometer [number]="previousSeasonData?.totalNumberOfApplicants"></ng9-odometer>
               </div>
@@ -92,7 +92,7 @@
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
-                <div class="px-3">حجاج الخارج</div>
+                <div class="px-3">{{'dashboard.general.external_pilgrims' | translate}}</div>
                 <div>{{previousSeasonData?.totalNumberOfExternalApplicants | number}}</div>
               </div>
 
@@ -100,7 +100,7 @@
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-                <div class="px-3">حجاج الداخل</div>
+                <div class="px-3">{{'dashboard.general.internal_pilgrims' | translate}}</div>
                 <div>{{previousSeasonData?.totalNumberOfInternalApplicants | number}}</div>
               </div>
 
@@ -108,7 +108,7 @@
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon styleClass="fa-w-6 h2 text-gray-300" icon="male-solid"></svg-icon>
-                <div class="px-3">عدد الذكور</div>
+                <div class="px-3">{{'dashboard.general-numbers.males' | translate}}</div>
                 <div>{{previousSeasonData?.totalNumberOfMaleApplicants | number}}</div>
               </div>
 
@@ -116,7 +116,7 @@
             <div class="col my-2">
               <div class="d-flex align-items-center">
                 <svg-icon class="text-pink" styleClass="fa-w-8 h2" icon="female-solid"></svg-icon>
-                <div class="px-3">عدد الإناث</div>
+                <div class="px-3">{{'dashboard.general-numbers.females' | translate}}</div>
                 <div>{{previousSeasonData?.totalNumberOfFemaleApplicants | number}}</div>
               </div>
 
@@ -134,15 +134,15 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts"> توزيع الأعمار </h5>
+              <h5 class="sts">{{'dashboard.general-numbers.age_distribution' | translate}}</h5>
             </div>
           </div>
           <div class="py-3">
 
             <app-doughnut-chart [centerValue]="totalCountAges | number"
-                                [centerTitle]="'عملية بالبطاقة'"
+                                [centerTitle]="'حاج'"
                                 *ngIf="countVoList != undefined"
-                                [title]="'توزيع الاعمار'"
+                                [title]="'dashboard.general-numbers.age_distribution' | translate"
                                 [countData]="countVoList"></app-doughnut-chart>
           </div>
         </div>
@@ -151,14 +151,14 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">توزيع أعلى الجنسيات</h5>
+              <h5 class="sts">{{'dashboard.general-numbers.distribution_of_highest_nationalities' | translate}}</h5>
             </div>
           </div>
           <div class="py-3">
             <app-doughnut-chart *ngIf="applicantsPerNationalities != undefined"
                                 [centerTitle]="'حاج'"
                                 [centerValue]="totalCountsNationalities | number"
-                                [title]="'توزيع أعلى الجنسيات'"
+                                [title]="'dashboard.general-numbers.distribution_of_highest_nationalities' | translate"
                                 [countData]="applicantsPerNationalities"></app-doughnut-chart>
           </div>
         </div>
@@ -167,13 +167,13 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">التوزيع على الشركات</h5>
+              <h5 class="sts">{{'dashboard.general-numbers.distribution_on_companies' | translate}}</h5>
               <button *ngIf="minCompanies" type="button" class="btn border mx-3" (click)="loadMaxCompanies()">
-                أقل الشركات
+                {{'dashboard.general.min_companies' | translate}}
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
               <button *ngIf="!minCompanies" type="button" class="btn border mx-3" (click)="loadMinCompanies()">
-                أعلى الشركات
+                {{'dashboard.general.max_companies' | translate}}
                 <!--TODO Rotate icon-->
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
@@ -204,13 +204,13 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">التوزيع على مخيمات منى</h5>
+              <h5 class="sts">{{'dashboard.general-numbers.distribution_on_mina_camps' | translate}}</h5>
               <button *ngIf="minCamps" type="button" class="btn border mx-3" (click)="loadMaxCamps()">
                 <svg-icon icon="sort-amount-down"></svg-icon>
-                أقل المخيمات
+                {{'dashboard.general-numbers.min_camps' | translate}}
               </button>
               <button *ngIf="!minCamps" type="button" class="btn border mx-3" (click)="loadMinCamps()">
-                أعلى المخيمات
+                {{'dashboard.general-numbers.max_camps' | translate}}
                 <!--TODO Rotate icon-->
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>

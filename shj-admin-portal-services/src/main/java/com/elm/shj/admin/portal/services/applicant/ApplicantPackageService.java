@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,14 +67,14 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
     }
 
     /**
-     * Find the latest applicant package id based on applicant UIN and package reference number.
-     *
+     * Find the latest applicant package id based on applicant UIN
      * @param applicantUin
-     * @param referenceNumber
      * @return
      */
-    public Long findCurrentApplicantPackage(long applicantUin, String referenceNumber) {
-        return applicantPackageRepository.findIdByApplicantUinAndRitualPackageReferenceNumber(applicantUin, referenceNumber);
+    public Long findLatestIdByApplicantUIN(String applicantUin) {
+        Page<Long> applicantPackageIdPage = applicantPackageRepository.findLastIdByApplicantUin(Long.parseLong(applicantUin), PageRequest.of(0, 1));
+        if (applicantPackageIdPage == null) return null;
+        return applicantPackageIdPage.getContent().get(0);
     }
 
     /**

@@ -6,8 +6,11 @@ import {ChartsConfig} from "@pages/dashboard/charts.config";
 import {ChartDataSets} from "chart.js";
 
 import * as momentjs from 'moment';
+import {I18nService} from "@dcc-commons-ng/services";
+import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
 
 const moment = momentjs;
+const FONTS: string = '"Elm-font", sans-serif';
 
 @Component({
   selector: 'app-mobile',
@@ -22,10 +25,15 @@ export class MobileComponent implements OnInit {
   weekDays: Array<any> = [];
   datasets: ChartDataSets[];
 
+  minCompanies: boolean;
+  companyLabels: Array<any>;
+  companyCounts: Array<any>;
 
-  public appdownloads: number = 1103402;
-
-  constructor(private authenticationService: AuthenticationService, private dashboardService: DashboardService) {
+  constructor(private authenticationService: AuthenticationService,
+              private dashboardService: DashboardService,
+              private i18nService: I18nService,
+              private translate: TranslateService,
+  ) {
   }
 
   ngOnInit() {
@@ -50,12 +58,76 @@ export class MobileComponent implements OnInit {
         tension: 0
       }];
 
+    this.chartsConfig.barChartOptions = {
+      ...this.chartsConfig.barChartOptions,
+      legend: false,
+      scales: {
+        ...this.chartsConfig.barChartOptions.scales,
+        xAxes: [
+          {
+            gridLines: {
+              color: 'rgba(0, 0, 0, 0)',
+            },
+          },
+        ],
+        yAxes: [
+          {
+            gridLines: {
+              borderDash: [8, 6],
+              color: '#F3F5F2',
+            },
+            ticks: {
+              fontFamily: FONTS,
+              beginAtZero: true,
+              callback: function (value) {
+                if (value % 1 === 0) {
+                  return value;
+                }
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.getWeekDays();
+    });
+
+    this.loadMaxCompanies();
+    this.loadMinCompanies();
+
+  }
+
+  loadMinCompanies() {
+    this.minCompanies = true;
+    this.dashboardService
+      .loadCompaniesWithMinApplicantsRegisteredCount()
+      .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
+    this.dashboardService
+      .loadCompaniesWithMinApplicantsRegisteredCount()
+      .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
+  }
+
+  loadMaxCompanies() {
+    this.minCompanies = false;
+    this.dashboardService
+      .loadCompaniesWithMaxApplicantsRegisteredCount()
+      .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
+    this.dashboardService
+      .loadCompaniesWithMaxApplicantsRegisteredCount()
+      .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
+  }
+
+  get currentLanguage(): string {
+    return this.i18nService.language;
   }
 
   getWeekDays() {
+    this.weekDays = [];
     let day = moment();
     for (let i = 1; i < 8; i++) {
-      this.weekDays.unshift(day.locale('ar').format('dddd'));
+      this.weekDays.unshift(day.locale(this.currentLanguage.toLowerCase().substr(0, 2)).format('dddd'));
       day = day.clone().subtract(1, 'd');
     }
   }

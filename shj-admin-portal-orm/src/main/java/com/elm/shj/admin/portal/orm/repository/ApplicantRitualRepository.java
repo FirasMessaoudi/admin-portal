@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -32,8 +33,13 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
 
     JpaApplicantRitual findFirstByApplicantDigitalIdsUinOrderByCreationDateDesc(String uin);
 
-    JpaApplicantRitual findByApplicantIdAndApplicantPackageRitualPackageReferenceNumber(long applicantId, String referenceNumber);
-
     JpaApplicantRitual findByApplicantIdAndPackageReferenceNumber(long applicantId, String referenceNumber);
+
+    @Modifying
+    @Query("UPDATE JpaApplicantRitual ar SET ar.applicantPackage.id = :applicantPackageId WHERE ar.id = :applicantRitualId")
+    void updateApplicantRitualApplicantPackage(@Param("applicantPackageId") long applicantPackageId, @Param("applicantRitualId") long applicantRitualId);
+
+    @Query("SELECT ar.id FROM JpaApplicantRitual ar WHERE ar.applicant.id = :applicantId AND ar.packageReferenceNumber = :packageReferenceNumber")
+    Long findIdByApplicantIdAndPackageReferenceNumber(@Param("applicantId") long applicantId, @Param("packageReferenceNumber") String packageReferenceNumber);
 
 }
