@@ -603,14 +603,14 @@
       "logged_in": "Logged in",
       "logged_out": "Logged out",
       "min_companies": "Min Companies",
-      "max_companies": "Max Companies"
+      "max_companies": "Max Companies",
+      "max_rating": "Max Rating",
+      "min_rating": "Min Rating"
     },
     "main": {
       "service_rating": "Service Rating",
       "more_on_rating": "More on Rating",
       "company_rating": "Company Rating",
-      "max_rating": "Max Rating",
-      "min_rating": "Min Rating",
       "number_of_incidents": "Number of Incidents",
       "total_incidents": "Total Incidents",
       "area_with_most_incidents": "The area in which the most incidents were reported is",
@@ -625,7 +625,14 @@
       "title": "Transaction Statistics"
     },
     "rating": {
-      "title": "Rating"
+      "title": "Rating",
+      "overall_rating": "Overall Rating",
+      "housing": "Housing",
+      "transportation": "Transportation",
+      "company_overall_rating": "Company Overall Rating",
+      "transportation_company_rating": "Transportation Company Rating",
+      "food_company_rating": "Food Company Rating",
+      "housing_company_rating": "Housing Company Rating"
     },
     "mobile": {
       "title": "Mobile Statistics",

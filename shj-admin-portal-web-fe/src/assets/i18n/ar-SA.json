@@ -604,14 +604,14 @@
       "logged_in": "مفعل",
       "logged_out": "غير مفعل",
       "min_companies": "أقل الشركات",
-      "max_companies": "أعلى الشركات"
+      "max_companies": "أعلى الشركات",
+      "max_rating": "أعلى تقييم",
+      "min_rating": "أقل تقييم"
     },
     "main": {
       "service_rating": "تقييم الخدمات",
       "more_on_rating": "المزيد عن التقييم",
       "company_rating": "تقييم الشركات",
-      "max_rating": "أعلى تقييم",
-      "min_rating": "أقل تقييم",
       "number_of_incidents": "عدد البلاغات",
       "total_incidents": "مجموع البلاغات",
       "area_with_most_incidents": "أكثر المناطق التي سجلت فيها بلاغات هي",
@@ -626,7 +626,14 @@
       "title": "إحصائيات العمليات"
     },
     "rating": {
-      "title": "التقييم"
+      "title": "التقييم",
+      "overall_rating": "التقييم العام",
+      "housing": "السكن",
+      "transportation": "النقل",
+      "company_overall_rating": "التقييم العام للشركات",
+      "transportation_company_rating": "تقييم شركات النقل",
+      "food_company_rating": "تقييم شركات الطعام",
+      "housing_company_rating": "تقييم شركات السكن"
     },
     "mobile": {
       "title": "إحصائيات الجوال",
