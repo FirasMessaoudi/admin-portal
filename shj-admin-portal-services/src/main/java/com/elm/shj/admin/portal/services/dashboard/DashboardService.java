@@ -289,19 +289,19 @@ public class DashboardService {
     }
 
     public List<CountVo> loadCompaniesWithMaxApplicantsCountByHijriSeason(int currentHijriYear) {
-        return companyRepository.findCompaniesWithMaxApplicantsByHijriSeason(currentHijriYear, PageRequest.of(0, 15)).getContent();
+        return companyRepository.findCompaniesWithMaxApplicantsByHijriSeason(currentHijriYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()), PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
     public List<CountVo> loadCompaniesWithMinApplicantsCountByHijriSeason(int currentHijriYear) {
-        return companyRepository.findCompaniesWithMinApplicantsByHijriSeason(currentHijriYear, PageRequest.of(0, 15)).getContent();
+        return companyRepository.findCompaniesWithMinApplicantsByHijriSeason(currentHijriYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()), PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
     public List<CountVo> loadCampsWithMaxApplicantsCountByHijriSeason(int currentHijriYear) {
-        return packageHousingRepository.findCampsWithMaxApplicantsByHijriSeason(currentHijriYear, PageRequest.of(0, 15)).getContent();
+        return packageHousingRepository.findCampsWithMaxApplicantsByHijriSeason(currentHijriYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()), PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
     public List<CountVo> loadCampsWithMinApplicantsCountByHijriSeason(int currentHijriYear) {
-        return packageHousingRepository.findCampsWithMinApplicantsByHijriSeason(currentHijriYear, PageRequest.of(0, 15)).getContent();
+        return packageHousingRepository.findCampsWithMinApplicantsByHijriSeason(currentHijriYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()), PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
     public List<LocationVo> getIncidentsLocationsFromCurrentSeason(int hijriYear) {

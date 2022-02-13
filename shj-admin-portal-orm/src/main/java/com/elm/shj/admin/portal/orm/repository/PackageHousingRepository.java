@@ -27,16 +27,20 @@ public interface PackageHousingRepository extends JpaRepository<JpaPackageHousin
 
     List<JpaPackageHousing> findByRitualPackageId(long id);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ph.locationNameAr, 0, COUNT(ph.locationNameAr), '') " +
-            "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.packageHousings ph " +
-            "WHERE ph.typeCode = 'CAMP' " +
-            "GROUP BY ph.locationNameAr ORDER BY COUNT(ph.locationNameAr) DESC")
-    Page<CountVo> findCampsWithMaxApplicantsByHijriSeason(@Param("hijriSeason") int hijriSeason, Pageable pageable);
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ph.locationNameAr, 0, COUNT(ph.referenceNumber), '') " +
+            "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.packageHousings ph JOIN rp.companyRitualSeason crs " +
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) " +
+            "AND ph.typeCode = 'CAMP' GROUP BY ph.referenceNumber, ph.locationNameAr ORDER BY COUNT(ph.referenceNumber) DESC")
+    Page<CountVo> findCampsWithMaxApplicantsByHijriSeason(@Param("seasonYear") int seasonYear,
+                                                          @Param("ritualTypeCodeList") List<String> ritualTypeCodeList,
+                                                          Pageable pageable);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ph.locationNameAr, 0, COUNT(ph.locationNameAr), '') " +
-            "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.packageHousings ph " +
-            "WHERE ph.typeCode = 'CAMP' " +
-            "GROUP BY ph.locationNameAr ORDER BY COUNT(ph.locationNameAr)")
-    Page<CountVo> findCampsWithMinApplicantsByHijriSeason(@Param("hijriSeason") int hijriSeason, Pageable pageable);
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ph.locationNameAr, 0, COUNT(ph.referenceNumber), '') " +
+            "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.packageHousings ph JOIN rp.companyRitualSeason crs " +
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) " +
+            "AND ph.typeCode = 'CAMP' GROUP BY ph.referenceNumber, ph.locationNameAr ORDER BY COUNT(ph.referenceNumber)")
+    Page<CountVo> findCampsWithMinApplicantsByHijriSeason(@Param("seasonYear") int seasonYear,
+                                                          @Param("ritualTypeCodeList") List<String> ritualTypeCodeList,
+                                                          Pageable pageable);
 
 }
