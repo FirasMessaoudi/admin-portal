@@ -41,8 +41,8 @@ public interface PrintRequestRepository extends JpaRepository<JpaPrintRequest, L
             "(:statusCode is null or pr.statusCode like %:statusCode%) AND pr.target = 'STAFF' AND " +
             "(:description is null or pr.description like %:description%) AND (:referenceNumber is null or pr.referenceNumber like %:referenceNumber%) AND " +
             "(:batchNumber = -1L or prb.sequenceNumber = :batchNumber) AND (:cardNumber is null or sc.referenceNumber like %:cardNumber%) AND " +
-            "(:uin is null or di.suin like %:uin%)AND (:endDate is null or :startDate is null or pr.creationDate BETWEEN :startDate AND :endDate)")
-    Page<JpaPrintRequest> findStaffByFilters(@Param("ritualType") String ritualType, @Param("companyCode") String companyCode, @Param("ritualSeason") Integer ritualSeason,
+            "(:uin is null or di.suin like %:uin%) AND (:endDate is null or :startDate is null or pr.creationDate BETWEEN :startDate AND :endDate)")
+    Page<JpaPrintRequest> findStaffPrintRequestByFilters(@Param("ritualType") String ritualType, @Param("companyCode") String companyCode, @Param("ritualSeason") Integer ritualSeason,
                                              @Param("statusCode") String statusCode, @Param("description") String description,
                                         @Param("referenceNumber") String referenceNumber, @Param("batchNumber") long batchNumber,
                                         @Param("cardNumber") String cardNumber, @Param("uin") String uin,

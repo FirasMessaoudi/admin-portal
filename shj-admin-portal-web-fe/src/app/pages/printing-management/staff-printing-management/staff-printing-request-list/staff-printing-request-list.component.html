@@ -58,12 +58,16 @@
         <div class="form-group col m-0">
           <label class="col-form-label">{{ "printing-management.printing_start_date" | translate }}</label>
           <hijri-gregorian-datepicker [showLabel]="false"
-                                      name="printingStartDate"
+                                      name="fromDate"
                                       buttonClass="dcc-primary"
                                       class="datepicker"
+                                      (selectedDateChange)="onPrintingStartDateChange($event)"
+                                      [maxGreg]="maxDateGregorian"
+                                      [maxHijri]="maxDateHijri"
                                       [isRequired]="false"
                                       [GregLabel]="'general.cal_greg' | translate"
                                       [hijriLabel]="'general.cal_hijri' | translate"
+                                      [selectedDateType]="selectedDateType"
                                       [readonly]="true"
                                       #datePicker>
           </hijri-gregorian-datepicker>
@@ -72,12 +76,16 @@
         <div class="form-group col m-0">
           <label class="col-form-label">{{ "printing-management.printing_end_date" | translate }}</label>
           <hijri-gregorian-datepicker [showLabel]="false"
-                                      name="printingEndDate"
+                                      name="toDate"
                                       buttonClass="dcc-primary"
                                       class="datepicker"
+                                      (selectedDateChange)="onPrintingEndDateChange($event)"
+                                      [maxGreg]="maxDateGregorian"
+                                      [maxHijri]="maxDateHijri"
                                       [isRequired]="false"
                                       [GregLabel]="'general.cal_greg' | translate"
                                       [hijriLabel]="'general.cal_hijri' | translate"
+                                      [selectedDateType]="selectedDateType"
                                       [readonly]="true"
                                       #datePicker>
           </hijri-gregorian-datepicker>

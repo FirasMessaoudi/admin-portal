@@ -95,7 +95,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
         if (criteria.getToDate() != null)
             endDate = atEndOfDay(criteria.getToDate());
 
-        return mapPage(printRequestRepository.findStaffByFilters(criteria.getRitualTypeCode(), criteria.getCompanyCode(), criteria.getSeason(),criteria.getStatusCode(), criteria.getDescription(),
+        return mapPage(printRequestRepository.findStaffPrintRequestByFilters(criteria.getRitualTypeCode(), criteria.getCompanyCode(), criteria.getSeason(),criteria.getStatusCode(), criteria.getDescription(),
                 criteria.getRequestNumber(), criteria.getBatchNumber(), criteria.getCardNumber(), criteria.getIdNumber()
                 , startDate, endDate, pageable));
     }
