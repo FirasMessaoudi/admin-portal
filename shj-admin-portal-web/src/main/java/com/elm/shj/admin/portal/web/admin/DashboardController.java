@@ -105,11 +105,11 @@ public class DashboardController {
         return dashboardService.loadCompaniesWithMinIncidentsCount();
     }
 
-    @GetMapping("/general-numbers/applicant/count-per-age")
+    @GetMapping("/general-numbers/applicant/count-per-age/{seasonYear}")
     @RolesAllowed(AuthorityConstants.USER_MANAGEMENT)
-    public List<CountVo> countPilgrimsFromCurrentSeasonByAgeRanges() {
+    public List<CountVo> countPilgrimsFromCurrentSeasonByAgeRanges(@PathVariable("seasonYear") int seasonYear) {
         log.debug("Count applicants based on age range...");
-        return dashboardService.pilgrimsCountListsByAgesRange();
+        return dashboardService.pilgrimsCountListsByAgesRange(seasonYear);
     }
 
     @GetMapping("/general-numbers/applicant/count-per-nationalities/{seasonYear}")
@@ -147,11 +147,11 @@ public class DashboardController {
         return dashboardService.loadCampsWithMinApplicantsCountByHijriSeason((int) DateUtils.getCurrentHijriYear());
     }
 
-    @GetMapping("/incidents-locations")
+    @GetMapping("/incidents-locations/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<LocationVo> loadIncidentsLocationsFromCurrentSeasons() {
+    public List<LocationVo> loadIncidentsLocationsFromCurrentSeasons(@PathVariable("seasonYear") int seasonYear) {
         log.info("Handling loadDashboardGeneralNumbers endpoint.");
-        return dashboardService.getIncidentsLocationsFromCurrentSeason();
+        return dashboardService.getIncidentsLocationsFromCurrentSeason(seasonYear);
     }
 
     @GetMapping("/mobile/app-downloads")

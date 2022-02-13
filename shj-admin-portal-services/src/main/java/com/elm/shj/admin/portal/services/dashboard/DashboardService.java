@@ -250,10 +250,10 @@ public class DashboardService {
         return c.getTime();
     }
 
-    public List<CountVo> pilgrimsCountListsByAgesRange() {
+    public List<CountVo> pilgrimsCountListsByAgesRange(int hijriYear) {
         List<CountVo> countVoList = new ArrayList<>();
         String[] arrOfRanges = this.agesRange.split(",");
-        long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason((int) DateUtils.getCurrentHijriYear(), new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
+        long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason(hijriYear, new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
         for (String range : arrOfRanges) {
             CountVo countVo = new CountVo();
             String[] ages = range.split("-");
@@ -304,8 +304,8 @@ public class DashboardService {
         return packageHousingRepository.findCampsWithMinApplicantsByHijriSeason(currentHijriYear, PageRequest.of(0, 15)).getContent();
     }
 
-    public List<LocationVo> getIncidentsLocationsFromCurrentSeason() {
-        return applicantIncidentRepository.getIncidentsLocationsBySeasonAndRitualType((int) DateUtils.getCurrentHijriYear(), List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
+    public List<LocationVo> getIncidentsLocationsFromCurrentSeason(int hijriYear) {
+        return applicantIncidentRepository.getIncidentsLocationsBySeasonAndRitualType(hijriYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
     }
 
     public List<CountVo> loadCompaniesWithMaxIncidentsCount() {
