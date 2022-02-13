@@ -28,12 +28,12 @@ const routes: Routes = [
     canActivate: [AuthenticationGuard],
   },
   {
-    path: 'dashboard/mobile',
+    path: 'dashboard/mobile/:seasonYear',
     component: MobileComponent,
     canActivate: [AuthenticationGuard],
   },
   {
-    path: 'dashboard/incidents',
+    path: 'dashboard/incidents/:seasonYear',
     component: IncidentsComponent,
     canActivate: [AuthenticationGuard],
   },

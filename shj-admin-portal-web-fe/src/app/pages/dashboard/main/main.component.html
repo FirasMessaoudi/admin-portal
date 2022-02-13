@@ -133,7 +133,7 @@
         </div>
       </div>
 
-      <div class="col mb-4" [routerLink]="['/dashboard/mobile']">
+      <div class="col mb-4" [routerLink]="['/dashboard/mobile',seasonYear]">
         <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
@@ -215,7 +215,7 @@
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">{{'dashboard.main.number_of_incidents' | translate}}</h5>
             </div>
-            <a [routerLink]="['/dashboard/incidents']" class="text-dcc-primary">
+            <a [routerLink]="['/dashboard/incidents',seasonYear]" class="text-dcc-primary">
               {{'dashboard.main.more_on_incidents' | translate}}
               <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
             </a>
