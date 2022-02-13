@@ -24,13 +24,15 @@ public interface CompanyRepository extends JpaRepository<JpaCompany, Long> {
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(c.labelAr), '') " +
             "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
-            "WHERE rs.seasonYear = :hijriSeason " +
+            "WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) " +
             "GROUP BY c.labelAr ORDER BY COUNT(c.labelAr) DESC")
-    Page<CountVo> findCompaniesWithMaxApplicantsByHijriSeason(@Param("hijriSeason") int hijriSeason, Pageable pageable);
+    Page<CountVo> findCompaniesWithMaxApplicantsByHijriSeason(@Param("seasonYear") int seasonYear,
+                                                              @Param("ritualTypeCodeList") List<String> ritualTypeCodeList, Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(c.labelAr), '') " +
             "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
-            "WHERE rs.seasonYear = :hijriSeason " +
+            "WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) " +
             "GROUP BY c.labelAr ORDER BY COUNT(c.labelAr)")
-    Page<CountVo> findCompaniesWithMinApplicantsByHijriSeason(@Param("hijriSeason") int hijriSeason, Pageable pageable);
+    Page<CountVo> findCompaniesWithMinApplicantsByHijriSeason(@Param("seasonYear") int seasonYear,
+                                                              @Param("ritualTypeCodeList") List<String> ritualTypeCodeList, Pageable pageable);
 }
