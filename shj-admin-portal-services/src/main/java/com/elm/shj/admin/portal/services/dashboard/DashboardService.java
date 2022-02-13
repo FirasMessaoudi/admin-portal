@@ -183,8 +183,8 @@ public class DashboardService {
         long totalNumberOfExternalApplicants = applicantRepository
                 .countAllApplicantBySeasonAndRitualType(hijriSeason, new ArrayList<>(Arrays.asList(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
 
-        long totalNumberOfUsersInstalledApp = applicantRepository.countAllByMobileLoggedInIsNotNull();
-        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue();
+        long totalNumberOfUsersInstalledApp = applicantRepository.countAllByMobileLoggedInIsNotNull(hijriSeason, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
+        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue(hijriSeason, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
         long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfUsersInstalledApp - totalNumberOfLoggedInUsersFromMobile;
 
         return DashboardGeneralNumbersVo.builder()
@@ -317,8 +317,8 @@ public class DashboardService {
     }
 
     public DashboardMobileNumbersVo getMobileAppDownloadsFromCurrentSeason(int seasonYear) {
-        long totalNumberOfMobileAppDownloads = applicantRepository.countAllByMobileLoggedInIsNotNull();
-        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue();
+        long totalNumberOfMobileAppDownloads = applicantRepository.countAllByMobileLoggedInIsNotNull(seasonYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
+        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue(seasonYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
         long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfMobileAppDownloads - totalNumberOfLoggedInUsersFromMobile;
         return DashboardMobileNumbersVo.builder()
                 .totalNumberOfMobileAppDownloads(totalNumberOfMobileAppDownloads)
