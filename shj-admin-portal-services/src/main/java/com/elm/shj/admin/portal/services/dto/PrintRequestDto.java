@@ -37,4 +37,6 @@ public class PrintRequestDto implements Serializable {
     private Date creationDate;
     private Date updateDate;
     private Date confirmationDate;
+    private Integer seasonYear;
+    private String ritualTypeCode;
 }

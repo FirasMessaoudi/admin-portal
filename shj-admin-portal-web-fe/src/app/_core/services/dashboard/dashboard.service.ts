@@ -1,19 +1,20 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { DashboardVo } from '@model/dashboard-vo.model';
-import { Observable } from 'rxjs';
-import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
-import { CountVo } from '@app/_shared/model/countVo.model';
-import { Lookup } from '@model/lookup.model';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {DashboardVo} from '@model/dashboard-vo.model';
+import {Observable} from 'rxjs';
+import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
+import {CountVo} from '@app/_shared/model/countVo.model';
+import {Lookup} from '@model/lookup.model';
 import {DashboardIncidentNumbersVo} from "@model/dashboardIncidentNumbersVo.model";
-import { Position } from '@app/_shared/model/marker.model';
+import {Position} from '@app/_shared/model/marker.model';
 import {DashboardMobileNumbersVo} from "@model/dashboard-mobile-numbers-vo.model";
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   /**
    * Load dashboard data for logged in user agency
@@ -34,38 +35,45 @@ export class DashboardService {
   }
 
   /**
+   * Load all ritual seasons
+   */
+  findRitualSeasonYears(): Observable<any[]> {
+    return this.http.get<any>('/core/api/lookup/ritual-seasons-years/list');
+  }
+
+  /**
    * Load dashboard general numbers for current season
    */
-  loadGeneralNumbersForCurrentSeason(): Observable<GeneralDashboardVo> {
+  loadGeneralNumbersForHijriSeason(seasonYear: number): Observable<GeneralDashboardVo> {
     return this.http.get<GeneralDashboardVo>(
-      '/core/api/dashboard/general-numbers/current-season'
+      '/core/api/dashboard/general-numbers/current-season/' + seasonYear
     );
   }
 
   /**
    * Load dashboard general numbers for previous season
    */
-  loadGeneralNumbersForPreviousSeason(): Observable<GeneralDashboardVo> {
+  loadGeneralNumbersForPreviousSeason(seasonYear: number): Observable<GeneralDashboardVo> {
     return this.http.get<GeneralDashboardVo>(
-      '/core/api/dashboard/general-numbers/previous-season'
+      '/core/api/dashboard/general-numbers/previous-season/' + seasonYear
     );
   }
 
   /**
    * Load dashboard general numbers for number of applicant per nationalities
    */
-  loadGeneralNumbersForApplicantPerNationalities(): Observable<CountVo[]> {
+  loadGeneralNumbersForApplicantPerNationalities(seasonYear: number): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/general-numbers/applicant/count-per-nationalities'
+      '/core/api/dashboard/general-numbers/applicant/count-per-nationalities/' + seasonYear
     );
   }
 
   /**
    * Load dashboard applicants numbers for current season
    */
-  loadApplicantsCountByAgeCurrentSeason(): Observable<CountVo[]> {
+  loadApplicantsCountByAgeHijriSeason(seasonYear: number): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/general-numbers/applicant/count-per-age'
+      '/core/api/dashboard/general-numbers/applicant/count-per-age/' + seasonYear
     );
   }
 
@@ -76,42 +84,42 @@ export class DashboardService {
   /**
    * Load companies with max applicant count for current season
    */
-  loadCompaniesWithMaxApplicantCountForCurrentSeason(): Observable<CountVo[]> {
+  loadCompaniesWithMaxApplicantCountForCurrentSeason(seasonYear: number): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/general-numbers/max-companies'
+      '/core/api/dashboard/general-numbers/max-companies/' + seasonYear
     );
   }
 
   /**
    * Load companies with min applicant count for current season
    */
-  loadCompaniesWithMinApplicantCountForCurrentSeason(): Observable<CountVo[]> {
+  loadCompaniesWithMinApplicantCountForHijriSeason(seasonYear: number): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/general-numbers/min-companies'
+      '/core/api/dashboard/general-numbers/min-companies/' + seasonYear
     );
   }
 
   /**
    * Load camps with max applicant count for current season
    */
-  loadCampsWithMaxApplicantCountForCurrentSeason(): Observable<CountVo[]> {
+  loadCampsWithMaxApplicantCountForHijriSeason(seasonYear: number): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/general-numbers/max-camps'
+      '/core/api/dashboard/general-numbers/max-camps/' + seasonYear
     );
   }
 
   /**
    * Load camps with min applicant count for current season
    */
-  loadCampsWithMinApplicantCountForCurrentSeason(): Observable<CountVo[]> {
+  loadCampsWithMinApplicantCountForHijriSeason(seasonYear: number): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/general-numbers/min-camps'
+      '/core/api/dashboard/general-numbers/min-camps/' + seasonYear
     );
   }
 
-  loadIncidents(): Observable<DashboardIncidentNumbersVo> {
+  loadIncidents(seasonYear: number): Observable<DashboardIncidentNumbersVo> {
     return this.http.get<DashboardIncidentNumbersVo>(
-      '/core/api/dashboard/incident-numbers'
+      '/core/api/dashboard/incident-numbers/' + seasonYear
     );
   }
 
@@ -123,57 +131,57 @@ export class DashboardService {
     return this.http.get<any>('/core/api/lookup/incident-status/list');
   }
 
-    /**
+  /**
    * Load incidents location for current season
    */
-     loadIncidentsLocationsForCurrentSeason(): Observable<Position[]> {
-      return this.http.get<Position[]>(
-        '/core/api/dashboard/incidents-locations'
-      );
-    }
+  loadIncidentsLocationsForHijriSeason(seasonYear: number): Observable<Position[]> {
+    return this.http.get<Position[]>(
+      '/core/api/dashboard/incidents-locations/' + seasonYear
+    );
+  }
 
   /**
    * Load companies with max incident count
    */
-  loadCompaniesWithMaxIncidentCount(): Observable<CountVo[]> {
+  loadCompaniesWithMaxIncidentCount(seasonYear: number): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/incident-numbers/max-companies'
+      '/core/api/dashboard/incident-numbers/max-companies/' + seasonYear
     );
   }
 
   /**
    * Load companies with min incident count
    */
-  loadCompaniesWithMinIncidentCount(): Observable<CountVo[]> {
+  loadCompaniesWithMinIncidentCount(seasonYear: number): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/incident-numbers/min-companies'
+      '/core/api/dashboard/incident-numbers/min-companies/' + seasonYear
     );
   }
 
   /**
    * Load dashboard mobile app downloads numbers
    */
-  loadMobileAppDownloadsNumbers(): Observable<DashboardMobileNumbersVo> {
+  loadMobileAppDownloadsNumbers(seasonYear: number): Observable<DashboardMobileNumbersVo> {
     return this.http.get<DashboardMobileNumbersVo>(
-      '/core/api/dashboard/mobile/app-downloads'
+      '/core/api/dashboard/mobile/app-downloads/' + seasonYear
     );
   }
 
   /**
    * Load companies with max applicant registered count
    */
-  loadCompaniesWithMaxApplicantsRegisteredCount(): Observable<CountVo[]> {
+  loadCompaniesWithMaxApplicantsRegisteredCount(seasonYear: number): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/applicant-numbers/max-companies'
+      '/core/api/dashboard/applicant-numbers/max-companies/' + seasonYear
     );
   }
 
   /**
    * Load companies with min applicant registered count
    */
-  loadCompaniesWithMinApplicantsRegisteredCount(): Observable<CountVo[]> {
+  loadCompaniesWithMinApplicantsRegisteredCount(seasonYear: number): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/applicant-numbers/min-companies'
+      '/core/api/dashboard/applicant-numbers/min-companies/' + seasonYear
     );
   }
 

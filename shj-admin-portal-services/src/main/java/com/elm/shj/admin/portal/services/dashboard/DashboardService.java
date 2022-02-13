@@ -183,8 +183,8 @@ public class DashboardService {
         long totalNumberOfExternalApplicants = applicantRepository
                 .countAllApplicantBySeasonAndRitualType(hijriSeason, new ArrayList<>(Arrays.asList(ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
 
-        long totalNumberOfUsersInstalledApp = applicantRepository.countAllByMobileLoggedInIsNotNull();
-        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue();
+        long totalNumberOfUsersInstalledApp = applicantRepository.countAllByMobileLoggedInIsNotNull(hijriSeason, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
+        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue(hijriSeason, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
         long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfUsersInstalledApp - totalNumberOfLoggedInUsersFromMobile;
 
         return DashboardGeneralNumbersVo.builder()
@@ -200,11 +200,11 @@ public class DashboardService {
                 .build();
     }
 
-    public DashboardIncidentNumbersVo loadDashboardIncidentNumbers() {
+    public DashboardIncidentNumbersVo loadDashboardIncidentNumbers(int seasonYear) {
         List<JpaApplicantIncident> allApplicantIncident = applicantIncidentRepository.findAll();
-        long totalNumberOfRegisteredIncidents = applicantIncidentRepository.count();
         long totalNumberOfResolvedIncidents = applicantIncidentRepository.countAllResolvedIncidents();
         long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents();
+        long totalNumberOfRegisteredIncidents = totalNumberOfResolvedIncidents + totalNumberOfUnResolvedIncidents;
 
         Date mostIncidentDate = new Date();
         Map<Long, Long> mostIncidentDateCount = allApplicantIncident.stream().collect(Collectors.groupingBy(d -> DateUtils.toHijri(d.getCreationDate()), Collectors.counting()));
@@ -308,17 +308,17 @@ public class DashboardService {
         return applicantIncidentRepository.getIncidentsLocationsBySeasonAndRitualType(hijriYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
     }
 
-    public List<CountVo> loadCompaniesWithMaxIncidentsCount() {
+    public List<CountVo> loadCompaniesWithMaxIncidentsCount(int seasonYear) {
         return applicantIncidentRepository.findCompaniesWithMaxIncidents(PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
-    public List<CountVo> loadCompaniesWithMinIncidentsCount() {
+    public List<CountVo> loadCompaniesWithMinIncidentsCount(int seasonYear) {
         return applicantIncidentRepository.findCompaniesWithMinIncidents(PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
-    public DashboardMobileNumbersVo getMobileAppDownloadsFromCurrentSeason() {
-        long totalNumberOfMobileAppDownloads = applicantRepository.countAllByMobileLoggedInIsNotNull();
-        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue();
+    public DashboardMobileNumbersVo getMobileAppDownloadsFromCurrentSeason(int seasonYear) {
+        long totalNumberOfMobileAppDownloads = applicantRepository.countAllByMobileLoggedInIsNotNull(seasonYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
+        long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue(seasonYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()));
         long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfMobileAppDownloads - totalNumberOfLoggedInUsersFromMobile;
         return DashboardMobileNumbersVo.builder()
                 .totalNumberOfMobileAppDownloads(totalNumberOfMobileAppDownloads)
@@ -331,11 +331,11 @@ public class DashboardService {
         return refreshInterval;
     }
 
-    public List<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount() {
+    public List<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount(int seasonYear) {
         return applicantRepository.loadCompaniesWithMaxApplicantsRegisteredCount(PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
     }
 
-    public List<CountVo> loadCompaniesWithMinApplicantsRegisteredCount() {
+    public List<CountVo> loadCompaniesWithMinApplicantsRegisteredCount(int seasonYear) {
         return applicantRepository.loadCompaniesWithMinApplicantsRegisteredCount(PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
     }
 }

@@ -3,7 +3,21 @@
     <h3 class="font-weight-bold text-dark">
       {{'dashboard.general.hajj' | translate}}
       <span *ngIf="currentLanguage.startsWith('ar')">عام</span>
-      {{seasonYear}}</h3>
+      <span *ngIf="isSeasonYearSelected">{{seasonYear}}</span>
+
+      <select class="custom-select" *ngIf="!isSeasonYearSelected" #currentSeasonYear
+              (change)="onCurrentSeasonYearsSelected(currentSeasonYear.value)">
+        <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+        <option *ngFor="let season of ritualSeasons" [ngValue]="season">
+          {{season}}
+        </option>
+      </select>
+
+      <svg-icon styleClass="fa-w-18" icon="edit-light" *ngIf="isSeasonYearSelected==true"
+                (click)="isSeasonYearSelected=false"></svg-icon>
+
+    </h3>
+
     <div>
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-18" icon="edit-light"></svg-icon>
@@ -19,7 +33,7 @@
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
 
-      <div class="col mb-4" [routerLink]="['/dashboard/general-numbers']">
+      <div class="col" [routerLink]="['/dashboard/general-numbers',seasonYear]">
         <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
@@ -51,8 +65,7 @@
           </div>
         </div>
       </div>
-
-      <div class="col mb-4" [routerLink]="['/dashboard/general-numbers']">
+      <div class="col" [routerLink]="['/dashboard/general-numbers', seasonYear - 1]">
         <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
@@ -85,7 +98,7 @@
         </div>
       </div>
 
-      <div class="col mb-4" [routerLink]="['/dashboard/cameras']">
+      <div class="col" [routerLink]="['/dashboard/cameras']">
         <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
@@ -119,7 +132,7 @@
         </div>
       </div>
 
-      <div class="col mb-4" [routerLink]="['/dashboard/mobile']">
+      <div class="col" [routerLink]="['/dashboard/mobile',seasonYear]">
         <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
@@ -166,7 +179,7 @@
             </div>
             <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
               {{'dashboard.main.more_on_rating' | translate}}
-              <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
+              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
             </a>
           </div>
           <div class="py-3">Content</div>
@@ -178,18 +191,18 @@
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">{{'dashboard.main.company_rating' | translate}}</h5>
               <button type="button" class="btn border mx-3">
-                {{'dashboard.main.max_rating' | translate}}
-                <svg-icon icon="sort-amount-down"></svg-icon>
+                {{'dashboard.general.max_rating' | translate}}
+                <svg-icon icon="sort-amount-up"></svg-icon>
               </button>
               <button type="button" class="btn border mx-3">
-                {{'dashboard.main.min_rating' | translate}}
+                {{'dashboard.general.min_rating' | translate}}
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
             </div>
 
             <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
               {{'dashboard.main.more_on_rating' | translate}}
-              <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
+              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
             </a>
           </div>
           <div class="py-3">Content</div>
@@ -201,9 +214,9 @@
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">{{'dashboard.main.number_of_incidents' | translate}}</h5>
             </div>
-            <a [routerLink]="['/dashboard/incidents']" class="text-dcc-primary">
+            <a [routerLink]="['/dashboard/incidents',seasonYear]" class="text-dcc-primary">
               {{'dashboard.main.more_on_incidents' | translate}}
-              <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
+              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
             </a>
           </div>
           <div class="py-3">
@@ -212,7 +225,10 @@
                     [labels]="incidentDoughnutChartLabels"
                     [chartType]="incidentDoughnutChartType"
                     [plugins]="incidentDoughnutChartPlugins"
-                    [colors]="chartsConfig.doughnutChartColors"
+                    [colors]="[{
+                      backgroundColor: ['#657DA5', '#D8DEE8'],
+                      hoverBackgroundColor: ['#657DA5', '#D8DEE8']
+                    }]"
                     [options]="incidentDoughnutChartOptions"
                     height="100">
             </canvas>
@@ -238,7 +254,7 @@
 
             <a [routerLink]="['/dashboard/transactions']" class="text-dcc-primary">
               {{'dashboard.main.more_on_transactions' | translate}}
-              <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
+              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
             </a>
           </div>
           <div class="py-3">Content</div>
@@ -274,7 +290,7 @@
             <li ngbDropdown class="ml-auto flex-center">
               <a href="/" class="text-dcc-primary mr-3">
                 {{'dashboard.main.more_on_tracking' | translate}}
-                <svg-icon icon="chevron-double-left" styleClass="small ml-2"></svg-icon>
+                <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
               </a>
             </li>
           </ul>

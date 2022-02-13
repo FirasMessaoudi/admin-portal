@@ -75,7 +75,7 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">استخدام التطبيق بالنسبة للأعمار</h5>
+              <h5 class="sts">{{'dashboard.mobile.app_usage_by_age' | translate}}</h5>
               <button type="button" class="btn border mx-3">
                 آخر يوم
                 <svg-icon icon="calendar"></svg-icon>
@@ -85,40 +85,52 @@
           <div class="py-3">Content</div>
         </div>
       </div>
+
       <div class="col mt-4">
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">استخدام التطبيق بالنسبة للشركات</h5>
-              <button *ngIf="minCompanies" type="button" class="btn border mx-3" (click)="loadMaxCompanies()">
-                {{'dashboard.general.min_companies' | translate}}
-                <svg-icon icon="sort-amount-down"></svg-icon>
+              <h5 class="sts">{{'dashboard.mobile.app_usage_by_company' | translate}}</h5>
+              <button *ngIf="!minCompanies" type="button" class="btn border mx-3"
+                      (click)="this.minCompanies=!this.minCompanies;loadMaxCompanies()">
+                {{'dashboard.mobile.max_usage' | translate}}
+                <svg-icon icon="sort-amount-up"></svg-icon>
               </button>
-              <button *ngIf="!minCompanies" type="button" class="btn border mx-3" (click)="loadMinCompanies()">
-                {{'dashboard.general.max_companies' | translate}}
-                <!--TODO Rotate icon-->
+              <button *ngIf="minCompanies" type="button" class="btn border mx-3"
+                      (click)="this.minCompanies=!this.minCompanies;loadMinCompanies()">
+                {{'dashboard.mobile.min_usage' | translate}}
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
             </div>
           </div>
-          <div class="w-80">
-            <canvas baseChart #companiesByApplicantCount
-                    [datasets]="[{data: companyCounts, maxBarThickness: 15}]"
-                    [options]="chartsConfig.barChartOptions"
-                    [labels]="companyLabels"
-                    [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#b1bdd2'}]"
-                    chartType="bar" height="80"></canvas>
-            <div class="text-center"></div>
+          <div class="py-3">
+            <div class="d-flex flex-column flex-md-row justify-content-between">
+            </div>
+            <div class="col-12">
+              <div class="w-100">
+                <canvas baseChart #companiesByApplicantCount
+                        [datasets]="[{data: companyCounts, maxBarThickness: 30}]"
+                        [options]="chartsConfig.barChartOptions"
+                        [labels]="companyLabels"
+                        [colors]="[{
+                          backgroundColor: ['#2B7127', '#4F8B4B', '#79A476', '#8CB189', '#E1EAE0'],
+                          hoverBackgroundColor: ['#2B7127', '#4F8B4B', '#79A476', '#8CB189', '#E1EAE0']
+                    }]"
+                        chartType="bar" height="150"></canvas>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
       <div class="col-12 mt-4">
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">خريطة استخدام التطبيق</h5>
+              <h5 class="sts">{{'dashboard.mobile.app_usage_map' | translate}}</h5>
               <ul ngbNav #nav="ngbNav" class="nav-tabs groupBtn">
                 <li ngbNavItem>
-                  <a ngbNavLink>خريطة حرارية</a>
+                  <a ngbNavLink>{{'dashboard.mobile.heat_map' | translate}}</a>
                   <ng-template ngbNavContent>
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
                       <div class="form-group col">
@@ -144,11 +156,12 @@
                         </div>
                       </div>
                       <div class="form-group col">
-                        <label class="col-form-label">الجنسية</label>
+                        <!--TODO TO BE REFACTORED-->
+                        <label class="col-form-label">{{'general.nationality' | translate}}</label>
                         <select class="custom-select">
-                          <option selected value="1">الكل</option>
-                          <option value="2">سعودي</option>
-                          <option value="2">غير سعودي</option>
+                          <option selected value="1">{{'general.all' | translate}}</option>
+                          <option value="2">{{'dashboard.mobile.saudi'| translate}}</option>
+                          <option value="2">{{'dashboard.mobile.non_saudi' | translate}}</option>
                         </select>
                       </div>
                     </div>
@@ -158,7 +171,7 @@
                   </ng-template>
                 </li>
                 <li ngbNavItem>
-                  <a ngbNavLink>المجموعات</a>
+                  <a ngbNavLink>{{'dashboard.mobile.groups' | translate}}</a>
                   <ng-template ngbNavContent>
                     <div class="flex-center">
                       <svg-icon styleClass="fa-10x text-dcc-light" icon="empty-set"></svg-icon>

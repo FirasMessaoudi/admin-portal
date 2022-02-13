@@ -5,6 +5,10 @@
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="font-weight-bold text-dark">{{'dashboard.general-numbers.title' | translate}}</h3>
+    <h3 class="font-weight-bold text-dark">
+      {{'dashboard.general.hajj' | translate}}
+      <span *ngIf="currentLanguage.startsWith('ar')">عام</span>
+      {{seasonYear}}</h3>
     <div>
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
@@ -174,8 +178,7 @@
               </button>
               <button *ngIf="!minCompanies" type="button" class="btn border mx-3" (click)="loadMinCompanies()">
                 {{'dashboard.general.max_companies' | translate}}
-                <!--TODO Rotate icon-->
-                <svg-icon icon="sort-amount-down"></svg-icon>
+                <svg-icon icon="sort-amount-up"></svg-icon>
               </button>
             </div>
           </div>
@@ -211,8 +214,7 @@
               </button>
               <button *ngIf="!minCamps" type="button" class="btn border mx-3" (click)="loadMinCamps()">
                 {{'dashboard.general-numbers.max_camps' | translate}}
-                <!--TODO Rotate icon-->
-                <svg-icon icon="sort-amount-down"></svg-icon>
+                <svg-icon icon="sort-amount-up"></svg-icon>
               </button>
             </div>
           </div>

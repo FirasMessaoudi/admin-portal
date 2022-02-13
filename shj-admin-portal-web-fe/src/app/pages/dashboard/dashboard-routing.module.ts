@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { AuthenticationGuard } from '@core/guards/authentication.guard';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {AuthenticationGuard} from '@core/guards/authentication.guard';
 import {
   CamerasComponent,
   GeneralNumbersComponent,
@@ -28,17 +28,17 @@ const routes: Routes = [
     canActivate: [AuthenticationGuard],
   },
   {
-    path: 'dashboard/mobile',
+    path: 'dashboard/mobile/:seasonYear',
     component: MobileComponent,
     canActivate: [AuthenticationGuard],
   },
   {
-    path: 'dashboard/incidents',
+    path: 'dashboard/incidents/:seasonYear',
     component: IncidentsComponent,
     canActivate: [AuthenticationGuard],
   },
   {
-    path: 'dashboard/general-numbers',
+    path: 'dashboard/general-numbers/:seasonYear',
     component: GeneralNumbersComponent,
     canActivate: [AuthenticationGuard],
   },

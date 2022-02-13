@@ -252,6 +252,12 @@ public class LookupController {
 
     }
 
+    @GetMapping("/ritual-seasons-years/list")
+    public List<Integer> listRitualSeasonYears() {
+        log.debug("list ritual season years...");
+        return ritualSeasonService.listRitualSeasonYears();
+    }
+
     @GetMapping("/staff-print-batch-type/list")
     public List<PrintBatchTypeLookupDto> listStaffPrintRequestBatchTypes(Authentication authentication) {
         log.debug("list print batch types...");

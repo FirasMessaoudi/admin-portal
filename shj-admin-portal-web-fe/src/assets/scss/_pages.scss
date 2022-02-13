@@ -592,13 +592,14 @@ tr:hover .tblView {
 }
 
 
-.modal{
+.modal {
   .table th, .table td {
     padding: 0.5rem;
   }
+
   .form-group {
     margin-bottom: 1rem;
-}
+  }
 }
 
 textarea {
@@ -855,9 +856,14 @@ textarea {
   }
 }
 
-
-
-.bg-lighter{
+.bg-lighter {
   background-color: #F6F7F5;
 }
 
+.flip {
+  svg {
+    [dir="rtl"] & {
+      transform: rotate(180deg);
+    }
+  }
+}

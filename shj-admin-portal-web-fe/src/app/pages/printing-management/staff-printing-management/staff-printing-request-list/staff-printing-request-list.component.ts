@@ -159,14 +159,23 @@ export class StaffPrintingRequestListComponent implements OnInit {
     }
   }
 
-  onDateOfBirthChange(event) {
+  onPrintingStartDateChange(event) {
     if (event) {
       let dateStruct = this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : this.dateFormatterService.toGregorian(event);
       let dateStructGreg = this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? event : this.dateFormatterService.toGregorian(event);
       let dateStructHijri = this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : event;
       this.dateString = this.dateFormatterService.toString(dateStruct);
       this.searchForm.controls.printingStartDate.setValue(this.dateFormatterService.toDate(dateStructGreg));
-      this.searchForm.controls.dateOfBirthHijri.setValue(this.dateFormatterService.toString(dateStructHijri).split('/').reverse().join(''));
+    }
+  }
+
+  onPrintingEndDateChange(event) {
+    if (event) {
+      let dateStruct = this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : this.dateFormatterService.toGregorian(event);
+      let dateStructGreg = this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? event : this.dateFormatterService.toGregorian(event);
+      let dateStructHijri = this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : event;
+      this.dateString = this.dateFormatterService.toString(dateStruct);
+      this.searchForm.controls.printingEndDate.setValue(this.dateFormatterService.toDate(dateStructGreg));
     }
   }
 }

@@ -4,12 +4,15 @@
 package com.elm.shj.admin.portal.services.ritual;
 
 import com.elm.shj.admin.portal.orm.entity.JpaRitualSeason;
+import com.elm.shj.admin.portal.orm.repository.RitualSeasonRepository;
 import com.elm.shj.admin.portal.services.dto.RitualSeasonDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Service handling  ritual seasons
@@ -22,4 +25,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class RitualSeasonService extends GenericService<JpaRitualSeason, RitualSeasonDto, Long> {
 
+    private final RitualSeasonRepository ritualSeasonRepository;
+
+    public List<Integer> listRitualSeasonYears() {
+        return ritualSeasonRepository.listRitualSeasonYears();
+    }
 }
