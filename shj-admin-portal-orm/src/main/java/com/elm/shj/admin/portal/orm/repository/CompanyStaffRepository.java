@@ -88,28 +88,36 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     CompanyStaffVO findStaffRitual(@Param("suin") String suin);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO(" +
-            " digitalId.suin, staff.fullNameEn,staff.fullNameAr, ritualSeason.ritualTypeCode,cards.statusCode ,staff.photo, " +
+            " digitalId.suin, staff.fullNameEn,staff.fullNameAr, ritualSeason.ritualTypeCode,card.statusCode ,staff.photo, " +
             " company.labelEn, company.labelAr ) " +
             "from JpaCompanyStaff staff " +
             "join staff.digitalIds digitalId " +
-            "join digitalId.companyStaffCards cards " +
-            "join cards.companyRitualSeason companyRitualSeason " +
+            "join digitalId.companyStaffCards card " +
+            "join card.companyRitualSeason companyRitualSeason " +
             "join companyRitualSeason.ritualSeason ritualSeason " +
             "join companyRitualSeason.company company " +
-            "where staff.idNumberOriginal =:idNumber " +
-            "or staff.passportNumber =:idNumber ")
-    ApplicantStaffVO findStaffByIdNumber(@Param("idNumber") String idNumber);
+            "where (staff.idNumber =:idNumber " +
+            "or staff.idNumberOriginal =:idNumber " +
+            "or staff.passportNumber =:idNumber )" +
+            "AND digitalId.statusCode=:digitalIdStatus " +
+            "AND card.statusCode <> :canceledCardStatus "+
+            "AND card.statusCode <> :suspendedCardStatus "
+    )
+    ApplicantStaffVO findStaffByIdNumber(@Param("idNumber") String idNumber, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO(" +
-            " digitalId.suin, staff.fullNameEn,staff.fullNameAr, ritualSeason.ritualTypeCode,cards.statusCode ,staff.photo, " +
+            " digitalId.suin, staff.fullNameEn,staff.fullNameAr, ritualSeason.ritualTypeCode,card.statusCode ,staff.photo, " +
             "  company.labelEn, company.labelAr ) " +
             "from JpaCompanyStaff staff " +
             "join staff.digitalIds digitalId " +
-            "join digitalId.companyStaffCards cards " +
-            "join cards.companyRitualSeason companyRitualSeason " +
+            "join digitalId.companyStaffCards card " +
+            "join card.companyRitualSeason companyRitualSeason " +
             "join companyRitualSeason.ritualSeason ritualSeason " +
             "join companyRitualSeason.company company " +
-            "where digitalId.suin =:suin ")
-    ApplicantStaffVO findStaffBySuin(@Param("suin") String suin);
+            "where digitalId.suin =:suin "+
+            "AND digitalId.statusCode=:digitalIdStatus " +
+            "AND card.statusCode <> :canceledCardStatus "+
+            "AND card.statusCode <> :suspendedCardStatus ")
+    ApplicantStaffVO findStaffBySuin(@Param("suin") String suin, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
 
 }
