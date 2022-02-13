@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -59,12 +60,12 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
     }
 
     public Optional<ApplicantStaffVO> findApplicantRitualByIdNumber(String value) {
-        ApplicantStaffVO applicant = applicantLiteRepository.findApplicantRitualByIdNumber(value, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
-        return applicant == null? Optional.empty(): Optional.of(applicant);
+        List<ApplicantStaffVO> applicantList = applicantLiteRepository.findApplicantRitualByIdNumber(value, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
+        return applicantList.size() == 0? Optional.empty(): Optional.of(applicantList.get(0));
     }
 
     public Optional<ApplicantStaffVO> findApplicantRitualByUin(String uin) {
-        ApplicantStaffVO applicant = applicantLiteRepository.findApplicantRitualByUin(uin, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
-        return applicant == null? Optional.empty(): Optional.of(applicant);
+        List<ApplicantStaffVO> applicantList  = applicantLiteRepository.findApplicantRitualByUin(uin, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
+        return applicantList.size() == 0? Optional.empty(): Optional.of(applicantList.get(0));
     }
 }

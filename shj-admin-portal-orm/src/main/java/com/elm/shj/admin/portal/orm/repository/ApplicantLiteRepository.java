@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 /**
  * Repository for applicant lite.
  *
@@ -38,14 +40,16 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
             "INNER JOIN applicantGroup.companyRitualSeason companyRitualSeason " +
             "INNER JOIN companyRitualSeason.ritualSeason ritualSeason " +
             "INNER JOIN companyRitualSeason.company company " +
-            "WHERE (applicant.idNumber =:idNumber OR  " +
+            "WHERE ritualSeason.active = true " +
+            "AND (applicant.idNumber =:idNumber OR  " +
             "applicant.idNumberOriginal =:idNumber OR " +
             "applicant.passportNumber =:idNumber )" +
             "AND applicantDigitalId.statusCode=:digitalIdStatus " +
             "AND card.statusCode <> :canceledCardStatus "+
-            "AND card.statusCode <> :suspendedCardStatus "
+            "AND card.statusCode <> :suspendedCardStatus " +
+            "order by applicantPackage.startDate desc, applicantPackage.creationDate desc"
     )
-    ApplicantStaffVO findApplicantRitualByIdNumber(@Param("idNumber") String idNumber, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
+    List<ApplicantStaffVO> findApplicantRitualByIdNumber(@Param("idNumber") String idNumber, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
 
     @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO ( applicantDigitalId.uin, applicant.fullNameEn, applicant.fullNameAr, " +
             "ritualSeason.ritualTypeCode, card.statusCode, applicant.photo, " +
@@ -62,10 +66,12 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
             "INNER JOIN applicantGroup.companyRitualSeason companyRitualSeason " +
             "INNER JOIN companyRitualSeason.ritualSeason ritualSeason " +
             "INNER JOIN companyRitualSeason.company company " +
-            "WHERE applicantDigitalId.uin =:uin " +
+            "WHERE ritualSeason.active = true " +
+            "AND  applicantDigitalId.uin =:uin " +
             "AND applicantDigitalId.statusCode=:digitalIdStatus " +
             "AND card.statusCode <> :canceledCardStatus "+
-            "AND card.statusCode <> :suspendedCardStatus "
+            "AND card.statusCode <> :suspendedCardStatus " +
+            "order by applicantPackage.startDate desc, applicantPackage.creationDate desc "
     )
-    ApplicantStaffVO findApplicantRitualByUin(@Param("uin") String uin, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
+    List<ApplicantStaffVO> findApplicantRitualByUin(@Param("uin") String uin, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
 }
