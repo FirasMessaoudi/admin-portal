@@ -442,12 +442,12 @@ public class ItemWriter {
             ReflectionUtils.makeAccessible(packageReferenceNumberField);
             String packageReferenceNumber = (String) packageReferenceNumberField.get(item);
 
-            // retrieve the applicant ritual if it is saved before by the digital id scheduler.
-            ApplicantRitualDto savedApplicantRitual = applicantRitualService.findDirtyByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+            // retrieve the applicant ritual id if the applicant ritual is saved before by the digital id scheduler.
+            Long savedApplicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
 
-            if (applicantRitualField != null) {
+            if (applicantRitualField != null && savedApplicantRitualId != null) {
                 ReflectionUtils.makeAccessible(applicantRitualField);
-                applicantRitualField.set(item, savedApplicantRitual);
+                applicantRitualField.set(item, ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
             }
 
             String applicantUin = digitalIdService.findApplicantUin(applicant.getId());
@@ -460,10 +460,11 @@ public class ItemWriter {
                         ac.setApplicantRitual(applicantRitual);
                     });
                 }
-                if (savedApplicantRitual != null) {
-                    applicantRitual.setId(savedApplicantRitual.getId());
-                    applicantRitual.setCreationDate(savedApplicantRitual.getCreationDate());
-                    applicantRitual.setApplicantPackage(savedApplicantRitual.getApplicantPackage());
+
+                if (savedApplicantRitualId != null) {
+                    applicantRitual.setId(savedApplicantRitualId);
+                    Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
+                    applicantRitual.setApplicantPackage(ApplicantPackageDto.builder().id(applicantPackageId).build());
                     //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
                     applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
                     applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
@@ -483,20 +484,16 @@ public class ItemWriter {
                 ApplicantDto relativeApplicant = applicantService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative));
                 applicantRelative.setRelativeApplicant(relativeApplicant);
                 applicantRelative.setApplicant(applicant);
-                // get the applicant ritual for the relative applicant
-                Long relativeApplicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(relativeApplicant.getId(), packageReferenceNumber);
-                log.info("set the applicant ritual id {} for the relative applicant id {}", relativeApplicantRitualId, applicantRelative.getRelativeApplicant().getId());
-                applicantRelative.setApplicantRitual(ApplicantRitualDto.builder().id(relativeApplicantRitualId).build());
 
                 String relativeApplicantUin = CollectionUtils.isNotEmpty(relativeApplicant.getDigitalIds()) ? relativeApplicant.getDigitalIds().get(0).getUin() : null;
 
                 // if the applicant digital id and the relative applicant digital id and the applicant ritual are created then add chat contacts
                 // check if digital ids are created for the applicant and the relative applicant and applicant ritual is already created.
-                if (applicantUin == null || relativeApplicantUin == null || savedApplicantRitual == null) {
+                if (applicantUin == null || relativeApplicantUin == null || savedApplicantRitualId == null) {
                     return;
                 }
 
-                applicantChatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitual.getId());
+                applicantChatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitualId);
             }
 
             if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
@@ -528,7 +525,10 @@ public class ItemWriter {
                 ApplicantHealthDto applicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
 
                 if (applicantHealth == null) {
-                    applicantHealth = ApplicantHealthDto.builder().applicant(applicant).applicantRitual(savedApplicantRitual).packageReferenceNumber(packageReferenceNumber).build();
+                    applicantHealth = ApplicantHealthDto.builder().applicant(applicant).packageReferenceNumber(packageReferenceNumber).build();
+                    if (savedApplicantRitualId != null) {
+                        applicantHealth.setApplicantRitual(ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
+                    }
                     applicantHealth = applicantHealthService.save(applicantHealth);
                 }
                 // make fields accessible
