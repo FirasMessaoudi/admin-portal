@@ -114,7 +114,7 @@
                     *ngSwitchCase="'M'">{{'user-management.male' | translate}}</span>
             </div>
             <div class="form-group col">
-              <label class="col-form-label">{{'card-management.nationality' | translate}}</label>
+              <label class="col-form-label">{{'general.nationality' | translate}}</label>
               <span
                 class="form-control-plaintext">{{card?.applicantRitual?.applicant?.nationalityCode ? lookupService().localizedLabel(countries, card?.applicantRitual?.applicant?.nationalityCode) : ''}}</span>
             </div>
