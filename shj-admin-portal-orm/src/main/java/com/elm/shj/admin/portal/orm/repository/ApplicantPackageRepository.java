@@ -2,6 +2,8 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackage;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,7 +29,6 @@ public interface ApplicantPackageRepository extends JpaRepository<JpaApplicantPa
 
     Optional<JpaApplicantPackage> findByIdAndApplicantUin(Long id, Long applicantUin);
 
-    @Query("SELECT ap.id FROM JpaApplicantPackage ap WHERE ap.applicantUin = :applicantUin AND ap.ritualPackage.referenceNumber = :referenceNumber ORDER BY ap.creationDate DESC")
-    Long findIdByApplicantUinAndRitualPackageReferenceNumber(@Param("applicantUin") long applicantUin, @Param("referenceNumber") String referenceNumber);
-
+    @Query("SELECT ap.id FROM JpaApplicantPackage ap WHERE ap.applicantUin = :applicantUin ORDER BY ap.creationDate DESC")
+    Page<Long> findLastIdByApplicantUin(@Param("applicantUin") Long applicantUin, Pageable pageable);
 }
