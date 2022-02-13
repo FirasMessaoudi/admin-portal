@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantLiteRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
@@ -53,5 +54,15 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
     public boolean existsByUin(String uin) {
         return ((ApplicantLiteRepository) getRepository()).existsByUin(uin);
 
+    }
+
+    public Optional<ApplicantStaffVO> findApplicantRitualByIdNumber(String value) {
+        ApplicantStaffVO applicant = applicantLiteRepository.findApplicantRitualByIdNumber(value);
+        return applicant == null? Optional.empty(): Optional.of(applicant);
+    }
+
+    public Optional<ApplicantStaffVO> findApplicantRitualByUin(String uin) {
+        ApplicantStaffVO applicant = applicantLiteRepository.findApplicantRitualByUin(uin);
+        return applicant == null? Optional.empty(): Optional.of(applicant);
     }
 }

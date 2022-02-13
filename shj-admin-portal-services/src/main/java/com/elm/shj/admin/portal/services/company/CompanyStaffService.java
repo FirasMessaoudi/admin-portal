@@ -3,14 +3,12 @@
  */
 package com.elm.shj.admin.portal.services.company;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
-import com.elm.shj.admin.portal.orm.repository.CompanyStaffDigitalIdRepository;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
-import com.elm.shj.admin.portal.services.applicant.ApplicantPackageService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
-import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,5 +131,13 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return staffRitual == null? Optional.empty(): Optional.of(staffRitual);
     }
 
+    public Optional<ApplicantStaffVO> findStaffByIdNumber(String idNumber) {
+        ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffByIdNumber(idNumber);
+        return staffByIdNumber == null? Optional.empty(): Optional.of(staffByIdNumber);
+    }
 
+    public Optional<ApplicantStaffVO> findStaffBySuin(String suin) {
+        ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffBySuin(suin);
+        return staffByIdNumber == null? Optional.empty(): Optional.of(staffByIdNumber);
+    }
 }

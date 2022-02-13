@@ -61,6 +61,7 @@ public final class AuthorityConstants {
     public static final String ADMIN_DASHBOARD = "ADMIN_DASHBOARD";
     public static final String MOBILE_TRACKING_DASHBOARD = "MOBILE_TRACKING_DASHBOARD";
     public static final String STATISTICAL_DASHBOARD = "STATISTICAL_DASHBOARD";
+    public static final String INCIDENT_DASHBOARD = "INCIDENT_DASHBOARD";
 
     private AuthorityConstants() {
         // creating instances is not allowed
