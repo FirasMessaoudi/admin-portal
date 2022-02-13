@@ -114,7 +114,9 @@
     "export_to_excel": "Export to Excel",
     "export_to_pdf": "Export to PDF",
     "from": "From",
-    "to": "To"
+    "to": "To",
+    "nationality": "Nationality",
+    "all": "All"
   },
   "header": {
     "welcome": "Welcome",
@@ -307,7 +309,6 @@
     "activate_card": "Activate Card",
     "cancel_card": "Cancel Card",
     "applicant_id_status": "Rahman Guest ID Status",
-    "nationality": "Nationality",
     "passport_number": "Passport Number",
     "name": "Name",
     "activate_cards": "Activate {{noCards}} cards",
@@ -451,7 +452,6 @@
     "user_specific": "User Specific",
     "force_sending": "Must send even if settings are disabled",
     "age": "Age",
-    "nationality": "Nationality",
     "camp": "Camp",
     "company": "Company",
     "gender": "Gender",
@@ -515,7 +515,6 @@
     "dialog_confirm_request_error_text": "Error while confirming your request. Please try again...",
     "group_leader": "Group Leader",
     "fawj_number": "Fawj Number",
-    "nationality": "Nationality",
     "motawif": "Motawif",
     "btn_cancel": "Cancel",
     "request_description": "Request Description",
@@ -600,7 +599,7 @@
       "number_of_cameras": "Number of Cameras",
       "active_cameras": "Active Cameras",
       "inactive_cameras": "Inactive Cameras",
-      "mobile_app_downloads": "Mobile App Downloads",
+      "mobile_app_downloads": "Mobile Application Downloads",
       "logged_in": "Logged in",
       "logged_out": "Logged out",
       "min_companies": "Min Companies",
@@ -623,13 +622,22 @@
       "more_on_tracking": "More on Tracking"
     },
     "transactions": {
-      "title": ""
+      "title": "Transaction Statistics"
     },
     "rating": {
       "title": "Rating"
     },
     "mobile": {
-      "title": "Mobile Statistics"
+      "title": "Mobile Statistics",
+      "app_usage_by_age": "Application Usage by Age",
+      "app_usage_by_company": "Application Usage by Company",
+      "max_usage": "Max Usage",
+      "min_usage": "Min Usage",
+      "app_usage_map": "Application Usage Map",
+      "heat_map": "Heat Map",
+      "saudi": "Saudi",
+      "non_saudi": "Non-Saudi",
+      "groups": "Groups"
     },
     "incidents": {
       "title": "Incidents",
