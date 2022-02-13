@@ -38,7 +38,7 @@ export class MobileComponent implements OnInit {
 
   ngOnInit() {
     this.chartsConfig.lineChartOptions.legend = false;
-    this.dashboardService.loadMobileAppDownloadsNumbers().subscribe(data => this.mobileAppDownloadsData = data);
+    this.dashboardService.loadMobileAppDownloadsNumbers(1443).subscribe(data => this.mobileAppDownloadsData = data);
     this.getWeekDays();
 
     this.datasets = [
@@ -102,20 +102,20 @@ export class MobileComponent implements OnInit {
   loadMinCompanies() {
     this.minCompanies = true;
     this.dashboardService
-      .loadCompaniesWithMinApplicantsRegisteredCount()
+      .loadCompaniesWithMinApplicantsRegisteredCount(1443)
       .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
     this.dashboardService
-      .loadCompaniesWithMinApplicantsRegisteredCount()
+      .loadCompaniesWithMinApplicantsRegisteredCount(1443)
       .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
   }
 
   loadMaxCompanies() {
     this.minCompanies = false;
     this.dashboardService
-      .loadCompaniesWithMaxApplicantsRegisteredCount()
+      .loadCompaniesWithMaxApplicantsRegisteredCount(1443)
       .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
     this.dashboardService
-      .loadCompaniesWithMaxApplicantsRegisteredCount()
+      .loadCompaniesWithMaxApplicantsRegisteredCount(1443)
       .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
   }
 

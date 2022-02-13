@@ -79,10 +79,10 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
   }
 
   ngOnInit() {
-    this.dashboardService.loadIncidentsLocationsForCurrentSeason().subscribe(
+   /* this.dashboardService.loadIncidentsLocationsForCurrentSeason().subscribe(
       data =>{ this.locations = data;
         this.loadMapkey();                 }
-    );
+    );*/
     this.loadLookups();
     this.chartsConfig.barChartOptions = {
       ...this.chartsConfig.barChartOptions,
@@ -116,7 +116,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
       },
     };
 
-    this.incidentSubscription = this.dashboardService.loadIncidents().subscribe((data)=> {
+    this.incidentSubscription = this.dashboardService.loadIncidents(1443).subscribe((data)=> {
       this.incidents = data;
 
       this.incidentDoughnutChartLabels = [this.lookupService.localizedLabel(this.incidentStatusList, 'RESOLVED'), this.lookupService.localizedLabel(this.incidentStatusList, 'UNDER_PROCESSING')];
@@ -138,20 +138,20 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
   loadMinCompanies() {
     this.minCompanies = true;
     this.dashboardService
-      .loadCompaniesWithMinIncidentCount()
+      .loadCompaniesWithMinIncidentCount(1443)
       .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
     this.dashboardService
-      .loadCompaniesWithMinIncidentCount()
+      .loadCompaniesWithMinIncidentCount(1443)
       .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
   }
 
   loadMaxCompanies() {
     this.minCompanies = false;
     this.dashboardService
-      .loadCompaniesWithMaxIncidentCount()
+      .loadCompaniesWithMaxIncidentCount(1443)
       .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
     this.dashboardService
-      .loadCompaniesWithMaxIncidentCount()
+      .loadCompaniesWithMaxIncidentCount(1443)
       .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
   }
 
