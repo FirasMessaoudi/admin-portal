@@ -5,10 +5,7 @@ package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.*;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffCardFilterDto;
-import com.elm.shj.admin.portal.services.dto.EPrintingRequestTarget;
-import com.elm.shj.admin.portal.services.dto.PrintRequestCriteriaDto;
-import com.elm.shj.admin.portal.services.dto.PrintRequestDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +21,7 @@ import javax.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * Service handling print request lite
@@ -45,6 +39,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
     private final PrintRequestCardRepository printRequestCardRepository;
     private final PrintRequestBatchRepository printRequestBatchRepository;
     private final ApplicantCardRepository applicantCardRepository;
+    private final CompanyStaffCardRepository companyStaffCardRepository;
 
     /**
      * Find the lite version of all print requests.
@@ -77,8 +72,14 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
             litePrintRequests = mapPage(printRequestRepository.findAll(withApplicantPrintRequestFilter(criteria), pageable));
 
         } else {
-          //  litePrintRequests = mapPage(printRequestRepository.findAll(withStaffPrintRequestFilter(criteria.getStatusCode(), criteria.getDescription()), pageable));
             litePrintRequests = findStaffPrintRequests(criteria, criteria.getFromDate(), criteria.getToDate(), pageable);
+            litePrintRequests.forEach(p -> {
+                Optional<JpaCompanyStaffCard> companyStaffCard = companyStaffCardRepository.findById(p.getPrintRequestCards().stream().iterator().next().getCardId());
+                if(companyStaffCard.isPresent()){
+                    p.setSeasonYear(companyStaffCard.get().getCompanyRitualSeason().getRitualSeason().getSeasonYear());
+                    p.setRitualTypeCode(companyStaffCard.get().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode());
+                }
+            });
         }
         litePrintRequests.forEach(p -> {
             p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
