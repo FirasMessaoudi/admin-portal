@@ -132,12 +132,12 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
     public Optional<ApplicantStaffVO> findStaffByIdNumber(String idNumber) {
-        ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffByIdNumber(idNumber);
+        ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffByIdNumber(idNumber, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
         return staffByIdNumber == null? Optional.empty(): Optional.of(staffByIdNumber);
     }
 
     public Optional<ApplicantStaffVO> findStaffBySuin(String suin) {
-        ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffBySuin(suin);
+        ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffBySuin(suin, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
         return staffByIdNumber == null? Optional.empty(): Optional.of(staffByIdNumber);
     }
 }

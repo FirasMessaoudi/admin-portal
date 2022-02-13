@@ -7,6 +7,8 @@ import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantLiteRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
+import com.elm.shj.admin.portal.services.dto.ECardStatus;
+import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,12 +59,12 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
     }
 
     public Optional<ApplicantStaffVO> findApplicantRitualByIdNumber(String value) {
-        ApplicantStaffVO applicant = applicantLiteRepository.findApplicantRitualByIdNumber(value);
+        ApplicantStaffVO applicant = applicantLiteRepository.findApplicantRitualByIdNumber(value, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
         return applicant == null? Optional.empty(): Optional.of(applicant);
     }
 
     public Optional<ApplicantStaffVO> findApplicantRitualByUin(String uin) {
-        ApplicantStaffVO applicant = applicantLiteRepository.findApplicantRitualByUin(uin);
+        ApplicantStaffVO applicant = applicantLiteRepository.findApplicantRitualByUin(uin, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
         return applicant == null? Optional.empty(): Optional.of(applicant);
     }
 }
