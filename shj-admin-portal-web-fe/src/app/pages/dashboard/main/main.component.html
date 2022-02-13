@@ -33,7 +33,7 @@
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
 
-      <div class="col mb-4" [routerLink]="['/dashboard/general-numbers',seasonYear]">
+      <div class="col" [routerLink]="['/dashboard/general-numbers',seasonYear]">
         <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
@@ -65,42 +65,40 @@
           </div>
         </div>
       </div>
-      <div class="col mb-4" [routerLink]="['/dashboard/general-numbers', seasonYear - 1]">
-        <div class="col mb-4">
-          <div class="statistics h-100 p-3 border full-click">
-            <div class="flex-center-between">
-              <div>
-                <div class="sts-title">{{'dashboard.general.previous_season_pilgrims' | translate}}</div>
-                <div class="sts-number text-dark">
-                  <ng9-odometer [number]="previousSeasonData?.totalNumberOfApplicants"></ng9-odometer>
-                </div>
+      <div class="col" [routerLink]="['/dashboard/general-numbers', seasonYear - 1]">
+        <div class="statistics h-100 p-3 border full-click">
+          <div class="flex-center-between">
+            <div>
+              <div class="sts-title">{{'dashboard.general.previous_season_pilgrims' | translate}}</div>
+              <div class="sts-number text-dark">
+                <ng9-odometer [number]="previousSeasonData?.totalNumberOfApplicants"></ng9-odometer>
               </div>
-              <svg-icon styleClass="sts-icon fa-w-20 display-4" icon="user-clock"></svg-icon>
             </div>
+            <svg-icon styleClass="sts-icon fa-w-20 display-4" icon="user-clock"></svg-icon>
+          </div>
 
-            <p class="py-3">
-              <ngb-progressbar type="pilgrims" [value]="previousSeasonPercentage" height="10px"></ngb-progressbar>
-            </p>
+          <p class="py-3">
+            <ngb-progressbar type="pilgrims" [value]="previousSeasonPercentage" height="10px"></ngb-progressbar>
+          </p>
 
-            <div class="flex-center-between mt-2">
-              <div class="d-flex">
-                <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
-                <div class="px-3">{{'dashboard.general.external_pilgrims' | translate}}</div>
-              </div>
-              <div>{{previousSeasonData?.totalNumberOfExternalApplicants | number}}</div>
+          <div class="flex-center-between mt-2">
+            <div class="d-flex">
+              <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
+              <div class="px-3">{{'dashboard.general.external_pilgrims' | translate}}</div>
             </div>
-            <div class="flex-center-between mt-2">
-              <div class="d-flex">
-                <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-                <div class="px-3">{{'dashboard.general.internal_pilgrims' | translate}}</div>
-              </div>
-              <div>{{previousSeasonData?.totalNumberOfInternalApplicants | number}}</div>
+            <div>{{previousSeasonData?.totalNumberOfExternalApplicants | number}}</div>
+          </div>
+          <div class="flex-center-between mt-2">
+            <div class="d-flex">
+              <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+              <div class="px-3">{{'dashboard.general.internal_pilgrims' | translate}}</div>
             </div>
+            <div>{{previousSeasonData?.totalNumberOfInternalApplicants | number}}</div>
           </div>
         </div>
       </div>
 
-      <div class="col mb-4" [routerLink]="['/dashboard/cameras']">
+      <div class="col" [routerLink]="['/dashboard/cameras']">
         <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
@@ -134,7 +132,7 @@
         </div>
       </div>
 
-      <div class="col mb-4" [routerLink]="['/dashboard/mobile',seasonYear]">
+      <div class="col" [routerLink]="['/dashboard/mobile',seasonYear]">
         <div class="statistics h-100 p-3 border full-click">
           <div class="flex-center-between">
             <div>
@@ -228,8 +226,8 @@
                     [chartType]="incidentDoughnutChartType"
                     [plugins]="incidentDoughnutChartPlugins"
                     [colors]="[{
-                    backgroundColor: ['#657DA5', '#D8DEE8'],
-                    hoverBackgroundColor: ['#657DA5', '#D8DEE8']
+                      backgroundColor: ['#657DA5', '#D8DEE8'],
+                      hoverBackgroundColor: ['#657DA5', '#D8DEE8']
                     }]"
                     [options]="incidentDoughnutChartOptions"
                     height="100">

@@ -180,27 +180,26 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
       });
 
     this.loadMaxCompanies();
-    this.loadMinCompanies();
   }
 
   loadMinCompanies() {
     this.minCompanies = true;
     this.dashboardService
       .loadCompaniesWithMinIncidentCount(this.seasonYear)
-      .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
-    this.dashboardService
-      .loadCompaniesWithMinIncidentCount(this.seasonYear)
-      .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
+      .subscribe((data) => {
+        this.companyCounts = data.map((d) => d.count);
+        this.companyLabels = data.map((d) => d.label);
+      });
   }
 
   loadMaxCompanies() {
     this.minCompanies = false;
     this.dashboardService
       .loadCompaniesWithMaxIncidentCount(this.seasonYear)
-      .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
-    this.dashboardService
-      .loadCompaniesWithMaxIncidentCount(this.seasonYear)
-      .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
+      .subscribe((data) => {
+        this.companyCounts = data.map((d) => d.count);
+        this.companyLabels = data.map((d) => d.label);
+      });
   }
 
   setIncidentCenterTitle(title: string, countText: number) {

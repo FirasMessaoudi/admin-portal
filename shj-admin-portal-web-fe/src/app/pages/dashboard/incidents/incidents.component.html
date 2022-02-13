@@ -19,7 +19,7 @@
   <div class="content__section" *ngIf="canSeeIncidentDashboard">
 
     <div class="row row-cols-1 row-cols-xl-2">
-      <div class="col mt-4">
+      <div class="col">
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
@@ -33,7 +33,10 @@
                     [labels]="incidentDoughnutChartLabels"
                     [chartType]="incidentDoughnutChartType"
                     [plugins]="incidentDoughnutChartPlugins"
-                    [colors]="chartsConfig.doughnutChartColors"
+                    [colors]="[{
+                      backgroundColor: ['#657DA5', '#D8DEE8'],
+                      hoverBackgroundColor: ['#657DA5', '#D8DEE8']
+                    }]"
                     [options]="incidentDoughnutChartOptions"
                     height="100"
             >
@@ -51,7 +54,7 @@
           </div>
         </div>
       </div>
-      <div class="col mt-4">
+      <div class="col">
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
@@ -105,7 +108,7 @@
             </div>
           </div>
           <!--Start MAP-->
-          <div class="map mt-1">
+          <div class="map py-3">
             <div id="map" style="height: 100%; width: 100%;"></div>
           </div>
           <!--End Map-->
