@@ -22,7 +22,7 @@ public class PrintRequestCriteriaDto implements Serializable {
     private static final long serialVersionUID = 6344767991328308660L;
 
     private String requestNumber;
-    private String season;
+    private Integer season;
     private int batchNumber;
     private String cardNumber;
     private String companyCode;

@@ -3,8 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.prinitng;
 
-import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
+import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.*;
+import com.elm.shj.admin.portal.services.dto.CompanyStaffCardFilterDto;
 import com.elm.shj.admin.portal.services.dto.EPrintingRequestTarget;
 import com.elm.shj.admin.portal.services.dto.PrintRequestCriteriaDto;
 import com.elm.shj.admin.portal.services.dto.PrintRequestDto;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -74,14 +77,26 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
             litePrintRequests = mapPage(printRequestRepository.findAll(withApplicantPrintRequestFilter(criteria), pageable));
 
         } else {
-            litePrintRequests = mapPage(printRequestRepository.findAll(withStaffPrintRequestFilter(criteria.getStatusCode(), criteria.getDescription()), pageable));
-
+          //  litePrintRequests = mapPage(printRequestRepository.findAll(withStaffPrintRequestFilter(criteria.getStatusCode(), criteria.getDescription()), pageable));
+            litePrintRequests = findStaffPrintRequests(criteria, criteria.getFromDate(), criteria.getToDate(), pageable);
         }
         litePrintRequests.forEach(p -> {
             p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
             p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
         });
         return litePrintRequests;
+    }
+
+    private Page<PrintRequestDto> findStaffPrintRequests(PrintRequestCriteriaDto criteria, Date startDate, Date endDate, Pageable pageable) {
+        if (criteria.getFromDate() != null)
+            startDate = atStartOfDay(criteria.getFromDate());
+
+        if (criteria.getToDate() != null)
+            endDate = atEndOfDay(criteria.getToDate());
+
+        return mapPage(printRequestRepository.findStaffByFilters(criteria.getRitualTypeCode(), criteria.getCompanyCode(), criteria.getSeason(),criteria.getStatusCode(), criteria.getDescription(),
+                criteria.getRequestNumber(), criteria.getBatchNumber(), criteria.getCardNumber(), criteria.getIdNumber()
+                , startDate, endDate, pageable));
     }
 
     private Page<PrintRequestDto> findApplicantPrintRequests(PrintRequestCriteriaDto criteria, Date startDate, Date endDate, Pageable pageable) {
@@ -134,7 +149,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
             if (statusCode != null) {
                 predicates.add(criteriaBuilder.equal(root.get("statusCode"), statusCode));
             }
-            predicates.add(criteriaBuilder.equal(root.get("target"), EPrintingRequestTarget.STAFF.name()));
+            //predicates.add(criteriaBuilder.equal(root.get("target"), EPrintingRequestTarget.STAFF.name()));
 
             if (description != null && description.length() > 0) {
                 predicates.add(criteriaBuilder.like(root.get("description"), "%" + description.trim() + "%"));

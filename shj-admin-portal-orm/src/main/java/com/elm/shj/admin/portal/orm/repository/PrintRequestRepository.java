@@ -32,4 +32,19 @@ public interface PrintRequestRepository extends JpaRepository<JpaPrintRequest, L
                                         @Param("referenceNumber") String referenceNumber, @Param("batchNumber") long batchNumber,
                                         @Param("cardNumber") String cardNumber, @Param("uin") String uin,
                                         @Param("startDate") Date startDate, @Param("endDate") Date endDate, Pageable pageable);
+
+    @Query(value = "SELECT distinct pr FROM JpaPrintRequest pr JOIN pr.printRequestBatches prb JOIN pr.printRequestCards prc JOIN JpaCompanyStaffCard sc " +
+            "on prc.cardId = sc.id JOIN sc.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs JOIN sc.companyStaffDigitalId di WHERE pr.id = prb.printRequest.id AND " +
+            "(:ritualType is null or rs.ritualTypeCode like %:ritualType%) AND " +
+            "(:ritualType is null or rs.ritualTypeCode like %:ritualType%) AND (:ritualSeason is null or rs.seasonYear=:ritualSeason) AND " +
+            "(:companyCode is null or c.code like %:companyCode%) AND " +
+            "(:statusCode is null or pr.statusCode like %:statusCode%) AND pr.target = 'STAFF' AND " +
+            "(:description is null or pr.description like %:description%) AND (:referenceNumber is null or pr.referenceNumber like %:referenceNumber%) AND " +
+            "(:batchNumber = -1L or prb.sequenceNumber = :batchNumber) AND (:cardNumber is null or sc.referenceNumber like %:cardNumber%) AND " +
+            "(:uin is null or di.suin like %:uin%)AND (:endDate is null or :startDate is null or pr.creationDate BETWEEN :startDate AND :endDate)")
+    Page<JpaPrintRequest> findStaffByFilters(@Param("ritualType") String ritualType, @Param("companyCode") String companyCode, @Param("ritualSeason") Integer ritualSeason,
+                                             @Param("statusCode") String statusCode, @Param("description") String description,
+                                        @Param("referenceNumber") String referenceNumber, @Param("batchNumber") long batchNumber,
+                                        @Param("cardNumber") String cardNumber, @Param("uin") String uin,
+                                        @Param("startDate") Date startDate, @Param("endDate") Date endDate,Pageable pageable);
 }

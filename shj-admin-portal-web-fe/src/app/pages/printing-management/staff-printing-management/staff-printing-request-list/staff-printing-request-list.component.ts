@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {EAuthority, Page} from '@shared/model';
 import {AuthenticationService} from '@core/services';
 import {FormBuilder, FormGroup} from '@angular/forms';
@@ -9,6 +9,11 @@ import {I18nService} from '@dcc-commons-ng/services';
 import {PrintRequestLite} from '@model/print-request-card-lite.model';
 import {StaffPrintService} from '@core/services/printing/staff-print.service';
 import {CompanyLite} from '@model/company-lite.model';
+import {DateType} from "@shared/modules/hijri-gregorian-datepicker/consts";
+import {
+  HijriGregorianDatepickerComponent
+} from "@shared/modules/hijri-gregorian-datepicker/datepicker/hijri-gregorian-datepicker.component";
+import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 
 @Component({
   selector: 'app-printing-request-list',
@@ -28,13 +33,17 @@ export class StaffPrintingRequestListComponent implements OnInit {
   companyNames: CompanyLite[] = [];
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
+  dateString: string;
+
+  @ViewChild('datePicker') dateOfBirthPicker: HijriGregorianDatepickerComponent;
 
   constructor(
     private authenticationService: AuthenticationService,
     private staffPrintService: StaffPrintService,
     private lookupsService: LookupService,
     private i18nService: I18nService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private dateFormatterService: DateFormatterService
   ) {}
 
   ngOnInit(): void {
@@ -147,6 +156,17 @@ export class StaffPrintingRequestListComponent implements OnInit {
     if (this.page != null) {
       this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
       this.printRequests = this.page.content;
+    }
+  }
+
+  onDateOfBirthChange(event) {
+    if (event) {
+      let dateStruct = this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : this.dateFormatterService.toGregorian(event);
+      let dateStructGreg = this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? event : this.dateFormatterService.toGregorian(event);
+      let dateStructHijri = this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? this.dateFormatterService.toHijri(event) : event;
+      this.dateString = this.dateFormatterService.toString(dateStruct);
+      this.searchForm.controls.printingStartDate.setValue(this.dateFormatterService.toDate(dateStructGreg));
+      this.searchForm.controls.dateOfBirthHijri.setValue(this.dateFormatterService.toString(dateStructHijri).split('/').reverse().join(''));
     }
   }
 }
