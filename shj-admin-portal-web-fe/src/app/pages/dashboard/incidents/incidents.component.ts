@@ -1,10 +1,10 @@
-import {AfterViewInit, Component, Inject, OnChanges, OnInit, Renderer2, SimpleChanges, ViewChild} from '@angular/core';
-import {Label, PluginServiceGlobalRegistrationAndOptions, SingleDataSet} from "ng2-charts";
+import {AfterViewInit, Component, Inject, OnInit, Renderer2} from '@angular/core';
+import {Label, PluginServiceGlobalRegistrationAndOptions} from "ng2-charts";
 import {ChartOptions, ChartType} from "chart.js";
 import {ChartsConfig} from "@pages/dashboard/charts.config";
 import {AuthenticationService, DashboardService} from "@core/services";
-import { Loader } from "@googlemaps/js-api-loader";
-import { Cluster, ClusterStats, MarkerClusterer , Renderer} from "@googlemaps/markerclusterer";
+import {Loader} from "@googlemaps/js-api-loader";
+import {Cluster, ClusterStats, MarkerClusterer, Renderer} from "@googlemaps/markerclusterer";
 //import {GoogleMap, MapMarkerClusterer} from '@angular/google-maps';
 import {LookupService} from "@core/utilities/lookup.service";
 import {Subscription} from "rxjs";
@@ -13,10 +13,11 @@ import {CountVo} from "@model/countVo.model";
 import {DatePipe, DOCUMENT} from "@angular/common";
 import {DateFormatterService} from "@shared/modules/hijri-gregorian-datepicker/date-formatter.service";
 import {I18nService} from "@dcc-commons-ng/services";
-import { interpolateRgb } from "d3-interpolate";
+import {interpolateRgb} from "d3-interpolate";
 import {DashboardIncidentNumbersVo} from "@model/dashboardIncidentNumbersVo.model";
-import { Position } from '@app/_shared/model/marker.model';
+import {Position} from '@app/_shared/model/marker.model';
 import {EAuthority} from "@shared/model";
+import {ActivatedRoute} from "@angular/router";
 
 const FONTS: string = '"Elm-font", sans-serif';
 
@@ -43,6 +44,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
   MAP_ZOOM_OUT = 10;
   MAP_ZOOM_IN = 25;
   mapIsReady = false;
+  seasonYear: any;
   mostIncidentDate: any;
   mostIncidentsArea: string;
   minCompanies: boolean;
@@ -72,6 +74,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
               private dateFormatterService: DateFormatterService,
               private i18nService: I18nService,
               @Inject(DOCUMENT) private document: Document,
+              private route: ActivatedRoute,
               private renderer2: Renderer2) {
 
   }
@@ -79,10 +82,13 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
   }
 
   ngOnInit() {
-   /* this.dashboardService.loadIncidentsLocationsForCurrentSeason().subscribe(
-      data =>{ this.locations = data;
-        this.loadMapkey();                 }
-    );*/
+    this.seasonYear = this.route.snapshot.paramMap.get('seasonYear')
+    this.dashboardService.loadIncidentsLocationsForHijriSeason(this.seasonYear).subscribe(
+      data => {
+        this.locations = data;
+        this.loadMapkey();
+      }
+    );
     this.loadLookups();
     this.chartsConfig.barChartOptions = {
       ...this.chartsConfig.barChartOptions,
@@ -116,16 +122,19 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
       },
     };
 
-    this.incidentSubscription = this.dashboardService.loadIncidents(1443).subscribe((data)=> {
+    this.incidentSubscription = this.dashboardService.loadIncidents(this.seasonYear).subscribe((data) => {
       this.incidents = data;
 
       this.incidentDoughnutChartLabels = [this.lookupService.localizedLabel(this.incidentStatusList, 'RESOLVED'), this.lookupService.localizedLabel(this.incidentStatusList, 'UNDER_PROCESSING')];
-      this.incidentDoughnutChartData = [{ data: [this.incidents.totalNumberOfResolvedIncidents, this.incidents.totalNumberOfUnResolvedIncidents], steppedLine: 'after'}];
+      this.incidentDoughnutChartData = [{
+        data: [this.incidents.totalNumberOfResolvedIncidents, this.incidents.totalNumberOfUnResolvedIncidents],
+        steppedLine: 'after'
+      }];
       this.incidentByTypes = this.incidents.countIncidentByTypes;
       this.incidentTypeCounts = this.incidents.countIncidentByTypes.map((i) => i.count);
       this.incidentTypeLabels = this.incidents.countIncidentByTypes.map((d) => this.lookupService.localizedLabel(this.incidentTypeList, d.label));
-      this.setIncidentCenterTitle('مجموع البلاغات',this.incidents.totalNumberOfRegisteredIncidents);
-      this.setIncidentTypeCenterTitle('مجموع البلاغات',this.incidents.totalNumberOfRegisteredIncidents);
+      this.setIncidentCenterTitle('مجموع البلاغات', this.incidents.totalNumberOfRegisteredIncidents);
+      this.setIncidentTypeCenterTitle('مجموع البلاغات', this.incidents.totalNumberOfRegisteredIncidents);
 
       this.mostIncidentDate = this.formatHijriDate(this.incidents.mostIncidentDate);
       this.mostIncidentsArea = this.incidents.mostIncidentsArea;
@@ -138,48 +147,48 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
   loadMinCompanies() {
     this.minCompanies = true;
     this.dashboardService
-      .loadCompaniesWithMinIncidentCount(1443)
+      .loadCompaniesWithMinIncidentCount(this.seasonYear)
       .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
     this.dashboardService
-      .loadCompaniesWithMinIncidentCount(1443)
+      .loadCompaniesWithMinIncidentCount(this.seasonYear)
       .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
   }
 
   loadMaxCompanies() {
     this.minCompanies = false;
     this.dashboardService
-      .loadCompaniesWithMaxIncidentCount(1443)
+      .loadCompaniesWithMaxIncidentCount(this.seasonYear)
       .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
     this.dashboardService
-      .loadCompaniesWithMaxIncidentCount(1443)
+      .loadCompaniesWithMaxIncidentCount(this.seasonYear)
       .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
   }
 
   setIncidentCenterTitle(title:string, countText:number) {
-      this.incidentDoughnutChartPlugins = [{
-        beforeDraw(chart) {
-          var data = chart.data.datasets[0].data;
-          var width = chart.width,
-            height = (chart.chartArea.top + chart.chartArea.bottom),
-            ctx = chart.ctx;
-          ctx.restore();
-          var fontSize = (height / 15).toFixed(2);
-          ctx.font = fontSize + "px Arial";
-          ctx.textBaseline = "middle";
-          var text = countText+"",
-            textX = Math.round((width - ctx.measureText(text).width) / 2),
-            textY = height / 2;
-          var textZ = height / 2.5;
-          ctx.fillText(text, textX, textY);
-          ctx.textBaseline = "middle";
-          var textLabel = title,
-            textLabelX = Math.round((width - ctx.measureText(textLabel).width) / 2),
-            textLabelY = height / 1.5;
-          var textLabelZ = height / 1.5;
-          ctx.fillText(textLabel, textLabelX, textLabelY);
-          ctx.save();
-        }
-      }];
+    this.incidentDoughnutChartPlugins = [{
+      beforeDraw(chart) {
+        var data = chart.data.datasets[0].data;
+        var width = chart.width,
+          height = (chart.chartArea.top + chart.chartArea.bottom),
+          ctx = chart.ctx;
+        ctx.restore();
+        var fontSize = (height / 15).toFixed(2);
+        ctx.font = fontSize + "px Arial";
+        ctx.textBaseline = "middle";
+        var text = countText+"",
+          textX = Math.round((width - ctx.measureText(text).width) / 2),
+          textY = height / 2;
+        var textZ = height / 2.5;
+        ctx.fillText(text, textX, textY);
+        ctx.textBaseline = "middle";
+        var textLabel = title,
+          textLabelX = Math.round((width - ctx.measureText(textLabel).width) / 2),
+          textLabelY = height / 1.5;
+        var textLabelZ = height / 1.5;
+        ctx.fillText(textLabel, textLabelX, textLabelY);
+        ctx.save();
+      }
+    }];
   }
 
   setIncidentTypeCenterTitle(title:string, countText:number) {
@@ -227,12 +236,12 @@ export class IncidentsComponent implements OnInit, AfterViewInit  {
           zoom: 5,
           scrollwheel: true,
         });
-            // Add some markers to the map.
-          const markers = this.locations.map((position, i) => {
+        // Add some markers to the map.
+        const markers = this.locations.map((position, i) => {
           const marker = new google.maps.Marker({
-          position,
+            position,
           });
-        return marker;
+          return marker;
         });
         const interpolatedRenderer = {
           palette: interpolateRgb("blue", "red"),

@@ -8,6 +8,7 @@ import {ChartDataSets} from "chart.js";
 import * as momentjs from 'moment';
 import {I18nService} from "@dcc-commons-ng/services";
 import {LangChangeEvent, TranslateService} from "@ngx-translate/core";
+import {ActivatedRoute} from "@angular/router";
 
 const moment = momentjs;
 const FONTS: string = '"Elm-font", sans-serif';
@@ -28,17 +29,19 @@ export class MobileComponent implements OnInit {
   minCompanies: boolean;
   companyLabels: Array<any>;
   companyCounts: Array<any>;
-
+  seasonYear: any;
   constructor(private authenticationService: AuthenticationService,
               private dashboardService: DashboardService,
               private i18nService: I18nService,
               private translate: TranslateService,
+              private route: ActivatedRoute
   ) {
   }
 
   ngOnInit() {
+    this.seasonYear = this.route.snapshot.paramMap.get('seasonYear')
     this.chartsConfig.lineChartOptions.legend = false;
-    this.dashboardService.loadMobileAppDownloadsNumbers(1443).subscribe(data => this.mobileAppDownloadsData = data);
+    this.dashboardService.loadMobileAppDownloadsNumbers(this.seasonYear).subscribe(data => this.mobileAppDownloadsData = data);
     this.getWeekDays();
 
     this.datasets = [
@@ -102,20 +105,20 @@ export class MobileComponent implements OnInit {
   loadMinCompanies() {
     this.minCompanies = true;
     this.dashboardService
-      .loadCompaniesWithMinApplicantsRegisteredCount(1443)
+      .loadCompaniesWithMinApplicantsRegisteredCount(this.seasonYear)
       .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
     this.dashboardService
-      .loadCompaniesWithMinApplicantsRegisteredCount(1443)
+      .loadCompaniesWithMinApplicantsRegisteredCount(this.seasonYear)
       .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
   }
 
   loadMaxCompanies() {
     this.minCompanies = false;
     this.dashboardService
-      .loadCompaniesWithMaxApplicantsRegisteredCount(1443)
+      .loadCompaniesWithMaxApplicantsRegisteredCount(this.seasonYear)
       .subscribe((data) => (this.companyCounts = data.map((i) => i.count)));
     this.dashboardService
-      .loadCompaniesWithMaxApplicantsRegisteredCount(1443)
+      .loadCompaniesWithMaxApplicantsRegisteredCount(this.seasonYear)
       .subscribe((data) => (this.companyLabels = data.map((d) => d.label)));
   }
 
