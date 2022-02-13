@@ -112,11 +112,11 @@ public class DashboardController {
         return dashboardService.pilgrimsCountListsByAgesRange();
     }
 
-    @GetMapping("/general-numbers/applicant/count-per-nationalities")
+    @GetMapping("/general-numbers/applicant/count-per-nationalities/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CountVo> loadNumberOfApplicantsByNationalities() {
+    public List<CountVo> loadNumberOfApplicantsByNationalities(@PathVariable int seasonYear) {
         log.info("Handling loadDashboardGeneralNumbers endpoint.");
-        return dashboardService.listCountApplicantsByNationalities();
+        return dashboardService.listCountApplicantsByNationalities(seasonYear);
     }
 
     @GetMapping("/general-numbers/max-companies")
