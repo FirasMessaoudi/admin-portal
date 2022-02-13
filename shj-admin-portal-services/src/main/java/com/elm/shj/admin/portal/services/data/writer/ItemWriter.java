@@ -522,8 +522,8 @@ public class ItemWriter {
                         ).collect(Collectors.toList()));
                     }
                 }
-                applicantHealth.setApplicantRitual(savedApplicantRitual);
             }
+
             if (applicantHealthField != null) {
                 ApplicantHealthDto applicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
 
