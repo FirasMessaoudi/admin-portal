@@ -26,7 +26,7 @@ export class SideNavComponent implements OnInit {
         display: false,
         icon: 'home',
         iconFa: 'fa-w-18',
-        routerLink: '/',
+        routerLink: '/dashboard',
         submenu: false,
       },
       {
