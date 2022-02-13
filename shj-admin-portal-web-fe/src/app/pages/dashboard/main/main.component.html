@@ -65,36 +65,37 @@
           </div>
         </div>
       </div>
-      <!-- <div class="col mb-4" [routerLink]="['/dashboard/general-numbers',seasonYear]">-->
-      <div class="col mb-4">
-        <div class="statistics h-100 p-3 border full-click">
-          <div class="flex-center-between">
-            <div>
-              <div class="sts-title">{{'dashboard.general.previous_season_pilgrims' | translate}}</div>
-              <div class="sts-number text-dark">
-                <ng9-odometer [number]="previousSeasonData?.totalNumberOfApplicants"></ng9-odometer>
+      <div class="col mb-4" [routerLink]="['/dashboard/general-numbers', seasonYear - 1]">
+        <div class="col mb-4">
+          <div class="statistics h-100 p-3 border full-click">
+            <div class="flex-center-between">
+              <div>
+                <div class="sts-title">{{'dashboard.general.previous_season_pilgrims' | translate}}</div>
+                <div class="sts-number text-dark">
+                  <ng9-odometer [number]="previousSeasonData?.totalNumberOfApplicants"></ng9-odometer>
+                </div>
               </div>
+              <svg-icon styleClass="sts-icon fa-w-20 display-4" icon="user-clock"></svg-icon>
             </div>
-            <svg-icon styleClass="sts-icon fa-w-20 display-4" icon="user-clock"></svg-icon>
-          </div>
 
-          <p class="py-3">
-            <ngb-progressbar type="pilgrims" [value]="previousSeasonPercentage" height="10px"></ngb-progressbar>
-          </p>
+            <p class="py-3">
+              <ngb-progressbar type="pilgrims" [value]="previousSeasonPercentage" height="10px"></ngb-progressbar>
+            </p>
 
-          <div class="flex-center-between mt-2">
-            <div class="d-flex">
-              <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
-              <div class="px-3">{{'dashboard.general.external_pilgrims' | translate}}</div>
+            <div class="flex-center-between mt-2">
+              <div class="d-flex">
+                <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
+                <div class="px-3">{{'dashboard.general.external_pilgrims' | translate}}</div>
+              </div>
+              <div>{{previousSeasonData?.totalNumberOfExternalApplicants | number}}</div>
             </div>
-            <div>{{previousSeasonData?.totalNumberOfExternalApplicants | number}}</div>
-          </div>
-          <div class="flex-center-between mt-2">
-            <div class="d-flex">
-              <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-              <div class="px-3">{{'dashboard.general.internal_pilgrims' | translate}}</div>
+            <div class="flex-center-between mt-2">
+              <div class="d-flex">
+                <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+                <div class="px-3">{{'dashboard.general.internal_pilgrims' | translate}}</div>
+              </div>
+              <div>{{previousSeasonData?.totalNumberOfInternalApplicants | number}}</div>
             </div>
-            <div>{{previousSeasonData?.totalNumberOfInternalApplicants | number}}</div>
           </div>
         </div>
       </div>
@@ -192,11 +193,11 @@
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">{{'dashboard.main.company_rating' | translate}}</h5>
               <button type="button" class="btn border mx-3">
-                {{'dashboard.main.max_rating' | translate}}
-                <svg-icon icon="sort-amount-down"></svg-icon>
+                {{'dashboard.general.max_rating' | translate}}
+                <svg-icon icon="sort-amount-up"></svg-icon>
               </button>
               <button type="button" class="btn border mx-3">
-                {{'dashboard.main.min_rating' | translate}}
+                {{'dashboard.general.min_rating' | translate}}
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
             </div>
@@ -226,7 +227,10 @@
                     [labels]="incidentDoughnutChartLabels"
                     [chartType]="incidentDoughnutChartType"
                     [plugins]="incidentDoughnutChartPlugins"
-                    [colors]="chartsConfig.doughnutChartColors"
+                    [colors]="[{
+                    backgroundColor: ['#657DA5', '#D8DEE8'],
+                    hoverBackgroundColor: ['#657DA5', '#D8DEE8']
+                    }]"
                     [options]="incidentDoughnutChartOptions"
                     height="100">
             </canvas>

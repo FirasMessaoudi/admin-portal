@@ -81,8 +81,7 @@
               </button>
               <button *ngIf="!minCompanies" type="button" class="btn border mx-3" (click)="loadMinCompanies()">
                 {{'dashboard.general.max_companies' | translate}}
-                <!--TODO Rotate icon-->
-                <svg-icon icon="sort-amount-down"></svg-icon>
+                <svg-icon icon="sort-amount-up"></svg-icon>
               </button>
             </div>
           </div>
@@ -91,7 +90,7 @@
                     [datasets]="[{data: companyCounts, maxBarThickness: 15}]"
                     [options]="chartsConfig.barChartOptions"
                     [labels]="companyLabels"
-                    [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#b1bdd2'}]"
+                    [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#D8DEE8'}]"
                     chartType="bar" height="80"></canvas>
             <div class="text-center">
             </div>

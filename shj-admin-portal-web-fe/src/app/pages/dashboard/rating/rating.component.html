@@ -29,7 +29,7 @@
                   <div class="bg-dcc-light flex-center-between px-4 py-3">
                     <div>
                       <div>
-                        <div>التقييم العام</div>
+                        <div>{{'dashboard.rating.overall_rating' | translate}}</div>
                         <h2 class="font-weight-bold text-dark">3.87</h2>
                       </div>
                     </div>
@@ -51,7 +51,7 @@
                   <div class="bg-dcc-light flex-center-between px-4 py-3">
                     <div>
                       <div>
-                        <div>السكن</div>
+                        <div>{{'dashboard.rating.housing' | translate}}</div>
                         <h2 class="font-weight-bold text-dark">3.87</h2>
                       </div>
                     </div>
@@ -62,7 +62,7 @@
                   <div class="bg-dcc-light flex-center-between px-4 py-3">
                     <div>
                       <div>
-                        <div>النقل</div>
+                        <div>{{'dashboard.rating.transportation' | translate}}</div>
                         <h2 class="font-weight-bold text-dark">3.87</h2>
                       </div>
                     </div>
@@ -114,9 +114,13 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">التقييم العام للشركات</h5>
+              <h5 class="sts"> {{'dashboard.rating.company_overall_rating' | translate}}</h5>
               <button type="button" class="btn border mx-3">
-                أعلى تقييم
+                {{'dashboard.general.max_rating' | translate}}
+                <svg-icon icon="sort-amount-up"></svg-icon>
+              </button>
+              <button type="button" class="btn border mx-3">
+                {{'dashboard.general.min_rating' | translate}}
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
             </div>
@@ -128,9 +132,13 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">تقييم شركات النقل</h5>
+              <h5 class="sts">{{'dashboard.rating.transportation_company_rating' | translate}}</h5>
               <button type="button" class="btn border mx-3">
-                أعلى تقييم
+                {{'dashboard.general.max_rating' | translate}}
+                <svg-icon icon="sort-amount-up"></svg-icon>
+              </button>
+              <button type="button" class="btn border mx-3">
+                {{'dashboard.general.min_rating' | translate}}
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
             </div>
@@ -142,9 +150,13 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">تقييم شركات الطعام</h5>
+              <h5 class="sts">{{'dashboard.rating.food_company_rating' | translate}}</h5>
               <button type="button" class="btn border mx-3">
-                أعلى تقييم
+                {{'dashboard.general.max_rating' | translate}}
+                <svg-icon icon="sort-amount-up"></svg-icon>
+              </button>
+              <button type="button" class="btn border mx-3">
+                {{'dashboard.general.min_rating' | translate}}
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
             </div>
@@ -156,9 +168,13 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">تقييم شركات السكن</h5>
+              <h5 class="sts">{{'dashboard.rating.housing_company_rating' | translate}}</h5>
               <button type="button" class="btn border mx-3">
-                أعلى تقييم
+                {{'dashboard.general.max_rating' | translate}}
+                <svg-icon icon="sort-amount-up"></svg-icon>
+              </button>
+              <button type="button" class="btn border mx-3">
+                {{'dashboard.general.min_rating' | translate}}
                 <svg-icon icon="sort-amount-down"></svg-icon>
               </button>
             </div>
