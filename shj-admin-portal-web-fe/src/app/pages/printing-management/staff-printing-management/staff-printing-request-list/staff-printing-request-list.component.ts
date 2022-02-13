@@ -56,12 +56,12 @@ export class StaffPrintingRequestListComponent implements OnInit {
     let toDayGregorian = this.dateFormatterService.todayGregorian();
     let toDayHijri = this.dateFormatterService.todayHijri();
     this.maxDateGregorian = {
-      year: toDayGregorian.year - DEFAULT_MAX_USER_AGE,
+      year: toDayGregorian.year,
       month: toDayGregorian.month,
       day: toDayGregorian.day
     };
     this.maxDateHijri = {
-      year: toDayHijri.year - DEFAULT_MAX_USER_AGE,
+      year: toDayHijri.year,
       month: toDayHijri.month,
       day: toDayHijri.day
     };
