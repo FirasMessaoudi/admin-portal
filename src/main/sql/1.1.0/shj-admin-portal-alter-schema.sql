@@ -1263,3 +1263,22 @@ ALTER TABLE shc_portal.shc_applicant_incident
 
 alter table shc_portal.shc_print_request_batch_card drop CONSTRAINT fk_print_request_batch_card_card;
 alter table shc_portal.shc_print_request_card drop CONSTRAINT fk_print_request_card_applicant_card;
+
+GO
+if not exists (select * from sys.tables where name = 'shs_user_location')
+create table shc_portal.shs_user_location
+(
+    id int PRIMARY KEY NOT NULL identity(1,1),
+    user_id VARCHAR(14) NOT NULL,
+    user_type VARCHAR(20) not null,
+    latitude DECIMAL(10, 8) ,
+    longitude DECIMAL(11, 8) ,
+    altitude DECIMAL(10, 5),
+    heading DECIMAL(10, 5),
+    speed DECIMAL(7, 4),
+    speed_accuracy DECIMAL(7, 4),
+    location_accuracy DECIMAL(7, 4),
+    gps_time smalldatetime null,
+    creation_date smalldatetime not null default current_timestamp,
+    update_date smalldatetime null
+);
