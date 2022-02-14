@@ -1,7 +1,10 @@
+/*
+ * Copyright (c) 2022 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.services.dto;
 
 /**
- * Enum for card statuses Actions
+ * Enum for card statuses actions
  *
  * @author Ahmed Ali
  * @since 1.1.0

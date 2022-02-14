@@ -91,15 +91,15 @@
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
               <h5 class="sts">{{'dashboard.mobile.app_usage_by_company' | translate}}</h5>
-              <button *ngIf="!minCompanies" type="button" class="btn border mx-3"
-                      (click)="this.minCompanies=!this.minCompanies;loadMaxCompanies()">
-                {{'dashboard.mobile.max_usage' | translate}}
-                <svg-icon icon="sort-amount-up"></svg-icon>
-              </button>
               <button *ngIf="minCompanies" type="button" class="btn border mx-3"
-                      (click)="this.minCompanies=!this.minCompanies;loadMinCompanies()">
+                      (click)="loadMaxCompanies()">
                 {{'dashboard.mobile.min_usage' | translate}}
                 <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
+              <button *ngIf="!minCompanies" type="button" class="btn border mx-3"
+                      (click)="loadMinCompanies()">
+                {{'dashboard.mobile.max_usage' | translate}}
+                <svg-icon icon="sort-amount-up"></svg-icon>
               </button>
             </div>
           </div>

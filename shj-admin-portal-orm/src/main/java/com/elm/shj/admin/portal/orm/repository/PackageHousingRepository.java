@@ -30,17 +30,19 @@ public interface PackageHousingRepository extends JpaRepository<JpaPackageHousin
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ph.locationNameAr, 0, COUNT(ph.referenceNumber), '') " +
             "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.packageHousings ph JOIN rp.companyRitualSeason crs " +
             "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) " +
-            "AND ph.typeCode = 'CAMP' GROUP BY ph.referenceNumber, ph.locationNameAr ORDER BY COUNT(ph.referenceNumber) DESC")
+            "AND ph.siteCode = :siteCode AND ph.typeCode = 'CAMP' GROUP BY ph.referenceNumber, ph.locationNameAr ORDER BY COUNT(ph.referenceNumber) DESC")
     Page<CountVo> findCampsWithMaxApplicantsByHijriSeason(@Param("seasonYear") int seasonYear,
                                                           @Param("ritualTypeCodeList") List<String> ritualTypeCodeList,
+                                                          @Param("siteCode") String siteCode,
                                                           Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ph.locationNameAr, 0, COUNT(ph.referenceNumber), '') " +
             "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.packageHousings ph JOIN rp.companyRitualSeason crs " +
             "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) " +
-            "AND ph.typeCode = 'CAMP' GROUP BY ph.referenceNumber, ph.locationNameAr ORDER BY COUNT(ph.referenceNumber)")
+            "AND ph.siteCode = :siteCode AND ph.typeCode = 'CAMP' GROUP BY ph.referenceNumber, ph.locationNameAr ORDER BY COUNT(ph.referenceNumber)")
     Page<CountVo> findCampsWithMinApplicantsByHijriSeason(@Param("seasonYear") int seasonYear,
                                                           @Param("ritualTypeCodeList") List<String> ritualTypeCodeList,
+                                                          @Param("siteCode") String siteCode,
                                                           Pageable pageable);
 
 }

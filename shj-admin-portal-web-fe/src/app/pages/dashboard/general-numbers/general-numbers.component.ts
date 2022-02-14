@@ -9,6 +9,7 @@ import { ChartsConfig } from '@pages/dashboard/charts.config';
 import { DashboardVo } from '@shared/model';
 import { I18nService } from '@dcc-commons-ng/services';
 import { ActivatedRoute } from '@angular/router';
+import { campSites } from '@pages/dashboard/general-numbers/camp-sites';
 
 @Component({
   selector: 'app-general-numbers',
@@ -27,6 +28,7 @@ export class GeneralNumbersComponent implements OnInit {
   countVoList: CountVo[];
   minCompanies: boolean;
   minCamps: boolean;
+  campSites: any = campSites;
   private currentSeasonSubscription: Subscription;
   private previousSeasonSubscription: Subscription;
   private applicantsPerNationalitiesSubscription: Subscription;
@@ -42,6 +44,7 @@ export class GeneralNumbersComponent implements OnInit {
 
   private loadSubscription: Subscription;
   seasonYear: any;
+  selectedCampSiteCode: any;
 
   constructor(
     private dashboardService: DashboardService,
@@ -51,6 +54,7 @@ export class GeneralNumbersComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.selectedCampSiteCode = campSites[0].code;
     this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
     this.loadLookups();
     this.chartsConfig.barChartOptions.legend = false;
@@ -153,7 +157,10 @@ export class GeneralNumbersComponent implements OnInit {
   loadMinCamps() {
     this.minCamps = true;
     this.dashboardService
-      .loadCampsWithMinApplicantCountForHijriSeason(this.seasonYear)
+      .loadCampsWithMinApplicantCountForHijriSeason(
+        this.seasonYear,
+        this.selectedCampSiteCode
+      )
       .subscribe((data) => {
         this.campCounts = data.map((d) => d.count);
         this.campLabels = data.map((d) => d.label);
@@ -163,10 +170,17 @@ export class GeneralNumbersComponent implements OnInit {
   loadMaxCamps() {
     this.minCamps = false;
     this.dashboardService
-      .loadCampsWithMaxApplicantCountForHijriSeason(this.seasonYear)
+      .loadCampsWithMaxApplicantCountForHijriSeason(
+        this.seasonYear,
+        this.selectedCampSiteCode
+      )
       .subscribe((data) => {
         this.campCounts = data.map((d) => d.count);
         this.campLabels = data.map((d) => d.label);
       });
+  }
+
+  onCampSiteChange() {
+    this.minCamps ? this.loadMinCamps() : this.loadMaxCamps();
   }
 }
