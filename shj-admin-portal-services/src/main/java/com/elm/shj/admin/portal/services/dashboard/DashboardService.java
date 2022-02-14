@@ -341,10 +341,10 @@ public class DashboardService {
     }
 
     public List<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount(int seasonYear) {
-        return applicantRepository.loadCompaniesWithMaxApplicantsRegisteredCount(PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
+        return applicantRepository.loadCompaniesWithMaxApplicantsRegisteredCount(seasonYear, PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
     }
 
     public List<CountVo> loadCompaniesWithMinApplicantsRegisteredCount(int seasonYear) {
-        return applicantRepository.loadCompaniesWithMinApplicantsRegisteredCount(PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
+        return applicantRepository.loadCompaniesWithMinApplicantsRegisteredCount(seasonYear, PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
     }
 }
