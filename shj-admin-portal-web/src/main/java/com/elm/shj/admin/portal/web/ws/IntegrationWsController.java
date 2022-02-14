@@ -12,6 +12,7 @@ import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.services.user.UserLocationService;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.admin.ValidateStaffCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
@@ -101,6 +102,7 @@ public class IntegrationWsController {
     private final ApplicantPackageService applicantPackageService;
     private final CompanyService companyService;
     private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
+    private final UserLocationService userLocationService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -808,6 +810,20 @@ public class IntegrationWsController {
     @GetMapping("/company-ritual-season/{suin}")
     public ResponseEntity<WsResponse<?>> findLatestCompanyRitualSeasonIdBySuin(@PathVariable String suin) {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyRitualSeasonService.findLatestCompanyRitualSeasonIdBySuin(suin)).build());
+
+    }
+
+    @PostMapping("/store-user-locations")
+    public ResponseEntity<WsResponse<?>> storeUserLocations(@RequestBody List<UserLocationDto> locationsList) {
+        boolean isSaved = userLocationService.storeUserLocation(locationsList);
+        if(!isSaved){
+            return ResponseEntity.ok(
+                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
+        }
+
+        return ResponseEntity.ok(
+                WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(true).build());
 
     }
 
