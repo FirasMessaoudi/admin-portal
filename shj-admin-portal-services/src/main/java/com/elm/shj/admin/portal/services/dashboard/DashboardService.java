@@ -261,7 +261,7 @@ public class DashboardService {
             Date from = new Timestamp(getDateFromAge(Integer.valueOf(ages[0])).getTime());
             Date to = new Timestamp(getDateFromAge(Integer.valueOf(ages[1])).getTime());
             long applicantsNumber = applicantRepository
-                    .countPilgrimsFromCurrentSeasonByAgeRange(from, to, (int) DateUtils.getCurrentHijriYear(), new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
+                    .countPilgrimsFromCurrentSeasonByAgeRange(from, to, hijriYear, new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
             countVo.setLabel(range);
             countVo.setCount(applicantsNumber);
             countVo.setPercentage(String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
@@ -276,7 +276,7 @@ public class DashboardService {
         long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason(seasonYear, new ArrayList<>(Arrays.asList(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())));
         for (String nat : nationalities) {
             CountVo countVo = new CountVo();
-            long applicantsNumber = applicantRepository.countTotalApplicantsFromCurrentSeasonByNationality(nat, (int) DateUtils.getCurrentHijriYear());
+            long applicantsNumber = applicantRepository.countTotalApplicantsFromCurrentSeasonByNationality(nat, seasonYear);
             countVo.setLabel(nat);
             countVo.setCount(applicantsNumber);
             countVo.setPercentage(String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
