@@ -309,11 +309,11 @@ public class DashboardService {
     }
 
     public List<CountVo> loadCompaniesWithMaxIncidentsCount(int seasonYear) {
-        return applicantIncidentRepository.findCompaniesWithMaxIncidents(PageRequest.of(0, maxCompanyChartSize)).getContent();
+        return applicantIncidentRepository.findCompaniesWithMaxIncidents(seasonYear, PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
     public List<CountVo> loadCompaniesWithMinIncidentsCount(int seasonYear) {
-        return applicantIncidentRepository.findCompaniesWithMinIncidents(PageRequest.of(0, maxCompanyChartSize)).getContent();
+        return applicantIncidentRepository.findCompaniesWithMinIncidents(seasonYear, PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
     public DashboardMobileNumbersVo getMobileAppDownloadsFromCurrentSeason(int seasonYear) {

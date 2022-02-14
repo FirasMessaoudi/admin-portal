@@ -39,13 +39,15 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(ai),'') " +
             "FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
-            "JOIN rp.companyRitualSeason crs JOIN crs.company c WHERE  c.labelAr is NOT NULL GROUP BY c.labelAr ORDER BY COUNT(c.labelAr) DESC")
-    Page<CountVo> findCompaniesWithMaxIncidents(Pageable pageable);
+            "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
+            "WHERE  c.labelAr is NOT NULL AND  rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr) DESC")
+    Page<CountVo> findCompaniesWithMaxIncidents(@Param("seasonYear") int seasonYear, Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(ai),'') " +
             "FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
-            "JOIN rp.companyRitualSeason crs JOIN crs.company c WHERE  c.labelAr is NOT NULL GROUP BY c.labelAr ORDER BY COUNT(c.labelAr)")
-    Page<CountVo> findCompaniesWithMinIncidents(Pageable pageable);
+            "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
+            "WHERE  c.labelAr is NOT NULL AND  rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr)")
+    Page<CountVo> findCompaniesWithMinIncidents(@Param("seasonYear") int seasonYear,Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocationVo(i.locationLat, i.locationLng) " +
             "FROM JpaApplicantIncident i JOIN i.applicantRitual ar JOIN ar.applicantPackage ap " +
