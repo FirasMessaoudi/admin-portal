@@ -7,15 +7,13 @@ import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.LocationVo;
 import com.elm.shj.admin.portal.services.dashboard.*;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.dto.ECampSite;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.List;
@@ -134,16 +132,16 @@ public class DashboardController {
 
     @GetMapping("/general-numbers/max-camps/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CountVo> loadCampsWithMaxApplicantsCount(@PathVariable("seasonYear") int seasonYear) {
+    public List<CountVo> loadCampsWithMaxApplicantsCount(@PathVariable("seasonYear") int seasonYear, @RequestParam ECampSite site) {
         log.info("Load Camps with max applicants' count for current season.");
-        return dashboardService.loadCampsWithMaxApplicantsCountByHijriSeason(seasonYear);
+        return dashboardService.loadCampsWithMaxApplicantsCountByHijriSeason(seasonYear, site);
     }
 
     @GetMapping("/general-numbers/min-camps/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CountVo> loadCampsWithMinApplicantsCount(@PathVariable("seasonYear") int seasonYear) {
+    public List<CountVo> loadCampsWithMinApplicantsCount(@PathVariable("seasonYear") int seasonYear, @RequestParam ECampSite site) {
         log.info("Load Camps with min applicants' count for current season.");
-        return dashboardService.loadCampsWithMinApplicantsCountByHijriSeason(seasonYear);
+        return dashboardService.loadCampsWithMinApplicantsCountByHijriSeason(seasonYear, site);
     }
 
     @GetMapping("/incidents-locations/{seasonYear}")

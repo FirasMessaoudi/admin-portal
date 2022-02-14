@@ -105,6 +105,7 @@ export class MobileComponent implements OnInit {
   }
 
   loadMinCompanies() {
+    this.minCompanies = true;
     this.dashboardService
       .loadCompaniesWithMinApplicantsRegisteredCount(this.seasonYear)
       .subscribe((data) => {
@@ -114,6 +115,7 @@ export class MobileComponent implements OnInit {
   }
 
   loadMaxCompanies() {
+    this.minCompanies = false;
     this.dashboardService
       .loadCompaniesWithMaxApplicantsRegisteredCount(this.seasonYear)
       .subscribe((data) => {

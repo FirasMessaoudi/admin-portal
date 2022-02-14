@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
 import com.elm.shj.admin.portal.orm.entity.LocationVo;
 import com.elm.shj.admin.portal.orm.repository.*;
+import com.elm.shj.admin.portal.services.dto.ECampSite;
 import com.elm.shj.admin.portal.services.dto.EGender;
 import com.elm.shj.admin.portal.services.dto.ERitualType;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
@@ -296,12 +297,20 @@ public class DashboardService {
         return companyRepository.findCompaniesWithMinApplicantsByHijriSeason(currentHijriYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()), PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
-    public List<CountVo> loadCampsWithMaxApplicantsCountByHijriSeason(int currentHijriYear) {
-        return packageHousingRepository.findCampsWithMaxApplicantsByHijriSeason(currentHijriYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()), PageRequest.of(0, maxCompanyChartSize)).getContent();
+    public List<CountVo> loadCampsWithMaxApplicantsCountByHijriSeason(int currentHijriYear, ECampSite siteCode) {
+        return packageHousingRepository.findCampsWithMaxApplicantsByHijriSeason(
+                currentHijriYear,
+                List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()),
+                siteCode.name(),
+                PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
-    public List<CountVo> loadCampsWithMinApplicantsCountByHijriSeason(int currentHijriYear) {
-        return packageHousingRepository.findCampsWithMinApplicantsByHijriSeason(currentHijriYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()), PageRequest.of(0, maxCompanyChartSize)).getContent();
+    public List<CountVo> loadCampsWithMinApplicantsCountByHijriSeason(int currentHijriYear, ECampSite siteCode) {
+        return packageHousingRepository.findCampsWithMinApplicantsByHijriSeason(
+                currentHijriYear,
+                List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name()),
+                siteCode.name(),
+                PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
     public List<LocationVo> getIncidentsLocationsFromCurrentSeason(int hijriYear) {

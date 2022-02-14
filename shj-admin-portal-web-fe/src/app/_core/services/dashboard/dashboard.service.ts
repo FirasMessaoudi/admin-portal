@@ -1,20 +1,19 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {DashboardVo} from '@model/dashboard-vo.model';
-import {Observable} from 'rxjs';
-import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
-import {CountVo} from '@app/_shared/model/countVo.model';
-import {Lookup} from '@model/lookup.model';
-import {DashboardIncidentNumbersVo} from "@model/dashboardIncidentNumbersVo.model";
-import {Position} from '@app/_shared/model/marker.model';
-import {DashboardMobileNumbersVo} from "@model/dashboard-mobile-numbers-vo.model";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { DashboardVo } from '@model/dashboard-vo.model';
+import { Observable } from 'rxjs';
+import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
+import { CountVo } from '@app/_shared/model/countVo.model';
+import { Lookup } from '@model/lookup.model';
+import { DashboardIncidentNumbersVo } from '@model/dashboardIncidentNumbersVo.model';
+import { Position } from '@app/_shared/model/marker.model';
+import { DashboardMobileNumbersVo } from '@model/dashboard-mobile-numbers-vo.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardService {
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   /**
    * Load dashboard data for logged in user agency
@@ -44,7 +43,9 @@ export class DashboardService {
   /**
    * Load dashboard general numbers for current season
    */
-  loadGeneralNumbersForHijriSeason(seasonYear: number): Observable<GeneralDashboardVo> {
+  loadGeneralNumbersForHijriSeason(
+    seasonYear: number
+  ): Observable<GeneralDashboardVo> {
     return this.http.get<GeneralDashboardVo>(
       '/core/api/dashboard/general-numbers/current-season/' + seasonYear
     );
@@ -53,7 +54,9 @@ export class DashboardService {
   /**
    * Load dashboard general numbers for previous season
    */
-  loadGeneralNumbersForPreviousSeason(seasonYear: number): Observable<GeneralDashboardVo> {
+  loadGeneralNumbersForPreviousSeason(
+    seasonYear: number
+  ): Observable<GeneralDashboardVo> {
     return this.http.get<GeneralDashboardVo>(
       '/core/api/dashboard/general-numbers/previous-season/' + seasonYear
     );
@@ -62,18 +65,24 @@ export class DashboardService {
   /**
    * Load dashboard general numbers for number of applicant per nationalities
    */
-  loadGeneralNumbersForApplicantPerNationalities(seasonYear: number): Observable<CountVo[]> {
+  loadGeneralNumbersForApplicantPerNationalities(
+    seasonYear: number
+  ): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/general-numbers/applicant/count-per-nationalities/' + seasonYear
+      '/core/api/dashboard/general-numbers/applicant/count-per-nationalities/' +
+        seasonYear
     );
   }
 
   /**
    * Load dashboard applicants numbers for current season
    */
-  loadApplicantsCountByAgeHijriSeason(seasonYear: number): Observable<CountVo[]> {
+  loadApplicantsCountByAgeHijriSeason(
+    seasonYear: number
+  ): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/general-numbers/applicant/count-per-age/' + seasonYear
+      '/core/api/dashboard/general-numbers/applicant/count-per-age/' +
+        seasonYear
     );
   }
 
@@ -84,7 +93,9 @@ export class DashboardService {
   /**
    * Load companies with max applicant count for current season
    */
-  loadCompaniesWithMaxApplicantCountForCurrentSeason(seasonYear: number): Observable<CountVo[]> {
+  loadCompaniesWithMaxApplicantCountForCurrentSeason(
+    seasonYear: number
+  ): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
       '/core/api/dashboard/general-numbers/max-companies/' + seasonYear
     );
@@ -93,7 +104,9 @@ export class DashboardService {
   /**
    * Load companies with min applicant count for current season
    */
-  loadCompaniesWithMinApplicantCountForHijriSeason(seasonYear: number): Observable<CountVo[]> {
+  loadCompaniesWithMinApplicantCountForHijriSeason(
+    seasonYear: number
+  ): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
       '/core/api/dashboard/general-numbers/min-companies/' + seasonYear
     );
@@ -102,18 +115,28 @@ export class DashboardService {
   /**
    * Load camps with max applicant count for current season
    */
-  loadCampsWithMaxApplicantCountForHijriSeason(seasonYear: number): Observable<CountVo[]> {
+  loadCampsWithMaxApplicantCountForHijriSeason(
+    seasonYear: number,
+    site: string
+  ): Observable<CountVo[]> {
+    let params = new HttpParams().set('site', site);
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/general-numbers/max-camps/' + seasonYear
+      '/core/api/dashboard/general-numbers/max-camps/' + seasonYear,
+      { params: params }
     );
   }
 
   /**
    * Load camps with min applicant count for current season
    */
-  loadCampsWithMinApplicantCountForHijriSeason(seasonYear: number): Observable<CountVo[]> {
+  loadCampsWithMinApplicantCountForHijriSeason(
+    seasonYear: number,
+    site: string
+  ): Observable<CountVo[]> {
+    let params = new HttpParams().set('site', site);
     return this.http.get<CountVo[]>(
-      '/core/api/dashboard/general-numbers/min-camps/' + seasonYear
+      '/core/api/dashboard/general-numbers/min-camps/' + seasonYear,
+      { params: params }
     );
   }
 
@@ -134,7 +157,9 @@ export class DashboardService {
   /**
    * Load incidents location for current season
    */
-  loadIncidentsLocationsForHijriSeason(seasonYear: number): Observable<Position[]> {
+  loadIncidentsLocationsForHijriSeason(
+    seasonYear: number
+  ): Observable<Position[]> {
     return this.http.get<Position[]>(
       '/core/api/dashboard/incidents-locations/' + seasonYear
     );
@@ -161,7 +186,9 @@ export class DashboardService {
   /**
    * Load dashboard mobile app downloads numbers
    */
-  loadMobileAppDownloadsNumbers(seasonYear: number): Observable<DashboardMobileNumbersVo> {
+  loadMobileAppDownloadsNumbers(
+    seasonYear: number
+  ): Observable<DashboardMobileNumbersVo> {
     return this.http.get<DashboardMobileNumbersVo>(
       '/core/api/dashboard/mobile/app-downloads/' + seasonYear
     );
@@ -170,7 +197,9 @@ export class DashboardService {
   /**
    * Load companies with max applicant registered count
    */
-  loadCompaniesWithMaxApplicantsRegisteredCount(seasonYear: number): Observable<CountVo[]> {
+  loadCompaniesWithMaxApplicantsRegisteredCount(
+    seasonYear: number
+  ): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
       '/core/api/dashboard/applicant-numbers/max-companies/' + seasonYear
     );
@@ -179,10 +208,11 @@ export class DashboardService {
   /**
    * Load companies with min applicant registered count
    */
-  loadCompaniesWithMinApplicantsRegisteredCount(seasonYear: number): Observable<CountVo[]> {
+  loadCompaniesWithMinApplicantsRegisteredCount(
+    seasonYear: number
+  ): Observable<CountVo[]> {
     return this.http.get<CountVo[]>(
       '/core/api/dashboard/applicant-numbers/min-companies/' + seasonYear
     );
   }
-
 }

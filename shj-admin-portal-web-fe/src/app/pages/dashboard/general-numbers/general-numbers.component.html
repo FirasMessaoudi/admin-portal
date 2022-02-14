@@ -207,7 +207,7 @@
         <div class="h-100 p-3 border">
           <div class="flex-center-between">
             <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">{{'dashboard.general-numbers.distribution_on_mina_camps' | translate}}</h5>
+              <h5 class="sts">{{'dashboard.general-numbers.distribution_on_camps' | translate}}</h5>
               <button *ngIf="minCamps" type="button" class="btn border mx-3" (click)="loadMaxCamps()">
                 <svg-icon icon="sort-amount-down"></svg-icon>
                 {{'dashboard.general-numbers.min_camps' | translate}}
@@ -217,6 +217,11 @@
                 <svg-icon icon="sort-amount-up"></svg-icon>
               </button>
             </div>
+            <select [(ngModel)]="selectedCampSiteCode" class="col-3 custom-select"
+                    (ngModelChange)="onCampSiteChange()">
+              <option *ngFor="let camp of campSites"
+                      [ngValue]="camp.code">{{currentLanguage.startsWith('ar') ? camp.labelAr : camp.labelEn}}</option>
+            </select>
           </div>
           <div class="py-3">
 
