@@ -31,11 +31,17 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
     void update(@Param("incidentId") long incidentId, @Param("resolutionComment") String resolutionComment,@Param("status") String status);
 
 
-    @Query("SELECT COUNT(a) FROM JpaApplicantIncident a where a.statusCode = 'UNDER_PROCESSING'")
-    long countAllUnResolvedIncidents();
+    @Query("SELECT COUNT(ai) FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar " +
+            "JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
+            "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
+            "where ai.statusCode = 'UNDER_PROCESSING' AND rs.seasonYear= :seasonYear")
+    long countAllUnResolvedIncidents(@Param("seasonYear") int seasonYear);
 
-    @Query("SELECT COUNT(a) FROM JpaApplicantIncident a where a.statusCode IN ('RESOLVED', 'CLOSED')")
-    long countAllResolvedIncidents();
+    @Query("SELECT COUNT(ai) FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar " +
+            "JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
+            "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
+            "where ai.statusCode IN ('RESOLVED', 'CLOSED') AND rs.seasonYear= :seasonYear")
+    long countAllResolvedIncidents(@Param("seasonYear") int seasonYear);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(ai),'') " +
             "FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
@@ -55,5 +61,10 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
             "and rs.ritualTypeCode IN (:ritualTypeCodeList)")
     List<LocationVo> getIncidentsLocationsBySeasonAndRitualType(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 
+    @Query("SELECT ai FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar " +
+            "JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
+            "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
+            "where rs.seasonYear= :seasonYear")
+    List<JpaApplicantIncident> findAllByCurrentSeason(@Param("seasonYear") int seasonYear);
 
 }

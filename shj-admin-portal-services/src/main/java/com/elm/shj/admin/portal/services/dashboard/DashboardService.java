@@ -202,9 +202,9 @@ public class DashboardService {
     }
 
     public DashboardIncidentNumbersVo loadDashboardIncidentNumbers(int seasonYear) {
-        List<JpaApplicantIncident> allApplicantIncident = applicantIncidentRepository.findAll();
-        long totalNumberOfResolvedIncidents = applicantIncidentRepository.countAllResolvedIncidents();
-        long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents();
+        List<JpaApplicantIncident> allApplicantIncident = applicantIncidentRepository.findAllByCurrentSeason(seasonYear);
+        long totalNumberOfResolvedIncidents = applicantIncidentRepository.countAllResolvedIncidents(seasonYear);
+        long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents(seasonYear);
         long totalNumberOfRegisteredIncidents = totalNumberOfResolvedIncidents + totalNumberOfUnResolvedIncidents;
 
         Date mostIncidentDate = new Date();
