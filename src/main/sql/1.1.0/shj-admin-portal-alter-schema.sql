@@ -1265,8 +1265,8 @@ alter table shc_portal.shc_print_request_batch_card drop CONSTRAINT fk_print_req
 alter table shc_portal.shc_print_request_card drop CONSTRAINT fk_print_request_card_applicant_card;
 
 GO
-if not exists (select * from sys.tables where name = 'shs_user_location')
-create table shc_portal.shs_user_location
+if not exists (select * from sys.tables where name = 'shc_user_location')
+create table shc_portal.shc_user_location
 (
     id int PRIMARY KEY NOT NULL identity(1,1),
     user_id VARCHAR(14) NOT NULL,
