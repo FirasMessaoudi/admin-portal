@@ -115,12 +115,12 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(a),'') " +
             "FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
-            "WHERE  c.labelAr is NOT NULL AND a.registered = TRUE AND rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr) DESC")
+            "WHERE  c.labelAr is NOT NULL AND a.mobileLoggedIn IS NOT NULL AND rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr) DESC")
     Page<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount(@Param("seasonYear") int seasonYear, Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(a),'') " +
             "FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
-            "WHERE c.labelAr is NOT NULL AND a.registered = TRUE AND rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr)")
+            "WHERE c.labelAr is NOT NULL AND a.mobileLoggedIn IS NOT NULL AND rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr)")
     Page<CountVo> loadCompaniesWithMinApplicantsRegisteredCount(@Param("seasonYear") int seasonYear, Pageable pageable);
 }
