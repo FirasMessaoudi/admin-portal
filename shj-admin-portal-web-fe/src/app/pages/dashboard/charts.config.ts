@@ -204,7 +204,7 @@ export class ChartsConfig {
   ];
 
   lineChartColors: Color[] = [
-    {backgroundColor: '#E5CA81', hoverBackgroundColor: '#E5CA81'},
+    {backgroundColor: '#BA9430', hoverBackgroundColor: '#BA9430'},
     {backgroundColor: '#D5D5DD', hoverBackgroundColor: '#D5D5DD'},
   ];
 

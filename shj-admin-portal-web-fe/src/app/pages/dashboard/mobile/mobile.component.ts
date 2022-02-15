@@ -31,6 +31,8 @@ export class MobileComponent implements OnInit {
   companyCounts: Array<any>;
   seasonYear: any;
 
+  loggedInUsers: Array<number> = [];
+
   constructor(
     private authenticationService: AuthenticationService,
     private dashboardService: DashboardService,
@@ -47,12 +49,16 @@ export class MobileComponent implements OnInit {
       .subscribe((data) => (this.mobileAppDownloadsData = data));
     this.getWeekDays();
 
+    this.dashboardService
+      .getMobileLoggedInUsers(this.seasonYear)
+      .subscribe((data) => (this.datasets[0].data = data));
+
     this.datasets = [
       {
         //TODO Dummy Data
-        data: [20, 21, 18, 25, 25, 28, 40],
         fill: false,
-        borderColor: '#E5CA81',
+        borderColor: '#BA9430',
+        borderWidth: 2,
         // @ts-ignore
         tension: 0,
       },
@@ -60,6 +66,7 @@ export class MobileComponent implements OnInit {
         data: [14, 12, 24, 18, 13, 20, 31],
         fill: false,
         borderColor: '#D5D5DD',
+        borderWidth: 2,
         // @ts-ignore
         tension: 0,
       },
