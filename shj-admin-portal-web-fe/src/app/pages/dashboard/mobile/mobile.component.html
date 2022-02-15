@@ -36,14 +36,14 @@
                   </div>
 
                   <p class="py-3">
-                    <ngb-progressbar type="appdownloads"
+                    <ngb-progressbar type="mobile"
                                      [value]="mobileAppDownloadsData?.totalNumberOfLoggedInUsers / mobileAppDownloadsData?.totalNumberOfMobileAppDownloads * 100"
                                      height="10px"></ngb-progressbar>
                   </p>
 
                   <div class="flex-center-between mt-2">
                     <div class="d-flex">
-                      <svg-icon styleClass="text-appdownloads" icon="circle"></svg-icon>
+                      <svg-icon styleClass="text-mobile" icon="circle"></svg-icon>
                       <div class="px-3">{{'dashboard.general.logged_in' | translate}}</div>
                     </div>
                     <div>{{mobileAppDownloadsData?.totalNumberOfLoggedInUsers}}</div>

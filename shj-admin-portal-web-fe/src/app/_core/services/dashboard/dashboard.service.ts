@@ -215,4 +215,13 @@ export class DashboardService {
       '/core/api/dashboard/applicant-numbers/min-companies/' + seasonYear
     );
   }
+
+  /**
+   * Load companies with min applicant registered count
+   */
+  getMobileLoggedInUsers(seasonYear: number): Observable<number[]> {
+    return this.http.get<number[]>(
+      '/core/api/dashboard/mobile/logged-in-users/' + seasonYear
+    );
+  }
 }

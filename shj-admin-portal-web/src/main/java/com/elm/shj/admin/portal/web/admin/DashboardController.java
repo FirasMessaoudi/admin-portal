@@ -172,4 +172,11 @@ public class DashboardController {
         return dashboardService.loadCompaniesWithMinApplicantsRegisteredCount(seasonYear);
     }
 
+    @GetMapping("/mobile/logged-in-users/{seasonYear}")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<Integer> loadMobileLoggedInUsers(@PathVariable("seasonYear") int seasonYear) {
+        log.info("Handling loadMobileLoggedInUsers endpoint.");
+        return dashboardService.getMobileLoggedInUsers(seasonYear);
+    }
+
 }
