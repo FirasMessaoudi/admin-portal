@@ -24,7 +24,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class JpaRitualPackage implements Serializable {
+
     private static final long serialVersionUID = -8657084839410538572L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)

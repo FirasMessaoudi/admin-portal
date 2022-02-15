@@ -21,6 +21,7 @@ import java.io.Serializable;
 public class ApplicantStaffVO implements Serializable {
 
     private static final long serialVersionUID = -1154179829470241614L;
+
     private String uin;
     private String fullNameEn;
     private String fullNameAr;

@@ -26,6 +26,7 @@ import java.util.Date;
 public class JpaUserCardStatusAudit implements Serializable {
 
     private static final long serialVersionUID = -2573018111056761497L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)

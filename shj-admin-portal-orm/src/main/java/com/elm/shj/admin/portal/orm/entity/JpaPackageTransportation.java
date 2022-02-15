@@ -28,8 +28,8 @@ import java.util.List;
 @NoArgsConstructor
 public class JpaPackageTransportation implements Serializable {
 
-
     private static final long serialVersionUID = -2449410033454976614L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
