@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.web.ws;
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
+import com.elm.shj.admin.portal.services.applicant.GroupApplicantListService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.EUserType;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -38,6 +39,8 @@ public class StaffWsController {
 
     private final CompanyStaffService companyStaffService;
     private final ApplicantLiteService applicantLiteService;
+    private final GroupApplicantListService groupApplicantListService;
+
 
     /**
      * finds company staff
@@ -125,6 +128,12 @@ public class StaffWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                 .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(value).build()).build());
 
+    }
+
+    @GetMapping("/applicant-group/{suin}")
+    public ResponseEntity<WsResponse<?>> loadApplicantGroupList(@PathVariable String suin) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(groupApplicantListService.findGroupApplicantListBySuin(suin)).build());
     }
 
 }
