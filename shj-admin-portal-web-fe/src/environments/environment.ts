@@ -9,11 +9,11 @@ import {env} from './.env';
 export const environment = {
   production: false,
   dev: true,
-  mock: false,
+  mock: true,
   recaptchaSiteKey: '6LdzHFQUAAAAAKbbaojHVswZvdHgPuzC71VCIUlb',
   invisibleRecaptchaSiteKey: '6Le30G0UAAAAAM3Kwdf4V_feWJ-zD7OFAjxqO3Vo',
   version: env.npm_package_version + '-dev',
-  backendMappings: [{mapping:'/core', url:'http://localhost:8080/shj-admin/'}],
+  backendMappings: [{mapping: '/core', url: 'http://localhost:8080/shj-admin/'}],
   websocketConnection: [{url: ''}],
   defaultLanguage: 'ar-SA',
   termsAndConditionsUrl: '',
@@ -28,7 +28,7 @@ export const environment = {
     },
     {
       url: '/api/auth/otp',
-      data: '{"authorities":[{"authority":"CANCEL_CARD"},{"authority":"ADMIN_DASHBOARD"},{"authority":"ACTIVATE_CARD"},{"authority":"ADD_USER"},{"authority":"SUSPEND_CARD"},{"authority":"RESET_USER_PASSWORD"},{"authority":"EDIT_ROLE"},{"authority":"REISSUE_CARD"},{"authority":"SYSTEM_DEFINED_NOTIFICATION_DETAILS"},{"authority":"NOTIFICATION_MANAGEMENT"},{"authority":"EDIT_USER"},{"authority":"RESET_PASSWORD"},{"authority":"DELETE_ROLE"},{"authority":"USER_MANAGEMENT"},{"authority":"DELETE_USER"},{"authority":"CHANGE_USER_STATUS"},{"authority":"ROLE_MANAGEMENT"},{"authority":"CHANGE_ROLE_STATUS"},{"authority":"ADD_ROLE"},{"authority":"ADD_PRINTING_REQUEST"},{"authority":"RESET_PASSWORD"},{"authority":"VIEW_PRINTING_REQUEST_DETAILS"},{"authority":"ADMIN_DASHBOARD"},{"authority":"PRINTING_REQUEST_MANAGEMENT"},{"authority":"STAFF_PRINTING_REQUEST_MANAGEMENT"},{"authority":"APPLICANT_PRINTING_REQUEST_MANAGEMENT"},{"authority":"UPDATE_MY_PROFILE"},{"authority":"VIEW_MY_PROFILE"},{"authority":"ACTIVATE_CARD"},{"authority":"REISSUE_CARD"},{"authority":"APPROVE_APPLICANT_PROFILE"},{"authority":"ADMIN_DASHBOARD"},{"authority":"ADD_CARD"},{"authority":"ACTIVATE_CARD"},{"authority":"UPDATE_CARD"},{"authority":"VIEW_MY_PROFILE"},{"authority":"RESET_PASSWORD"},{"authority":"SUSPEND_CARD"},{"authority":"VIEW_CARD_DETAILS"},{"authority":"SUSPEND_CARD"},{"authority":"CANCEL_CARD"},{"authority":"CANCEL_CARD"},{"authority":"REISSUE_CARD"},{"authority":"ADD_APPLICANT_PROFILE"},{"authority":"UPDATE_MY_PROFILE"},{"authority":"CARD_MANAGEMENT"},{"authority":"VIEW_MY_PROFILE"},{"authority":"RESET_PASSWORD"},{"authority":"VIEW_DATA_REQUEST_DETAILS"},{"authority":"DATA_REQUEST_MANAGEMENT"},{"authority":"UPDATE_MY_PROFILE"},{"authority":"ADMIN_DASHBOARD"},{"authority":"CREATE_DATA_REQUEST"}],"details":null,"authenticated":true,"principal":"1234567897","credentials":null,"token":null,"tokenExpirationDate":0,"passwordExpired":false,"userRoles":[{"id":1,"role":{"id":1,"labelAr":"مشرف النظام","labelEn":"System Admin","deleted":false,"activated":true,"roleAuthorities":null,"creationDate":1633502880000,"updateDate":null},"mainRole":true,"creationDate":1633502880000},{"id":4,"role":{"id":7,"labelAr":"مشرف الطباعة","labelEn":"Printing Supervisor","deleted":false,"activated":true,"roleAuthorities":null,"creationDate":1633502880000,"updateDate":null},"mainRole":false,"creationDate":1633502940000},{"id":3,"role":{"id":5,"labelAr":"مشرف مركز الخدمة","labelEn":"Service Center Agent Supervisor","deleted":false,"activated":true,"roleAuthorities":null,"creationDate":1633502880000,"updateDate":null},"mainRole":false,"creationDate":1633502940000},{"id":5,"role":{"id":11,"labelAr":"مشرف المعرفات الرقمية","labelEn":"Digital ID Issuer Supervisor","deleted":false,"activated":true,"roleAuthorities":null,"creationDate":1633502880000,"updateDate":null},"mainRole":false,"creationDate":1633502940000}],"firstName":"سعد","lastName":"الغامدي","id":1,"name":"1234567897"}'
+      data: '{"authorities":[{"authority":"CANCEL_CARD"},{"authority":"MOBILE_TRACKING_DASHBOARD"},{"authority":"ADMIN_DASHBOARD"},{"authority":"ACTIVATE_CARD"},{"authority":"ADD_USER"},{"authority":"SUSPEND_CARD"},{"authority":"RESET_USER_PASSWORD"},{"authority":"EDIT_ROLE"},{"authority":"REISSUE_CARD"},{"authority":"SYSTEM_DEFINED_NOTIFICATION_DETAILS"},{"authority":"NOTIFICATION_MANAGEMENT"},{"authority":"EDIT_USER"},{"authority":"RESET_PASSWORD"},{"authority":"DELETE_ROLE"},{"authority":"USER_MANAGEMENT"},{"authority":"DELETE_USER"},{"authority":"CHANGE_USER_STATUS"},{"authority":"ROLE_MANAGEMENT"},{"authority":"CHANGE_ROLE_STATUS"},{"authority":"ADD_ROLE"},{"authority":"ADD_PRINTING_REQUEST"},{"authority":"RESET_PASSWORD"},{"authority":"VIEW_PRINTING_REQUEST_DETAILS"},{"authority":"ADMIN_DASHBOARD"},{"authority":"PRINTING_REQUEST_MANAGEMENT"},{"authority":"STAFF_PRINTING_REQUEST_MANAGEMENT"},{"authority":"APPLICANT_PRINTING_REQUEST_MANAGEMENT"},{"authority":"UPDATE_MY_PROFILE"},{"authority":"VIEW_MY_PROFILE"},{"authority":"ACTIVATE_CARD"},{"authority":"REISSUE_CARD"},{"authority":"APPROVE_APPLICANT_PROFILE"},{"authority":"ADMIN_DASHBOARD"},{"authority":"ADD_CARD"},{"authority":"ACTIVATE_CARD"},{"authority":"UPDATE_CARD"},{"authority":"VIEW_MY_PROFILE"},{"authority":"RESET_PASSWORD"},{"authority":"SUSPEND_CARD"},{"authority":"VIEW_CARD_DETAILS"},{"authority":"SUSPEND_CARD"},{"authority":"CANCEL_CARD"},{"authority":"CANCEL_CARD"},{"authority":"REISSUE_CARD"},{"authority":"ADD_APPLICANT_PROFILE"},{"authority":"UPDATE_MY_PROFILE"},{"authority":"CARD_MANAGEMENT"},{"authority":"VIEW_MY_PROFILE"},{"authority":"RESET_PASSWORD"},{"authority":"VIEW_DATA_REQUEST_DETAILS"},{"authority":"DATA_REQUEST_MANAGEMENT"},{"authority":"UPDATE_MY_PROFILE"},{"authority":"ADMIN_DASHBOARD"},{"authority":"CREATE_DATA_REQUEST"}],"details":null,"authenticated":true,"principal":"1234567897","credentials":null,"token":null,"tokenExpirationDate":0,"passwordExpired":false,"userRoles":[{"id":1,"role":{"id":1,"labelAr":"مشرف النظام","labelEn":"System Admin","deleted":false,"activated":true,"roleAuthorities":null,"creationDate":1633502880000,"updateDate":null},"mainRole":true,"creationDate":1633502880000},{"id":4,"role":{"id":7,"labelAr":"مشرف الطباعة","labelEn":"Printing Supervisor","deleted":false,"activated":true,"roleAuthorities":null,"creationDate":1633502880000,"updateDate":null},"mainRole":false,"creationDate":1633502940000},{"id":3,"role":{"id":5,"labelAr":"مشرف مركز الخدمة","labelEn":"Service Center Agent Supervisor","deleted":false,"activated":true,"roleAuthorities":null,"creationDate":1633502880000,"updateDate":null},"mainRole":false,"creationDate":1633502940000},{"id":5,"role":{"id":11,"labelAr":"مشرف المعرفات الرقمية","labelEn":"Digital ID Issuer Supervisor","deleted":false,"activated":true,"roleAuthorities":null,"creationDate":1633502880000,"updateDate":null},"mainRole":false,"creationDate":1633502940000}],"firstName":"سعد","lastName":"الغامدي","id":1,"name":"1234567897"}'
     },
     {
       url: '/api/dashboard',
@@ -175,6 +175,26 @@ export const environment = {
     {
       url: '/api/dashboard/general-numbers/max-companies/1442',
       data: '[{"label":"الناظر","labelNumber":0,"count":6,"percentage":""}]'
+    },
+    {
+      url: '/api/dashboard/general-numbers/applicant/count-per-nationalities/1443',
+      data: '[{"label":"OM","labelNumber":0,"count":2,"percentage":"33.33"},{"label":"SA","labelNumber":0,"count":2,"percentage":"33.33"},{"label":"IN","labelNumber":0,"count":1,"percentage":"16.67"},{"label":"PS","labelNumber":0,"count":1,"percentage":"16.67"}]'
+    },
+    {
+      url: '/api/dashboard/general-numbers/current-season/1443',
+      data: '{"totalNumberOfApplicants":6,"totalNumberOfMaleApplicants":4,"totalNumberOfFemaleApplicants":2,"totalNumberOfInternalApplicants":0,"totalNumberOfExternalApplicants":6,"totalNumberOfLoggedInUsers":6,"totalNumberOfLoggedOutUsers":0,"totalNumberOfMobileAppDownloads":6}'
+    },
+    {
+      url: '/api/dashboard/general-numbers/applicant/count-per-age/1443',
+      data: '[{"label":"0-12","labelNumber":0,"count":1,"percentage":"16.67"},{"label":"12-18","labelNumber":0,"count":0,"percentage":"0.00"},{"label":"18-30","labelNumber":0,"count":0,"percentage":"0.00"},{"label":"30-50","labelNumber":0,"count":4,"percentage":"66.67"},{"label":"50-70","labelNumber":0,"count":0,"percentage":"0.00"},{"label":"70-200","labelNumber":0,"count":1,"percentage":"16.67"}]'
+    },
+    {
+      url: '/api/dashboard/general-numbers/max-companies/1443',
+      data: '[{"label":"الناظر","labelNumber":0,"count":6,"percentage":""}]'
+    },
+    {
+      url: '/api/lookup/dashboard/refresh-interval',
+      data: '600000'
     }
   ]
 };
