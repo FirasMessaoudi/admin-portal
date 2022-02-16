@@ -59,7 +59,6 @@ public class JpaApplicantIncident implements Serializable {
     @Column(name = "resolution_comment")
     private String resolutionComment;
 
-
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantIncident")
     private List<JpaIncidentAttachment>  incidentAttachments;
@@ -72,7 +71,6 @@ public class JpaApplicantIncident implements Serializable {
 
     @Column(name = "area_code")
     private String areaCode;
-
 
     @PrePersist
     public void prePersist() {

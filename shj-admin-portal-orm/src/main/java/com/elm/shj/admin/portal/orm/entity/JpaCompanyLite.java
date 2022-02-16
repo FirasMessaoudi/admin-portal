@@ -22,10 +22,12 @@ import java.io.Serializable;
 public class JpaCompanyLite implements Serializable {
 
     private static final long serialVersionUID = 4101520768244593266L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
     private long id;
+
     @Column(name = "code", nullable = false)
     private String code;
 

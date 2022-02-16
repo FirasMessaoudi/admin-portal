@@ -24,8 +24,8 @@ import java.util.List;
 @NoArgsConstructor
 public class JpaHousingZone implements Serializable {
 
-
     private static final long serialVersionUID = 3358143495376599793L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
@@ -40,10 +40,8 @@ public class JpaHousingZone implements Serializable {
 
     private String color;
 
-
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "housingZone")
     private List<JpaPackageHousing> packageHousings;
-
 
 }
