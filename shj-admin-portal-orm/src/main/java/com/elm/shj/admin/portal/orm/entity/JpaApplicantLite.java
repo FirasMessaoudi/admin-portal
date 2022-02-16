@@ -53,6 +53,8 @@ public class JpaApplicantLite implements Serializable {
     @Column(name = "preferred_language")
     private String preferredLanguage;
 
+    private String photo;
+
     private String gender;
 
     @LazyCollection(LazyCollectionOption.FALSE)
