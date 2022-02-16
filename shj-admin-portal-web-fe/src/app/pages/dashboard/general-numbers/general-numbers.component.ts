@@ -23,8 +23,8 @@ export class GeneralNumbersComponent implements OnInit {
   previousSeasonPercentage: number;
   totalCountsNationalities: number = 0;
   totalCountAges: number = 0;
-  countryList: Lookup[] = [];
-  countVoList: CountVo[] = [];
+  countryList: Lookup[];
+  countVoList: CountVo[];
   minCompanies: boolean;
   minCamps: boolean;
   campSites: Lookup[] = [];
