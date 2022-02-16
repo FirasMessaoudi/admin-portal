@@ -57,14 +57,14 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
           ctx.textBaseline = "middle";
           var text = changes.centerValue.currentValue,
             textX = Math.round((width - ctx.measureText(text).width) / 2),
-            textY = height / 2;
-          var textZ = height / 2.5;
+            textY = height / 2.2;
+          var textZ = height / 2.3;
           ctx.fillText(text, textX, textZ);
 
           ctx.textBaseline = "middle";
           var textLabel = changes.centerTitle.currentValue,
             textLabelX = Math.round((width - ctx.measureText(textLabel).width) / 2),
-            textLabelY = height / 2;
+            textLabelY = height / 1.9;
           var textLabelZ = height / 1.5;
           ctx.fillText(textLabel, textLabelX, textLabelY);
           ctx.save();

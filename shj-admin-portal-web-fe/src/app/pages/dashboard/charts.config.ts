@@ -188,7 +188,7 @@ export class ChartsConfig {
 
   doughnutChartColors: Color[] = [
     {
-      backgroundColor: ['#5E56A2', '#67C7E0', '#7ABE6C', '#FF4B12', '#289E9A', '#FE9B43', '#AD323B'],
+      backgroundColor: ['#67C7E0', '#7ABE6C', '#FF4B12', '#289E9A', '#FE9B43', '#AD323B', '#5E56A2'],
       hoverBackgroundColor: ['#B5AEEF', '#B3E4F1', '#B6EAAC', '#B0B0B0', '#FB9373', '#47B5B1', '#FFAE66', '#CE5962']
     }
   ];
