@@ -25,12 +25,17 @@ public class ApplicantVo implements Serializable {
     private double lat;
     private double lng;
     private String photo;
+    private String idNumber;
+    private String passportNumber;
 
-    public ApplicantVo(String fullNameAr, String fullNameEn, String uin, String photo, Double lat, Double lng) {
+    public ApplicantVo(String fullNameAr, String fullNameEn, String uin, String photo, Double lat, Double lng, String idNumber,
+             String passportNumber) {
         this.fullNameAr = fullNameAr;
         this.fullNameEn = fullNameEn;
         this.uin = uin;
         this.photo = photo;
+        this.idNumber= idNumber;
+        this.passportNumber= passportNumber;
         if (lat == null || lng == null) {
             this.lat = 0.0;
             this.lng = 0.0;

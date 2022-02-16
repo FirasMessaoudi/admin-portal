@@ -55,6 +55,7 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
     }
 
     public List<ApplicantVo> findGroupApplicantListBySuin(String suin) {
+        //TODO performance issue to be fixed
         //return getMapper().fromEntityList(groupApplicantListRepository.findByApplicantGroupGroupLeaderDigitalIdsSuin(suin), mappingContext);
         List<ApplicantVo> applicantLiteDtoList = new ArrayList<ApplicantVo>();
         List<JpaGroupApplicantList> groupApplicantLists = groupApplicantListRepository.findByApplicantGroupGroupLeaderDigitalIdsSuin(suin);
