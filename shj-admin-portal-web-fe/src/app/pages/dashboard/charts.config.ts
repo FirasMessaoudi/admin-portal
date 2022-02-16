@@ -1,5 +1,5 @@
-import {Color} from "ng2-charts";
-import {Chart, ChartType} from "chart.js";
+import { Color } from 'ng2-charts';
+import { Chart, ChartType } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const ACTIVE_LABEL: string = 'نشط';
@@ -11,7 +11,6 @@ const TOTAL_USERS_LABEL: string = 'إجمالي المستخدمين';
 const FONTS: string = '"Elm-font", sans-serif';
 
 export class ChartsConfig {
-
   constructor() {
     if (Chart.defaults.global.plugins.datalabels) {
       Chart.defaults.global.plugins.datalabels.color = 'white';
@@ -19,27 +18,30 @@ export class ChartsConfig {
     }
     Chart.defaults.global.plugins = [ChartDataLabels];
     Chart.defaults.global.defaultFontFamily = 'Elm-Font';
-
   }
 
   // barChart
   barChartData: Array<any> = [
     {
       data: new Array(24).fill(0),
-      label: 'جديد', stack: 'a'
+      label: 'جديد',
+      stack: 'a',
     },
     {
       data: new Array(24).fill(0),
-      label: ACTIVE_LABEL, stack: 'a'
+      label: ACTIVE_LABEL,
+      stack: 'a',
     },
     {
       data: new Array(24).fill(0),
-      label: INACTIVE_LABEL, stack: 'a'
+      label: INACTIVE_LABEL,
+      stack: 'a',
     },
     {
       data: new Array(24).fill(0),
-      label: DELETED_LABEL, stack: 'a'
-    }
+      label: DELETED_LABEL,
+      stack: 'a',
+    },
   ];
 
   barChartLabels: Array<any>;
@@ -48,32 +50,32 @@ export class ChartsConfig {
     maintainAspectRatio: true,
     elements: {
       line: {
-        fill: false
+        fill: false,
       },
       point: {
         hoverRadius: 7,
-        radius: 5
-      }
+        radius: 5,
+      },
     },
     tooltips: {
       titleFontFamily: FONTS,
       bodyFontFamily: FONTS,
       footerFontFamily: FONTS,
     },
-    plugins: // [ChartDataLabels],
-      {
-        datalabels: {
-          color: 'white',
-          display: function (context: any) {
-            return context.dataset.data[context.dataIndex] > 15;
-          },
-          textAlign: 'center',
-          font: {
-            weight: 'bold'
-          },
-          formatter: Math.round
+    // [ChartDataLabels],
+    plugins: {
+      datalabels: {
+        color: 'white',
+        display: function (context: any) {
+          return context.dataset.data[context.dataIndex] > 15;
         },
+        textAlign: 'center',
+        font: {
+          weight: 'bold',
+        },
+        formatter: Math.round,
       },
+    },
     legend: {
       labels: {
         fontFamily: FONTS,
@@ -82,15 +84,20 @@ export class ChartsConfig {
         fontColor: '#777',
         boxWidth: 10,
       },
-      position: 'bottom'
+      position: 'bottom',
     },
     scales: {
-      xAxes: [{
-        stacked: true,
-        gridLines: {
-          color: 'rgba(0, 0, 0, 0)',
+      xAxes: [
+        {
+          stacked: true,
+          gridLines: {
+            color: 'rgba(0, 0, 0, 0)',
+          },
+          ticks: {
+            fontSize: 40,
+          },
         },
-      }],
+      ],
       yAxes: [
         {
           stacked: true,
@@ -110,19 +117,19 @@ export class ChartsConfig {
           },
         },
       ],
-    }
+    },
   };
   lineChartOptions: any = {
     responsive: true,
     maintainAspectRatio: true,
     elements: {
       line: {
-        fill: false
+        fill: false,
       },
       point: {
         hoverRadius: 7,
-        radius: 5
-      }
+        radius: 5,
+      },
     },
     tooltips: {
       titleFontFamily: FONTS,
@@ -142,18 +149,20 @@ export class ChartsConfig {
         fontColor: '#777',
         boxWidth: 10,
       },
-      position: 'bottom'
+      position: 'bottom',
     },
     scales: {
-      xAxes: [{
-        stacked: true,
-        gridLines: {
-          color: 'rgba(0, 0, 0, 0)',
+      xAxes: [
+        {
+          stacked: true,
+          gridLines: {
+            color: 'rgba(0, 0, 0, 0)',
+          },
+          ticks: {
+            fontFamily: FONTS,
+          },
         },
-        ticks: {
-          fontFamily: FONTS,
-        }
-      }],
+      ],
       yAxes: [
         {
           gridLines: {
@@ -171,41 +180,94 @@ export class ChartsConfig {
           },
         },
       ],
-    }
+    },
   };
   pieChartColors: Color[] = [
     {
-      backgroundColor: ['#289E9A', '#FE9B43', '#AD323B', '#767676', '#FF4B12', '#7ABE6C', '#67C7E0', '#5E56A2'],
-      hoverBackgroundColor: ['#47B5B1', '#FFAE66', '#CE5962', '#B0B0B0', '#FB9373', '#B6EAAC', '#B3E4F1', '#B5AEEF']
-    }
+      backgroundColor: [
+        '#289E9A',
+        '#FE9B43',
+        '#AD323B',
+        '#767676',
+        '#FF4B12',
+        '#7ABE6C',
+        '#67C7E0',
+        '#5E56A2',
+      ],
+      hoverBackgroundColor: [
+        '#47B5B1',
+        '#FFAE66',
+        '#CE5962',
+        '#B0B0B0',
+        '#FB9373',
+        '#B6EAAC',
+        '#B3E4F1',
+        '#B5AEEF',
+      ],
+    },
   ];
   polarChartColors: Color[] = [
     {
-      backgroundColor: ['#5E56A2', '#67C7E0', '#7ABE6C', '#767676', '#FF4B12', '#289E9A', '#FE9B43', '#AD323B'],
-      hoverBackgroundColor: ['#B5AEEF', '#B3E4F1', '#B6EAAC', '#B0B0B0', '#FB9373', '#47B5B1', '#FFAE66', '#CE5962']
-    }
+      backgroundColor: [
+        '#5E56A2',
+        '#67C7E0',
+        '#7ABE6C',
+        '#767676',
+        '#FF4B12',
+        '#289E9A',
+        '#FE9B43',
+        '#AD323B',
+      ],
+      hoverBackgroundColor: [
+        '#B5AEEF',
+        '#B3E4F1',
+        '#B6EAAC',
+        '#B0B0B0',
+        '#FB9373',
+        '#47B5B1',
+        '#FFAE66',
+        '#CE5962',
+      ],
+    },
   ];
 
   doughnutChartColors: Color[] = [
     {
-      backgroundColor: ['#67C7E0', '#7ABE6C', '#FF4B12', '#289E9A', '#FE9B43', '#AD323B', '#5E56A2'],
-      hoverBackgroundColor: ['#B5AEEF', '#B3E4F1', '#B6EAAC', '#B0B0B0', '#FB9373', '#47B5B1', '#FFAE66', '#CE5962']
-    }
+      backgroundColor: [
+        '#5E56A2',
+        '#67C7E0',
+        '#7ABE6C',
+        '#FF4B12',
+        '#289E9A',
+        '#FE9B43',
+        '#AD323B',
+      ],
+      hoverBackgroundColor: [
+        '#B5AEEF',
+        '#B3E4F1',
+        '#B6EAAC',
+        '#B0B0B0',
+        '#FB9373',
+        '#47B5B1',
+        '#FFAE66',
+        '#CE5962',
+      ],
+    },
   ];
   barChartColors: Color[] = [
-    {backgroundColor: '#289E9A', hoverBackgroundColor: '#47B5B1'},
-    {backgroundColor: '#7ABE6C', hoverBackgroundColor: '#B6EAAC'},
-    {backgroundColor: '#FE9B43', hoverBackgroundColor: '#FFAE66'},
-    {backgroundColor: '#AD323B', hoverBackgroundColor: '#CE5962'},
-    {backgroundColor: '#767676', hoverBackgroundColor: '#B0B0B0'},
-    {backgroundColor: '#FF4B12', hoverBackgroundColor: '#FB9373'},
-    {backgroundColor: '#67C7E0', hoverBackgroundColor: '#B3E4F1'},
-    {backgroundColor: '#5E56A2', hoverBackgroundColor: '#B5AEEF'}
+    { backgroundColor: '#289E9A', hoverBackgroundColor: '#47B5B1' },
+    { backgroundColor: '#7ABE6C', hoverBackgroundColor: '#B6EAAC' },
+    { backgroundColor: '#FE9B43', hoverBackgroundColor: '#FFAE66' },
+    { backgroundColor: '#AD323B', hoverBackgroundColor: '#CE5962' },
+    { backgroundColor: '#767676', hoverBackgroundColor: '#B0B0B0' },
+    { backgroundColor: '#FF4B12', hoverBackgroundColor: '#FB9373' },
+    { backgroundColor: '#67C7E0', hoverBackgroundColor: '#B3E4F1' },
+    { backgroundColor: '#5E56A2', hoverBackgroundColor: '#B5AEEF' },
   ];
 
   lineChartColors: Color[] = [
-    {backgroundColor: '#BA9430', hoverBackgroundColor: '#BA9430'},
-    {backgroundColor: '#D5D5DD', hoverBackgroundColor: '#D5D5DD'},
+    { backgroundColor: '#BA9430', hoverBackgroundColor: '#BA9430' },
+    { backgroundColor: '#D5D5DD', hoverBackgroundColor: '#D5D5DD' },
   ];
 
   // doughnut
@@ -222,17 +284,17 @@ export class ChartsConfig {
         left: 12,
         right: 12,
         top: 12,
-        bottom: 0
-      }
+        bottom: 0,
+      },
     },
     elements: {
       line: {
-        fill: false
+        fill: false,
       },
       point: {
         hoverRadius: 7,
-        radius: 5
-      }
+        radius: 5,
+      },
     },
     plugins: {
       datalabels: {
@@ -254,10 +316,10 @@ export class ChartsConfig {
           return value > count * 1.5;
         },
         font: {
-          weight: 'bold'
+          weight: 'bold',
         },
-        formatter: Math.round
-      }
+        formatter: Math.round,
+      },
     },
     legend: {
       labels: {
@@ -267,7 +329,7 @@ export class ChartsConfig {
         fontColor: '#777',
         boxWidth: 10,
       },
-      position: 'bottom'
+      position: 'bottom',
     },
     animation: {
       onProgress: function (chart: any) {
@@ -276,7 +338,7 @@ export class ChartsConfig {
       onComplete: function (chart: any) {
         drawText(chart.chart, 4.5, TOTAL_USERS_LABEL);
       },
-    }
+    },
   };
 
   // PolarArea
@@ -290,16 +352,16 @@ export class ChartsConfig {
     responsive: true,
     maintainAspectRatio: false,
     layout: {
-      padding: 8
+      padding: 8,
     },
     elements: {
       line: {
-        fill: false
+        fill: false,
       },
       point: {
         hoverRadius: 7,
-        radius: 5
-      }
+        radius: 5,
+      },
     },
     plugins: {},
     legend: {
@@ -310,29 +372,30 @@ export class ChartsConfig {
         fontColor: '#777',
         boxWidth: 12,
       },
-      position: 'bottom'
-    }
+      position: 'bottom',
+    },
   };
-
 }
 
 const drawText = function (chart: any, fontSize: number, title: string) {
-  const width = chart.width, height = chart.height - 50, ctx = chart.ctx;
+  const width = chart.width,
+    height = chart.height - 50,
+    ctx = chart.ctx;
   let total = 0;
-  chart.data.datasets[0].data.forEach((v: any) => total += v);
+  chart.data.datasets[0].data.forEach((v: any) => (total += v));
   ctx.restore();
   ctx.font = fontSize + 'em ' + FONTS;
   ctx.textBaseline = 'middle';
   ctx.fillStyle = '#952d98';
-  const text = '' + total, legendHeight = chart.chart.legend.height,
+  const text = '' + total,
+    legendHeight = chart.chart.legend.height,
     textY = height / 2.3 + legendHeight;
   let textX = Math.round((width - ctx.measureText(text).width) / 2);
   ctx.fillText(text, textX, textY);
-  ctx.font = (+fontSize / 4.5) + 'em ' + FONTS;
+  ctx.font = +fontSize / 4.5 + 'em ' + FONTS;
   ctx.textBaseline = 'middle';
   ctx.fillStyle = '#777';
-  textX = Math.round((width - ctx.measureText(title).width) / 2)
-  ctx.fillText(title, textX, textY + (10 * +fontSize));
+  textX = Math.round((width - ctx.measureText(title).width) / 2);
+  ctx.fillText(title, textX, textY + 10 * +fontSize);
   ctx.save();
 };
-

@@ -9,23 +9,26 @@ import * as momentjs from 'moment';
 import { I18nService } from '@dcc-commons-ng/services';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
-import {Position} from "@model/marker.model";
-import {Loader} from "@googlemaps/js-api-loader";
-import {Cluster, ClusterStats, MarkerClusterer, Renderer} from "@googlemaps/markerclusterer";
-import {LookupService} from "@core/utilities/lookup.service";
-import { interpolateRgb } from 'd3-interpolate';
-import MVCArray = google.maps.MVCArray;
-import {ApplicantMobileTracking} from "@model/applicant-mobile-tracking.model";
-import {DatePipe} from "@angular/common";
+import { Loader } from '@googlemaps/js-api-loader';
+import { LookupService } from '@core/utilities/lookup.service';
+import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
+import { DatePipe } from '@angular/common';
 
 const moment = momentjs;
 const FONTS: string = '"Elm-font", sans-serif';
+const barChartBackgroundColors = [
+  '#2B7127',
+  '#4F8B4B',
+  '#79A476',
+  '#8CB189',
+  '#E1EAE0',
+];
 
 @Component({
   selector: 'app-mobile',
   templateUrl: './mobile.component.html',
   styleUrls: ['./mobile.component.scss'],
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
 export class MobileComponent implements OnInit {
   model = 1;
@@ -46,6 +49,10 @@ export class MobileComponent implements OnInit {
 
   loggedInUsers: Array<number> = [];
 
+  appUsersCount: Array<any>;
+  appUsersLabels: Array<any>;
+  backgroundColors: Array<any> = [];
+
   constructor(
     private authenticationService: AuthenticationService,
     private dashboardService: DashboardService,
@@ -58,6 +65,7 @@ export class MobileComponent implements OnInit {
 
   ngOnInit() {
     this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
+
     this.loadActiveApplicantWithLocations();
     this.chartsConfig.lineChartOptions.legend = false;
     this.dashboardService
@@ -71,7 +79,6 @@ export class MobileComponent implements OnInit {
 
     this.datasets = [
       {
-        //TODO Dummy Data
         fill: false,
         borderColor: '#BA9430',
         borderWidth: 2,
@@ -125,6 +132,7 @@ export class MobileComponent implements OnInit {
     });
 
     this.loadMaxCompanies();
+    this.loadMobileAppUsersByAgeRange();
   }
 
   loadMinCompanies() {
@@ -170,7 +178,40 @@ export class MobileComponent implements OnInit {
     );
   }
 
-  loadActiveApplicantWithLocations(){
+  loadMobileAppUsersByAgeRange() {
+    this.dashboardService
+      .loadMobileAppUsersByAgeRangeAndSeason(this.seasonYear)
+      .subscribe((data) => {
+        this.appUsersCount = data.map((d) => d.count);
+        this.appUsersLabels = data.map((d) => d.label);
+        this.changeChartColorsBasedOnValue(
+          this.appUsersCount,
+          barChartBackgroundColors
+        );
+      });
+  }
+
+  changeChartColorsBasedOnValue(data: Array<any>, colors: Array<string>) {
+    const sortedData = data.slice().sort((a, b) => a - b);
+    this.backgroundColors = this.appUsersCount.map((v) => {
+      if (sortedData.indexOf(v) >= data.length - 1) {
+        return colors[0];
+      }
+      if (sortedData.indexOf(v) >= data.length - 2) {
+        return colors[1];
+      }
+      if (sortedData.indexOf(v) >= data.length - 3) {
+        return colors[2];
+      }
+      if (sortedData.indexOf(v) >= data.length - 4) {
+        return colors[3];
+      } else {
+        return colors[4];
+      }
+    });
+  }
+
+  loadActiveApplicantWithLocations() {
     this.dashboardService
       .findActiveApplicantWithLocationBySeason(this.seasonYear)
       .subscribe((data) => {
@@ -179,29 +220,31 @@ export class MobileComponent implements OnInit {
       });
   }
 
-  loadHeatMap(){
+  loadHeatMap() {
     this.loadActiveApplicantWithLocations();
   }
+
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({ apiKey: result, libraries:['visualization'] });
+      let loader = new Loader({ apiKey: result, libraries: ['visualization'] });
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
           center: { lat: 21.423461874376475, lng: 39.825553299746616 },
           zoom: 5,
           scrollwheel: true,
         });
-       var  heatmap = new google.maps.visualization.HeatmapLayer({    data: this.getPoints(),    map: map,  });
-
+        var heatmap = new google.maps.visualization.HeatmapLayer({
+          data: this.getPoints(),
+          map: map,
+        });
       });
     });
   }
 
   getPoints() {
-    this.applicantMobileTrackings.forEach( (applicant) => {
-      this.locations.push( new google.maps.LatLng(applicant.lat, applicant.lng));
+    this.applicantMobileTrackings.forEach((applicant) => {
+      this.locations.push(new google.maps.LatLng(applicant.lat, applicant.lng));
     });
     return this.locations;
   }
-
 }

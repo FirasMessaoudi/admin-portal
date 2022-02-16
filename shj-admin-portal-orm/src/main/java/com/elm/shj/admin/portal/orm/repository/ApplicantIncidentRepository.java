@@ -33,13 +33,13 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
 
     @Query("SELECT COUNT(ai) FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar " +
             "JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
-            "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
+            "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
             "where ai.statusCode = 'UNDER_PROCESSING' AND rs.seasonYear= :seasonYear")
     long countAllUnResolvedIncidents(@Param("seasonYear") int seasonYear);
 
     @Query("SELECT COUNT(ai) FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar " +
             "JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
-            "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
+            "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
             "where ai.statusCode IN ('RESOLVED', 'CLOSED') AND rs.seasonYear= :seasonYear")
     long countAllResolvedIncidents(@Param("seasonYear") int seasonYear);
 

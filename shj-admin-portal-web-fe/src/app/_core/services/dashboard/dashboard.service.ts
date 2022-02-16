@@ -8,7 +8,7 @@ import { Lookup } from '@model/lookup.model';
 import { DashboardIncidentNumbersVo } from '@model/dashboardIncidentNumbersVo.model';
 import { Position } from '@app/_shared/model/marker.model';
 import { DashboardMobileNumbersVo } from '@model/dashboard-mobile-numbers-vo.model';
-import {ApplicantMobileTracking} from "@model/applicant-mobile-tracking.model";
+import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
 
 @Injectable({
   providedIn: 'root',
@@ -239,5 +239,16 @@ export class DashboardService {
 
   findCampSites(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/camp-site/list');
+  }
+
+  /**
+   * Load mobile app users by age range and hijri season
+   */
+  loadMobileAppUsersByAgeRangeAndSeason(
+    seasonYear: number
+  ): Observable<CountVo[]> {
+    return this.http.get<CountVo[]>(
+      '/core/api/dashboard/mobile/usage-by-age-range/' + seasonYear
+    );
   }
 }
