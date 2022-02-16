@@ -827,4 +827,18 @@ public class IntegrationWsController {
 
     }
 
+    @GetMapping("/applicant/relatives/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findApplicantRelatives(@PathVariable String applicantUin) {
+        ApplicantRitualDto latestApplicantRitual = applicantRitualService.findLatestApplicantRitual(applicantUin);
+        List<ApplicantRelativeDto> relatives = applicantRelativesService
+                .findApplicantRelativesInLastRitual(applicantUin, latestApplicantRitual.getPackageReferenceNumber());
+
+
+        return ResponseEntity.ok(
+                WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(relatives).build());
+
+    }
+
+
+
 }
