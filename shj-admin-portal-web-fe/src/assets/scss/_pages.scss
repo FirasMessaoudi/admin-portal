@@ -871,7 +871,7 @@ textarea {
 .flip {
   svg {
     [dir="rtl"] & {
-      transform: rotate(180deg);
+      transform: scaleX(-1);
     }
   }
 }

@@ -9,7 +9,6 @@ import { ChartsConfig } from '@pages/dashboard/charts.config';
 import { DashboardVo } from '@shared/model';
 import { I18nService } from '@dcc-commons-ng/services';
 import { ActivatedRoute } from '@angular/router';
-import { campSites } from '@pages/dashboard/general-numbers/camp-sites';
 
 @Component({
   selector: 'app-general-numbers',
@@ -28,7 +27,7 @@ export class GeneralNumbersComponent implements OnInit {
   countVoList: CountVo[];
   minCompanies: boolean;
   minCamps: boolean;
-  campSites: any = campSites;
+  campSites: Lookup[] = [];
   private currentSeasonSubscription: Subscription;
   private previousSeasonSubscription: Subscription;
   private applicantsPerNationalitiesSubscription: Subscription;
@@ -44,17 +43,16 @@ export class GeneralNumbersComponent implements OnInit {
 
   private loadSubscription: Subscription;
   seasonYear: any;
-  selectedCampSiteCode: any;
+  selectedCampSiteCode: any = 'MENA';
 
   constructor(
     private dashboardService: DashboardService,
-    private lookupService: LookupService,
     private i18nService: I18nService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private lookupsService: LookupService,
   ) {}
 
   ngOnInit() {
-    this.selectedCampSiteCode = campSites[0].code;
     this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
     this.loadLookups();
     this.chartsConfig.barChartOptions.legend = false;
@@ -98,7 +96,7 @@ export class GeneralNumbersComponent implements OnInit {
         this.applicantsPerNationalities = data;
         this.applicantsPerNationalities.forEach((element) => {
           this.totalCountsNationalities += element.count;
-          element.label = this.lookupService.localizedLabel(
+          element.label = this.lookupsService.localizedLabel(
             this.countryList,
             element.label
           );
@@ -113,10 +111,18 @@ export class GeneralNumbersComponent implements OnInit {
     this.dashboardService
       .findNationalities()
       .subscribe((data) => (this.countryList = data));
+
+    this.dashboardService
+      .findCampSites()
+      .subscribe((data) => (this.campSites = data));
   }
 
   get currentLanguage(): string {
     return this.i18nService.language;
+  }
+
+  lookupService(): LookupService {
+    return this.lookupsService;
   }
 
   ngOnDestroy() {

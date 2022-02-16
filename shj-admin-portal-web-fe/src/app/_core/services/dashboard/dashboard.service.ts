@@ -8,6 +8,7 @@ import { Lookup } from '@model/lookup.model';
 import { DashboardIncidentNumbersVo } from '@model/dashboardIncidentNumbersVo.model';
 import { Position } from '@app/_shared/model/marker.model';
 import { DashboardMobileNumbersVo } from '@model/dashboard-mobile-numbers-vo.model';
+import {ApplicantMobileTracking} from "@model/applicant-mobile-tracking.model";
 
 @Injectable({
   providedIn: 'root',
@@ -223,5 +224,20 @@ export class DashboardService {
     return this.http.get<number[]>(
       '/core/api/dashboard/mobile/logged-in-users/' + seasonYear
     );
+  }
+
+  /**
+   * Load active applicants with locations by season
+   */
+  findActiveApplicantWithLocationBySeason(
+    seasonYear: number
+  ): Observable<ApplicantMobileTracking[]> {
+    return this.http.get<ApplicantMobileTracking[]>(
+      '/core/api/dashboard/mobile/active-applicants-locations/' + seasonYear
+    );
+  }
+
+  findCampSites(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/camp-site/list');
   }
 }

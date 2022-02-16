@@ -15,6 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplicantRitualPackageVo {
+
     private Long applicantPackageId;
     private long applicantUin;
     private Date startDate;

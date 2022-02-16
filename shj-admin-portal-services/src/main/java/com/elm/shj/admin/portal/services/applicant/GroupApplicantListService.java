@@ -3,7 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantVo;
 import com.elm.shj.admin.portal.orm.entity.JpaGroupApplicantList;
+import com.elm.shj.admin.portal.orm.repository.ApplicantLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.GroupApplicantListRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantGroupDto;
 import com.elm.shj.admin.portal.services.dto.GroupApplicantListDto;
@@ -12,7 +14,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -27,8 +33,11 @@ import java.util.Optional;
 public class GroupApplicantListService extends GenericService<JpaGroupApplicantList, GroupApplicantListDto, Long> {
 
     private final GroupApplicantListRepository groupApplicantListRepository;
+    private final ApplicantLiteRepository applicantLiteRepository;
     private final ApplicantGroupService applicantGroupService;
+    private final ApplicantLiteService applicantLiteService;
 
+    @Transactional
     public boolean registerUserToGroup(String applicantUin, String referenceNumber) {
 
         ApplicantGroupDto applicantGroup = applicantGroupService.getApplicantGroupByReferenceNumber(referenceNumber);
@@ -37,12 +46,27 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
             Optional<JpaGroupApplicantList> groupApplicantListOptional = groupApplicantListRepository.findByApplicantUinAndApplicantGroupReferenceNumber(applicantUin, referenceNumber);
             if (!groupApplicantListOptional.isPresent()) {
                 GroupApplicantListDto groupApplicantListDto = GroupApplicantListDto.builder().applicantUin(applicantUin).applicantGroup(applicantGroup).build();
-                this.save(groupApplicantListDto);
+                List<GroupApplicantListDto> groupList =new ArrayList<>();
+                groupList.add(groupApplicantListDto);
+                applicantGroup.setGroupApplicantLists(groupList);
+                 save(groupApplicantListDto);
                 return true;
             }
 
         }
 
         return false;
+    }
+
+    public List<ApplicantVo> findGroupApplicantListBySuin(String suin) {
+        //TODO performance issue to be fixed
+        //return getMapper().fromEntityList(groupApplicantListRepository.findByApplicantGroupGroupLeaderDigitalIdsSuin(suin), mappingContext);
+        List<ApplicantVo> applicantLiteDtoList = new ArrayList<ApplicantVo>();
+        List<JpaGroupApplicantList> groupApplicantLists = groupApplicantListRepository.findByApplicantGroupGroupLeaderDigitalIdsSuin(suin);
+        groupApplicantLists.forEach((c) -> {
+            applicantLiteDtoList.add(applicantLiteRepository.findApplicantDetailsWithLocationByUin(c.getApplicantUin()));
+        });
+        applicantLiteDtoList.removeAll(Collections.singleton(null));
+        return applicantLiteDtoList;
     }
 }

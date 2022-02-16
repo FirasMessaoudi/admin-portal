@@ -24,6 +24,7 @@ import java.util.Date;
 public class ChatMessageVo implements Serializable {
 
     private static final long serialVersionUID = -4352620262606672595L;
+
     private long contactId;
     private String contactUin;
     private String messageText;

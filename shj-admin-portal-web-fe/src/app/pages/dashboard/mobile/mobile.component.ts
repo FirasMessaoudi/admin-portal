@@ -9,6 +9,14 @@ import * as momentjs from 'moment';
 import { I18nService } from '@dcc-commons-ng/services';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
+import {Position} from "@model/marker.model";
+import {Loader} from "@googlemaps/js-api-loader";
+import {Cluster, ClusterStats, MarkerClusterer, Renderer} from "@googlemaps/markerclusterer";
+import {LookupService} from "@core/utilities/lookup.service";
+import { interpolateRgb } from 'd3-interpolate';
+import MVCArray = google.maps.MVCArray;
+import {ApplicantMobileTracking} from "@model/applicant-mobile-tracking.model";
+import {DatePipe} from "@angular/common";
 
 const moment = momentjs;
 const FONTS: string = '"Elm-font", sans-serif';
@@ -17,6 +25,7 @@ const FONTS: string = '"Elm-font", sans-serif';
   selector: 'app-mobile',
   templateUrl: './mobile.component.html',
   styleUrls: ['./mobile.component.scss'],
+  providers: [DatePipe]
 })
 export class MobileComponent implements OnInit {
   model = 1;
@@ -30,6 +39,10 @@ export class MobileComponent implements OnInit {
   companyLabels: Array<any>;
   companyCounts: Array<any>;
   seasonYear: any;
+  applicantMobileTrackings: ApplicantMobileTracking[];
+  locations: Array<any> = [];
+
+  MAP_ZOOM_OUT = 10;
 
   loggedInUsers: Array<number> = [];
 
@@ -38,11 +51,14 @@ export class MobileComponent implements OnInit {
     private dashboardService: DashboardService,
     private i18nService: I18nService,
     private translate: TranslateService,
+    private lookupService: LookupService,
+    public datePipe: DatePipe,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
+    this.loadActiveApplicantWithLocations();
     this.chartsConfig.lineChartOptions.legend = false;
     this.dashboardService
       .loadMobileAppDownloadsNumbers(this.seasonYear)
@@ -153,4 +169,39 @@ export class MobileComponent implements OnInit {
       EAuthority.MOBILE_TRACKING_DASHBOARD
     );
   }
+
+  loadActiveApplicantWithLocations(){
+    this.dashboardService
+      .findActiveApplicantWithLocationBySeason(this.seasonYear)
+      .subscribe((data) => {
+        this.applicantMobileTrackings = data;
+        this.loadMapkey();
+      });
+  }
+
+  loadHeatMap(){
+    this.loadActiveApplicantWithLocations();
+  }
+  async loadMapkey() {
+    this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
+      let loader = new Loader({ apiKey: result, libraries:['visualization'] });
+      loader.load().then(() => {
+        const map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: 21.423461874376475, lng: 39.825553299746616 },
+          zoom: 5,
+          scrollwheel: true,
+        });
+       var  heatmap = new google.maps.visualization.HeatmapLayer({    data: this.getPoints(),    map: map,  });
+
+      });
+    });
+  }
+
+  getPoints() {
+    this.applicantMobileTrackings.forEach( (applicant) => {
+      this.locations.push( new google.maps.LatLng(applicant.lat, applicant.lng));
+    });
+    return this.locations;
+  }
+
 }

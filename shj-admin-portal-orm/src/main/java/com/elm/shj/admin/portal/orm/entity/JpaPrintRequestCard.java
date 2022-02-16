@@ -25,15 +25,19 @@ import java.util.Date;
 public class JpaPrintRequestCard implements Serializable {
 
     private static final long serialVersionUID = -3160791580855210723L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
     private long id;
+
     @ManyToOne
     @JoinColumn(name = "print_request_id")
     private JpaPrintRequest printRequest;
+
     @Column(name = "card_id")
     private long cardId;
+
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 

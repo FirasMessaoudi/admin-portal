@@ -38,7 +38,6 @@ public class JpaApplicantPackageHousing implements Serializable {
     @Column(name = "bed_number")
     private String bedNumber;
 
-
     @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 

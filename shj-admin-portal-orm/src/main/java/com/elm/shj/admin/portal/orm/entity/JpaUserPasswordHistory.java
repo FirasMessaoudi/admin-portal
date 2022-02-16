@@ -24,6 +24,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class JpaUserPasswordHistory implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id

@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantMobileTrackingVo;
 import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.LocationVo;
 import com.elm.shj.admin.portal.services.dashboard.*;
@@ -177,6 +178,13 @@ public class DashboardController {
     public List<Integer> loadMobileLoggedInUsers(@PathVariable("seasonYear") int seasonYear) {
         log.info("Handling loadMobileLoggedInUsers endpoint.");
         return dashboardService.getMobileLoggedInUsers(seasonYear);
+    }
+
+    @GetMapping("/mobile/active-applicants-locations/{seasonYear}")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<ApplicantMobileTrackingVo> findActiveApplicantWithLocationBySeason(@PathVariable("seasonYear") int seasonYear) {
+        log.info("Handling findActiveApplicantWithLocationBySeason endpoint.");
+        return dashboardService.findActiveApplicantWithLocationBySeason(seasonYear);
     }
 
 }

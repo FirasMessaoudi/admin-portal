@@ -107,7 +107,7 @@ public class CompanyStaffDto {
     private String email;
 
     private DataRequestRecordDto dataRequestRecord;
-    @JsonBackReference(value = "digitalIds")
+  @JsonBackReference(value = "digitalIds")
     private List<CompanyStaffDigitalIdDto> digitalIds;
 
     private String countryCode;
