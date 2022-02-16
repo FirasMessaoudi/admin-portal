@@ -37,5 +37,7 @@ public interface CompanyStaffDigitalIdRepository extends JpaRepository<JpaCompan
     @Query("select c.statusCode from JpaCompanyStaffDigitalId  c where c.suin = :suin")
     String findStaffSuinStatusCode(@Param("suin") String suin);
 
-    ;
+
+    @Query("select cdi.suin from JpaCompanyStaffDigitalId  cdi where cdi.companyStaff.id=:staffId AND cdi.seasonYear=:seasonYear AND cdi.statusCode=:statusCode ")
+    String findStaffSuinByStaffIdAndStatusCodeAndSeasonYear(@Param("staffId") long staffId,@Param("seasonYear") int seasonYear,@Param("statusCode")  String statusCode);
 }
