@@ -219,8 +219,8 @@
             </div>
             <select [(ngModel)]="selectedCampSiteCode" class="col-3 custom-select"
                     (ngModelChange)="onCampSiteChange()">
-              <option *ngFor="let camp of campSites"
-                      [ngValue]="camp.code">{{currentLanguage.startsWith('ar') ? camp.labelAr : camp.labelEn}}</option>
+              <option *ngFor="let camp of lookupService().localizedItems(campSites)"
+                      [ngValue]="camp.code">{{camp.label}}</option>
             </select>
           </div>
           <div class="py-3">

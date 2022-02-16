@@ -11,5 +11,5 @@ package com.elm.shj.admin.portal.services.dto;
  */
 public enum ECampSite {
 
-    ARAFAT, MINA
+    ARAFAT, MENA
 }

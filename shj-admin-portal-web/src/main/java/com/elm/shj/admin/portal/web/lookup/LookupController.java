@@ -155,6 +155,12 @@ public class LookupController {
         return housingSiteLookupService.findAll();
     }
 
+    @GetMapping("/camp-site/list")
+    public List<HousingSiteLookupDto> listCampSites(Authentication authentication) {
+        log.debug("list camp sites...");
+        return housingSiteLookupService.findCampSites();
+    }
+
     @GetMapping("/transportation-type/list")
     public List<TransportationTypeLookupDto> listTransportationTypes(Authentication authentication) {
         log.debug("list transportation type...");
@@ -190,6 +196,7 @@ public class LookupController {
         log.debug("list notification template statuses...");
         return notificationTemplateStatusLookupService.findAll();
     }
+
     @GetMapping("/health-immunization/list")
     public List<HealthImmunizationLookupDto> listImmunization() {
         log.debug("list health immunizations...");
@@ -242,14 +249,12 @@ public class LookupController {
     public List<CompanyLiteDto> listCompanyNames() {
         log.debug("list company names...");
         return companyLiteService.findAll();
-
     }
 
     @GetMapping("/ritual-seasons/list")
     public List<RitualSeasonDto> listRitualSeasons() {
         log.debug("list ritual seasons...");
         return ritualSeasonService.findAll();
-
     }
 
     @GetMapping("/ritual-seasons-years/list")
