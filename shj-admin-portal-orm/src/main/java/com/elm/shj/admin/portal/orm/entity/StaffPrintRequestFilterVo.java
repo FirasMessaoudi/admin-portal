@@ -18,8 +18,8 @@ import java.io.Serializable;
 @Setter
 public class StaffPrintRequestFilterVo implements Serializable {
 
-
     private static final long serialVersionUID = -8414842137514438188L;
+
     private String statusCode;
     private String description;
     private int season;

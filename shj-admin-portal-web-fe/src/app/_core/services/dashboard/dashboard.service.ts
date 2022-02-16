@@ -236,4 +236,8 @@ export class DashboardService {
       '/core/api/dashboard/mobile/active-applicants-locations/' + seasonYear
     );
   }
+
+  findCampSites(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/camp-site/list');
+  }
 }

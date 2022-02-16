@@ -49,7 +49,6 @@ public class JpaCompanyRitualSeasonLite implements Serializable {
     @Column(name = "season_end", nullable = false)
     private long seasonEnd;
 
-
     @Column(name = "creation_date")
     private Date creationDate;
 

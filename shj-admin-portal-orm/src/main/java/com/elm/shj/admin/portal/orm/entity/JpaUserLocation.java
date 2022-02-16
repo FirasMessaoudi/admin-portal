@@ -26,6 +26,7 @@ public class JpaUserLocation implements Serializable {
 
 
     private static final long serialVersionUID = 3413128593173931801L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)

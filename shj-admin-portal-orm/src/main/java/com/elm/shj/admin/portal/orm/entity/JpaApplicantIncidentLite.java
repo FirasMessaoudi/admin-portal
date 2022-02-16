@@ -38,7 +38,6 @@ public class JpaApplicantIncidentLite implements Serializable {
     @Column(name = "reference_number")
     private String referenceNumber;
 
-
     @Column(name = "applicant_ritual_id")
     private long applicantRitualId;
 
@@ -59,7 +58,6 @@ public class JpaApplicantIncidentLite implements Serializable {
     @Column(name = "resolution_comment")
     private String resolutionComment;
 
-
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantIncidentLite")
     private List<JpaIncidentAttachmentLite>  incidentAttachments;
@@ -69,7 +67,6 @@ public class JpaApplicantIncidentLite implements Serializable {
 
     @Column(name = "update_date")
     private Date updateDate;
-
 
     @PrePersist
     public void prePersist() {
