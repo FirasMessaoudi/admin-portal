@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.ApplicantChatContactVo;
 import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantChatContact;
 import com.elm.shj.admin.portal.orm.repository.ApplicantChatContactRepository;
+import com.elm.shj.admin.portal.orm.repository.CompanyStaffDigitalIdRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -36,6 +37,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
     private final ApplicantChatContactRepository applicantChatContactRepository;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantPackageService applicantPackageService;
+    private final CompanyStaffDigitalIdRepository companyStaffDigitalIdRepository;
 
     /**
      * List all chat contacts of a specific applicant.
@@ -153,11 +155,13 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         return save(applicantChatContact);
     }
 
-    public void createGroupLeaderContact(String applicantUin, CompanyStaffDto companyStaff) {
+    @Transactional
+    public void createGroupLeaderContact(String applicantUin, CompanyStaffDto companyStaff,int seasonYear) {
         ApplicantRitualPackageVo latestApplicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(applicantUin));
+       String leaderSuin= companyStaffDigitalIdRepository.findStaffSuinByStaffIdAndStatusCodeAndSeasonYear(companyStaff.getId(),seasonYear,EStaffDigitalIdStatus.VALID.name());
         ApplicantChatContactDto contactBuilder = ApplicantChatContactDto.builder()
                 .applicantUin(applicantUin)
-                .contactUin(companyStaff.getDigitalIds().get(0).getSuin())
+                .contactUin(leaderSuin)
                 .mobileNumber(companyStaff.getMobileNumber() != null ? companyStaff.getMobileNumber() : companyStaff.getMobileNumberIntl())
                 //TODO country code and nationality code may not match
                 //TODO Missing country code prefix and country code
@@ -168,7 +172,14 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .staffTitleCode(companyStaff.getTitleCode())
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.STAFF.getId()).build())
                 .build();
+        Optional<JpaApplicantChatContact> applicantChatContact = applicantChatContactRepository.findByApplicantUinAndContactUinAndDeletedFalse(applicantUin, contactBuilder.getContactUin());
+        ApplicantChatContactDto chatContact = applicantChatContact.isPresent() ? getMapper().fromEntity(applicantChatContact.get(), mappingContext) : null;
 
+        if (chatContact != null) {
+            log.debug("update System Defined Applicant Chat Contact applicantUin: {} groupLeaderSuin: {}", applicantUin, contactBuilder.getContactUin());
+            contactBuilder.setId(chatContact.getId());
+            contactBuilder.setCreationDate(chatContact.getCreationDate());
+        }
         save(contactBuilder);
     }
 
@@ -282,9 +293,11 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         }
         if (relativeRelationshipCode.equalsIgnoreCase(BROTHER.name()) && Gender.equalsIgnoreCase("F")) {
             return SISTER.name();
-        }if (relativeRelationshipCode.equalsIgnoreCase(COMPANION.name())) {
+        }
+        if (relativeRelationshipCode.equalsIgnoreCase(COMPANION.name())) {
             return COMPANION.name();
-        }if (relativeRelationshipCode.equalsIgnoreCase(RELATIVE.name()) ) {
+        }
+        if (relativeRelationshipCode.equalsIgnoreCase(RELATIVE.name())) {
             return RELATIVE.name();
         }
 
