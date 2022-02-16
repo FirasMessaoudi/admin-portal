@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dashboard;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantMobileTrackingVo;
 import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
 import com.elm.shj.admin.portal.orm.entity.LocationVo;
@@ -348,5 +349,9 @@ public class DashboardService {
     public List<Integer> getMobileLoggedInUsers(int seasonYear) {
         Date startDate = Date.from(Instant.from(LocalDate.now().minusDays(7).atStartOfDay(ZoneId.systemDefault())));
         return mobileAuditLogRepository.getMobileLoggedInUsers(seasonYear, hajjRituals, startDate);
+    }
+
+    public List<ApplicantMobileTrackingVo> findActiveApplicantWithLocationBySeason(int seasonYear) {
+        return applicantRepository.findActiveApplicantWithLocationBySeason(seasonYear);
     }
 }
