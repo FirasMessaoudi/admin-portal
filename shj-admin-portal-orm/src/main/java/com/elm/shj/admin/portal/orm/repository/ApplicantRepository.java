@@ -130,6 +130,6 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantMobileTrackingVo(crs.company.code, a.nationalityCode, ul.gpsTime, adi.uin, ul.latitude, ul.longitude) " +
             "FROM JpaApplicant a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id JOIN JpaUserLocation ul ON ul.userId = adi.uin " +
             "JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
-            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND a.mobileLoggedIn = TRUE AND ul.userType= 'APPLICANT' ")
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND ul.userType= 'APPLICANT' ")
     List<ApplicantMobileTrackingVo> findActiveApplicantWithLocationBySeason(@Param("seasonYear") int seasonYear);
 }
