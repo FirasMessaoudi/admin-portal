@@ -1,5 +1,5 @@
-import { Color } from 'ng2-charts';
-import { Chart, ChartType } from 'chart.js';
+import {Color} from 'ng2-charts';
+import {Chart, ChartType} from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const ACTIVE_LABEL: string = 'نشط';
@@ -231,13 +231,13 @@ export class ChartsConfig {
   doughnutChartColors: Color[] = [
     {
       backgroundColor: [
-        '#5E56A2',
         '#67C7E0',
         '#7ABE6C',
         '#FF4B12',
         '#289E9A',
         '#FE9B43',
         '#AD323B',
+        '#5E56A2'
       ],
       hoverBackgroundColor: [
         '#B5AEEF',

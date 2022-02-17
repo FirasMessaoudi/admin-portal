@@ -64,7 +64,7 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
         List<ApplicantVo> applicantLiteDtoList = new ArrayList<ApplicantVo>();
         List<JpaGroupApplicantList> groupApplicantLists = groupApplicantListRepository.findByApplicantGroupGroupLeaderDigitalIdsSuin(suin);
         groupApplicantLists.forEach((c) -> {
-            applicantLiteDtoList.add(applicantLiteRepository.findApplicantDetailsWithLocationByUin(c.getApplicantUin()));
+            applicantLiteDtoList.add(applicantLiteRepository.findApplicantDetailsWithLocationByUin(c.getApplicantUin()).get(0));
         });
         applicantLiteDtoList.removeAll(Collections.singleton(null));
         return applicantLiteDtoList;

@@ -116,18 +116,20 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(a),'') " +
             "FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
-            "WHERE  c.labelAr is NOT NULL AND a.mobileLoggedIn IS NOT NULL AND rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr) DESC")
+            "WHERE  rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') AND " +
+            "c.labelAr is NOT NULL AND a.mobileLoggedIn IS NOT NULL AND rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr) DESC")
     Page<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount(@Param("seasonYear") int seasonYear, Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(a),'') " +
             "FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
-            "WHERE c.labelAr is NOT NULL AND a.mobileLoggedIn IS NOT NULL AND rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr)")
+            "WHERE rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') AND " +
+            "c.labelAr is NOT NULL AND a.mobileLoggedIn IS NOT NULL AND rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr)")
     Page<CountVo> loadCompaniesWithMinApplicantsRegisteredCount(@Param("seasonYear") int seasonYear, Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantMobileTrackingVo(crs.company.code, a.nationalityCode, ul.gpsTime, adi.uin, ul.latitude, ul.longitude) " +
             "FROM JpaApplicant a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id JOIN JpaUserLocation ul ON ul.userId = adi.uin " +
             "JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
-            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND a.mobileLoggedIn = TRUE AND ul.userType= 'APPLICANT' ")
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND ul.userType= 'APPLICANT' ")
     List<ApplicantMobileTrackingVo> findActiveApplicantWithLocationBySeason(@Param("seasonYear") int seasonYear);
 }

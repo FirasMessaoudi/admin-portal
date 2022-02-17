@@ -3,6 +3,7 @@ import {ChartsConfig} from '@pages/dashboard/charts.config';
 import {CountVo} from '@app/_shared/model/countVo.model';
 import {ChartOptions, ChartType} from 'chart.js';
 import {Label, PluginServiceGlobalRegistrationAndOptions, SingleDataSet} from 'ng2-charts';
+import {I18nService} from "@dcc-commons-ng/services";
 
 @Component({
   selector: 'app-doughnut-chart',
@@ -31,12 +32,12 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
   };
   public doughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
 
-  constructor() {
+  constructor(private i18nService: I18nService) {
   }
 
   ngOnInit() {
     this.doughnutChartLabels = new Array(this.data.length).fill('')
-      .map((v: any, i: number) => this.data[i].label + ": %" + this.data[i].percentage);
+      .map((v: any, i: number) => this.i18nService.language.startsWith('en') ? this.data[i].label + ": " + this.data[i].percentage + "%" : this.data[i].label + ": %" + this.data[i].percentage);
     this.doughnutChartData = new Array(this.data.length).fill('')
       .map((v: any, i: number) => this.data[i].count);
 
@@ -57,14 +58,14 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
           ctx.textBaseline = "middle";
           var text = changes.centerValue.currentValue,
             textX = Math.round((width - ctx.measureText(text).width) / 2),
-            textY = height / 2;
-          var textZ = height / 2.5;
+            textY = height / 2.2;
+          var textZ = height / 2.3;
           ctx.fillText(text, textX, textZ);
 
           ctx.textBaseline = "middle";
           var textLabel = changes.centerTitle.currentValue,
             textLabelX = Math.round((width - ctx.measureText(textLabel).width) / 2),
-            textLabelY = height / 2;
+            textLabelY = height / 1.9;
           var textLabelZ = height / 1.5;
           ctx.fillText(textLabel, textLabelX, textLabelY);
           ctx.save();
