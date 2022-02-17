@@ -4,6 +4,7 @@ import {CountVo} from '@app/_shared/model/countVo.model';
 import {ChartOptions, ChartType} from 'chart.js';
 import {Label, PluginServiceGlobalRegistrationAndOptions, SingleDataSet} from 'ng2-charts';
 import {I18nService} from "@dcc-commons-ng/services";
+import 'chartjs-plugin-labels';
 
 @Component({
   selector: 'app-doughnut-chart',
@@ -24,11 +25,23 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
   public doughnutChartData: SingleDataSet;
   public doughnutChartType: ChartType = 'doughnut';
   chartsConfig: ChartsConfig = new ChartsConfig();
-  currentSeasonPercentage: number;
-  previousSeasonPercentage: number;
   public doughnutChartOptions: ChartOptions = {
     responsive: true,
     cutoutPercentage: 70,
+    plugins: {
+      labels: {
+        render: 'label',
+        fontColor: '#000',
+        position: 'outside',
+        fontStyle: 'bold',
+      },
+      datalabels: {
+        display: false
+      }
+    },
+    tooltips: {
+      enabled: false
+    }
   };
   public doughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
 
@@ -37,7 +50,7 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.doughnutChartLabels = new Array(this.data.length).fill('')
-      .map((v: any, i: number) => this.i18nService.language.startsWith('en') ? this.data[i].label + ": " + this.data[i].percentage + "%" : this.data[i].label + ": %" + this.data[i].percentage);
+      .map((v: any, i: number) => this.i18nService.language.startsWith('en') ? '\n' + this.data[i].label + "\n" + this.data[i].percentage + "%" : '\n' + this.data[i].label + "\n" + this.data[i].percentage + '%');
     this.doughnutChartData = new Array(this.data.length).fill('')
       .map((v: any, i: number) => this.data[i].count);
 
@@ -48,13 +61,12 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
     if (changes.centerTitle && changes.centerValue) {
       this.doughnutChartPlugins = [{
         beforeDraw(chart) {
-          var data = chart.data.datasets[0].data;
           var width = chart.width,
             height = (chart.chartArea.top + chart.chartArea.bottom),
             ctx = chart.ctx;
           ctx.restore();
-          var fontSize = (height / 15).toFixed(2);
-          ctx.font = fontSize + "px Arial";
+          var valueFontSize = (height / 10).toFixed(2);
+          ctx.font = 'bold ' + valueFontSize + "px Arial";
           ctx.textBaseline = "middle";
           var text = changes.centerValue.currentValue,
             textX = Math.round((width - ctx.measureText(text).width) / 2),
@@ -63,6 +75,8 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
           ctx.fillText(text, textX, textZ);
 
           ctx.textBaseline = "middle";
+          var labelFontSize = (height / 15).toFixed(2);
+          ctx.font = labelFontSize + "px Arial";
           var textLabel = changes.centerTitle.currentValue,
             textLabelX = Math.round((width - ctx.measureText(textLabel).width) / 2),
             textLabelY = height / 1.9;
