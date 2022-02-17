@@ -76,7 +76,7 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
     )
     List<ApplicantStaffVO> findApplicantRitualByUin(@Param("uin") String uin, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
 
-    @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantVo(a.fullNameAr, a.fullNameEn, adi.uin, a.photo, l.latitude , l.longitude,a.idNumber,a.passportNumber) From JpaApplicant a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id LEFT JOIN JpaUserLocation l ON l.userId = adi.uin WHERE adi.uin = :uin")
-    ApplicantVo findApplicantDetailsWithLocationByUin(@Param("uin") String uin);
+    @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantVo(a.fullNameAr, a.fullNameEn, adi.uin, a.photo, l.latitude , l.longitude,a.idNumber,a.passportNumber) From JpaApplicant a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id LEFT JOIN JpaUserLocation l ON l.userId = adi.uin WHERE adi.uin = :uin order by l.creationDate desc")
+    List<ApplicantVo> findApplicantDetailsWithLocationByUin(@Param("uin") String uin);
 
 }

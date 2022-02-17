@@ -229,8 +229,8 @@ export class MobileComponent implements OnInit {
       let loader = new Loader({ apiKey: result, libraries: ['visualization'] });
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
-          center: { lat: 21.423461874376475, lng: 39.825553299746616 },
-          zoom: 5,
+          center: { lat: this.applicantMobileTrackings[0].lat, lng: this.applicantMobileTrackings[0].lng },
+          zoom: 14,
           scrollwheel: true,
         });
         var heatmap = new google.maps.visualization.HeatmapLayer({
