@@ -4,8 +4,8 @@ delete from  shc_portal.shc_portal.shc_package_type_lk where id > 0
     GO
 SET IDENTITY_INSERT shc_portal.shc_package_type_lk ON;
 GO
-INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (6, N'VIP', N'en', N'VIP', GETDATE());
-INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (7, N'VIP', N'ar', N'مميز', GETDATE());
+INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (6, N'INTERNAL_HAJJ', N'en', N'INTERNAL_HAJJ', GETDATE());
+INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (7, N'INTERNAL_HAJJ', N'ar', N'حج داخلي', GETDATE());
 INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (8, N'EXTERNAL_HAJJ', N'en', N'EXTERNAL HAJJ', GETDATE());
 INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (9, N'EXTERNAL_UMRAH', N'en', N'EXTERNAL UMRAH', GETDATE());
 INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (10, N'INTERNAL_UMRAH', N'en', N'INTERNAL UMRAH', GETDATE());
@@ -166,12 +166,12 @@ delete from  shc_portal.shc_portal.shc_applicant_group where id > 0
     GO
 SET IDENTITY_INSERT shc_portal.shc_applicant_group ON;
 GO
-INSERT INTO shc_portal.shc_portal.shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES (1, 1, N'4343', null, null, 1, 1, null, null, GETDATE(), null);
+INSERT INTO shc_portal.shc_portal.shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES (1, 1, N'INTERNALHAJJ43', null, null, 1, 1, null, null, GETDATE(), null);
 INSERT INTO shc_portal.shc_portal.shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES (2, 1, N'EXTERNALHAJJ43', null, null, 5, 2, null, null, GETDATE(), null);
 INSERT INTO shc_portal.shc_portal.shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES (3, 1, N'EXTERNALUMRAH43', null, null, 1, 3, null, null, GETDATE(), null);
 INSERT INTO shc_portal.shc_portal.shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES (4, 1, N'INTERNALUMRAH43', null, null, 5, 4, null, null, GETDATE(), null);
 INSERT INTO shc_portal.shc_portal.shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES (5, 1, N'COURTESYHAJJ43', null, null, 1, 5, null, null, GETDATE(), null);
-INSERT INTO shc_portal.shc_portal.shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES (6, 1, N'4242', null, null, 1, 6, null, null, GETDATE(), null);
+INSERT INTO shc_portal.shc_portal.shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES (6, 1, N'INTERNALHAJJ42', null, null, 1, 6, null, null, GETDATE(), null);
 INSERT INTO shc_portal.shc_portal.shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES (7, 1, N'EXTERNALHAJJ42', null, null, 5, 7, null, null, GETDATE(), null);
 INSERT INTO shc_portal.shc_portal.shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES (8, 1, N'EXTERNALUMRAH42', null, null, 1, 8, null, null, GETDATE(), null);
 INSERT INTO shc_portal.shc_portal.shc_applicant_group (id, local_office_id, reference_number, arrival_date, departure_date, group_leader_id, company_ritual_season_id, group_type_code, entry_transportation_type_code, creation_date, update_date) VALUES (9, 1, N'INTERNALUMRAH42', null, null, 5, 9, null, null, GETDATE(), null);
@@ -232,12 +232,12 @@ delete from  shc_portal.shc_portal.shc_ritual_package where id > 0
     GO
 SET IDENTITY_INSERT shc_portal.shc_ritual_package ON;
 GO
-INSERT INTO shc_portal.shc_portal.shc_ritual_package (id, type_code, reference_number, price, departure_city, country_id, creation_date, update_date, company_ritual_season_id, start_date, end_date) VALUES (1, N'VIP', N'PKG1443', 100, null, 1, GETDATE(), null, 1, GETDATE() - 1,GETDATE() + 14);
+INSERT INTO shc_portal.shc_portal.shc_ritual_package (id, type_code, reference_number, price, departure_city, country_id, creation_date, update_date, company_ritual_season_id, start_date, end_date) VALUES (1, N'INTERNAL_HAJJ', N'INTERNALHAJJ43', 100, null, 1, GETDATE(), null, 1, GETDATE() - 1,GETDATE() + 14);
 INSERT INTO shc_portal.shc_portal.shc_ritual_package (id, type_code, reference_number, price, departure_city, country_id, creation_date, update_date, company_ritual_season_id, start_date, end_date) VALUES (2, N'EXTERNAL_HAJJ', N'EXTERNALHAJJ43', 100, null, 1, GETDATE(), null, 2, GETDATE() - 1,GETDATE() + 14);
 INSERT INTO shc_portal.shc_portal.shc_ritual_package (id, type_code, reference_number, price, departure_city, country_id, creation_date, update_date, company_ritual_season_id, start_date, end_date) VALUES (3, N'EXTERNAL_UMRAH', N'EXTERNALUMRAH43', 100, null, 1, GETDATE(), null, 3, GETDATE() - 1,GETDATE() + 14);
 INSERT INTO shc_portal.shc_portal.shc_ritual_package (id, type_code, reference_number, price, departure_city, country_id, creation_date, update_date, company_ritual_season_id, start_date, end_date) VALUES (4, N'INTERNAL_UMRAH', N'INTERNALUMRAH43', 100, null, 1, GETDATE(), null, 4, GETDATE() - 1,GETDATE() + 14);
 INSERT INTO shc_portal.shc_portal.shc_ritual_package (id, type_code, reference_number, price, departure_city, country_id, creation_date, update_date, company_ritual_season_id, start_date, end_date) VALUES (5, N'COURTESY_HAJJ', N'COURTESYHAJJ43', 100, null, 1, GETDATE(), null, 5, GETDATE() - 1,GETDATE() + 14);
-INSERT INTO shc_portal.shc_portal.shc_ritual_package (id, type_code, reference_number, price, departure_city, country_id, creation_date, update_date, company_ritual_season_id, start_date, end_date) VALUES (6, N'VIP', N'PKG1442', 100, null, 1, GETDATE(), null, 6, dateadd(yy, -1, getdate() -1),  dateadd(yy, -1, getdate() + 14) );
+INSERT INTO shc_portal.shc_portal.shc_ritual_package (id, type_code, reference_number, price, departure_city, country_id, creation_date, update_date, company_ritual_season_id, start_date, end_date) VALUES (6, N'INTERNAL_HAJJ', N'INTERNALHAJJ42', 100, null, 1, GETDATE(), null, 6, dateadd(yy, -1, getdate() -1),  dateadd(yy, -1, getdate() + 14) );
 INSERT INTO shc_portal.shc_portal.shc_ritual_package (id, type_code, reference_number, price, departure_city, country_id, creation_date, update_date, company_ritual_season_id, start_date, end_date) VALUES (7, N'EXTERNAL_HAJJ', N'EXTERNALHAJJ42', 100, null, 1, GETDATE(), null, 7,dateadd(yy, -1, getdate() -1), dateadd(yy, -1, getdate() + 14));
 INSERT INTO shc_portal.shc_portal.shc_ritual_package (id, type_code, reference_number, price, departure_city, country_id, creation_date, update_date, company_ritual_season_id, start_date, end_date) VALUES (8, N'EXTERNAL_UMRAH', N'EXTERNALUMRAH42', 100, null, 1, GETDATE(), null, 8, dateadd(yy, -1, getdate() -1), dateadd(yy, -1, getdate() + 14));
 INSERT INTO shc_portal.shc_portal.shc_ritual_package (id, type_code, reference_number, price, departure_city, country_id, creation_date, update_date, company_ritual_season_id, start_date, end_date) VALUES (9, N'INTERNAL_UMRAH', N'INTERNALUMRAH42', 100, null, 1, GETDATE(), null, 9, dateadd(yy, -1, getdate() -1), dateadd(yy, -1, getdate() + 14));
@@ -369,15 +369,15 @@ SET IDENTITY_INSERT shc_portal.shc_portal.shc_package_catering OFF;
 GO
 
 INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
-VALUES ('04_10','en','First days of Tashriq');
+VALUES ('07_18','en','First days of Tashriq');
 INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
-VALUES ('04_10','ar',N'اول ايام التشريق');
+VALUES ('07_18','ar',N'اول ايام التشريق');
 INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
-VALUES  ('04_11'  ,'en'  ,'Second days of Tashriq' )
+VALUES  ('07_19'  ,'en'  ,'Second days of Tashriq' )
 INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
-VALUES  ('04_11'  ,'ar'  , N'ثاني ايام التشريق' )
+VALUES  ('07_19'  ,'ar'  , N'ثاني ايام التشريق' )
 INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
-VALUES  ('04_12'  ,'en'  ,'Third days of Tashriq' )
+VALUES  ('07_20'  ,'en'  ,'Third days of Tashriq' )
 INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
-VALUES  ('04_12'  ,'ar'  ,N'ثالث ايام التشريق' )
+VALUES  ('04_20'  ,'ar'  ,N'ثالث ايام التشريق' )
 GO

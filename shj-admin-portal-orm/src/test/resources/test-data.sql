@@ -175,7 +175,7 @@ values (1, 1, 'AR,EN', 'app@elm1', 00966558572482, 00355558572477, 'AL', 545454,
 INSERT INTO shc_package_housing (id, package_id, zone_id, reference_number, category_code, type_code, location_name_ar,
                                  location_name_en, validity_start, validity_end, address_ar, address_en, is_default,
                                  lat, lng, creation_date, update_date)
-VALUES (1, 1, null, null, N'VIP', null, N'مكة', N'Macka', null, null, N'مكة', N'Macka', 1, 1.3234, 2.3344,
+VALUES (1, 1, null, null, N'INTERNAL_HAJJ', null, N'مكة', N'Macka', null, null, N'مكة', N'Macka', 1, 1.3234, 2.3344,
         N'2021-09-15 10:10:00', null);
 
 INSERT INTO shc_applicant_package_housing (id, applicant_package_id, package_housing_id, room_number, bed_number,
