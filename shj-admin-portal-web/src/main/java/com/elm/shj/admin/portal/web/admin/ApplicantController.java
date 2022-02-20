@@ -32,18 +32,6 @@ public class ApplicantController {
 
     private final ApplicantService applicantService;
 
-/*    @GetMapping("/group")
-    public List<ApplicantDto> group() {
-        return applicantService.findApplicantsWithoutGroupLeaderChatContact();
-    }*/
-
-    @GetMapping("/list/all")
-    @RolesAllowed(AuthorityConstants.USER_MANAGEMENT) //TODO: Change it
-    public Page<ApplicantDto> listApplicants(Pageable pageable) {
-        log.debug("List applicants...");
-        return applicantService.findAll(pageable);
-    }
-
     /**
      * finds a list of applicants matching criteria
      *

@@ -38,7 +38,7 @@ public class JpaConfig implements Serializable {
     @Column(name = "CONF_VALUE", nullable = false, length = 250)
     private String confValue;
 
-    @Column(name = "CREATION_DATE", nullable = false)
+    @Column(name = "CREATION_DATE", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE", nullable = false)

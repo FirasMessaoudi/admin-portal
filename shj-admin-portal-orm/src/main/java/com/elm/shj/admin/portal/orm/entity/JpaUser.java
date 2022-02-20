@@ -43,7 +43,7 @@ public class JpaUser implements Serializable {
 	@Column(name = "CHANGE_PASSWORD_REQUIRED")
 	private boolean changePasswordRequired;
 
-	@Column(name = "CREATION_DATE", nullable = false)
+	@Column(name = "CREATION_DATE", nullable = false, updatable = false)
 	private Date creationDate;
 
 	@Temporal(TemporalType.DATE)

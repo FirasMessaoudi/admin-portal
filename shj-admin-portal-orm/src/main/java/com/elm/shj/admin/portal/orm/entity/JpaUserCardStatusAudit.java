@@ -46,7 +46,7 @@ public class JpaUserCardStatusAudit implements Serializable {
     @Column(name = "status_code")
     String statusCode;
 
-    @Column(name = "CREATION_DATE", nullable = false)
+    @Column(name = "CREATION_DATE", nullable = false, updatable = false)
     private Date creationDate;
 
     @PrePersist

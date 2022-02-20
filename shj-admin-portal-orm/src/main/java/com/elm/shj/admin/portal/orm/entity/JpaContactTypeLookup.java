@@ -34,7 +34,7 @@ public class JpaContactTypeLookup implements Serializable {
 
     private String code;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @PrePersist

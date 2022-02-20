@@ -42,7 +42,7 @@ public class JpaAuthorityLookup implements Serializable {
 
     private String code;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "parent_id", insertable = false, updatable = false)

@@ -60,7 +60,7 @@ public class JpaPackageTransportation implements Serializable {
     @Column(name = "ritual_step_code")
     private String ritualStepCode;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE")

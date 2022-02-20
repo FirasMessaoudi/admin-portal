@@ -44,7 +44,7 @@ public class JpaApplicantRelative implements Serializable {
     @JoinColumn(name = "relative_applicant_id")
     private JpaApplicant relativeApplicant;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date", nullable = false)

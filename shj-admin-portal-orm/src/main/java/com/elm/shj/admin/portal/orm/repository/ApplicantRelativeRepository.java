@@ -23,8 +23,8 @@ public interface ApplicantRelativeRepository extends JpaRepository<JpaApplicantR
     Optional<JpaApplicantRelative> findByApplicantIdAndRelativeApplicantId(long applicantId, long relativeApplicantId);
 
     @Modifying
-    @Query("UPDATE JpaApplicantRelative ar SET ar.applicantRitual.id = :applicantRitualId " +
-            "WHERE ar.applicant.id = :applicantId AND ar.packageReferenceNumber = :packageReferenceNumber")
+    @Query("UPDATE JpaApplicantRelative ar SET ar.applicantRitual.id = :applicantRitualId, " +
+            "ar.updateDate = CURRENT_TIMESTAMP WHERE ar.applicant.id = :applicantId AND ar.packageReferenceNumber = :packageReferenceNumber")
     int updateApplicantRelativeApplicantRitual(@Param("applicantRitualId") long applicantRitualId, @Param("applicantId") long applicantId,
                                                @Param("packageReferenceNumber") String packageReferenceNumber);
 

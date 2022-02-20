@@ -36,7 +36,7 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
     JpaApplicantRitual findByApplicantIdAndPackageReferenceNumber(long applicantId, String referenceNumber);
 
     @Modifying
-    @Query("UPDATE JpaApplicantRitual ar SET ar.applicantPackage.id = :applicantPackageId WHERE ar.id = :applicantRitualId")
+    @Query("UPDATE JpaApplicantRitual ar SET ar.applicantPackage.id = :applicantPackageId, ar.updateDate = CURRENT_TIMESTAMP WHERE ar.id = :applicantRitualId")
     void updateApplicantRitualApplicantPackage(@Param("applicantPackageId") long applicantPackageId, @Param("applicantRitualId") long applicantRitualId);
 
     @Query("SELECT ar.id FROM JpaApplicantRitual ar WHERE ar.applicant.id = :applicantId AND ar.packageReferenceNumber = :packageReferenceNumber")

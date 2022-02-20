@@ -39,7 +39,7 @@ public class JpaIncidentAttachment implements Serializable {
     @JoinColumn(name = "applicant_incident_id")
     private JpaApplicantIncident applicantIncident;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @PrePersist

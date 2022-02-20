@@ -51,7 +51,7 @@ public class JpaPackageCatering implements Serializable {
     @Column(name = "description_en", length = 125)
     private String descriptionEn;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE")

@@ -125,7 +125,7 @@ SET IDENTITY_INSERT shc_portal.shc_notification_template_content OFF;
 GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('notification.processing.batch.size', '1000');
-INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('scheduler.notification.processing.cron', '* * * ? * *');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('scheduler.notification.processing.cron', '0 0/5 * * * *');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('google.maps.api.key', 'AIzaSyAC78ugAlOF9B2YK8-ukki2IQTyNAgUSO0');
 GO
 

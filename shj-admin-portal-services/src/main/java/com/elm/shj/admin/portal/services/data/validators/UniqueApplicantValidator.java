@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import javax.validation.ConstraintValidatorContext;
 public class UniqueApplicantValidator implements ConstraintValidator<UniqueApplicant, Object> {
 
     @Autowired
-    private ApplicantService applicantService;
+    private ApplicantLiteService applicantLiteService;
 
     @Value("${data.request.applicant.override}")
     private boolean overrideApplicantData;
@@ -37,7 +37,6 @@ public class UniqueApplicantValidator implements ConstraintValidator<UniqueAppli
             return false;
         }
         // applicant should not exist or override flag should be true
-        return overrideApplicantData || !applicantService.existsByBasicInfoAndPackageCode(ApplicantBasicInfoDto.fromApplicant((ApplicantDto) value), ((ApplicantDto) value).getPackageReferenceNumber());
+        return overrideApplicantData || !applicantLiteService.existsByBasicInfo(ApplicantBasicInfoDto.fromApplicant((ApplicantDto) value));
     }
-
 }

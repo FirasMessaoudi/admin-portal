@@ -44,7 +44,7 @@ public class JpaRitualZone implements Serializable {
     @Column(name = "season_id")
     private long seasonId;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @PrePersist

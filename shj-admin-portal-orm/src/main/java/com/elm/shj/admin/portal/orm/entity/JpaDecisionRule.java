@@ -45,7 +45,7 @@ public class JpaDecisionRule implements Serializable {
     @JoinColumn(name = "data_segment_id")
     private JpaDataSegment dataSegment;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")

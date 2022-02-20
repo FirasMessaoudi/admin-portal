@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.applicant;
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantLiteRepository;
+import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.dto.ECardStatus;
 import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +59,28 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
 
     public boolean existsByUin(String uin) {
         return ((ApplicantLiteRepository) getRepository()).existsByUin(uin);
+    }
 
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public List<ApplicantLiteDto> findAllWithoutDigitalId() {
+        return mapList(applicantLiteRepository.findAllApplicantsWithoutDigitalId());
+    }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public ApplicantLiteDto findByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
+        return getMapper().fromEntity(applicantLiteRepository.findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(),
+                applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian()), mappingContext);
+    }
+
+    /**
+     * Checks if an applicant exists with the same basic info
+     *
+     * @param applicantBasicInfo the applicant basic info
+     * @return true if applicant with the same basic info exists
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public boolean existsByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
+        return applicantLiteRepository.existsByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
     }
 
     public Optional<ApplicantStaffVO> findApplicantRitualByIdNumber(String value) {

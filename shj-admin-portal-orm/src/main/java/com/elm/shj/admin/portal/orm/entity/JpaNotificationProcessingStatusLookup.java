@@ -36,6 +36,6 @@ public class JpaNotificationProcessingStatusLookup implements Serializable {
 
     private String description;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 }

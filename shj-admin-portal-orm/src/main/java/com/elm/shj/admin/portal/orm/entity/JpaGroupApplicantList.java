@@ -39,7 +39,7 @@ public class JpaGroupApplicantList implements Serializable {
     @Column(name = "applicant_uin", nullable = false)
     private String applicantUin;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @PrePersist

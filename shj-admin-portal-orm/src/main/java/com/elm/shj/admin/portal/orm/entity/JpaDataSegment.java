@@ -41,7 +41,7 @@ public class JpaDataSegment implements Serializable {
     @Column(name = "template_file_name", nullable = false)
     private String templateFileName;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")

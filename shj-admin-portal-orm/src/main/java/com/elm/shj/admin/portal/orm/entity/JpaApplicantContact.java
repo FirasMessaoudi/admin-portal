@@ -69,7 +69,7 @@ public class JpaApplicantContact implements Serializable {
     @Column(name = "postal_code")
     private String postalCode;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE")

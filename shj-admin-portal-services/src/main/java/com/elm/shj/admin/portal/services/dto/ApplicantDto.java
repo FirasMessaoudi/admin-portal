@@ -7,9 +7,7 @@ import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -30,8 +28,10 @@ import java.util.List;
         @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri")
 })
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class ApplicantDto implements Serializable {
 
     private static final long serialVersionUID = 4276580006724069703L;
@@ -117,4 +117,20 @@ public class ApplicantDto implements Serializable {
     private boolean registered;
     private Date creationDate;
     private Date updateDate;
+
+    /**
+     * Get applicant object from applicant lite object.
+     *
+     * @param applicantLiteDto
+     * @return
+     */
+    public static ApplicantDto fromApplicantLite(ApplicantLiteDto applicantLiteDto) {
+        return ApplicantDto.builder().id(applicantLiteDto.getId()).nationalityCode(applicantLiteDto.getNationalityCode())
+                .idNumber(applicantLiteDto.getIdNumber()).passportNumber(applicantLiteDto.getPassportNumber())
+                .packageReferenceNumber(applicantLiteDto.getPackageReferenceNumber()).dateOfBirthGregorian(applicantLiteDto.getDateOfBirthGregorian())
+                .dateOfBirthHijri(applicantLiteDto.getDateOfBirthHijri()).fullNameAr(applicantLiteDto.getFullNameAr()).fullNameEn(applicantLiteDto.getFullNameEn())
+                .fullNameOrigin(applicantLiteDto.getFullNameOrigin()).preferredLanguage(applicantLiteDto.getPreferredLanguage()).gender(applicantLiteDto.getGender())
+                .photo(applicantLiteDto.getPhoto()).contacts(applicantLiteDto.getContacts()).digitalIds(applicantLiteDto.getDigitalIds())
+                .build();
+    }
 }

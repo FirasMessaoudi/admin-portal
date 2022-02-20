@@ -46,7 +46,7 @@ public class JpaCompanyStaffCard implements Serializable {
     @JoinColumn(name = "company_ritual_season_id", nullable = false)
     private JpaCompanyRitualSeason companyRitualSeason;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")
