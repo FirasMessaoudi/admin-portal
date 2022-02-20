@@ -33,6 +33,8 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
         render: 'label',
         fontColor: '#000',
         position: 'outside',
+        outsidePadding: 10,
+        textMargin: 10,
         fontStyle: 'bold',
       },
       datalabels: {
@@ -69,7 +71,7 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
           ctx.font = 'bold ' + valueFontSize + "px Arial";
           ctx.textBaseline = "middle";
           var text = changes.centerValue.currentValue,
-            textX = Math.round((width - ctx.measureText(text).width) / 2),
+            textX = Math.round((width - ctx.measureText(text).width) / 1.9),
             textY = height / 2.2;
           var textZ = height / 2.3;
           ctx.fillText(text, textX, textZ);
@@ -78,7 +80,7 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
           var labelFontSize = (height / 15).toFixed(2);
           ctx.font = labelFontSize + "px Arial";
           var textLabel = changes.centerTitle.currentValue,
-            textLabelX = Math.round((width - ctx.measureText(textLabel).width) / 2),
+            textLabelX = Math.round((width - ctx.measureText(textLabel).width) / 1.85),
             textLabelY = height / 1.9;
           var textLabelZ = height / 1.5;
           ctx.fillText(textLabel, textLabelX, textLabelY);
