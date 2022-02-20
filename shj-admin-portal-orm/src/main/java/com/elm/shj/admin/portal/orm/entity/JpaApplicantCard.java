@@ -44,7 +44,7 @@ public class JpaApplicantCard implements Serializable {
     @Column(name = "status_code")
     private String statusCode;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE")

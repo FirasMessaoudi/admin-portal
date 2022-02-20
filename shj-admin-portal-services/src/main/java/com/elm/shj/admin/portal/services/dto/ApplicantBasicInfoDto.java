@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -63,6 +62,15 @@ public class ApplicantBasicInfoDto implements Serializable {
         applicantBasicInfo.setPassportNumber(applicant.getPassportNumber());
         applicantBasicInfo.setDateOfBirthGregorian(applicant.getDateOfBirthGregorian());
         applicantBasicInfo.setDateOfBirthHijri(applicant.getDateOfBirthHijri());
+        return applicantBasicInfo;
+    }
+
+    public static ApplicantBasicInfoDto fromApplicantDigitalIdInfo(ApplicantLiteDto applicantDigitalIdInfoDto) {
+        ApplicantBasicInfoDto applicantBasicInfo = new ApplicantBasicInfoDto();
+        applicantBasicInfo.setIdNumber(applicantDigitalIdInfoDto.getIdNumber());
+        applicantBasicInfo.setPassportNumber(applicantDigitalIdInfoDto.getPassportNumber());
+        applicantBasicInfo.setDateOfBirthGregorian(applicantDigitalIdInfoDto.getDateOfBirthGregorian());
+        applicantBasicInfo.setDateOfBirthHijri(applicantDigitalIdInfoDto.getDateOfBirthHijri());
         return applicantBasicInfo;
     }
 

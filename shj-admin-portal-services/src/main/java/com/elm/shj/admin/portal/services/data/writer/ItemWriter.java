@@ -77,6 +77,7 @@ public class ItemWriter {
     private final ApplicantHealthService applicantHealthService;
     private final ApplicantEmergencyDataUploadService applicantEmergencyDataUploadService;
     private final DigitalIdService digitalIdService;
+    private final ApplicantLiteService applicantLiteService;
 
     /**
      * Populates the registry
@@ -267,7 +268,7 @@ public class ItemWriter {
         List<S> savedItems = new ArrayList<>();
         JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
         items.forEach(entry -> {
-            S savedItem = null;
+            S savedItem;
             //this part is to handle staff main data
             if (dataSegment.getId() == EDataSegment.STAFF_MAIN_DATA.getId()) {
                 CompanyStaffDto staff = (CompanyStaffDto) entry.getValue();
@@ -279,7 +280,6 @@ public class ItemWriter {
                     // staff.setCompany(existingStaff.getCompany());
                     staff.setDataRequestRecord(existingStaff.getDataRequestRecord());
                     staff.setApplicantGroups(existingStaff.getApplicantGroups());
-                    staff.setCreationDate(existingStaff.getCreationDate());
                     savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(staff, mappingContext));
                 } else {
                     savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
@@ -392,15 +392,14 @@ public class ItemWriter {
                 HijrahDate islamyDate = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
                 applicant.setDateOfBirthHijri(Long.parseLong(islamyDate.toString().substring(islamyDate.toString().indexOf("AH") + 3).replace("-", "")));
             }
-            ApplicantDto existingApplicant = applicantService.findByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
+
+            Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
             // if record exists already in DB we need to update it
-            if (existingApplicant != null) {
-                applicant.setId(existingApplicant.getId());
-                applicant.setDigitalIds(existingApplicant.getDigitalIds());
-                applicant.setRituals(applicantRitualService.findAllByApplicantId(existingApplicant.getId()));
-                applicant.setRelatives(existingApplicant.getRelatives());
-                applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicant.getId()));
-                applicant.setCreationDate(existingApplicant.getCreationDate());
+            if (existingApplicantId != null) {
+                applicant.setId(existingApplicantId);
+                applicant.setUpdateDate(new Date());
+                //TODO: need refactoring, the below line should be replaced by deleting the old contact as a new one will be added
+                applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicantId));
             }
 
             // this case is for applicant data upload
@@ -427,8 +426,9 @@ public class ItemWriter {
             // get applicant basic info from the current object
             ApplicantBasicInfoDto applicantBasicInfo = (ApplicantBasicInfoDto) applicantBasicInfoField.get(item);
             // search applicant by his basic info from the database
-            ApplicantDto applicant = applicantService.findByBasicInfo(applicantBasicInfo);
-            if (applicant == null) {
+            ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantBasicInfo);
+            Long applicantId = applicantLite.getId();
+            if (applicantLite == null) {
                 return;
             }
 
@@ -436,39 +436,33 @@ public class ItemWriter {
                 // make fields accessible
                 ReflectionUtils.makeAccessible(applicantField);
                 // set the found applicant into the object
-                applicantField.set(item, applicant);
+                applicantField.set(item, ApplicantDto.builder().id(applicantId).build());
             }
 
             ReflectionUtils.makeAccessible(packageReferenceNumberField);
             String packageReferenceNumber = (String) packageReferenceNumberField.get(item);
 
             // retrieve the applicant ritual id if the applicant ritual is saved before by the digital id scheduler.
-            Long savedApplicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+            Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, packageReferenceNumber, null, false);
 
             if (applicantRitualField != null && savedApplicantRitualId != null) {
                 ReflectionUtils.makeAccessible(applicantRitualField);
                 applicantRitualField.set(item, ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
             }
 
-            String applicantUin = digitalIdService.findApplicantUin(applicant.getId());
+            String applicantUin = digitalIdService.findApplicantUin(applicantId);
 
             if (item.getClass().isAssignableFrom(ApplicantRitualDto.class)) {
                 ApplicantRitualDto applicantRitual = (ApplicantRitualDto) item;
-                applicantRitual.setContacts(new HashSet<>(applicant.getContacts()));
-                if (CollectionUtils.isNotEmpty(applicantRitual.getContacts())) {
-                    applicantRitual.getContacts().forEach(ac -> {
-                        ac.setApplicantRitual(applicantRitual);
-                    });
-                }
-
                 if (savedApplicantRitualId != null) {
                     applicantRitual.setId(savedApplicantRitualId);
+                    applicantRitual.setUpdateDate(new Date());
                     Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
                     applicantRitual.setApplicantPackage(ApplicantPackageDto.builder().id(applicantPackageId).build());
                     //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
-                    applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicant.getId());
-                    applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
-                    applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicant.getId(), applicantRitual.getPackageReferenceNumber());
+                    applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicantId);
+                    applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicantId, applicantRitual.getPackageReferenceNumber());
+                    applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicantId, applicantRitual.getPackageReferenceNumber());
                 } else {
                     // applicant ritual not created yet, check if digital id is exists,
                     // if yes then create a new applicant package and link it with the applicant ritual
@@ -481,27 +475,27 @@ public class ItemWriter {
 
             if (item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
                 ApplicantRelativeDto applicantRelative = (ApplicantRelativeDto) item;
-                ApplicantDto relativeApplicant = applicantService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative));
-                applicantRelative.setRelativeApplicant(relativeApplicant);
-                applicantRelative.setApplicant(applicant);
+                ApplicantLiteDto relativeApplicantLite = applicantLiteService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative));
+                applicantRelative.setRelativeApplicant(ApplicantDto.fromApplicantLite(relativeApplicantLite));
+                applicantRelative.setApplicant(ApplicantDto.fromApplicantLite(applicantLite));
 
-                String relativeApplicantUin = CollectionUtils.isNotEmpty(relativeApplicant.getDigitalIds()) ? relativeApplicant.getDigitalIds().get(0).getUin() : null;
+                String relativeApplicantUin = (relativeApplicantLite == null || CollectionUtils.isEmpty(relativeApplicantLite.getDigitalIds())) ? null : relativeApplicantLite.getDigitalIds().get(0).getUin();
 
                 // if the applicant digital id and the relative applicant digital id and the applicant ritual are created then add chat contacts
                 // check if digital ids are created for the applicant and the relative applicant and applicant ritual is already created.
                 if (applicantUin == null || relativeApplicantUin == null || savedApplicantRitualId == null) {
                     return;
                 }
-
+                //TODO: try to get the relative applicant ritual id as it is needed to create the chat contact
                 applicantChatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitualId);
             }
 
             if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
                 ApplicantHealthDto applicantHealth = (ApplicantHealthDto) item;
-                ApplicantHealthDto savedApplicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
-                if (savedApplicantHealth != null) {
-                    applicantHealth.setId(savedApplicantHealth.getId());
-                    applicantHealth.setCreationDate(savedApplicantHealth.getCreationDate());
+                Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber, null, false);
+                if (savedApplicantHealthId != null) {
+                    applicantHealth.setId(savedApplicantHealthId);
+                    applicantHealth.setUpdateDate(new Date());
                     if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
                         // get the special needs and if it is a list then create a list of special needs dtos
                         List<ApplicantHealthSpecialNeedsDto> applicantHealthSpecialNeeds = Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
@@ -522,19 +516,14 @@ public class ItemWriter {
             }
 
             if (applicantHealthField != null) {
-                ApplicantHealthDto applicantHealth = applicantHealthService.findByApplicantIdAndPackageReferenceNumber(applicant.getId(), packageReferenceNumber);
+                Long applicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber, savedApplicantRitualId, true);
 
-                if (applicantHealth == null) {
-                    applicantHealth = ApplicantHealthDto.builder().applicant(applicant).packageReferenceNumber(packageReferenceNumber).build();
-                    if (savedApplicantRitualId != null) {
-                        applicantHealth.setApplicantRitual(ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
-                    }
-                    applicantHealth = applicantHealthService.save(applicantHealth);
+                if (applicantHealthId != null) {
+                    // make fields accessible
+                    ReflectionUtils.makeAccessible(applicantHealthField);
+                    // set the found applicant health into the object
+                    applicantHealthField.set(item, ApplicantHealthDto.builder().id(applicantHealthId).build());
                 }
-                // make fields accessible
-                ReflectionUtils.makeAccessible(applicantHealthField);
-                // set the found applicant health into the object
-                applicantHealthField.set(item, applicantHealth);
             }
         } catch (IllegalAccessException e) {
             ReflectionUtils.handleReflectionException(e);

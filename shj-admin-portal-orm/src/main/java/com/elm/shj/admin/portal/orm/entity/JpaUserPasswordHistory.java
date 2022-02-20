@@ -38,7 +38,12 @@ public class JpaUserPasswordHistory implements Serializable {
     @Column(name = "OLD_PASSWORD_HASH", nullable = false, length = 256)
     private String oldPasswordHash;
 
-    @Column(name = "CREATION_DATE", nullable = false)
+    @Column(name = "CREATION_DATE", nullable = false, updatable = false)
     private Date creationDate;
+
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+    }
 
 }

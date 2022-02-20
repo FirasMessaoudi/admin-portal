@@ -51,7 +51,7 @@ public class JpaPrintRequest implements Serializable {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, mappedBy = "printRequest")
     private Set<JpaPrintRequestBatch> printRequestBatches;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")

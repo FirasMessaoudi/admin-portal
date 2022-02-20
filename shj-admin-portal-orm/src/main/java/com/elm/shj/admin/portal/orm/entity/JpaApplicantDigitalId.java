@@ -40,7 +40,7 @@ public class JpaApplicantDigitalId implements Serializable {
     @Column(name = "applicant_id")
     private long applicantId;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @PrePersist

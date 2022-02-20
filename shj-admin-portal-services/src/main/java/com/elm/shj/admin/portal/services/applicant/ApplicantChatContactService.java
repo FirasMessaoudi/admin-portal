@@ -245,7 +245,6 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         if (chatContact != null) {
             log.debug("update System Defined Applicant Chat Contact applicantUin: {} contactUin: {}", contactOwnerUin, contactUin);
             createdContact.setId(chatContact.getId());
-            createdContact.setCreationDate(chatContact.getCreationDate());
         }
         save(createdContact);
     }

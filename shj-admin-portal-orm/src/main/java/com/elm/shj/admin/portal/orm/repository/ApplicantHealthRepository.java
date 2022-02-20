@@ -25,9 +25,12 @@ public interface ApplicantHealthRepository extends JpaRepository<JpaApplicantHea
 
     JpaApplicantHealth findByApplicantIdAndPackageReferenceNumber(long applicantId, String referenceNumber);
 
+    @Query("SELECT ah.id FROM JpaApplicantHealth ah WHERE ah.applicant.id = :applicantId AND ah.packageReferenceNumber = :packageReferenceNumber")
+    Long findIdByApplicantIdAndPackageReferenceNumber(@Param("applicantId") long applicantId, @Param("packageReferenceNumber") String packageReferenceNumber);
+
     @Modifying
-    @Query("UPDATE JpaApplicantHealth ah SET ah.applicantRitual.id = :applicantRitualId " +
-            "WHERE ah.applicant.id = :applicantId AND ah.packageReferenceNumber = :packageReferenceNumber")
+    @Query("UPDATE JpaApplicantHealth ah SET ah.applicantRitual.id = :applicantRitualId, " +
+            "ah.updateDate = CURRENT_TIMESTAMP WHERE ah.applicant.id = :applicantId AND ah.packageReferenceNumber = :packageReferenceNumber")
     int updateApplicantHealthApplicantRitual(@Param("applicantRitualId") long applicantRitualId, @Param("applicantId") long applicantId,
                                              @Param("packageReferenceNumber") String packageReferenceNumber);
 }

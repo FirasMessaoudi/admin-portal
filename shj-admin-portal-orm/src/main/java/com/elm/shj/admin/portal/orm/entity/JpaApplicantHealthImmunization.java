@@ -33,7 +33,7 @@ public class JpaApplicantHealthImmunization implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "applicant_health_id")
     private JpaApplicantHealth applicantHealth;
 
@@ -45,7 +45,7 @@ public class JpaApplicantHealthImmunization implements Serializable {
 
     private boolean mandatory;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date", nullable = false)

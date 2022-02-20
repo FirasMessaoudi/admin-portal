@@ -39,7 +39,7 @@ public class JpaNotificationTemplateParameter implements Serializable {
     @Column(name = "parameter_name")
     private String parameterName;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @PrePersist

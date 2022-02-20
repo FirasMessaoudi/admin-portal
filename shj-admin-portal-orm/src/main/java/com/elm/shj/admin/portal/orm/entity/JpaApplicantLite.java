@@ -35,6 +35,18 @@ public class JpaApplicantLite implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
+    @Column(name = "nationality_code")
+    private String nationalityCode;
+
+    @Column(name = "id_number")
+    private String idNumber;
+
+    @Column(name = "passport_number")
+    private String passportNumber;
+
+    @Column(name = "first_package_reference_number")
+    private String packageReferenceNumber;
+
     @Column(name = "date_of_birth_gregorian")
     private Date dateOfBirthGregorian;
 
@@ -60,4 +72,9 @@ public class JpaApplicantLite implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantContact> contacts;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade  = {CascadeType.REFRESH, CascadeType.REMOVE}, orphanRemoval = true)
+    @JoinColumn(name = "applicant_id")
+    private List<JpaApplicantDigitalId> digitalIds;
 }

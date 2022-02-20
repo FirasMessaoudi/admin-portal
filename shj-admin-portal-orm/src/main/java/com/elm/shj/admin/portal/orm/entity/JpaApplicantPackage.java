@@ -35,7 +35,7 @@ public class JpaApplicantPackage implements Serializable {
     @Column(name = "applicant_uin", nullable = false)
     private long applicantUin;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")
@@ -51,7 +51,7 @@ public class JpaApplicantPackage implements Serializable {
     @JoinColumn(name = "ritual_package_id")
     private JpaRitualPackage ritualPackage;
 
-    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantPackage")
+    @OneToOne(cascade = CascadeType.REFRESH, orphanRemoval = true, mappedBy = "applicantPackage")
     private JpaApplicantRitual applicantRitual;
 
     @LazyCollection(LazyCollectionOption.TRUE)

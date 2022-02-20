@@ -40,7 +40,7 @@ public class JpaApplicantHealthSpecialNeeds implements Serializable {
     @Column(name = "special_need_type_code", nullable = false)
     private String specialNeedTypeCode;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @PrePersist

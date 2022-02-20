@@ -40,7 +40,7 @@ public class JpaPrintRequestLite implements Serializable {
     @Column(name = "status_code", nullable = false)
     private String statusCode;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")
@@ -51,4 +51,9 @@ public class JpaPrintRequestLite implements Serializable {
 
     @Column(name = "confirmation_date")
     private Date confirmationDate;
+
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+    }
 }

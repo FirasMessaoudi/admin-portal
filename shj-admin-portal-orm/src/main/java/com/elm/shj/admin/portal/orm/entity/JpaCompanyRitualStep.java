@@ -60,7 +60,7 @@ public class JpaCompanyRitualStep implements Serializable {
     @Column(name = "location_name_en", nullable = false)
     private String locationNameEn;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")

@@ -67,9 +67,6 @@ public class JpaApplicantMainData implements Serializable {
     private String photo;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
-    private List<JpaApplicantRitual> rituals;
-
-    @Column(name = "creation_date", nullable = false)
-    private Date creationDate;
+    @OneToMany(mappedBy = "applicant")
+    private List<JpaApplicantContact> contacts;
 }

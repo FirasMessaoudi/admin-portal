@@ -38,7 +38,7 @@ public class JpaPrintRequestCard implements Serializable {
     @Column(name = "card_id")
     private long cardId;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @PrePersist

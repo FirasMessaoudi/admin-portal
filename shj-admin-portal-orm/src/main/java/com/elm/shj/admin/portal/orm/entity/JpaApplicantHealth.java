@@ -48,7 +48,7 @@ public class JpaApplicantHealth implements Serializable {
     @Column(name = "insurance_policy_number")
     private String insurancePolicyNumber;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date", nullable = false)
@@ -62,7 +62,7 @@ public class JpaApplicantHealth implements Serializable {
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "applicantHealth")
+    @OneToMany(cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, mappedBy = "applicantHealth")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthDisease> diseases;
 
@@ -70,7 +70,7 @@ public class JpaApplicantHealth implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthSpecialNeeds> specialNeeds;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "applicantHealth")
+    @OneToMany(cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, mappedBy = "applicantHealth")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthImmunization> immunizations;
 

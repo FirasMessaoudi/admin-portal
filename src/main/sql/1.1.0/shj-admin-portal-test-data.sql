@@ -374,10 +374,10 @@ INSERT INTO shc_portal.shc_religious_occasions_day_lk (code,lang,label)
 VALUES ('04_10','ar',N'اول ايام التشريق');
 INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
 VALUES  ('04_11'  ,'en'  ,'Second days of Tashriq' )
-    INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
+INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
 VALUES  ('04_11'  ,'ar'  , N'ثاني ايام التشريق' )
 INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
 VALUES  ('04_12'  ,'en'  ,'Third days of Tashriq' )
 INSERT INTO shc_portal.shc_religious_occasions_day_lk (code ,lang,label)
 VALUES  ('04_12'  ,'ar'  ,N'ثالث ايام التشريق' )
-    GO
+GO

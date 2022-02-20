@@ -38,7 +38,7 @@ public class JpaDataRequestStatusLookup implements Serializable {
     @Column(name = "label_en", nullable = false)
     private String labelEn;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
 }

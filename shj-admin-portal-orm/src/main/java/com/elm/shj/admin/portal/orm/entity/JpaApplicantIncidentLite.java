@@ -62,7 +62,7 @@ public class JpaApplicantIncidentLite implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantIncidentLite")
     private List<JpaIncidentAttachmentLite>  incidentAttachments;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")

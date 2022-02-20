@@ -48,7 +48,7 @@ public class JpaUserNotification implements Serializable {
     @Column(name = "user_lang")
     private String userLang;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE")

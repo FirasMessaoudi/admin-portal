@@ -40,6 +40,6 @@ public class JpaRoleAuthority implements Serializable {
     @JoinColumn(name = "authority_id")
     private JpaAuthorityLookup authority;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 }

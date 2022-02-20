@@ -32,6 +32,6 @@ public interface ApplicantContactRepository extends JpaRepository<JpaApplicantCo
     List<JpaApplicantContact> findAllByApplicantId(Long id);
 
     @Modifying
-    @Query("UPDATE JpaApplicantContact ac SET ac.applicantRitual.id = :applicantRitualId WHERE ac.applicant.id = :applicantId")
+    @Query("UPDATE JpaApplicantContact ac SET ac.applicantRitual.id = :applicantRitualId, ac.updateDate = CURRENT_TIMESTAMP WHERE ac.applicant.id = :applicantId")
     int updateContactApplicantRitual(@Param("applicantRitualId") long applicantRitualId, @Param("applicantId") long applicantId);
 }
