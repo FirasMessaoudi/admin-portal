@@ -29,14 +29,29 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
     responsive: true,
     cutoutPercentage: 70,
     plugins: {
-      labels: {
-        render: 'label',
-        fontColor: '#000',
-        position: 'outside',
-        outsidePadding: 10,
-        textMargin: 10,
-        fontStyle: 'bold',
-      },
+      labels: [
+        {
+          render: 'label',
+          fontColor: '#000',
+          position: 'outside',
+          outsidePadding: 10,
+          textMargin: 10,
+          fontStyle: 'bold',
+
+        },
+        {
+          render: function (args) {
+            return '\n\n' + args.percentage + '%';
+          },
+          fontColor: '#000',
+          position: 'outside',
+          outsidePadding: 10,
+          textMargin: 10,
+          fontStyle: 'normal',
+          precision: 2
+
+        }
+      ],
       datalabels: {
         display: false
       }
@@ -52,7 +67,7 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.doughnutChartLabels = new Array(this.data.length).fill('')
-      .map((v: any, i: number) => this.i18nService.language.startsWith('en') ? '\n' + this.data[i].label + "\n" + this.data[i].percentage + "%" : '\n' + this.data[i].label + "\n" + this.data[i].percentage + '%');
+      .map((v: any, i: number) => this.data[i].label);
     this.doughnutChartData = new Array(this.data.length).fill('')
       .map((v: any, i: number) => this.data[i].count);
 
@@ -63,27 +78,22 @@ export class DoughnutChartComponent implements OnInit, OnChanges {
     if (changes.centerTitle && changes.centerValue) {
       this.doughnutChartPlugins = [{
         beforeDraw(chart) {
-          var width = chart.width,
-            height = (chart.chartArea.top + chart.chartArea.bottom),
+          var height = (chart.chartArea.top + chart.chartArea.bottom),
             ctx = chart.ctx;
           ctx.restore();
           var valueFontSize = (height / 10).toFixed(2);
           ctx.font = 'bold ' + valueFontSize + "px Arial";
+          ctx.textAlign = 'center'
           ctx.textBaseline = "middle";
-          var text = changes.centerValue.currentValue,
-            textX = Math.round((width - ctx.measureText(text).width) / 1.9),
-            textY = height / 2.2;
-          var textZ = height / 2.3;
-          ctx.fillText(text, textX, textZ);
+          var text = changes.centerValue.currentValue;
+          const centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
+          const centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
+          ctx.fillText(text, centerX, centerY - 10);
 
-          ctx.textBaseline = "middle";
           var labelFontSize = (height / 15).toFixed(2);
           ctx.font = labelFontSize + "px Arial";
-          var textLabel = changes.centerTitle.currentValue,
-            textLabelX = Math.round((width - ctx.measureText(textLabel).width) / 1.85),
-            textLabelY = height / 1.9;
-          var textLabelZ = height / 1.5;
-          ctx.fillText(textLabel, textLabelX, textLabelY);
+          var textLabel = changes.centerTitle.currentValue;
+          ctx.fillText(textLabel, centerX, centerY + 10);
           ctx.save();
         }
       }];
