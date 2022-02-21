@@ -60,7 +60,7 @@ public class JpaPackageCatering implements Serializable {
     @Column(name = "is_default")
     private boolean isDefault;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "package_housing_id")
     private JpaPackageHousing packageHousing;
 
