@@ -27,6 +27,7 @@ import * as moment_ from 'moment-hijri';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { ApplicantMobileTracking } from '@app/_shared/model/applicant-mobile-tracking.model';
 import {dashboardItem} from "@shared/model";
+import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
 
 const momentHijri = moment_;
 
@@ -36,7 +37,7 @@ const momentHijri = moment_;
   styleUrls: ['./main.component.scss'],
   providers: [NgbModalConfig, NgbModal]
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, DashboardComponent {
   //TODO Dummy Data
   dashboardCameras = {
     totalCount: 782,
@@ -379,4 +380,6 @@ export class MainComponent implements OnInit {
   updateInterval(newValue) {
     this.dashboardService.getSlideShowInterval().next(newValue)
   }
+
+  isFullScreen: boolean;
 }

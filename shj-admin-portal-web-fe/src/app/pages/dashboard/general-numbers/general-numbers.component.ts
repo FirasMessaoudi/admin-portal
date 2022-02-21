@@ -9,13 +9,14 @@ import { ChartsConfig } from '@pages/dashboard/charts.config';
 import { DashboardVo } from '@shared/model';
 import { I18nService } from '@dcc-commons-ng/services';
 import { ActivatedRoute } from '@angular/router';
+import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
 
 @Component({
   selector: 'app-general-numbers',
   templateUrl: './general-numbers.component.html',
   styleUrls: ['./general-numbers.component.scss'],
 })
-export class GeneralNumbersComponent implements OnInit {
+export class GeneralNumbersComponent implements OnInit, DashboardComponent {
   currentSeasonData: GeneralDashboardVo;
   previousSeasonData: GeneralDashboardVo;
   applicantsPerNationalities: CountVo[];
@@ -189,4 +190,6 @@ export class GeneralNumbersComponent implements OnInit {
   onCampSiteChange() {
     this.minCamps ? this.loadMinCamps() : this.loadMaxCamps();
   }
+
+  isFullScreen: boolean;
 }

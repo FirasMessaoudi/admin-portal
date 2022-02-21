@@ -27,11 +27,11 @@ import {
   styleUrls: ['./slide-show.component.scss'],
 })
 export class SlideShowComponent implements OnInit, AfterViewInit {
-  ads: dashboardItem[] = [];
+  dashboardItems: dashboardItem[] = [];
   currentAdIndex = -1;
 
   @ViewChild(SlideShowDirective, {static: true})
-  adHost!: SlideShowDirective;
+  slideShowHost!: SlideShowDirective;
 
   interval: number | undefined;
 
@@ -65,7 +65,7 @@ export class SlideShowComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.ads = this.dashboardService.getDashboardItems().filter(dashboard => {
+    this.dashboardItems = this.dashboardService.getDashboardItems().filter(dashboard => {
       console.log(JSON.stringify(dashboard))
       return dashboard.selected
     });
@@ -122,14 +122,14 @@ export class SlideShowComponent implements OnInit, AfterViewInit {
   }
 
   loadComponent() {
-    this.currentAdIndex = (this.currentAdIndex + 1) % this.ads.length;
-    const adItem = this.ads[this.currentAdIndex];
-    const viewContainerRef = this.adHost.viewContainerRef;
+    this.currentAdIndex = (this.currentAdIndex + 1) % this.dashboardItems.length;
+    const adItem = this.dashboardItems[this.currentAdIndex];
+    const viewContainerRef = this.slideShowHost.viewContainerRef;
     viewContainerRef.clear();
     const componentClass = this.componentLookupRegistry.get(adItem.componentName);
     const componentRef =
       viewContainerRef.createComponent<DashboardComponent>(this.componentFactoryResolve.resolveComponentFactory(componentClass));
-    componentRef.instance.isFullScreen = adItem.isFullScreen;
+    componentRef.instance.isFullScreen = true;
   }
 
   ngAfterViewInit(): void {

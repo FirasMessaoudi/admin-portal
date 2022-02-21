@@ -13,6 +13,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { LookupService } from '@core/utilities/lookup.service';
 import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
 import { DatePipe } from '@angular/common';
+import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
 
 const moment = momentjs;
 const FONTS: string = '"Elm-font", sans-serif';
@@ -30,7 +31,7 @@ const barChartBackgroundColors = [
   styleUrls: ['./mobile.component.scss'],
   providers: [DatePipe],
 })
-export class MobileComponent implements OnInit {
+export class MobileComponent implements OnInit, DashboardComponent {
   model = 1;
   mobileAppDownloadsData: DashboardMobileNumbersVo;
 
@@ -249,4 +250,6 @@ export class MobileComponent implements OnInit {
     });
     return this.locations;
   }
+
+  isFullScreen: boolean;
 }
