@@ -42,6 +42,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
   incidents: DashboardIncidentNumbersVo;
   incidentTypeList: Lookup[];
   incidentStatusList: Lookup[];
+  housingSites: Lookup[];
   public incidentDoughnutChartLabels: Label[];
   incidentByTypes: CountVo[];
   public incidentDoughnutChartData: Array<any>;
@@ -236,7 +237,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
         );
-        this.mostIncidentsArea = this.incidents.mostIncidentsArea;
+        this.mostIncidentsArea = this.lookupService.localizedLabel(this.housingSites, this.incidents.mostIncidentsArea);
       });
 
     this.loadMaxCompanies();
@@ -334,6 +335,9 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
     this.dashboardService
       .findIncidentStatus()
       .subscribe((data) => (this.incidentStatusList = data));
+    this.dashboardService.findHousingSites().subscribe(result => {
+      this.housingSites = result;
+    });
   }
 
   async loadMapkey() {
@@ -400,8 +404,8 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
       )
     );
     return this.currentLanguage.startsWith('ar')
-      ? datePipe.transform(hijriDate, 'yyyy/MM/dd')
-      : datePipe.transform(hijriDate, 'dd/MM/yyyy');
+      ? datePipe.transform(hijriDate, 'yyyy MM, dd')
+      : datePipe.transform(hijriDate, 'dd, MM yyyy');
   }
 
   get currentLanguage(): string {

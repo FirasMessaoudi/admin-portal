@@ -42,6 +42,7 @@ export class MainComponent implements OnInit {
   private incidentSubscription: Subscription;
   incidents: DashboardIncidentNumbersVo;
   incidentStatusList: Lookup[];
+  housingSites: Lookup[];
   public incidentDoughnutChartLabels: Label[];
   public incidentDoughnutChartData: Array<any>;
   public incidentDoughnutChartType: ChartType = 'doughnut';
@@ -178,6 +179,9 @@ export class MainComponent implements OnInit {
     this.dashboardService.findRitualSeasonYears().subscribe((result) => {
       this.ritualSeasons = result;
     });
+    this.dashboardService.findHousingSites().subscribe(result => {
+      this.housingSites = result;
+    });
   }
 
   formatHijriDate(date: Date): string {
@@ -254,8 +258,8 @@ export class MainComponent implements OnInit {
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
         );
-        console.log(this.mostIncidentDate);
-        this.mostIncidentsArea = this.incidents.mostIncidentsArea;
+        this.mostIncidentsArea = this.lookupService.localizedLabel(this.housingSites, this.incidents.mostIncidentsArea);
+
       });
   }
 
