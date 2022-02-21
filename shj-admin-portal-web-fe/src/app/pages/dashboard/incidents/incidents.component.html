@@ -38,6 +38,7 @@
                       hoverBackgroundColor: ['#657DA5', '#D8DEE8']
                     }]"
                     [options]="incidentDoughnutChartOptions"
+                    [legend]="false"
                     height="100"
             >
             </canvas>
@@ -69,6 +70,7 @@
                   [plugins]="incidentTypeDoughnutChartPlugins"
                   [colors]="chartsConfig.doughnutChartColors"
                   [options]="incidentTypeDoughnutChartOptions"
+                  [legend]="false"
           >
           </canvas>
         </div>
