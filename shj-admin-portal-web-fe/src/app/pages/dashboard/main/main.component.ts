@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
 import { Subscription, timer } from 'rxjs';
 import { DashboardService } from '@core/services';
@@ -53,6 +53,35 @@ export class MainComponent implements OnInit {
     cutoutPercentage: 70,
     rotation: Math.PI,
     circumference: Math.PI,
+    plugins: {
+      labels: [
+        {
+          render: 'label',
+          fontColor: '#000',
+          position: 'outside',
+          textMargin: 10,
+          fontStyle: 'bold',
+
+        },
+        {
+          render: function (args) {
+            return '\n\n' + args.percentage + '%';
+          },
+          fontColor: '#000',
+          position: 'outside',
+          textMargin: 12,
+          fontStyle: 'normal',
+          precision: 2
+
+        }
+      ],
+      datalabels: {
+        display: false
+      }
+    },
+    tooltips: {
+      enabled: false
+    }
   };
   public incidentDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
 
@@ -118,8 +147,9 @@ export class MainComponent implements OnInit {
             height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
           ctx.restore();
-          var fontSize = (height / 15).toFixed(2);
-          ctx.font = fontSize + 'px Elm-font", sans-serif';
+         // var fontSize = (height / 15).toFixed(2);
+          var valueFontSize = (height / 10).toFixed(2);
+          ctx.font = 'bold ' + valueFontSize + "px Arial";
           ctx.textBaseline = 'middle';
           var text = countText + '',
             textX = Math.round((width - ctx.measureText(text).width) / 2),
@@ -129,10 +159,11 @@ export class MainComponent implements OnInit {
           ctx.textBaseline = 'middle';
           var textLabel = title,
             textLabelX = Math.round(
-              (width - ctx.measureText(textLabel).width) / 2
+              (width - ctx.measureText(textLabel).width) / 1.9
             ),
             textLabelY = height / 1.5;
-          var textLabelZ = height / 1.5;
+          var labelFontSize = (height / 11).toFixed(2);
+          ctx.font =  labelFontSize + "px Arial";
           ctx.fillText(textLabel, textLabelX, textLabelY);
           ctx.save();
         },
@@ -157,8 +188,8 @@ export class MainComponent implements OnInit {
       )
     );
     return this.currentLanguage.startsWith('ar')
-      ? datePipe.transform(hijriDate, 'yyyy/MM/dd')
-      : datePipe.transform(hijriDate, 'dd/MM/yyyy');
+      ? datePipe.transform(hijriDate, 'yyyy MM, dd')
+      : datePipe.transform(hijriDate, 'dd, MM yyyy');
   }
 
   get currentLanguage(): string {
@@ -223,6 +254,7 @@ export class MainComponent implements OnInit {
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
         );
+        console.log(this.mostIncidentDate);
         this.mostIncidentsArea = this.incidents.mostIncidentsArea;
       });
   }
