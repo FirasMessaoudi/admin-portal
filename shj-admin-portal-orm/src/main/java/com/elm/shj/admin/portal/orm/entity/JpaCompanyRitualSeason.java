@@ -71,7 +71,7 @@ public class JpaCompanyRitualSeason implements Serializable {
     @Column(name = "land_quota")
     private int landQuota;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")

@@ -15,11 +15,6 @@ export class ApplicantService {
   constructor(private http: HttpClient) {
   }
 
-  list(pageNumber: any): Observable<any> {
-    let params = new HttpParams().set('page', pageNumber);
-    return this.http.get<any>("/core/api/applicants/list/all", {params: params});
-  }
-
   findByIds(ids, pageNumber: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
     if (ids.length > 0) {

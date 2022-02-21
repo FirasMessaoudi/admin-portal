@@ -60,7 +60,7 @@ public class JpaPackageTransportation implements Serializable {
     @Column(name = "ritual_step_code")
     private String ritualStepCode;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE")
@@ -71,7 +71,7 @@ public class JpaPackageTransportation implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageTransportation")
     private List<JpaApplicantPackageTransportation> applicantPackageTransportations;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", nullable = false)
     private JpaRitualPackage ritualPackage;
 

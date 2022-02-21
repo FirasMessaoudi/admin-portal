@@ -52,13 +52,13 @@ public class JpaRitualPackage implements Serializable {
     @Column(name = "end_date")
     private Date endDate;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_ritual_season_id")
     private JpaCompanyRitualSeason companyRitualSeason;
 

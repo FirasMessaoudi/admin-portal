@@ -91,14 +91,10 @@ create table shc_portal.shc_audit_event_data
 );
 GO
 -- update script for shc_portal aash version 1.2.0
-USE shc_portal
-GO
 ALTER TABLE shc_portal.shc_user
     ADD token nvarchar(255) null;
 GO
 -- update script for shc_portal aash version 1.3.0
-USE shc_portal
-GO
 if not exists (select * from sys.tables where name = 'shc_user_password_history')
 create table shc_portal.shc_user_password_history
 (
@@ -114,8 +110,7 @@ GO
 ALTER TABLE shc_portal.shc_user
     ADD token_expiry_date smalldatetime NULL;
 GO
-USE shc_portal
-GO
+
 drop table if exists shc_portal.shc_audit_event_data;
 drop table if exists shc_portal.shc_audit_event;
 GO

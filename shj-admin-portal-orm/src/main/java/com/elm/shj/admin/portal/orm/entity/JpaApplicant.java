@@ -82,20 +82,20 @@ public class JpaApplicant implements Serializable {
     @Column(name = "preferred_language")
     private String preferredLanguage;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "applicant_id")
     private List<JpaApplicantDigitalId> digitalIds;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicant")
+    @OneToMany(orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantRelative> relatives;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "applicant")
+    @OneToMany(orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantRitual> rituals;
 
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -107,7 +107,7 @@ public class JpaApplicant implements Serializable {
     @Column(name = "first_package_reference_number")
     private String packageReferenceNumber;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE")

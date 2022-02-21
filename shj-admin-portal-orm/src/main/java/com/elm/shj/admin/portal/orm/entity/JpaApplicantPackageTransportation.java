@@ -41,17 +41,17 @@ public class JpaApplicantPackageTransportation implements Serializable {
     @Column(name = "vehicle_number")
     private String vehicleNumber;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")
     private Date updateDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicant_package_id")
     private JpaApplicantPackage applicantPackage;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ritual_package_transportation_id")
     private JpaPackageTransportation packageTransportation;
 

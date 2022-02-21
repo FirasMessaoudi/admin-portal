@@ -56,7 +56,7 @@ public class JpaNotificationTemplateCategorizing implements Serializable {
     @Column(name = "selected_applicants")
     private String selectedApplicants;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")

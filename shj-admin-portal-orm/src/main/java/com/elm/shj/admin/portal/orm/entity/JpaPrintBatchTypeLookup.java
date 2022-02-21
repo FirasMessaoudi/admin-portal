@@ -42,6 +42,6 @@ public class JpaPrintBatchTypeLookup implements Serializable {
 
     private String target;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 }

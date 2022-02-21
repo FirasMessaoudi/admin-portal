@@ -45,25 +45,6 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     private final ApplicantPackageService applicantPackageService;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
 
-    /**
-     * Find all applicants.
-     *
-     * @param pageable the current page information
-     * @return the list of applicants
-     */
-    public Page<ApplicantDto> findAll(Pageable pageable) {
-        return mapPage(getRepository().findAll(pageable));
-    }
-
-    /**
-     * Find all applicants without digital IDs
-     *
-     * @return the list of applicants
-     */
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public List<ApplicantDto> findAllWithoutDigitalId() {
-        return mapList(applicantRepository.findAllApplicantsWithoutDigitalId());
-    }
 
     /**
      * finds an applicant with the same basic info exists
@@ -74,6 +55,11 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ApplicantDto findByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
         return getMapper().fromEntity(applicantRepository.findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian()), mappingContext);
+    }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public Long findIdByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
+        return applicantRepository.findIdByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
     }
 
     /**
@@ -247,6 +233,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return mapPage(applicantRepository.findByIds(selectedApplicants, pageable));
     }
 
+    //TODO: To be deleted
     public boolean existsByBasicInfoAndPackageCode(ApplicantBasicInfoDto applicantBasicInfo, String packageReferenceNumber) {
         return applicantRepository.findByBasicInfoAndPackageCode(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian(), packageReferenceNumber);
     }

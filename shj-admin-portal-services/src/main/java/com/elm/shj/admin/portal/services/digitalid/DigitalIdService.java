@@ -5,10 +5,7 @@ package com.elm.shj.admin.portal.services.digitalid;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantDigitalIdDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.CountryLookupDto;
-import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.lookup.CountryLookupService;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
@@ -66,7 +63,7 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
      * @param applicant the applicant to generate smart id for
      * @return the generated smart id
      */
-    public String generate(ApplicantDto applicant) {
+    public String generate(ApplicantLiteDto applicant) {
         // check inputs
         Assert.isTrue(Arrays.asList("M", "F").contains(applicant.getGender().toUpperCase()), "Invalid Applicant Gender!");
         Assert.notNull(applicant.getDateOfBirthGregorian(), "Invalid Applicant Date of Birth!");

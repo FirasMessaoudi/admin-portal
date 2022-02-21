@@ -53,7 +53,7 @@ public class JpaApplicantEmergencyDataUpload implements Serializable {
     @Column(name = "bus_number")
     private String busNumber;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @PrePersist

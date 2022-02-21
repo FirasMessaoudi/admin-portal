@@ -33,6 +33,6 @@ public abstract class JpaLocalizedLookup implements Serializable {
     @Column(name = "label", nullable = false)
     private String label;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 }

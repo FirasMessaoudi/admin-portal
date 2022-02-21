@@ -160,7 +160,7 @@ GO
 -- update script for shc_portal aash version 1.8.0
 USE shc_portal
 GO
-INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('elm.commons.web.cors.allowed_origins', 'http://localhost:8080,http://localhost:4200,http://127.0.0.1:4200,http://localhost:8200,http://127.0.0.1:8200,http://ci-shc_portal.elm.com.sa:8080');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('elm.commons.web.cors.allowed_origins', 'http://localhost:8080,http://localhost:4200,http://localhost:4100,http://localhost:8200,http://127.0.0.1:8200,http://ci-shc_portal.elm.com.sa:8080');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('elm.commons.web.cors.allowed_methods', 'GET,POST,PUT,OPTIONS');
 GO
@@ -590,20 +590,14 @@ IDENTITY_INSERT shc_portal.shc_user_role OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
-INSERT INTO shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en, creation_date, update_date)
-VALUES (1, 'applicant-data.xlsx', N'بيانات ضيف الرحمن', 'Applicant Data', N'2021-04-13 13:38', null),
-       (2, 'applicant-relatives-data.xlsx', N'بيانات أقارب ضيف الرحمن', 'Applicant Relatives Data',
-        N'2021-04-13 13:38', null),
-       (3, 'applicant-health-data.xlsx', N'البيانات الصحية لضيف الرحمن', 'Applicant Health Data', N'2021-04-13 13:38',
-        null),
-       (4, 'applicant-vaccination-data.xlsx', N'بيانات تطعيمات ضيف الرحمن', 'Applicant Vaccination Data',
-        N'2021-04-13 13:38', null),
-       (5, 'applicant-disease-data.xlsx', N'بيانات أمراض ضيف الرحمن', 'Applicant Disease Data', N'2021-04-13 13:38',
-        null),
-       (6, 'applicant-ritual-data.xlsx', N'بيانات الشعيرة لضيف الرحمن', 'Applicant Ritual Data', N'2021-05-13 13:38',
-        null);
-SET
-IDENTITY_INSERT shc_portal.shc_data_segment OFF;
+INSERT INTO shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
+VALUES (1, 'applicant-data.xlsx', N'بيانات ضيف الرحمن', 'Applicant Data'),
+       (2, 'applicant-ritual-data.xlsx', N'بيانات الشعيرة لضيف الرحمن', 'Applicant Ritual Data'),
+       (3, 'applicant-relatives-data.xlsx', N'بيانات أقارب ضيف الرحمن', 'Applicant Relatives Data'),
+       (4, 'applicant-health-data.xlsx', N'البيانات الصحية لضيف الرحمن', 'Applicant Health Data'),
+       (5, 'applicant-vaccination-data.xlsx', N'بيانات تطعيمات ضيف الرحمن', 'Applicant Vaccination Data'),
+       (6, 'applicant-disease-data.xlsx', N'بيانات أمراض ضيف الرحمن', 'Applicant Disease Data');
+SET IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 GO
 
 -- add data request statuses

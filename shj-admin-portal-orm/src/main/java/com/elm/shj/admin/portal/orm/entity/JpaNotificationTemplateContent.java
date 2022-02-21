@@ -45,7 +45,7 @@ public class JpaNotificationTemplateContent implements Serializable {
     @Column(name = "action_label")
     private String actionLabel;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE")

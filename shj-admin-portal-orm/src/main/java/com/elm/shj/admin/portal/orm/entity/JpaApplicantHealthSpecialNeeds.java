@@ -33,14 +33,14 @@ public class JpaApplicantHealthSpecialNeeds implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicant_health_id")
     private JpaApplicantHealth applicantHealth;
 
     @Column(name = "special_need_type_code", nullable = false)
     private String specialNeedTypeCode;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @PrePersist

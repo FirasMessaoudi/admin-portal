@@ -39,11 +39,11 @@ public class JpaPackageHousing implements Serializable {
     @Column(name = "site_code")
     private String siteCode;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", nullable = false)
     private JpaRitualPackage ritualPackage;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "zone_id")
     private JpaHousingZone housingZone;
 
@@ -87,7 +87,7 @@ public class JpaPackageHousing implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageHousing")
     private List<JpaApplicantPackageHousing> applicantPackageHousing;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE")

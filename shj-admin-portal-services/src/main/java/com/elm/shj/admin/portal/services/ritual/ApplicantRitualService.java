@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.services.ritual;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
+import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -128,7 +130,29 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
      * @return
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public Long findIdByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
+    protected Long findIdByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
         return applicantRitualRepository.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber);
+    }
+
+    @Transactional
+    public Long findAndUpdate(Long applicantId, String packageReferenceNumber, ApplicantPackageDto applicantPackage, boolean createIfNotExist) {
+        // find id, if exists update applicant ritual applicant package
+        // if not exists create a new one and link it with the applicant package.
+        Long applicantRitualId = findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber);
+
+        if (applicantRitualId != null && applicantPackage != null) {
+            updateApplicantRitualApplicantPackage(applicantPackage.getId(), applicantRitualId);
+            return applicantRitualId;
+        }
+
+        if (applicantRitualId == null && applicantPackage != null && createIfNotExist) {
+            ApplicantRitualDto applicantRitual = ApplicantRitualDto.builder()
+                    .applicant(ApplicantDto.builder().id(applicantId).build())
+                    .applicantPackage(applicantPackage).packageReferenceNumber(packageReferenceNumber)
+                    .build();
+            applicantRitual = save(applicantRitual);
+            applicantRitualId = applicantRitual.getId();
+        }
+        return applicantRitualId;
     }
 }

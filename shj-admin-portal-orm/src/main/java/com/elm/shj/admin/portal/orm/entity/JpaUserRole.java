@@ -41,7 +41,7 @@ public class JpaUserRole implements Serializable {
     @Column(name = "is_main_role")
     private boolean mainRole;
 
-    @Column(name = "CREATION_DATE", nullable = false)
+    @Column(name = "CREATION_DATE", nullable = false, updatable = false)
     private Date creationDate;
 
     @PrePersist

@@ -47,7 +47,7 @@ public class JpaDataRequestRecord implements Serializable {
     @Column(name = "item_id")
     private long itemId;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")

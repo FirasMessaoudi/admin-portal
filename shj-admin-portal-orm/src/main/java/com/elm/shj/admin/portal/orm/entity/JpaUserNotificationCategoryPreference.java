@@ -40,7 +40,7 @@ public class JpaUserNotificationCategoryPreference implements Serializable {
 
     private boolean enabled;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "UPDATE_DATE")

@@ -125,7 +125,7 @@ SET IDENTITY_INSERT shc_portal.shc_notification_template_content OFF;
 GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('notification.processing.batch.size', '1000');
-INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('scheduler.notification.processing.cron', '* * * ? * *');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('scheduler.notification.processing.cron', '0 0/5 * * * *');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('google.maps.api.key', 'AIzaSyAC78ugAlOF9B2YK8-ukki2IQTyNAgUSO0');
 GO
 
@@ -304,7 +304,7 @@ GO
 
 SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
 insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
-values (8, 'staff-main-data.xlsx', N'بيانات العاملين	',
+values (8, 'staff-main-data.xlsx', N'بيانات العاملين',
         'Staff Main Data');
 SET
 IDENTITY_INSERT shc_portal.shc_data_segment OFF;
@@ -514,4 +514,8 @@ SET IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
 
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
 VALUES (1, 41);
+GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('dashboard.mobile.age.range', '0-18,18-30,30-40,40-60,60-200');
 GO

@@ -28,4 +28,12 @@ public interface MobileAuditLogRepository extends JpaRepository<JpaMobileAuditLo
                                          @Param("ritualTypeCodeList") List<String> ritualTypeCodeList,
                                          @Param("currentDate") Date currentDate);
 
+    @Query("SELECT COUNT(DISTINCT a) FROM JpaApplicant a JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id " +
+            "JOIN JpaMobileAuditLog mal ON mal.userIdNumber = adi.uin JOIN a.rituals ar JOIN ar.applicantPackage ap " +
+            "JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
+            "WHERE rs.seasonYear = :seasonYear AND (a.dateOfBirthGregorian BETWEEN :to AND :from) AND rs.ritualTypeCode IN (:ritualTypeCodeList)")
+    long countMobileAppUsersByAgeRange(@Param("from") Date from,
+                                       @Param("to") Date to,
+                                       @Param("seasonYear") int seasonYear,
+                                       @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 }

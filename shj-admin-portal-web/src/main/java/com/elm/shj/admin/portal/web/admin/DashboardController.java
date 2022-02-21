@@ -187,4 +187,11 @@ public class DashboardController {
         return dashboardService.findActiveApplicantWithLocationBySeason(seasonYear);
     }
 
+    @GetMapping("/mobile/usage-by-age-range/{seasonYear}")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CountVo> loadMobileAppUsersCountByAgeRange(@PathVariable("seasonYear") int seasonYear) {
+        log.info("Handling findActiveApplicantWithLocationBySeason endpoint.");
+        return dashboardService.loadMobileAppUsersCountByAgeRange(seasonYear);
+    }
+
 }

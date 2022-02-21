@@ -43,6 +43,11 @@
           <div class="inline float-left">
             <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
           </div>
+          <!-- <div class="d-inline custom-control custom-checkbox my-2">
+            <input type="checkbox"  class="custom-control-input" id="customCheck-01"
+                  >
+            <label class="custom-control-label mx-3" for="customCheck-01"></label>
+          </div> -->
         </li>
         <li class="list-group-item list-sts">حجاج الموسم الماضي
           <div class="inline float-left">
@@ -323,12 +328,20 @@
             [plugins]="incidentDoughnutChartPlugins" [colors]="[{
                       backgroundColor: ['#657DA5', '#D8DEE8'],
                       hoverBackgroundColor: ['#657DA5', '#D8DEE8']
-                    }]" [options]="incidentDoughnutChartOptions" height="100">
-          </canvas>
-          <div class="mt-4">
-            <div>
-              {{'dashboard.main.area_with_most_incidents' | translate}}
-              <b class="text-dark">{{mostIncidentsArea}}</b>
+                    }]"
+                    [legend]="false"
+                    [options]="incidentDoughnutChartOptions"
+                    height="100">
+            </canvas>
+            <div class="mt-4">
+              <div>
+                {{'dashboard.main.area_with_most_incidents' | translate}}
+                <b class="text-dark">{{mostIncidentsArea}}</b>
+              </div>
+              <div>
+                {{'dashboard.main.largest_number_of_incidents_reported' | translate}}
+                <b class="text-dark">{{mostIncidentDate}}</b>
+              </div>
             </div>
             <div>
               {{'dashboard.main.largest_number_of_incidents_reported' | translate}}
@@ -393,5 +406,4 @@
     </div>
   </div>
 
-</div>
 </div>

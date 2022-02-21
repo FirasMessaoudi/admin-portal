@@ -51,6 +51,9 @@ public class DashboardService {
     @Value("${dashboard.mobile.registered.applicant.by.company.size}")
     private int maxApplicantRegistereByCompanySize;
 
+    @Value("${dashboard.mobile.age.range}")
+    private String mobileUsersAgeRange;
+
     List<String> hajjRituals = List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name());
 
     private final UserRepository userRepository;
@@ -347,11 +350,26 @@ public class DashboardService {
     }
 
     public List<Integer> getMobileLoggedInUsers(int seasonYear) {
-        Date startDate = Date.from(Instant.from(LocalDate.now().minusDays(7).atStartOfDay(ZoneId.systemDefault())));
+        Date startDate = Date.from(Instant.from(LocalDate.now().minusDays(6).atStartOfDay(ZoneId.systemDefault())));
         return mobileAuditLogRepository.getMobileLoggedInUsers(seasonYear, hajjRituals, startDate);
     }
 
     public List<ApplicantMobileTrackingVo> findActiveApplicantWithLocationBySeason(int seasonYear) {
         return applicantRepository.findActiveApplicantWithLocationBySeason(seasonYear);
+    }
+
+    public List<CountVo> loadMobileAppUsersCountByAgeRange(int hijriYear) {
+        List<CountVo> countVoList = new ArrayList<>();
+        Arrays.stream(this.mobileUsersAgeRange.split(",")).forEach(range -> {
+            CountVo countVo = new CountVo();
+            String[] ages = range.split("-");
+            Date from = new Timestamp(getDateFromAge(Integer.valueOf(ages[0])).getTime());
+            Date to = new Timestamp(getDateFromAge(Integer.valueOf(ages[1])).getTime());
+            long applicantsNumber = mobileAuditLogRepository.countMobileAppUsersByAgeRange(from, to, hijriYear, hajjRituals);
+            countVo.setLabel(range);
+            countVo.setCount(applicantsNumber);
+            countVoList.add(countVo);
+        });
+        return countVoList;
     }
 }
