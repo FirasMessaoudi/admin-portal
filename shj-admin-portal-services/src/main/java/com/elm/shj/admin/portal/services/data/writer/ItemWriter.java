@@ -294,17 +294,6 @@ public class ItemWriter {
                         applicantHealth.setUpdateDate(new Date());
                     }
                 }
-
-                if (dataSegment.getId() == EDataSegment.APPLICANT_RITUAL_DATA.getId()) {
-                    ApplicantHealthDto applicantHealth = (ApplicantHealthDto) entry.getValue();
-                    // find existing (if inserted by other segments like diseases and immunizations) and update or save the new one
-                    Long applicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantHealth.getApplicant().getId(), applicantHealth.getPackageReferenceNumber());
-                    if (applicantHealthId != null) {
-                        applicantHealth.setId(applicantHealthId);
-                        applicantHealth.setUpdateDate(new Date());
-                    }
-                }
-
                 savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
             }
             savedItems.add(savedItem);
