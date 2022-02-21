@@ -1285,3 +1285,16 @@ create table shc_portal.shc_user_location
 
 ALTER TABLE shc_portal.shc_applicant_health ADD CONSTRAINT applicant_health_unique UNIQUE (applicant_id, applicant_ritual_id, package_reference_number);
 GO
+
+/*---------------------------------------------------
+--  ddl for shc_applicant_mobile_log_time table
+---------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_applicant_mobile_log_time')
+CREATE TABLE shc_applicant_mobile_audit_log
+(
+    id             int          NOT NULL PRIMARY KEY IDENTITY (1,1),
+    user_id_number varchar(45)  NOT NULL,
+    event          varchar(255) NULL,
+    event_date     smalldatetime DEFAULT CURRENT_TIMESTAMP,
+);
+GO
