@@ -79,7 +79,7 @@ public class ApplicantRitualDto implements Serializable {
 
     private Date updateDate;
 
-    private DataRequestRecordDto dataRequestRecord;
+    private Long dataRequestRecordId;
 
     // used in data requests either through file upload or integration
     @Valid

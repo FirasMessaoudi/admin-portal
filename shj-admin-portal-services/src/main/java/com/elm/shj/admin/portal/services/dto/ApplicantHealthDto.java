@@ -60,7 +60,7 @@ public class ApplicantHealthDto implements Serializable {
     @JsonBackReference(value = "applicantRitual")
     private ApplicantRitualDto applicantRitual;
 
-    private DataRequestRecordDto dataRequestRecord;
+    private Long dataRequestRecordId;
 
     private List<ApplicantHealthDiseaseDto> diseases;
 

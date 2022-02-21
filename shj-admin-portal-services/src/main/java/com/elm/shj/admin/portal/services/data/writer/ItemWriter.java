@@ -185,9 +185,9 @@ public class ItemWriter {
                     }
                 }).forEach(r -> {
                     try {
-                        BeanUtils.setProperty(s, "dataRequestRecord", r);
+                        BeanUtils.setProperty(s, "dataRequestRecordId", BeanUtils.getProperty(r, "id"));
                         //set data request record for the saved applicants ritual
-                        ((JpaApplicant) s).getRituals().get(0).setDataRequestRecord(((JpaApplicant) s).getDataRequestRecord());
+                        ((JpaApplicant) s).getRituals().get(0).setDataRequestRecordId(((JpaApplicant) s).getDataRequestRecordId());
                         applicantRepository.save(s);
                     } catch (Exception e) {
                         ReflectionUtils.handleReflectionException(e);
@@ -278,7 +278,7 @@ public class ItemWriter {
                     staff.setId(existingStaff.getId());
                     staff.setDigitalIds(existingStaff.getDigitalIds());
                     // staff.setCompany(existingStaff.getCompany());
-                    staff.setDataRequestRecord(existingStaff.getDataRequestRecord());
+                    staff.setDataRequestRecordId(existingStaff.getDataRequestRecordId());
                     staff.setApplicantGroups(existingStaff.getApplicantGroups());
                     savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(staff, mappingContext));
                 } else {
@@ -286,6 +286,16 @@ public class ItemWriter {
                 }
             } else {
                 if (dataSegment.getId() == EDataSegment.APPLICANT_HEALTH_DATA.getId()) {
+                    ApplicantHealthDto applicantHealth = (ApplicantHealthDto) entry.getValue();
+                    // find existing (if inserted by other segments like diseases and immunizations) and update or save the new one
+                    Long applicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantHealth.getApplicant().getId(), applicantHealth.getPackageReferenceNumber());
+                    if (applicantHealthId != null) {
+                        applicantHealth.setId(applicantHealthId);
+                        applicantHealth.setUpdateDate(new Date());
+                    }
+                }
+
+                if (dataSegment.getId() == EDataSegment.APPLICANT_RITUAL_DATA.getId()) {
                     ApplicantHealthDto applicantHealth = (ApplicantHealthDto) entry.getValue();
                     // find existing (if inserted by other segments like diseases and immunizations) and update or save the new one
                     Long applicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantHealth.getApplicant().getId(), applicantHealth.getPackageReferenceNumber());
@@ -325,7 +335,7 @@ public class ItemWriter {
                 }
             }).forEach(r -> {
                 try {
-                    BeanUtils.setProperty(s, "dataRequestRecord", r);
+                    BeanUtils.setProperty(s, "dataRequestRecordId", BeanUtils.getProperty(r, "id"));
                 } catch (Exception e) {
                     ReflectionUtils.handleReflectionException(e);
                 }

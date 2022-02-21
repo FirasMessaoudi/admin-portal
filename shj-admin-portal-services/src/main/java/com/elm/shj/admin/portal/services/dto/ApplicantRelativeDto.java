@@ -42,7 +42,7 @@ public class ApplicantRelativeDto implements Serializable {
     private ApplicantDto relativeApplicant;
     private Date creationDate;
     private Date updateDate;
-    private DataRequestRecordDto dataRequestRecord;
+    private Long dataRequestRecordId;
 
     // used in data requests either through file upload or integration
     @Valid

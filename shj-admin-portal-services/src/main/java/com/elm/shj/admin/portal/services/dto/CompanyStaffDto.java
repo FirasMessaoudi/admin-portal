@@ -106,8 +106,9 @@ public class CompanyStaffDto {
     @CellIndex(index = 12)
     private String email;
 
-    private DataRequestRecordDto dataRequestRecord;
-  @JsonBackReference(value = "digitalIds")
+    private Long dataRequestRecordId;
+
+    @JsonBackReference(value = "digitalIds")
     private List<CompanyStaffDigitalIdDto> digitalIds;
 
     private String countryCode;
