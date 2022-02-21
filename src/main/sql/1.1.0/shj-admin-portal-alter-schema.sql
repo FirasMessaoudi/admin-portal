@@ -1282,3 +1282,6 @@ create table shc_portal.shc_user_location
     creation_date smalldatetime not null default current_timestamp,
     update_date smalldatetime null
 );
+
+ALTER TABLE shc_portal.shc_applicant_health ADD CONSTRAINT applicant_health_unique UNIQUE (applicant_id, applicant_ritual_id, package_reference_number);
+GO
