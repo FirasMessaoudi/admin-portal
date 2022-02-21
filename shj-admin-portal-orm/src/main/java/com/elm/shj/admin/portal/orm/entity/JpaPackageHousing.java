@@ -39,11 +39,11 @@ public class JpaPackageHousing implements Serializable {
     @Column(name = "site_code")
     private String siteCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "package_id", nullable = false)
     private JpaRitualPackage ritualPackage;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "zone_id")
     private JpaHousingZone housingZone;
 

@@ -35,7 +35,7 @@ public class JpaApplicantRitual implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private JpaApplicant applicant;
 
     @Column(name = "visa_number")
@@ -60,7 +60,7 @@ public class JpaApplicantRitual implements Serializable {
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "applicant_package_id")
     private JpaApplicantPackage applicantPackage;
 

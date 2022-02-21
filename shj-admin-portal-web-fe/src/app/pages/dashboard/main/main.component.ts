@@ -11,6 +11,7 @@ import { LookupService } from '@core/utilities/lookup.service';
 import { DatePipe } from '@angular/common';
 import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
 import { I18nService } from '@dcc-commons-ng/services';
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import * as moment_ from 'moment-hijri';
 
@@ -22,6 +23,7 @@ const momentHijri = moment_;
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
+  providers: [NgbModalConfig, NgbModal]
 })
 export class MainComponent implements OnInit {
   //TODO Dummy Data
@@ -94,8 +96,18 @@ export class MainComponent implements OnInit {
     private lookupService: LookupService,
     private dateFormatterService: DateFormatterService,
     private translate: TranslateService,
-    private i18nService: I18nService
-  ) {}
+    private i18nService: I18nService,
+    config: NgbModalConfig, private modalService: NgbModal
+  ) {
+    config.backdrop = 'static';
+    config.keyboard = false;
+  }
+
+  open(content) {
+    this.modalService.open(content);
+  }
+
+
 
   ngOnInit() {
     this.loadLookups();
@@ -125,6 +137,8 @@ export class MainComponent implements OnInit {
         this.incidents.totalNumberOfRegisteredIncidents
       );
     });
+
+   
   }
 
   ngOnDestroy() {
@@ -170,6 +184,8 @@ export class MainComponent implements OnInit {
         },
       },
     ];
+
+    
   }
 
   loadLookups() {

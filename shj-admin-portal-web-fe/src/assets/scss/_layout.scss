@@ -233,3 +233,30 @@ body .btn-select{
     margin-left: 8px;
     line-height: 1.72;
 }
+
+[dir=rtl] .list-group {
+  padding-left: 0px !important;
+}
+
+.list-sts {
+  font-size: 1rem;
+  color: #000;
+}
+
+.custom-popup-btn {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    width: 57%;
+}
+
+.custom-input-pop {
+  width: 3rem;
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 600px !important;
+}
+}
+
+

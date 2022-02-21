@@ -44,11 +44,11 @@ public class JpaApplicantPackageHousing implements Serializable {
     @Column(name = "update_date")
     private Date updateDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "applicant_package_id")
     private JpaApplicantPackage applicantPackage;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "package_housing_id")
     private JpaPackageHousing packageHousing;
 
