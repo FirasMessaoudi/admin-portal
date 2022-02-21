@@ -86,7 +86,6 @@ export class MobileComponent implements OnInit {
         tension: 0,
       },
       {
-        data: [14, 12, 24, 18, 13, 20, 31],
         fill: false,
         borderColor: '#D5D5DD',
         borderWidth: 2,
@@ -229,7 +228,10 @@ export class MobileComponent implements OnInit {
       let loader = new Loader({ apiKey: result, libraries: ['visualization'] });
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
-          center: { lat: this.applicantMobileTrackings[0].lat, lng: this.applicantMobileTrackings[0].lng },
+          center: {
+            lat: this.applicantMobileTrackings[0].lat,
+            lng: this.applicantMobileTrackings[0].lng,
+          },
           zoom: 14,
           scrollwheel: true,
         });

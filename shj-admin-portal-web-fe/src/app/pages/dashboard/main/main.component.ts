@@ -119,7 +119,7 @@ export class MainComponent implements OnInit {
             ctx = chart.ctx;
           ctx.restore();
           var fontSize = (height / 15).toFixed(2);
-          ctx.font = fontSize + 'px Arial';
+          ctx.font = fontSize + 'px Elm-font", sans-serif';
           ctx.textBaseline = 'middle';
           var text = countText + '',
             textX = Math.round((width - ctx.measureText(text).width) / 2),

@@ -67,7 +67,8 @@ export class ChartsConfig {
       datalabels: {
         color: 'white',
         display: function (context: any) {
-          return context.dataset.data[context.dataIndex] > 15;
+          /*return context.dataset.data[context.dataIndex] > 15;*/
+          return null;
         },
         textAlign: 'center',
         font: {
