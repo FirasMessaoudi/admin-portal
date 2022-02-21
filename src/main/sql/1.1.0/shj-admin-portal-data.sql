@@ -515,3 +515,7 @@ SET IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id)
 VALUES (1, 41);
 GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('dashboard.mobile.age.range', '0-18,18-30,30-40,40-60,60-200');
+GO
