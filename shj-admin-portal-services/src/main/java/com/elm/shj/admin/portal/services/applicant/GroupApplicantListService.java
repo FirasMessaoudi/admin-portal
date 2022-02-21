@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,12 +60,8 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
     public List<ApplicantVo> findGroupApplicantListBySuin(String suin) {
         //TODO performance issue to be fixed
         //return getMapper().fromEntityList(groupApplicantListRepository.findByApplicantGroupGroupLeaderDigitalIdsSuin(suin), mappingContext);
-        List<ApplicantVo> applicantLiteDtoList = new ArrayList<ApplicantVo>();
-        List<JpaGroupApplicantList> groupApplicantLists = groupApplicantListRepository.findByApplicantGroupGroupLeaderDigitalIdsSuin(suin);
-        groupApplicantLists.forEach((c) -> {
-            applicantLiteDtoList.add(applicantLiteRepository.findApplicantDetailsWithLocationByUin(c.getApplicantUin()).get(0));
-        });
-        applicantLiteDtoList.removeAll(Collections.singleton(null));
+        List<ApplicantVo> applicantLiteDtoList = groupApplicantListRepository.findApplicantDetailsWithLocationByGroupeLeaderSuin(suin);
+        //applicantLiteDtoList.removeAll(Collections.singleton(null));
         return applicantLiteDtoList;
     }
 }

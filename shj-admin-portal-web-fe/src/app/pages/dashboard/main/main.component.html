@@ -119,14 +119,16 @@
         </div>
 
         <div class="col-md-8">
-          <div class="d-inline-flex text-nowrap"> 
-            <button type="button" class="btn btn-outline-dcc-primary custom-popup-btn" (click)="c('Save click')">تطبيق العرض
-              الافتراضي</button>
+          <div class="d-inline-flex text-nowrap">
+            <button type="button" class="btn btn-outline-dcc-primary custom-popup-btn" (click)="c('Save click')">تطبيق
+              العرض
+              الافتراضي
+            </button>
             <button type="button" class="btn btn-dcc-primary mx-2" (click)="c('Save click')">عرض</button>
           </div>
-         
+
         </div>
-       
+
       </div>
     </div>
 </ng-template>
@@ -373,7 +375,11 @@
             <a ngbNavLink>{{'dashboard.main.pilgrims_tracking' | translate}}</a>
             <ng-template ngbNavContent>
               <div class="flex-center">
-                <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
+                <!--Start MAP-->
+                <div class="map py-3">
+                  <div id="map" style="height: 100%; width: 100%;"></div>
+                </div>
+                <!--End Map-->
               </div>
             </ng-template>
           </li>
