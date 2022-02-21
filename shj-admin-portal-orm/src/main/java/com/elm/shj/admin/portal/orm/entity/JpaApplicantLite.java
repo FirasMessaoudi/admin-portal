@@ -74,7 +74,7 @@ public class JpaApplicantLite implements Serializable {
     private List<JpaApplicantContact> contacts;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade  = {CascadeType.REFRESH, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "applicant_id")
     private List<JpaApplicantDigitalId> digitalIds;
 }

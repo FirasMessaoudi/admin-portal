@@ -71,7 +71,7 @@ public class JpaPackageTransportation implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageTransportation")
     private List<JpaApplicantPackageTransportation> applicantPackageTransportations;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", nullable = false)
     private JpaRitualPackage ritualPackage;
 

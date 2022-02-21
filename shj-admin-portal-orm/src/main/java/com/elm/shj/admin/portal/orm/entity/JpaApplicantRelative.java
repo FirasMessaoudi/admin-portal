@@ -36,11 +36,11 @@ public class JpaApplicantRelative implements Serializable {
     @Column(name = "relationship_code", nullable = false)
     private String relationshipCode;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicant_id")
     private JpaApplicant applicant;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "relative_applicant_id")
     private JpaApplicant relativeApplicant;
 
@@ -50,11 +50,11 @@ public class JpaApplicantRelative implements Serializable {
     @Column(name = "update_date", nullable = false)
     private Date updateDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicant_ritual_id")
     private JpaApplicantRitual applicantRitual;
 

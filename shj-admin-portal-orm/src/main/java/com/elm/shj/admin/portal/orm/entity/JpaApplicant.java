@@ -82,20 +82,20 @@ public class JpaApplicant implements Serializable {
     @Column(name = "preferred_language")
     private String preferredLanguage;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 
-    @OneToMany(cascade  = {CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "applicant_id")
     private List<JpaApplicantDigitalId> digitalIds;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade  = {CascadeType.REFRESH, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "applicant")
+    @OneToMany(orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantRelative> relatives;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade  = CascadeType.REFRESH, orphanRemoval = true, mappedBy = "applicant")
+    @OneToMany(orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantRitual> rituals;
 
     @LazyCollection(LazyCollectionOption.FALSE)
