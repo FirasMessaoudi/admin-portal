@@ -10,3 +10,4 @@ export * from './dashboard-vo.model';
 export * from './change-password.model';
 export * from './data-request.model';
 export * from './data-segment.model';
+export * from './dashboard-item';

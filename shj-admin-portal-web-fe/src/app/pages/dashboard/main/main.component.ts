@@ -26,6 +26,7 @@ import * as moment_ from 'moment-hijri';
 
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { ApplicantMobileTracking } from '@app/_shared/model/applicant-mobile-tracking.model';
+import {dashboardItem} from "@shared/model";
 
 const momentHijri = moment_;
 
@@ -101,7 +102,8 @@ export class MainComponent implements OnInit {
 
   private refreshSubscription: Subscription;
   seasonYear: number;
-
+  dashboards:dashboardItem[] = [];
+  slideShowInterval: number;
   constructor(
     private dashboardService: DashboardService,
     private lookupService: LookupService,
@@ -150,6 +152,8 @@ export class MainComponent implements OnInit {
     });
 
 
+    this.dashboards = this.dashboardService.getDashboardItems();
+    this.dashboardService.getSlideShowInterval().subscribe(interval => this.slideShowInterval = interval);
   }
 
   ngOnDestroy() {
@@ -367,5 +371,12 @@ export class MainComponent implements OnInit {
       this.isSeasonYearSelected = true;
       this.loadDashboardData();
     }
+  }
+  disableSlideShow(): boolean {
+    return this.dashboards.filter(dashboard => dashboard.selected).length < 1 ;
+  }
+
+  updateInterval(newValue) {
+    this.dashboardService.getSlideShowInterval().next(newValue)
   }
 }
