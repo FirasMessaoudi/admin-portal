@@ -5,8 +5,8 @@
       <span *ngIf="currentLanguage.startsWith('ar')">عام</span>
       <span *ngIf="isSeasonYearSelected">{{seasonYear}}</span>
 
-      <select class="col-8 custom-select mx-3"  *ngIf="!isSeasonYearSelected" #currentSeasonYear
-              (change)="onCurrentSeasonYearsSelected(currentSeasonYear.value)">
+      <select class="col-8 custom-select mx-3" *ngIf="!isSeasonYearSelected" #currentSeasonYear
+        (change)="onCurrentSeasonYearsSelected(currentSeasonYear.value)">
         <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
         <option *ngFor="let season of ritualSeasons" [ngValue]="season">
           {{season}}
@@ -14,12 +14,12 @@
       </select>
 
       <svg-icon styleClass="fa-w-18 edit-icon" ngbTooltip="Edit" icon="edit-light" *ngIf="isSeasonYearSelected==true"
-                (click)="isSeasonYearSelected=false"></svg-icon>
+        (click)="isSeasonYearSelected=false"></svg-icon>
 
     </h3>
 
     <div>
-      <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
+      <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3" (click)="open(content)">
         <svg-icon styleClass="fa-w-18" icon="edit-light"></svg-icon>
         {{'general.btn_edit' | translate}}
       </button>
@@ -28,278 +28,370 @@
         {{'dashboard.general.full_screen' | translate}}
       </button>
     </div>
+
+
   </div>
-  <div class="content__section">
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
-
-      <div class="col" [routerLink]="['/dashboard/general-numbers',seasonYear]">
-        <div class="statistics h-100 p-3 border full-click">
-          <div class="flex-center-between">
-            <div>
-              <div class="sts-title">{{'dashboard.general.current_season_pilgrims' | translate}}</div>
-              <div class="sts-number text-dark">
-                <ng9-odometer [number]="currentSeasonData?.totalNumberOfApplicants"></ng9-odometer>
-              </div>
-            </div>
-            <svg-icon styleClass="sts-icon fa-w-14 display-4" icon="user-solid"></svg-icon>
+  <ng-template #content let-c="close" let-d="dismiss" >
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">اختر البيانات التي تريد عرضها في لوحة البيانات</h5>
+      <span class="h3" aria-label="Close" (click)="d('Cross click')">X</span>
+    </div>
+    <div class="modal-body w-100">
+      <ul class="list-group">
+        <li class="list-group-item list-sts">حجاج هذا العام
+          <div class="inline float-left">
+            <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
           </div>
-
-          <p class="py-3">
-            <ngb-progressbar type="pilgrims" [value]="currentSeasonPercentage" height="10px"></ngb-progressbar>
-          </p>
-
-          <div class="flex-center-between mt-2">
-            <div class="d-flex">
-              <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
-              <div class="px-3">{{'dashboard.general.external_pilgrims' | translate}}</div>
-            </div>
-            <div>{{currentSeasonData?.totalNumberOfExternalApplicants | number}}</div>
+        </li>
+        <li class="list-group-item list-sts">حجاج الموسم الماضي
+          <div class="inline float-left">
+            <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
           </div>
-          <div class="flex-center-between mt-2">
-            <div class="d-flex">
-              <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-              <div class="px-3">{{'dashboard.general.internal_pilgrims' | translate}}</div>
-            </div>
-            <div>{{currentSeasonData?.totalNumberOfInternalApplicants | number}}</div>
+        </li>
+        <li class="list-group-item list-sts">عدد الكاميرات
+          <div class="inline float-left">
+            <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
           </div>
-        </div>
-      </div>
-      <!-- <div class="col"> -->
-             <div class="col" [routerLink]="['/dashboard/general-numbers', seasonYear - 1]">
-        <div class="statistics h-100 p-3 border full-click">
-          <div class="flex-center-between">
-            <div>
-              <div class="sts-title">{{'dashboard.general.previous_season_pilgrims' | translate}}</div>
-              <div class="sts-number text-dark">
-                <ng9-odometer [number]="previousSeasonData?.totalNumberOfApplicants"></ng9-odometer>
-              </div>
-            </div>
-            <svg-icon styleClass="sts-icon fa-w-20 display-4" icon="user-clock"></svg-icon>
+        </li>
+        <li class="list-group-item list-sts">تحميل التطبيق
+          <div class="inline float-left">
+            <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
           </div>
-
-          <p class="py-3">
-            <ngb-progressbar type="pilgrims" [value]="previousSeasonPercentage" height="10px"></ngb-progressbar>
-          </p>
-
-          <div class="flex-center-between mt-2">
-            <div class="d-flex">
-              <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
-              <div class="px-3">{{'dashboard.general.external_pilgrims' | translate}}</div>
-            </div>
-            <div>{{previousSeasonData?.totalNumberOfExternalApplicants | number}}</div>
+        </li>
+        <li class="list-group-item list-sts">عمليات البطاقة بالنسبة للأجهزة
+          <div class="inline float-left">
+            <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
           </div>
-          <div class="flex-center-between mt-2">
-            <div class="d-flex">
-              <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-              <div class="px-3">{{'dashboard.general.internal_pilgrims' | translate}}</div>
-            </div>
-            <div>{{previousSeasonData?.totalNumberOfInternalApplicants | number}}</div>
+        </li>
+        <li class="list-group-item list-sts">المتابعة بالخريطة
+          <div class="inline float-left">
+            <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
           </div>
-        </div>
-      </div>
-
-      <div class="col" [routerLink]="['/dashboard/cameras']">
-        <div class="statistics h-100 p-3 border full-click">
-          <div class="flex-center-between">
-            <div>
-              <div class="sts-title">{{'dashboard.general.number_of_cameras' | translate}}</div>
-              <div class="sts-number text-dark">
-                <ng9-odometer [number]="dashboardCameras.totalCount"></ng9-odometer>
-              </div>
-            </div>
-            <svg-icon styleClass="sts-icon fa-w-18 display-4 flip" icon="cctv"></svg-icon>
+        </li>
+        <li class="list-group-item list-sts">إستخدام التطبيق بالنسبة للاعمار
+          <div class="inline float-left">
+            <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
           </div>
-
-          <p class="py-3">
-            <ngb-progressbar type="cctv" [value]="dashboardCameras.activeCameras / dashboardCameras.totalCount * 100"
-                             height="10px"></ngb-progressbar>
-          </p>
-
-          <div class="flex-center-between mt-2">
-            <div class="d-flex">
-              <svg-icon styleClass="text-cctv" icon="circle"></svg-icon>
-              <div class="px-3">{{'dashboard.general.active_cameras' | translate}}</div>
-            </div>
-            <div>{{dashboardCameras.activeCameras}}</div>
+        </li>
+        <li class="list-group-item list-sts">إستخدام التطبيق بالنسبة للشركات
+          <div class="inline float-left">
+            <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
           </div>
-          <div class="flex-center-between mt-2">
-            <div class="d-flex">
-              <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-              <div class="px-3">{{'dashboard.general.inactive_cameras' | translate}}</div>
+        </li>
+        <li class="list-group-item list-sts">تقييم الخدمات
+          <div class="inline float-left">
+            <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
+          </div>
+        </li>
+        <li class="list-group-item list-sts">أنواع البلاغات
+          <div class="inline float-left">
+            <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
+          </div>
+        </li>
+        <li class="list-group-item list-sts">عدد البلاغات
+          <div class="inline float-left">
+            <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
+          </div>
+        </li>
+        <li class="list-group-item list-sts">تقييم الشركات
+          <div class="inline float-left">
+            <input mdbCheckbox class="form-check-input " type="checkbox" value="" id="flexCheckDefault" />
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="d-flex">
+            <span class="text-nowrap list-sts">فترة العرض</span>
+            <div class="col-xs-2 mx-2">
+              <input type="number"  class="custom-input-pop" value="30">
             </div>
-            <div>{{dashboardCameras.inactiveCameras}}</div>
+            <span class="list-sts">ثانية</span>
           </div>
         </div>
+
+        <div class="col-md-8">
+          <div class="d-inline-flex text-nowrap"> 
+            <button type="button" class="btn btn-outline-dcc-primary custom-popup-btn" (click)="c('Save click')">تطبيق العرض
+              الافتراضي</button>
+            <button type="button" class="btn btn-dcc-primary mx-2" (click)="c('Save click')">عرض</button>
+          </div>
+         
+        </div>
+       
       </div>
+    </div>
+</ng-template>
 
-      <div class="col" [routerLink]="['/dashboard/mobile',seasonYear]">
-        <div class="statistics h-100 p-3 border full-click">
-          <div class="flex-center-between">
-            <div>
-              <div class="sts-title">{{'dashboard.general.mobile_app_downloads' | translate}}</div>
-              <div class="sts-number text-dark">
-                <ng9-odometer [number]="currentSeasonData?.totalNumberOfMobileAppDownloads"></ng9-odometer>
-              </div>
+<div class="content__section">
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
+
+    <div class="col" [routerLink]="['/dashboard/general-numbers',seasonYear]">
+      <div class="statistics h-100 p-3 border full-click">
+        <div class="flex-center-between">
+          <div>
+            <div class="sts-title">{{'dashboard.general.current_season_pilgrims' | translate}}</div>
+            <div class="sts-number text-dark">
+              <ng9-odometer [number]="currentSeasonData?.totalNumberOfApplicants"></ng9-odometer>
             </div>
-            <svg-icon styleClass="sts-icon fa-w-10 display-4" icon="mobile-android-alt"></svg-icon>
           </div>
+          <svg-icon styleClass="sts-icon fa-w-14 display-4" icon="user-solid"></svg-icon>
+        </div>
 
-          <p class="py-3">
-            <ngb-progressbar type="appdownloads"
-                             [value]="currentSeasonData?.totalNumberOfLoggedInUsers / currentSeasonData?.totalNumberOfMobileAppDownloads * 100"
-                             height="10px"></ngb-progressbar>
-          </p>
+        <p class="py-3">
+          <ngb-progressbar type="pilgrims" [value]="currentSeasonPercentage" height="10px"></ngb-progressbar>
+        </p>
 
-          <div class="flex-center-between mt-2">
-            <div class="d-flex">
-              <svg-icon styleClass="text-appdownloads" icon="circle"></svg-icon>
-              <div class="px-3">{{'dashboard.general.logged_in' | translate}}</div>
-            </div>
-            <div>{{currentSeasonData?.totalNumberOfLoggedInUsers}}</div>
-
+        <div class="flex-center-between mt-2">
+          <div class="d-flex">
+            <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
+            <div class="px-3">{{'dashboard.general.external_pilgrims' | translate}}</div>
           </div>
-          <div class="flex-center-between mt-2">
-            <div class="d-flex">
-              <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
-              <div class="px-3">{{'dashboard.general.logged_out' | translate}}</div>
-            </div>
-            <div>{{currentSeasonData?.totalNumberOfLoggedOutUsers}}</div>
+          <div>{{currentSeasonData?.totalNumberOfExternalApplicants | number}}</div>
+        </div>
+        <div class="flex-center-between mt-2">
+          <div class="d-flex">
+            <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+            <div class="px-3">{{'dashboard.general.internal_pilgrims' | translate}}</div>
           </div>
+          <div>{{currentSeasonData?.totalNumberOfInternalApplicants | number}}</div>
         </div>
       </div>
+    </div>
+    <!-- <div class="col"> -->
+    <div class="col" [routerLink]="['/dashboard/general-numbers', seasonYear - 1]">
+      <div class="statistics h-100 p-3 border full-click">
+        <div class="flex-center-between">
+          <div>
+            <div class="sts-title">{{'dashboard.general.previous_season_pilgrims' | translate}}</div>
+            <div class="sts-number text-dark">
+              <ng9-odometer [number]="previousSeasonData?.totalNumberOfApplicants"></ng9-odometer>
+            </div>
+          </div>
+          <svg-icon styleClass="sts-icon fa-w-20 display-4" icon="user-clock"></svg-icon>
+        </div>
 
+        <p class="py-3">
+          <ngb-progressbar type="pilgrims" [value]="previousSeasonPercentage" height="10px"></ngb-progressbar>
+        </p>
+
+        <div class="flex-center-between mt-2">
+          <div class="d-flex">
+            <svg-icon styleClass="text-pilgrims" icon="circle"></svg-icon>
+            <div class="px-3">{{'dashboard.general.external_pilgrims' | translate}}</div>
+          </div>
+          <div>{{previousSeasonData?.totalNumberOfExternalApplicants | number}}</div>
+        </div>
+        <div class="flex-center-between mt-2">
+          <div class="d-flex">
+            <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+            <div class="px-3">{{'dashboard.general.internal_pilgrims' | translate}}</div>
+          </div>
+          <div>{{previousSeasonData?.totalNumberOfInternalApplicants | number}}</div>
+        </div>
+      </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-xl-2">
-      <div class="col mt-4">
-        <div class="h-100 p-3 border">
-          <div class="flex-center-between flex-wrap">
-            <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">{{'dashboard.main.service_rating' | translate}}</h5>
+    <div class="col" [routerLink]="['/dashboard/cameras']">
+      <div class="statistics h-100 p-3 border full-click">
+        <div class="flex-center-between">
+          <div>
+            <div class="sts-title">{{'dashboard.general.number_of_cameras' | translate}}</div>
+            <div class="sts-number text-dark">
+              <ng9-odometer [number]="dashboardCameras.totalCount"></ng9-odometer>
             </div>
-            <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
-              {{'dashboard.main.more_on_rating' | translate}}
-              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
-            </a>
           </div>
-          <div class="py-3">Content</div>
+          <svg-icon styleClass="sts-icon fa-w-18 display-4 flip" icon="cctv"></svg-icon>
         </div>
-      </div>
-      <div class="col mt-4">
-        <div class="h-100 p-3 border">
-          <div class="flex-center-between flex-wrap">
-            <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">{{'dashboard.main.company_rating' | translate}}</h5>
-              <button type="button" class="btn border mx-3">
-                {{'dashboard.general.max_rating' | translate}}
-                <svg-icon icon="sort-amount-up"></svg-icon>
-              </button>
-              <button type="button" class="btn border mx-3">
-                {{'dashboard.general.min_rating' | translate}}
-                <svg-icon icon="sort-amount-down"></svg-icon>
-              </button>
-            </div>
 
-            <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
-              {{'dashboard.main.more_on_rating' | translate}}
-              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
-            </a>
+        <p class="py-3">
+          <ngb-progressbar type="cctv" [value]="dashboardCameras.activeCameras / dashboardCameras.totalCount * 100"
+            height="10px"></ngb-progressbar>
+        </p>
+
+        <div class="flex-center-between mt-2">
+          <div class="d-flex">
+            <svg-icon styleClass="text-cctv" icon="circle"></svg-icon>
+            <div class="px-3">{{'dashboard.general.active_cameras' | translate}}</div>
           </div>
-          <div class="py-3">Content</div>
+          <div>{{dashboardCameras.activeCameras}}</div>
+        </div>
+        <div class="flex-center-between mt-2">
+          <div class="d-flex">
+            <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+            <div class="px-3">{{'dashboard.general.inactive_cameras' | translate}}</div>
+          </div>
+          <div>{{dashboardCameras.inactiveCameras}}</div>
         </div>
       </div>
-      <div class="col mt-4">
-        <div class="h-100 p-3 border">
-          <div class="flex-center-between flex-wrap">
-            <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">{{'dashboard.main.number_of_incidents' | translate}}</h5>
+    </div>
+
+    <div class="col" [routerLink]="['/dashboard/mobile',seasonYear]">
+      <div class="statistics h-100 p-3 border full-click">
+        <div class="flex-center-between">
+          <div>
+            <div class="sts-title">{{'dashboard.general.mobile_app_downloads' | translate}}</div>
+            <div class="sts-number text-dark">
+              <ng9-odometer [number]="currentSeasonData?.totalNumberOfMobileAppDownloads"></ng9-odometer>
             </div>
-            <a [routerLink]="['/dashboard/incidents',seasonYear]" class="text-dcc-primary">
-              {{'dashboard.main.more_on_incidents' | translate}}
-              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
-            </a>
           </div>
-          <div class="py-3">
-            <canvas #incidentCanvas baseChart *ngIf="incidents != undefined"
-                    [datasets]="incidentDoughnutChartData"
-                    [labels]="incidentDoughnutChartLabels"
-                    [chartType]="incidentDoughnutChartType"
-                    [plugins]="incidentDoughnutChartPlugins"
-                    [colors]="[{
+          <svg-icon styleClass="sts-icon fa-w-10 display-4" icon="mobile-android-alt"></svg-icon>
+        </div>
+
+        <p class="py-3">
+          <ngb-progressbar type="appdownloads"
+            [value]="currentSeasonData?.totalNumberOfLoggedInUsers / currentSeasonData?.totalNumberOfMobileAppDownloads * 100"
+            height="10px"></ngb-progressbar>
+        </p>
+
+        <div class="flex-center-between mt-2">
+          <div class="d-flex">
+            <svg-icon styleClass="text-appdownloads" icon="circle"></svg-icon>
+            <div class="px-3">{{'dashboard.general.logged_in' | translate}}</div>
+          </div>
+          <div>{{currentSeasonData?.totalNumberOfLoggedInUsers}}</div>
+
+        </div>
+        <div class="flex-center-between mt-2">
+          <div class="d-flex">
+            <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+            <div class="px-3">{{'dashboard.general.logged_out' | translate}}</div>
+          </div>
+          <div>{{currentSeasonData?.totalNumberOfLoggedOutUsers}}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row row-cols-1 row-cols-xl-2">
+    <div class="col mt-4">
+      <div class="h-100 p-3 border">
+        <div class="flex-center-between flex-wrap">
+          <div class="flex-center-vert flex-wrap">
+            <h5 class="sts">{{'dashboard.main.service_rating' | translate}}</h5>
+          </div>
+          <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
+            {{'dashboard.main.more_on_rating' | translate}}
+            <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
+          </a>
+        </div>
+        <div class="py-3">Content</div>
+      </div>
+    </div>
+    <div class="col mt-4">
+      <div class="h-100 p-3 border">
+        <div class="flex-center-between flex-wrap">
+          <div class="flex-center-vert flex-wrap">
+            <h5 class="sts">{{'dashboard.main.company_rating' | translate}}</h5>
+            <button type="button" class="btn border mx-3">
+              {{'dashboard.general.max_rating' | translate}}
+              <svg-icon icon="sort-amount-up"></svg-icon>
+            </button>
+            <button type="button" class="btn border mx-3">
+              {{'dashboard.general.min_rating' | translate}}
+              <svg-icon icon="sort-amount-down"></svg-icon>
+            </button>
+          </div>
+
+          <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
+            {{'dashboard.main.more_on_rating' | translate}}
+            <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
+          </a>
+        </div>
+        <div class="py-3">Content</div>
+      </div>
+    </div>
+    <div class="col mt-4">
+      <div class="h-100 p-3 border">
+        <div class="flex-center-between flex-wrap">
+          <div class="flex-center-vert flex-wrap">
+            <h5 class="sts">{{'dashboard.main.number_of_incidents' | translate}}</h5>
+          </div>
+          <a [routerLink]="['/dashboard/incidents',seasonYear]" class="text-dcc-primary">
+            {{'dashboard.main.more_on_incidents' | translate}}
+            <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
+          </a>
+        </div>
+        <div class="py-3">
+          <canvas #incidentCanvas baseChart *ngIf="incidents != undefined" [datasets]="incidentDoughnutChartData"
+            [labels]="incidentDoughnutChartLabels" [chartType]="incidentDoughnutChartType"
+            [plugins]="incidentDoughnutChartPlugins" [colors]="[{
                       backgroundColor: ['#657DA5', '#D8DEE8'],
                       hoverBackgroundColor: ['#657DA5', '#D8DEE8']
-                    }]"
-                    [options]="incidentDoughnutChartOptions"
-                    height="100">
-            </canvas>
-            <div class="mt-4">
-              <div>
-                {{'dashboard.main.area_with_most_incidents' | translate}}
-                <b class="text-dark">{{mostIncidentsArea}}</b>
-              </div>
-              <div>
-                {{'dashboard.main.largest_number_of_incidents_reported' | translate}}
-                <b class="text-dark">{{mostIncidentDate}}</b>
-              </div>
+                    }]" [options]="incidentDoughnutChartOptions" height="100">
+          </canvas>
+          <div class="mt-4">
+            <div>
+              {{'dashboard.main.area_with_most_incidents' | translate}}
+              <b class="text-dark">{{mostIncidentsArea}}</b>
+            </div>
+            <div>
+              {{'dashboard.main.largest_number_of_incidents_reported' | translate}}
+              <b class="text-dark">{{mostIncidentDate}}</b>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="col mt-4">
-        <div class="h-100 p-3 border">
-          <div class="flex-center-between flex-wrap">
-            <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">عمليات البطاقة بالنسبة للأجهزة</h5>
-            </div>
-
-            <a [routerLink]="['/dashboard/transactions']" class="text-dcc-primary">
-              {{'dashboard.main.more_on_transactions' | translate}}
-              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
-            </a>
-          </div>
-          <div class="py-3">Content</div>
-        </div>
-      </div>
-      <div class="col-12 mt-4">
-        <div class="border">
-          <ul ngbNav #nav="ngbNav" class="nav-tabs stsTab">
-            <li [ngbNavItem]="1">
-              <a ngbNavLink>{{'dashboard.main.pilgrims_tracking' | translate}}</a>
-              <ng-template ngbNavContent>
-                <div class="flex-center">
-                  <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
-                </div>
-              </ng-template>
-            </li>
-            <li [ngbNavItem]="2">
-              <a ngbNavLink>{{'dashboard.main.motawif_tracking' | translate}}</a>
-              <ng-template ngbNavContent>
-                <div class="flex-center">
-                  <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
-                </div>
-              </ng-template>
-            </li>
-            <li [ngbNavItem]="3">
-              <a ngbNavLink>متابعة المركبات</a>
-              <ng-template ngbNavContent>
-                <div class="flex-center">
-                  <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
-                </div>
-              </ng-template>
-            </li>
-            <li ngbDropdown class="ml-auto flex-center">
-              <a href="/" class="text-dcc-primary mr-3">
-                {{'dashboard.main.more_on_tracking' | translate}}
-                <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
-              </a>
-            </li>
-          </ul>
-
-          <div [ngbNavOutlet]="nav" class="bg-dcc-light"></div>
         </div>
       </div>
     </div>
+    <div class="col mt-4">
+      <div class="h-100 p-3 border">
+        <div class="flex-center-between flex-wrap">
+          <div class="flex-center-vert flex-wrap">
+            <h5 class="sts">عمليات البطاقة بالنسبة للأجهزة</h5>
+          </div>
 
+          <a [routerLink]="['/dashboard/transactions']" class="text-dcc-primary">
+            {{'dashboard.main.more_on_transactions' | translate}}
+            <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
+          </a>
+        </div>
+        <div class="py-3">Content</div>
+      </div>
+    </div>
+    <div class="col-12 mt-4">
+      <div class="border">
+        <ul ngbNav #nav="ngbNav" class="nav-tabs stsTab">
+          <li [ngbNavItem]="1">
+            <a ngbNavLink>{{'dashboard.main.pilgrims_tracking' | translate}}</a>
+            <ng-template ngbNavContent>
+              <div class="flex-center">
+                <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
+              </div>
+            </ng-template>
+          </li>
+          <li [ngbNavItem]="2">
+            <a ngbNavLink>{{'dashboard.main.motawif_tracking' | translate}}</a>
+            <ng-template ngbNavContent>
+              <div class="flex-center">
+                <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
+              </div>
+            </ng-template>
+          </li>
+          <li [ngbNavItem]="3">
+            <a ngbNavLink>متابعة المركبات</a>
+            <ng-template ngbNavContent>
+              <div class="flex-center">
+                <svg-icon icon="map-marked-alt" styleClass="fa-10x text-dcc-light"></svg-icon>
+              </div>
+            </ng-template>
+          </li>
+          <li ngbDropdown class="ml-auto flex-center">
+            <a href="/" class="text-dcc-primary mr-3">
+              {{'dashboard.main.more_on_tracking' | translate}}
+              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
+            </a>
+          </li>
+        </ul>
+
+        <div [ngbNavOutlet]="nav" class="bg-dcc-light"></div>
+      </div>
+    </div>
   </div>
+
+</div>
 </div>
