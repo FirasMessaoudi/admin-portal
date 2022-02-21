@@ -157,7 +157,7 @@ public class ChatContactWsController {
         Optional<CompanyStaffLiteDto> companyStaff = companyStaffService.findBySuin(suin);
         if (companyStaff.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                    .body(applicantChatContactService.createStaffContact(applicantUin, ritualId, companyStaff)).build());
+                    .body(applicantChatContactService.createStaffContact(applicantUin, ritualId.equals(-1L) ? null : ritualId, companyStaff)).build());
         }
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                 .body(WsError.builder().error(WsError.EWsError.APPLICANT_CHAT_CONTACT_NOT_FOUND.getCode()).referenceNumber(suin).build()).build());
@@ -236,6 +236,24 @@ public class ChatContactWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicant).build());
     }
 
+    @GetMapping("validate-applicant/{suin}/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> validateApplicantByUin(@PathVariable String suin,
+                                                                @PathVariable String applicantUin) {
+        log.debug("find chat contact by uin {} and applicant ritual ID {}", suin);
+
+        List<ApplicantChatContactVo> staffContacts = applicantChatContactService.listStaffContact(suin, null);
+        boolean isFound = staffContacts.stream().anyMatch(p -> p.getContactUin().equals(applicantUin) && !p.isAutoAdded());
+        if (isFound)
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(suin).build()).build());
+
+        Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(applicantUin);
+        if (!applicant.isPresent()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(suin).build()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicant).build());
+    }
 
     @GetMapping("/find-staff/{suin}")
     public ResponseEntity<WsResponse<?>> findStaffContactByValidSuin(@PathVariable String suin) {
@@ -279,12 +297,13 @@ public class ChatContactWsController {
      * @param systemDefined
      * @return the found chat contacts or empty structure
      */
-    @GetMapping("/staff/{suin}}")
+    @GetMapping("/staff/{suin}")
     public ResponseEntity<WsResponse<?>> findChatContactsBySuin(@PathVariable String suin,
                                                                 @RequestParam(required = false) Boolean systemDefined) {
         log.debug("List chat contacts by suin {}", suin);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(applicantChatContactService.listStaffContact(suin, systemDefined)).build());
     }
+
 
 }
