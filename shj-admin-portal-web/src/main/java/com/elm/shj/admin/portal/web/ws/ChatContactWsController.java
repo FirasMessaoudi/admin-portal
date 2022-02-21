@@ -9,7 +9,10 @@ import com.elm.shj.admin.portal.services.applicant.ApplicantChatContactService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ChatMessageService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantChatContactDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
+import com.elm.shj.admin.portal.services.dto.ChatMessageDto;
+import com.elm.shj.admin.portal.services.dto.CompanyStaffLiteDto;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -267,6 +270,21 @@ public class ChatContactWsController {
         ChatMessageDto chatMessageDto = chatMessageService.saveMessage(chatMessage);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(chatMessageDto).build());
+    }
+
+    /**
+     * finds chat contacts by suin
+     *
+     * @param suin          the suin of the staff
+     * @param systemDefined
+     * @return the found chat contacts or empty structure
+     */
+    @GetMapping("/staff/{suin}}")
+    public ResponseEntity<WsResponse<?>> findChatContactsBySuin(@PathVariable String suin,
+                                                                @RequestParam(required = false) Boolean systemDefined) {
+        log.debug("List chat contacts by suin {}", suin);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(applicantChatContactService.listStaffContact(suin, systemDefined)).build());
     }
 
 }

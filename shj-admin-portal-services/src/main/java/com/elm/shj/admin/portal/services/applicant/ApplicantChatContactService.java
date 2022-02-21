@@ -302,4 +302,24 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
 
         return COMPANION.name();
     }
+
+    /**
+     * List all chat contacts of a specific applicant.
+     *
+     * @param suin          the suin of the staff
+     * @param systemDefined a boolean flag to define whether the chat contact is added by system or not
+     * @return the list of chat contacts
+     */
+    public List<ApplicantChatContactVo> listStaffContact(String suin, Boolean systemDefined) {
+        if (systemDefined == null) {
+            List<ApplicantChatContactVo> applicantList = applicantChatContactRepository.findContactApplicantList(suin, null);
+            List<ApplicantChatContactVo> staffList = applicantChatContactRepository.findContactStaffList(suin, null);
+            applicantList.addAll(staffList);
+            return applicantList;
+        } else if (systemDefined) {
+            return ((ApplicantChatContactRepository) getRepository()).findBySystemDefinedTrue(suin, null);
+        } else {
+            return ((ApplicantChatContactRepository) getRepository()).findBySystemDefinedFalse(suin);
+        }
+    }
 }
