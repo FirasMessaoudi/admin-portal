@@ -82,9 +82,8 @@ public class JpaCompanyStaff implements Serializable {
     @Column(name = "update_date")
     private Date updateDate;
 
-    @ManyToOne
-    @JoinColumn(name = "data_request_record_id")
-    private JpaDataRequestRecord dataRequestRecord;
+    @Column(name = "data_request_record_id")
+    private Long dataRequestRecordId;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyStaff")
     private List<JpaCompanyStaffDigitalId> digitalIds;
