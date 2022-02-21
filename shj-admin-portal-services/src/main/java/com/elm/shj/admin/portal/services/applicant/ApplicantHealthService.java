@@ -50,8 +50,7 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
      * @param packageReferenceNumber
      * @return
      */
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    protected Long findIdByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
+    public Long findIdByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
         return applicantHealthRepository.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber);
     }
 

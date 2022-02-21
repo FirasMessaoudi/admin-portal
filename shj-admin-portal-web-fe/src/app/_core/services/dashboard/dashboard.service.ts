@@ -251,4 +251,8 @@ export class DashboardService {
       '/core/api/dashboard/mobile/usage-by-age-range/' + seasonYear
     );
   }
+
+  findHousingSites(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/housing-site/list');
+  }
 }

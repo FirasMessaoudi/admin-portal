@@ -47,11 +47,11 @@ public class JpaApplicantPackage implements Serializable {
     @Column(name = "end_date")
     private Date endDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ritual_package_id")
     private JpaRitualPackage ritualPackage;
 
-    @OneToOne(cascade = CascadeType.REFRESH, orphanRemoval = true, mappedBy = "applicantPackage")
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "applicantPackage")
     private JpaApplicantRitual applicantRitual;
 
     @LazyCollection(LazyCollectionOption.TRUE)

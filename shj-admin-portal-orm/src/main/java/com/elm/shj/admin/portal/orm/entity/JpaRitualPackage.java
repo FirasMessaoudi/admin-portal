@@ -58,7 +58,7 @@ public class JpaRitualPackage implements Serializable {
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_ritual_season_id")
     private JpaCompanyRitualSeason companyRitualSeason;
 

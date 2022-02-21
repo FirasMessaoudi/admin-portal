@@ -42,6 +42,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
   incidents: DashboardIncidentNumbersVo;
   incidentTypeList: Lookup[];
   incidentStatusList: Lookup[];
+  housingSites: Lookup[];
   public incidentDoughnutChartLabels: Label[];
   incidentByTypes: CountVo[];
   public incidentDoughnutChartData: Array<any>;
@@ -71,10 +72,70 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
     cutoutPercentage: 70,
     rotation: 1 * Math.PI,
     circumference: 1 * Math.PI,
+    plugins: {
+      labels: [
+        {
+          render: 'label',
+          fontColor: '#000',
+          position: 'outside',
+          textMargin: 10,
+          fontStyle: 'bold',
+
+        },
+        {
+          render: function (args) {
+            return '\n\n' + args.percentage + '%';
+          },
+          fontColor: '#000',
+          position: 'outside',
+          textMargin: 12,
+          fontStyle: 'normal',
+          precision: 2
+
+        }
+      ],
+      datalabels: {
+        display: false
+      }
+    },
+    tooltips: {
+      enabled: false
+    }
   };
   public incidentTypeDoughnutChartOptions: ChartOptions = {
     responsive: true,
     cutoutPercentage: 70,
+    plugins: {
+      labels: [
+        {
+          render: 'label',
+          fontColor: '#000',
+          position: 'outside',
+          outsidePadding: 10,
+          textMargin: 10,
+          fontStyle: 'bold',
+
+        },
+        {
+          render: function (args) {
+            return '\n\n' + args.percentage + '%';
+          },
+          fontColor: '#000',
+          position: 'outside',
+          outsidePadding: 10,
+          textMargin: 10,
+          fontStyle: 'normal',
+          precision: 2
+
+        }
+      ],
+      datalabels: {
+        display: false
+      }
+    },
+    tooltips: {
+      enabled: false
+    }
   };
   public incidentDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
   public incidentTypeDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
@@ -176,7 +237,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
         );
-        this.mostIncidentsArea = this.incidents.mostIncidentsArea;
+        this.mostIncidentsArea = this.lookupService.localizedLabel(this.housingSites, this.incidents.mostIncidentsArea);
       });
 
     this.loadMaxCompanies();
@@ -211,8 +272,9 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
             height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
           ctx.restore();
-          var fontSize = (height / 15).toFixed(2);
-          ctx.font = fontSize + 'px Elm-font", sans-serif';
+          // var fontSize = (height / 15).toFixed(2);
+          var valueFontSize = (height / 10).toFixed(2);
+          ctx.font = 'bold ' + valueFontSize + "px Arial";
           ctx.textBaseline = 'middle';
           var text = countText + '',
             textX = Math.round((width - ctx.measureText(text).width) / 2),
@@ -222,10 +284,11 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
           ctx.textBaseline = 'middle';
           var textLabel = title,
             textLabelX = Math.round(
-              (width - ctx.measureText(textLabel).width) / 2
+              (width - ctx.measureText(textLabel).width) / 1.9
             ),
             textLabelY = height / 1.5;
-          var textLabelZ = height / 1.5;
+          var labelFontSize = (height / 11).toFixed(2);
+          ctx.font =  labelFontSize + "px Arial";
           ctx.fillText(textLabel, textLabelX, textLabelY);
           ctx.save();
         },
@@ -242,8 +305,8 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
             height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
           ctx.restore();
-          var fontSize = (height / 15).toFixed(2);
-          ctx.font = fontSize + 'px Elm-font", sans-serif';
+          var valueFontSize = (height / 15).toFixed(2);
+          ctx.font = 'bold ' + valueFontSize + "px Arial";
           ctx.textBaseline = 'middle';
           var text = countText + '',
             textX = Math.round((width - ctx.measureText(text).width) / 2),
@@ -256,7 +319,8 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
               (width - ctx.measureText(textLabel).width) / 2
             ),
             textLabelY = height / 2;
-          var textLabelZ = height / 1.5;
+          var labelFontSize = (height / 15).toFixed(2);
+          ctx.font = labelFontSize + "px Arial";
           ctx.fillText(textLabel, textLabelX, textLabelY);
           ctx.save();
         },
@@ -271,6 +335,9 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
     this.dashboardService
       .findIncidentStatus()
       .subscribe((data) => (this.incidentStatusList = data));
+    this.dashboardService.findHousingSites().subscribe(result => {
+      this.housingSites = result;
+    });
   }
 
   async loadMapkey() {
@@ -337,8 +404,8 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
       )
     );
     return this.currentLanguage.startsWith('ar')
-      ? datePipe.transform(hijriDate, 'yyyy/MM/dd')
-      : datePipe.transform(hijriDate, 'dd/MM/yyyy');
+      ? datePipe.transform(hijriDate, 'yyyy MM, dd')
+      : datePipe.transform(hijriDate, 'dd, MM yyyy');
   }
 
   get currentLanguage(): string {

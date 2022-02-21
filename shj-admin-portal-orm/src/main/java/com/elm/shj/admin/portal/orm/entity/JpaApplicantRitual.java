@@ -35,7 +35,7 @@ public class JpaApplicantRitual implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private JpaApplicant applicant;
 
     @Column(name = "visa_number")
@@ -56,11 +56,11 @@ public class JpaApplicantRitual implements Serializable {
     @Column(name = "update_date", nullable = false)
     private Date updateDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "data_request_record_id")
     private JpaDataRequestRecord dataRequestRecord;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicant_package_id")
     private JpaApplicantPackage applicantPackage;
 
@@ -68,19 +68,19 @@ public class JpaApplicantRitual implements Serializable {
     private String packageReferenceNumber;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "applicantRitual")
+    @OneToMany(mappedBy = "applicantRitual")
     private Set<JpaApplicantRelative> relatives;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.REFRESH,  mappedBy = "applicantRitual")
+    @OneToMany(mappedBy = "applicantRitual")
     private Set<JpaApplicantContact> contacts;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = {CascadeType.REFRESH, CascadeType.REMOVE} ,  mappedBy = "applicantRitual")
+    @OneToMany(mappedBy = "applicantRitual")
     private Set<JpaApplicantHealth>  applicantHealths;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "applicantRitual")
+    @OneToMany(mappedBy = "applicantRitual")
     private Set<JpaApplicantIncident> applicantIncidents;
 
     @PrePersist
