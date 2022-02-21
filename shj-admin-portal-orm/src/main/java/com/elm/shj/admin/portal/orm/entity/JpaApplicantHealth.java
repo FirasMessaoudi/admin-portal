@@ -58,9 +58,8 @@ public class JpaApplicantHealth implements Serializable {
     @JoinColumn(name = "applicant_ritual_id")
     private JpaApplicantRitual applicantRitual;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "data_request_record_id")
-    private JpaDataRequestRecord dataRequestRecord;
+    @Column(name = "data_request_record_id")
+    private Long dataRequestRecordId;
 
     @OneToMany(mappedBy = "applicantHealth")
     @LazyCollection(LazyCollectionOption.FALSE)

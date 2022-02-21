@@ -105,7 +105,7 @@ public class ApplicantDto implements Serializable {
     @CellIndex(index = 25)
     private String packageReferenceNumber;
 
-    private DataRequestRecordDto dataRequestRecord;
+    private Long dataRequestRecordId;
     private List<ApplicantDigitalIdDto> digitalIds;
     private List<ApplicantRelativeDto> relatives;
     @JsonBackReference
