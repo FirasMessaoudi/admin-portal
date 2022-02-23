@@ -217,14 +217,16 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      */
     private void createChatContact(String contactOwnerUin, ApplicantDto contactApplicant, long applicantRitualId, String relationshipCode) {
         String contactUin = contactApplicant.getDigitalIds().get(0).getUin();
-        String mobileNumber, countryCode;
-        ApplicantContactDto relativeApplicantContact = contactApplicant.getContacts().get(0);
-        if (relativeApplicantContact.getLocalMobileNumber() != null) {
-            mobileNumber = relativeApplicantContact.getLocalMobileNumber();
-            countryCode = "SA";
-        } else {
-            mobileNumber = relativeApplicantContact.getIntlMobileNumber();
-            countryCode = relativeApplicantContact.getCountryCode();
+        String mobileNumber = null, countryCode= "SA";
+        if(!contactApplicant.getContacts().isEmpty()) {
+            ApplicantContactDto relativeApplicantContact = contactApplicant.getContacts().get(0);
+            if (relativeApplicantContact.getLocalMobileNumber() != null) {
+                mobileNumber = relativeApplicantContact.getLocalMobileNumber();
+                countryCode = "SA";
+            } else {
+                mobileNumber = relativeApplicantContact.getIntlMobileNumber();
+                countryCode = relativeApplicantContact.getCountryCode();
+            }
         }
         ApplicantChatContactDto createdContact = ApplicantChatContactDto
                 .builder()
