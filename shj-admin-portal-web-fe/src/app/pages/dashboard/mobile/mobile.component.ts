@@ -234,9 +234,9 @@ export class MobileComponent implements OnInit, DashboardComponent {
       });
   }
 
-  loadHeatMap() {
+/*   loadHeatMap() {
     this.loadActiveApplicantWithLocations();
-  }
+  } */
 
   async loadMapkey() {
     this.lookupService().loadGoogleMapsApiKey().subscribe((result) => {
