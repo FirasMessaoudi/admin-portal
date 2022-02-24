@@ -76,6 +76,10 @@ export class ChartsConfig {
         },
         formatter: Math.round,
       },
+      labels: {
+        render: () => {
+        }
+      }
     },
     legend: {
       labels: {
@@ -114,6 +118,7 @@ export class ChartsConfig {
             },
           },
         },
+
       ],
     },
   };
