@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,5 +64,10 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
 
     public ChatMessageDto saveMessage(ChatMessageDto chatMessage) {
         return save(chatMessage);
+    }
+
+    @Transactional
+    public void markMessagesAsRead(long chatContactId) {
+         chatMessageRepository.updateChatMessageReadDate(chatContactId);
     }
 }

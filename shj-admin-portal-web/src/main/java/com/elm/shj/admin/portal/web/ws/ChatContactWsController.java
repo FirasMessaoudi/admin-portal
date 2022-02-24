@@ -9,10 +9,7 @@ import com.elm.shj.admin.portal.services.applicant.ApplicantChatContactService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ChatMessageService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
-import com.elm.shj.admin.portal.services.dto.ApplicantChatContactDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
-import com.elm.shj.admin.portal.services.dto.ChatMessageDto;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffLiteDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -357,4 +354,24 @@ public class ChatContactWsController {
     }
 
 
+    @PostMapping("/v2/save-chat-message")
+    public ResponseEntity<WsResponse<?>> saveChatMessageNew(@RequestBody ChatMessageDto chatMessage) {
+        log.debug("chatMessage => {}",chatMessage);
+        ApplicantChatContactDto senderChatContact = chatMessage.getSender();
+        ApplicantChatContactDto senderInReceiverContact = applicantChatContactService.findApplicantChatContact(senderChatContact.getContactUin(), senderChatContact.getApplicantUin());
+        if(senderInReceiverContact == null){
+             senderInReceiverContact = applicantChatContactService.createAutoAddedChatContact(senderChatContact.getContactUin(), senderChatContact.getApplicantUin());
+
+        }
+        chatMessage.setReceiver(senderInReceiverContact);
+        ChatMessageDto chatMessageDto = chatMessageService.saveMessage(chatMessage);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(chatMessageDto).build());
+    }
+
+    @PutMapping("/read-chat-messages/{chatContactId}")
+    public ResponseEntity<WsResponse<?>> markChatMessageAsRead(@PathVariable("chatContactId") long chatContactId) {
+        chatMessageService.markMessagesAsRead(chatContactId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).build());
+    }
 }

@@ -9,6 +9,7 @@ import com.elm.shj.admin.portal.orm.entity.UnreadMessagesCount;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -38,10 +39,13 @@ public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Lon
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.UnreadMessagesCount(  " +
             " contact.id, COUNT(message.id) ) " +
             "FROM JpaChatMessage message " +
-            "JOIN JpaApplicantChatContact  contact ON contact.id = message.sender.id OR contact.id = message.receiver.id " +
+            "JOIN JpaApplicantChatContact  contact ON contact.id = message.receiver.id " +
             "WHERE contact.applicantUin= :applicantUin " +
             "AND message.readDate IS NULL " +
+            "AND message.receivedDate IS NOT NULL " +
             "GROUP BY contact.id ")
     List<UnreadMessagesCount> findUnreadMessagesCount(@Param("applicantUin") String uin);
-
+    @Modifying
+    @Query("UPDATE JpaChatMessage message SET message.readDate=CURRENT_TIMESTAMP,  message.updateDate = CURRENT_TIMESTAMP WHERE message.sender.id = :chatContactId AND message.readDate is null ")
+    void updateChatMessageReadDate(@Param("chatContactId") long chatContactId);
 }
