@@ -176,7 +176,7 @@ export class ChartsConfig {
             fontFamily: FONTS,
             fontColor: '#8A8A96',
             callback: function (value) {
-              if (value % 10 === 0) {
+              if (value % 1 === 0) {
                 return value;
               }
             },
