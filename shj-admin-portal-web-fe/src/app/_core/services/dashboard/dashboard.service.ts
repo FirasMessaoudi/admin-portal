@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { DashboardVo } from '@model/dashboard-vo.model';
-import { Observable } from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
 import { CountVo } from '@app/_shared/model/countVo.model';
 import { Lookup } from '@model/lookup.model';
@@ -9,12 +9,33 @@ import { DashboardIncidentNumbersVo } from '@model/dashboardIncidentNumbersVo.mo
 import { Position } from '@app/_shared/model/marker.model';
 import { DashboardMobileNumbersVo } from '@model/dashboard-mobile-numbers-vo.model';
 import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
+import {dashboardItem} from "@model/dashboard-item";
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardService {
-  constructor(private http: HttpClient) {}
+
+  items: dashboardItem[] = [];
+  slideShowInterval: number = 5;
+  private intervalSubject = new BehaviorSubject<number>(5);
+  constructor(private http: HttpClient) {
+    this.items = [
+      new dashboardItem('MainComponent', 'dashboard.general.hajj', true
+      ),
+      new dashboardItem(
+        'GeneralNumbersComponent', 'dashboard.general-numbers.title', true
+      ),
+      new dashboardItem(
+        'IncidentsComponent', 'dashboard.incidents.title', true
+      ), new dashboardItem(
+        'CamerasComponent', 'dashboard.cameras.title', true
+      ),
+      new dashboardItem(
+        'MobileComponent', 'dashboard.mobile.title', true
+      ),
+    ];
+  }
 
   /**
    * Load dashboard data for logged in user agency
@@ -254,5 +275,13 @@ export class DashboardService {
 
   findHousingSites(): Observable<Lookup[]> {
     return this.http.get<any>('/core/api/lookup/housing-site/list');
+  }
+
+  getDashboardItems(): dashboardItem[] {
+    return this.items;
+  }
+
+  getSlideShowInterval(): BehaviorSubject<number> {
+    return this.intervalSubject;
   }
 }

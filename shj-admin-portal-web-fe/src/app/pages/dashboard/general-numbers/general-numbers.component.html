@@ -1,4 +1,4 @@
-<a class="d-block button_back" href="javascript:void(0);" [routerLink]="['/']">
+<a *ngIf="!isFullScreen" class="d-block button_back" href="javascript:void(0);" [routerLink]="['/']">
   <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
   <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
 </a>
@@ -9,7 +9,7 @@
       {{'dashboard.general.hajj' | translate}}
       <span *ngIf="currentLanguage.startsWith('ar')">عام</span>
       {{seasonYear}}</h3>
-    <div>
+    <div *ngIf="!isFullScreen">
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
         {{'dashboard.general.full_screen' | translate}}
@@ -144,7 +144,7 @@
           <div class="py-3">
 
             <app-doughnut-chart [centerValue]="totalCountAges | number"
-                                [centerTitle]="'حاج'"
+                                [centerTitle]="getPilgrimLabel()"
                                 *ngIf="countVoList != undefined"
                                 [title]="'dashboard.general-numbers.age_distribution' | translate"
                                 [countData]="countVoList"></app-doughnut-chart>
@@ -160,7 +160,7 @@
           </div>
           <div class="py-3">
             <app-doughnut-chart *ngIf="applicantsPerNationalities != undefined"
-                                [centerTitle]="'حاج'"
+                                [centerTitle]="getPilgrimLabel()"
                                 [centerValue]="totalCountsNationalities | number"
                                 [title]="'dashboard.general-numbers.distribution_of_highest_nationalities' | translate"
                                 [countData]="applicantsPerNationalities"></app-doughnut-chart>

@@ -29,6 +29,7 @@ import { DashboardIncidentNumbersVo } from '@model/dashboardIncidentNumbersVo.mo
 import { Position } from '@app/_shared/model/marker.model';
 import { EAuthority } from '@shared/model';
 import { ActivatedRoute } from '@angular/router';
+import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
 
 const FONTS: string = '"Elm-font", sans-serif';
 
@@ -37,7 +38,7 @@ const FONTS: string = '"Elm-font", sans-serif';
   templateUrl: './incidents.component.html',
   styleUrls: ['./incidents.component.scss'],
 })
-export class IncidentsComponent implements OnInit, AfterViewInit {
+export class IncidentsComponent implements OnInit, AfterViewInit, DashboardComponent {
   private incidentSubscription: Subscription;
   incidents: DashboardIncidentNumbersVo;
   incidentTypeList: Lookup[];
@@ -417,4 +418,6 @@ export class IncidentsComponent implements OnInit, AfterViewInit {
       EAuthority.INCIDENT_DASHBOARD
     );
   }
+
+  isFullScreen: boolean;
 }

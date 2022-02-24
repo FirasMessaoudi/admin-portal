@@ -57,6 +57,7 @@
     "btn_add": "إضافة",
     "btn_back": "عودة",
     "btn_save": "حفظ",
+    "btn_start": "بدء",
     "btn_send": "إرسال",
     "btn_download": "تنزيل",
     "btn_upload": "رفع",
@@ -591,8 +592,12 @@
   },
   "dashboard": {
     "general": {
+      "dialog_preview_dashboard_selection_title": "اختر البيانات التي تريد عرضها في لوحة البيانات",
+      "preview_interval": "الفاصل الزمني للمعاينة",
       "hajj": "حج",
       "full_screen": "شاشة كاملة",
+      "exit": "مخرج",
+      "auto_preview": "معاينة تلقائية",
       "current_season_pilgrims": "حجاج هذا العام",
       "previous_season_pilgrims": "حجاج الموسم الماضي",
       "internal_pilgrims": "حجاج الداخل",

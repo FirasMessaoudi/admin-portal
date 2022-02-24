@@ -33,10 +33,10 @@ public class JpaApplicantContact implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private JpaApplicant applicant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "applicant_ritual_id")
     private JpaApplicantRitual applicantRitual;
 

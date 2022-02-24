@@ -58,6 +58,7 @@
     "btn_add": "Add",
     "btn_back": "Back",
     "btn_save": "Save",
+    "btn_start": "Start",
     "btn_send": "Send",
     "btn_download": "Download",
     "btn_upload": "Upload",
@@ -590,8 +591,12 @@
   },
   "dashboard": {
     "general": {
+      "dialog_preview_dashboard_selection_title": "Choose the dashboard you want to display in the panel",
+      "preview_interval": "Preview Interval",
       "hajj": "Hajj",
       "full_screen": "Full Screen",
+      "exit": "Exit",
+      "auto_preview": "Auto Preview",
       "current_season_pilgrims": "Current Season Pilgrims",
       "previous_season_pilgrims": "Previous Season Pilgrims",
       "internal_pilgrims": "Internal Pilgrims",

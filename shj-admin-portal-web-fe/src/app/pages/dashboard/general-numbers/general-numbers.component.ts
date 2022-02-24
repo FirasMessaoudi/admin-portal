@@ -1,21 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { DashboardService } from '@core/services';
-import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
-import { CountVo } from '@app/_shared/model/countVo.model';
-import { Lookup } from '@model/lookup.model';
-import { LookupService } from '@core/utilities/lookup.service';
-import { ChartsConfig } from '@pages/dashboard/charts.config';
-import { DashboardVo } from '@shared/model';
-import { I18nService } from '@dcc-commons-ng/services';
-import { ActivatedRoute } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {DashboardService} from '@core/services';
+import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
+import {CountVo} from '@app/_shared/model/countVo.model';
+import {Lookup} from '@model/lookup.model';
+import {LookupService} from '@core/utilities/lookup.service';
+import {ChartsConfig} from '@pages/dashboard/charts.config';
+import {DashboardVo} from '@shared/model';
+import {I18nService} from '@dcc-commons-ng/services';
+import {ActivatedRoute} from '@angular/router';
+import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
 
 @Component({
   selector: 'app-general-numbers',
   templateUrl: './general-numbers.component.html',
   styleUrls: ['./general-numbers.component.scss'],
 })
-export class GeneralNumbersComponent implements OnInit {
+export class GeneralNumbersComponent implements OnInit, DashboardComponent {
   currentSeasonData: GeneralDashboardVo;
   previousSeasonData: GeneralDashboardVo;
   applicantsPerNationalities: CountVo[];
@@ -189,4 +190,10 @@ export class GeneralNumbersComponent implements OnInit {
   onCampSiteChange() {
     this.minCamps ? this.loadMinCamps() : this.loadMaxCamps();
   }
+
+  getPilgrimLabel() {
+    return this.i18nService.language.startsWith('ar') ? 'حاج' : 'Pilgrims'
+  }
+
+  isFullScreen: boolean;
 }

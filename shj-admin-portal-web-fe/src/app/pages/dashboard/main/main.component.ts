@@ -12,10 +12,22 @@ import { DatePipe } from '@angular/common';
 import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
 import { I18nService } from '@dcc-commons-ng/services';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { interpolateRgb } from 'd3-interpolate';
+import { Loader } from '@googlemaps/js-api-loader';
+import { Position } from '@app/_shared/model/marker.model';
+import {
+  Cluster,
+  ClusterStats,
+  MarkerClusterer,
+  Renderer,
+} from '@googlemaps/markerclusterer';
 
 import * as moment_ from 'moment-hijri';
 
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { ApplicantMobileTracking } from '@app/_shared/model/applicant-mobile-tracking.model';
+import {dashboardItem} from "@shared/model";
+import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
 
 const momentHijri = moment_;
 
@@ -25,7 +37,7 @@ const momentHijri = moment_;
   styleUrls: ['./main.component.scss'],
   providers: [NgbModalConfig, NgbModal]
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, DashboardComponent {
   //TODO Dummy Data
   dashboardCameras = {
     totalCount: 782,
@@ -38,6 +50,7 @@ export class MainComponent implements OnInit {
   currentSeasonPercentage: number;
   previousSeasonPercentage: number;
   ritualSeasons: any[] = [];
+  locations: ApplicantMobileTracking[];
   private currentSeasonSubscription: Subscription;
   private previousSeasonSubscription: Subscription;
   isSeasonYearSelected: boolean = true;
@@ -90,7 +103,8 @@ export class MainComponent implements OnInit {
 
   private refreshSubscription: Subscription;
   seasonYear: number;
-
+  dashboards:dashboardItem[] = [];
+  slideShowInterval: number;
   constructor(
     private dashboardService: DashboardService,
     private lookupService: LookupService,
@@ -114,7 +128,7 @@ export class MainComponent implements OnInit {
 
     //Get current hijri year
     this.seasonYear = momentHijri(new Date()).iYear();
-
+    this.loadActiveApplicantWithLocations();
     this.lookupService
       .loadDashboardRefreshInterval()
       .subscribe((timeInterval) => {
@@ -138,7 +152,9 @@ export class MainComponent implements OnInit {
       );
     });
 
-   
+
+    this.dashboards = this.dashboardService.getDashboardItems();
+    this.dashboardService.getSlideShowInterval().subscribe(interval => this.slideShowInterval = interval);
   }
 
   ngOnDestroy() {
@@ -185,7 +201,7 @@ export class MainComponent implements OnInit {
       },
     ];
 
-    
+
   }
 
   loadLookups() {
@@ -279,6 +295,77 @@ export class MainComponent implements OnInit {
       });
   }
 
+  loadActiveApplicantWithLocations() {
+    this.dashboardService
+      .findActiveApplicantWithLocationBySeason(this.seasonYear)
+      .subscribe((data) => {
+        console.log(data);
+        this.locations = data;
+        this.loadMapkey();
+      });
+  }
+
+  async loadMapkey() {
+    this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
+      let loader = new Loader({ apiKey: result });
+      loader.load().then(() => {
+        const map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: 21.423461874376475, lng: 39.825553299746616 },
+          zoom: 5,
+          scrollwheel: true,
+        });
+        let markersArray: Position[];
+        this.locations.forEach((applicant) => {
+          markersArray.push(new Position(applicant.lat, applicant.lng));
+        });
+        console.log(markersArray);
+        // Add some markers to the map.
+        const markers = markersArray.map((position, i) => {
+          const marker = new google.maps.Marker({
+            position,
+          });
+          return marker;
+        });
+        const interpolatedRenderer = {
+          palette: interpolateRgb('blue', 'red'),
+          render: function (
+            { count, position }: Cluster,
+            stats: ClusterStats
+          ): google.maps.Marker {
+            // use d3-interpolateRgb to interpolate between red and blue
+            const color = this.palette(count / stats.clusters.markers.max);
+
+            // create svg url with fill color
+            const svg = window.btoa(`
+          <svg fill="${color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+            <circle cx="120" cy="120" opacity=".8" r="70" />
+          </svg>`);
+
+            // create marker using svg icon
+            return new google.maps.Marker({
+              position,
+              icon: {
+                url: `data:image/svg+xml;base64,${svg}`,
+                scaledSize: new google.maps.Size(75, 75),
+              },
+              label: {
+                text: String(count),
+                color: 'rgba(255,255,255,0.9)',
+                fontSize: '12px',
+              },
+              // adjust zIndex to be above other markers
+              zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
+            });
+          },
+        };
+        const panel: [Renderer] = [interpolatedRenderer];
+        const render = panel[0];
+        // Add a marker clusterer to manage the markers.
+        new MarkerClusterer({ markers, map, renderer: render });
+      });
+    });
+  }
+
   onCurrentSeasonYearsSelected(value: string) {
     if (value != null) {
       this.seasonYear = +value;
@@ -286,4 +373,13 @@ export class MainComponent implements OnInit {
       this.loadDashboardData();
     }
   }
+  disableSlideShow(): boolean {
+    return this.dashboards.filter(dashboard => dashboard.selected).length < 1 ;
+  }
+
+  updateInterval(newValue) {
+    this.dashboardService.getSlideShowInterval().next(newValue)
+  }
+
+  isFullScreen: boolean;
 }

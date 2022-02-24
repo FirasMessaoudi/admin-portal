@@ -16,6 +16,7 @@ import {RULE_MANAGEMENT_ROUTES} from "@core/routes/rule-management-routes";
 import {DATA_UPLOAD_MANAGEMENT_ROUTES} from "@core/routes/data-upload-management-routes";
 import {NOTIFICATION_MANAGEMENT_ROUTES} from "@core/routes/notification-management-routes";
 import {INCIDENT_MANAGEMENT_ROUTES} from "@core/routes/incident-management-routes";
+import {SlideShowComponent} from "@pages/dashboard";
 
 const routes: Routes = [
 
@@ -86,6 +87,11 @@ const routes: Routes = [
   {
     path: '',
     component: AppLayoutComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: 'slideshow',
+    component: SlideShowComponent,
     canActivate: [AuthenticationGuard]
   },
   {

@@ -50,9 +50,8 @@ public class JpaApplicantRelative implements Serializable {
     @Column(name = "update_date", nullable = false)
     private Date updateDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "data_request_record_id")
-    private JpaDataRequestRecord dataRequestRecord;
+    @Column(name = "data_request_record_id")
+    private Long dataRequestRecordId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicant_ritual_id")
