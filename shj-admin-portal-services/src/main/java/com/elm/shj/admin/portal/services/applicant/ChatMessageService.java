@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.ChatMessageVo;
 import com.elm.shj.admin.portal.orm.entity.JpaChatMessage;
+import com.elm.shj.admin.portal.orm.entity.UnreadMessagesCount;
 import com.elm.shj.admin.portal.orm.repository.ChatMessageRepository;
 import com.elm.shj.admin.portal.services.dto.ChatMessageDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service handling chat messages
@@ -38,7 +40,14 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
 
 
     public List<ChatMessageVo> listChatContactsWithLatestMessage(String uin) {
-        return chatMessageRepository.findChatContactsWithLatestMessage(uin);
+        List<ChatMessageVo> latestMessageList = chatMessageRepository.findChatContactsWithLatestMessage(uin);
+        List<UnreadMessagesCount> unreadMessagesCount = chatMessageRepository.findUnreadMessagesCount(uin);
+
+        unreadMessagesCount.parallelStream().forEach(e-> {
+            ChatMessageVo matchedChatMessageVo = latestMessageList.parallelStream().filter(p -> p.getContactId() == e.getContactId()).findFirst().get();
+            matchedChatMessageVo.setUnreadMessagesCount(e.getUnreadMessagesCount());
+        });
+        return latestMessageList;
 
 
 
