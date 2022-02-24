@@ -314,7 +314,7 @@ export class MainComponent implements OnInit, DashboardComponent {
           zoom: 5,
           scrollwheel: true,
         });
-        let markersArray: Position[];
+        let markersArray: Position[] = [];
         this.locations.forEach((applicant) => {
           markersArray.push(new Position(applicant.lat, applicant.lng));
         });
