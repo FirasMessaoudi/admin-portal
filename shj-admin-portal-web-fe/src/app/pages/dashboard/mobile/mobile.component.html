@@ -157,7 +157,9 @@
                         <label class="col-form-label">الشركة</label>
                         <select class="custom-select">
                           <option selected value="1">الكل</option>
-                          <option value="2">غير سعودي</option>
+                          <option *ngFor="let company of companyNames" [ngValue]="company.id">
+                            {{currentLanguage.startsWith('en') ? company.labelEn : company.labelAr}}
+                          </option>
                         </select>
                       </div>
                       <div class="form-group col">
@@ -172,8 +174,10 @@
                         <label class="col-form-label">{{'general.nationality' | translate}}</label>
                         <select class="custom-select">
                           <option selected value="1">{{'general.all' | translate}}</option>
-                          <option value="2">{{'dashboard.mobile.saudi'| translate}}</option>
-                          <option value="2">{{'dashboard.mobile.non_saudi' | translate}}</option>
+                          <option *ngFor="let nationality of lookupService().localizedItems(nationalities)"
+                                  [ngValue]="nationality.code">
+                            {{nationality.label}}
+                          </option>
                         </select>
                       </div>
                     </div>
