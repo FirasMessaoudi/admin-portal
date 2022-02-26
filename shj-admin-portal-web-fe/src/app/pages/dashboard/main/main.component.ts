@@ -305,9 +305,13 @@ export class MainComponent implements OnInit, DashboardComponent {
       });
   }
 
+  loadPilgrimsMap() {
+    this.loadActiveApplicantWithLocations();
+  } 
+
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({ apiKey: result });
+      let loader = new Loader({ apiKey: result, libraries: ['visualization'] });
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
           center: { lat: 21.423461874376475, lng: 39.825553299746616 },
