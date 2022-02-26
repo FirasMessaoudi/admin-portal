@@ -140,6 +140,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
     });
     this.cardService.findCompanyNames().subscribe((result) => {
       this.companyNames = result;
+      console.log(this.companyNames);
     });
     this.loadMaxCompanies();
     this.loadMobileAppUsersByAgeRange();
@@ -230,13 +231,14 @@ export class MobileComponent implements OnInit, DashboardComponent {
       .findActiveApplicantWithLocationBySeason(this.seasonYear)
       .subscribe((data) => {
         this.applicantMobileTrackings = data;
+        console.log(this.applicantMobileTrackings);
         this.loadMapkey();
       });
   }
 
-/*   loadHeatMap() {
+  loadHeatMap() {
     this.loadActiveApplicantWithLocations();
-  } */
+  } 
 
   async loadMapkey() {
     this.lookupService().loadGoogleMapsApiKey().subscribe((result) => {
@@ -253,6 +255,18 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
       });
     });
+  }
+
+  filterMap(param:any){
+    console.log(param);
+    //this.applicantMobileTrackings.filter(c => c.nationalityCode = param)
+  }
+
+  selectedFromDateChange(event: Date) {
+    console.log(event)
+  }
+  selectedToDateChange(event: Date) {
+    console.log(event)
   }
 
   getPoints() {
