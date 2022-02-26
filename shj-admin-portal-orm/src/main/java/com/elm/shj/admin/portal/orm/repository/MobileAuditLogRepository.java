@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.JpaMobileAuditLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,12 +20,13 @@ import java.util.List;
  */
 public interface MobileAuditLogRepository extends JpaRepository<JpaMobileAuditLog, Long> {
 
-    @Query("SELECT COUNT (j) FROM JpaMobileAuditLog j " +
-            "JOIN JpaApplicantDigitalId adi ON adi.uin = j.userIdNumber JOIN JpaApplicant a ON a.id = adi.applicantId JOIN a.rituals ar " +
-            "JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
-            "WHERE rs.seasonYear= :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) AND j.eventDate >= :currentDate " +
-            "GROUP BY FUNCTION('DAY', j.eventDate) ORDER BY FUNCTION('DAY', j.eventDate)")
-    List<Integer> getMobileLoggedInUsers(@Param("seasonYear") int seasonYear,
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo('', FUNCTION('DAY',mal.eventDate),COUNT(DISTINCT a),'') " +
+            "FROM JpaApplicant a JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id " +
+            "JOIN JpaMobileAuditLog mal ON mal.userIdNumber = adi.uin JOIN a.rituals ar JOIN ar.applicantPackage ap " +
+            "JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
+            "WHERE rs.seasonYear= :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) AND mal.eventDate >= :currentDate " +
+            "GROUP BY FUNCTION('DAY', mal.eventDate) ORDER BY FUNCTION('DAY', mal.eventDate)")
+    List<CountVo> getMobileLoggedInUsers(@Param("seasonYear") int seasonYear,
                                          @Param("ritualTypeCodeList") List<String> ritualTypeCodeList,
                                          @Param("currentDate") Date currentDate);
 

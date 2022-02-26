@@ -39,6 +39,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DashboardService {
 
+    private static int DAYS_RANGE = 7;
+
     @Value("${applicants.counter.ages.range}")
     private String agesRange;
 
@@ -349,9 +351,17 @@ public class DashboardService {
         return applicantRepository.loadCompaniesWithMinApplicantsRegisteredCount(seasonYear, PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
     }
 
-    public List<Integer> getMobileLoggedInUsers(int seasonYear) {
-        Date startDate = Date.from(Instant.from(LocalDate.now().minusDays(6).atStartOfDay(ZoneId.systemDefault())));
-        return mobileAuditLogRepository.getMobileLoggedInUsers(seasonYear, hajjRituals, startDate);
+    public int[] getMobileLoggedInUsers(int seasonYear) {
+        int[] loggedInUsers = new int[DAYS_RANGE];
+        LocalDate now = LocalDate.now();
+        Date startDate = Date.from(Instant.from(now.minusDays(DAYS_RANGE - 1).atStartOfDay(ZoneId.systemDefault())));
+        List<CountVo> groupedLoggedInUsers = mobileAuditLogRepository.getMobileLoggedInUsers(seasonYear, hajjRituals, startDate);
+        for (int i = 0; i < loggedInUsers.length; i++) {
+            int finalI = i;
+            groupedLoggedInUsers.stream().filter(item -> item.getLabelNumber() == now.minusDays(finalI).getDayOfMonth()).findAny()
+                    .ifPresent(item -> loggedInUsers[DAYS_RANGE - finalI - 1] = (int) item.getCount());
+        }
+        return loggedInUsers;
     }
 
     public List<ApplicantMobileTrackingVo> findActiveApplicantWithLocationBySeason(int seasonYear) {
