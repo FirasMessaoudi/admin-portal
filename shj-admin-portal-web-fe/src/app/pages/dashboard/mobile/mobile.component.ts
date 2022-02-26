@@ -46,6 +46,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
   companyCounts: Array<any>;
   seasonYear: any;
   applicantMobileTrackings: ApplicantMobileTracking[];
+  applicantMobileTrackingsFiltred: ApplicantMobileTracking[];
   locations: Array<any> = [];
 
   MAP_ZOOM_OUT = 10;
@@ -231,6 +232,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
       .findActiveApplicantWithLocationBySeason(this.seasonYear)
       .subscribe((data) => {
         this.applicantMobileTrackings = data;
+        this.applicantMobileTrackingsFiltred = data;
         console.log(this.applicantMobileTrackings);
         this.loadMapkey();
       });
@@ -252,25 +254,43 @@ export class MobileComponent implements OnInit, DashboardComponent {
           zoom: 14,
           scrollwheel: true,
         });
+        let heatmap = new google.maps.visualization.HeatmapLayer({
+          data: this.getPoints(),
+          map: map,
+        });
 
       });
     });
   }
 
-  filterMap(param:any){
-    console.log(param);
-    //this.applicantMobileTrackings.filter(c => c.nationalityCode = param)
+  filterMap(param:string, type: string){
+    console.log(param == type);
+    switch(type) {
+      case 'nationality':
+       this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => c.nationalityCode == param);
+        break;
+      case 'all':
+        this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
+        break;
+      default: 
+        this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
+    }
+    this.loadMapkey();
   }
 
   selectedFromDateChange(event: Date) {
-    console.log(event)
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => new Date(c.lastLoginDate).getTime() > event.getTime());
+    this.loadMapkey();
   }
   selectedToDateChange(event: Date) {
-    console.log(event)
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => new Date(c.lastLoginDate).getTime() < event.getTime());
+    this.loadMapkey();
   }
 
   getPoints() {
-    this.applicantMobileTrackings.forEach((applicant) => {
+    this.locations = [];
+    this.applicantMobileTrackingsFiltred.forEach((applicant) => {
+      console.log(new Date(applicant.lastLoginDate));
       this.locations.push(new google.maps.LatLng(applicant.lat, applicant.lng));
     });
     return this.locations;
