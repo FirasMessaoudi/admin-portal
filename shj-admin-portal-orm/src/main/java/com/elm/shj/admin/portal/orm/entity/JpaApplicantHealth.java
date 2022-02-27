@@ -36,7 +36,7 @@ public class JpaApplicantHealth implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     private JpaApplicant applicant;
 
     @Column(name = "blood_type")
