@@ -58,6 +58,8 @@ export class MobileComponent implements OnInit, DashboardComponent {
   appUsersCount: Array<any>;
   appUsersLabels: Array<any>;
   backgroundColors: Array<any> = [];
+  lastCompanyCode = 'all';
+  lastNationalityCode = 'all';
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -264,17 +266,25 @@ export class MobileComponent implements OnInit, DashboardComponent {
   }
 
   filterMap(param:string, type: string){
-    console.log(param == type);
+    console.log(type);
     switch(type) {
       case 'nationality':
-       this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => c.nationalityCode == param);
-        break;
-      case 'all':
-        this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
-        break;
+       this.lastNationalityCode = param;
+       break;
+      case 'company':
+        this.lastCompanyCode = param
+           break;
       default: 
-        this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
     }
+    if(this.lastNationalityCode == 'all' && this.lastCompanyCode == 'all')
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
+    if(this.lastNationalityCode != 'all' && this.lastCompanyCode == 'all')
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => c.nationalityCode == this.lastNationalityCode);
+    if(this.lastNationalityCode == 'all' && this.lastCompanyCode != 'all')
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => c.companyCode == this.lastCompanyCode);
+    if(this.lastNationalityCode != 'all' && this.lastCompanyCode != 'all')
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => c.nationalityCode == this.lastNationalityCode && c.companyCode == this.lastCompanyCode);
+
     this.loadMapkey();
   }
 
@@ -290,7 +300,6 @@ export class MobileComponent implements OnInit, DashboardComponent {
   getPoints() {
     this.locations = [];
     this.applicantMobileTrackingsFiltred.forEach((applicant) => {
-      console.log(new Date(applicant.lastLoginDate));
       this.locations.push(new google.maps.LatLng(applicant.lat, applicant.lng));
     });
     return this.locations;
