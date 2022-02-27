@@ -9,7 +9,10 @@ import com.elm.shj.admin.portal.services.applicant.ApplicantChatContactService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ChatMessageService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantChatContactDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
+import com.elm.shj.admin.portal.services.dto.ChatMessageDto;
+import com.elm.shj.admin.portal.services.dto.CompanyStaffLiteDto;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -40,6 +43,7 @@ import java.util.Optional;
 @RequestMapping(Navigation.API_CHAT_CONTACT_INTEGRATION)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ChatContactWsController {
+
 
     private final ApplicantChatContactService applicantChatContactService;
     private final ApplicantLiteService applicantLiteService;
