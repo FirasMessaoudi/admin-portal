@@ -261,7 +261,6 @@ export class MainComponent implements OnInit, DashboardComponent {
       .loadIncidents( this.seasonYear)
       .subscribe((data) => {
         this.incidents = data;
-        console.log(this.incidents.totalNumberOfRegisteredIncidents);
         this.incidentDoughnutChartLabels = [
           this.lookupService.localizedLabel(
             this.incidentStatusList,
@@ -284,7 +283,6 @@ export class MainComponent implements OnInit, DashboardComponent {
         this.setIncidentCenterTitle(
           this.translate.instant('dashboard.main.total_incidents')
         );
-        console.log(this.incidents.totalNumberOfRegisteredIncidents);
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
         );
@@ -305,7 +303,7 @@ export class MainComponent implements OnInit, DashboardComponent {
 
   loadPilgrimsMap() {
     this.loadActiveApplicantWithLocations();
-  } 
+  }
 
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
