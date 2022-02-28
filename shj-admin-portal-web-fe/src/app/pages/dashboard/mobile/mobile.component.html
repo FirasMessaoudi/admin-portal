@@ -5,6 +5,10 @@
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="font-weight-bold text-dark">{{'dashboard.mobile.title' | translate}}</h3>
+    <h3 class="font-weight-bold text-dark">
+      {{'dashboard.general.hajj' | translate}}
+      <span *ngIf="currentLanguage.startsWith('ar')">عام</span>
+      {{seasonYear}}</h3>
     <div *ngIf="!isFullScreen">
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
@@ -155,7 +159,7 @@
                       </div>
                       <div class="form-group col">
                         <label class="col-form-label">الشركة</label>
-                        <select class="custom-select" (change)="filterMap($event.target.value, 'all')">
+                        <select class="custom-select" (change)="filterMap($event.target.value, 'company')">
                           <option selected value="all">الكل</option>
                           <option *ngFor="let company of companyNames" [value]="company.code">
                             {{currentLanguage.startsWith('en') ? company.labelEn : company.labelAr}}
@@ -176,7 +180,7 @@
                         <!--TODO TO BE REFACTORED-->
                         <label class="col-form-label">{{'general.nationality' | translate}}</label>
                         <select class="custom-select" (change)="filterMap($event.target.value, 'nationality')">
-                          <option selected value="1">{{'general.all' | translate}}</option>
+                          <option selected value="all">{{'general.all' | translate}}</option>
                           <option *ngFor="let nationality of lookupService().localizedItems(nationalities)"
                                   [value]="nationality.code">
                             {{nationality.label}}

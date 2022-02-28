@@ -15,6 +15,9 @@ public class Navigation {
 		// private constructor to prevent construction
 	}
 
+	//cameras
+	public static final String API_CAMERAS = "/api/cameras";
+
 	// Authentication
 	public static final String API_AUTH = "/api/auth";
 	// Users

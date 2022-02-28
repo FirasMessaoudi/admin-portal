@@ -24,10 +24,11 @@ import {
 
 import * as moment_ from 'moment-hijri';
 
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { ApplicantMobileTracking } from '@app/_shared/model/applicant-mobile-tracking.model';
+import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
+import {ApplicantMobileTracking} from '@app/_shared/model/applicant-mobile-tracking.model';
 import {dashboardItem} from "@shared/model";
-import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
+import {DashboardComponent} from '@pages/dashboard/slide-show/dashboard.component';
+import {DashboardCameraNumbers} from '@model/dashboard-camera-numbers';
 
 const momentHijri = moment_;
 
@@ -38,12 +39,12 @@ const momentHijri = moment_;
   providers: [NgbModalConfig, NgbModal]
 })
 export class MainComponent implements OnInit, DashboardComponent {
-  //TODO Dummy Data
-  dashboardCameras = {
-    totalCount: 782,
-    activeCameras: 609,
-    inactiveCameras: 176,
-  };
+
+
+  dashboardCamerasData: DashboardCameraNumbers;
+  private CameraSubscription: Subscription;
+
+  public centerText: string = 'Center Text';
 
   currentSeasonData: GeneralDashboardVo;
   previousSeasonData: GeneralDashboardVo;
@@ -171,32 +172,26 @@ export class MainComponent implements OnInit, DashboardComponent {
       {
         afterDatasetsDraw(chart) {
           var data = chart.data.datasets[0].data;
-          var total=0;
-          data.forEach(element=>{
+          var total = 0;
+          data.forEach(element => {
             total += element;
           });
-          var width = chart.width,
-            height = chart.chartArea.top + chart.chartArea.bottom,
+          var height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
-          ctx.save();
-          // var fontSize = (height / 15).toFixed(2);
+          ctx.restore();
           var valueFontSize = (height / 10).toFixed(2);
-          ctx.font = 'bold ' + valueFontSize + "px Arial";
+          ctx.font = 'bold ' + valueFontSize + 'px Arial';
+          ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          var text = total.toString() + '',
-            textX = Math.round((width - ctx.measureText(text).width) / 2),
-            textY = height / 2;
-          var textZ = height / 2.5;
-          ctx.fillText(text, textX, textY);
-          ctx.textBaseline = 'middle';
-          var textLabel = title,
-            textLabelX = Math.round(
-              (width - ctx.measureText(textLabel).width) / 1.9
-            ),
-            textLabelY = height / 1.5;
+          var text = total.toString();
+          const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+          const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+          ctx.fillText(text, centerX, centerY - 10);
+
           var labelFontSize = (height / 11).toFixed(2);
-          ctx.font =  labelFontSize + "px Arial";
-          ctx.fillText(textLabel, textLabelX, textLabelY);
+          ctx.font = labelFontSize + 'px Arial';
+          var textLabel = title;
+          ctx.fillText(textLabel, centerX, centerY + 10);
           ctx.save();
         },
       },
@@ -257,6 +252,13 @@ export class MainComponent implements OnInit, DashboardComponent {
           this.previousSeasonData.totalNumberOfInternalApplicants;
       });
 
+    // *************************Get camera data*****************************
+    this.CameraSubscription = this.dashboardService
+      .loadCamerasNumbers(this.seasonYear)
+      .subscribe((data) => {
+        this.dashboardCamerasData = data;
+      });
+
     this.incidentSubscription = this.dashboardService
       .loadIncidents( this.seasonYear)
       .subscribe((data) => {
@@ -307,7 +309,7 @@ export class MainComponent implements OnInit, DashboardComponent {
 
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({ apiKey: result, libraries: ['visualization'] });
+      let loader = new Loader({ apiKey: result, libraries: ['visualization', 'geometry'] });
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
           center: { lat: 21.423461874376475, lng: 39.825553299746616 },

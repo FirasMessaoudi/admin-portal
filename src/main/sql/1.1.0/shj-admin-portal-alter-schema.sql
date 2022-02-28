@@ -1293,3 +1293,35 @@ GO
 
 ALTER TABLE shc_portal.shc_applicant_chat_contact ALTER COLUMN applicant_ritual_id INT NULL;
 GO
+
+/*---------------------------------------------------
+--  ddl for area layers table
+---------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_area_layers_lk')
+CREATE TABLE shc_portal.shc_area_layers_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(50)  NOT NULL,
+    layer		  nvarchar(255) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT area_layers_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+/*---------------------------------------------------
+--  ddl for shc_camera table
+---------------------------------------------------*/
+
+if not exists(select * from sys.tables where name = 'shc_camera')
+create table shc_portal.shc_camera
+(
+    id                       int           not null primary key identity(1,1),
+    status                   nvarchar(50) ,
+    url                      nvarchar(256) ,
+    creation_hijri_year      int null,
+    creation_date            smalldatetime not null default current_timestamp,
+    update_date              smalldatetime null
+);
+GO

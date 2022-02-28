@@ -11,6 +11,8 @@ import { DashboardMobileNumbersVo } from '@model/dashboard-mobile-numbers-vo.mod
 import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
 import { dashboardItem } from '@model/dashboard-item';
 import { LocalizedCountVo } from '@model/localized-count-vo.model';
+import {DashboardCameraNumbers} from "@model/dashboard-camera-numbers";
+import { AreaLayerLookup } from '@app/_shared/model/area-layer-lookup.model';
 
 @Injectable({
   providedIn: 'root',
@@ -106,6 +108,19 @@ export class DashboardService {
     return this.http.get<CountVo[]>(
       '/core/api/dashboard/general-numbers/applicant/count-per-age/' +
         seasonYear
+    );
+  }
+
+  /**
+   * Load dashboard applicants numbers for current season
+   */
+
+  loadCamerasNumbers(
+    seasonYear: number
+  ): Observable<DashboardCameraNumbers> {
+    return this.http.get<DashboardCameraNumbers>(
+      '/core/api/dashboard/camera_numbers/' +
+      seasonYear
     );
   }
 
@@ -284,6 +299,10 @@ export class DashboardService {
 
   getDashboardItems(): dashboardItem[] {
     return this.items;
+  }
+
+  findAreaLayers(): Observable<AreaLayerLookup[]> {
+    return this.http.get<any>('/core/api/lookup/area_layers/list');
   }
 
   getSlideShowInterval(): BehaviorSubject<number> {
