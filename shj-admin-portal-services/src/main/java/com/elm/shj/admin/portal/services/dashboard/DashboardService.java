@@ -63,6 +63,7 @@ public class DashboardService {
     private final CompanyRepository companyRepository;
     private final PackageHousingRepository packageHousingRepository;
     private final MobileAuditLogRepository mobileAuditLogRepository;
+    private final CameraRepository cameraRepository;
 
     public DashboardVo loadDashboardData() {
         log.info("Start loading dashboard data");
@@ -206,6 +207,26 @@ public class DashboardService {
                 .totalNumberOfLoggedOutUsers(totalNumberOfLoggedOutUsersFromMobile)
 
                 .build();
+    }
+
+    /**
+     * Load dashboard cameras numbers by hijri season.
+     *
+     * @return
+     */
+    public DashboardCameraNumbersVo loadDashboardCamerasNumbers(int seasonYear){
+
+        //cameras related data
+        long totalNumberOfCameras = cameraRepository.countCameraByHijriSeason(seasonYear);
+        long totalNumberOfActiveCameras= cameraRepository.countCameraByStatusAndHijriYear("active",seasonYear);
+        long totalNumberOfInactiveCameras= cameraRepository.countCameraByStatusAndHijriYear("inactive",seasonYear);
+
+        return DashboardCameraNumbersVo.builder()
+                .totalNumberOfCameras(totalNumberOfCameras)
+                .totalNumberOfActiveCameras(totalNumberOfActiveCameras)
+                .totalNumberOfInactiveCameras(totalNumberOfInactiveCameras)
+                .build();
+
     }
 
     public DashboardIncidentNumbersVo loadDashboardIncidentNumbers(int seasonYear) {

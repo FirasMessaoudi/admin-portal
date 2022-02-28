@@ -43,7 +43,7 @@ const routes: Routes = [
     canActivate: [AuthenticationGuard],
   },
   {
-    path: 'dashboard/cameras',
+    path: 'dashboard/cameras/:seasonYear',
     component: CamerasComponent,
     canActivate: [AuthenticationGuard],
   },

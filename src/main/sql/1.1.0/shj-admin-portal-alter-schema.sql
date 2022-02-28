@@ -1301,3 +1301,19 @@ GO
 
 alter table shc_portal.shc_applicant_chat_contact alter column applicant_ritual_id int null
 go
+
+/*---------------------------------------------------
+--  ddl for shc_camera table
+---------------------------------------------------*/
+
+if not exists(select * from sys.tables where name = 'shc_camera')
+create table shc_portal.shc_camera
+(
+    id                       int           not null primary key identity(1,1),
+    status                   nvarchar(50) ,
+    url                      nvarchar(256) ,
+    creation_hijri_year      int null,
+    creation_date            smalldatetime not null default current_timestamp,
+    update_date              smalldatetime null
+);
+GO

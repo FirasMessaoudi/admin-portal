@@ -10,6 +10,7 @@ import { Position } from '@app/_shared/model/marker.model';
 import { DashboardMobileNumbersVo } from '@model/dashboard-mobile-numbers-vo.model';
 import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
 import {dashboardItem} from "@model/dashboard-item";
+import {DashboardCameraNumbers} from "@model/dashboard-camera-numbers";
 
 @Injectable({
   providedIn: 'root',
@@ -105,6 +106,19 @@ export class DashboardService {
     return this.http.get<CountVo[]>(
       '/core/api/dashboard/general-numbers/applicant/count-per-age/' +
         seasonYear
+    );
+  }
+
+  /**
+   * Load dashboard applicants numbers for current season
+   */
+
+  loadCamerasNumbers(
+    seasonYear: number
+  ): Observable<DashboardCameraNumbers> {
+    return this.http.get<DashboardCameraNumbers>(
+      '/core/api/dashboard/camera_numbers/' +
+      seasonYear
     );
   }
 
