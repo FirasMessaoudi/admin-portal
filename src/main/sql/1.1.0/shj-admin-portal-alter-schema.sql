@@ -1284,10 +1284,10 @@ GO
 if not exists(select * from sys.tables where name = 'shc_mobile_audit_log')
 CREATE TABLE shc_portal.shc_mobile_audit_log
 (
-    id             int         NOT NULL PRIMARY KEY IDENTITY (1,1),
-    user_id_number varchar(45) NOT NULL,
-    event          varchar(255) NULL,
-    event_date     smalldatetime DEFAULT CURRENT_TIMESTAMP,
+    id         int          NOT NULL PRIMARY KEY IDENTITY (1,1),
+    user_id    varchar(45)  NOT NULL,
+    event      varchar(255) NULL,
+    event_date smalldatetime DEFAULT CURRENT_TIMESTAMP,
 );
 GO
 
@@ -1307,5 +1307,21 @@ CREATE TABLE shc_portal.shc_area_layers_lk
     layer		  nvarchar(255) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
     CONSTRAINT area_layers_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+/*---------------------------------------------------
+--  ddl for shc_camera table
+---------------------------------------------------*/
+
+if not exists(select * from sys.tables where name = 'shc_camera')
+create table shc_portal.shc_camera
+(
+    id                       int           not null primary key identity(1,1),
+    status                   nvarchar(50) ,
+    url                      nvarchar(256) ,
+    creation_hijri_year      int null,
+    creation_date            smalldatetime not null default current_timestamp,
+    update_date              smalldatetime null
 );
 GO

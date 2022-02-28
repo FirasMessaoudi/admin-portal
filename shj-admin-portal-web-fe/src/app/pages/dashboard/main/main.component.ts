@@ -27,7 +27,8 @@ import * as moment_ from 'moment-hijri';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { ApplicantMobileTracking } from '@app/_shared/model/applicant-mobile-tracking.model';
 import {dashboardItem} from "@shared/model";
-import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
+import {DashboardComponent} from '@pages/dashboard/slide-show/dashboard.component';
+import {DashboardCameraNumbers} from '@model/dashboard-camera-numbers';
 
 const momentHijri = moment_;
 
@@ -38,12 +39,12 @@ const momentHijri = moment_;
   providers: [NgbModalConfig, NgbModal]
 })
 export class MainComponent implements OnInit, DashboardComponent {
-  //TODO Dummy Data
-  dashboardCameras = {
-    totalCount: 782,
-    activeCameras: 609,
-    inactiveCameras: 176,
-  };
+
+
+  dashboardCamerasData: DashboardCameraNumbers;
+  private CameraSubscription: Subscription;
+
+  public centerText: string = 'Center Text';
 
   currentSeasonData: GeneralDashboardVo;
   previousSeasonData: GeneralDashboardVo;
@@ -125,7 +126,6 @@ export class MainComponent implements OnInit, DashboardComponent {
 
   ngOnInit() {
     this.loadLookups();
-
     //Get current hijri year
     this.seasonYear = momentHijri(new Date()).iYear();
     this.loadActiveApplicantWithLocations();
@@ -147,9 +147,7 @@ export class MainComponent implements OnInit, DashboardComponent {
         ),
       ];
       this.setIncidentCenterTitle(
-        this.translate.instant('dashboard.main.total_incidents'),
-        this.incidents.totalNumberOfRegisteredIncidents
-      );
+        this.translate.instant('dashboard.main.total_incidents'));
     });
 
 
@@ -168,21 +166,25 @@ export class MainComponent implements OnInit, DashboardComponent {
       this.refreshSubscription.unsubscribe();
     }
   }
+  setIncidentCenterTitle(title: string) {
 
-  setIncidentCenterTitle(title: string, countText: number) {
     this.incidentDoughnutChartPlugins = [
       {
-        beforeDraw(chart) {
+        afterDatasetsDraw(chart) {
           var data = chart.data.datasets[0].data;
+          var total=0;
+          data.forEach(element=>{
+            total += element;
+          });
           var width = chart.width,
             height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
-          ctx.restore();
-         // var fontSize = (height / 15).toFixed(2);
+          ctx.save();
+          // var fontSize = (height / 15).toFixed(2);
           var valueFontSize = (height / 10).toFixed(2);
           ctx.font = 'bold ' + valueFontSize + "px Arial";
           ctx.textBaseline = 'middle';
-          var text = countText + '',
+          var text = total.toString() + '',
             textX = Math.round((width - ctx.measureText(text).width) / 2),
             textY = height / 2;
           var textZ = height / 2.5;
@@ -203,7 +205,6 @@ export class MainComponent implements OnInit, DashboardComponent {
 
 
   }
-
   loadLookups() {
     this.dashboardService
       .findIncidentStatus()
@@ -257,11 +258,17 @@ export class MainComponent implements OnInit, DashboardComponent {
           this.previousSeasonData.totalNumberOfInternalApplicants;
       });
 
+    // *************************Get camera data*****************************
+    this.CameraSubscription = this.dashboardService
+      .loadCamerasNumbers(this.seasonYear)
+      .subscribe((data) => {
+        this.dashboardCamerasData = data;
+      });
+
     this.incidentSubscription = this.dashboardService
-      .loadIncidents(this.seasonYear)
+      .loadIncidents( this.seasonYear)
       .subscribe((data) => {
         this.incidents = data;
-
         this.incidentDoughnutChartLabels = [
           this.lookupService.localizedLabel(
             this.incidentStatusList,
@@ -272,7 +279,6 @@ export class MainComponent implements OnInit, DashboardComponent {
             'UNDER_PROCESSING'
           ),
         ];
-
         this.incidentDoughnutChartData = [
           {
             data: [
@@ -282,10 +288,8 @@ export class MainComponent implements OnInit, DashboardComponent {
             steppedLine: 'after',
           },
         ];
-
         this.setIncidentCenterTitle(
-          this.translate.instant('dashboard.main.total_incidents'),
-          this.incidents.totalNumberOfRegisteredIncidents
+          this.translate.instant('dashboard.main.total_incidents')
         );
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
@@ -307,7 +311,7 @@ export class MainComponent implements OnInit, DashboardComponent {
 
   loadPilgrimsMap() {
     this.loadActiveApplicantWithLocations();
-  } 
+  }
 
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {

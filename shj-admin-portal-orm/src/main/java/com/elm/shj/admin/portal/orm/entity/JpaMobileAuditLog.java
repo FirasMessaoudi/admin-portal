@@ -32,8 +32,8 @@ public class JpaMobileAuditLog implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "user_id_number")
-    private String userIdNumber;
+    @Column(name = "user_id")
+    private String userId;
 
     private String event;
 

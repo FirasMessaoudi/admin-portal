@@ -46,6 +46,6 @@ public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Lon
             "GROUP BY contact.id ")
     List<UnreadMessagesCount> findUnreadMessagesCount(@Param("applicantUin") String uin);
     @Modifying
-    @Query("UPDATE JpaChatMessage message SET message.readDate=CURRENT_TIMESTAMP,  message.updateDate = CURRENT_TIMESTAMP WHERE message.sender.id = :chatContactId AND message.readDate is null ")
+    @Query("UPDATE JpaChatMessage message SET message.readDate=CURRENT_TIMESTAMP,  message.updateDate = CURRENT_TIMESTAMP WHERE message.receiver.id = :chatContactId AND message.readDate is null ")
     void updateChatMessageReadDate(@Param("chatContactId") long chatContactId);
 }
