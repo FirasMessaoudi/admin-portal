@@ -1,39 +1,40 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { DashboardVo } from '@model/dashboard-vo.model';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
-import { CountVo } from '@app/_shared/model/countVo.model';
+import { CountVo } from '@model/count-vo.model';
 import { Lookup } from '@model/lookup.model';
-import { DashboardIncidentNumbersVo } from '@model/dashboardIncidentNumbersVo.model';
+import { DashboardIncidentNumbersVo } from '@model/dashboard-incident-numbers-vo.model';
 import { Position } from '@app/_shared/model/marker.model';
 import { DashboardMobileNumbersVo } from '@model/dashboard-mobile-numbers-vo.model';
 import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
-import {dashboardItem} from "@model/dashboard-item";
+import { dashboardItem } from '@model/dashboard-item';
+import { LocalizedCountVo } from '@model/localized-count-vo.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardService {
-
   items: dashboardItem[] = [];
   slideShowInterval: number = 5;
   private intervalSubject = new BehaviorSubject<number>(5);
+
   constructor(private http: HttpClient) {
     this.items = [
-      new dashboardItem('MainComponent', 'dashboard.general.hajj', true
+      new dashboardItem('MainComponent', 'dashboard.general.hajj', true),
+      new dashboardItem(
+        'GeneralNumbersComponent',
+        'dashboard.general-numbers.title',
+        true
       ),
       new dashboardItem(
-        'GeneralNumbersComponent', 'dashboard.general-numbers.title', true
+        'IncidentsComponent',
+        'dashboard.incidents.title',
+        true
       ),
-      new dashboardItem(
-        'IncidentsComponent', 'dashboard.incidents.title', true
-      ), new dashboardItem(
-        'CamerasComponent', 'dashboard.cameras.title', true
-      ),
-      new dashboardItem(
-        'MobileComponent', 'dashboard.mobile.title', true
-      ),
+      new dashboardItem('CamerasComponent', 'dashboard.cameras.title', true),
+      new dashboardItem('MobileComponent', 'dashboard.mobile.title', true),
     ];
   }
 
@@ -117,8 +118,8 @@ export class DashboardService {
    */
   loadCompaniesWithMaxApplicantCountForCurrentSeason(
     seasonYear: number
-  ): Observable<CountVo[]> {
-    return this.http.get<CountVo[]>(
+  ): Observable<LocalizedCountVo[]> {
+    return this.http.get<LocalizedCountVo[]>(
       '/core/api/dashboard/general-numbers/max-companies/' + seasonYear
     );
   }
@@ -128,8 +129,8 @@ export class DashboardService {
    */
   loadCompaniesWithMinApplicantCountForHijriSeason(
     seasonYear: number
-  ): Observable<CountVo[]> {
-    return this.http.get<CountVo[]>(
+  ): Observable<LocalizedCountVo[]> {
+    return this.http.get<LocalizedCountVo[]>(
       '/core/api/dashboard/general-numbers/min-companies/' + seasonYear
     );
   }
@@ -140,9 +141,9 @@ export class DashboardService {
   loadCampsWithMaxApplicantCountForHijriSeason(
     seasonYear: number,
     site: string
-  ): Observable<CountVo[]> {
+  ): Observable<LocalizedCountVo[]> {
     let params = new HttpParams().set('site', site);
-    return this.http.get<CountVo[]>(
+    return this.http.get<LocalizedCountVo[]>(
       '/core/api/dashboard/general-numbers/max-camps/' + seasonYear,
       { params: params }
     );
@@ -154,9 +155,9 @@ export class DashboardService {
   loadCampsWithMinApplicantCountForHijriSeason(
     seasonYear: number,
     site: string
-  ): Observable<CountVo[]> {
+  ): Observable<LocalizedCountVo[]> {
     let params = new HttpParams().set('site', site);
-    return this.http.get<CountVo[]>(
+    return this.http.get<LocalizedCountVo[]>(
       '/core/api/dashboard/general-numbers/min-camps/' + seasonYear,
       { params: params }
     );
@@ -190,8 +191,10 @@ export class DashboardService {
   /**
    * Load companies with max incident count
    */
-  loadCompaniesWithMaxIncidentCount(seasonYear: number): Observable<CountVo[]> {
-    return this.http.get<CountVo[]>(
+  loadCompaniesWithMaxIncidentCount(
+    seasonYear: number
+  ): Observable<LocalizedCountVo[]> {
+    return this.http.get<LocalizedCountVo[]>(
       '/core/api/dashboard/incident-numbers/max-companies/' + seasonYear
     );
   }
@@ -199,8 +202,10 @@ export class DashboardService {
   /**
    * Load companies with min incident count
    */
-  loadCompaniesWithMinIncidentCount(seasonYear: number): Observable<CountVo[]> {
-    return this.http.get<CountVo[]>(
+  loadCompaniesWithMinIncidentCount(
+    seasonYear: number
+  ): Observable<LocalizedCountVo[]> {
+    return this.http.get<LocalizedCountVo[]>(
       '/core/api/dashboard/incident-numbers/min-companies/' + seasonYear
     );
   }

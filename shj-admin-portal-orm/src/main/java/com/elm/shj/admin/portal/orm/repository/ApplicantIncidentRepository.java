@@ -3,8 +3,8 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
+import com.elm.shj.admin.portal.orm.entity.LocalizedCountVo;
 import com.elm.shj.admin.portal.orm.entity.LocationVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +28,7 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
     @Modifying
     @Query("update JpaApplicantIncident incident set incident.statusCode = :status, " +
             "incident.resolutionComment = :resolutionComment, incident.updateDate = current_timestamp where incident.id =:incidentId")
-    void update(@Param("incidentId") long incidentId, @Param("resolutionComment") String resolutionComment,@Param("status") String status);
+    void update(@Param("incidentId") long incidentId, @Param("resolutionComment") String resolutionComment, @Param("status") String status);
 
 
     @Query("SELECT COUNT(ai) FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar " +
@@ -43,21 +43,23 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
             "where ai.statusCode IN ('RESOLVED', 'CLOSED') AND rs.seasonYear= :seasonYear")
     long countAllResolvedIncidents(@Param("seasonYear") int seasonYear);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(ai),'') " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocalizedCountVo(c.labelAr, c.labelEn, COUNT(ai)) " +
             "FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
-            "WHERE  c.labelAr is NOT NULL AND  rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr) DESC")
-    Page<CountVo> findCompaniesWithMaxIncidents(@Param("seasonYear") int seasonYear, Pageable pageable);
+            "WHERE c.labelAr is NOT NULL AND rs.seasonYear= :seasonYear GROUP BY c.labelAr, c.labelEn " +
+            "ORDER BY COUNT(c.labelAr) DESC")
+    Page<LocalizedCountVo> findCompaniesWithMaxIncidents(@Param("seasonYear") int seasonYear, Pageable pageable);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(ai),'') " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocalizedCountVo(c.labelAr, c.labelEn, COUNT(ai)) " +
             "FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
-            "WHERE  c.labelAr is NOT NULL AND  rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr)")
-    Page<CountVo> findCompaniesWithMinIncidents(@Param("seasonYear") int seasonYear,Pageable pageable);
+            "WHERE c.labelAr is NOT NULL AND rs.seasonYear= :seasonYear GROUP BY c.labelAr, c.labelEn " +
+            "ORDER BY COUNT(c.labelAr)")
+    Page<LocalizedCountVo> findCompaniesWithMinIncidents(@Param("seasonYear") int seasonYear, Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocationVo(i.locationLat, i.locationLng) " +
             "FROM JpaApplicantIncident i JOIN i.applicantRitual ar JOIN ar.applicantPackage ap " +
-            "JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs  where rs.seasonYear = :seasonYear " +
+            "JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs where rs.seasonYear = :seasonYear " +
             "and rs.ritualTypeCode IN (:ritualTypeCodeList)")
     List<LocationVo> getIncidentsLocationsBySeasonAndRitualType(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 

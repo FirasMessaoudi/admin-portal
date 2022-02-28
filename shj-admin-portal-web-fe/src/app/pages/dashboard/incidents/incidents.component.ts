@@ -20,25 +20,27 @@ import {
 import { LookupService } from '@core/utilities/lookup.service';
 import { Subscription } from 'rxjs';
 import { Lookup } from '@model/lookup.model';
-import { CountVo } from '@model/countVo.model';
+import { CountVo } from '@model/count-vo.model';
 import { DatePipe, DOCUMENT } from '@angular/common';
 import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
 import { I18nService } from '@dcc-commons-ng/services';
 import { interpolateRgb } from 'd3-interpolate';
-import { DashboardIncidentNumbersVo } from '@model/dashboardIncidentNumbersVo.model';
+import { DashboardIncidentNumbersVo } from '@model/dashboard-incident-numbers-vo.model';
 import { Position } from '@app/_shared/model/marker.model';
 import { EAuthority } from '@shared/model';
 import { ActivatedRoute } from '@angular/router';
-import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
-
-const FONTS: string = '"Elm-font", sans-serif';
+import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { LocalizedCountVo } from '@model/localized-count-vo.model';
 
 @Component({
   selector: 'app-incidents',
   templateUrl: './incidents.component.html',
   styleUrls: ['./incidents.component.scss'],
 })
-export class IncidentsComponent implements OnInit, AfterViewInit, DashboardComponent {
+export class IncidentsComponent
+  implements OnInit, AfterViewInit, DashboardComponent
+{
   private incidentSubscription: Subscription;
   incidents: DashboardIncidentNumbersVo;
   incidentTypeList: Lookup[];
@@ -71,8 +73,8 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
   public incidentDoughnutChartOptions: ChartOptions = {
     responsive: true,
     cutoutPercentage: 70,
-    rotation: 1 * Math.PI,
-    circumference: 1 * Math.PI,
+    rotation: Math.PI,
+    circumference: Math.PI,
     plugins: {
       labels: [
         {
@@ -81,7 +83,6 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           position: 'outside',
           textMargin: 10,
           fontStyle: 'bold',
-
         },
         {
           render: function (args) {
@@ -91,17 +92,16 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           position: 'outside',
           textMargin: 12,
           fontStyle: 'normal',
-          precision: 2
-
-        }
+          precision: 2,
+        },
       ],
       datalabels: {
-        display: false
-      }
+        display: false,
+      },
     },
     tooltips: {
-      enabled: false
-    }
+      enabled: false,
+    },
   };
   public incidentTypeDoughnutChartOptions: ChartOptions = {
     responsive: true,
@@ -115,7 +115,6 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           outsidePadding: 10,
           textMargin: 10,
           fontStyle: 'bold',
-
         },
         {
           render: function (args) {
@@ -126,20 +125,20 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           outsidePadding: 10,
           textMargin: 10,
           fontStyle: 'normal',
-          precision: 2
-
-        }
+          precision: 2,
+        },
       ],
       datalabels: {
-        display: false
-      }
+        display: false,
+      },
     },
     tooltips: {
-      enabled: false
-    }
+      enabled: false,
+    },
   };
   public incidentDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
   public incidentTypeDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
+  companyData: LocalizedCountVo[] = [];
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -147,6 +146,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
     private lookupService: LookupService,
     private dateFormatterService: DateFormatterService,
     private i18nService: I18nService,
+    private translate: TranslateService,
     @Inject(DOCUMENT) private document: Document,
     private route: ActivatedRoute,
     private renderer2: Renderer2
@@ -163,37 +163,9 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
         this.loadMapkey();
       });
     this.loadLookups();
-    this.chartsConfig.barChartOptions = {
-      ...this.chartsConfig.barChartOptions,
-      legend: false,
-      scales: {
-        ...this.chartsConfig.barChartOptions.scales,
-        xAxes: [
-          {
-            gridLines: {
-              color: 'rgba(0, 0, 0, 0)',
-            },
-          },
-        ],
-        yAxes: [
-          {
-            gridLines: {
-              borderDash: [8, 6],
-              color: '#F3F5F2',
-            },
-            ticks: {
-              fontFamily: FONTS,
-              beginAtZero: true,
-              callback: function (value) {
-                if (value % 1 === 0) {
-                  return value;
-                }
-              },
-            },
-          },
-        ],
-      },
-    };
+
+    // Hide bar chart legend
+    this.chartsConfig.barChartOptions.legend = false;
 
     this.incidentSubscription = this.dashboardService
       .loadIncidents(this.seasonYear)
@@ -238,8 +210,17 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
         );
-        this.mostIncidentsArea = this.lookupService.localizedLabel(this.housingSites, this.incidents.mostIncidentsArea);
+        this.mostIncidentsArea = this.lookupService.localizedLabel(
+          this.housingSites,
+          this.incidents.mostIncidentsArea
+        );
       });
+
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.companyLabels = this.currentLanguage.startsWith('ar')
+        ? this.companyData.map((d) => d.labelAr)
+        : this.companyData.map((d) => d.labelEn);
+    });
 
     this.loadMaxCompanies();
   }
@@ -249,8 +230,11 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
     this.dashboardService
       .loadCompaniesWithMinIncidentCount(this.seasonYear)
       .subscribe((data) => {
+        this.companyData = data;
         this.companyCounts = data.map((d) => d.count);
-        this.companyLabels = data.map((d) => d.label);
+        this.companyLabels = this.currentLanguage.startsWith('ar')
+          ? data.map((d) => d.labelAr)
+          : data.map((d) => d.labelEn);
       });
   }
 
@@ -259,8 +243,11 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
     this.dashboardService
       .loadCompaniesWithMaxIncidentCount(this.seasonYear)
       .subscribe((data) => {
+        this.companyData = data;
         this.companyCounts = data.map((d) => d.count);
-        this.companyLabels = data.map((d) => d.label);
+        this.companyLabels = this.currentLanguage.startsWith('ar')
+          ? data.map((d) => d.labelAr)
+          : data.map((d) => d.labelEn);
       });
   }
 
@@ -275,7 +262,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           ctx.restore();
           // var fontSize = (height / 15).toFixed(2);
           var valueFontSize = (height / 10).toFixed(2);
-          ctx.font = 'bold ' + valueFontSize + "px Arial";
+          ctx.font = 'bold ' + valueFontSize + 'px Arial';
           ctx.textBaseline = 'middle';
           var text = countText + '',
             textX = Math.round((width - ctx.measureText(text).width) / 2),
@@ -289,7 +276,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
             ),
             textLabelY = height / 1.5;
           var labelFontSize = (height / 11).toFixed(2);
-          ctx.font =  labelFontSize + "px Arial";
+          ctx.font = labelFontSize + 'px Arial';
           ctx.fillText(textLabel, textLabelX, textLabelY);
           ctx.save();
         },
@@ -307,7 +294,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
             ctx = chart.ctx;
           ctx.restore();
           var valueFontSize = (height / 15).toFixed(2);
-          ctx.font = 'bold ' + valueFontSize + "px Arial";
+          ctx.font = 'bold ' + valueFontSize + 'px Arial';
           ctx.textBaseline = 'middle';
           var text = countText + '',
             textX = Math.round((width - ctx.measureText(text).width) / 2),
@@ -321,7 +308,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
             ),
             textLabelY = height / 2;
           var labelFontSize = (height / 15).toFixed(2);
-          ctx.font = labelFontSize + "px Arial";
+          ctx.font = labelFontSize + 'px Arial';
           ctx.fillText(textLabel, textLabelX, textLabelY);
           ctx.save();
         },
@@ -336,7 +323,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
     this.dashboardService
       .findIncidentStatus()
       .subscribe((data) => (this.incidentStatusList = data));
-    this.dashboardService.findHousingSites().subscribe(result => {
+    this.dashboardService.findHousingSites().subscribe((result) => {
       this.housingSites = result;
     });
   }

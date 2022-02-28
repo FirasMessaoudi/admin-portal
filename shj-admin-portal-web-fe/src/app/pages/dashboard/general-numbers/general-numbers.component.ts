@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DashboardService } from '@core/services';
 import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
-import { CountVo } from '@app/_shared/model/countVo.model';
+import { CountVo } from '@model/count-vo.model';
 import { Lookup } from '@model/lookup.model';
 import { LookupService } from '@core/utilities/lookup.service';
 import { ChartsConfig } from '@pages/dashboard/charts.config';
@@ -10,6 +10,8 @@ import { DashboardVo } from '@shared/model';
 import { I18nService } from '@dcc-commons-ng/services';
 import { ActivatedRoute } from '@angular/router';
 import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { LocalizedCountVo } from '@model/localized-count-vo.model';
 
 @Component({
   selector: 'app-general-numbers',
@@ -38,6 +40,9 @@ export class GeneralNumbersComponent implements OnInit, DashboardComponent {
   campCounts: Array<any>;
   campLabels: Array<any>;
 
+  companyData: LocalizedCountVo[] = [];
+  campData: LocalizedCountVo[] = [];
+
   data: DashboardVo;
 
   chartsConfig: ChartsConfig = new ChartsConfig();
@@ -50,7 +55,8 @@ export class GeneralNumbersComponent implements OnInit, DashboardComponent {
     private dashboardService: DashboardService,
     private i18nService: I18nService,
     private route: ActivatedRoute,
-    private lookupsService: LookupService
+    private lookupsService: LookupService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -104,6 +110,15 @@ export class GeneralNumbersComponent implements OnInit, DashboardComponent {
         });
       });
 
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.companyLabels = this.currentLanguage.startsWith('ar')
+        ? this.companyData.map((d) => d.labelAr)
+        : this.companyData.map((d) => d.labelEn);
+      this.campLabels = this.currentLanguage.startsWith('ar')
+        ? this.campData.map((d) => d.labelAr)
+        : this.campData.map((d) => d.labelEn);
+    });
+
     this.loadMaxCompanies();
     this.loadMaxCamps();
   }
@@ -146,8 +161,11 @@ export class GeneralNumbersComponent implements OnInit, DashboardComponent {
     this.dashboardService
       .loadCompaniesWithMinApplicantCountForHijriSeason(this.seasonYear)
       .subscribe((data) => {
+        this.companyData = data;
         this.companyCounts = data.map((d) => d.count);
-        this.companyLabels = data.map((d) => d.label);
+        this.companyLabels = this.currentLanguage.startsWith('ar')
+          ? data.map((d) => d.labelAr)
+          : data.map((d) => d.labelEn);
       });
   }
 
@@ -156,8 +174,11 @@ export class GeneralNumbersComponent implements OnInit, DashboardComponent {
     this.dashboardService
       .loadCompaniesWithMaxApplicantCountForCurrentSeason(this.seasonYear)
       .subscribe((data) => {
+        this.companyData = data;
         this.companyCounts = data.map((d) => d.count);
-        this.companyLabels = data.map((d) => d.label);
+        this.companyLabels = this.currentLanguage.startsWith('ar')
+          ? data.map((d) => d.labelAr)
+          : data.map((d) => d.labelEn);
       });
   }
 
@@ -169,8 +190,11 @@ export class GeneralNumbersComponent implements OnInit, DashboardComponent {
         this.selectedCampSiteCode
       )
       .subscribe((data) => {
+        this.campData = data;
         this.campCounts = data.map((d) => d.count);
-        this.campLabels = data.map((d) => d.label);
+        this.campLabels = this.currentLanguage.startsWith('ar')
+          ? data.map((d) => d.labelAr)
+          : data.map((d) => d.labelEn);
       });
   }
 
@@ -182,8 +206,11 @@ export class GeneralNumbersComponent implements OnInit, DashboardComponent {
         this.selectedCampSiteCode
       )
       .subscribe((data) => {
+        this.campData = data;
         this.campCounts = data.map((d) => d.count);
-        this.campLabels = data.map((d) => d.label);
+        this.campLabels = this.currentLanguage.startsWith('ar')
+          ? data.map((d) => d.labelAr)
+          : data.map((d) => d.labelEn);
       });
   }
 

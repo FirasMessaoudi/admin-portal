@@ -1,24 +1,27 @@
-import {Component, OnInit} from '@angular/core';
-import {EAuthority} from '@shared/model';
-import {AuthenticationService, CardService, DashboardService} from '@core/services';
-import {DashboardMobileNumbersVo} from '@model/dashboard-mobile-numbers-vo.model';
-import {ChartsConfig} from '@pages/dashboard/charts.config';
-import {ChartDataSets} from 'chart.js';
+import { Component, OnInit } from '@angular/core';
+import { EAuthority } from '@shared/model';
+import {
+  AuthenticationService,
+  CardService,
+  DashboardService,
+} from '@core/services';
+import { DashboardMobileNumbersVo } from '@model/dashboard-mobile-numbers-vo.model';
+import { ChartsConfig } from '@pages/dashboard/charts.config';
+import { ChartDataSets } from 'chart.js';
 
 import * as momentjs from 'moment';
-import {I18nService} from '@dcc-commons-ng/services';
-import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
-import {ActivatedRoute} from '@angular/router';
-import {CompanyLite} from "@model/company-lite.model";
-import {Lookup} from "@model/lookup.model";
-import {Loader} from '@googlemaps/js-api-loader';
-import {LookupService} from '@core/utilities/lookup.service';
-import {ApplicantMobileTracking} from '@model/applicant-mobile-tracking.model';
-import {DatePipe} from '@angular/common';
-import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
+import { I18nService } from '@dcc-commons-ng/services';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { ActivatedRoute } from '@angular/router';
+import { CompanyLite } from '@model/company-lite.model';
+import { Lookup } from '@model/lookup.model';
+import { Loader } from '@googlemaps/js-api-loader';
+import { LookupService } from '@core/utilities/lookup.service';
+import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
+import { DatePipe } from '@angular/common';
+import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
 
 const moment = momentjs;
-const FONTS: string = '"Elm-font", sans-serif';
 const barChartBackgroundColors = [
   '#2B7127',
   '#4F8B4B',
@@ -74,6 +77,8 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
 
     this.loadActiveApplicantWithLocations();
+
+    // Hide bar chart legend
     this.chartsConfig.lineChartOptions.legend = false;
     this.dashboardService
       .loadMobileAppDownloadsNumbers(this.seasonYear)
@@ -101,37 +106,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
       },
     ];
 
-    this.chartsConfig.barChartOptions = {
-      ...this.chartsConfig.barChartOptions,
-      legend: false,
-      scales: {
-        ...this.chartsConfig.barChartOptions.scales,
-        xAxes: [
-          {
-            gridLines: {
-              color: 'rgba(0, 0, 0, 0)',
-            },
-          },
-        ],
-        yAxes: [
-          {
-            gridLines: {
-              borderDash: [8, 6],
-              color: '#F3F5F2',
-            },
-            ticks: {
-              fontFamily: FONTS,
-              beginAtZero: true,
-              callback: function (value) {
-                if (value % 1 === 0) {
-                  return value;
-                }
-              },
-            },
-          },
-        ],
-      },
-    };
+    this.chartsConfig.barChartOptions.legend =  false;
 
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.getWeekDays();
@@ -240,50 +215,62 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
   loadHeatMap() {
     this.loadActiveApplicantWithLocations();
-  } 
-
-  async loadMapkey() {
-    this.lookupService().loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({apiKey: result, libraries: ['visualization']});
-      loader.load().then(() => {
-        const map = new google.maps.Map(document.getElementById('map'), {
-          center: {
-            lat: this.applicantMobileTrackings[0].lat,
-            lng: this.applicantMobileTrackings[0].lng,
-          },
-          zoom: 14,
-          scrollwheel: true,
-        });
-        let heatmap = new google.maps.visualization.HeatmapLayer({
-          data: this.getPoints(),
-          map: map,
-        });
-
-      });
-    });
   }
 
-  filterMap(param:string, type: string){
+  async loadMapkey() {
+    this.lookupService()
+      .loadGoogleMapsApiKey()
+      .subscribe((result) => {
+        let loader = new Loader({
+          apiKey: result,
+          libraries: ['visualization'],
+        });
+        loader.load().then(() => {
+          const map = new google.maps.Map(document.getElementById('map'), {
+            center: {
+              lat: this.applicantMobileTrackings[0].lat,
+              lng: this.applicantMobileTrackings[0].lng,
+            },
+            zoom: 14,
+            scrollwheel: true,
+          });
+          let heatmap = new google.maps.visualization.HeatmapLayer({
+            data: this.getPoints(),
+            map: map,
+          });
+        });
+      });
+  }
+
+  filterMap(param: string, type: string) {
     console.log(param == type);
-    switch(type) {
+    switch (type) {
       case 'nationality':
-       this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => c.nationalityCode == param);
+        this.applicantMobileTrackingsFiltred =
+          this.applicantMobileTrackings.filter(
+            (c) => c.nationalityCode == param
+          );
         break;
       case 'all':
         this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
         break;
-      default: 
+      default:
         this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
     }
     this.loadMapkey();
   }
 
   selectedFromDateChange(event: Date) {
-    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => new Date(c.lastLoginDate).getTime() > event.getTime());
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(
+      (c) => new Date(c.lastLoginDate).getTime() > event.getTime()
+    );
     this.loadMapkey();
   }
+
   selectedToDateChange(event: Date) {
-    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => new Date(c.lastLoginDate).getTime() < event.getTime());
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(
+      (c) => new Date(c.lastLoginDate).getTime() < event.getTime()
+    );
     this.loadMapkey();
   }
 

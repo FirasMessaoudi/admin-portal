@@ -1,7 +1,7 @@
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.JpaPackageHousing;
+import com.elm.shj.admin.portal.orm.entity.LocalizedCountVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,22 +27,24 @@ public interface PackageHousingRepository extends JpaRepository<JpaPackageHousin
 
     List<JpaPackageHousing> findByRitualPackageId(long id);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ph.locationNameAr, 0, COUNT(ph.referenceNumber), '') " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocalizedCountVo(ph.locationNameAr, ph.locationNameEn, COUNT(ph.locationNameAr)) " +
             "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.packageHousings ph JOIN rp.companyRitualSeason crs " +
             "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) " +
-            "AND ph.siteCode = :siteCode AND ph.typeCode = 'CAMP' GROUP BY ph.referenceNumber, ph.locationNameAr ORDER BY COUNT(ph.referenceNumber) DESC")
-    Page<CountVo> findCampsWithMaxApplicantsByHijriSeason(@Param("seasonYear") int seasonYear,
-                                                          @Param("ritualTypeCodeList") List<String> ritualTypeCodeList,
-                                                          @Param("siteCode") String siteCode,
-                                                          Pageable pageable);
+            "AND ph.siteCode = :siteCode AND ph.typeCode = 'CAMP' GROUP BY ph.referenceNumber, ph.locationNameAr, ph.locationNameEn " +
+            "ORDER BY COUNT(ph.referenceNumber) DESC")
+    Page<LocalizedCountVo> findCampsWithMaxApplicantsByHijriSeason(@Param("seasonYear") int seasonYear,
+                                                                   @Param("ritualTypeCodeList") List<String> ritualTypeCodeList,
+                                                                   @Param("siteCode") String siteCode,
+                                                                   Pageable pageable);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(ph.locationNameAr, 0, COUNT(ph.referenceNumber), '') " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocalizedCountVo(ph.locationNameAr, ph.locationNameEn, COUNT(ph.locationNameAr)) " +
             "FROM JpaApplicantPackage ap JOIN ap.ritualPackage rp JOIN rp.packageHousings ph JOIN rp.companyRitualSeason crs " +
             "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) " +
-            "AND ph.siteCode = :siteCode AND ph.typeCode = 'CAMP' GROUP BY ph.referenceNumber, ph.locationNameAr ORDER BY COUNT(ph.referenceNumber)")
-    Page<CountVo> findCampsWithMinApplicantsByHijriSeason(@Param("seasonYear") int seasonYear,
-                                                          @Param("ritualTypeCodeList") List<String> ritualTypeCodeList,
-                                                          @Param("siteCode") String siteCode,
-                                                          Pageable pageable);
+            "AND ph.siteCode = :siteCode AND ph.typeCode = 'CAMP' GROUP BY ph.referenceNumber, ph.locationNameAr, ph.locationNameEn " +
+            "ORDER BY COUNT(ph.referenceNumber)")
+    Page<LocalizedCountVo> findCampsWithMinApplicantsByHijriSeason(@Param("seasonYear") int seasonYear,
+                                                                   @Param("ritualTypeCodeList") List<String> ritualTypeCodeList,
+                                                                   @Param("siteCode") String siteCode,
+                                                                   Pageable pageable);
 
 }

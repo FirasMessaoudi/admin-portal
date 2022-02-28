@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
 import { Subscription, timer } from 'rxjs';
 import { DashboardService } from '@core/services';
-import { DashboardIncidentNumbersVo } from '@model/dashboardIncidentNumbersVo.model';
+import { DashboardIncidentNumbersVo } from '@model/dashboard-incident-numbers-vo.model';
 import { Lookup } from '@model/lookup.model';
 import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
 import { ChartOptions, ChartType } from 'chart.js';

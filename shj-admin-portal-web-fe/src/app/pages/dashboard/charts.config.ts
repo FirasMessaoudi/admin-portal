@@ -17,7 +17,7 @@ export class ChartsConfig {
       Chart.defaults.global.plugins.datalabels.textAlign = 'center';
     }
     Chart.defaults.global.plugins = [ChartDataLabels];
-    Chart.defaults.global.defaultFontFamily = 'Elm-Font';
+    Chart.defaults.global.defaultFontFamily = '"Elm-font", sans-serif';
   }
 
   // barChart
@@ -97,6 +97,9 @@ export class ChartsConfig {
           gridLines: {
             color: '#FFFFFF',
             zeroLineColor: 'rgba(255,255,255, 0.9)',
+          },
+          ticks: {
+            fontFamily: FONTS,
           },
         },
       ],

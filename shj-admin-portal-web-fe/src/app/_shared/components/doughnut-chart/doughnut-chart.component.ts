@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ChartsConfig } from '@pages/dashboard/charts.config';
-import { CountVo } from '@app/_shared/model/countVo.model';
+import { CountVo } from '@model/count-vo.model';
 import { ChartOptions, ChartType } from 'chart.js';
 import {
   Label,
