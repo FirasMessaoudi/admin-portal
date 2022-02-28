@@ -1284,10 +1284,10 @@ GO
 if not exists(select * from sys.tables where name = 'shc_mobile_audit_log')
 CREATE TABLE shc_portal.shc_mobile_audit_log
 (
-    id             int         NOT NULL PRIMARY KEY IDENTITY (1,1),
-    user_id_number varchar(45) NOT NULL,
-    event          varchar(255) NULL,
-    event_date     smalldatetime DEFAULT CURRENT_TIMESTAMP,
+    id         int          NOT NULL PRIMARY KEY IDENTITY (1,1),
+    user_id    varchar(45)  NOT NULL,
+    event      varchar(255) NULL,
+    event_date smalldatetime DEFAULT CURRENT_TIMESTAMP,
 );
 GO
 
