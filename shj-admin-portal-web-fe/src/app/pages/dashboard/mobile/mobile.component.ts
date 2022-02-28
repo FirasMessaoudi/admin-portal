@@ -16,6 +16,7 @@ import {LookupService} from '@core/utilities/lookup.service';
 import {ApplicantMobileTracking} from '@model/applicant-mobile-tracking.model';
 import {DatePipe} from '@angular/common';
 import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
+import { AreaLayerLookup } from '@app/_shared/model/area-layer-lookup.model';
 
 const moment = momentjs;
 const FONTS: string = '"Elm-font", sans-serif';
@@ -36,6 +37,7 @@ const barChartBackgroundColors = [
 export class MobileComponent implements OnInit, DashboardComponent {
   model = 1;
   mobileAppDownloadsData: DashboardMobileNumbersVo;
+  map:google.maps.Map;
 
   chartsConfig: ChartsConfig = new ChartsConfig();
   weekDays: Array<any> = [];
@@ -51,6 +53,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
   MAP_ZOOM_OUT = 10;
 
+  areaLayers: AreaLayerLookup[];
   companyNames: CompanyLite[];
   nationalities: Lookup[] = [];
   loggedInUsers: Array<number> = [];
@@ -74,7 +77,6 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
   ngOnInit() {
     this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
-
     this.loadActiveApplicantWithLocations();
     this.chartsConfig.lineChartOptions.legend = false;
     this.dashboardService
@@ -230,6 +232,18 @@ export class MobileComponent implements OnInit, DashboardComponent {
   }
 
   loadActiveApplicantWithLocations() {
+    this.dashboardService.findAreaLayers().subscribe((result) => {
+      this.areaLayers = result;
+      let latLng
+      this.areaLayers.forEach(a=>{
+        let polygoneCoords = [];
+          let layerArray = a.layer.split('-');
+          layerArray.forEach(l=> {latLng = l.split(',');
+          polygoneCoords.push({lat: +latLng[0], lng: +latLng[1]})
+        });
+        a.layer = polygoneCoords;
+      });
+    });
     this.dashboardService
       .findActiveApplicantWithLocationBySeason(this.seasonYear)
       .subscribe((data) => {
@@ -242,13 +256,13 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
   loadHeatMap() {
     this.loadActiveApplicantWithLocations();
-  } 
+  }
 
   async loadMapkey() {
     this.lookupService().loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({apiKey: result, libraries: ['visualization']});
+      let loader = new Loader({apiKey: result, libraries: ['visualization', 'geometry']});
       loader.load().then(() => {
-        const map = new google.maps.Map(document.getElementById('map'), {
+        this.map = new google.maps.Map(document.getElementById('map'), {
           center: {
             lat: this.applicantMobileTrackings[0].lat,
             lng: this.applicantMobileTrackings[0].lng,
@@ -256,9 +270,15 @@ export class MobileComponent implements OnInit, DashboardComponent {
           zoom: 14,
           scrollwheel: true,
         });
+        console.log(this.areaLayers);
+        this.areaLayers.forEach(a=>{if(a.lang == 'ar'){
+        let bermudaTriangle = new google.maps.Polygon({ paths: a.layer });
+        }
+      })
+
         let heatmap = new google.maps.visualization.HeatmapLayer({
           data: this.getPoints(),
-          map: map,
+          map: this.map,
         });
 
       });
@@ -274,7 +294,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
       case 'company':
         this.lastCompanyCode = param
            break;
-      default: 
+      default:
     }
     if(this.lastNationalityCode == 'all' && this.lastCompanyCode == 'all')
     this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;

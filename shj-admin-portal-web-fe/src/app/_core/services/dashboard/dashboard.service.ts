@@ -11,6 +11,7 @@ import { DashboardMobileNumbersVo } from '@model/dashboard-mobile-numbers-vo.mod
 import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
 import {dashboardItem} from "@model/dashboard-item";
 import {DashboardCameraNumbers} from "@model/dashboard-camera-numbers";
+import { AreaLayerLookup } from '@app/_shared/model/area-layer-lookup.model';
 
 @Injectable({
   providedIn: 'root',
@@ -293,6 +294,10 @@ export class DashboardService {
 
   getDashboardItems(): dashboardItem[] {
     return this.items;
+  }
+
+  findAreaLayers(): Observable<AreaLayerLookup[]> {
+    return this.http.get<any>('/core/api/lookup/area_layers/list');
   }
 
   getSlideShowInterval(): BehaviorSubject<number> {
