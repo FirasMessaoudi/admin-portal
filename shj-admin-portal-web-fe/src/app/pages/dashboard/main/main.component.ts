@@ -1,31 +1,26 @@
 import {Component, OnInit} from '@angular/core';
-import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
-import { Subscription, timer } from 'rxjs';
-import { DashboardService } from '@core/services';
-import { DashboardIncidentNumbersVo } from '@model/dashboardIncidentNumbersVo.model';
-import { Lookup } from '@model/lookup.model';
-import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
-import { ChartOptions, ChartType } from 'chart.js';
-import { ChartsConfig } from '@pages/dashboard/charts.config';
-import { LookupService } from '@core/utilities/lookup.service';
-import { DatePipe } from '@angular/common';
-import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
-import { I18nService } from '@dcc-commons-ng/services';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { interpolateRgb } from 'd3-interpolate';
-import { Loader } from '@googlemaps/js-api-loader';
-import { Position } from '@app/_shared/model/marker.model';
-import {
-  Cluster,
-  ClusterStats,
-  MarkerClusterer,
-  Renderer,
-} from '@googlemaps/markerclusterer';
+import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
+import {Subscription, timer} from 'rxjs';
+import {DashboardService} from '@core/services';
+import {DashboardIncidentNumbersVo} from '@model/dashboardIncidentNumbersVo.model';
+import {Lookup} from '@model/lookup.model';
+import {Label, PluginServiceGlobalRegistrationAndOptions} from 'ng2-charts';
+import {ChartOptions, ChartType} from 'chart.js';
+import {ChartsConfig} from '@pages/dashboard/charts.config';
+import {LookupService} from '@core/utilities/lookup.service';
+import {DatePipe} from '@angular/common';
+import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import {I18nService} from '@dcc-commons-ng/services';
+import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
+import {interpolateRgb} from 'd3-interpolate';
+import {Loader} from '@googlemaps/js-api-loader';
+import {Position} from '@app/_shared/model/marker.model';
+import {Cluster, ClusterStats, MarkerClusterer, Renderer,} from '@googlemaps/markerclusterer';
 
 import * as moment_ from 'moment-hijri';
 
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { ApplicantMobileTracking } from '@app/_shared/model/applicant-mobile-tracking.model';
+import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
+import {ApplicantMobileTracking} from '@app/_shared/model/applicant-mobile-tracking.model';
 import {dashboardItem} from "@shared/model";
 import {DashboardComponent} from '@pages/dashboard/slide-show/dashboard.component';
 import {DashboardCameraNumbers} from '@model/dashboard-camera-numbers';
@@ -172,32 +167,26 @@ export class MainComponent implements OnInit, DashboardComponent {
       {
         afterDatasetsDraw(chart) {
           var data = chart.data.datasets[0].data;
-          var total=0;
-          data.forEach(element=>{
+          var total = 0;
+          data.forEach(element => {
             total += element;
           });
-          var width = chart.width,
-            height = chart.chartArea.top + chart.chartArea.bottom,
+          var height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
-          ctx.save();
-          // var fontSize = (height / 15).toFixed(2);
+          ctx.restore();
           var valueFontSize = (height / 10).toFixed(2);
-          ctx.font = 'bold ' + valueFontSize + "px Arial";
+          ctx.font = 'bold ' + valueFontSize + 'px Arial';
+          ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          var text = total.toString() + '',
-            textX = Math.round((width - ctx.measureText(text).width) / 2),
-            textY = height / 2;
-          var textZ = height / 2.5;
-          ctx.fillText(text, textX, textY);
-          ctx.textBaseline = 'middle';
-          var textLabel = title,
-            textLabelX = Math.round(
-              (width - ctx.measureText(textLabel).width) / 1.9
-            ),
-            textLabelY = height / 1.5;
+          var text = total.toString();
+          const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+          const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+          ctx.fillText(text, centerX, centerY - 10);
+
           var labelFontSize = (height / 11).toFixed(2);
-          ctx.font =  labelFontSize + "px Arial";
-          ctx.fillText(textLabel, textLabelX, textLabelY);
+          ctx.font = labelFontSize + 'px Arial';
+          var textLabel = title;
+          ctx.fillText(textLabel, centerX, centerY + 10);
           ctx.save();
         },
       },

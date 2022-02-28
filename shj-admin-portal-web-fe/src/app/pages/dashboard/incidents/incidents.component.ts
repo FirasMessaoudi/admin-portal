@@ -1,34 +1,23 @@
-import {
-  AfterViewInit,
-  Component,
-  Inject,
-  OnInit,
-  Renderer2,
-} from '@angular/core';
-import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
-import { ChartOptions, ChartType } from 'chart.js';
-import { ChartsConfig } from '@pages/dashboard/charts.config';
-import { AuthenticationService, DashboardService } from '@core/services';
-import { Loader } from '@googlemaps/js-api-loader';
-import {
-  Cluster,
-  ClusterStats,
-  MarkerClusterer,
-  Renderer,
-} from '@googlemaps/markerclusterer';
+import {AfterViewInit, Component, Inject, OnInit, Renderer2,} from '@angular/core';
+import {Label, PluginServiceGlobalRegistrationAndOptions} from 'ng2-charts';
+import {ChartOptions, ChartType} from 'chart.js';
+import {ChartsConfig} from '@pages/dashboard/charts.config';
+import {AuthenticationService, DashboardService} from '@core/services';
+import {Loader} from '@googlemaps/js-api-loader';
+import {Cluster, ClusterStats, MarkerClusterer, Renderer,} from '@googlemaps/markerclusterer';
 //import {GoogleMap, MapMarkerClusterer} from '@angular/google-maps';
-import { LookupService } from '@core/utilities/lookup.service';
-import { Subscription } from 'rxjs';
-import { Lookup } from '@model/lookup.model';
-import { CountVo } from '@model/countVo.model';
-import { DatePipe, DOCUMENT } from '@angular/common';
-import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
-import { I18nService } from '@dcc-commons-ng/services';
-import { interpolateRgb } from 'd3-interpolate';
-import { DashboardIncidentNumbersVo } from '@model/dashboardIncidentNumbersVo.model';
-import { Position } from '@app/_shared/model/marker.model';
-import { EAuthority } from '@shared/model';
-import { ActivatedRoute } from '@angular/router';
+import {LookupService} from '@core/utilities/lookup.service';
+import {Subscription} from 'rxjs';
+import {Lookup} from '@model/lookup.model';
+import {CountVo} from '@model/countVo.model';
+import {DatePipe, DOCUMENT} from '@angular/common';
+import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import {I18nService} from '@dcc-commons-ng/services';
+import {interpolateRgb} from 'd3-interpolate';
+import {DashboardIncidentNumbersVo} from '@model/dashboardIncidentNumbersVo.model';
+import {Position} from '@app/_shared/model/marker.model';
+import {EAuthority} from '@shared/model';
+import {ActivatedRoute} from '@angular/router';
 import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
 
 const FONTS: string = '"Elm-font", sans-serif';
@@ -227,11 +216,11 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           this.lookupService.localizedLabel(this.incidentTypeList, d.label)
         );
         this.setIncidentCenterTitle(
-          'مجموع البلاغات',
+          this.i18nService.language.startsWith('en') ? 'Total Incidents' : 'مجموع البلاغات',
           this.incidents.totalNumberOfRegisteredIncidents
         );
         this.setIncidentTypeCenterTitle(
-          'مجموع البلاغات',
+          this.i18nService.language.startsWith('en') ? 'Total Incidents' : 'مجموع البلاغات',
           this.incidents.totalNumberOfRegisteredIncidents
         );
 
@@ -268,29 +257,22 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
     this.incidentDoughnutChartPlugins = [
       {
         beforeDraw(chart) {
-          var data = chart.data.datasets[0].data;
-          var width = chart.width,
-            height = chart.chartArea.top + chart.chartArea.bottom,
+          var height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
           ctx.restore();
-          // var fontSize = (height / 15).toFixed(2);
           var valueFontSize = (height / 10).toFixed(2);
-          ctx.font = 'bold ' + valueFontSize + "px Arial";
+          ctx.font = 'bold ' + valueFontSize + 'px Arial';
+          ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          var text = countText + '',
-            textX = Math.round((width - ctx.measureText(text).width) / 2),
-            textY = height / 2;
-          var textZ = height / 2.5;
-          ctx.fillText(text, textX, textY);
-          ctx.textBaseline = 'middle';
-          var textLabel = title,
-            textLabelX = Math.round(
-              (width - ctx.measureText(textLabel).width) / 1.9
-            ),
-            textLabelY = height / 1.5;
+          var text = countText.toString();
+          const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+          const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+          ctx.fillText(text, centerX, centerY - 10);
+
           var labelFontSize = (height / 11).toFixed(2);
-          ctx.font =  labelFontSize + "px Arial";
-          ctx.fillText(textLabel, textLabelX, textLabelY);
+          ctx.font = labelFontSize + 'px Arial';
+          var textLabel = title;
+          ctx.fillText(textLabel, centerX, centerY + 10);
           ctx.save();
         },
       },
@@ -301,28 +283,22 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
     this.incidentTypeDoughnutChartPlugins = [
       {
         beforeDraw(chart) {
-          var data = chart.data.datasets[0].data;
-          var width = chart.width,
-            height = chart.chartArea.top + chart.chartArea.bottom,
+          var height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
           ctx.restore();
-          var valueFontSize = (height / 15).toFixed(2);
-          ctx.font = 'bold ' + valueFontSize + "px Arial";
+          var valueFontSize = (height / 10).toFixed(2);
+          ctx.font = 'bold ' + valueFontSize + 'px Arial';
+          ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          var text = countText + '',
-            textX = Math.round((width - ctx.measureText(text).width) / 2),
-            textY = height / 2.5;
-          var textZ = height / 2.5;
-          ctx.fillText(text, textX, textY);
-          ctx.textBaseline = 'middle';
-          var textLabel = title,
-            textLabelX = Math.round(
-              (width - ctx.measureText(textLabel).width) / 2
-            ),
-            textLabelY = height / 2;
+          var text = countText.toString();
+          const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+          const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+          ctx.fillText(text, centerX, centerY - 10);
+
           var labelFontSize = (height / 15).toFixed(2);
-          ctx.font = labelFontSize + "px Arial";
-          ctx.fillText(textLabel, textLabelX, textLabelY);
+          ctx.font = labelFontSize + 'px Arial';
+          var textLabel = title;
+          ctx.fillText(textLabel, centerX, centerY + 10);
           ctx.save();
         },
       },

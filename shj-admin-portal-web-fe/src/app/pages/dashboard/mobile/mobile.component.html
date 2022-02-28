@@ -5,6 +5,10 @@
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="font-weight-bold text-dark">{{'dashboard.mobile.title' | translate}}</h3>
+    <h3 class="font-weight-bold text-dark">
+      {{'dashboard.general.hajj' | translate}}
+      <span *ngIf="currentLanguage.startsWith('ar')">عام</span>
+      {{seasonYear}}</h3>
     <div *ngIf="!isFullScreen">
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
