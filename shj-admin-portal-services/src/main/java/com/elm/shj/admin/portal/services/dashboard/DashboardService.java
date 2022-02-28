@@ -225,7 +225,6 @@ public class DashboardService {
                 .totalNumberOfActiveCameras(totalNumberOfActiveCameras)
                 .totalNumberOfInactiveCameras(totalNumberOfInactiveCameras)
                 .build();
-
     }
 
     public DashboardIncidentNumbersVo loadDashboardIncidentNumbers(int seasonYear) {

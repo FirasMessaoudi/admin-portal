@@ -143,7 +143,8 @@ export class MainComponent implements OnInit, DashboardComponent {
         ),
       ];
       this.setIncidentCenterTitle(
-        this.translate.instant('dashboard.main.total_incidents')
+        this.translate.instant('dashboard.main.total_incidents'),
+        this.incidents.totalNumberOfRegisteredIncidents
       );
     });
 
@@ -165,31 +166,38 @@ export class MainComponent implements OnInit, DashboardComponent {
     }
   }
 
-  setIncidentCenterTitle(title: string) {
+  setIncidentCenterTitle(title: string, countText: number) {
+    console.log(countText);
     this.incidentDoughnutChartPlugins = [
       {
-        afterDatasetsDraw(chart) {
+        beforeDraw(chart) {
+          console.log(countText);
           var data = chart.data.datasets[0].data;
-          var total = 0;
-          data.forEach((element) => {
-            total += element;
-          });
-          var height = chart.chartArea.top + chart.chartArea.bottom,
+
+          var width = chart.width,
+            height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
           ctx.restore();
+          // var fontSize = (height / 15).toFixed(2);
           var valueFontSize = (height / 10).toFixed(2);
           ctx.font = 'bold ' + valueFontSize + 'px Arial';
-          ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          var text = total.toString();
-          const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
-          const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
-          ctx.fillText(text, centerX, centerY - 10);
 
+          var text = countText + '',
+            textX = Math.round((width - ctx.measureText(text).width) / 2),
+            textY = height / 2;
+          var textZ = height / 2.5;
+          ctx.fillText(text, textX, textY);
+          ctx.textBaseline = 'middle';
+          var textLabel = title,
+            textLabelX = Math.round(
+              (width - ctx.measureText(textLabel).width) / 1.9
+            ),
+            textLabelY = height / 1.5;
           var labelFontSize = (height / 11).toFixed(2);
           ctx.font = labelFontSize + 'px Arial';
-          var textLabel = title;
-          ctx.fillText(textLabel, centerX, centerY + 10);
+          ctx.fillText(textLabel, textLabelX, textLabelY);
+
           ctx.save();
         },
       },
@@ -280,7 +288,8 @@ export class MainComponent implements OnInit, DashboardComponent {
           },
         ];
         this.setIncidentCenterTitle(
-          this.translate.instant('dashboard.main.total_incidents')
+          this.translate.instant('dashboard.main.total_incidents'),
+          this.incidents.totalNumberOfRegisteredIncidents
         );
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
@@ -308,10 +317,7 @@ export class MainComponent implements OnInit, DashboardComponent {
 
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({
-        apiKey: result,
-        libraries: ['visualization', 'geometry'],
-      });
+      let loader = new Loader({ apiKey: result });
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
           center: { lat: 21.423461874376475, lng: 39.825553299746616 },
