@@ -40,7 +40,7 @@ const barChartBackgroundColors = [
 export class MobileComponent implements OnInit, DashboardComponent {
   model = 1;
   mobileAppDownloadsData: DashboardMobileNumbersVo;
-  map:google.maps.Map;
+  map: google.maps.Map;
 
   chartsConfig: ChartsConfig = new ChartsConfig();
   weekDays: Array<any> = [];
@@ -110,7 +110,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
       },
     ];
 
-    this.chartsConfig.barChartOptions.legend =  false;
+    this.chartsConfig.barChartOptions.legend = false;
 
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.getWeekDays();
@@ -209,12 +209,13 @@ export class MobileComponent implements OnInit, DashboardComponent {
   loadActiveApplicantWithLocations() {
     this.dashboardService.findAreaLayers().subscribe((result) => {
       this.areaLayers = result;
-      let latLng
-      this.areaLayers.forEach(a=>{
+      let latLng;
+      this.areaLayers.forEach((a) => {
         let polygoneCoords = [];
-          let layerArray = a.layer.split('-');
-          layerArray.forEach(l=> {latLng = l.split(',');
-          polygoneCoords.push({lat: +latLng[0], lng: +latLng[1]})
+        let layerArray = a.layer.split('-');
+        layerArray.forEach((l) => {
+          latLng = l.split(',');
+          polygoneCoords.push({ lat: +latLng[0], lng: +latLng[1] });
         });
         a.layer = polygoneCoords;
       });
@@ -234,51 +235,67 @@ export class MobileComponent implements OnInit, DashboardComponent {
   }
 
   async loadMapkey() {
-    this.lookupService().loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({apiKey: result, libraries: ['visualization', 'geometry']});
-      loader.load().then(() => {
-        this.map = new google.maps.Map(document.getElementById('map'), {
-          center: {
-            lat: this.applicantMobileTrackings[0].lat,
-            lng: this.applicantMobileTrackings[0].lng,
-          },
-          zoom: 14,
-          scrollwheel: true,
+    this.lookupService()
+      .loadGoogleMapsApiKey()
+      .subscribe((result) => {
+        let loader = new Loader({
+          apiKey: result,
+          libraries: ['visualization', 'geometry'],
         });
-        console.log(this.areaLayers);
-        this.areaLayers.forEach(a=>{if(a.lang == 'ar'){
-        let bermudaTriangle = new google.maps.Polygon({ paths: a.layer });
-        }
-      })
+        loader.load().then(() => {
+          this.map = new google.maps.Map(document.getElementById('map'), {
+            center: {
+              lat: this.applicantMobileTrackings[0].lat,
+              lng: this.applicantMobileTrackings[0].lng,
+            },
+            zoom: 14,
+            scrollwheel: true,
+          });
+          console.log(this.areaLayers);
+          this.areaLayers.forEach((a) => {
+            if (a.lang == 'ar') {
+              let bermudaTriangle = new google.maps.Polygon({ paths: a.layer });
+            }
+          });
 
-        let heatmap = new google.maps.visualization.HeatmapLayer({
-          data: this.getPoints(),
-          map: this.map,
+          let heatmap = new google.maps.visualization.HeatmapLayer({
+            data: this.getPoints(),
+            map: this.map,
+          });
         });
-
       });
-    });
   }
 
-  filterMap(param:string, type: string){
+  filterMap(param: string, type: string) {
     console.log(type);
-    switch(type) {
+    switch (type) {
       case 'nationality':
-       this.lastNationalityCode = param;
-       break;
+        this.lastNationalityCode = param;
+        break;
       case 'company':
-        this.lastCompanyCode = param
-           break;
+        this.lastCompanyCode = param;
+        break;
       default:
     }
-    if(this.lastNationalityCode == 'all' && this.lastCompanyCode == 'all')
-    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
-    if(this.lastNationalityCode != 'all' && this.lastCompanyCode == 'all')
-    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => c.nationalityCode == this.lastNationalityCode);
-    if(this.lastNationalityCode == 'all' && this.lastCompanyCode != 'all')
-    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => c.companyCode == this.lastCompanyCode);
-    if(this.lastNationalityCode != 'all' && this.lastCompanyCode != 'all')
-    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => c.nationalityCode == this.lastNationalityCode && c.companyCode == this.lastCompanyCode);
+    if (this.lastNationalityCode == 'all' && this.lastCompanyCode == 'all')
+      this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
+    if (this.lastNationalityCode != 'all' && this.lastCompanyCode == 'all')
+      this.applicantMobileTrackingsFiltred =
+        this.applicantMobileTrackings.filter(
+          (c) => c.nationalityCode == this.lastNationalityCode
+        );
+    if (this.lastNationalityCode == 'all' && this.lastCompanyCode != 'all')
+      this.applicantMobileTrackingsFiltred =
+        this.applicantMobileTrackings.filter(
+          (c) => c.companyCode == this.lastCompanyCode
+        );
+    if (this.lastNationalityCode != 'all' && this.lastCompanyCode != 'all')
+      this.applicantMobileTrackingsFiltred =
+        this.applicantMobileTrackings.filter(
+          (c) =>
+            c.nationalityCode == this.lastNationalityCode &&
+            c.companyCode == this.lastCompanyCode
+        );
 
     this.loadMapkey();
   }

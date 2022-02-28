@@ -199,11 +199,15 @@ export class IncidentsComponent
           this.lookupService.localizedLabel(this.incidentTypeList, d.label)
         );
         this.setIncidentCenterTitle(
-          this.i18nService.language.startsWith('en') ? 'Total Incidents' : 'مجموع البلاغات',
+          this.i18nService.language.startsWith('en')
+            ? 'Total Incidents'
+            : 'مجموع البلاغات',
           this.incidents.totalNumberOfRegisteredIncidents
         );
         this.setIncidentTypeCenterTitle(
-          this.i18nService.language.startsWith('en') ? 'Total Incidents' : 'مجموع البلاغات',
+          this.i18nService.language.startsWith('en')
+            ? 'Total Incidents'
+            : 'مجموع البلاغات',
           this.incidents.totalNumberOfRegisteredIncidents
         );
 
@@ -317,7 +321,10 @@ export class IncidentsComponent
 
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({ apiKey: result, libraries: ['visualization', 'geometry'] });
+      let loader = new Loader({
+        apiKey: result,
+        libraries: ['visualization', 'geometry'],
+      });
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
           center: { lat: 21.423461874376475, lng: 39.825553299746616 },

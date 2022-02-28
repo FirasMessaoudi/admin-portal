@@ -213,12 +213,12 @@ public class DashboardService {
      *
      * @return
      */
-    public DashboardCameraNumbersVo loadDashboardCamerasNumbers(int seasonYear){
+    public DashboardCameraNumbersVo loadDashboardCamerasNumbers(int seasonYear) {
 
         //cameras related data
         long totalNumberOfCameras = cameraRepository.countCameraByHijriSeason(seasonYear);
-        long totalNumberOfActiveCameras= cameraRepository.countCameraByStatusAndHijriYear("active",seasonYear);
-        long totalNumberOfInactiveCameras= cameraRepository.countCameraByStatusAndHijriYear("inactive",seasonYear);
+        long totalNumberOfActiveCameras = cameraRepository.countCameraByStatusAndHijriYear("active", seasonYear);
+        long totalNumberOfInactiveCameras = cameraRepository.countCameraByStatusAndHijriYear("inactive", seasonYear);
 
         return DashboardCameraNumbersVo.builder()
                 .totalNumberOfCameras(totalNumberOfCameras)

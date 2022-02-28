@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2022 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Getter;
@@ -14,25 +17,24 @@ import java.util.Date;
  * @author r.chebbi
  * @since 1.1.0
  */
-
 @Entity
 @Table(name = "shc_camera")
 @NamedQuery(name = "JpaCamera.findAll", query = "SELECT j FROM JpaCamera j")
 @Getter
 @Setter
 @NoArgsConstructor
+public class JpaCamera implements Serializable {
 
-public class JpaCamera implements Serializable{
     private static final long serialVersionUID = -4152985135548776915L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
-    private  long id;
+    private long id;
 
     private String status;
 
-    private  String url;
+    private String url;
 
     @Column(name = "creation_hijri_year")
     private int creationHijriYear;

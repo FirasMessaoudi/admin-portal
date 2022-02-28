@@ -1,5 +1,7 @@
+/*
+ * Copyright (c) 2022 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.orm.entity;
-
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
 import { Subscription, timer } from 'rxjs';
 import { DashboardService } from '@core/services';
@@ -24,11 +24,11 @@ import {
 
 import * as moment_ from 'moment-hijri';
 
-import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
-import {ApplicantMobileTracking} from '@app/_shared/model/applicant-mobile-tracking.model';
-import {dashboardItem} from "@shared/model";
-import {DashboardComponent} from '@pages/dashboard/slide-show/dashboard.component';
-import {DashboardCameraNumbers} from '@model/dashboard-camera-numbers';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { ApplicantMobileTracking } from '@app/_shared/model/applicant-mobile-tracking.model';
+import { dashboardItem } from '@shared/model';
+import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
+import { DashboardCameraNumbers } from '@model/dashboard-camera-numbers';
 
 const momentHijri = moment_;
 
@@ -36,11 +36,9 @@ const momentHijri = moment_;
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
-  providers: [NgbModalConfig, NgbModal]
+  providers: [NgbModalConfig, NgbModal],
 })
 export class MainComponent implements OnInit, DashboardComponent {
-
-
   dashboardCamerasData: DashboardCameraNumbers;
   private CameraSubscription: Subscription;
 
@@ -78,7 +76,6 @@ export class MainComponent implements OnInit, DashboardComponent {
           position: 'outside',
           textMargin: 10,
           fontStyle: 'bold',
-
         },
         {
           render: function (args) {
@@ -88,31 +85,32 @@ export class MainComponent implements OnInit, DashboardComponent {
           position: 'outside',
           textMargin: 12,
           fontStyle: 'normal',
-          precision: 2
-
-        }
+          precision: 2,
+        },
       ],
       datalabels: {
-        display: false
-      }
+        display: false,
+      },
     },
     tooltips: {
-      enabled: false
-    }
+      enabled: false,
+    },
   };
   public incidentDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
 
   private refreshSubscription: Subscription;
   seasonYear: number;
-  dashboards:dashboardItem[] = [];
+  dashboards: dashboardItem[] = [];
   slideShowInterval: number;
+
   constructor(
     private dashboardService: DashboardService,
     private lookupService: LookupService,
     private dateFormatterService: DateFormatterService,
     private translate: TranslateService,
     private i18nService: I18nService,
-    config: NgbModalConfig, private modalService: NgbModal
+    config: NgbModalConfig,
+    private modalService: NgbModal
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
@@ -121,8 +119,6 @@ export class MainComponent implements OnInit, DashboardComponent {
   open(content) {
     this.modalService.open(content);
   }
-
-
 
   ngOnInit() {
     this.loadLookups();
@@ -147,12 +143,14 @@ export class MainComponent implements OnInit, DashboardComponent {
         ),
       ];
       this.setIncidentCenterTitle(
-        this.translate.instant('dashboard.main.total_incidents'));
+        this.translate.instant('dashboard.main.total_incidents')
+      );
     });
 
-
     this.dashboards = this.dashboardService.getDashboardItems();
-    this.dashboardService.getSlideShowInterval().subscribe(interval => this.slideShowInterval = interval);
+    this.dashboardService
+      .getSlideShowInterval()
+      .subscribe((interval) => (this.slideShowInterval = interval));
   }
 
   ngOnDestroy() {
@@ -166,14 +164,14 @@ export class MainComponent implements OnInit, DashboardComponent {
       this.refreshSubscription.unsubscribe();
     }
   }
-  setIncidentCenterTitle(title: string) {
 
+  setIncidentCenterTitle(title: string) {
     this.incidentDoughnutChartPlugins = [
       {
         afterDatasetsDraw(chart) {
           var data = chart.data.datasets[0].data;
           var total = 0;
-          data.forEach(element => {
+          data.forEach((element) => {
             total += element;
           });
           var height = chart.chartArea.top + chart.chartArea.bottom,
@@ -196,9 +194,8 @@ export class MainComponent implements OnInit, DashboardComponent {
         },
       },
     ];
-
-
   }
+
   loadLookups() {
     this.dashboardService
       .findIncidentStatus()
@@ -206,7 +203,7 @@ export class MainComponent implements OnInit, DashboardComponent {
     this.dashboardService.findRitualSeasonYears().subscribe((result) => {
       this.ritualSeasons = result;
     });
-    this.dashboardService.findHousingSites().subscribe(result => {
+    this.dashboardService.findHousingSites().subscribe((result) => {
       this.housingSites = result;
     });
   }
@@ -260,7 +257,7 @@ export class MainComponent implements OnInit, DashboardComponent {
       });
 
     this.incidentSubscription = this.dashboardService
-      .loadIncidents( this.seasonYear)
+      .loadIncidents(this.seasonYear)
       .subscribe((data) => {
         this.incidents = data;
         this.incidentDoughnutChartLabels = [
@@ -288,8 +285,10 @@ export class MainComponent implements OnInit, DashboardComponent {
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
         );
-        this.mostIncidentsArea = this.lookupService.localizedLabel(this.housingSites, this.incidents.mostIncidentsArea);
-
+        this.mostIncidentsArea = this.lookupService.localizedLabel(
+          this.housingSites,
+          this.incidents.mostIncidentsArea
+        );
       });
   }
 
@@ -309,7 +308,10 @@ export class MainComponent implements OnInit, DashboardComponent {
 
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({ apiKey: result, libraries: ['visualization', 'geometry'] });
+      let loader = new Loader({
+        apiKey: result,
+        libraries: ['visualization', 'geometry'],
+      });
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
           center: { lat: 21.423461874376475, lng: 39.825553299746616 },
@@ -375,12 +377,13 @@ export class MainComponent implements OnInit, DashboardComponent {
       this.loadDashboardData();
     }
   }
+
   disableSlideShow(): boolean {
-    return this.dashboards.filter(dashboard => dashboard.selected).length < 1 ;
+    return this.dashboards.filter((dashboard) => dashboard.selected).length < 1;
   }
 
   updateInterval(newValue) {
-    this.dashboardService.getSlideShowInterval().next(newValue)
+    this.dashboardService.getSlideShowInterval().next(newValue);
   }
 
   isFullScreen: boolean;
