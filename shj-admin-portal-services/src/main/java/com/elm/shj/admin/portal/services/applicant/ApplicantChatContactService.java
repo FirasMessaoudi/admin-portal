@@ -217,14 +217,16 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      */
     private void createChatContact(String contactOwnerUin, ApplicantDto contactApplicant, long applicantRitualId, String relationshipCode) {
         String contactUin = contactApplicant.getDigitalIds().get(0).getUin();
-        String mobileNumber, countryCode;
-        ApplicantContactDto relativeApplicantContact = contactApplicant.getContacts().get(0);
-        if (relativeApplicantContact.getLocalMobileNumber() != null) {
-            mobileNumber = relativeApplicantContact.getLocalMobileNumber();
-            countryCode = "SA";
-        } else {
-            mobileNumber = relativeApplicantContact.getIntlMobileNumber();
-            countryCode = relativeApplicantContact.getCountryCode();
+        String mobileNumber = null, countryCode= "SA";
+        if(!contactApplicant.getContacts().isEmpty()) {
+            ApplicantContactDto relativeApplicantContact = contactApplicant.getContacts().get(0);
+            if (relativeApplicantContact.getLocalMobileNumber() != null) {
+                mobileNumber = relativeApplicantContact.getLocalMobileNumber();
+                countryCode = "SA";
+            } else {
+                mobileNumber = relativeApplicantContact.getIntlMobileNumber();
+                countryCode = relativeApplicantContact.getCountryCode();
+            }
         }
         ApplicantChatContactDto createdContact = ApplicantChatContactDto
                 .builder()
@@ -321,5 +323,26 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
         } else {
             return ((ApplicantChatContactRepository) getRepository()).findBySystemDefinedFalse(suin);
         }
+    }
+
+    /**
+     * Creates auto added new chat contact
+     * This contact will be added if and only if the receiver does not
+     * have the sender in his contact
+     * @param shaaerNumber represent uin or suin
+     * @param contactUin  the chat contact uin to save
+     * @return the value object of the saved applicant contact chat
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public ApplicantChatContactDto createAutoAddedChatContact(String shaaerNumber, String contactUin) {
+        int chatContactTypeId = contactUin.length() == 12 ? EChatContactType.STAFF.getId() : EChatContactType.APPLICANT.getId();
+        ApplicantChatContactDto contactBuilder = ApplicantChatContactDto.builder()
+                .applicantUin(shaaerNumber)
+                .contactUin(contactUin)
+                .autoAdded(true)
+                .type(ContactTypeLookupDto.builder().id(chatContactTypeId).build())
+                .build();
+        ApplicantChatContactDto savedContact = save(contactBuilder);
+        return savedContact;
     }
 }

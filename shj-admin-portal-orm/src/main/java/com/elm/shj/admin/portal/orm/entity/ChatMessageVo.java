@@ -20,7 +20,6 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ChatMessageVo implements Serializable {
 
     private static final long serialVersionUID = -4352620262606672595L;
@@ -32,4 +31,15 @@ public class ChatMessageVo implements Serializable {
     private Date receivedDate;
     private Date readDate;
     private boolean deleted;
+    private long unreadMessagesCount;
+
+    public ChatMessageVo(long contactId, String contactUin, String messageText, Date sentDate, Date receivedDate, Date readDate, boolean deleted) {
+        this.contactId = contactId;
+        this.contactUin = contactUin;
+        this.messageText = messageText;
+        this.sentDate = sentDate;
+        this.receivedDate = receivedDate;
+        this.readDate = readDate;
+        this.deleted = deleted;
+    }
 }

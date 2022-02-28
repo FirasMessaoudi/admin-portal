@@ -36,7 +36,7 @@ public class JpaApplicantHealth implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     private JpaApplicant applicant;
 
     @Column(name = "blood_type")
@@ -65,7 +65,7 @@ public class JpaApplicantHealth implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthDisease> diseases;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "applicantHealth")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy = "applicantHealth")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthSpecialNeeds> specialNeeds;
 

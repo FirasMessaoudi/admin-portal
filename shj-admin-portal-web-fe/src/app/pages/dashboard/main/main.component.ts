@@ -65,7 +65,7 @@ export class MainComponent implements OnInit, DashboardComponent {
   chartsConfig: ChartsConfig = new ChartsConfig();
   mostIncidentDate: any;
   mostIncidentsArea: string;
-  public incidentDoughnutChartOptions: ChartOptions  = {
+  public incidentDoughnutChartOptions: ChartOptions = {
     responsive: true,
     cutoutPercentage: 70,
     rotation: Math.PI,
@@ -104,7 +104,7 @@ export class MainComponent implements OnInit, DashboardComponent {
 
   private refreshSubscription: Subscription;
   seasonYear: number;
-  dashboards: dashboardItem[] = [];
+  dashboards:dashboardItem[] = [];
   slideShowInterval: number;
   constructor(
     private dashboardService: DashboardService,
@@ -126,7 +126,6 @@ export class MainComponent implements OnInit, DashboardComponent {
 
   ngOnInit() {
     this.loadLookups();
-
     //Get current hijri year
     this.seasonYear = momentHijri(new Date()).iYear();
     this.loadActiveApplicantWithLocations();
@@ -148,9 +147,7 @@ export class MainComponent implements OnInit, DashboardComponent {
         ),
       ];
       this.setIncidentCenterTitle(
-        this.translate.instant('dashboard.main.total_incidents'),
-        this.incidents.totalNumberOfRegisteredIncidents
-      );
+        this.translate.instant('dashboard.main.total_incidents'));
     });
 
 
@@ -169,25 +166,25 @@ export class MainComponent implements OnInit, DashboardComponent {
       this.refreshSubscription.unsubscribe();
     }
   }
+  setIncidentCenterTitle(title: string) {
 
-  setIncidentCenterTitle(title: string, countText: number) {
-    console.log(countText);
     this.incidentDoughnutChartPlugins = [
       {
-        beforeDraw(chart) {
-          console.log(countText);
+        afterDatasetsDraw(chart) {
           var data = chart.data.datasets[0].data;
-
+          var total=0;
+          data.forEach(element=>{
+            total += element;
+          });
           var width = chart.width,
             height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
-          ctx.restore();
-         // var fontSize = (height / 15).toFixed(2);
+          ctx.save();
+          // var fontSize = (height / 15).toFixed(2);
           var valueFontSize = (height / 10).toFixed(2);
           ctx.font = 'bold ' + valueFontSize + "px Arial";
           ctx.textBaseline = 'middle';
-
-          var text = countText + '',
+          var text = total.toString() + '',
             textX = Math.round((width - ctx.measureText(text).width) / 2),
             textY = height / 2;
           var textZ = height / 2.5;
@@ -201,7 +198,6 @@ export class MainComponent implements OnInit, DashboardComponent {
           var labelFontSize = (height / 11).toFixed(2);
           ctx.font =  labelFontSize + "px Arial";
           ctx.fillText(textLabel, textLabelX, textLabelY);
-
           ctx.save();
         },
       },
@@ -209,7 +205,6 @@ export class MainComponent implements OnInit, DashboardComponent {
 
 
   }
-
   loadLookups() {
     this.dashboardService
       .findIncidentStatus()
@@ -271,12 +266,10 @@ export class MainComponent implements OnInit, DashboardComponent {
       });
 
     this.incidentSubscription = this.dashboardService
-      .loadIncidents(this.seasonYear)
+      .loadIncidents( this.seasonYear)
       .subscribe((data) => {
         this.incidents = data;
-
         this.incidentDoughnutChartLabels = [
-
           this.lookupService.localizedLabel(
             this.incidentStatusList,
             'RESOLVED'
@@ -286,7 +279,6 @@ export class MainComponent implements OnInit, DashboardComponent {
             'UNDER_PROCESSING'
           ),
         ];
-        console.log(this.incidents.totalNumberOfRegisteredIncidents);
         this.incidentDoughnutChartData = [
           {
             data: [
@@ -296,12 +288,9 @@ export class MainComponent implements OnInit, DashboardComponent {
             steppedLine: 'after',
           },
         ];
-
         this.setIncidentCenterTitle(
-          this.translate.instant('dashboard.main.total_incidents'),
-          this.incidents.totalNumberOfRegisteredIncidents
+          this.translate.instant('dashboard.main.total_incidents')
         );
-        console.log(this.incidents.totalNumberOfRegisteredIncidents);
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
         );
@@ -320,16 +309,20 @@ export class MainComponent implements OnInit, DashboardComponent {
       });
   }
 
+  loadPilgrimsMap() {
+    this.loadActiveApplicantWithLocations();
+  }
+
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({ apiKey: result });
+      let loader = new Loader({ apiKey: result, libraries: ['visualization'] });
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
           center: { lat: 21.423461874376475, lng: 39.825553299746616 },
           zoom: 5,
           scrollwheel: true,
         });
-        let markersArray: Position[];
+        let markersArray: Position[] = [];
         this.locations.forEach((applicant) => {
           markersArray.push(new Position(applicant.lat, applicant.lng));
         });

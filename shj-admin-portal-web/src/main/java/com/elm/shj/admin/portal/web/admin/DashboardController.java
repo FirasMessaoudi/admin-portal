@@ -175,7 +175,7 @@ public class DashboardController {
 
     @GetMapping("/mobile/logged-in-users/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<Integer> loadMobileLoggedInUsers(@PathVariable("seasonYear") int seasonYear) {
+    public int[] loadMobileLoggedInUsers(@PathVariable("seasonYear") int seasonYear) {
         log.info("Handling loadMobileLoggedInUsers endpoint.");
         return dashboardService.getMobileLoggedInUsers(seasonYear);
     }

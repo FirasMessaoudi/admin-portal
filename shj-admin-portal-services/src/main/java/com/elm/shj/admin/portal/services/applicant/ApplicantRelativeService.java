@@ -51,6 +51,7 @@ public class ApplicantRelativeService  extends GenericService<JpaApplicantRelati
      * @param packageReferenceNumber to find by
      * @return the list of relatives to return
      */
+    @Transactional
     public List<ApplicantRelativeDto> findApplicantRelativesInLastRitual(String applicantUin, String packageReferenceNumber) {
         return mapList(((ApplicantRelativeRepository) getRepository()).findByApplicantUinAndPackageReferenceNumber(applicantUin, packageReferenceNumber));
     }
