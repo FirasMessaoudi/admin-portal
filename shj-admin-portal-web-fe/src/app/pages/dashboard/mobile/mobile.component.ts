@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { EAuthority } from '@shared/model';
-import { AuthenticationService, DashboardService } from '@core/services';
-import { DashboardMobileNumbersVo } from '@model/dashboard-mobile-numbers-vo.model';
-import { ChartsConfig } from '@pages/dashboard/charts.config';
-import { ChartDataSets } from 'chart.js';
+import {Component, OnInit} from '@angular/core';
+import {EAuthority} from '@shared/model';
+import {AuthenticationService, CardService, DashboardService} from '@core/services';
+import {DashboardMobileNumbersVo} from '@model/dashboard-mobile-numbers-vo.model';
+import {ChartsConfig} from '@pages/dashboard/charts.config';
+import {ChartDataSets} from 'chart.js';
 
 import * as momentjs from 'moment';
-import { I18nService } from '@dcc-commons-ng/services';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute } from '@angular/router';
-import { Loader } from '@googlemaps/js-api-loader';
-import { LookupService } from '@core/utilities/lookup.service';
-import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
-import { DatePipe } from '@angular/common';
+import {I18nService} from '@dcc-commons-ng/services';
+import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
+import {ActivatedRoute} from '@angular/router';
+import {CompanyLite} from "@model/company-lite.model";
+import {Lookup} from "@model/lookup.model";
+import {Loader} from '@googlemaps/js-api-loader';
+import {LookupService} from '@core/utilities/lookup.service';
+import {ApplicantMobileTracking} from '@model/applicant-mobile-tracking.model';
+import {DatePipe} from '@angular/common';
 import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
 
 const moment = momentjs;
@@ -44,10 +46,13 @@ export class MobileComponent implements OnInit, DashboardComponent {
   companyCounts: Array<any>;
   seasonYear: any;
   applicantMobileTrackings: ApplicantMobileTracking[];
+  applicantMobileTrackingsFiltred: ApplicantMobileTracking[];
   locations: Array<any> = [];
 
   MAP_ZOOM_OUT = 10;
 
+  companyNames: CompanyLite[];
+  nationalities: Lookup[] = [];
   loggedInUsers: Array<number> = [];
 
   appUsersCount: Array<any>;
@@ -57,9 +62,10 @@ export class MobileComponent implements OnInit, DashboardComponent {
   constructor(
     private authenticationService: AuthenticationService,
     private dashboardService: DashboardService,
+    private cardService: CardService,
     private i18nService: I18nService,
     private translate: TranslateService,
-    private lookupService: LookupService,
+    private lookupsService: LookupService,
     public datePipe: DatePipe,
     private route: ActivatedRoute
   ) {}
@@ -130,7 +136,13 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.getWeekDays();
     });
-
+    this.cardService.findCountries().subscribe((result) => {
+      this.nationalities = result;
+    });
+    this.cardService.findCompanyNames().subscribe((result) => {
+      this.companyNames = result;
+      console.log(this.companyNames);
+    });
     this.loadMaxCompanies();
     this.loadMobileAppUsersByAgeRange();
   }
@@ -157,6 +169,10 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
   get currentLanguage(): string {
     return this.i18nService.language;
+  }
+
+  lookupService(): LookupService {
+    return this.lookupsService;
   }
 
   getWeekDays() {
@@ -216,17 +232,19 @@ export class MobileComponent implements OnInit, DashboardComponent {
       .findActiveApplicantWithLocationBySeason(this.seasonYear)
       .subscribe((data) => {
         this.applicantMobileTrackings = data;
+        this.applicantMobileTrackingsFiltred = data;
+        console.log(this.applicantMobileTrackings);
         this.loadMapkey();
       });
   }
 
   loadHeatMap() {
     this.loadActiveApplicantWithLocations();
-  }
+  } 
 
   async loadMapkey() {
-    this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({ apiKey: result, libraries: ['visualization'] });
+    this.lookupService().loadGoogleMapsApiKey().subscribe((result) => {
+      let loader = new Loader({apiKey: result, libraries: ['visualization']});
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
           center: {
@@ -236,16 +254,43 @@ export class MobileComponent implements OnInit, DashboardComponent {
           zoom: 14,
           scrollwheel: true,
         });
-        var heatmap = new google.maps.visualization.HeatmapLayer({
+        let heatmap = new google.maps.visualization.HeatmapLayer({
           data: this.getPoints(),
           map: map,
         });
+
       });
     });
   }
 
+  filterMap(param:string, type: string){
+    console.log(param == type);
+    switch(type) {
+      case 'nationality':
+       this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => c.nationalityCode == param);
+        break;
+      case 'all':
+        this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
+        break;
+      default: 
+        this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
+    }
+    this.loadMapkey();
+  }
+
+  selectedFromDateChange(event: Date) {
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => new Date(c.lastLoginDate).getTime() > event.getTime());
+    this.loadMapkey();
+  }
+  selectedToDateChange(event: Date) {
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => new Date(c.lastLoginDate).getTime() < event.getTime());
+    this.loadMapkey();
+  }
+
   getPoints() {
-    this.applicantMobileTrackings.forEach((applicant) => {
+    this.locations = [];
+    this.applicantMobileTrackingsFiltred.forEach((applicant) => {
+      console.log(new Date(applicant.lastLoginDate));
       this.locations.push(new google.maps.LatLng(applicant.lat, applicant.lng));
     });
     return this.locations;

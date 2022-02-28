@@ -305,7 +305,7 @@
       <div class="border">
         <ul ngbNav #nav="ngbNav" class="nav-tabs stsTab">
           <li [ngbNavItem]="1">
-            <a ngbNavLink>{{'dashboard.main.pilgrims_tracking' | translate}}</a>
+            <a ngbNavLink (click)="loadPilgrimsMap()">{{'dashboard.main.pilgrims_tracking' | translate}}</a>
             <ng-template ngbNavContent>
               <div class="flex-center">
                 <!--Start MAP-->

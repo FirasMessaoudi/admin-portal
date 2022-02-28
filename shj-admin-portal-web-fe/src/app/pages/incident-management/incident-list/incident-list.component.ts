@@ -1,17 +1,17 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { EAuthority, Page } from '@shared/model';
-import { AuthenticationService } from '@core/services';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
-import { ApplicantIncident } from '@model/applicant-incident.model';
-import { Subscription } from 'rxjs';
-import { IncidentService } from '@core/services/incident/incident.service';
-import { Lookup } from '@model/lookup.model';
-import { LookupService } from '@core/utilities/lookup.service';
-import { I18nService } from '@dcc-commons-ng/services';
-import { DatePipe } from '@angular/common';
-import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
-import { DateType } from '@shared/modules/hijri-gregorian-datepicker/consts';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {EAuthority, Page} from '@shared/model';
+import {AuthenticationService} from '@core/services';
+import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
+import {ApplicantIncident} from '@model/applicant-incident.model';
+import {Subscription} from 'rxjs';
+import {IncidentService} from '@core/services/incident/incident.service';
+import {Lookup} from '@model/lookup.model';
+import {LookupService} from '@core/utilities/lookup.service';
+import {I18nService} from '@dcc-commons-ng/services';
+import {DatePipe} from '@angular/common';
+import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import {DateType} from '@shared/modules/hijri-gregorian-datepicker/consts';
+import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-incident-list',
@@ -96,7 +96,7 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   get canSeeIncidentList(): boolean {
     //TODO Change this
     return this.authenticationService.hasAuthority(
-      EAuthority.NOTIFICATION_MANAGEMENT
+      EAuthority.INCIDENT_MANAGEMENT
     );
   }
 

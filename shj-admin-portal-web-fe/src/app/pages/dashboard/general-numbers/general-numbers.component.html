@@ -144,7 +144,7 @@
           <div class="py-3">
 
             <app-doughnut-chart [centerValue]="totalCountAges | number"
-                                [centerTitle]="'حاج'"
+                                [centerTitle]="getPilgrimLabel()"
                                 *ngIf="countVoList != undefined"
                                 [title]="'dashboard.general-numbers.age_distribution' | translate"
                                 [countData]="countVoList"></app-doughnut-chart>
@@ -160,7 +160,7 @@
           </div>
           <div class="py-3">
             <app-doughnut-chart *ngIf="applicantsPerNationalities != undefined"
-                                [centerTitle]="'حاج'"
+                                [centerTitle]="getPilgrimLabel()"
                                 [centerValue]="totalCountsNationalities | number"
                                 [title]="'dashboard.general-numbers.distribution_of_highest_nationalities' | translate"
                                 [countData]="applicantsPerNationalities"></app-doughnut-chart>

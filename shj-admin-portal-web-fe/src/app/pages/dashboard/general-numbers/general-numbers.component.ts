@@ -9,7 +9,7 @@ import { ChartsConfig } from '@pages/dashboard/charts.config';
 import { DashboardVo } from '@shared/model';
 import { I18nService } from '@dcc-commons-ng/services';
 import { ActivatedRoute } from '@angular/router';
-import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
+import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
 
 @Component({
   selector: 'app-general-numbers',
@@ -50,7 +50,7 @@ export class GeneralNumbersComponent implements OnInit, DashboardComponent {
     private dashboardService: DashboardService,
     private i18nService: I18nService,
     private route: ActivatedRoute,
-    private lookupsService: LookupService,
+    private lookupsService: LookupService
   ) {}
 
   ngOnInit() {
@@ -189,6 +189,10 @@ export class GeneralNumbersComponent implements OnInit, DashboardComponent {
 
   onCampSiteChange() {
     this.minCamps ? this.loadMinCamps() : this.loadMaxCamps();
+  }
+
+  getPilgrimLabel() {
+    return this.i18nService.language.startsWith('ar') ? 'حاج' : 'Pilgrims';
   }
 
   isFullScreen: boolean;

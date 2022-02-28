@@ -1,5 +1,5 @@
-import {Color} from 'ng2-charts';
-import {Chart, ChartType} from 'chart.js';
+import { Color } from 'ng2-charts';
+import { Chart, ChartType } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const ACTIVE_LABEL: string = 'نشط';
@@ -76,6 +76,9 @@ export class ChartsConfig {
         },
         formatter: Math.round,
       },
+      labels: {
+        render: () => {},
+      },
     },
     legend: {
       labels: {
@@ -92,7 +95,8 @@ export class ChartsConfig {
         {
           stacked: true,
           gridLines: {
-            color: 'rgba(0, 0, 0, 0)',
+            color: '#FFFFFF',
+            zeroLineColor: 'rgba(255,255,255, 0.9)',
           },
         },
       ],
@@ -171,7 +175,7 @@ export class ChartsConfig {
             fontFamily: FONTS,
             fontColor: '#8A8A96',
             callback: function (value) {
-              if (value % 10 === 0) {
+              if (value % 1 === 0) {
                 return value;
               }
             },
@@ -238,7 +242,7 @@ export class ChartsConfig {
         '#289E9A',
         '#FE9B43',
         '#AD323B',
-        '#5E56A2'
+        '#5E56A2',
       ],
       hoverBackgroundColor: [
         '#B5AEEF',
