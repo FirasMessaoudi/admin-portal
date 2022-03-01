@@ -272,7 +272,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           var labelFontSize = (height / 11).toFixed(2);
           ctx.font = labelFontSize + 'px Arial';
           var textLabel = title;
-          ctx.fillText(textLabel, centerX, centerY + 10);
+          ctx.fillText(textLabel, centerX, centerY + 15);
           ctx.save();
         },
       },
@@ -293,7 +293,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           var text = countText.toString();
           const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
           const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
-          ctx.fillText(text, centerX, centerY - 10);
+          ctx.fillText(text, centerX, centerY - 15);
 
           var labelFontSize = (height / 15).toFixed(2);
           ctx.font = labelFontSize + 'px Arial';
