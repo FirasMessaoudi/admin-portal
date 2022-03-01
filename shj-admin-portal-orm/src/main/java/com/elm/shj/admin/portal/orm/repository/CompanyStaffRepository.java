@@ -77,7 +77,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffVO(" +
             " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode,staff.photo, " +
-            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr ) " +
+            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode ) " +
             "from JpaCompanyStaff staff " +
             "join staff.digitalIds digitalId " +
             "join digitalId.companyStaffCards cards " +
