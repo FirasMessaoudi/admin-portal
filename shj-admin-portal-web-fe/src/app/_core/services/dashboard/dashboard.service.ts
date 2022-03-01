@@ -117,7 +117,7 @@ export class DashboardService {
 
   loadCamerasNumbers(seasonYear: number): Observable<DashboardCameraNumbers> {
     return this.http.get<DashboardCameraNumbers>(
-      '/core/api/dashboard/camera_numbers/' + seasonYear
+      '/core/api/dashboard/camera-numbers/' + seasonYear
     );
   }
 

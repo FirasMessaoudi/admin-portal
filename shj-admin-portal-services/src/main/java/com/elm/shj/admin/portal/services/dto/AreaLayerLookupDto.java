@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2022 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.services.dto;
 
 import lombok.Getter;
@@ -6,7 +9,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
-
 
 /**
  * Dto class for the area layer domain.

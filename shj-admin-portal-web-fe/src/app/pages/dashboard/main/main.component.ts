@@ -11,7 +11,7 @@ import { LookupService } from '@core/utilities/lookup.service';
 import { DatePipe } from '@angular/common';
 import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
 import { I18nService } from '@dcc-commons-ng/services';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { interpolateRgb } from 'd3-interpolate';
 import { Loader } from '@googlemaps/js-api-loader';
 import { Position } from '@app/_shared/model/marker.model';
@@ -143,8 +143,7 @@ export class MainComponent implements OnInit, DashboardComponent {
         ),
       ];
       this.setIncidentCenterTitle(
-        this.translate.instant('dashboard.main.total_incidents'),
-        this.incidents.totalNumberOfRegisteredIncidents
+        this.translate.instant('dashboard.main.total_incidents')
       );
     });
 
@@ -166,24 +165,24 @@ export class MainComponent implements OnInit, DashboardComponent {
     }
   }
 
-  setIncidentCenterTitle(title: string, countText: number) {
-    console.log(countText);
+  setIncidentCenterTitle(title: string) {
     this.incidentDoughnutChartPlugins = [
       {
-        beforeDraw(chart) {
-          console.log(countText);
+        afterDatasetsDraw(chart) {
           var data = chart.data.datasets[0].data;
-
+          var total = 0;
+          data.forEach((element) => {
+            total += element;
+          });
           var width = chart.width,
             height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
-          ctx.restore();
+          ctx.save();
           // var fontSize = (height / 15).toFixed(2);
           var valueFontSize = (height / 10).toFixed(2);
           ctx.font = 'bold ' + valueFontSize + 'px Arial';
           ctx.textBaseline = 'middle';
-
-          var text = countText + '',
+          var text = total.toString() + '',
             textX = Math.round((width - ctx.measureText(text).width) / 2),
             textY = height / 2;
           var textZ = height / 2.5;
@@ -197,7 +196,6 @@ export class MainComponent implements OnInit, DashboardComponent {
           var labelFontSize = (height / 11).toFixed(2);
           ctx.font = labelFontSize + 'px Arial';
           ctx.fillText(textLabel, textLabelX, textLabelY);
-
           ctx.save();
         },
       },
@@ -288,8 +286,7 @@ export class MainComponent implements OnInit, DashboardComponent {
           },
         ];
         this.setIncidentCenterTitle(
-          this.translate.instant('dashboard.main.total_incidents'),
-          this.incidents.totalNumberOfRegisteredIncidents
+          this.translate.instant('dashboard.main.total_incidents')
         );
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
@@ -317,7 +314,10 @@ export class MainComponent implements OnInit, DashboardComponent {
 
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({ apiKey: result });
+      let loader = new Loader({
+        apiKey: result,
+        libraries: ['visualization', 'geometry'],
+      });
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
           center: { lat: 21.423461874376475, lng: 39.825553299746616 },
@@ -331,10 +331,9 @@ export class MainComponent implements OnInit, DashboardComponent {
         console.log(markersArray);
         // Add some markers to the map.
         const markers = markersArray.map((position, i) => {
-          const marker = new google.maps.Marker({
+          return new google.maps.Marker({
             position,
           });
-          return marker;
         });
         const interpolatedRenderer = {
           palette: interpolateRgb('blue', 'red'),

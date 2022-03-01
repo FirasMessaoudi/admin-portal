@@ -4,7 +4,9 @@
 </a>
 <div class="content__wrapper">
   <div class="title__Page">
-    <h3 class="font-weight-bold text-dark">{{'dashboard.cameras.title' | translate}}
+    <h3 class="font-weight-bold text-dark">{{'dashboard.cameras.title' | translate}}</h3>
+    <h3 class="font-weight-bold text-dark">
+      {{'dashboard.general.hajj' | translate}}
       <span *ngIf="currentLanguage.startsWith('ar')">عام</span>
       {{seasonYear}}</h3>
     <div *ngIf="!isFullScreen">
