@@ -94,14 +94,18 @@
               </button>
             </div>
           </div>
-          <div class="w-80">
-            <canvas baseChart #companiesByApplicantCount
-                    [datasets]="[{data: companyCounts, maxBarThickness: 15}]"
-                    [options]="chartsConfig.barChartOptions"
-                    [labels]="companyLabels"
-                    [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#D8DEE8'}]"
-                    chartType="bar" height="80"></canvas>
-            <div class="text-center">
+          <div class="py-3">
+            <div class="col-12">
+              <div class="w-100">
+                <canvas baseChart #companiesByApplicantCount
+                        [datasets]="[{data: companyCounts, maxBarThickness: 15}]"
+                        [options]="chartsConfig.barChartOptions"
+                        [labels]="companyLabels"
+                        [colors]="[{backgroundColor: '#657DA5', hoverBackgroundColor: '#D8DEE8'}]"
+                        chartType="bar" height="80"></canvas>
+                <div class="text-center">
+                </div>
+              </div>
             </div>
           </div>
         </div>

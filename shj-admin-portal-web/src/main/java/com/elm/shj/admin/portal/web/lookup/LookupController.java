@@ -64,6 +64,7 @@ public class LookupController {
     private final CompanyLiteService companyLiteService;
     private final RitualSeasonService ritualSeasonService;
     private final DashboardService dashboardService;
+    private final AreaLayerLookupService areaLayerLookupService;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -273,6 +274,12 @@ public class LookupController {
     public Integer loadDashboardRefreshInterval() {
         log.debug("load dashboard refresh interval...");
         return dashboardService.getRefreshInterval();
+    }
+
+    @GetMapping("/area_layers/list")
+    public List<AreaLayerLookupDto> listAreaLayers() {
+        log.debug("list religious occasions day...");
+        return areaLayerLookupService.findAll();
     }
 
 }

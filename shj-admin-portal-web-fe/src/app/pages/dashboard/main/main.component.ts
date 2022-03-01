@@ -1,29 +1,34 @@
-import {Component, OnInit} from '@angular/core';
-import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
-import {Subscription, timer} from 'rxjs';
-import {DashboardService} from '@core/services';
-import {DashboardIncidentNumbersVo} from '@model/dashboardIncidentNumbersVo.model';
-import {Lookup} from '@model/lookup.model';
-import {Label, PluginServiceGlobalRegistrationAndOptions} from 'ng2-charts';
-import {ChartOptions, ChartType} from 'chart.js';
-import {ChartsConfig} from '@pages/dashboard/charts.config';
-import {LookupService} from '@core/utilities/lookup.service';
-import {DatePipe} from '@angular/common';
-import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
-import {I18nService} from '@dcc-commons-ng/services';
-import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
-import {interpolateRgb} from 'd3-interpolate';
-import {Loader} from '@googlemaps/js-api-loader';
-import {Position} from '@app/_shared/model/marker.model';
-import {Cluster, ClusterStats, MarkerClusterer, Renderer,} from '@googlemaps/markerclusterer';
+import { Component, OnInit } from '@angular/core';
+import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
+import { Subscription, timer } from 'rxjs';
+import { DashboardService } from '@core/services';
+import { DashboardIncidentNumbersVo } from '@model/dashboard-incident-numbers-vo.model';
+import { Lookup } from '@model/lookup.model';
+import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
+import { ChartOptions, ChartType } from 'chart.js';
+import { ChartsConfig } from '@pages/dashboard/charts.config';
+import { LookupService } from '@core/utilities/lookup.service';
+import { DatePipe } from '@angular/common';
+import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import { I18nService } from '@dcc-commons-ng/services';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { interpolateRgb } from 'd3-interpolate';
+import { Loader } from '@googlemaps/js-api-loader';
+import { Position } from '@app/_shared/model/marker.model';
+import {
+  Cluster,
+  ClusterStats,
+  MarkerClusterer,
+  Renderer,
+} from '@googlemaps/markerclusterer';
 
 import * as moment_ from 'moment-hijri';
 
-import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
-import {ApplicantMobileTracking} from '@app/_shared/model/applicant-mobile-tracking.model';
-import {dashboardItem} from "@shared/model";
-import {DashboardComponent} from '@pages/dashboard/slide-show/dashboard.component';
-import {DashboardCameraNumbers} from '@model/dashboard-camera-numbers';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { ApplicantMobileTracking } from '@app/_shared/model/applicant-mobile-tracking.model';
+import { dashboardItem } from '@shared/model';
+import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
+import { DashboardCameraNumbers } from '@model/dashboard-camera-numbers';
 
 const momentHijri = moment_;
 
@@ -31,11 +36,9 @@ const momentHijri = moment_;
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
-  providers: [NgbModalConfig, NgbModal]
+  providers: [NgbModalConfig, NgbModal],
 })
 export class MainComponent implements OnInit, DashboardComponent {
-
-
   dashboardCamerasData: DashboardCameraNumbers;
   private CameraSubscription: Subscription;
 
@@ -73,7 +76,6 @@ export class MainComponent implements OnInit, DashboardComponent {
           position: 'outside',
           textMargin: 10,
           fontStyle: 'bold',
-
         },
         {
           render: function (args) {
@@ -83,31 +85,32 @@ export class MainComponent implements OnInit, DashboardComponent {
           position: 'outside',
           textMargin: 12,
           fontStyle: 'normal',
-          precision: 2
-
-        }
+          precision: 2,
+        },
       ],
       datalabels: {
-        display: false
-      }
+        display: false,
+      },
     },
     tooltips: {
-      enabled: false
-    }
+      enabled: false,
+    },
   };
   public incidentDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
 
   private refreshSubscription: Subscription;
   seasonYear: number;
-  dashboards:dashboardItem[] = [];
+  dashboards: dashboardItem[] = [];
   slideShowInterval: number;
+
   constructor(
     private dashboardService: DashboardService,
     private lookupService: LookupService,
     private dateFormatterService: DateFormatterService,
     private translate: TranslateService,
     private i18nService: I18nService,
-    config: NgbModalConfig, private modalService: NgbModal
+    config: NgbModalConfig,
+    private modalService: NgbModal
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
@@ -116,8 +119,6 @@ export class MainComponent implements OnInit, DashboardComponent {
   open(content) {
     this.modalService.open(content);
   }
-
-
 
   ngOnInit() {
     this.loadLookups();
@@ -142,12 +143,14 @@ export class MainComponent implements OnInit, DashboardComponent {
         ),
       ];
       this.setIncidentCenterTitle(
-        this.translate.instant('dashboard.main.total_incidents'));
+        this.translate.instant('dashboard.main.total_incidents')
+      );
     });
 
-
     this.dashboards = this.dashboardService.getDashboardItems();
-    this.dashboardService.getSlideShowInterval().subscribe(interval => this.slideShowInterval = interval);
+    this.dashboardService
+      .getSlideShowInterval()
+      .subscribe((interval) => (this.slideShowInterval = interval));
   }
 
   ngOnDestroy() {
@@ -161,39 +164,44 @@ export class MainComponent implements OnInit, DashboardComponent {
       this.refreshSubscription.unsubscribe();
     }
   }
-  setIncidentCenterTitle(title: string) {
 
+  setIncidentCenterTitle(title: string) {
     this.incidentDoughnutChartPlugins = [
       {
         afterDatasetsDraw(chart) {
           var data = chart.data.datasets[0].data;
           var total = 0;
-          data.forEach(element => {
+          data.forEach((element) => {
             total += element;
           });
-          var height = chart.chartArea.top + chart.chartArea.bottom,
+          var width = chart.width,
+            height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
-          ctx.restore();
+          ctx.save();
+          // var fontSize = (height / 15).toFixed(2);
           var valueFontSize = (height / 10).toFixed(2);
           ctx.font = 'bold ' + valueFontSize + 'px Arial';
-          ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          var text = total.toString();
-          const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
-          const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
-          ctx.fillText(text, centerX, centerY - 10);
-
+          var text = total.toString() + '',
+            textX = Math.round((width - ctx.measureText(text).width) / 2),
+            textY = height / 2;
+          var textZ = height / 2.5;
+          ctx.fillText(text, textX, textY);
+          ctx.textBaseline = 'middle';
+          var textLabel = title,
+            textLabelX = Math.round(
+              (width - ctx.measureText(textLabel).width) / 1.9
+            ),
+            textLabelY = height / 1.5;
           var labelFontSize = (height / 11).toFixed(2);
           ctx.font = labelFontSize + 'px Arial';
-          var textLabel = title;
-          ctx.fillText(textLabel, centerX, centerY + 10);
+          ctx.fillText(textLabel, textLabelX, textLabelY);
           ctx.save();
         },
       },
     ];
-
-
   }
+
   loadLookups() {
     this.dashboardService
       .findIncidentStatus()
@@ -201,7 +209,7 @@ export class MainComponent implements OnInit, DashboardComponent {
     this.dashboardService.findRitualSeasonYears().subscribe((result) => {
       this.ritualSeasons = result;
     });
-    this.dashboardService.findHousingSites().subscribe(result => {
+    this.dashboardService.findHousingSites().subscribe((result) => {
       this.housingSites = result;
     });
   }
@@ -255,7 +263,7 @@ export class MainComponent implements OnInit, DashboardComponent {
       });
 
     this.incidentSubscription = this.dashboardService
-      .loadIncidents( this.seasonYear)
+      .loadIncidents(this.seasonYear)
       .subscribe((data) => {
         this.incidents = data;
         this.incidentDoughnutChartLabels = [
@@ -283,8 +291,10 @@ export class MainComponent implements OnInit, DashboardComponent {
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
         );
-        this.mostIncidentsArea = this.lookupService.localizedLabel(this.housingSites, this.incidents.mostIncidentsArea);
-
+        this.mostIncidentsArea = this.lookupService.localizedLabel(
+          this.housingSites,
+          this.incidents.mostIncidentsArea
+        );
       });
   }
 
@@ -304,7 +314,10 @@ export class MainComponent implements OnInit, DashboardComponent {
 
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({ apiKey: result, libraries: ['visualization'] });
+      let loader = new Loader({
+        apiKey: result,
+        libraries: ['visualization', 'geometry'],
+      });
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
           center: { lat: 21.423461874376475, lng: 39.825553299746616 },
@@ -318,10 +331,9 @@ export class MainComponent implements OnInit, DashboardComponent {
         console.log(markersArray);
         // Add some markers to the map.
         const markers = markersArray.map((position, i) => {
-          const marker = new google.maps.Marker({
+          return new google.maps.Marker({
             position,
           });
-          return marker;
         });
         const interpolatedRenderer = {
           palette: interpolateRgb('blue', 'red'),
@@ -370,12 +382,13 @@ export class MainComponent implements OnInit, DashboardComponent {
       this.loadDashboardData();
     }
   }
+
   disableSlideShow(): boolean {
-    return this.dashboards.filter(dashboard => dashboard.selected).length < 1 ;
+    return this.dashboards.filter((dashboard) => dashboard.selected).length < 1;
   }
 
   updateInterval(newValue) {
-    this.dashboardService.getSlideShowInterval().next(newValue)
+    this.dashboardService.getSlideShowInterval().next(newValue);
   }
 
   isFullScreen: boolean;

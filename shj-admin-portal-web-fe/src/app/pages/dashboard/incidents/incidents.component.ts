@@ -1,33 +1,46 @@
-import {AfterViewInit, Component, Inject, OnInit, Renderer2,} from '@angular/core';
-import {Label, PluginServiceGlobalRegistrationAndOptions} from 'ng2-charts';
-import {ChartOptions, ChartType} from 'chart.js';
-import {ChartsConfig} from '@pages/dashboard/charts.config';
-import {AuthenticationService, DashboardService} from '@core/services';
-import {Loader} from '@googlemaps/js-api-loader';
-import {Cluster, ClusterStats, MarkerClusterer, Renderer,} from '@googlemaps/markerclusterer';
+import {
+  AfterViewInit,
+  Component,
+  Inject,
+  OnInit,
+  Renderer2,
+} from '@angular/core';
+import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
+import { ChartOptions, ChartType } from 'chart.js';
+import { ChartsConfig } from '@pages/dashboard/charts.config';
+import { AuthenticationService, DashboardService } from '@core/services';
+import { Loader } from '@googlemaps/js-api-loader';
+import {
+  Cluster,
+  ClusterStats,
+  MarkerClusterer,
+  Renderer,
+} from '@googlemaps/markerclusterer';
 //import {GoogleMap, MapMarkerClusterer} from '@angular/google-maps';
-import {LookupService} from '@core/utilities/lookup.service';
-import {Subscription} from 'rxjs';
-import {Lookup} from '@model/lookup.model';
-import {CountVo} from '@model/countVo.model';
-import {DatePipe, DOCUMENT} from '@angular/common';
-import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
-import {I18nService} from '@dcc-commons-ng/services';
-import {interpolateRgb} from 'd3-interpolate';
-import {DashboardIncidentNumbersVo} from '@model/dashboardIncidentNumbersVo.model';
-import {Position} from '@app/_shared/model/marker.model';
-import {EAuthority} from '@shared/model';
-import {ActivatedRoute} from '@angular/router';
-import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
-
-const FONTS: string = '"Elm-font", sans-serif';
+import { LookupService } from '@core/utilities/lookup.service';
+import { Subscription } from 'rxjs';
+import { Lookup } from '@model/lookup.model';
+import { CountVo } from '@model/count-vo.model';
+import { DatePipe, DOCUMENT } from '@angular/common';
+import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import { I18nService } from '@dcc-commons-ng/services';
+import { interpolateRgb } from 'd3-interpolate';
+import { DashboardIncidentNumbersVo } from '@model/dashboard-incident-numbers-vo.model';
+import { Position } from '@app/_shared/model/marker.model';
+import { EAuthority } from '@shared/model';
+import { ActivatedRoute } from '@angular/router';
+import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { LocalizedCountVo } from '@model/localized-count-vo.model';
 
 @Component({
   selector: 'app-incidents',
   templateUrl: './incidents.component.html',
   styleUrls: ['./incidents.component.scss'],
 })
-export class IncidentsComponent implements OnInit, AfterViewInit, DashboardComponent {
+export class IncidentsComponent
+  implements OnInit, AfterViewInit, DashboardComponent
+{
   private incidentSubscription: Subscription;
   incidents: DashboardIncidentNumbersVo;
   incidentTypeList: Lookup[];
@@ -60,8 +73,8 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
   public incidentDoughnutChartOptions: ChartOptions = {
     responsive: true,
     cutoutPercentage: 70,
-    rotation: 1 * Math.PI,
-    circumference: 1 * Math.PI,
+    rotation: Math.PI,
+    circumference: Math.PI,
     plugins: {
       labels: [
         {
@@ -70,7 +83,6 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           position: 'outside',
           textMargin: 10,
           fontStyle: 'bold',
-
         },
         {
           render: function (args) {
@@ -80,17 +92,16 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           position: 'outside',
           textMargin: 12,
           fontStyle: 'normal',
-          precision: 2
-
-        }
+          precision: 2,
+        },
       ],
       datalabels: {
-        display: false
-      }
+        display: false,
+      },
     },
     tooltips: {
-      enabled: false
-    }
+      enabled: false,
+    },
   };
   public incidentTypeDoughnutChartOptions: ChartOptions = {
     responsive: true,
@@ -104,7 +115,6 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           outsidePadding: 10,
           textMargin: 10,
           fontStyle: 'bold',
-
         },
         {
           render: function (args) {
@@ -115,20 +125,20 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           outsidePadding: 10,
           textMargin: 10,
           fontStyle: 'normal',
-          precision: 2
-
-        }
+          precision: 2,
+        },
       ],
       datalabels: {
-        display: false
-      }
+        display: false,
+      },
     },
     tooltips: {
-      enabled: false
-    }
+      enabled: false,
+    },
   };
   public incidentDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
   public incidentTypeDoughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[];
+  companyData: LocalizedCountVo[] = [];
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -136,6 +146,7 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
     private lookupService: LookupService,
     private dateFormatterService: DateFormatterService,
     private i18nService: I18nService,
+    private translate: TranslateService,
     @Inject(DOCUMENT) private document: Document,
     private route: ActivatedRoute,
     private renderer2: Renderer2
@@ -152,37 +163,9 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
         this.loadMapkey();
       });
     this.loadLookups();
-    this.chartsConfig.barChartOptions = {
-      ...this.chartsConfig.barChartOptions,
-      legend: false,
-      scales: {
-        ...this.chartsConfig.barChartOptions.scales,
-        xAxes: [
-          {
-            gridLines: {
-              color: 'rgba(0, 0, 0, 0)',
-            },
-          },
-        ],
-        yAxes: [
-          {
-            gridLines: {
-              borderDash: [8, 6],
-              color: '#F3F5F2',
-            },
-            ticks: {
-              fontFamily: FONTS,
-              beginAtZero: true,
-              callback: function (value) {
-                if (value % 1 === 0) {
-                  return value;
-                }
-              },
-            },
-          },
-        ],
-      },
-    };
+
+    // Hide bar chart legend
+    this.chartsConfig.barChartOptions.legend = false;
 
     this.incidentSubscription = this.dashboardService
       .loadIncidents(this.seasonYear)
@@ -216,19 +199,32 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
           this.lookupService.localizedLabel(this.incidentTypeList, d.label)
         );
         this.setIncidentCenterTitle(
-          this.i18nService.language.startsWith('en') ? 'Total Incidents' : 'مجموع البلاغات',
+          this.i18nService.language.startsWith('en')
+            ? 'Total Incidents'
+            : 'مجموع البلاغات',
           this.incidents.totalNumberOfRegisteredIncidents
         );
         this.setIncidentTypeCenterTitle(
-          this.i18nService.language.startsWith('en') ? 'Total Incidents' : 'مجموع البلاغات',
+          this.i18nService.language.startsWith('en')
+            ? 'Total Incidents'
+            : 'مجموع البلاغات',
           this.incidents.totalNumberOfRegisteredIncidents
         );
 
         this.mostIncidentDate = this.formatHijriDate(
           this.incidents.mostIncidentDate
         );
-        this.mostIncidentsArea = this.lookupService.localizedLabel(this.housingSites, this.incidents.mostIncidentsArea);
+        this.mostIncidentsArea = this.lookupService.localizedLabel(
+          this.housingSites,
+          this.incidents.mostIncidentsArea
+        );
       });
+
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.companyLabels = this.currentLanguage.startsWith('ar')
+        ? this.companyData.map((d) => d.labelAr)
+        : this.companyData.map((d) => d.labelEn);
+    });
 
     this.loadMaxCompanies();
   }
@@ -238,8 +234,11 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
     this.dashboardService
       .loadCompaniesWithMinIncidentCount(this.seasonYear)
       .subscribe((data) => {
+        this.companyData = data;
         this.companyCounts = data.map((d) => d.count);
-        this.companyLabels = data.map((d) => d.label);
+        this.companyLabels = this.currentLanguage.startsWith('ar')
+          ? data.map((d) => d.labelAr)
+          : data.map((d) => d.labelEn);
       });
   }
 
@@ -248,8 +247,11 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
     this.dashboardService
       .loadCompaniesWithMaxIncidentCount(this.seasonYear)
       .subscribe((data) => {
+        this.companyData = data;
         this.companyCounts = data.map((d) => d.count);
-        this.companyLabels = data.map((d) => d.label);
+        this.companyLabels = this.currentLanguage.startsWith('ar')
+          ? data.map((d) => d.labelAr)
+          : data.map((d) => d.labelEn);
       });
   }
 
@@ -312,14 +314,17 @@ export class IncidentsComponent implements OnInit, AfterViewInit, DashboardCompo
     this.dashboardService
       .findIncidentStatus()
       .subscribe((data) => (this.incidentStatusList = data));
-    this.dashboardService.findHousingSites().subscribe(result => {
+    this.dashboardService.findHousingSites().subscribe((result) => {
       this.housingSites = result;
     });
   }
 
   async loadMapkey() {
     this.lookupService.loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({ apiKey: result, libraries: ['visualization'] });
+      let loader = new Loader({
+        apiKey: result,
+        libraries: ['visualization', 'geometry'],
+      });
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById('map'), {
           center: { lat: 21.423461874376475, lng: 39.825553299746616 },

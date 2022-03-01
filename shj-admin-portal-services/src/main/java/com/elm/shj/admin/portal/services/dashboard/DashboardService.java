@@ -3,10 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dashboard;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantMobileTrackingVo;
-import com.elm.shj.admin.portal.orm.entity.CountVo;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
-import com.elm.shj.admin.portal.orm.entity.LocationVo;
+import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.dto.ECampSite;
 import com.elm.shj.admin.portal.services.dto.EGender;
@@ -216,19 +213,18 @@ public class DashboardService {
      *
      * @return
      */
-    public DashboardCameraNumbersVo loadDashboardCamerasNumbers(int seasonYear){
+    public DashboardCameraNumbersVo loadDashboardCamerasNumbers(int seasonYear) {
 
         //cameras related data
         long totalNumberOfCameras = cameraRepository.countCameraByHijriSeason(seasonYear);
-        long totalNumberOfActiveCameras= cameraRepository.countCameraByStatusAndHijriYear("active",seasonYear);
-        long totalNumberOfInactiveCameras= cameraRepository.countCameraByStatusAndHijriYear("inactive",seasonYear);
+        long totalNumberOfActiveCameras = cameraRepository.countCameraByStatusAndHijriYear("active", seasonYear);
+        long totalNumberOfInactiveCameras = cameraRepository.countCameraByStatusAndHijriYear("inactive", seasonYear);
 
         return DashboardCameraNumbersVo.builder()
                 .totalNumberOfCameras(totalNumberOfCameras)
                 .totalNumberOfActiveCameras(totalNumberOfActiveCameras)
                 .totalNumberOfInactiveCameras(totalNumberOfInactiveCameras)
                 .build();
-
     }
 
     public DashboardIncidentNumbersVo loadDashboardIncidentNumbers(int seasonYear) {
@@ -319,20 +315,20 @@ public class DashboardService {
         return countVoList;
     }
 
-    public List<CountVo> loadCompaniesWithMaxApplicantsCountByHijriSeason(int currentHijriYear) {
+    public List<LocalizedCountVo> loadCompaniesWithMaxApplicantsCountByHijriSeason(int currentHijriYear) {
         return companyRepository.findCompaniesWithMaxApplicantsByHijriSeason(currentHijriYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
-    public List<CountVo> loadCompaniesWithMinApplicantsCountByHijriSeason(int currentHijriYear) {
+    public List<LocalizedCountVo> loadCompaniesWithMinApplicantsCountByHijriSeason(int currentHijriYear) {
         return companyRepository.findCompaniesWithMinApplicantsByHijriSeason(currentHijriYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
-    public List<CountVo> loadCampsWithMaxApplicantsCountByHijriSeason(int currentHijriYear, ECampSite siteCode) {
+    public List<LocalizedCountVo> loadCampsWithMaxApplicantsCountByHijriSeason(int currentHijriYear, ECampSite siteCode) {
         return packageHousingRepository.findCampsWithMaxApplicantsByHijriSeason(
                 currentHijriYear, hajjRituals, siteCode.name(), PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
-    public List<CountVo> loadCampsWithMinApplicantsCountByHijriSeason(int currentHijriYear, ECampSite siteCode) {
+    public List<LocalizedCountVo> loadCampsWithMinApplicantsCountByHijriSeason(int currentHijriYear, ECampSite siteCode) {
         return packageHousingRepository.findCampsWithMinApplicantsByHijriSeason(
                 currentHijriYear, hajjRituals, siteCode.name(), PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
@@ -341,11 +337,11 @@ public class DashboardService {
         return applicantIncidentRepository.getIncidentsLocationsBySeasonAndRitualType(hijriYear, hajjRituals);
     }
 
-    public List<CountVo> loadCompaniesWithMaxIncidentsCount(int seasonYear) {
+    public List<LocalizedCountVo> loadCompaniesWithMaxIncidentsCount(int seasonYear) {
         return applicantIncidentRepository.findCompaniesWithMaxIncidents(seasonYear, PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
-    public List<CountVo> loadCompaniesWithMinIncidentsCount(int seasonYear) {
+    public List<LocalizedCountVo> loadCompaniesWithMinIncidentsCount(int seasonYear) {
         return applicantIncidentRepository.findCompaniesWithMinIncidents(seasonYear, PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 

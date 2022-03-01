@@ -1,24 +1,28 @@
-import {Component, OnInit} from '@angular/core';
-import {EAuthority} from '@shared/model';
-import {AuthenticationService, CardService, DashboardService} from '@core/services';
-import {DashboardMobileNumbersVo} from '@model/dashboard-mobile-numbers-vo.model';
-import {ChartsConfig} from '@pages/dashboard/charts.config';
-import {ChartDataSets} from 'chart.js';
+import { Component, OnInit } from '@angular/core';
+import { EAuthority } from '@shared/model';
+import {
+  AuthenticationService,
+  CardService,
+  DashboardService,
+} from '@core/services';
+import { DashboardMobileNumbersVo } from '@model/dashboard-mobile-numbers-vo.model';
+import { ChartsConfig } from '@pages/dashboard/charts.config';
+import { ChartDataSets } from 'chart.js';
 
 import * as momentjs from 'moment';
-import {I18nService} from '@dcc-commons-ng/services';
-import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
-import {ActivatedRoute} from '@angular/router';
-import {CompanyLite} from "@model/company-lite.model";
-import {Lookup} from "@model/lookup.model";
-import {Loader} from '@googlemaps/js-api-loader';
-import {LookupService} from '@core/utilities/lookup.service';
-import {ApplicantMobileTracking} from '@model/applicant-mobile-tracking.model';
-import {DatePipe} from '@angular/common';
-import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
+import { I18nService } from '@dcc-commons-ng/services';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { ActivatedRoute } from '@angular/router';
+import { CompanyLite } from '@model/company-lite.model';
+import { Lookup } from '@model/lookup.model';
+import { Loader } from '@googlemaps/js-api-loader';
+import { LookupService } from '@core/utilities/lookup.service';
+import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
+import { DatePipe } from '@angular/common';
+import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
+import { AreaLayerLookup } from '@app/_shared/model/area-layer-lookup.model';
 
 const moment = momentjs;
-const FONTS: string = '"Elm-font", sans-serif';
 const barChartBackgroundColors = [
   '#2B7127',
   '#4F8B4B',
@@ -36,6 +40,7 @@ const barChartBackgroundColors = [
 export class MobileComponent implements OnInit, DashboardComponent {
   model = 1;
   mobileAppDownloadsData: DashboardMobileNumbersVo;
+  map: google.maps.Map;
 
   chartsConfig: ChartsConfig = new ChartsConfig();
   weekDays: Array<any> = [];
@@ -51,6 +56,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
   MAP_ZOOM_OUT = 10;
 
+  areaLayers: AreaLayerLookup[];
   companyNames: CompanyLite[];
   nationalities: Lookup[] = [];
   loggedInUsers: Array<number> = [];
@@ -58,6 +64,8 @@ export class MobileComponent implements OnInit, DashboardComponent {
   appUsersCount: Array<any>;
   appUsersLabels: Array<any>;
   backgroundColors: Array<any> = [];
+  lastCompanyCode = 'all';
+  lastNationalityCode = 'all';
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -72,8 +80,9 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
   ngOnInit() {
     this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
-
     this.loadActiveApplicantWithLocations();
+
+    // Hide bar chart legend
     this.chartsConfig.lineChartOptions.legend = false;
     this.dashboardService
       .loadMobileAppDownloadsNumbers(this.seasonYear)
@@ -101,37 +110,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
       },
     ];
 
-    this.chartsConfig.barChartOptions = {
-      ...this.chartsConfig.barChartOptions,
-      legend: false,
-      scales: {
-        ...this.chartsConfig.barChartOptions.scales,
-        xAxes: [
-          {
-            gridLines: {
-              color: 'rgba(0, 0, 0, 0)',
-            },
-          },
-        ],
-        yAxes: [
-          {
-            gridLines: {
-              borderDash: [8, 6],
-              color: '#F3F5F2',
-            },
-            ticks: {
-              fontFamily: FONTS,
-              beginAtZero: true,
-              callback: function (value) {
-                if (value % 1 === 0) {
-                  return value;
-                }
-              },
-            },
-          },
-        ],
-      },
-    };
+    this.chartsConfig.barChartOptions.legend = false;
 
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.getWeekDays();
@@ -228,6 +207,19 @@ export class MobileComponent implements OnInit, DashboardComponent {
   }
 
   loadActiveApplicantWithLocations() {
+    this.dashboardService.findAreaLayers().subscribe((result) => {
+      this.areaLayers = result;
+      let latLng;
+      this.areaLayers.forEach((a) => {
+        let polygoneCoords = [];
+        let layerArray = a.layer.split('-');
+        layerArray.forEach((l) => {
+          latLng = l.split(',');
+          polygoneCoords.push({ lat: +latLng[0], lng: +latLng[1] });
+        });
+        a.layer = polygoneCoords;
+      });
+    });
     this.dashboardService
       .findActiveApplicantWithLocationBySeason(this.seasonYear)
       .subscribe((data) => {
@@ -240,57 +232,91 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
   loadHeatMap() {
     this.loadActiveApplicantWithLocations();
-  } 
-
-  async loadMapkey() {
-    this.lookupService().loadGoogleMapsApiKey().subscribe((result) => {
-      let loader = new Loader({apiKey: result, libraries: ['visualization']});
-      loader.load().then(() => {
-        const map = new google.maps.Map(document.getElementById('map'), {
-          center: {
-            lat: this.applicantMobileTrackings[0].lat,
-            lng: this.applicantMobileTrackings[0].lng,
-          },
-          zoom: 14,
-          scrollwheel: true,
-        });
-        let heatmap = new google.maps.visualization.HeatmapLayer({
-          data: this.getPoints(),
-          map: map,
-        });
-
-      });
-    });
   }
 
-  filterMap(param:string, type: string){
-    console.log(param == type);
-    switch(type) {
+  async loadMapkey() {
+    this.lookupService()
+      .loadGoogleMapsApiKey()
+      .subscribe((result) => {
+        let loader = new Loader({
+          apiKey: result,
+          libraries: ['visualization', 'geometry'],
+        });
+        loader.load().then(() => {
+          this.map = new google.maps.Map(document.getElementById('map'), {
+            center: {
+              lat: this.applicantMobileTrackings[0].lat,
+              lng: this.applicantMobileTrackings[0].lng,
+            },
+            zoom: 14,
+            scrollwheel: true,
+          });
+          console.log(this.areaLayers);
+          this.areaLayers.forEach((a) => {
+            if (a.lang == 'ar') {
+              let bermudaTriangle = new google.maps.Polygon({ paths: a.layer });
+            }
+          });
+
+          let heatmap = new google.maps.visualization.HeatmapLayer({
+            data: this.getPoints(),
+            map: this.map,
+          });
+        });
+      });
+  }
+
+  filterMap(param: string, type: string) {
+    console.log(type);
+    switch (type) {
       case 'nationality':
-       this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => c.nationalityCode == param);
+        this.lastNationalityCode = param;
         break;
-      case 'all':
-        this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
+      case 'company':
+        this.lastCompanyCode = param;
         break;
-      default: 
-        this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
+      default:
     }
+    if (this.lastNationalityCode == 'all' && this.lastCompanyCode == 'all')
+      this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings;
+    if (this.lastNationalityCode != 'all' && this.lastCompanyCode == 'all')
+      this.applicantMobileTrackingsFiltred =
+        this.applicantMobileTrackings.filter(
+          (c) => c.nationalityCode == this.lastNationalityCode
+        );
+    if (this.lastNationalityCode == 'all' && this.lastCompanyCode != 'all')
+      this.applicantMobileTrackingsFiltred =
+        this.applicantMobileTrackings.filter(
+          (c) => c.companyCode == this.lastCompanyCode
+        );
+    if (this.lastNationalityCode != 'all' && this.lastCompanyCode != 'all')
+      this.applicantMobileTrackingsFiltred =
+        this.applicantMobileTrackings.filter(
+          (c) =>
+            c.nationalityCode == this.lastNationalityCode &&
+            c.companyCode == this.lastCompanyCode
+        );
+
     this.loadMapkey();
   }
 
   selectedFromDateChange(event: Date) {
-    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => new Date(c.lastLoginDate).getTime() > event.getTime());
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(
+      (c) => new Date(c.lastLoginDate).getTime() > event.getTime()
+    );
     this.loadMapkey();
   }
+
   selectedToDateChange(event: Date) {
-    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(c => new Date(c.lastLoginDate).getTime() < event.getTime());
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(
+      (c) => new Date(c.lastLoginDate).getTime() < event.getTime()
+    );
     this.loadMapkey();
   }
 
   getPoints() {
     this.locations = [];
     this.applicantMobileTrackingsFiltred.forEach((applicant) => {
-      console.log(new Date(applicant.lastLoginDate));
       this.locations.push(new google.maps.LatLng(applicant.lat, applicant.lng));
     });
     return this.locations;

@@ -1,7 +1,9 @@
+/*
+ * Copyright (c) 2022 ELM. All rights reserved.
+ */
 package com.elm.shj.admin.portal.services.dto;
 
 import lombok.*;
-
 
 
 import java.io.Serializable;
@@ -19,10 +21,12 @@ import java.util.Date;
 @Setter
 @Builder
 public class CameraDto implements Serializable {
+
     private static final long serialVersionUID = -8960778295403218626L;
-    private  long id;
+
+    private long id;
     private String status;
-    private  String url;
+    private String url;
     private int creationHijriYear;
     private Date creationDate;
     private Date updateDate;

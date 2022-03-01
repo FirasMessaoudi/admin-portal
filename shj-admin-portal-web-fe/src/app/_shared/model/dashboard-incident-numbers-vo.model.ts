@@ -1,4 +1,4 @@
-import {CountVo} from "@model/countVo.model";
+import {CountVo} from "@model/count-vo.model";
 
 export class DashboardIncidentNumbersVo{
   totalNumberOfRegisteredIncidents: number;

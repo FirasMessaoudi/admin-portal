@@ -519,3 +519,30 @@ GO
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('dashboard.mobile.age.range', '0-18,18-30,30-40,40-60,60-200');
 GO
+
+ALTER TABLE shc_portal.shc_area_layers_lk
+ADD parent_layer_code varchar(20);
+
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_area_layers_lk ON;
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date)
+VALUES (1, 'MECCA', 'ar', N'مكة المكرمة', '21.51249,39.83359-21.55241,39.80355-21.55657,39.76527-21.4196,39.68416-21.35095,39.69437-21.30225,39.799-21.2881,39.95169-21.35822,40.03976-21.47081,39.90535', GETDATE());
+
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date)
+VALUES (2, 'MECCA', 'en', N'Mecca', '21.51249,39.83359-21.55241,39.80355-21.55657,39.76527-21.4196,39.68416-21.35095,39.69437-21.30225,39.799-21.2881,39.95169-21.35822,40.03976-21.47081,39.90535', GETDATE());
+
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date)
+VALUES (3, 'MADINA', 'ar', N'المدينة المنورة', '24.65638,39.60837-24.6542,39.50417-24.63079,39.43911-24.59197,39.39169-24.45442,39.43079-24.38729,39.441-24.33967,39.54563-24.32583,39.69832-24.3944,39.78638-24.47758,39.86543-24.55413,39.81261-24.61815,39.77008-24.6535,39.70879', GETDATE());
+
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date)
+VALUES (4, 'MADINA', 'en', N'Madina', '24.65638,39.60837-24.6542,39.50417-24.63079,39.43911-24.59197,39.39169-24.45442,39.43079-24.38729,39.441-24.33967,39.54563-24.32583,39.69832-24.3944,39.78638-24.47758,39.86543-24.55413,39.81261-24.61815,39.77008-24.6535,39.70879', GETDATE());
+
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date, parent_layer_code)
+VALUES (5, 'HOLY_MOSQ_MECCA', 'ar', N'المسجد الحرام في مكة ', '21.42623,39.82861-21.42519,39.8281-21.42403,39.82921-21.42116,39.82733-21.42084,39.82295-21.42267,39.82119-21.42381,39.82071-21.42514,39.82035-21.42609,39.82316-21.42711,39.8272', GETDATE(),'MECCA');
+
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date, parent_layer_code)
+VALUES (6, 'HOLY_MOSQ_MECCA', 'en', N'the Holy Mosque in Mecca ', '21.42623,39.82861-21.42519,39.8281-21.42403,39.82921-21.42116,39.82733-21.42084,39.82295-21.42267,39.82119-21.42381,39.82071-21.42514,39.82035-21.42609,39.82316-21.42711,39.8272', GETDATE(),'MECCA');
+SET IDENTITY_INSERT shc_portal.shc_area_layers_lk OFF;
+
+GO

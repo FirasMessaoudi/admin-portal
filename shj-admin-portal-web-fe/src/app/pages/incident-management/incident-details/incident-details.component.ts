@@ -1,24 +1,24 @@
-import {Component, Inject, OnInit, Renderer2} from '@angular/core';
-import {DOCUMENT} from "@angular/common";
-import {ActivatedRoute, Router} from "@angular/router";
-import {combineLatest} from "rxjs";
-import {map} from "rxjs/operators";
-import { Loader } from "@googlemaps/js-api-loader";
-import {ApplicantIncident} from "@model/applicant-incident.model";
-import {IncidentService} from "@core/services/incident/incident.service";
-import {TranslateService} from "@ngx-translate/core";
-import {ToastService} from "@shared/components/toast";
-import {I18nService} from "@dcc-commons-ng/services";
-import {Lookup} from "@model/lookup.model";
-import {LookupService} from "@core/utilities/lookup.service";
-import {Marker} from "@model/marker.model";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ConfirmDialogService} from "@shared/components/confirm-dialog";
+import { Component, Inject, OnInit, Renderer2 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Loader } from '@googlemaps/js-api-loader';
+import { ApplicantIncident } from '@model/applicant-incident.model';
+import { IncidentService } from '@core/services/incident/incident.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ToastService } from '@shared/components/toast';
+import { I18nService } from '@dcc-commons-ng/services';
+import { Lookup } from '@model/lookup.model';
+import { LookupService } from '@core/utilities/lookup.service';
+import { Marker } from '@model/marker.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ConfirmDialogService } from '@shared/components/confirm-dialog';
 
 @Component({
   selector: 'app-incident-details',
   templateUrl: './incident-details.component.html',
-  styleUrls: ['./incident-details.component.scss']
+  styleUrls: ['./incident-details.component.scss'],
 })
 export class IncidentDetailsComponent implements OnInit {
   incident: ApplicantIncident;
@@ -29,10 +29,10 @@ export class IncidentDetailsComponent implements OnInit {
   mapIsReady = false;
   MAP_ZOOM_OUT = 10;
   mapOptions: google.maps.MapOptions = {
-    center: {lat: 21.423461874376475, lng: 39.825553299746616},
+    center: { lat: 21.423461874376475, lng: 39.825553299746616 },
     zoom: this.MAP_ZOOM_OUT,
-    disableDefaultUI: true
-  }
+    disableDefaultUI: true,
+  };
   marker: Marker;
   MARK_AS_RESOLVED: string = 'MARK_AS_RESOLVED';
   MARK_AS_CLOSED: string = 'MARK_AS_CLOSED';
@@ -42,54 +42,65 @@ export class IncidentDetailsComponent implements OnInit {
   incidentForm: FormGroup;
   icon: any;
 
-  constructor(private incidentService: IncidentService,
-              private router: Router,
-              private i18nService: I18nService,
-              private translate: TranslateService,
-              private toastr: ToastService,
-              private lookupsService: LookupService,
-              private route: ActivatedRoute,
-              private confirmDialogService: ConfirmDialogService,
-              private formBuilder: FormBuilder,
-              @Inject(DOCUMENT) private document: Document,
-              private renderer2: Renderer2) {
-  }
+  constructor(
+    private incidentService: IncidentService,
+    private router: Router,
+    private i18nService: I18nService,
+    private translate: TranslateService,
+    private toastr: ToastService,
+    private lookupsService: LookupService,
+    private route: ActivatedRoute,
+    private confirmDialogService: ConfirmDialogService,
+    private formBuilder: FormBuilder,
+    @Inject(DOCUMENT) private document: Document,
+    private renderer2: Renderer2
+  ) {}
 
   ngOnInit(): void {
     this.loadGoogleMapsApiKey();
-    combineLatest([this.route.params, this.route.queryParams]).pipe(map(results => ({
-      params: results[0].id,
-      qParams: results[1]
-    }))).subscribe(results => {
-      this.incidentId = +results.params; // (+) converts string 'id' to a number
-      if (this.incidentId) {
-        this.isLoading = true;
-        // load incident details
-        this.incidentService.find(this.incidentId).subscribe(data => {
-          if (data && data.id) {
-            this.isLoading = false;
-            this.incident = data;
-          } else {
-            this.toastr.error(this.translate.instant('general.route_item_not_found', {itemId: this.incidentId}),
-              this.translate.instant('general.dialog_error_title'));
-            this.navigateToList();
-          }
-        });
-      } else {
-        this.toastr.error(this.translate.instant('general.route_id_param_not_found'),
-          this.translate.instant('general.dialog_error_title'));
-        this.navigateToList();
-      }
-    });
+    combineLatest([this.route.params, this.route.queryParams])
+      .pipe(
+        map((results) => ({
+          params: results[0].id,
+          qParams: results[1],
+        }))
+      )
+      .subscribe((results) => {
+        this.incidentId = +results.params; // (+) converts string 'id' to a number
+        if (this.incidentId) {
+          this.isLoading = true;
+          // load incident details
+          this.incidentService.find(this.incidentId).subscribe((data) => {
+            if (data && data.id) {
+              this.isLoading = false;
+              this.incident = data;
+            } else {
+              this.toastr.error(
+                this.translate.instant('general.route_item_not_found', {
+                  itemId: this.incidentId,
+                }),
+                this.translate.instant('general.dialog_error_title')
+              );
+              this.navigateToList();
+            }
+          });
+        } else {
+          this.toastr.error(
+            this.translate.instant('general.route_id_param_not_found'),
+            this.translate.instant('general.dialog_error_title')
+          );
+          this.navigateToList();
+        }
+      });
     this.initForm();
     this.loadLookups();
   }
 
   loadLookups() {
-    this.incidentService.findIncidentTypes().subscribe(result => {
+    this.incidentService.findIncidentTypes().subscribe((result) => {
       this.incidentTypes = result;
     });
-    this.incidentService.findIncidentStatuses().subscribe(result => {
+    this.incidentService.findIncidentStatuses().subscribe((result) => {
       this.incidentStatuses = result;
     });
   }
@@ -131,22 +142,27 @@ export class IncidentDetailsComponent implements OnInit {
   }
 
   async loadGoogleMapsApiKey() {
-    this.lookupsService.loadGoogleMapsApiKey().subscribe(result => {
-      let loader = new Loader({apiKey: result})
-      loader.load().then(()=>{
-        const map = new google.maps.Map(document.getElementById("map"),{
-          center:{lat: 21.423461874376475, lng: 39.825553299746616},
+    this.lookupsService.loadGoogleMapsApiKey().subscribe((result) => {
+      let loader = new Loader({
+        apiKey: result,
+        libraries: ['visualization', 'geometry'],
+      });
+      loader.load().then(() => {
+        const map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: 21.423461874376475, lng: 39.825553299746616 },
           zoom: 5,
           scrollwheel: true,
         });
         new google.maps.Marker({
-          position: {lat: this.incident?.locationLat, lng: this.incident?.locationLng},
+          position: {
+            lat: this.incident?.locationLat,
+            lng: this.incident?.locationLng,
+          },
           map,
         });
-      })
+      });
     });
   }
-
 
   private loadScript(key) {
     return new Promise((resolve, reject) => {
@@ -164,12 +180,17 @@ export class IncidentDetailsComponent implements OnInit {
 
   cancel() {
     this.confirmDialogService
-      .confirm(this.translate.instant('notification-management.cancel_confirmation_text'),
-        this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
-      if (confirm) {
-        this.goBackToList();
-      }
-    });
+      .confirm(
+        this.translate.instant(
+          'notification-management.cancel_confirmation_text'
+        ),
+        this.translate.instant('general.dialog_confirmation_title')
+      )
+      .then((confirm) => {
+        if (confirm) {
+          this.goBackToList();
+        }
+      });
   }
 
   goBackToList() {
@@ -181,9 +202,9 @@ export class IncidentDetailsComponent implements OnInit {
   }
 
   save() {
-    Object.keys(this.incidentForm.controls).forEach(field => {
+    Object.keys(this.incidentForm.controls).forEach((field) => {
       const control = this.incidentForm.get(field);
-      control.markAsTouched({onlySelf: true});
+      control.markAsTouched({ onlySelf: true });
     });
 
     if (this.incidentForm.invalid) {
@@ -192,36 +213,58 @@ export class IncidentDetailsComponent implements OnInit {
 
     let confirmationText, successText;
     if (this.incidentForm.controls.operation.value === this.MARK_AS_RESOLVED) {
-      confirmationText = 'incident-management.dialog_resolve_complaint_confirmation_text';
+      confirmationText =
+        'incident-management.dialog_resolve_complaint_confirmation_text';
       successText = 'incident-management.dialog_resolve_complaint_success_text';
-    } else if (this.incidentForm.controls.operation.value === this.MARK_AS_CLOSED) {
-      confirmationText = 'incident-management.dialog_close_complaint_confirmation_text';
+    } else if (
+      this.incidentForm.controls.operation.value === this.MARK_AS_CLOSED
+    ) {
+      confirmationText =
+        'incident-management.dialog_close_complaint_confirmation_text';
       successText = 'incident-management.dialog_close_complaint_success_text';
     }
-    this.confirmDialogService.confirm(this.translate.instant(confirmationText), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
-      let payload = this.incidentForm.value;
-      payload.resolutionComment = payload.resolutionComment.replace(/\s/g, " ").trim();
-      if (confirm) {
-        this.isLoading = true;
-        this.incidentService.handle(this.incidentId, payload).subscribe(_ => {
-          this.isLoading = false;
-          this.toastr.success(this.translate.instant(successText), this.translate.instant('incident-management.incident_resolution'));
-          this.navigateToList();
-        }, error => {
-          this.isLoading = false;
-          this.toastr.error(this.translate.instant('general.dialog_error_text'), this.translate.instant('incident-management.incident_resolution'));
-        });
-      }
-    });
+    this.confirmDialogService
+      .confirm(
+        this.translate.instant(confirmationText),
+        this.translate.instant('general.dialog_confirmation_title')
+      )
+      .then((confirm) => {
+        let payload = this.incidentForm.value;
+        payload.resolutionComment = payload.resolutionComment
+          .replace(/\s/g, ' ')
+          .trim();
+        if (confirm) {
+          this.isLoading = true;
+          this.incidentService.handle(this.incidentId, payload).subscribe(
+            (_) => {
+              this.isLoading = false;
+              this.toastr.success(
+                this.translate.instant(successText),
+                this.translate.instant(
+                  'incident-management.incident_resolution'
+                )
+              );
+              this.navigateToList();
+            },
+            (error) => {
+              this.isLoading = false;
+              this.toastr.error(
+                this.translate.instant('general.dialog_error_text'),
+                this.translate.instant(
+                  'incident-management.incident_resolution'
+                )
+              );
+            }
+          );
+        }
+      });
   }
 
   private initForm() {
-    this.incidentForm = this.formBuilder.group(
-      {
-        operation: [this.MARK_AS_RESOLVED, Validators.required],
-        resolutionComment: ['', [Validators.required, Validators.maxLength(500)]]
-      }
-    );
+    this.incidentForm = this.formBuilder.group({
+      operation: [this.MARK_AS_RESOLVED, Validators.required],
+      resolutionComment: ['', [Validators.required, Validators.maxLength(500)]],
+    });
   }
 
   isUnderProcessing(incident): boolean {
@@ -229,17 +272,18 @@ export class IncidentDetailsComponent implements OnInit {
   }
 
   downloadAttachment(id) {
-    this.incidentService.downloadIncidentAttachment(id).subscribe(data => {
+    this.incidentService.downloadIncidentAttachment(id).subscribe(
+      (data) => {
         this.downloadFile(data);
-        console.log(data)
+        console.log(data);
       },
-      error => console.log('Error downloading the file.'),
+      (error) => console.log('Error downloading the file.'),
       () => console.info('OK')
     );
   }
 
   downloadFile(data) {
-    const blob = new Blob([data], {type: 'image/jpg'});
+    const blob = new Blob([data], { type: 'image/jpg' });
     const url = window.URL.createObjectURL(blob);
     window.open(url);
   }

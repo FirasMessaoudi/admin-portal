@@ -4,15 +4,15 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
-import com.elm.shj.admin.portal.orm.entity.JpaCamera;
+import com.elm.shj.admin.portal.orm.entity.JpaAreaLayerLookup;
 import org.mapstruct.Mapper;
 
 /**
- * Mapper for {@link CameraDto} class
+ * Mapper for {@link AreaLayerLookupDto} class
  *
- * @author r.chebbi
+ * @author jaafer jarray
  * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
-public abstract class CameraDtoMapper implements IGenericMapper<CameraDto, JpaCamera> {
+public abstract class AreaLayerLookupDtoMapper implements IGenericMapper<AreaLayerLookupDto, JpaAreaLayerLookup> {
 }
