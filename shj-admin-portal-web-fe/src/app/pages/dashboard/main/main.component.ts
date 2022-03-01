@@ -1,34 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { GeneralDashboardVo } from '@model/dashboard-general-numbers-vo.model';
-import { Subscription, timer } from 'rxjs';
-import { DashboardService } from '@core/services';
-import { DashboardIncidentNumbersVo } from '@model/dashboard-incident-numbers-vo.model';
-import { Lookup } from '@model/lookup.model';
-import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
-import { ChartOptions, ChartType } from 'chart.js';
-import { ChartsConfig } from '@pages/dashboard/charts.config';
-import { LookupService } from '@core/utilities/lookup.service';
-import { DatePipe } from '@angular/common';
-import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
-import { I18nService } from '@dcc-commons-ng/services';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { interpolateRgb } from 'd3-interpolate';
-import { Loader } from '@googlemaps/js-api-loader';
-import { Position } from '@app/_shared/model/marker.model';
-import {
-  Cluster,
-  ClusterStats,
-  MarkerClusterer,
-  Renderer,
-} from '@googlemaps/markerclusterer';
+import {Component, OnInit} from '@angular/core';
+import {GeneralDashboardVo} from '@model/dashboard-general-numbers-vo.model';
+import {Subscription, timer} from 'rxjs';
+import {DashboardService} from '@core/services';
+import {DashboardIncidentNumbersVo} from '@model/dashboard-incident-numbers-vo.model';
+import {Lookup} from '@model/lookup.model';
+import {Label, PluginServiceGlobalRegistrationAndOptions} from 'ng2-charts';
+import {ChartOptions, ChartType} from 'chart.js';
+import {ChartsConfig} from '@pages/dashboard/charts.config';
+import {LookupService} from '@core/utilities/lookup.service';
+import {DatePipe} from '@angular/common';
+import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import {I18nService} from '@dcc-commons-ng/services';
+import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
+import {interpolateRgb} from 'd3-interpolate';
+import {Loader} from '@googlemaps/js-api-loader';
+import {Position} from '@app/_shared/model/marker.model';
+import {Cluster, ClusterStats, MarkerClusterer, Renderer,} from '@googlemaps/markerclusterer';
 
 import * as moment_ from 'moment-hijri';
 
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { ApplicantMobileTracking } from '@app/_shared/model/applicant-mobile-tracking.model';
-import { dashboardItem } from '@shared/model';
-import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
-import { DashboardCameraNumbers } from '@model/dashboard-camera-numbers';
+import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
+import {ApplicantMobileTracking} from '@app/_shared/model/applicant-mobile-tracking.model';
+import {dashboardItem} from '@shared/model';
+import {DashboardComponent} from '@pages/dashboard/slide-show/dashboard.component';
+import {DashboardCameraNumbers} from '@model/dashboard-camera-numbers';
 
 const momentHijri = moment_;
 
@@ -221,9 +216,12 @@ export class MainComponent implements OnInit, DashboardComponent {
         this.dateFormatterService.fromDate(date)
       )
     );
+    const todayHijri = momentHijri(date).locale('ar-sa').format('iYYYY iMMMM iDD');
+    const finalHijri = this.dateFormatterService.toEnglishDigits(todayHijri);
+    console.log(finalHijri);
     return this.currentLanguage.startsWith('ar')
-      ? datePipe.transform(hijriDate, 'yyyy MM, dd')
-      : datePipe.transform(hijriDate, 'dd, MM yyyy');
+      ? finalHijri
+      : datePipe.transform(hijriDate, 'dd MMM yyyy');
   }
 
   get currentLanguage(): string {

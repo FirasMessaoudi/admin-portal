@@ -1,17 +1,19 @@
-import { Injectable } from '@angular/core';
-import { NgbDateStruct, NgbDateParserFormatter, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import {Injectable} from '@angular/core';
+import {NgbDate, NgbDateParserFormatter, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 
 import * as momentjs from 'moment';
+import * as moment_ from 'moment-hijri';
+
 const moment = momentjs;
 
 
-import * as moment_ from 'moment-hijri';
 const momentHijri = moment_;
 
 @Injectable()
 export class DateFormatterService {
 
-  constructor(private parserFormatter: NgbDateParserFormatter) { }
+  constructor(private parserFormatter: NgbDateParserFormatter) {
+  }
 
     fromDate(date: Date): NgbDateStruct {
       let newDate = new Date(date);
@@ -85,15 +87,31 @@ export class DateFormatterService {
 
       const todayHijri = momentHijri().locale('en').format('iYYYY/iMM/iDD');
 
-      return this.toHijriDateStruct(todayHijri, 'iYYYY/iMM/iDD') ;
+      return this.toHijriDateStruct(todayHijri, 'iYYYY/iMM/iDD');
 
     }
 
-    todayGregorian(): NgbDateStruct {
+  todayGregorian(): NgbDateStruct {
 
-      const todayGregorian = moment().locale('en').format('YYYY/MM/DD');
+    const todayGregorian = moment().locale('en').format('YYYY/MM/DD');
 
-      return this.toGregorianDateStruct(todayGregorian, 'YYYY/MM/DD') ;
-    }
+    return this.toGregorianDateStruct(todayGregorian, 'YYYY/MM/DD');
+  }
+
+  toEnglishDigits(str) {
+
+    // convert persian digits [۰۱۲۳۴۵۶۷۸۹]
+    var e = '۰'.charCodeAt(0);
+    str = str.replace(/[۰-۹]/g, function (t) {
+      return t.charCodeAt(0) - e;
+    });
+
+    // convert arabic indic digits [٠١٢٣٤٥٦٧٨٩]
+    e = '٠'.charCodeAt(0);
+    str = str.replace(/[٠-٩]/g, function (t) {
+      return t.charCodeAt(0) - e;
+    });
+    return str;
+  }
 
 }
