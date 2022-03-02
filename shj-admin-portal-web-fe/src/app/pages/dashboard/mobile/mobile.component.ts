@@ -94,6 +94,10 @@ export class MobileComponent implements OnInit, DashboardComponent {
       .getMobileLoggedInUsers(this.seasonYear)
       .subscribe((data) => (this.datasets[0].data = data));
 
+    this.dashboardService
+      .getMobileLoggedOutUsers(this.seasonYear)
+      .subscribe((data) => (this.datasets[1].data = data));
+
     this.datasets = [
       {
         fill: false,
@@ -336,7 +340,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
       return c;
       }
       });
-  
+
   }
   if(areaCode == 'all'){
     this.applicantMobileTrackingsFiltred = this.applicantMobileTrackingsLastFiltred;
