@@ -1,11 +1,11 @@
-<a class="d-block button_back" href="javascript:void(0);" [routerLink]="['/']">
+<a *ngIf="!isFullScreen" class="d-block button_back" href="javascript:void(0);" [routerLink]="['/']">
   <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
   <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
 </a>
 <div class="content__wrapper">
   <div class="title__Page">
     <h3 class="font-weight-bold text-dark">{{'dashboard.rating.title' | translate}}</h3>
-    <div>
+    <div *ngIf="!isFullScreen">
       <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
         <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
         {{'dashboard.general.full_screen' | translate}}

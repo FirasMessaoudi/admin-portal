@@ -151,10 +151,12 @@
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
                       <div class="form-group col">
                         <label class="col-form-label">المنطقة</label>
-                        <select class="custom-select">
-                          <option selected value="1">الكل</option>
-                          <option value="2">الرياض</option>
-                          <option value="2">جدة</option>
+                        <select class="custom-select" (change)="filterMapByArea($event.target.value)">
+                          <option selected value="all">{{'general.all' | translate}}</option>
+                          <option *ngFor="let areaLayer of lookupService().localizedItems(areaLayers)"
+                                  [value]="areaLayer.code">
+                            {{areaLayer.label}}
+                          </option>
                         </select>
                       </div>
                       <div class="form-group col">

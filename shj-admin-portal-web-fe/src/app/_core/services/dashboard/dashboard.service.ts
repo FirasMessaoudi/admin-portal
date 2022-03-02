@@ -20,24 +20,10 @@ import { AreaLayerLookup } from '@app/_shared/model/area-layer-lookup.model';
 export class DashboardService {
   items: dashboardItem[] = [];
   slideShowInterval: number = 5;
-  private intervalSubject = new BehaviorSubject<number>(5);
+  private intervalSubject = new BehaviorSubject<number>(60);
 
   constructor(private http: HttpClient) {
-    this.items = [
-      new dashboardItem('MainComponent', 'dashboard.general.hajj', true),
-      new dashboardItem(
-        'GeneralNumbersComponent',
-        'dashboard.general-numbers.title',
-        true
-      ),
-      new dashboardItem(
-        'IncidentsComponent',
-        'dashboard.incidents.title',
-        true
-      ),
-      new dashboardItem('CamerasComponent', 'dashboard.cameras.title', true),
-      new dashboardItem('MobileComponent', 'dashboard.mobile.title', true),
-    ];
+
   }
 
   /**
@@ -295,7 +281,23 @@ export class DashboardService {
   }
 
   getDashboardItems(): dashboardItem[] {
-    return this.items;
+    return [
+      new dashboardItem('MainComponent', 'dashboard.main.name', true),
+      new dashboardItem(
+        'GeneralNumbersComponent',
+        'dashboard.general-numbers.name',
+        true
+      ),
+      new dashboardItem(
+        'IncidentsComponent',
+        'dashboard.incidents.name',
+        true
+      ),
+      new dashboardItem('CamerasComponent', 'dashboard.cameras.name', true),
+      new dashboardItem('MobileComponent', 'dashboard.mobile.name', true),
+      new dashboardItem('RatingComponent', 'dashboard.rating.name', true),
+      new dashboardItem('TransactionsComponent', 'dashboard.transactions.name', true),
+    ];
   }
 
   findAreaLayers(): Observable<AreaLayerLookup[]> {
