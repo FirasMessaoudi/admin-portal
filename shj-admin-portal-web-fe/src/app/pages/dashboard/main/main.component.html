@@ -281,7 +281,7 @@
                     [legend]="false"
                     height="100">
             </canvas>
-            <div>
+            <div *ngIf="incidents.totalNumberOfRegisteredIncidents>0">
               {{'dashboard.main.largest_number_of_incidents_reported' | translate}}
               <b class="text-dark">{{mostIncidentDate}}</b>
             </div>
