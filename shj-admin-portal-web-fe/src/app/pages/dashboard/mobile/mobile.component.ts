@@ -251,7 +251,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
               lat: this.applicantMobileTrackings[0].lat,
               lng: this.applicantMobileTrackings[0].lng,
             },
-            zoom: 14,
+            zoom: 5,
             scrollwheel: true,
           });
           this.getPoints();
