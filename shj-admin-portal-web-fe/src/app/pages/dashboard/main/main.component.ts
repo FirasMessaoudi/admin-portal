@@ -216,9 +216,8 @@ export class MainComponent implements OnInit, DashboardComponent {
         this.dateFormatterService.fromDate(date)
       )
     );
-    const todayHijri = momentHijri(date).locale('ar-sa').format('iYYYY iMMMM iDD');
-    const finalHijri = this.dateFormatterService.toEnglishDigits(todayHijri);
-    console.log(finalHijri);
+    const formattedHijri = momentHijri(date).locale('ar-sa').format('iYYYY iMMMM iDD');
+    const finalHijri = this.dateFormatterService.toEnglishDigits(formattedHijri);
     return this.currentLanguage.startsWith('ar')
       ? finalHijri
       : datePipe.transform(hijriDate, 'dd MMM yyyy');

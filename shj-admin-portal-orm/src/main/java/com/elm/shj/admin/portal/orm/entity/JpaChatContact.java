@@ -12,18 +12,18 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the shc_applicant_chat_contact database table.
+ * The persistent class for the shc_chat_contact database table.
  *
  * @author Slim Ben Hadj
  * @since 1.1.0
  */
 @Entity
-@Table(name = "shc_applicant_chat_contact")
-@NamedQuery(name = "JpaApplicantChatContact.findAll", query = "SELECT j FROM JpaApplicantChatContact j")
+@Table(name = "shc_chat_contact")
+@NamedQuery(name = "JpaChatContact.findAll", query = "SELECT j FROM JpaChatContact j")
 @Getter
 @Setter
 @NoArgsConstructor
-public class JpaApplicantChatContact implements Serializable {
+public class JpaChatContact implements Serializable {
 
     private static final long serialVersionUID = 7212037715533180866L;
 
@@ -32,11 +32,11 @@ public class JpaApplicantChatContact implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "applicant_uin")
-    private String applicantUin;
+    @Column(name = "digital_id")
+    private String digitalId;
 
-    @Column(name = "contact_uin")
-    private String contactUin;
+    @Column(name = "contact_digital_id")
+    private String contactDigitalId;
 
     @ManyToOne
     @JoinColumn(name = "type_id")

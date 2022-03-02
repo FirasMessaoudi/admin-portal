@@ -1317,11 +1317,20 @@ GO
 if not exists(select * from sys.tables where name = 'shc_camera')
 create table shc_portal.shc_camera
 (
-    id                       int           not null primary key identity(1,1),
-    status                   nvarchar(50) ,
-    url                      nvarchar(256) ,
-    creation_hijri_year      int null,
-    creation_date            smalldatetime not null default current_timestamp,
-    update_date              smalldatetime null
+    id                  int           not null primary key identity(1,1),
+    status              nvarchar(50),
+    url                 nvarchar(256),
+    creation_hijri_year int null,
+    creation_date       smalldatetime not null default current_timestamp,
+    update_date         smalldatetime null
 );
 GO
+
+exec sp_rename 'shc_portal.shc_applicant_chat_contact','shc_chat_contact'
+Go
+
+exec sp_rename 'shc_portal.shc_chat_contact.applicant_uin','digital_id','COLUMN'
+Go
+
+exec sp_rename 'shc_portal.shc_chat_contact.contact_uin','contact_digital_id','COLUMN'
+Go

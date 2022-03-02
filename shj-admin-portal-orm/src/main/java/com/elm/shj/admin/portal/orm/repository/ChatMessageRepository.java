@@ -25,26 +25,28 @@ import java.util.List;
 public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Long> {
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ChatMessageVo(  " +
-            " contact.id, contact.contactUin, message.text, message.sentDate, message.receivedDate,message.readDate, contact.deleted ) " +
+            " contact.id, contact.contactDigitalId, message.text, message.sentDate, message.receivedDate,message.readDate, contact.deleted ) " +
             "FROM JpaChatMessage message " +
-            "JOIN JpaApplicantChatContact  contact ON contact.id = message.sender.id OR contact.id = message.receiver.id " +
-            "WHERE contact.applicantUin= :applicantUin " +
+            "JOIN JpaChatContact  contact ON contact.id = message.sender.id OR contact.id = message.receiver.id " +
+            "WHERE contact.digitalId= :digitalId " +
             "AND message.id IN ( SELECT max(messages.id) FROM JpaChatMessage messages " +
-            "JOIN JpaApplicantChatContact  contact ON contact.id = messages.sender.id OR contact.id = messages.receiver.id " +
+            "JOIN JpaChatContact  contact ON contact.id = messages.sender.id OR contact.id = messages.receiver.id " +
             "GROUP BY contact.id) " +
             "ORDER BY message.sentDate desc ")
-    List<ChatMessageVo> findChatContactsWithLatestMessage(@Param("applicantUin") String uin);
+    List<ChatMessageVo> findChatContactsWithLatestMessage(@Param("digitalId") String uin);
+
     Page<JpaChatMessage> findBySenderIdOrReceiverIdAndSentDateLessThanEqual(long senderId, long receiverId, Date time, Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.UnreadMessagesCount(  " +
             " contact.id, COUNT(message.id) ) " +
             "FROM JpaChatMessage message " +
-            "JOIN JpaApplicantChatContact  contact ON contact.id = message.receiver.id " +
-            "WHERE contact.applicantUin= :applicantUin " +
+            "JOIN JpaChatContact  contact ON contact.id = message.receiver.id " +
+            "WHERE contact.digitalId= :digitalId " +
             "AND message.readDate IS NULL " +
             "AND message.receivedDate IS NOT NULL " +
             "GROUP BY contact.id ")
-    List<UnreadMessagesCount> findUnreadMessagesCount(@Param("applicantUin") String uin);
+    List<UnreadMessagesCount> findUnreadMessagesCount(@Param("digitalId") String uin);
+
     @Modifying
     @Query("UPDATE JpaChatMessage message SET message.readDate=CURRENT_TIMESTAMP,  message.updateDate = CURRENT_TIMESTAMP WHERE message.receiver.id = :chatContactId AND message.readDate is null ")
     void updateChatMessageReadDate(@Param("chatContactId") long chatContactId);

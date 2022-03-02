@@ -3,10 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantChatContactVo;
 import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantChatContact;
-import com.elm.shj.admin.portal.orm.repository.ApplicantChatContactRepository;
+import com.elm.shj.admin.portal.orm.entity.ChatContactVo;
+import com.elm.shj.admin.portal.orm.entity.JpaChatContact;
+import com.elm.shj.admin.portal.orm.repository.ChatContactRepository;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffDigitalIdRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -32,9 +32,9 @@ import static com.elm.shj.admin.portal.services.dto.ERelativeRelationship.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class ApplicantChatContactService extends GenericService<JpaApplicantChatContact, ApplicantChatContactDto, Long> {
+public class ChatContactService extends GenericService<JpaChatContact, ChatContactDto, Long> {
 
-    private final ApplicantChatContactRepository applicantChatContactRepository;
+    private final ChatContactRepository chatContactRepository;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantPackageService applicantPackageService;
     private final CompanyStaffDigitalIdRepository companyStaffDigitalIdRepository;
@@ -47,31 +47,31 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @param systemDefined a boolean flag to define whether the chat contact is added by system or not
      * @return the list of chat contacts
      */
-    public List<ApplicantChatContactVo> list(String applicantUin, Long ritualId, Boolean systemDefined) {
+    public List<ChatContactVo> list(String applicantUin, Long ritualId, Boolean systemDefined) {
         if (systemDefined == null) {
-            List<ApplicantChatContactVo> applicantList = applicantChatContactRepository.findContactApplicantList(applicantUin, ritualId);
-            List<ApplicantChatContactVo> staffList = applicantChatContactRepository.findContactStaffList(applicantUin, ritualId);
+            List<ChatContactVo> applicantList = chatContactRepository.findContactApplicantList(applicantUin, ritualId);
+            List<ChatContactVo> staffList = chatContactRepository.findContactStaffList(applicantUin, ritualId);
             applicantList.addAll(staffList);
             return applicantList;
         } else if (systemDefined) {
-            return ((ApplicantChatContactRepository) getRepository()).findBySystemDefinedTrue(applicantUin, ritualId);
+            return ((ChatContactRepository) getRepository()).findBySystemDefinedTrue(applicantUin, ritualId);
         } else {
-            return ((ApplicantChatContactRepository) getRepository()).findBySystemDefinedFalse(applicantUin);
+            return ((ChatContactRepository) getRepository()).findBySystemDefinedFalse(applicantUin);
         }
     }
 
     @Transactional
     public int deleteApplicantChatContact(String applicantUin, String contactUin) {
-        return applicantChatContactRepository.markDeleted(applicantUin, contactUin);
+        return chatContactRepository.markDeleted(applicantUin, contactUin);
     }
 
     @Transactional
     public int deleteInvalidStaffChatContact(String staffUin) {
-        return applicantChatContactRepository.markStaffDeleted(staffUin);
+        return chatContactRepository.markStaffDeleted(staffUin);
     }
 
-    public ApplicantChatContactDto findApplicantChatContact(String applicantUin, String contactUin) {
-        Optional<JpaApplicantChatContact> applicantChatContact = applicantChatContactRepository.findByApplicantUinAndContactUin(applicantUin, contactUin);
+    public ChatContactDto findApplicantChatContact(String applicantUin, String contactUin) {
+        Optional<JpaChatContact> applicantChatContact = chatContactRepository.findByDigitalIdAndContactDigitalId(applicantUin, contactUin);
         return applicantChatContact.map(chatContact -> getMapper().fromEntity(chatContact, mappingContext)).orElse(null);
     }
 
@@ -83,10 +83,10 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @return the value object of the saved applicant contact chat
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantChatContactVo createApplicantContact(Long ritualId, ApplicantChatContactDto contact) {
-        ApplicantChatContactDto contactBuilder = ApplicantChatContactDto.builder()
-                .applicantUin(contact.getApplicantUin())
-                .contactUin(contact.getContactUin())
+    public ChatContactVo createApplicantContact(Long ritualId, ChatContactDto contact) {
+        ChatContactDto contactBuilder = ChatContactDto.builder()
+                .digitalId(contact.getDigitalId())
+                .contactDigitalId(contact.getContactDigitalId())
                 .alias(contact.getAlias())
                 .mobileNumber(contact.getMobileNumber())
                 .countryPhonePrefix(contact.getCountryPhonePrefix())
@@ -96,8 +96,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .autoAdded(contact.isAutoAdded())
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
-        ApplicantChatContactDto savedContact = save(contactBuilder);
-        return ((ApplicantChatContactRepository) getRepository()).findApplicantContactVoById(savedContact.getId()).orElse(null);
+        ChatContactDto savedContact = save(contactBuilder);
+        return ((ChatContactRepository) getRepository()).findApplicantContactVoById(savedContact.getId()).orElse(null);
     }
 
     /**
@@ -109,10 +109,10 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @return the value object of the saved staff contact chat
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantChatContactVo createStaffContact(String applicantUin, Long ritualId, Optional<CompanyStaffLiteDto> companyStaff) {
-        ApplicantChatContactDto contactBuilder = ApplicantChatContactDto.builder()
-                .applicantUin(applicantUin)
-                .contactUin(companyStaff.map(CompanyStaffLiteDto::getSuin).orElse(null))
+    public ChatContactVo createStaffContact(String applicantUin, Long ritualId, Optional<CompanyStaffLiteDto> companyStaff) {
+        ChatContactDto contactBuilder = ChatContactDto.builder()
+                .digitalId(applicantUin)
+                .contactDigitalId(companyStaff.map(CompanyStaffLiteDto::getSuin).orElse(null))
                 .mobileNumber(companyStaff.map(CompanyStaffLiteDto::getMobileNumber).orElse(null))
                 //TODO country code and nationality code may not match
                 //TODO Missing country code prefix and country code
@@ -123,8 +123,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.STAFF.getId()).build())
                 .build();
 
-        ApplicantChatContactDto savedContact = save(contactBuilder);
-        return ((ApplicantChatContactRepository) getRepository()).findStaffContactVoById(savedContact.getId()).orElse(null);
+        ChatContactDto savedContact = save(contactBuilder);
+        return ((ChatContactRepository) getRepository()).findStaffContactVoById(savedContact.getId()).orElse(null);
     }
 
     /**
@@ -134,7 +134,7 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @return the found contact or <code>null</code>
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantChatContactDto findById(long chatContactId) {
+    public ChatContactDto findById(long chatContactId) {
         return findOne(chatContactId);
     }
 
@@ -144,8 +144,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @param contact the chat contact to save
      * @return savedContact saved one
      */
-    public ApplicantChatContactDto updateUserDefinedChatContact(Long id, ApplicantChatContactDto contact) {
-        ApplicantChatContactDto applicantChatContact = findOne(id);
+    public ChatContactDto updateUserDefinedChatContact(Long id, ChatContactDto contact) {
+        ChatContactDto applicantChatContact = findOne(id);
         applicantChatContact.setAlias(contact.getAlias());
         applicantChatContact.setMobileNumber(contact.getMobileNumber());
         applicantChatContact.setCountryPhonePrefix(contact.getCountryPhonePrefix());
@@ -158,10 +158,10 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
     @Transactional
     public void createGroupLeaderContact(String applicantUin, CompanyStaffDto companyStaff,int seasonYear) {
         ApplicantRitualPackageVo latestApplicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(applicantUin));
-       String leaderSuin= companyStaffDigitalIdRepository.findStaffSuinByStaffIdAndStatusCodeAndSeasonYear(companyStaff.getId(),seasonYear,EStaffDigitalIdStatus.VALID.name());
-        ApplicantChatContactDto contactBuilder = ApplicantChatContactDto.builder()
-                .applicantUin(applicantUin)
-                .contactUin(leaderSuin)
+        String leaderSuin = companyStaffDigitalIdRepository.findStaffSuinByStaffIdAndStatusCodeAndSeasonYear(companyStaff.getId(), seasonYear, EStaffDigitalIdStatus.VALID.name());
+        ChatContactDto contactBuilder = ChatContactDto.builder()
+                .digitalId(applicantUin)
+                .contactDigitalId(leaderSuin)
                 .mobileNumber(companyStaff.getMobileNumber() != null ? companyStaff.getMobileNumber() : companyStaff.getMobileNumberIntl())
                 //TODO country code and nationality code may not match
                 //TODO Missing country code prefix and country code
@@ -172,11 +172,11 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .staffTitleCode(companyStaff.getTitleCode())
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.STAFF.getId()).build())
                 .build();
-        Optional<JpaApplicantChatContact> applicantChatContact = applicantChatContactRepository.findByApplicantUinAndContactUinAndDeletedFalse(applicantUin, contactBuilder.getContactUin());
-        ApplicantChatContactDto chatContact = applicantChatContact.isPresent() ? getMapper().fromEntity(applicantChatContact.get(), mappingContext) : null;
+        Optional<JpaChatContact> applicantChatContact = chatContactRepository.findByDigitalIdAndContactDigitalIdAndDeletedFalse(applicantUin, contactBuilder.getContactDigitalId());
+        ChatContactDto chatContact = applicantChatContact.isPresent() ? getMapper().fromEntity(applicantChatContact.get(), mappingContext) : null;
 
         if (chatContact != null) {
-            log.debug("update System Defined Applicant Chat Contact applicantUin: {} groupLeaderSuin: {}", applicantUin, contactBuilder.getContactUin());
+            log.debug("update System Defined Applicant Chat Contact applicantUin: {} groupLeaderSuin: {}", applicantUin, contactBuilder.getContactDigitalId());
             contactBuilder.setId(chatContact.getId());
             contactBuilder.setCreationDate(chatContact.getCreationDate());
         }
@@ -228,10 +228,10 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 countryCode = relativeApplicantContact.getCountryCode();
             }
         }
-        ApplicantChatContactDto createdContact = ApplicantChatContactDto
+        ChatContactDto createdContact = ChatContactDto
                 .builder()
-                .applicantUin(contactOwnerUin)
-                .contactUin(contactUin)
+                .digitalId(contactOwnerUin)
+                .contactDigitalId(contactUin)
                 .alias(null)
                 .mobileNumber(mobileNumber)
                 .countryCode(countryCode)
@@ -242,8 +242,8 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
 
-        Optional<JpaApplicantChatContact> applicantChatContact = applicantChatContactRepository.findByApplicantUinAndContactUinAndDeletedFalse(contactOwnerUin, contactUin);
-        ApplicantChatContactDto chatContact = applicantChatContact.isPresent() ? getMapper().fromEntity(applicantChatContact.get(), mappingContext) : null;
+        Optional<JpaChatContact> applicantChatContact = chatContactRepository.findByDigitalIdAndContactDigitalIdAndDeletedFalse(contactOwnerUin, contactUin);
+        ChatContactDto chatContact = applicantChatContact.isPresent() ? getMapper().fromEntity(applicantChatContact.get(), mappingContext) : null;
         if (chatContact != null) {
             log.debug("update System Defined Applicant Chat Contact applicantUin: {} contactUin: {}", contactOwnerUin, contactUin);
             createdContact.setId(chatContact.getId());
@@ -312,16 +312,16 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * @param systemDefined a boolean flag to define whether the chat contact is added by system or not
      * @return the list of chat contacts
      */
-    public List<ApplicantChatContactVo> listStaffContact(String suin, Boolean systemDefined) {
+    public List<ChatContactVo> listStaffContact(String suin, Boolean systemDefined) {
         if (systemDefined == null) {
-            List<ApplicantChatContactVo> applicantList = applicantChatContactRepository.findContactApplicantList(suin, null);
-            List<ApplicantChatContactVo> staffList = applicantChatContactRepository.findContactStaffList(suin, null);
+            List<ChatContactVo> applicantList = chatContactRepository.findContactApplicantList(suin, null);
+            List<ChatContactVo> staffList = chatContactRepository.findContactStaffList(suin, null);
             applicantList.addAll(staffList);
             return applicantList;
         } else if (systemDefined) {
-            return ((ApplicantChatContactRepository) getRepository()).findBySystemDefinedTrue(suin, null);
+            return ((ChatContactRepository) getRepository()).findBySystemDefinedTrue(suin, null);
         } else {
-            return ((ApplicantChatContactRepository) getRepository()).findBySystemDefinedFalse(suin);
+            return ((ChatContactRepository) getRepository()).findBySystemDefinedFalse(suin);
         }
     }
 
@@ -329,20 +329,21 @@ public class ApplicantChatContactService extends GenericService<JpaApplicantChat
      * Creates auto added new chat contact
      * This contact will be added if and only if the receiver does not
      * have the sender in his contact
+     *
      * @param shaaerNumber represent uin or suin
-     * @param contactUin  the chat contact uin to save
+     * @param contactUin   the chat contact uin to save
      * @return the value object of the saved applicant contact chat
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantChatContactDto createAutoAddedChatContact(String shaaerNumber, String contactUin) {
+    public ChatContactDto createAutoAddedChatContact(String shaaerNumber, String contactUin) {
         int chatContactTypeId = contactUin.length() == 12 ? EChatContactType.STAFF.getId() : EChatContactType.APPLICANT.getId();
-        ApplicantChatContactDto contactBuilder = ApplicantChatContactDto.builder()
-                .applicantUin(shaaerNumber)
-                .contactUin(contactUin)
+        ChatContactDto contactBuilder = ChatContactDto.builder()
+                .digitalId(shaaerNumber)
+                .contactDigitalId(contactUin)
                 .autoAdded(true)
                 .type(ContactTypeLookupDto.builder().id(chatContactTypeId).build())
                 .build();
-        ApplicantChatContactDto savedContact = save(contactBuilder);
+        ChatContactDto savedContact = save(contactBuilder);
         return savedContact;
     }
 }

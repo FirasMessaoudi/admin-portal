@@ -368,7 +368,7 @@ public abstract class AbstractControllerTestSuite {
     @MockBean
     protected IncidentTypeLookupService incidentTypeLookupService;
     @MockBean
-    protected ApplicantChatContactService applicantChatContactService;
+    protected ChatContactService chatContactService;
     @MockBean
     protected CompanyStaffCardService companyStaffCardService;
     @MockBean

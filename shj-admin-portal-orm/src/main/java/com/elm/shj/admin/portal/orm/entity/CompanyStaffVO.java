@@ -36,6 +36,7 @@ public class CompanyStaffVO implements Serializable {
     private int ritualSeason;
     private String companyLabelEn;
     private String companyLabelAr;
+    private String companyCode;
     private String idNumber;
     private String passport;
     private String fullNameOrigin;

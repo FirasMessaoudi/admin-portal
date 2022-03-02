@@ -3,7 +3,7 @@ package com.elm.shj.admin.portal.services.company;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffDigitalId;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffDigitalIdRepository;
-import com.elm.shj.admin.portal.services.applicant.ApplicantChatContactService;
+import com.elm.shj.admin.portal.services.applicant.ChatContactService;
 import com.elm.shj.admin.portal.services.dto.ECardStatus;
 import com.elm.shj.admin.portal.services.dto.EStaffDigitalIdStatus;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
@@ -30,7 +30,7 @@ import java.util.List;
 public class CompanyStaffExpirationScheduler {
 
     private final CompanyStaffDigitalIdRepository companyStaffDigitalIdRepository;
-    private final ApplicantChatContactService applicantChatContactService;
+    private final ChatContactService chatContactService;
 
     @PostConstruct
     @Scheduled(cron = "${scheduler.staff.digitalId.invalidate.cron}")
@@ -46,7 +46,7 @@ public class CompanyStaffExpirationScheduler {
                 companyStaffCard.setStatusCode(ECardStatus.EXPIRED.name());
             });
             try {
-                applicantChatContactService.deleteInvalidStaffChatContact(companyStaffDigitalId.getSuin());
+                chatContactService.deleteInvalidStaffChatContact(companyStaffDigitalId.getSuin());
             } catch (Exception e) {
                 log.error("Failed to delete staff contact with suin  >>  {}", companyStaffDigitalId.getSuin());
             }

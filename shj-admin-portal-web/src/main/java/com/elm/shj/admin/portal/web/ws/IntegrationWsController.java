@@ -97,7 +97,7 @@ public class IntegrationWsController {
     private final ApplicantIncidentService applicantIncidentService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
-    private final ApplicantChatContactService applicantChatContactService;
+    private final ChatContactService chatContactService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantPackageService applicantPackageService;
     private final CompanyService companyService;
@@ -290,10 +290,10 @@ public class IntegrationWsController {
                 .findApplicantRelativesInLastRitual(applicantUin, latestApplicantRitual.getPackageReferenceNumber());
         if (!relatives.isEmpty()) {
             relatives.stream().forEach(relative -> {
-                ApplicantChatContactDto applicantChatContact = applicantChatContactService
+                ChatContactDto applicantChatContact = chatContactService
                         .findApplicantChatContact(applicantUin, relative.getRelativeApplicant().getDigitalIds().get(0).getUin());
                 if (applicantChatContact == null) {
-                    applicantChatContactService.createApplicantRelativesChatContacts(relative, latestApplicantRitual.getId());
+                    chatContactService.createApplicantRelativesChatContacts(relative, latestApplicantRitual.getId());
                 } else {
                     log.error("applicant chat contact already found for this relative {}", relative.getId());
                 }

@@ -6,7 +6,6 @@ package com.elm.shj.admin.portal.services.data.writer;
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthSpecialNeeds;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
@@ -72,7 +71,7 @@ public class ItemWriter {
     private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
     private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
-    private final ApplicantChatContactService applicantChatContactService;
+    private final ChatContactService chatContactService;
     private final ApplicantRelativeService applicantRelativeService;
     private final ApplicantHealthService applicantHealthService;
     private final ApplicantEmergencyDataUploadService applicantEmergencyDataUploadService;
@@ -228,7 +227,7 @@ public class ItemWriter {
                         }
                         ApplicantDto applicantDto = applicantService.findByBasicInfo(applicantBasicInfoDto);
                         if (applicantDto != null) {
-                            applicantChatContactService.createGroupLeaderContact(applicantDto.getDigitalIds().get(0).getUin(), groupLeader,staffApplicantGroupDto.getSeason());
+                            chatContactService.createGroupLeaderContact(applicantDto.getDigitalIds().get(0).getUin(), groupLeader, staffApplicantGroupDto.getSeason());
                             groupApplicantListService.registerUserToGroup(applicantDto.getDigitalIds().get(0).getUin(), staffApplicantGroupDto.getGroupReferenceNumber());
                         } else {
                             //this applicant not found in db in time of processing
@@ -496,7 +495,7 @@ public class ItemWriter {
                     return;
                 }
                 //TODO: try to get the relative applicant ritual id as it is needed to create the chat contact
-                applicantChatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitualId);
+                chatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitualId);
             }
 
             if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {

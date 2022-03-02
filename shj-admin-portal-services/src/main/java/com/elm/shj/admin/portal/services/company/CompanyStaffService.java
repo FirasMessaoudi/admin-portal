@@ -127,7 +127,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
     public Optional<CompanyStaffVO> findStaffRitualBySuin(String suin) {
-        CompanyStaffVO staffRitual = companyStaffRepository.findStaffRitual(suin);
+        CompanyStaffVO staffRitual = companyStaffRepository.findStaffMainData(suin);
         return staffRitual == null? Optional.empty(): Optional.of(staffRitual);
     }
 

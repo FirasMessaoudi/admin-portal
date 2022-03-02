@@ -11,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Testing class for {@link ApplicantChatContactRepository}
+ * Testing class for {@link ChatContactRepository}
  *
  * @author Ahmed Ali
  * @since 1.1.0
  */
-public class ApplicantChatContactRepositoryTest extends AbstractJpaTest {
+public class ChatContactRepositoryTest extends AbstractJpaTest {
 
     private final static String TEST_APPLICANT_UIN = "123";
     private final static String TEST_CONTACT_UIN = "123";
@@ -27,13 +27,13 @@ public class ApplicantChatContactRepositoryTest extends AbstractJpaTest {
     private final static long TEST_APPLICANT_RITUAL_ID = 24;
 
     @Autowired
-    private ApplicantChatContactRepository applicantChatContactRepository;
+    private ChatContactRepository chatContactRepository;
 
 
     @Test
     public void test_delete_applicant_chat_contact_success() {
 
-        int numOfAffectedRows = applicantChatContactRepository.markDeleted(TEST_ANOTHER_APPLICANT_UIN, TEST_ANOTHER_CONTACT_UIN);
+        int numOfAffectedRows = chatContactRepository.markDeleted(TEST_ANOTHER_APPLICANT_UIN, TEST_ANOTHER_CONTACT_UIN);
         entityManager.clear();
         assertTrue(numOfAffectedRows > 0);
     }
@@ -42,7 +42,7 @@ public class ApplicantChatContactRepositoryTest extends AbstractJpaTest {
     @Test
     public void test_delete_applicant_chat_contact_fail() {
 
-        int numOfAffectedRows = applicantChatContactRepository.markDeleted(TEST_APPLICANT_UIN, TEST_CONTACT_UIN);
+        int numOfAffectedRows = chatContactRepository.markDeleted(TEST_APPLICANT_UIN, TEST_CONTACT_UIN);
         entityManager.clear();
         assertFalse(numOfAffectedRows > 0);
     }

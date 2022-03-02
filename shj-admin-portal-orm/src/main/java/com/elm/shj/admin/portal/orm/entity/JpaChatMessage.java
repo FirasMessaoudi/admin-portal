@@ -42,11 +42,11 @@ public class JpaChatMessage implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "sender_id")
-    private JpaApplicantChatContact sender;
+    private JpaChatContact sender;
 
     @ManyToOne
     @JoinColumn(name = "receiver_id")
-    private JpaApplicantChatContact receiver;
+    private JpaChatContact receiver;
 
     @Column(name = "sent_date", nullable = false)
     private Date sentDate;

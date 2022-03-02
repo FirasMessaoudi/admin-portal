@@ -5,7 +5,6 @@ package com.elm.shj.admin.portal.services.dto;
 
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,13 +19,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ApplicantChatContactDto implements Serializable {
+public class ChatContactDto implements Serializable {
 
     private static final long serialVersionUID = -4684813036429505035L;
 
     private long id;
-    private String applicantUin;
-    private String contactUin;
+    private String digitalId;
+    private String contactDigitalId;
     private ContactTypeLookupDto type;
     private String alias;
     private String avatar;
