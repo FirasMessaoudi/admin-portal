@@ -593,6 +593,7 @@
   "dashboard": {
     "general": {
       "dialog_preview_dashboard_selection_title": "اختر البيانات التي تريد عرضها في لوحة البيانات",
+      "dashboard": "لوحة المعلومات",
       "preview_interval": "الفاصل الزمني للمعاينة",
       "hajj": "حج",
       "full_screen": "شاشة كاملة",
@@ -614,6 +615,8 @@
       "min_rating": "أقل تقييم"
     },
     "main": {
+      "name": "الملخص العام",
+      "title": "الملخص العام",
       "service_rating": "تقييم الخدمات",
       "more_on_rating": "المزيد عن التقييم",
       "company_rating": "تقييم الشركات",
@@ -628,9 +631,11 @@
       "more_on_tracking": "المزيد عن المتابعة"
     },
     "transactions": {
+      "name": "العمليات",
       "title": "إحصائيات العمليات"
     },
     "rating": {
+      "name": "التقييم",
       "title": "التقييم",
       "overall_rating": "التقييم العام",
       "housing": "السكن",
@@ -641,6 +646,7 @@
       "housing_company_rating": "تقييم شركات السكن"
     },
     "mobile": {
+      "name": "الجوال",
       "title": "إحصائيات الجوال",
       "app_usage_by_age": "استخدام التطبيق بالنسبة للأعمار",
       "app_usage_by_company": "استخدام التطبيق بالنسبة للشركات",
@@ -653,12 +659,14 @@
       "groups": "المجموعات"
     },
     "incidents": {
+      "name": "البلاغات",
       "title": "البلاغات",
       "types_of_incidents": "أنواع البلاغات",
       "distribution_on_companies": "توزيع البلاغات على الشركات",
       "distribution_on_the_map": "توزيع البلاغات على الخريطة"
     },
     "general-numbers": {
+      "name": "الإحصائيات",
       "title": "إحصائيات عامة",
       "males": "عدد الذكور",
       "females": "عدد الإناث",
@@ -670,6 +678,7 @@
       "max_camps": "أعلى المخيمات"
     },
     "cameras": {
+      "name": "الكاميرات",
       "title": "الكاميرات"
     }
   }

@@ -24,19 +24,21 @@ export class DashboardService {
 
   constructor(private http: HttpClient) {
     this.items = [
-      new dashboardItem('MainComponent', 'dashboard.general.hajj', true),
+      new dashboardItem('MainComponent', 'dashboard.main.name', true),
       new dashboardItem(
         'GeneralNumbersComponent',
-        'dashboard.general-numbers.title',
+        'dashboard.general-numbers.name',
         true
       ),
       new dashboardItem(
         'IncidentsComponent',
-        'dashboard.incidents.title',
+        'dashboard.incidents.name',
         true
       ),
-      new dashboardItem('CamerasComponent', 'dashboard.cameras.title', true),
-      new dashboardItem('MobileComponent', 'dashboard.mobile.title', true),
+      new dashboardItem('CamerasComponent', 'dashboard.cameras.name', true),
+      new dashboardItem('MobileComponent', 'dashboard.mobile.name', true),
+      new dashboardItem('RatingComponent', 'dashboard.rating.name', true),
+      new dashboardItem('TransactionsComponent', 'dashboard.transactions.name', true),
     ];
   }
 

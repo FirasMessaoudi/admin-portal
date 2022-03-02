@@ -18,7 +18,7 @@ import {
   GeneralNumbersComponent,
   IncidentsComponent,
   MainComponent,
-  MobileComponent
+  MobileComponent, RatingComponent, TransactionsComponent
 } from "@pages/dashboard";
 
 @Component({
@@ -66,7 +66,6 @@ export class SlideShowComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.dashboardItems = this.dashboardService.getDashboardItems().filter(dashboard => {
-      console.log(JSON.stringify(dashboard))
       return dashboard.selected
     });
     this.componentLookupRegistry.set(MainComponent.name,MainComponent);
@@ -74,6 +73,9 @@ export class SlideShowComponent implements OnInit, AfterViewInit {
     this.componentLookupRegistry.set(IncidentsComponent.name,IncidentsComponent);
     this.componentLookupRegistry.set(CamerasComponent.name,CamerasComponent);
     this.componentLookupRegistry.set(MobileComponent.name,MobileComponent);
+    this.componentLookupRegistry.set(RatingComponent.name,RatingComponent);
+    this.componentLookupRegistry.set(TransactionsComponent.name,TransactionsComponent);
+
     this.chkScreenMode();
     this.elem = document.documentElement;
     this.openFullscreen()
@@ -123,10 +125,10 @@ export class SlideShowComponent implements OnInit, AfterViewInit {
 
   loadComponent() {
     this.currentAdIndex = (this.currentAdIndex + 1) % this.dashboardItems.length;
-    const adItem = this.dashboardItems[this.currentAdIndex];
+    const dashboardItem = this.dashboardItems[this.currentAdIndex];
     const viewContainerRef = this.slideShowHost.viewContainerRef;
     viewContainerRef.clear();
-    const componentClass = this.componentLookupRegistry.get(adItem.componentName);
+    const componentClass = this.componentLookupRegistry.get(dashboardItem.componentName);
     const componentRef =
       viewContainerRef.createComponent<DashboardComponent>(this.componentFactoryResolve.resolveComponentFactory(componentClass));
     componentRef.instance.isFullScreen = true;

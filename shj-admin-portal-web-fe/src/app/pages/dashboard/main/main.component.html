@@ -38,7 +38,7 @@
     <div class="modal-body w-100">
       <ul class="list-group">
         <li *ngFor="let dashboardItem of dashboards"
-            class="list-group-item list-sts">{{dashboardItem.title | translate}}
+            class="list-group-item list-sts">{{dashboardItem.title | translate}} {{'dashboard.general.dashboard' | translate}}
           <div class="inline float-left">
             <input mdbCheckbox class="form-check-input " type="checkbox" value=""
                    id="customCheck-{{dashboardItem.componentName}}" [(ngModel)]="dashboardItem.selected"/>
@@ -52,7 +52,7 @@
           <div class="d-flex">
             <span class="text-nowrap list-sts">فترة العرض</span>
             <div class="col-xs-2 mx-2">
-              <input type="number" class="custom-input-pop" [(ngModel)]="slideShowInterval"
+              <input type="number" min="1" max="1000" class="custom-input-pop" [(ngModel)]="slideShowInterval"
                      (ngModelChange)="updateInterval($event)">
             </div>
             <span class="list-sts">ثانية</span>

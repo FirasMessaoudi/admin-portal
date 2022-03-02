@@ -592,6 +592,7 @@
   "dashboard": {
     "general": {
       "dialog_preview_dashboard_selection_title": "Choose the dashboard you want to display in the panel",
+      "dashboard": "Dashboard",
       "preview_interval": "Preview Interval",
       "hajj": "Hajj",
       "full_screen": "Full Screen",
@@ -613,6 +614,7 @@
       "min_rating": "Min Rating"
     },
     "main": {
+      "name": "Summary",
       "service_rating": "Service Rating",
       "more_on_rating": "More on Rating",
       "company_rating": "Company Rating",
@@ -627,9 +629,11 @@
       "more_on_tracking": "More on Tracking"
     },
     "transactions": {
+      "name": "Transactions ",
       "title": "Transaction Statistics"
     },
     "rating": {
+      "name": "Evaluation",
       "title": "Rating",
       "overall_rating": "Overall Rating",
       "housing": "Housing",
@@ -640,6 +644,7 @@
       "housing_company_rating": "Housing Company Rating"
     },
     "mobile": {
+      "name": "Mobile Tracking",
       "title": "Mobile Statistics",
       "app_usage_by_age": "Application Usage by Age",
       "app_usage_by_company": "Application Usage by Company",
@@ -652,12 +657,14 @@
       "groups": "Groups"
     },
     "incidents": {
+      "name": "Incident ",
       "title": "Incidents",
       "types_of_incidents": "Types of Incidents",
       "distribution_on_companies": "Distribution of Incidents on Companies",
       "distribution_on_the_map": "Distribution of Incidents on the Map"
     },
     "general-numbers": {
+      "name": "Statistical ",
       "title": "General Statistics",
       "males": "Males",
       "females": "Females",
@@ -669,6 +676,7 @@
       "max_camps": "Max Camps"
     },
     "cameras": {
+      "name": "Cameras",
       "title": "Cameras"
     }
   }
