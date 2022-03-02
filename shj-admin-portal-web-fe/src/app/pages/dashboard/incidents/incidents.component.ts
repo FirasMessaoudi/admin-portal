@@ -227,6 +227,14 @@ export class IncidentsComponent
     });
 
     this.loadMaxCompanies();
+
+    let areaA = [
+      new Position(33.57401,-111.92056),
+      new Position(33.56844,-111.95077),
+      new Position(33.54855,-112.03866),
+      new Position(33.5238,-111.93412),
+      new Position(33.53367,-111.87867)];
+      console.error(`Incident is inside Area A ${this.isPointInPolygon(new Position(33.5238,-111.93412), areaA)}`);
   }
 
   loadMinCompanies() {
@@ -400,5 +408,35 @@ export class IncidentsComponent
     );
   }
 
+  /**
+   * This function finds whether ${arg}point is inside the polygon
+   * @param p
+   * @param polygon
+   * @return boolean
+   */
+  isPointInPolygon(p: Position, polygon: Position[]): boolean {
+    let minX = polygon[0].lat;
+    let maxX = polygon[0].lat;
+    let minY = polygon[0].lng;
+    let maxY = polygon[0].lng;
+    for (let i = 1; i < polygon.length; i++) {
+      let q = polygon[i];
+      minX = q.lat < minX ? q.lat : minX;
+      maxX = q.lat > maxX ? q.lat : maxX;
+      minY = q.lng < minY ? q.lng : minY;
+      maxY = q.lng > maxX ? q.lng : maxY;
+    }
+    if (p.lat < minX || p.lat > maxX || p.lng < minY || p.lng > maxY) {
+      return false;
+    }
+    let inside = false;
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      if ((polygon[i].lng > p.lng) != (polygon[j].lng > p.lng) &&
+        p.lat < (polygon[j].lat - polygon[i].lat) * (p.lng - polygon[i].lng) / (polygon[j].lng - polygon[i].lng) + polygon[i].lat) {
+        inside = !inside;
+      }
+    }
+    return inside;
+  }
   isFullScreen: boolean;
 }
