@@ -20,7 +20,7 @@ import { AreaLayerLookup } from '@app/_shared/model/area-layer-lookup.model';
 export class DashboardService {
   items: dashboardItem[] = [];
   slideShowInterval: number = 5;
-  private intervalSubject = new BehaviorSubject<number>(5);
+  private intervalSubject = new BehaviorSubject<number>(60);
 
   constructor(private http: HttpClient) {
 
