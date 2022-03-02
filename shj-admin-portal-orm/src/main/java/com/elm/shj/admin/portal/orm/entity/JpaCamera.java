@@ -36,8 +36,11 @@ public class JpaCamera implements Serializable {
 
     private String url;
 
-    @Column(name = "creation_hijri_year")
-    private int creationHijriYear;
+    @Column(name = "season_year")
+    private int seasonYear;
+
+    @Column(name = "area_code")
+    private int area_code;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;

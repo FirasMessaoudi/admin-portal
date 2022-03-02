@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
 import { ActivatedRoute } from '@angular/router';
 import { DashboardService } from '@core/services';
-import { DashboardCameraNumbers } from '@model/dashboard-camera-numbers';
+import { DashboardCameraNumbersVoModel } from '@model/dashboard-camera-numbers-vo.model';
 import { I18nService } from '@dcc-commons-ng/services';
 
 @Component({
@@ -11,7 +11,8 @@ import { I18nService } from '@dcc-commons-ng/services';
   styleUrls: ['./cameras.component.scss'],
 })
 export class CamerasComponent implements OnInit, DashboardComponent {
-  cameraNumbers: DashboardCameraNumbers;
+  totalCameras: any = 0 ;
+  cameraNumbers: DashboardCameraNumbersVoModel;
   seasonYear: any;
 
   constructor(
@@ -26,8 +27,8 @@ export class CamerasComponent implements OnInit, DashboardComponent {
       .loadCamerasNumbers(this.seasonYear)
       .subscribe((data) => {
         this.cameraNumbers = data;
+        this.totalCameras = this.cameraNumbers.totalNumberOfInactiveCameras + this.cameraNumbers.totalNumberOfActiveCameras;
       });
-    console.log(this.cameraNumbers);
   }
 
   get currentLanguage(): string {

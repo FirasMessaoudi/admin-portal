@@ -195,9 +195,9 @@ public class DashboardController {
         return dashboardService.loadMobileAppUsersCountByAgeRange(seasonYear);
     }
 
-    @GetMapping("/camera-numbers/{seasonYear}")
+    @GetMapping("/camera_numbers/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public DashboardCameraNumbersVo CountTotalCameras(@PathVariable("seasonYear") int seasonYear) {
+    public DashboardCameraNumbersVo countTotalCameras(@PathVariable("seasonYear") int seasonYear) {
         log.debug("Count  cameras numbers ...");
         return dashboardService.loadDashboardCamerasNumbers(seasonYear);
     }

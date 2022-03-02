@@ -1334,3 +1334,9 @@ Go
 
 exec sp_rename 'shc_portal.shc_chat_contact.contact_uin','contact_digital_id','COLUMN'
 Go
+
+ALTER TABLE shc_portal.shc_camera ADD area_code int NULL;
+GO
+exec sp_rename 'shc_portal.shc_camera.creation_hijri_year', 'season_year', 'COLUMN';
+GO
+ALTER TABLE shc_portal.shc_camera ALTER COLUMN url varchar(256);

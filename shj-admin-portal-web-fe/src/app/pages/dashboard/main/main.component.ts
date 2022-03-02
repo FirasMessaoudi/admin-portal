@@ -23,7 +23,7 @@ import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
 import {ApplicantMobileTracking} from '@app/_shared/model/applicant-mobile-tracking.model';
 import {dashboardItem} from '@shared/model';
 import {DashboardComponent} from '@pages/dashboard/slide-show/dashboard.component';
-import {DashboardCameraNumbers} from '@model/dashboard-camera-numbers';
+import {DashboardCameraNumbersVoModel} from '@model/dashboard-camera-numbers-vo.model';
 
 const momentHijri = moment_;
 
@@ -34,11 +34,9 @@ const momentHijri = moment_;
   providers: [NgbModalConfig, NgbModal],
 })
 export class MainComponent implements OnInit, DashboardComponent {
-  dashboardCamerasData: DashboardCameraNumbers;
+  dashboardCamerasData: DashboardCameraNumbersVoModel;
   private CameraSubscription: Subscription;
-
-  public centerText: string = 'Center Text';
-
+  totalCameras: any = 0 ;
   currentSeasonData: GeneralDashboardVo;
   previousSeasonData: GeneralDashboardVo;
   currentSeasonPercentage: number;
@@ -257,8 +255,9 @@ export class MainComponent implements OnInit, DashboardComponent {
       .loadCamerasNumbers(this.seasonYear)
       .subscribe((data) => {
         this.dashboardCamerasData = data;
-      });
+        this.totalCameras = this.dashboardCamerasData.totalNumberOfInactiveCameras + this.dashboardCamerasData.totalNumberOfActiveCameras;
 
+      });
     this.incidentSubscription = this.dashboardService
       .loadIncidents(this.seasonYear)
       .subscribe((data) => {
@@ -299,7 +298,6 @@ export class MainComponent implements OnInit, DashboardComponent {
     this.dashboardService
       .findActiveApplicantWithLocationBySeason(this.seasonYear)
       .subscribe((data) => {
-        console.log(data);
         this.locations = data;
         this.loadMapkey();
       });
