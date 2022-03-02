@@ -52,6 +52,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
   seasonYear: any;
   applicantMobileTrackings: ApplicantMobileTracking[];
   applicantMobileTrackingsFiltred: ApplicantMobileTracking[];
+  applicantMobileTrackingsLastFiltred: ApplicantMobileTracking[];
   locations: Array<any> = [];
 
   MAP_ZOOM_OUT = 10;
@@ -219,12 +220,14 @@ export class MobileComponent implements OnInit, DashboardComponent {
         });
         a.layer = polygoneCoords;
       });
+      console.log(this.areaLayers);
     });
     this.dashboardService
       .findActiveApplicantWithLocationBySeason(this.seasonYear)
       .subscribe((data) => {
         this.applicantMobileTrackings = data;
         this.applicantMobileTrackingsFiltred = data;
+        this.applicantMobileTrackingsLastFiltred = data;
         console.log(this.applicantMobileTrackings);
         this.loadMapkey();
       });
@@ -251,15 +254,9 @@ export class MobileComponent implements OnInit, DashboardComponent {
             zoom: 14,
             scrollwheel: true,
           });
-          console.log(this.areaLayers);
-          this.areaLayers.forEach((a) => {
-            if (a.lang == 'ar') {
-              let bermudaTriangle = new google.maps.Polygon({ paths: a.layer });
-            }
-          });
-
+          this.getPoints();
           let heatmap = new google.maps.visualization.HeatmapLayer({
-            data: this.getPoints(),
+            data: this.locations,
             map: this.map,
           });
         });
@@ -296,7 +293,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
             c.nationalityCode == this.lastNationalityCode &&
             c.companyCode == this.lastCompanyCode
         );
-
+        this.applicantMobileTrackingsLastFiltred = this.applicantMobileTrackingsFiltred;
     this.loadMapkey();
   }
 
@@ -304,6 +301,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(
       (c) => new Date(c.lastLoginDate).getTime() > event.getTime()
     );
+    this.applicantMobileTrackingsLastFiltred = this.applicantMobileTrackingsFiltred;
     this.loadMapkey();
   }
 
@@ -311,6 +309,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(
       (c) => new Date(c.lastLoginDate).getTime() < event.getTime()
     );
+    this.applicantMobileTrackingsLastFiltred = this.applicantMobileTrackingsFiltred;
     this.loadMapkey();
   }
 
@@ -319,7 +318,30 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.applicantMobileTrackingsFiltred.forEach((applicant) => {
       this.locations.push(new google.maps.LatLng(applicant.lat, applicant.lng));
     });
-    return this.locations;
+  }
+
+  filterMapByArea(areaCode: string){
+
+    if(areaCode != 'all'){
+      let area : AreaLayerLookup = this.areaLayers.find(c=> c.code == areaCode);
+      //bermudaTriangle.setMap(this.map);
+      this.locations = [];
+      this.applicantMobileTrackingsFiltred = this.applicantMobileTrackingsLastFiltred.filter(c=>{
+      let polygone = new google.maps.Polygon({
+      paths: area.layer,
+        });
+     if(google.maps.geometry.poly.containsLocation(
+      new google.maps.LatLng(c.lat, c.lng),
+      polygone)){
+      return c;
+      }
+      });
+  
+  }
+  if(areaCode == 'all'){
+    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackingsLastFiltred;
+  }
+  this.loadMapkey();
   }
 
   isFullScreen: boolean;
