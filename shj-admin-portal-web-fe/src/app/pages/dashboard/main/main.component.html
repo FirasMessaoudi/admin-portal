@@ -13,12 +13,12 @@
         </option>
       </select>
 
-      <svg-icon styleClass="fa-w-18 edit-icon" ngbTooltip="Edit" icon="edit-light" *ngIf="isSeasonYearSelected==true"
+      <svg-icon  styleClass="fa-w-18 edit-icon" ngbTooltip="Edit" icon="edit-light" *ngIf="isSeasonYearSelected==true && !isFullScreen"
                 (click)="isSeasonYearSelected=false"></svg-icon>
 
     </h3>
 
-    <div>
+    <div *ngIf="!isFullScreen">
       <!--      <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3" >
               <svg-icon styleClass="fa-w-18" icon="edit-light"></svg-icon>
               {{'general.btn_edit' | translate}}
