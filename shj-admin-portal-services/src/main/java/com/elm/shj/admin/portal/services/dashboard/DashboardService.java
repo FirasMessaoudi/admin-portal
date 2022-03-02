@@ -397,8 +397,8 @@ public class DashboardService {
         int sum = 0;
 
         for (int i = 0; i < mobileUsers.length; i++) {
-            sum += mobileUsers[mobileUsers.length - i - 1];
-            mobileUsers[mobileUsers.length - i - 1] += sum;
+            sum += mobileUsers[i];
+            mobileUsers[i] += sum;
         }
         return mobileUsers;
     }
