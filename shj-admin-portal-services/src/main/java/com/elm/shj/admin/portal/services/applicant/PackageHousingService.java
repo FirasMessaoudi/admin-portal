@@ -47,4 +47,9 @@ public class PackageHousingService extends GenericService<JpaPackageHousing, Pac
     public List<PackageHousingDto> findByRitualPackageId(long id) {
         return mapList(packageHousingRepository.findByRitualPackageId(id));
     }
+
+    public PackageHousingDto findStaffPackageHousingByCompanyRitualSeason(long companyRitualSeason) {
+        JpaPackageHousing jpaPackageHousing = packageHousingRepository.findStaffPackageHousingByCompanyRitualSeason(companyRitualSeason);
+        return getMapper().fromEntity(jpaPackageHousing,mappingContext);
+    }
 }

@@ -103,6 +103,7 @@ public class IntegrationWsController {
     private final CompanyService companyService;
     private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
     private final UserLocationService userLocationService;
+    private final RitualPackageService ritualPackageService;
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -839,6 +840,30 @@ public class IntegrationWsController {
 
     }
 
+    /**
+     * @param companyRitualSeasonId
+     * @return list of ritual steps
+     */
+    @GetMapping("/ritual-steps/all/{companyRitualSeasonId}")
+    public ResponseEntity<WsResponse<?>> findCompanyRitualStepsByCompanyRitualSeasonId(@PathVariable long companyRitualSeasonId) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyRitualStepService.findCompanyRitualStepsByCompanyRitualSeasonId(companyRitualSeasonId)).build());
+
+    }
+
+    /**
+     * @param companyRitualSeasonId
+     * @return latest Ritual Package
+     */
+    @GetMapping("/ritual-package/latest/{companyRitualSeasonId}")
+    public ResponseEntity<WsResponse<?>> findLatestRitualPackageByCompanyRitualSeasonId(@PathVariable long companyRitualSeasonId) {
+        RitualPackageDto ritualPackage = ritualPackageService.findRitualPackageByCompanyRitualSeasonId(companyRitualSeasonId);
+        if (ritualPackage == null)
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.RITUAL_PACKAGE_NOT_FOUND.getCode()).build()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(ritualPackage).build());
+
+    }
 
 
 }
