@@ -331,7 +331,7 @@ export class MainComponent implements OnInit, DashboardComponent {
           });
         });
         const interpolatedRenderer = {
-          palette: interpolateRgb('white', 'red'),
+          palette: interpolateRgb('white', '#BF0C0C'),
           render: function (
             { count, position }: Cluster,
             stats: ClusterStats

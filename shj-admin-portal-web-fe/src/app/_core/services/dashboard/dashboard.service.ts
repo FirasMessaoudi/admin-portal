@@ -307,4 +307,10 @@ export class DashboardService {
   getSlideShowInterval(): BehaviorSubject<number> {
     return this.intervalSubject;
   }
+
+  getMobileLoggedOutUsers(seasonYear: number): Observable<number[]> {
+    return this.http.get<number[]>(
+      '/core/api/dashboard/mobile/users/' + seasonYear
+    );
+  }
 }
