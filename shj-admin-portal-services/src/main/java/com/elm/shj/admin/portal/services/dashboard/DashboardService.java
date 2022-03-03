@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.sql.Array;
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -216,12 +217,10 @@ public class DashboardService {
     public DashboardCameraNumbersVo loadDashboardCamerasNumbers(int seasonYear) {
 
         //cameras related data
-        long totalNumberOfCameras = cameraRepository.countCameraByHijriSeason(seasonYear);
         long totalNumberOfActiveCameras = cameraRepository.countCameraByStatusAndHijriYear("active", seasonYear);
         long totalNumberOfInactiveCameras = cameraRepository.countCameraByStatusAndHijriYear("inactive", seasonYear);
 
         return DashboardCameraNumbersVo.builder()
-                .totalNumberOfCameras(totalNumberOfCameras)
                 .totalNumberOfActiveCameras(totalNumberOfActiveCameras)
                 .totalNumberOfInactiveCameras(totalNumberOfInactiveCameras)
                 .build();
@@ -381,6 +380,27 @@ public class DashboardService {
         return loggedInUsers;
     }
 
+    public int[] getMobileUsers(int seasonYear) {
+        LocalDate now = LocalDate.now();
+        Date startDate = Date.from(Instant.from(now.minusDays(DAYS_RANGE - 1).atStartOfDay(ZoneId.systemDefault())));
+        int previousMobileUsers = mobileAuditLogRepository.countPreviousMobileUsers(seasonYear, hajjRituals, startDate);
+        int[] mobileUsers = new int[DAYS_RANGE];
+        Arrays.fill(mobileUsers, previousMobileUsers);
+        List<CountVo> groupedLoggedInUsers = mobileAuditLogRepository.getMobileUsers(seasonYear, hajjRituals, startDate);
+        for (int i = 0; i < mobileUsers.length; i++) {
+            int finalI = i;
+            groupedLoggedInUsers.stream().filter(item -> item.getLabelNumber() == now.minusDays(finalI).getDayOfMonth()).findAny()
+                    .ifPresent(item -> mobileUsers[DAYS_RANGE - finalI - 1] += (int) item.getCount());
+        }
+        int sum = 0;
+
+        for (int i = 0; i < mobileUsers.length; i++) {
+            sum += mobileUsers[i];
+            mobileUsers[i] += sum;
+        }
+        return mobileUsers;
+    }
+
     public List<ApplicantMobileTrackingVo> findActiveApplicantWithLocationBySeason(int seasonYear) {
         return applicantRepository.findActiveApplicantWithLocationBySeason(seasonYear);
     }
@@ -399,4 +419,7 @@ public class DashboardService {
         });
         return countVoList;
     }
+
+
+
 }

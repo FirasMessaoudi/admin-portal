@@ -11,7 +11,7 @@ import { DashboardMobileNumbersVo } from '@model/dashboard-mobile-numbers-vo.mod
 import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
 import { dashboardItem } from '@model/dashboard-item';
 import { LocalizedCountVo } from '@model/localized-count-vo.model';
-import { DashboardCameraNumbers } from '@model/dashboard-camera-numbers';
+import { DashboardCameraNumbersVoModel } from '@model/dashboard-camera-numbers-vo.model';
 import { AreaLayerLookup } from '@app/_shared/model/area-layer-lookup.model';
 
 @Injectable({
@@ -98,12 +98,12 @@ export class DashboardService {
   }
 
   /**
-   * Load dashboard applicants numbers for current season
+   * Load dashboard cameras numbers for current season
    */
 
-  loadCamerasNumbers(seasonYear: number): Observable<DashboardCameraNumbers> {
-    return this.http.get<DashboardCameraNumbers>(
-      '/core/api/dashboard/camera-numbers/' + seasonYear
+  loadCamerasNumbers(seasonYear: number): Observable<DashboardCameraNumbersVoModel> {
+    return this.http.get<DashboardCameraNumbersVoModel>(
+      '/core/api/dashboard/camera_numbers/' + seasonYear
     );
   }
 
@@ -306,5 +306,11 @@ export class DashboardService {
 
   getSlideShowInterval(): BehaviorSubject<number> {
     return this.intervalSubject;
+  }
+
+  getMobileLoggedOutUsers(seasonYear: number): Observable<number[]> {
+    return this.http.get<number[]>(
+      '/core/api/dashboard/mobile/users/' + seasonYear
+    );
   }
 }

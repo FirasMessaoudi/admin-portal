@@ -4,8 +4,6 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import lombok.*;
-
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -27,7 +25,8 @@ public class CameraDto implements Serializable {
     private long id;
     private String status;
     private String url;
-    private int creationHijriYear;
+    private int seasonYear;
+    private int areaCode;
     private Date creationDate;
     private Date updateDate;
 }

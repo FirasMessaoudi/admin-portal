@@ -181,6 +181,13 @@ public class DashboardController {
         return dashboardService.getMobileLoggedInUsers(seasonYear);
     }
 
+    @GetMapping("/mobile/users/{seasonYear}")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public int[] loadMobileUsers(@PathVariable("seasonYear") int seasonYear) {
+        log.info("Handling loadMobileUsers endpoint.");
+        return dashboardService.getMobileUsers(seasonYear);
+    }
+
     @GetMapping("/mobile/active-applicants-locations/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
     public List<ApplicantMobileTrackingVo> findActiveApplicantWithLocationBySeason(@PathVariable("seasonYear") int seasonYear) {
@@ -195,9 +202,9 @@ public class DashboardController {
         return dashboardService.loadMobileAppUsersCountByAgeRange(seasonYear);
     }
 
-    @GetMapping("/camera-numbers/{seasonYear}")
+    @GetMapping("/camera_numbers/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public DashboardCameraNumbersVo CountTotalCameras(@PathVariable("seasonYear") int seasonYear) {
+    public DashboardCameraNumbersVo countTotalCameras(@PathVariable("seasonYear") int seasonYear) {
         log.debug("Count  cameras numbers ...");
         return dashboardService.loadDashboardCamerasNumbers(seasonYear);
     }

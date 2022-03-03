@@ -1,9 +1,11 @@
 <div class="content__wrapper">
   <div class="title__Page flex-wrap">
     <h3 class="font-weight-bold text-dark d-flex p-2">
-      {{'dashboard.general.hajj' | translate}}
-      <span *ngIf="currentLanguage.startsWith('ar')">عام</span>
-      <span *ngIf="isSeasonYearSelected">{{seasonYear}}</span>
+     <span>{{'dashboard.general.hajj' | translate}}</span>
+
+      <span *ngIf="currentLanguage.startsWith('ar')" style="text-indent:2mm">  عام</span>
+
+      <span *ngIf="isSeasonYearSelected" style="text-indent:2mm"> {{seasonYear}}</span>
 
       <select class="col-8 custom-select mx-3" *ngIf="!isSeasonYearSelected" #currentSeasonYear
               (change)="onCurrentSeasonYearsSelected(currentSeasonYear.value)">
@@ -13,8 +15,8 @@
         </option>
       </select>
 
-      <svg-icon  styleClass="fa-w-18 edit-icon" ngbTooltip="Edit" icon="edit-light" *ngIf="isSeasonYearSelected==true && !isFullScreen"
-                (click)="isSeasonYearSelected=false"></svg-icon>
+      <svg-icon styleClass="fa-w-18 edit-icon" ngbTooltip="{{'general.btn_edit' | translate}}" icon="edit-light" *ngIf="isSeasonYearSelected==true"
+                        (click)="isSeasonYearSelected=false"></svg-icon>
 
     </h3>
 
@@ -151,7 +153,7 @@
             <div>
               <div class="sts-title">{{'dashboard.general.number_of_cameras' | translate}}</div>
               <div class="sts-number text-dark">
-                <ng9-odometer [number]="dashboardCamerasData?.totalNumberOfCameras"></ng9-odometer>
+                <ng9-odometer [number]="totalCameras"></ng9-odometer>
               </div>
             </div>
             <svg-icon styleClass="sts-icon fa-w-18 display-4 flip" icon="cctv"></svg-icon>
@@ -159,7 +161,7 @@
 
           <p class="py-3">
             <ngb-progressbar type="cctv"
-                             [value]="dashboardCamerasData?.totalNumberOfActiveCameras / dashboardCamerasData?.totalNumberOfCameras * 100"
+                             [value]="dashboardCamerasData?.totalNumberOfActiveCameras / totalCameras * 100"
                              height="10px"></ngb-progressbar>
           </p>
 

@@ -1,5 +1,4 @@
-export class DashboardCameraNumbers{
-  totalNumberOfCameras: number;
+export class DashboardCameraNumbersVoModel {
   totalNumberOfActiveCameras: number;
   totalNumberOfInactiveCameras: number;
 }

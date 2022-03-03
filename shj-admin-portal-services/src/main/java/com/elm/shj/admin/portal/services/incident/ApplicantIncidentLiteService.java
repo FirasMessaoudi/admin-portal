@@ -6,9 +6,11 @@ package com.elm.shj.admin.portal.services.incident;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncidentLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentLiteRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantIncidentLiteDto;
+import com.elm.shj.admin.portal.services.dto.AreaLayerLookupDto;
 import com.elm.shj.admin.portal.services.dto.EIncidentStatus;
 import com.elm.shj.admin.portal.services.dto.IncidentAttachmentLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.lookup.AreaLayerLookupService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
 import com.jcraft.jsch.JSchException;
@@ -27,9 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Service handling Applicant Incident operations
@@ -53,7 +54,7 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
     private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
     private static ThreadLocal<List<String>> threadLocalLatestSerialList = ThreadLocal.withInitial(() -> new ArrayList<>());
-
+    private final AreaLayerLookupService areaLayerLookupService;
 
 
     /**
@@ -79,6 +80,23 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
         // generate and set reference number
         applicantIncidentLiteDto.setReferenceNumber(referenceNumber);
         applicantIncidentLiteDto.setStatusCode(EIncidentStatus.UNDER_PROCESSING.name());
+        //  lat and long
+        List<AreaLayerLookupDto> areaLayers = areaLayerLookupService.findAll();
+        Position point = new Position();
+        point.lat = applicantIncidentLiteDto.getLocationLat();
+        point.lng = applicantIncidentLiteDto.getLocationLng();
+        areaLayers.forEach(area -> {
+            List<Position> positions = new ArrayList<>();
+            Stream.of(area.getLayer().split("-")).forEach(stringPoint -> {
+                Position position = new Position();
+                position.lat = Double.parseDouble(stringPoint.split(",")[0]);
+                position.lng = Double.parseDouble(stringPoint.split(",")[1]);
+                positions.add(position);
+            });
+            if(isPointInPolygon(point,positions.stream().toArray(Position[]::new))) {
+                applicantIncidentLiteDto.setAreaCode(area.getCode());
+            }
+        });
 
         // upload the file in the SFTP
         try {
@@ -134,4 +152,39 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
         return fileSize > maxFileSize ? false : true;
     }
 
+    /**
+     * This function finds whether @param point is inside the polygon
+     * @param p
+     * @param polygon
+     * @return boolean
+     */
+    boolean isPointInPolygon(Position p,Position[] polygon) {
+        double minX = polygon[0].lat;
+        double maxX = polygon[0].lat;
+        double minY = polygon[0].lng;
+        double maxY = polygon[0].lng;
+        for (int i = 1; i < polygon.length; i++) {
+            Position q = polygon[i];
+            minX = q.lat < minX ? q.lat : minX;
+            maxX = q.lat > maxX ? q.lat : maxX;
+            minY = q.lng < minY ? q.lng : minY;
+            maxY = q.lng > maxX ? q.lng : maxY;
+        }
+        if (p.lat < minX || p.lat > maxX || p.lng < minY || p.lng > maxY) {
+            return false;
+        }
+        boolean inside = false;
+        for (int i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+            if ((polygon[i].lng > p.lng) != (polygon[j].lng > p.lng) &&
+                    p.lat < (polygon[j].lat - polygon[i].lat) * (p.lng - polygon[i].lng) / (polygon[j].lng - polygon[i].lng) + polygon[i].lat) {
+                inside = !inside;
+            }
+        }
+        return inside;
+    }
+}
+
+class Position {
+    public double lat;
+    public double lng;
 }

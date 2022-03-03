@@ -200,10 +200,56 @@
                   </ng-template>
                 </li>
                 <li ngbNavItem>
-                  <a ngbNavLink>{{'dashboard.mobile.groups' | translate}}</a>
+                  <a ngbNavLink (click)="loadGroupMap()">{{'dashboard.mobile.groups' | translate}}</a>
                   <ng-template ngbNavContent>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+                      <div class="form-group col">
+                        <label class="col-form-label">المنطقة</label>
+                        <select class="custom-select" (change)="filterMapByArea($event.target.value)">
+                          <option selected value="all">{{'general.all' | translate}}</option>
+                          <option *ngFor="let areaLayer of lookupService().localizedItems(areaLayers)"
+                                  [value]="areaLayer.code">
+                            {{areaLayer.label}}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="form-group col">
+                        <label class="col-form-label">الشركة</label>
+                        <select class="custom-select" (change)="filterMap($event.target.value, 'company')">
+                          <option selected value="all">الكل</option>
+                          <option *ngFor="let company of companyNames" [value]="company.code">
+                            {{currentLanguage.startsWith('en') ? company.labelEn : company.labelAr}}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="form-group col">
+                        <label class="col-form-label">الفترة من - إلى</label>
+                        <hijri-gregorian-range-picker
+                          class="date-range-picker"
+                          (selectedFromDateChange)="selectedFromDateChange($event)"
+                          (selectedToDateChange)="selectedToDateChange($event)"
+                        >
+                        </hijri-gregorian-range-picker>
+                        <i class="icon"></i>
+                      </div>
+                      <div class="form-group col">
+                        <!--TODO TO BE REFACTORED-->
+                        <label class="col-form-label">{{'general.nationality' | translate}}</label>
+                        <select class="custom-select" (change)="filterMap($event.target.value, 'nationality')">
+                          <option selected value="all">{{'general.all' | translate}}</option>
+                          <option *ngFor="let nationality of lookupService().localizedItems(nationalities)"
+                                  [value]="nationality.code">
+                            {{nationality.label}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
                     <div class="flex-center">
-                      <svg-icon styleClass="fa-10x text-dcc-light" icon="empty-set"></svg-icon>
+                      <!--Start MAP-->
+                      <div class="map py-3">
+                        <div id="gmap" style="height: 100%; width: 100%;"></div>
+                      </div>
+                      <!--End Map-->
                     </div>
                   </ng-template>
                 </li>
