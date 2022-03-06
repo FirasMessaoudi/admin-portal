@@ -35,4 +35,9 @@ public interface CompanyRepository extends JpaRepository<JpaCompany, Long> {
             "GROUP BY c.labelAr, c.labelEn ORDER BY COUNT(c.labelAr)")
     Page<LocalizedCountVo> findCompaniesWithMinApplicantsByHijriSeason(@Param("seasonYear") int seasonYear,
                                                                        @Param("ritualTypeCodeList") List<String> ritualTypeCodeList, Pageable pageable);
+
+    @Query("SELECT c FROM JpaCompany c JOIN c.companyRitualSeasons cr JOIN cr.ritualSeason rs  " +
+            "WHERE rs.seasonYear = :seasonYear " +
+            "AND rs.ritualTypeCode IN (:ritualTypeCodeList) ")
+    List<JpaCompany> findCompaniesBySeasonAndRitualType(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 }

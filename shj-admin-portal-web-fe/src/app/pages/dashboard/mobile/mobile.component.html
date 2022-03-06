@@ -146,30 +146,31 @@
               <h5 class="sts">{{'dashboard.mobile.app_usage_map' | translate}}</h5>
               <ul ngbNav #nav="ngbNav" class="nav-tabs groupBtn">
                 <li ngbNavItem>
-                  <a ngbNavLink (click)="loadHeatMap()">{{'dashboard.mobile.heat_map' | translate}}</a>
+                  <a ngbNavLink style="font-weight: bold;" (click)="loadHeatMap()">{{'dashboard.mobile.heat_map' |
+                    translate}}</a>
                   <ng-template ngbNavContent>
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
                       <div class="form-group col">
-                        <label class="col-form-label">المنطقة</label>
+                        <label class="col-form-label">{{'dashboard.general.area' | translate}}</label>
                         <select class="custom-select" (change)="filterMapByArea($event.target.value)">
-                          <option selected value="all">{{'general.all' | translate}}</option>
+                          <option selected value=0>{{'general.all' | translate}}</option>
                           <option *ngFor="let areaLayer of lookupService().localizedItems(areaLayers)"
-                                  [value]="areaLayer.code">
+                                  [value]="areaLayer.id">
                             {{areaLayer.label}}
                           </option>
                         </select>
                       </div>
                       <div class="form-group col">
-                        <label class="col-form-label">الشركة</label>
+                        <label class="col-form-label">{{'dashboard.general.company' | translate}}</label>
                         <select class="custom-select" (change)="filterMap($event.target.value, 'company')">
-                          <option selected value="all">الكل</option>
+                          <option selected value="all">{{'general.all' | translate}}</option>
                           <option *ngFor="let company of companyNames" [value]="company.code">
                             {{currentLanguage.startsWith('en') ? company.labelEn : company.labelAr}}
                           </option>
                         </select>
                       </div>
                       <div class="form-group col">
-                        <label class="col-form-label">الفترة من - إلى</label>
+                        <label class="col-form-label">{{'dashboard.mobile.period_from_to' | translate}}</label>
                         <hijri-gregorian-range-picker
                           class="date-range-picker"
                           (selectedFromDateChange)="selectedFromDateChange($event)"
@@ -200,15 +201,16 @@
                   </ng-template>
                 </li>
                 <li ngbNavItem>
-                  <a ngbNavLink (click)="loadGroupMap()">{{'dashboard.mobile.groups' | translate}}</a>
+                  <a ngbNavLink (click)="loadGroupMap()" style="font-weight: bold;">{{'dashboard.mobile.groups' |
+                    translate}}</a>
                   <ng-template ngbNavContent>
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
                       <div class="form-group col">
                         <label class="col-form-label">المنطقة</label>
                         <select class="custom-select" (change)="filterMapByArea($event.target.value)">
-                          <option selected value="all">{{'general.all' | translate}}</option>
+                          <option selected value=0>{{'general.all' | translate}}</option>
                           <option *ngFor="let areaLayer of lookupService().localizedItems(areaLayers)"
-                                  [value]="areaLayer.code">
+                                  [value]="areaLayer.id">
                             {{areaLayer.label}}
                           </option>
                         </select>

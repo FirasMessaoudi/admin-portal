@@ -614,7 +614,9 @@
       "max_rating": "أعلى تقييم",
       "min_rating": "أقل تقييم",
       "second": "ثانية",
-      "show_period": "فترة العرض"
+      "show_period": "فترة العرض",
+      "area": "المنطقة",
+      "company": "الشركة"
     },
     "main": {
       "name": "الملخص العام",
@@ -658,7 +660,8 @@
       "heat_map": "خريطة حرارية",
       "saudi": "سعودي",
       "non_saudi": "غير سعودي",
-      "groups": "المجموعات"
+      "groups": "المجموعات",
+      "period_from_to": "الفترة من - إلى"
     },
     "incidents": {
       "name": "البلاغات",

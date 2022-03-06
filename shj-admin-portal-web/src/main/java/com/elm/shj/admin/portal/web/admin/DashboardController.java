@@ -7,8 +7,10 @@ import com.elm.shj.admin.portal.orm.entity.ApplicantMobileTrackingVo;
 import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.LocalizedCountVo;
 import com.elm.shj.admin.portal.orm.entity.LocationVo;
+import com.elm.shj.admin.portal.services.company.CompanyService;
 import com.elm.shj.admin.portal.services.dashboard.*;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.dto.CompanyLiteDto;
 import com.elm.shj.admin.portal.services.dto.ECampSite;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,7 @@ import java.util.List;
 public class DashboardController {
 
     private final DashboardService dashboardService;
-
+    private final CompanyService companyService;
     public enum EPeriodType {
         D, // daily
         W, // Weekly
@@ -207,6 +209,13 @@ public class DashboardController {
     public DashboardCameraNumbersVo countTotalCameras(@PathVariable("seasonYear") int seasonYear) {
         log.debug("Count  cameras numbers ...");
         return dashboardService.loadDashboardCamerasNumbers(seasonYear);
+    }
+
+    @GetMapping("/company-hajj-list/{seasonYear}")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public List<CompanyLiteDto> loadCompaniesFromCurrentSeasons(@PathVariable("seasonYear") int seasonYear) {
+        log.info("Handling loadCompanies.");
+        return companyService.findCompaniesBySeasonAndRitualType(seasonYear);
     }
 
 }

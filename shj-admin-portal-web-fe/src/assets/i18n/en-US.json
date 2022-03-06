@@ -613,7 +613,9 @@
       "max_rating": "Max Rating",
       "min_rating": "Min Rating",
       "second": "second",
-      "show_period": "Show period"
+      "show_period": "Show period",
+      "area": "Area",
+      "company": "Company"
     },
     "main": {
       "name": "Summary",
@@ -656,7 +658,8 @@
       "heat_map": "Heat Map",
       "saudi": "Saudi",
       "non_saudi": "Non-Saudi",
-      "groups": "Groups"
+      "groups": "Groups",
+      "period_from_to": "Period from-to"
     },
     "incidents": {
       "name": "Incident ",
