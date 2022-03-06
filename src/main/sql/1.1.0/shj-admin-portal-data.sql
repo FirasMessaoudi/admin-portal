@@ -596,3 +596,29 @@ VALUES (18, 'JABAL_ALRAHMA', 'en', N'Alrahma Mountain', '21.35402,39.98216-21.35
 SET IDENTITY_INSERT shc_portal.shc_area_layers_lk OFF;
 
 GO
+
+ALTER TABLE shc_portal.shc_area_layers_lk DROP COLUMN parent_layer_code;
+GO
+
+ALTER TABLE shc_portal.shc_area_layers_lk ADD parent_layer_id int;
+GO
+
+UPDATE shc_portal.shc_area_layers_lk
+SET parent_layer_id = 1
+WHERE id IN (5, 6, 9, 10, 13, 14, 15, 16);
+
+GO
+UPDATE shc_portal.shc_area_layers_lk
+SET parent_layer_id = 2
+WHERE id IN (7, 8);
+
+GO
+UPDATE shc_portal.shc_area_layers_lk
+SET parent_layer_id = 5
+WHERE id IN (11, 12);
+
+GO
+UPDATE shc_portal.shc_area_layers_lk
+SET parent_layer_id = 8
+WHERE id IN (17, 18);
+GO
