@@ -30,6 +30,6 @@ public class JpaAreaLayerLookup extends JpaLocalizedLookup {
 
     private String layer;
 
-    @Column(name = "parent_layer_code")
-    private String parentLayerCode;
+    @Column(name = "parent_layer_id")
+    private Integer parentLayerId;
 }

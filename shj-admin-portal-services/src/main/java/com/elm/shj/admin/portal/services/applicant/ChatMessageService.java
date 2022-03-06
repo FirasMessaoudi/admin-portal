@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaChatMessage;
 import com.elm.shj.admin.portal.orm.entity.UnreadMessagesCount;
 import com.elm.shj.admin.portal.orm.repository.ChatMessageRepository;
 import com.elm.shj.admin.portal.services.dto.ChatMessageDto;
+import com.elm.shj.admin.portal.services.dto.EChatMessageType;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service handling chat messages
@@ -62,7 +61,9 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
         return chatMessageDtoList;
     }
 
+    @Transactional
     public ChatMessageDto saveMessage(ChatMessageDto chatMessage) {
+        chatMessage.setType(EChatMessageType.TEXT.name());
         return save(chatMessage);
     }
 

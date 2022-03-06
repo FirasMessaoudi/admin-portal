@@ -397,10 +397,11 @@ export class MobileComponent implements OnInit, DashboardComponent {
     });
   }
 
-  filterMapByArea(areaCode: string){
+  filterMapByArea(areaCode: number){
+    console.log(areaCode);
 
-    if(areaCode != 'all'){
-      let area : AreaLayerLookup = this.areaLayers.find(c=> c.code == areaCode);
+    if(areaCode != 0){
+      let area : AreaLayerLookup = this.areaLayers.find(c=> c.id == areaCode);
       //bermudaTriangle.setMap(this.map);
       this.locations = [];
       this.applicantMobileTrackingsFiltred = this.applicantMobileTrackingsLastFiltred.filter(c=>{
@@ -415,7 +416,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
       });
 
   }
-  if(areaCode == 'all'){
+  if(areaCode == 0){
     this.applicantMobileTrackingsFiltred = this.applicantMobileTrackingsLastFiltred;
   }
   this.loadMapkey();
