@@ -13,6 +13,7 @@ import { dashboardItem } from '@model/dashboard-item';
 import { LocalizedCountVo } from '@model/localized-count-vo.model';
 import { DashboardCameraNumbersVoModel } from '@model/dashboard-camera-numbers-vo.model';
 import { AreaLayerLookup } from '@app/_shared/model/area-layer-lookup.model';
+import { CompanyLite } from '@app/_shared/model/company-lite.model';
 
 @Injectable({
   providedIn: 'root',
@@ -313,4 +314,15 @@ export class DashboardService {
       '/core/api/dashboard/mobile/users/' + seasonYear
     );
   }
+
+    /**
+   * Load hajj companies lookup list
+   */
+     loadHajCompaniesList(
+      seasonYear: number
+    ): Observable<CompanyLite[]> {
+      return this.http.get<CompanyLite[]>(
+        '/core/api/dashboard/company-hajj-list/' + seasonYear
+      );
+    }
 }
