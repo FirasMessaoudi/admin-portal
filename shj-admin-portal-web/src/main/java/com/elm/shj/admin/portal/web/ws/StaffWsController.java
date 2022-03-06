@@ -7,8 +7,10 @@ import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.GroupApplicantListService;
+import com.elm.shj.admin.portal.services.applicant.PackageHousingService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.EUserType;
+import com.elm.shj.admin.portal.services.dto.PackageHousingDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +42,7 @@ public class StaffWsController {
     private final CompanyStaffService companyStaffService;
     private final ApplicantLiteService applicantLiteService;
     private final GroupApplicantListService groupApplicantListService;
-
+    private final PackageHousingService packageHousingService;
 
     /**
      * finds company staff
@@ -135,5 +137,13 @@ public class StaffWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(groupApplicantListService.findGroupApplicantListBySuin(suin)).build());
     }
+
+    @GetMapping("/find/package-housing/{companyRitualSeason}")
+    public ResponseEntity<WsResponse<?>> findStaffPackageHousingByCompanyRitualSeason(@PathVariable long companyRitualSeason) {
+        PackageHousingDto packageHousingDto=  packageHousingService.findStaffPackageHousingByCompanyRitualSeason(companyRitualSeason);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(packageHousingDto).build());
+    }
+
 
 }

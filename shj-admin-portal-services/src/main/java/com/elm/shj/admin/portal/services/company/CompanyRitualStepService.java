@@ -76,4 +76,16 @@ public class CompanyRitualStepService extends GenericService<JpaCompanyRitualSte
         }).collect(Collectors.toList());
 
     }
+
+    /**
+     * find company ritual steps by staff uin
+     *
+     * @return company ritual steps
+     */
+    public List<CompanyRitualStepDto> findCompanyRitualStepsByCompanyRitualSeasonId(long companyRitualSeasonId) {
+        List<JpaCompanyRitualStep> jpaRitualSteps = companyRitualStepRepository.findByApplicantGroupCompanyRitualSeasonId(companyRitualSeasonId);
+        List<CompanyRitualStepDto> ritualSteps = mapList(jpaRitualSteps);
+        return  ritualSteps;
+
+    }
 }

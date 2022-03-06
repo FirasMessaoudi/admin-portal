@@ -46,4 +46,9 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         }
         return null;
     }
+
+    public RitualPackageDto findRitualPackageByCompanyRitualSeasonId(long companyRitualSeasonId) {
+        JpaRitualPackage ritualPackage = ritualPackageRepository.findTopByCompanyRitualSeasonIdOrderByStartDateDescCreationDateDesc(companyRitualSeasonId);
+        return ritualPackage== null? null: getMapper().fromEntity(ritualPackage,mappingContext);
+    }
 }

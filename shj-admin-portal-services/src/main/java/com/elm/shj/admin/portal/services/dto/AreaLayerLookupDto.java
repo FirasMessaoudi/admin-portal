@@ -29,5 +29,5 @@ public class AreaLayerLookupDto implements Serializable {
     private String label;
     private String layer;
     private Date creationDate;
-    private String parentLayerCode;
+    private Integer parentLayerId;
 }

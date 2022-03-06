@@ -21,6 +21,9 @@ import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model'
 import { DatePipe } from '@angular/common';
 import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
 import { AreaLayerLookup } from '@app/_shared/model/area-layer-lookup.model';
+import { Position } from '@app/_shared/model/marker.model';
+import {interpolateRgb} from 'd3-interpolate';
+import { Cluster, ClusterStats, MarkerClusterer, Renderer } from '@googlemaps/markerclusterer';
 
 const moment = momentjs;
 const barChartBackgroundColors = [
@@ -40,7 +43,7 @@ const barChartBackgroundColors = [
 export class MobileComponent implements OnInit, DashboardComponent {
   model = 1;
   mobileAppDownloadsData: DashboardMobileNumbersVo;
-  map: google.maps.Map;
+  heatMap: google.maps.Map;
 
   chartsConfig: ChartsConfig = new ChartsConfig();
   weekDays: Array<any> = [];
@@ -241,6 +244,73 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.loadActiveApplicantWithLocations();
   }
 
+  loadGroupMap(){
+    this.lookupService()
+    .loadGoogleMapsApiKey()
+    .subscribe((result) => {
+      let loader = new Loader({
+        apiKey: result,
+        libraries: ['visualization', 'geometry'],
+      });
+      loader.load().then(() => {
+        let map = new google.maps.Map(document.getElementById('gmap'), {
+          center: {
+            lat: this.applicantMobileTrackings[0].lat,
+            lng: this.applicantMobileTrackings[0].lng,
+          },
+          zoom: 5,
+          scrollwheel: true,
+        });
+        let markersArray: Position[] = [];
+        this.applicantMobileTrackingsFiltred.forEach((applicant) => {
+          markersArray.push(new Position(applicant.lat, applicant.lng));
+        });
+        const markers = markersArray.map((position, i) => {
+          return new google.maps.Marker({
+            position,
+          });
+        });
+
+        const interpolatedRenderer = {
+          palette: interpolateRgb('white', '#BF0C0C'),
+          render: function (
+            { count, position }: Cluster,
+            stats: ClusterStats
+          ): google.maps.Marker {
+            // use d3-interpolateRgb to interpolate between red and blue
+            const color = this.palette(count / stats.clusters.markers.max);
+
+            // create svg url with fill color
+            const svg = window.btoa(`
+          <svg fill="${color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+            <circle cx="120" cy="120" opacity=".8" r="70" />
+          </svg>`);
+
+            // create marker using svg icon
+            return new google.maps.Marker({
+              position,
+              icon: {
+                url: `data:image/svg+xml;base64,${svg}`,
+                scaledSize: new google.maps.Size(75, 75),
+              },
+              label: {
+                text: String(count),
+                color: 'rgba(255,255,255,0.9)',
+                fontSize: '12px',
+              },
+              // adjust zIndex to be above other markers
+              zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
+            });
+          },
+        };
+        const panel: [Renderer] = [interpolatedRenderer];
+        const render = panel[0];
+        // Add a marker clusterer to manage the markers.
+        new MarkerClusterer({ markers, map, renderer: render });
+      });
+    });
+  }
+
   async loadMapkey() {
     this.lookupService()
       .loadGoogleMapsApiKey()
@@ -250,18 +320,18 @@ export class MobileComponent implements OnInit, DashboardComponent {
           libraries: ['visualization', 'geometry'],
         });
         loader.load().then(() => {
-          this.map = new google.maps.Map(document.getElementById('map'), {
+          this.heatMap = new google.maps.Map(document.getElementById('map'), {
             center: {
               lat: this.applicantMobileTrackings[0].lat,
               lng: this.applicantMobileTrackings[0].lng,
             },
-            zoom: 5,
+            zoom: 8,
             scrollwheel: true,
           });
           this.getPoints();
           let heatmap = new google.maps.visualization.HeatmapLayer({
             data: this.locations,
-            map: this.map,
+            map: this.heatMap,
           });
         });
       });
@@ -299,6 +369,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
         );
         this.applicantMobileTrackingsLastFiltred = this.applicantMobileTrackingsFiltred;
     this.loadMapkey();
+    this.loadGroupMap();
   }
 
   selectedFromDateChange(event: Date) {
@@ -307,6 +378,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
     );
     this.applicantMobileTrackingsLastFiltred = this.applicantMobileTrackingsFiltred;
     this.loadMapkey();
+    this.loadGroupMap();
   }
 
   selectedToDateChange(event: Date) {
@@ -315,6 +387,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
     );
     this.applicantMobileTrackingsLastFiltred = this.applicantMobileTrackingsFiltred;
     this.loadMapkey();
+    this.loadGroupMap();
   }
 
   getPoints() {
@@ -324,10 +397,11 @@ export class MobileComponent implements OnInit, DashboardComponent {
     });
   }
 
-  filterMapByArea(areaCode: string){
+  filterMapByArea(areaCode: number){
+    console.log(areaCode);
 
-    if(areaCode != 'all'){
-      let area : AreaLayerLookup = this.areaLayers.find(c=> c.code == areaCode);
+    if(areaCode != 0){
+      let area : AreaLayerLookup = this.areaLayers.find(c=> c.id == areaCode);
       //bermudaTriangle.setMap(this.map);
       this.locations = [];
       this.applicantMobileTrackingsFiltred = this.applicantMobileTrackingsLastFiltred.filter(c=>{
@@ -342,10 +416,11 @@ export class MobileComponent implements OnInit, DashboardComponent {
       });
 
   }
-  if(areaCode == 'all'){
+  if(areaCode == 0){
     this.applicantMobileTrackingsFiltred = this.applicantMobileTrackingsLastFiltred;
   }
   this.loadMapkey();
+  this.loadGroupMap();
   }
 
   isFullScreen: boolean;

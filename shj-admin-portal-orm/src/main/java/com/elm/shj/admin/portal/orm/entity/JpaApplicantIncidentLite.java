@@ -68,6 +68,9 @@ public class JpaApplicantIncidentLite implements Serializable {
     @Column(name = "update_date")
     private Date updateDate;
 
+    @Column(name = "area_code")
+    private String areaCode;
+
     @PrePersist
     public void prePersist() {
         this.creationDate = new Date();

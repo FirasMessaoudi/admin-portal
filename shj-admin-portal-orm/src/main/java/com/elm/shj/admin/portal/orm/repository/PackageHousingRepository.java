@@ -47,4 +47,8 @@ public interface PackageHousingRepository extends JpaRepository<JpaPackageHousin
                                                                    @Param("siteCode") String siteCode,
                                                                    Pageable pageable);
 
+    @Query("SELECT h FROM JpaPackageHousing h JOIN h.ritualPackage r JOIN r.companyRitualSeason c " +
+            " WHERE c.id = :companyRitualSeasonsId AND CURRENT_TIMESTAMP BETWEEN h.validityStart AND h.validityEnd")
+    JpaPackageHousing findStaffPackageHousingByCompanyRitualSeason(@Param("companyRitualSeasonsId") long companyRitualSeasonsId);
+
 }
