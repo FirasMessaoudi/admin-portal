@@ -167,28 +167,22 @@ export class MainComponent implements OnInit, DashboardComponent {
           data.forEach((element) => {
             total += element;
           });
-          var width = chart.width,
-            height = chart.chartArea.top + chart.chartArea.bottom,
+          var height = chart.chartArea.top + chart.chartArea.bottom,
             ctx = chart.ctx;
-          ctx.save();
-          // var fontSize = (height / 15).toFixed(2);
+          ctx.restore();
           var valueFontSize = (height / 10).toFixed(2);
           ctx.font = 'bold ' + valueFontSize + 'px Arial';
+          ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          var text = total.toString() + '',
-            textX = Math.round((width - ctx.measureText(text).width) / 2),
-            textY = height / 2;
-          var textZ = height / 2.5;
-          ctx.fillText(text, textX, textY);
-          ctx.textBaseline = 'middle';
-          var textLabel = title,
-            textLabelX = Math.round(
-              (width - ctx.measureText(textLabel).width) / 1.9
-            ),
-            textLabelY = height / 1.5;
+          var text = total.toString() + '';
+          const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+          const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+          ctx.fillText(text, centerX, centerY - 10);
+
           var labelFontSize = (height / 11).toFixed(2);
           ctx.font = labelFontSize + 'px Arial';
-          ctx.fillText(textLabel, textLabelX, textLabelY);
+          var textLabel = title;
+          ctx.fillText(textLabel, centerX, centerY + 15);
           ctx.save();
         },
       },
