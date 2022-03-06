@@ -593,12 +593,6 @@ SET IDENTITY_INSERT shc_portal.shc_area_layers_lk OFF;
 
 GO
 
-ALTER TABLE shc_portal.shc_area_layers_lk DROP COLUMN parent_layer_code;
-GO
-
-ALTER TABLE shc_portal.shc_area_layers_lk ADD parent_layer_id int;
-GO
-
 UPDATE shc_portal.shc_area_layers_lk
 SET parent_layer_id = 1
 WHERE id IN (5, 6, 9, 10, 13, 14, 15, 16);
