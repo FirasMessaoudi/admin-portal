@@ -23,7 +23,23 @@ export class DashboardService {
   private intervalSubject = new BehaviorSubject<number>(60);
 
   constructor(private http: HttpClient) {
-
+    this.items =  [
+      new dashboardItem('MainComponent', 'dashboard.main.name', true),
+      new dashboardItem(
+        'GeneralNumbersComponent',
+        'dashboard.general-numbers.name',
+        true
+      ),
+      new dashboardItem(
+        'IncidentsComponent',
+        'dashboard.incidents.name',
+        true
+      ),
+      new dashboardItem('CamerasComponent', 'dashboard.cameras.name', true),
+      new dashboardItem('MobileComponent', 'dashboard.mobile.name', true),
+      new dashboardItem('RatingComponent', 'dashboard.rating.name', true),
+      new dashboardItem('TransactionsComponent', 'dashboard.transactions.name', true),
+    ];
   }
 
   /**
@@ -281,23 +297,7 @@ export class DashboardService {
   }
 
   getDashboardItems(): dashboardItem[] {
-    return [
-      new dashboardItem('MainComponent', 'dashboard.main.name', true),
-      new dashboardItem(
-        'GeneralNumbersComponent',
-        'dashboard.general-numbers.name',
-        true
-      ),
-      new dashboardItem(
-        'IncidentsComponent',
-        'dashboard.incidents.name',
-        true
-      ),
-      new dashboardItem('CamerasComponent', 'dashboard.cameras.name', true),
-      new dashboardItem('MobileComponent', 'dashboard.mobile.name', true),
-      new dashboardItem('RatingComponent', 'dashboard.rating.name', true),
-      new dashboardItem('TransactionsComponent', 'dashboard.transactions.name', true),
-    ];
+    return this.items;
   }
 
   findAreaLayers(): Observable<AreaLayerLookup[]> {

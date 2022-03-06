@@ -611,7 +611,9 @@
       "min_companies": "Min Companies",
       "max_companies": "Max Companies",
       "max_rating": "Max Rating",
-      "min_rating": "Min Rating"
+      "min_rating": "Min Rating",
+      "second": "second",
+      "show_period": "Show period"
     },
     "main": {
       "name": "Summary",
