@@ -611,7 +611,9 @@
       "min_companies": "Min Companies",
       "max_companies": "Max Companies",
       "max_rating": "Max Rating",
-      "min_rating": "Min Rating"
+      "min_rating": "Min Rating",
+      "area": "Area",
+      "company": "Company"
     },
     "main": {
       "name": "Summary",
@@ -654,7 +656,8 @@
       "heat_map": "Heat Map",
       "saudi": "Saudi",
       "non_saudi": "Non-Saudi",
-      "groups": "Groups"
+      "groups": "Groups",
+      "period_from_to": "Period from-to"
     },
     "incidents": {
       "name": "Incident ",

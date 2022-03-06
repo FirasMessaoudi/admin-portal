@@ -57,7 +57,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
   MAP_ZOOM_OUT = 10;
 
-  areaLayers: AreaLayerLookup[];
+  areaLayers: AreaLayerLookup[] = [];
   companyNames: CompanyLite[];
   nationalities: Lookup[] = [];
   loggedInUsers: Array<number> = [];

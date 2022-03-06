@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.sql.Array;
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.Instant;
