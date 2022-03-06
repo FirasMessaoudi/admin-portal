@@ -596,3 +596,10 @@ VALUES (18, 'JABAL_ALRAHMA', 'en', N'Alrahma Mountain', '21.35402,39.98216-21.35
 SET IDENTITY_INSERT shc_portal.shc_area_layers_lk OFF;
 
 GO
+
+INSERT INTO shc_portal.shc_chat_message_type_lk (code) VALUES ('TEXT');
+INSERT INTO shc_portal.shc_chat_message_type_lk (code) VALUES ('PHOTO');
+INSERT INTO shc_portal.shc_chat_message_type_lk (code) VALUES ('VIDEO');
+INSERT INTO shc_portal.shc_chat_message_type_lk (code) VALUES ('AUDIO');
+INSERT INTO shc_portal.shc_chat_message_type_lk (code) VALUES ('LOCATION');
+GO
