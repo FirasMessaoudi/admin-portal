@@ -103,15 +103,22 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
     /**
      * Creates a new staff chat contact
      *
-     * @param applicantUin the uin of the relationship owner
+     * @param digitalId the uin of the relationship owner
      * @param ritualId     the selected ritual ID
      * @param companyStaff the company staff
      * @return the value object of the saved staff contact chat
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ChatContactVo createStaffContact(String applicantUin, Long ritualId, Optional<CompanyStaffLiteDto> companyStaff) {
+    public ChatContactVo createStaffContact(String digitalId, Long ritualId, Optional<CompanyStaffLiteDto> companyStaff) {
+        ChatContactDto chatContactDto = findApplicantChatContact(digitalId, companyStaff.map(CompanyStaffLiteDto::getSuin).orElse(null));
+        if(chatContactDto!=null){
+            if(chatContactDto.isDeleted()){
+             updateUserDefinedChatContact(chatContactDto.getId(),chatContactDto,false);
+             }
+           return  ((ChatContactRepository) getRepository()).findStaffContactVoById(chatContactDto.getId()).orElse(null);
+        }
         ChatContactDto contactBuilder = ChatContactDto.builder()
-                .digitalId(applicantUin)
+                .digitalId(digitalId)
                 .contactDigitalId(companyStaff.map(CompanyStaffLiteDto::getSuin).orElse(null))
                 .mobileNumber(companyStaff.map(CompanyStaffLiteDto::getMobileNumber).orElse(null))
                 //TODO country code and nationality code may not match
@@ -144,7 +151,7 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
      * @param contact the chat contact to save
      * @return savedContact saved one
      */
-    public ChatContactDto updateUserDefinedChatContact(Long id, ChatContactDto contact) {
+    public ChatContactDto updateUserDefinedChatContact(Long id, ChatContactDto contact, boolean deleted) {
         ChatContactDto applicantChatContact = findOne(id);
         applicantChatContact.setAlias(contact.getAlias());
         applicantChatContact.setMobileNumber(contact.getMobileNumber());
@@ -152,6 +159,7 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
         applicantChatContact.setCountryCode(contact.getCountryCode());
         applicantChatContact.setAvatar(contact.getAvatar());
         applicantChatContact.setAutoAdded(contact.isAutoAdded());
+        applicantChatContact.setDeleted(deleted);
         return save(applicantChatContact);
     }
 
