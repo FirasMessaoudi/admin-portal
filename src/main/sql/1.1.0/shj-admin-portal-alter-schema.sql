@@ -1352,3 +1352,35 @@ ALTER TABLE shc_portal.shc_area_layers_lk DROP COLUMN parent_layer_code;
 GO
 
 ALTER TABLE shc_portal.shc_area_layers_lk ADD parent_layer_id int;
+
+alter table shc_portal.shc_chat_message
+drop CONSTRAINT fk_chat_message_chat_message_type;
+GO
+
+alter table shc_portal.shc_chat_message
+alter column type_id varchar(10);
+GO
+
+exec sp_rename 'shc_portal.shc_chat_message.type_id','type_code','COLUMN'
+Go
+
+alter table shc_portal.shc_chat_message_type_lk
+drop CONSTRAINT chat_message_type_lk_unique;
+GO
+
+alter table shc_portal.shc_chat_message_type_lk
+alter column code varchar(10);
+GO
+
+ALTER TABLE shc_portal.shc_chat_message_type_lk
+ADD CONSTRAINT chat_message_type_lk_unique unique (code ASC)
+GO
+
+ALTER TABLE shc_portal.shc_chat_message
+ADD CONSTRAINT fk_chat_message_chat_message_type
+FOREIGN KEY (type_code) REFERENCES  shc_portal.shc_chat_message_type_lk (code);
+GO
+
+
+
+

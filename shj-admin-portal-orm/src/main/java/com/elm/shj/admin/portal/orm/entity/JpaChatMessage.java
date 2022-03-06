@@ -34,7 +34,7 @@ public class JpaChatMessage implements Serializable {
 
     private String text;
 
-    @JoinColumn(name = "type")
+    @JoinColumn(name = "type_code")
     private String type;
 
     @Column(name = "content_file_path")
