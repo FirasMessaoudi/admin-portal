@@ -518,10 +518,6 @@ GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('dashboard.mobile.age.range', '0-18,18-30,30-40,40-60,60-200');
-GO
-
-ALTER TABLE shc_portal.shc_area_layers_lk
-ADD parent_layer_code varchar(20);
 
 GO
 
@@ -595,6 +591,26 @@ VALUES (18, 'JABAL_ALRAHMA', 'en', N'Alrahma Mountain', '21.35402,39.98216-21.35
 
 SET IDENTITY_INSERT shc_portal.shc_area_layers_lk OFF;
 
+GO
+
+UPDATE shc_portal.shc_area_layers_lk
+SET parent_layer_id = 1
+WHERE id IN (5, 6, 9, 10, 13, 14, 15, 16);
+
+GO
+UPDATE shc_portal.shc_area_layers_lk
+SET parent_layer_id = 2
+WHERE id IN (7, 8);
+
+GO
+UPDATE shc_portal.shc_area_layers_lk
+SET parent_layer_id = 5
+WHERE id IN (11, 12);
+
+GO
+UPDATE shc_portal.shc_area_layers_lk
+SET parent_layer_id = 8
+WHERE id IN (17, 18);
 GO
 
 INSERT INTO shc_portal.shc_chat_message_type_lk (code) VALUES ('TEXT');

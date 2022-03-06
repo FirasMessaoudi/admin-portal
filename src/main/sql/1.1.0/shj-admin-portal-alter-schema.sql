@@ -1310,6 +1310,11 @@ CREATE TABLE shc_portal.shc_area_layers_lk
 );
 GO
 
+ALTER TABLE shc_portal.shc_area_layers_lk
+ADD parent_layer_code varchar(20);
+
+GO
+
 /*---------------------------------------------------
 --  ddl for shc_camera table
 ---------------------------------------------------*/
@@ -1340,3 +1345,10 @@ GO
 exec sp_rename 'shc_portal.shc_camera.creation_hijri_year', 'season_year', 'COLUMN';
 GO
 ALTER TABLE shc_portal.shc_camera ALTER COLUMN url varchar(256);
+
+GO
+
+ALTER TABLE shc_portal.shc_area_layers_lk DROP COLUMN parent_layer_code;
+GO
+
+ALTER TABLE shc_portal.shc_area_layers_lk ADD parent_layer_id int;
