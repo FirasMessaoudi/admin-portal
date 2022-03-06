@@ -103,7 +103,7 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
     /**
      * Creates a new staff chat contact
      *
-     * @param digitalId the uin of the relationship owner
+     * @param digitalId    the digital id  of the relationship owner
      * @param ritualId     the selected ritual ID
      * @param companyStaff the company staff
      * @return the value object of the saved staff contact chat
