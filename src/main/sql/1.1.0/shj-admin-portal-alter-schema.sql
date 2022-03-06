@@ -1310,6 +1310,11 @@ CREATE TABLE shc_portal.shc_area_layers_lk
 );
 GO
 
+ALTER TABLE shc_portal.shc_area_layers_lk
+ADD parent_layer_code varchar(20);
+
+GO
+
 /*---------------------------------------------------
 --  ddl for shc_camera table
 ---------------------------------------------------*/

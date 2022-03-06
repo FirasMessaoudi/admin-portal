@@ -518,10 +518,6 @@ GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('dashboard.mobile.age.range', '0-18,18-30,30-40,40-60,60-200');
-GO
-
-ALTER TABLE shc_portal.shc_area_layers_lk
-ADD parent_layer_code varchar(20);
 
 GO
 
