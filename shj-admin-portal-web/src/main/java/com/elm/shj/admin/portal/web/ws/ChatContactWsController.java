@@ -375,7 +375,13 @@ public class ChatContactWsController {
     @PostMapping("/v2/save-chat-message")
     public ResponseEntity<WsResponse<?>> saveChatMessageNew(@RequestBody ChatMessageDto chatMessage) {
         log.debug("chatMessage => {}", chatMessage);
+
         ChatContactDto senderChatContact = chatMessage.getSender();
+        if(chatMessage.getSender().getId() == 0){
+            ChatContactDto receiverInSenderContact = chatContactService.createAutoAddedChatContact(senderChatContact.getDigitalId(), senderChatContact.getContactDigitalId());
+            chatMessage.setSender(receiverInSenderContact);
+        }
+
         ChatContactDto senderInReceiverContact = chatContactService.findApplicantChatContact(senderChatContact.getContactDigitalId(), senderChatContact.getDigitalId());
         if (senderInReceiverContact == null) {
             senderInReceiverContact = chatContactService.createAutoAddedChatContact(senderChatContact.getContactDigitalId(), senderChatContact.getDigitalId());
