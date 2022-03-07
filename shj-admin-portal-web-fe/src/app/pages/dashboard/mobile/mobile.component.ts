@@ -69,7 +69,6 @@ export class MobileComponent implements OnInit, DashboardComponent {
   areaLayers: AreaLayerLookup[] = [];
   companyNames: CompanyLite[];
   nationalities: Lookup[] = [];
-  loggedInUsers: Array<number> = [];
 
   appUsersCount: Array<any>;
   appUsersLabels: Array<any>;

@@ -213,7 +213,7 @@ public class DashboardController {
 
     @GetMapping("/company-hajj-list/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CompanyLiteDto> loadCompaniesFromCurrentSeasons(@PathVariable("seasonYear") int seasonYear) {
+    public List<CompanyLiteDto> loadCompaniesFromCurrentHajjSeasons(@PathVariable("seasonYear") int seasonYear) {
         log.info("Handling loadCompanies.");
         return companyService.findCompaniesBySeasonAndRitualType(seasonYear);
     }
