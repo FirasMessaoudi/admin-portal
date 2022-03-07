@@ -55,7 +55,7 @@
           <div class="d-flex flex-center align-content-center">
             <span class="text-nowrap list-sts">{{'dashboard.general.show_period' | translate}}</span>
             <div class="col-xs-2 mx-2">
-              <input type="number" min="5" max="10000" class="custom-input-pop" [(ngModel)]="slideShowInterval"
+              <input type="number" min="5" max="10000" class="custom-input-pop" [(ngModel)]="slideShowInterval" (blur)="onNumberChange($event.target.value)"
                      (ngModelChange)="updateInterval($event)">
             </div>
             <span class="list-sts">{{'dashboard.general.second' | translate}}</span>
