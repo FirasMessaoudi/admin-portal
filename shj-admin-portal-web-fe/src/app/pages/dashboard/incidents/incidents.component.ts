@@ -32,6 +32,8 @@ import { ActivatedRoute } from '@angular/router';
 import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { LocalizedCountVo } from '@model/localized-count-vo.model';
+import * as moment_ from 'moment-hijri';
+const momentHijri = moment_;
 
 @Component({
   selector: 'app-incidents',
@@ -155,7 +157,7 @@ export class IncidentsComponent
   ngAfterViewInit(): void {}
 
   ngOnInit() {
-    this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
+    this.seasonYear = this.seasonYear = momentHijri(new Date()).iYear();;
     this.dashboardService
       .loadIncidentsLocationsForHijriSeason(this.seasonYear)
       .subscribe((data) => {
