@@ -34,37 +34,37 @@
 
   <ng-template #content let-c="close" let-d="dismiss">
     <div class="modal-header">
-      <h5 class="modal-title" id="modal-basic-title">اختر البيانات التي تريد عرضها في لوحة البيانات</h5>
-      <span class="h3" aria-label="Close" (click)="d('Cross click')">X</span>
+      <h5 class="modal-title" id="modal-basic-title">{{'dashboard.general.dialog_preview_dashboard_selection_title' | translate}}</h5>
+      <span class="h3" aria-label="Close" [ngbTooltip]="'general.btn_close'| translate" (click)="d('Cross click')">X</span>
     </div>
     <div class="modal-body w-100">
       <ul class="list-group">
         <li *ngFor="let dashboardItem of dashboards"
-            class="list-group-item list-sts">{{dashboardItem.title | translate}} {{'dashboard.general.dashboard' | translate}}
-          <div class="inline float-left">
-            <input mdbCheckbox class="form-check-input " type="checkbox" value=""
+            class="list-group-item list-sts flex-center-between font-weight-bold">{{dashboardItem.title | translate}} {{'dashboard.general.dashboard' | translate}}
+          <div class="form-checkbox">
+            <input mdbCheckbox class="form-check-input c9" type="checkbox" value=""
                    id="customCheck-{{dashboardItem.componentName}}" [(ngModel)]="dashboardItem.selected"/>
           </div>
+
         </li>
       </ul>
     </div>
     <div class="modal-footer">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="d-flex">
-            <span class="text-nowrap list-sts">فترة العرض</span>
+      <div class="footer">
+        <div class="flex-center align-content-center">
+          <div class="d-flex flex-center align-content-center">
+            <span class="text-nowrap list-sts">{{'dashboard.general.show_period' | translate}}</span>
             <div class="col-xs-2 mx-2">
-              <input type="number" min="5" max="10000" class="custom-input-pop" [(ngModel)]="slideShowInterval"
+              <input type="number" min="5" max="10000" class="custom-input-pop" [(ngModel)]="slideShowInterval" (blur)="onNumberChange($event.target.value)"
                      (ngModelChange)="updateInterval($event)">
             </div>
-            <span class="list-sts">ثانية</span>
+            <span class="list-sts">{{'dashboard.general.second' | translate}}</span>
           </div>
         </div>
 
-        <div class="col-md-8">
+        <div>
           <div class="d-inline-flex text-nowrap">
-            <button type="button" class="btn btn-outline-dcc-primary custom-popup-btn" (click)="c('Save click')">تطبيق
-              العرض الافتراضي
+            <button type="button" class="btn btn-outline-dcc-primary custom-popup-btn" (click)="c('Save click')">{{'dashboard.general.default_application_view' | translate}}
             </button>
             <button type="button" class="btn btn-dcc-primary mx-2" [disabled]="disableSlideShow()"
                     (click)="c('Save click')" [routerLink]="['/slideshow']">{{'general.btn_view' | translate}}

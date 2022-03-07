@@ -612,7 +612,12 @@
       "min_companies": "أقل الشركات",
       "max_companies": "أعلى الشركات",
       "max_rating": "أعلى تقييم",
-      "min_rating": "أقل تقييم"
+      "min_rating": "أقل تقييم",
+      "second": "ثانية",
+      "show_period": "فترة العرض",
+      "area": "المنطقة",
+      "company": "الشركة",
+      "default_application_view": "تطبيق العرض الافتراضي"
     },
     "main": {
       "name": "الملخص العام",
@@ -656,7 +661,8 @@
       "heat_map": "خريطة حرارية",
       "saudi": "سعودي",
       "non_saudi": "غير سعودي",
-      "groups": "المجموعات"
+      "groups": "المجموعات",
+      "period_from_to": "الفترة من - إلى"
     },
     "incidents": {
       "name": "البلاغات",
