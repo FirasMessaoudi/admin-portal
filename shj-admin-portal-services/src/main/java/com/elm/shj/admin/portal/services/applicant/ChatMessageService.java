@@ -38,19 +38,16 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
     private final ChatMessageRepository chatMessageRepository;
 
 
-
     public List<ChatMessageVo> listChatContactsWithLatestMessage(String uin) {
         List<ChatMessageVo> latestMessageList = chatMessageRepository.findChatContactsWithLatestMessage(uin);
         List<UnreadMessagesCount> unreadMessagesCount = chatMessageRepository.findUnreadMessagesCount(uin);
 
-        unreadMessagesCount.parallelStream().forEach(e-> {
-            ChatMessageVo matchedChatMessageVo = latestMessageList.parallelStream().filter(p -> p.getContactId() == e.getContactId()).findFirst().get();
+        unreadMessagesCount.stream().forEach(e-> {
+            ChatMessageVo matchedChatMessageVo = latestMessageList.parallelStream().filter(p -> p.getId() == e.getContactId()).findFirst().get();
             matchedChatMessageVo.setUnreadMessagesCount(e.getUnreadMessagesCount());
         });
+
         return latestMessageList;
-
-
-
     }
 
     public List<ChatMessageDto> findChatMessagesBySenderIdOrReceiverId(int page, int limit, long contactId, long time) {
@@ -63,12 +60,12 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
 
     @Transactional
     public ChatMessageDto saveMessage(ChatMessageDto chatMessage) {
-        chatMessage.setType(EChatMessageType.TEXT.name());
+        chatMessage.setTypeCode(EChatMessageType.TEXT.name());
         return save(chatMessage);
     }
 
     @Transactional
     public void markMessagesAsRead(long chatContactId) {
-         chatMessageRepository.updateChatMessageReadDate(chatContactId);
+        chatMessageRepository.updateChatMessageReadDate(chatContactId);
     }
 }

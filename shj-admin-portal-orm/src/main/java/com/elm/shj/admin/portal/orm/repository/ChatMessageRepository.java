@@ -25,15 +25,29 @@ import java.util.List;
 public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Long> {
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ChatMessageVo(  " +
-            " contact.id, contact.contactDigitalId, message.text, message.sentDate, message.receivedDate,message.readDate, contact.deleted ) " +
+            " contact.id,contact.digitalId, contact.contactDigitalId, " +
+            "case when applicant.id is not null then applicant.fullNameAr " +
+            "ELSE staff.fullNameAr END , " +
+            "case when applicant.id is not null then applicant.fullNameEn " +
+            "ELSE staff.fullNameEn END  , " +
+            "case when applicant.id is not null then applicantDigitalId.statusCode " +
+            "ELSE staffDigitalId.statusCode END  , " +
+            "contact.type.id, contact.alias, contact.avatar,contact.systemDefined, contact.staffTitleCode, contact.relationshipCode," +
+            "contact.mobileNumber ,contact.countryPhonePrefix, contact.countryCode, contact.autoAdded, contact.deleted, " +
+            "message.text, message.sentDate, message.receivedDate,message.readDate ) " +
             "FROM JpaChatMessage message " +
             "JOIN JpaChatContact  contact ON contact.id = message.sender.id OR contact.id = message.receiver.id " +
+            "LEFT JOIN JpaApplicantDigitalId applicantDigitalId on applicantDigitalId.uin = contact.contactDigitalId " +
+            "LEFT JOIN JpaApplicant  applicant on applicant.id = applicantDigitalId.applicantId " +
+            "LEFT JOIN JpaCompanyStaffDigitalId staffDigitalId on staffDigitalId.suin = contact.contactDigitalId " +
+            "LEFT JOIN staffDigitalId.companyStaff staff " +
             "WHERE contact.digitalId= :digitalId " +
             "AND message.id IN ( SELECT max(messages.id) FROM JpaChatMessage messages " +
             "JOIN JpaChatContact  contact ON contact.id = messages.sender.id OR contact.id = messages.receiver.id " +
             "GROUP BY contact.id) " +
             "ORDER BY message.sentDate desc ")
     List<ChatMessageVo> findChatContactsWithLatestMessage(@Param("digitalId") String uin);
+
 
     Page<JpaChatMessage> findBySenderIdOrReceiverIdAndSentDateLessThanEqual(long senderId, long receiverId, Date time, Pageable pageable);
 
