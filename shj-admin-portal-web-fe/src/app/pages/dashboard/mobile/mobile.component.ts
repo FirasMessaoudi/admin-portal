@@ -22,8 +22,14 @@ import { DatePipe } from '@angular/common';
 import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
 import { AreaLayerLookup } from '@app/_shared/model/area-layer-lookup.model';
 import { Position } from '@app/_shared/model/marker.model';
-import {interpolateRgb} from 'd3-interpolate';
-import { Cluster, ClusterStats, MarkerClusterer, Renderer } from '@googlemaps/markerclusterer';
+import { interpolateRgb } from 'd3-interpolate';
+import {
+  Cluster,
+  ClusterStats,
+  MarkerClusterer,
+  Renderer,
+} from '@googlemaps/markerclusterer';
+import { LocalizedCountVo } from '@model/localized-count-vo.model';
 
 const moment = momentjs;
 const barChartBackgroundColors = [
@@ -63,13 +69,14 @@ export class MobileComponent implements OnInit, DashboardComponent {
   areaLayers: AreaLayerLookup[] = [];
   companyNames: CompanyLite[];
   nationalities: Lookup[] = [];
-  loggedInUsers: Array<number> = [];
 
   appUsersCount: Array<any>;
   appUsersLabels: Array<any>;
   backgroundColors: Array<any> = [];
   lastCompanyCode = 'all';
   lastNationalityCode = 'all';
+
+  companyData: LocalizedCountVo[] = [];
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -126,9 +133,18 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.cardService.findCountries().subscribe((result) => {
       this.nationalities = result;
     });
-    this.dashboardService.loadHajCompaniesList(this.seasonYear).subscribe((result) => {
-      this.companyNames = result;
+    this.dashboardService
+      .loadHajCompaniesList(this.seasonYear)
+      .subscribe((result) => {
+        this.companyNames = result;
+      });
+
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.companyLabels = this.currentLanguage.startsWith('ar')
+        ? this.companyData.map((d) => d.labelAr)
+        : this.companyData.map((d) => d.labelEn);
     });
+
     this.loadMaxCompanies();
     this.loadMobileAppUsersByAgeRange();
   }
@@ -138,8 +154,11 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.dashboardService
       .loadCompaniesWithMinApplicantsRegisteredCount(this.seasonYear)
       .subscribe((data) => {
+        this.companyData = data;
         this.companyCounts = data.map((d) => d.count);
-        this.companyLabels = data.map((d) => d.label);
+        this.companyLabels = this.currentLanguage.startsWith('ar')
+          ? data.map((d) => d.labelAr)
+          : data.map((d) => d.labelEn);
       });
   }
 
@@ -148,8 +167,11 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.dashboardService
       .loadCompaniesWithMaxApplicantsRegisteredCount(this.seasonYear)
       .subscribe((data) => {
+        this.companyData = data;
         this.companyCounts = data.map((d) => d.count);
-        this.companyLabels = data.map((d) => d.label);
+        this.companyLabels = this.currentLanguage.startsWith('ar')
+          ? data.map((d) => d.labelAr)
+          : data.map((d) => d.labelEn);
       });
   }
 
@@ -243,71 +265,71 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.loadActiveApplicantWithLocations();
   }
 
-  loadGroupMap(){
+  loadGroupMap() {
     this.lookupService()
-    .loadGoogleMapsApiKey()
-    .subscribe((result) => {
-      let loader = new Loader({
-        apiKey: result,
-        libraries: ['visualization', 'geometry'],
-      });
-      loader.load().then(() => {
-        let map = new google.maps.Map(document.getElementById('gmap'), {
-          center: {
-            lat: this.applicantMobileTrackings[0].lat,
-            lng: this.applicantMobileTrackings[0].lng,
-          },
-          zoom: 5,
-          scrollwheel: true,
+      .loadGoogleMapsApiKey()
+      .subscribe((result) => {
+        let loader = new Loader({
+          apiKey: result,
+          libraries: ['visualization', 'geometry'],
         });
-        let markersArray: Position[] = [];
-        this.applicantMobileTrackingsFiltred.forEach((applicant) => {
-          markersArray.push(new Position(applicant.lat, applicant.lng));
-        });
-        const markers = markersArray.map((position, i) => {
-          return new google.maps.Marker({
-            position,
+        loader.load().then(() => {
+          let map = new google.maps.Map(document.getElementById('gmap'), {
+            center: {
+              lat: this.applicantMobileTrackings[0].lat,
+              lng: this.applicantMobileTrackings[0].lng,
+            },
+            zoom: 5,
+            scrollwheel: true,
           });
-        });
+          let markersArray: Position[] = [];
+          this.applicantMobileTrackingsFiltred.forEach((applicant) => {
+            markersArray.push(new Position(applicant.lat, applicant.lng));
+          });
+          const markers = markersArray.map((position, i) => {
+            return new google.maps.Marker({
+              position,
+            });
+          });
 
-        const interpolatedRenderer = {
-          palette: interpolateRgb('white', '#BF0C0C'),
-          render: function (
-            { count, position }: Cluster,
-            stats: ClusterStats
-          ): google.maps.Marker {
-            // use d3-interpolateRgb to interpolate between red and blue
-            const color = this.palette(count / stats.clusters.markers.max);
+          const interpolatedRenderer = {
+            palette: interpolateRgb('white', '#BF0C0C'),
+            render: function (
+              { count, position }: Cluster,
+              stats: ClusterStats
+            ): google.maps.Marker {
+              // use d3-interpolateRgb to interpolate between red and blue
+              const color = this.palette(count / stats.clusters.markers.max);
 
-            // create svg url with fill color
-            const svg = window.btoa(`
+              // create svg url with fill color
+              const svg = window.btoa(`
           <svg fill="${color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
             <circle cx="120" cy="120" opacity=".8" r="70" />
           </svg>`);
 
-            // create marker using svg icon
-            return new google.maps.Marker({
-              position,
-              icon: {
-                url: `data:image/svg+xml;base64,${svg}`,
-                scaledSize: new google.maps.Size(75, 75),
-              },
-              label: {
-                text: String(count),
-                color: 'rgba(255,255,255,0.9)',
-                fontSize: '12px',
-              },
-              // adjust zIndex to be above other markers
-              zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
-            });
-          },
-        };
-        const panel: [Renderer] = [interpolatedRenderer];
-        const render = panel[0];
-        // Add a marker clusterer to manage the markers.
-        new MarkerClusterer({ markers, map, renderer: render });
+              // create marker using svg icon
+              return new google.maps.Marker({
+                position,
+                icon: {
+                  url: `data:image/svg+xml;base64,${svg}`,
+                  scaledSize: new google.maps.Size(75, 75),
+                },
+                label: {
+                  text: String(count),
+                  color: 'rgba(255,255,255,0.9)',
+                  fontSize: '12px',
+                },
+                // adjust zIndex to be above other markers
+                zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
+              });
+            },
+          };
+          const panel: [Renderer] = [interpolatedRenderer];
+          const render = panel[0];
+          // Add a marker clusterer to manage the markers.
+          new MarkerClusterer({ markers, map, renderer: render });
+        });
       });
-    });
   }
 
   async loadMapkey() {
@@ -366,7 +388,8 @@ export class MobileComponent implements OnInit, DashboardComponent {
             c.nationalityCode == this.lastNationalityCode &&
             c.companyCode == this.lastCompanyCode
         );
-        this.applicantMobileTrackingsLastFiltred = this.applicantMobileTrackingsFiltred;
+    this.applicantMobileTrackingsLastFiltred =
+      this.applicantMobileTrackingsFiltred;
     this.loadMapkey();
     this.loadGroupMap();
   }
@@ -375,7 +398,8 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(
       (c) => new Date(c.lastLoginDate).getTime() > event.getTime()
     );
-    this.applicantMobileTrackingsLastFiltred = this.applicantMobileTrackingsFiltred;
+    this.applicantMobileTrackingsLastFiltred =
+      this.applicantMobileTrackingsFiltred;
     this.loadMapkey();
     this.loadGroupMap();
   }
@@ -384,7 +408,8 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.applicantMobileTrackingsFiltred = this.applicantMobileTrackings.filter(
       (c) => new Date(c.lastLoginDate).getTime() < event.getTime()
     );
-    this.applicantMobileTrackingsLastFiltred = this.applicantMobileTrackingsFiltred;
+    this.applicantMobileTrackingsLastFiltred =
+      this.applicantMobileTrackingsFiltred;
     this.loadMapkey();
     this.loadGroupMap();
   }
@@ -396,29 +421,33 @@ export class MobileComponent implements OnInit, DashboardComponent {
     });
   }
 
-  filterMapByArea(areaCode: number){
+  filterMapByArea(areaCode: number) {
     console.log(areaCode);
 
-    if(areaCode != 0){
-      let area : AreaLayerLookup = this.areaLayers.find(c=> c.id == areaCode);
+    if (areaCode != 0) {
+      let area: AreaLayerLookup = this.areaLayers.find((c) => c.id == areaCode);
       //bermudaTriangle.setMap(this.map);
-      this.applicantMobileTrackingsFiltred = this.applicantMobileTrackingsLastFiltred.filter(c=>{
-      let polygone = new google.maps.Polygon({
-      paths: area.layer,
+      this.applicantMobileTrackingsFiltred =
+        this.applicantMobileTrackingsLastFiltred.filter((c) => {
+          let polygone = new google.maps.Polygon({
+            paths: area.layer,
+          });
+          if (
+            google.maps.geometry.poly.containsLocation(
+              new google.maps.LatLng(c.lat, c.lng),
+              polygone
+            )
+          ) {
+            return c;
+          }
         });
-     if(google.maps.geometry.poly.containsLocation(
-      new google.maps.LatLng(c.lat, c.lng),
-      polygone)){
-      return c;
-      }
-      });
-
-  }
-  if(areaCode == 0){
-    this.applicantMobileTrackingsFiltred = this.applicantMobileTrackingsLastFiltred;
-  }
-  this.loadMapkey();
-  this.loadGroupMap();
+    }
+    if (areaCode == 0) {
+      this.applicantMobileTrackingsFiltred =
+        this.applicantMobileTrackingsLastFiltred;
+    }
+    this.loadMapkey();
+    this.loadGroupMap();
   }
 
   isFullScreen: boolean;

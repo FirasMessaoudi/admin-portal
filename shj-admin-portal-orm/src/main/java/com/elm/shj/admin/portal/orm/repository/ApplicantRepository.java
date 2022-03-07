@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.ApplicantMobileTrackingVo;
 import com.elm.shj.admin.portal.orm.entity.CountVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.LocalizedCountVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,7 +36,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "(a.idNumber = :idNumber and a.dateOfBirthHijri = :dateOfBirthHijri) or " +
             "(a.passportNumber = :passportNumber and a.dateOfBirthGregorian = :dateOfBirthGregorian)")
     Long findIdByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
-                                 @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
+                           @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
     @Query(value = "SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
             "FROM JpaApplicant a WHERE " +
@@ -118,19 +119,21 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Query("UPDATE JpaApplicant a SET a.mobileLoggedIn = :mobileLoggedIn, a.updateDate = CURRENT_TIMESTAMP WHERE a.id = :applicantId")
     void updateLoggedInFromMobileAppFlag(@Param("applicantId") long applicantId, @Param("mobileLoggedIn") boolean mobileLoggedIn);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(a),'') " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocalizedCountVo(c.labelAr,c.labelEn,COUNT(a)) " +
             "FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
             "WHERE  rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') AND " +
-            "c.labelAr is NOT NULL AND a.mobileLoggedIn IS NOT NULL AND rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr) DESC")
-    Page<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount(@Param("seasonYear") int seasonYear, Pageable pageable);
+            "c.labelAr is NOT NULL AND a.mobileLoggedIn IS NOT NULL AND rs.seasonYear= :seasonYear " +
+            "GROUP BY c.labelAr, c.labelEn ORDER BY COUNT(c.labelAr) DESC")
+    Page<LocalizedCountVo> loadCompaniesWithMaxApplicantsRegisteredCount(@Param("seasonYear") int seasonYear, Pageable pageable);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(c.labelAr, 0, COUNT(a),'') " +
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocalizedCountVo(c.labelAr,c.labelEn,COUNT(a)) " +
             "FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
             "WHERE rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') AND " +
-            "c.labelAr is NOT NULL AND a.mobileLoggedIn IS NOT NULL AND rs.seasonYear= :seasonYear GROUP BY c.labelAr ORDER BY COUNT(c.labelAr)")
-    Page<CountVo> loadCompaniesWithMinApplicantsRegisteredCount(@Param("seasonYear") int seasonYear, Pageable pageable);
+            "c.labelAr is NOT NULL AND a.mobileLoggedIn IS NOT NULL AND rs.seasonYear= :seasonYear " +
+            "GROUP BY c.labelAr, c.labelEn ORDER BY COUNT(c.labelAr)")
+    Page<LocalizedCountVo> loadCompaniesWithMinApplicantsRegisteredCount(@Param("seasonYear") int seasonYear, Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantMobileTrackingVo(crs.company.code, a.nationalityCode, ul.gpsTime, adi.uin, ul.latitude, ul.longitude) " +
             "FROM JpaApplicant a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id JOIN JpaUserLocation ul ON ul.userId = adi.uin " +

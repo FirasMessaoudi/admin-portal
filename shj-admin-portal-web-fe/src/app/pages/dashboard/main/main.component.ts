@@ -116,7 +116,11 @@ export class MainComponent implements OnInit, DashboardComponent {
   ngOnInit() {
     this.loadLookups();
     //Get current hijri year
-    this.seasonYear = momentHijri(new Date()).iYear();
+    this.seasonYear = parseInt(localStorage.getItem('seasonYear'));
+    if (isNaN(this.seasonYear)  ){
+      this.seasonYear = momentHijri(new Date()).iYear();
+      localStorage.setItem('seasonYear', String(this.seasonYear));
+    }
     this.loadActiveApplicantWithLocations();
     this.lookupService
       .loadDashboardRefreshInterval()
@@ -317,7 +321,6 @@ export class MainComponent implements OnInit, DashboardComponent {
         this.locations.forEach((applicant) => {
           markersArray.push(new Position(applicant.lat, applicant.lng));
         });
-        console.log(markersArray);
         // Add some markers to the map.
         const markers = markersArray.map((position, i) => {
           return new google.maps.Marker({
@@ -368,6 +371,7 @@ export class MainComponent implements OnInit, DashboardComponent {
     if (value != null) {
       this.seasonYear = +value;
       this.isSeasonYearSelected = true;
+      localStorage.setItem('seasonYear', String(this.seasonYear));
       this.loadDashboardData();
     }
   }

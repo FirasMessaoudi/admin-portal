@@ -164,14 +164,14 @@ public class DashboardController {
 
     @GetMapping("/applicant-numbers/max-companies/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount(@PathVariable("seasonYear") int seasonYear) {
+    public List<LocalizedCountVo> loadCompaniesWithMaxApplicantsRegisteredCount(@PathVariable("seasonYear") int seasonYear) {
         log.info("Load Companies with max applicant registered count");
         return dashboardService.loadCompaniesWithMaxApplicantsRegisteredCount(seasonYear);
     }
 
     @GetMapping("/applicant-numbers/min-companies/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CountVo> loadCompaniesWithMinApplicantsRegisteredCount(@PathVariable("seasonYear") int seasonYear) {
+    public List<LocalizedCountVo> loadCompaniesWithMinApplicantsRegisteredCount(@PathVariable("seasonYear") int seasonYear) {
         log.info("Load Companies with min applicant registered count.");
         return dashboardService.loadCompaniesWithMinApplicantsRegisteredCount(seasonYear);
     }
@@ -213,7 +213,7 @@ public class DashboardController {
 
     @GetMapping("/company-hajj-list/{seasonYear}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
-    public List<CompanyLiteDto> loadCompaniesFromCurrentSeasons(@PathVariable("seasonYear") int seasonYear) {
+    public List<CompanyLiteDto> loadCompaniesFromCurrentHajjSeasons(@PathVariable("seasonYear") int seasonYear) {
         log.info("Handling loadCompanies.");
         return companyService.findCompaniesBySeasonAndRitualType(seasonYear);
     }

@@ -241,11 +241,14 @@ public class DashboardService {
         }
 
         String mostIncidentsArea = "";
-        Map<String, Long> incidentByArea = allApplicantIncident.stream().collect(Collectors.groupingBy(JpaApplicantIncident::getAreaCode, Collectors.counting()));
+        Map<String, Long> incidentByArea = allApplicantIncident.stream().collect(Collectors.groupingBy(incident -> getAreaCode(incident.getAreaCode()), Collectors.counting()));
         if (!incidentByArea.isEmpty()) {
             if (incidentByArea.entrySet().iterator().hasNext()) {
-                Map.Entry<String, Long> incidentByAreaMapEntry = incidentByArea.entrySet().iterator().next();
-                mostIncidentsArea = incidentByAreaMapEntry.getKey();
+
+                incidentByArea = incidentByArea.entrySet().stream()
+                        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                mostIncidentsArea = incidentByArea.entrySet().iterator().next().getKey();
             }
         }
         Map<String, Long> incidentByType = allApplicantIncident.stream().collect(Collectors.groupingBy(JpaApplicantIncident::getTypeCode, Collectors.counting()));
@@ -265,6 +268,13 @@ public class DashboardService {
                 .mostIncidentDate(mostIncidentDate)
                 .mostIncidentsArea(mostIncidentsArea)
                 .build();
+    }
+
+    private String getAreaCode(String areaCode){
+        if (areaCode == null)
+            return "";
+        else
+            return areaCode;
     }
 
     private Date getDateFromAge(Integer age) {
@@ -358,11 +368,11 @@ public class DashboardService {
         return refreshInterval;
     }
 
-    public List<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount(int seasonYear) {
+    public List<LocalizedCountVo> loadCompaniesWithMaxApplicantsRegisteredCount(int seasonYear) {
         return applicantRepository.loadCompaniesWithMaxApplicantsRegisteredCount(seasonYear, PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
     }
 
-    public List<CountVo> loadCompaniesWithMinApplicantsRegisteredCount(int seasonYear) {
+    public List<LocalizedCountVo> loadCompaniesWithMinApplicantsRegisteredCount(int seasonYear) {
         return applicantRepository.loadCompaniesWithMinApplicantsRegisteredCount(seasonYear, PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
     }
 

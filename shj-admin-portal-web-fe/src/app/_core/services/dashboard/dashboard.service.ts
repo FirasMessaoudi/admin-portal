@@ -24,22 +24,22 @@ export class DashboardService {
   private intervalSubject = new BehaviorSubject<number>(60);
 
   constructor(private http: HttpClient) {
-    this.items =  [
+    this.items = [
       new dashboardItem('MainComponent', 'dashboard.main.name', true),
       new dashboardItem(
         'GeneralNumbersComponent',
         'dashboard.general-numbers.name',
         true
       ),
-      new dashboardItem(
-        'IncidentsComponent',
-        'dashboard.incidents.name',
-        true
-      ),
+      new dashboardItem('IncidentsComponent', 'dashboard.incidents.name', true),
       new dashboardItem('CamerasComponent', 'dashboard.cameras.name', true),
       new dashboardItem('MobileComponent', 'dashboard.mobile.name', true),
       new dashboardItem('RatingComponent', 'dashboard.rating.name', true),
-      new dashboardItem('TransactionsComponent', 'dashboard.transactions.name', true),
+      new dashboardItem(
+        'TransactionsComponent',
+        'dashboard.transactions.name',
+        true
+      ),
     ];
   }
 
@@ -118,7 +118,9 @@ export class DashboardService {
    * Load dashboard cameras numbers for current season
    */
 
-  loadCamerasNumbers(seasonYear: number): Observable<DashboardCameraNumbersVoModel> {
+  loadCamerasNumbers(
+    seasonYear: number
+  ): Observable<DashboardCameraNumbersVoModel> {
     return this.http.get<DashboardCameraNumbersVoModel>(
       '/core/api/dashboard/camera_numbers/' + seasonYear
     );
@@ -241,8 +243,8 @@ export class DashboardService {
    */
   loadCompaniesWithMaxApplicantsRegisteredCount(
     seasonYear: number
-  ): Observable<CountVo[]> {
-    return this.http.get<CountVo[]>(
+  ): Observable<LocalizedCountVo[]> {
+    return this.http.get<LocalizedCountVo[]>(
       '/core/api/dashboard/applicant-numbers/max-companies/' + seasonYear
     );
   }
@@ -252,8 +254,8 @@ export class DashboardService {
    */
   loadCompaniesWithMinApplicantsRegisteredCount(
     seasonYear: number
-  ): Observable<CountVo[]> {
-    return this.http.get<CountVo[]>(
+  ): Observable<LocalizedCountVo[]> {
+    return this.http.get<LocalizedCountVo[]>(
       '/core/api/dashboard/applicant-numbers/min-companies/' + seasonYear
     );
   }
@@ -315,14 +317,12 @@ export class DashboardService {
     );
   }
 
-    /**
+  /**
    * Load hajj companies lookup list
    */
-     loadHajCompaniesList(
-      seasonYear: number
-    ): Observable<CompanyLite[]> {
-      return this.http.get<CompanyLite[]>(
-        '/core/api/dashboard/company-hajj-list/' + seasonYear
-      );
-    }
+  loadHajCompaniesList(seasonYear: number): Observable<CompanyLite[]> {
+    return this.http.get<CompanyLite[]>(
+      '/core/api/dashboard/company-hajj-list/' + seasonYear
+    );
+  }
 }
