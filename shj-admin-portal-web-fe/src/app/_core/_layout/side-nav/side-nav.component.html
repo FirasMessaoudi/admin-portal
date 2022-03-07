@@ -8,7 +8,7 @@
   <ul class="sideNav mt-4">
     <li *ngFor="let link of links ;let i = index">
       <a class="item" *ngIf="link.display && !link.submenu" routerLink="{{ link.routerLink }}"
-         routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+         routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="resetSeasonYear()">
           <span class="navIcon">
             <svg-icon styleClass="mx-3 {{ link.iconFa }}" icon="{{ link.icon }}"></svg-icon>
           </span>

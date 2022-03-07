@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EAuthority } from '@model/enum/authority.enum';
 import { AuthenticationService } from '@app/_core/services';
-
+import * as moment_ from 'moment-hijri';
+const momentHijri = moment_;
 @Component({
   selector: 'app-side-nav',
   templateUrl: './side-nav.component.html',
@@ -200,6 +201,10 @@ export class SideNavComponent implements OnInit {
     }
   }
 
+  resetSeasonYear() {
+    let seasonYear = momentHijri(new Date()).iYear();
+    localStorage.setItem('seasonYear', String(seasonYear));
+  }
   setCollapsed(index: number) {
     let updateItem: any = this.links[index];
     updateItem.isCollapsed = !updateItem.isCollapsed;
