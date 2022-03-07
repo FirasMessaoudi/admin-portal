@@ -616,7 +616,8 @@
       "second": "ثانية",
       "show_period": "فترة العرض",
       "area": "المنطقة",
-      "company": "الشركة"
+      "company": "الشركة",
+      "default_application_view": "تطبيق العرض الافتراضي"
     },
     "main": {
       "name": "الملخص العام",

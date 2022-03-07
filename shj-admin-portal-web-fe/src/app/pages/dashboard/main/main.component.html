@@ -64,8 +64,7 @@
 
         <div>
           <div class="d-inline-flex text-nowrap">
-            <button type="button" class="btn btn-outline-dcc-primary custom-popup-btn" (click)="c('Save click')">تطبيق
-              العرض الافتراضي
+            <button type="button" class="btn btn-outline-dcc-primary custom-popup-btn" (click)="c('Save click')">{{'dashboard.general.default_application_view' | translate}}
             </button>
             <button type="button" class="btn btn-dcc-primary mx-2" [disabled]="disableSlideShow()"
                     (click)="c('Save click')" [routerLink]="['/slideshow']">{{'general.btn_view' | translate}}

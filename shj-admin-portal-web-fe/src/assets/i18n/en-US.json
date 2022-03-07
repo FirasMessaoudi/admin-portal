@@ -615,7 +615,8 @@
       "second": "second",
       "show_period": "Show period",
       "area": "Area",
-      "company": "Company"
+      "company": "Company",
+      "default_application_view": "Default application view"
     },
     "main": {
       "name": "Summary",
