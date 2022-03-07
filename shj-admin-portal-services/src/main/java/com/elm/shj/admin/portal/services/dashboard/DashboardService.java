@@ -358,11 +358,11 @@ public class DashboardService {
         return refreshInterval;
     }
 
-    public List<CountVo> loadCompaniesWithMaxApplicantsRegisteredCount(int seasonYear) {
+    public List<LocalizedCountVo> loadCompaniesWithMaxApplicantsRegisteredCount(int seasonYear) {
         return applicantRepository.loadCompaniesWithMaxApplicantsRegisteredCount(seasonYear, PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
     }
 
-    public List<CountVo> loadCompaniesWithMinApplicantsRegisteredCount(int seasonYear) {
+    public List<LocalizedCountVo> loadCompaniesWithMinApplicantsRegisteredCount(int seasonYear) {
         return applicantRepository.loadCompaniesWithMinApplicantsRegisteredCount(seasonYear, PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
     }
 
