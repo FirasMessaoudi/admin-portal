@@ -60,7 +60,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
   MAP_ZOOM_OUT = 10;
 
-  areaLayers: AreaLayerLookup[];
+  areaLayers: AreaLayerLookup[] = [];
   companyNames: CompanyLite[];
   nationalities: Lookup[] = [];
   loggedInUsers: Array<number> = [];
@@ -126,9 +126,8 @@ export class MobileComponent implements OnInit, DashboardComponent {
     this.cardService.findCountries().subscribe((result) => {
       this.nationalities = result;
     });
-    this.cardService.findCompanyNames().subscribe((result) => {
+    this.dashboardService.loadHajCompaniesList(this.seasonYear).subscribe((result) => {
       this.companyNames = result;
-      console.log(this.companyNames);
     });
     this.loadMaxCompanies();
     this.loadMobileAppUsersByAgeRange();
@@ -403,7 +402,6 @@ export class MobileComponent implements OnInit, DashboardComponent {
     if(areaCode != 0){
       let area : AreaLayerLookup = this.areaLayers.find(c=> c.id == areaCode);
       //bermudaTriangle.setMap(this.map);
-      this.locations = [];
       this.applicantMobileTrackingsFiltred = this.applicantMobileTrackingsLastFiltred.filter(c=>{
       let polygone = new google.maps.Polygon({
       paths: area.layer,

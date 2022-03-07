@@ -381,4 +381,11 @@ export class MainComponent implements OnInit, DashboardComponent {
   }
 
   isFullScreen: boolean;
+
+
+  onNumberChange(value: number) {
+    if(value < 5) {
+      this.dashboardService.getSlideShowInterval().next(5);
+    }
+  }
 }
