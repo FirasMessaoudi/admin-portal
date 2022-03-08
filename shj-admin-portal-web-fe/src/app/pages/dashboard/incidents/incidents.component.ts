@@ -157,7 +157,7 @@ export class IncidentsComponent
   ngAfterViewInit(): void {}
 
   ngOnInit() {
-    this.seasonYear = this.seasonYear = momentHijri(new Date()).iYear();;
+    this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
     this.dashboardService
       .loadIncidentsLocationsForHijriSeason(this.seasonYear)
       .subscribe((data) => {

@@ -46,7 +46,7 @@
                     height="100"
             >
             </canvas>
-            <div class="mt-4">
+            <div class="mt-4" *ngIf="incidents?.totalNumberOfRegisteredIncidents>0">
               <div>
                 {{'dashboard.main.area_with_most_incidents' | translate}}
                 <b class="text-dark">{{mostIncidentsArea}}</b>
