@@ -93,8 +93,6 @@ export class MainComponent implements OnInit, DashboardComponent {
 
   private refreshSubscription: Subscription;
   seasonYear: number;
-  dashboards: dashboardItem[] = [];
-  slideShowInterval: number;
 
   constructor(
     private dashboardService: DashboardService,
@@ -102,15 +100,10 @@ export class MainComponent implements OnInit, DashboardComponent {
     private dateFormatterService: DateFormatterService,
     private translate: TranslateService,
     private i18nService: I18nService,
-    config: NgbModalConfig,
-    private modalService: NgbModal
+    config: NgbModalConfig
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
-  }
-
-  open(content) {
-    this.modalService.open(content);
   }
 
   ngOnInit() {
@@ -143,11 +136,6 @@ export class MainComponent implements OnInit, DashboardComponent {
         this.translate.instant('dashboard.main.total_incidents')
       );
     });
-
-    this.dashboards = this.dashboardService.getDashboardItems();
-    this.dashboardService
-      .getSlideShowInterval()
-      .subscribe((interval) => (this.slideShowInterval = interval));
   }
 
   ngOnDestroy() {
@@ -376,20 +364,6 @@ export class MainComponent implements OnInit, DashboardComponent {
     }
   }
 
-  disableSlideShow(): boolean {
-    return this.dashboards.filter((dashboard) => dashboard.selected).length < 1;
-  }
-
-  updateInterval(newValue) {
-    this.dashboardService.getSlideShowInterval().next(newValue);
-  }
-
   isFullScreen: boolean;
 
-
-  onNumberChange(value: number) {
-    if(value < 5) {
-      this.dashboardService.getSlideShowInterval().next(5);
-    }
-  }
 }

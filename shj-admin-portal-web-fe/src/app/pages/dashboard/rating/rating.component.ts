@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-rating',
@@ -8,7 +9,7 @@ import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.componen
 })
 export class RatingComponent implements OnInit,DashboardComponent {
 
-  constructor() { }
+  constructor(private translate: TranslateService) { }
 
   ngOnInit() {
   }

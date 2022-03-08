@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {EAuthority} from "@shared/model";
 import {AuthenticationService} from "@core/services";
 import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-transactions',
@@ -10,7 +11,7 @@ import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.componen
 })
 export class TransactionsComponent implements OnInit, DashboardComponent{
 
-  constructor(private authenticationService: AuthenticationService) {
+  constructor(private authenticationService: AuthenticationService, private translate: TranslateService) {
   }
 
   ngOnInit() {

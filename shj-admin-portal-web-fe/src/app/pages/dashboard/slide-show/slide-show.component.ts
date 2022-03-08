@@ -121,6 +121,7 @@ export class SlideShowComponent implements OnInit, AfterViewInit {
       /* IE/Edge */
       this.document.msExitFullscreen();
     }
+    window.history.back();
   }
 
   loadComponent() {
@@ -137,4 +138,5 @@ export class SlideShowComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
 
   }
+
 }
