@@ -91,7 +91,7 @@ public class StaffWsController {
             if (applicant.isPresent()) {
                 ApplicantStaffVO applicantStaffVO = applicant.get();
                 applicantStaffVO.setUserType(EUserType.APPLICANT.getId());
-                if(applicantStaffVO.getGroupLeaderSuin().equals(suin)){
+                if(applicantStaffVO.getGroupLeaderSuin()!= null && applicantStaffVO.getGroupLeaderSuin().equals(suin)){
                     applicantStaffVO.setSameStaffGroup(true);
                 }
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())

@@ -53,13 +53,14 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
             "INNER JOIN ritual.applicant applicant " +
             "INNER JOIN ritual.applicantPackage applicantPackage " +
             "INNER JOIN applicant.digitalIds applicantDigitalId " +
-            "INNER JOIN JpaGroupApplicantList groupApplicantList on groupApplicantList.applicantUin = applicantDigitalId.uin " +
-            "INNER JOIN groupApplicantList.applicantGroup applicantGroup " +
-            "INNER JOIN applicantGroup.groupLeader groupLeader " +
-            "INNER JOIN groupLeader.digitalIds groupLeaderDigitalId " +
-            "INNER JOIN applicantGroup.companyRitualSeason companyRitualSeason " +
+            "INNER JOIN applicantPackage.ritualPackage ritualPackage " +
+            "INNER JOIN ritualPackage.companyRitualSeason companyRitualSeason " +
             "INNER JOIN companyRitualSeason.ritualSeason ritualSeason " +
             "INNER JOIN companyRitualSeason.company company " +
+            "LEFT JOIN JpaGroupApplicantList groupApplicantList on groupApplicantList.applicantUin = applicantDigitalId.uin " +
+            "LEFT JOIN groupApplicantList.applicantGroup applicantGroup " +
+            "LEFT JOIN applicantGroup.groupLeader groupLeader " +
+            "LEFT JOIN groupLeader.digitalIds groupLeaderDigitalId " +
             "WHERE ritualSeason.active = true " +
             "AND (applicant.idNumber =:idNumber OR  " +
             "applicant.idNumberOriginal =:idNumber OR " +
@@ -79,13 +80,14 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
             "INNER JOIN ritual.applicant applicant " +
             "INNER JOIN ritual.applicantPackage applicantPackage " +
             "INNER JOIN applicant.digitalIds applicantDigitalId " +
-            "INNER JOIN JpaGroupApplicantList groupApplicantList on groupApplicantList.applicantUin = applicantDigitalId.uin " +
-            "INNER JOIN groupApplicantList.applicantGroup applicantGroup " +
-            "INNER JOIN applicantGroup.groupLeader groupLeader " +
-            "INNER JOIN groupLeader.digitalIds groupLeaderDigitalId " +
-            "INNER JOIN applicantGroup.companyRitualSeason companyRitualSeason " +
+            "INNER JOIN applicantPackage.ritualPackage ritualPackage " +
+            "INNER JOIN ritualPackage.companyRitualSeason companyRitualSeason " +
             "INNER JOIN companyRitualSeason.ritualSeason ritualSeason " +
             "INNER JOIN companyRitualSeason.company company " +
+            "LEFT JOIN JpaGroupApplicantList groupApplicantList on groupApplicantList.applicantUin = applicantDigitalId.uin " +
+            "LEFT JOIN groupApplicantList.applicantGroup applicantGroup " +
+            "LEFT JOIN applicantGroup.groupLeader groupLeader " +
+            "LEFT JOIN groupLeader.digitalIds groupLeaderDigitalId " +
             "WHERE ritualSeason.active = true " +
             "AND  applicantDigitalId.uin =:uin " +
             "AND applicantDigitalId.statusCode=:digitalIdStatus " +
