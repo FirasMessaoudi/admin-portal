@@ -103,7 +103,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
                         // Save batching values as comma-separated string
                         .batchTypeValues(String.join(",", key))
                         .printRequestBatchCards(value.stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
-                printRequestBatch.setSequenceNumber(printRequestBatchRepository.maxSequenceNumber() + 1);
+                printRequestBatch.setSequenceNumber(printRequestBatchRepository.maxSequenceNumber() != null ? printRequestBatchRepository.maxSequenceNumber() + 1 : 1);
                 printRequest.getPrintRequestBatches().add(printRequestBatch);
             });
         } else {

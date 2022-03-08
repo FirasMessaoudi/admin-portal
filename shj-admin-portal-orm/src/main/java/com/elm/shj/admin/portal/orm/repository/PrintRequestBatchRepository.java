@@ -17,5 +17,5 @@ public interface PrintRequestBatchRepository extends JpaRepository<JpaPrintReque
     int countAllByPrintRequestId(long printRequestId);
 
     @Query("select max (p.sequenceNumber) from JpaPrintRequestBatch p")
-    int maxSequenceNumber();
+    Integer maxSequenceNumber();
 }
