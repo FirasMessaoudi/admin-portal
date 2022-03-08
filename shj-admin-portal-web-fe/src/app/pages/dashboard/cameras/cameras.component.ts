@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DashboardService } from '@core/services';
 import { DashboardCameraNumbersVoModel } from '@model/dashboard-camera-numbers-vo.model';
 import { I18nService } from '@dcc-commons-ng/services';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-cameras',
@@ -18,7 +19,8 @@ export class CamerasComponent implements OnInit, DashboardComponent {
   constructor(
     private dashboardService: DashboardService,
     private route: ActivatedRoute,
-    private i18nService: I18nService
+    private i18nService: I18nService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {

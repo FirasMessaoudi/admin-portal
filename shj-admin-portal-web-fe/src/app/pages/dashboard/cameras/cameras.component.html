@@ -6,10 +6,7 @@
   <div class="title__Page">
     <h3 class="font-weight-bold text-dark">{{'dashboard.cameras.title' | translate}}</h3>
     <div *ngIf="!isFullScreen">
-      <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3">
-        <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
-        {{'dashboard.general.full_screen' | translate}}
-      </button>
+      <auto-preview></auto-preview>
     </div>
   </div>
   <div class="content__section">

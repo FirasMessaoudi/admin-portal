@@ -1,0 +1,24 @@
+.item {
+  display: flex;
+  justify-content: space-between;
+}
+.c9 { filter: hue-rotate(230deg) }
+
+.form-checkbox {
+  display: flex;
+  align-items: center;
+}
+input[type=checkbox] {
+  transform: scale(1.5);
+  cursor: pointer;
+}
+.footer {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+}
+.btn-exit {
+  display: flex;
+  justify-content: right;
+}

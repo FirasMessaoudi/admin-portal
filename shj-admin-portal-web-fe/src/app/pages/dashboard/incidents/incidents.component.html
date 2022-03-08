@@ -10,10 +10,7 @@
       <span *ngIf="currentLanguage.startsWith('ar')">عام</span>
       {{seasonYear}}</h3>
     <div *ngIf="!isFullScreen">
-      <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3" >
-        <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
-        {{'dashboard.general.auto_preview' | translate}}
-      </button>
+      <auto-preview></auto-preview>
     </div>
   </div>
   <div class="content__section" *ngIf="!canSeeIncidentDashboard">
