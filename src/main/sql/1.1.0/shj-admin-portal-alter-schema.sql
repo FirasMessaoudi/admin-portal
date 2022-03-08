@@ -1358,7 +1358,7 @@ drop CONSTRAINT fk_chat_message_chat_message_type;
 GO
 
 alter table shc_portal.shc_chat_message
-alter column type_id varchar(10);
+alter column type_id varchar(20);
 GO
 
 exec sp_rename 'shc_portal.shc_chat_message.type_id','type_code','COLUMN'
