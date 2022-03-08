@@ -580,13 +580,13 @@ VALUES (14, 'MUZDALIFA', 'en', N'Muzdalifah', '21.4013,39.89213-21.38372,39.9035
 INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date, parent_layer_id)
 VALUES (15, 'ARAFAT', 'ar', N'عرفات', '21.32488,39.9232-21.31465,39.96414-21.32248,39.97998-21.33112,39.98929-21.35047,40.00663-21.38388,39.988-21.38336,39.97797-21.37724,39.96845-21.37477,39.96504-21.37181,39.96111', GETDATE(),1);
 
-INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date, parent_layer_code)
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date, parent_layer_id)
 VALUES (16, 'ARAFAT', 'en', N'Arafat', '21.32488,39.9232-21.31465,39.96414-21.32248,39.97998-21.33112,39.98929-21.35047,40.00663-21.38388,39.988-21.38336,39.97797-21.37724,39.96845-21.37477,39.96504-21.37181,39.96111', GETDATE(),1);
 
-INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date, parent_layer_code)
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date, parent_layer_id)
 VALUES (17, 'JABAL_ALRAHMA', 'ar', N'جبل الرحمة', '21.35402,39.98216-21.3553,39.98195-21.35658,39.98319-21.35678,39.98422-21.35686,39.98461-21.35638,39.98555-21.35394,39.98616-21.35254,39.9842-21.3532,39.9831', GETDATE(),8);
 
-INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date, parent_layer_code)
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, layer, creation_date, parent_layer_id)
 VALUES (18, 'JABAL_ALRAHMA', 'en', N'Alrahma Mountain', '21.35402,39.98216-21.3553,39.98195-21.35658,39.98319-21.35678,39.98422-21.35686,39.98461-21.35638,39.98555-21.35394,39.98616-21.35254,39.9842-21.3532,39.9831', GETDATE(),8);
 
 SET IDENTITY_INSERT shc_portal.shc_area_layers_lk OFF;
