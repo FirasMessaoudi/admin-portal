@@ -29,7 +29,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -83,20 +85,22 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
         //  lat and long
         List<AreaLayerLookupDto> areaLayers = areaLayerLookupService.findAll();
         Position point = new Position();
-        point.lat = applicantIncidentLiteDto.getLocationLat();
-        point.lng = applicantIncidentLiteDto.getLocationLng();
-        areaLayers.forEach(area -> {
-            List<Position> positions = new ArrayList<>();
-            Stream.of(area.getLayer().split("-")).forEach(stringPoint -> {
-                Position position = new Position();
-                position.lat = Double.parseDouble(stringPoint.split(",")[0]);
-                position.lng = Double.parseDouble(stringPoint.split(",")[1]);
-                positions.add(position);
+        if (applicantIncidentLiteDto.getLocationLat() != null && applicantIncidentLiteDto.getLocationLat() != null) {
+            point.lat = applicantIncidentLiteDto.getLocationLat();
+            point.lng = applicantIncidentLiteDto.getLocationLng();
+            areaLayers.forEach(area -> {
+                List<Position> positions = new ArrayList<>();
+                Stream.of(area.getLayer().split("-")).forEach(stringPoint -> {
+                    Position position = new Position();
+                    position.lat = Double.parseDouble(stringPoint.split(",")[0]);
+                    position.lng = Double.parseDouble(stringPoint.split(",")[1]);
+                    positions.add(position);
+                });
+                if (isPointInPolygon(point, positions.stream().toArray(Position[]::new))) {
+                    applicantIncidentLiteDto.setAreaCode(area.getCode());
+                }
             });
-            if(isPointInPolygon(point,positions.stream().toArray(Position[]::new))) {
-                applicantIncidentLiteDto.setAreaCode(area.getCode());
-            }
-        });
+        }
 
         // upload the file in the SFTP
         try {

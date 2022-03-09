@@ -1369,6 +1369,11 @@ ADD CONSTRAINT fk_chat_message_chat_message_type
 FOREIGN KEY (type_code) REFERENCES  shc_portal.shc_chat_message_type_lk (code);
 GO
 
+ALTER TABLE shc_portal.shc_applicant_incident ALTER COLUMN location_lat decimal(10, 8) NULL;
+GO
+ALTER TABLE shc_portal.shc_applicant_incident ALTER COLUMN location_lng decimal(11, 8) NULL;
+GO
+
 
 
 
