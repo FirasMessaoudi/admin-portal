@@ -7,9 +7,10 @@ import {RatingComponent} from './rating/rating.component';
 import {TransactionsComponent} from './transactions/transactions.component';
 import {SlideShowComponent} from "@pages/dashboard/slide-show/slide-show.component";
 import {SlideShowDirective} from "@shared/directives/slide-show.directive";
+import {AutoPreviewComponent} from "@pages/dashboard/auto-preview/auto-preview.component";
 
 export const my_dashboard: any[] = [MainComponent, TransactionsComponent, RatingComponent, MobileComponent,
-  IncidentsComponent, GeneralNumbersComponent, CamerasComponent, SlideShowComponent, SlideShowDirective
+  IncidentsComponent, GeneralNumbersComponent, CamerasComponent, SlideShowComponent, SlideShowDirective, AutoPreviewComponent
 ];
 
 
