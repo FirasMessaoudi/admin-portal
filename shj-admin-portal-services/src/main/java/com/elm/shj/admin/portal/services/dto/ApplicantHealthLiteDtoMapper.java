@@ -4,7 +4,7 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthLite;
 import org.mapstruct.Mapper;
 
 /**
@@ -14,5 +14,5 @@ import org.mapstruct.Mapper;
  * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
-public abstract class ApplicantHealthLiteDtoMapper implements IGenericMapper<ApplicantHealthLiteDto, JpaApplicantHealth> {
+public abstract class ApplicantHealthLiteDtoMapper implements IGenericMapper<ApplicantHealthLiteDto, JpaApplicantHealthLite>, HibernateAwareMapper {
 }

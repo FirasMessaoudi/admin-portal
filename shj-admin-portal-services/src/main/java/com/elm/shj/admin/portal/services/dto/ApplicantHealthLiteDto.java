@@ -28,8 +28,6 @@ public class ApplicantHealthLiteDto implements Serializable {
     private String bloodType;
     @JsonBackReference
     private ApplicantLiteDto applicant;
-    @JsonBackReference
-    private ApplicantRitualLiteDto applicantRitual;
     private List<ApplicantHealthDiseaseLiteDto> diseases;
     private List<ApplicantHealthSpecialNeedsLiteDto> specialNeeds;
     private List<ApplicantHealthImmunizationLiteDto> immunizations;

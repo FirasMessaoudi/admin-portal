@@ -3,8 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
-import com.elm.shj.admin.portal.orm.repository.ApplicantHealthRepository;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthLite;
+import com.elm.shj.admin.portal.orm.repository.ApplicantHealthLiteRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantHealthLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +23,9 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class ApplicantHealthLiteService extends GenericService<JpaApplicantHealth, ApplicantHealthLiteDto, Long> {
+public class ApplicantHealthLiteService extends GenericService<JpaApplicantHealthLite, ApplicantHealthLiteDto, Long> {
 
-    private final ApplicantHealthRepository applicantHealthRepository;
+    private final ApplicantHealthLiteRepository applicantHealthLiteRepository;
 
     /**
      * Finds applicant's health details by applicant's uin and ritual id
@@ -35,7 +35,7 @@ public class ApplicantHealthLiteService extends GenericService<JpaApplicantHealt
      * @return the found health details or empty structure
      */
     public Optional<ApplicantHealthLiteDto> findApplicantHealthDetailsByUinAndApplicantPackageId(String uin, Long applicantPackageId) {
-        JpaApplicantHealth healthProfile = applicantHealthRepository.findByApplicantDigitalIdsUinAndApplicantRitualApplicantPackageId(uin, applicantPackageId);
+        JpaApplicantHealthLite healthProfile = applicantHealthLiteRepository.findByApplicantDigitalIdsUinAndApplicantRitualApplicantPackageId(uin, applicantPackageId);
         if (healthProfile == null) {
             return Optional.empty();
         } else {
