@@ -86,7 +86,7 @@ public class IncidentWsController {
                                                 @RequestPart(value = "attachment", required = false) MultipartFile incidentAttachment) throws Exception {
 
         log.info("adding  applicant incident");
-        if(incidentAttachment != null) {
+        if (incidentAttachment != null) {
             //validate file type, allow only images and video
             if (!incidentAttachment.getOriginalFilename().equals("") && !applicantIncidentLiteService.validateFileExtension(incidentAttachment.getOriginalFilename())) {
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_FILE_EXTENSION.getCode()).build()).build());
@@ -96,16 +96,19 @@ public class IncidentWsController {
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.ExCEED_MAX_SIZE.getCode()).build()).build());
             }
         }
-        // validate latitude cordinates, it should be between -90 and +90
-        if(applicantIncidentRequest.getLocationLat().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLat().intValue() > MAX_GEO_CORDINATES){
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
+        if (applicantIncidentRequest.getLocationLat() != null && applicantIncidentRequest.getLocationLng() != null) {
+            // validate latitude cordinates, it should be between -90 and +90
+            if (applicantIncidentRequest.getLocationLat().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLat().intValue() > MAX_GEO_CORDINATES) {
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
+            }
+            // validate longitude cordinates, it should be between -90 and +90
+            if (applicantIncidentRequest.getLocationLng().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLng().intValue() > MAX_GEO_CORDINATES) {
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
+            }
         }
-        // validate longitude cordinates, it should be between -90 and +90
-        if(applicantIncidentRequest.getLocationLng().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLng().intValue() > MAX_GEO_CORDINATES){
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
-        }
-        IncidentTypeLookupDto incidentTypeLookupDto= incidentTypeLookupService.findByCode(applicantIncidentRequest.getTypeCode());
-        if(incidentTypeLookupDto ==null)
+
+        IncidentTypeLookupDto incidentTypeLookupDto = incidentTypeLookupService.findByCode(applicantIncidentRequest.getTypeCode());
+        if (incidentTypeLookupDto == null)
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INCIDENT_TYPE_NOT_FOUND.getCode()).build()).build());
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantIncidentLiteService.addApplicantIncident(applicantIncidentRequest, incidentAttachment)).build());
 
