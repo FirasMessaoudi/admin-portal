@@ -9,6 +9,7 @@ import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.RitualSeasonService;
 import com.elm.shj.admin.portal.services.utils.MapUtils;
+import com.elm.shj.admin.portal.services.zone.AreaLayerService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +66,7 @@ public class LookupController {
     private final RitualSeasonService ritualSeasonService;
     private final DashboardService dashboardService;
     private final AreaLayerLookupService areaLayerLookupService;
+    private final AreaLayerService areaLayerService;
 
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
@@ -277,8 +279,14 @@ public class LookupController {
     }
 
     @GetMapping("/area_layers/list")
-    public List<AreaLayerLookupDto> listAreaLayers() {
-        log.debug("list religious occasions day...");
+    public List<AreaLayerDto> listAreaLayers() {
+        log.debug("list area Layers...");
+        return areaLayerService.findAll();
+    }
+
+    @GetMapping("/area_layers_labels/list")
+    public List<AreaLayerLookupDto> AreaLayersLabel() {
+        log.debug("list area layer label...");
         return areaLayerLookupService.findAll();
     }
 

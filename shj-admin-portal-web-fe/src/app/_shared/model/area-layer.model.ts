@@ -1,6 +1,8 @@
 import { Lookup } from '@model/lookup.model';
 
-export class AreaLayerLookup extends Lookup {
+export class AreaLayer {
+  id: number;
   layer: any;
   parentLayerId: number;
+  areaCode: string;
 }

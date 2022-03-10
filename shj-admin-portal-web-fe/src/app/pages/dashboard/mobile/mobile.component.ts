@@ -20,7 +20,6 @@ import { LookupService } from '@core/utilities/lookup.service';
 import { ApplicantMobileTracking } from '@model/applicant-mobile-tracking.model';
 import { DatePipe } from '@angular/common';
 import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
-import { AreaLayerLookup } from '@app/_shared/model/area-layer-lookup.model';
 import { Position } from '@app/_shared/model/marker.model';
 import { interpolateRgb } from 'd3-interpolate';
 import {
@@ -30,6 +29,7 @@ import {
   Renderer,
 } from '@googlemaps/markerclusterer';
 import { LocalizedCountVo } from '@model/localized-count-vo.model';
+import { AreaLayer } from '@app/_shared/model/area-layer.model';
 
 const moment = momentjs;
 const barChartBackgroundColors = [
@@ -66,9 +66,10 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
   MAP_ZOOM_OUT = 10;
 
-  areaLayers: AreaLayerLookup[] = [];
+  areaLayers: AreaLayer[] = [];
   companyNames: CompanyLite[];
   nationalities: Lookup[] = [];
+  layersLabels: Lookup[] = [];
 
   appUsersCount: Array<any>;
   appUsersLabels: Array<any>;
@@ -92,6 +93,8 @@ export class MobileComponent implements OnInit, DashboardComponent {
   ngOnInit() {
     this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
     this.loadActiveApplicantWithLocations();
+
+    this.lookupsService.findAreaLayersLabels().subscribe((data)=> this.layersLabels = data)
 
     // Hide bar chart legend
     this.chartsConfig.lineChartOptions.legend = false;
@@ -421,11 +424,11 @@ export class MobileComponent implements OnInit, DashboardComponent {
     });
   }
 
-  filterMapByArea(areaCode: number) {
+  filterMapByArea(areaCode: string) {
     console.log(areaCode);
 
-    if (areaCode != 0) {
-      let area: AreaLayerLookup = this.areaLayers.find((c) => c.id == areaCode);
+    if (areaCode != 'all') {
+      let area: AreaLayer = this.areaLayers.find((c) => c.areaCode == areaCode);
       //bermudaTriangle.setMap(this.map);
       this.applicantMobileTrackingsFiltred =
         this.applicantMobileTrackingsLastFiltred.filter((c) => {
@@ -442,7 +445,7 @@ export class MobileComponent implements OnInit, DashboardComponent {
           }
         });
     }
-    if (areaCode == 0) {
+    if (areaCode == "all") {
       this.applicantMobileTrackingsFiltred =
         this.applicantMobileTrackingsLastFiltred;
     }

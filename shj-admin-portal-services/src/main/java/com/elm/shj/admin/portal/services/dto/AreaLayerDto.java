@@ -1,6 +1,3 @@
-/*
- * Copyright (c) 2022 ELM. All rights reserved.
- */
 package com.elm.shj.admin.portal.services.dto;
 
 import lombok.Getter;
@@ -19,13 +16,15 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AreaLayerLookupDto implements Serializable {
+public class AreaLayerDto implements Serializable {
 
-    private static final long serialVersionUID = -5358244881018936417L;
+    private static final long serialVersionUID = 9147583371796645468L;
+
 
     private long id;
-    private String code;
-    private String lang;
-    private String label;
+    private String areaCode;
+    private String layer;
+    private Integer parentLayerId;
     private Date creationDate;
+
 }

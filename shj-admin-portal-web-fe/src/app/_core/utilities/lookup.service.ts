@@ -35,4 +35,8 @@ export class LookupService {
   loadDashboardRefreshInterval(): Observable<any> {
     return this.http.get<any>('/core/api/lookup/dashboard/refresh-interval', {responseType: 'number' as 'json'});
   }
+
+  findAreaLayersLabels(): Observable<Lookup[]> {
+    return this.http.get<any>('/core/api/lookup/area_layers_labels/list');
+  }
 }

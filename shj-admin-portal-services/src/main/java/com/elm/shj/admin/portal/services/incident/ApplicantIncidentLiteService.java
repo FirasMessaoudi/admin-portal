@@ -6,13 +6,13 @@ package com.elm.shj.admin.portal.services.incident;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncidentLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentLiteRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantIncidentLiteDto;
-import com.elm.shj.admin.portal.services.dto.AreaLayerLookupDto;
+import com.elm.shj.admin.portal.services.dto.AreaLayerDto;
 import com.elm.shj.admin.portal.services.dto.EIncidentStatus;
 import com.elm.shj.admin.portal.services.dto.IncidentAttachmentLiteDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
-import com.elm.shj.admin.portal.services.lookup.AreaLayerLookupService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
+import com.elm.shj.admin.portal.services.zone.AreaLayerService;
 import com.jcraft.jsch.JSchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +56,7 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
     private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
     private static ThreadLocal<List<String>> threadLocalLatestSerialList = ThreadLocal.withInitial(() -> new ArrayList<>());
-    private final AreaLayerLookupService areaLayerLookupService;
+    private final AreaLayerService areaLayerService;
 
 
     /**
@@ -83,7 +83,7 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
         applicantIncidentLiteDto.setReferenceNumber(referenceNumber);
         applicantIncidentLiteDto.setStatusCode(EIncidentStatus.UNDER_PROCESSING.name());
         //  lat and long
-        List<AreaLayerLookupDto> areaLayers = areaLayerLookupService.findAll();
+        List<AreaLayerDto> areaLayers = areaLayerService.findAll();
         Position point = new Position();
         if (applicantIncidentLiteDto.getLocationLat() != null && applicantIncidentLiteDto.getLocationLat() != null) {
             point.lat = applicantIncidentLiteDto.getLocationLat();
@@ -97,7 +97,7 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
                     positions.add(position);
                 });
                 if (isPointInPolygon(point, positions.stream().toArray(Position[]::new))) {
-                    applicantIncidentLiteDto.setAreaCode(area.getCode());
+                    applicantIncidentLiteDto.setAreaCode(area.getAreaCode());
                 }
             });
         }

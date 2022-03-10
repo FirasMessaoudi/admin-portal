@@ -1303,8 +1303,6 @@ CREATE TABLE shc_portal.shc_area_layers_lk
     id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
     code          varchar(20)   NOT NULL,
     lang          varchar(45)   NOT NULL,
-    label         nvarchar(50)  NOT NULL,
-    layer		  nvarchar(255) NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
     CONSTRAINT area_layers_lk_unique UNIQUE (code ASC, lang ASC)
 );
@@ -1374,6 +1372,20 @@ GO
 ALTER TABLE shc_portal.shc_applicant_incident ALTER COLUMN location_lng decimal(11, 8) NULL;
 GO
 
+if not exists(select * from sys.tables where name = 'shc_area_layers')
+CREATE TABLE shc_portal.shc_area_layers
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    area_code          varchar(20)   NOT NULL,
+    layer		  nvarchar(255) NOT NULL,
+    parent_layer_id     int,
+    creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
+);
+GO
+ALTER TABLE shc_portal.shc_area_layers_lk DROP COLUMN layer;
+GO
+ALTER TABLE shc_portal.shc_area_layers_lk DROP COLUMN parent_layer_id;
+GO
 
 
 
