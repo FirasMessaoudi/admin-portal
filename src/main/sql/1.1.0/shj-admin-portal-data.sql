@@ -597,25 +597,25 @@ VALUES (1, 'MAKKAH', '21.51249,39.83359-21.55241,39.80355-21.55657,39.76527-21.4
 INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date)
 VALUES (2, 'MADINA', '24.65638,39.60837-24.6542,39.50417-24.63079,39.43911-24.59197,39.39169-24.45442,39.43079-24.38729,39.441-24.33967,39.54563-24.32583,39.69832-24.3944,39.78638-24.47758,39.86543-24.55413,39.81261-24.61815,39.77008-24.6535,39.70879', GETDATE());
 
-INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_area_code)
+INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_layer_id)
 VALUES (3, 'MAKKAH_HOLY_MOSQUE', '21.42623,39.82861-21.42519,39.8281-21.42403,39.82921-21.42116,39.82733-21.42084,39.82295-21.42267,39.82119-21.42381,39.82071-21.42514,39.82035-21.42609,39.82316-21.42711,39.8272', GETDATE(), 1);
 
-INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_area_code)
+INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_layer_id)
 VALUES (4, 'MADINA_HOLY_MOSQUE', '24.46536,39.61052-24.46598,39.6076-24.47309,39.60468-24.47567,39.61069-24.47243,39.61833-24.46645,39.62004-24.46536,39.61485', GETDATE(),1);
 
-INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_area_code)
+INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_layer_id)
 VALUES (5, 'MENA','21.40585,39.87573-21.42263,39.86458-21.42527,39.88621-21.43494,39.89685-21.43418,39.90174-21.43398,39.90655-21.40489,39.91183-21.39642,39.89455', GETDATE(), 1);
 
-INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_area_code)
+INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_layer_id)
 VALUES (6, 'GAMARAT', '21.42623,39.85265-21.40865,39.86406-21.40274,39.86891-21.40034,39.87822-21.41808,39.88904-21.43741,39.87385-21.43686,39.87095-21.43646,39.86822-21.43606,39.86687', GETDATE(),5);
 
-INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_area_code)
+INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_layer_id)
 VALUES (7, 'MUZDALIFA', '21.4013,39.89213-21.38372,39.90354-21.3754,39.91771-21.38915,39.9311-21.41249,39.91333-21.43014,39.90717-21.42927,39.90238-21.41113,39.90635', GETDATE(), 1);
 
-INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_area_code)
+INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_layer_id)
 VALUES (8, 'ARAFAT', '21.32488,39.9232-21.31465,39.96414-21.32248,39.97998-21.33112,39.98929-21.35047,40.00663-21.38388,39.988-21.38336,39.97797-21.37724,39.96845-21.37477,39.96504-21.37181,39.96111', GETDATE(),1);
 
-INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_area_code)
+INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_layer_id)
 VALUES (9, 'JABAL_ALRAHMA', '21.35402,39.98216-21.3553,39.98195-21.35658,39.98319-21.35678,39.98422-21.35686,39.98461-21.35638,39.98555-21.35394,39.98616-21.35254,39.9842-21.3532,39.9831', GETDATE(),8);
 
 
