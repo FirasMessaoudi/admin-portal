@@ -23,27 +23,20 @@
   <div class="modal-footer">
     <div class="footer">
       <div class="flex-center align-content-center">
-        <div class="d-flex flex-center align-content-center">
-          <span class="text-nowrap list-sts">{{'dashboard.general.show_period' | translate}}</span>
-          <div class="col-xs-2 mx-2">
-            <input type="number" min="5" max="10000" class="custom-input-pop" [(ngModel)]="slideShowInterval" (blur)="onNumberChange($event.target.value)"
-                   (ngModelChange)="updateInterval($event)">
-          </div>
-          <span class="list-sts">{{'dashboard.general.second' | translate}}</span>
-        </div>
+        <span class="text-nowrap list-sts">{{'dashboard.general.show_period' | translate}}</span>
+        <div class="horizontal-space"></div>
+        <input type="number" min="5" max="10000" class="custom-input-pop input-number" [(ngModel)]="slideShowInterval"
+               (blur)="onNumberChange($event.target.value)"
+               (ngModelChange)="updateInterval($event)">
+        <div class="horizontal-space"></div>
+        <span class="list-sts">{{'dashboard.general.second' | translate}}</span>
       </div>
-
-      <div>
-        <div class="d-inline-flex text-nowrap">
-          <button type="button" class="btn btn-outline-dcc-primary custom-popup-btn" (click)="c('Save click')">{{'dashboard.general.default_application_view' | translate}}
-          </button>
-          <button type="button" class="btn btn-dcc-primary mx-2" [disabled]="disableSlideShow()"
-                  (click)="c('Save click')" [routerLink]="['/slideshow']">{{'general.btn_view' | translate}}
-          </button>
-        </div>
-
+      <div class="flex-sm-fill"></div>
+      <div class="text-nowrap">
+        <button type="button" class="btn btn-dcc-primary mx-2" [disabled]="disableSlideShow()"
+                (click)="c('Save click')" [routerLink]="['/slideshow']">{{'general.btn_view' | translate}}
+        </button>
       </div>
-
     </div>
   </div>
 </ng-template>
