@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.validation.Valid;
@@ -60,6 +61,7 @@ public class ApplicantDto implements Serializable {
     @CellIndex(index = 1)
     private String passportNumber;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @GregorianDate(minOffset = -120, maxOffset = -10)
     @CellIndex(index = 2)
     private Date dateOfBirthGregorian;

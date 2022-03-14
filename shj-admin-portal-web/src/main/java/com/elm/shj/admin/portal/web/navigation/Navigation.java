@@ -55,14 +55,18 @@ public class Navigation {
 	// Notification Integration
 	public static final String API_NOTIFICATION_INTEGRATION = "/api/ws/notification";
 	// notification template management
-	public static final String API_NOTIFICATION_TEMPLATE = "/api/notification/template";
-	// Incidents
-	public static final String API_INCIDENTS = "/api/incidents";
-	// Incident Integration
-	public static final String API_INCIDENTS_INTEGRATION = "/api/ws/incidents";
-	// Chat Contact Integration
-	public static final String API_CHAT_CONTACT_INTEGRATION = "/api/ws/chat-contact";
-	public static final String API_STAFF_INTEGRATION = "/api/ws/staff";
-	// Applicant Cards
-	public static final String API_STAFF_CARDS = "/api/staff-cards";
+    public static final String API_NOTIFICATION_TEMPLATE = "/api/notification/template";
+    // Incidents
+    public static final String API_INCIDENTS = "/api/incidents";
+    // Incident Integration
+    public static final String API_INCIDENTS_INTEGRATION = "/api/ws/incidents";
+    // Chat Contact Integration
+    public static final String API_CHAT_CONTACT_INTEGRATION = "/api/ws/chat-contact";
+    public static final String API_STAFF_INTEGRATION = "/api/ws/staff";
+    // Applicant Cards
+    public static final String API_STAFF_CARDS = "/api/staff-cards";
+    //Data request
+    public static final String API_DATA_REQUEST_INTEGRATION = "/api/ws/data-request";
+    //Data segment
+    public static final String API_DATA_SEGMENT_INTEGRATION = "/api/ws/data-segment";
 }

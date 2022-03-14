@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,6 +40,7 @@ public class ApplicantBasicInfoDto implements Serializable {
     @CellIndex(index = 1)
     private String passportNumber;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @GregorianDate(minOffset = -120, maxOffset = -10, groups = CheckSecond.class)
     @CellIndex(index = 2)
     private Date dateOfBirthGregorian;

@@ -130,7 +130,7 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
      * @return
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    protected Long findIdByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
+    public Long findIdByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
         return applicantRitualRepository.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber);
     }
 
