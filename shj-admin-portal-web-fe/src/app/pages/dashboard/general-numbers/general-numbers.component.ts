@@ -12,6 +12,8 @@ import { ActivatedRoute } from '@angular/router';
 import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { LocalizedCountVo } from '@model/localized-count-vo.model';
+import * as moment_ from 'moment-hijri';
+const momentHijri = moment_;
 
 @Component({
   selector: 'app-general-numbers',
@@ -60,7 +62,12 @@ export class GeneralNumbersComponent implements OnInit, DashboardComponent {
   ) {}
 
   ngOnInit() {
-    this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
+    //this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
+    this.seasonYear = parseInt(localStorage.getItem('seasonYear'));
+    if (isNaN(this.seasonYear)  ){
+      this.seasonYear = momentHijri(new Date()).iYear();
+      localStorage.setItem('seasonYear', String(this.seasonYear));
+    }
     this.loadLookups();
     this.chartsConfig.barChartOptions.legend = false;
 
