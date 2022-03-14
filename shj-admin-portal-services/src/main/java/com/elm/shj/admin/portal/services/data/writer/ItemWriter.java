@@ -225,6 +225,7 @@ public class ItemWriter {
                         } else {
                             uniqueGroupLeader.put(applicantGroupDto.getReferenceNumber(), groupLeader.getId());
                         }
+                        //TODO: fetch UIN instead of the whole applicant object
                         ApplicantDto applicantDto = applicantService.findByBasicInfo(applicantBasicInfoDto);
                         if (applicantDto != null) {
                             chatContactService.createGroupLeaderContact(applicantDto.getDigitalIds().get(0).getUin(), groupLeader, staffApplicantGroupDto.getSeason());
