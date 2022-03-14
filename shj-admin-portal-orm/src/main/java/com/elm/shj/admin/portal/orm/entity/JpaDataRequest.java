@@ -50,7 +50,7 @@ public class JpaDataRequest implements Serializable {
     @Column(name = "error_count")
     private long errorCount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "data_segment_id")
     private JpaDataSegment dataSegment;
 
@@ -58,7 +58,7 @@ public class JpaDataRequest implements Serializable {
     @JoinColumn(name = "last_update_data_request_id")
     private List<JpaDataRequestRecord> records;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "status_id")
     private JpaDataRequestStatusLookup status;
 
