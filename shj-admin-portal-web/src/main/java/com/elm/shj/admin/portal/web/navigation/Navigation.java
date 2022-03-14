@@ -69,4 +69,5 @@ public class Navigation {
     public static final String API_DATA_REQUEST_INTEGRATION = "/api/ws/data-request";
     //Data segment
     public static final String API_DATA_SEGMENT_INTEGRATION = "/api/ws/data-segment";
+	public static final String API_SURVEY_INTEGRATION = "/api/ws/survey";
 }

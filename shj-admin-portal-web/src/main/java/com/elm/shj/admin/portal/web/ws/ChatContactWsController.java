@@ -293,13 +293,6 @@ public class ChatContactWsController {
                 .body(messagesList).build());
     }
 
-    @PostMapping("/save-chat-message")
-    public ResponseEntity<WsResponse<?>> saveChatMessage(@RequestBody ChatMessageDto chatMessage) {
-        ChatMessageDto chatMessageDto = chatMessageService.saveMessage(chatMessage);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(chatMessageDto).build());
-    }
-
     /**
      * finds chat contacts by suin
      *
@@ -372,7 +365,7 @@ public class ChatContactWsController {
     }
 
 
-    @PostMapping("/v2/save-chat-message")
+    @PostMapping("/save-chat-message")
     public ResponseEntity<WsResponse<?>> saveChatMessageNew(@RequestBody ChatMessageDto chatMessage) {
         log.debug("chatMessage => {}", chatMessage);
 

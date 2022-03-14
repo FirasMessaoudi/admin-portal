@@ -1376,3 +1376,61 @@ CREATE TABLE shc_portal.shc_area_layers
 
 
 
+
+
+
+/*--------------------------------------------------------
+--  ddl for survey tables
+--------------------------------------------------------*/
+
+
+if not exists(select * from sys.tables where name = 'shc_survey_type_lk')
+create table shc_portal.shc_survey_type_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT survey_type_lk_unique unique (code ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_survey_question_lk')
+create table shc_portal.shc_survey_question_lk
+(
+    id                      int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code                    varchar(20)   NOT NULL,
+    survey_type_code        varchar(20)   NOT NULL,
+    lang                    varchar(45)   NOT NULL,
+    label                   nvarchar(100)  NOT NULL,
+    creation_date           smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT survey_question_lk_unique unique (code ASC, lang ASC, survey_type_code ASC),
+    CONSTRAINT fk_survey_question_type_code FOREIGN KEY (survey_type_code) REFERENCES shc_portal.shc_survey_type_lk (code)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_user_survey')
+create table shc_portal.shc_user_survey
+(
+    id                   int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    digital_id           varchar(45)   NOT NULL,
+    type_code            varchar(20)   NOT NULL,
+    creation_date        smalldatetime NOT NULL default current_timestamp,
+    update_date          smalldatetime NULL,
+    CONSTRAINT fk_user_survey_type_code FOREIGN KEY (type_code) REFERENCES shc_portal.shc_survey_type_lk (code),
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_user_survey_question')
+create table shc_portal.shc_user_survey_question
+(
+    id                          int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    user_survey_id              int           NOT NULL,
+    question_code               varchar(20)   NOT NULL,
+    rate                        int           NULL,
+    creation_date               smalldatetime NOT NULL default current_timestamp,
+    update_date                 smalldatetime NULL,
+
+    CONSTRAINT user_survey_unique unique (user_survey_id ASC, question_code ASC),
+    CONSTRAINT fk_user_survey_id FOREIGN KEY (user_survey_id) REFERENCES shc_portal.shc_user_survey (id)
+);
+GO
