@@ -1415,7 +1415,6 @@ create table shc_portal.shc_user_survey
     digital_id           varchar(45)   NOT NULL,
     type_code            varchar(20)   NOT NULL,
     creation_date        smalldatetime NOT NULL default current_timestamp,
-    update_date          smalldatetime NULL,
     CONSTRAINT fk_user_survey_type_code FOREIGN KEY (type_code) REFERENCES shc_portal.shc_survey_type_lk (code),
 );
 GO
