@@ -1303,14 +1303,10 @@ CREATE TABLE shc_portal.shc_area_layers_lk
     id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
     code          varchar(20)   NOT NULL,
     lang          varchar(45)   NOT NULL,
+    label         nvarchar(50)  NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
     CONSTRAINT area_layers_lk_unique UNIQUE (code ASC, lang ASC)
 );
-GO
-
-ALTER TABLE shc_portal.shc_area_layers_lk
-ADD parent_layer_code varchar(20);
-
 GO
 
 /*---------------------------------------------------
@@ -1346,11 +1342,6 @@ ALTER TABLE shc_portal.shc_camera ALTER COLUMN url varchar(256);
 
 GO
 
-ALTER TABLE shc_portal.shc_area_layers_lk DROP COLUMN parent_layer_code;
-GO
-
-ALTER TABLE shc_portal.shc_area_layers_lk ADD parent_layer_id int;
-
 alter table shc_portal.shc_chat_message
 drop CONSTRAINT fk_chat_message_chat_message_type;
 GO
@@ -1381,11 +1372,7 @@ CREATE TABLE shc_portal.shc_area_layers
     parent_layer_id     int,
     creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
 );
-GO
-ALTER TABLE shc_portal.shc_area_layers_lk DROP COLUMN layer;
-GO
-ALTER TABLE shc_portal.shc_area_layers_lk DROP COLUMN parent_layer_id;
-GO
+
 
 
 

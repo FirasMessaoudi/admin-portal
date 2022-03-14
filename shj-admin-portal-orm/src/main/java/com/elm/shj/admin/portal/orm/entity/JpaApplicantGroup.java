@@ -69,7 +69,7 @@ public class JpaApplicantGroup implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantGroup")
     private List<JpaGroupApplicantList> groupApplicantLists;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantGroup")
+    @OneToMany(orphanRemoval = true, mappedBy = "applicantGroup")
     private List<JpaCompanyRitualStep> companyRitualSteps;
 
     @PrePersist

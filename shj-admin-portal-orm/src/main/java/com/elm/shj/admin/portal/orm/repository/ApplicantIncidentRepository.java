@@ -66,7 +66,7 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
     @Query("SELECT ai FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar " +
             "JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
-            "where rs.seasonYear= :seasonYear")
+            "where rs.seasonYear= :seasonYear AND ai.areaCode IS NOT NULL")
     List<JpaApplicantIncident> findAllByCurrentSeason(@Param("seasonYear") int seasonYear);
 
 }
