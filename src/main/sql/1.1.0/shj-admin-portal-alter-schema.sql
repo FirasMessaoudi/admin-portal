@@ -1303,6 +1303,7 @@ CREATE TABLE shc_portal.shc_area_layers_lk
     id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
     code          varchar(20)   NOT NULL,
     lang          varchar(45)   NOT NULL,
+    label         nvarchar(50)  NOT NULL,
     creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
     CONSTRAINT area_layers_lk_unique UNIQUE (code ASC, lang ASC)
 );
