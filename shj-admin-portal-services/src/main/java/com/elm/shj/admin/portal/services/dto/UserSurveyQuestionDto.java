@@ -32,6 +32,5 @@ public class UserSurveyQuestionDto implements Serializable {
 
     private Date creationDate;
 
-    private Date updateDate;
 
 }

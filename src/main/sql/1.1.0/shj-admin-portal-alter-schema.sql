@@ -1427,8 +1427,6 @@ create table shc_portal.shc_user_survey_question
     question_code               varchar(20)   NOT NULL,
     rate                        int           NULL,
     creation_date               smalldatetime NOT NULL default current_timestamp,
-    update_date                 smalldatetime NULL,
-
     CONSTRAINT user_survey_unique unique (user_survey_id ASC, question_code ASC),
     CONSTRAINT fk_user_survey_id FOREIGN KEY (user_survey_id) REFERENCES shc_portal.shc_user_survey (id)
 );
