@@ -3,6 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.data.huicIntegration;
 
+import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
+import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
+import com.elm.shj.admin.portal.orm.repository.ApplicantHealthDiseaseRepository;
+import com.elm.shj.admin.portal.orm.repository.ApplicantHealthImmunizationRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.data.validators.CheckFirst;
 import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
@@ -13,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +52,11 @@ public class ValidationService {
     private final ApplicantPackageService applicantPackageService;
     private final ApplicantRelativeService applicantRelativeService;
     private final ApplicantHealthService applicantHealthService;
+    private final ChatContactService chatContactService;
+    private final ApplicantHealthDiseaseRepository applicantHealthDiseaseRepository;
+    private final CycleAvoidingMappingContext mappingContext;
+    private final ApplicationContext context;
+    private final ApplicantHealthImmunizationRepository applicantHealthImmunizationRepository;
 
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {
@@ -75,11 +86,40 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(ApplicantHealthDto.class)) {
                     saveApplicantHealth((ApplicantHealthDto) items.get(i));
                 }
+                if (items.get(i).getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
+                    saveApplicantRelative((ApplicantRelativeDto) items.get(i));
+                }
+
             }
 
         }
 
         return errorResponses;
+    }
+
+    private void saveApplicantRelative(ApplicantRelativeDto applicantRelative) {
+        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantRelative.getApplicantBasicInfo());
+        Long applicantId = applicantLite.getId();
+        if (applicantLite == null) {
+            return;
+        }
+        String applicantUin = digitalIdService.findApplicantUin(applicantId);
+        Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, applicantRelative.getPackageReferenceNumber(), null, false);
+        ApplicantLiteDto relativeApplicantLite = applicantLiteService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative));
+        applicantRelative.setRelativeApplicant(ApplicantDto.fromApplicantLite(relativeApplicantLite));
+        applicantRelative.setApplicant(ApplicantDto.fromApplicantLite(applicantLite));
+        applicantRelative.setApplicantRitual(ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
+
+        String relativeApplicantUin = (relativeApplicantLite == null || CollectionUtils.isEmpty(relativeApplicantLite.getDigitalIds())) ? null : relativeApplicantLite.getDigitalIds().get(0).getUin();
+
+        applicantRelativeService.save(applicantRelative);
+        // if the applicant digital id and the relative applicant digital id and the applicant ritual are created then add chat contacts
+        // check if digital ids are created for the applicant and the relative applicant and applicant ritual is already created.
+        if (applicantUin == null || relativeApplicantUin == null || savedApplicantRitualId == null) {
+            return;
+        }
+        //TODO: try to get the relative applicant ritual id as it is needed to create the chat contact
+        chatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitualId);
     }
 
     private void saveApplicantHealth(ApplicantHealthDto applicantHealth) {
@@ -168,6 +208,11 @@ public class ValidationService {
 
     private String getValidMessage(String message) {
         return message.substring(message.lastIndexOf(".") + 1);
+    }
+
+    private IGenericMapper findMapper(Class clazz) {
+        List<IGenericMapper> foundMappers = this.context.getBeansOfType(IGenericMapper.class).values().stream().filter(mapper -> Objects.requireNonNull(GenericTypeResolver.resolveTypeArguments(mapper.getClass(), IGenericMapper.class))[0].getSimpleName().equals(clazz.getSimpleName())).collect(Collectors.toList());
+        return CollectionUtils.size(foundMappers) == 1 ? foundMappers.get(0) : null;
     }
 
 

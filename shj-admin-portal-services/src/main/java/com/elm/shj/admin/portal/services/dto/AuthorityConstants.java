@@ -63,6 +63,9 @@ public final class AuthorityConstants {
     public static final String STATISTICAL_DASHBOARD = "STATISTICAL_DASHBOARD";
     public static final String INCIDENT_DASHBOARD = "INCIDENT_DASHBOARD";
 
+    //HUIC integration API's
+    public static final String HUIC_INTEGRATION_WEB_SERVICE_CALL = "HUIC_INTEGRATION_WEB_SERVICE_CALL";
+
     private AuthorityConstants() {
         // creating instances is not allowed
     }

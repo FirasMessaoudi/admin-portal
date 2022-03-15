@@ -640,13 +640,49 @@ INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, par
 VALUES (6, 'GAMARAT', '21.42623,39.85265-21.40865,39.86406-21.40274,39.86891-21.40034,39.87822-21.41808,39.88904-21.43741,39.87385-21.43686,39.87095-21.43646,39.86822-21.43606,39.86687', GETDATE(),5);
 
 INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_layer_id)
-VALUES (7, 'MUZDALIFA', '21.4013,39.89213-21.38372,39.90354-21.3754,39.91771-21.38915,39.9311-21.41249,39.91333-21.43014,39.90717-21.42927,39.90238-21.41113,39.90635', GETDATE(), 1);
+VALUES (7, 'MUZDALIFA',
+        '21.4013,39.89213-21.38372,39.90354-21.3754,39.91771-21.38915,39.9311-21.41249,39.91333-21.43014,39.90717-21.42927,39.90238-21.41113,39.90635',
+        GETDATE(), 1);
 
 INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_layer_id)
-VALUES (8, 'ARAFAT', '21.32488,39.9232-21.31465,39.96414-21.32248,39.97998-21.33112,39.98929-21.35047,40.00663-21.38388,39.988-21.38336,39.97797-21.37724,39.96845-21.37477,39.96504-21.37181,39.96111', GETDATE(),1);
+VALUES (8, 'ARAFAT',
+        '21.32488,39.9232-21.31465,39.96414-21.32248,39.97998-21.33112,39.98929-21.35047,40.00663-21.38388,39.988-21.38336,39.97797-21.37724,39.96845-21.37477,39.96504-21.37181,39.96111',
+        GETDATE(), 1);
 
 INSERT INTO shc_portal.shc_area_layers (id, area_code, layer, creation_date, parent_layer_id)
-VALUES (9, 'JABAL_ALRAHMA', '21.35402,39.98216-21.3553,39.98195-21.35658,39.98319-21.35678,39.98422-21.35686,39.98461-21.35638,39.98555-21.35394,39.98616-21.35254,39.9842-21.3532,39.9831', GETDATE(),8);
+VALUES (9, 'JABAL_ALRAHMA',
+        '21.35402,39.98216-21.3553,39.98195-21.35658,39.98319-21.35678,39.98422-21.35686,39.98461-21.35638,39.98555-21.35394,39.98616-21.35254,39.9842-21.3532,39.9831',
+        GETDATE(), 8);
 
 
-SET IDENTITY_INSERT shc_portal.shc_area_layers OFF;
+SET
+IDENTITY_INSERT shc_portal.shc_area_layers OFF;
+SET
+IDENTITY_INSERT shc_portal.shc_user ON;
+insert into shc_portal.shc_user (id, nin, gender, mobile_number, date_of_birth_gregorian, password_hash, first_name,
+                                 family_name, number_of_tries, activated, deleted, creation_date)
+values (3, 12345678912, 'M', 512345678, convert(date, '01/01/1970', 103),
+        '$2a$10$A81/FuMFJWcxaJhUcL8isuVeKKa.hk7GVzTVTyf7xe/XoMVWuKckK', 'HUIC', 'User', 0, 'true', 'false',
+        current_timestamp);
+SET
+IDENTITY_INSERT shc_portal.shc_user OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_role ON;
+INSERT INTO shc_portal.shc_role(id, label_ar, label_en, deleted, activated)
+VALUES (14, N'مستخدم خارجي', 'HUIC User', 0, 1);
+SET
+IDENTITY_INSERT shc_portal.shc_role OFF;
+GO
+
+INSERT INTO shc_portal.shc_user_role(user_id, role_id, is_main_role) VALUES (3, 14, 1);
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_authority_lk ON;
+INSERT INTO shc_portal.shc_authority_lk(id, label_ar, label_en, code, parent_id)
+VALUES (42, N'طلب خدمة ربط', 'HUIC Integration Web Service Call', 'HUIC_INTEGRATION_WEB_SERVICE_CALL', NULL);
+SET
+IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
+GO
+INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (14, 42);
+GO
