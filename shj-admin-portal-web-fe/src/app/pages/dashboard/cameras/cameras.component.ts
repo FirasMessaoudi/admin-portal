@@ -5,6 +5,8 @@ import { DashboardService } from '@core/services';
 import { DashboardCameraNumbersVoModel } from '@model/dashboard-camera-numbers-vo.model';
 import { I18nService } from '@dcc-commons-ng/services';
 import {TranslateService} from "@ngx-translate/core";
+import * as moment_ from 'moment-hijri';
+const momentHijri = moment_;
 
 @Component({
   selector: 'app-cameras',
@@ -25,6 +27,13 @@ export class CamerasComponent implements OnInit, DashboardComponent {
 
   ngOnInit() {
     this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
+    if(!this.seasonYear) {
+      this.seasonYear = parseInt(localStorage.getItem('seasonYear'));
+    }
+    if (isNaN(this.seasonYear)  ){
+      this.seasonYear = momentHijri(new Date()).iYear();
+      localStorage.setItem('seasonYear', String(this.seasonYear));
+    }
     this.dashboardService
       .loadCamerasNumbers(this.seasonYear)
       .subscribe((data) => {

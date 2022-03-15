@@ -30,7 +30,8 @@ import {
 } from '@googlemaps/markerclusterer';
 import { LocalizedCountVo } from '@model/localized-count-vo.model';
 import { AreaLayer } from '@app/_shared/model/area-layer.model';
-
+import * as moment_ from 'moment-hijri';
+const momentHijri = moment_;
 const moment = momentjs;
 const barChartBackgroundColors = [
   '#2B7127',
@@ -92,6 +93,14 @@ export class MobileComponent implements OnInit, DashboardComponent {
 
   ngOnInit() {
     this.seasonYear = this.route.snapshot.paramMap.get('seasonYear');
+    if(!this.seasonYear) {
+      this.seasonYear = parseInt(localStorage.getItem('seasonYear'));
+    }
+    if (isNaN(this.seasonYear)  ){
+      this.seasonYear = momentHijri(new Date()).iYear();
+      localStorage.setItem('seasonYear', String(this.seasonYear));
+    }
+
     this.loadActiveApplicantWithLocations();
 
     this.lookupsService.findAreaLayersLabels().subscribe((data)=> this.layersLabels = data)
