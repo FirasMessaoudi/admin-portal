@@ -657,6 +657,7 @@ VALUES (9, 'JABAL_ALRAHMA',
 
 SET
 IDENTITY_INSERT shc_portal.shc_area_layers OFF;
+
 SET
 IDENTITY_INSERT shc_portal.shc_user ON;
 insert into shc_portal.shc_user (id, nin, gender, mobile_number, date_of_birth_gregorian, password_hash, first_name,
