@@ -11,14 +11,18 @@ import com.elm.shj.admin.portal.services.applicant.PackageHousingService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.EUserType;
 import com.elm.shj.admin.portal.services.dto.PackageHousingDto;
+import com.elm.shj.admin.portal.services.dto.PrintRequestDto;
+import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -43,6 +47,7 @@ public class StaffWsController {
     private final ApplicantLiteService applicantLiteService;
     private final GroupApplicantListService groupApplicantListService;
     private final PackageHousingService packageHousingService;
+    private final PrintRequestLiteService printRequestLiteService;
 
     /**
      * finds company staff
@@ -143,6 +148,13 @@ public class StaffWsController {
         PackageHousingDto packageHousingDto=  packageHousingService.findStaffPackageHousingByCompanyRitualSeason(companyRitualSeason);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(packageHousingDto).build());
+    }
+
+    @GetMapping("/find/print-request")
+    public ResponseEntity<WsResponse<?>> findPrintRequest() {
+        log.debug("List print requests based on search criteria...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(printRequestLiteService.findPrintRequest()).build());
     }
 
 

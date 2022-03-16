@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Repository for print request table.
@@ -47,4 +48,20 @@ public interface PrintRequestRepository extends JpaRepository<JpaPrintRequest, L
                                         @Param("referenceNumber") String referenceNumber, @Param("batchNumber") long batchNumber,
                                         @Param("cardNumber") String cardNumber, @Param("uin") String uin,
                                         @Param("startDate") Date startDate, @Param("endDate") Date endDate,Pageable pageable);
+
+   @Query("SELECT distinct pr FROM JpaPrintRequest pr JOIN pr.printRequestBatches prb JOIN pr.printRequestCards prc " +
+           "JOIN JpaApplicantCard card ON prc.cardId = card.id " +
+           "INNER JOIN card.applicantRitual ritual  " +
+           "INNER JOIN ritual.applicant applicant " +
+           "INNER JOIN ritual.applicantPackage applicantPackage " +
+           "INNER JOIN applicant.digitalIds applicantDigitalId " +
+           "INNER JOIN applicantPackage.ritualPackage ritualPackage " +
+           "INNER JOIN ritualPackage.companyRitualSeason companyRitualSeason " +
+           "INNER JOIN companyRitualSeason.ritualSeason ritualSeason " +
+           "INNER JOIN companyRitualSeason.company company " +
+           "LEFT JOIN JpaGroupApplicantList groupApplicantList on groupApplicantList.applicantUin = applicantDigitalId.uin " +
+           "LEFT JOIN groupApplicantList.applicantGroup applicantGroup " +
+           "WHERE pr.statusCode='CONFIRMED'")
+   Page<JpaPrintRequest> findPrintRequest(Pageable pageable);
+
 }

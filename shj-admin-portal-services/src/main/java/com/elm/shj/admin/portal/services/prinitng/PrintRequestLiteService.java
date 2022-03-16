@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service handling print request lite
@@ -180,5 +183,9 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
+    public List<PrintRequestDto> findPrintRequest(){
+        List<PrintRequestDto> litePrintRequests= mapList(printRequestRepository.findPrintRequest(PageRequest.of(0, 1, Sort.Direction.ASC, "creationDate")).getContent());
+        return litePrintRequests;
+    }
 
 }
