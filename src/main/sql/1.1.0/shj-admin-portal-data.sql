@@ -661,7 +661,7 @@ SET
 IDENTITY_INSERT shc_portal.shc_user ON;
 insert into shc_portal.shc_user (id, nin, gender, mobile_number, date_of_birth_gregorian, password_hash, first_name,
                                  family_name, number_of_tries, activated, deleted, creation_date)
-values (3, 12345678912, 'M', 512345678, convert(date, '01/01/1970', 103),
+values (3, 1234567891, 'M', 512345678, convert(date, '01/01/1970', 103),
         '$2a$10$A81/FuMFJWcxaJhUcL8isuVeKKa.hk7GVzTVTyf7xe/XoMVWuKckK', 'HUIC', 'User', 0, 'true', 'false',
         current_timestamp);
 SET

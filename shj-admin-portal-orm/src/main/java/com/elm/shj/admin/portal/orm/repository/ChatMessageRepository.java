@@ -34,7 +34,7 @@ public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Lon
             "ELSE staffDigitalId.statusCode END  , " +
             "contact.type.id, contact.alias, contact.avatar,contact.systemDefined, contact.staffTitleCode, contact.relationshipCode," +
             "contact.mobileNumber ,contact.countryPhonePrefix, contact.countryCode, contact.autoAdded, contact.deleted, " +
-            "message.text, message.sentDate, message.receivedDate,message.readDate ) " +
+            "message.text, message.sentDate, message.receivedDate,message.readDate,contact.creationDate ) " +
             "FROM JpaChatMessage message " +
             "JOIN JpaChatContact  contact ON contact.id = message.sender.id OR contact.id = message.receiver.id " +
             "LEFT JOIN JpaApplicantDigitalId applicantDigitalId on applicantDigitalId.uin = contact.contactDigitalId " +

@@ -154,6 +154,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(PUBLIC_URLS).permitAll()
                 // integration web service call for WS user only
                 .antMatchers(Navigation.API_INTEGRATION + "/**").hasAuthority(AuthorityConstants.INTEGRATION_WEB_SERVICE_CALL)
+                // huic integration api call for huic user only
+                .antMatchers(Navigation.API_HUIC_INTEGRATION + "/**").hasAuthority(AuthorityConstants.HUIC_INTEGRATION_WEB_SERVICE_CALL)
                 // request authentication for all remaining urls
                 .anyRequest().fullyAuthenticated().and()
                 // add the authentication provider

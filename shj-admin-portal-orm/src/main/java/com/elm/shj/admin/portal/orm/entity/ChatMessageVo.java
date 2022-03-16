@@ -49,7 +49,7 @@ public class ChatMessageVo implements Serializable {
     private Date readDate;
     private long unreadMessagesCount;
 
-    public ChatMessageVo(long id, String digitalId, String contactDigitalId, String contactFullNameAr, String contactFullNameEn, String statusCode, long typeId, String alias, String avatar, boolean systemDefined, String staffTitleCode, String relationshipCode, String mobileNumber, String countryPhonePrefix, String countryCode, boolean autoAdded, boolean deleted, String messageText, Date sentDate, Date receivedDate, Date readDate) {
+    public ChatMessageVo(long id, String digitalId, String contactDigitalId, String contactFullNameAr, String contactFullNameEn, String statusCode, long typeId, String alias, String avatar, boolean systemDefined, String staffTitleCode, String relationshipCode, String mobileNumber, String countryPhonePrefix, String countryCode, boolean autoAdded, boolean deleted, String messageText, Date sentDate, Date receivedDate, Date readDate, Date creationDate) {
         this.id = id;
         this.digitalId = digitalId;
         this.contactDigitalId = contactDigitalId;
@@ -58,7 +58,7 @@ public class ChatMessageVo implements Serializable {
         this.typeId = typeId;
         this.alias = alias;
         this.avatar = avatar;
-        this.systemDefined= systemDefined;
+        this.systemDefined = systemDefined;
         this.staffTitleCode = staffTitleCode;
         this.relationshipCode = relationshipCode;
         this.mobileNumber = mobileNumber;
@@ -71,5 +71,6 @@ public class ChatMessageVo implements Serializable {
         this.sentDate = sentDate;
         this.receivedDate = receivedDate;
         this.readDate = readDate;
+        this.creationDate = creationDate;
     }
 }

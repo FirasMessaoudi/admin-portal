@@ -5,10 +5,7 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.data.huicIntegration.ErrorResponse;
 import com.elm.shj.admin.portal.services.data.huicIntegration.ValidationService;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantHealthDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantRelativeDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,12 +32,13 @@ import java.util.List;
 )
 @Slf4j
 @RestController
-@RequestMapping(Navigation.API_DATA_REQUEST_INTEGRATION)
+@RequestMapping(Navigation.API_HUIC_INTEGRATION)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DataRequestWsController {
 
     private final ValidationService validationService;
 
+    @RolesAllowed(AuthorityConstants.HUIC_INTEGRATION_WEB_SERVICE_CALL)
     @PostMapping(value = "/save-applicant-main-data")
     public ResponseEntity<WsResponse<?>> saveApplicantMainData(@RequestBody List<ApplicantDto> applicantDtos) {
 
@@ -53,6 +52,7 @@ public class DataRequestWsController {
                 Collections.emptyList()).build());
     }
 
+    @RolesAllowed(AuthorityConstants.HUIC_INTEGRATION_WEB_SERVICE_CALL)
     @PostMapping(value = "/save-applicant-ritual-data")
     public ResponseEntity<WsResponse<?>> saveApplicantRitualData(@RequestBody List<ApplicantRitualDto> applicantRitualDtos) {
 
@@ -66,6 +66,7 @@ public class DataRequestWsController {
                 Collections.emptyList()).build());
     }
 
+    @RolesAllowed(AuthorityConstants.HUIC_INTEGRATION_WEB_SERVICE_CALL)
     @PostMapping(value = "/save-applicant-health-data")
     public ResponseEntity<WsResponse<?>> saveApplicantHealthData(@RequestBody List<ApplicantHealthDto> applicantHealthDtos) {
 
@@ -79,6 +80,7 @@ public class DataRequestWsController {
                 Collections.emptyList()).build());
     }
 
+    @RolesAllowed(AuthorityConstants.HUIC_INTEGRATION_WEB_SERVICE_CALL)
     @PostMapping(value = "/save-applicant-relative-data")
     public ResponseEntity<WsResponse<?>> saveApplicantRelativeData(@RequestBody List<ApplicantRelativeDto> applicantRelativeDtos) {
 
@@ -91,5 +93,6 @@ public class DataRequestWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
                 Collections.emptyList()).build());
     }
+
 
 }
