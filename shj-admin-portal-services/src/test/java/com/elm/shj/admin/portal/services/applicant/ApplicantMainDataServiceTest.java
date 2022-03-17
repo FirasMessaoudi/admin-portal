@@ -49,7 +49,7 @@ public class ApplicantMainDataServiceTest {
     public void test_find_by_uin_success() {
 
         JpaApplicantMainData jpaApplicantMainData = new JpaApplicantMainData();
-        Mockito.when(applicantMainDataRepository.findByUin(UIN_USER_EXIST)).thenReturn(jpaApplicantMainData);
+        Mockito.when(applicantMainDataRepository.findByDigitalIdsUin(UIN_USER_EXIST)).thenReturn(jpaApplicantMainData);
 
         ApplicantMainDataDto applicantMainDataDto = new ApplicantMainDataDto();
         Mockito.when(applicantMainDataDtoMapper.fromEntity(Mockito.any(), Mockito.any())).thenReturn(applicantMainDataDto);
