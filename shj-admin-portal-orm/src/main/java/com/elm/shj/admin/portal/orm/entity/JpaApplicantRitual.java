@@ -72,10 +72,6 @@ public class JpaApplicantRitual implements Serializable {
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(mappedBy = "applicantRitual")
-    private Set<JpaApplicantContact> contacts;
-
-    @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(mappedBy = "applicantRitual")
     private Set<JpaApplicantHealth>  applicantHealths;
 
     @LazyCollection(LazyCollectionOption.TRUE)

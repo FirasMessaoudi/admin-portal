@@ -179,7 +179,6 @@ public class ValidationService {
             Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
             applicantRitualDto.setApplicantPackage(ApplicantPackageDto.builder().id(applicantPackageId).build());
             //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
-            applicantContactService.updateContactApplicantRitual(applicantRitualDto.getId(), applicantId);
             applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitualDto.getId(), applicantId, applicantRitualDto.getPackageReferenceNumber());
             applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitualDto.getId(), applicantId, applicantRitualDto.getPackageReferenceNumber());
         } else {

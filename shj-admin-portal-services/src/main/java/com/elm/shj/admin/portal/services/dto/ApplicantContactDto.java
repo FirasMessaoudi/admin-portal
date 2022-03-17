@@ -32,11 +32,9 @@ public class ApplicantContactDto implements Serializable {
     private static final long serialVersionUID = -5662001048401642743L;
 
     private long id;
+
     @JsonBackReference(value = "applicant")
     private ApplicantDto applicant;
-
-    @JsonBackReference(value = "applicantRitual")
-    private ApplicantRitualDto applicantRitual;
 
     @LanguageCodeList
     @CellIndex(index = 15)

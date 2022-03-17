@@ -37,7 +37,7 @@ public class ApplicantContactRepositoryTest extends AbstractJpaTest {
     @Test
     public void test_update_contact_intl_number_success() {
 
-        applicantContactRepository.updateContactIntlNumber(TEST_EMAIL, TEST_COUNTRY_CODE, TEST_INTL_MOBILE, TEST_APPLICANT_ID, TEST_RITUAL_ID);
+        applicantContactRepository.updateContactIntlNumber(TEST_EMAIL, TEST_COUNTRY_CODE, TEST_INTL_MOBILE, TEST_APPLICANT_ID);
         entityManager.clear();
         Optional<JpaApplicantContact> jpaApplicantContact = applicantContactRepository.findById(TEST_APPLICANT_CONTACT_ID);
         assertEquals(jpaApplicantContact.get().getIntlMobileNumber(), TEST_INTL_MOBILE);
@@ -45,7 +45,7 @@ public class ApplicantContactRepositoryTest extends AbstractJpaTest {
 
     @Test
     public void test_update_contact_local_number_success() {
-        applicantContactRepository.updateContactLocalNumber(TEST_EMAIL, TEST_COUNTRY_CODE, TEST_LOCAL_MOBILE, TEST_APPLICANT_ID, TEST_RITUAL_ID);
+        applicantContactRepository.updateContactLocalNumber(TEST_EMAIL, TEST_COUNTRY_CODE, TEST_LOCAL_MOBILE, TEST_APPLICANT_ID);
         entityManager.clear();
         Optional<JpaApplicantContact> jpaApplicantContact = applicantContactRepository.findById(TEST_APPLICANT_CONTACT_ID);
         assertEquals(jpaApplicantContact.get().getLocalMobileNumber(), TEST_LOCAL_MOBILE);

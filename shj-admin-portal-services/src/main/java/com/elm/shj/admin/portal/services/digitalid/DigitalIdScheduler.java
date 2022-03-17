@@ -64,7 +64,6 @@ public class DigitalIdScheduler {
             //create or update applicant ritual;
             Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantLiteDto.getId(), applicantLiteDto.getPackageReferenceNumber(), savedApplicantPackage, true);
             //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
-            applicantContactService.updateContactApplicantRitual(savedApplicantRitualId, applicantLiteDto.getId());
             applicantHealthService.updateApplicantHealthApplicantRitual(savedApplicantRitualId, applicantLiteDto.getId(), applicantLiteDto.getPackageReferenceNumber());
             applicantRelativeService.updateApplicantRelativeApplicantRitual(savedApplicantRitualId, applicantLiteDto.getId(), applicantLiteDto.getPackageReferenceNumber());
         });

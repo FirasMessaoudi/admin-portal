@@ -85,12 +85,12 @@ public class JpaApplicant implements Serializable {
     @Column(name = "data_request_record_id")
     private Long dataRequestRecordId;
 
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "applicant_id")
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "applicant_id", updatable = false)
     private List<JpaApplicantDigitalId> digitalIds;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(orphanRemoval = true, mappedBy = "applicant")
+    @OneToMany(mappedBy = "applicant")
     private List<JpaApplicantRelative> relatives;
 
     @LazyCollection(LazyCollectionOption.TRUE)
