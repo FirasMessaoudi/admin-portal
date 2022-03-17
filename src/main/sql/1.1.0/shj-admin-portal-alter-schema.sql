@@ -1431,3 +1431,8 @@ create table shc_portal.shc_user_survey_question
     CONSTRAINT fk_user_survey_id FOREIGN KEY (user_survey_id) REFERENCES shc_portal.shc_user_survey (id)
 );
 GO
+
+ALTER TABLE shc_portal.shc_applicant_contact DROP CONSTRAINT fk_applicant_contact_applicant_ritual;
+GO
+ALTER TABLE shc_portal.shc_applicant_contact DROP COLUMN applicant_ritual_id;
+GO
