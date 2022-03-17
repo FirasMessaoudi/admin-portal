@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -63,5 +64,9 @@ public interface PrintRequestRepository extends JpaRepository<JpaPrintRequest, L
            "LEFT JOIN groupApplicantList.applicantGroup applicantGroup " +
            "WHERE pr.statusCode='CONFIRMED'")
    Page<JpaPrintRequest> findPrintRequest(Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE JpaPrintRequest pr SET pr.statusCode='SENT_TO_PRINTING' WHERE pr.id = :printRequestId")
+    void updatePrintRequestStatus(@Param("printRequestId") long printRequestId);
 
 }

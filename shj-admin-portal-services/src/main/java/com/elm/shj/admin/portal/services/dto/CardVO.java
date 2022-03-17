@@ -31,5 +31,6 @@ public class CardVO implements Serializable, HibernateAwareMapper {
     private String hamlahPackageCode;
     private String tafweejCode;
     private String referenceNumber;
+    private String groupReferenceNumber;
     private String statusCode;
 }

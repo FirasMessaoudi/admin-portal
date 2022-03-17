@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.*;
+import com.elm.shj.admin.portal.services.card.ApplicantCardService;
+import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
@@ -43,6 +46,8 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
     private final PrintRequestBatchRepository printRequestBatchRepository;
     private final ApplicantCardRepository applicantCardRepository;
     private final CompanyStaffCardRepository companyStaffCardRepository;
+    private final ApplicantCardService applicantCardService;
+    private final CompanyStaffCardService companyStaffCardService;
 
     /**
      * Find the lite version of all print requests.
@@ -185,7 +190,62 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
 
     public List<PrintRequestDto> findPrintRequest(){
         List<PrintRequestDto> litePrintRequests= mapList(printRequestRepository.findPrintRequest(PageRequest.of(0, 1, Sort.Direction.ASC, "creationDate")).getContent());
+        if(!litePrintRequests.isEmpty()){
+            if(litePrintRequests.get(0).getTarget().equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
+                litePrintRequests.get(0).getPrintRequestBatches().stream().forEach(batch -> {
+                    // will be called for each print request batch, get all applicant cards for that batch
+                    List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
+                    // to get applicant cards based on the ids list from DB by JPQL Query
+                    List<ApplicantCardDto> applicantCards = applicantCardService.findApplicantCards(cardIds);
+                    // map between applicant card and batch card
+                    batch.getPrintRequestBatchCards().stream().forEach(batchCard -> {
+                        long cardId = batchCard.getCardId();
+                        //get the applicant card by id through findAny on stream of applicantCards
+                        applicantCards.stream().filter(appCard -> appCard.getId() == cardId).findAny()
+                                .ifPresent(applicantCardDto -> batchCard.setCard(mapApplicantCardToCardVO(applicantCardDto)));
+                        //map applicantCard to CardVO and attach it to batch card like below
+                    });
+                });
+            } else {
+                litePrintRequests.get(0).getPrintRequestBatches().stream().forEach(batch -> {
+                    // will be called for each print request batch, get all applicant cards for that batch
+                    List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
+                    // to get applicant cards based on the ids list from DB by JPQL Query
+                    List<CompanyStaffCardDto> staffCards = companyStaffCardService.findStaffCards(cardIds);
+                    // map between applicant card and batch card
+                    batch.getPrintRequestBatchCards().stream().forEach(batchCard -> {
+                        long cardId = batchCard.getCardId();
+                        //get the applicant card by id through findAny on stream of applicantCards
+                        staffCards.stream().filter(staffCard -> staffCard.getId() == cardId).findAny()
+                                .ifPresent(staffCardDto -> batchCard.setCard(mapStaffCardToCardVO(staffCardDto)));
+                        //map applicantCard to CardVO and attach it to batch card like below
+                    });
+                });
+            }
+        }
         return litePrintRequests;
+    }
+
+    private CardVO mapApplicantCardToCardVO(ApplicantCardDto applicantCardDto) {
+        return CardVO.builder().digitalId(applicantCardDto.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin())
+                .id(applicantCardDto.getId())
+                .referenceNumber(applicantCardDto.getReferenceNumber())
+                .groupReferenceNumber(applicantCardDto.getApplicantRitual().getApplicantPackage().getRitualPackage().getCompanyRitualSeason().getApplicantGroups().get(0).getReferenceNumber())
+                .statusCode(applicantCardDto.getStatusCode()).build();
+    }
+
+    private CardVO mapStaffCardToCardVO(CompanyStaffCardDto staffCardDto) {
+        String suin = staffCardDto.getCompanyStaffDigitalId() == null ? "" : staffCardDto.getCompanyStaffDigitalId().getSuin();
+        return CardVO.builder().digitalId(suin)
+                .id(staffCardDto.getId())
+                .referenceNumber(staffCardDto.getReferenceNumber())
+                .groupReferenceNumber(staffCardDto.getCompanyRitualSeason().getApplicantGroups().get(0).getReferenceNumber())
+                .statusCode(staffCardDto.getStatusCode()).build();
+    }
+
+    @Transactional
+    public void updatePrintRequestStatus(long printRequestId) {
+        printRequestRepository.updatePrintRequestStatus(printRequestId);
     }
 
 }

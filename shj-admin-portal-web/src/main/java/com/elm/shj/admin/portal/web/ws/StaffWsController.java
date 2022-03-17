@@ -157,5 +157,11 @@ public class StaffWsController {
                 .body(printRequestLiteService.findPrintRequest()).build());
     }
 
+    @PutMapping("/update-print-request-status/{printRequestId}")
+    public ResponseEntity<WsResponse<?>> updatePrintRequestStatus(@PathVariable long printRequestId) {
+        printRequestLiteService.updatePrintRequestStatus(printRequestId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).build());
+    }
+
 
 }
