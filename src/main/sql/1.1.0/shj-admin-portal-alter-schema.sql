@@ -1431,3 +1431,8 @@ create table shc_portal.shc_user_survey_question
     CONSTRAINT fk_user_survey_id FOREIGN KEY (user_survey_id) REFERENCES shc_portal.shc_user_survey (id)
 );
 GO
+
+alter table shc_portal.shc_survey_question_lk add question_index int not null
+alter table shc_portal.shc_survey_question_lk  alter column code VARCHAR(50)
+alter table shc_portal.shc_user_survey_question alter column question_code VARCHAR(50)
+

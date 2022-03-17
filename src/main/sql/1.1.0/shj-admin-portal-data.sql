@@ -588,33 +588,34 @@ INSERT INTO shc_portal.shc_chat_message_type_lk (code) VALUES ('AUDIO');
 INSERT INTO shc_portal.shc_chat_message_type_lk (code) VALUES ('LOCATION');
 GO
 
+Use shc_portal
 SET IDENTITY_INSERT shc_portal.shc_survey_type_lk ON;
 INSERT INTO shc_portal.shc_survey_type_lk(id, code) VALUES (1, 'DAILY');
 INSERT INTO shc_portal.shc_survey_type_lk(id, code) VALUES (2, 'END_OF_RITUAL');
 SET IDENTITY_INSERT shc_portal.shc_survey_type_lk OFF;
-
+Use shc_portal
 SET IDENTITY_INSERT shc_portal.shc_survey_question_lk ON;
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (1,'1', 'DAILY', 'en', 'How satisfied are you with the food?');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (2,'1', 'DAILY', 'ar', N'مدى رضاك عن الطعام؟');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (3,'2', 'DAILY', 'en', 'How satisfied are you with the housing?');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (4,'2', 'DAILY', 'ar', N'مدى رضاك عن مستوى السكن؟');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (5,'3', 'DAILY', 'en', 'How satisfied are you with the transportation?');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (6,'3', 'DAILY', 'ar', N'مدى رضاك عن مستوى المواصلات؟');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (7,'4', 'DAILY', 'en', 'How satisfied are you with the cleanliness?');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (8,'4', 'DAILY', 'ar', N'مدى رضاك عن مستوى النظافة؟');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (9,'5', 'DAILY', 'en', 'How satisfied are you with the ritual organization?');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (10,'5', 'DAILY', 'ar', N'مدى رضاك عن مستوى تنظيم الشعيرة؟');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (1,	 'FOOD_SATISFACTION_Q_DAILY', 			'DAILY',1,'en', 'How satisfied are you with the food?');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (2,	 'FOOD_SATISFACTION_Q_DAILY', 			'DAILY',1,'ar', N'مدى رضاك عن الطعام؟');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (3,	 'HOUSING_SATISFACTION_Q_DAILY', 		'DAILY',2,'en', 'How satisfied are you with the housing?');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (4,	 'HOUSING_SATISFACTION_Q_DAILY', 		'DAILY',2,'ar', N'مدى رضاك عن مستوى السكن؟');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (5,	 'TRANSPORTATION_SATISFACTION_Q_DAILY', 'DAILY',3,'en', 'How satisfied are you with the transportation?');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (6,	 'TRANSPORTATION_SATISFACTION_Q_DAILY', 'DAILY',3,'ar', N'مدى رضاك عن مستوى المواصلات؟');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (7,	 'CLEANLINESS_SATISFACTION_Q_DAILY', 	'DAILY',4,'en', 'How satisfied are you with the cleanliness?');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (8,	 'CLEANLINESS_SATISFACTION_Q_DAILY', 	'DAILY',4,'ar', N'مدى رضاك عن مستوى النظافة؟');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (9,	 'ORGANIZATION_SATISFACTION_Q_DAILY', 	'DAILY',5,'en', 'How satisfied are you with the ritual organization?');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (10,	 'ORGANIZATION_SATISFACTION_Q_DAILY', 	'DAILY',5,'ar', N'مدى رضاك عن مستوى تنظيم الشعيرة؟');
 
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (11,'1', 'END_OF_RITUAL', 'en', 'How satisfied are you with the food?');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (12,'1', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن الطعام؟');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (13,'2', 'END_OF_RITUAL', 'en', 'How satisfied are you with the housing?');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (14,'2', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن مستوى السكن؟');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (15,'3', 'END_OF_RITUAL', 'en', 'How satisfied are you with the transportation?');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (16,'3', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن مستوى المواصلات؟');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (17,'4', 'END_OF_RITUAL', 'en', 'How satisfied are you with the cleanliness?');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (18,'4', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن مستوى النظافة؟');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (19,'5', 'END_OF_RITUAL', 'en', 'How satisfied are you with the ritual organization?');
-INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code , lang , label) VALUES (20,'5', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن مستوى تنظيم الشعيرة؟');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (11, 'FOOD_SATISFACTION_Q_END_OF_RITUAL',        	'END_OF_RITUAL',1,'en', 'How satisfied are you with the food?');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (12, 'FOOD_SATISFACTION_Q_END_OF_RITUAL', 			'END_OF_RITUAL',1,'ar', N'مدى رضاك عن الطعام؟');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (13, 'HOUSING_SATISFACTION_Q_END_OF_RITUAL', 		'END_OF_RITUAL',2,'en', 'How satisfied are you with the housing?');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (14, 'HOUSING_SATISFACTION_Q_END_OF_RITUAL', 		'END_OF_RITUAL',2,'ar', N'مدى رضاك عن مستوى السكن؟');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (15, 'TRANSPORTATION_SATISFACTION_Q_END_OF_RITUAL', 'END_OF_RITUAL',3,'en', 'How satisfied are you with the transportation?');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (16, 'TRANSPORTATION_SATISFACTION_Q_END_OF_RITUAL', 'END_OF_RITUAL',3,'ar', N'مدى رضاك عن مستوى المواصلات؟');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (17, 'CLEANLINESS_SATISFACTION_Q_END_OF_RITUAL', 	'END_OF_RITUAL',4,'en', 'How satisfied are you with the cleanliness?');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (18, 'CLEANLINESS_SATISFACTION_Q_END_OF_RITUAL', 	'END_OF_RITUAL',4,'ar', N'مدى رضاك عن مستوى النظافة؟');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (19, 'ORGANIZATION_SATISFACTION_Q_END_OF_RITUAL', 	'END_OF_RITUAL',5,'en', 'How satisfied are you with the ritual organization?');
+INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code ,question_index, lang , label) VALUES (20, 'ORGANIZATION_SATISFACTION_Q_END_OF_RITUAL', 	'END_OF_RITUAL',5,'ar', N'مدى رضاك عن مستوى تنظيم الشعيرة؟');
 
 SET IDENTITY_INSERT shc_portal.shc_survey_question_lk OFF;
 
