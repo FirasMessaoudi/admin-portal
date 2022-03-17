@@ -89,10 +89,10 @@ public class ValidationService {
 
     private void saveApplicantRelative(ApplicantRelativeDto applicantRelative) {
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantRelative.getApplicantBasicInfo());
-        Long applicantId = applicantLite.getId();
         if (applicantLite == null) {
             return;
         }
+        Long applicantId = applicantLite.getId();
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
         Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, applicantRelative.getPackageReferenceNumber(), null, false);
         ApplicantLiteDto relativeApplicantLite = applicantLiteService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative));
@@ -114,10 +114,10 @@ public class ValidationService {
 
     private void saveApplicantHealth(ApplicantHealthDto applicantHealth) {
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantHealth.getApplicantBasicInfo());
-        Long applicantId = applicantLite.getId();
         if (applicantLite == null) {
             return;
         }
+        Long applicantId = applicantLite.getId();
         Long applicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealth.getPackageReferenceNumber());
         Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealth.getPackageReferenceNumber(), null, false);
         if (savedApplicantHealthId != null) {
@@ -164,11 +164,10 @@ public class ValidationService {
 
     private void saveApplicantRitual(ApplicantRitualDto applicantRitualDto) {
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantRitualDto.getApplicantBasicInfo());
-        Long applicantId = applicantLite.getId();
         if (applicantLite == null) {
             return;
         }
-
+        Long applicantId = applicantLite.getId();
         String packageReferenceNumber = applicantRitualDto.getPackageReferenceNumber();
         Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, packageReferenceNumber, null, false);
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
