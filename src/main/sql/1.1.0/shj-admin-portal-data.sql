@@ -691,3 +691,8 @@ IDENTITY_INSERT shc_portal.shc_authority_lk OFF;
 GO
 INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (14, 42);
 GO
+
+SET IDENTITY_INSERT shc_portal.shc_data_request_status_lk ON;
+INSERT INTO shc_portal.shc_data_request_status_lk(id, label_ar, label_en) VALUES (7, N'خطأ', 'Failed');
+SET IDENTITY_INSERT shc_portal.shc_data_request_status_lk OFF;
+GO

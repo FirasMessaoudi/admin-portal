@@ -152,13 +152,13 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
     @Async
     @Transactional
     public void confirm(long dataRequestId) throws Exception {
-        updateUnderProcessing(dataRequestId);
+        updateRequestStatus(dataRequestId, EDataRequestStatus.UNDER_PROCESSING);
         processRequest(dataRequestId);
     }
 
     @Transactional(propagation = Propagation.NESTED)
-    public void updateUnderProcessing(long dataRequestId) {
-        ((DataRequestRepository) getRepository()).updateStatus(dataRequestId, EDataRequestStatus.UNDER_PROCESSING.getId());
+    public void updateRequestStatus(long dataRequestId, EDataRequestStatus requestStatus) {
+        ((DataRequestRepository) getRepository()).updateStatus(dataRequestId, requestStatus.getId());
     }
 
     /**
@@ -209,10 +209,21 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
         if (dataRequest != null && dataRequest.getOriginalSourcePath() != null) {
             // retrieve the original file to start processing
             Resource originalFile = sftpService.downloadFile(dataRequest.getOriginalSourcePath(),DATA_UPLOAD_CONFIG_PROPERTIES);
-            // process the file
-            DataProcessorResult<T> parserResult = dataRequestProcessor.processRequestFile(originalFile, dataRequest.getDataSegment());
-            // save all parsed items
-            List<DataValidationResult> writerValidationResult =itemWriter.write(parserResult.getParsedItems(), dataRequest.getDataSegment(), dataRequestId);
+
+            DataProcessorResult<T> parserResult;
+            List<DataValidationResult> writerValidationResult;
+            try {
+                // process the file
+                parserResult = dataRequestProcessor.processRequestFile(originalFile, dataRequest.getDataSegment());
+                // save all parsed items
+                writerValidationResult = itemWriter.write(parserResult.getParsedItems(), dataRequest.getDataSegment(), dataRequestId);
+            } catch (Exception e) {
+                log.error("Failed to process the data request id {}.", dataRequestId, e);
+                //update the status of the request
+                updateRequestStatus(dataRequestId, EDataRequestStatus.FAILED);
+                return;
+            }
+
             // in case of error, generate the error file and save it in the SFTP
            if(!writerValidationResult.isEmpty()){
                 parserResult.getDataValidationResults().addAll(writerValidationResult);
