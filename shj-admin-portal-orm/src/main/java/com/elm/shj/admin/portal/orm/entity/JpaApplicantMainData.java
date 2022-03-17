@@ -67,6 +67,11 @@ public class JpaApplicantMainData implements Serializable {
     private String photo;
 
     @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany
+    @JoinColumn(name = "applicant_id", updatable = false)
+    private List<JpaApplicantDigitalId> digitalIds;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "applicant")
     private List<JpaApplicantContact> contacts;
 }

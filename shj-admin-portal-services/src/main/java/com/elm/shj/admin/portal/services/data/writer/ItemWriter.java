@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.data.writer;
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
@@ -129,7 +130,6 @@ public class ItemWriter {
 
                 // create a new applicant ritual
                 ApplicantRitualDto applicantRitual = ApplicantRitualDto.builder().applicant(applicantDto).packageReferenceNumber(emergencyDto.getPackageReferenceNumber()).build();
-                applicantRitual.setContacts(new HashSet<>(applicantDto.getContacts()));
                 // update applicant ritual from the emergency data and update applicant with the new ritual.
                 updateApplicantRitualInfo(applicantRitual, applicantRitualEmergencyDto);
 
@@ -144,12 +144,6 @@ public class ItemWriter {
                             .passportNumber(applicantDto.getPassportNumber()).dateOfBirthHijri(applicantDto.getDateOfBirthHijri())
                             .dateOfBirthGregorian(applicantDto.getDateOfBirthGregorian()).packageReferenceNumber(emergencyDto.getPackageReferenceNumber())
                             .busNumber(applicantRitualEmergencyDto.getBusNumber()).seatNumber(applicantRitualEmergencyDto.getSeatNumber()).build());
-                }
-
-                if (CollectionUtils.isNotEmpty(applicantRitual.getContacts())) {
-                    applicantRitual.getContacts().forEach(ac -> {
-                        ac.setApplicantRitual(applicantRitual);
-                    });
                 }
 
                 if (CollectionUtils.isNotEmpty(applicantDto.getRituals())) {
@@ -173,7 +167,6 @@ public class ItemWriter {
                 }
             });
             List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
-            //set data request record for the saved items (applicants)
             savedItems.forEach(s -> {
                 savedRecords.stream().filter(r -> {
                     try {
@@ -184,10 +177,11 @@ public class ItemWriter {
                     }
                 }).forEach(r -> {
                     try {
-                        BeanUtils.setProperty(s, "dataRequestRecordId", BeanUtils.getProperty(r, "id"));
-                        //set data request record for the saved applicants ritual
-                        ((JpaApplicant) s).getRituals().get(0).setDataRequestRecordId(((JpaApplicant) s).getDataRequestRecordId());
-                        applicantRepository.save(s);
+                        //set data request record for the saved applicants and applicants rituals
+                        Long dataRequestRecordId = Long.parseLong(BeanUtils.getProperty(r, "id"));
+                        BeanUtils.setProperty(s, "dataRequestRecordId", dataRequestRecordId);
+                        JpaApplicantRitual lastApplicantRitual = ((JpaApplicant) s).getRituals().get(((JpaApplicant) s).getRituals().size() - 1);
+                        applicantService.updateDataRequestRecordId(dataRequestRecordId, ((JpaApplicant) s).getId(), lastApplicantRitual.getId());
                     } catch (Exception e) {
                         ReflectionUtils.handleReflectionException(e);
                     }
@@ -407,8 +401,6 @@ public class ItemWriter {
             if (existingApplicantId != null) {
                 applicant.setId(existingApplicantId);
                 applicant.setUpdateDate(new Date());
-                //TODO: need refactoring, the below line should be replaced by deleting the old contact as a new one will be added
-                applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicantId));
             }
 
             // this case is for applicant data upload
@@ -469,7 +461,6 @@ public class ItemWriter {
                     Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
                     applicantRitual.setApplicantPackage(ApplicantPackageDto.builder().id(applicantPackageId).build());
                     //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
-                    applicantContactService.updateContactApplicantRitual(applicantRitual.getId(), applicantId);
                     applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicantId, applicantRitual.getPackageReferenceNumber());
                     applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicantId, applicantRitual.getPackageReferenceNumber());
                 } else {

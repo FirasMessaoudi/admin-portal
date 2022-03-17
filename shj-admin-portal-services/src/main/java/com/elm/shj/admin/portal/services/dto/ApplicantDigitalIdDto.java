@@ -3,10 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -19,14 +16,12 @@ import java.util.Date;
  */
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class ApplicantDigitalIdDto implements Serializable {
 
     private static final long serialVersionUID = -1067949632316606990L;
-
-    public ApplicantDigitalIdDto() {
-    }
 
     private long id;
     private String uin;

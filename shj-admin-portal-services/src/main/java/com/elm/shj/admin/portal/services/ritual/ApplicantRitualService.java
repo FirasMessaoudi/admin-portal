@@ -66,7 +66,6 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
         Optional<JpaApplicantRitual> applicantRitualOptional = applicantRitualRepository.findById(applicantRitualId);
         if (applicantRitualOptional.isPresent()) {
             JpaApplicantRitual applicantRitual = applicantRitualOptional.get();
-            applicantRitual.getContacts().size();
             applicantRitual.getRelatives().size();
             applicantRitual.getApplicantHealths().size();
             return getMapper().fromEntity(applicantRitual, mappingContext);
@@ -120,6 +119,17 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
     @Transactional
     public void updateApplicantRitualApplicantPackage(long newApplicantPackageId, long applicantRitualId) {
         applicantRitualRepository.updateApplicantRitualApplicantPackage(newApplicantPackageId, applicantRitualId);
+    }
+
+    /**
+     * Set data request record id for the applicant ritual.
+     *
+     * @param dataRequestRecordId
+     * @param applicantRitualId
+     */
+    @Transactional
+    public void updateDataRequestRecordId(long dataRequestRecordId, long applicantRitualId) {
+        applicantRitualRepository.updateDataRequestRecordId(dataRequestRecordId, applicantRitualId);
     }
 
     /**

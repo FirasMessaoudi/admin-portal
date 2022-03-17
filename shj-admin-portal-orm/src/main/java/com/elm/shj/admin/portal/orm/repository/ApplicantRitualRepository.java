@@ -24,7 +24,7 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
             "and ar.applicant.id in (select adi.applicantId from JpaApplicantDigitalId adi)")
     List<JpaApplicantRitual> findWithExistingDigitalIdAndWithoutCard();
 
-    @Query("select ar   from JpaApplicantRitual ar join ar.applicant a join a.digitalIds di where di.uin=:uin and ar.id=:rid")
+    @Query("select ar from JpaApplicantRitual ar join ar.applicant a join a.digitalIds di where di.uin=:uin and ar.id=:rid")
     JpaApplicantRitual findCardDetailsByUinAndRitualId(@Param("uin") String uin, @Param("rid") long rid);
 
     Optional<JpaApplicantRitual> findByApplicantDigitalIdsUinAndApplicantPackageId(String uin, Long applicantPackageId);
@@ -42,4 +42,7 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
     @Query("SELECT ar.id FROM JpaApplicantRitual ar WHERE ar.applicant.id = :applicantId AND ar.packageReferenceNumber = :packageReferenceNumber")
     Long findIdByApplicantIdAndPackageReferenceNumber(@Param("applicantId") long applicantId, @Param("packageReferenceNumber") String packageReferenceNumber);
 
+    @Modifying
+    @Query("UPDATE JpaApplicantRitual ar SET ar.dataRequestRecordId = :dataRequestRecordId, ar.updateDate = CURRENT_TIMESTAMP WHERE ar.id = :applicantRitualId")
+    void updateDataRequestRecordId(@Param("dataRequestRecordId") long dataRequestRecordId, @Param("applicantRitualId") long applicantRitualId);
 }

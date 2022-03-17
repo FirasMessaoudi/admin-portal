@@ -20,18 +20,15 @@ import java.util.List;
 public interface ApplicantContactRepository extends JpaRepository<JpaApplicantContact, Long> {
     @Modifying
     @Query("update JpaApplicantContact contact set contact.countryCode = :countryCode, contact.email = :email, " +
-            "contact.intlMobileNumber =:intlMobileNumber, contact.updateDate = CURRENT_TIMESTAMP where contact.applicant.id =:applicantId and contact.applicantRitual.id=:ritualId")
-    int updateContactIntlNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("intlMobileNumber") String intlMobileNumber, @Param("applicantId") long applicantId, @Param("ritualId") long ritualId);
+            "contact.intlMobileNumber =:intlMobileNumber, contact.updateDate = CURRENT_TIMESTAMP where contact.applicant.id =:applicantId")
+    int updateContactIntlNumber(@Param("email") String email, @Param("countryCode") String countryCode,
+                                @Param("intlMobileNumber") String intlMobileNumber, @Param("applicantId") long applicantId);
 
 
     @Modifying
     @Query("update JpaApplicantContact contact set contact.countryCode = :countryCode, contact.email = :email, " +
-            "contact.localMobileNumber =:localMobileNumber, contact.updateDate = CURRENT_TIMESTAMP where contact.applicant.id =:applicantId and contact.applicantRitual.id=:ritualId")
-    int updateContactLocalNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("localMobileNumber") String localMobileNumber, @Param("applicantId") long applicantId, @Param("ritualId") long ritualId);
-
+            "contact.localMobileNumber =:localMobileNumber, contact.updateDate = CURRENT_TIMESTAMP where contact.applicant.id =:applicantId")
+    int updateContactLocalNumber(@Param("email") String email, @Param("countryCode") String countryCode,
+                                 @Param("localMobileNumber") String localMobileNumber, @Param("applicantId") long applicantId);
     List<JpaApplicantContact> findAllByApplicantId(Long id);
-
-    @Modifying
-    @Query("UPDATE JpaApplicantContact ac SET ac.applicantRitual.id = :applicantRitualId, ac.updateDate = CURRENT_TIMESTAMP WHERE ac.applicant.id = :applicantId")
-    int updateContactApplicantRitual(@Param("applicantRitualId") long applicantRitualId, @Param("applicantId") long applicantId);
 }

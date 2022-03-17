@@ -4,7 +4,6 @@
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantCard;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantMainData;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantCardRepository;
@@ -15,6 +14,7 @@ import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,12 +51,12 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
      */
     @Transactional
     public Optional<ApplicantMainDataDto> findByUin(String uin, long applicantPackageId) {
-        JpaApplicantMainData applicant = applicantMainDataRepository.findByUin(uin);
-        JpaApplicantDigitalId applicantDigitalId = applicantDigitalIdRepository.findByApplicantId(applicant.getId());
+        log.debug("Start findByUin for {} uin and {} applicant package id.", uin, applicantPackageId);
+        JpaApplicantMainData applicant = applicantMainDataRepository.findByDigitalIdsUin(uin);
 
         if (applicant == null) return Optional.empty();
 
-        String statusCode = applicantDigitalId == null ? "" : applicantDigitalId.getStatusCode();
+        String statusCode = CollectionUtils.isEmpty(applicant.getDigitalIds()) ? "" : applicant.getDigitalIds().get(0).getStatusCode();
         ApplicantMainDataDto applicantMainDataDto = getMapper().fromEntity(applicant, mappingContext);
         applicantMainDataDto.setStatusCode(statusCode);
         applicantMainDataDto.setUin(uin);
@@ -68,11 +68,9 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
             Optional<JpaApplicantRitual> applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageId(uin, applicantPackageDto.getId());
             if (applicantRitual.isPresent()) {
                 applicantRitual.get().getRelatives().size();
-                applicantRitual.get().getContacts().size();
 
                 applicantMainDataDto.setRelatives(applicantRelativeDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.get().getRelatives()), mappingContext));
                 applicantMainDataDto.setContacts(applicantContactDtoMapper.fromEntityList(new ArrayList<>(applicantRitual.get().getApplicant().getContacts()), mappingContext));
-
 
                 JpaApplicantCard jpaApplicantCard = applicantCardRepository.findByApplicantRitualIdAndStatusCodeNot(applicantRitual.get().getId(), ECardStatus.REISSUED.name());
                 if (jpaApplicantCard != null) {

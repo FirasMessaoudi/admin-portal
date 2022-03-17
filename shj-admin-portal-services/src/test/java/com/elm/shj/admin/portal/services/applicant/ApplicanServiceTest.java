@@ -63,7 +63,7 @@ public class ApplicanServiceTest {
         command.setUin(TEST_UIN);
         command.setMobileNumber(TEST_LOCAL_MOBILE);
         applicantService.updateApplicantContacts(TEST_APPLICANT_ID, command);
-        verify(applicantContactRepository, times(1)).updateContactLocalNumber(any(), any(), anyString(), anyLong(), anyLong());
+        verify(applicantContactRepository, times(1)).updateContactLocalNumber(any(), any(), anyString(), anyLong());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class ApplicanServiceTest {
         command.setUin(TEST_UIN);
         command.setMobileNumber(TEST_INTL_MOBILE);
         applicantService.updateApplicantContacts(TEST_APPLICANT_ID, command);
-        verify(applicantContactRepository, times(1)).updateContactIntlNumber(any(), any(), anyString(), anyLong(), anyLong());
+        verify(applicantContactRepository, times(1)).updateContactIntlNumber(any(), any(), anyString(), anyLong());
     }
 
     @Test

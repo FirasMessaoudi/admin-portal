@@ -9,7 +9,10 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.NotificationTemplateCategorizingDto;
+import com.elm.shj.admin.portal.services.dto.UpdateApplicantCmd;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
@@ -98,12 +101,10 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         ApplicantRitualPackageVo latestPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(command.getUin()));
         int updatedRowsCount = 0;
         if (latestPackage != null) {
-            ApplicantRitualDto applicantRitual = applicantRitualService.findByApplicantUinAndApplicantPackageId(command.getUin(), latestPackage.getApplicantPackageId());
-
             if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
-                updatedRowsCount = applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, applicantRitual.getId());
+                updatedRowsCount = applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId);
             } else {
-                updatedRowsCount = applicantContactRepository.updateContactIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId, applicantRitual.getId());
+                updatedRowsCount = applicantContactRepository.updateContactIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId);
             }
             updatedRowsCount += applicantRepository.markAsRegistered(applicantId);
 
@@ -248,5 +249,17 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     @Transactional
     public void updateLoggedInFromMobileAppFlag(boolean mobileLoggedIn, long applicantId) {
         applicantRepository.updateLoggedInFromMobileAppFlag(applicantId, mobileLoggedIn);
+    }
+
+    /**
+     * Set data request record id for the applicant.
+     *
+     * @param dataRequestRecordId
+     * @param applicantId
+     */
+    @Transactional
+    public void updateDataRequestRecordId(long dataRequestRecordId, long applicantId, long applicantRitualId) {
+        applicantRepository.updateDataRequestRecordId(dataRequestRecordId, applicantId);
+        applicantRitualService.updateDataRequestRecordId(dataRequestRecordId, applicantRitualId);
     }
 }

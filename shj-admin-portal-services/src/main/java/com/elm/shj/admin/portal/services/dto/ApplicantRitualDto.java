@@ -86,8 +86,6 @@ public class ApplicantRitualDto implements Serializable {
     @NestedCells
     private ApplicantBasicInfoDto applicantBasicInfo;
 
-    private Set<ApplicantContactDto> contacts;
-
     private Set<ApplicantRelativeDto> relatives;
 
     private Set<ApplicantHealthDto> applicantHealths;

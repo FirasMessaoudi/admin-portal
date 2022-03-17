@@ -46,6 +46,7 @@ public class ValidationService {
     private final ApplicantPackageService applicantPackageService;
     private final ApplicantRelativeService applicantRelativeService;
     private final ApplicantHealthService applicantHealthService;
+    private final ChatContactService chatContactService;
 
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {
@@ -75,6 +76,9 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(ApplicantHealthDto.class)) {
                     saveApplicantHealth((ApplicantHealthDto) items.get(i));
                 }
+                if (items.get(i).getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
+                    saveApplicantRelative((ApplicantRelativeDto) items.get(i));
+                }
             }
 
         }
@@ -82,16 +86,41 @@ public class ValidationService {
         return errorResponses;
     }
 
-    private void saveApplicantHealth(ApplicantHealthDto applicantHealth) {
-        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantHealth.getApplicantBasicInfo());
-        Long applicantId = applicantLite.getId();
+
+    private void saveApplicantRelative(ApplicantRelativeDto applicantRelative) {
+        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantRelative.getApplicantBasicInfo());
         if (applicantLite == null) {
             return;
         }
+        Long applicantId = applicantLite.getId();
+        String applicantUin = digitalIdService.findApplicantUin(applicantId);
+        Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, applicantRelative.getPackageReferenceNumber(), null, false);
+        ApplicantLiteDto relativeApplicantLite = applicantLiteService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative));
+        applicantRelative.setRelativeApplicant(ApplicantDto.fromApplicantLite(relativeApplicantLite));
+        applicantRelative.setApplicant(ApplicantDto.fromApplicantLite(applicantLite));
+        applicantRelative.setApplicantRitual(ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
+
+        String relativeApplicantUin = (relativeApplicantLite == null || CollectionUtils.isEmpty(relativeApplicantLite.getDigitalIds())) ? null : relativeApplicantLite.getDigitalIds().get(0).getUin();
+
+        applicantRelativeService.save(applicantRelative);
+        // if the applicant digital id and the relative applicant digital id and the applicant ritual are created then add chat contacts
+        // check if digital ids are created for the applicant and the relative applicant and applicant ritual is already created.
+        if (applicantUin == null || relativeApplicantUin == null || savedApplicantRitualId == null) {
+            return;
+        }
+        //TODO: try to get the relative applicant ritual id as it is needed to create the chat contact
+        chatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitualId);
+    }
+
+    private void saveApplicantHealth(ApplicantHealthDto applicantHealth) {
+        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantHealth.getApplicantBasicInfo());
+        if (applicantLite == null) {
+            return;
+        }
+        Long applicantId = applicantLite.getId();
         Long applicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealth.getPackageReferenceNumber());
         Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealth.getPackageReferenceNumber(), null, false);
         if (savedApplicantHealthId != null) {
-            log.debug("Update existing applicant health in applicant health segment for {} applicant id and {} package reference number.", applicantId, applicantHealth.getPackageReferenceNumber());
             applicantHealth.setId(savedApplicantHealthId);
             applicantHealth.setUpdateDate(new Date());
         }
@@ -135,11 +164,10 @@ public class ValidationService {
 
     private void saveApplicantRitual(ApplicantRitualDto applicantRitualDto) {
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantRitualDto.getApplicantBasicInfo());
-        Long applicantId = applicantLite.getId();
         if (applicantLite == null) {
             return;
         }
-
+        Long applicantId = applicantLite.getId();
         String packageReferenceNumber = applicantRitualDto.getPackageReferenceNumber();
         Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, packageReferenceNumber, null, false);
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
@@ -150,7 +178,6 @@ public class ValidationService {
             Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
             applicantRitualDto.setApplicantPackage(ApplicantPackageDto.builder().id(applicantPackageId).build());
             //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
-            applicantContactService.updateContactApplicantRitual(applicantRitualDto.getId(), applicantId);
             applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitualDto.getId(), applicantId, applicantRitualDto.getPackageReferenceNumber());
             applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitualDto.getId(), applicantId, applicantRitualDto.getPackageReferenceNumber());
         } else {

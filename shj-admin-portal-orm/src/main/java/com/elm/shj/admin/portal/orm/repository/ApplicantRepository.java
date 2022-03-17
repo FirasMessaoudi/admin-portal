@@ -140,4 +140,8 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
             "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND ul.userType= 'APPLICANT' AND ul.gpsTime = (SELECT MAX(l.gpsTime) FROM JpaUserLocation l WHERE l.userId  = adi.uin) ")
     List<ApplicantMobileTrackingVo> findActiveApplicantWithLocationBySeason(@Param("seasonYear") int seasonYear);
+
+    @Modifying
+    @Query("UPDATE JpaApplicant a SET a.dataRequestRecordId = :dataRequestRecordId, a.updateDate = CURRENT_TIMESTAMP WHERE a.id = :applicantId")
+    void updateDataRequestRecordId(@Param("dataRequestRecordId") long dataRequestRecordId, @Param("applicantId") long applicantId);
 }

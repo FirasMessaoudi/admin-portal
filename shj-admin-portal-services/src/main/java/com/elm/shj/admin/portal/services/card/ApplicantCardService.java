@@ -218,7 +218,6 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
         ApplicantRitualDto applicantRitualDto = applicantRitualService.findApplicantRitualWithContactsAndRelatives(applicantCardDto.getApplicantRitual().getId());
 
         applicantCardDto.setApplicantRitual(applicantRitualDto);
-        applicantCardDto.getApplicantRitual().getApplicant().setContacts(new ArrayList<>(applicantRitualDto.getContacts()));
         applicantCardDto.getApplicantRitual().getApplicant().setRelatives(new ArrayList<>(applicantRitualDto.getRelatives()));
 
         if (CollectionUtils.isNotEmpty(applicantRitualDto.getApplicantHealths())) {
