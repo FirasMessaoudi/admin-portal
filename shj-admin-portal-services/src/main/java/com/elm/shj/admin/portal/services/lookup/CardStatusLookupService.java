@@ -6,7 +6,9 @@ package com.elm.shj.admin.portal.services.lookup;
 import com.elm.shj.admin.portal.orm.entity.JpaCardStatusLookup;
 import com.elm.shj.admin.portal.services.dto.CardStatusLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,5 +19,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CardStatusLookupService extends GenericService<JpaCardStatusLookup, CardStatusLookupDto, Long> {
 }
