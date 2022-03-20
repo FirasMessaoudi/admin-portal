@@ -162,7 +162,8 @@ export class ChartsConfig {
         {
           stacked: true,
           gridLines: {
-            color: 'rgba(0, 0, 0, 0)',
+            color: '#FFFFFF',
+            zeroLineColor: 'rgba(255,255,255, 0.9)',
           },
           ticks: {
             fontFamily: FONTS,
@@ -171,16 +172,18 @@ export class ChartsConfig {
       ],
       yAxes: [
         {
+          stacked: true,
           gridLines: {
             borderDash: [8, 6],
             color: '#EDEDED',
+            tickMarkLength: false,
           },
           ticks: {
             fontFamily: FONTS,
             fontColor: '#8A8A96',
             callback: function (value) {
               if (value % 1 === 0) {
-                return value;
+                return value.toString() + '  ';
               }
             },
           },
