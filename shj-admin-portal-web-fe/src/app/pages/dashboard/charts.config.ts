@@ -1,5 +1,5 @@
-import { Color } from 'ng2-charts';
-import { Chart, ChartType } from 'chart.js';
+import {Color} from 'ng2-charts';
+import {Chart, ChartType} from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const ACTIVE_LABEL: string = 'نشط';
@@ -109,6 +109,7 @@ export class ChartsConfig {
           gridLines: {
             borderDash: [8, 6],
             color: '#EDEDED',
+            tickMarkLength: false,
           },
           ticks: {
             fontFamily: FONTS,
@@ -116,7 +117,7 @@ export class ChartsConfig {
             beginAtZero: true,
             callback: function (value) {
               if (value % 1 === 0) {
-                return value;
+                return value.toString() + '  ';
               }
             },
           },
