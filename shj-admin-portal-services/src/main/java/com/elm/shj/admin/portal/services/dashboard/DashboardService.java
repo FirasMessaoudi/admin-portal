@@ -342,7 +342,7 @@ public class DashboardService {
     }
 
     public List<LocationVo> getIncidentsLocationsFromCurrentSeason(int hijriYear) {
-        return applicantIncidentRepository.getIncidentsLocationsBySeasonAndRitualType(hijriYear, hajjRituals);
+        return applicantIncidentRepository.getIncidentsLocationsBySeasonAndRitualType(hijriYear).stream().filter(c -> c.getLat() != null && c.getLng() != null).collect(Collectors.toList());
     }
 
     public List<LocalizedCountVo> loadCompaniesWithMaxIncidentsCount(int seasonYear) {
