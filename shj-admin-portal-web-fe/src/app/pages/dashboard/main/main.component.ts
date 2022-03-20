@@ -21,7 +21,6 @@ import * as moment_ from 'moment-hijri';
 
 import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
 import {ApplicantMobileTracking} from '@app/_shared/model/applicant-mobile-tracking.model';
-import {dashboardItem} from '@shared/model';
 import {DashboardComponent} from '@pages/dashboard/slide-show/dashboard.component';
 import {DashboardCameraNumbersVoModel} from '@model/dashboard-camera-numbers-vo.model';
 
@@ -72,7 +71,7 @@ export class MainComponent implements OnInit, DashboardComponent {
         },
         {
           render: function (args) {
-            return '\n\n' + args.percentage + '%';
+            return '\n\n\n' + args.percentage + '%';
           },
           fontColor: '#000',
           position: 'outside',

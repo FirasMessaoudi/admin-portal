@@ -1,38 +1,28 @@
-import {
-  AfterViewInit,
-  Component,
-  Inject,
-  OnInit,
-  Renderer2,
-} from '@angular/core';
-import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
-import { ChartOptions, ChartType } from 'chart.js';
-import { ChartsConfig } from '@pages/dashboard/charts.config';
-import { AuthenticationService, DashboardService } from '@core/services';
-import { Loader } from '@googlemaps/js-api-loader';
-import {
-  Cluster,
-  ClusterStats,
-  MarkerClusterer,
-  Renderer,
-} from '@googlemaps/markerclusterer';
+import {AfterViewInit, Component, Inject, OnInit, Renderer2,} from '@angular/core';
+import {Label, PluginServiceGlobalRegistrationAndOptions} from 'ng2-charts';
+import {ChartOptions, ChartType} from 'chart.js';
+import {ChartsConfig} from '@pages/dashboard/charts.config';
+import {AuthenticationService, DashboardService} from '@core/services';
+import {Loader} from '@googlemaps/js-api-loader';
+import {Cluster, ClusterStats, MarkerClusterer, Renderer,} from '@googlemaps/markerclusterer';
 //import {GoogleMap, MapMarkerClusterer} from '@angular/google-maps';
-import { LookupService } from '@core/utilities/lookup.service';
-import { Subscription } from 'rxjs';
-import { Lookup } from '@model/lookup.model';
-import { CountVo } from '@model/count-vo.model';
-import { DatePipe, DOCUMENT } from '@angular/common';
-import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
-import { I18nService } from '@dcc-commons-ng/services';
-import { interpolateRgb } from 'd3-interpolate';
-import { DashboardIncidentNumbersVo } from '@model/dashboard-incident-numbers-vo.model';
-import { Position } from '@app/_shared/model/marker.model';
-import { EAuthority } from '@shared/model';
-import { ActivatedRoute } from '@angular/router';
-import { DashboardComponent } from '@pages/dashboard/slide-show/dashboard.component';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { LocalizedCountVo } from '@model/localized-count-vo.model';
+import {LookupService} from '@core/utilities/lookup.service';
+import {Subscription} from 'rxjs';
+import {Lookup} from '@model/lookup.model';
+import {CountVo} from '@model/count-vo.model';
+import {DatePipe, DOCUMENT} from '@angular/common';
+import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import {I18nService} from '@dcc-commons-ng/services';
+import {interpolateRgb} from 'd3-interpolate';
+import {DashboardIncidentNumbersVo} from '@model/dashboard-incident-numbers-vo.model';
+import {Position} from '@app/_shared/model/marker.model';
+import {EAuthority} from '@shared/model';
+import {ActivatedRoute} from '@angular/router';
+import {DashboardComponent} from '@pages/dashboard/slide-show/dashboard.component';
+import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
+import {LocalizedCountVo} from '@model/localized-count-vo.model';
 import * as moment_ from 'moment-hijri';
+
 const momentHijri = moment_;
 
 @Component({
@@ -88,7 +78,7 @@ export class IncidentsComponent
         },
         {
           render: function (args) {
-            return '\n\n' + args.percentage + '%';
+            return '\n\n\n' + args.percentage + '%';
           },
           fontColor: '#000',
           position: 'outside',
@@ -120,7 +110,7 @@ export class IncidentsComponent
         },
         {
           render: function (args) {
-            return '\n\n' + args.percentage + '%';
+            return '\n\n\n' + args.percentage + '%';
           },
           fontColor: '#000',
           position: 'outside',
