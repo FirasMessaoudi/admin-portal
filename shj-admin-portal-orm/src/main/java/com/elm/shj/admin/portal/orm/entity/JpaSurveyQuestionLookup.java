@@ -29,4 +29,7 @@ public class JpaSurveyQuestionLookup extends JpaLocalizedLookup {
     @JoinColumn(name = "survey_type_code",nullable = false)
     private JpaSurveyTypeLookup surveyType;
 
+    @Column(name= "question_index", nullable = false)
+    private int questionIndex;
+
 }

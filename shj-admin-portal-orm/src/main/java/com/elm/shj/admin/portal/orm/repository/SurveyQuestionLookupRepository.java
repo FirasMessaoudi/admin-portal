@@ -16,5 +16,5 @@ import java.util.List;
  */
 public interface SurveyQuestionLookupRepository extends JpaRepository<JpaSurveyQuestionLookup, Long> {
 
-    List<JpaSurveyQuestionLookup> findAllBySurveyTypeCodeOrderByCodeAsc(String surveyTypeCode);
+    List<JpaSurveyQuestionLookup> findAllBySurveyTypeCodeOrderByQuestionIndexAsc(String surveyTypeCode);
 }

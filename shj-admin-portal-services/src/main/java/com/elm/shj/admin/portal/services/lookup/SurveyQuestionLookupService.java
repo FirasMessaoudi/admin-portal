@@ -28,7 +28,7 @@ public class SurveyQuestionLookupService extends GenericService<JpaSurveyQuestio
     private final SurveyQuestionLookupRepository surveyQuestionLookupRepository;
 
     public List<SurveyQuestionLookupDto> getSurveyQuestionsBySurveyType(String surveyType){
-        List<JpaSurveyQuestionLookup> questionsList = surveyQuestionLookupRepository.findAllBySurveyTypeCodeOrderByCodeAsc(surveyType);
+        List<JpaSurveyQuestionLookup> questionsList = surveyQuestionLookupRepository.findAllBySurveyTypeCodeOrderByQuestionIndexAsc(surveyType);
         List<SurveyQuestionLookupDto> surveyQuestionList = getMapper().fromEntityList(questionsList, mappingContext);
         return surveyQuestionList;
     }

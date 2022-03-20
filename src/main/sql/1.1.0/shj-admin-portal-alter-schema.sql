@@ -1436,3 +1436,8 @@ ALTER TABLE shc_portal.shc_applicant_contact DROP CONSTRAINT fk_applicant_contac
 GO
 ALTER TABLE shc_portal.shc_applicant_contact DROP COLUMN applicant_ritual_id;
 GO
+
+alter table shc_portal.shc_survey_question_lk add question_index int not null
+alter table shc_portal.shc_survey_question_lk  alter column code VARCHAR(50)
+alter table shc_portal.shc_user_survey_question alter column question_code VARCHAR(50)
+
