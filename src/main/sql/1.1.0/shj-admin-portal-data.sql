@@ -693,6 +693,30 @@ INSERT INTO shc_portal.shc_role_authority(role_id, authority_id) VALUES (14, 42)
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_data_request_status_lk ON;
-INSERT INTO shc_portal.shc_data_request_status_lk(id, label_ar, label_en) VALUES (7, N'خطأ', 'Failed');
-SET IDENTITY_INSERT shc_portal.shc_data_request_status_lk OFF;
+INSERT INTO shc_portal.shc_data_request_status_lk(id, label_ar, label_en)
+VALUES (7, N'خطأ', 'Failed');
+SET
+IDENTITY_INSERT shc_portal.shc_data_request_status_lk OFF;
+GO
+
+UPDATE shc_portal.shc_portal.shc_notification_category_lk
+SET sample = 'Make sure to carry your Hajj card when performing the rituals'
+WHERE code = 'GENERAL'
+  and lang = 'en';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk
+SET sample = 'If your temperature rises above 38 degrees, go to the nearest health point directly'
+WHERE code = 'HEALTH'
+  and lang = 'en';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk
+SET sample = 'Our Lord, accept from us, You are the Hearer, the Knower'
+WHERE code = 'RELIGIOUS'
+  and lang = 'en';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk
+SET sample = 'Tawaf al-Ifadah is one of the pillars of Hajj that can only be done by performing it. And the evidence for that is the Almighty’s saying: (And let them circumambulate the Ancient House)'
+WHERE code = 'RITUAL'
+  and lang = 'en';
+UPDATE shc_portal.shc_portal.shc_notification_category_lk
+SET sample ='Avoid climbing mountains and high places and avoid crowding, docking and sleeping on the roads'
+WHERE code = 'GENERAL_AWARENESS'
+  and lang = 'en';
 GO
