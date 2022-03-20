@@ -59,8 +59,9 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocationVo(i.locationLat, i.locationLng) " +
             "FROM JpaApplicantIncident i JOIN i.applicantRitual ar JOIN ar.applicantPackage ap " +
-            "JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs where rs.seasonYear = :seasonYear")
-    List<LocationVo> getIncidentsLocationsBySeasonAndRitualType(@Param("seasonYear") int seasonYear);
+            "JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs where rs.seasonYear = :seasonYear " +
+            "and rs.ritualTypeCode IN (:ritualTypeCodeList)")
+    List<LocationVo> getIncidentsLocationsBySeasonAndRitualType(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 
     @Query("SELECT ai FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar " +
             "JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
