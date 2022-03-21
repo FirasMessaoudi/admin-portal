@@ -3,7 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.prinitng;
 
-import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
+import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
@@ -20,8 +21,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -103,8 +102,8 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
         if (criteria.getToDate() != null)
             endDate = atEndOfDay(criteria.getToDate());
 
-        return mapPage(printRequestRepository.findStaffPrintRequestByFilters(criteria.getRitualTypeCode(), criteria.getCompanyCode(), criteria.getSeason(),criteria.getStatusCode(), criteria.getDescription(),
-                criteria.getRequestNumber(), criteria.getBatchNumber(), criteria.getCardNumber(), criteria.getIdNumber()
+        return mapPage(printRequestRepository.findStaffPrintRequestByFilters(criteria.getRitualTypeCode(), criteria.getCompanyCode(), criteria.getSeason(), criteria.getStatusCode(), !criteria.getDescription().equals("") ? criteria.getDescription() : null,
+                !criteria.getRequestNumber().equals("") ? criteria.getRequestNumber() : null, criteria.getBatchNumber() != 0 ? criteria.getBatchNumber() : -1L, !criteria.getCardNumber().equals("") ? criteria.getCardNumber() : null, !criteria.getIdNumber().equals("") ? criteria.getIdNumber() : null
                 , startDate, endDate, pageable));
     }
 
