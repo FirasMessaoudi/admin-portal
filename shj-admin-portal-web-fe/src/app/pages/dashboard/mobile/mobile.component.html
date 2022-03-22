@@ -203,7 +203,7 @@
                   <ng-template ngbNavContent>
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
                       <div class="form-group col">
-                        <label class="col-form-label">المنطقة</label>
+                        <label class="col-form-label">{{'dashboard.general.area' | translate}}</label>
                         <select class="custom-select" (change)="filterMapByArea($event.target.value)">
                           <option selected value="all">{{'general.all' | translate}}</option>
                           <option *ngFor="let areaLayerLookup of lookupService().localizedItems(layersLabels)"
@@ -213,16 +213,16 @@
                         </select>
                       </div>
                       <div class="form-group col">
-                        <label class="col-form-label">الشركة</label>
+                        <label class="col-form-label">{{'dashboard.general.company' | translate}}</label>
                         <select class="custom-select" (change)="filterMap($event.target.value, 'company')">
-                          <option selected value="all">الكل</option>
+                          <option selected value="all">{{'general.all' | translate}}</option>
                           <option *ngFor="let company of companyNames" [value]="company.code">
                             {{currentLanguage.startsWith('en') ? company.labelEn : company.labelAr}}
                           </option>
                         </select>
                       </div>
                       <div class="form-group col">
-                        <label class="col-form-label">الفترة من - إلى</label>
+                        <label class="col-form-label">{{'dashboard.mobile.period_from_to' | translate}}</label>
                         <hijri-gregorian-range-picker
                           class="date-range-picker"
                           (selectedFromDateChange)="selectedFromDateChange($event)"
