@@ -41,7 +41,7 @@ public class ApplicantBasicInfoDto implements Serializable {
     private String passportNumber;
 
     // @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @GregorianDate(minOffset = -120, maxOffset = -10, groups = CheckSecond.class)
     @CellIndex(index = 2)
     private Date dateOfBirthGregorian;
