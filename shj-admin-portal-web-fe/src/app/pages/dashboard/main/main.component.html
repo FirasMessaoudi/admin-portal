@@ -15,17 +15,25 @@
         </option>
       </select>
 
-      <svg-icon styleClass="fa-w-18 edit-icon" ngbTooltip="{{'general.btn_edit' | translate}}" icon="edit-light" *ngIf="isSeasonYearSelected==true"
-                        (click)="isSeasonYearSelected=false"></svg-icon>
+      
 
     </h3>
 
-    <div *ngIf="!isFullScreen">
-      <!--      <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3" >
-              <svg-icon styleClass="fa-w-18" icon="edit-light"></svg-icon>
-              {{'general.btn_edit' | translate}}
-            </button>-->
-      <auto-preview></auto-preview>
+    <div class="d-flex">
+      <ng-container *ngIf="isSeasonYearSelected==true">
+        <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3 d-flex" (click)="isSeasonYearSelected=false">
+          <svg-icon styleClass="fa-w-18 mr-2" icon="edit-light"></svg-icon>
+          <div class="horizontal-space"></div>
+          {{'general.btn_edit' | translate}}
+        </button>
+      </ng-container>
+      <ng-container *ngIf="!isFullScreen">
+        <!--      <button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3" >
+                <svg-icon styleClass="fa-w-18" icon="edit-light"></svg-icon>
+                {{'general.btn_edit' | translate}}
+              </button>-->
+        <auto-preview></auto-preview>
+      </ng-container>
     </div>
   </div>
 
@@ -162,7 +170,7 @@
           </div>
           <div class="flex-center-between mt-2">
             <div class="d-flex">
-              <svg-icon styleClass="text-gray-300" icon="circle"></svg-icon>
+              <svg-icon styleClass="text-appDLight" icon="circle"></svg-icon>
               <div class="px-3">{{'dashboard.general.logged_out' | translate}}</div>
             </div>
             <div>{{currentSeasonData?.totalNumberOfLoggedOutUsers}}</div>
