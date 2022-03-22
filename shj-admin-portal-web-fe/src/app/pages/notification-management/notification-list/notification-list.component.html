@@ -123,12 +123,16 @@
           <td class="ltr">{{lookupService().localizedLabel(notificationCategories, template?.categoryCode)}}</td>
 
           <td *ngIf="template?.important">
-            <span class="status mr-1 Suspended severity-badge"></span>
-            <span>{{'notification-management.important' | translate}}</span>
+            <div class="text-nowrap">
+              <span class="status mr-1 Suspended severity-badge"></span>
+              <span>{{'notification-management.important' | translate}}</span>
+            </div>
           </td>
           <td *ngIf="!template?.important">
-            <span class="status mr-1 done severity-badge"></span>
-            <span>{{'notification-management.normal' | translate}}</span>
+            <div class="text-nowrap">
+              <span class="status mr-1 done severity-badge"></span>
+              <span>{{'notification-management.normal' | translate}}</span>
+            </div>
           </td>
 
           <td>

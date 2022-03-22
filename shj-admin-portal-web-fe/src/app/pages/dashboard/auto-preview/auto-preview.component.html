@@ -1,6 +1,5 @@
-<button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3 flex-center-between" (click)="open(content)">
-  <svg-icon styleClass="fa-w-14" icon="play"></svg-icon>
-  <div class="horizontal-space"></div>
+<button type="button" class="btn btn-outline-dcc-primary px-4 ml-md-3 d-flex" (click)="open(content)">
+  <svg-icon styleClass="fa-w-14 mr-2" icon="play"></svg-icon>
   {{'dashboard.general.auto_preview' | translate}}
 </button>
 
@@ -12,10 +11,11 @@
   <div class="modal-body w-100">
     <ul class="list-group">
       <li *ngFor="let dashboardItem of dashboards"
-          class="list-group-item list-sts flex-center-between font-weight-bold">{{dashboardItem.title | translate}} {{'dashboard.general.dashboard' | translate}}
-        <div class="form-checkbox">
-          <input mdbCheckbox class="form-check-input c9" type="checkbox" value=""
+          class="list-group-item list-sts flex-center-between font-weight-bold">
+        <div class="custom-control custom-checkbox dashboards">
+          <input mdbCheckbox class="custom-control-input" type="checkbox" value=""
                  id="customCheck-{{dashboardItem.componentName}}" [(ngModel)]="dashboardItem.selected"/>
+                 <label class="custom-control-label" for="customCheck-{{dashboardItem.componentName}}">{{dashboardItem.title | translate}} {{'dashboard.general.dashboard' | translate}}</label>
         </div>
 
       </li>

@@ -135,11 +135,11 @@
             <span *ngIf="editMode" class="text-danger">*</span>
           </label>
           <span *ngIf="!editMode">
-            <label *ngIf="notificationTemplate?.important" class="form-control-plaintext">
+            <label *ngIf="notificationTemplate?.important" class="form-control-plaintext text-nowrap">
               <span class="status mr-1 Suspended severity-badge"></span>
               <span>{{'notification-management.important' | translate}}</span>
             </label>
-            <label *ngIf="!notificationTemplate?.important" class="form-control-plaintext">
+            <label *ngIf="!notificationTemplate?.important" class="form-control-plaintext text-nowrap">
               <span class="status mr-1 done severity-badge"></span>
               <span>{{'notification-management.normal' | translate}}</span>
             </label>

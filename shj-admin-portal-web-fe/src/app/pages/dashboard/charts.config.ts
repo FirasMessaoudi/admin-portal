@@ -276,7 +276,7 @@ export class ChartsConfig {
 
   lineChartColors: Color[] = [
     { backgroundColor: '#BA9430', hoverBackgroundColor: '#BA9430' },
-    { backgroundColor: '#D5D5DD', hoverBackgroundColor: '#D5D5DD' },
+    { backgroundColor: '#F7F5EF', hoverBackgroundColor: '#F7F5EF' },
   ];
 
   // doughnut
