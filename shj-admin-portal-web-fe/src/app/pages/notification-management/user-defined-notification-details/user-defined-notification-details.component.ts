@@ -1,41 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { I18nService } from '@dcc-commons-ng/services';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ToastService } from '@shared/components/toast';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import {
-  AuthenticationService,
-  CardService,
-  NotificationService,
-} from '@core/services';
-import { LookupService } from '@core/utilities/lookup.service';
-import { Lookup } from '@model/lookup.model';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NotificationTemplate } from '@model/notification-template.model';
-import { combineLatest, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { NotificationTemplateContent } from '@model/notification-template-content.model';
-import {
-  ModalDismissReasons,
-  NgbCalendar,
-  NgbDate,
-  NgbDateStruct,
-  NgbModal,
-} from '@ng-bootstrap/ng-bootstrap';
-import { CompanyLite } from '@model/company-lite.model';
-import { PackageHousing } from '@model/package-housing.model';
-import { DateType } from '@shared/modules/hijri-gregorian-datepicker/consts';
-import { DateFormatterService } from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
-import {
-  ageRangeValidator,
-  validateIsRequired,
-} from '@pages/notification-management/notification-custom-validator';
-import { ConfirmDialogService } from '@shared/components/confirm-dialog';
-import { Applicant } from '@model/applicant.model';
-import { ApplicantService } from '@core/services/applicant/applicant.service';
-import { Page } from '@shared/model';
-import { NotificationTemplateCategorizing } from '@model/notification-template-categorizing.model';
-import { DatePipe } from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {I18nService} from '@dcc-commons-ng/services';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ToastService} from '@shared/components/toast';
+import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
+import {AuthenticationService, CardService, NotificationService,} from '@core/services';
+import {LookupService} from '@core/utilities/lookup.service';
+import {Lookup} from '@model/lookup.model';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {NotificationTemplate} from '@model/notification-template.model';
+import {combineLatest, Subscription} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {NotificationTemplateContent} from '@model/notification-template-content.model';
+import {ModalDismissReasons, NgbCalendar, NgbDate, NgbDateStruct, NgbModal,} from '@ng-bootstrap/ng-bootstrap';
+import {CompanyLite} from '@model/company-lite.model';
+import {PackageHousing} from '@model/package-housing.model';
+import {DateType} from '@shared/modules/hijri-gregorian-datepicker/consts';
+import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
+import {ageRangeValidator, validateIsRequired,} from '@pages/notification-management/notification-custom-validator';
+import {ConfirmDialogService} from '@shared/components/confirm-dialog';
+import {Applicant} from '@model/applicant.model';
+import {ApplicantService} from '@core/services/applicant/applicant.service';
+import {Page} from '@shared/model';
+import {NotificationTemplateCategorizing} from '@model/notification-template-categorizing.model';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-user-defined-notification-details',
@@ -692,5 +679,19 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
     return this.currentLanguage.startsWith('ar')
       ? datePipe.transform(hijriDate, 'yyyy/MM/dd')
       : datePipe.transform(hijriDate, 'dd/MM/yyyy');
+  }
+
+  getNotificationTitle(indexLanguage) {
+
+    let titre = this.notificationTemplate.notificationTemplateContents.find(notif => notif.lang.toLocaleLowerCase() == this.translatedLanguages[indexLanguage].code.toLocaleLowerCase()).title;
+    return titre;
+
+  }
+
+  getNotificationBody(indexLanguage) {
+
+    let body = this.notificationTemplate.notificationTemplateContents.find(notif => notif.lang.toLocaleLowerCase() == this.translatedLanguages[indexLanguage].code.toLocaleLowerCase()).body;
+    return body;
+
   }
 }

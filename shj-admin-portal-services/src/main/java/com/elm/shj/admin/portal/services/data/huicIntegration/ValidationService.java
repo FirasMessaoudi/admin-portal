@@ -3,6 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.data.huicIntegration;
 
+import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
+import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthDisease;
+import com.elm.shj.admin.portal.orm.repository.ApplicantHealthDiseaseRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.data.validators.CheckFirst;
 import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
@@ -13,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +53,9 @@ public class ValidationService {
     private final ApplicantRelativeService applicantRelativeService;
     private final ApplicantHealthService applicantHealthService;
     private final ChatContactService chatContactService;
+    private final ApplicantHealthDiseaseRepository applicantHealthDiseaseRepository;
+    private final CycleAvoidingMappingContext mappingContext;
+    private final ApplicationContext context;
 
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {
@@ -79,6 +88,9 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
                     saveApplicantRelative((ApplicantRelativeDto) items.get(i));
                 }
+                if (items.get(i).getClass().isAssignableFrom(ApplicantHealthDiseaseDto.class)) {
+                    saveApplicantHealthDisease((ApplicantHealthDiseaseDto) items.get(i));
+                }
             }
 
         }
@@ -86,6 +98,17 @@ public class ValidationService {
         return errorResponses;
     }
 
+    private void saveApplicantHealthDisease(ApplicantHealthDiseaseDto applicantHealthDiseaseDto) {
+        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantHealthDiseaseDto.getApplicantBasicInfo());
+        Long applicantId = applicantLite.getId();
+        if (applicantLite == null) {
+            return;
+        }
+        Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealthDiseaseDto.getPackageReferenceNumber(), null, false);
+        applicantHealthDiseaseDto.setApplicantHealth(ApplicantHealthDto.builder().id(savedApplicantHealthId).build());
+        applicantHealthDiseaseRepository.save((JpaApplicantHealthDisease) findMapper(ApplicantHealthDiseaseDto.class).toEntity(applicantHealthDiseaseDto, mappingContext));
+
+    }
 
     private void saveApplicantRelative(ApplicantRelativeDto applicantRelative) {
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantRelative.getApplicantBasicInfo());
@@ -192,10 +215,19 @@ public class ValidationService {
 
     }
 
-
+    /**
+     * remove unnecessary text from error message
+     *
+     * @param message
+     * @return
+     */
     private String getValidMessage(String message) {
         return message.substring(message.lastIndexOf(".") + 1);
     }
 
+    private IGenericMapper findMapper(Class clazz) {
+        List<IGenericMapper> foundMappers = this.context.getBeansOfType(IGenericMapper.class).values().stream().filter(mapper -> Objects.requireNonNull(GenericTypeResolver.resolveTypeArguments(mapper.getClass(), IGenericMapper.class))[0].getSimpleName().equals(clazz.getSimpleName())).collect(Collectors.toList());
+        return CollectionUtils.size(foundMappers) == 1 ? foundMappers.get(0) : null;
+    }
 
 }
