@@ -185,7 +185,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                         .userId(applicant.getDigitalIds().get(0).getUin())
                         .notificationTemplate(notificationTemplate)
                         .sendingDate(notificationTemplate.getSendingDate())
-                        .userLang(getNotificationLanguage(notificationTemplate, applicant))
+                        .userLang(applicant.getPreferredLanguage() != null ? getNotificationLanguage(notificationTemplate, applicant) : NOTIFICATION_DEFAULT_LANGUAGE)
                         .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
                         .build())
                 .collect(Collectors.toList());

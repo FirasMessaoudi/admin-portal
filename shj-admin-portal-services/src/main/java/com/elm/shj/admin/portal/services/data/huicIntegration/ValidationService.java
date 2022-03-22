@@ -31,6 +31,9 @@ import java.time.chrono.HijrahDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
+
 
 /**
  * Service for validating data received from third party
@@ -94,11 +97,21 @@ public class ValidationService {
             }
 
         }
+        errorResponses.forEach(errorResponse -> {
+                    List<ErrorItem> unique = errorResponse.getErrors().stream()
+                            .collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(ErrorItem::getAttributeName))),
+                                    ArrayList::new));
+                    errorResponse.setErrors(unique);
+                }
+
+        );
+
 
         return errorResponses;
     }
 
     private void saveApplicantHealthDisease(ApplicantHealthDiseaseDto applicantHealthDiseaseDto) {
+        applicantHealthDiseaseDto.getApplicantBasicInfo().setDateOfBirthGregorian(updateDate(applicantHealthDiseaseDto.getApplicantBasicInfo().getDateOfBirthGregorian()));
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantHealthDiseaseDto.getApplicantBasicInfo());
         Long applicantId = applicantLite.getId();
         if (applicantLite == null) {
@@ -111,6 +124,7 @@ public class ValidationService {
     }
 
     private void saveApplicantRelative(ApplicantRelativeDto applicantRelative) {
+        applicantRelative.getApplicantBasicInfo().setDateOfBirthGregorian(updateDate(applicantRelative.getApplicantBasicInfo().getDateOfBirthGregorian()));
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantRelative.getApplicantBasicInfo());
         if (applicantLite == null) {
             return;
@@ -136,6 +150,7 @@ public class ValidationService {
     }
 
     private void saveApplicantHealth(ApplicantHealthDto applicantHealth) {
+        applicantHealth.getApplicantBasicInfo().setDateOfBirthGregorian(updateDate(applicantHealth.getApplicantBasicInfo().getDateOfBirthGregorian()));
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantHealth.getApplicantBasicInfo());
         if (applicantLite == null) {
             return;
@@ -165,7 +180,7 @@ public class ValidationService {
             HijrahDate islamyDate = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
             applicant.setDateOfBirthHijri(Long.parseLong(islamyDate.toString().substring(islamyDate.toString().indexOf("AH") + 3).replace("-", "")));
         }
-
+        applicant.setDateOfBirthGregorian(updateDate(applicant.getDateOfBirthGregorian()));
         Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
         // if record exists already in DB we need to update it
         if (existingApplicantId != null) {
@@ -173,6 +188,8 @@ public class ValidationService {
             applicant.setUpdateDate(new Date());
             //TODO: need refactoring, the below line should be replaced by deleting the old contact as a new one will be added
             applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicantId));
+
+            //TODO: get oldRituals
         }
         if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
             applicant.getContacts().forEach(ac -> {
@@ -216,11 +233,28 @@ public class ValidationService {
     }
 
     /**
+     * remove hours from date
+     *
+     * @param date
+     * @return
+     */
+    Date updateDate(Date date) {
+        if (date != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            return calendar.getTime();
+        }
+        return null;
+    }
+
+    /**
      * remove unnecessary text from error message
      *
      * @param message
      * @return
      */
+
     private String getValidMessage(String message) {
         return message.substring(message.lastIndexOf(".") + 1);
     }
