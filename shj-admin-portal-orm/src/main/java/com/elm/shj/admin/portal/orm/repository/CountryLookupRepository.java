@@ -6,6 +6,8 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.JpaCountryLookup;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * Repository for JpaCountryLookup.
  *
@@ -17,4 +19,6 @@ public interface CountryLookupRepository extends JpaRepository<JpaCountryLookup,
     boolean existsByCode(String code);
 
     JpaCountryLookup findFirstByCode(String countryCode);
+
+    List<JpaCountryLookup> findAllByCode(String countryCode);
 }
