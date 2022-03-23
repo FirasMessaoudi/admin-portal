@@ -46,14 +46,4 @@ public class RitualTypeLookupService extends GenericService<JpaRitualTypeLookup,
     public boolean existsByCode(String ritualTypeCode) {
         return ((RitualTypeLookupRepository) getRepository()).existsByCode(ritualTypeCode);
     }
-
-    /**
-     * finds if a country by its code
-     *
-     * @param ritualTypeCode the code of the country to look for
-     * @return the found country
-     */
-    public RitualTypeLookupDto findByCode(String ritualTypeCode) {
-        return getMapper().fromEntity(((RitualTypeLookupRepository) getRepository()).findFirstByCode(ritualTypeCode), mappingContext);
-    }
 }

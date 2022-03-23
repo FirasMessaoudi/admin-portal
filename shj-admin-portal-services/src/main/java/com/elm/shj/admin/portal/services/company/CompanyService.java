@@ -2,7 +2,6 @@ package com.elm.shj.admin.portal.services.company;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompany;
 import com.elm.shj.admin.portal.orm.repository.CompanyRepository;
-import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyLiteDto;
 import com.elm.shj.admin.portal.services.dto.ERitualType;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -25,7 +24,6 @@ import java.util.List;
 public class CompanyService extends GenericService<JpaCompany, CompanyLiteDto, Long> {
 
     private final CompanyRepository companyRepository;
-    private final CompanyStaffRepository companyStaffRepository;
 
     public CompanyLiteDto findCompanyByCompanyRitualSeasonsIdAndApplicantUin(long companyRitualSeasonsId, long applicantUin) {
         return getMapper().fromEntity(companyRepository.findByCompanyRitualSeasonsIdAndCompanyRitualSeasonsRitualPackagesApplicantPackagesApplicantUin(companyRitualSeasonsId, applicantUin), mappingContext);
