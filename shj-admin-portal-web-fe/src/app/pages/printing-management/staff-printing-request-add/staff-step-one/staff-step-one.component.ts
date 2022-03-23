@@ -171,7 +171,7 @@ export class StaffStepOneComponent implements OnInit {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       centered: true,
-      size: 'lg'
+      size: 'xl'
     }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {

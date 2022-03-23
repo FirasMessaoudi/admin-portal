@@ -512,7 +512,7 @@
     "add_no_cards": "Add {{noCards}} card(s)",
     "add_cards": "Add Card",
     "cards_from_all_pages": "card(s) from all pages",
-    "cards_selected_on_the_current_page": " X card(s)",
+    "cards_selected_on_the_current_page": " X selected card(s)",
     "cards_tooltip": "cards have been selected on the current page",
     "dialog_confirm_request_error_text": "Error while confirming your request. Please try again...",
     "group_leader": "Group Leader",
