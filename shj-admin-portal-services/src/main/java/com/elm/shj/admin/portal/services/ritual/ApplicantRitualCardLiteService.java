@@ -6,7 +6,6 @@ package com.elm.shj.admin.portal.services.ritual;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantPackageService;
-import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
@@ -31,7 +30,6 @@ import java.util.Optional;
 public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantRitual, ApplicantRitualCardLiteDto, Long> {
 
     private final ApplicantRitualRepository applicantRitualRepository;
-    private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private final CompanyStaffService companyStaffService;
     private final ApplicantPackageService applicantPackageService;
 

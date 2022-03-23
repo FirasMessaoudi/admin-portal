@@ -224,7 +224,7 @@
                       </div>
                     </div>
                     <label *ngIf="!editMode"
-                           class="form-control-plaintext">{{notificationTemplate?.notificationTemplateContents[i]?.title ? notificationTemplate?.notificationTemplateContents[i]?.title : '---'}}</label>
+                           class="form-control-plaintext">{{notificationTemplate?.notificationTemplateContents[i]?.title ? getNotificationTitle(i) : '---'}}</label>
                   </div>
 
                   <div class="form-group col">
@@ -244,7 +244,7 @@
                       </div>
                     </div>
                     <label *ngIf="!editMode"
-                           class="form-control-plaintext text-break">{{notificationTemplate?.notificationTemplateContents[i]?.body ? notificationTemplate?.notificationTemplateContents[i]?.body : '---'}}
+                           class="form-control-plaintext text-break">{{notificationTemplate?.notificationTemplateContents[i]?.body ? getNotificationBody(i) : '---'}}
                     </label>
                   </div>
 
@@ -480,7 +480,7 @@
               <tr>
                 <th scope="col">{{'card-management.name' | translate}}</th>
                 <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-                <th scope="col">{{'printing-management.id_number' | translate}}</th>
+                <th scope="col">{{'general.nin' | translate}}</th>
                 <th scope="col">{{'card-management.passport_number' | translate}}</th>
               </tr>
               </thead>
@@ -562,7 +562,7 @@
                 <tr>
                   <th scope="col">{{'card-management.name' | translate}}</th>
                   <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-                  <th scope="col">{{'printing-management.id_number' | translate}}</th>
+                  <th scope="col">{{'general.nin' | translate}}</th>
                   <th scope="col">{{'card-management.passport_number' | translate}}</th>
                   <th scope="col" class="text-center"></th>
                 </tr>
@@ -661,7 +661,7 @@
       </div>
 
       <div class="form-group col">
-        <label class="col-form-label">{{'printing-management.id_number' | translate }}</label>
+        <label class="col-form-label">{{'general.nin' | translate }}</label>
         <input formControlName="idNumber" class="form-control"
                onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length < 10"
                min="0" step="1">
@@ -690,7 +690,7 @@
             <th scope="col"></th>
             <th scope="col">{{'card-management.name' | translate}}</th>
             <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-            <th scope="col">{{'printing-management.id_number' | translate}}</th>
+            <th scope="col">{{'general.nin' | translate}}</th>
             <th scope="col">{{'card-management.passport_number' | translate}}</th>
           </tr>
           </thead>

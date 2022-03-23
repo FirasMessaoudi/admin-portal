@@ -69,4 +69,6 @@ public class Navigation {
 	public static final String API_HUIC_INTEGRATION = "/api/huic";
 	//Data segment
 	public static final String API_SURVEY_INTEGRATION = "/api/ws/survey";
+	// Applicant and Staff Badge
+	public static final String API_BADGE = "/api/ws/badge";
 }

@@ -76,7 +76,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
         Date endDate = new GregorianCalendar(5000, 01, 01).getTime();
         ;
         if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
-            litePrintRequests = mapPage(printRequestRepository.findAll(withApplicantPrintRequestFilter(criteria), pageable));
+            litePrintRequests = findApplicantPrintRequests(criteria, criteria.getFromDate(), criteria.getToDate(), pageable);
 
         } else {
             litePrintRequests = findStaffPrintRequests(criteria, criteria.getFromDate(), criteria.getToDate(), pageable);
@@ -187,11 +187,11 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public List<PrintRequestDto> findPrintRequest(){
-        List<PrintRequestDto> litePrintRequests= mapList(printRequestRepository.findPrintRequest(PageRequest.of(0, 1, Sort.Direction.ASC, "creationDate")).getContent());
-        if(!litePrintRequests.isEmpty()){
-            if(litePrintRequests.get(0).getTarget().equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
-                litePrintRequests.get(0).getPrintRequestBatches().stream().forEach(batch -> {
+    public PrintRequestDto findPrintRequest(){
+        PrintRequestDto printRequest = getMapper().fromEntity(printRequestRepository.findFirstByStatusCodeOrderByCreationDateAsc(EPrintRequestStatus.CONFIRMED.name()), mappingContext);
+        if(printRequest != null){
+            if(printRequest.getTarget().equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
+                printRequest.getPrintRequestBatches().stream().forEach(batch -> {
                     // will be called for each print request batch, get all applicant cards for that batch
                     List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
                     // to get applicant cards based on the ids list from DB by JPQL Query
@@ -206,7 +206,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
                     });
                 });
             } else {
-                litePrintRequests.get(0).getPrintRequestBatches().stream().forEach(batch -> {
+                printRequest.getPrintRequestBatches().stream().forEach(batch -> {
                     // will be called for each print request batch, get all applicant cards for that batch
                     List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
                     // to get applicant cards based on the ids list from DB by JPQL Query
@@ -222,7 +222,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
                 });
             }
         }
-        return litePrintRequests;
+        return printRequest;
     }
 
     private CardVO mapApplicantCardToCardVO(ApplicantCardDto applicantCardDto) {

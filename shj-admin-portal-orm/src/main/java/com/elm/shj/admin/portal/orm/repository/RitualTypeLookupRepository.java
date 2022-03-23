@@ -15,6 +15,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface RitualTypeLookupRepository extends JpaRepository<JpaRitualTypeLookup, Long> {
 
     boolean existsByCode(String ritualTypeCode);
-
-    JpaRitualTypeLookup findFirstByCode(String ritualTypeCode);
 }

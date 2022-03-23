@@ -5,13 +5,8 @@ package com.elm.shj.admin.portal.services.notification;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.javacrumbs.shedlock.core.LockAssert;
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Scheduler to process automatically notification templates
@@ -26,7 +21,7 @@ public class NotificationTemplateProcessingScheduler {
 
     private final NotificationRequestService notificationRequestService;
 
-/*    @PostConstruct
+   /* @PostConstruct
     @Scheduled(cron = "${scheduler.notification.processing.cron}")
     @SchedulerLock(name = "notification-template-processing-task")
     public void createNotificationRequests() {

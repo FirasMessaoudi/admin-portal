@@ -3,6 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.data.huicIntegration;
 
+import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
+import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthDisease;
+import com.elm.shj.admin.portal.orm.repository.ApplicantHealthDiseaseRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.data.validators.CheckFirst;
 import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
@@ -13,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +30,9 @@ import java.time.chrono.HijrahChronology;
 import java.time.chrono.HijrahDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 
 /**
@@ -47,6 +56,9 @@ public class ValidationService {
     private final ApplicantRelativeService applicantRelativeService;
     private final ApplicantHealthService applicantHealthService;
     private final ChatContactService chatContactService;
+    private final ApplicantHealthDiseaseRepository applicantHealthDiseaseRepository;
+    private final CycleAvoidingMappingContext mappingContext;
+    private final ApplicationContext context;
 
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {
@@ -79,15 +91,40 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
                     saveApplicantRelative((ApplicantRelativeDto) items.get(i));
                 }
+                if (items.get(i).getClass().isAssignableFrom(ApplicantHealthDiseaseDto.class)) {
+                    saveApplicantHealthDisease((ApplicantHealthDiseaseDto) items.get(i));
+                }
             }
 
         }
+        errorResponses.forEach(errorResponse -> {
+                    List<ErrorItem> unique = errorResponse.getErrors().stream()
+                            .collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(ErrorItem::getAttributeName))),
+                                    ArrayList::new));
+                    errorResponse.setErrors(unique);
+                }
+
+        );
+
 
         return errorResponses;
     }
 
+    private void saveApplicantHealthDisease(ApplicantHealthDiseaseDto applicantHealthDiseaseDto) {
+        applicantHealthDiseaseDto.getApplicantBasicInfo().setDateOfBirthGregorian(updateDate(applicantHealthDiseaseDto.getApplicantBasicInfo().getDateOfBirthGregorian()));
+        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantHealthDiseaseDto.getApplicantBasicInfo());
+        Long applicantId = applicantLite.getId();
+        if (applicantLite == null) {
+            return;
+        }
+        Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealthDiseaseDto.getPackageReferenceNumber(), null, false);
+        applicantHealthDiseaseDto.setApplicantHealth(ApplicantHealthDto.builder().id(savedApplicantHealthId).build());
+        applicantHealthDiseaseRepository.save((JpaApplicantHealthDisease) findMapper(ApplicantHealthDiseaseDto.class).toEntity(applicantHealthDiseaseDto, mappingContext));
+
+    }
 
     private void saveApplicantRelative(ApplicantRelativeDto applicantRelative) {
+        applicantRelative.getApplicantBasicInfo().setDateOfBirthGregorian(updateDate(applicantRelative.getApplicantBasicInfo().getDateOfBirthGregorian()));
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantRelative.getApplicantBasicInfo());
         if (applicantLite == null) {
             return;
@@ -113,6 +150,7 @@ public class ValidationService {
     }
 
     private void saveApplicantHealth(ApplicantHealthDto applicantHealth) {
+        applicantHealth.getApplicantBasicInfo().setDateOfBirthGregorian(updateDate(applicantHealth.getApplicantBasicInfo().getDateOfBirthGregorian()));
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantHealth.getApplicantBasicInfo());
         if (applicantLite == null) {
             return;
@@ -136,21 +174,26 @@ public class ValidationService {
     }
 
     private void saveApplicantsMainData(ApplicantDto applicant) {
+        //TODO: unify this for both data upload and huic
         if (applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) {
             Calendar cl = Calendar.getInstance();
             cl.setTime(applicant.getDateOfBirthGregorian());
             HijrahDate islamyDate = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
             applicant.setDateOfBirthHijri(Long.parseLong(islamyDate.toString().substring(islamyDate.toString().indexOf("AH") + 3).replace("-", "")));
         }
-
+        applicant.setDateOfBirthGregorian(updateDate(applicant.getDateOfBirthGregorian()));
         Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
         // if record exists already in DB we need to update it
+        //TODO: unify this for both data upload and huic
         if (existingApplicantId != null) {
             applicant.setId(existingApplicantId);
             applicant.setUpdateDate(new Date());
             //TODO: need refactoring, the below line should be replaced by deleting the old contact as a new one will be added
             applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicantId));
+            //TODO: get oldRituals
         }
+
+        //TODO: unify this for both data upload and huic
         if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
             applicant.getContacts().forEach(ac -> {
                 ac.setApplicant(applicant);
@@ -172,7 +215,6 @@ public class ValidationService {
         Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, packageReferenceNumber, null, false);
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
         if (savedApplicantRitualId != null) {
-            applicantRitualDto.setApplicant(ApplicantDto.builder().id(applicantId).build());
             applicantRitualDto.setId(savedApplicantRitualId);
             applicantRitualDto.setUpdateDate(new Date());
             Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
@@ -188,14 +230,42 @@ public class ValidationService {
                 applicantRitualDto.setApplicantPackage(createdApplicantPackage);
             }
         }
+        applicantRitualDto.setApplicant(ApplicantDto.builder().id(applicantId).build());
         applicantRitualService.save(applicantRitualDto);
 
     }
 
+    /**
+     * remove hours from date
+     *
+     * @param date
+     * @return
+     */
+    Date updateDate(Date date) {
+        if (date != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            return calendar.getTime();
+        }
+        return null;
+    }
+
+    /**
+     * remove unnecessary text from error message
+     *
+     * @param message
+     * @return
+     */
 
     private String getValidMessage(String message) {
         return message.substring(message.lastIndexOf(".") + 1);
     }
 
+    //TODO: unify this for both data upload and huic
+    private IGenericMapper findMapper(Class clazz) {
+        List<IGenericMapper> foundMappers = this.context.getBeansOfType(IGenericMapper.class).values().stream().filter(mapper -> Objects.requireNonNull(GenericTypeResolver.resolveTypeArguments(mapper.getClass(), IGenericMapper.class))[0].getSimpleName().equals(clazz.getSimpleName())).collect(Collectors.toList());
+        return CollectionUtils.size(foundMappers) == 1 ? foundMappers.get(0) : null;
+    }
 
 }
