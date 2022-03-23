@@ -174,6 +174,7 @@ public class ValidationService {
     }
 
     private void saveApplicantsMainData(ApplicantDto applicant) {
+        //TODO: unify this for both data upload and huic
         if (applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) {
             Calendar cl = Calendar.getInstance();
             cl.setTime(applicant.getDateOfBirthGregorian());
@@ -183,14 +184,16 @@ public class ValidationService {
         applicant.setDateOfBirthGregorian(updateDate(applicant.getDateOfBirthGregorian()));
         Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
         // if record exists already in DB we need to update it
+        //TODO: unify this for both data upload and huic
         if (existingApplicantId != null) {
             applicant.setId(existingApplicantId);
             applicant.setUpdateDate(new Date());
             //TODO: need refactoring, the below line should be replaced by deleting the old contact as a new one will be added
             applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicantId));
-
             //TODO: get oldRituals
         }
+
+        //TODO: unify this for both data upload and huic
         if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
             applicant.getContacts().forEach(ac -> {
                 ac.setApplicant(applicant);
@@ -212,7 +215,6 @@ public class ValidationService {
         Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, packageReferenceNumber, null, false);
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
         if (savedApplicantRitualId != null) {
-            applicantRitualDto.setApplicant(ApplicantDto.builder().id(applicantId).build());
             applicantRitualDto.setId(savedApplicantRitualId);
             applicantRitualDto.setUpdateDate(new Date());
             Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
@@ -228,6 +230,7 @@ public class ValidationService {
                 applicantRitualDto.setApplicantPackage(createdApplicantPackage);
             }
         }
+        applicantRitualDto.setApplicant(ApplicantDto.builder().id(applicantId).build());
         applicantRitualService.save(applicantRitualDto);
 
     }
@@ -259,6 +262,7 @@ public class ValidationService {
         return message.substring(message.lastIndexOf(".") + 1);
     }
 
+    //TODO: unify this for both data upload and huic
     private IGenericMapper findMapper(Class clazz) {
         List<IGenericMapper> foundMappers = this.context.getBeansOfType(IGenericMapper.class).values().stream().filter(mapper -> Objects.requireNonNull(GenericTypeResolver.resolveTypeArguments(mapper.getClass(), IGenericMapper.class))[0].getSimpleName().equals(clazz.getSimpleName())).collect(Collectors.toList());
         return CollectionUtils.size(foundMappers) == 1 ? foundMappers.get(0) : null;
