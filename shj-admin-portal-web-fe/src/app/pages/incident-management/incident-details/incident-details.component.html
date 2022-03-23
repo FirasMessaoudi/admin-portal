@@ -61,8 +61,10 @@
     </div>
     <div class="row row-cols-1">
       <div class="form-group col">
-        <label class="col-form-label">{{"incident-management.location" | translate }}</label>
-        <div class="map mt-1">
+        <label class="col-form-label" *ngIf="!isLocationSelected">{{"incident-management.no_location" | translate
+          }}</label>
+        <label class="col-form-label" *ngIf="isLocationSelected">{{"incident-management.location" | translate }}</label>
+        <div class="map mt-1" *ngIf="isLocationSelected">
           <!-- google map-->
           <div id="map" style="height: 100%; width: 100%;"></div>
         </div>

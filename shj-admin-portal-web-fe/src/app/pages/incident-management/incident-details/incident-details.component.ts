@@ -24,6 +24,7 @@ export class IncidentDetailsComponent implements OnInit {
   incident: ApplicantIncident;
   incidentId: number;
   isLoading: boolean;
+  isLocationSelected = false;
   incidentTypes: Lookup[] = [];
   incidentStatuses: Lookup[] = [];
   mapIsReady = false;
@@ -57,7 +58,7 @@ export class IncidentDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadGoogleMapsApiKey();
+    
     combineLatest([this.route.params, this.route.queryParams])
       .pipe(
         map((results) => ({
@@ -74,6 +75,9 @@ export class IncidentDetailsComponent implements OnInit {
             if (data && data.id) {
               this.isLoading = false;
               this.incident = data;
+              if(this.incident?.locationLat && this.incident?.locationLng){
+                this.isLocationSelected = true;
+              this.loadGoogleMapsApiKey();}
             } else {
               this.toastr.error(
                 this.translate.instant('general.route_item_not_found', {
@@ -153,13 +157,14 @@ export class IncidentDetailsComponent implements OnInit {
           zoom: 5,
           scrollwheel: true,
         });
+        if(this.incident?.locationLat && this.incident?.locationLng){
         new google.maps.Marker({
           position: {
             lat: this.incident?.locationLat,
             lng: this.incident?.locationLng,
           },
           map,
-        });
+        });}
       });
     });
   }
