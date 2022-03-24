@@ -68,8 +68,12 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ApplicantLiteDto findByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
-        return getMapper().fromEntity(applicantLiteRepository.findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(),
-                applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian()), mappingContext);
+        List<JpaApplicantLite> applicantLites = applicantLiteRepository.findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(),
+                applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
+        if (applicantLites.isEmpty()) {
+            return null;
+        }
+        return getMapper().fromEntity(applicantLites.get(0), mappingContext);
     }
 
     /**

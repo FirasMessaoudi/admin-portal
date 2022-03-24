@@ -40,13 +40,12 @@ public class ApplicantBasicInfoDto implements Serializable {
     @CellIndex(index = 1)
     private String passportNumber;
 
-    // @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @GregorianDate(minOffset = -120, maxOffset = -10, groups = CheckSecond.class)
+    @GregorianDate(minOffset = -120, maxOffset = -10, groups = CheckSecond.class, allowNull = true)
     @CellIndex(index = 2)
     private Date dateOfBirthGregorian;
 
-    @HijriDate(minOffset = -140, maxOffset = -11, groups = CheckSecond.class)
+    @HijriDate(minOffset = -140, maxOffset = -11, groups = CheckSecond.class, allowEmpty = true)
     @CellIndex(index = 3)
     private Long dateOfBirthHijri;
 

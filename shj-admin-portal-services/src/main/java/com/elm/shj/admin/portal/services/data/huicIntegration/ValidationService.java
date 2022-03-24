@@ -113,10 +113,11 @@ public class ValidationService {
     private void saveApplicantHealthDisease(ApplicantHealthDiseaseDto applicantHealthDiseaseDto) {
         applicantHealthDiseaseDto.getApplicantBasicInfo().setDateOfBirthGregorian(updateDate(applicantHealthDiseaseDto.getApplicantBasicInfo().getDateOfBirthGregorian()));
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantHealthDiseaseDto.getApplicantBasicInfo());
-        Long applicantId = applicantLite.getId();
         if (applicantLite == null) {
             return;
         }
+        Long applicantId = applicantLite.getId();
+
         Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealthDiseaseDto.getPackageReferenceNumber(), null, false);
         applicantHealthDiseaseDto.setApplicantHealth(ApplicantHealthDto.builder().id(savedApplicantHealthId).build());
         applicantHealthDiseaseRepository.save((JpaApplicantHealthDisease) findMapper(ApplicantHealthDiseaseDto.class).toEntity(applicantHealthDiseaseDto, mappingContext));
@@ -175,22 +176,13 @@ public class ValidationService {
 
     private void saveApplicantsMainData(ApplicantDto applicant) {
         //TODO: unify this for both data upload and huic
-        if (applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) {
-            Calendar cl = Calendar.getInstance();
-            cl.setTime(applicant.getDateOfBirthGregorian());
-            HijrahDate islamyDate = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
-            applicant.setDateOfBirthHijri(Long.parseLong(islamyDate.toString().substring(islamyDate.toString().indexOf("AH") + 3).replace("-", "")));
-        }
+        updateApplicantBirthDate(applicant);
         applicant.setDateOfBirthGregorian(updateDate(applicant.getDateOfBirthGregorian()));
         Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
         // if record exists already in DB we need to update it
         //TODO: unify this for both data upload and huic
         if (existingApplicantId != null) {
-            applicant.setId(existingApplicantId);
-            applicant.setUpdateDate(new Date());
-            //TODO: need refactoring, the below line should be replaced by deleting the old contact as a new one will be added
-            applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicantId));
-            //TODO: get oldRituals
+            updateExistingApplicant(applicant, existingApplicantId);
         }
 
         //TODO: unify this for both data upload and huic
@@ -262,10 +254,32 @@ public class ValidationService {
         return message.substring(message.lastIndexOf(".") + 1);
     }
 
-    //TODO: unify this for both data upload and huic
-    private IGenericMapper findMapper(Class clazz) {
+    /**
+     * Finds a mapper for a given dto class
+     *
+     * @param clazz the dto class to find mapper for
+     * @return the found mapper
+     */
+    public IGenericMapper findMapper(Class clazz) {
         List<IGenericMapper> foundMappers = this.context.getBeansOfType(IGenericMapper.class).values().stream().filter(mapper -> Objects.requireNonNull(GenericTypeResolver.resolveTypeArguments(mapper.getClass(), IGenericMapper.class))[0].getSimpleName().equals(clazz.getSimpleName())).collect(Collectors.toList());
         return CollectionUtils.size(foundMappers) == 1 ? foundMappers.get(0) : null;
+    }
+
+    public void updateApplicantBirthDate(ApplicantDto applicant) {
+        if (applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) {
+            Calendar cl = Calendar.getInstance();
+            cl.setTime(applicant.getDateOfBirthGregorian());
+            HijrahDate islamyDate = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+            applicant.setDateOfBirthHijri(Long.parseLong(islamyDate.toString().substring(islamyDate.toString().indexOf("AH") + 3).replace("-", "")));
+        }
+    }
+
+    public void updateExistingApplicant(ApplicantDto applicant, long existingApplicantId) {
+        applicant.setId(existingApplicantId);
+        applicant.setUpdateDate(new Date());
+        //TODO: need refactoring, the below line should be replaced by deleting the old contact as a new one will be added
+        applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicantId));
+        //TODO: get oldRituals
     }
 
 }

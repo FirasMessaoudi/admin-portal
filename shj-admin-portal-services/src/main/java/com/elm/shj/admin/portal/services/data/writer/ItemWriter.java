@@ -12,6 +12,7 @@ import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
+import com.elm.shj.admin.portal.services.data.huicIntegration.ValidationService;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.reader.EExcelItemReaderErrorType;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
@@ -28,7 +29,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,9 +36,6 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
-import java.time.LocalDate;
-import java.time.chrono.HijrahChronology;
-import java.time.chrono.HijrahDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -78,6 +75,7 @@ public class ItemWriter {
     private final ApplicantEmergencyDataUploadService applicantEmergencyDataUploadService;
     private final DigitalIdService digitalIdService;
     private final ApplicantLiteService applicantLiteService;
+    private final ValidationService validationService;
 
     /**
      * Populates the registry
@@ -93,13 +91,13 @@ public class ItemWriter {
         repositoryRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, ApplicantRitualRepository.class);
         repositoryRegistry.put(EDataSegment.STAFF_MAIN_DATA, CompanyStaffRepository.class);
         // mapper registry initialization
-        mapperRegistry.put(EDataSegment.APPLICANT_DATA, Objects.requireNonNull(findMapper(ApplicantDto.class)));
-        mapperRegistry.put(EDataSegment.APPLICANT_RELATIVES_DATA, Objects.requireNonNull(findMapper(ApplicantRelativeDto.class)));
-        mapperRegistry.put(EDataSegment.APPLICANT_HEALTH_DATA, Objects.requireNonNull(findMapper(ApplicantHealthDto.class)));
-        mapperRegistry.put(EDataSegment.APPLICANT_IMMUNIZATION_DATA, Objects.requireNonNull(findMapper(ApplicantHealthImmunizationDto.class)));
-        mapperRegistry.put(EDataSegment.APPLICANT_DISEASE_DATA, Objects.requireNonNull(findMapper(ApplicantHealthDiseaseDto.class)));
-        mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, Objects.requireNonNull(findMapper(ApplicantRitualDto.class)));
-        mapperRegistry.put(EDataSegment.STAFF_MAIN_DATA, Objects.requireNonNull(findMapper(CompanyStaffDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_RELATIVES_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantRelativeDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_HEALTH_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantHealthDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_IMMUNIZATION_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantHealthImmunizationDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_DISEASE_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantHealthDiseaseDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantRitualDto.class)));
+        mapperRegistry.put(EDataSegment.STAFF_MAIN_DATA, Objects.requireNonNull(validationService.findMapper(CompanyStaffDto.class)));
 
     }
 
@@ -166,7 +164,7 @@ public class ItemWriter {
                     ReflectionUtils.handleReflectionException(e);
                 }
             });
-            List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+            List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(validationService.findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
             savedItems.forEach(s -> {
                 savedRecords.stream().filter(r -> {
                     try {
@@ -306,7 +304,7 @@ public class ItemWriter {
         });
 
         // save all records
-        List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+        List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(validationService.findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
         // update all items with record ids
         savedItems.forEach(s -> {
             savedRecords.stream().filter(r -> {
@@ -389,13 +387,7 @@ public class ItemWriter {
         // Special treatment for ApplicantDto and contact info as they come in the same sheet
         if (item.getClass().isAssignableFrom(ApplicantDto.class)) {
             ApplicantDto applicant = (ApplicantDto) item;
-            if (applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) {
-                Calendar cl = Calendar.getInstance();
-                cl.setTime(applicant.getDateOfBirthGregorian());
-                HijrahDate islamyDate = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
-                applicant.setDateOfBirthHijri(Long.parseLong(islamyDate.toString().substring(islamyDate.toString().indexOf("AH") + 3).replace("-", "")));
-            }
-
+            validationService.updateApplicantBirthDate(applicant);
             Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
             // if record exists already in DB we need to update it
             if (existingApplicantId != null) {
@@ -586,18 +578,6 @@ public class ItemWriter {
 
             }
         }
-    }
-
-    /**
-     * Finds a mapper for a given dto class
-     *
-     * @param clazz the dto class to find mapper for
-     * @return the found mapper
-     */
-    @SuppressWarnings("rawtypes")
-    private IGenericMapper findMapper(Class clazz) {
-        List<IGenericMapper> foundMappers = this.context.getBeansOfType(IGenericMapper.class).values().stream().filter(mapper -> Objects.requireNonNull(GenericTypeResolver.resolveTypeArguments(mapper.getClass(), IGenericMapper.class))[0].getSimpleName().equals(clazz.getSimpleName())).collect(Collectors.toList());
-        return CollectionUtils.size(foundMappers) == 1 ? foundMappers.get(0) : null;
     }
 
 }
