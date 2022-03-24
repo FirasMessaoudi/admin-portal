@@ -123,7 +123,7 @@ export class StaffStepOneComponent implements OnInit {
     this.ritualForm = this.formBuilder.group({
       seasonYear: [null, Validators.required],
       ritualCode: [null, Validators.required],
-      description: [""]
+      description: ["", Validators.required]
     });
 
 
@@ -255,7 +255,7 @@ export class StaffStepOneComponent implements OnInit {
       cardVO.digitalId = card?.companyStaffDigitalId?.suin;
       cardVO.idNumber = card?.companyStaffDigitalId?.companyStaff?.idNumber;
       cardVO.passportNumber = card?.companyStaffDigitalId?.companyStaff?.passportNumber;
-      cardVO.nationalityCode = card?.companyStaffDigitalId?.companyStaff?.countryCode;
+      cardVO.nationalityCode = card?.companyStaffDigitalId?.companyStaff?.nationalityCode;
       cardVO.referenceNumber = card.referenceNumber;
       cardVO.statusCode = card.statusCode;
       this.cardsToSend.push(cardVO);
