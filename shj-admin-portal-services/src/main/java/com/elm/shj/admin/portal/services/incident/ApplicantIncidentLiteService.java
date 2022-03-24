@@ -5,11 +5,10 @@ package com.elm.shj.admin.portal.services.incident;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncidentLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentLiteRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantIncidentLiteDto;
-import com.elm.shj.admin.portal.services.dto.AreaLayerDto;
-import com.elm.shj.admin.portal.services.dto.EIncidentStatus;
-import com.elm.shj.admin.portal.services.dto.IncidentAttachmentLiteDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.location.Location;
+import com.elm.shj.admin.portal.services.location.LocationService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
 import com.elm.shj.admin.portal.services.zone.AreaLayerService;
@@ -32,6 +31,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -57,7 +57,7 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
     private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
     private static ThreadLocal<List<String>> threadLocalLatestSerialList = ThreadLocal.withInitial(() -> new ArrayList<>());
     private final AreaLayerService areaLayerService;
-
+    private final LocationService locationService;
 
     /**
      * finds an incident by its ID
@@ -84,22 +84,35 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
         applicantIncidentLiteDto.setStatusCode(EIncidentStatus.UNDER_PROCESSING.name());
         //  lat and long
         List<AreaLayerDto> areaLayers = areaLayerService.findAll();
-        Position point = new Position();
+
         if (applicantIncidentLiteDto.getLocationLat() != null && applicantIncidentLiteDto.getLocationLat() != null) {
-            point.lat = applicantIncidentLiteDto.getLocationLat();
-            point.lng = applicantIncidentLiteDto.getLocationLng();
-            areaLayers.forEach(area -> {
-                List<Position> positions = new ArrayList<>();
-                Stream.of(area.getLayer().split("-")).forEach(stringPoint -> {
-                    Position position = new Position();
-                    position.lat = Double.parseDouble(stringPoint.split(",")[0]);
-                    position.lng = Double.parseDouble(stringPoint.split(",")[1]);
-                    positions.add(position);
-                });
-                if (isPointInPolygon(point, positions.stream().toArray(Position[]::new))) {
+            Location incidentLocation = new Location();
+            incidentLocation.setLat(applicantIncidentLiteDto.getLocationLat());
+            incidentLocation.setLng(applicantIncidentLiteDto.getLocationLng());
+
+            List<AreaLayerDto> searchAreas = areaLayers
+                    .stream()
+                    .filter(area-> area.getParentLayerId() == null)
+                    .collect(Collectors.toList());
+            while (!searchAreas.isEmpty()) {
+                AreaLayerDto area = searchAreas.remove(0);
+                List<Location> locations = Stream
+                        .of(area.getLayer().split("-"))
+                        .map(stringPoint -> {
+                            Location location = new Location();
+                            location.setLat(Double.parseDouble(stringPoint.split(",")[0]));
+                            location.setLng(Double.parseDouble(stringPoint.split(",")[1]));
+                            return location;
+                        }).collect(Collectors.toList());
+                if (locationService.isInside(locations.toArray(Location[]::new),incidentLocation)) {
                     applicantIncidentLiteDto.setAreaCode(area.getAreaCode());
+                    searchAreas = areaLayers
+                            .stream()
+                            .filter(a -> a.getParentLayerId() != null)
+                            .filter(a -> a.getParentLayerId().longValue() == area.getId())
+                            .collect(Collectors.toList());
                 }
-            });
+            }
         }
 
         // upload the file in the SFTP
@@ -156,39 +169,5 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
         return fileSize > maxFileSize ? false : true;
     }
 
-    /**
-     * This function finds whether @param point is inside the polygon
-     * @param p
-     * @param polygon
-     * @return boolean
-     */
-    boolean isPointInPolygon(Position p,Position[] polygon) {
-        double minX = polygon[0].lat;
-        double maxX = polygon[0].lat;
-        double minY = polygon[0].lng;
-        double maxY = polygon[0].lng;
-        for (int i = 1; i < polygon.length; i++) {
-            Position q = polygon[i];
-            minX = q.lat < minX ? q.lat : minX;
-            maxX = q.lat > maxX ? q.lat : maxX;
-            minY = q.lng < minY ? q.lng : minY;
-            maxY = q.lng > maxX ? q.lng : maxY;
-        }
-        if (p.lat < minX || p.lat > maxX || p.lng < minY || p.lng > maxY) {
-            return false;
-        }
-        boolean inside = false;
-        for (int i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-            if ((polygon[i].lng > p.lng) != (polygon[j].lng > p.lng) &&
-                    p.lat < (polygon[j].lat - polygon[i].lat) * (p.lng - polygon[i].lng) / (polygon[j].lng - polygon[i].lng) + polygon[i].lat) {
-                inside = !inside;
-            }
-        }
-        return inside;
-    }
 }
 
-class Position {
-    public double lat;
-    public double lng;
-}

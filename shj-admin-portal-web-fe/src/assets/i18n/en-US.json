@@ -576,6 +576,7 @@
     "incident_number": "Incident Number",
     "incident_details": "Incident Details",
     "attachments": "Attachments",
+    "no_location": "No Location was selected",
     "location": "Location",
     "incident_description": "Incident Description",
     "incident_resolution": "Incident Resolution",

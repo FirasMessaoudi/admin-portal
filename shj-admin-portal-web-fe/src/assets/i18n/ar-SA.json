@@ -577,6 +577,7 @@
     "incident_number": "رقم البلاغ",
     "incident_details": "تفاصيل البلاغ",
     "attachments": "المرفقات",
+    "no_location": "لم يتم اختيار موقع لهذا البلاغ",
     "location": "الموقع على الخريطة",
     "incident_description": "وصف البلاغ",
     "incident_resolution": "معالجة البلاغ",
