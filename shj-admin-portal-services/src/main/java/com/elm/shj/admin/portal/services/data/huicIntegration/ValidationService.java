@@ -265,6 +265,11 @@ public class ValidationService {
         return CollectionUtils.size(foundMappers) == 1 ? foundMappers.get(0) : null;
     }
 
+    /**
+     * update date of birth hijri in case of null
+     *
+     * @param applicant
+     */
     public void updateApplicantBirthDate(ApplicantDto applicant) {
         if (applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) {
             Calendar cl = Calendar.getInstance();
