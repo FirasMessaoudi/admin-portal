@@ -222,4 +222,9 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         databaseNotificationTemplate.setDescription(notificationTemplate.getDescription());
         return save(databaseNotificationTemplate);
     }
+
+    public NotificationTemplateDto updatedProcessed(NotificationTemplateDto notificationTemplateDto) {
+        notificationTemplateDto.setIsProcessed(true);
+        return save(notificationTemplateDto);
+    }
 }
