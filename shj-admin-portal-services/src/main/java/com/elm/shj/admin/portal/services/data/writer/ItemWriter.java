@@ -390,10 +390,7 @@ public class ItemWriter {
             validationService.updateApplicantBirthDate(applicant);
             Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
             // if record exists already in DB we need to update it
-            if (existingApplicantId != null) {
-                applicant.setId(existingApplicantId);
-                applicant.setUpdateDate(new Date());
-            }
+            validationService.updateExistingApplicant(applicant, existingApplicantId);
 
             // this case is for applicant data upload
             if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
@@ -447,22 +444,7 @@ public class ItemWriter {
 
             if (item.getClass().isAssignableFrom(ApplicantRitualDto.class)) {
                 ApplicantRitualDto applicantRitual = (ApplicantRitualDto) item;
-                if (savedApplicantRitualId != null) {
-                    applicantRitual.setId(savedApplicantRitualId);
-                    applicantRitual.setUpdateDate(new Date());
-                    Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
-                    applicantRitual.setApplicantPackage(ApplicantPackageDto.builder().id(applicantPackageId).build());
-                    //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
-                    applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicantId, applicantRitual.getPackageReferenceNumber());
-                    applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicantId, applicantRitual.getPackageReferenceNumber());
-                } else {
-                    // applicant ritual not created yet, check if digital id is exists,
-                    // if yes then create a new applicant package and link it with the applicant ritual
-                    if (applicantUin != null && !applicantUin.isEmpty()) {
-                        ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantUin), null, null);
-                        applicantRitual.setApplicantPackage(createdApplicantPackage);
-                    }
-                }
+                validationService.updateApplicantRitual(applicantRitual, savedApplicantRitualId, applicantId, applicantUin);
             }
 
             if (item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {

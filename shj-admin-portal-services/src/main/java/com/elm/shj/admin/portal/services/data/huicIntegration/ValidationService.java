@@ -137,9 +137,7 @@ public class ValidationService {
         applicantRelative.setRelativeApplicant(ApplicantDto.fromApplicantLite(relativeApplicantLite));
         applicantRelative.setApplicant(ApplicantDto.fromApplicantLite(applicantLite));
         applicantRelative.setApplicantRitual(ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
-
         String relativeApplicantUin = (relativeApplicantLite == null || CollectionUtils.isEmpty(relativeApplicantLite.getDigitalIds())) ? null : relativeApplicantLite.getDigitalIds().get(0).getUin();
-
         applicantRelativeService.save(applicantRelative);
         // if the applicant digital id and the relative applicant digital id and the applicant ritual are created then add chat contacts
         // check if digital ids are created for the applicant and the relative applicant and applicant ritual is already created.
@@ -206,22 +204,7 @@ public class ValidationService {
         String packageReferenceNumber = applicantRitualDto.getPackageReferenceNumber();
         Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, packageReferenceNumber, null, false);
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
-        if (savedApplicantRitualId != null) {
-            applicantRitualDto.setId(savedApplicantRitualId);
-            applicantRitualDto.setUpdateDate(new Date());
-            Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
-            applicantRitualDto.setApplicantPackage(ApplicantPackageDto.builder().id(applicantPackageId).build());
-            //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
-            applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitualDto.getId(), applicantId, applicantRitualDto.getPackageReferenceNumber());
-            applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitualDto.getId(), applicantId, applicantRitualDto.getPackageReferenceNumber());
-        } else {
-            // applicant ritual not created yet, check if digital id is exists,
-            // if yes then create a new applicant package and link it with the applicant ritual
-            if (applicantUin != null && !applicantUin.isEmpty()) {
-                ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitualDto.getPackageReferenceNumber(), Long.parseLong(applicantUin), null, null);
-                applicantRitualDto.setApplicantPackage(createdApplicantPackage);
-            }
-        }
+        updateApplicantRitual(applicantRitualDto, savedApplicantRitualId, applicantId, applicantUin);
         applicantRitualDto.setApplicant(ApplicantDto.builder().id(applicantId).build());
         applicantRitualService.save(applicantRitualDto);
 
@@ -282,9 +265,25 @@ public class ValidationService {
     public void updateExistingApplicant(ApplicantDto applicant, long existingApplicantId) {
         applicant.setId(existingApplicantId);
         applicant.setUpdateDate(new Date());
-        //TODO: need refactoring, the below line should be replaced by deleting the old contact as a new one will be added
-        applicant.getContacts().addAll(applicantContactService.findByApplicantId(existingApplicantId));
-        //TODO: get oldRituals
+    }
+
+    public void updateApplicantRitual(ApplicantRitualDto applicantRitualDto, Long savedApplicantRitualId, long applicantId, String applicantUin) {
+        if (savedApplicantRitualId != null) {
+            applicantRitualDto.setId(savedApplicantRitualId);
+            applicantRitualDto.setUpdateDate(new Date());
+            Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
+            applicantRitualDto.setApplicantPackage(ApplicantPackageDto.builder().id(applicantPackageId).build());
+            //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
+            applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitualDto.getId(), applicantId, applicantRitualDto.getPackageReferenceNumber());
+            applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitualDto.getId(), applicantId, applicantRitualDto.getPackageReferenceNumber());
+        } else {
+            // applicant ritual not created yet, check if digital id is exists,
+            // if yes then create a new applicant package and link it with the applicant ritual
+            if (applicantUin != null && !applicantUin.isEmpty()) {
+                ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitualDto.getPackageReferenceNumber(), Long.parseLong(applicantUin), null, null);
+                applicantRitualDto.setApplicantPackage(createdApplicantPackage);
+            }
+        }
     }
 
 }
