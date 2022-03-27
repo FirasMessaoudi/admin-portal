@@ -37,8 +37,8 @@ public class ApplicantVo implements Serializable {
         this.idNumber= idNumber;
         this.passportNumber= passportNumber;
         if (lat == null || lng == null) {
-            this.lat = 0.0;
-            this.lng = 0.0;
+            this.lat = -200.0;
+            this.lng = -200.0;
         } else {
             this.lat = lat.doubleValue();
             this.lng = lng.doubleValue();
