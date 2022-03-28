@@ -37,7 +37,6 @@ import org.springframework.util.ReflectionUtils;
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Generic Item writer to save read items based on their data segment
@@ -393,11 +392,7 @@ public class ItemWriter {
             validationService.updateExistingApplicant(applicant, existingApplicantId);
 
             // this case is for applicant data upload
-            if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
-                applicant.getContacts().forEach(ac -> {
-                    ac.setApplicant(applicant);
-                });
-            }
+           validationService.addApplicantToContact(applicant);
         }
 
         Field applicantBasicInfoField = ReflectionUtils.findField(item.getClass(), "applicantBasicInfo");
@@ -467,16 +462,7 @@ public class ItemWriter {
             if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
                 ApplicantHealthDto applicantHealth = (ApplicantHealthDto) item;
                 Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber, null, false);
-                if (savedApplicantHealthId != null) {
-                    log.debug("Update existing applicant health in applicant health segment for {} applicant id and {} package reference number.", applicantId, packageReferenceNumber);
-                    applicantHealth.setId(savedApplicantHealthId);
-                    applicantHealth.setUpdateDate(new Date());
-                }
-                if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
-                    applicantHealth.setSpecialNeeds(Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
-                            ApplicantHealthSpecialNeedsDto.builder().applicantHealth(applicantHealth).specialNeedTypeCode(sn).build()
-                    ).collect(Collectors.toList()));
-                }
+                validationService.updateApplicantHealth(applicantHealth, savedApplicantHealthId);
             }
 
             if (applicantHealthField != null) {

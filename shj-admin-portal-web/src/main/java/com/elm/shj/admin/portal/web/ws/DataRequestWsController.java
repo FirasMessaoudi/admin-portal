@@ -102,5 +102,18 @@ public class DataRequestWsController {
                 Collections.emptyList()).build());
     }
 
+    @PostMapping(value = "/save-applicant-health-immunization")
+    public ResponseEntity<WsResponse<?>> saveApplicantHealthImmunization(@RequestBody List<ApplicantHealthImmunizationDto> applicantHealthImmunizationDtos) {
+
+        List<ErrorResponse> errorResponses = validationService.validateData(applicantHealthImmunizationDtos);
+
+        if (!errorResponses.isEmpty())
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
+                    errorResponses).build());
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+                Collections.emptyList()).build());
+    }
+
 
 }

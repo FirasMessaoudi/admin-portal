@@ -6,7 +6,9 @@ package com.elm.shj.admin.portal.services.data.huicIntegration;
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthDisease;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthImmunization;
 import com.elm.shj.admin.portal.orm.repository.ApplicantHealthDiseaseRepository;
+import com.elm.shj.admin.portal.orm.repository.ApplicantHealthImmunizationRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.data.validators.CheckFirst;
 import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
@@ -48,7 +50,6 @@ public class ValidationService {
     private final Validator validator;
     private final MessageSource messageSource;
     private final ApplicantService applicantService;
-    private final ApplicantContactService applicantContactService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantLiteService applicantLiteService;
     private final DigitalIdService digitalIdService;
@@ -59,6 +60,7 @@ public class ValidationService {
     private final ApplicantHealthDiseaseRepository applicantHealthDiseaseRepository;
     private final CycleAvoidingMappingContext mappingContext;
     private final ApplicationContext context;
+    private final ApplicantHealthImmunizationRepository applicantHealthImmunizationRepository;
 
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {
@@ -94,6 +96,9 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(ApplicantHealthDiseaseDto.class)) {
                     saveApplicantHealthDisease((ApplicantHealthDiseaseDto) items.get(i));
                 }
+                if (items.get(i).getClass().isAssignableFrom(ApplicantHealthImmunizationDto.class)) {
+                    saveApplicantHealthImmunization((ApplicantHealthImmunizationDto) items.get(i));
+                }
             }
 
         }
@@ -110,6 +115,23 @@ public class ValidationService {
         return errorResponses;
     }
 
+
+    private void saveApplicantHealthImmunization(ApplicantHealthImmunizationDto applicantHealthImmunization) {
+        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantHealthImmunization.getApplicantBasicInfo());
+        Long applicantId = applicantLite.getId();
+        if (applicantLite == null) {
+            return;
+        }
+        Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealthImmunization.getPackageReferenceNumber(), null, false);
+        applicantHealthImmunization.setApplicantHealth(ApplicantHealthDto.builder().id(savedApplicantHealthId).build());
+        Optional<JpaApplicantHealthImmunization> existByBasicInfoAndImmunizationCode = applicantHealthImmunizationRepository.findByApplicantHealthApplicantIdAndImmunizationCodeAndApplicantHealthPackageReferenceNumber(applicantId, applicantHealthImmunization.getImmunizationCode(), applicantHealthImmunization.getPackageReferenceNumber());
+        if (existByBasicInfoAndImmunizationCode.isPresent()) {
+            applicantHealthImmunization.setId(existByBasicInfoAndImmunizationCode.get().getId());
+        }
+        applicantHealthImmunizationRepository.save((JpaApplicantHealthImmunization) findMapper(ApplicantHealthImmunizationDto.class).toEntity(applicantHealthImmunization, mappingContext));
+
+    }
+
     private void saveApplicantHealthDisease(ApplicantHealthDiseaseDto applicantHealthDiseaseDto) {
         applicantHealthDiseaseDto.getApplicantBasicInfo().setDateOfBirthGregorian(updateDate(applicantHealthDiseaseDto.getApplicantBasicInfo().getDateOfBirthGregorian()));
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantHealthDiseaseDto.getApplicantBasicInfo());
@@ -117,7 +139,6 @@ public class ValidationService {
             return;
         }
         Long applicantId = applicantLite.getId();
-
         Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealthDiseaseDto.getPackageReferenceNumber(), null, false);
         applicantHealthDiseaseDto.setApplicantHealth(ApplicantHealthDto.builder().id(savedApplicantHealthId).build());
         applicantHealthDiseaseRepository.save((JpaApplicantHealthDisease) findMapper(ApplicantHealthDiseaseDto.class).toEntity(applicantHealthDiseaseDto, mappingContext));
@@ -157,38 +178,25 @@ public class ValidationService {
         Long applicantId = applicantLite.getId();
         Long applicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealth.getPackageReferenceNumber());
         Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealth.getPackageReferenceNumber(), null, false);
-        if (savedApplicantHealthId != null) {
-            applicantHealth.setId(savedApplicantHealthId);
-            applicantHealth.setUpdateDate(new Date());
-        }
+        //TODO: refactor this
+        updateApplicantHealth(applicantHealth, savedApplicantHealthId);
+
         applicantHealth.setApplicant(ApplicantDto.builder().id(applicantId).build());
         applicantHealth.setApplicantRitual(ApplicantRitualDto.builder().id(applicantRitualId).build());
-        if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
-            applicantHealth.setSpecialNeeds(Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
-                    ApplicantHealthSpecialNeedsDto.builder().applicantHealth(applicantHealth).specialNeedTypeCode(sn).build()
-            ).collect(Collectors.toList()));
-        }
-
         applicantHealthService.save(applicantHealth);
     }
 
     private void saveApplicantsMainData(ApplicantDto applicant) {
-        //TODO: unify this for both data upload and huic
         updateApplicantBirthDate(applicant);
         applicant.setDateOfBirthGregorian(updateDate(applicant.getDateOfBirthGregorian()));
         Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
         // if record exists already in DB we need to update it
-        //TODO: unify this for both data upload and huic
         if (existingApplicantId != null) {
             updateExistingApplicant(applicant, existingApplicantId);
         }
 
         //TODO: unify this for both data upload and huic
-        if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
-            applicant.getContacts().forEach(ac -> {
-                ac.setApplicant(applicant);
-            });
-        }
+        addApplicantToContact(applicant);
 
         applicantService.save(applicant);
 
@@ -283,6 +291,27 @@ public class ValidationService {
                 ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitualDto.getPackageReferenceNumber(), Long.parseLong(applicantUin), null, null);
                 applicantRitualDto.setApplicantPackage(createdApplicantPackage);
             }
+        }
+    }
+
+    public void addApplicantToContact(ApplicantDto applicant) {
+        if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
+            applicant.getContacts().forEach(ac -> {
+                ac.setApplicant(applicant);
+            });
+        }
+    }
+
+    public void updateApplicantHealth(ApplicantHealthDto applicantHealth, Long savedApplicantHealthId) {
+        if (savedApplicantHealthId != null) {
+            log.debug("Update existing applicant health in applicant health segment for {} applicant id and {} package reference number.");
+            applicantHealth.setId(savedApplicantHealthId);
+            applicantHealth.setUpdateDate(new Date());
+        }
+        if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
+            applicantHealth.setSpecialNeeds(Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
+                    ApplicantHealthSpecialNeedsDto.builder().applicantHealth(applicantHealth).specialNeedTypeCode(sn).build()
+            ).collect(Collectors.toList()));
         }
     }
 
