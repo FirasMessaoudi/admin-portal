@@ -33,9 +33,6 @@ import java.time.chrono.HijrahDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
-
 
 /**
  * Service for validating data received from third party
@@ -102,14 +99,14 @@ public class ValidationService {
             }
 
         }
-        errorResponses.forEach(errorResponse -> {
+        /*errorResponses.forEach(errorResponse -> {
                     List<ErrorItem> unique = errorResponse.getErrors().stream()
                             .collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(ErrorItem::getAttributeName))),
                                     ArrayList::new));
                     errorResponse.setErrors(unique);
                 }
 
-        );
+        );*/
 
 
         return errorResponses;

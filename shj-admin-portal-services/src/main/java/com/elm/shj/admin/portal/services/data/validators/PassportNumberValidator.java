@@ -31,7 +31,8 @@ public class PassportNumberValidator implements ConstraintValidator<PassportNumb
         } else // return default message
             if (!value.toString().matches(LETTERS_AND_NUMBERS_REGEX)) {
             // build new violation message and add it
-            context.buildConstraintViolationWithTemplate(MSG_20003).addConstraintViolation();
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate(MSG_20003).addConstraintViolation();
             return false;
         }
         // Allowed chars only number and english && length between ( 5 , 30)
