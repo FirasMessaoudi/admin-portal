@@ -41,7 +41,7 @@ public class ApplicantContactDto implements Serializable {
     private String languageList;
 
     @NullOrNotBlank(min = 5, max = 50)
-    @Email(message = "validation.data.constraints.msg.20003")
+    @Email(message = "validation.data.constraints.msg.20003", regexp = "^[A-Za-z0-9+_.-]+@(.+)$")
     @CellIndex(index = 16)
     private String email;
 
