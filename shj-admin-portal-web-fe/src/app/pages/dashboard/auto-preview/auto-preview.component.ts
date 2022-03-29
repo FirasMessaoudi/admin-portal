@@ -1,28 +1,7 @@
-import {
-  AfterViewInit,
-  Component,
-  ComponentFactoryResolver,
-  HostListener,
-  Inject,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {DashboardService} from '@core/services';
-import {LookupService} from '@core/utilities/lookup.service';
-import {DOCUMENT} from "@angular/common";
 import {dashboardItem} from "@model/dashboard-item";
-import {SlideShowDirective} from "@shared/directives/slide-show.directive";
-import {DashboardComponent} from "@pages/dashboard/slide-show/dashboard.component";
-import {
-  CamerasComponent,
-  GeneralNumbersComponent,
-  IncidentsComponent,
-  MainComponent,
-  MobileComponent, RatingComponent, TransactionsComponent
-} from "@pages/dashboard";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {TranslateService} from "@ngx-translate/core";
-import {I18nService} from "@dcc-commons-ng/services";
 
 @Component({
   selector: 'auto-preview',
