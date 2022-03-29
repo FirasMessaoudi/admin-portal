@@ -25,7 +25,7 @@ public class RelationshipCodeValidator implements ConstraintValidator<Relationsh
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value != null && relationshipLookupService.existsByCode(value.toString().toUpperCase());
+        return value == null || relationshipLookupService.existsByCode(value.toString().toUpperCase());
     }
 
 }

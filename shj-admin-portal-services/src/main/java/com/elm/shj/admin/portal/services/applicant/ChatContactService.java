@@ -267,47 +267,49 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
      * @return
      */
     private String mapOwnerRelationship(String relativeRelationshipCode, String Gender) {
-        if (relativeRelationshipCode.equalsIgnoreCase(FATHER.name()) && Gender.equalsIgnoreCase("M")) {
-            return SON.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(FATHER.name()) && Gender.equalsIgnoreCase("F")) {
-            return DAUGHTER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(SON.name()) && Gender.equalsIgnoreCase("M")) {
-            return FATHER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(SON.name()) && Gender.equalsIgnoreCase("F")) {
-            return MOTHER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(MOTHER.name()) && Gender.equalsIgnoreCase("M")) {
-            return SON.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(MOTHER.name()) && Gender.equalsIgnoreCase("F")) {
-            return DAUGHTER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(HUSBAND.name())) {
-            return WIFE.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(WIFE.name())) {
-            return HUSBAND.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(SISTER.name()) && Gender.equalsIgnoreCase("M")) {
-            return BROTHER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(SISTER.name()) && Gender.equalsIgnoreCase("F")) {
-            return SISTER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(BROTHER.name()) && Gender.equalsIgnoreCase("M")) {
-            return BROTHER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(BROTHER.name()) && Gender.equalsIgnoreCase("F")) {
-            return SISTER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(COMPANION.name())) {
-            return COMPANION.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(RELATIVE.name())) {
-            return RELATIVE.name();
+        if (relativeRelationshipCode != null) {
+            if (relativeRelationshipCode.equalsIgnoreCase(FATHER.name()) && Gender.equalsIgnoreCase("M")) {
+                return SON.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(FATHER.name()) && Gender.equalsIgnoreCase("F")) {
+                return DAUGHTER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(SON.name()) && Gender.equalsIgnoreCase("M")) {
+                return FATHER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(SON.name()) && Gender.equalsIgnoreCase("F")) {
+                return MOTHER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(MOTHER.name()) && Gender.equalsIgnoreCase("M")) {
+                return SON.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(MOTHER.name()) && Gender.equalsIgnoreCase("F")) {
+                return DAUGHTER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(HUSBAND.name())) {
+                return WIFE.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(WIFE.name())) {
+                return HUSBAND.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(SISTER.name()) && Gender.equalsIgnoreCase("M")) {
+                return BROTHER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(SISTER.name()) && Gender.equalsIgnoreCase("F")) {
+                return SISTER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(BROTHER.name()) && Gender.equalsIgnoreCase("M")) {
+                return BROTHER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(BROTHER.name()) && Gender.equalsIgnoreCase("F")) {
+                return SISTER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(COMPANION.name())) {
+                return COMPANION.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(RELATIVE.name())) {
+                return RELATIVE.name();
+            }
         }
 
         return COMPANION.name();
