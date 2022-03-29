@@ -1450,3 +1450,6 @@ GO
 
 alter table shc_portal.shc_applicant_health_disease alter column label_ar nvarchar(50) null
 GO
+
+alter table shc_portal.shc_applicant_relative alter column relationship_code varchar(20) null
+GO
