@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
+import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatch;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
@@ -47,6 +48,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
     private final CompanyStaffCardRepository companyStaffCardRepository;
     private final ApplicantCardService applicantCardService;
     private final CompanyStaffCardService companyStaffCardService;
+    private final PrintRequestBatchService printRequestBatchService;
 
     /**
      * Find the lite version of all print requests.
@@ -187,42 +189,51 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public PrintRequestDto findPrintRequest(){
-        PrintRequestDto printRequest = getMapper().fromEntity(printRequestRepository.findFirstByStatusCodeOrderByCreationDateAsc(EPrintRequestStatus.CONFIRMED.name()), mappingContext);
-        if(printRequest != null){
-            if(printRequest.getTarget().equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
-                printRequest.getPrintRequestBatches().stream().forEach(batch -> {
-                    // will be called for each print request batch, get all applicant cards for that batch
-                    List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
-                    // to get applicant cards based on the ids list from DB by JPQL Query
-                    List<ApplicantCardDto> applicantCards = applicantCardService.findApplicantCards(cardIds);
-                    // map between applicant card and batch card
-                    batch.getPrintRequestBatchCards().stream().forEach(batchCard -> {
-                        long cardId = batchCard.getCardId();
-                        //get the applicant card by id through findAny on stream of applicantCards
-                        applicantCards.stream().filter(appCard -> appCard.getId() == cardId).findAny()
-                                .ifPresent(applicantCardDto -> batchCard.setCard(mapApplicantCardToCardVO(applicantCardDto)));
-                        //map applicantCard to CardVO and attach it to batch card like below
-                    });
-                });
-            } else {
-                printRequest.getPrintRequestBatches().stream().forEach(batch -> {
-                    // will be called for each print request batch, get all applicant cards for that batch
-                    List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
-                    // to get applicant cards based on the ids list from DB by JPQL Query
-                    List<CompanyStaffCardDto> staffCards = companyStaffCardService.findStaffCards(cardIds);
-                    // map between applicant card and batch card
-                    batch.getPrintRequestBatchCards().stream().forEach(batchCard -> {
-                        long cardId = batchCard.getCardId();
-                        //get the applicant card by id through findAny on stream of applicantCards
-                        staffCards.stream().filter(staffCard -> staffCard.getId() == cardId).findAny()
-                                .ifPresent(staffCardDto -> batchCard.setCard(mapStaffCardToCardVO(staffCardDto)));
-                        //map applicantCard to CardVO and attach it to batch card like below
-                    });
-                });
-            }
-        }
+    public List<PrintRequestDto> findAllPrintRequest(){
+        List<PrintRequestDto> printRequest = mapList(printRequestRepository.findPrintRequest(EPrintRequestStatus.CONFIRMED.name()));
         return printRequest;
+
+    }
+
+    public List<PrintRequestBatchDto> findPrintRequestBatches(String refrenceNumber, String target){
+        JpaPrintRequest jpaPrintRequest = printRequestRepository.findByReferenceNumber(refrenceNumber);
+        List<PrintRequestBatchDto> listPrintRequestBatches = new ArrayList<>();
+        if(target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
+            listPrintRequestBatches = printRequestBatchService.findPrintRequestBatches(jpaPrintRequest.getId());
+            listPrintRequestBatches.stream().forEach(batch -> {
+                // will be called for each print request batch, get all applicant cards for that batch
+                List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
+                // to get applicant cards based on the ids list from DB by JPQL Query
+                List<ApplicantCardDto> applicantCards = applicantCardService.findApplicantCards(cardIds);
+                // map between applicant card and batch card
+                batch.getPrintRequestBatchCards().stream().forEach(batchCard -> {
+                    long cardId = batchCard.getCardId();
+                    //get the applicant card by id through findAny on stream of applicantCards
+                    applicantCards.stream().filter(appCard -> appCard.getId() == cardId).findAny()
+                            .ifPresent(applicantCardDto -> batchCard.setCard(mapApplicantCardToCardVO(applicantCardDto)));
+                    //map applicantCard to CardVO and attach it to batch card like below
+                });
+            });
+
+        } else {
+            listPrintRequestBatches = printRequestBatchService.findStaffPrintRequestBatches(jpaPrintRequest.getId());
+            listPrintRequestBatches.stream().forEach(batch -> {
+                // will be called for each print request batch, get all applicant cards for that batch
+                List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
+                // to get applicant cards based on the ids list from DB by JPQL Query
+                List<CompanyStaffCardDto> staffCards = companyStaffCardService.findStaffCards(cardIds);
+                // map between applicant card and batch card
+                batch.getPrintRequestBatchCards().stream().forEach(batchCard -> {
+                    long cardId = batchCard.getCardId();
+                    //get the applicant card by id through findAny on stream of applicantCards
+                    staffCards.stream().filter(staffCard -> staffCard.getId() == cardId).findAny()
+                            .ifPresent(staffCardDto -> batchCard.setCard(mapStaffCardToCardVO(staffCardDto)));
+                    //map applicantCard to CardVO and attach it to batch card like below
+                });
+            });
+        }
+        return listPrintRequestBatches;
+
     }
 
     private CardVO mapApplicantCardToCardVO(ApplicantCardDto applicantCardDto) {

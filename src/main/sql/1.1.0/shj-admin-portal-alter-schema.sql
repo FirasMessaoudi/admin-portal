@@ -1437,7 +1437,19 @@ GO
 ALTER TABLE shc_portal.shc_applicant_contact DROP COLUMN applicant_ritual_id;
 GO
 
-alter table shc_portal.shc_survey_question_lk add question_index int not null
-alter table shc_portal.shc_survey_question_lk  alter column code VARCHAR(50)
+alter table shc_portal.shc_survey_question_lk
+    add question_index int not null
+alter table shc_portal.shc_survey_question_lk alter column code VARCHAR(50)
 alter table shc_portal.shc_user_survey_question alter column question_code VARCHAR(50)
 
+alter table shc_portal.shc_applicant alter column education_level_code varchar(100) null
+GO
+
+alter table shc_portal.shc_applicant alter column id_number_original varchar(50) null
+GO
+
+alter table shc_portal.shc_applicant_health_disease alter column label_ar nvarchar(50) null
+GO
+
+alter table shc_portal.shc_applicant_relative alter column relationship_code varchar(20) null
+GO

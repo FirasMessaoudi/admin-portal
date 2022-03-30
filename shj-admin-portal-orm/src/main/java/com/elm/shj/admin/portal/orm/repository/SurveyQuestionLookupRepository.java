@@ -5,8 +5,11 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaSurveyQuestionLookup;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository for Survey Question Lookup table.
@@ -16,5 +19,6 @@ import java.util.List;
  */
 public interface SurveyQuestionLookupRepository extends JpaRepository<JpaSurveyQuestionLookup, Long> {
 
-    List<JpaSurveyQuestionLookup> findAllBySurveyTypeCodeOrderByQuestionIndexAsc(String surveyTypeCode);
+    List<JpaSurveyQuestionLookup> findAllBySurveyTypeCodeOrderByQuestionIndexAsc( String surveyTypeCode);
+
 }

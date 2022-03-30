@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Calendar;
 
 /**
  * Validator for {@link WithRelative} annotation
@@ -33,6 +34,12 @@ public class WithRelativeValidator implements ConstraintValidator<WithRelative, 
             return false;
         }
         // search relative applicant by his basic info from the database
+        if (((ApplicantRelativeDto) value).getRelativeDateOfBirthGregorian() != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(((ApplicantRelativeDto) value).getRelativeDateOfBirthGregorian());
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            ((ApplicantRelativeDto) value).setRelativeDateOfBirthGregorian(calendar.getTime());
+        }
         return applicantService.existsByBasicInfo(ApplicantBasicInfoDto.fromRelative((ApplicantRelativeDto) value));
     }
 

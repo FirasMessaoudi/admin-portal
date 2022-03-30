@@ -33,9 +33,6 @@ import java.time.chrono.HijrahDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
-
 
 /**
  * Service for validating data received from third party
@@ -102,14 +99,14 @@ public class ValidationService {
             }
 
         }
-        errorResponses.forEach(errorResponse -> {
+        /*errorResponses.forEach(errorResponse -> {
                     List<ErrorItem> unique = errorResponse.getErrors().stream()
                             .collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(ErrorItem::getAttributeName))),
                                     ArrayList::new));
                     errorResponse.setErrors(unique);
                 }
 
-        );
+        );*/
 
 
         return errorResponses;
@@ -123,13 +120,14 @@ public class ValidationService {
             return;
         }
         Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealthImmunization.getPackageReferenceNumber(), null, false);
-        applicantHealthImmunization.setApplicantHealth(ApplicantHealthDto.builder().id(savedApplicantHealthId).build());
-        Optional<JpaApplicantHealthImmunization> existByBasicInfoAndImmunizationCode = applicantHealthImmunizationRepository.findByApplicantHealthApplicantIdAndImmunizationCodeAndApplicantHealthPackageReferenceNumber(applicantId, applicantHealthImmunization.getImmunizationCode(), applicantHealthImmunization.getPackageReferenceNumber());
-        if (existByBasicInfoAndImmunizationCode.isPresent()) {
-            applicantHealthImmunization.setId(existByBasicInfoAndImmunizationCode.get().getId());
+        if (savedApplicantHealthId != null) {
+            applicantHealthImmunization.setApplicantHealth(ApplicantHealthDto.builder().id(savedApplicantHealthId).build());
+            Optional<JpaApplicantHealthImmunization> existByBasicInfoAndImmunizationCode = applicantHealthImmunizationRepository.findByApplicantHealthApplicantIdAndImmunizationCodeAndApplicantHealthPackageReferenceNumber(applicantId, applicantHealthImmunization.getImmunizationCode(), applicantHealthImmunization.getPackageReferenceNumber());
+            if (existByBasicInfoAndImmunizationCode.isPresent()) {
+                applicantHealthImmunization.setId(existByBasicInfoAndImmunizationCode.get().getId());
+            }
+            applicantHealthImmunizationRepository.save((JpaApplicantHealthImmunization) findMapper(ApplicantHealthImmunizationDto.class).toEntity(applicantHealthImmunization, mappingContext));
         }
-        applicantHealthImmunizationRepository.save((JpaApplicantHealthImmunization) findMapper(ApplicantHealthImmunizationDto.class).toEntity(applicantHealthImmunization, mappingContext));
-
     }
 
     private void saveApplicantHealthDisease(ApplicantHealthDiseaseDto applicantHealthDiseaseDto) {
@@ -178,7 +176,6 @@ public class ValidationService {
         Long applicantId = applicantLite.getId();
         Long applicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealth.getPackageReferenceNumber());
         Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealth.getPackageReferenceNumber(), null, false);
-        //TODO: refactor this
         updateApplicantHealth(applicantHealth, savedApplicantHealthId);
 
         applicantHealth.setApplicant(ApplicantDto.builder().id(applicantId).build());
@@ -307,6 +304,10 @@ public class ValidationService {
             log.debug("Update existing applicant health in applicant health segment for {} applicant id and {} package reference number.");
             applicantHealth.setId(savedApplicantHealthId);
             applicantHealth.setUpdateDate(new Date());
+        }
+        if (!applicantHealth.getHasSpecialNeeds()) {
+            applicantHealth.setSpecialNeeds(null);
+            return;
         }
         if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
             applicantHealth.setSpecialNeeds(Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->

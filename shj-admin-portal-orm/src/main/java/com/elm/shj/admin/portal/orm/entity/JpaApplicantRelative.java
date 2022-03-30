@@ -33,7 +33,7 @@ public class JpaApplicantRelative implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "relationship_code", nullable = false)
+    @Column(name = "relationship_code")
     private String relationshipCode;
 
     @ManyToOne

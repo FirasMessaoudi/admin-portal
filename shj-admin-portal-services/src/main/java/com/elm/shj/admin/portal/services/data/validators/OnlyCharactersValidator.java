@@ -57,10 +57,12 @@ public class OnlyCharactersValidator implements ConstraintValidator<OnlyCharacte
             return this.allowEmpty;
         } else if (value.toString().length() < min || value.toString().length() > max) {
             // build new violation message and add it
+            context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(MSG_20004).addConstraintViolation();
             return false;
         } else if (!value.toString().matches(regex)) {
             // build new violation message and add it
+            context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(arabic ? MSG_20013 : MSG_20014).addConstraintViolation();
             return false;
         }
