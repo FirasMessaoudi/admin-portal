@@ -35,4 +35,5 @@ public class ApplicantCardDto implements Serializable, HibernateAwareMapper {
     private List<ApplicantPackageHousingDto> applicantPackageHousings;
     private List<ApplicantPackageTransportationDto> applicantPackageTransportations;
     private CompanyLiteDto companyLite;
+    private Date updateDate;
 }

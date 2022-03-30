@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -19,7 +20,7 @@ import java.util.List;
  * @author f.messaoudi
  * @since 1.1.0
  */
-public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaffCard, Long> , JpaSpecificationExecutor<JpaCompanyStaffCard> {
+public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaffCard, Long>, JpaSpecificationExecutor<JpaCompanyStaffCard> {
     List<JpaCompanyStaffCard> findAllByCompanyStaffDigitalIdSuin(String suin);
 
     JpaCompanyStaffCard findByCompanyStaffDigitalIdSuinAndStatusCode(String suin, String statusCode);
@@ -65,4 +66,15 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
 
     @Query("SELECT staffCard FROM JpaCompanyStaffCard staffCard WHERE   staffCard.id IN :cardsIds ")
     List<JpaCompanyStaffCard> findStaffCards(@Param("cardsIds") List<Long> cardsIds);
+
+    @Modifying
+    @Query("UPDATE JpaApplicantCard card SET card.statusCode = :newStatusCode WHERE card.id in :cardIdsList AND card.statusCode = :oldStatusCode" )
+    int updateCardStatuses(@Param("newStatusCode") String newStatusCode,@Param("oldStatusCode") String oldStatusCode, @Param("cardIdsList") List<Long> cardIdsList);
+
+    @Query("SELECT staffCard from JpaCompanyStaffCard staffCard " +
+            "join staffCard.companyStaffDigitalId companyStaffDigitalId " +
+            "where staffCard.batchNumber = :batchId " +
+            "And companyStaffDigitalId.suin in :digitalIdList ")
+    List<JpaCompanyStaffCard> findStaffCardsByPrintRequestBatchIdAndDigitalIds(@Param("digitalIdList") List<String> digitalIdList , @Param("batchId") long batchId);
+
 }

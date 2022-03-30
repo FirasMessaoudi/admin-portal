@@ -68,4 +68,16 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
 
     @Query("SELECT appCard FROM JpaApplicantCard appCard WHERE   appCard.id IN :cardsIds ")
     List<JpaApplicantCard> findApplicantCards(@Param("cardsIds") List<Long> cardsIds);
+
+    @Modifying
+    @Query("UPDATE JpaApplicantCard card SET card.statusCode = :newStatusCode WHERE card.id in :cardIdsList AND card.statusCode = :oldStatusCode" )
+    int updateCardStatuses(@Param("newStatusCode") String newStatusCode,@Param("oldStatusCode") String oldStatusCode, @Param("cardIdsList") List<Long> cardIdsList);
+
+    @Query("SELECT applicantCard from JpaApplicantCard applicantCard " +
+            "join applicantCard.applicantRitual applicantRitual " +
+            "join applicantRitual.applicant applicant " +
+            "join JpaApplicantDigitalId applicantDigitalId on applicantDigitalId.applicantId = applicant.id " +
+            "where applicantCard.batchId = :batchId " +
+            "and applicantDigitalId.uin in :digitalIdList ")
+    List<JpaApplicantCard> findApplicantCardsByPrintRequestBatchIdAndDigitalIds(@Param("digitalIdList") List<String> digitalIdList , @Param("batchId") long batchId);
 }

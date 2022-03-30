@@ -7,6 +7,8 @@ import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 /**
  * Repository for print request batch table.
  *
@@ -18,4 +20,8 @@ public interface PrintRequestBatchRepository extends JpaRepository<JpaPrintReque
 
     @Query("select max (p.sequenceNumber) from JpaPrintRequestBatch p")
     Integer maxSequenceNumber();
+
+    Optional<JpaPrintRequestBatch> findBySequenceNumberAndPrintRequestReferenceNumber(Integer sequenceNumber, String printRequestReferenceNumber);
+
+
 }
