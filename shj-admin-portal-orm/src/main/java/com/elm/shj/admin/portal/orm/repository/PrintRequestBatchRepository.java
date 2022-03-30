@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+import java.util.Optional;
+
 /**
  * Repository for print request batch table.
  *
@@ -31,4 +33,8 @@ public interface PrintRequestBatchRepository extends JpaRepository<JpaPrintReque
             "JOIN JpaCompanyStaffCard sc ON prc.cardId = sc.id " +
             "WHERE prb.printRequest.id=:printRequestId")
     List<JpaPrintRequestBatch> findStaffPrintRequestBatches(@Param("printRequestId") long printRequestId);
+
+    Optional<JpaPrintRequestBatch> findBySequenceNumberAndPrintRequestReferenceNumber(Integer sequenceNumber, String printRequestReferenceNumber);
+
+
 }

@@ -276,5 +276,8 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
         log.debug("Find cards by ids  ...");
         return mapList(applicantCardRepository.findApplicantCards(cardsIds));
     }
+    public List<ApplicantCardDto> findApplicantCardsByPrintRequestBatchIdAndDigitalIds(long batchId, Set<String> digitalIdSet) {
+        return mapList(applicantCardRepository.findApplicantCardsByPrintRequestBatchIdAndDigitalIds(digitalIdSet.stream().collect(Collectors.toList()),batchId));
+    }
 
 }

@@ -5,15 +5,19 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.SurveyQuestionLookupService;
+import com.elm.shj.admin.portal.services.lookup.SurveyTypeLookupService;
+import com.elm.shj.admin.portal.services.lookup.UserSurveyQuestionService;
 import com.elm.shj.admin.portal.services.lookup.UserSurveyService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -34,18 +38,17 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SurveyWsController {
 
-
     private final UserSurveyService userSurveyService;
+    private final UserSurveyQuestionService userSurveyQuestionService;
     private final SurveyQuestionLookupService surveyQuestionLookupService;
-
     /**
-     * finds chat contacts by uin and applicant ritual ID
+     * finds survey by uin and survey type
      *
      * @param digitalId               the UIN of the applicant
      * @param surveyType the selected ritual ID
      * @return the survey question if it is not already submitted
      */
-    @GetMapping("/get/{digitalId}/{surveyType}")
+    @GetMapping("/find-survey/{digitalId}/{surveyType}")
     public ResponseEntity<WsResponse<?>> findSurveyByDigitalIdAndSurveyType(@PathVariable("digitalId") String digitalId,@PathVariable("surveyType") String surveyType) {
         log.debug("List survey questions by digital Id {} and survey type {}", digitalId, surveyType);
         Optional<UserSurveyDto> userSurvey = userSurveyService.findSurveyByDigitalIdAndSurveyType(digitalId, surveyType);
@@ -58,6 +61,16 @@ public class SurveyWsController {
                 .body(surveyQuestionLookupService.getSurveyQuestionsBySurveyType(surveyType)).build());
     }
 
+    @PostMapping(value ="/submit-survey",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<WsResponse<?>> SubmitUserSurvey(@RequestPart("userSurvey") UserSurveyDto userSurveyDto, @RequestPart("userSurveyQuestions") List<UserSurveyQuestionDto> userSurveyQuestionDtoList){
+        log.debug("submit user survey");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(userSurveyService.submitSurvey(userSurveyDto,userSurveyQuestionDtoList)).build());
 
+    }
+    @GetMapping("/findRating/{userSurveyId}")
+    public ResponseEntity<WsResponse<?>> findQuestionRatingByUserSurveyId(@PathVariable("userSurveyId") long userSurveyId) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(userSurveyQuestionService.findQuestionRating(userSurveyId)).build());
+    }
 
 }

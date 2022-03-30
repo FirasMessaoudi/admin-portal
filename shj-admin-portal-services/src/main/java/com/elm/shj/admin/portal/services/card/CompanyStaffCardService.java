@@ -20,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service handling company staff card
@@ -184,4 +182,9 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
         log.debug("Find cards by ids  ...");
         return mapList(companyStaffCardRepository.findStaffCards(cardIds));
     }
+
+    public List<CompanyStaffCardDto> findStaffCardsByPrintRequestBatchIdAndDigitalIds(long batchId, Set<String> digitalIdSet) {
+        return mapList(companyStaffCardRepository.findStaffCardsByPrintRequestBatchIdAndDigitalIds(digitalIdSet.stream().collect(Collectors.toList()), batchId));
+    }
+
 }
