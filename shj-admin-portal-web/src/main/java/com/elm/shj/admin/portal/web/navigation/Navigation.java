@@ -61,14 +61,17 @@ public class Navigation {
 	// Incident Integration
 	public static final String API_INCIDENTS_INTEGRATION = "/api/ws/incidents";
 	// Chat Contact Integration
-	public static final String API_CHAT_CONTACT_INTEGRATION = "/api/ws/chat-contact";
-	public static final String API_STAFF_INTEGRATION = "/api/ws/staff";
-	// Applicant Cards
-	public static final String API_STAFF_CARDS = "/api/staff-cards";
-	//huic integration
-	public static final String API_HUIC_INTEGRATION = "/api/huic";
-	//Data segment
-	public static final String API_SURVEY_INTEGRATION = "/api/ws/survey";
-	// Applicant and Staff Badge
-	public static final String API_BADGE = "/api/ws/badge";
+    public static final String API_CHAT_CONTACT_INTEGRATION = "/api/ws/chat-contact";
+    public static final String API_STAFF_INTEGRATION = "/api/ws/staff";
+    // Applicant Cards
+    public static final String API_STAFF_CARDS = "/api/staff-cards";
+    //huic integration
+    public static final String API_HUIC_INTEGRATION = "/api/huic";
+    //Data segment
+    public static final String API_SURVEY_INTEGRATION = "/api/ws/survey";
+    // Applicant and Staff Badge
+    public static final String API_BADGE = "/api/ws/badge";
+    // Batch main collection
+    public static final String API_BATCH = "/api/ws/batch";
+
 }
