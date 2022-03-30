@@ -46,16 +46,16 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocalizedCountVo(c.labelAr, c.labelEn, COUNT(ai)) " +
             "FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
-            "WHERE c.labelAr is NOT NULL AND rs.seasonYear= :seasonYear GROUP BY c.labelAr, c.labelEn " +
+            "WHERE c.labelAr is NOT NULL AND rs.seasonYear= :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) GROUP BY c.labelAr, c.labelEn " +
             "ORDER BY COUNT(c.labelAr) DESC")
-    Page<LocalizedCountVo> findCompaniesWithMaxIncidents(@Param("seasonYear") int seasonYear, Pageable pageable);
+    Page<LocalizedCountVo> findCompaniesWithMaxIncidents(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList, Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocalizedCountVo(c.labelAr, c.labelEn, COUNT(ai)) " +
             "FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
-            "WHERE c.labelAr is NOT NULL AND rs.seasonYear= :seasonYear GROUP BY c.labelAr, c.labelEn " +
+            "WHERE c.labelAr is NOT NULL AND rs.seasonYear= :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) GROUP BY c.labelAr, c.labelEn " +
             "ORDER BY COUNT(c.labelAr)")
-    Page<LocalizedCountVo> findCompaniesWithMinIncidents(@Param("seasonYear") int seasonYear, Pageable pageable);
+    Page<LocalizedCountVo> findCompaniesWithMinIncidents(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList, Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocationVo(i.locationLat, i.locationLng) " +
             "FROM JpaApplicantIncident i JOIN i.applicantRitual ar JOIN ar.applicantPackage ap " +

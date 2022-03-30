@@ -346,11 +346,11 @@ public class DashboardService {
     }
 
     public List<LocalizedCountVo> loadCompaniesWithMaxIncidentsCount(int seasonYear) {
-        return applicantIncidentRepository.findCompaniesWithMaxIncidents(seasonYear, PageRequest.of(0, maxCompanyChartSize)).getContent();
+        return applicantIncidentRepository.findCompaniesWithMaxIncidents(seasonYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
     public List<LocalizedCountVo> loadCompaniesWithMinIncidentsCount(int seasonYear) {
-        return applicantIncidentRepository.findCompaniesWithMinIncidents(seasonYear, PageRequest.of(0, maxCompanyChartSize)).getContent();
+        return applicantIncidentRepository.findCompaniesWithMinIncidents(seasonYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
     public DashboardMobileNumbersVo getMobileAppDownloadsFromCurrentSeason(int seasonYear) {
