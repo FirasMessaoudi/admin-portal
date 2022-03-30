@@ -40,6 +40,7 @@ public class ApplicantHealthDto implements Serializable {
     @JsonBackReference(value = "applicant")
     private ApplicantDto applicant;
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @BloodType
     @CellIndex(index = 4)
     private String bloodType;

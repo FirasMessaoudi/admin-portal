@@ -176,7 +176,6 @@ public class ValidationService {
         Long applicantId = applicantLite.getId();
         Long applicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealth.getPackageReferenceNumber());
         Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealth.getPackageReferenceNumber(), null, false);
-        //TODO: refactor this
         updateApplicantHealth(applicantHealth, savedApplicantHealthId);
 
         applicantHealth.setApplicant(ApplicantDto.builder().id(applicantId).build());
@@ -305,6 +304,10 @@ public class ValidationService {
             log.debug("Update existing applicant health in applicant health segment for {} applicant id and {} package reference number.");
             applicantHealth.setId(savedApplicantHealthId);
             applicantHealth.setUpdateDate(new Date());
+        }
+        if (!applicantHealth.getHasSpecialNeeds()) {
+            applicantHealth.setSpecialNeeds(null);
+            return;
         }
         if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
             applicantHealth.setSpecialNeeds(Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
