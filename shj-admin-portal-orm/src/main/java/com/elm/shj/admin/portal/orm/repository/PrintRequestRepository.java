@@ -53,7 +53,8 @@ public interface PrintRequestRepository extends JpaRepository<JpaPrintRequest, L
     @Query(value = "SELECT distinct pr FROM JpaPrintRequest pr WHERE pr.statusCode=:statusCode")
     List<JpaPrintRequest> findPrintRequest(@Param("statusCode") String statusCode);
 
-   JpaPrintRequest findFirstByStatusCodeOrderByCreationDateAsc(String statusCode);
+    @Query(value = "SELECT pr from JpaPrintRequest pr where pr.referenceNumber=:referenceNumber")
+   JpaPrintRequest findByReferenceNumber(@Param("referenceNumber") String referenceNumber);
 
     @Modifying
     @Query("UPDATE JpaPrintRequest pr SET pr.statusCode='SENT_TO_PRINTING' WHERE pr.id = :printRequestId")

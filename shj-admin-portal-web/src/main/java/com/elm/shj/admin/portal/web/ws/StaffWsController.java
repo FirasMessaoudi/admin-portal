@@ -151,10 +151,10 @@ public class StaffWsController {
     }
 
     @GetMapping("/find/print-request")
-    public ResponseEntity<WsResponse<?>> findPrintRequest() {
+    public ResponseEntity<WsResponse<?>> findAllPrintRequest() {
         log.debug("List print requests based on search criteria...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(printRequestLiteService.findPrintRequest()).build());
+                .body(printRequestLiteService.findAllPrintRequest()).build());
     }
 
     @PutMapping("/update-print-request-status/{printRequestId}")
@@ -163,5 +163,11 @@ public class StaffWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).build());
     }
 
+    @GetMapping("/find/print-request-batches/{refrenceNumber}/{target}")
+    public ResponseEntity<WsResponse<?>> findPrintRequest(@PathVariable String refrenceNumber, @PathVariable String target) {
+        log.debug("List print requests based on search criteria...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(printRequestLiteService.findPrintRequestBatches(refrenceNumber, target)).build());
+    }
 
 }
