@@ -1,9 +1,8 @@
 /*
  * Copyright (c) 2022 ELM. All rights reserved.
  */
-package com.elm.shj.admin.portal.web.ws;
+package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.services.dto.BatchMainCollectionDto;
 import lombok.Data;
 
 import java.util.List;

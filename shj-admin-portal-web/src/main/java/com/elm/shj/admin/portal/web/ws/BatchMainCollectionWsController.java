@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.card.BatchMainCollectionService;
+import com.elm.shj.admin.portal.services.dto.BatchCollectionVO;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,6 @@ public class BatchMainCollectionWsController {
 
 
     private final BatchMainCollectionService batchMainCollectionService;
-
     /**
      * generate batch cards
      *
@@ -41,7 +41,9 @@ public class BatchMainCollectionWsController {
      */
     @PostMapping("/generate")
     public ResponseEntity<WsResponse<?>> generateBatchCards(@RequestBody BatchCollectionVO batchCollection) {
-        return null;
+        batchMainCollectionService.generateBatchCards(batchCollection);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+                "SUCCESS").build());
     }
 
 }

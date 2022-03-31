@@ -4,7 +4,6 @@
 package com.elm.shj.admin.portal.services.sftp;
 
 import com.jcraft.jsch.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +12,16 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
 import java.io.*;
-import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Service for filesystem manipulation using SFTP
@@ -38,11 +40,16 @@ public class SftpService {
     @Autowired
     @Qualifier("applicantIncidentSftpProperties")
     private SftpProperties applicantIncidentsConfig;
+
+    @Autowired
+    @Qualifier("cardsSftpProperties")
+    private SftpProperties cardsConfig;
     // Set the prompt when logging in for the first time, optional values: (ask | yes | no)
     private static final SimpleDateFormat FILE_NAME_POSTFIX_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
     private static final SimpleDateFormat FOLDER_NAME_FORMAT = new SimpleDateFormat("yyyy_MM_dd");
     private static final String SESSION_CONFIG_STRICT_HOST_KEY_CHECKING = "StrictHostKeyChecking";
     private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
+    private static final String CARDS_CONFIG_PROPERTIES = "cardsConfigProperties";
     private static final String DATA_UPLOAD_CONFIG_PROPERTIES = "dataUploadConfigProperties";
 
 
@@ -265,6 +272,8 @@ public class SftpService {
         switch (configPropertiesType) {
             case APPLICANT_INCIDENTS_CONFIG_PROPERTIES:
                 return applicantIncidentsConfig;
+            case CARDS_CONFIG_PROPERTIES:
+                return cardsConfig;
             default:
                 return dataUploadConfig;
         }
@@ -292,5 +301,33 @@ public class SftpService {
                 "/" +
                 (isErrorFile ? "error/" : "") +
                 localFileName;
+    }
+
+    public void pack(String referenceNumber) throws JSchException, SftpException {
+        SftpProperties config = this.getSftpPropertiesConfig(CARDS_CONFIG_PROPERTIES);
+        ChannelSftp sftp = this.createSftp(CARDS_CONFIG_PROPERTIES);
+        createDirs(config.getRootFolder(), sftp);
+        sftp.cd(config.getRootFolder() + "/" + referenceNumber);
+        String sftpPath = sftp.getHome();
+        try {
+            Path p = Files.createFile(Paths.get(config.getRootFolder() + "/" + referenceNumber));
+            try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p))) {
+                Path pp = Paths.get(config.getRootFolder() + "/" + referenceNumber);
+                Files.walk(pp)
+                        .filter(path -> !Files.isDirectory(path))
+                        .forEach(path -> {
+                            ZipEntry zipEntry = new ZipEntry(pp.relativize(path).toString());
+                            try {
+                                zs.putNextEntry(zipEntry);
+                                Files.copy(path, zs);
+                                zs.closeEntry();
+                            } catch (IOException e) {
+                                System.err.println(e);
+                            }
+                        });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

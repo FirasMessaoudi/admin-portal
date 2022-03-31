@@ -1,7 +1,5 @@
 package com.elm.shj.admin.portal.services.sftp;
 
-import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,12 +10,18 @@ public class ConfigProperties {
     @Bean
     @ConfigurationProperties(ignoreUnknownFields = false, prefix = "sftp.client")
     public SftpProperties sftpProperties() {
-        return new SftpProperties ();
+        return new SftpProperties();
     }
 
     @Bean
     @ConfigurationProperties(ignoreUnknownFields = false, prefix = "sftp.incident.client")
-    public SftpProperties applicantIncidentSftpProperties(){
-        return new SftpProperties ();
+    public SftpProperties applicantIncidentSftpProperties() {
+        return new SftpProperties();
+    }
+
+    @Bean
+    @ConfigurationProperties(ignoreUnknownFields = false, prefix = "sftp.card.client")
+    public SftpProperties cardsSftpProperties() {
+        return new SftpProperties();
     }
 }

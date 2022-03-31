@@ -19,7 +19,7 @@ import java.util.Date;
  * @since 1.1.0
  */
 @Entity
-@Table(name = "shs_batch_main_collection")
+@Table(name = "shc_batch_main_collection")
 @NamedQuery(name = "JpaBatchMainCollection.findAll", query = "SELECT j FROM JpaBatchMainCollection j")
 @Getter
 @Setter

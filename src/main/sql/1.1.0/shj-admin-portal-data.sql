@@ -720,3 +720,23 @@ SET sample ='Avoid climbing mountains and high places and avoid crowding, dockin
 WHERE code = 'GENERAL_AWARENESS'
   and lang = 'en';
 GO
+
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.card.client.protocol', 'sftp');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.card.client.host', '127.0.0.1');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.card.client.port', '22');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.card.client.username', 'sftp-user');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.card.client.password', 'Aa123456');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.card.client.root-folder', '/data/smart-hajj/applicant-cards/');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.card.client.session-strict-host-key-checking', 'no');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.card.client.session-connect-timeout', '15000');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.card.client.channel-connected-timeout', '15000');
+GO
