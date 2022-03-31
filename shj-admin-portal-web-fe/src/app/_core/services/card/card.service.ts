@@ -252,7 +252,7 @@ export class CardService {
   }
 
   findRitualSeasons(): Observable<any[]> {
-    return this.http.get<any>('/core/api/lookup/ritual-seasons/list');
+    return this.http.get<any>('/core/api/lookup/ritual-seasons-years/list');
   }
 
   staffCardlist(
