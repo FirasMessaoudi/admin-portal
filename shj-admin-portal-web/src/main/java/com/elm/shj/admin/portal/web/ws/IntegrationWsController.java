@@ -104,6 +104,7 @@ public class IntegrationWsController {
     private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
     private final UserLocationService userLocationService;
     private final RitualPackageService ritualPackageService;
+
     /**
      * Authenticates the user requesting a webservice call
      *
@@ -265,7 +266,7 @@ public class IntegrationWsController {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getUin()).build()).build());
         }
-        applicantService.updatePreferredLanguage(command.getUin(),"en");
+        applicantService.updatePreferredLanguage(command.getUin(), "en");
         int updatedRowsCount = applicantService.updateApplicantContacts(databaseApplicant.get().getId(), command);
         if (updatedRowsCount < 1) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
@@ -331,7 +332,7 @@ public class IntegrationWsController {
     /**
      * finds an applicant by his UIN and ritual id
      *
-     * @param uin                   the applicant's uin to find
+     * @param uin                the applicant's uin to find
      * @param applicantPackageId applicant ritual id
      * @return the found applicant or <code>null</code>
      */
@@ -397,6 +398,28 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, seasonId)).build());
     }
 
+    /**
+     * finds an applicant group leaders by his UIN and SEASON ID
+     * to be used by applicant portal
+     *
+     * @param uin      the applicant's group leaders details by  uin
+     * @param seasonId the applicant's group leaders details by  season id
+     * @return the company staff list
+     */
+    @GetMapping("/find/company-staff/group-leader/{uin}/{seasonId}")
+    public ResponseEntity<WsResponse<?>> findGroupLeaderByUinAndSeasonId(@PathVariable String uin, @PathVariable long seasonId) {
+        log.debug("Handler for {}", "Find company employee by uin and season ");
+        Optional<CompanyStaffDto> groupLeader = companyStaffService.findGroupLeaderByApplicantUin(uin, seasonId);
+        if (groupLeader.isPresent()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(groupLeader.get()).build());
+        }
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(uin).build()).build());
+
+
+    }
+
     @GetMapping("/company_ritual_step_label/list")
     public ResponseEntity<WsResponse<?>> listCompanyRitualStepsLabel() {
         log.debug("list company ritual step labels...");
@@ -414,7 +437,7 @@ public class IntegrationWsController {
     /**
      * finds an applicant package by his UIN and  id
      *
-     * @param uin                   the applicant's uin to find
+     * @param uin                the applicant's uin to find
      * @param applicantPackageId applicant package id
      * @return the found applicant package data
      */
@@ -772,11 +795,11 @@ public class IntegrationWsController {
     /**
      * Updates user mobileLogin flag to tue when login, and false when logout
      *
-     * @param uin  The UIN of the applicant.
+     * @param uin            The UIN of the applicant.
      * @param mobileLoggedIn flag set to true when login, and false when logout
      */
     @PutMapping("/applicant/mobile-login/{uin}/{mobileLoggedIn}")
-    public ResponseEntity<WsResponse<?>> updateLoggedInFromMobileAppFlag( @PathVariable String uin,@PathVariable boolean mobileLoggedIn) {
+    public ResponseEntity<WsResponse<?>> updateLoggedInFromMobileAppFlag(@PathVariable String uin, @PathVariable boolean mobileLoggedIn) {
         Optional<ApplicantDto> applicant = applicantService.findByUin(uin);
         if (applicant.isPresent()) {
             applicantService.updateLoggedInFromMobileAppFlag(mobileLoggedIn, applicant.get().getId());
@@ -817,7 +840,7 @@ public class IntegrationWsController {
     @PostMapping("/store-user-locations")
     public ResponseEntity<WsResponse<?>> storeUserLocations(@RequestBody List<UserLocationDto> locationsList) {
         boolean isSaved = userLocationService.storeUserLocation(locationsList);
-        if(!isSaved){
+        if (!isSaved) {
             return ResponseEntity.ok(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                             .body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());

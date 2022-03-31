@@ -11,7 +11,7 @@ import com.elm.shj.admin.portal.services.applicant.PackageHousingService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.EUserType;
 import com.elm.shj.admin.portal.services.dto.PackageHousingDto;
-import com.elm.shj.admin.portal.services.dto.PrintRequestDto;
+import com.elm.shj.admin.portal.services.prinitng.PrintRequestBatchService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -19,10 +19,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -48,6 +46,7 @@ public class StaffWsController {
     private final GroupApplicantListService groupApplicantListService;
     private final PackageHousingService packageHousingService;
     private final PrintRequestLiteService printRequestLiteService;
+    private  final PrintRequestBatchService printRequestBatchService;
 
     /**
      * finds company staff
@@ -150,24 +149,6 @@ public class StaffWsController {
                 .body(packageHousingDto).build());
     }
 
-    @GetMapping("/find/print-request")
-    public ResponseEntity<WsResponse<?>> findAllPrintRequest() {
-        log.debug("List print requests based on search criteria...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(printRequestLiteService.findAllPrintRequest()).build());
-    }
 
-    @PutMapping("/update-print-request-status/{printRequestId}")
-    public ResponseEntity<WsResponse<?>> updatePrintRequestStatus(@PathVariable long printRequestId) {
-        printRequestLiteService.updatePrintRequestStatus(printRequestId);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).build());
-    }
-
-    @GetMapping("/find/print-request-batches/{refrenceNumber}/{target}")
-    public ResponseEntity<WsResponse<?>> findPrintRequest(@PathVariable String refrenceNumber, @PathVariable String target) {
-        log.debug("List print requests based on search criteria...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(printRequestLiteService.findPrintRequestBatches(refrenceNumber, target)).build());
-    }
 
 }

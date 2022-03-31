@@ -1453,3 +1453,27 @@ GO
 
 alter table shc_portal.shc_applicant_relative alter column relationship_code varchar(20) null
 GO
+
+if not exists(select * from sys.tables where name = 'shc_collection_status_lk')
+CREATE TABLE shc_portal.shc_collection_status_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(50) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT shc_collection_status_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_batch_main_collection')
+create table shc_portal.shc_batch_main_collection
+(
+    id               int           not null primary key identity(1,1),
+    reference_number varchar(50)   not null,
+    statusCode       varchar(50),
+    url              varchar(256),
+    creation_date    smalldatetime not null default current_timestamp,
+    update_date      smalldatetime null
+);
+GO
