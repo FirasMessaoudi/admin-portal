@@ -720,3 +720,6 @@ SET sample ='Avoid climbing mountains and high places and avoid crowding, dockin
 WHERE code = 'GENERAL_AWARENESS'
   and lang = 'en';
 GO
+
+update shc_portal.shc_config set conf_value = '0 0 23 * * *' where conf_key = 'scheduler.update.applicant.card.status.cron';
+GO
