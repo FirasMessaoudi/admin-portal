@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -43,7 +42,6 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
             "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
     List<JpaApplicantCard> findAllPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus, @Param("uin") String uin, @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds);
 
-
     /*this method is used find all Applicant Cards with status Not Equals REISSUED */
     @Query("SELECT card FROM JpaApplicantCard card WHERE card.statusCode <> :reissuedStatusCode ")
     Page<JpaApplicantCard> findAllApplicantCards(@Param("reissuedStatusCode") String reissuedStatusCode, Pageable pageable);
@@ -55,23 +53,12 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
 
     JpaApplicantCard findByApplicantRitualIdAndStatusCodeNot(long id, String statusCode);
 
+    @Query("SELECT ac FROM JpaApplicantCard ac WHERE :todayDate > ac.applicantRitual.applicantPackage.endDate AND ac.statusCode NOT IN :excludedCardsStatuses")
+    List<JpaApplicantCard> findCardsToExpire(@Param("todayDate") Date todayDate, @Param("excludedCardsStatuses") List<String> excludedCardsStatuses);
 
-    @Modifying
-    @Query("UPDATE JpaApplicantCard card SET card.statusCode = :statusCode WHERE card.id in :cardsIds ")
-    int updateCardStatusesAsExpired(@Param("statusCode") String statusCode, @Param("cardsIds") List<Long> cardsIds);
-
-    @Query("SELECT appCard FROM JpaApplicantCard appCard " +
-            "INNER JOIN appCard.applicantRitual ritual " +
-            "INNER JOIN ritual.applicantPackage package " +
-            "WHERE :todayDate > package.endDate AND appCard.statusCode NOT IN :excludedCardsStatuses ")
-    List<JpaApplicantCard> findApplicantCardsEligibleToExpire(@Param("todayDate") Date todayDate, @Param("excludedCardsStatuses") List<String> excludedCardsStatuses);
-
-    @Query("SELECT appCard FROM JpaApplicantCard appCard WHERE   appCard.id IN :cardsIds ")
+    //TODO: this may cause an issue with SQL server due to the IN parameters length; max is 2100 so find another solution
+    @Query("SELECT appCard FROM JpaApplicantCard appCard WHERE appCard.id IN :cardsIds ")
     List<JpaApplicantCard> findApplicantCards(@Param("cardsIds") List<Long> cardsIds);
-
-    @Modifying
-    @Query("UPDATE JpaApplicantCard card SET card.statusCode = :newStatusCode WHERE card.id in :cardIdsList AND card.statusCode = :oldStatusCode" )
-    int updateCardStatuses(@Param("newStatusCode") String newStatusCode,@Param("oldStatusCode") String oldStatusCode, @Param("cardIdsList") List<Long> cardIdsList);
 
     @Query("SELECT applicantCard from JpaApplicantCard applicantCard " +
             "join applicantCard.applicantRitual applicantRitual " +

@@ -64,25 +64,4 @@ public class ApplicantCardServiceTest {
         mapperRegistryField.set(serviceToTest, mapperRegistry);
         repositoryField.set(serviceToTest, applicantCardRepository);
     }
-
-    @Test
-    public void test_change_card_status() {
-        ApplicantDto applicantDto = new ApplicantDto();
-        List listOfDigitalIds = new ArrayList<ApplicantDigitalIdDto>();
-        listOfDigitalIds.add(ApplicantDigitalIdDto.builder().uin(TEST_APPLICANT_UIN).build());
-        applicantDto.setDigitalIds(listOfDigitalIds);
-
-        ApplicantCardDto card = ApplicantCardDto.builder()
-                .id(TEST_CARD_ID)
-                .statusCode(TEST_CARD_STATUS_CODE)
-                .applicantRitual(ApplicantRitualDto.builder().applicant(applicantDto).build())
-                .build();
-        UserDto user = new UserDto();
-        user.setId(TEST_USER_ID);
-        when(userCardStatusAuditService.saveUserCardStatusAudit((ApplicantCardDto) any(), eq(Optional.of(TEST_USER_ID)))).thenReturn(null);
-        ApplicantCardDto result = serviceToTest.changeCardStatus(card, ECardStatusAction.REISSUE_CARD.name(), Optional.of(TEST_USER_ID));
-        Assertions.assertNotNull(result);
-    }
-
-
 }
