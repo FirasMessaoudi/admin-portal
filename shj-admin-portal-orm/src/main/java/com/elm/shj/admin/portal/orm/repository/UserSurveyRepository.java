@@ -7,7 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaUserSurvey;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -18,5 +18,5 @@ import java.util.Optional;
  */
 public interface UserSurveyRepository extends JpaRepository<JpaUserSurvey, Long> {
 
-    Optional<JpaUserSurvey> findByDigitalIdAndSurveyTypeAndCreationDate(String digitalId,String surveyType, LocalDateTime today);
+    Optional<JpaUserSurvey> findByDigitalIdAndSurveyTypeAndCreationDate(String digitalId, String surveyType, Date today);
 }

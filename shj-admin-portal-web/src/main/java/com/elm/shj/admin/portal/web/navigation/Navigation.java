@@ -71,4 +71,8 @@ public class Navigation {
 	public static final String API_SURVEY_INTEGRATION = "/api/ws/survey";
 	// Applicant and Staff Badge
 	public static final String API_BADGE = "/api/ws/badge";
+	public static final String API_PRINTING_MANAGEMENT_INTEGRATION = "/api/ws/printing/management";
+	// Batch main collection
+	public static final String API_BATCH = "/api/ws/batch";
+
 }

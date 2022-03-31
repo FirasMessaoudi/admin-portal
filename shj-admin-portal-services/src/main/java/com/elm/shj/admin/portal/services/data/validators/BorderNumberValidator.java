@@ -18,6 +18,7 @@ import javax.validation.ConstraintValidatorContext;
 public class BorderNumberValidator implements ConstraintValidator<BorderNumber, Object> {
 
     private static final String BORDER_NUMBER_REGEX = "^[3]\\d{9}$";
+    private static final String MSG_20012 = "validation.data.constraints.msg.20012";
 
     /**
      * {@inheritDoc}
@@ -26,7 +27,16 @@ public class BorderNumberValidator implements ConstraintValidator<BorderNumber, 
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
         // allow null/empty
-        return value == null || StringUtils.isBlank(value.toString()) || value.toString().matches(BORDER_NUMBER_REGEX);
+        if (value == null || StringUtils.isBlank(value.toString())) {
+            return true;
+        } else if (value.toString().length() != 10) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(MSG_20012).addConstraintViolation();
+            return false;
+        } else if (!value.toString().matches(BORDER_NUMBER_REGEX)) {
+            return false;
+        }
+        return true;
     }
 
 }

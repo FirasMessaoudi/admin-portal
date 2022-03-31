@@ -31,8 +31,8 @@
           <label class="col-form-label">{{ "printing-management.season" | translate }}</label>
           <select id="season" formControlName="season" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-            <option *ngFor="let season of ritualSeasons" [ngValue]="season.seasonYear">
-              {{season.seasonYear}}
+            <option *ngFor="let season of ritualSeasons" [ngValue]="season">
+              {{season}}
             </option>
           </select>
         </div>
