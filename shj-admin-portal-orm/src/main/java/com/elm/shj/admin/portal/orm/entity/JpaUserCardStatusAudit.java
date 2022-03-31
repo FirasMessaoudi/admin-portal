@@ -32,13 +32,11 @@ public class JpaUserCardStatusAudit implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    JpaUser user;
+    @Column(name = "user_id")
+    private long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "card_id")
-    JpaApplicantCard card;
+    @Column(name = "card_id")
+    private long cardId;
 
     @Column(name = "uin")
     String uin;

@@ -18,7 +18,6 @@ export class Staff {
   mobileNumber: string;
   mobileNumberIntl: string;
   email: string;
-  dataRequestRecord: any;
   creationDate: any;
   updateDate: any
 }

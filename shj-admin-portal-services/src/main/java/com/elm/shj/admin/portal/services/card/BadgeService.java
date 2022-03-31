@@ -57,7 +57,6 @@ public class BadgeService {
 
     private final static String BADGE_RESOURCES_PATH = "badge/";
     private final static String ELM_FONT_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "DINNextLTArabic-Regular-2.ttf";
-    private final static String USER_PHOTO_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "pilgrim-photo.txt";
     private final static String TOP_BG_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "top-bg.png";
     private final static String BOTTOM_BG_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "bottom-bg.png";
     private final static String MOHU_LOGO_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "mohu-logo.png";
@@ -82,15 +81,6 @@ public class BadgeService {
     }
 
     public BadgeVO generateApplicantBadge(String uin) {
-        //get applicant details
-        //applicant table: fullNameAr; fullNameEn; photo, nationality code;
-        //country lookup table: nationalityAr; nationalityEn;
-        //applicant package, ritual package, ritual type lookup tables: ritualType;
-        //applicant package, ritual package, company ritual season, ritual season tables: ritualSeasonYear;
-        // unit; group; camp; seat; bus; --> ignore for now
-        //group applicant list, applicant group, company staff tables: groupLeaderName; groupLeaderMobile;
-
-
         // get the last applicant package
         Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(uin);
         ApplicantRitualCardLiteDto applicantRitualCardLite = applicantCardService.findCardDetailsByUinAndPackageId(uin, applicantPackageId).orElse(null);
@@ -226,7 +216,7 @@ public class BadgeService {
         }
     }
 
-    public void addBarCode(Graphics2D g2d, String uin) {
+    private void addBarCode(Graphics2D g2d, String uin) {
         PDF417Writer barcodeWriter = new PDF417Writer();
         Map<EncodeHintType, Object> hintMap = new HashMap<>();
         hintMap.put(EncodeHintType.MARGIN, 0);
@@ -338,51 +328,4 @@ public class BadgeService {
             layout.draw(g2d, rectX + (i * rectWidth/ headersAr.length) + (int) (rectWidth/ headersAr.length - font.getStringBounds(values[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 56);
         }
     }
-
-    //TODO: For test only, to be removed later
-//    public static BadgeContentVO dummy() {
-//        BadgeContentVO badgeContent = new BadgeContentVO();
-//        badgeContent.setFullNameAr("عبدالرحمن عبدالعزيز الزهراني");
-//        badgeContent.setFullNameEn("Abdulrahman Abdulaziz Alzahrani");
-//
-//        String stringTooLong = new BufferedReader(
-//                new InputStreamReader(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream(USER_PHOTO_RESOURCE_FILE_NAME))))
-//                .lines().collect(Collectors.joining());
-//
-//        badgeContent.setPhoto(stringTooLong);
-//        badgeContent.setNationalityAr("المملكة العربية السعودية");
-//        badgeContent.setNationalityEn("kingdom of Saudi Arabia");
-//        badgeContent.setUin("109283007408");
-//
-//        badgeContent.setRitualType("حج");
-//        badgeContent.setRitualSeasonYear("١٤٤٣");
-//        badgeContent.setUnit("12");
-//        badgeContent.setGroup("102");
-//        badgeContent.setCamp("3005");
-//        badgeContent.setSeat("758");
-//        badgeContent.setBus("12");
-//        badgeContent.setGroupLeaderName("عبد الله محمد القرشي");
-//        badgeContent.setGroupLeaderMobile("0512345678");
-//        return badgeContent;
-//    }
-
-    //TODO: For test only, to be removed later
-//    public static void main(String[] args) {
-//        BadgeService badgeService = new BadgeService();
-//        ImageUtils.saveToFile(badgeService.generateBadge(BadgeService.dummy()), "D:\\buffered-test-2.png");
-//        String imgStr = null;
-//        try {
-//            imgStr = ImageUtils.imgToBase64String(badgeService.generateBadge(BadgeService.dummy()));
-//            System.out.println(imgStr);
-//
-//            byte[] data = Base64.decodeBase64(imgStr);
-//            try (OutputStream stream = new FileOutputStream("D:\\base-test-2.png")) {
-//                stream.write(data);
-//            }
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
 }

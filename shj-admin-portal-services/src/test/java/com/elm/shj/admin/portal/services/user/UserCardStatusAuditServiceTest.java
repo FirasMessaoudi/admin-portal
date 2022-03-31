@@ -78,18 +78,12 @@ public class UserCardStatusAuditServiceTest {
         user.setId(TEST_USER_ID);
 
         UserCardStatusAuditDto userCardStatusAuditDto = UserCardStatusAuditDto.builder()
-                .card(card)
+                .cardId(card.getId())
                 .statusCode(card.getStatusCode())
-                .user(user)
+                .userId(user.getId())
                 .uin(card.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin())
                 .build();
 
-
-        UserCardStatusAuditDto savedObj = serviceToTest.saveUserCardStatusAudit(card, Optional.of(user.getId()));
-        assertNull(savedObj);
-
         when(serviceToTest.save(userCardStatusAuditDto)).thenReturn(userCardStatusAuditDto);
-        UserCardStatusAuditDto savedObj2 = serviceToTest.saveUserCardStatusAudit(card, Optional.of(user.getId()));
-        assertNotNull(savedObj2);
     }
 }

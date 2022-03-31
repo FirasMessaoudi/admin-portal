@@ -15,10 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 /**
  * Scheduler to generate automatically Cards for new added applicantRituals
  *
@@ -46,7 +42,7 @@ public class ApplicantCardScheduler {
         applicantRitualService.findAllWithoutCards().forEach(applicantRitual -> {
             // generate and save the card
             ApplicantCardDto savedCard = applicantCardService.save(ApplicantCardDto.builder().applicantRitual(applicantRitual).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
-            userCardStatusAuditService.saveUserCardStatusAudit(savedCard, Optional.of(Constants.SYSTEM_USER_ID_NUMBER));
+            userCardStatusAuditService.saveUserCardStatusAudit(savedCard, Constants.SYSTEM_USER_ID_NUMBER);
 
         });
     }
@@ -57,15 +53,8 @@ public class ApplicantCardScheduler {
     @Scheduled(cron = "${scheduler.update.applicant.card.status.cron}")
     @SchedulerLock(name = "expire-ritual-applicant-card")
     public void expireRitualApplicantCard() {
-        log.debug("Expire Ritual Applicant Card scheduler started...");
+        log.debug("Expire ritual applicant card scheduler started...");
         LockAssert.assertLocked();
-
-        List<ApplicantCardDto> cardsList = applicantCardService.findApplicantCardsEligibleToExpire();
-        applicantCardService.updateCardStatusesAsExpired(cardsList.stream().map(ApplicantCardDto::getId).collect(Collectors.toList()));
-        cardsList.forEach((card) -> card.setStatusCode(ECardStatus.EXPIRED.name()));
-        userCardStatusAuditService.saveUserCardStatusAudit(cardsList, Optional.of(Constants.SYSTEM_USER_ID_NUMBER));
-
+        applicantCardService.markEligibleCardsAsExpired();
     }
-
-
 }

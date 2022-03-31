@@ -101,7 +101,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   private initUserStatuses(): void {
-    this.userStatuses = [new UserStatus(1, 'نشط', 'ِActivated', true), new UserStatus(2, 'غير نشط', 'Deactivated', false)];
+    this.userStatuses = [new UserStatus(1, 'نشط', 'Activated', true), new UserStatus(2, 'غير نشط', 'Deactivated', false)];
   }
 
   loadPage(page: number) {
