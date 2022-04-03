@@ -744,3 +744,24 @@ VALUES ('sftp.card.client.session-connect-timeout', '15000');
 INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
 VALUES ('sftp.card.client.channel-connected-timeout', '15000');
 GO
+
+SET IDENTITY_INSERT shc_portal.shc_collection_status_lk ON;
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label)
+VALUES (1, 'NEW', 'ar', N'جديد');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label)
+VALUES (2, 'NEW', 'en', 'NEW');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label)
+VALUES (3, 'GENERATING', 'ar', N'جاري إعداد البطاقات');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label)
+VALUES (4, 'GENERATING', 'en', 'Generating Cards ');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label)
+VALUES (5, 'FAILED', 'ar', N'فشل في إعداد البطاقات');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label)
+VALUES (6, 'FAILED', 'en', 'Fail to generate');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label)
+VALUES (7, 'READY', 'ar', N'جاهزة للطباعة');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label)
+VALUES (8, 'READY', 'en', 'Ready');
+SET
+IDENTITY_INSERT shc_portal.shc_collection_status_lk OFF;
+GO

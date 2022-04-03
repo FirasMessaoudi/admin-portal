@@ -88,7 +88,7 @@ public class ValidationService {
                     saveApplicantHealth((ApplicantHealthDto) items.get(i));
                 }
                 if (items.get(i).getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
-                    saveApplicantRelative((ApplicantRelativeDto) items.get(i));
+                    saveApplicantRelative((ApplicantRelativeDto) items.get(i), errorResponses, i);
                 }
                 if (items.get(i).getClass().isAssignableFrom(ApplicantHealthDiseaseDto.class)) {
                     saveApplicantHealthDisease((ApplicantHealthDiseaseDto) items.get(i));
@@ -146,7 +146,7 @@ public class ValidationService {
 
     }
 
-    private void saveApplicantRelative(ApplicantRelativeDto applicantRelative) {
+    private void saveApplicantRelative(ApplicantRelativeDto applicantRelative, List<ErrorResponse> errorResponses, int rowNumber) {
         applicantRelative.getApplicantBasicInfo().setDateOfBirthGregorian(updateDate(applicantRelative.getApplicantBasicInfo().getDateOfBirthGregorian()));
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantRelative.getApplicantBasicInfo());
         if (applicantLite == null) {
@@ -155,6 +155,13 @@ public class ValidationService {
         Long applicantId = applicantLite.getId();
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
         Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, applicantRelative.getPackageReferenceNumber(), null, false);
+        if (savedApplicantRitualId == null) {
+            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse.setRowNumber(rowNumber + 1);
+            errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "20001", "No Applicant ritual found"));
+            errorResponses.add(errorResponse);
+            return;
+        }
         ApplicantLiteDto relativeApplicantLite = applicantLiteService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative));
         applicantRelative.setRelativeApplicant(ApplicantDto.fromApplicantLite(relativeApplicantLite));
         applicantRelative.setApplicant(ApplicantDto.fromApplicantLite(applicantLite));
