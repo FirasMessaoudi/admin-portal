@@ -16,5 +16,6 @@ import java.util.List;
 @Data
 public class BatchCollectionVO {
     private String batchReferenceNumber;
+    private String target;
     private List<BatchMainCollectionDto> batchMainCollections;
 }

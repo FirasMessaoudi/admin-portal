@@ -13,9 +13,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -306,11 +305,10 @@ public class SftpService {
     public void pack(String referenceNumber) throws JSchException, SftpException {
         SftpProperties config = this.getSftpPropertiesConfig(CARDS_CONFIG_PROPERTIES);
         ChannelSftp sftp = this.createSftp(CARDS_CONFIG_PROPERTIES);
-        createDirs(config.getRootFolder(), sftp);
-        sftp.cd(config.getRootFolder() + "/" + referenceNumber);
-        String sftpPath = sftp.getHome();
         try {
-            Path p = Files.createFile(Paths.get(config.getRootFolder() + "/" + referenceNumber));
+            Path workDir = Paths.get(sftp.pwd());
+            zipFolder(workDir);
+         /*   Path p = Files.createFile(workDir);
             try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p))) {
                 Path pp = Paths.get(config.getRootFolder() + "/" + referenceNumber);
                 Files.walk(pp)
@@ -325,9 +323,66 @@ public class SftpService {
                                 System.err.println(e);
                             }
                         });
-            }
+            }*/
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // zip a directory, including sub files and sub directories
+    public void zipFolder(Path source) throws IOException {
+
+        // get folder name as zip file name
+        String zipFileName = source.getFileName().toString() + ".zip";
+
+        try (
+                ZipOutputStream zos = new ZipOutputStream(
+                        new FileOutputStream(zipFileName))
+        ) {
+
+            Files.walkFileTree(source, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path file,
+                                                 BasicFileAttributes attributes) {
+
+                    // only copy files, no symbolic links
+                    if (attributes.isSymbolicLink()) {
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    try (FileInputStream fis = new FileInputStream(file.toFile())) {
+
+                        Path targetFile = source.relativize(file);
+                        zos.putNextEntry(new ZipEntry(targetFile.toString()));
+
+                        byte[] buffer = new byte[1024];
+                        int len;
+                        while ((len = fis.read(buffer)) > 0) {
+                            zos.write(buffer, 0, len);
+                        }
+
+                        // if large file, throws out of memory
+                        //byte[] bytes = Files.readAllBytes(file);
+                        //zos.write(bytes, 0, bytes.length);
+
+                        zos.closeEntry();
+
+                        System.out.printf("Zip file : %s%n", file);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                    System.err.printf("Unable to zip : %s%n%s%n", file, exc);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+
+        }
+
     }
 }

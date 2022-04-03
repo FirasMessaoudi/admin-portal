@@ -8,7 +8,6 @@ import com.elm.shj.admin.portal.orm.repository.BatchMainCollectionRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
-import com.jcraft.jsch.JSchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service handling batch cards generation
@@ -40,41 +40,51 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
     @Async
     public void generateBatchCards(BatchCollectionVO batchCollectionVO) {
         // String sftpPath = sftpService.generateSftpFilePath(p.getFileName().toString(), referenceNumber, false);
-
-        for (BatchMainCollectionDto batchMainCollectionDto : batchCollectionVO.getBatchMainCollections()) {
-            batchMainCollectionDto.setStatusCode(ECollectionStatus.GENERATING.name());
-            BatchMainCollectionDto savedBatchMainCollection = save(batchMainCollectionDto);
-            String sftpPath = "";
-            try {
-                for (SubCollectionVO subCollectionVO : batchMainCollectionDto.getSubCollections()) {
-                    for (String digitalId : subCollectionVO.getDigitalIds()) {
-                        BadgeVO badge = badgeService.generateApplicantBadge(digitalId);
-                        if (badge != null) {
-                            byte[] decodedImage = Base64.getDecoder().decode(badge.getBadgeImage());
-                            InputStream targetStream = new ByteArrayInputStream(decodedImage);
-                            // String sftpPath = sftpService.generateSftpFilePath("card", digitalId, false);
-                            sftpPath = batchCollectionVO.getBatchReferenceNumber() + "/" + batchMainCollectionDto.getReferenceNumber() + "/" + subCollectionVO.getReferenceNumber() + "/" + digitalId + ".jpg";
-                            sftpService.uploadFile(sftpPath, targetStream, CARDS_CONFIG_PROPERTIES);
-                            log.info("file uploaded successfully to: {}", sftpPath);
-                        }
-
-
+        if (batchCollectionVO.getTarget().equals(EPrintingRequestTarget.APPLICANT.name())) {
+            for (BatchMainCollectionDto batchMainCollectionDto : batchCollectionVO.getBatchMainCollections()) {
+                Optional<JpaBatchMainCollection> batchMainCollection = batchMainCollectionRepository.findTopByReferenceNumberOrderByCreationDateDesc(batchMainCollectionDto.getReferenceNumber());
+                if (!batchMainCollection.isPresent() || batchMainCollection.get().getStatusCode().equals(ECollectionStatus.FAILED.name())) {
+                    if (batchMainCollection.isPresent()) {
+                        batchMainCollectionDto.setId(batchMainCollection.get().getId());
                     }
+                    batchMainCollectionDto.setStatusCode(ECollectionStatus.GENERATING.name());
+                    BatchMainCollectionDto savedBatchMainCollection = save(batchMainCollectionDto);
+                    String sftpPath = "";
+                    try {
+                        for (SubCollectionVO subCollectionVO : batchMainCollectionDto.getSubCollections()) {
+                            for (String digitalId : subCollectionVO.getDigitalIds()) {
+                                BadgeVO badge = badgeService.generateApplicantBadge(digitalId);
+                                if (badge != null) {
+                                    byte[] decodedImage = Base64.getDecoder().decode(badge.getBadgeImage());
+                                    InputStream targetStream = new ByteArrayInputStream(decodedImage);
+                                    // String sftpPath = sftpService.generateSftpFilePath("card", digitalId, false);
+                                    sftpPath = batchCollectionVO.getBatchReferenceNumber() + "/" + batchMainCollectionDto.getReferenceNumber() + "/" + subCollectionVO.getReferenceNumber() + "/" + digitalId + ".jpg";
+                                    sftpService.uploadFile(sftpPath, targetStream, CARDS_CONFIG_PROPERTIES);
+                                    log.info("file uploaded successfully to: {}", sftpPath);
+                                }
 
+
+                            }
+
+                        }
+                        // sftpService.pack(batchCollectionVO.getBatchReferenceNumber());
+                        savedBatchMainCollection.setStatusCode(ECollectionStatus.READY.name());
+                        save(savedBatchMainCollection);
+                        //TODO: create zip file for the main collection
+
+
+                    } catch (Exception e) {
+                        savedBatchMainCollection.setStatusCode(ECollectionStatus.FAILED.name());
+                        save(batchMainCollectionDto);
+                        log.error("Unable to open attached file", e);
+                        throw new IllegalArgumentException("Unable to open attached file");
+                    }
                 }
-                savedBatchMainCollection.setStatusCode(ECollectionStatus.READY.name());
-                save(savedBatchMainCollection);
 
 
-            } catch (JSchException e) {
-                savedBatchMainCollection.setStatusCode(ECollectionStatus.FAILED.name());
-                save(batchMainCollectionDto);
-                log.error("Unable to open attached file", e);
-                throw new IllegalArgumentException("Unable to open attached file");
             }
-
-
         }
+        //TODO: create zip file for the whole batch
 
     }
 

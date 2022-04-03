@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository for batch main collection table.
@@ -20,4 +21,6 @@ public interface BatchMainCollectionRepository extends JpaRepository<JpaBatchMai
 
     @Query("SELECT b FROM JpaBatchMainCollection b WHERE b.referenceNumber LIKE :referenceNumber || 'c' ||'%'")
     List<JpaBatchMainCollection> findBatchStatusByReference(@Param("referenceNumber") String referenceNumber);
+
+    Optional<JpaBatchMainCollection> findTopByReferenceNumberOrderByCreationDateDesc(String referenceNumber);
 }
