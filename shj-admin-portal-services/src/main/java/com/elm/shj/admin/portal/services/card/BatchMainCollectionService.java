@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.card;
 
 import com.elm.shj.admin.portal.orm.entity.JpaBatchMainCollection;
+import com.elm.shj.admin.portal.orm.repository.BatchMainCollectionRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * Service handling batch cards generation
@@ -31,6 +33,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
     private final SftpService sftpService;
     private final BadgeService badgeService;
     private static final String CARDS_CONFIG_PROPERTIES = "cardsConfigProperties";
+    private final BatchMainCollectionRepository batchMainCollectionRepository;
 
 
     @Async
@@ -72,6 +75,10 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
 
         }
 
+    }
+
+    public List<BatchMainCollectionDto> findBatchStatusByReference(String referenceNumber) {
+        return mapList(batchMainCollectionRepository.findBatchStatusByReference(referenceNumber));
     }
 
 }

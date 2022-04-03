@@ -5,6 +5,10 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaBatchMainCollection;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 /**
  * Repository for batch main collection table.
@@ -13,4 +17,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.1.0
  */
 public interface BatchMainCollectionRepository extends JpaRepository<JpaBatchMainCollection, Long> {
+
+    @Query("SELECT b FROM JpaBatchMainCollection b WHERE b.referenceNumber LIKE :referenceNumber || 'c' ||'%'")
+    List<JpaBatchMainCollection> findBatchStatusByReference(@Param("referenceNumber") String referenceNumber);
 }
