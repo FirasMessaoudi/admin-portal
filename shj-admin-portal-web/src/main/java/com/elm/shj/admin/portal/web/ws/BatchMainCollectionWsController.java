@@ -46,4 +46,11 @@ public class BatchMainCollectionWsController {
                 "SUCCESS").build());
     }
 
+    @GetMapping("/collection-status/{reference}")
+    public ResponseEntity<WsResponse<?>> trackBatchCollectionStatus(@PathVariable String reference) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+                batchMainCollectionService.findBatchStatusByReference(reference)).build());
+    }
+
+
 }
