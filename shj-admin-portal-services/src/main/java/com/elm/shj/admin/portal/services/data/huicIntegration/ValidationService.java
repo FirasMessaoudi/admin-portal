@@ -320,9 +320,14 @@ public class ValidationService {
             return;
         }
         if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
-            applicantHealth.setSpecialNeeds(Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
-                    ApplicantHealthSpecialNeedsDto.builder().applicantHealth(applicantHealth).specialNeedTypeCode(sn).build()
-            ).collect(Collectors.toList()));
+            if (applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode() != null) {
+                applicantHealth.setSpecialNeeds(Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
+                        ApplicantHealthSpecialNeedsDto.builder().applicantHealth(applicantHealth).specialNeedTypeCode(sn).build()
+                ).collect(Collectors.toList()));
+            } else {
+                applicantHealth.setSpecialNeeds(null);
+
+            }
         }
     }
 

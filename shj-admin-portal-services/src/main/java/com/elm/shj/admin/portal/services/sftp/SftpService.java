@@ -13,7 +13,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.nio.file.*;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -302,38 +305,11 @@ public class SftpService {
                 localFileName;
     }
 
-    public void pack(String referenceNumber) throws JSchException, SftpException {
-        SftpProperties config = this.getSftpPropertiesConfig(CARDS_CONFIG_PROPERTIES);
-        ChannelSftp sftp = this.createSftp(CARDS_CONFIG_PROPERTIES);
-        try {
-            Path workDir = Paths.get(sftp.pwd());
-            zipFolder(workDir);
-         /*   Path p = Files.createFile(workDir);
-            try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p))) {
-                Path pp = Paths.get(config.getRootFolder() + "/" + referenceNumber);
-                Files.walk(pp)
-                        .filter(path -> !Files.isDirectory(path))
-                        .forEach(path -> {
-                            ZipEntry zipEntry = new ZipEntry(pp.relativize(path).toString());
-                            try {
-                                zs.putNextEntry(zipEntry);
-                                Files.copy(path, zs);
-                                zs.closeEntry();
-                            } catch (IOException e) {
-                                System.err.println(e);
-                            }
-                        });
-            }*/
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     // zip a directory, including sub files and sub directories
     public void zipFolder(Path source) throws IOException {
 
         // get folder name as zip file name
-        String zipFileName = source.getFileName().toString() + ".zip";
+        String zipFileName = source.toString() + ".zip";
 
         try (
                 ZipOutputStream zos = new ZipOutputStream(
