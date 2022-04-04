@@ -87,7 +87,7 @@ public class ValidationService {
                     saveApplicantRitual((ApplicantRitualDto) items.get(i));
                 }
                 if (items.get(i).getClass().isAssignableFrom(ApplicantHealthDto.class)) {
-                    saveApplicantHealth((ApplicantHealthDto) items.get(i));
+                    saveApplicantHealth((ApplicantHealthDto) items.get(i), errorResponses, i);
                 }
                 if (items.get(i).getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
                     saveApplicantRelative((ApplicantRelativeDto) items.get(i), errorResponses, i);
@@ -179,7 +179,7 @@ public class ValidationService {
         chatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitualId);
     }
 
-    private void saveApplicantHealth(ApplicantHealthDto applicantHealth) {
+    private void saveApplicantHealth(ApplicantHealthDto applicantHealth, List<ErrorResponse> errorResponses, int rowNumber) {
         applicantHealth.getApplicantBasicInfo().setDateOfBirthGregorian(updateDate(applicantHealth.getApplicantBasicInfo().getDateOfBirthGregorian()));
         ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantHealth.getApplicantBasicInfo());
         if (applicantLite == null) {
@@ -188,8 +188,10 @@ public class ValidationService {
         Long applicantId = applicantLite.getId();
         Long applicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealth.getPackageReferenceNumber());
         Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, applicantHealth.getPackageReferenceNumber(), null, false);
-        updateApplicantHealth(applicantHealth, savedApplicantHealthId);
-
+        updateApplicantHealth(applicantHealth, savedApplicantHealthId, errorResponses, rowNumber);
+        if (!errorResponses.isEmpty()) {
+            return;
+        }
         applicantHealth.setApplicant(ApplicantDto.builder().id(applicantId).build());
         applicantHealth.setApplicantRitual(ApplicantRitualDto.builder().id(applicantRitualId).build());
         applicantHealthService.save(applicantHealth);
@@ -311,7 +313,7 @@ public class ValidationService {
         }
     }
 
-    public void updateApplicantHealth(ApplicantHealthDto applicantHealth, Long savedApplicantHealthId) {
+    public void updateApplicantHealth(ApplicantHealthDto applicantHealth, Long savedApplicantHealthId, List<ErrorResponse> errorResponses, int rowNumber) {
         if (savedApplicantHealthId != null) {
             log.debug("Update existing applicant health in applicant health segment for {} applicant id and {} package reference number.");
             applicantHealth.setId(savedApplicantHealthId);
@@ -327,8 +329,23 @@ public class ValidationService {
                         ApplicantHealthSpecialNeedsDto.builder().applicantHealth(applicantHealth).specialNeedTypeCode(sn).build()
                 ).collect(Collectors.toList()));
             } else {
-                applicantHealth.setSpecialNeeds(null);
+                // applicantHealth.setSpecialNeeds(null);
+                if (errorResponses != null) {
+                    ErrorResponse errorResponse = new ErrorResponse();
+                    errorResponse.setRowNumber(rowNumber + 1);
+                    errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "specialNeedList", "20001", "Please fill a value. This field cannot be empty"));
+                    errorResponses.add(errorResponse);
+                    return;
+                }
 
+            }
+        } else {
+            if (errorResponses != null) {
+                ErrorResponse errorResponse = new ErrorResponse();
+                errorResponse.setRowNumber(rowNumber + 1);
+                errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "specialNeedList", "20001", "Please fill a value. This field cannot be empty"));
+                errorResponses.add(errorResponse);
+                return;
             }
         }
     }

@@ -462,7 +462,7 @@ public class ItemWriter {
             if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
                 ApplicantHealthDto applicantHealth = (ApplicantHealthDto) item;
                 Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber, null, false);
-                validationService.updateApplicantHealth(applicantHealth, savedApplicantHealthId);
+                validationService.updateApplicantHealth(applicantHealth, savedApplicantHealthId, null, 0);
             }
 
             if (applicantHealthField != null) {
