@@ -43,10 +43,8 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
 
     @Async
     public void generateBatchCards(BatchCollectionVO batchCollectionVO) {
-        // String sftpPath = sftpService.generateSftpFilePath(p.getFileName().toString(), referenceNumber, false);
-
         try {
-            // if not exist
+            // create a temporary folder
             if (!Files.exists(root)) {
                 Files.createDirectory(root);
             }
@@ -82,9 +80,8 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                             }
 
                         }
-                        // sftpService.pack(batchCollectionVO.getBatchReferenceNumber());
 
-                        //TODO: create zip file for the main collection
+                        // create zip file for the main collection
                         Path zipSource = root.resolve(batchCollectionVO.getBatchReferenceNumber()).resolve(batchMainCollectionDto.getReferenceNumber());
                         sftpService.zipFolder(zipSource);
                         String zipPath = batchCollectionVO.getBatchReferenceNumber() + "/" + batchMainCollectionDto.getReferenceNumber() + ".zip";
@@ -107,23 +104,23 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
 
 
             }
+
+            // create the zip file for  the whole batch
+            try {
+                Path zipSource = root.resolve(Paths.get(batchCollectionVO.getBatchReferenceNumber()));
+                sftpService.zipFolder(zipSource);
+                String zipPath = batchCollectionVO.getBatchReferenceNumber() + ".zip";
+                FileInputStream fis = new FileInputStream(root + "/" + zipPath);
+                sftpService.uploadFile(batchCollectionVO.getBatchReferenceNumber() + "/" + zipPath, fis, CARDS_CONFIG_PROPERTIES);
+                fis.close();
+                Files.delete(root.resolve(zipPath));
+                deleteDirectory(new File(root + "/" + batchCollectionVO.getBatchReferenceNumber()));
+
+
+            } catch (IOException | JSchException e) {
+                e.printStackTrace();
+            }
         }
-        //TODO: create zip file for the whole batch
-        try {
-            Path zipSource = root.resolve(Paths.get(batchCollectionVO.getBatchReferenceNumber()));
-            sftpService.zipFolder(zipSource);
-            String zipPath = batchCollectionVO.getBatchReferenceNumber() + ".zip";
-            FileInputStream fis = new FileInputStream(root + "/" + zipPath);
-            sftpService.uploadFile(batchCollectionVO.getBatchReferenceNumber() + "/" + zipPath, fis, CARDS_CONFIG_PROPERTIES);
-            fis.close();
-            Files.delete(root.resolve(zipPath));
-            deleteDirectory(new File(root + "/" + batchCollectionVO.getBatchReferenceNumber()));
-
-
-        } catch (IOException | JSchException e) {
-            e.printStackTrace();
-        }
-
 
     }
 
