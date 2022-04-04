@@ -34,14 +34,14 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
     @Query("SELECT COUNT(ai) FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar " +
             "JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
-            "where ai.statusCode = 'UNDER_PROCESSING' AND rs.seasonYear= :seasonYear")
-    long countAllUnResolvedIncidents(@Param("seasonYear") int seasonYear);
+            "where ai.statusCode = 'UNDER_PROCESSING' AND rs.seasonYear= :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList)")
+    long countAllUnResolvedIncidents(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 
     @Query("SELECT COUNT(ai) FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar " +
             "JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
-            "where ai.statusCode IN ('RESOLVED', 'CLOSED') AND rs.seasonYear= :seasonYear")
-    long countAllResolvedIncidents(@Param("seasonYear") int seasonYear);
+            "where ai.statusCode IN ('RESOLVED', 'CLOSED') AND rs.seasonYear= :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList)")
+    long countAllResolvedIncidents(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocalizedCountVo(c.labelAr, c.labelEn, COUNT(ai)) " +
             "FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
