@@ -66,7 +66,9 @@ public class ValidationService {
 
             Set<ConstraintViolation<T>> violations = validator.validate(items.get(i));
             violations.addAll(validator.validate(items.get(i), CheckFirst.class));
-            violations.addAll(validator.validate(items.get(i), CheckSecond.class));
+            if (!items.get(i).getClass().isAssignableFrom(ApplicantHealthDto.class)) {
+                violations.addAll(validator.validate(items.get(i), CheckSecond.class));
+            }
             if (!violations.isEmpty()) {
                 ErrorResponse errorResponse = new ErrorResponse();
                 int rowNumber = i + 1;
