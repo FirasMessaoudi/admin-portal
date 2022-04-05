@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.company.*;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -104,6 +105,7 @@ public class IntegrationWsController {
     private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
     private final UserLocationService userLocationService;
     private final RitualPackageService ritualPackageService;
+    private final BadgeService badgeService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -885,6 +887,16 @@ public class IntegrationWsController {
                     .body(WsError.builder().error(WsError.EWsError.RITUAL_PACKAGE_NOT_FOUND.getCode()).build()).build());
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(ritualPackage).build());
+
+    }
+
+    /**
+     * @param applicantUin
+     * @return badge
+     */
+    @GetMapping("/badge/generate/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findApplicantBadge(@PathVariable String applicantUin) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateApplicantBadge(applicantUin)).build());
 
     }
 
