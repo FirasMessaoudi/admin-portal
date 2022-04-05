@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 public interface BatchMainCollectionRepository extends JpaRepository<JpaBatchMainCollection, Long> {
 
-    @Query("SELECT b FROM JpaBatchMainCollection b WHERE b.referenceNumber LIKE :referenceNumber || 'c' ||'%'")
+    @Query("SELECT b FROM JpaBatchMainCollection b WHERE b.referenceNumber LIKE :referenceNumber || '_' ||'%'")
     List<JpaBatchMainCollection> findBatchStatusByReference(@Param("referenceNumber") String referenceNumber);
 
     Optional<JpaBatchMainCollection> findTopByReferenceNumberOrderByCreationDateDesc(String referenceNumber);

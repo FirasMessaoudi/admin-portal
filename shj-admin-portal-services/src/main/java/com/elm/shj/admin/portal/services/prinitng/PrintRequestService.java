@@ -15,10 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 /**
  * Service handling print request
@@ -95,15 +93,19 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
 
                         return groupingByCriteriaList;
                     }));
+            //create sequence count to increase sequence number for each batch and avoid duplication
+            AtomicInteger sequenceCount = new AtomicInteger();
+            sequenceCount.set(printRequestBatchRepository.maxSequenceNumber() != null ? printRequestBatchRepository.maxSequenceNumber() + 1 : 1);
             // Create print request batches
             groupedRequestCards.forEach((key, value) -> {
+
                 PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
                         // Save batching criteria as comma-separated string
                         .batchTypeCodes(selectedBatchTypes.stream().map(EPrintBatchType::name).collect(Collectors.joining(",")))
                         // Save batching values as comma-separated string
                         .batchTypeValues(String.join(",", key))
                         .printRequestBatchCards(value.stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
-                printRequestBatch.setSequenceNumber(printRequestBatchRepository.maxSequenceNumber() != null ? printRequestBatchRepository.maxSequenceNumber() + 1 : 1);
+                printRequestBatch.setSequenceNumber(sequenceCount.getAndIncrement());
                 printRequest.getPrintRequestBatches().add(printRequestBatch);
             });
         } else {
@@ -121,6 +123,8 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
             requestCard.setPrintRequest(printRequest);
             requestCard.setCardId(requestCard.getCard().getId());
         });
+        //sorting batches based on sequence number before adding in the print request
+        printRequest.getPrintRequestBatches().stream().sorted(Comparator.comparingInt(PrintRequestBatchDto::getSequenceNumber));
         printRequest.getPrintRequestBatches().forEach(requestBatch -> {
             requestBatch.setPrintRequest(printRequest);
             requestBatch.getPrintRequestBatchCards().forEach(batchCard -> {
