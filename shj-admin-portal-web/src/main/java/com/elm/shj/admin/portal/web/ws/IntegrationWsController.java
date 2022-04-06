@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.company.*;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -104,6 +105,7 @@ public class IntegrationWsController {
     private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
     private final UserLocationService userLocationService;
     private final RitualPackageService ritualPackageService;
+    private final BadgeService badgeService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -361,6 +363,7 @@ public class IntegrationWsController {
      */
     @GetMapping("/details/{uin}/{applicantPackageId}")
     public ResponseEntity<WsResponse<?>> findCardDetails(@PathVariable String uin, @PathVariable Long applicantPackageId) {
+        //TODO this method should be deleted no needed after now, because we generate card as image see /card-image api
         log.debug("Handler for {}", "Find applicant card details by uin");
         Optional<ApplicantRitualCardLiteDto> returnedApplicantRitualCardLiteDto = applicantRitualCardLiteService.findCardDetailsByUinAndPackageId(uin, applicantPackageId);
 

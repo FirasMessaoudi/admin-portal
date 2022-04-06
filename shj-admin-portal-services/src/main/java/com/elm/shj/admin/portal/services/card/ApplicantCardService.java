@@ -290,4 +290,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
         return mapList(applicantCardRepository.findApplicantCardsByPrintRequestBatchIdAndDigitalIds(digitalIdSet.stream().collect(Collectors.toList()),batchId));
     }
 
+    public ApplicantCardDto findApplicantCardByApplicantRitualId(long applicantRitualId) {
+        return getMapper().fromEntity(applicantCardRepository.findByApplicantRitualId(applicantRitualId), mappingContext);
+    }
 }
