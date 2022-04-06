@@ -54,11 +54,11 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
         if (batchCollectionVO.getTarget().equals(EPrintingRequestTarget.APPLICANT.name())) {
             for (BatchMainCollectionDto batchMainCollectionDto : batchCollectionVO.getBatchMainCollections()) {
                 Optional<JpaBatchMainCollection> batchMainCollection = batchMainCollectionRepository.findTopByReferenceNumberOrderByCreationDateDesc(batchMainCollectionDto.getReferenceNumber());
-                if (!batchMainCollection.isPresent() || batchMainCollection.get().getStatusCode().equals(ECollectionStatus.FAILED.name())) {
+                if (!batchMainCollection.isPresent() || batchMainCollection.get().getStatusCode().equals(ECollectionStatus.FAIL_TO_GENERATE.name())) {
                     if (batchMainCollection.isPresent()) {
                         batchMainCollectionDto.setId(batchMainCollection.get().getId());
                     }
-                    batchMainCollectionDto.setStatusCode(ECollectionStatus.GENERATING.name());
+                    batchMainCollectionDto.setStatusCode(ECollectionStatus.GENERATING_CARDS.name());
                     BatchMainCollectionDto savedBatchMainCollection = save(batchMainCollectionDto);
                     String sftpPath = "";
                     try {
@@ -95,7 +95,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
 
 
                     } catch (Exception e) {
-                        savedBatchMainCollection.setStatusCode(ECollectionStatus.FAILED.name());
+                        savedBatchMainCollection.setStatusCode(ECollectionStatus.FAIL_TO_GENERATE.name());
                         save(savedBatchMainCollection);
                         log.error("Unable to open attached file", e);
                         throw new IllegalArgumentException("Unable to open attached file");

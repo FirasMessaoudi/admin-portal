@@ -11,7 +11,7 @@ package com.elm.shj.admin.portal.services.dto;
  */
 public enum ECollectionStatus {
 
-    NEW(1), GENERATING(2), FAILED(3), READY(4);
+    NEW(1), FAIL_TO_GENERATE(2), GENERATING_CARDS(3), READY(4);
 
     private final int id;
 
