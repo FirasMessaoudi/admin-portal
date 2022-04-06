@@ -389,10 +389,11 @@ public class ItemWriter {
             validationService.updateApplicantBirthDate(applicant);
             Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
             // if record exists already in DB we need to update it
-            validationService.updateExistingApplicant(applicant, existingApplicantId);
-
+            if (existingApplicantId != null) {
+                validationService.updateExistingApplicant(applicant, existingApplicantId);
+            }
             // this case is for applicant data upload
-           validationService.addApplicantToContact(applicant);
+            validationService.addApplicantToContact(applicant);
         }
 
         Field applicantBasicInfoField = ReflectionUtils.findField(item.getClass(), "applicantBasicInfo");

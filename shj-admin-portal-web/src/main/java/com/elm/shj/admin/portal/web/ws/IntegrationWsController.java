@@ -891,5 +891,15 @@ public class IntegrationWsController {
 
     }
 
+    /**
+     * @param applicantUin
+     * @return badge
+     */
+    @GetMapping("/badge/generate/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findApplicantBadge(@PathVariable String applicantUin) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateApplicantBadge(applicantUin)).build());
+
+    }
+
 
 }
