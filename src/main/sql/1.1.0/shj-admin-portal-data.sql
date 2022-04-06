@@ -529,7 +529,7 @@ VALUES (1, 'MAKKAH', 'en', 'Makkah', GETDATE());
 INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, creation_date)
 VALUES (2, 'MAKKAH', 'ar', N'مكة المكرمة', GETDATE());
 
-INSERT INTO shc_portal.shc_housing_site_lk (id, code, lang, label, creation_date)
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, creation_date)
 VALUES (3, 'MADINA', 'en', 'Madina', GETDATE());
 
 INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label, creation_date)
