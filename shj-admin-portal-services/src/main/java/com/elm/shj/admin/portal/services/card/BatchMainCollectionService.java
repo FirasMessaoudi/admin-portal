@@ -100,6 +100,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                         log.error("Unable to open attached file", e);
                         throw new IllegalArgumentException("Unable to open attached file");
                     }
+
                 }
 
 
@@ -118,6 +119,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
 
 
             } catch (IOException | JSchException e) {
+                deleteDirectory(new File(root.toString()));
                 e.printStackTrace();
             }
         }
@@ -128,7 +130,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
         return mapList(batchMainCollectionRepository.findBatchStatusByReference(referenceNumber));
     }
 
-    boolean deleteDirectory(File directoryToBeDeleted) {
+    private boolean deleteDirectory(File directoryToBeDeleted) {
         File[] allContents = directoryToBeDeleted.listFiles();
         if (allContents != null) {
             for (File file : allContents) {
