@@ -67,4 +67,6 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
             "where applicantCard.batchId = :batchId " +
             "and applicantDigitalId.uin in :digitalIdList ")
     List<JpaApplicantCard> findApplicantCardsByPrintRequestBatchIdAndDigitalIds(@Param("digitalIdList") List<String> digitalIdList , @Param("batchId") long batchId);
+
+    JpaApplicantCard findByApplicantRitualId(long applicantRitualId);
 }

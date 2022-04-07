@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantBasicInfoVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -45,4 +46,12 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
     @Modifying
     @Query("UPDATE JpaApplicantRitual ar SET ar.dataRequestRecordId = :dataRequestRecordId, ar.updateDate = CURRENT_TIMESTAMP WHERE ar.id = :applicantRitualId")
     void updateDataRequestRecordId(@Param("dataRequestRecordId") long dataRequestRecordId, @Param("applicantRitualId") long applicantRitualId);
+
+    @Query("select new com.elm.shj.admin.portal.orm.entity.ApplicantBasicInfoVo(digitalId.uin, applicant.fullNameAr, applicant.fullNameEn,card.referenceNumber) from JpaApplicantCard card  " +
+            " join card.applicantRitual applicantRitual " +
+            " join applicantRitual.applicant applicant " +
+            " join JpaApplicantDigitalId digitalId  on digitalId.applicantId = applicant.id " +
+            "where card.statusCode = :cardStatusCode " +
+            "and digitalId.uin in :digitalIdList ")
+    List<ApplicantBasicInfoVo> findAllByApplicantDigitalIds(List<String> digitalIdList, String cardStatusCode);
 }

@@ -36,6 +36,9 @@
                             <directory>${basedir}/../shj-admin-portal-web-fe/dist</directory>
                         </resource>
                         <resource>
+                            <directory>${basedir}/../shj-admin-portal-services/src/main/resources</directory>
+                        </resource>
+                        <resource>
                             <directory>src/main/resources/static</directory>
                         </resource>
                     </webResources>

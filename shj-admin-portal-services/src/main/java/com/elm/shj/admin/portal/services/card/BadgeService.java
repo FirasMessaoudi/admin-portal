@@ -118,7 +118,8 @@ public class BadgeService {
         addCampRectangle(g2d, applicantRitualCardLite.getUnitCode(), applicantRitualCardLite.getGroupCode(), applicantRitualCardLite.getCampCode());
         addBusRectangle(g2d, applicantRitualCardLite.getBusNumber(), applicantRitualCardLite.getSeatNumber());
         addLeaderRectangle(g2d, applicantRitualCardLite.getLeaderNameAr(), applicantRitualCardLite.getLeaderMobile());
-        addBarCode(g2d, uin);
+        String decodedBarCode =  getBarCodeItemsAsString(uin,applicantRitualCardLite);
+        addBarCode(g2d, decodedBarCode);
 
         String imgStr = null;
         try {
@@ -216,13 +217,13 @@ public class BadgeService {
         }
     }
 
-    private void addBarCode(Graphics2D g2d, String uin) {
+    public void addBarCode(Graphics2D g2d, String decodedBarCode) {
         PDF417Writer barcodeWriter = new PDF417Writer();
         Map<EncodeHintType, Object> hintMap = new HashMap<>();
         hintMap.put(EncodeHintType.MARGIN, 0);
         BitMatrix bitMatrix;
         try {
-            bitMatrix = barcodeWriter.encode(uin, BarcodeFormat.PDF_417, BADGE_WIDTH*2/3, (int)Math.round(0.72*96), hintMap);
+            bitMatrix = barcodeWriter.encode(decodedBarCode, BarcodeFormat.PDF_417, BADGE_WIDTH*2/3, (int)Math.round(0.72*96), hintMap);
             BufferedImage barCodeImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
             g2d.drawImage(barCodeImage, (BADGE_WIDTH - barCodeImage.getWidth()) / 2 , BADGE_HEIGHT - barCodeImage.getHeight() - 34, null);
         }
@@ -328,4 +329,34 @@ public class BadgeService {
             layout.draw(g2d, rectX + (i * rectWidth/ headersAr.length) + (int) (rectWidth/ headersAr.length - font.getStringBounds(values[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 56);
         }
     }
+
+   private String convertArabicCharactersToUnicode(String input){
+
+        StringBuilder buf = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            if (ch >= 32 && ch < 127)
+                buf.append(ch);
+            else
+                buf.append(String.format("\\u%04x", (int) ch));
+        }
+        return buf.toString();
+    }
+    private String getBarCodeItemsAsString(String uin,ApplicantRitualCardLiteDto card) {
+        StringBuilder barCodeItems = new StringBuilder();
+        barCodeItems.append(uin);
+        barCodeItems.append(card.getCardId());
+        barCodeItems.append("#");
+        barCodeItems.append(card.getFullNameEn());
+        barCodeItems.append("#");
+        barCodeItems.append(convertArabicCharactersToUnicode(card.getFullNameAr()));
+        barCodeItems.append("#");
+        barCodeItems.append(card.getNationalityCode());
+        barCodeItems.append("#");
+        barCodeItems.append(card.getCompanyName());
+        barCodeItems.append("#");
+        return barCodeItems.toString();
+    }
+
+
 }
