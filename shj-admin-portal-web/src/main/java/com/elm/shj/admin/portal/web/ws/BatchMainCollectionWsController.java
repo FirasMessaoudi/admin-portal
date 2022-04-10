@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 /**
@@ -68,8 +69,7 @@ public class BatchMainCollectionWsController {
      */
     @PostMapping("/manifest/generate/{printRequestReferenceNumber}")
     public ResponseEntity<WsResponse<?>> generateManifestFileAsImages(@PathVariable("printRequestReferenceNumber") String printRequestReferenceNumber, @RequestBody BatchCollectionVO batchCollection) {
-      //  batchMainCollectionService.generateBatchCards(batchCollection);
-        ManifestVo manifest = manifestService.generateManifest(printRequestReferenceNumber, batchCollection, EManifestType.IMAGE);
+        List<ManifestVo> manifest = manifestService.generateManifest(printRequestReferenceNumber, batchCollection, EManifestType.IMAGE);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
                 manifest).build());
     }

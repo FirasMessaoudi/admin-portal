@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
 
 @Service
@@ -28,15 +27,15 @@ public class ManifestService {
     private final ApplicantRitualCardLiteService applicantCardService;
 
 
-    public ManifestVo generateManifest(String printRequestReferenceNumber, BatchCollectionVO batchCollection, EManifestType manifestType) {
+    public List<ManifestVo> generateManifest(String printRequestReferenceNumber, BatchCollectionVO batchCollection, EManifestType manifestType) {
         if (EManifestType.IMAGE == manifestType)
             return generateManifestAsImages(printRequestReferenceNumber, batchCollection);
         throw new IllegalArgumentException("Manifest Type not supported " + manifestType);
 
     }
 
-    private ManifestVo generateManifestAsImages(String printRequestReferenceNumber, BatchCollectionVO batchCollectionVO) {
-        List<String> manifestImages = new ArrayList<>();
+    private List<ManifestVo> generateManifestAsImages(String printRequestReferenceNumber, BatchCollectionVO batchCollectionVO) {
+        List<ManifestVo> manifestImages = new ArrayList<>();
         batchCollectionVO.getBatchMainCollections().forEach(batchMainCollectionDto -> batchMainCollectionDto.getSubCollections()
                 .forEach(subCollectionVO -> {
                     BufferedImage subCollectionImage = new BufferedImage(BADGE_WIDTH, BADGE_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
@@ -51,25 +50,26 @@ public class ManifestService {
                     drawRow(g2d, 3, Arrays.asList("Sub Collection Number", subCollectionVO.getReferenceNumber()));
                     List<ApplicantBasicInfoVo> applicantBasicInfoVoList = applicantCardService.findApplicantsBasicInfoByDigitalIds(subCollectionVO.getDigitalIds());
                     for (int i = 0; i < applicantBasicInfoVoList.size(); i++) {
-                        drawBody(g2d, applicantBasicInfoVoList.get(i + 4));
+                        drawBody(g2d, applicantBasicInfoVoList.get(i), i + 4);
                     }
                     try {
 
-                        manifestImages.add(ImageUtils.imgToBase64String(subCollectionImage));
+                        manifestImages.add(ManifestVo.builder()
+                                .referenceNumber(subCollectionVO.getReferenceNumber())
+                                .image(ImageUtils.imgToBase64String(subCollectionImage))
+                                .build());
                     } catch (IOException e) {
                         throw new RuntimeException("Error while converting image to base64");
                     }
                 }));
-        ManifestVo ManifestVo = com.elm.shj.admin.portal.services.dto.ManifestVo.builder()
-                .images(manifestImages).printRequestNumber(printRequestReferenceNumber)
 
-                .build();
-        return ManifestVo;
+        return manifestImages;
     }
 
-    private void drawBody(Graphics2D g2d, ApplicantBasicInfoVo applicantBasicInfoVo) {
-
-        drawRow(g2d, 3, Arrays.asList(applicantBasicInfoVo.getUin(), applicantBasicInfoVo.getFullNameAr(), applicantBasicInfoVo.getFullNameEn(), applicantBasicInfoVo.getSerialNumber()));
+    private void drawBody(Graphics2D g2d, ApplicantBasicInfoVo applicantBasicInfoVo, int index) {
+        if (applicantBasicInfoVo.getSerialNumber() == null)
+            return;
+        drawRow(g2d, index, Arrays.asList(applicantBasicInfoVo.getUin(), applicantBasicInfoVo.getFullNameAr(), applicantBasicInfoVo.getFullNameEn(), applicantBasicInfoVo.getSerialNumber()));
     }
 
     private void drawRow(Graphics2D g2d, int index, List<String> values) {

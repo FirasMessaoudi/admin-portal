@@ -53,5 +53,5 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
             " join JpaApplicantDigitalId digitalId  on digitalId.applicantId = applicant.id " +
             "where card.statusCode = :cardStatusCode " +
             "and digitalId.uin in :digitalIdList ")
-    List<ApplicantBasicInfoVo> findAllByApplicantDigitalIds(List<String> digitalIdList, String cardStatusCode);
+    List<ApplicantBasicInfoVo> findAllByApplicantDigitalIds(@Param("digitalIdList") List<String> digitalIdList,@Param("cardStatusCode") String cardStatusCode);
 }
