@@ -19,8 +19,8 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ManifestService {
-    private final static int BADGE_WIDTH = 3000;
-    private final static int BADGE_HEIGHT = 5000;
+    private final static int BADGE_WIDTH = 1000;
+    private final static int BADGE_HEIGHT = 3000;
     private final static int CELL_HEIGHT = 50;
     private final static int CELL_WIDTH = 500;
 
