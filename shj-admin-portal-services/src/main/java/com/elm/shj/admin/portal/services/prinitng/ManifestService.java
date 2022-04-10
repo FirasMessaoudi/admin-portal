@@ -84,6 +84,8 @@ public class ManifestService {
     private void drawCell(Graphics2D g2d, int y, int index, String value) {
 
         g2d.drawRect(CELL_WIDTH * index, y, CELL_WIDTH, CELL_HEIGHT);
+        if(value == null)
+            value = "---";
         g2d.drawString(value, 10 + (CELL_WIDTH * index), y + (CELL_HEIGHT / 2));
 
     }
