@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.card;
 
+import com.elm.shj.admin.portal.orm.repository.RitualTypeLookupRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantPackageService;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
 import com.elm.shj.admin.portal.services.dto.BadgeVO;
@@ -69,6 +70,7 @@ public class BadgeService {
     private final ApplicantRitualCardLiteService applicantCardService;
     private final ApplicantPackageService applicantPackageService;
     private final CountryLookupService countryLookupService;
+    private final RitualTypeLookupRepository ritualTypeLookupRepository;
 
     static {
         try {
@@ -88,7 +90,7 @@ public class BadgeService {
             log.error("Cannot generate badge, no ritual details for the applicant with {} uin", uin);
             return null;
         }
-
+        String ritualType = ritualTypeLookupRepository.findArabicByCodeAndLanguage(applicantRitualCardLite.getRitualType(), "ar");
         // get the nationality
         List<CountryLookupDto> mainLangCountryLookupList = countryLookupService.findAllByCode(applicantRitualCardLite.getNationalityCode());
         CountryLookupDto arabicCountryLookup = mainLangCountryLookupList.stream().filter(countryLookup -> countryLookup.getLang().equals("ar")).findFirst().orElse(null);
@@ -108,17 +110,18 @@ public class BadgeService {
 
         addHeaderBg(g2d);
         addFooterBg(g2d);
-
+        addZone(g2d);
+        g2d.setColor(new Color(86, 86, 86));
         addPilgrimImage(g2d, applicantRitualCardLite.getPhoto());
 
         addNameAndNationality(g2d, applicantRitualCardLite.getFullNameAr(), applicantRitualCardLite.getFullNameEn(), nationalityAr, nationalityEn);
 
-        addRitual(g2d, applicantRitualCardLite.getRitualType(), applicantRitualCardLite.getHijriSeason() + "");
+        addRitual(g2d, ritualType, applicantRitualCardLite.getHijriSeason() + "");
 
         addCampRectangle(g2d, applicantRitualCardLite.getUnitCode(), applicantRitualCardLite.getGroupCode(), applicantRitualCardLite.getCampCode());
         addBusRectangle(g2d, applicantRitualCardLite.getBusNumber(), applicantRitualCardLite.getSeatNumber());
         addLeaderRectangle(g2d, applicantRitualCardLite.getLeaderNameAr(), applicantRitualCardLite.getLeaderMobile());
-        String decodedBarCode =  getBarCodeItemsAsString(uin,applicantRitualCardLite);
+        String decodedBarCode = getBarCodeItemsAsString(uin, applicantRitualCardLite);
         addBarCode(g2d, decodedBarCode);
 
         String imgStr = null;
@@ -129,6 +132,25 @@ public class BadgeService {
         }
 
         return BadgeVO.builder().badgeImage(imgStr).build();
+    }
+
+    private void addZone(Graphics2D g2d) {
+        FontRenderContext frc = g2d.getFontRenderContext();
+
+        Font font = shaaerFont.deriveFont(32f);
+
+        g2d.setColor(Color.WHITE);
+        FontMetrics fm = g2d.getFontMetrics(font);
+
+        int xDif = ((BADGE_WIDTH - fm.stringWidth("النطاق")) - 450);
+        int yDif = 45;
+
+        TextLayout layout = new TextLayout("النطاق", font, frc);
+        layout.draw(g2d, xDif, yDif);
+        yDif += 44;
+        xDif += 5;
+        layout = new TextLayout("Zone", font, frc);
+        layout.draw(g2d, xDif, yDif);
     }
 
     private void addHeaderBg(Graphics2D g2d) {
@@ -163,14 +185,16 @@ public class BadgeService {
         FontRenderContext frc = g2d.getFontRenderContext();
 
         Font font = shaaerFont.deriveFont(22f);
-
+        xDif -= 30;
+        yDif += 10;
         TextLayout layout = new TextLayout(ritualType, font, frc);
         yDif += 22;
-        layout.draw(g2d, xDif + img.getWidth(null)/2 - 10, yDif);
+        layout.draw(g2d, xDif + img.getWidth(null) / 2 - 10, yDif);
         font = shaaerFont.deriveFont(26f);
+        xDif += 30;
         layout = new TextLayout(ritualYear, font, frc);
         yDif += 32;
-        layout.draw(g2d, xDif + img.getWidth(null)/2 - 22, yDif);
+        layout.draw(g2d, xDif + img.getWidth(null) / 2 - 22, yDif);
     }
 
     private void addNameAndNationality(Graphics2D g2d, String fullNameAr, String fullNameEn, String nationalityAr, String nationalityEn) {
@@ -200,6 +224,7 @@ public class BadgeService {
         fm = g2d.getFontMetrics(font);
 
         yDif += 30;
+        xDif += 95;
         layout = new TextLayout(nationalityAr, font, frc);
         layout.draw(g2d, xDif, yDif);
 
