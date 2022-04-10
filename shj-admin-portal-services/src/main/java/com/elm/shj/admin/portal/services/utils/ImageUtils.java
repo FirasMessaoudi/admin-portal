@@ -38,7 +38,7 @@ public class ImageUtils {
     public static BufferedImage loadFromClasspath(String path) {
         BufferedImage image = null;
         try {
-            image = ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream(path)));
+            image = ImageIO.read(Objects.requireNonNull(ImageUtils.class.getClassLoader().getResourceAsStream(path)));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

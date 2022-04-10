@@ -120,7 +120,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
 
             } catch (IOException | JSchException e) {
                 deleteDirectory(new File(root.toString()));
-                e.printStackTrace();
+                throw new IllegalArgumentException("Unable to find path");
             }
         }
 
