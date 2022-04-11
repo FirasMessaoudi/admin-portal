@@ -28,6 +28,7 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
   masterSelected: boolean;
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
+  seasonYear: number;
 
   constructor(private i18nService: I18nService,
               private formBuilder: FormBuilder,
@@ -38,6 +39,7 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.seasonYear = parseInt(localStorage.getItem('seasonYear'));
     this.initForm();
     this.loadLookups();
     this.masterSelected = false;
@@ -53,6 +55,7 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
     });
     this.cardService.findRitualSeasons().subscribe((result) => {
       this.ritualSeasons = result;
+      this.ritualSeasons = this.ritualSeasons.filter( season => season == this.seasonYear);
     });
 
     this.cardService.findCompanyNames().subscribe((result) => {
