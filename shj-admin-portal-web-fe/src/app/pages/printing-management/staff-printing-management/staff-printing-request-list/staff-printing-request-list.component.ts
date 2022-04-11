@@ -38,6 +38,7 @@ export class StaffPrintingRequestListComponent implements OnInit {
   maxDateGregorian: NgbDateStruct;
   maxDateHijri: NgbDateStruct;
   selectedDateType: any;
+  seasonYear: number;
 
   @ViewChild('datePicker') dateFromPicker: HijriGregorianDatepickerComponent
   @ViewChild('datePicker') dateToPicker: HijriGregorianDatepickerComponent;
@@ -66,6 +67,7 @@ export class StaffPrintingRequestListComponent implements OnInit {
       day: toDayHijri.day
     };
     this.selectedDateType = DateType.Gregorian;
+    this.seasonYear = parseInt(localStorage.getItem('seasonYear'));
     this.initForm();
     this.loadLookups();
     this.loadPage(0);
@@ -110,6 +112,7 @@ export class StaffPrintingRequestListComponent implements OnInit {
 
     this.staffPrintService.findRitualSeasons().subscribe((result) => {
       this.ritualSeasons = result;
+      this.ritualSeasons = this.ritualSeasons.filter( season => season == this.seasonYear);
     });
 
     this.staffPrintService.findCompanyNames().subscribe((result) => {

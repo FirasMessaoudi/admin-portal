@@ -59,6 +59,7 @@ export class StaffStepOneComponent implements OnInit {
   private searchSubscription: Subscription;
   ritualTypes: Lookup[] = [];
   ritualSeasons: any[] = [];
+  ritualSeasonYear: number;
 
 
   constructor(private modalService: NgbModal,
@@ -74,6 +75,7 @@ export class StaffStepOneComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ritualSeasonYear = parseInt(localStorage.getItem('seasonYear'));
     this.initForm();
     this.cardService.findCountries().subscribe(result => {
       this.nationalities = result;
@@ -90,6 +92,7 @@ export class StaffStepOneComponent implements OnInit {
 
     this.printService.findRitualSeasons().subscribe((result) => {
       this.ritualSeasons = result;
+      this.ritualSeasons = this.ritualSeasons.filter( season => season == this.ritualSeasonYear);
     });
   }
 
