@@ -72,6 +72,6 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
     JpaApplicantCard findByApplicantRitualId(long applicantRitualId);
 
     @Modifying
-    @Query("UPDATE JpaApplicantCard appCard SET appCard.statusCode=:status WHERE appCard.id IN :cardsIds")
+    @Query("UPDATE JpaApplicantCard appCard SET appCard.statusCode=:status, appCard.updateDate = CURRENT_TIMESTAMP WHERE appCard.id IN :cardsIds")
     void updateCardStatus(@Param("cardsIds") List<Long> cardsIds, @Param("status") String status);
 }
