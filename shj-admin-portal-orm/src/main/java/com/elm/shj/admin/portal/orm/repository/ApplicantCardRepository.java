@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -69,4 +70,8 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
     List<JpaApplicantCard> findApplicantCardsByPrintRequestBatchIdAndDigitalIds(@Param("digitalIdList") List<String> digitalIdList , @Param("batchId") long batchId);
 
     JpaApplicantCard findByApplicantRitualId(long applicantRitualId);
+
+    @Modifying
+    @Query("UPDATE JpaApplicantCard appCard SET appCard.statusCode=:status WHERE appCard.id IN :cardsIds")
+    void updateCardStatus(@Param("cardsIds") List<Long> cardsIds, @Param("status") String status);
 }
