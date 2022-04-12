@@ -765,3 +765,9 @@ VALUES (8, 'READY', 'en', 'Ready');
 SET
 IDENTITY_INSERT shc_portal.shc_collection_status_lk OFF;
 GO
+INSERT INTO shc_portal.shc_applicant_supplication (digital_id, label_ar,label_en,total_supplication, last_supplication_number) VALUES ('98717100000035', N'الحمدلله','Praise be to Allah',0,0);
+INSERT INTO shc_portal.shc_applicant_supplication (digital_id, label_ar,label_en,total_supplication, last_supplication_number) VALUES ('98717100000035', N'سبحان الله','Glory be to Allah',0,0);
+INSERT INTO shc_portal.shc_applicant_supplication (digital_id, label_ar,label_en,total_supplication, last_supplication_number) VALUES ('98717100000035', N'استغفر الله','I seek forgiveness from Allah',0,0);
+INSERT INTO shc_portal.shc_applicant_supplication (digital_id, label_ar,label_en,total_supplication, last_supplication_number) VALUES ('98717100000035', N'لا حول ولا قوة الا بالله','There is no power or strength except with Allah',10,5);
+
+GO

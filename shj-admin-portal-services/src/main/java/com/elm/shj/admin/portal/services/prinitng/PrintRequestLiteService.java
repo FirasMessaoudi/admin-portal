@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.prinitng;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatch;
+import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestCard;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
@@ -277,6 +278,8 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
     @Transactional
     public void updatePrintRequestStatus(long printRequestId) {
         printRequestRepository.updatePrintRequestStatus(printRequestId);
+        List<Long> cardsIds = printRequestCardRepository.findAllByPrintRequestId(printRequestId).stream().map(JpaPrintRequestCard::getCardId).collect(Collectors.toList());
+        applicantCardService.updateCardStatus(cardsIds);
     }
 
 }

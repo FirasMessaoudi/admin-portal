@@ -19,8 +19,8 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ManifestService {
-    private final static int BADGE_WIDTH = 3000;
-    private final static int BADGE_HEIGHT = 5000;
+    private final static int BADGE_WIDTH = 1000;
+    private final static int BADGE_HEIGHT = 3000;
     private final static int CELL_HEIGHT = 50;
     private final static int CELL_WIDTH = 500;
 
@@ -84,6 +84,8 @@ public class ManifestService {
     private void drawCell(Graphics2D g2d, int y, int index, String value) {
 
         g2d.drawRect(CELL_WIDTH * index, y, CELL_WIDTH, CELL_HEIGHT);
+        if(value == null)
+            value = "---";
         g2d.drawString(value, 10 + (CELL_WIDTH * index), y + (CELL_HEIGHT / 2));
 
     }

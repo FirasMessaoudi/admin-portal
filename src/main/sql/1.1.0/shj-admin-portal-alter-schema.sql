@@ -1471,9 +1471,28 @@ create table shc_portal.shc_batch_main_collection
 (
     id               int           not null primary key identity(1,1),
     reference_number varchar(50)   not null,
-    statusCode       varchar(50),
+    status_code       varchar(50),
     url              varchar(256),
     creation_date    smalldatetime not null default current_timestamp,
     update_date      smalldatetime null
+);
+GO
+
+
+/*--------------------------------------------------------
+--  ddl for islamic rosary table
+--------------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_applicant_supplication')
+create table shc_portal.shc_applicant_supplication
+(
+    id                          int PRIMARY KEY NOT NULL identity (1,1),
+    digital_id                  VARCHAR(45)     NOT NULL,
+    label_ar                    NVARCHAR(100)   NOT NULL,
+    label_en                    VARCHAR(100)    NOT NULL,
+    total_supplication          int              ,
+    last_supplication_number    int              ,
+    deleted                     bit             NOT NULL default 0,
+    creation_date               smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
 );
 GO
