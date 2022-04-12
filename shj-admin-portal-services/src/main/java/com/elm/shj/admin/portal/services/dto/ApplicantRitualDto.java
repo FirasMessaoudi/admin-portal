@@ -51,19 +51,19 @@ public class ApplicantRitualDto implements Serializable {
     @CellIndex(index = 5)
     private String groupReferenceNumber;
 
-    @VisaOrPermitNumber(allowEmpty = false)
+   // @VisaOrPermitNumber(allowEmpty = false)
     @CellIndex(index = 6)
     private String visaNumber;
 
-    @VisaOrPermitNumber(allowEmpty = false)
+    //@VisaOrPermitNumber(allowEmpty = false)
     @CellIndex(index = 7)
     private String permitNumber;
 
-    @OnlyCharacters(min = 5, max = 50, allowEmpty = false, allowNumbers = true, allowSpecialChars = true)
+    //@OnlyCharacters(min = 5, max = 50, allowEmpty = false, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 8)
     private String insuranceNumber;
 
-    @BorderNumber
+    //@BorderNumber
     @CellIndex(index = 9)
     private String borderNumber;
 

@@ -19,5 +19,4 @@ import java.util.List;
 public interface UserSurveyQuestionRepository extends JpaRepository<JpaUserSurveyQuestion, Long> {
     @Query("select s.rate from JpaUserSurveyQuestion s where :userSurveyId=s.userSurvey.id ")
     List<Integer> findRateByUserSurveyId(@Param("userSurveyId") long userSurveyId);
-
 }

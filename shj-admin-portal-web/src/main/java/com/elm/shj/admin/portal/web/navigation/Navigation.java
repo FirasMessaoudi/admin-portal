@@ -75,4 +75,5 @@ public class Navigation {
 	// Batch main collection
 	public static final String API_BATCH = "/api/ws/batch";
 
+	public static final String API_SUPPLICATIONS ="/api/ws/supplications";
 }

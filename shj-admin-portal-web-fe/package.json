@@ -26,8 +26,7 @@
   },
   "dependencies": {
     "@angular/animations": "~9.1.6",
-    "@dcc-commons-ng/pipes": "^2.0.0",
-    "@dcc-commons-ng/services": "^2.0.8",
+
     "@angular/cdk": "^9.2.4",
     "@angular/common": "~9.1.6",
     "@angular/compiler": "~9.1.6",
@@ -35,6 +34,8 @@
     "@angular/forms": "~9.1.6",
     "@angular/localize": "^9.1.7",
     "@angular/platform-browser": "~9.1.6",
+    "@dcc-commons-ng/pipes": "^2.0.0",
+    "@dcc-commons-ng/services": "^2.0.6",
     "@angular/platform-browser-dynamic": "~9.1.6",
     "@angular/router": "~9.1.6",
     "@angular/service-worker": "~9.1.6",

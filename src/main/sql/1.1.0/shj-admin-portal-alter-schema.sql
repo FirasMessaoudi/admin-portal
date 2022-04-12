@@ -1477,3 +1477,17 @@ create table shc_portal.shc_batch_main_collection
     update_date      smalldatetime null
 );
 GO
+
+
+if not exists(select * from sys.tables where name = 'shc_supplication_Lk')
+create table shc_portal.shc_supplication_Lk
+(
+    id                      int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code                    varchar(20)   NOT NULL,
+    lang                    varchar(45)   NOT NULL,
+    label                   nvarchar(255)  NOT NULL,
+    type                    nvarchar(100)  NOT NULL,
+    counter                 int            NOT NULL ,
+    creation_date           smalldatetime NOT NULL default current_timestamp,
+);
+GO
