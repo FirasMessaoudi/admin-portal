@@ -212,7 +212,7 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
         Long relativeApplicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(relativeApplicant.getId(), relativeApplicant.getPackageReferenceNumber());
         if (relativeApplicantRitualId != null) {
             String mainApplicantRelationshipCode = mapOwnerRelationship(applicantRelative.getRelationshipCode(), mainApplicant.getGender());
-            createChatContact(relativeApplicantUin, mainApplicant, applicantRelative.getApplicantRitual().getId(), mainApplicantRelationshipCode);
+            createChatContact(relativeApplicantUin, mainApplicant, relativeApplicantRitualId, mainApplicantRelationshipCode);
         }
     }
 
