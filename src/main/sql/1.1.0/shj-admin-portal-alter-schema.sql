@@ -1471,7 +1471,7 @@ create table shc_portal.shc_batch_main_collection
 (
     id               int           not null primary key identity(1,1),
     reference_number varchar(50)   not null,
-    statusCode       varchar(50),
+    status_code       varchar(50),
     url              varchar(256),
     creation_date    smalldatetime not null default current_timestamp,
     update_date      smalldatetime null
