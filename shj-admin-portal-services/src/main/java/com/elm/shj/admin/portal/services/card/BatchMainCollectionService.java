@@ -64,7 +64,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                     try {
                         for (SubCollectionVO subCollectionVO : batchMainCollectionDto.getSubCollections()) {
                             for (String digitalId : subCollectionVO.getDigitalIds()) {
-                                BadgeVO badge = badgeService.generateApplicantBadge(digitalId);
+                                BadgeVO badge = badgeService.generateApplicantBadge(digitalId, false);
                                 if (badge != null) {
                                     byte[] decodedImage = Base64.getDecoder().decode(badge.getBadgeImage());
                                     InputStream targetStream = new ByteArrayInputStream(decodedImage);

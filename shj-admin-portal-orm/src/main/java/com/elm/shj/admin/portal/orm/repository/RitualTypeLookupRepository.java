@@ -19,5 +19,5 @@ public interface RitualTypeLookupRepository extends JpaRepository<JpaRitualTypeL
     boolean existsByCode(String ritualTypeCode);
 
     @Query("select r.label from  JpaRitualTypeLookup r where r.code = :code and r.lang = :lang")
-    String findArabicByCodeAndLanguage(@Param("code") String code, @Param("lang") String lang);
+    String findLabelByCodeAndLanguage(@Param("code") String code, @Param("lang") String lang);
 }
