@@ -37,7 +37,7 @@ public class JpaBatchMainCollection implements Serializable {
     @Column(name = "reference_number", nullable = false)
     private String referenceNumber;
 
-    @Column(name = "statusCode")
+    @Column(name = "status_code")
     private String statusCode;
 
     private String url;

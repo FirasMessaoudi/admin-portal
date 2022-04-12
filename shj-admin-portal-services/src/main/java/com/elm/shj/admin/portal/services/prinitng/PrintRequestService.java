@@ -110,7 +110,10 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
             });
         } else {
             // No batching criteria selected save all printing cards as one batch
-            PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder().printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
+            //create sequence count to increase sequence number for each batch and avoid duplication
+            AtomicInteger sequenceCount = new AtomicInteger();
+            sequenceCount.set(printRequestBatchRepository.maxSequenceNumber() != null ? printRequestBatchRepository.maxSequenceNumber() + 1 : 1);
+            PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder().sequenceNumber(sequenceCount.getAndIncrement()).printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
             printRequest.getPrintRequestBatches().add(printRequestBatch);
         }
         // Return nested object
