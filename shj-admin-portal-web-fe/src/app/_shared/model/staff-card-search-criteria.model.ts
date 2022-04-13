@@ -6,4 +6,5 @@ export class StaffCardSearchCriteria {
   batchNumber: any;
   suin: any;
   ritualSeason: any;
+  jobTitle: any;
 }

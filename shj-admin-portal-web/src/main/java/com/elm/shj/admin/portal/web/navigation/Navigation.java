@@ -76,4 +76,7 @@ public class Navigation {
 	public static final String API_BATCH = "/api/ws/batch";
 
 	public static final String API_SUPPLICATIONS ="/api/ws/supplications";
+	//Rosary
+	public static final String API_ROSARY_INTEGRATION  = "/api/ws/rosary";
+
 }

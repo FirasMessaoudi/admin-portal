@@ -765,6 +765,7 @@ VALUES (8, 'READY', 'en', 'Ready');
 SET
 IDENTITY_INSERT shc_portal.shc_collection_status_lk OFF;
 GO
+
 SET IDENTITY_INSERT shc_portal.shc_supplication_Lk ON;
 INSERT INTO shc_portal.shc_supplication_Lk(id, code, lang, label, type, counter) VALUES (1,'1', 'en', 'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belonges whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.','Morning Supplications' ,3 ) ;
 INSERT INTO shc_portal.shc_supplication_Lk(id, code, lang, label, type, counter) VALUES(2,'1', 'ar', N'االلَّهُ لاَ إِلَـهَ إِلاَّ هُوَ الْحَيُّ الْقَيُّومُ لاَ تَأْخُذُهُ سِنَةٌ وَلاَ نَوْمٌ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلاَّ بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلاَ يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلاَّ بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلاَ يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ', N'اذكار الصباح', 3)  ;
@@ -783,4 +784,11 @@ INSERT INTO shc_portal.shc_supplication_Lk(id, code, lang, label, type, counter)
 INSERT INTO shc_portal.shc_supplication_Lk(id, code, lang, label, type, counter) VALUES(12,'7', 'ar', N'قُلْ هُوَ اللهُ أَحَدٌ اللهُ الصَّمَدُ  لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَد', N'اذكار المساء', 3)  ;
 
 SET IDENTITY_INSERT shc_portal.shc_supplication_Lk OFF;
+GO
+
+INSERT INTO shc_portal.shc_applicant_supplication (digital_id, label_ar,label_en,total_supplication, last_supplication_number) VALUES ('98717100000035', N'الحمدلله','Praise be to Allah',0,0);
+INSERT INTO shc_portal.shc_applicant_supplication (digital_id, label_ar,label_en,total_supplication, last_supplication_number) VALUES ('98717100000035', N'سبحان الله','Glory be to Allah',0,0);
+INSERT INTO shc_portal.shc_applicant_supplication (digital_id, label_ar,label_en,total_supplication, last_supplication_number) VALUES ('98717100000035', N'استغفر الله','I seek forgiveness from Allah',0,0);
+INSERT INTO shc_portal.shc_applicant_supplication (digital_id, label_ar,label_en,total_supplication, last_supplication_number) VALUES ('98717100000035', N'لا حول ولا قوة الا بالله','There is no power or strength except with Allah',10,5);
+
 GO
