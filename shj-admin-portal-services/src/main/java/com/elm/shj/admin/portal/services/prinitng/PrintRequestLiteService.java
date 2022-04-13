@@ -277,7 +277,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
 
     @Transactional
     public void updatePrintRequestStatus(long printRequestId) {
-        printRequestRepository.updatePrintRequestStatus(printRequestId);
+        printRequestRepository.updatePrintRequestStatus(printRequestId, EPrintRequestStatus.SENT_TO_PRINTING.name());
         List<Long> cardsIds = printRequestCardRepository.findAllByPrintRequestId(printRequestId).stream().map(JpaPrintRequestCard::getCardId).collect(Collectors.toList());
         applicantCardService.updateCardStatus(cardsIds);
     }

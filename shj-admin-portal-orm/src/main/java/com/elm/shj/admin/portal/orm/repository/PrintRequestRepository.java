@@ -57,7 +57,7 @@ public interface PrintRequestRepository extends JpaRepository<JpaPrintRequest, L
    JpaPrintRequest findByReferenceNumber(@Param("referenceNumber") String referenceNumber);
 
     @Modifying
-    @Query("UPDATE JpaPrintRequest pr SET pr.statusCode='SENT_TO_PRINTING', pr.updateDate = CURRENT_TIMESTAMP WHERE pr.id = :printRequestId")
-    void updatePrintRequestStatus(@Param("printRequestId") long printRequestId);
+    @Query("UPDATE JpaPrintRequest pr SET pr.statusCode=:status, pr.updateDate = CURRENT_TIMESTAMP WHERE pr.id = :printRequestId")
+    void updatePrintRequestStatus(@Param("printRequestId") long printRequestId, @Param("status") String status);
 
 }
