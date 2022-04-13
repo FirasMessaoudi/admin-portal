@@ -76,6 +76,17 @@
           <input type="text" formControlName="cardNumber" class="form-control"/>
         </div>
 
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.job_title" | translate }}</label>
+          <select formControlName="jobTitle" class="custom-select">
+            <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
+            <option *ngFor="let jobTitle of lookupService().localizedItems(groupLeaderJobTitles)"
+                    [ngValue]="jobTitle.code">
+              {{jobTitle.label}}
+            </option>
+          </select>
+        </div>
+
         <div class="form-group col-12">
           <button id="searchCard" type="submit" (click)="search()" class="btn btn-dcc-primary px-5 mr-3">
             {{ "general.btn_search" | translate }}
@@ -120,6 +131,7 @@
           <th scope="col">{{'card-management.applicant_id' | translate }}</th>
           <th scope="col">{{'general.nin' | translate }}</th>
           <th scope="col">{{'card-management.passport_number' | translate }}</th>
+          <th scope="col">{{'card-management.job_title' | translate }}</th>
           <th scope="col">{{'card-management.card_number' | translate}}</th>
           <th scope="col">{{'card-management.ritual_season' | translate}}</th>
           <th scope="col">{{'card-management.ritual_type' | translate}}</th>
@@ -149,6 +161,7 @@
           <td class="ltr">{{card?.companyStaffDigitalId?.suin}}</td>
           <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.idNumber}}</td>
           <td class="ltr">{{card?.companyStaffDigitalId?.companyStaff?.passportNumber}}</td>
+          <td class="ltr">{{lookupService().localizedLabel(groupLeaderJobTitles, card?.companyStaffDigitalId?.companyStaff?.titleCode)}}</td>
           <td class="ltr">{{card?.referenceNumber}}</td>
           <td class="ltr">{{card?.companyRitualSeason?.ritualSeason?.seasonYear}}</td>
           <td>{{lookupService().localizedLabel(ritualTypes, card?.companyRitualSeason?.ritualSeason?.ritualTypeCode)}}</td>

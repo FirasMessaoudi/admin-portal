@@ -105,6 +105,11 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
                 predicates.add(criteriaBuilder.equal(companyCode, criteria.getCompanyCode()));
             }
 
+            if (criteria.getJobTitle() != null) {
+                Join<JpaCompanyStaffCard, JpaCompanyStaffDigitalId> companyStaffDigitalId = root.join("companyStaffDigitalId");
+                predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("titleCode"), criteria.getJobTitle()));
+            }
+
             if (criteria.getCardStatus() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("statusCode"), criteria.getCardStatus()));
             }

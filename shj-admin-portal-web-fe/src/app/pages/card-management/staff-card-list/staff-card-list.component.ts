@@ -25,6 +25,7 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
   cardStatuses: Lookup[] = [];
   companyNames: CompanyLite[] = [];
   ritualSeasons: any[] = [];
+  groupLeaderJobTitles: Lookup[] = [];
   masterSelected: boolean;
   private listSubscription: Subscription;
   private searchSubscription: Subscription;
@@ -61,6 +62,9 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
     this.cardService.findCompanyNames().subscribe((result) => {
       this.companyNames = result;
     });
+    this.cardService.findGroupLeaderTitleLabels().subscribe((result) => {
+      this.groupLeaderJobTitles = result;
+    });
   }
 
   ngOnDestroy() {
@@ -84,7 +88,8 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
       batchNumber: null,
       suin: '',
       cardNumber: '',
-      cardStatus: null
+      cardStatus: null,
+      jobTitle: null
     });
   }
 
