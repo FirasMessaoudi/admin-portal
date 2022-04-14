@@ -895,9 +895,19 @@ public class IntegrationWsController {
      * @param applicantUin
      * @return badge
      */
-    @GetMapping("/badge/generate/{applicantUin}")
-    public ResponseEntity<WsResponse<?>> findApplicantBadge(@PathVariable String applicantUin) {
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateApplicantBadge(applicantUin, false)).build());
+    @GetMapping("/badge/generate/{applicantUin}/{withQr}")
+    public ResponseEntity<WsResponse<?>> findApplicantBadge(@PathVariable String applicantUin, @PathVariable boolean withQr) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateApplicantBadge(applicantUin, withQr)).build());
+
+    }
+
+    /**
+     * @param suin
+     * @return badge
+     */
+    @GetMapping("/badge/staff/generate/{suin}")
+    public ResponseEntity<WsResponse<?>> findApplicantBadge(@PathVariable String suin) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateStaffCard(suin)).build());
 
     }
 
