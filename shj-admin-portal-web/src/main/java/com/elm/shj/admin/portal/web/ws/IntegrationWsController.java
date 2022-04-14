@@ -893,7 +893,7 @@ public class IntegrationWsController {
 
     /**
      * @param applicantUin
-     * @return badge
+     * @return generated badge for applicant
      */
     @GetMapping("/badge/generate/{applicantUin}/{withQr}")
     public ResponseEntity<WsResponse<?>> findApplicantBadge(@PathVariable String applicantUin, @PathVariable boolean withQr) {
@@ -903,7 +903,7 @@ public class IntegrationWsController {
 
     /**
      * @param suin
-     * @return badge
+     * @return generated badge for staff
      */
     @GetMapping("/badge/staff/generate/{suin}")
     public ResponseEntity<WsResponse<?>> findApplicantBadge(@PathVariable String suin) {
