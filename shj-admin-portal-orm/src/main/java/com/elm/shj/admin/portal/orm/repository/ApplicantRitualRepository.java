@@ -51,7 +51,7 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
             " join card.applicantRitual applicantRitual " +
             " join applicantRitual.applicant applicant " +
             " join JpaApplicantDigitalId digitalId  on digitalId.applicantId = applicant.id " +
-            "where card.statusCode = :cardStatusCode " +
+            "where card.statusCode not in :cardStatusCodeList " +
             "and digitalId.uin in :digitalIdList ")
-    List<ApplicantBasicInfoVo> findAllByApplicantDigitalIds(@Param("digitalIdList") List<String> digitalIdList,@Param("cardStatusCode") String cardStatusCode);
+    List<ApplicantBasicInfoVo> findAllByApplicantDigitalIds(@Param("digitalIdList") List<String> digitalIdList,@Param("cardStatusCodeList") List<String> cardStatusCodeList);
 }

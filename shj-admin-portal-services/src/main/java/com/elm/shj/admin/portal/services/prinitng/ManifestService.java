@@ -19,8 +19,8 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ManifestService {
-    private final static int BADGE_WIDTH = 1000;
-    private final static int BADGE_HEIGHT = 3000;
+    private final static int BADGE_WIDTH = 3000;
+    private final static int BADGE_HEIGHT = 5000;
     private final static int CELL_HEIGHT = 50;
     private final static int CELL_WIDTH = 500;
 
@@ -49,8 +49,10 @@ public class ManifestService {
                     drawRow(g2d, 2, Arrays.asList("Collection Number", batchMainCollectionDto.getReferenceNumber()));
                     drawRow(g2d, 3, Arrays.asList("Sub Collection Number", subCollectionVO.getReferenceNumber()));
                     List<ApplicantBasicInfoVo> applicantBasicInfoVoList = applicantCardService.findApplicantsBasicInfoByDigitalIds(subCollectionVO.getDigitalIds());
+                   if(applicantBasicInfoVoList.size() != 0)
+                       drawRow(g2d, 4, Arrays.asList("Shaaer Digital Id", "English Name", "Arabic Name","Card Serial Number"));
                     for (int i = 0; i < applicantBasicInfoVoList.size(); i++) {
-                        drawBody(g2d, applicantBasicInfoVoList.get(i), i + 4);
+                        drawBody(g2d, applicantBasicInfoVoList.get(i), i + 5);
                     }
                     try {
 
@@ -68,7 +70,7 @@ public class ManifestService {
 
     private void drawBody(Graphics2D g2d, ApplicantBasicInfoVo applicantBasicInfoVo, int index) {
         if (applicantBasicInfoVo.getSerialNumber() == null)
-            return;
+            applicantBasicInfoVo.setSerialNumber("---");
         drawRow(g2d, index, Arrays.asList(applicantBasicInfoVo.getUin(), applicantBasicInfoVo.getFullNameAr(), applicantBasicInfoVo.getFullNameEn(), applicantBasicInfoVo.getSerialNumber()));
     }
 

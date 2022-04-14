@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,6 +85,6 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
     }
 
     public List<ApplicantBasicInfoVo> findApplicantsBasicInfoByDigitalIds(List<String> digitalIds) {
-        return  applicantRitualRepository.findAllByApplicantDigitalIds(digitalIds,ECardStatus.PRINTED.name());
+        return  applicantRitualRepository.findAllByApplicantDigitalIds(digitalIds, Arrays.asList(ECardStatus.CANCELLED.name(),ECardStatus.EXPIRED.name(),ECardStatus.SUSPENDED.name()));
     }
 }
