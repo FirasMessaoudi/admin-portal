@@ -51,7 +51,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
         } catch (IOException e) {
             throw new RuntimeException("Could not initialize folder for upload!");
         }
-        if (batchCollectionVO.getTarget().equals(EPrintingRequestTarget.APPLICANT.name())) {
+
             for (BatchMainCollectionDto batchMainCollectionDto : batchCollectionVO.getBatchMainCollections()) {
                 Optional<JpaBatchMainCollection> batchMainCollection = batchMainCollectionRepository.findTopByReferenceNumberOrderByCreationDateDesc(batchMainCollectionDto.getReferenceNumber());
                 if (!batchMainCollection.isPresent() || batchMainCollection.get().getStatusCode().equals(ECollectionStatus.FAIL_TO_GENERATE.name())) {
@@ -64,15 +64,18 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                     try {
                         for (SubCollectionVO subCollectionVO : batchMainCollectionDto.getSubCollections()) {
                             for (String digitalId : subCollectionVO.getDigitalIds()) {
-                                BadgeVO badge = badgeService.generateApplicantBadge(digitalId, false);
+                                BadgeVO badge;
+                                if (batchCollectionVO.getTarget().equals(EPrintingRequestTarget.APPLICANT.name())) {
+                                    badge = badgeService.generateApplicantBadge(digitalId, false);
+                                } else {
+                                    badge = badgeService.generateStaffCard(digitalId);
+                                }
                                 if (badge != null) {
                                     byte[] decodedImage = Base64.getDecoder().decode(badge.getBadgeImage());
                                     InputStream targetStream = new ByteArrayInputStream(decodedImage);
-                                    // String sftpPath = sftpService.generateSftpFilePath("card", digitalId, false);
                                     sftpPath = batchCollectionVO.getBatchReferenceNumber() + "/" + batchMainCollectionDto.getReferenceNumber() + "/" + subCollectionVO.getReferenceNumber();
                                     Path p = Files.createDirectories(root.resolve(Paths.get(sftpPath)));
                                     Files.copy(targetStream, p.resolve(Paths.get(digitalId + ".jpg")));
-                                    //  sftpService.uploadFile(sftpPath, targetStream, CARDS_CONFIG_PROPERTIES);
                                     log.info("file uploaded successfully to: {}", sftpPath);
                                 }
 
@@ -122,7 +125,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                 deleteDirectory(new File(root.toString()));
                 throw new IllegalArgumentException("Unable to find path");
             }
-        }
+
 
     }
 
