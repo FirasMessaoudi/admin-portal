@@ -563,14 +563,11 @@ public class BadgeService {
 
 
     private void addQrCodeRectangle(Graphics2D g2d, String uin, long cardId, String ritualType, int ritualSeason) {
-        // g2d.fillRect(0, 0, BADGE_WIDTH, MOBILE_BADGE_HEIGHT);
-        //   g2d.setPaint(new Color(59, 121, 55));
         int rectHeight = (int) Math.round(4 * 50);
         int rectWidth = BADGE_WIDTH;
         int rectX = 0;
         int rectY = uin.length() == 14 ? BADGE_HEIGHT + 14 : BADGE_HEIGHT;
         Rectangle2D roundedRectangle = new Rectangle2D.Float(rectX, rectY, rectWidth, rectHeight);
-        //roundedRectangle.fil(rectX,rectY,rectWidth,rectHeight);
         g2d.draw(roundedRectangle);
         g2d.setColor(new Color(235, 241, 235));
         g2d.fillRect(rectX, rectY, rectWidth, rectHeight);
