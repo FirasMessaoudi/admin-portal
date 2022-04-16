@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestBatchRepository;
+import com.elm.shj.admin.portal.orm.repository.PrintRequestRepository;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -18,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
 /**
  * Service handling print request
  *
@@ -33,6 +35,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
     private final CompanyStaffCardService staffCardService;
     private final PrintRequestBatchRepository printRequestBatchRepository;
+    private final PrintRequestRepository printRequestRepository;
 
     public PrintRequestDto prepare(List<CardVO> cards) {
         // create and save the print request
@@ -49,6 +52,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         // return the print request
         return printRequest;
     }
+
     /**
      * Generates a unique identifier for the print request
      *
@@ -139,5 +143,14 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         printRequest.setTarget(target);
         printRequest.setConfirmationDate(new Date());
         return super.save(printRequest);
+    }
+
+    public PrintRequestDto findByReferenceNumber(String referenceNumber) {
+        if(referenceNumber == null || referenceNumber.trim().isEmpty())
+            return null;
+        JpaPrintRequest jpaPrintRequest = printRequestRepository.findByReferenceNumber(referenceNumber);
+        if (jpaPrintRequest != null)
+            return this.getMapper().fromEntity(jpaPrintRequest, mappingContext);
+        return null;
     }
 }
