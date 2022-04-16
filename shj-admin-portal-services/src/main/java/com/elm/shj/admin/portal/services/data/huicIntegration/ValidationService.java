@@ -284,6 +284,10 @@ public class ValidationService {
     public void updateExistingApplicant(ApplicantDto applicant, long existingApplicantId) {
         applicant.setId(existingApplicantId);
         applicant.setUpdateDate(new Date());
+        List<ApplicantRitualDto> applicantRituals = applicantRitualService.findAllByApplicantId(existingApplicantId);
+        if (!applicantRituals.isEmpty()) {
+            applicant.setRituals(applicantRituals);
+        }
     }
 
     public void updateApplicantRitual(ApplicantRitualDto applicantRitualDto, Long savedApplicantRitualId, long applicantId, String applicantUin) {

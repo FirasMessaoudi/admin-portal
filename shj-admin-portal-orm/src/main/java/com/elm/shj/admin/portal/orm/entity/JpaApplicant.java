@@ -94,7 +94,7 @@ public class JpaApplicant implements Serializable {
     private List<JpaApplicantRelative> relatives;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(orphanRemoval = true, mappedBy = "applicant")
+    @OneToMany(orphanRemoval = true, mappedBy = "applicant", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<JpaApplicantRitual> rituals;
 
     @LazyCollection(LazyCollectionOption.FALSE)
