@@ -103,7 +103,7 @@ public class JpaApplicant implements Serializable {
 
     private boolean registered;
 
-    @Column(name = "first_package_reference_number")
+    @Column(name = "first_package_reference_number", updatable = false)
     private String packageReferenceNumber;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
