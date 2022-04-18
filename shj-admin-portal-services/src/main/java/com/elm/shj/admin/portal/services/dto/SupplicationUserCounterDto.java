@@ -1,9 +1,7 @@
-/*
- * Copyright (c) 2021 ELM. All rights reserved.
- */
 package com.elm.shj.admin.portal.services.dto;
 
 import lombok.*;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,15 +16,14 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ApplicantSupplicationDto implements Serializable {
-
-    private static final long serialVersionUID = -8325398355769557350L;
+public class SupplicationUserCounterDto implements Serializable {
+    private static final long serialVersionUID = 8039998593570573015L;
     private long id;
+    private String code;
     private String digitalId;
-    private String labelAr;
-    private String labelEn;
-    private int totalSupplication;
-    private int lastSupplicationNumber;
-    private boolean deleted;
+    private boolean suggested;
+    private int supplicationTotalCount;
+    private int supplicationLastCount;
     private Date creationDate;
+    private Date updateDate;
 }

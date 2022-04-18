@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.ws;
 
+import com.elm.shj.admin.portal.services.prinitng.PrintRequestBatchException;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestBatchService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -56,10 +57,16 @@ public class PrintingManagementWsController {
                 .body(printRequestLiteService.findPrintRequestBatches(refrenceNumber, target)).build());
     }
 
-    @PutMapping("/update-batch-details/{printRequestReferenceNumber}/{batchSequenceNumber}")
-    public ResponseEntity<WsResponse<?>> updateBatchDetails(@PathVariable String printRequestReferenceNumber, @PathVariable String batchSequenceNumber, @RequestBody Map<String, String> batchCards) {
-        printRequestBatchService.updatePrintRequestBatchCards(printRequestReferenceNumber, Integer.parseInt(batchSequenceNumber), batchCards);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).build());
+    @PutMapping("/update-batch-details/{printRequestReferenceNumber}/{batchSequenceNumber}/{updatePrintRequestStatus}")
+    public ResponseEntity<WsResponse<?>> updateBatchDetails(@PathVariable String printRequestReferenceNumber, @PathVariable String batchSequenceNumber, @RequestBody Map<String, String> batchCards, @PathVariable boolean updatePrintRequestStatus) {
+        try {
+            printRequestBatchService.updatePrintRequestBatchCards(printRequestReferenceNumber, Integer.parseInt(batchSequenceNumber), batchCards, updatePrintRequestStatus);
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).build());
+        } catch (PrintRequestBatchException e) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(e.getMessage()).build());
+        }
+
+
     }
 
 

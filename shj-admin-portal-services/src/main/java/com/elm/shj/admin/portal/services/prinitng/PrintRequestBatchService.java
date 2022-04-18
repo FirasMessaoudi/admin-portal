@@ -29,39 +29,73 @@ public class PrintRequestBatchService extends GenericService<JpaPrintRequestBatc
     private final PrintRequestBatchRepository printRequestBatchRepository;
     private final ApplicantCardService applicantCardService;
     private final CompanyStaffCardService companyStaffCardService;
+    private final PrintRequestService printRequestService;
 
-    public List<PrintRequestBatchDto> findPrintRequestBatches(long printRequestId){
+
+    public List<PrintRequestBatchDto> findPrintRequestBatches(long printRequestId) {
         return mapList(printRequestBatchRepository.findPrintRequestBatches(printRequestId));
     }
 
-    public List<PrintRequestBatchDto> findStaffPrintRequestBatches(long printRequestId){
+    public List<PrintRequestBatchDto> findStaffPrintRequestBatches(long printRequestId) {
         return mapList(printRequestBatchRepository.findStaffPrintRequestBatches(printRequestId));
     }
 
-    public void updatePrintRequestBatchCards(String printRequestReferenceNumber, int batchSequenceNumber, Map<String,String> cardsReferenceNumberMap) {
-        Optional<JpaPrintRequestBatch> batch = printRequestBatchRepository.findBySequenceNumberAndPrintRequestReferenceNumber(batchSequenceNumber,printRequestReferenceNumber);
+    public void updatePrintRequestBatchCards(String printRequestReferenceNumber, int batchSequenceNumber, Map<String, String> cardsReferenceNumberMap, boolean updatePrintRequestStatus) throws PrintRequestBatchException {
+        PrintRequestDto printRequestDto = printRequestService.findByReferenceNumber(printRequestReferenceNumber);
+        if (printRequestDto == null) {
+            throw new PrintRequestBatchException("Print request not found");
+        }
+        if (printRequestDto.getStatusCode().equalsIgnoreCase(EPrintRequestStatus.PROCESSED.name())) {
+            throw new PrintRequestBatchException("Print request already Processed ");
+        }
+        Optional<JpaPrintRequestBatch> batch = printRequestBatchRepository.findBySequenceNumberAndPrintRequestReferenceNumber(batchSequenceNumber, printRequestReferenceNumber);
         if (!batch.isPresent()) {
-            throw new IllegalArgumentException("Print request Batch not found");
+            throw new PrintRequestBatchException("Print request Batch not found");
         }
         PrintRequestBatchDto printRequestBatchDto = getMapper().fromEntity(batch.get(), mappingContext);
         String target = printRequestBatchDto.getPrintRequest().getTarget();
         if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
             List<ApplicantCardDto> applicantCardList = applicantCardService.findApplicantCardsByPrintRequestBatchIdAndDigitalIds(batch.get().getId(), cardsReferenceNumberMap.keySet());
-            applicantCardList.forEach(c->{
-                c.setStatusCode(ECardStatus.PRINTED.name());
-                c.setReferenceNumber(cardsReferenceNumberMap.get(c.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin()));
-                c.setUpdateDate(new Date());
+            if (applicantCardList.isEmpty()) {
+                throw new PrintRequestBatchException("Applicant cards not found");
+            }
+            applicantCardList.forEach(c -> {
+                String cardRefNumber = cardsReferenceNumberMap.get(c.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin());
+                if (c.getStatusCode().equalsIgnoreCase(ECardStatus.PRINTED.name()) == false
+                        && (c.getReferenceNumber() == null
+                        || c.getReferenceNumber().equalsIgnoreCase(cardRefNumber) == false)) {
+                    c.setStatusCode(ECardStatus.PRINTED.name());
+                    c.setReferenceNumber(cardRefNumber);
+                    c.setUpdateDate(new Date());
+                }
             });
             applicantCardService.saveAll(applicantCardList);
+            if (updatePrintRequestStatus) {
+                printRequestDto.setStatusCode(EPrintRequestStatus.PROCESSED.name());
+                printRequestDto.setUpdateDate(new Date());
+                printRequestService.save(printRequestDto);
+            }
         }
         if (target.equalsIgnoreCase(EPrintingRequestTarget.STAFF.name())) {
             List<CompanyStaffCardDto> staffCardList = companyStaffCardService.findStaffCardsByPrintRequestBatchIdAndDigitalIds(batch.get().getId(), cardsReferenceNumberMap.keySet());
-            staffCardList.forEach(c->{
-                c.setStatusCode(ECardStatus.PRINTED.name());
-                c.setReferenceNumber(cardsReferenceNumberMap.get(c.getCompanyStaffDigitalId().getSuin()));
-                c.setUpdateDate(new Date());
+            if (staffCardList.isEmpty()) {
+                throw new PrintRequestBatchException("Staff cards not found");
+            }
+            staffCardList.forEach(c -> {
+                String cardRefNumber = cardsReferenceNumberMap.get(c.getCompanyStaffDigitalId().getSuin());
+                if (c.getStatusCode().equalsIgnoreCase(ECardStatus.PRINTED.name()) == false
+                        && (c.getReferenceNumber() == null
+                        || c.getReferenceNumber().equalsIgnoreCase(cardRefNumber) == false)) {
+                    c.setUpdateDate(new Date());
+
+                    c.setStatusCode(ECardStatus.PRINTED.name());
+                    c.setReferenceNumber(cardRefNumber);
+                }
+
             });
             companyStaffCardService.saveAll(staffCardList);
+            printRequestDto.setStatusCode(EPrintRequestStatus.PROCESSED.name());
+            printRequestService.save(printRequestDto);
         }
     }
 }

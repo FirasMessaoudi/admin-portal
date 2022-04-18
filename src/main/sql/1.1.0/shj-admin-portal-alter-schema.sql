@@ -1478,9 +1478,13 @@ create table shc_portal.shc_batch_main_collection
 );
 GO
 
+Use shc_portal
 
-if not exists(select * from sys.tables where name = 'shc_supplication_Lk')
-create table shc_portal.shc_supplication_Lk
+exec sp_rename 'shc_portal.shc_supplication_Lk','shc_supplication_lk';
+Go
+
+if not exists(select * from sys.tables where name = 'shc_supplication_lk')
+create table shc_portal.shc_supplication_lk
 (
     id                      int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
     code                    varchar(20)   NOT NULL,
@@ -1497,17 +1501,43 @@ GO
 /*--------------------------------------------------------
 --  ddl for islamic rosary table
 --------------------------------------------------------*/
-if not exists(select * from sys.tables where name = 'shc_applicant_supplication')
-create table shc_portal.shc_applicant_supplication
+USE shc_portal
+GO
+if not exists(select * from sys.tables where name = 'shc_user_supplication')
+create table shc_portal.shc_user_supplication
 (
-    id                          int PRIMARY KEY NOT NULL identity (1,1),
-    digital_id                  VARCHAR(45)     NOT NULL,
-    label_ar                    NVARCHAR(100)   NOT NULL,
-    label_en                    VARCHAR(100)    NOT NULL,
-    total_supplication          int              ,
-    last_supplication_number    int              ,
-    deleted                     bit             NOT NULL default 0,
-    creation_date               smalldatetime   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id int PRIMARY KEY NOT NULL identity (1,1),
+    digital_id VARCHAR(45) NOT NULL,
+    code varchar(20) NOT NULL,
+    lang varchar(45) NOT NULL,
+    label nvarchar(100) NOT NULL,
+    deleted bit NOT NULL default 0,
+    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
 );
 GO
+if not exists(select * from sys.tables where name = 'shc_suggested_supplication_lk')
+create table shc_portal.shc_suggested_supplication_lk
+(
+    id                      int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code                    varchar(20)   NOT NULL,
+    lang                    varchar(45)   NOT NULL,
+    label                   nvarchar(100)  NOT NULL,
+    creation_date           smalldatetime NOT NULL default current_timestamp,
+);
+GO
+if not exists(select * from sys.tables where name = 'shc_supplication_user_counter')
+create table shc_portal.shc_supplication_user_counter
+(
+    id                          int             NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    digital_id                  VARCHAR(45)     NOT NULL,
+    code                        varchar(20)     NOT NULL,
+    supplication_total_count    int              ,
+    supplication_last_count     int              ,
+    suggested                   bit             NOT NULL default 0,
+    creation_date               smalldatetime   NOT NULL default current_timestamp,
+    update_date                 smalldatetime
+);
+GO
+
+

@@ -5,10 +5,12 @@ package com.elm.shj.admin.portal.services.data.huicIntegration;
 
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthDisease;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthImmunization;
 import com.elm.shj.admin.portal.orm.repository.ApplicantHealthDiseaseRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantHealthImmunizationRepository;
+import com.elm.shj.admin.portal.orm.repository.ApplicantHealthRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.data.validators.CheckFirst;
 import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
@@ -58,6 +60,7 @@ public class ValidationService {
     private final CycleAvoidingMappingContext mappingContext;
     private final ApplicationContext context;
     private final ApplicantHealthImmunizationRepository applicantHealthImmunizationRepository;
+    private final ApplicantHealthRepository applicantHealthRepository;
 
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {
@@ -194,7 +197,9 @@ public class ValidationService {
         }
         applicantHealth.setApplicant(ApplicantDto.builder().id(applicantId).build());
         applicantHealth.setApplicantRitual(ApplicantRitualDto.builder().id(applicantRitualId).build());
-        applicantHealthService.save(applicantHealth);
+        applicantHealthRepository.save((JpaApplicantHealth) findMapper(ApplicantHealthDto.class).toEntity(applicantHealth, mappingContext));
+        //  applicantHealthService.save(applicantHealth);
+
     }
 
     private void saveApplicantsMainData(ApplicantDto applicant) {
@@ -284,6 +289,10 @@ public class ValidationService {
     public void updateExistingApplicant(ApplicantDto applicant, long existingApplicantId) {
         applicant.setId(existingApplicantId);
         applicant.setUpdateDate(new Date());
+        List<ApplicantRitualDto> applicantRituals = applicantRitualService.findAllByApplicantId(existingApplicantId);
+        if (!applicantRituals.isEmpty()) {
+            applicant.setRituals(applicantRituals);
+        }
     }
 
     public void updateApplicantRitual(ApplicantRitualDto applicantRitualDto, Long savedApplicantRitualId, long applicantId, String applicantUin) {
