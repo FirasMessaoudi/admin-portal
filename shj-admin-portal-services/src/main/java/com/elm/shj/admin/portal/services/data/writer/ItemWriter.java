@@ -122,8 +122,9 @@ public class ItemWriter {
 
                 updateNestedApplicantInfo(applicantDto);
 
-                ApplicantDigitalIdDto applicantDigitalId = CollectionUtils.isNotEmpty(applicantDto.getDigitalIds()) ? applicantDto.getDigitalIds().get(0) : null;
-                String applicantUin = applicantDigitalId != null ? applicantDigitalId.getUin() : null;
+                //  ApplicantDigitalIdDto applicantDigitalId = CollectionUtils.isNotEmpty(applicantDto.getDigitalIds()) ? applicantDto.getDigitalIds().get(0) : null;
+                // String applicantUin = applicantDigitalId != null ? applicantDigitalId.getUin() : null;
+                String applicantUin = applicantDto.getId() > 0 ? digitalIdService.findApplicantUin(applicantDto.getId()) : null;
 
                 // create a new applicant ritual
                 ApplicantRitualDto applicantRitual = ApplicantRitualDto.builder().applicant(applicantDto).packageReferenceNumber(emergencyDto.getPackageReferenceNumber()).build();
