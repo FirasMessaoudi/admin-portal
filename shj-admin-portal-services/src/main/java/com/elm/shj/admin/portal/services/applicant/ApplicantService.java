@@ -8,11 +8,10 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
+import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.NotificationTemplateCategorizingDto;
-import com.elm.shj.admin.portal.services.dto.UpdateApplicantCmd;
+import com.elm.shj.admin.portal.services.audit.MobileAuditLogService;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +41,11 @@ import java.util.*;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto, Long> {
 
+    private final MobileAuditLogService mobileAuditLogService;
     private final ApplicantRepository applicantRepository;
     private final ApplicantContactRepository applicantContactRepository;
     private final ApplicantRitualService applicantRitualService;
+    private final ApplicantDigitalIdRepository applicantDigitalIdRepository;
     private final ApplicantPackageService applicantPackageService;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
 
@@ -249,6 +250,18 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     @Transactional
     public void updateLoggedInFromMobileAppFlag(boolean mobileLoggedIn, long applicantId) {
         applicantRepository.updateLoggedInFromMobileAppFlag(applicantId, mobileLoggedIn);
+        applicantDigitalIdRepository
+                .findByApplicantIdAndStatusCode(applicantId, EDigitalIdStatus.VALID.name())
+                .ifPresent(applicantDigitalId -> {
+                    MobileAuditLogDto mobileAuditLogDto = new MobileAuditLogDto();
+                    if(mobileLoggedIn) {
+                        mobileAuditLogDto.setEvent("User logged in");
+                    } else {
+                        mobileAuditLogDto.setEvent("User logged out");
+                    }
+                    mobileAuditLogDto.setUserId(applicantDigitalId.getUin());
+                    mobileAuditLogService.save(mobileAuditLogDto);
+                });
     }
 
     /**

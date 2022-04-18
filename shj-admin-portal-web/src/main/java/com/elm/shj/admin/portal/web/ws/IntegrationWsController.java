@@ -796,7 +796,7 @@ public class IntegrationWsController {
     }
 
     /**
-     * Updates user mobileLogin flag to tue when login, and false when logout
+     * Updates user mobileLogin flag to true when login, and false when logout
      *
      * @param uin            The UIN of the applicant.
      * @param mobileLoggedIn flag set to true when login, and false when logout
