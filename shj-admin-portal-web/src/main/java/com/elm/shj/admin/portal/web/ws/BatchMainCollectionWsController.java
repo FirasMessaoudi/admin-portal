@@ -65,7 +65,7 @@ public class BatchMainCollectionWsController {
      * batch cards that belong to batch or main collection or sub collection
      *
      * @param batchCollection the batch main collection with the batch reference number
-     * @return image or list of images (each image for sub collection)
+     * @return image or list of images (each sub collection in one image)
      */
     @PostMapping("/manifest/generate/{printRequestReferenceNumber}")
     public ResponseEntity<WsResponse<?>> generateManifestFileAsImages(@PathVariable("printRequestReferenceNumber") String printRequestReferenceNumber, @RequestBody BatchCollectionVO batchCollection) {
