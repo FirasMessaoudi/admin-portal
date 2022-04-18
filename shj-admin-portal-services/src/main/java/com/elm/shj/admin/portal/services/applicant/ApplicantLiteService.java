@@ -96,4 +96,11 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
         List<ApplicantStaffVO> applicantList  = applicantLiteRepository.findApplicantRitualByUin(uin, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
         return applicantList.size() == 0? Optional.empty(): Optional.of(applicantList.get(0));
     }
+
+    public Optional<ApplicantStaffVO> findApplicantRitualByUinAndCardId(String value) {
+        String uin = value.substring(0,value.length()-1);
+        long cardId = Long.parseLong(value.substring(value.length()-1));
+        List<ApplicantStaffVO> applicantList  = applicantLiteRepository.findApplicantRitualByUinAndCardId(uin, cardId);
+        return applicantList.size() == 0? Optional.empty(): Optional.of(applicantList.get(0));
+    }
 }

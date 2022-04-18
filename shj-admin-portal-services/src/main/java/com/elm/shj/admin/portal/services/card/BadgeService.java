@@ -537,11 +537,10 @@ public class BadgeService {
 
         StringBuilder buf = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
-            char ch = input.charAt(i);
-            if (ch >= 32 && ch < 127)
-                buf.append(ch);
-            else
-                buf.append(String.format("\\u%04x", (int) ch));
+            int ch = input.charAt(i);
+            buf.append(ch);
+            if(i<input.length()-1)
+                buf.append(",");
         }
         return buf.toString();
     }
