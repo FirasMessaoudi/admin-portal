@@ -785,10 +785,14 @@ INSERT INTO shc_portal.shc_supplication_lk(id, code, lang, label, type, counter)
 
 SET IDENTITY_INSERT shc_portal.shc_supplication_lk OFF;
 GO
-
-INSERT INTO shc_portal.shc_applicant_supplication (digital_id, label_ar,label_en,total_supplication, last_supplication_number) VALUES ('98717100000035', N'الحمدلله','Praise be to Allah',0,0);
-INSERT INTO shc_portal.shc_applicant_supplication (digital_id, label_ar,label_en,total_supplication, last_supplication_number) VALUES ('98717100000035', N'سبحان الله','Glory be to Allah',0,0);
-INSERT INTO shc_portal.shc_applicant_supplication (digital_id, label_ar,label_en,total_supplication, last_supplication_number) VALUES ('98717100000035', N'استغفر الله','I seek forgiveness from Allah',0,0);
-INSERT INTO shc_portal.shc_applicant_supplication (digital_id, label_ar,label_en,total_supplication, last_supplication_number) VALUES ('98717100000035', N'لا حول ولا قوة الا بالله','There is no power or strength except with Allah',10,5);
-
+SET IDENTITY_INSERT shc_suggested_supplication_lk ON;
+INSERT INTO shc_portal.shc_suggested_supplication_lk ( code, lang, label) VALUES ( 'SUGGESTEDSUPPLICATION1', 'ar', N'سبحان الله وبحمده سبحان الله العظيم');
+INSERT INTO shc_portal.shc_suggested_supplication_lk ( code, lang, label) VALUES ( 'SUGGESTEDSUPPLICATION1', 'en', 'Glory be to Allah');
+INSERT INTO shc_portal.shc_suggested_supplication_lk( code, lang, label) VALUES ( 'SUGGESTEDSUPPLICATION2', 'ar', N'الحمدلله');
+INSERT INTO shc_portal.shc_suggested_supplication_lk (code, lang, label) VALUES ('SUGGESTEDSUPPLICATION2', 'en', 'Praise be to Allah');
+INSERT INTO shc_portal.shc_suggested_supplication_lk ( code, lang, label) VALUES ( 'SUGGESTEDSUPPLICATION3', 'ar', N'استغفر الله');
+INSERT INTO shc_portal.shc_suggested_supplication_lk( code, lang, label) VALUES ( 'SUGGESTEDSUPPLICATION3', 'en', 'I seek forgiveness from Allah');
+INSERT INTO shc_portal.shc_suggested_supplication_lk ( code, lang, label) VALUES ( 'SUGGESTEDSUPPLICATION4', 'ar', N'لا حول ولا قوة الا بالله');
+INSERT INTO shc_portal.shc_suggested_supplication_lk( code, lang, label) VALUES ( 'SUGGESTEDSUPPLICATION4', 'en', 'There is no power or strength except with Allah');
+SET IDENTITY_INSERT shc_suggested_supplication_lk OFF;
 GO

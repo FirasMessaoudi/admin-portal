@@ -1515,3 +1515,37 @@ create table shc_portal.shc_applicant_supplication
 
 );
 GO
+EXEC sp_rename 'shc_portal.shc_applicant_supplication', 'shc_portal.shc_user_supplication';
+GO
+ALTER TABLE shc_portal.shc_user_supplication DROP COLUMN total_supplication;
+ALTER TABLE shc_portal.shc_user_supplication DROP COLUMN last_supplication_number;
+ALTER TABLE shc_portal.shc_user_supplication DROP COLUMN label_en;
+ALTER TABLE shc_portal.shc_user_supplication DROP COLUMN label_ar;
+GO
+ALTER TABLE shc_portal.shc_user_supplication ADD code VARCHAR(20) NOT NULL, lang VARCHAR(2) NOT NULL ,label NVARCHAR(100) NOT NULL;
+GO
+if not exists(select * from sys.tables where name = 'shc_suggested_supplication_lk')
+create table shc_portal.shc_suggested_supplication_lk
+(
+    id                      int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code                    varchar(20)   NOT NULL,
+    lang                    varchar(45)   NOT NULL,
+    label                   nvarchar(100)  NOT NULL,
+    creation_date           smalldatetime NOT NULL default current_timestamp,
+);
+GO
+if not exists(select * from sys.tables where name = 'shc_supplication_user_counter')
+create table shc_portal.shc_supplication_user_counter
+(
+    id                          int             NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    digital_id                  VARCHAR(45)     NOT NULL,
+    code                        varchar(20)     NOT NULL,
+    supplication_total_count    int              ,
+    supplication_last_count     int              ,
+    suggested                   bit             NOT NULL default 0,
+    creation_date               smalldatetime   NOT NULL default current_timestamp,
+    update_date                 smalldatetime
+);
+GO
+
+

@@ -18,15 +18,16 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ApplicantSupplicationDto implements Serializable {
+public class UserSupplicationDto implements Serializable {
 
     private static final long serialVersionUID = -8325398355769557350L;
     private long id;
     private String digitalId;
-    private String labelAr;
-    private String labelEn;
+    private String code;
+    private String lang;
+    private String label;
     private int totalSupplication;
     private int lastSupplicationNumber;
-    private boolean deleted;
+    private boolean Deleted;
     private Date creationDate;
 }

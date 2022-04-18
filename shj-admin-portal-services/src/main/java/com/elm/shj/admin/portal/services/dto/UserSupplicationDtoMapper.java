@@ -4,14 +4,14 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantSupplication;
+import com.elm.shj.admin.portal.orm.entity.JpaUserSupplication;
 import org.mapstruct.Mapper;
 /**
- * Mapper for {@link ApplicantSupplicationDto} class
+ * Mapper for {@link UserSupplicationDto} class
  *
  * @author r.chebbi
  * @since 1.1.0
  */
 @Mapper(componentModel = "spring")
-public abstract class ApplicantSupplicationDtoMapper implements IGenericMapper<ApplicantSupplicationDto, JpaApplicantSupplication>{
+public abstract class UserSupplicationDtoMapper implements IGenericMapper<UserSupplicationDto, JpaUserSupplication>{
 }
