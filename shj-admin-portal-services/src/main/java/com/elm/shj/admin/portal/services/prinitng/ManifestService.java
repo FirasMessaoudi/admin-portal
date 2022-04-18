@@ -1,7 +1,9 @@
 package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantBasicInfoVo;
+import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,13 +20,25 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ManifestService {
-    private final static int BADGE_WIDTH = 3000;
+    private final static int BADGE_WIDTH = 6000;
     private final static int BADGE_HEIGHT = 5000;
-    private final static int CELL_HEIGHT = 50;
-    private final static int CELL_WIDTH = 500;
-
+    private final static int CELL_HEIGHT = 100;
+    private final static int CELL_WIDTH = 1000;
     private final ApplicantRitualCardLiteService applicantCardService;
+    private static Font shaaerFont;
+    private final static String BADGE_RESOURCES_PATH = "badge/";
+    private final static String ELM_FONT_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "DINNextLTArabic-Regular-2.ttf";
 
+
+    static {
+        try {
+            shaaerFont = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(ManifestService.class.getClassLoader().getResourceAsStream(ELM_FONT_RESOURCE_FILE_NAME)));
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(shaaerFont);
+        } catch (IOException | FontFormatException e) {
+            log.error("Error while creating Shaaer font.", e);
+        }
+    }
 
     public List<ManifestVo> generateManifest(String printRequestReferenceNumber, BatchCollectionVO batchCollection, EManifestType manifestType) {
         if (EManifestType.IMAGE == manifestType)
@@ -35,6 +49,7 @@ public class ManifestService {
 
     private List<ManifestVo> generateManifestAsImages(String printRequestReferenceNumber, BatchCollectionVO batchCollectionVO) {
         List<ManifestVo> manifestImages = new ArrayList<>();
+
         batchCollectionVO.getBatchMainCollections().forEach(batchMainCollectionDto -> batchMainCollectionDto.getSubCollections()
                 .forEach(subCollectionVO -> {
                     BufferedImage subCollectionImage = new BufferedImage(BADGE_WIDTH, BADGE_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
@@ -43,14 +58,20 @@ public class ManifestService {
                     g2d.fillRect(0, 0, BADGE_WIDTH, BADGE_HEIGHT);
 
                     g2d.setColor(new Color(86, 86, 86));
+                    Font font = shaaerFont.deriveFont(40f);
+                    g2d.setFont(font);
                     drawRow(g2d, 0, Arrays.asList("Print Request Number", printRequestReferenceNumber));
                     drawRow(g2d, 1, Arrays.asList("Batch Number", batchCollectionVO.getBatchReferenceNumber()));
                     drawRow(g2d, 2, Arrays.asList("Collection Number", batchMainCollectionDto.getReferenceNumber()));
                     drawRow(g2d, 3, Arrays.asList("Sub Collection Number", subCollectionVO.getReferenceNumber()));
                     List<ApplicantBasicInfoVo> applicantBasicInfoVoList = applicantCardService.findApplicantsBasicInfoByDigitalIds(subCollectionVO.getDigitalIds());
                    if(applicantBasicInfoVoList.size() != 0)
+                        font = shaaerFont.deriveFont(30f);
+                        g2d.setFont(font);
                        drawRow(g2d, 4, Arrays.asList("Shaaer Digital Id", "English Name", "Arabic Name","Card Serial Number"));
                     for (int i = 0; i < applicantBasicInfoVoList.size(); i++) {
+                         font = shaaerFont.deriveFont(20f);
+                        g2d.setFont(font);
                         drawBody(g2d, applicantBasicInfoVoList.get(i), i + 5);
                     }
                     try {
@@ -85,6 +106,7 @@ public class ManifestService {
     private void drawCell(Graphics2D g2d, int y, int index, String value) {
 
         g2d.drawRect(CELL_WIDTH * index, y, CELL_WIDTH, CELL_HEIGHT);
+
         if(value == null)
             value = "---";
         g2d.drawString(value, 10 + (CELL_WIDTH * index), y + (CELL_HEIGHT / 2));
