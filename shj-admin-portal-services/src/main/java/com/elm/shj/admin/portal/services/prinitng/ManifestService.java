@@ -2,7 +2,6 @@ package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantBasicInfoVo;
 import com.elm.shj.admin.portal.services.dto.*;
-import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +70,7 @@ public class ManifestService {
     private void drawBody(Graphics2D g2d, ApplicantBasicInfoVo applicantBasicInfoVo, int index) {
         if (applicantBasicInfoVo.getSerialNumber() == null)
             applicantBasicInfoVo.setSerialNumber("---");
-        drawRow(g2d, index, Arrays.asList(applicantBasicInfoVo.getUin(), applicantBasicInfoVo.getFullNameAr(), applicantBasicInfoVo.getFullNameEn(), applicantBasicInfoVo.getSerialNumber()));
+        drawRow(g2d, index, Arrays.asList(applicantBasicInfoVo.getUin(), applicantBasicInfoVo.getFullNameEn(), applicantBasicInfoVo.getFullNameAr(), applicantBasicInfoVo.getSerialNumber()));
     }
 
     private void drawRow(Graphics2D g2d, int index, List<String> values) {
