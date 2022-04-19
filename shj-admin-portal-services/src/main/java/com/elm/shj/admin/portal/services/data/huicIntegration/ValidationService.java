@@ -8,15 +8,19 @@ import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthDisease;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthImmunization;
+import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import com.elm.shj.admin.portal.orm.repository.ApplicantHealthDiseaseRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantHealthImmunizationRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantHealthRepository;
+import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.data.validators.CheckFirst;
 import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.services.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -61,12 +65,16 @@ public class ValidationService {
     private final ApplicationContext context;
     private final ApplicantHealthImmunizationRepository applicantHealthImmunizationRepository;
     private final ApplicantHealthRepository applicantHealthRepository;
+    private final CompanyStaffService companyStaffService;
+    private final CompanyStaffRepository companyStaffRepository;
 
     @Transactional
-    public <T> List<ErrorResponse> validateData(List<T> items) {
+    public <T> List<ErrorResponse> validateData(List<T> items, Integer seasonYear) {
         List<ErrorResponse> errorResponses = new ArrayList<>();
         for (int i = 0; i < items.size(); i++) {
-
+            if (items.get(i).getClass().isAssignableFrom(CompanyStaffDto.class)) {
+                ((CompanyStaffDto) items.get(i)).setSeason(seasonYear);
+            }
             Set<ConstraintViolation<T>> violations = validator.validate(items.get(i));
             violations.addAll(validator.validate(items.get(i), CheckFirst.class));
             if (!items.get(i).getClass().isAssignableFrom(ApplicantHealthDto.class)) {
@@ -101,6 +109,9 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(ApplicantHealthImmunizationDto.class)) {
                     saveApplicantHealthImmunization((ApplicantHealthImmunizationDto) items.get(i));
                 }
+                if (items.get(i).getClass().isAssignableFrom(CompanyStaffDto.class)) {
+                    saveCompanyStaffMainData((CompanyStaffDto) items.get(i), seasonYear, errorResponses);
+                }
             }
 
         }
@@ -115,6 +126,24 @@ public class ValidationService {
 
 
         return errorResponses;
+    }
+
+    private void saveCompanyStaffMainData(CompanyStaffDto staff, Integer seasonYear, List<ErrorResponse> errorResponses) {
+        if (seasonYear != null && (DateUtils.getCurrentHijriYear() - 1 <= seasonYear && seasonYear <= (DateUtils.getCurrentHijriYear() + 1))) {
+            updateDate(staff.getDateOfBirthGregorian());
+            CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
+            if (existingStaff != null) {
+                updateExistingStaff(staff, existingStaff);
+            }
+            companyStaffRepository.save((JpaCompanyStaff) findMapper(CompanyStaffDto.class).toEntity(staff, mappingContext));
+        } else {
+
+            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse.setRowNumber(0);
+            errorResponse.getErrors().add(new ErrorItem(0, "season", "20011", "Season value is not correct"));
+            errorResponses.add(errorResponse);
+            return;
+        }
     }
 
 
@@ -289,10 +318,6 @@ public class ValidationService {
     public void updateExistingApplicant(ApplicantDto applicant, long existingApplicantId) {
         applicant.setId(existingApplicantId);
         applicant.setUpdateDate(new Date());
-        List<ApplicantRitualDto> applicantRituals = applicantRitualService.findAllByApplicantId(existingApplicantId);
-        if (!applicantRituals.isEmpty()) {
-            applicant.setRituals(applicantRituals);
-        }
     }
 
     public void updateApplicantRitual(ApplicantRitualDto applicantRitualDto, Long savedApplicantRitualId, long applicantId, String applicantUin) {
@@ -359,4 +384,10 @@ public class ValidationService {
         }
     }
 
+    public void updateExistingStaff(CompanyStaffDto staff, CompanyStaffDto existingStaff) {
+        staff.setId(existingStaff.getId());
+        staff.setDigitalIds(existingStaff.getDigitalIds());
+        staff.setDataRequestRecordId(existingStaff.getDataRequestRecordId());
+        staff.setApplicantGroups(existingStaff.getApplicantGroups());
+    }
 }

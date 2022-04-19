@@ -62,7 +62,7 @@
     <div class="input-group-append gregorian-hijri-buttons">
       <button
         class="btn btn-sm shadow-none {{selectedDateType == DateType.Hijri ? 'btn-'+buttonClass+' focus active' :  'btn-outline-'+ buttonClass}}"
-        (click)="hijriClick()" type="button" [disabled]="true">
+        (click)="hijriClick()" type="button" [disabled]="disabled">
         {{hijriLabel ? hijriLabel : 'Hijri'}}
       </button>
       <button

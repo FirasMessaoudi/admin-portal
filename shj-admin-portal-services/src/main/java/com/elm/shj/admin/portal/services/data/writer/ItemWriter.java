@@ -121,9 +121,14 @@ public class ItemWriter {
                 ApplicantRitualEmergencyDto applicantRitualEmergencyDto = emergencyDto.getApplicantRitualEmergencyDto();
 
                 updateNestedApplicantInfo(applicantDto);
+                // find old ald applicant rituals for existing applicant
+                if (applicantDto.getId() > 0) {
+                    List<ApplicantRitualDto> applicantRituals = applicantRitualService.findAllByApplicantId(applicantDto.getId());
+                    if (!applicantRituals.isEmpty()) {
+                        applicantDto.setRituals(applicantRituals);
+                    }
+                }
 
-                //  ApplicantDigitalIdDto applicantDigitalId = CollectionUtils.isNotEmpty(applicantDto.getDigitalIds()) ? applicantDto.getDigitalIds().get(0) : null;
-                // String applicantUin = applicantDigitalId != null ? applicantDigitalId.getUin() : null;
                 String applicantUin = applicantDto.getId() > 0 ? digitalIdService.findApplicantUin(applicantDto.getId()) : null;
 
                 // create a new applicant ritual
@@ -267,11 +272,7 @@ public class ItemWriter {
                 CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
                 // if record exists already in DB we need to update it
                 if (existingStaff != null) {
-                    staff.setId(existingStaff.getId());
-                    staff.setDigitalIds(existingStaff.getDigitalIds());
-                    // staff.setCompany(existingStaff.getCompany());
-                    staff.setDataRequestRecordId(existingStaff.getDataRequestRecordId());
-                    staff.setApplicantGroups(existingStaff.getApplicantGroups());
+                    validationService.updateExistingStaff(staff, existingStaff);
                     savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(staff, mappingContext));
                 } else {
                     savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));

@@ -45,6 +45,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
     public void generateBatchCards(BatchCollectionVO batchCollectionVO) {
         try {
             // create a temporary folder
+            deleteDirectory(new File(root.toString()));
             if (!Files.exists(root)) {
                 Files.createDirectory(root);
             }
