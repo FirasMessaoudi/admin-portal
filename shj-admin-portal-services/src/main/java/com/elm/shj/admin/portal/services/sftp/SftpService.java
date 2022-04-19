@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -373,7 +374,7 @@ public class SftpService {
                 sftp.get(path, outputStream);
                 log.info("Download file success. TargetPath: {}", path);
                 String fileName = path.substring(path.lastIndexOf("/") + 1);
-                return new ByteArrayResource(outputStream.toByteArray(), fileName);
+                return new ByteArrayResource(outputStream.toByteArray());
             }
         } catch (Exception e) {
             log.error("Download file failure. TargetPath: {}", path, e);

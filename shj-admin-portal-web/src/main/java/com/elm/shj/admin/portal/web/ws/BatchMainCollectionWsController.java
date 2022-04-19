@@ -91,7 +91,7 @@ public class BatchMainCollectionWsController {
 
         Resource fileResource = batchMainCollectionService.downloadBatchCards(referenceNumber);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileResource.getDescription() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + referenceNumber + ".zip\"")
                 .body(fileResource);
     }
 
