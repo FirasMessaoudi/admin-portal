@@ -8,11 +8,15 @@ import com.elm.shj.admin.portal.services.dto.BatchCollectionVO;
 import com.elm.shj.admin.portal.services.dto.EManifestType;
 import com.elm.shj.admin.portal.services.dto.ManifestVo;
 import com.elm.shj.admin.portal.services.prinitng.ManifestService;
+import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +44,8 @@ public class BatchMainCollectionWsController {
 
     private final BatchMainCollectionService batchMainCollectionService;
     private final ManifestService manifestService;
+
+    private final SftpService sftpService;
 
     /**
      * generate batch cards
@@ -74,5 +80,19 @@ public class BatchMainCollectionWsController {
                 manifest).build());
     }
 
+    /*
+     * download batch cards
+     *
+     * @param batchCollection the batch main collection with the batch reference number
+     * @return
+     */
+    @GetMapping(value = "/download/{referenceNumber}", produces = "application/zip")
+    public ResponseEntity<Resource> downloadBatchCards(@PathVariable("referenceNumber")String referenceNumber) throws Exception {
+
+        Resource fileResource = batchMainCollectionService.downloadBatchCards(referenceNumber);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + referenceNumber + ".zip\"")
+                .body(fileResource);
+    }
 
 }
