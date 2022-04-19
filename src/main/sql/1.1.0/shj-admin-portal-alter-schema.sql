@@ -1545,3 +1545,4 @@ ALTER TABLE shc_portal.shc_suggested_supplication_lk ALTER COLUMN code varchar(1
 ALTER TABLE shc_portal.shc_suggested_supplication_lk ALTER COLUMN label varchar(300) NOT NULL
 GO
 
+
