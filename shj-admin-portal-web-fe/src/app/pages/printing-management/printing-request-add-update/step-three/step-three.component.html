@@ -16,7 +16,7 @@
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mt-4">
   <div class="form-group col">
     <label class="form-label">{{'printing-management.request_description' | translate}}</label>
-    <textarea id="description" name="description" [(ngModel)]="description" rows="4" cols="50" class="form-control"></textarea>
+    <textarea id="description" name="description" maxlength="150" [(ngModel)]="description" rows="4" cols="50" class="form-control"></textarea>
   </div>
 </div>
 
