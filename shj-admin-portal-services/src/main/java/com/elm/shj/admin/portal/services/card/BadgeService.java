@@ -124,6 +124,9 @@ public class BadgeService {
         addStaffCamp(g2d, "");
         addCardStatus(g2d);
         addStaffFooterBg(g2d);
+        String decodedBarCode = getBarCodeForStaffItemsAsString(staffData, 1);
+        addBarCode(g2d, decodedBarCode);
+        //TODO why cardId is fixed
         addQrCodeRectangle(g2d, staffData.getSuin(), 1, ritualType, staffData.getRitualSeason());
         String imgStr = null;
         try {
@@ -175,7 +178,7 @@ public class BadgeService {
         addCampRectangle(g2d, applicantRitualCardLite.getUnitCode(), applicantRitualCardLite.getGroupCode(), applicantRitualCardLite.getCampCode());
         addBusRectangle(g2d, applicantRitualCardLite.getBusNumber(), applicantRitualCardLite.getSeatNumber());
         addLeaderRectangle(g2d, applicantRitualCardLite.getLeaderNameAr(), applicantRitualCardLite.getLeaderMobile());
-        String decodedBarCode = getBarCodeItemsAsString(uin, applicantRitualCardLite);
+        String decodedBarCode = getBarCodeFoApplicantItemsAsString(uin, applicantRitualCardLite);
         addBarCode(g2d, decodedBarCode);
         if (withQr) {
             addQrCodeRectangle(g2d, uin, applicantRitualCardLite.getCardId(), ritualType, applicantRitualCardLite.getHijriSeason());
@@ -537,15 +540,14 @@ public class BadgeService {
 
         StringBuilder buf = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
-            char ch = input.charAt(i);
-            if (ch >= 32 && ch < 127)
-                buf.append(ch);
-            else
-                buf.append(String.format("\\u%04x", (int) ch));
+            int ch = input.charAt(i);
+            buf.append(ch);
+            if(i<input.length()-1)
+                buf.append(",");
         }
         return buf.toString();
     }
-    private String getBarCodeItemsAsString(String uin,ApplicantRitualCardLiteDto card) {
+    private String getBarCodeFoApplicantItemsAsString(String uin,ApplicantRitualCardLiteDto card) {
         StringBuilder barCodeItems = new StringBuilder();
         barCodeItems.append(uin);
         barCodeItems.append(card.getCardId());
@@ -557,6 +559,22 @@ public class BadgeService {
         barCodeItems.append(card.getNationalityCode());
         barCodeItems.append("#");
         barCodeItems.append(card.getCompanyName());
+        barCodeItems.append("#");
+        return barCodeItems.toString();
+    }
+
+    private String getBarCodeForStaffItemsAsString(CompanyStaffVO staffData, long cardId) {
+        StringBuilder barCodeItems = new StringBuilder();
+        barCodeItems.append(staffData.getSuin());
+        barCodeItems.append(cardId);
+        barCodeItems.append("#");
+        barCodeItems.append(staffData.getFullNameEn());
+        barCodeItems.append("#");
+        barCodeItems.append(convertArabicCharactersToUnicode(staffData.getFullNameAr()));
+        barCodeItems.append("#");
+        barCodeItems.append(staffData.getJobTitleCode());
+        barCodeItems.append("#");
+        barCodeItems.append(staffData.getCompanyLabelEn());
         barCodeItems.append("#");
         return barCodeItems.toString();
     }

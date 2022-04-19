@@ -17,12 +17,12 @@ import java.util.Date;
  * @since 1.1.0
  */
 @Entity
-@Table(name = "shc_applicant_supplication")
-@NamedQuery(name = "shc_applicant_supplication", query = "SELECT j FROM JpaApplicantSupplication j")
+@Table(name = "shc_user_supplication")
+@NamedQuery(name = "shc_user_supplication", query = "SELECT j FROM JpaUserSupplication  j")
 @Getter
 @Setter
 @NoArgsConstructor
-public class JpaApplicantSupplication implements Serializable {
+public class JpaUserSupplication implements Serializable {
     private static final long serialVersionUID = -1523933134279344057L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,17 +32,14 @@ public class JpaApplicantSupplication implements Serializable {
     @Column(name = "digital_id",nullable = false,updatable = false)
     private String digitalId;
 
-    @Column(name = "label_ar")
-    private String labelAr;
+    @Column(name = "code", nullable = false)
+    private String code;
 
-    @Column(name = "label_en", nullable = false)
-    private String labelEn;
+    @Column(name = "lang", nullable = false)
+    private String lang;
 
-    @Column(name = "total_supplication")
-    private int totalSupplication;
-
-    @Column(name = "last_supplication_number")
-    private int lastSupplicationNumber;
+    @Column(name = "label", nullable = false)
+    private String label;
 
     private boolean deleted;
 

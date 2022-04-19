@@ -12,6 +12,8 @@ import com.jcraft.jsch.JSchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -145,4 +147,8 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
     }
 
 
+    public Resource downloadBatchCards(String referenceNumber) throws Exception {
+        Optional<JpaBatchMainCollection> batchMainCollectionOptional = batchMainCollectionRepository.findTopByReferenceNumberOrderByCreationDateDesc(referenceNumber);
+        return sftpService.downloadCardsZipFile(batchMainCollectionOptional.map(JpaBatchMainCollection::getUrl).get());
+    }
 }

@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -360,5 +362,25 @@ public class SftpService {
 
         }
 
+    }
+
+    public Resource downloadCardsZipFile(String path) throws Exception {
+        SftpProperties config = this.getSftpPropertiesConfig(CARDS_CONFIG_PROPERTIES);
+        log.info("Download File Started, ftpServer [{}:{}], ftpPath [{}]", config.getHost(), config.getPort(), path);
+        ChannelSftp sftp = this.createSftp(CARDS_CONFIG_PROPERTIES);
+        try {
+            sftp.cd(config.getRootFolder());
+            try(ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                sftp.get(path, outputStream);
+                log.info("Download file success. TargetPath: {}", path);
+                String fileName = path.substring(path.lastIndexOf("/") + 1);
+                return new ByteArrayResource(outputStream.toByteArray());
+            }
+        } catch (Exception e) {
+            log.error("Download file failure. TargetPath: {}", path, e);
+            throw new Exception("Download File failure from SFTP");
+        } finally {
+            this.disconnect(sftp);
+        }
     }
 }
