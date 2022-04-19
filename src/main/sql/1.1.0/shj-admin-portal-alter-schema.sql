@@ -1539,5 +1539,9 @@ create table shc_portal.shc_supplication_user_counter
     update_date                 smalldatetime
 );
 GO
-
+USE shc_portal
+GO
+ALTER TABLE shc_portal.shc_suggested_supplication_lk ALTER COLUMN code varchar(100) NOT NULL
+ALTER TABLE shc_portal.shc_suggested_supplication_lk ALTER COLUMN label varchar(300) NOT NULL
+GO
 
