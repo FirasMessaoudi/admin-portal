@@ -20,7 +20,6 @@ import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
-import com.elm.shj.admin.portal.services.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -110,40 +109,23 @@ public class ValidationService {
                     saveApplicantHealthImmunization((ApplicantHealthImmunizationDto) items.get(i));
                 }
                 if (items.get(i).getClass().isAssignableFrom(CompanyStaffDto.class)) {
-                    saveCompanyStaffMainData((CompanyStaffDto) items.get(i), seasonYear, errorResponses);
+                    saveCompanyStaffMainData((CompanyStaffDto) items.get(i));
                 }
             }
 
         }
-        /*errorResponses.forEach(errorResponse -> {
-                    List<ErrorItem> unique = errorResponse.getErrors().stream()
-                            .collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(ErrorItem::getAttributeName))),
-                                    ArrayList::new));
-                    errorResponse.setErrors(unique);
-                }
-
-        );*/
 
 
         return errorResponses;
     }
 
-    private void saveCompanyStaffMainData(CompanyStaffDto staff, Integer seasonYear, List<ErrorResponse> errorResponses) {
-        if (seasonYear != null && (DateUtils.getCurrentHijriYear() - 1 <= seasonYear && seasonYear <= (DateUtils.getCurrentHijriYear() + 1))) {
-            updateDate(staff.getDateOfBirthGregorian());
-            CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
-            if (existingStaff != null) {
-                updateExistingStaff(staff, existingStaff);
-            }
-            companyStaffRepository.save((JpaCompanyStaff) findMapper(CompanyStaffDto.class).toEntity(staff, mappingContext));
-        } else {
-
-            ErrorResponse errorResponse = new ErrorResponse();
-            errorResponse.setRowNumber(0);
-            errorResponse.getErrors().add(new ErrorItem(0, "season", "20011", "Season value is not correct"));
-            errorResponses.add(errorResponse);
-            return;
+    private void saveCompanyStaffMainData(CompanyStaffDto staff) {
+        updateDate(staff.getDateOfBirthGregorian());
+        CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
+        if (existingStaff != null) {
+            updateExistingStaff(staff, existingStaff);
         }
+        companyStaffRepository.save((JpaCompanyStaff) findMapper(CompanyStaffDto.class).toEntity(staff, mappingContext));
     }
 
 
