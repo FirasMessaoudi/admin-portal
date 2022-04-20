@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -38,8 +39,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * Service handling applicant and staff badge generation
@@ -90,7 +91,7 @@ public class BadgeService {
 
     static {
         try {
-            shaaerFont = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(BadgeService.class.getClassLoader().getResourceAsStream(ELM_FONT_RESOURCE_FILE_NAME)));
+            shaaerFont = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(new ClassPathResource(ELM_FONT_RESOURCE_FILE_NAME).getInputStream()));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(shaaerFont);
         } catch (IOException | FontFormatException e) {
