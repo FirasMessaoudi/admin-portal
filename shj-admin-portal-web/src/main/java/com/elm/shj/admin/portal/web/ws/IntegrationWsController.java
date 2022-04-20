@@ -916,7 +916,7 @@ public class IntegrationWsController {
      *
      * @param uin The UIN of the applicant.
      */
-    @PutMapping("/applicant/save-register-event/{uin}")
+    @GetMapping("/applicant/save-register-event/{uin}")
     public ResponseEntity<WsResponse<?>> storeSignupEventFromMobile(@PathVariable String uin) {
         Optional<ApplicantDto> applicant = applicantService.findByUin(uin);
         if (applicant.isPresent()) {
