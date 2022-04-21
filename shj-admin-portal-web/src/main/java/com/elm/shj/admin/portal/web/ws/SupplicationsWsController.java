@@ -31,8 +31,8 @@ public class SupplicationsWsController {
      * @param type the type of the supplication
      * @return the supplications
      */
-    //TODO: Don't use camel case name in URI findSupplications and remove findSupplications as supplications is already in the URI.
-    @GetMapping("/findSupplications/{type}")
+
+    @GetMapping("/find/{type}")
     public ResponseEntity<WsResponse<?>> findSupplicationsByType(@PathVariable("type") String type) {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(supplicationsService.findSupplicationsListByType(type)).build());
