@@ -125,7 +125,7 @@ public class BadgeService {
         addCardStatus(g2d);
         addStaffFooterBg(g2d);
         String decodedBarCode = getBarCodeForStaffItemsAsString(staffData, 1);
-        addBarCode(g2d, decodedBarCode);
+        addBarCode(g2d, decodedBarCode, false);
         //TODO why cardId is fixed
         addQrCodeRectangle(g2d, staffData.getSuin(), 1, ritualType, staffData.getRitualSeason());
         String imgStr = null;
@@ -179,7 +179,7 @@ public class BadgeService {
         addBusRectangle(g2d, applicantRitualCardLite.getBusNumber(), applicantRitualCardLite.getSeatNumber());
         addLeaderRectangle(g2d, applicantRitualCardLite.getLeaderNameAr(), applicantRitualCardLite.getLeaderMobile());
         String decodedBarCode = getBarCodeFoApplicantItemsAsString(uin, applicantRitualCardLite);
-        addBarCode(g2d, decodedBarCode);
+        addBarCode(g2d, decodedBarCode, true);
         if (withQr) {
             addQrCodeRectangle(g2d, uin, applicantRitualCardLite.getCardId(), ritualType, applicantRitualCardLite.getHijriSeason());
         }
@@ -402,15 +402,16 @@ public class BadgeService {
         }
     }
 
-    public void addBarCode(Graphics2D g2d, String decodedBarCode) {
+    public void addBarCode(Graphics2D g2d, String decodedBarCode, boolean isApplicant) {
         PDF417Writer barcodeWriter = new PDF417Writer();
         Map<EncodeHintType, Object> hintMap = new HashMap<>();
         hintMap.put(EncodeHintType.MARGIN, 0);
         BitMatrix bitMatrix;
         try {
-            bitMatrix = barcodeWriter.encode(decodedBarCode, BarcodeFormat.PDF_417, BADGE_WIDTH*2/3, (int)Math.round(0.72*96), hintMap);
+            bitMatrix = barcodeWriter.encode(decodedBarCode, BarcodeFormat.PDF_417, BADGE_WIDTH * 2 / 3, (int) Math.round(0.72 * 96), hintMap);
             BufferedImage barCodeImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
-            g2d.drawImage(barCodeImage, (BADGE_WIDTH - barCodeImage.getWidth()) / 2 , BADGE_HEIGHT - barCodeImage.getHeight() - 34, null);
+            int yDiff = isApplicant ? BADGE_HEIGHT - barCodeImage.getHeight() - 34 : BADGE_HEIGHT - barCodeImage.getHeight() - 54;
+            g2d.drawImage(barCodeImage, (BADGE_WIDTH - barCodeImage.getWidth()) / 2, yDiff, null);
         }
         catch (WriterException e) {
             log.error("Error while writing the bar code", e);

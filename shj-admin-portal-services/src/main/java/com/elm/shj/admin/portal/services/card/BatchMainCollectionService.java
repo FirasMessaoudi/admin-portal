@@ -10,9 +10,10 @@ import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.jcraft.jsch.JSchException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -41,8 +43,13 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
     private static final String CARDS_CONFIG_PROPERTIES = "cardsConfigProperties";
     private final BatchMainCollectionRepository batchMainCollectionRepository;
     private final Path root = Paths.get("uploads");
+    @Value("${data.generation.max-retries}")
+    private int maxRetries;
+    @Value("${data.generation.retry.period}")
+    private int retryPeriod;
 
 
+    @SneakyThrows
     @Async
     public void generateBatchCards(BatchCollectionVO batchCollectionVO) {
         try {
@@ -55,17 +62,21 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
             throw new RuntimeException("Could not initialize folder for upload!");
         }
 
-            for (BatchMainCollectionDto batchMainCollectionDto : batchCollectionVO.getBatchMainCollections()) {
-                Optional<JpaBatchMainCollection> batchMainCollection = batchMainCollectionRepository.findTopByReferenceNumberOrderByCreationDateDesc(batchMainCollectionDto.getReferenceNumber());
-                if (!batchMainCollection.isPresent() || batchMainCollection.get().getStatusCode().equals(ECollectionStatus.FAIL_TO_GENERATE.name())) {
-                    if (batchMainCollection.isPresent()) {
-                        batchMainCollectionDto.setId(batchMainCollection.get().getId());
-                    }
-                    batchMainCollectionDto.setStatusCode(ECollectionStatus.GENERATING_CARDS.name());
-                    BatchMainCollectionDto savedBatchMainCollection = save(batchMainCollectionDto);
-                    String sftpPath = "";
+        for (BatchMainCollectionDto batchMainCollectionDto : batchCollectionVO.getBatchMainCollections()) {
+            Optional<JpaBatchMainCollection> batchMainCollection = batchMainCollectionRepository.findTopByReferenceNumberOrderByCreationDateDesc(batchMainCollectionDto.getReferenceNumber());
+            if (!batchMainCollection.isPresent() || batchMainCollection.get().getStatusCode().equals(ECollectionStatus.FAIL_TO_GENERATE.name())) {
+                if (batchMainCollection.isPresent()) {
+                    batchMainCollectionDto.setId(batchMainCollection.get().getId());
+                }
+                batchMainCollectionDto.setStatusCode(ECollectionStatus.GENERATING_CARDS.name());
+                BatchMainCollectionDto savedBatchMainCollection = save(batchMainCollectionDto);
+                String sftpPath = "";
+                for (int i = 0; i <= maxRetries; i++) {
                     try {
+
                         for (SubCollectionVO subCollectionVO : batchMainCollectionDto.getSubCollections()) {
+
+
                             for (String digitalId : subCollectionVO.getDigitalIds()) {
                                 BadgeVO badge;
                                 if (batchCollectionVO.getTarget().equals(EPrintingRequestTarget.APPLICANT.name())) {
@@ -78,7 +89,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                                     InputStream targetStream = new ByteArrayInputStream(decodedImage);
                                     sftpPath = batchCollectionVO.getBatchReferenceNumber() + "/" + batchMainCollectionDto.getReferenceNumber() + "/" + subCollectionVO.getReferenceNumber();
                                     Path p = Files.createDirectories(root.resolve(Paths.get(sftpPath)));
-                                    Files.copy(targetStream, p.resolve(Paths.get(digitalId + ".jpg")));
+                                    Files.copy(targetStream, p.resolve(Paths.get(digitalId + ".jpg")), StandardCopyOption.REPLACE_EXISTING);
                                     log.info("file uploaded successfully to: {}", sftpPath);
                                 }
 
@@ -98,36 +109,41 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                         savedBatchMainCollection.setStatusCode(ECollectionStatus.READY.name());
                         savedBatchMainCollection.setUrl(zipPath);
                         save(savedBatchMainCollection);
+                        break;
 
 
                     } catch (Exception e) {
-                        savedBatchMainCollection.setStatusCode(ECollectionStatus.FAIL_TO_GENERATE.name());
-                        save(savedBatchMainCollection);
                         log.error("Unable to open attached file", e);
-                        throw new IllegalArgumentException("Unable to open attached file");
+                        Thread.sleep(retryPeriod);
+                        if (i == maxRetries) {
+                            savedBatchMainCollection.setStatusCode(ECollectionStatus.FAIL_TO_GENERATE.name());
+                            save(savedBatchMainCollection);
+                            throw new IllegalArgumentException("Unable to open attached file");
+                        }
                     }
-
                 }
 
-
             }
 
-            // create the zip file for  the whole batch
-            try {
-                Path zipSource = root.resolve(Paths.get(batchCollectionVO.getBatchReferenceNumber()));
-                sftpService.zipFolder(zipSource);
-                String zipPath = batchCollectionVO.getBatchReferenceNumber() + ".zip";
-                FileInputStream fis = new FileInputStream(root + "/" + zipPath);
-                sftpService.uploadFile(batchCollectionVO.getBatchReferenceNumber() + "/" + zipPath, fis, CARDS_CONFIG_PROPERTIES);
-                fis.close();
-                Files.delete(root.resolve(zipPath));
-                deleteDirectory(new File(root + "/" + batchCollectionVO.getBatchReferenceNumber()));
+
+        }
+
+        // create the zip file for  the whole batch
+        try {
+            Path zipSource = root.resolve(Paths.get(batchCollectionVO.getBatchReferenceNumber()));
+            sftpService.zipFolder(zipSource);
+            String zipPath = batchCollectionVO.getBatchReferenceNumber() + ".zip";
+            FileInputStream fis = new FileInputStream(root + "/" + zipPath);
+            sftpService.uploadFile(batchCollectionVO.getBatchReferenceNumber() + "/" + zipPath, fis, CARDS_CONFIG_PROPERTIES);
+            fis.close();
+            Files.delete(root.resolve(zipPath));
+            deleteDirectory(new File(root + "/" + batchCollectionVO.getBatchReferenceNumber()));
 
 
-            } catch (IOException | JSchException e) {
-                deleteDirectory(new File(root.toString()));
-                throw new IllegalArgumentException("Unable to find path");
-            }
+        } catch (IOException | JSchException e) {
+            deleteDirectory(new File(root.toString()));
+            throw new IllegalArgumentException("Unable to find path");
+        }
 
 
     }
