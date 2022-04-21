@@ -61,6 +61,8 @@ public class SurveyWsController {
                 .body(surveyQuestionLookupService.getSurveyQuestionsBySurveyType(surveyType)).build());
     }
 
+    //TODO: Remove multipart form data value and RequestPart. Use @RequestBody create one DTO and inside that DTO use these two parameters,
+    // If both parameters are required.
     @PostMapping(value ="/submit-survey",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<WsResponse<?>> SubmitUserSurvey(@RequestPart("userSurvey") UserSurveyDto userSurveyDto, @RequestPart("userSurveyQuestions") List<UserSurveyQuestionDto> userSurveyQuestionDtoList){
         log.debug("submit user survey");
