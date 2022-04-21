@@ -39,8 +39,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Service handling applicant and staff badge generation
@@ -577,6 +577,8 @@ public class BadgeService {
         barCodeItems.append(staffData.getJobTitleCode());
         barCodeItems.append("#");
         barCodeItems.append(staffData.getCompanyLabelEn());
+        barCodeItems.append("#");
+        barCodeItems.append(staffData.getIdNumber() != null ? staffData.getIdNumber() : staffData.getPassport());
         barCodeItems.append("#");
         return barCodeItems.toString();
     }
