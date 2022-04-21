@@ -254,11 +254,23 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
                 .findByApplicantIdAndStatusCode(applicantId, EDigitalIdStatus.VALID.name())
                 .ifPresent(applicantDigitalId -> {
                     MobileAuditLogDto mobileAuditLogDto = new MobileAuditLogDto();
-                    if(mobileLoggedIn) {
+                    if (mobileLoggedIn) {
                         mobileAuditLogDto.setEvent("User logged in");
                     } else {
                         mobileAuditLogDto.setEvent("User logged out");
                     }
+                    mobileAuditLogDto.setUserId(applicantDigitalId.getUin());
+                    mobileAuditLogService.save(mobileAuditLogDto);
+                });
+    }
+
+    @Transactional
+    public void storeSignupEvent(long applicantId) {
+        applicantDigitalIdRepository
+                .findByApplicantIdAndStatusCode(applicantId, EDigitalIdStatus.VALID.name())
+                .ifPresent(applicantDigitalId -> {
+                    MobileAuditLogDto mobileAuditLogDto = new MobileAuditLogDto();
+                    mobileAuditLogDto.setEvent("registration");
                     mobileAuditLogDto.setUserId(applicantDigitalId.getUin());
                     mobileAuditLogService.save(mobileAuditLogDto);
                 });

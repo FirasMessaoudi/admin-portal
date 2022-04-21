@@ -911,5 +911,22 @@ public class IntegrationWsController {
 
     }
 
+    /**
+     * save user registration action to audit mobile log
+     *
+     * @param uin The UIN of the applicant.
+     */
+    @GetMapping("/applicant/save-register-event/{uin}")
+    public ResponseEntity<WsResponse<?>> storeSignupEventFromMobile(@PathVariable String uin) {
+        Optional<ApplicantDto> applicant = applicantService.findByUin(uin);
+        if (applicant.isPresent()) {
+            applicantService.storeSignupEvent(applicant.get().getId());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(null).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(uin).build()).build());
+        }
+    }
+
 
 }
