@@ -43,9 +43,9 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
     private static final String CARDS_CONFIG_PROPERTIES = "cardsConfigProperties";
     private final BatchMainCollectionRepository batchMainCollectionRepository;
     private final Path root = Paths.get("uploads");
-    @Value("${data.generation.max-retries}")
+    @Value("${card.generation.max-retries}")
     private int maxRetries;
-    @Value("${data.generation.retry.period}")
+    @Value("${card.generation.retry.period}")
     private int retryPeriod;
 
 
