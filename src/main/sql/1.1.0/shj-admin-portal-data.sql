@@ -810,3 +810,11 @@ VALUES ('data.generation.max-retries', '3');
 
 INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
 VALUES ('data.generation.retry.period', '2000');
+
+update shc_portal.shc_portal.shc_config
+set conf_key ='card.generation.max-retries'
+where conf_key = 'data.generation.max-retries';
+
+update shc_portal.shc_portal.shc_config
+set conf_key ='card.generation.retry.period'
+where conf_key = 'data.generation.retry.period';
