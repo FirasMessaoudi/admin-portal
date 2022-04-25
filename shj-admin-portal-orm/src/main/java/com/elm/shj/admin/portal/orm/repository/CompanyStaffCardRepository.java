@@ -77,4 +77,7 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
             "And companyStaffDigitalId.suin in :digitalIdList ")
     List<JpaCompanyStaffCard> findStaffCardsByPrintRequestBatchIdAndDigitalIds(@Param("digitalIdList") List<String> digitalIdList , @Param("batchId") long batchId);
 
+    @Modifying
+    @Query("UPDATE JpaCompanyStaffCard csc SET csc.statusCode=:status, csc.updateDate = CURRENT_TIMESTAMP WHERE csc.id IN :cardsIds")
+    void updateCardStatus(@Param("cardsIds") List<Long> cardsIds, @Param("status") String status);
 }

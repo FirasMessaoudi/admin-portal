@@ -192,4 +192,8 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
         return mapList(companyStaffCardRepository.findStaffCardsByPrintRequestBatchIdAndDigitalIds(digitalIdSet.stream().collect(Collectors.toList()), batchId));
     }
 
+    public void updateCardStatus(List<Long> cardsIds){
+        companyStaffCardRepository.updateCardStatus(cardsIds, ECardStatus.SENT_FOR_PRINT.name());
+    }
+
 }

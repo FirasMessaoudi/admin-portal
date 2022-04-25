@@ -255,9 +255,9 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
                 .ifPresent(applicantDigitalId -> {
                     MobileAuditLogDto mobileAuditLogDto = new MobileAuditLogDto();
                     if (mobileLoggedIn) {
-                        mobileAuditLogDto.setEvent("User logged in");
+                        mobileAuditLogDto.setEvent("login");
                     } else {
-                        mobileAuditLogDto.setEvent("User logged out");
+                        mobileAuditLogDto.setEvent("logout");
                     }
                     mobileAuditLogDto.setUserId(applicantDigitalId.getUin());
                     mobileAuditLogService.save(mobileAuditLogDto);
