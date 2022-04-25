@@ -44,9 +44,9 @@ public class PrintingManagementWsController {
                 .body(printRequestLiteService.findAllPrintRequest()).build());
     }
 
-    @PutMapping("/update-print-request-status/{printRequestId}")
-    public ResponseEntity<WsResponse<?>> updatePrintRequestStatus(@PathVariable long printRequestId) {
-        printRequestLiteService.updatePrintRequestStatus(printRequestId);
+    @PutMapping("/update-print-request-status/{printRequestId}/{target}")
+    public ResponseEntity<WsResponse<?>> updatePrintRequestStatus(@PathVariable long printRequestId, @PathVariable String target) {
+        printRequestLiteService.updatePrintRequestStatus(printRequestId, target);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).build());
     }
 
