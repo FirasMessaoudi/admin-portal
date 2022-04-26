@@ -928,5 +928,16 @@ public class IntegrationWsController {
         }
     }
 
+    @PostMapping("/mark-as-registered")
+    public ResponseEntity<WsResponse<?>> update(@RequestBody String uin) {
+        Optional<ApplicantDto> databaseApplicant = applicantService.findByUin(uin);
+        if (!databaseApplicant.isPresent()) {
+            log.error("invalid data for uin {}", uin);
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(uin).build()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantService.markAsRegistered(databaseApplicant.get().getId())).build());
+    }
+
 
 }

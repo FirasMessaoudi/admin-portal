@@ -287,4 +287,9 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         applicantRepository.updateDataRequestRecordId(dataRequestRecordId, applicantId);
         applicantRitualService.updateDataRequestRecordId(dataRequestRecordId, applicantRitualId);
     }
+
+    @Transactional
+    public int markAsRegistered(long applicantId) {
+        return applicantRepository.markAsRegistered(applicantId);
+    }
 }
