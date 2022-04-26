@@ -40,7 +40,7 @@ public class DataRequestWsController {
     @PostMapping(value = "/save-applicant-main-data")
     public ResponseEntity<WsResponse<?>> saveApplicantMainData(@RequestBody List<ApplicantDto> applicantDtos) {
 
-        List<ErrorResponse> errorResponses = validationService.validateData(applicantDtos, null);
+        List<ErrorResponse> errorResponses = validationService.validateData(applicantDtos);
 
         if (!errorResponses.isEmpty())
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
@@ -53,7 +53,7 @@ public class DataRequestWsController {
     @PostMapping(value = "/save-applicant-ritual-data")
     public ResponseEntity<WsResponse<?>> saveApplicantRitualData(@RequestBody List<ApplicantRitualDto> applicantRitualDtos) {
 
-        List<ErrorResponse> errorResponses = validationService.validateData(applicantRitualDtos, null);
+        List<ErrorResponse> errorResponses = validationService.validateData(applicantRitualDtos);
 
         if (!errorResponses.isEmpty())
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
@@ -66,7 +66,7 @@ public class DataRequestWsController {
     @PostMapping(value = "/save-applicant-health-data")
     public ResponseEntity<WsResponse<?>> saveApplicantHealthData(@RequestBody List<ApplicantHealthDto> applicantHealthDtos) {
 
-        List<ErrorResponse> errorResponses = validationService.validateData(applicantHealthDtos, null);
+        List<ErrorResponse> errorResponses = validationService.validateData(applicantHealthDtos);
 
         if (!errorResponses.isEmpty())
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
@@ -79,7 +79,7 @@ public class DataRequestWsController {
     @PostMapping(value = "/save-applicant-relative-data")
     public ResponseEntity<WsResponse<?>> saveApplicantRelativeData(@RequestBody List<ApplicantRelativeDto> applicantRelativeDtos) {
 
-        List<ErrorResponse> errorResponses = validationService.validateData(applicantRelativeDtos, null);
+        List<ErrorResponse> errorResponses = validationService.validateData(applicantRelativeDtos);
 
         if (!errorResponses.isEmpty())
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
@@ -92,7 +92,7 @@ public class DataRequestWsController {
     @PostMapping(value = "/save-applicant-health-disease")
     public ResponseEntity<WsResponse<?>> saveApplicantHealthDisease(@RequestBody List<ApplicantHealthDiseaseDto> applicantHealthDiseaseDtos) {
 
-        List<ErrorResponse> errorResponses = validationService.validateData(applicantHealthDiseaseDtos, null);
+        List<ErrorResponse> errorResponses = validationService.validateData(applicantHealthDiseaseDtos);
 
         if (!errorResponses.isEmpty())
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
@@ -105,7 +105,7 @@ public class DataRequestWsController {
     @PostMapping(value = "/save-applicant-health-immunization")
     public ResponseEntity<WsResponse<?>> saveApplicantHealthImmunization(@RequestBody List<ApplicantHealthImmunizationDto> applicantHealthImmunizationDtos) {
 
-        List<ErrorResponse> errorResponses = validationService.validateData(applicantHealthImmunizationDtos, null);
+        List<ErrorResponse> errorResponses = validationService.validateData(applicantHealthImmunizationDtos);
 
         if (!errorResponses.isEmpty())
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
@@ -117,8 +117,10 @@ public class DataRequestWsController {
 
     @PostMapping(value = "/save-company-staff-main-data")
     public ResponseEntity<WsResponse<?>> saveCompanyStaffMainData(@RequestBody HuicCompanyStaffDto companyStaffDtos) {
-
-        List<ErrorResponse> errorResponses = validationService.validateData(companyStaffDtos.getCompanyStaffs(), companyStaffDtos.getSeason());
+        companyStaffDtos.getCompanyStaffs().forEach(companyStaffDto -> {
+            companyStaffDto.setSeason(companyStaffDtos.getSeason());
+        });
+        List<ErrorResponse> errorResponses = validationService.validateData(companyStaffDtos.getCompanyStaffs());
 
         if (!errorResponses.isEmpty())
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
