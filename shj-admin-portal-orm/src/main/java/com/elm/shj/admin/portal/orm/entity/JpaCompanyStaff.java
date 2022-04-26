@@ -38,7 +38,7 @@ public class JpaCompanyStaff implements Serializable {
     @Column(name = "full_name_en")
     private String fullNameEn;
 
-    @Column(name = "id_number", nullable = false)
+    @Column(name = "id_number")
     private String idNumber;
 
     @Column(name = "title_code")
