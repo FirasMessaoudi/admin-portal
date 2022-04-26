@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.data.validators;
 
 import com.elm.shj.admin.portal.services.utils.DateUtils;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -14,14 +15,21 @@ import javax.validation.ConstraintValidatorContext;
  * @since 1.1.0
  */
 public class SeasonYearValidator implements ConstraintValidator<SeasonYear, Object> {
+    private static final String MSG_20001 = "validation.data.constraints.msg.20001";
 
     /**
      * {@inheritDoc}
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
+
         int seasonYear = (Integer) value;
-        return value != null && (DateUtils.getCurrentHijriYear()-1 <= seasonYear &&  seasonYear<= (DateUtils.getCurrentHijriYear()+1));
+        if (seasonYear == 0) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(MSG_20001).addConstraintViolation();
+            return false;
+        }
+        return (DateUtils.getCurrentHijriYear() - 1 <= seasonYear && seasonYear <= (DateUtils.getCurrentHijriYear() + 1));
     }
 
 }
