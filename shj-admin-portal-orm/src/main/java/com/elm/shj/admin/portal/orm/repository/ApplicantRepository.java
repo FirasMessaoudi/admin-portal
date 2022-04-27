@@ -72,8 +72,8 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     void updatePreferredLanguage(@Param("applicantId") long applicantId, @Param("lang") String lang);
 
     @Modifying
-    @Query("UPDATE JpaApplicant a SET a.registered = TRUE, a.updateDate = CURRENT_TIMESTAMP WHERE a.id = :applicantId")
-    int markAsRegistered(@Param("applicantId") long applicantId);
+    @Query("UPDATE JpaApplicant a SET a.registered = TRUE, a.updateDate = CURRENT_TIMESTAMP, a.channel = :channel WHERE a.id = :applicantId")
+    int markAsRegistered(@Param("applicantId") long applicantId, @Param("channel") String channel);
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
             "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :hijriSeason " +
@@ -108,7 +108,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     List<String> findAllNationalities();
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
-            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) AND a.mobileLoggedIn IS NOT NULL")
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) AND a.mobileLoggedIn IS NOT NULL OR a.channel='MOBILE'")
     long countAllByMobileLoggedInIsNotNull(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
@@ -123,7 +123,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
             "WHERE  rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') AND " +
-            "c.labelAr is NOT NULL AND a.mobileLoggedIn IS NOT NULL AND rs.seasonYear= :seasonYear " +
+            "c.labelAr is NOT NULL AND (a.mobileLoggedIn IS NOT NULL OR a.channel='MOBILE') AND rs.seasonYear= :seasonYear " +
             "GROUP BY c.labelAr, c.labelEn ORDER BY COUNT(c.labelAr) DESC")
     Page<LocalizedCountVo> loadCompaniesWithMaxApplicantsRegisteredCount(@Param("seasonYear") int seasonYear, Pageable pageable);
 
@@ -131,7 +131,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
             "WHERE rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') AND " +
-            "c.labelAr is NOT NULL AND a.mobileLoggedIn IS NOT NULL AND rs.seasonYear= :seasonYear " +
+            "c.labelAr is NOT NULL AND (a.mobileLoggedIn IS NOT NULL OR a.channel='MOBILE') AND rs.seasonYear= :seasonYear " +
             "GROUP BY c.labelAr, c.labelEn ORDER BY COUNT(c.labelAr)")
     Page<LocalizedCountVo> loadCompaniesWithMinApplicantsRegisteredCount(@Param("seasonYear") int seasonYear, Pageable pageable);
 
@@ -144,4 +144,12 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Modifying
     @Query("UPDATE JpaApplicant a SET a.dataRequestRecordId = :dataRequestRecordId, a.updateDate = CURRENT_TIMESTAMP WHERE a.id = :applicantId")
     void updateDataRequestRecordId(@Param("dataRequestRecordId") long dataRequestRecordId, @Param("applicantId") long applicantId);
+
+    @Query("SELECT COUNT(DISTINCT a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap " +
+            "JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
+            "WHERE (a.mobileLoggedIn IS NOT NULL OR a.channel='MOBILE') AND rs.seasonYear = :seasonYear AND (a.dateOfBirthGregorian BETWEEN :to AND :from) AND rs.ritualTypeCode IN (:ritualTypeCodeList)")
+    long countMobileAppUsersByAgeRange(@Param("from") Date from,
+                                       @Param("to") Date to,
+                                       @Param("seasonYear") int seasonYear,
+                                       @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 }
