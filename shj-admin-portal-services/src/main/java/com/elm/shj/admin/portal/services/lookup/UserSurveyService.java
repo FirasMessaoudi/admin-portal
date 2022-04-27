@@ -41,7 +41,8 @@ public class UserSurveyService extends GenericService<JpaUserSurvey, UserSurveyD
         if(today.getHour() <= 5){
             today = LocalDateTime.now().minusDays(1);
         }
-        Optional<JpaUserSurvey> userSurvey = userSurveyRepository.findByDigitalIdAndSurveyTypeAndCreationDate(digitalId, surveyType, localDateTimeToDate(today));
+//        Optional<JpaUserSurvey> userSurvey = userSurveyRepository.findByDigitalIdAndSurveyTypeAndCreationDate(digitalId, surveyType, localDateTimeToDate(today));
+        Optional<JpaUserSurvey> userSurvey = Optional.empty();
         if(userSurvey.isPresent()){
             return Optional.of(getMapper().fromEntity(userSurvey.get(),mappingContext));
         }
