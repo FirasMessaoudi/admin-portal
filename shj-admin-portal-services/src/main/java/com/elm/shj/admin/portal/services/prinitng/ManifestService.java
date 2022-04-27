@@ -20,10 +20,10 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ManifestService {
-    private final static int BADGE_WIDTH = 6000;
-    private final static int BADGE_HEIGHT = 5000;
-    private final static int CELL_HEIGHT = 150;
-    private final static int CELL_WIDTH = 1000;
+    private final static int BADGE_WIDTH = 2480;
+    private final static int BADGE_HEIGHT = 3508;
+    private final static int CELL_HEIGHT = 120;
+    private final static int CELL_WIDTH = 615;
     private final ApplicantRitualCardLiteService applicantCardService;
     private static Font shaaerFont;
     private final static String BADGE_RESOURCES_PATH = "badge/";
@@ -58,7 +58,7 @@ public class ManifestService {
                     g2d.fillRect(0, 0, BADGE_WIDTH, BADGE_HEIGHT);
 
                     g2d.setColor(new Color(86, 86, 86));
-                    Font font = shaaerFont.deriveFont(60f);
+                    Font font = shaaerFont.deriveFont(40f);
                     g2d.setFont(font);
                     drawRow(g2d, 0, Arrays.asList("Print Request Number", printRequestReferenceNumber));
                     drawRow(g2d, 1, Arrays.asList("Batch Number", batchCollectionVO.getBatchReferenceNumber()));
