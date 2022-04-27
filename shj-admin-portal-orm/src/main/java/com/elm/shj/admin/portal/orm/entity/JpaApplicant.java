@@ -115,7 +115,7 @@ public class JpaApplicant implements Serializable {
     @Column(name = "mobile_logged_in")
     private Boolean mobileLoggedIn;
 
-    @Column(name = "registered_channel")
+    @Column(name = "registration_channel")
     private String channel;
 
     @PrePersist
