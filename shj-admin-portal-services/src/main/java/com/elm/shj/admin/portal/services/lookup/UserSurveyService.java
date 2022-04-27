@@ -32,23 +32,26 @@ public class UserSurveyService extends GenericService<JpaUserSurvey, UserSurveyD
 
     private final UserSurveyRepository userSurveyRepository;
     private final UserSurveyQuestionService userSurveyQuestionService;
+
     private static Date localDateTimeToDate(LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
-    public Optional<UserSurveyDto> findSurveyByDigitalIdAndSurveyType(String digitalId, String surveyType){
+
+    public Optional<UserSurveyDto> findSurveyByDigitalIdAndSurveyType(String digitalId, String surveyType) {
         LocalDateTime today = LocalDateTime.now();
         System.out.println(today);
-        if(today.getHour() <= 5){
+        if (today.getHour() <= 5) {
             today = LocalDateTime.now().minusDays(1);
         }
 //        Optional<JpaUserSurvey> userSurvey = userSurveyRepository.findByDigitalIdAndSurveyTypeAndCreationDate(digitalId, surveyType, localDateTimeToDate(today));
         Optional<JpaUserSurvey> userSurvey = Optional.empty();
-        if(userSurvey.isPresent()){
-            return Optional.of(getMapper().fromEntity(userSurvey.get(),mappingContext));
+        if (userSurvey.isPresent()) {
+            return Optional.of(getMapper().fromEntity(userSurvey.get(), mappingContext));
         }
         return Optional.empty();
 
     }
+
     @Transactional
     public UserSurveyDto submitSurvey(UserSurveyDto userSurveyDto, List<UserSurveyQuestionDto> userSurveyQuestionDtoList) {
         UserSurveyDto surveyBuilder = UserSurveyDto.builder()
@@ -57,11 +60,11 @@ public class UserSurveyService extends GenericService<JpaUserSurvey, UserSurveyD
                 .surveyType(userSurveyDto.getSurveyType())
                 .build();
         UserSurveyDto submittedSurvey = save(surveyBuilder);
-        if(submittedSurvey != null){
-            userSurveyQuestionDtoList.forEach((surveyQuestion) ->{
-                userSurveyQuestionService.submitSurveyQuestion(submittedSurvey,surveyQuestion);
+        if (submittedSurvey != null) {
+            userSurveyQuestionDtoList.forEach((surveyQuestion) -> {
+                userSurveyQuestionService.submitSurveyQuestion(submittedSurvey, surveyQuestion);
             });
         }
-        return  submittedSurvey;
+        return submittedSurvey;
     }
 }
