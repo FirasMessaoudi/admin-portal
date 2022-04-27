@@ -1547,7 +1547,7 @@ GO
 alter table shc_portal.shc_company_staff alter column id_number varchar(16) null
 GO
 
-ALTER TABLE shc_portal.shc_applicant ADD registered_channel varchar(20)
+ALTER TABLE shc_portal.shc_applicant ADD registration_channel varchar(20)
 GO
 
 
