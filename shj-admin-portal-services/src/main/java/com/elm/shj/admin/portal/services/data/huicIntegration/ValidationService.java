@@ -68,12 +68,9 @@ public class ValidationService {
     private final CompanyStaffRepository companyStaffRepository;
 
     @Transactional
-    public <T> List<ErrorResponse> validateData(List<T> items, Integer seasonYear) {
+    public <T> List<ErrorResponse> validateData(List<T> items) {
         List<ErrorResponse> errorResponses = new ArrayList<>();
         for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getClass().isAssignableFrom(CompanyStaffDto.class)) {
-                ((CompanyStaffDto) items.get(i)).setSeason(seasonYear);
-            }
             Set<ConstraintViolation<T>> violations = validator.validate(items.get(i));
             violations.addAll(validator.validate(items.get(i), CheckFirst.class));
             if (!items.get(i).getClass().isAssignableFrom(ApplicantHealthDto.class)) {

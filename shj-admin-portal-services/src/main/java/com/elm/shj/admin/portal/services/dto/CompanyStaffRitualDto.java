@@ -50,7 +50,7 @@ public class CompanyStaffRitualDto implements Serializable {
 
     @CellIndex(index = 4)
     @RitualTypeCode
-    String typeCode;
+    private String typeCode;
 
     @CellIndex(index = 5)
     @SamePerRequest
