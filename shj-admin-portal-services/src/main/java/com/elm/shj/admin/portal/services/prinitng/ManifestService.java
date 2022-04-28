@@ -2,6 +2,7 @@ package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantBasicInfoVo;
 import com.elm.shj.admin.portal.services.card.BadgeService;
+import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.utils.ImageUtils;
@@ -25,6 +26,8 @@ public class ManifestService {
     private final static int CELL_HEIGHT = 120;
     private final static int CELL_WIDTH = 615;
     private final ApplicantRitualCardLiteService applicantCardService;
+    private final CompanyStaffCardService staffCardService;
+    private final PrintRequestService printRequestService;
     private static Font shaaerFont;
     private final static String BADGE_RESOURCES_PATH = "badge/";
     private final static String ELM_FONT_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "DINNextLTArabic-Regular-2.ttf";
@@ -49,6 +52,7 @@ public class ManifestService {
 
     private List<ManifestVo> generateManifestAsImages(String printRequestReferenceNumber, BatchCollectionVO batchCollectionVO) {
         List<ManifestVo> manifestImages = new ArrayList<>();
+        PrintRequestDto printRequestDto = printRequestService.findByReferenceNumber(printRequestReferenceNumber);
 
         batchCollectionVO.getBatchMainCollections().forEach(batchMainCollectionDto -> batchMainCollectionDto.getSubCollections()
                 .forEach(subCollectionVO -> {
@@ -64,15 +68,20 @@ public class ManifestService {
                     drawRow(g2d, 1, Arrays.asList("Batch Number", batchCollectionVO.getBatchReferenceNumber()));
                     drawRow(g2d, 2, Arrays.asList("Collection Number", batchMainCollectionDto.getReferenceNumber()));
                     drawRow(g2d, 3, Arrays.asList("Sub Collection Number", subCollectionVO.getReferenceNumber()));
-                    List<ApplicantBasicInfoVo> applicantBasicInfoVoList = applicantCardService.findApplicantsBasicInfoByDigitalIds(subCollectionVO.getDigitalIds());
-                   if(applicantBasicInfoVoList.size() != 0)
+                    List<ApplicantBasicInfoVo> basicInfoVoList = new ArrayList<>();
+                    if (printRequestDto.getTarget().equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name()))
+                        basicInfoVoList = applicantCardService.findApplicantsBasicInfoByDigitalIds(subCollectionVO.getDigitalIds());
+                    else if (printRequestDto.getTarget().equalsIgnoreCase(EPrintingRequestTarget.STAFF.name()))
+                        basicInfoVoList = staffCardService.findStaffBasicInfoByDigitalIds(subCollectionVO.getDigitalIds());
+                    if (basicInfoVoList.size() != 0) {
                         font = shaaerFont.deriveFont(40f);
                         g2d.setFont(font);
-                       drawRow(g2d, 4, Arrays.asList("Shaaer Digital Id", "English Name", "Arabic Name","Card Serial Number"));
-                    for (int i = 0; i < applicantBasicInfoVoList.size(); i++) {
-                         font = shaaerFont.deriveFont(40f);
-                        g2d.setFont(font);
-                        drawBody(g2d, applicantBasicInfoVoList.get(i), i + 5);
+                        drawRow(g2d, 4, Arrays.asList("Shaaer Digital Id", "English Name", "Arabic Name", "Card Serial Number"));
+                        for (int i = 0; i < basicInfoVoList.size(); i++) {
+                            font = shaaerFont.deriveFont(40f);
+                            g2d.setFont(font);
+                            drawBody(g2d, basicInfoVoList.get(i), i + 5);
+                        }
                     }
                     try {
 
@@ -107,7 +116,7 @@ public class ManifestService {
 
         g2d.drawRect(CELL_WIDTH * index, y, CELL_WIDTH, CELL_HEIGHT);
 
-        if(value == null)
+        if (value == null)
             value = "---";
         g2d.drawString(value, 10 + (CELL_WIDTH * index), y + (CELL_HEIGHT / 2));
 

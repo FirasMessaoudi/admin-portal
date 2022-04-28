@@ -196,4 +196,8 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
         companyStaffCardRepository.updateCardStatus(cardsIds, ECardStatus.SENT_FOR_PRINT.name());
     }
 
+    public List<ApplicantBasicInfoVo> findStaffBasicInfoByDigitalIds(List<String> digitalIds) {
+        return  companyStaffCardRepository.findAllByStaffDigitalIds(digitalIds, Arrays.asList(ECardStatus.CANCELLED.name(),ECardStatus.EXPIRED.name(),ECardStatus.SUSPENDED.name()));
+
+    }
 }
