@@ -107,7 +107,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             } else {
                 updatedRowsCount = applicantContactRepository.updateContactIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId);
             }
-            updatedRowsCount += applicantRepository.markAsRegistered(applicantId);
+            updatedRowsCount += applicantRepository.markAsRegistered(applicantId, command.getChannel());
 
         }
         return updatedRowsCount;
@@ -289,7 +289,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     }
 
     @Transactional
-    public int markAsRegistered(long applicantId) {
-        return applicantRepository.markAsRegistered(applicantId);
+    public int markAsRegistered(long applicantId, String channel) {
+        return applicantRepository.markAsRegistered(applicantId, channel);
     }
 }

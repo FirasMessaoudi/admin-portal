@@ -73,7 +73,9 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
 
     @Query("SELECT staffCard from JpaCompanyStaffCard staffCard " +
             "join staffCard.companyStaffDigitalId companyStaffDigitalId " +
-            "where staffCard.batchNumber = :batchId " +
+            "join JpaPrintRequestBatchCard printRequestBatchCard on printRequestBatchCard.cardId = staffCard.id " +
+            "join printRequestBatchCard.printRequestBatch printRequestBatch " +
+            "where printRequestBatch.id = :batchId " +
             "And companyStaffDigitalId.suin in :digitalIdList ")
     List<JpaCompanyStaffCard> findStaffCardsByPrintRequestBatchIdAndDigitalIds(@Param("digitalIdList") List<String> digitalIdList , @Param("batchId") long batchId);
 

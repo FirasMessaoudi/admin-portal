@@ -158,4 +158,12 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
         return save(applicantPackage);
     }
 
+    public ApplicantPackageDto findJpaApplicantPackageByApplicantUin(String applicantUin) {
+        Optional<JpaApplicantPackage> applicantPackage = applicantPackageRepository.findJpaApplicantPackageByApplicantUin(Long.parseLong(applicantUin));
+        if(applicantPackage.isPresent()){
+            return getMapper().fromEntity(applicantPackage.get(),mappingContext);
+        }
+        return  null;
+    }
+
 }

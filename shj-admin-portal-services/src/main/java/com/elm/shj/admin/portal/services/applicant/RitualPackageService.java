@@ -1,7 +1,9 @@
 package com.elm.shj.admin.portal.services.applicant;
 
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
 import com.elm.shj.admin.portal.orm.entity.JpaRitualPackage;
 import com.elm.shj.admin.portal.orm.repository.RitualPackageRepository;
+import com.elm.shj.admin.portal.services.dto.ApplicantGroupDto;
 import com.elm.shj.admin.portal.services.dto.RitualPackageDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -50,5 +52,13 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
     public RitualPackageDto findRitualPackageByCompanyRitualSeasonId(long companyRitualSeasonId) {
         JpaRitualPackage ritualPackage = ritualPackageRepository.findTopByCompanyRitualSeasonIdOrderByStartDateDescCreationDateDesc(companyRitualSeasonId);
         return ritualPackage== null? null: getMapper().fromEntity(ritualPackage,mappingContext);
+    }
+
+    public RitualPackageDto findByGroupLeaderDigitalId(String digitalId) {
+        Optional<JpaRitualPackage> ritualPackage = ritualPackageRepository.findByCompanyRitualSeasonCompanyStaffCardsCompanyStaffDigitalIdSuin(digitalId);
+        if (ritualPackage.isPresent()) {
+            return getMapper().fromEntity(ritualPackage.get(), mappingContext);
+        }
+        return null;
     }
 }

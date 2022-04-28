@@ -421,7 +421,7 @@ public class DashboardService {
             String[] ages = range.split("-");
             Date from = new Timestamp(getDateFromAge(Integer.valueOf(ages[0])).getTime());
             Date to = new Timestamp(getDateFromAge(Integer.valueOf(ages[1])).getTime());
-            long applicantsNumber = mobileAuditLogRepository.countMobileAppUsersByAgeRange(from, to, hijriYear, hajjRituals);
+            long applicantsNumber = applicantRepository.countMobileAppUsersByAgeRange(from, to, hijriYear, hajjRituals);
             countVo.setLabel(range);
             countVo.setCount(applicantsNumber);
             countVoList.add(countVo);

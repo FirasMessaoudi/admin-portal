@@ -21,5 +21,5 @@ public interface RitualPackageRepository extends JpaRepository<JpaRitualPackage,
     Long findIdByReferenceNumber(@Param("referenceNumber") String referenceNumber);
 
      JpaRitualPackage findTopByCompanyRitualSeasonIdOrderByStartDateDescCreationDateDesc(long companyRitualSeason);
-
+     Optional<JpaRitualPackage> findByCompanyRitualSeasonCompanyStaffCardsCompanyStaffDigitalIdSuin(String digitalId);
 }

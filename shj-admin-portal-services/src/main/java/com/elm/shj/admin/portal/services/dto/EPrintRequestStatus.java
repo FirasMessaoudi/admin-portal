@@ -8,5 +8,5 @@ package com.elm.shj.admin.portal.services.dto;
  */
 public enum EPrintRequestStatus {
 
-    NEW, CONFIRMED, UNDER_PROCESSING, PROCESSED, SENT_TO_PRINTING, CANCELLED
+    NEW, CONFIRMED, SENT_TO_PRINTING,PRINTED, CANCELLED,DISTRIBUTED
 }
