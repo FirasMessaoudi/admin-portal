@@ -40,14 +40,8 @@ public class PrintRequestBatchService extends GenericService<JpaPrintRequestBatc
         return mapList(printRequestBatchRepository.findStaffPrintRequestBatches(printRequestId));
     }
 
-    public void updatePrintRequestBatchCards(String printRequestReferenceNumber, int batchSequenceNumber, Map<String, String> cardsReferenceNumberMap, boolean updatePrintRequestStatus) throws PrintRequestBatchException {
-        PrintRequestDto printRequestDto = printRequestService.findByReferenceNumber(printRequestReferenceNumber);
-        if (printRequestDto == null) {
-            throw new PrintRequestBatchException("Print request not found");
-        }
-        if (printRequestDto.getStatusCode().equalsIgnoreCase(EPrintRequestStatus.PROCESSED.name())) {
-            throw new PrintRequestBatchException("Print request already Processed ");
-        }
+    public void updatePrintRequestBatchCards(String printRequestReferenceNumber, int batchSequenceNumber, Map<String, String> cardsReferenceNumberMap) throws PrintRequestBatchException {
+
         Optional<JpaPrintRequestBatch> batch = printRequestBatchRepository.findBySequenceNumberAndPrintRequestReferenceNumber(batchSequenceNumber, printRequestReferenceNumber);
         if (!batch.isPresent()) {
             throw new PrintRequestBatchException("Print request Batch not found");
@@ -70,11 +64,7 @@ public class PrintRequestBatchService extends GenericService<JpaPrintRequestBatc
                 }
             });
             applicantCardService.saveAll(applicantCardList);
-            if (updatePrintRequestStatus) {
-                printRequestDto.setStatusCode(EPrintRequestStatus.PROCESSED.name());
-                printRequestDto.setUpdateDate(new Date());
-                printRequestService.save(printRequestDto);
-            }
+
         }
         if (target.equalsIgnoreCase(EPrintingRequestTarget.STAFF.name())) {
             List<CompanyStaffCardDto> staffCardList = companyStaffCardService.findStaffCardsByPrintRequestBatchIdAndDigitalIds(batch.get().getId(), cardsReferenceNumberMap.keySet());
@@ -94,8 +84,8 @@ public class PrintRequestBatchService extends GenericService<JpaPrintRequestBatc
 
             });
             companyStaffCardService.saveAll(staffCardList);
-            printRequestDto.setStatusCode(EPrintRequestStatus.PROCESSED.name());
-            printRequestService.save(printRequestDto);
         }
     }
+
+
 }
