@@ -1555,5 +1555,8 @@ GO
 
 ALTER TABLE shc_portal.shc_applicant ADD registration_channel varchar(20)
 GO
-
+USE shc_portal
+GO
+ALTER TABLE shc_portal.shc_user_survey ADD survey_date smalldatetime NOT NULL default current_timestamp;
+GO
 
