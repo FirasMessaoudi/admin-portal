@@ -149,7 +149,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
     }
 
     public List<BatchMainCollectionDto> findBatchStatusByReference(String referenceNumber) {
-        return mapList(batchMainCollectionRepository.findBatchStatusByReference(referenceNumber));
+        return mapList(batchMainCollectionRepository.findByReferenceNumberStartsWith(referenceNumber));
     }
 
     private boolean deleteDirectory(File directoryToBeDeleted) {

@@ -14,7 +14,6 @@ import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +62,7 @@ public class BatchMainCollectionWsController {
     @GetMapping("/collection-status/{reference}")
     public ResponseEntity<WsResponse<?>> trackBatchCollectionStatus(@PathVariable String reference) {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
-                batchMainCollectionService.findBatchStatusByReference(reference)).build());
+                batchMainCollectionService.findBatchStatusByReference(reference + "_")).build());
     }
 
     /**
