@@ -281,12 +281,12 @@ public class BadgeService {
 
         // add the logo image
         Image img = ImageUtils.resizeImage(letfLogoImage, MOHU_LOGO_MAX_HEIGHT, MOHU_LOGO_MAX_HEIGHT);
-        g2d.drawImage(img, BADGE_WIDTH - 510, (int) Math.round(1.5 * 96), null);
+        g2d.drawImage(img, BADGE_WIDTH - 520, (int) Math.round(1.5 * 96), null);
 
         // draw a line underneath it
 
         g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        int xDif = BADGE_WIDTH - 500;
+        int xDif = BADGE_WIDTH - 510;
         int yDif = (int) Math.round(1.5 * 96) + img.getHeight(null) + 8;
         g2d.drawLine(xDif, yDif, xDif + img.getWidth(null) - 10, yDif);
 
@@ -339,7 +339,7 @@ public class BadgeService {
     private void addStaffNameAndJob(Graphics2D g2d, String fullNameAr, String jobTitle) {
         FontRenderContext frc = g2d.getFontRenderContext();
 
-        Font font = shaaerFont.deriveFont(40f);
+        Font font = shaaerFont.deriveFont(43f);
 
         FontMetrics fm = g2d.getFontMetrics(font);
 
@@ -352,7 +352,7 @@ public class BadgeService {
         yDif += 22;
         g2d.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2d.drawLine((int) (BADGE_WIDTH * 0.125), yDif, (int) (BADGE_WIDTH * 0.875), yDif);
-
+        xDif = ((BADGE_WIDTH - fm.stringWidth(jobTitle)) / 2);
         yDif += 45;
         layout = new TextLayout(jobTitle, font, frc);
         layout.draw(g2d, xDif, yDif);
