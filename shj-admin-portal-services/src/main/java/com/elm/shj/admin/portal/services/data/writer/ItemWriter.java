@@ -9,7 +9,6 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
-import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.data.huicIntegration.ValidationService;
@@ -17,7 +16,6 @@ import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.reader.EExcelItemReaderErrorType;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.data.validators.WithGroupReferenceNumber;
-import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -65,8 +63,6 @@ public class ItemWriter {
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantContactService applicantContactService;
     private final CompanyStaffService companyStaffService;
-    private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
-    private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
     private final ChatContactService chatContactService;
     private final ApplicantRelativeService applicantRelativeService;
@@ -493,61 +489,7 @@ public class ItemWriter {
     private <T> void updateCompanyStaffRitualData(T item) {
         if (item != null && item.getClass().isAssignableFrom(CompanyStaffRitualDto.class)) {
             CompanyStaffRitualDto companyStaffRitual = (CompanyStaffRitualDto) item;
-            CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(companyStaffRitual.getIdNumber(), companyStaffRitual.getPassportNumber(), companyStaffRitual.getDateOfBirthGregorian(), companyStaffRitual.getDateOfBirthHijri());
-            CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
-            CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
-            //existingStaff.setCompanyRitualSeason(companyRitualSeasonDto);
-            if (companyStaffDigitalId != null) {
-                // if he has a digital id for that same season
-                List<CompanyStaffCardDto> companyStaffCardDtos = companyStaffCardService.findByDigitalId(companyStaffDigitalId.getSuin());
-                // if no cards for digitalId and SEASON
-                if (companyStaffCardDtos.isEmpty()) {
-                    CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                    companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
-                    companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-                    companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
-                    companyStaffCardService.save(companyStaffCardDto);
-                    return;
-
-                }
-
-                //find staff cards for different company or different ritual
-                List<CompanyStaffCardDto> companyStaffCards2 = companyStaffCardService.findByDigitalIdAndDifferentCompanyOrRitual(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
-                if (CollectionUtils.isNotEmpty(companyStaffCards2)) {
-                    companyStaffCards2.forEach(c -> {
-                        c.setStatusCode(ECardStatus.EXPIRED.name());
-                    });
-                    companyStaffCardService.saveAll(companyStaffCards2);
-                    return;
-                }
-
-                // find staff cards for same company and same ritual
-                List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
-                if (companyStaffCards.isEmpty()) {
-                    CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                    companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
-                    companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-                    companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
-                    companyStaffCardService.save(companyStaffCardDto);
-                    return;
-                }
-
-
-            } else {
-                // create new digital id for that staff in case he has no digital id for that same season
-                CompanyStaffDigitalIdDto staffDigitalId = new CompanyStaffDigitalIdDto();
-                staffDigitalId.setCompanyStaff(existingStaff);
-                staffDigitalId.setSeasonYear(companyStaffRitual.getSeason());
-                staffDigitalId.setSuin(companyStaffDigitalIdService.generate(existingStaff, companyStaffRitual.getSeason()));
-                staffDigitalId.setStatusCode(EStaffDigitalIdStatus.VALID.name());
-                CompanyStaffDigitalIdDto savedDigitalId = companyStaffDigitalIdService.save(staffDigitalId);
-                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                companyStaffCardDto.setCompanyStaffDigitalId(savedDigitalId);
-                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
-                companyStaffCardService.save(companyStaffCardDto);
-
-            }
+            validationService.saveStaffRitual(companyStaffRitual);
         }
     }
 

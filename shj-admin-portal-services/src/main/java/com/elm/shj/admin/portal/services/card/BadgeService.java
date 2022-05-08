@@ -378,13 +378,15 @@ public class BadgeService {
         // draw a line underneath it
         yDif += 18;
         g2d.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g2d.drawLine((int)(BADGE_WIDTH * 0.125), yDif, (int)(BADGE_WIDTH * 0.875), yDif);
+        g2d.drawLine((int) (BADGE_WIDTH * 0.125), yDif, (int) (BADGE_WIDTH * 0.875), yDif);
 
         font = shaaerFont.deriveFont(24f);
         fm = g2d.getFontMetrics(font);
 
         yDif += 30;
-        xDif += 95;
+        // xDif += 95;
+        xDif = ((BADGE_WIDTH - fm.stringWidth(nationalityAr)) / 2);
+
         layout = new TextLayout(nationalityAr, font, frc);
         layout.draw(g2d, xDif, yDif);
 
@@ -398,7 +400,7 @@ public class BadgeService {
         BufferedImage pilgrimImage = ImageUtils.loadFromBase64String(base64Photo);
         if (pilgrimImage != null) {
             Image img = ImageUtils.resizeImage(pilgrimImage, PHOTO_MAX_HEIGHT, PHOTO_MAX_HEIGHT);
-            int yDif = isApplicant ? (int) Math.round(0.8 * 96) : (int) Math.round(2 * 93);
+            int yDif = isApplicant ? (int) Math.round(0.9 * 100) : Math.round(2 * 93);
             g2d.drawImage(img, (BADGE_WIDTH - img.getWidth(null)) / 2, yDif, null);
         }
     }
