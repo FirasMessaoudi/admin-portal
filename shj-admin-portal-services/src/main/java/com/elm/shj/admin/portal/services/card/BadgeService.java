@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
+import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
@@ -127,7 +128,6 @@ public class BadgeService {
         addStaffFooterBg(g2d);
         String decodedBarCode = getBarCodeForStaffItemsAsString(staffData, staffData.getCardReferenceNumber());
         addBarCode(g2d, decodedBarCode, false);
-        //TODO why cardId is fixed
         addQrCodeRectangle(g2d, staffData.getSuin(), staffData.getCardReferenceNumber(), ritualType, staffData.getRitualSeason());
         String imgStr = null;
         try {
@@ -523,7 +523,7 @@ public class BadgeService {
         LineMetrics lm;
         TextLayout layout;
         for (int i = 0; i< headersAr.length; i++) {
-            font = shaaerFont.deriveFont(25f);
+            font = shaaerFont.deriveFont(32f);
             // header AR
             lm = font.getLineMetrics(headersAr[i], frc);
             layout = new TextLayout(headersAr[i], font, frc);
@@ -597,7 +597,10 @@ public class BadgeService {
         g2d.fillRect(rectX, rectY, rectWidth, rectHeight);
         FontRenderContext frc = g2d.getFontRenderContext();
 
-        Font font = shaaerFont.deriveFont(36f);
+        Font font = shaaerFont.deriveFont(38f);
+        font = font.deriveFont(
+                Collections.singletonMap(
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
 
         FontMetrics fm = g2d.getFontMetrics(font);
         g2d.setColor(new Color(59, 121, 55));
@@ -608,7 +611,7 @@ public class BadgeService {
 
         font = shaaerFont.deriveFont(24f);
         fm = g2d.getFontMetrics(font);
-        String card = cardId + " رقم البطاقة";
+        String card = "رقم البطاقة " + cardId;
         yDif += 55;
         xDif = ((BADGE_WIDTH - fm.stringWidth(card)) - 15);
         layout = new TextLayout(card, font, frc);
