@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
+import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
@@ -125,10 +126,9 @@ public class BadgeService {
         addStaffCamp(g2d, "");
         addCardStatus(g2d);
         addStaffFooterBg(g2d);
-        String decodedBarCode = getBarCodeForStaffItemsAsString(staffData, 1);
+        String decodedBarCode = getBarCodeForStaffItemsAsString(staffData, staffData.getCardReferenceNumber());
         addBarCode(g2d, decodedBarCode, false);
-        //TODO why cardId is fixed
-        addQrCodeRectangle(g2d, staffData.getSuin(), 1, ritualType, staffData.getRitualSeason());
+        addQrCodeRectangle(g2d, staffData.getSuin(), staffData.getCardReferenceNumber(), ritualType, staffData.getRitualSeason());
         String imgStr = null;
         try {
             imgStr = ImageUtils.imgToBase64String(badgeImage);
@@ -182,7 +182,7 @@ public class BadgeService {
         String decodedBarCode = getBarCodeFoApplicantItemsAsString(uin, applicantRitualCardLite);
         addBarCode(g2d, decodedBarCode, true);
         if (withQr) {
-            addQrCodeRectangle(g2d, uin, applicantRitualCardLite.getCardId(), ritualType, applicantRitualCardLite.getHijriSeason());
+            addQrCodeRectangle(g2d, uin, String.valueOf(applicantRitualCardLite.getCardId()), ritualType, applicantRitualCardLite.getHijriSeason());
         }
 
         String imgStr = null;
@@ -281,12 +281,12 @@ public class BadgeService {
 
         // add the logo image
         Image img = ImageUtils.resizeImage(letfLogoImage, MOHU_LOGO_MAX_HEIGHT, MOHU_LOGO_MAX_HEIGHT);
-        g2d.drawImage(img, BADGE_WIDTH - 510, (int) Math.round(1.5 * 96), null);
+        g2d.drawImage(img, BADGE_WIDTH - 520, (int) Math.round(1.5 * 96), null);
 
         // draw a line underneath it
 
         g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        int xDif = BADGE_WIDTH - 500;
+        int xDif = BADGE_WIDTH - 510;
         int yDif = (int) Math.round(1.5 * 96) + img.getHeight(null) + 8;
         g2d.drawLine(xDif, yDif, xDif + img.getWidth(null) - 10, yDif);
 
@@ -339,7 +339,7 @@ public class BadgeService {
     private void addStaffNameAndJob(Graphics2D g2d, String fullNameAr, String jobTitle) {
         FontRenderContext frc = g2d.getFontRenderContext();
 
-        Font font = shaaerFont.deriveFont(40f);
+        Font font = shaaerFont.deriveFont(43f);
 
         FontMetrics fm = g2d.getFontMetrics(font);
 
@@ -352,7 +352,7 @@ public class BadgeService {
         yDif += 22;
         g2d.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2d.drawLine((int) (BADGE_WIDTH * 0.125), yDif, (int) (BADGE_WIDTH * 0.875), yDif);
-
+        xDif = ((BADGE_WIDTH - fm.stringWidth(jobTitle)) / 2);
         yDif += 45;
         layout = new TextLayout(jobTitle, font, frc);
         layout.draw(g2d, xDif, yDif);
@@ -378,13 +378,15 @@ public class BadgeService {
         // draw a line underneath it
         yDif += 18;
         g2d.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g2d.drawLine((int)(BADGE_WIDTH * 0.125), yDif, (int)(BADGE_WIDTH * 0.875), yDif);
+        g2d.drawLine((int) (BADGE_WIDTH * 0.125), yDif, (int) (BADGE_WIDTH * 0.875), yDif);
 
         font = shaaerFont.deriveFont(24f);
         fm = g2d.getFontMetrics(font);
 
         yDif += 30;
-        xDif += 95;
+        // xDif += 95;
+        xDif = ((BADGE_WIDTH - fm.stringWidth(nationalityAr)) / 2);
+
         layout = new TextLayout(nationalityAr, font, frc);
         layout.draw(g2d, xDif, yDif);
 
@@ -398,7 +400,7 @@ public class BadgeService {
         BufferedImage pilgrimImage = ImageUtils.loadFromBase64String(base64Photo);
         if (pilgrimImage != null) {
             Image img = ImageUtils.resizeImage(pilgrimImage, PHOTO_MAX_HEIGHT, PHOTO_MAX_HEIGHT);
-            int yDif = isApplicant ? (int) Math.round(0.8 * 96) : (int) Math.round(2 * 93);
+            int yDif = isApplicant ? (int) Math.round(0.9 * 100) : Math.round(2 * 93);
             g2d.drawImage(img, (BADGE_WIDTH - img.getWidth(null)) / 2, yDif, null);
         }
     }
@@ -522,14 +524,17 @@ public class BadgeService {
         TextLayout layout;
         for (int i = 0; i< headersAr.length; i++) {
             font = shaaerFont.deriveFont(25f);
+            font = font.deriveFont(
+                    Collections.singletonMap(
+                            TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
             // header AR
             lm = font.getLineMetrics(headersAr[i], frc);
             layout = new TextLayout(headersAr[i], font, frc);
-            layout.draw(g2d, rectX + (i * rectWidth/ headersAr.length) + (int) (rectWidth/ headersAr.length - font.getStringBounds(headersAr[i], frc).getWidth()) / 2, rectY + lm.getHeight() / 2 + 8);
+            layout.draw(g2d, rectX + (i * rectWidth / headersAr.length) + (int) (rectWidth / headersAr.length - font.getStringBounds(headersAr[i], frc).getWidth()) / 2, rectY + lm.getHeight() / 2 + 8);
             // header EN
             lm = font.getLineMetrics(headersEn[i], frc);
             layout = new TextLayout(headersEn[i], font, frc);
-            layout.draw(g2d, rectX + (i * rectWidth/ headersAr.length) + (int) (rectWidth/ headersAr.length - font.getStringBounds(headersEn[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 16);
+            layout.draw(g2d, rectX + (i * rectWidth / headersAr.length) + (int) (rectWidth / headersAr.length - font.getStringBounds(headersEn[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 16);
             // values
             font = shaaerFont.deriveFont(26f);
             lm = font.getLineMetrics(values[i], frc);
@@ -565,7 +570,7 @@ public class BadgeService {
         return barCodeItems.toString();
     }
 
-    private String getBarCodeForStaffItemsAsString(CompanyStaffVO staffData, long cardId) {
+    private String getBarCodeForStaffItemsAsString(CompanyStaffVO staffData, String cardId) {
         StringBuilder barCodeItems = new StringBuilder();
         barCodeItems.append(staffData.getSuin());
         barCodeItems.append(cardId);
@@ -584,7 +589,7 @@ public class BadgeService {
     }
 
 
-    private void addQrCodeRectangle(Graphics2D g2d, String uin, long cardId, String ritualType, int ritualSeason) {
+    private void addQrCodeRectangle(Graphics2D g2d, String uin, String cardId, String ritualType, int ritualSeason) {
         int rectHeight = (int) Math.round(4 * 50);
         int rectWidth = BADGE_WIDTH;
         int rectX = 0;
@@ -595,7 +600,10 @@ public class BadgeService {
         g2d.fillRect(rectX, rectY, rectWidth, rectHeight);
         FontRenderContext frc = g2d.getFontRenderContext();
 
-        Font font = shaaerFont.deriveFont(36f);
+        Font font = shaaerFont.deriveFont(38f);
+        font = font.deriveFont(
+                Collections.singletonMap(
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
 
         FontMetrics fm = g2d.getFontMetrics(font);
         g2d.setColor(new Color(59, 121, 55));
@@ -606,9 +614,10 @@ public class BadgeService {
 
         font = shaaerFont.deriveFont(24f);
         fm = g2d.getFontMetrics(font);
+        String card = "رقم البطاقة " + cardId;
         yDif += 55;
-        xDif = ((BADGE_WIDTH - fm.stringWidth("رقم البطاقة 1029380")) - 15);
-        layout = new TextLayout("رقم البطاقة 1029380", font, frc);
+        xDif = ((BADGE_WIDTH - fm.stringWidth(card)) - 15);
+        layout = new TextLayout(card, font, frc);
         layout.draw(g2d, xDif, yDif);
         yDif += 40;
         String ritual = "الشعيرة " + ritualType + " " + ritualSeason;
@@ -617,19 +626,20 @@ public class BadgeService {
         layout.draw(g2d, xDif, yDif);
         BufferedImage qrCode = generateQRcode(uin, cardId);
         Image img = ImageUtils.resizeImage(qrCode, QR_CODE_MAX_HEIGHT, QR_CODE_MAX_HEIGHT);
+        g2d.setBackground(new Color(235, 241, 235));
         g2d.drawImage(img, (BADGE_WIDTH - img.getWidth(null)) / 2 - 180, yDif - 140, null);
 
 
     }
 
-    private BufferedImage generateQRcode(String uin, long cardId) {
+    private BufferedImage generateQRcode(String uin, String cardId) {
         try {
             String charset = "UTF-8";
             String data = uin + cardId;
             Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
             hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-            BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, 200, 200);
-            MatrixToImageConfig conf = new MatrixToImageConfig();
+            BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, 300, 300);
+            MatrixToImageConfig conf = new MatrixToImageConfig(0xFF37793B, 0xFFEBF1EB);
             BufferedImage qrcode = MatrixToImageWriter.toBufferedImage(matrix, conf);
             //MatrixToImageWriter.writeToPath(matrix, "png", root.resolve(Paths.get("qrCode.png")));
             return qrcode;

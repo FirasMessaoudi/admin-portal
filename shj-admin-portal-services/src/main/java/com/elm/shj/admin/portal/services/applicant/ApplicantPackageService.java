@@ -72,9 +72,13 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
      * @return
      */
     public Long findLatestIdByApplicantUIN(String applicantUin) {
-        Page<Long> applicantPackageIdPage = applicantPackageRepository.findLastIdByApplicantUin(Long.parseLong(applicantUin), PageRequest.of(0, 1));
-        if (applicantPackageIdPage == null) return null;
-        return applicantPackageIdPage.getContent().get(0);
+        try {
+            Page<Long> applicantPackageIdPage = applicantPackageRepository.findLastIdByApplicantUin(Long.parseLong(applicantUin), PageRequest.of(0, 1));
+            if (applicantPackageIdPage == null) return null;
+            return applicantPackageIdPage.getContent().get(0);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -152,6 +156,14 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
             applicantPackage.setApplicantPackageCaterings(applicantPackageCaterings);
         }
         return save(applicantPackage);
+    }
+
+    public ApplicantPackageDto findJpaApplicantPackageByApplicantUin(String applicantUin) {
+        Optional<JpaApplicantPackage> applicantPackage = applicantPackageRepository.findJpaApplicantPackageByApplicantUin(Long.parseLong(applicantUin));
+        if(applicantPackage.isPresent()){
+            return getMapper().fromEntity(applicantPackage.get(),mappingContext);
+        }
+        return  null;
     }
 
 }

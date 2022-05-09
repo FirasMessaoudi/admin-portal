@@ -14,9 +14,12 @@ import com.elm.shj.admin.portal.orm.repository.ApplicantHealthImmunizationReposi
 import com.elm.shj.admin.portal.orm.repository.ApplicantHealthRepository;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
 import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.data.validators.CheckFirst;
 import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
+import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -66,6 +69,9 @@ public class ValidationService {
     private final ApplicantHealthRepository applicantHealthRepository;
     private final CompanyStaffService companyStaffService;
     private final CompanyStaffRepository companyStaffRepository;
+    private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
+    private final CompanyStaffCardService companyStaffCardService;
+    private final CompanyRitualSeasonService companyRitualSeasonService;
 
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {
@@ -108,12 +114,19 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(CompanyStaffDto.class)) {
                     saveCompanyStaffMainData((CompanyStaffDto) items.get(i));
                 }
+                if (items.get(i).getClass().isAssignableFrom(CompanyStaffRitualDto.class)) {
+                    saveCompanyStaffRitualData((CompanyStaffRitualDto) items.get(i));
+                }
             }
 
         }
 
 
         return errorResponses;
+    }
+
+    private void saveCompanyStaffRitualData(CompanyStaffRitualDto companyStaffRitualDto) {
+        saveStaffRitual(companyStaffRitualDto);
     }
 
     private void saveCompanyStaffMainData(CompanyStaffDto staff) {
@@ -206,7 +219,6 @@ public class ValidationService {
         applicantHealth.setApplicant(ApplicantDto.builder().id(applicantId).build());
         applicantHealth.setApplicantRitual(ApplicantRitualDto.builder().id(applicantRitualId).build());
         applicantHealthRepository.save((JpaApplicantHealth) findMapper(ApplicantHealthDto.class).toEntity(applicantHealth, mappingContext));
-        //  applicantHealthService.save(applicantHealth);
 
     }
 
@@ -368,5 +380,63 @@ public class ValidationService {
         staff.setDigitalIds(existingStaff.getDigitalIds());
         staff.setDataRequestRecordId(existingStaff.getDataRequestRecordId());
         staff.setApplicantGroups(existingStaff.getApplicantGroups());
+    }
+
+    public void saveStaffRitual(CompanyStaffRitualDto companyStaffRitual) {
+        CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(companyStaffRitual.getIdNumber(), companyStaffRitual.getPassportNumber(), companyStaffRitual.getDateOfBirthGregorian(), companyStaffRitual.getDateOfBirthHijri());
+        CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
+        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
+        //existingStaff.setCompanyRitualSeason(companyRitualSeasonDto);
+        if (companyStaffDigitalId != null) {
+            // if he has a digital id for that same season
+            List<CompanyStaffCardDto> companyStaffCardDtos = companyStaffCardService.findByDigitalId(companyStaffDigitalId.getSuin());
+            // if no cards for digitalId and SEASON
+            if (companyStaffCardDtos.isEmpty()) {
+                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
+                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                companyStaffCardService.save(companyStaffCardDto);
+                return;
+
+            }
+
+            //find staff cards for different company or different ritual
+            List<CompanyStaffCardDto> companyStaffCards2 = companyStaffCardService.findByDigitalIdAndDifferentCompanyOrRitual(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+            if (CollectionUtils.isNotEmpty(companyStaffCards2)) {
+                companyStaffCards2.forEach(c -> {
+                    c.setStatusCode(ECardStatus.EXPIRED.name());
+                });
+                companyStaffCardService.saveAll(companyStaffCards2);
+                return;
+            }
+
+            // find staff cards for same company and same ritual
+            List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+            if (companyStaffCards.isEmpty()) {
+                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
+                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                companyStaffCardService.save(companyStaffCardDto);
+                return;
+            }
+
+
+        } else {
+            // create new digital id for that staff in case he has no digital id for that same season
+            CompanyStaffDigitalIdDto staffDigitalId = new CompanyStaffDigitalIdDto();
+            staffDigitalId.setCompanyStaff(existingStaff);
+            staffDigitalId.setSeasonYear(companyStaffRitual.getSeason());
+            staffDigitalId.setSuin(companyStaffDigitalIdService.generate(existingStaff, companyStaffRitual.getSeason()));
+            staffDigitalId.setStatusCode(EStaffDigitalIdStatus.VALID.name());
+            CompanyStaffDigitalIdDto savedDigitalId = companyStaffDigitalIdService.save(staffDigitalId);
+            CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+            companyStaffCardDto.setCompanyStaffDigitalId(savedDigitalId);
+            companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+            companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+            companyStaffCardService.save(companyStaffCardDto);
+
+        }
     }
 }

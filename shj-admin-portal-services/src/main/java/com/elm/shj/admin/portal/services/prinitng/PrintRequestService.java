@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -152,5 +153,10 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         if (jpaPrintRequest != null)
             return this.getMapper().fromEntity(jpaPrintRequest, mappingContext);
         return null;
+    }
+
+    @Transactional
+    public void updatePrintRequestStatus(long printRequestId, String status) {
+        printRequestRepository.updatePrintRequestStatus(printRequestId, status);
     }
 }

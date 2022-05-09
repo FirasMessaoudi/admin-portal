@@ -37,7 +37,7 @@ public class JpaUserSurveyQuestion implements Serializable {
     private JpaUserSurvey userSurvey;
 
 
-    @Column(name = "question_code")
+    @Column(name = "question_code",nullable = false)
     private String surveyQuestion;
 
     private int rate;

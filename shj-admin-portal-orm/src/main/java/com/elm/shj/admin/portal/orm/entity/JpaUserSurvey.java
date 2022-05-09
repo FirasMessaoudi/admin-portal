@@ -39,6 +39,11 @@ public class JpaUserSurvey implements Serializable {
     @Column(name = "type_code")
     private String surveyType;
 
+
+    @Column(name = "survey_date")
+    @Temporal(TemporalType.DATE)
+    private Date surveyDate;
+
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 

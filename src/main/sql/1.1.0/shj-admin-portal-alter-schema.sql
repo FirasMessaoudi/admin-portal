@@ -1539,12 +1539,25 @@ create table shc_portal.shc_supplication_user_counter
     update_date                 smalldatetime
 );
 GO
-USE shc_portal
-GO
-ALTER TABLE shc_portal.shc_suggested_supplication_lk ALTER COLUMN code varchar(100) NOT NULL
-ALTER TABLE shc_portal.shc_suggested_supplication_lk ALTER COLUMN label varchar(300) NOT NULL
-GO
-alter table shc_portal.shc_company_staff alter column id_number varchar(16) null
-go
 
+ALTER TABLE shc_portal.shc_suggested_supplication_lk ALTER COLUMN code varchar(100) NOT NULL
+GO
+ALTER TABLE shc_portal.shc_suggested_supplication_lk ALTER COLUMN label nvarchar(300) NOT NULL
+GO
+GO
+alter table shc_portal.shc_supplication_user_counter alter column code varchar(100) NOT NULL
+GO
+ALTER TABLE shc_portal.shc_user_survey_question ALTER COLUMN question_code varchar(100) NOT NULL
+GO
+
+alter table shc_portal.shc_company_staff alter column id_number varchar(16) null
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD registration_channel varchar(20)
+GO
+GO
+ALTER TABLE shc_portal.shc_user_survey ADD survey_date smalldatetime NOT NULL default current_timestamp;
+GO
+alter table shc_portal.shc_company_staff alter column mobile_number varchar(20) null
+GO
 

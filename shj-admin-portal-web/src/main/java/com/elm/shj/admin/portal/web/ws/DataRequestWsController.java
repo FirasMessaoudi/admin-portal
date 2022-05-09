@@ -130,5 +130,22 @@ public class DataRequestWsController {
                 Collections.emptyList()).build());
     }
 
+    @PostMapping(value = "/save-company-staff-ritual-data")
+    public ResponseEntity<WsResponse<?>> saveCompanyStaffRitualData(@RequestBody HuicCompanyStaffRitualDto companyStaffRituals) {
+        companyStaffRituals.getCompanyStaffRituals().forEach(companyStaffDto -> {
+            companyStaffDto.setSeason(companyStaffRituals.getSeason());
+            companyStaffDto.setTypeCode(companyStaffRituals.getRitualTypeCode());
+
+        });
+        List<ErrorResponse> errorResponses = validationService.validateData(companyStaffRituals.getCompanyStaffRituals());
+
+        if (!errorResponses.isEmpty())
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
+                    errorResponses).build());
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+                Collections.emptyList()).build());
+    }
+
 
 }

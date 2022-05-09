@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantBasicInfoVo;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,16 +69,25 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
     List<JpaCompanyStaffCard> findStaffCards(@Param("cardsIds") List<Long> cardsIds);
 
     @Modifying
-    @Query("UPDATE JpaApplicantCard card SET card.statusCode = :newStatusCode WHERE card.id in :cardIdsList AND card.statusCode = :oldStatusCode" )
-    int updateCardStatuses(@Param("newStatusCode") String newStatusCode,@Param("oldStatusCode") String oldStatusCode, @Param("cardIdsList") List<Long> cardIdsList);
+    @Query("UPDATE JpaApplicantCard card SET card.statusCode = :newStatusCode WHERE card.id in :cardIdsList AND card.statusCode = :oldStatusCode")
+    int updateCardStatuses(@Param("newStatusCode") String newStatusCode, @Param("oldStatusCode") String oldStatusCode, @Param("cardIdsList") List<Long> cardIdsList);
 
     @Query("SELECT staffCard from JpaCompanyStaffCard staffCard " +
             "join staffCard.companyStaffDigitalId companyStaffDigitalId " +
-            "where staffCard.batchNumber = :batchId " +
+            "join JpaPrintRequestBatchCard printRequestBatchCard on printRequestBatchCard.cardId = staffCard.id " +
+            "join printRequestBatchCard.printRequestBatch printRequestBatch " +
+            "where printRequestBatch.id = :batchId " +
             "And companyStaffDigitalId.suin in :digitalIdList ")
-    List<JpaCompanyStaffCard> findStaffCardsByPrintRequestBatchIdAndDigitalIds(@Param("digitalIdList") List<String> digitalIdList , @Param("batchId") long batchId);
+    List<JpaCompanyStaffCard> findStaffCardsByPrintRequestBatchIdAndDigitalIds(@Param("digitalIdList") List<String> digitalIdList, @Param("batchId") long batchId);
 
     @Modifying
     @Query("UPDATE JpaCompanyStaffCard csc SET csc.statusCode=:status, csc.updateDate = CURRENT_TIMESTAMP WHERE csc.id IN :cardsIds")
     void updateCardStatus(@Param("cardsIds") List<Long> cardsIds, @Param("status") String status);
+
+    @Query("select new com.elm.shj.admin.portal.orm.entity.ApplicantBasicInfoVo(digitalId.suin, staff.fullNameAr, staff.fullNameEn,card.referenceNumber) from JpaCompanyStaffCard card  " +
+            " join card.companyStaffDigitalId digitalId " +
+            " join digitalId.companyStaff staff " +
+            "where card.statusCode not in :cardStatusCodeList " +
+            "and digitalId.suin in :digitalIdList ")
+    List<ApplicantBasicInfoVo> findAllByStaffDigitalIds(@Param("digitalIdList") List<String> digitalIdList,@Param("cardStatusCodeList") List<String> cardStatusCodeList);
 }
