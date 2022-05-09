@@ -21,7 +21,7 @@ import java.util.Optional;
 public interface SupplicationUserCounterRepository extends JpaRepository<JpaSupplicationUserCounter,Long> {
     List<JpaSupplicationUserCounter> findAllByDigitalId(String digitalId);
 
-    Optional<JpaSupplicationUserCounter> findByCode(String code);
+    Optional<JpaSupplicationUserCounter> findByCodeAndDigitalId(String code,String digitalId);
 
     @Modifying
     @Query("update JpaSupplicationUserCounter supp set supp.supplicationLastCount = 0 where supp.id=:id ")
