@@ -125,10 +125,10 @@ public class BadgeService {
         addStaffCamp(g2d, "");
         addCardStatus(g2d);
         addStaffFooterBg(g2d);
-        String decodedBarCode = getBarCodeForStaffItemsAsString(staffData, 1);
+        String decodedBarCode = getBarCodeForStaffItemsAsString(staffData, staffData.getCardReferenceNumber());
         addBarCode(g2d, decodedBarCode, false);
         //TODO why cardId is fixed
-        addQrCodeRectangle(g2d, staffData.getSuin(), 1, ritualType, staffData.getRitualSeason());
+        addQrCodeRectangle(g2d, staffData.getSuin(), staffData.getCardReferenceNumber(), ritualType, staffData.getRitualSeason());
         String imgStr = null;
         try {
             imgStr = ImageUtils.imgToBase64String(badgeImage);
@@ -182,7 +182,7 @@ public class BadgeService {
         String decodedBarCode = getBarCodeFoApplicantItemsAsString(uin, applicantRitualCardLite);
         addBarCode(g2d, decodedBarCode, true);
         if (withQr) {
-            addQrCodeRectangle(g2d, uin, applicantRitualCardLite.getCardId(), ritualType, applicantRitualCardLite.getHijriSeason());
+            addQrCodeRectangle(g2d, uin, String.valueOf(applicantRitualCardLite.getCardId()), ritualType, applicantRitualCardLite.getHijriSeason());
         }
 
         String imgStr = null;
@@ -567,7 +567,7 @@ public class BadgeService {
         return barCodeItems.toString();
     }
 
-    private String getBarCodeForStaffItemsAsString(CompanyStaffVO staffData, long cardId) {
+    private String getBarCodeForStaffItemsAsString(CompanyStaffVO staffData, String cardId) {
         StringBuilder barCodeItems = new StringBuilder();
         barCodeItems.append(staffData.getSuin());
         barCodeItems.append(cardId);
@@ -586,7 +586,7 @@ public class BadgeService {
     }
 
 
-    private void addQrCodeRectangle(Graphics2D g2d, String uin, long cardId, String ritualType, int ritualSeason) {
+    private void addQrCodeRectangle(Graphics2D g2d, String uin, String cardId, String ritualType, int ritualSeason) {
         int rectHeight = (int) Math.round(4 * 50);
         int rectWidth = BADGE_WIDTH;
         int rectX = 0;
@@ -608,9 +608,10 @@ public class BadgeService {
 
         font = shaaerFont.deriveFont(24f);
         fm = g2d.getFontMetrics(font);
+        String card = cardId + " رقم البطاقة";
         yDif += 55;
-        xDif = ((BADGE_WIDTH - fm.stringWidth("رقم البطاقة 1029380")) - 15);
-        layout = new TextLayout("رقم البطاقة 1029380", font, frc);
+        xDif = ((BADGE_WIDTH - fm.stringWidth(card)) - 15);
+        layout = new TextLayout(card, font, frc);
         layout.draw(g2d, xDif, yDif);
         yDif += 40;
         String ritual = "الشعيرة " + ritualType + " " + ritualSeason;
@@ -619,19 +620,20 @@ public class BadgeService {
         layout.draw(g2d, xDif, yDif);
         BufferedImage qrCode = generateQRcode(uin, cardId);
         Image img = ImageUtils.resizeImage(qrCode, QR_CODE_MAX_HEIGHT, QR_CODE_MAX_HEIGHT);
+        g2d.setBackground(new Color(235, 241, 235));
         g2d.drawImage(img, (BADGE_WIDTH - img.getWidth(null)) / 2 - 180, yDif - 140, null);
 
 
     }
 
-    private BufferedImage generateQRcode(String uin, long cardId) {
+    private BufferedImage generateQRcode(String uin, String cardId) {
         try {
             String charset = "UTF-8";
             String data = uin + cardId;
             Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
             hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-            BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, 200, 200);
-            MatrixToImageConfig conf = new MatrixToImageConfig();
+            BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, 300, 300);
+            MatrixToImageConfig conf = new MatrixToImageConfig(0xFF37793B, 0xFFEBF1EB);
             BufferedImage qrcode = MatrixToImageWriter.toBufferedImage(matrix, conf);
             //MatrixToImageWriter.writeToPath(matrix, "png", root.resolve(Paths.get("qrCode.png")));
             return qrcode;
