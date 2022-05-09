@@ -523,15 +523,18 @@ public class BadgeService {
         LineMetrics lm;
         TextLayout layout;
         for (int i = 0; i< headersAr.length; i++) {
-            font = shaaerFont.deriveFont(32f);
+            font = shaaerFont.deriveFont(25f);
+            font = font.deriveFont(
+                    Collections.singletonMap(
+                            TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
             // header AR
             lm = font.getLineMetrics(headersAr[i], frc);
             layout = new TextLayout(headersAr[i], font, frc);
-            layout.draw(g2d, rectX + (i * rectWidth/ headersAr.length) + (int) (rectWidth/ headersAr.length - font.getStringBounds(headersAr[i], frc).getWidth()) / 2, rectY + lm.getHeight() / 2 + 8);
+            layout.draw(g2d, rectX + (i * rectWidth / headersAr.length) + (int) (rectWidth / headersAr.length - font.getStringBounds(headersAr[i], frc).getWidth()) / 2, rectY + lm.getHeight() / 2 + 8);
             // header EN
             lm = font.getLineMetrics(headersEn[i], frc);
             layout = new TextLayout(headersEn[i], font, frc);
-            layout.draw(g2d, rectX + (i * rectWidth/ headersAr.length) + (int) (rectWidth/ headersAr.length - font.getStringBounds(headersEn[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 16);
+            layout.draw(g2d, rectX + (i * rectWidth / headersAr.length) + (int) (rectWidth / headersAr.length - font.getStringBounds(headersEn[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 16);
             // values
             font = shaaerFont.deriveFont(26f);
             lm = font.getLineMetrics(values[i], frc);
