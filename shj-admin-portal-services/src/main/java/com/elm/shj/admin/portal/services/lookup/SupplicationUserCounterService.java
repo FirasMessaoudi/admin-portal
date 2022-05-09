@@ -32,8 +32,8 @@ public class SupplicationUserCounterService extends GenericService<JpaSupplicati
         List<JpaSupplicationUserCounter> supplicationUserCounters = supplicationUserCounterRepository.findAllByDigitalId(digitalId);
         return mapList(supplicationUserCounters);
     }
-    public Optional<SupplicationUserCounterDto>findSupplicationCounterByCode(String code){
-        Optional<JpaSupplicationUserCounter> supplicationUserCounter = supplicationUserCounterRepository.findByCode(code);
+    public Optional<SupplicationUserCounterDto> findSupplicationCounterByCodeAndDigitalId(String code,String digitalId){
+        Optional<JpaSupplicationUserCounter> supplicationUserCounter = supplicationUserCounterRepository.findByCodeAndDigitalId(code,digitalId);
         if(supplicationUserCounter.isPresent()){
             return Optional.of(getMapper().fromEntity(supplicationUserCounter.get(),mappingContext));
         }

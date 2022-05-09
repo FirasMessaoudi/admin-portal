@@ -101,7 +101,7 @@ public class RosaryWsController {
     @PostMapping(value ="/save-supplication-user-counter")
     public ResponseEntity<WsResponse<?>> SaveSupplicationUserCounter(@RequestBody SupplicationUserCounterDto supplicationUserCounterDto){
         log.debug("save supplication user counter");
-        Optional<SupplicationUserCounterDto> supplicationUserCounter = supplicationUserCounterService.findSupplicationCounterByCode(supplicationUserCounterDto.getCode());
+        Optional<SupplicationUserCounterDto> supplicationUserCounter = supplicationUserCounterService.findSupplicationCounterByCodeAndDigitalId(supplicationUserCounterDto.getCode(),supplicationUserCounterDto.getDigitalId());
         if(supplicationUserCounter.isPresent()){
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.SUPPLICATION_COUNTER_EXIST_ALREADY.getCode())
