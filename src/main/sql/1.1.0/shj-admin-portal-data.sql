@@ -1,5 +1,6 @@
-USE
-shc_portal
+USE shc_portal
+GO
+
 -- insert integration web service user
 SET IDENTITY_INSERT shc_portal.shc_user ON;
 insert into shc_portal.shc_user (id, nin, gender, mobile_number, date_of_birth_gregorian, password_hash, first_name,
@@ -1010,8 +1011,7 @@ INSERT INTO shc_portal.shc_print_request_status_lk (code, lang, label) VALUES ('
 INSERT INTO shc_portal.shc_print_request_status_lk (code, lang, label) VALUES ('PRINTED', 'ar', N'تم الطباعة')
 INSERT INTO shc_portal.shc_print_request_status_lk (code, lang, label) VALUES ('DISTRIBUTED', 'en', 'Distributed')
 INSERT INTO shc_portal.shc_print_request_status_lk (code, lang, label) VALUES ('DISTRIBUTED', 'ar', N'تم التوزيع')
-delete from shc_portal.shc_portal.shc_print_request_status_lk
-where code = 'UNDER_PROCESSING' or code = 'PROCESSED'
+delete from shc_portal.shc_portal.shc_print_request_status_lk where code = 'UNDER_PROCESSING' or code = 'PROCESSED'
 GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('survey.activation.date', '17');

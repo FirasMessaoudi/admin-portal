@@ -1,5 +1,4 @@
-USE
-shc_portal
+USE shc_portal
 GO
 
 ALTER TABLE shc_portal.shc_applicant_health
@@ -1478,8 +1477,6 @@ create table shc_portal.shc_batch_main_collection
 );
 GO
 
-Use shc_portal
-
 exec sp_rename 'shc_portal.shc_supplication_Lk','shc_supplication_lk';
 Go
 
@@ -1496,13 +1493,9 @@ create table shc_portal.shc_supplication_lk
 );
 GO
 
-
-
 /*--------------------------------------------------------
 --  ddl for islamic rosary table
 --------------------------------------------------------*/
-USE shc_portal
-GO
 if not exists(select * from sys.tables where name = 'shc_user_supplication')
 create table shc_portal.shc_user_supplication
 (
@@ -1542,11 +1535,13 @@ GO
 
 ALTER TABLE shc_portal.shc_suggested_supplication_lk ALTER COLUMN code varchar(100) NOT NULL
 GO
+
 ALTER TABLE shc_portal.shc_suggested_supplication_lk ALTER COLUMN label nvarchar(300) NOT NULL
 GO
-GO
+
 alter table shc_portal.shc_supplication_user_counter alter column code varchar(100) NOT NULL
 GO
+
 ALTER TABLE shc_portal.shc_user_survey_question ALTER COLUMN question_code varchar(100) NOT NULL
 GO
 
@@ -1555,9 +1550,10 @@ GO
 
 ALTER TABLE shc_portal.shc_applicant ADD registration_channel varchar(20)
 GO
-GO
+
 ALTER TABLE shc_portal.shc_user_survey ADD survey_date smalldatetime NOT NULL default current_timestamp;
 GO
+
 alter table shc_portal.shc_company_staff alter column mobile_number varchar(20) null
 GO
 
