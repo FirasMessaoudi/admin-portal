@@ -88,12 +88,21 @@ public class SurveyWsController {
     public ResponseEntity<WsResponse<?>> SubmitUserSurvey(@RequestBody SurveyFormDto surveyFormDto){
         UserSurveyDto userSurveyDto=surveyFormDto.getUserSurvey();
         List<UserSurveyQuestionDto> userSurveyQuestionDtoList=surveyFormDto.getUserSurveyQuestions();
+        if (surveyFormDto.getUserSurvey().getDigitalId()==null || surveyFormDto.getUserSurvey().getDigitalId().equals("")) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.USER_NOT_FOUND.getCode()).referenceNumber(surveyFormDto.getUserSurvey().getDigitalId()).build()).build());
+        }
+        if (null == surveyFormDto.getUserSurvey().getSurveyType()||!surveyFormDto.getUserSurvey().getSurveyType().equals("DAILY") && !surveyFormDto.getUserSurvey().getSurveyType().equals("END_OF_RITUAL") ) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.INVALID_SURVEY_TYPE.getCode()).referenceNumber(surveyFormDto.getUserSurvey().getDigitalId()).build()).build());
+        }
         Optional<UserSurveyDto> userSurvey = userSurveyService.findSurveyByDigitalIdAndSurveyType(surveyFormDto.getUserSurvey().getDigitalId(),surveyFormDto.getUserSurvey().getSurveyType());
         if (userSurvey.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.SURVEY_ALREADY_SUBMITTED.getCode())
                             .referenceNumber(userSurveyDto.getDigitalId()).build()).build());
         }
+
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(userSurveyService.submitSurvey(userSurveyDto, userSurveyQuestionDtoList)).build());
 
     }
