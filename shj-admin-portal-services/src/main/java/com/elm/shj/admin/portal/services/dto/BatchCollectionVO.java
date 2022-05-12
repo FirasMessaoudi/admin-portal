@@ -17,5 +17,6 @@ import java.util.List;
 public class BatchCollectionVO {
     private String batchReferenceNumber;
     private String target;
+    private String locale;
     private List<BatchMainCollectionDto> batchMainCollections;
 }

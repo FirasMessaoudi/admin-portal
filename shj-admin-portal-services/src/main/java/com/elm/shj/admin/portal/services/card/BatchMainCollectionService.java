@@ -163,6 +163,11 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
 
 
     public Resource downloadBatchCards(String referenceNumber) throws Exception {
+        String path = referenceNumber + "/" + referenceNumber + ".zip";
+        return sftpService.downloadCardsZipFile(path);
+    }
+
+    public Resource downloadMainCollectionCards(String referenceNumber) throws Exception {
         Optional<JpaBatchMainCollection> batchMainCollectionOptional = batchMainCollectionRepository.findTopByReferenceNumberOrderByCreationDateDesc(referenceNumber);
         return sftpService.downloadCardsZipFile(batchMainCollectionOptional.map(JpaBatchMainCollection::getUrl).get());
     }
