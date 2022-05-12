@@ -1,4 +1,5 @@
-USE shc_portal
+USE
+shc_portal
 GO
 
 ALTER TABLE shc_portal.shc_applicant_health
@@ -1476,9 +1477,6 @@ create table shc_portal.shc_batch_main_collection
     update_date      smalldatetime null
 );
 GO
-
-exec sp_rename 'shc_portal.shc_supplication_Lk','shc_supplication_lk';
-Go
 
 if not exists(select * from sys.tables where name = 'shc_supplication_lk')
 create table shc_portal.shc_supplication_lk
