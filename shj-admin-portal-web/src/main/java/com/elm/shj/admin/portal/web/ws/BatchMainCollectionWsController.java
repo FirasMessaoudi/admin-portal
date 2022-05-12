@@ -54,6 +54,7 @@ public class BatchMainCollectionWsController {
      */
     @PostMapping("/generate")
     public ResponseEntity<WsResponse<?>> generateBatchCards(@RequestBody BatchCollectionVO batchCollection) {
+        log.info("Handler for {} , generating batch cards");
         batchMainCollectionService.generateBatchCards(batchCollection);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
                 "SUCCESS").build());
