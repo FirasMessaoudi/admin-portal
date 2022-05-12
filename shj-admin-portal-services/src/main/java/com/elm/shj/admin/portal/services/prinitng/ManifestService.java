@@ -9,6 +9,7 @@ import com.elm.shj.admin.portal.services.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -28,10 +29,10 @@ public class ManifestService {
     private final ApplicantRitualCardLiteService applicantCardService;
     private final CompanyStaffCardService staffCardService;
     private final PrintRequestService printRequestService;
+    private final MessageSource messageSource;
     private static Font shaaerFont;
     private final static String BADGE_RESOURCES_PATH = "badge/";
     private final static String ELM_FONT_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "DINNextLTArabic-Regular-2.ttf";
-
 
     static {
         try {
@@ -64,10 +65,10 @@ public class ManifestService {
                     g2d.setColor(new Color(86, 86, 86));
                     Font font = shaaerFont.deriveFont(40f);
                     g2d.setFont(font);
-                    drawRow(g2d, 0, Arrays.asList("Print Request Number", printRequestReferenceNumber));
-                    drawRow(g2d, 1, Arrays.asList("Batch Number", batchCollectionVO.getBatchReferenceNumber()));
-                    drawRow(g2d, 2, Arrays.asList("Collection Number", batchMainCollectionDto.getReferenceNumber()));
-                    drawRow(g2d, 3, Arrays.asList("Sub Collection Number", subCollectionVO.getReferenceNumber()));
+                    drawRow(g2d, 0, Arrays.asList(messageSource.getMessage("printing.request.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())), printRequestReferenceNumber));
+                    drawRow(g2d, 1, Arrays.asList(messageSource.getMessage("batch.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())), batchCollectionVO.getBatchReferenceNumber()));
+                    drawRow(g2d, 2, Arrays.asList(messageSource.getMessage("collection.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())), batchMainCollectionDto.getReferenceNumber()));
+                    drawRow(g2d, 3, Arrays.asList(messageSource.getMessage("sub.collection.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())), subCollectionVO.getReferenceNumber()));
                     List<ApplicantBasicInfoVo> basicInfoVoList = new ArrayList<>();
                     if (printRequestDto.getTarget().equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name()))
                         basicInfoVoList = applicantCardService.findApplicantsBasicInfoByDigitalIds(subCollectionVO.getDigitalIds());
@@ -76,7 +77,10 @@ public class ManifestService {
                     if (basicInfoVoList.size() != 0) {
                         font = shaaerFont.deriveFont(40f);
                         g2d.setFont(font);
-                        drawRow(g2d, 4, Arrays.asList("Shaaer Digital Id", "English Name", "Arabic Name", "Card Serial Number"));
+                        drawRow(g2d, 4, Arrays.asList(messageSource.getMessage("smart.id.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
+                                messageSource.getMessage("full.name.en", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
+                                messageSource.getMessage("full.name.ar", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
+                                messageSource.getMessage("card.serial", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
                         for (int i = 0; i < basicInfoVoList.size(); i++) {
                             font = shaaerFont.deriveFont(40f);
                             g2d.setFont(font);

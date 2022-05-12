@@ -1,19 +1,22 @@
 USE shc_portal
+GO
+
 ----------------      shc_package_type_lk           --------------------------------------
 delete from  shc_portal.shc_portal.shc_package_type_lk where id > 0
-    GO
+GO
+
 SET IDENTITY_INSERT shc_portal.shc_package_type_lk ON;
 GO
-INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (6, N'INTERNAL_HAJJ', N'en', N'INTERNAL_HAJJ', GETDATE());
-INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (7, N'INTERNAL_HAJJ', N'ar', N'حج داخلي', GETDATE());
-INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (8, N'EXTERNAL_HAJJ', N'en', N'EXTERNAL HAJJ', GETDATE());
-INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (9, N'EXTERNAL_UMRAH', N'en', N'EXTERNAL UMRAH', GETDATE());
-INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (10, N'INTERNAL_UMRAH', N'en', N'INTERNAL UMRAH', GETDATE());
-INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (11, N'COURTESY_HAJJ', N'en', N'COURTESY HAJJ', GETDATE());
-INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (12, N'EXTERNAL_HAJJ', N'ar', N'حج خارجى', GETDATE());
-INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (13, N'EXTERNAL_UMRAH', N'ar', N'عمره خارجية', GETDATE());
-INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (14, N'INTERNAL_UMRAH', N'ar', N'عمره داخليه', GETDATE());
-INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (15, N'COURTESY_HAJJ', N'ar', N'حج موسمي', GETDATE());
+INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (6, 'INTERNAL_HAJJ', 'en', 'INTERNAL_HAJJ', GETDATE());
+INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (7, 'INTERNAL_HAJJ', 'ar', 'حج داخلي', GETDATE());
+INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (8, 'EXTERNAL_HAJJ', 'en', 'EXTERNAL HAJJ', GETDATE());
+INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (9, 'EXTERNAL_UMRAH', 'en', 'EXTERNAL UMRAH', GETDATE());
+INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (10, 'INTERNAL_UMRAH', 'en', 'INTERNAL UMRAH', GETDATE());
+INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (11, 'COURTESY_HAJJ', 'en', 'COURTESY HAJJ', GETDATE());
+INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (12, 'EXTERNAL_HAJJ', 'ar', N'حج خارجى', GETDATE());
+INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (13, 'EXTERNAL_UMRAH', 'ar', N'عمره خارجية', GETDATE());
+INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (14, 'INTERNAL_UMRAH', 'ar', N'عمره داخليه', GETDATE());
+INSERT INTO shc_portal.shc_portal.shc_package_type_lk (id, code, lang, label, creation_date) VALUES (15, 'COURTESY_HAJJ', 'ar', N'حج موسمي', GETDATE());
 SET IDENTITY_INSERT shc_portal.shc_package_type_lk OFF;
 GO
 

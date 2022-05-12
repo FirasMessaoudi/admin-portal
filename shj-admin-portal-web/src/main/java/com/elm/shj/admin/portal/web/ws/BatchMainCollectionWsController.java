@@ -94,4 +94,19 @@ public class BatchMainCollectionWsController {
                 .body(fileResource);
     }
 
+    /*
+     * download main collections cards
+     *
+     * @param batchCollection the batch main collection with the batch reference number
+     * @return
+     */
+    @GetMapping(value = "/download/main-collection/{referenceNumber}", produces = "application/zip")
+    public ResponseEntity<Resource> downloadMainCollectionCards(@PathVariable("referenceNumber")String referenceNumber) throws Exception {
+
+        Resource fileResource = batchMainCollectionService.downloadMainCollectionCards(referenceNumber);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + referenceNumber + ".zip\"")
+                .body(fileResource);
+    }
+
 }

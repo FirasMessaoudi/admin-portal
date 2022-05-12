@@ -260,8 +260,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
         return CardVO.builder().digitalId(applicantCardDto.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin())
                 .id(applicantCardDto.getId())
                 .referenceNumber(applicantCardDto.getReferenceNumber())
-                .groupReferenceNumber(applicantCardDto.getApplicantRitual().getApplicantPackage().getRitualPackage().getCompanyRitualSeason().getApplicantGroups().size() > 0 ?
-                        applicantCardDto.getApplicantRitual().getApplicantPackage().getRitualPackage().getCompanyRitualSeason().getApplicantGroups().get(0).getReferenceNumber() : "")
+                .groupReferenceNumber(applicantCardDto.getApplicantRitual().getApplicant().getPackageReferenceNumber())
                 .statusCode(applicantCardDto.getStatusCode()).build();
     }
 
