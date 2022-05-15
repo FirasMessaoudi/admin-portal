@@ -59,13 +59,15 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
             return;
         }
         Path root = Paths.get(tmpdir);
-
+        boolean mainCollectionCreated = false;
         for (BatchMainCollectionDto batchMainCollectionDto : batchCollectionVO.getBatchMainCollections()) {
+            // get main collection by reference number and process only the new or the failed
             Optional<JpaBatchMainCollection> batchMainCollection = batchMainCollectionRepository.findTopByReferenceNumberOrderByCreationDateDesc(batchMainCollectionDto.getReferenceNumber());
             if (!batchMainCollection.isPresent() || batchMainCollection.get().getStatusCode().equals(ECollectionStatus.FAIL_TO_GENERATE.name())) {
                 if (batchMainCollection.isPresent()) {
                     batchMainCollectionDto.setId(batchMainCollection.get().getId());
                 }
+                // start the generation and update the status
                 batchMainCollectionDto.setStatusCode(ECollectionStatus.GENERATING_CARDS.name());
                 BatchMainCollectionDto savedBatchMainCollection = save(batchMainCollectionDto);
                 log.info("batch main collection saved successfully {} ", batchMainCollectionDto.getReferenceNumber());
@@ -84,6 +86,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                             }
                             if (badge != null) {
                                 try {
+                                    // save the card in temp folder
                                     byte[] decodedImage = Base64.getDecoder().decode(badge.getBadgeImage());
                                     InputStream targetStream = new ByteArrayInputStream(decodedImage);
                                     sftpPath = batchCollectionVO.getBatchReferenceNumber() + "/" + batchMainCollectionDto.getReferenceNumber() + "/" + subCollectionVO.getReferenceNumber();
@@ -92,8 +95,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                                     log.info("file uploaded successfully to: {}", sftpPath);
                                 } catch (IOException e) {
                                     log.debug("failed to save card in temporary folder");
-                                    savedBatchMainCollection.setStatusCode(ECollectionStatus.FAIL_TO_GENERATE.name());
-                                    save(savedBatchMainCollection);
+                                    updateMainCollection(savedBatchMainCollection, ECollectionStatus.FAIL_TO_GENERATE.name());
                                     break subCollectionLoop;
 
                                 }
@@ -102,8 +104,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                             }
                         } catch (Exception e) {
                             log.debug("failed to generate badge for uin {}", digitalId);
-                            savedBatchMainCollection.setStatusCode(ECollectionStatus.FAIL_TO_GENERATE.name());
-                            save(savedBatchMainCollection);
+                            updateMainCollection(savedBatchMainCollection, ECollectionStatus.FAIL_TO_GENERATE.name());
                             break subCollectionLoop;
                         }
 
@@ -124,17 +125,18 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                         try {
                             //upload main collection zip folder in sftp server and mark main collection as ready
                             sftpService.uploadFile(zipPath, fis, CARDS_CONFIG_PROPERTIES);
-                            savedBatchMainCollection.setStatusCode(ECollectionStatus.READY.name());
                             savedBatchMainCollection.setUrl(zipPath);
-                            save(savedBatchMainCollection);
+                            updateMainCollection(savedBatchMainCollection, ECollectionStatus.READY.name());
+                            if (!mainCollectionCreated) {
+                                mainCollectionCreated = true;
+                            }
                             break;
                         } catch (Exception e) {
                             log.debug("failed to connect to sftp server , will retry ");
                             Thread.sleep(retryPeriod);
                             if (i == maxRetries) {
                                 log.debug("failed to connect to sftp server after achieving max retries");
-                                savedBatchMainCollection.setStatusCode(ECollectionStatus.FAIL_TO_GENERATE.name());
-                                save(savedBatchMainCollection);
+                                updateMainCollection(savedBatchMainCollection, ECollectionStatus.FAIL_TO_GENERATE.name());
                             }
 
                         } finally {
@@ -143,8 +145,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                         }
                 } catch (Exception e) {
                     log.debug("failed to create zip folder for main collection {} ", batchMainCollectionDto.getReferenceNumber());
-                    savedBatchMainCollection.setStatusCode(ECollectionStatus.FAIL_TO_GENERATE.name());
-                    save(savedBatchMainCollection);
+                    updateMainCollection(savedBatchMainCollection, ECollectionStatus.FAIL_TO_GENERATE.name());
                 }
 
 
@@ -156,9 +157,8 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
         // create the zip file for  the whole batch
         try {
 
-            //TODO: check if files have been already created before zipping them or at least one main collection is ready
             Path zipSource = root.resolve(Paths.get(batchCollectionVO.getBatchReferenceNumber()));
-            if (Files.exists(zipSource)) {
+            if (mainCollectionCreated) {
                 // create zip folder for the whole batch in temp folder
                 sftpService.zipFolder(zipSource);
                 String zipPath = batchCollectionVO.getBatchReferenceNumber() + ".zip";
@@ -194,6 +194,10 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
         return directoryToBeDeleted.delete();
     }
 
+    private void updateMainCollection(BatchMainCollectionDto batchMainCollectionDto, String status) {
+        batchMainCollectionDto.setStatusCode(status);
+        save(batchMainCollectionDto);
+    }
 
     public Resource downloadBatchCards(String referenceNumber) throws Exception {
         String path = referenceNumber + "/" + referenceNumber + ".zip";
