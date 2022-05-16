@@ -183,7 +183,8 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
     }
 
     public List<BatchMainCollectionDto> findBatchStatusByReference(String referenceNumber) {
-        //TODO(flaifel): add inline comment why "_" is used with the reference number
+        // main collections in command portal use print request batch number as a prefix with "_" as a separator
+        // "_" was concatenated with the batchReferenceNumber when passing the parameters
         return mapList(batchMainCollectionRepository.findByReferenceNumberStartsWith(referenceNumber + "_"));
     }
 
