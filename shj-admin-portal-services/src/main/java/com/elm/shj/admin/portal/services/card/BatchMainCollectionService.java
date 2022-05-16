@@ -50,7 +50,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
     @Async
     //TODO(flaifel): split the code into different methods.
     public void generateBatchCards(BatchCollectionVO batchCollectionVO) {
-        //TODO(flaifel): add info log at the beginning and end of the method.
+        log.info("Starting card generation process ");
         // create temporary folder to save the cards before saving them in sftp server
         String tmpdir;
         try {
@@ -171,6 +171,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                 Files.delete(root.resolve(zipPath));
                 deleteDirectory(new File(root + "/" + batchCollectionVO.getBatchReferenceNumber()));
             }
+            log.info("finish card generation process ");
 
 
         } catch (IOException | JSchException e) {

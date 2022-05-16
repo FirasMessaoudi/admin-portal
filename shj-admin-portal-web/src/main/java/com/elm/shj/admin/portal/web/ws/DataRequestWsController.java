@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -177,6 +178,71 @@ public class DataRequestWsController {
     public ResponseEntity<WsResponse<?>> saveCompanies(@RequestBody List<CompanyDto> companies) {
 
         List<ErrorResponse> errorResponses = validationService.validateData(companies);
+
+        if (!errorResponses.isEmpty())
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
+                    errorResponses).build());
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+                Collections.emptyList()).build());
+    }
+
+    @PostMapping(value = "/save-planned-packages")
+    public ResponseEntity<WsResponse<?>> savePlannedPackages() {
+
+        List<ErrorResponse> errorResponses = validationService.validateData(new ArrayList<>());
+
+        if (!errorResponses.isEmpty())
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
+                    errorResponses).build());
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+                Collections.emptyList()).build());
+    }
+
+    @PostMapping(value = "/save-tafweej-data")
+    public ResponseEntity<WsResponse<?>> saveTafweejData() {
+
+        List<ErrorResponse> errorResponses = validationService.validateData(new ArrayList<>());
+
+        if (!errorResponses.isEmpty())
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
+                    errorResponses).build());
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+                Collections.emptyList()).build());
+    }
+
+    @PostMapping(value = "/save-pre-arrival-data")
+    public ResponseEntity<WsResponse<?>> savePreArrivalData() {
+
+        List<ErrorResponse> errorResponses = validationService.validateData(new ArrayList<>());
+
+        if (!errorResponses.isEmpty())
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
+                    errorResponses).build());
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+                Collections.emptyList()).build());
+    }
+
+    @PostMapping(value = "/save-group-list-data")
+    public ResponseEntity<WsResponse<?>> saveGroupListData() {
+
+        List<ErrorResponse> errorResponses = validationService.validateData(new ArrayList<>());
+
+        if (!errorResponses.isEmpty())
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
+                    errorResponses).build());
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+                Collections.emptyList()).build());
+    }
+
+    @PostMapping(value = "/save-group-main-data")
+    public ResponseEntity<WsResponse<?>> saveGroupMainData() {
+
+        List<ErrorResponse> errorResponses = validationService.validateData(new ArrayList<>());
 
         if (!errorResponses.isEmpty())
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
