@@ -1482,7 +1482,7 @@ if not exists(select * from sys.tables where name = 'shc_supplication_lk')
 create table shc_portal.shc_supplication_lk
 (
     id                      int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
-    code                    varchar(200)   NOT NULL,
+    code                    varchar(250)   NOT NULL,
     lang                    varchar(45)   NOT NULL,
     label                   nvarchar(1000)  NOT NULL,
     type                    nvarchar(100)  NOT NULL,
