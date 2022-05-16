@@ -14,11 +14,16 @@ import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 
@@ -74,10 +79,12 @@ public class BatchMainCollectionWsController {
      * @return image or list of images (each sub collection in one image)
      */
     @PostMapping("/manifest/generate/{printRequestReferenceNumber}")
-    public ResponseEntity<WsResponse<?>> generateManifestFileAsImages(@PathVariable("printRequestReferenceNumber") String printRequestReferenceNumber, @RequestBody BatchCollectionVO batchCollection) {
-        List<ManifestVo> manifest = manifestService.generateManifest(printRequestReferenceNumber, batchCollection, EManifestType.IMAGE);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
-                manifest).build());
+    public ResponseEntity<Resource> generateManifestFileAsImages(@PathVariable("printRequestReferenceNumber") String printRequestReferenceNumber, @RequestBody BatchCollectionVO batchCollection) {
+        ByteArrayInputStream manifest = manifestService.generateManifestPDF(printRequestReferenceNumber, batchCollection);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=subCollection.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(manifest));
     }
 
     /*
