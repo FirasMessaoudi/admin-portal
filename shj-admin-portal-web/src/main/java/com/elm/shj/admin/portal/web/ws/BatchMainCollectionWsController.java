@@ -66,9 +66,11 @@ public class BatchMainCollectionWsController {
     }
 
     @GetMapping("/collection-status/{reference}")
+    //TODO(flaifel): rename path variable to more related name like batchReferenceNumber
+    //TODO(flaifel): add method comment which describe what the method do
     public ResponseEntity<WsResponse<?>> trackBatchCollectionStatus(@PathVariable String reference) {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
-                batchMainCollectionService.findBatchStatusByReference(reference + "_")).build());
+                batchMainCollectionService.findBatchStatusByReference(reference)).build());
     }
 
     /**

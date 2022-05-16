@@ -48,10 +48,11 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
 
 
     @Async
+    //TODO(flaifel): split the code into different methods.
     public void generateBatchCards(BatchCollectionVO batchCollectionVO) {
-
+        //TODO(flaifel): add info log at the beginning and end of the method.
         // create temporary folder to save the cards before saving them in sftp server
-        String tmpdir = null;
+        String tmpdir;
         try {
             tmpdir = Files.createTempDirectory("cards").toFile().getAbsolutePath();
         } catch (IOException e) {
@@ -72,7 +73,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                 BatchMainCollectionDto savedBatchMainCollection = save(batchMainCollectionDto);
                 log.info("batch main collection saved successfully {} ", batchMainCollectionDto.getReferenceNumber());
 
-                String sftpPath = "";
+                String sftpPath;
                 subCollectionLoop:
                 for (SubCollectionVO subCollectionVO : batchMainCollectionDto.getSubCollections()) {
 
@@ -181,7 +182,8 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
     }
 
     public List<BatchMainCollectionDto> findBatchStatusByReference(String referenceNumber) {
-        return mapList(batchMainCollectionRepository.findByReferenceNumberStartsWith(referenceNumber));
+        //TODO(flaifel): add inline comment why "_" is used with the reference number
+        return mapList(batchMainCollectionRepository.findByReferenceNumberStartsWith(referenceNumber + "_"));
     }
 
     private boolean deleteDirectory(File directoryToBeDeleted) {
