@@ -6,6 +6,11 @@ import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.utils.ImageUtils;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +18,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.awt.Font;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 
@@ -97,8 +107,95 @@ public class ManifestService {
                         throw new RuntimeException("Error while converting image to base64");
                     }
                 }));
-
         return manifestImages;
+    }
+
+
+    //TODO(flaifel): remove unused lines of code
+    public ByteArrayInputStream generateManifestPDF(String printRequestReferenceNumber, BatchCollectionVO batchCollectionVO) {
+        //TODO(flaifel): add info logging at the beginning of the method and include reference number for the request and batch in the log message
+        PrintRequestDto printRequestDto = printRequestService.findByReferenceNumber(printRequestReferenceNumber);
+        Document doc = new Document();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+        PdfWriter.getInstance(doc, out);
+        doc.open();
+        batchCollectionVO.getBatchMainCollections().forEach(batchMainCollectionDto -> batchMainCollectionDto.getSubCollections()
+                .forEach(subCollectionVO -> {
+                    try {
+
+                       PdfPTable table = new PdfPTable(4);
+                        //com.itextpdf.text.Font subCollectionFont = FontFactory.getFont(ELM_FONT_RESOURCE_FILE_NAME, BaseFont.IDENTITY_H, 16, Font.PLAIN);
+                       PdfPCell referenceNumberHeader = new PdfPCell(new Phrase(messageSource.getMessage("printing.request.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+                       referenceNumberHeader.setColspan(2);
+                       // cell1.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+                       // cell1.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                       table.addCell(referenceNumberHeader);
+                       PdfPCell referenceNumberValue = new PdfPCell(new Phrase(printRequestReferenceNumber));
+                       referenceNumberValue.setColspan(2);
+                       table.addCell(referenceNumberValue);
+                       table.completeRow();
+                       PdfPCell batchNumberHeader = new PdfPCell(new Phrase(messageSource.getMessage("batch.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+                       batchNumberHeader.setColspan(2);
+                       table.addCell(batchNumberHeader);
+                       PdfPCell batchNumberValue = new PdfPCell(new Phrase(batchCollectionVO.getBatchReferenceNumber()));
+                       batchNumberValue.setColspan(2);
+                       table.addCell(batchNumberValue);
+                       table.completeRow();
+                       PdfPCell mainCollectionHeader = new PdfPCell(new Phrase(messageSource.getMessage("collection.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+                       mainCollectionHeader.setColspan(2);
+                       table.addCell(mainCollectionHeader);
+                       PdfPCell mainCollectionValue = new PdfPCell(new Phrase(batchMainCollectionDto.getReferenceNumber()));
+                       mainCollectionValue.setColspan(2);
+                       table.addCell(mainCollectionValue);
+                       table.completeRow();
+                       PdfPCell subCollectionHeader = new PdfPCell(new Phrase(messageSource.getMessage("sub.collection.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+                       subCollectionHeader.setColspan(2);
+                       table.addCell(subCollectionHeader);
+                       PdfPCell subCollectionValue = new PdfPCell(new Phrase(subCollectionVO.getReferenceNumber()));
+                       subCollectionValue.setColspan(2);
+                       table.addCell(subCollectionValue);
+                       table.completeRow();
+                       List<ApplicantBasicInfoVo> basicInfoVoList = new ArrayList<>();
+                        if (printRequestDto.getTarget().equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name()))
+                            basicInfoVoList = applicantCardService.findApplicantsBasicInfoByDigitalIds(subCollectionVO.getDigitalIds());
+                        else if (printRequestDto.getTarget().equalsIgnoreCase(EPrintingRequestTarget.STAFF.name()))
+                            basicInfoVoList = staffCardService.findStaffBasicInfoByDigitalIds(subCollectionVO.getDigitalIds());
+                        if (basicInfoVoList.size() != 0) {
+                            PdfPCell digitalIdHeader = new PdfPCell(new Phrase(messageSource.getMessage("smart.id.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+                            table.addCell(digitalIdHeader);
+                            PdfPCell fullNameEnHeader = new PdfPCell(new Phrase(messageSource.getMessage("full.name.en", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+                            table.addCell(fullNameEnHeader);
+                            PdfPCell fullNameArHeader = new PdfPCell(new Phrase(messageSource.getMessage("full.name.ar", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+                            table.addCell(fullNameArHeader);
+                            PdfPCell cardSerialHeader = new PdfPCell(new Phrase(messageSource.getMessage("card.serial", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+                            table.addCell(cardSerialHeader);
+                            for (ApplicantBasicInfoVo basicInfo: basicInfoVoList) {
+                                PdfPCell digitalId = new PdfPCell(new Phrase(basicInfo.getUin()));
+                                table.addCell(digitalId);
+                                PdfPCell fullNameEn = new PdfPCell(new Phrase(basicInfo.getFullNameEn()));
+                                table.addCell(fullNameEn);
+                                PdfPCell fullNameAr = new PdfPCell(new Phrase(basicInfo.getFullNameAr()));
+                                table.addCell(fullNameAr);
+                                PdfPCell cardSerial = new PdfPCell(new Phrase(basicInfo.getSerialNumber() == null ?  "---" :  basicInfo.getSerialNumber()));
+                                table.addCell(cardSerial);
+                            }
+                        }
+                        doc.add(table);
+                        doc.newPage();
+                    } catch (DocumentException e) {
+                        //TODO(flaifel): add error log
+                        doc.close();
+                        throw new RuntimeException("Error while creating document");
+                    }
+                }));
+        } catch (DocumentException e) {
+            //TODO(flaifel): add error log
+            doc.close();
+            throw new RuntimeException("Error while creating document");
+        }
+        doc.close();
+        return new ByteArrayInputStream(out.toByteArray());
     }
 
     private void drawBody(Graphics2D g2d, ApplicantBasicInfoVo applicantBasicInfoVo, int index) {

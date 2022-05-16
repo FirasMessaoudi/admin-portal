@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -54,7 +52,6 @@ public class SftpService {
     private static final String SESSION_CONFIG_STRICT_HOST_KEY_CHECKING = "StrictHostKeyChecking";
     private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
     private static final String CARDS_CONFIG_PROPERTIES = "cardsConfigProperties";
-    private static final String DATA_UPLOAD_CONFIG_PROPERTIES = "dataUploadConfigProperties";
 
 
     /**
@@ -65,14 +62,14 @@ public class SftpService {
      * @return if the file was uploaded successfully
      * @throws JSchException in case of operation failure
      */
-    public boolean uploadFile(String targetPath, InputStream inputStream,String  configPropertiesType) throws JSchException {
-        SftpProperties config= getSftpPropertiesConfig( configPropertiesType);
+    public boolean uploadFile(String targetPath, InputStream inputStream,String configPropertiesType) throws JSchException {
+        SftpProperties config = getSftpPropertiesConfig(configPropertiesType);
 
-        log.info("Upload File Started, ftpServer [{}:{}], ftpPath [{}]", config.getHost(), config.getPort(), targetPath);
-        ChannelSftp sftp = this.createSftp( configPropertiesType);
+        log.info("Upload File Started, ftpServer [{}:{}], ftpPath [{}], root folder [{}]", config.getHost(), config.getPort(), targetPath, config.getRootFolder());
+        ChannelSftp sftp = this.createSftp(configPropertiesType);
         try {
             createDirs(config.getRootFolder(), sftp);
-            sftp.cd(config.getRootFolder());
+            sftp.cd(sftp.getHome() + config.getRootFolder());
             log.info("Change path to {}", config.getRootFolder());
 
             int index = targetPath.lastIndexOf("/");

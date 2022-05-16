@@ -3,10 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
-import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Calendar;
 
 /**
  * Validator for {@link UniqueCompanyStaff} annotation
@@ -39,9 +37,14 @@ public class UniqueCompanyStaffValidator implements ConstraintValidator<UniqueCo
             return false;
         }
         // staff should not exist or override flag should be true
-        CompanyStaffDto companyStaffDto=   (CompanyStaffDto) value;
-
-        return overrideCompanyStaffData || !companyStaffService.existsByBasicInfo(companyStaffDto.getIdNumber(), companyStaffDto.getPassportNumber(),companyStaffDto.getDateOfBirthGregorian(),companyStaffDto.getDateOfBirthHijri());
+        CompanyStaffDto companyStaffDto = (CompanyStaffDto) value;
+        if (companyStaffDto.getDateOfBirthGregorian() != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(companyStaffDto.getDateOfBirthGregorian());
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            companyStaffDto.setDateOfBirthGregorian(calendar.getTime());
+        }
+        return overrideCompanyStaffData || !companyStaffService.existsByBasicInfo(companyStaffDto.getIdNumber(), companyStaffDto.getPassportNumber(), companyStaffDto.getDateOfBirthGregorian(), companyStaffDto.getDateOfBirthHijri());
     }
 
 }

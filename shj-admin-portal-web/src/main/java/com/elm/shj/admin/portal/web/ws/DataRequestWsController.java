@@ -147,5 +147,43 @@ public class DataRequestWsController {
                 Collections.emptyList()).build());
     }
 
+    @PostMapping(value = "/save-ritual-seasons")
+    public ResponseEntity<WsResponse<?>> saveRitualSeasons(@RequestBody List<RitualSeasonDto> ritualSeasons) {
+
+        List<ErrorResponse> errorResponses = validationService.validateData(ritualSeasons);
+
+        if (!errorResponses.isEmpty())
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
+                    errorResponses).build());
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+                Collections.emptyList()).build());
+    }
+
+    @PostMapping(value = "/save-housing-data")
+    public ResponseEntity<WsResponse<?>> saveHousingData(@RequestBody List<PackageHousingDto> packageHousings) {
+
+        List<ErrorResponse> errorResponses = validationService.validateData(packageHousings);
+
+        if (!errorResponses.isEmpty())
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
+                    errorResponses).build());
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+                Collections.emptyList()).build());
+    }
+
+    @PostMapping(value = "/save-companies")
+    public ResponseEntity<WsResponse<?>> saveCompanies(@RequestBody List<CompanyDto> companies) {
+
+        List<ErrorResponse> errorResponses = validationService.validateData(companies);
+
+        if (!errorResponses.isEmpty())
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
+                    errorResponses).build());
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+                Collections.emptyList()).build());
+    }
 
 }
