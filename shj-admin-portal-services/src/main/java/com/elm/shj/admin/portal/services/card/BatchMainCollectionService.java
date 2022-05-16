@@ -182,10 +182,10 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
 
     }
 
-    public List<BatchMainCollectionDto> findBatchStatusByReference(String referenceNumber) {
+    public List<BatchMainCollectionDto> findBatchStatusByReference(String BatchReferenceNumber) {
         // main collections in command portal use print request batch number as a prefix with "_" as a separator
         // "_" was concatenated with the batchReferenceNumber when passing the parameters
-        return mapList(batchMainCollectionRepository.findByReferenceNumberStartsWith(referenceNumber + "_"));
+        return mapList(batchMainCollectionRepository.findByReferenceNumberStartsWith(BatchReferenceNumber + "_"));
     }
 
     private boolean deleteDirectory(File directoryToBeDeleted) {
