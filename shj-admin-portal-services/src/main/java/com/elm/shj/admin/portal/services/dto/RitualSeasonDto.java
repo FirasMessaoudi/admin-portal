@@ -3,6 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.elm.shj.admin.portal.services.data.validators.HijriDate;
+import com.elm.shj.admin.portal.services.data.validators.RitualTypeCode;
+import com.elm.shj.admin.portal.services.data.validators.SeasonYear;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,14 +29,18 @@ public class RitualSeasonDto implements Serializable {
     private long id;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
+    @SeasonYear
     private int seasonYear;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
+    @RitualTypeCode
     private String ritualTypeCode;
 
-    private int seasonStart;
+    @HijriDate(minOffset = -1, maxOffset = 1)
+    private long seasonStart;
 
-    private int seasonEnd;
+    @HijriDate(minOffset = -1, maxOffset = 1)
+    private long seasonEnd;
 
     private boolean activated;
 }

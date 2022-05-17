@@ -5,8 +5,6 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.card.BatchMainCollectionService;
 import com.elm.shj.admin.portal.services.dto.BatchCollectionVO;
-import com.elm.shj.admin.portal.services.dto.EManifestType;
-import com.elm.shj.admin.portal.services.dto.ManifestVo;
 import com.elm.shj.admin.portal.services.prinitng.ManifestService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -14,7 +12,6 @@ import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -23,8 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.util.List;
 
 
 /**
@@ -65,10 +60,11 @@ public class BatchMainCollectionWsController {
                 "SUCCESS").build());
     }
 
-    @GetMapping("/collection-status/{reference}")
-    public ResponseEntity<WsResponse<?>> trackBatchCollectionStatus(@PathVariable String reference) {
+    @GetMapping("/collection-status/{batchReferenceNumber}")
+    // this endpoint responsible for checking the main collections statuses for the business operation portal
+    public ResponseEntity<WsResponse<?>> trackBatchCollectionStatus(@PathVariable String batchReferenceNumber) {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
-                batchMainCollectionService.findBatchStatusByReference(reference + "_")).build());
+                batchMainCollectionService.findBatchStatusByReference(batchReferenceNumber)).build());
     }
 
     /**

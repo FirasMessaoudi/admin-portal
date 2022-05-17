@@ -48,10 +48,11 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
 
 
     @Async
+    //TODO(flaifel): split the code into different methods.
     public void generateBatchCards(BatchCollectionVO batchCollectionVO) {
-
+        log.info("Starting card generation process ");
         // create temporary folder to save the cards before saving them in sftp server
-        String tmpdir = null;
+        String tmpdir;
         try {
             tmpdir = Files.createTempDirectory("cards").toFile().getAbsolutePath();
         } catch (IOException e) {
@@ -72,7 +73,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                 BatchMainCollectionDto savedBatchMainCollection = save(batchMainCollectionDto);
                 log.info("batch main collection saved successfully {} ", batchMainCollectionDto.getReferenceNumber());
 
-                String sftpPath = "";
+                String sftpPath;
                 subCollectionLoop:
                 for (SubCollectionVO subCollectionVO : batchMainCollectionDto.getSubCollections()) {
 
@@ -170,6 +171,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                 Files.delete(root.resolve(zipPath));
                 deleteDirectory(new File(root + "/" + batchCollectionVO.getBatchReferenceNumber()));
             }
+            log.info("finish card generation process ");
 
 
         } catch (IOException | JSchException e) {
@@ -180,8 +182,10 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
 
     }
 
-    public List<BatchMainCollectionDto> findBatchStatusByReference(String referenceNumber) {
-        return mapList(batchMainCollectionRepository.findByReferenceNumberStartsWith(referenceNumber));
+    public List<BatchMainCollectionDto> findBatchStatusByReference(String BatchReferenceNumber) {
+        // main collections in command portal use print request batch number as a prefix with "_" as a separator
+        // "_" was concatenated with the batchReferenceNumber when passing the parameters
+        return mapList(batchMainCollectionRepository.findByReferenceNumberStartsWith(BatchReferenceNumber + "_"));
     }
 
     private boolean deleteDirectory(File directoryToBeDeleted) {

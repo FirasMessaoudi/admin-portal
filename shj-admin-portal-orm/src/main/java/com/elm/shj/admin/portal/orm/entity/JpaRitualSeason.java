@@ -38,10 +38,10 @@ public class JpaRitualSeason implements Serializable {
     private String ritualTypeCode;
 
     @Column(name = "season_start", nullable = false)
-    private int seasonStart;
+    private long seasonStart;
 
     @Column(name = "season_end", nullable = false)
-    private int seasonEnd;
+    private long seasonEnd;
 
     private boolean active;
 

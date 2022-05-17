@@ -111,8 +111,9 @@ public class ManifestService {
     }
 
 
+    //TODO(flaifel): remove unused lines of code
     public ByteArrayInputStream generateManifestPDF(String printRequestReferenceNumber, BatchCollectionVO batchCollectionVO) {
-        List<ManifestVo> manifestImages = new ArrayList<>();
+        //TODO(flaifel): add info logging at the beginning of the method and include reference number for the request and batch in the log message
         PrintRequestDto printRequestDto = printRequestService.findByReferenceNumber(printRequestReferenceNumber);
         Document doc = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -233,11 +234,13 @@ public class ManifestService {
                         doc.add(table);
                         doc.newPage();
                     } catch (DocumentException e) {
+                        //TODO(flaifel): add error log
                         doc.close();
                         throw new RuntimeException("Error while creating document");
                     }
                 }));
         } catch (DocumentException e) {
+            //TODO(flaifel): add error log
             doc.close();
             throw new RuntimeException("Error while creating document");
         }
