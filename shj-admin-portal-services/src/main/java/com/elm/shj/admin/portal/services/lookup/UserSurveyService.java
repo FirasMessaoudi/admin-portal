@@ -16,10 +16,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 
 /**
  * Service handling User Survey Question
@@ -36,14 +40,14 @@ public class UserSurveyService extends GenericService<JpaUserSurvey, UserSurveyD
     private final UserSurveyQuestionService userSurveyQuestionService;
     private final ApplicantPackageService applicantPackageService;
     private final RitualPackageService ritualPackageService;
-    @Value("${survey.activation.date}")
-    private int surveyActivationDate;
+    @Value("${daily.survey.activation.hour}")
+    private int dailySurveyActivationHour;
 
     public Optional<UserSurveyDto> findSurveyByDigitalIdAndSurveyType(String digitalId, String surveyType) {
         Calendar cal = Calendar.getInstance();
         Date currentDate = cal.getInstance().getTime();
         if (surveyType.equals("DAILY")) {
-            if (cal.get(Calendar.HOUR_OF_DAY) <= surveyActivationDate) {
+            if (cal.get(Calendar.HOUR_OF_DAY) <= dailySurveyActivationHour) {
                 cal.add(Calendar.DATE, -1);
                 currentDate = cal.getTime();
             }
@@ -65,7 +69,9 @@ public class UserSurveyService extends GenericService<JpaUserSurvey, UserSurveyD
         Calendar cal = Calendar.getInstance();
         Date currentDate = cal.getInstance().getTime();
         Date endRitualDate = applicantPackageService.findJpaApplicantPackageByApplicantUin(digitalId).getEndDate();
-        if (currentDate.after(endRitualDate)) {
+        Date maxDate = new Date(endRitualDate.getTime()+ 172800000);
+        Date minDate = new Date(endRitualDate.getTime()- 86400000);
+        if (currentDate.after(minDate) && currentDate.before(maxDate)) {
             return true;
         }
         else return false;
@@ -74,7 +80,9 @@ public class UserSurveyService extends GenericService<JpaUserSurvey, UserSurveyD
         Calendar cal = Calendar.getInstance();
         Date currentDate = cal.getInstance().getTime();
         Date endRitualDate = ritualPackageService.findByGroupLeaderDigitalId(digitalId).getEndDate();
-        if (currentDate.after(endRitualDate)) {
+        Date maxDate = new Date(endRitualDate.getTime()+ 172800000);
+        Date minDate = new Date(endRitualDate.getTime()- 86400000);
+        if (currentDate.after(minDate) && currentDate.before(maxDate)) {
             return true;
         }
         else return false;

@@ -1013,6 +1013,5 @@ INSERT INTO shc_portal.shc_print_request_status_lk (code, lang, label) VALUES ('
 INSERT INTO shc_portal.shc_print_request_status_lk (code, lang, label) VALUES ('DISTRIBUTED', 'ar', N'تم التوزيع')
 delete from shc_portal.shc_portal.shc_print_request_status_lk where code = 'UNDER_PROCESSING' or code = 'PROCESSED'
 GO
-
-INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('survey.activation.date', '17');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('daily.survey.activation.hour', '17');
 GO
