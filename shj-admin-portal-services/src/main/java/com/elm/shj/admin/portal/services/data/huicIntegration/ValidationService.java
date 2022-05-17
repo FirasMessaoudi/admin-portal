@@ -5,14 +5,8 @@ package com.elm.shj.admin.portal.services.data.huicIntegration;
 
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealth;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthDisease;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantHealthImmunization;
-import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
-import com.elm.shj.admin.portal.orm.repository.ApplicantHealthDiseaseRepository;
-import com.elm.shj.admin.portal.orm.repository.ApplicantHealthImmunizationRepository;
-import com.elm.shj.admin.portal.orm.repository.ApplicantHealthRepository;
-import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
+import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
@@ -72,6 +66,7 @@ public class ValidationService {
     private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
     private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
+    private final RitualSeasonRepository ritualSeasonRepository;
 
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {
@@ -117,12 +112,21 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(CompanyStaffRitualDto.class)) {
                     saveCompanyStaffRitualData((CompanyStaffRitualDto) items.get(i));
                 }
+                if (items.get(i).getClass().isAssignableFrom(RitualSeasonDto.class)) {
+                    saveRitualSeasons((RitualSeasonDto) items.get(i));
+                }
             }
 
         }
 
 
         return errorResponses;
+    }
+
+    private void saveRitualSeasons(RitualSeasonDto ritualSeasonDto) {
+        ritualSeasonDto.setActivated(true);
+        ritualSeasonRepository.save((JpaRitualSeason) findMapper(RitualSeasonDto.class).toEntity(ritualSeasonDto, mappingContext));
+
     }
 
     private void saveCompanyStaffRitualData(CompanyStaffRitualDto companyStaffRitualDto) {

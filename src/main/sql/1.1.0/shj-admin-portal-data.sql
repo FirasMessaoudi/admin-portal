@@ -920,7 +920,7 @@ GO
 SET IDENTITY_INSERT shc_portal.shc_supplication_lk ON;
 INSERT INTO shc_portal.shc_supplication_lk(id, code, lang, label, type, counter)
 VALUES (1, 'MORNING_SUPPLICATION_1', 'en',
-        'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belonges whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.',
+        'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belongs whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.',
         'Morning Supplications', 3);
 INSERT INTO shc_portal.shc_supplication_lk(id, code, lang, label, type, counter)
 VALUES (2, 'MORNING_SUPPLICATION_1', 'ar',
