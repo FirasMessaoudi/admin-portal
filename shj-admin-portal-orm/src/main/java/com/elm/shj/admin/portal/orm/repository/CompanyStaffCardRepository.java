@@ -39,7 +39,7 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
             @Param("cardStatus") List<String> cardStatus);
 
     @Query("select c from JpaCompanyStaffCard c where c.statusCode = :cardStatus and c.id NOT IN :excludedCardsIds " +
-            "and (c.id NOT IN(select p.cardId from JpaPrintRequestCard p where p.printRequest.statusCode <> :printRequestStatus or c.statusCode <> :cardStatus)) " +
+            "and (c.id NOT IN(select p.cardId from JpaPrintRequestCard p where (p.printRequest.statusCode <> :printRequestStatus or c.statusCode <> :cardStatus) and p.printRequest.target='STAFF')) " +
             "and (c.companyStaffDigitalId.suin LIKE '%'+:uin+'%' OR :uin IS NULL)" +
             "and (c.companyRitualSeason.company.code = :companyCode OR :companyCode IS NULL)" +
             "and (c.companyStaffDigitalId.companyStaff.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)" +
@@ -51,7 +51,7 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
                                                    @Param("ritualCode") String ritualCode, @Param("excludedCardsIds") List<Long> excludedCardsIds);
 
     @Query("select c from JpaCompanyStaffCard c where c.statusCode = :cardStatus and c.id NOT IN :excludedCardsIds " +
-            "and (c.id NOT IN(select p.cardId from JpaPrintRequestCard p where p.printRequest.statusCode <> :printRequestStatus or c.statusCode <> :cardStatus)) " +
+            "and (c.id NOT IN(select p.cardId from JpaPrintRequestCard p where (p.printRequest.statusCode <> :printRequestStatus or c.statusCode <> :cardStatus) and p.printRequest.target='STAFF')) " +
             "and (c.companyStaffDigitalId.suin LIKE '%'+:uin+'%' OR :uin IS NULL)" +
             "and (c.companyRitualSeason.company.code = :companyCode OR :companyCode IS NULL)" +
             "and (c.companyStaffDigitalId.companyStaff.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)" +

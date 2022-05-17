@@ -24,7 +24,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
 
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi WHERE card.id " +
             "NOT IN (SELECT card2.id FROM JpaApplicantCard card2 LEFT JOIN JpaPrintRequestCard prc  ON card2.id= prc.cardId  LEFT JOIN JpaPrintRequest pr ON prc.printRequest.id=pr.id " +
-            "WHERE pr.statusCode <> :printRequestStatus or card2.statusCode <> :cardStatus) AND card.id NOT IN :excludedCardsIds " +
+            "WHERE (pr.statusCode <> :printRequestStatus or card2.statusCode <> :cardStatus) and pr.target='APPLICANT') AND card.id NOT IN :excludedCardsIds " +
             "AND (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (a.idNumber LIKE '%'+:idNumber+'%' OR :idNumber IS NULL) " +
             "AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL) " +
             "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
@@ -37,7 +37,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
 
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi WHERE card.id " +
             "NOT IN (SELECT card2.id FROM JpaApplicantCard card2 LEFT JOIN JpaPrintRequestCard prc ON card2.id= prc.cardId LEFT JOIN JpaPrintRequest pr ON prc.printRequest.id=pr.id " +
-            "WHERE pr.statusCode <> :printRequestStatus OR card2.statusCode <> :cardStatus) AND card.id NOT IN :excludedCardsIds " +
+            "WHERE (pr.statusCode <> :printRequestStatus OR card2.statusCode <> :cardStatus)  and pr.target='APPLICANT') AND card.id NOT IN :excludedCardsIds " +
             "AND (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (a.idNumber LIKE '%'+:idNumber+'%' OR :idNumber IS NULL) " +
             "AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL) " +
             "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
