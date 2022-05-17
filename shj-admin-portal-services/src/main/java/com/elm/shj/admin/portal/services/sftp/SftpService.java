@@ -116,7 +116,7 @@ public class SftpService {
         ByteArrayOutputStream outputStream = null;
         try {
             createDirs(config.getRootFolder(), sftp);
-            sftp.cd(config.getRootFolder());
+            sftp.cd(sftp.getHome() + config.getRootFolder());
             log.info("Change path to {}", config.getRootFolder());
             outputStream = new ByteArrayOutputStream();
             sftp.get(targetPath, outputStream);
@@ -147,7 +147,7 @@ public class SftpService {
         ChannelSftp sftp = null;
         try {
             sftp = this.createSftp( configPropertiesType);
-            sftp.cd(config.getRootFolder());
+            sftp.cd(sftp.getHome() + config.getRootFolder());
             sftp.rm(targetPath);
             return true;
         } catch (Exception e) {
@@ -366,7 +366,7 @@ public class SftpService {
         log.info("Download File Started, ftpServer [{}:{}], ftpPath [{}]", config.getHost(), config.getPort(), path);
         ChannelSftp sftp = this.createSftp(CARDS_CONFIG_PROPERTIES);
         try {
-            sftp.cd(config.getRootFolder());
+            sftp.cd(sftp.getHome() + config.getRootFolder());
             try(ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 sftp.get(path, outputStream);
                 log.info("Download file success. TargetPath: {}", path);

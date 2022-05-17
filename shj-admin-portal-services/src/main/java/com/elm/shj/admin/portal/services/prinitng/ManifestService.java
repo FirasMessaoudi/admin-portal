@@ -125,58 +125,108 @@ public class ManifestService {
                     try {
 
                        PdfPTable table = new PdfPTable(4);
-                        //com.itextpdf.text.Font subCollectionFont = FontFactory.getFont(ELM_FONT_RESOURCE_FILE_NAME, BaseFont.IDENTITY_H, 16, Font.PLAIN);
-                       PdfPCell referenceNumberHeader = new PdfPCell(new Phrase(messageSource.getMessage("printing.request.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+                       com.itextpdf.text.Font fontEn = FontFactory.getFont(ELM_FONT_RESOURCE_FILE_NAME, BaseFont.IDENTITY_H, 12, Font.TRUETYPE_FONT);
+                       com.itextpdf.text.Font fontAr = FontFactory.getFont(ELM_FONT_RESOURCE_FILE_NAME, BaseFont.IDENTITY_H, 12, Font.TRUETYPE_FONT);
+
+                       PdfPCell referenceNumberHeader = new PdfPCell(new Phrase(messageSource.getMessage("printing.request.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
+                               batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
                        referenceNumberHeader.setColspan(2);
-                       // cell1.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
-                       // cell1.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                       referenceNumberHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
+                       referenceNumberHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                       referenceNumberHeader.setFixedHeight(20f);
                        table.addCell(referenceNumberHeader);
+
                        PdfPCell referenceNumberValue = new PdfPCell(new Phrase(printRequestReferenceNumber));
                        referenceNumberValue.setColspan(2);
                        table.addCell(referenceNumberValue);
                        table.completeRow();
-                       PdfPCell batchNumberHeader = new PdfPCell(new Phrase(messageSource.getMessage("batch.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+
+                       PdfPCell batchNumberHeader = new PdfPCell(new Phrase(messageSource.getMessage("batch.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
+                               batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
                        batchNumberHeader.setColspan(2);
+                       batchNumberHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
+                       batchNumberHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                       batchNumberHeader.setFixedHeight(20f);
                        table.addCell(batchNumberHeader);
+
                        PdfPCell batchNumberValue = new PdfPCell(new Phrase(batchCollectionVO.getBatchReferenceNumber()));
                        batchNumberValue.setColspan(2);
                        table.addCell(batchNumberValue);
                        table.completeRow();
-                       PdfPCell mainCollectionHeader = new PdfPCell(new Phrase(messageSource.getMessage("collection.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+
+                       PdfPCell mainCollectionHeader = new PdfPCell(new Phrase(messageSource.getMessage("collection.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
+                               batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
                        mainCollectionHeader.setColspan(2);
+                       mainCollectionHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
+                       mainCollectionHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                       mainCollectionHeader.setFixedHeight(20f);
                        table.addCell(mainCollectionHeader);
+
                        PdfPCell mainCollectionValue = new PdfPCell(new Phrase(batchMainCollectionDto.getReferenceNumber()));
                        mainCollectionValue.setColspan(2);
                        table.addCell(mainCollectionValue);
                        table.completeRow();
-                       PdfPCell subCollectionHeader = new PdfPCell(new Phrase(messageSource.getMessage("sub.collection.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+
+                       PdfPCell subCollectionHeader = new PdfPCell(new Phrase(messageSource.getMessage("sub.collection.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
+                               batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
                        subCollectionHeader.setColspan(2);
+                       subCollectionHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
+                       subCollectionHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                       subCollectionHeader.setFixedHeight(20f);
                        table.addCell(subCollectionHeader);
+
                        PdfPCell subCollectionValue = new PdfPCell(new Phrase(subCollectionVO.getReferenceNumber()));
                        subCollectionValue.setColspan(2);
                        table.addCell(subCollectionValue);
                        table.completeRow();
+
                        List<ApplicantBasicInfoVo> basicInfoVoList = new ArrayList<>();
                         if (printRequestDto.getTarget().equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name()))
                             basicInfoVoList = applicantCardService.findApplicantsBasicInfoByDigitalIds(subCollectionVO.getDigitalIds());
                         else if (printRequestDto.getTarget().equalsIgnoreCase(EPrintingRequestTarget.STAFF.name()))
                             basicInfoVoList = staffCardService.findStaffBasicInfoByDigitalIds(subCollectionVO.getDigitalIds());
                         if (basicInfoVoList.size() != 0) {
-                            PdfPCell digitalIdHeader = new PdfPCell(new Phrase(messageSource.getMessage("smart.id.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+                            PdfPCell digitalIdHeader = new PdfPCell(new Phrase(messageSource.getMessage("smart.id.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
+                                    batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
+                            digitalIdHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
+                            digitalIdHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            digitalIdHeader.setFixedHeight(20f);
                             table.addCell(digitalIdHeader);
-                            PdfPCell fullNameEnHeader = new PdfPCell(new Phrase(messageSource.getMessage("full.name.en", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+
+                            PdfPCell fullNameEnHeader = new PdfPCell(new Phrase(messageSource.getMessage("full.name.en", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
+                                    batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
+                            fullNameEnHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
+                            fullNameEnHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            fullNameEnHeader.setFixedHeight(20f);
                             table.addCell(fullNameEnHeader);
-                            PdfPCell fullNameArHeader = new PdfPCell(new Phrase(messageSource.getMessage("full.name.ar", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+
+                            PdfPCell fullNameArHeader = new PdfPCell(new Phrase(messageSource.getMessage("full.name.ar", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
+                                    batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
+                            fullNameArHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
+                            fullNameArHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            fullNameArHeader.setFixedHeight(20f);
                             table.addCell(fullNameArHeader);
-                            PdfPCell cardSerialHeader = new PdfPCell(new Phrase(messageSource.getMessage("card.serial", null, Locale.forLanguageTag(batchCollectionVO.getLocale()))));
+
+                            PdfPCell cardSerialHeader = new PdfPCell(new Phrase(messageSource.getMessage("card.serial", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
+                                    batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
+                            cardSerialHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
+                            cardSerialHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            cardSerialHeader.setFixedHeight(20f);
                             table.addCell(cardSerialHeader);
+
                             for (ApplicantBasicInfoVo basicInfo: basicInfoVoList) {
                                 PdfPCell digitalId = new PdfPCell(new Phrase(basicInfo.getUin()));
                                 table.addCell(digitalId);
+
                                 PdfPCell fullNameEn = new PdfPCell(new Phrase(basicInfo.getFullNameEn()));
                                 table.addCell(fullNameEn);
-                                PdfPCell fullNameAr = new PdfPCell(new Phrase(basicInfo.getFullNameAr()));
+
+                                PdfPCell fullNameAr = new PdfPCell(new Phrase(basicInfo.getFullNameAr(), batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
+                                fullNameAr.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
+                                fullNameAr.setHorizontalAlignment(batchCollectionVO.getLocale().equals("en") ? Element.ALIGN_LEFT : Element.ALIGN_CENTER);
+                                fullNameAr.setFixedHeight(20f);
                                 table.addCell(fullNameAr);
+
                                 PdfPCell cardSerial = new PdfPCell(new Phrase(basicInfo.getSerialNumber() == null ?  "---" :  basicInfo.getSerialNumber()));
                                 table.addCell(cardSerial);
                             }

@@ -126,9 +126,9 @@ public class BadgeService {
         addStaffCamp(g2d, "");
         addCardStatus(g2d);
         addStaffFooterBg(g2d);
-        String decodedBarCode = getBarCodeForStaffItemsAsString(staffData, staffData.getCardReferenceNumber());
+        String decodedBarCode = getBarCodeForStaffItemsAsString(staffData, String.valueOf(staffData.getCardId()));
         addBarCode(g2d, decodedBarCode, false);
-        addQrCodeRectangle(g2d, staffData.getSuin(), staffData.getCardReferenceNumber(), ritualType, staffData.getRitualSeason());
+        addQrCodeRectangle(g2d, staffData.getSuin(), String.valueOf(staffData.getCardId()), ritualType, staffData.getRitualSeason());
         String imgStr = null;
         try {
             imgStr = ImageUtils.imgToBase64String(badgeImage);
