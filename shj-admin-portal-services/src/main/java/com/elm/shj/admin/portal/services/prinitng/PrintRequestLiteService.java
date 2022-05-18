@@ -210,9 +210,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
                     // to get applicant cards based on the ids list from DB by JPQL Query
                     List<ApplicantCardDto> applicantCards = applicantCardService.findApplicantCards(cardIds);
 
-                    Comparator<ApplicantCardDto> comparator = Comparator.comparing(cards ->
-                            cards.getApplicantRitual().getApplicantPackage().getRitualPackage().getCompanyRitualSeason().getApplicantGroups().size() > 0 ?
-                                    cards.getApplicantRitual().getApplicantPackage().getRitualPackage().getCompanyRitualSeason().getApplicantGroups().get(0).getReferenceNumber() : "");
+                    Comparator<ApplicantCardDto> comparator = Comparator.comparing(cards -> cards.getApplicantRitual().getApplicant().getPackageReferenceNumber());
                     comparator = comparator.thenComparing(Comparator.comparing(cards -> cards.getCompanyLite().getCode()));
                     comparator = comparator.thenComparing(Comparator.comparing(cards -> cards.getApplicantRitual().getApplicant().getFullNameEn()));
                     applicantCards.stream().sorted(comparator);
@@ -235,9 +233,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
                     List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
                     // to get applicant cards based on the ids list from DB by JPQL Query
                     List<CompanyStaffCardDto> staffCards = companyStaffCardService.findStaffCards(cardIds);
-                    Comparator<CompanyStaffCardDto> comparator = Comparator.comparing(cards ->
-                            cards.getCompanyRitualSeason().getApplicantGroups().size() > 0 ?
-                                    cards.getCompanyRitualSeason().getApplicantGroups().get(0).getReferenceNumber() : "");
+                    Comparator<CompanyStaffCardDto> comparator = Comparator.comparing(cards -> cards.getCompanyRitualSeason().getApplicantGroups().get(0).getReferenceNumber());
                     comparator = comparator.thenComparing(Comparator.comparing(cards -> cards.getCompanyRitualSeason().getCompany().getCode()));
                     comparator = comparator.thenComparing(Comparator.comparing(cards -> cards.getCompanyStaffDigitalId().getCompanyStaff().getFullNameEn()));
                     staffCards.stream().sorted(comparator);
@@ -269,8 +265,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
         return CardVO.builder().digitalId(suin)
                 .id(staffCardDto.getId())
                 .referenceNumber(staffCardDto.getReferenceNumber())
-                .groupReferenceNumber(staffCardDto.getCompanyRitualSeason().getApplicantGroups().size() > 0 ?
-                        staffCardDto.getCompanyRitualSeason().getApplicantGroups().get(0).getReferenceNumber() : "")
+                .groupReferenceNumber(staffCardDto.getCompanyRitualSeason().getApplicantGroups().get(0).getReferenceNumber())
                 .statusCode(staffCardDto.getStatusCode()).build();
     }
 
