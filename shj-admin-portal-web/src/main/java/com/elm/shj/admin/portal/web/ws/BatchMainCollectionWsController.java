@@ -5,8 +5,8 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.card.BatchMainCollectionService;
 import com.elm.shj.admin.portal.services.dto.BatchCollectionVO;
+import com.elm.shj.admin.portal.services.dto.BatchMainCollectionDto;
 import com.elm.shj.admin.portal.services.prinitng.ManifestService;
-import com.elm.shj.admin.portal.services.sftp.SftpService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 
 
 /**
@@ -44,18 +45,17 @@ public class BatchMainCollectionWsController {
     private final BatchMainCollectionService batchMainCollectionService;
     private final ManifestService manifestService;
 
-    private final SftpService sftpService;
 
     /**
      * generate batch cards
      *
      * @param batchCollection the batch main collection with the batch reference number
-     * @return
      */
     @PostMapping("/generate")
     public ResponseEntity<WsResponse<?>> generateBatchCards(@RequestBody BatchCollectionVO batchCollection) {
-        log.info("Handler for {} , generating batch cards");
+        log.info("Start generating batch cards {}", batchCollection);
         batchMainCollectionService.generateBatchCards(batchCollection);
+        log.info("Finish generating batch cards with response {}", "SUCCESS");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
                 "SUCCESS").build());
     }
@@ -63,8 +63,11 @@ public class BatchMainCollectionWsController {
     @GetMapping("/collection-status/{batchReferenceNumber}")
     // this endpoint responsible for checking the main collections statuses for the business operation portal
     public ResponseEntity<WsResponse<?>> trackBatchCollectionStatus(@PathVariable String batchReferenceNumber) {
+        log.info("Start track Batch Collection Status {}", batchReferenceNumber);
+        List<BatchMainCollectionDto> batchStatusByReference = batchMainCollectionService.findBatchStatusByReference(batchReferenceNumber);
+        log.info("Finish track Batch Collection Status with response {}", batchStatusByReference);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
-                batchMainCollectionService.findBatchStatusByReference(batchReferenceNumber)).build());
+                batchStatusByReference).build());
     }
 
     /**
@@ -76,7 +79,9 @@ public class BatchMainCollectionWsController {
      */
     @PostMapping("/manifest/generate/{printRequestReferenceNumber}")
     public ResponseEntity<Resource> generateManifestFileAsImages(@PathVariable("printRequestReferenceNumber") String printRequestReferenceNumber, @RequestBody BatchCollectionVO batchCollection) {
+        log.info("Start Generate manifest file as images {},{}", printRequestReferenceNumber, batchCollection);
         ByteArrayInputStream manifest = manifestService.generateManifestPDF(printRequestReferenceNumber, batchCollection);
+        log.info("Finish Generate manifest file as images with response {}", new InputStreamResource(manifest));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=subCollection.pdf")
                 .contentType(MediaType.APPLICATION_PDF)
@@ -90,9 +95,10 @@ public class BatchMainCollectionWsController {
      * @return
      */
     @GetMapping(value = "/download/{referenceNumber}", produces = "application/zip")
-    public ResponseEntity<Resource> downloadBatchCards(@PathVariable("referenceNumber")String referenceNumber) throws Exception {
-
+    public ResponseEntity<Resource> downloadBatchCards(@PathVariable("referenceNumber") String referenceNumber) throws Exception {
+        log.info("Start download batch cards {}", referenceNumber);
         Resource fileResource = batchMainCollectionService.downloadBatchCards(referenceNumber);
+        log.info("Finish download batch cards with response {}", fileResource);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + referenceNumber + ".zip\"")
                 .body(fileResource);
@@ -105,9 +111,10 @@ public class BatchMainCollectionWsController {
      * @return
      */
     @GetMapping(value = "/download/main-collection/{referenceNumber}", produces = "application/zip")
-    public ResponseEntity<Resource> downloadMainCollectionCards(@PathVariable("referenceNumber")String referenceNumber) throws Exception {
-
+    public ResponseEntity<Resource> downloadMainCollectionCards(@PathVariable("referenceNumber") String referenceNumber) throws Exception {
+        log.info("Start download main collection cards {}", referenceNumber);
         Resource fileResource = batchMainCollectionService.downloadMainCollectionCards(referenceNumber);
+        log.info("Finish download main collection cards with response {}", fileResource);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + referenceNumber + ".zip\"")
                 .body(fileResource);
