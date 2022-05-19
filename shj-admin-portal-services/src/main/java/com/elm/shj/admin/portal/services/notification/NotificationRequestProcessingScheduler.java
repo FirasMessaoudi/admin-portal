@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.orm.repository.NotificationRequestRepository;
 import com.elm.shj.admin.portal.services.dto.ENotificationProcessingStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.core.LockAssert;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,8 +42,8 @@ public class NotificationRequestProcessingScheduler {
     @SchedulerLock(name = "notification-processing-task")
     void sendUserNotifications() {
         log.debug("send notification scheduler started ...");
-        Page<JpaNotificationRequest> notificationRequests = notificationRequestRepository.findNotificationRequests(PageRequest.ofSize(notificationProcessingBatchSize), ENotificationProcessingStatus.NEW.name(), new Date());
-        notificationRequests.forEach(
+
+        notificationRequestRepository.findNotificationRequests(PageRequest.ofSize(notificationProcessingBatchSize), ENotificationProcessingStatus.NEW.name(), new Date()).forEach(
                 notificationRequest -> {
                     notificationRequest.getProcessingStatus().setId(ENotificationProcessingStatus.UNDER_PROCESSING.getId());
                     notificationRequestRepository.save(notificationRequest);

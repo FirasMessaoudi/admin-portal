@@ -1015,3 +1015,5 @@ delete from shc_portal.shc_portal.shc_print_request_status_lk where code = 'UNDE
 GO
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('daily.survey.activation.hour', '17');
 GO
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('scheduler.notification.template.processing.cron', '0 0/4 * * * *');
+GO
