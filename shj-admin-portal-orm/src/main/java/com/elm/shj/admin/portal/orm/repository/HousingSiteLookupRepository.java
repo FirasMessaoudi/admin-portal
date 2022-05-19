@@ -17,4 +17,6 @@ import java.util.List;
 public interface HousingSiteLookupRepository extends JpaRepository<JpaHousingSiteLookup, Long> {
 
     List<JpaHousingSiteLookup> findByCodeIn(List<String> siteCodes);
+
+    boolean existsByCode(String code);
 }

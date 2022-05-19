@@ -67,6 +67,7 @@ public class ValidationService {
     private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
     private final RitualSeasonRepository ritualSeasonRepository;
+    private final PackageHousingRepository packageHousingRepository;
 
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {
@@ -115,12 +116,23 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(RitualSeasonDto.class)) {
                     saveRitualSeasons((RitualSeasonDto) items.get(i));
                 }
+                if (items.get(i).getClass().isAssignableFrom(PackageHousingDto.class)) {
+                    savePackageHousings((PackageHousingDto) items.get(i));
+                }
             }
 
         }
 
 
         return errorResponses;
+    }
+
+    private void savePackageHousings(PackageHousingDto packageHousingDto) {
+        packageHousingDto.setLat(packageHousingDto.getGeoLocation().getLat());
+        packageHousingDto.setLng(packageHousingDto.getGeoLocation().getLng());
+        packageHousingRepository.save((JpaPackageHousing) findMapper(PackageHousingDto.class).toEntity(packageHousingDto, mappingContext));
+
+
     }
 
     private void saveRitualSeasons(RitualSeasonDto ritualSeasonDto) {

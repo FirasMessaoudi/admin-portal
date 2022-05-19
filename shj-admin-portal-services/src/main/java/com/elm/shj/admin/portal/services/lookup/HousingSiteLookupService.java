@@ -37,4 +37,7 @@ public class HousingSiteLookupService extends GenericService<JpaHousingSiteLooku
     }
 
 
+    public boolean existsByCode(String code) {
+        return housingSiteLookupRepository.existsByCode(code);
+    }
 }

@@ -5,13 +5,14 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.List;
 
@@ -35,19 +36,15 @@ public class CompanyDto {
     private String code;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @OnlyCharacters(min = 3, max = 50, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
     private String labelAr;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
-    @OnlyCharacters(min = 3, max = 25, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
     private String labelEn;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
-    private int missionId;
+    private Integer missionId;
 
-    @Max(20)
-    @Min(10)
-    @NotNull(message = "validation.data.constraints.msg.20001")
+    @NullOrNotBlank(min = 5, max = 20)
     private String contactNumber;
 
     @NullOrNotBlank(min = 5, max = 75)
@@ -57,24 +54,26 @@ public class CompanyDto {
             , message = "validation.data.constraints.msg.20003")
     private String website;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
-    @OnlyCharacters(min = 3, max = 45, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @OnlyCharacters(min = 3, max = 45, allowEmpty = true, arabic = false, allowNumbers = true, allowSpecialChars = false)
     private String accreditationOrganization;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
-    @OnlyCharacters(min = 3, max = 45, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @OnlyCharacters(min = 3, max = 45, allowEmpty = true, arabic = false, allowNumbers = true, allowSpecialChars = false)
     private String accreditationNumber;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
     private Date accreditationDate;
 
     @Future
-    @NotNull(message = "validation.data.constraints.msg.20001")
     private Date accreditationExpiry;
 
     @NullOrNotBlank(min = 5, max = 50)
     @Email(message = "validation.data.constraints.msg.20003")
     private String email;
+
+    private String moiNumber;
+
+    private String crNumber;
+
+    private Integer typeCode;
 
     private Date creationDate;
     private Date updateDate;
