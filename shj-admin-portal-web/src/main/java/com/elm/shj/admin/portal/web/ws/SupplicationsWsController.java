@@ -1,6 +1,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 
+import com.elm.shj.admin.portal.services.dto.SupplicationLookupDto;
 import com.elm.shj.admin.portal.services.lookup.SupplicationsLookupService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Controller for exposing supplication web services for external party.
@@ -34,8 +37,11 @@ public class SupplicationsWsController {
 
     @GetMapping("/find/{type}")
     public ResponseEntity<WsResponse<?>> findSupplicationsByType(@PathVariable("type") String type) {
+        log.info("Start findSupplicationsByType  type {}" ,type);
+        List<SupplicationLookupDto> supplicationsListByType = supplicationsService.findSupplicationsListByType(type);
+        log.info("Finish findSupplicationsByType  {}, supplicationsListByTypeListSize: {}" ,"SUCCESS",supplicationsListByType ==null? null:supplicationsListByType.size() );
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(supplicationsService.findSupplicationsListByType(type)).build());
+                .body(supplicationsListByType).build());
     }
 
 

@@ -58,7 +58,7 @@ public class IncidentWsController {
      */
     @GetMapping("/attachment/{attachmentId}")
     public ResponseEntity<Resource> downloadAttachment(@PathVariable long attachmentId) throws Exception {
-        log.info("Downloading incident attachment with id# {} ", attachmentId);
+        log.info("Start downloadAttachment attachmentId: {} ", attachmentId);
         Resource attachment = applicantIncidentService.downloadApplicantIncidentAttachment(attachmentId);
 
         if (attachment != null) {
@@ -69,6 +69,7 @@ public class IncidentWsController {
 
             MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"");
+            log.info("Finish downloadAttachment attachmentName: {} ", attachmentName);
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"")
                     .body(attachment);
         }
@@ -85,32 +86,42 @@ public class IncidentWsController {
     public ResponseEntity<WsResponse<?>> create(@RequestPart("incident") @Valid ApplicantIncidentLiteDto applicantIncidentRequest,
                                                 @RequestPart(value = "attachment", required = false) MultipartFile incidentAttachment) throws Exception {
 
-        log.info("adding  applicant incident");
+        log.info("Start create Incident ApplicantIncidentLiteDto ReferenceNumber: {}, incidentAttachment File name: {} ", applicantIncidentRequest.getReferenceNumber(),incidentAttachment.getOriginalFilename());
         if (incidentAttachment != null) {
+            log.debug("create Incident incidentAttachment not null");
             //validate file type, allow only images and video
             if (!incidentAttachment.getOriginalFilename().equals("") && !applicantIncidentLiteService.validateFileExtension(incidentAttachment.getOriginalFilename())) {
+                log.info("Finish create Incident {}, {} ","FAILURE", WsError.EWsError.INVALID_FILE_EXTENSION.getCode());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_FILE_EXTENSION.getCode()).build()).build());
             }
             //validate file size, max size is allowed 15MB
             if (!incidentAttachment.getOriginalFilename().equals("") && !applicantIncidentLiteService.validateFileSize(incidentAttachment.getSize() / (1024 * 1024))) {
+                log.info("Finish create Incident {}, {} ","FAILURE", WsError.EWsError.ExCEED_MAX_SIZE.getCode());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.ExCEED_MAX_SIZE.getCode()).build()).build());
             }
         }
         if (applicantIncidentRequest.getLocationLat() != null && applicantIncidentRequest.getLocationLng() != null) {
+            log.debug("create Incident applicantIncidentRequest Location not null");
             // validate latitude cordinates, it should be between -90 and +90
             if (applicantIncidentRequest.getLocationLat().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLat().intValue() > MAX_GEO_CORDINATES) {
+                log.info("Finish create Incident {}, {} ","FAILURE", WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
             }
             // validate longitude cordinates, it should be between -90 and +90
             if (applicantIncidentRequest.getLocationLng().intValue() < MIN_GEO_CORDINATES || applicantIncidentRequest.getLocationLng().intValue() > MAX_GEO_CORDINATES) {
+                log.info("Finish create Incident {}, {} ","FAILURE", WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
             }
         }
 
         IncidentTypeLookupDto incidentTypeLookupDto = incidentTypeLookupService.findByCode(applicantIncidentRequest.getTypeCode());
-        if (incidentTypeLookupDto == null)
+        if (incidentTypeLookupDto == null) {
+            log.info("Finish downloadAttachment {}, {} ","FAILURE", WsError.EWsError.INCIDENT_TYPE_NOT_FOUND.getCode());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INCIDENT_TYPE_NOT_FOUND.getCode()).build()).build());
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantIncidentLiteService.addApplicantIncident(applicantIncidentRequest, incidentAttachment)).build());
+        }
+        ApplicantIncidentLiteDto applicantIncidentLiteDto = applicantIncidentLiteService.addApplicantIncident(applicantIncidentRequest, incidentAttachment);
+        log.info("Finish downloadAttachment {}, applicantIncidentLiteDtoId: {} ","SUCCESS",applicantIncidentLiteDto.getId());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantIncidentLiteDto).build());
 
     }
 

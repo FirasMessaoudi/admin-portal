@@ -48,7 +48,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
 
 
     @Async
-    //TODO(flaifel): split the code into different methods.
+    //TODO(flaifel):  split the code into different methods.
     public void generateBatchCards(BatchCollectionVO batchCollectionVO) {
         log.info("Starting card generation process ");
         // create temporary folder to save the cards before saving them in sftp server
