@@ -1545,12 +1545,33 @@ GO
 alter table shc_portal.shc_company_staff alter column id_number varchar(16) null
 GO
 
-ALTER TABLE shc_portal.shc_applicant ADD registration_channel varchar(20)
-GO
+ALTER TABLE shc_portal.shc_applicant
+    ADD registration_channel varchar(20)
+    GO
 
-ALTER TABLE shc_portal.shc_user_survey ADD survey_date smalldatetime NOT NULL default current_timestamp;
+ALTER TABLE shc_portal.shc_user_survey
+    ADD survey_date smalldatetime NOT NULL default current_timestamp;
 GO
 
 alter table shc_portal.shc_company_staff alter column mobile_number varchar(20) null
 GO
+alter table shc_portal.shc_company
+    add moi_number varchar(45)
+    GO
+alter table shc_portal.shc_company
+    add cr_number varchar(45)
+    Go
+alter table shc_portal.shc_company
+    add type_code int
+alter table shc_portal.shc_company alter column label_en varchar(25) null
+go
+alter table shc_portal.shc_company alter column accreditation_organization varchar(45) null
+go
+alter table shc_portal.shc_company alter column accreditation_number varchar(45) null
+go
+alter table shc_portal.shc_company alter column accreditation_date smalldatetime null
+go
+alter table shc_portal.shc_company alter column accreditation_expiry smalldatetime null
+go
+
 

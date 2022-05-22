@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.elm.shj.admin.portal.services.data.validators.CompanyTypeCode;
 import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
 import lombok.Getter;
@@ -32,11 +33,11 @@ public class CompanyDto {
     private long id;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @OnlyCharacters(min = 3, max = 20, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @OnlyCharacters(min = 1, max = 30, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
     private String code;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = true, allowNumbers = true, allowSpecialChars = false)
     private String labelAr;
 
     @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
@@ -48,16 +49,14 @@ public class CompanyDto {
     private String contactNumber;
 
     @NullOrNotBlank(min = 5, max = 75)
-    @Pattern(regexp = "((http|https)://)(www.)?"
-            + "[a-zA-Z0-9@:%._\\\\+~#?&//=]{2,60}\\\\.[a-z]"
-            + "{2,6}\\\\b([-a-zA-Z0-9@:%._\\\\+~#?&//=]*)"
+    @Pattern(regexp = "(http:\\/\\/|https:\\/\\/)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?(\\/[a-z0-9])*(\\/?|(\\?[a-z0-9]=[a-z0-9](&[a-z0-9]=[a-z0-9]*)?))"
             , message = "validation.data.constraints.msg.20003")
     private String website;
 
-    @OnlyCharacters(min = 3, max = 45, allowEmpty = true, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @OnlyCharacters(min = 3, max = 45, allowNumbers = true, allowSpecialChars = false)
     private String accreditationOrganization;
 
-    @OnlyCharacters(min = 3, max = 45, allowEmpty = true, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @OnlyCharacters(min = 3, max = 45, allowNumbers = true, allowSpecialChars = false)
     private String accreditationNumber;
 
     private Date accreditationDate;
@@ -69,10 +68,14 @@ public class CompanyDto {
     @Email(message = "validation.data.constraints.msg.20003")
     private String email;
 
+    @OnlyCharacters(min = 3, max = 30, allowEmpty = true, arabic = false, allowNumbers = true, allowSpecialChars = false)
     private String moiNumber;
 
+    @OnlyCharacters(min = 1, max = 30, allowEmpty = true, arabic = false, allowNumbers = true, allowSpecialChars = false)
     private String crNumber;
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @CompanyTypeCode
     private Integer typeCode;
 
     private Date creationDate;
