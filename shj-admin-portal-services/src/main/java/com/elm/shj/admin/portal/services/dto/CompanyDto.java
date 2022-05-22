@@ -53,10 +53,10 @@ public class CompanyDto {
             , message = "validation.data.constraints.msg.20003")
     private String website;
 
-    @OnlyCharacters(min = 3, max = 45, allowEmpty = true, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @OnlyCharacters(min = 3, max = 45, allowNumbers = true, allowSpecialChars = false)
     private String accreditationOrganization;
 
-    @OnlyCharacters(min = 3, max = 45, allowEmpty = true, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @OnlyCharacters(min = 3, max = 45, allowNumbers = true, allowSpecialChars = false)
     private String accreditationNumber;
 
     private Date accreditationDate;
