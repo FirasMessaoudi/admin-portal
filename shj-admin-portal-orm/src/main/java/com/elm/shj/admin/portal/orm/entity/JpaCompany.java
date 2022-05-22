@@ -51,16 +51,16 @@ public class JpaCompany implements Serializable {
     @Column(name = "website")
     private String website;
 
-    @Column(name = "accreditation_organization", nullable = false)
+    @Column(name = "accreditation_organization")
     private String accreditationOrganization;
 
-    @Column(name = "accreditation_number", nullable = false)
+    @Column(name = "accreditation_number")
     private String accreditationNumber;
 
-    @Column(name = "accreditation_date", nullable = false)
+    @Column(name = "accreditation_date")
     private Date accreditationDate;
 
-    @Column(name = "accreditation_expiry", nullable = false)
+    @Column(name = "accreditation_expiry")
     private Date accreditationExpiry;
 
     @Column(name = "email")
