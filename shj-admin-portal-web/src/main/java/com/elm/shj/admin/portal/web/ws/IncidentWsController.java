@@ -86,7 +86,6 @@ public class IncidentWsController {
     public ResponseEntity<WsResponse<?>> create(@RequestPart("incident") @Valid ApplicantIncidentLiteDto applicantIncidentRequest,
                                                 @RequestPart(value = "attachment", required = false) MultipartFile incidentAttachment) throws Exception {
 
-        log.info("Start create Incident ApplicantIncidentLiteDto ReferenceNumber: {}, incidentAttachment File name: {} ", applicantIncidentRequest.getReferenceNumber(),incidentAttachment.getOriginalFilename());
         if (incidentAttachment != null) {
             log.debug("create Incident incidentAttachment not null");
             //validate file type, allow only images and video
