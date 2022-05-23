@@ -111,9 +111,8 @@ public class ManifestService {
     }
 
 
-    //TODO(flaifel): remove unused lines of code
     public ByteArrayInputStream generateManifestPDF(String printRequestReferenceNumber, BatchCollectionVO batchCollectionVO) {
-        //TODO(flaifel): add info logging at the beginning of the method and include reference number for the request and batch in the log message
+        log.info("Start generate Manifest PDF printRequestReferenceNumber: {}, batchCollection: {}", printRequestReferenceNumber, batchCollectionVO);
         PrintRequestDto printRequestDto = printRequestService.findByReferenceNumber(printRequestReferenceNumber);
         Document doc = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -125,15 +124,14 @@ public class ManifestService {
                     try {
 
                        PdfPTable table = new PdfPTable(4);
-                       com.itextpdf.text.Font fontEn = FontFactory.getFont(ELM_FONT_RESOURCE_FILE_NAME, BaseFont.IDENTITY_H, 12, Font.TRUETYPE_FONT);
-                       com.itextpdf.text.Font fontAr = FontFactory.getFont(ELM_FONT_RESOURCE_FILE_NAME, BaseFont.IDENTITY_H, 12, Font.TRUETYPE_FONT);
+                       com.itextpdf.text.Font shaeerFont = FontFactory.getFont(ELM_FONT_RESOURCE_FILE_NAME, BaseFont.IDENTITY_H, 12, Font.TRUETYPE_FONT);
 
+                       table.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
                        PdfPCell referenceNumberHeader = new PdfPCell(new Phrase(messageSource.getMessage("printing.request.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
-                               batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
+                               shaeerFont));
                        referenceNumberHeader.setColspan(2);
-                       referenceNumberHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
-                       referenceNumberHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
                        referenceNumberHeader.setFixedHeight(20f);
+                       referenceNumberHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
                        table.addCell(referenceNumberHeader);
 
                        PdfPCell referenceNumberValue = new PdfPCell(new Phrase(printRequestReferenceNumber));
@@ -142,10 +140,9 @@ public class ManifestService {
                        table.completeRow();
 
                        PdfPCell batchNumberHeader = new PdfPCell(new Phrase(messageSource.getMessage("batch.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
-                               batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
+                               shaeerFont));
                        batchNumberHeader.setColspan(2);
-                       batchNumberHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
-                       batchNumberHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                       batchNumberHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
                        batchNumberHeader.setFixedHeight(20f);
                        table.addCell(batchNumberHeader);
 
@@ -155,10 +152,9 @@ public class ManifestService {
                        table.completeRow();
 
                        PdfPCell mainCollectionHeader = new PdfPCell(new Phrase(messageSource.getMessage("collection.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
-                               batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
+                               shaeerFont));
                        mainCollectionHeader.setColspan(2);
-                       mainCollectionHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
-                       mainCollectionHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                       mainCollectionHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
                        mainCollectionHeader.setFixedHeight(20f);
                        table.addCell(mainCollectionHeader);
 
@@ -168,10 +164,9 @@ public class ManifestService {
                        table.completeRow();
 
                        PdfPCell subCollectionHeader = new PdfPCell(new Phrase(messageSource.getMessage("sub.collection.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
-                               batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
+                               shaeerFont));
                        subCollectionHeader.setColspan(2);
-                       subCollectionHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
-                       subCollectionHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                       subCollectionHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
                        subCollectionHeader.setFixedHeight(20f);
                        table.addCell(subCollectionHeader);
 
@@ -187,30 +182,26 @@ public class ManifestService {
                             basicInfoVoList = staffCardService.findStaffBasicInfoByDigitalIds(subCollectionVO.getDigitalIds());
                         if (basicInfoVoList.size() != 0) {
                             PdfPCell digitalIdHeader = new PdfPCell(new Phrase(messageSource.getMessage("smart.id.number", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
-                                    batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
-                            digitalIdHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
-                            digitalIdHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                                    shaeerFont));
+                            digitalIdHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
                             digitalIdHeader.setFixedHeight(20f);
                             table.addCell(digitalIdHeader);
 
                             PdfPCell fullNameEnHeader = new PdfPCell(new Phrase(messageSource.getMessage("full.name.en", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
-                                    batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
-                            fullNameEnHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
-                            fullNameEnHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                                    shaeerFont));
+                            fullNameEnHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
                             fullNameEnHeader.setFixedHeight(20f);
                             table.addCell(fullNameEnHeader);
 
                             PdfPCell fullNameArHeader = new PdfPCell(new Phrase(messageSource.getMessage("full.name.ar", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
-                                    batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
-                            fullNameArHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
-                            fullNameArHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                                    shaeerFont));
+                            fullNameArHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
                             fullNameArHeader.setFixedHeight(20f);
                             table.addCell(fullNameArHeader);
 
                             PdfPCell cardSerialHeader = new PdfPCell(new Phrase(messageSource.getMessage("card.serial", null, Locale.forLanguageTag(batchCollectionVO.getLocale())),
-                                    batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
-                            cardSerialHeader.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
-                            cardSerialHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                                    shaeerFont));
+                            cardSerialHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
                             cardSerialHeader.setFixedHeight(20f);
                             table.addCell(cardSerialHeader);
 
@@ -221,9 +212,7 @@ public class ManifestService {
                                 PdfPCell fullNameEn = new PdfPCell(new Phrase(basicInfo.getFullNameEn()));
                                 table.addCell(fullNameEn);
 
-                                PdfPCell fullNameAr = new PdfPCell(new Phrase(basicInfo.getFullNameAr(), batchCollectionVO.getLocale().equals("en") ? fontEn : fontAr));
-                                fullNameAr.setRunDirection(batchCollectionVO.getLocale().equals("en") ? PdfWriter.RUN_DIRECTION_LTR : PdfWriter.RUN_DIRECTION_RTL);
-                                fullNameAr.setHorizontalAlignment(batchCollectionVO.getLocale().equals("en") ? Element.ALIGN_LEFT : Element.ALIGN_CENTER);
+                                PdfPCell fullNameAr = new PdfPCell(new Phrase(basicInfo.getFullNameAr(), shaeerFont));
                                 fullNameAr.setFixedHeight(20f);
                                 table.addCell(fullNameAr);
 
@@ -234,13 +223,13 @@ public class ManifestService {
                         doc.add(table);
                         doc.newPage();
                     } catch (DocumentException e) {
-                        //TODO(flaifel): add error log
+                        log.error("Error while creating document");
                         doc.close();
                         throw new RuntimeException("Error while creating document");
                     }
                 }));
         } catch (DocumentException e) {
-            //TODO(flaifel): add error log
+            log.error("Error while creating document");
             doc.close();
             throw new RuntimeException("Error while creating document");
         }
