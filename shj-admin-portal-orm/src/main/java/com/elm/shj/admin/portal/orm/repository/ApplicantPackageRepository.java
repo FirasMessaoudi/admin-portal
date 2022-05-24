@@ -31,4 +31,6 @@ public interface ApplicantPackageRepository extends JpaRepository<JpaApplicantPa
 
     @Query("SELECT ap.id FROM JpaApplicantPackage ap WHERE ap.applicantUin = :applicantUin ORDER BY ap.creationDate DESC")
     Page<Long> findLastIdByApplicantUin(@Param("applicantUin") Long applicantUin, Pageable pageable);
+
+    Optional<JpaApplicantPackage> findJpaApplicantPackageByApplicantUin(long applicantUin);
 }

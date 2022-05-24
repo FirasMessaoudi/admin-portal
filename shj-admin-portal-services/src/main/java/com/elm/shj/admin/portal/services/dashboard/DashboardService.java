@@ -227,8 +227,8 @@ public class DashboardService {
 
     public DashboardIncidentNumbersVo loadDashboardIncidentNumbers(int seasonYear) {
         List<JpaApplicantIncident> allApplicantIncident = applicantIncidentRepository.findAllByCurrentSeason(seasonYear);
-        long totalNumberOfResolvedIncidents = applicantIncidentRepository.countAllResolvedIncidents(seasonYear);
-        long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents(seasonYear);
+        long totalNumberOfResolvedIncidents = applicantIncidentRepository.countAllResolvedIncidents(seasonYear, hajjRituals);
+        long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents(seasonYear, hajjRituals);
         long totalNumberOfRegisteredIncidents = totalNumberOfResolvedIncidents + totalNumberOfUnResolvedIncidents;
 
         Date mostIncidentDate = new Date();
@@ -305,20 +305,16 @@ public class DashboardService {
     }
 
     public List<CountVo> listCountApplicantsByNationalities(int seasonYear) {
-        List<CountVo> countVoList = new ArrayList<>();
-        List<String> nationalities = applicantRepository.findAllNationalities();
+        log.info("Season year  :{}", seasonYear);
+        List<CountVo> applicantsByNationality = applicantRepository.countApplicantsByNationality(seasonYear);
+        applicantsByNationality.sort(Comparator.comparing(CountVo::getCount).reversed());
         long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason(seasonYear, hajjRituals);
-        for (String nat : nationalities) {
-            CountVo countVo = new CountVo();
-            long applicantsNumber = applicantRepository.countTotalApplicantsFromCurrentSeasonByNationality(nat, seasonYear);
-            countVo.setLabel(nat);
-            countVo.setCount(applicantsNumber);
-            countVo.setPercentage(String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
+        List<CountVo> countVoList = new ArrayList<>();
+        for(CountVo countVo: applicantsByNationality){
+            countVo.setPercentage(String.format("%.2f", (double) countVo.getCount() / totalApplicants * 100));
             countVoList.add(countVo);
-        }
-        countVoList.sort(Comparator.comparing(CountVo::getCount).reversed());
-        if (countVoList.size() > 5) {
-            return countVoList.subList(0, 4);
+            if(countVoList.size()>4)
+                break;
         }
         return countVoList;
     }
@@ -346,11 +342,11 @@ public class DashboardService {
     }
 
     public List<LocalizedCountVo> loadCompaniesWithMaxIncidentsCount(int seasonYear) {
-        return applicantIncidentRepository.findCompaniesWithMaxIncidents(seasonYear, PageRequest.of(0, maxCompanyChartSize)).getContent();
+        return applicantIncidentRepository.findCompaniesWithMaxIncidents(seasonYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
     public List<LocalizedCountVo> loadCompaniesWithMinIncidentsCount(int seasonYear) {
-        return applicantIncidentRepository.findCompaniesWithMinIncidents(seasonYear, PageRequest.of(0, maxCompanyChartSize)).getContent();
+        return applicantIncidentRepository.findCompaniesWithMinIncidents(seasonYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
     }
 
     public DashboardMobileNumbersVo getMobileAppDownloadsFromCurrentSeason(int seasonYear) {
@@ -421,7 +417,7 @@ public class DashboardService {
             String[] ages = range.split("-");
             Date from = new Timestamp(getDateFromAge(Integer.valueOf(ages[0])).getTime());
             Date to = new Timestamp(getDateFromAge(Integer.valueOf(ages[1])).getTime());
-            long applicantsNumber = mobileAuditLogRepository.countMobileAppUsersByAgeRange(from, to, hijriYear, hajjRituals);
+            long applicantsNumber = applicantRepository.countMobileAppUsersByAgeRange(from, to, hijriYear, hajjRituals);
             countVo.setLabel(range);
             countVo.setCount(applicantsNumber);
             countVoList.add(countVo);

@@ -52,7 +52,7 @@ public class ApplicantDto implements Serializable {
     @CellIndex(index = 0)
     private String idNumber;
 
-    @IdNumber(minLength = 5, maxLength = 30)
+    @IdNumber(minLength = 5, maxLength = 50)
     @CellIndex(index = 9)
     private String idNumberOriginal;
 
@@ -97,6 +97,7 @@ public class ApplicantDto implements Serializable {
     private String biometricDataFace;
 
     @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
+    @NullOrNotBlank(min = 0, max = 100)
     @CellIndex(index = 14)
     private String educationLevelCode;
 

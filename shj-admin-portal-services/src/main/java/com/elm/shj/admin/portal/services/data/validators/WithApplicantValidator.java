@@ -54,10 +54,12 @@ public class WithApplicantValidator implements ConstraintValidator<WithApplicant
                 ReflectionUtils.makeAccessible(applicantBasicInfoField);
                 // get applicant basic info from the current object
                 ApplicantBasicInfoDto applicantBasicInfo = (ApplicantBasicInfoDto) applicantBasicInfoField.get(value);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(applicantBasicInfo.getDateOfBirthGregorian());
-                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                applicantBasicInfo.setDateOfBirthGregorian(calendar.getTime());
+                if (applicantBasicInfo.getDateOfBirthGregorian() != null) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(applicantBasicInfo.getDateOfBirthGregorian());
+                    calendar.set(Calendar.HOUR_OF_DAY, 0);
+                    applicantBasicInfo.setDateOfBirthGregorian(calendar.getTime());
+                }
                 // search applicant by his basic info from the database
                 return applicantService.existsByBasicInfo(applicantBasicInfo);
             } catch (IllegalAccessException e) {

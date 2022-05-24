@@ -29,6 +29,5 @@ public class CompanyStaffCardFilterDto implements Serializable {
     private String cardStatus;
     private String suin;
     private String cardNumber;
-
-
+    private String jobTitle;
 }

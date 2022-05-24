@@ -3,12 +3,16 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.elm.shj.admin.portal.services.data.validators.WithHousingCategory;
+import com.elm.shj.admin.portal.services.data.validators.WithHousingSite;
+import com.elm.shj.admin.portal.services.data.validators.WithHousingType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -30,13 +34,19 @@ public class PackageHousingDto implements Serializable {
     public PackageHousingDto(){
     }
     private long id;
+    @WithHousingType
     private String typeCode;
+    @WithHousingSite
     private String siteCode;
     private RitualPackageDto ritualPackage;
     private HousingZoneDto housingZone;
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private String referenceNumber;
+    @WithHousingCategory
     private String categoryCode;
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private String locationNameAr;
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private String locationNameEn;
     private Date validityStart;
     private Date validityEnd;
@@ -51,4 +61,6 @@ public class PackageHousingDto implements Serializable {
     private List<ApplicantPackageHousingDto> applicantPackageHousing;
     private Date creationDate;
     private Date updateDate;
+
+    private GeoLocationDto geoLocation;
 }

@@ -1,0 +1,19 @@
+/*
+ * Copyright (c) 2022 ELM. All rights reserved.
+ */
+package com.elm.shj.admin.portal.services.dto;
+
+import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
+import com.elm.shj.admin.portal.orm.entity.JpaBatchMainCollection;
+import org.mapstruct.Mapper;
+
+
+/**
+ * Mapper for {@link BatchMainCollectionDto} class
+ *
+ * @author f.messaoudi
+ * @since 1.1.0
+ */
+@Mapper(componentModel = "spring")
+public abstract class BatchMainCollectionDtoMapper implements IGenericMapper<BatchMainCollectionDto, JpaBatchMainCollection> {
+}

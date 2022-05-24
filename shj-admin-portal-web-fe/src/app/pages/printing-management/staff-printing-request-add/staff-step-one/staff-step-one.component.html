@@ -13,8 +13,8 @@
     <label class="col-form-label">{{ "printing-management.season" | translate }}</label>
     <select id="season" formControlName="seasonYear" class="custom-select">
       <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>
-      <option *ngFor="let season of ritualSeasons" [ngValue]="season.seasonYear">
-        {{season.seasonYear}}
+      <option *ngFor="let season of ritualSeasons" [ngValue]="season">
+        {{season}}
       </option>
     </select>
   </div>
@@ -132,7 +132,7 @@
             </th>
             <th scope="col">{{'card-management.name' | translate}}</th>
             <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-            <th scope="col">{{'printing-management.id_number' | translate}}</th>
+            <th scope="col">{{'general.nin' | translate}}</th>
             <th scope="col">{{'card-management.passport_number' | translate}}</th>
           </tr>
           </thead>
@@ -234,7 +234,7 @@
       <tr>
         <th scope="col">{{'card-management.name' | translate}}</th>
         <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-        <th scope="col">{{'printing-management.id_number' | translate}}</th>
+        <th scope="col">{{'general.nin' | translate}}</th>
         <th scope="col">{{'card-management.passport_number' | translate}}</th>
         <th scope="col" class="text-center"></th>
       </tr>

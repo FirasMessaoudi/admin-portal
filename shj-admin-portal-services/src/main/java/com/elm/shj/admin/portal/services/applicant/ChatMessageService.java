@@ -39,6 +39,7 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
 
 
     public List<ChatMessageVo> listChatContactsWithLatestMessage(String uin) {
+        log.info("ChatMessageService ::: Start listChatContactsWithLatestMessage uin: {}", uin);
         List<ChatMessageVo> latestMessageList = chatMessageRepository.findChatContactsWithLatestMessage(uin);
         List<UnreadMessagesCount> unreadMessagesCount = chatMessageRepository.findUnreadMessagesCount(uin);
 
@@ -46,26 +47,33 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
             ChatMessageVo matchedChatMessageVo = latestMessageList.parallelStream().filter(p -> p.getId() == e.getContactId()).findFirst().get();
             matchedChatMessageVo.setUnreadMessagesCount(e.getUnreadMessagesCount());
         });
-
+        log.info("ChatMessageService ::: Finish listChatContactsWithLatestMessage uin: {}", uin);
         return latestMessageList;
     }
 
     public List<ChatMessageDto> findChatMessagesBySenderIdOrReceiverId(int page, int limit, long contactId, long time) {
+        log.info("ChatMessageService ::: Start findChatMessagesBySenderIdOrReceiverId  page: {},  limit: {},  contactId: {},  time: {}", page,  limit,  contactId,  time);
         Pageable pageableRequest = PageRequest.of(page, limit, Sort.by("sentDate").descending());
         Page<JpaChatMessage> chatMessagesPage = chatMessageRepository.findBySenderIdOrReceiverIdAndSentDateLessThanEqual(contactId, contactId, new Date(time), pageableRequest);
         List<JpaChatMessage> chatMessageList = chatMessagesPage.getContent();
         List<ChatMessageDto> chatMessageDtoList = mapList(chatMessageList);
+        log.info("ChatMessageService ::: Finish findChatMessagesBySenderIdOrReceiverId  chatMessageDtoListSize: {}",chatMessageDtoList.size());
         return chatMessageDtoList;
     }
 
     @Transactional
     public ChatMessageDto saveMessage(ChatMessageDto chatMessage) {
+        log.info("ChatMessageService ::: Start saveMessage  chatMessageText:{}",chatMessage.getText());
         chatMessage.setTypeCode(EChatMessageType.TEXT.name());
-        return save(chatMessage);
+        ChatMessageDto saveMessage = save(chatMessage);
+        log.info("ChatMessageService ::: Finish saveMessage  SentDate:{}",chatMessage.getSentDate());
+        return saveMessage;
     }
 
     @Transactional
     public void markMessagesAsRead(long chatContactId) {
+        log.info("ChatMessageService ::: Start markMessagesAsRead  chatContactId:{}",chatContactId);
         chatMessageRepository.updateChatMessageReadDate(chatContactId);
+        log.info("ChatMessageService ::: Finish markMessagesAsRead ");
     }
 }

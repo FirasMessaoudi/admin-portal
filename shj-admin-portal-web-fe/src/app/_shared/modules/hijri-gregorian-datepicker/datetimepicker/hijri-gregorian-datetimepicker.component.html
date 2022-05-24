@@ -46,7 +46,7 @@
               (click)="clear()">{{'general.btn_clear'| translate}}</button>
     </ng-template>
 
-    <hijri-datetime-picker [placeHolder]="placeHolder ? placeHolder : 'DD/MM/YYYY HH:MM'"
+    <hijri-datetime-picker ngDefaultControl [placeHolder]="placeHolder ? placeHolder : 'DD/MM/YYYY HH:MM'"
                            [min]="minHijri" [max]="maxHijri"
                            *ngIf="selectedDateType == DateType.Hijri"
                            [(ngModel)]="selectedDate"
@@ -62,7 +62,7 @@
     <div class="input-group-append gregorian-hijri-buttons">
       <button
         class="btn btn-sm shadow-none {{selectedDateType == DateType.Hijri ? 'btn-'+buttonClass+' focus active' :  'btn-outline-'+ buttonClass}}"
-        (click)="hijriClick()" type="button" [disabled]="true">
+        (click)="hijriClick()" type="button" [disabled]="disabled">
         {{hijriLabel ? hijriLabel : 'Hijri'}}
       </button>
       <button

@@ -9,14 +9,13 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
-import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
+import com.elm.shj.admin.portal.services.data.huicIntegration.ValidationService;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.reader.EExcelItemReaderErrorType;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.data.validators.WithGroupReferenceNumber;
-import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
@@ -28,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +34,7 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
-import java.time.LocalDate;
-import java.time.chrono.HijrahChronology;
-import java.time.chrono.HijrahDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Generic Item writer to save read items based on their data segment
@@ -69,8 +63,6 @@ public class ItemWriter {
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantContactService applicantContactService;
     private final CompanyStaffService companyStaffService;
-    private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
-    private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
     private final ChatContactService chatContactService;
     private final ApplicantRelativeService applicantRelativeService;
@@ -78,6 +70,7 @@ public class ItemWriter {
     private final ApplicantEmergencyDataUploadService applicantEmergencyDataUploadService;
     private final DigitalIdService digitalIdService;
     private final ApplicantLiteService applicantLiteService;
+    private final ValidationService validationService;
 
     /**
      * Populates the registry
@@ -93,13 +86,13 @@ public class ItemWriter {
         repositoryRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, ApplicantRitualRepository.class);
         repositoryRegistry.put(EDataSegment.STAFF_MAIN_DATA, CompanyStaffRepository.class);
         // mapper registry initialization
-        mapperRegistry.put(EDataSegment.APPLICANT_DATA, Objects.requireNonNull(findMapper(ApplicantDto.class)));
-        mapperRegistry.put(EDataSegment.APPLICANT_RELATIVES_DATA, Objects.requireNonNull(findMapper(ApplicantRelativeDto.class)));
-        mapperRegistry.put(EDataSegment.APPLICANT_HEALTH_DATA, Objects.requireNonNull(findMapper(ApplicantHealthDto.class)));
-        mapperRegistry.put(EDataSegment.APPLICANT_IMMUNIZATION_DATA, Objects.requireNonNull(findMapper(ApplicantHealthImmunizationDto.class)));
-        mapperRegistry.put(EDataSegment.APPLICANT_DISEASE_DATA, Objects.requireNonNull(findMapper(ApplicantHealthDiseaseDto.class)));
-        mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, Objects.requireNonNull(findMapper(ApplicantRitualDto.class)));
-        mapperRegistry.put(EDataSegment.STAFF_MAIN_DATA, Objects.requireNonNull(findMapper(CompanyStaffDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_RELATIVES_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantRelativeDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_HEALTH_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantHealthDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_IMMUNIZATION_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantHealthImmunizationDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_DISEASE_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantHealthDiseaseDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantRitualDto.class)));
+        mapperRegistry.put(EDataSegment.STAFF_MAIN_DATA, Objects.requireNonNull(validationService.findMapper(CompanyStaffDto.class)));
 
     }
 
@@ -124,9 +117,15 @@ public class ItemWriter {
                 ApplicantRitualEmergencyDto applicantRitualEmergencyDto = emergencyDto.getApplicantRitualEmergencyDto();
 
                 updateNestedApplicantInfo(applicantDto);
+                // find old ald applicant rituals for existing applicant
+                if (applicantDto.getId() > 0) {
+                    List<ApplicantRitualDto> applicantRituals = applicantRitualService.findAllByApplicantId(applicantDto.getId());
+                    if (!applicantRituals.isEmpty()) {
+                        applicantDto.setRituals(applicantRituals);
+                    }
+                }
 
-                ApplicantDigitalIdDto applicantDigitalId = CollectionUtils.isNotEmpty(applicantDto.getDigitalIds()) ? applicantDto.getDigitalIds().get(0) : null;
-                String applicantUin = applicantDigitalId != null ? applicantDigitalId.getUin() : null;
+                String applicantUin = applicantDto.getId() > 0 ? digitalIdService.findApplicantUin(applicantDto.getId()) : null;
 
                 // create a new applicant ritual
                 ApplicantRitualDto applicantRitual = ApplicantRitualDto.builder().applicant(applicantDto).packageReferenceNumber(emergencyDto.getPackageReferenceNumber()).build();
@@ -166,7 +165,7 @@ public class ItemWriter {
                     ReflectionUtils.handleReflectionException(e);
                 }
             });
-            List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+            List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(validationService.findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
             savedItems.forEach(s -> {
                 savedRecords.stream().filter(r -> {
                     try {
@@ -269,11 +268,7 @@ public class ItemWriter {
                 CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
                 // if record exists already in DB we need to update it
                 if (existingStaff != null) {
-                    staff.setId(existingStaff.getId());
-                    staff.setDigitalIds(existingStaff.getDigitalIds());
-                    // staff.setCompany(existingStaff.getCompany());
-                    staff.setDataRequestRecordId(existingStaff.getDataRequestRecordId());
-                    staff.setApplicantGroups(existingStaff.getApplicantGroups());
+                    validationService.updateExistingStaff(staff, existingStaff);
                     savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(staff, mappingContext));
                 } else {
                     savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
@@ -306,7 +301,7 @@ public class ItemWriter {
         });
 
         // save all records
-        List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+        List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(validationService.findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
         // update all items with record ids
         savedItems.forEach(s -> {
             savedRecords.stream().filter(r -> {
@@ -389,26 +384,14 @@ public class ItemWriter {
         // Special treatment for ApplicantDto and contact info as they come in the same sheet
         if (item.getClass().isAssignableFrom(ApplicantDto.class)) {
             ApplicantDto applicant = (ApplicantDto) item;
-            if (applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) {
-                Calendar cl = Calendar.getInstance();
-                cl.setTime(applicant.getDateOfBirthGregorian());
-                HijrahDate islamyDate = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
-                applicant.setDateOfBirthHijri(Long.parseLong(islamyDate.toString().substring(islamyDate.toString().indexOf("AH") + 3).replace("-", "")));
-            }
-
+            validationService.updateApplicantBirthDate(applicant);
             Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
             // if record exists already in DB we need to update it
             if (existingApplicantId != null) {
-                applicant.setId(existingApplicantId);
-                applicant.setUpdateDate(new Date());
+                validationService.updateExistingApplicant(applicant, existingApplicantId);
             }
-
             // this case is for applicant data upload
-            if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
-                applicant.getContacts().forEach(ac -> {
-                    ac.setApplicant(applicant);
-                });
-            }
+            validationService.addApplicantToContact(applicant);
         }
 
         Field applicantBasicInfoField = ReflectionUtils.findField(item.getClass(), "applicantBasicInfo");
@@ -455,22 +438,7 @@ public class ItemWriter {
 
             if (item.getClass().isAssignableFrom(ApplicantRitualDto.class)) {
                 ApplicantRitualDto applicantRitual = (ApplicantRitualDto) item;
-                if (savedApplicantRitualId != null) {
-                    applicantRitual.setId(savedApplicantRitualId);
-                    applicantRitual.setUpdateDate(new Date());
-                    Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
-                    applicantRitual.setApplicantPackage(ApplicantPackageDto.builder().id(applicantPackageId).build());
-                    //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
-                    applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitual.getId(), applicantId, applicantRitual.getPackageReferenceNumber());
-                    applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitual.getId(), applicantId, applicantRitual.getPackageReferenceNumber());
-                } else {
-                    // applicant ritual not created yet, check if digital id is exists,
-                    // if yes then create a new applicant package and link it with the applicant ritual
-                    if (applicantUin != null && !applicantUin.isEmpty()) {
-                        ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitual.getPackageReferenceNumber(), Long.parseLong(applicantUin), null, null);
-                        applicantRitual.setApplicantPackage(createdApplicantPackage);
-                    }
-                }
+                validationService.updateApplicantRitual(applicantRitual, savedApplicantRitualId, applicantId, applicantUin);
             }
 
             if (item.getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
@@ -493,16 +461,7 @@ public class ItemWriter {
             if (item.getClass().isAssignableFrom(ApplicantHealthDto.class)) {
                 ApplicantHealthDto applicantHealth = (ApplicantHealthDto) item;
                 Long savedApplicantHealthId = applicantHealthService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber, null, false);
-                if (savedApplicantHealthId != null) {
-                    log.debug("Update existing applicant health in applicant health segment for {} applicant id and {} package reference number.", applicantId, packageReferenceNumber);
-                    applicantHealth.setId(savedApplicantHealthId);
-                    applicantHealth.setUpdateDate(new Date());
-                }
-                if (CollectionUtils.isNotEmpty(applicantHealth.getSpecialNeeds())) {
-                    applicantHealth.setSpecialNeeds(Arrays.stream(applicantHealth.getSpecialNeeds().get(0).getSpecialNeedTypeCode().split(",")).map(sn ->
-                            ApplicantHealthSpecialNeedsDto.builder().applicantHealth(applicantHealth).specialNeedTypeCode(sn).build()
-                    ).collect(Collectors.toList()));
-                }
+                validationService.updateApplicantHealth(applicantHealth, savedApplicantHealthId, null, 0);
             }
 
             if (applicantHealthField != null) {
@@ -530,74 +489,8 @@ public class ItemWriter {
     private <T> void updateCompanyStaffRitualData(T item) {
         if (item != null && item.getClass().isAssignableFrom(CompanyStaffRitualDto.class)) {
             CompanyStaffRitualDto companyStaffRitual = (CompanyStaffRitualDto) item;
-            CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(companyStaffRitual.getIdNumber(), companyStaffRitual.getPassportNumber(), companyStaffRitual.getDateOfBirthGregorian(), companyStaffRitual.getDateOfBirthHijri());
-            CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
-            CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
-            //existingStaff.setCompanyRitualSeason(companyRitualSeasonDto);
-            if (companyStaffDigitalId != null) {
-                // if he has a digital id for that same season
-                List<CompanyStaffCardDto> companyStaffCardDtos = companyStaffCardService.findByDigitalId(companyStaffDigitalId.getSuin());
-                // if no cards for digitalId and SEASON
-                if (companyStaffCardDtos.isEmpty()) {
-                    CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                    companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
-                    companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-                    companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
-                    companyStaffCardService.save(companyStaffCardDto);
-                    return;
-
-                }
-
-                //find staff cards for different company or different ritual
-                List<CompanyStaffCardDto> companyStaffCards2 = companyStaffCardService.findByDigitalIdAndDifferentCompanyOrRitual(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
-                if (CollectionUtils.isNotEmpty(companyStaffCards2)) {
-                    companyStaffCards2.forEach(c -> {
-                        c.setStatusCode(ECardStatus.EXPIRED.name());
-                    });
-                    companyStaffCardService.saveAll(companyStaffCards2);
-                    return;
-                }
-
-                // find staff cards for same company and same ritual
-                List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
-                if (companyStaffCards.isEmpty()) {
-                    CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                    companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
-                    companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-                    companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
-                    companyStaffCardService.save(companyStaffCardDto);
-                    return;
-                }
-
-
-            } else {
-                // create new digital id for that staff in case he has no digital id for that same season
-                CompanyStaffDigitalIdDto staffDigitalId = new CompanyStaffDigitalIdDto();
-                staffDigitalId.setCompanyStaff(existingStaff);
-                staffDigitalId.setSeasonYear(companyStaffRitual.getSeason());
-                staffDigitalId.setSuin(companyStaffDigitalIdService.generate(existingStaff, companyStaffRitual.getSeason()));
-                staffDigitalId.setStatusCode(EStaffDigitalIdStatus.VALID.name());
-                CompanyStaffDigitalIdDto savedDigitalId = companyStaffDigitalIdService.save(staffDigitalId);
-                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                companyStaffCardDto.setCompanyStaffDigitalId(savedDigitalId);
-                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
-                companyStaffCardService.save(companyStaffCardDto);
-
-            }
+            validationService.saveStaffRitual(companyStaffRitual);
         }
-    }
-
-    /**
-     * Finds a mapper for a given dto class
-     *
-     * @param clazz the dto class to find mapper for
-     * @return the found mapper
-     */
-    @SuppressWarnings("rawtypes")
-    private IGenericMapper findMapper(Class clazz) {
-        List<IGenericMapper> foundMappers = this.context.getBeansOfType(IGenericMapper.class).values().stream().filter(mapper -> Objects.requireNonNull(GenericTypeResolver.resolveTypeArguments(mapper.getClass(), IGenericMapper.class))[0].getSimpleName().equals(clazz.getSimpleName())).collect(Collectors.toList());
-        return CollectionUtils.size(foundMappers) == 1 ? foundMappers.get(0) : null;
     }
 
 }

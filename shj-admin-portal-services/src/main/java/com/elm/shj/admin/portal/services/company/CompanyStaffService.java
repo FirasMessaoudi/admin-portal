@@ -140,4 +140,11 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffBySuin(suin, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
         return staffByIdNumber == null? Optional.empty(): Optional.of(staffByIdNumber);
     }
+
+    public Optional<ApplicantStaffVO> findStaffBySuinAndCardId(String value) {
+        String suin = value.substring(0,value.length()-1);
+        long cardId = Long.parseLong(value.substring(value.length()-1));
+        ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffBySuinAndCardId(suin,cardId);
+        return staffByIdNumber == null? Optional.empty(): Optional.of(staffByIdNumber);
+    }
 }

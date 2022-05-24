@@ -3,20 +3,12 @@ import {Router} from '@angular/router';
 import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
 import {Lookup} from '@model/lookup.model';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {
-  AuthenticationService,
-  CardService,
-  NotificationService,
-} from '@core/services';
+import {AuthenticationService, CardService, NotificationService,} from '@core/services';
 import {LookupService} from '@core/utilities/lookup.service';
 import {I18nService} from '@dcc-commons-ng/services';
 import {NotificationTemplate} from '@model/notification-template.model';
 import {ToastService} from '@shared/components/toast';
-import {
-  ModalDismissReasons,
-  NgbDateStruct,
-  NgbModal,
-} from '@ng-bootstrap/ng-bootstrap';
+import {ModalDismissReasons, NgbDateStruct, NgbModal,} from '@ng-bootstrap/ng-bootstrap';
 import {ConfirmDialogService} from '@shared/components/confirm-dialog';
 import {CompanyLite} from '@model/company-lite.model';
 import {PackageHousing} from '@model/package-housing.model';
@@ -26,13 +18,8 @@ import {Subscription} from 'rxjs';
 import {ApplicantService} from '@core/services/applicant/applicant.service';
 import {DateType} from '@shared/modules/hijri-gregorian-datepicker/consts';
 import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
-import {
-  HijriGregorianDatetimepickerComponent
-} from '@shared/modules/hijri-gregorian-datepicker/datetimepicker/hijri-gregorian-datetimepicker.component';
-import {
-  ageRangeValidator,
-  validateIsRequired,
-} from '@pages/notification-management/notification-custom-validator';
+import {HijriGregorianDatetimepickerComponent} from '@shared/modules/hijri-gregorian-datepicker/datetimepicker/hijri-gregorian-datetimepicker.component';
+import {ageRangeValidator, validateIsRequired,} from '@pages/notification-management/notification-custom-validator';
 import {NotificationTemplateCategorizing} from '@model/notification-template-categorizing.model';
 
 @Component({
@@ -497,6 +484,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   openSendModal(content) {
+    console.log(this.notificationForm.get('sendingDate'));
     this.notificationForm.markAllAsTouched();
     if (this.checkedCriteria === 1) {
       this.categorizingForm.markAllAsTouched();

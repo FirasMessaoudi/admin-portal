@@ -94,7 +94,7 @@ public class JpaApplicant implements Serializable {
     private List<JpaApplicantRelative> relatives;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(orphanRemoval = true, mappedBy = "applicant")
+    @OneToMany(orphanRemoval = true, mappedBy = "applicant", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<JpaApplicantRitual> rituals;
 
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -103,7 +103,7 @@ public class JpaApplicant implements Serializable {
 
     private boolean registered;
 
-    @Column(name = "first_package_reference_number")
+    @Column(name = "first_package_reference_number", updatable = false)
     private String packageReferenceNumber;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
@@ -114,6 +114,9 @@ public class JpaApplicant implements Serializable {
 
     @Column(name = "mobile_logged_in")
     private Boolean mobileLoggedIn;
+
+    @Column(name = "registration_channel")
+    private String channel;
 
     @PrePersist
     public void prePersist() {

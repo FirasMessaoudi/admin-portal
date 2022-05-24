@@ -13,9 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
 /**
  * Main controller for badge related services
  *
@@ -42,7 +39,7 @@ public class BadgeController {
         //TODO: do some validation for the passed digital id and return error message if needed
         if (digitalId.length() == 14) {
             //valid uin
-            return badgeService.generateApplicantBadge(digitalId);
+            return badgeService.generateApplicantBadge(digitalId, false);
         }
         return null;
     }

@@ -198,12 +198,12 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
             card.setStatusCode(ECardStatus.REISSUED.name());
             save(card);
             log.debug("Generate new applicant card  after mark old one as reissued...");
-            userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
+            userCardStatusAuditService.saveUserCardStatusAudit(card, userId.get());
             ApplicantCardDto savedCard = save(ApplicantCardDto.builder().applicantRitual(card.getApplicantRitual()).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
-            userCardStatusAuditService.saveUserCardStatusAudit(savedCard, userId);
+            userCardStatusAuditService.saveUserCardStatusAudit(savedCard, userId.get());
             return savedCard;
         }
-        userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
+        userCardStatusAuditService.saveUserCardStatusAudit(card, userId.get());
         return save(card);
     }
 
@@ -255,15 +255,25 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
         return getMapper().fromEntity(applicantCardRepository.findByIdAndStatusCodeNot(cardId, ECardStatus.REISSUED.name()), mappingContext);
     }
 
-    public List<ApplicantCardDto> findApplicantCardsEligibleToExpire() {
-        List<String> excludedCardsStatuses = Stream.of(ECardStatus.EXPIRED.name(), ECardStatus.CANCELLED.name(), ECardStatus.REISSUED.name()).collect(Collectors.toList());
-        List<JpaApplicantCard> applicantCardsList = applicantCardRepository.findApplicantCardsEligibleToExpire(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()), excludedCardsStatuses);
-        return getMapper().fromEntityList(applicantCardsList, mappingContext);
-    }
-
+    /**
+     * Mark cards as expired if applicant ritual is finished and log card status change.
+     */
     @Transactional
-    public void updateCardStatusesAsExpired(List<Long> cardsIds) {
-        applicantCardRepository.updateCardStatusesAsExpired(ECardStatus.EXPIRED.name(), cardsIds);
+    public void markEligibleCardsAsExpired() {
+        List<String> excludedCardsStatuses = Stream.of(ECardStatus.EXPIRED.name(), ECardStatus.CANCELLED.name(), ECardStatus.REISSUED.name()).collect(Collectors.toList());
+        List<JpaApplicantCard> cardsToExpire = applicantCardRepository.findCardsToExpire(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()), excludedCardsStatuses);
+        if (CollectionUtils.isEmpty(cardsToExpire)) return;
+
+        List<UserCardStatusAuditDto> cardStatusAuditList = new ArrayList<>();
+        cardsToExpire.forEach(card -> {
+            card.setStatusCode(ECardStatus.EXPIRED.name());
+            card.setUpdateDate(new Date());
+            // create card status audit
+            cardStatusAuditList.add(UserCardStatusAuditDto.builder().cardId(card.getId()).userId(Constants.SYSTEM_USER_ID_NUMBER)
+                    .statusCode(ECardStatus.EXPIRED.name()).uin(card.getApplicantRitual().getApplicantPackage().getApplicantUin() + "").build());
+        });
+        applicantCardRepository.saveAll(cardsToExpire);
+        userCardStatusAuditService.saveAll(cardStatusAuditList);
     }
 
     /**
@@ -276,5 +286,15 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
         log.debug("Find cards by ids  ...");
         return mapList(applicantCardRepository.findApplicantCards(cardsIds));
     }
+    public List<ApplicantCardDto> findApplicantCardsByPrintRequestBatchIdAndDigitalIds(long batchId, Set<String> digitalIdSet) {
+        return mapList(applicantCardRepository.findApplicantCardsByPrintRequestBatchIdAndDigitalIds(digitalIdSet.stream().collect(Collectors.toList()),batchId));
+    }
 
+    public ApplicantCardDto findApplicantCardByApplicantRitualId(long applicantRitualId) {
+        return getMapper().fromEntity(applicantCardRepository.findByApplicantRitualId(applicantRitualId), mappingContext);
+    }
+
+    public void updateCardStatus(List<Long> cardsIds){
+        applicantCardRepository.updateCardStatus(cardsIds, ECardStatus.SENT_FOR_PRINT.name());
+    }
 }

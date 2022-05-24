@@ -33,5 +33,9 @@ public class CompanyService extends GenericService<JpaCompany, CompanyLiteDto, L
         return getMapper().fromEntityList(companyRepository.findCompaniesBySeasonAndRitualType(currentHijriYear, List.of(ERitualType.INTERNAL_HAJJ.name(), ERitualType.EXTERNAL_HAJJ.name(), ERitualType.COURTESY_HAJJ.name())), mappingContext);
     }
 
+    public List<CompanyLiteDto> findCompaniesBySeason(int currentHijriYear) {
+        return getMapper().fromEntityList(companyRepository.findCompaniesBySeason(currentHijriYear), mappingContext);
+    }
+
 
 }

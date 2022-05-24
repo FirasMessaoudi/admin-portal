@@ -31,7 +31,6 @@ import java.util.List;
 public class ApplicantController {
 
     private final ApplicantService applicantService;
-
     /**
      * finds a list of applicants matching criteria
      *
@@ -66,4 +65,5 @@ public class ApplicantController {
         log.debug("Count applicants having current ritual...");
         return applicantService.countAllByCriteria(criteria, null);
     }
+
 }

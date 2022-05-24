@@ -21,7 +21,7 @@ export class IncidentService {
    */
   list(pageNumber: any, incidentSearchCriteria: IncidentSearchCriteria): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
-    return this.http.post<any>("/core/api/incidents/list", incidentSearchCriteria, {params: params});
+    return this.http.post<any>('/core/api/incidents/list', incidentSearchCriteria, {params: params});
   }
 
   /**

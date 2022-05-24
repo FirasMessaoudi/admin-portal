@@ -4,18 +4,13 @@
 package com.elm.shj.admin.portal.services.data.validators;
 
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
-import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffRitualDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.ReflectionUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.lang.reflect.Field;
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Validator for {@link WithCompanyStaff} annotation
@@ -39,6 +34,12 @@ public class WithCompanyStaffValidator implements ConstraintValidator<WithCompan
         }
 
         CompanyStaffRitualDto companyStaffRitualDto = (CompanyStaffRitualDto) value;
+        if (companyStaffRitualDto.getDateOfBirthGregorian() != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(companyStaffRitualDto.getDateOfBirthGregorian());
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            companyStaffRitualDto.setDateOfBirthGregorian(calendar.getTime());
+        }
         return companyStaffService.existsByBasicInfo(companyStaffRitualDto.getIdNumber(), companyStaffRitualDto.getPassportNumber(), companyStaffRitualDto.getDateOfBirthGregorian(), companyStaffRitualDto.getDateOfBirthHijri());
 
     }

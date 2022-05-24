@@ -8,11 +8,10 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
+import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantDto;
-import com.elm.shj.admin.portal.services.dto.NotificationTemplateCategorizingDto;
-import com.elm.shj.admin.portal.services.dto.UpdateApplicantCmd;
+import com.elm.shj.admin.portal.services.audit.MobileAuditLogService;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +41,11 @@ import java.util.*;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto, Long> {
 
+    private final MobileAuditLogService mobileAuditLogService;
     private final ApplicantRepository applicantRepository;
     private final ApplicantContactRepository applicantContactRepository;
     private final ApplicantRitualService applicantRitualService;
+    private final ApplicantDigitalIdRepository applicantDigitalIdRepository;
     private final ApplicantPackageService applicantPackageService;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
 
@@ -57,12 +58,18 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ApplicantDto findByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
-        return getMapper().fromEntity(applicantRepository.findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian()), mappingContext);
+        log.info("ApplicantService ::: Start findByBasicInfo ::: applicantBasicInfo rowNum: {}", applicantBasicInfo == null ? null : applicantBasicInfo.getRowNum());
+        ApplicantDto applicantDto = getMapper().fromEntity(applicantRepository.findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian()), mappingContext);
+        log.info("ApplicantService ::: Finish findByBasicInfo ::: applicantDto DigitalId: {}", applicantDto.getDigitalIds().get(0));
+        return applicantDto;
     }
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public Long findIdByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
-        return applicantRepository.findIdByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
+        log.info("ApplicantService ::: Start findByBasicInfo ::: applicantBasicInfo rowNum: {}", applicantBasicInfo == null ? null : applicantBasicInfo.getRowNum());
+        Long idByBasicInfo = applicantRepository.findIdByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
+        log.info("ApplicantService ::: Finish findByBasicInfo ::: applicantId: {}", idByBasicInfo);
+        return idByBasicInfo;
     }
 
     /**
@@ -73,7 +80,10 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public boolean existsByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
-        return applicantRepository.existsByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
+        log.info("ApplicantService ::: Start existsByBasicInfo ::: applicantBasicInfo rowNum: {}", applicantBasicInfo == null ? null : applicantBasicInfo.getRowNum());
+        boolean exists = applicantRepository.existsByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
+        log.info("ApplicantService ::: Finish existsByBasicInfo ::: isExists: {}", exists);
+        return exists;
     }
 
 
@@ -84,8 +94,17 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      * @return the found applicant or empty structure
      */
     public Optional<ApplicantDto> findByUin(String uin) {
+        log.info("ApplicantService ::: Start findByUin ::: uin: {}", uin);
+
         JpaApplicant applicant = applicantRepository.findByUin(uin);
-        return (applicant != null) ? Optional.of(getMapper().fromEntity(applicant, mappingContext)) : Optional.empty();
+        if (applicant != null) {
+            log.info("ApplicantService ::: Finish findByUin ::: FullNameEn: {}", applicant.getFullNameEn());
+            return Optional.of(getMapper().fromEntity(applicant, mappingContext));
+        }
+        {
+            log.info("ApplicantService ::: Finish findByUin ::: not found with uin: {}", uin);
+            return Optional.empty();
+        }
     }
 
 
@@ -98,6 +117,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      */
     @Transactional
     public int updateApplicantContacts(long applicantId, UpdateApplicantCmd command) {
+        log.info("ApplicantService ::: Start updateApplicantContacts ::: applicantId: {},  command: {}", applicantId, command);
         ApplicantRitualPackageVo latestPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(command.getUin()));
         int updatedRowsCount = 0;
         if (latestPackage != null) {
@@ -106,9 +126,10 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             } else {
                 updatedRowsCount = applicantContactRepository.updateContactIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId);
             }
-            updatedRowsCount += applicantRepository.markAsRegistered(applicantId);
+            updatedRowsCount += applicantRepository.markAsRegistered(applicantId, command.getChannel());
 
         }
+        log.info("ApplicantService ::: Finish updateApplicantContacts ::: updatedRowsCount: {}", updatedRowsCount);
         return updatedRowsCount;
     }
 
@@ -119,7 +140,10 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     @Override
     public ApplicantDto save(ApplicantDto applicant) {
         // persist the record
-        return super.save(applicant);
+        log.info("ApplicantService ::: Start updateApplicantContacts ::: FullNameEn: {}", applicant.getFullNameEn());
+        ApplicantDto savedApplicant = super.save(applicant);
+        log.info("ApplicantService ::: Finish updateApplicantContacts ::: FullNameEn: {}", savedApplicant.getFullNameEn());
+        return savedApplicant;
     }
 
     /**
@@ -128,7 +152,10 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      * @return the list of applicants
      */
     public List<ApplicantDto> findAllRegisteredAndHavingActiveRitual() {
-        return mapList(applicantRepository.findAllApplicantsRegisteredAndHavingActiveRitual(new Date()));
+        log.info("ApplicantService ::: Start findAllRegisteredAndHavingActiveRitual ");
+        List<ApplicantDto> applicantDtos = mapList(applicantRepository.findAllApplicantsRegisteredAndHavingActiveRitual(new Date()));
+        log.info("ApplicantService ::: Finish findAllRegisteredAndHavingActiveRitual with applicantDtosListSize: {}", applicantDtos.size());
+        return applicantDtos;
     }
 
     /**
@@ -137,7 +164,10 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      * @return the number of applicants
      */
     public long countHavingActiveRitual() {
-        return applicantRepository.countHavingActiveRitual(new Date());
+        log.info("ApplicantService ::: Start countHavingActiveRitual ");
+        long count = applicantRepository.countHavingActiveRitual(new Date());
+        log.info("ApplicantService ::: Finish countHavingActiveRitual: {} ", count);
+        return count;
     }
 
     public long countAllByCriteria(NotificationTemplateCategorizingDto applicantSearchCriteria, List<Long> excludedIds) {
@@ -227,28 +257,66 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
 
 
     public List<ApplicantDto> findAllByIds(List<Long> selectedApplicants) {
-        return mapList(applicantRepository.findAllByIds(selectedApplicants));
+        log.info("ApplicantService ::: Start findAllByIds selectedApplicantsListSize: {} ", selectedApplicants.size());
+        List<ApplicantDto> applicantDtos = mapList(applicantRepository.findAllByIds(selectedApplicants));
+        log.info("ApplicantService ::: Finish findAllByIds applicantDtosListSize: {} ", applicantDtos.size());
+        return applicantDtos;
     }
 
     public Page<ApplicantDto> findByIds(@RequestParam List<Long> selectedApplicants, Pageable pageable) {
-        return mapPage(applicantRepository.findByIds(selectedApplicants, pageable));
+        log.info("ApplicantService ::: Start findByIds selectedApplicantsListSize: {} ", selectedApplicants.size());
+        Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findByIds(selectedApplicants, pageable));
+        log.info("ApplicantService ::: Finish findByIds applicantDtosPageSize: {} ", applicantDtos.getTotalElements());
+        return applicantDtos;
     }
 
     //TODO: To be deleted
     public boolean existsByBasicInfoAndPackageCode(ApplicantBasicInfoDto applicantBasicInfo, String packageReferenceNumber) {
-        return applicantRepository.findByBasicInfoAndPackageCode(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian(), packageReferenceNumber);
+        log.info("ApplicantService ::: Start existsByBasicInfoAndPackageCode applicantBasicInfoRowNum: {}, packageReferenceNumber: {} ", applicantBasicInfo == null ? null : applicantBasicInfo.getRowNum(), packageReferenceNumber);
+        boolean isExists = applicantRepository.findByBasicInfoAndPackageCode(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian(), packageReferenceNumber);
+        log.info("ApplicantService ::: Finish existsByBasicInfoAndPackageCode isExists: {} ", isExists);
+        return isExists;
     }
 
     @Transactional
     public void updatePreferredLanguage(String uin, String lang) {
+        log.info("ApplicantService ::: Start updatePreferredLanguage uin: {},  lang: {} ", uin, lang);
         Optional<ApplicantDto> applicant = findByUin(uin);
-        log.debug("Applicant ID: {}", applicant.get().getId());
         applicant.ifPresent(applicantDto -> applicantRepository.updatePreferredLanguage(applicantDto.getId(), lang));
+        log.info("ApplicantService ::: Finish updatePreferredLanguage");
     }
 
     @Transactional
     public void updateLoggedInFromMobileAppFlag(boolean mobileLoggedIn, long applicantId) {
+        log.info("ApplicantService ::: Start updateLoggedInFromMobileAppFlag applicantId: {},  lang: {} ", mobileLoggedIn, applicantId);
         applicantRepository.updateLoggedInFromMobileAppFlag(applicantId, mobileLoggedIn);
+        applicantDigitalIdRepository
+                .findByApplicantIdAndStatusCode(applicantId, EDigitalIdStatus.VALID.name())
+                .ifPresent(applicantDigitalId -> {
+                    MobileAuditLogDto mobileAuditLogDto = new MobileAuditLogDto();
+                    if (mobileLoggedIn) {
+                        mobileAuditLogDto.setEvent("login");
+                    } else {
+                        mobileAuditLogDto.setEvent("logout");
+                    }
+                    mobileAuditLogDto.setUserId(applicantDigitalId.getUin());
+                    mobileAuditLogService.save(mobileAuditLogDto);
+                });
+        log.info("ApplicantService ::: Finish updateLoggedInFromMobileAppFlag ");
+    }
+
+    @Transactional
+    public void storeSignupEvent(long applicantId) {
+        log.info("ApplicantService ::: Start storeSignupEvent applicantId: {}", applicantId);
+        applicantDigitalIdRepository
+                .findByApplicantIdAndStatusCode(applicantId, EDigitalIdStatus.VALID.name())
+                .ifPresent(applicantDigitalId -> {
+                    MobileAuditLogDto mobileAuditLogDto = new MobileAuditLogDto();
+                    mobileAuditLogDto.setEvent("registration");
+                    mobileAuditLogDto.setUserId(applicantDigitalId.getUin());
+                    mobileAuditLogService.save(mobileAuditLogDto);
+                });
+        log.info("ApplicantService ::: Finish storeSignupEvent");
     }
 
     /**
@@ -259,7 +327,17 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
      */
     @Transactional
     public void updateDataRequestRecordId(long dataRequestRecordId, long applicantId, long applicantRitualId) {
+        log.info("ApplicantService ::: Start updateDataRequestRecordId dataRequestRecordId: {},  applicantId: {},  applicantRitualId: {}", dataRequestRecordId, applicantId, applicantRitualId);
         applicantRepository.updateDataRequestRecordId(dataRequestRecordId, applicantId);
         applicantRitualService.updateDataRequestRecordId(dataRequestRecordId, applicantRitualId);
+        log.info("ApplicantService ::: Finish updateDataRequestRecordId");
+    }
+
+    @Transactional
+    public int markAsRegistered(long applicantId, String channel) {
+        log.info("ApplicantService ::: Start markAsRegistered applicantId: {},  channel: {}", applicantId, channel);
+        int numberOfAffectedRows = applicantRepository.markAsRegistered(applicantId, channel);
+        log.info("ApplicantService ::: Start markAsRegistered numberOfAffectedRows: {}", numberOfAffectedRows);
+        return numberOfAffectedRows;
     }
 }

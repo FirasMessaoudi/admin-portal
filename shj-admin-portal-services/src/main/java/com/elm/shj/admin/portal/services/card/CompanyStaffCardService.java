@@ -20,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service handling company staff card
@@ -107,6 +105,11 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
                 predicates.add(criteriaBuilder.equal(companyCode, criteria.getCompanyCode()));
             }
 
+            if (criteria.getJobTitle() != null) {
+                Join<JpaCompanyStaffCard, JpaCompanyStaffDigitalId> companyStaffDigitalId = root.join("companyStaffDigitalId");
+                predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("titleCode"), criteria.getJobTitle()));
+            }
+
             if (criteria.getCardStatus() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("statusCode"), criteria.getCardStatus()));
             }
@@ -183,5 +186,18 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
     public List<CompanyStaffCardDto> findStaffCards(List<Long> cardIds) {
         log.debug("Find cards by ids  ...");
         return mapList(companyStaffCardRepository.findStaffCards(cardIds));
+    }
+
+    public List<CompanyStaffCardDto> findStaffCardsByPrintRequestBatchIdAndDigitalIds(long batchId, Set<String> digitalIdSet) {
+        return mapList(companyStaffCardRepository.findStaffCardsByPrintRequestBatchIdAndDigitalIds(digitalIdSet.stream().collect(Collectors.toList()), batchId));
+    }
+
+    public void updateCardStatus(List<Long> cardsIds){
+        companyStaffCardRepository.updateCardStatus(cardsIds, ECardStatus.SENT_FOR_PRINT.name());
+    }
+
+    public List<ApplicantBasicInfoVo> findStaffBasicInfoByDigitalIds(List<String> digitalIds) {
+        return  companyStaffCardRepository.findAllByStaffDigitalIds(digitalIds, Arrays.asList(ECardStatus.CANCELLED.name(),ECardStatus.EXPIRED.name(),ECardStatus.SUSPENDED.name()));
+
     }
 }

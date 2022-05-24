@@ -4,8 +4,10 @@
 package com.elm.shj.admin.portal.services.lookup;
 
 import com.elm.shj.admin.portal.orm.entity.JpaSurveyQuestionLookup;
+import com.elm.shj.admin.portal.orm.entity.JpaSurveyTypeLookup;
 import com.elm.shj.admin.portal.orm.repository.SurveyQuestionLookupRepository;
 import com.elm.shj.admin.portal.services.dto.SurveyQuestionLookupDto;
+import com.elm.shj.admin.portal.services.dto.SurveyTypeLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service handling Survey Question Lookup
@@ -32,9 +35,5 @@ public class SurveyQuestionLookupService extends GenericService<JpaSurveyQuestio
         List<SurveyQuestionLookupDto> surveyQuestionList = getMapper().fromEntityList(questionsList, mappingContext);
         return surveyQuestionList;
     }
-
-
-
-
 
 }

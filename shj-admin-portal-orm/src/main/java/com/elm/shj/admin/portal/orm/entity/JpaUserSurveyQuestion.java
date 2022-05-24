@@ -36,11 +36,11 @@ public class JpaUserSurveyQuestion implements Serializable {
     @JoinColumn(name = "user_survey_id")
     private JpaUserSurvey userSurvey;
 
-    @ManyToOne
-    @JoinColumn(name = "question_code")
-    private JpaSurveyQuestionLookup surveyQuestion;
 
-    private String code;
+    @Column(name = "question_code",nullable = false)
+    private String surveyQuestion;
+
+    private int rate;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;

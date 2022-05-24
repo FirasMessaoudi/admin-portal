@@ -45,12 +45,14 @@ public class IdNumberValidator implements ConstraintValidator<IdNumber, Object> 
             return true;
         } else if (!value.toString().matches(NUMBERS_ONLY_REGEX)) {
             // build new violation message and add it
+            context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(MSG_20003).addConstraintViolation();
             return false;
         } else // return default message
             // (length 11 to 16 => GCC)
             if (value.toString().length() < minLength || value.toString().length() > maxLength) {
                 // build new violation message and add it
+                context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate(MSG_20004).addConstraintViolation();
                 return false;
             }

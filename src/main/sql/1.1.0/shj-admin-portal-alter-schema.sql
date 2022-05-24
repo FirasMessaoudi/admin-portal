@@ -1437,7 +1437,141 @@ GO
 ALTER TABLE shc_portal.shc_applicant_contact DROP COLUMN applicant_ritual_id;
 GO
 
-alter table shc_portal.shc_survey_question_lk add question_index int not null
-alter table shc_portal.shc_survey_question_lk  alter column code VARCHAR(50)
-alter table shc_portal.shc_user_survey_question alter column question_code VARCHAR(50)
+alter table shc_portal.shc_survey_question_lk
+    add question_index int not null
+alter table shc_portal.shc_survey_question_lk alter column code VARCHAR(50)
+
+alter table shc_portal.shc_applicant alter column education_level_code varchar(100) null
+GO
+
+alter table shc_portal.shc_applicant alter column id_number_original varchar(50) null
+GO
+
+alter table shc_portal.shc_applicant_health_disease alter column label_ar nvarchar(50) null
+GO
+
+alter table shc_portal.shc_applicant_relative alter column relationship_code varchar(20) null
+GO
+
+if not exists(select * from sys.tables where name = 'shc_collection_status_lk')
+CREATE TABLE shc_portal.shc_collection_status_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(50) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT shc_collection_status_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_batch_main_collection')
+create table shc_portal.shc_batch_main_collection
+(
+    id               int           not null primary key identity(1,1),
+    reference_number varchar(50)   not null,
+    status_code       varchar(50),
+    url              varchar(256),
+    creation_date    smalldatetime not null default current_timestamp,
+    update_date      smalldatetime null
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_supplication_lk')
+create table shc_portal.shc_supplication_lk
+(
+    id                      int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code                    varchar(250)   NOT NULL,
+    lang                    varchar(45)   NOT NULL,
+    label                   nvarchar(1000)  NOT NULL,
+    type                    nvarchar(100)  NOT NULL,
+    counter                 int            NOT NULL ,
+    creation_date           smalldatetime NOT NULL default current_timestamp,
+);
+GO
+
+/*--------------------------------------------------------
+--  ddl for islamic rosary table
+--------------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_user_supplication')
+create table shc_portal.shc_user_supplication
+(
+    id int PRIMARY KEY NOT NULL identity (1,1),
+    digital_id VARCHAR(45) NOT NULL,
+    code varchar(20) NOT NULL,
+    lang varchar(45) NOT NULL,
+    label nvarchar(100) NOT NULL,
+    deleted bit NOT NULL default 0,
+    creation_date smalldatetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+);
+GO
+if not exists(select * from sys.tables where name = 'shc_suggested_supplication_lk')
+create table shc_portal.shc_suggested_supplication_lk
+(
+    id                      int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code                    varchar(20)   NOT NULL,
+    lang                    varchar(45)   NOT NULL,
+    label                   nvarchar(100)  NOT NULL,
+    creation_date           smalldatetime NOT NULL default current_timestamp,
+);
+GO
+if not exists(select * from sys.tables where name = 'shc_supplication_user_counter')
+create table shc_portal.shc_supplication_user_counter
+(
+    id                          int             NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    digital_id                  VARCHAR(45)     NOT NULL,
+    code                        varchar(20)     NOT NULL,
+    supplication_total_count    int              ,
+    supplication_last_count     int              ,
+    suggested                   bit             NOT NULL default 0,
+    creation_date               smalldatetime   NOT NULL default current_timestamp,
+    update_date                 smalldatetime
+);
+GO
+
+ALTER TABLE shc_portal.shc_suggested_supplication_lk ALTER COLUMN code varchar(100) NOT NULL
+GO
+
+ALTER TABLE shc_portal.shc_suggested_supplication_lk ALTER COLUMN label nvarchar(300) NOT NULL
+GO
+
+alter table shc_portal.shc_supplication_user_counter alter column code varchar(100) NOT NULL
+GO
+
+ALTER TABLE shc_portal.shc_user_survey_question ALTER COLUMN question_code varchar(100) NOT NULL
+GO
+
+alter table shc_portal.shc_company_staff alter column id_number varchar(16) null
+GO
+
+ALTER TABLE shc_portal.shc_applicant
+    ADD registration_channel varchar(20)
+    GO
+
+ALTER TABLE shc_portal.shc_user_survey
+    ADD survey_date smalldatetime NOT NULL default current_timestamp;
+GO
+
+alter table shc_portal.shc_company_staff alter column mobile_number varchar(20) null
+GO
+alter table shc_portal.shc_company
+    add moi_number varchar(45)
+    GO
+alter table shc_portal.shc_company
+    add cr_number varchar(45)
+    Go
+alter table shc_portal.shc_company
+    add type_code int
+alter table shc_portal.shc_company alter column label_en varchar(25) null
+go
+alter table shc_portal.shc_company alter column accreditation_organization varchar(45) null
+go
+alter table shc_portal.shc_company alter column accreditation_number varchar(45) null
+go
+alter table shc_portal.shc_company alter column accreditation_date smalldatetime null
+go
+alter table shc_portal.shc_company alter column accreditation_expiry smalldatetime null
+go
+
 

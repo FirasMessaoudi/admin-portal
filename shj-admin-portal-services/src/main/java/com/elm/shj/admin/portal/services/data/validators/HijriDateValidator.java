@@ -46,7 +46,7 @@ public class HijriDateValidator implements ConstraintValidator<HijriDate, Object
         Long dateValue = (Long) value;
 
         // allow empty entries
-        if (value == null || StringUtils.isBlank(value.toString())) {
+        if (value == null || dateValue == 0 || StringUtils.isBlank(value.toString())) {
             return allowEmpty;
         }
 

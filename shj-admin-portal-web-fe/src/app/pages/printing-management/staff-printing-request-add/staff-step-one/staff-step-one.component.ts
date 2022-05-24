@@ -59,6 +59,7 @@ export class StaffStepOneComponent implements OnInit {
   private searchSubscription: Subscription;
   ritualTypes: Lookup[] = [];
   ritualSeasons: any[] = [];
+  ritualSeasonYear: number;
 
 
   constructor(private modalService: NgbModal,
@@ -74,13 +75,14 @@ export class StaffStepOneComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ritualSeasonYear = parseInt(localStorage.getItem('seasonYear'));
     this.initForm();
     this.cardService.findCountries().subscribe(result => {
       this.nationalities = result;
       this.localizedNationalities = this.lookupsService.localizedItems(this.nationalities);
     });
 
-    this.cardService.findCompanyNames().subscribe((result) => {
+    this.cardService.findCompanyNamesBySeason(this.ritualSeasonYear).subscribe((result) => {
       this.companyNames = result;
     });
 
@@ -90,6 +92,7 @@ export class StaffStepOneComponent implements OnInit {
 
     this.printService.findRitualSeasons().subscribe((result) => {
       this.ritualSeasons = result;
+      this.ritualSeasons = this.ritualSeasons.filter( season => season == this.ritualSeasonYear);
     });
   }
 
@@ -123,7 +126,7 @@ export class StaffStepOneComponent implements OnInit {
     this.ritualForm = this.formBuilder.group({
       seasonYear: [null, Validators.required],
       ritualCode: [null, Validators.required],
-      description: [""]
+      description: ["", Validators.required]
     });
 
 
@@ -255,7 +258,7 @@ export class StaffStepOneComponent implements OnInit {
       cardVO.digitalId = card?.companyStaffDigitalId?.suin;
       cardVO.idNumber = card?.companyStaffDigitalId?.companyStaff?.idNumber;
       cardVO.passportNumber = card?.companyStaffDigitalId?.companyStaff?.passportNumber;
-      cardVO.nationalityCode = card?.companyStaffDigitalId?.companyStaff?.countryCode;
+      cardVO.nationalityCode = card?.companyStaffDigitalId?.companyStaff?.nationalityCode;
       cardVO.referenceNumber = card.referenceNumber;
       cardVO.statusCode = card.statusCode;
       this.cardsToSend.push(cardVO);

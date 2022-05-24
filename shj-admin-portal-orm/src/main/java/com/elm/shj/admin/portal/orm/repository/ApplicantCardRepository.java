@@ -24,7 +24,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
 
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi WHERE card.id " +
             "NOT IN (SELECT card2.id FROM JpaApplicantCard card2 LEFT JOIN JpaPrintRequestCard prc  ON card2.id= prc.cardId  LEFT JOIN JpaPrintRequest pr ON prc.printRequest.id=pr.id " +
-            "WHERE pr.statusCode <> :printRequestStatus or card2.statusCode <> :cardStatus) AND card.id NOT IN :excludedCardsIds " +
+            "WHERE (pr.statusCode <> :printRequestStatus or card2.statusCode <> :cardStatus) and pr.target='APPLICANT') AND card.id NOT IN :excludedCardsIds " +
             "AND (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (a.idNumber LIKE '%'+:idNumber+'%' OR :idNumber IS NULL) " +
             "AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL) " +
             "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
@@ -37,12 +37,11 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
 
     @Query("SELECT card FROM JpaApplicantCard card LEFT JOIN card.applicantRitual ar LEFT JOIN ar.applicant a LEFT JOIN a.digitalIds adi WHERE card.id " +
             "NOT IN (SELECT card2.id FROM JpaApplicantCard card2 LEFT JOIN JpaPrintRequestCard prc ON card2.id= prc.cardId LEFT JOIN JpaPrintRequest pr ON prc.printRequest.id=pr.id " +
-            "WHERE pr.statusCode <> :printRequestStatus OR card2.statusCode <> :cardStatus) AND card.id NOT IN :excludedCardsIds " +
+            "WHERE (pr.statusCode <> :printRequestStatus OR card2.statusCode <> :cardStatus)  and pr.target='APPLICANT') AND card.id NOT IN :excludedCardsIds " +
             "AND (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (a.idNumber LIKE '%'+:idNumber+'%' OR :idNumber IS NULL) " +
             "AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL) " +
             "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
     List<JpaApplicantCard> findAllPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus, @Param("uin") String uin, @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds);
-
 
     /*this method is used find all Applicant Cards with status Not Equals REISSUED */
     @Query("SELECT card FROM JpaApplicantCard card WHERE card.statusCode <> :reissuedStatusCode ")
@@ -55,17 +54,26 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
 
     JpaApplicantCard findByApplicantRitualIdAndStatusCodeNot(long id, String statusCode);
 
+    @Query("SELECT ac FROM JpaApplicantCard ac WHERE :todayDate > ac.applicantRitual.applicantPackage.endDate AND ac.statusCode NOT IN :excludedCardsStatuses")
+    List<JpaApplicantCard> findCardsToExpire(@Param("todayDate") Date todayDate, @Param("excludedCardsStatuses") List<String> excludedCardsStatuses);
+
+    //TODO: this may cause an issue with SQL server due to the IN parameters length; max is 2100 so find another solution
+    @Query("SELECT appCard FROM JpaApplicantCard appCard WHERE appCard.id IN :cardsIds ")
+    List<JpaApplicantCard> findApplicantCards(@Param("cardsIds") List<Long> cardsIds);
+
+    @Query("SELECT applicantCard from JpaApplicantCard applicantCard " +
+            "join applicantCard.applicantRitual applicantRitual " +
+            "join applicantRitual.applicant applicant " +
+            "join JpaApplicantDigitalId applicantDigitalId on applicantDigitalId.applicantId = applicant.id " +
+            "join JpaPrintRequestBatchCard printRequestBatchCard on printRequestBatchCard.cardId = applicantCard.id " +
+            "join printRequestBatchCard.printRequestBatch printRequestBatch " +
+            "where printRequestBatch.id = :batchId " +
+            "and applicantDigitalId.uin in :digitalIdList ")
+    List<JpaApplicantCard> findApplicantCardsByPrintRequestBatchIdAndDigitalIds(@Param("digitalIdList") List<String> digitalIdList , @Param("batchId") long batchId);
+
+    JpaApplicantCard findByApplicantRitualId(long applicantRitualId);
 
     @Modifying
-    @Query("UPDATE JpaApplicantCard card SET card.statusCode = :statusCode WHERE card.id in :cardsIds ")
-    int updateCardStatusesAsExpired(@Param("statusCode") String statusCode, @Param("cardsIds") List<Long> cardsIds);
-
-    @Query("SELECT appCard FROM JpaApplicantCard appCard " +
-            "INNER JOIN appCard.applicantRitual ritual " +
-            "INNER JOIN ritual.applicantPackage package " +
-            "WHERE :todayDate > package.endDate AND appCard.statusCode NOT IN :excludedCardsStatuses ")
-    List<JpaApplicantCard> findApplicantCardsEligibleToExpire(@Param("todayDate") Date todayDate, @Param("excludedCardsStatuses") List<String> excludedCardsStatuses);
-
-    @Query("SELECT appCard FROM JpaApplicantCard appCard WHERE   appCard.id IN :cardsIds ")
-    List<JpaApplicantCard> findApplicantCards(@Param("cardsIds") List<Long> cardsIds);
+    @Query("UPDATE JpaApplicantCard appCard SET appCard.statusCode=:status, appCard.updateDate = CURRENT_TIMESTAMP WHERE appCard.id IN :cardsIds")
+    void updateCardStatus(@Param("cardsIds") List<Long> cardsIds, @Param("status") String status);
 }

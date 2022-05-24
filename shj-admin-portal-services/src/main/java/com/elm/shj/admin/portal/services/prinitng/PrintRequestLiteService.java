@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffCard;
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
+import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestBatch;
+import com.elm.shj.admin.portal.orm.entity.JpaPrintRequestCard;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
@@ -13,6 +15,7 @@ import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Predicate;
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -47,6 +51,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
     private final CompanyStaffCardRepository companyStaffCardRepository;
     private final ApplicantCardService applicantCardService;
     private final CompanyStaffCardService companyStaffCardService;
+    private final PrintRequestBatchService printRequestBatchService;
 
     /**
      * Find the lite version of all print requests.
@@ -115,7 +120,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
             endDate = atEndOfDay(criteria.getToDate());
 
         return mapPage(printRequestRepository.findByFilters(criteria.getStatusCode(), criteria.getDescription(),
-                criteria.getRequestNumber(), criteria.getBatchNumber(), criteria.getCardNumber(), criteria.getIdNumber()
+                criteria.getRequestNumber(), criteria.getBatchNumber() != 0 ? criteria.getBatchNumber() : -1L, criteria.getCardNumber(), criteria.getIdNumber()
                 , startDate, endDate, pageable));
     }
 
@@ -187,15 +192,29 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public PrintRequestDto findPrintRequest(){
-        PrintRequestDto printRequest = getMapper().fromEntity(printRequestRepository.findFirstByStatusCodeOrderByCreationDateAsc(EPrintRequestStatus.CONFIRMED.name()), mappingContext);
-        if(printRequest != null){
-            if(printRequest.getTarget().equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
-                printRequest.getPrintRequestBatches().stream().forEach(batch -> {
+    public List<PrintRequestDto> findAllPrintRequest(){
+        List<PrintRequestDto> printRequest = mapList(printRequestRepository.findPrintRequest(EPrintRequestStatus.CONFIRMED.name()));
+        return printRequest;
+
+    }
+
+    public List<PrintRequestBatchDto> findPrintRequestBatches(String refrenceNumber, String target){
+        JpaPrintRequest jpaPrintRequest = printRequestRepository.findByReferenceNumber(refrenceNumber);
+        List<PrintRequestBatchDto> listPrintRequestBatches = new ArrayList<>();
+        if(jpaPrintRequest != null) {
+            if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
+                listPrintRequestBatches = printRequestBatchService.findPrintRequestBatches(jpaPrintRequest.getId());
+                listPrintRequestBatches.stream().forEach(batch -> {
                     // will be called for each print request batch, get all applicant cards for that batch
                     List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
                     // to get applicant cards based on the ids list from DB by JPQL Query
                     List<ApplicantCardDto> applicantCards = applicantCardService.findApplicantCards(cardIds);
+
+                    Comparator<ApplicantCardDto> comparator = Comparator.comparing(cards -> cards.getApplicantRitual().getApplicant().getPackageReferenceNumber());
+                    comparator = comparator.thenComparing(Comparator.comparing(cards -> cards.getCompanyLite().getCode()));
+                    comparator = comparator.thenComparing(Comparator.comparing(cards -> cards.getApplicantRitual().getApplicant().getFullNameEn()));
+                    applicantCards.stream().sorted(comparator);
+
                     // map between applicant card and batch card
                     batch.getPrintRequestBatchCards().stream().forEach(batchCard -> {
                         long cardId = batchCard.getCardId();
@@ -205,12 +224,19 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
                         //map applicantCard to CardVO and attach it to batch card like below
                     });
                 });
+
+
             } else {
-                printRequest.getPrintRequestBatches().stream().forEach(batch -> {
+                listPrintRequestBatches = printRequestBatchService.findStaffPrintRequestBatches(jpaPrintRequest.getId());
+                listPrintRequestBatches.stream().forEach(batch -> {
                     // will be called for each print request batch, get all applicant cards for that batch
                     List<Long> cardIds = batch.getPrintRequestBatchCards().stream().map(batchCard -> batchCard.getCardId()).collect(Collectors.toList());
                     // to get applicant cards based on the ids list from DB by JPQL Query
                     List<CompanyStaffCardDto> staffCards = companyStaffCardService.findStaffCards(cardIds);
+                    Comparator<CompanyStaffCardDto> comparator = Comparator.comparing(cards -> cards.getCompanyRitualSeason().getApplicantGroups().get(0).getReferenceNumber());
+                    comparator = comparator.thenComparing(Comparator.comparing(cards -> cards.getCompanyRitualSeason().getCompany().getCode()));
+                    comparator = comparator.thenComparing(Comparator.comparing(cards -> cards.getCompanyStaffDigitalId().getCompanyStaff().getFullNameEn()));
+                    staffCards.stream().sorted(comparator);
                     // map between applicant card and batch card
                     batch.getPrintRequestBatchCards().stream().forEach(batchCard -> {
                         long cardId = batchCard.getCardId();
@@ -222,14 +248,15 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
                 });
             }
         }
-        return printRequest;
+        return listPrintRequestBatches;
+
     }
 
     private CardVO mapApplicantCardToCardVO(ApplicantCardDto applicantCardDto) {
         return CardVO.builder().digitalId(applicantCardDto.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin())
                 .id(applicantCardDto.getId())
                 .referenceNumber(applicantCardDto.getReferenceNumber())
-                .groupReferenceNumber(applicantCardDto.getApplicantRitual().getApplicantPackage().getRitualPackage().getCompanyRitualSeason().getApplicantGroups().get(0).getReferenceNumber())
+                .groupReferenceNumber(applicantCardDto.getApplicantRitual().getApplicant().getPackageReferenceNumber())
                 .statusCode(applicantCardDto.getStatusCode()).build();
     }
 
@@ -243,8 +270,15 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
     }
 
     @Transactional
-    public void updatePrintRequestStatus(long printRequestId) {
-        printRequestRepository.updatePrintRequestStatus(printRequestId);
+    public void updatePrintRequestStatusToSendToPrinting(long printRequestId, String target) {
+        printRequestRepository.updatePrintRequestStatus(printRequestId, EPrintRequestStatus.SENT_TO_PRINTING.name());
+        if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
+            List<Long> cardsIds = printRequestCardRepository.findAllByPrintRequestId(printRequestId).stream().map(JpaPrintRequestCard::getCardId).collect(Collectors.toList());
+            applicantCardService.updateCardStatus(cardsIds);
+        } else {
+            List<Long> cardsIds = printRequestCardRepository.findAllByPrintRequestId(printRequestId).stream().map(JpaPrintRequestCard::getCardId).collect(Collectors.toList());
+            companyStaffCardService.updateCardStatus(cardsIds);
+        }
     }
 
 }

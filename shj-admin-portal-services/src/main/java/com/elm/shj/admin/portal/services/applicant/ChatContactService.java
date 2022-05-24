@@ -48,31 +48,46 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
      * @return the list of chat contacts
      */
     public List<ChatContactVo> list(String applicantUin, Long ritualId, Boolean systemDefined) {
+        log.info("Start list chat Contacts applicantUin: {}, ritualId: {}, systemDefined: {}", applicantUin, ritualId, systemDefined);
         if (systemDefined == null) {
             List<ChatContactVo> applicantList = chatContactRepository.findContactApplicantList(applicantUin, ritualId);
             List<ChatContactVo> staffList = chatContactRepository.findContactStaffList(applicantUin, ritualId);
             applicantList.addAll(staffList);
+            log.info("Finish list chat Contacts systemDefined is null listSize: {}", applicantList.size());
             return applicantList;
         } else if (systemDefined) {
-            return ((ChatContactRepository) getRepository()).findBySystemDefinedTrue(applicantUin, ritualId);
+            List<ChatContactVo> bySystemDefinedTrue = ((ChatContactRepository) getRepository()).findBySystemDefinedTrue(applicantUin, ritualId);
+            log.info("Finish list chat Contacts systemDefined is true listSize: {}", bySystemDefinedTrue.size());
+            return bySystemDefinedTrue;
         } else {
-            return ((ChatContactRepository) getRepository()).findBySystemDefinedFalse(applicantUin);
+            List<ChatContactVo> bySystemDefinedFalse = ((ChatContactRepository) getRepository()).findBySystemDefinedFalse(applicantUin);
+            log.info("Finish list chat Contacts systemDefined is true listSize: {}", bySystemDefinedFalse.size());
+            return bySystemDefinedFalse;
         }
     }
 
     @Transactional
     public int deleteApplicantChatContact(String applicantUin, String contactUin) {
-        return chatContactRepository.markDeleted(applicantUin, contactUin);
+        log.info("Start deleteApplicantChatContact  applicantUin: {}, contactUin: {}", applicantUin, contactUin);
+        int numberOfAffectedRows = chatContactRepository.markDeleted(applicantUin, contactUin);
+        log.info("Finish deleteApplicantChatContact  numberOfAffectedRows: {}", numberOfAffectedRows);
+        return numberOfAffectedRows;
     }
 
     @Transactional
     public int deleteInvalidStaffChatContact(String staffUin) {
-        return chatContactRepository.markStaffDeleted(staffUin);
+        log.info("Start deleteInvalidStaffChatContact  staffUin: {}", staffUin);
+        int numberOfAffectedRows = chatContactRepository.markStaffDeleted(staffUin);
+        log.info("Finish deleteInvalidStaffChatContact  numberOfAffectedRows: {}", numberOfAffectedRows);
+        return numberOfAffectedRows;
     }
 
     public ChatContactDto findApplicantChatContact(String applicantUin, String contactUin) {
+        log.info("Start findApplicantChatContact  applicantUin: {}, contactUin: {}", applicantUin, contactUin);
         Optional<JpaChatContact> applicantChatContact = chatContactRepository.findByDigitalIdAndContactDigitalId(applicantUin, contactUin);
-        return applicantChatContact.map(chatContact -> getMapper().fromEntity(chatContact, mappingContext)).orElse(null);
+        log.info("Finish findApplicantChatContact ChatContactDtoId: {}", applicantChatContact.isPresent() ? applicantChatContact.get().getId() : null);
+        ChatContactDto chatContactDto = applicantChatContact.map(chatContact -> getMapper().fromEntity(chatContact, mappingContext)).orElse(null);
+        return chatContactDto;
     }
 
     /**
@@ -84,6 +99,7 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ChatContactVo createApplicantContact(Long ritualId, ChatContactDto contact) {
+        log.info("Start createApplicantContact  ritualId: {}, DigitalId: {}, ContactDigitalId: {}", ritualId, contact.getDigitalId(), contact.getContactDigitalId());
         ChatContactDto contactBuilder = ChatContactDto.builder()
                 .digitalId(contact.getDigitalId())
                 .contactDigitalId(contact.getContactDigitalId())
@@ -97,6 +113,7 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
                 .type(ContactTypeLookupDto.builder().id(EChatContactType.APPLICANT.getId()).build())
                 .build();
         ChatContactDto savedContact = save(contactBuilder);
+        log.info("Finish createApplicantContact SavedChatContactDtoId: {}", savedContact.getId());
         return ((ChatContactRepository) getRepository()).findApplicantContactVoById(savedContact.getId()).orElse(null);
     }
 
@@ -110,12 +127,15 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ChatContactVo createStaffContact(String digitalId, Long ritualId, Optional<CompanyStaffLiteDto> companyStaff) {
+        log.info("Start createStaffContact digitalId: {}, ritualId: {}, CompanyStaffLiteDtoId: {}", digitalId, ritualId, companyStaff.isPresent() ? companyStaff.get().getId() : null);
         ChatContactDto chatContactDto = findApplicantChatContact(digitalId, companyStaff.map(CompanyStaffLiteDto::getSuin).orElse(null));
-        if(chatContactDto!=null){
-            if(chatContactDto.isDeleted()){
-             updateUserDefinedChatContact(chatContactDto.getId(),chatContactDto,false);
-             }
-           return  ((ChatContactRepository) getRepository()).findStaffContactVoById(chatContactDto.getId()).orElse(null);
+        if (chatContactDto != null) {
+            if (chatContactDto.isDeleted()) {
+                log.debug("createStaffContact chat contact already exist calling updateUserDefinedChatContact ChatContactDtoId: {}", chatContactDto.getId());
+                updateUserDefinedChatContact(chatContactDto.getId(), chatContactDto, false);
+            }
+            log.info("Finish createStaffContact chat contact already exist ChatContactDtoId: {}", chatContactDto.getId());
+            return ((ChatContactRepository) getRepository()).findStaffContactVoById(chatContactDto.getId()).orElse(null);
         }
         ChatContactDto contactBuilder = ChatContactDto.builder()
                 .digitalId(digitalId)
@@ -131,6 +151,7 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
                 .build();
 
         ChatContactDto savedContact = save(contactBuilder);
+        log.info("Finish createStaffContact savedContactId: {}", savedContact.getId());
         return ((ChatContactRepository) getRepository()).findStaffContactVoById(savedContact.getId()).orElse(null);
     }
 
@@ -142,7 +163,10 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ChatContactDto findById(long chatContactId) {
-        return findOne(chatContactId);
+        log.info("Start findById chatContactId: {}", chatContactId);
+        ChatContactDto chatContactDto = findOne(chatContactId);
+        log.info("Finish findById chatContactDtoId: {}", chatContactDto.getId());
+        return chatContactDto;
     }
 
     /**
@@ -152,6 +176,7 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
      * @return savedContact saved one
      */
     public ChatContactDto updateUserDefinedChatContact(Long id, ChatContactDto contact, boolean deleted) {
+        log.info("Start updateUserDefinedChatContact id: {}, DigitalId: {}, ContactDigitalId: {}, deleted: {}", id,contact.getDigitalId(), contact.getContactDigitalId(),deleted);
         ChatContactDto applicantChatContact = findOne(id);
         applicantChatContact.setAlias(contact.getAlias());
         applicantChatContact.setMobileNumber(contact.getMobileNumber());
@@ -160,12 +185,15 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
         applicantChatContact.setAvatar(contact.getAvatar());
         applicantChatContact.setAutoAdded(contact.isAutoAdded());
         applicantChatContact.setDeleted(deleted);
+        log.info("Finish updateUserDefinedChatContact applicantChatContactId: {}", applicantChatContact.getId());
         return save(applicantChatContact);
     }
 
     @Transactional
-    public void createGroupLeaderContact(String applicantUin, CompanyStaffDto companyStaff,int seasonYear) {
+    public void createGroupLeaderContact(String applicantUin, CompanyStaffDto companyStaff, int seasonYear) {
+        log.info("Start createGroupLeaderContact applicantUin: {}, CompanyStaffDtoId: {}, seasonYear: {}", applicantUin, companyStaff.getId(), seasonYear);
         ApplicantRitualPackageVo latestApplicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(applicantUin));
+        log.debug("createGroupLeaderContact findLatestApplicantRitualPackage {}, ",latestApplicantPackage.getApplicantPackageId());
         String leaderSuin = companyStaffDigitalIdRepository.findStaffSuinByStaffIdAndStatusCodeAndSeasonYear(companyStaff.getId(), seasonYear, EStaffDigitalIdStatus.VALID.name());
         ChatContactDto contactBuilder = ChatContactDto.builder()
                 .digitalId(applicantUin)
@@ -184,10 +212,11 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
         ChatContactDto chatContact = applicantChatContact.isPresent() ? getMapper().fromEntity(applicantChatContact.get(), mappingContext) : null;
 
         if (chatContact != null) {
-            log.debug("update System Defined Applicant Chat Contact applicantUin: {} groupLeaderSuin: {}", applicantUin, contactBuilder.getContactDigitalId());
+            log.debug("createGroupLeaderContact chat contact is not null DigitalId: {}, ContactDigitalId: {}", contactBuilder.getDigitalId(), contactBuilder.getContactDigitalId());
             contactBuilder.setId(chatContact.getId());
             contactBuilder.setCreationDate(chatContact.getCreationDate());
         }
+        log.info("Finish createGroupLeaderContact savedChatContactDtoId {}", contactBuilder.getId());
         save(contactBuilder);
     }
 
@@ -200,19 +229,23 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
      * @param applicantRitualId
      */
     public void createApplicantRelativesChatContacts(ApplicantRelativeDto applicantRelative, long applicantRitualId) {
+        log.info("Start createApplicantRelativesChatContacts ApplicantRelativeDtoId: {}, applicantRitualId: {}", applicantRelative.getId(), applicantRitualId);
         ApplicantDto relativeApplicant = applicantRelative.getRelativeApplicant();
         String relativeApplicantUin = relativeApplicant.getDigitalIds().get(0).getUin();
 
         ApplicantDto mainApplicant = applicantRelative.getApplicant();
         String mainApplicantUin = mainApplicant.getDigitalIds().get(0).getUin();
 
-        // create applicant relatives chat contacts for the main applicant
+        log.debug("create applicant relatives chat contacts for the main applicant");
         createChatContact(mainApplicantUin, relativeApplicant, applicantRitualId, applicantRelative.getRelationshipCode());
-        // create main applicant chat contact for the relative applicant if relative applicant ritual is exists
-        if (applicantRelative.getApplicantRitual() != null) {
+        Long relativeApplicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(relativeApplicant.getId(), relativeApplicant.getPackageReferenceNumber());
+        if (relativeApplicantRitualId != null) {
+            log.debug("create main applicant chat contact for the relative applicant");
             String mainApplicantRelationshipCode = mapOwnerRelationship(applicantRelative.getRelationshipCode(), mainApplicant.getGender());
-            createChatContact(relativeApplicantUin, mainApplicant, applicantRelative.getApplicantRitual().getId(), mainApplicantRelationshipCode);
+            log.info("Finish mapOwnerRelationship mainApplicantRelationshipCode: {}",mainApplicantRelationshipCode);
+            createChatContact(relativeApplicantUin, mainApplicant, relativeApplicantRitualId, mainApplicantRelationshipCode);
         }
+        log.info("Finish createApplicantRelativesChatContacts");
     }
 
     /**
@@ -224,16 +257,20 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
      * @param relationshipCode
      */
     private void createChatContact(String contactOwnerUin, ApplicantDto contactApplicant, long applicantRitualId, String relationshipCode) {
+        log.info("Start createChatContact contactOwnerUin: {}, contactApplicant: {}, applicantRitualId: {}, applicantRitualId: {}",contactOwnerUin,  contactApplicant,  applicantRitualId,  relationshipCode);
         String contactUin = contactApplicant.getDigitalIds().get(0).getUin();
-        String mobileNumber = null, countryCode= "SA";
-        if(!contactApplicant.getContacts().isEmpty()) {
+        String mobileNumber = null, countryCode = "SA";
+        if (!contactApplicant.getContacts().isEmpty()) {
+            log.debug("createChatContact applicant contacts is not empty");
             ApplicantContactDto relativeApplicantContact = contactApplicant.getContacts().get(0);
             if (relativeApplicantContact.getLocalMobileNumber() != null) {
+                log.debug("createChatContact relative applicant contact LocalMobileNumber: {}",relativeApplicantContact.getLocalMobileNumber() );
                 mobileNumber = relativeApplicantContact.getLocalMobileNumber();
                 countryCode = "SA";
             } else {
                 mobileNumber = relativeApplicantContact.getIntlMobileNumber();
                 countryCode = relativeApplicantContact.getCountryCode();
+                log.debug("createChatContact relative applicant contact IntlMobileNumber: {}", mobileNumber);
             }
         }
         ChatContactDto createdContact = ChatContactDto
@@ -257,57 +294,62 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
             createdContact.setId(chatContact.getId());
         }
         save(createdContact);
+        log.info("Finish createChatContact DigitalId: {}, ContactDigitalId: {}",createdContact.getDigitalId(), createdContact.getContactDigitalId());
+
     }
 
     /**
      * Map main applicant relationship code based on the main applicant gender and relative relationship code.
      *
      * @param relativeRelationshipCode
-     * @param Gender
+     * @param gender
      * @return
      */
-    private String mapOwnerRelationship(String relativeRelationshipCode, String Gender) {
-        if (relativeRelationshipCode.equalsIgnoreCase(FATHER.name()) && Gender.equalsIgnoreCase("M")) {
-            return SON.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(FATHER.name()) && Gender.equalsIgnoreCase("F")) {
-            return DAUGHTER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(SON.name()) && Gender.equalsIgnoreCase("M")) {
-            return FATHER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(SON.name()) && Gender.equalsIgnoreCase("F")) {
-            return MOTHER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(MOTHER.name()) && Gender.equalsIgnoreCase("M")) {
-            return SON.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(MOTHER.name()) && Gender.equalsIgnoreCase("F")) {
-            return DAUGHTER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(HUSBAND.name())) {
-            return WIFE.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(WIFE.name())) {
-            return HUSBAND.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(SISTER.name()) && Gender.equalsIgnoreCase("M")) {
-            return BROTHER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(SISTER.name()) && Gender.equalsIgnoreCase("F")) {
-            return SISTER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(BROTHER.name()) && Gender.equalsIgnoreCase("M")) {
-            return BROTHER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(BROTHER.name()) && Gender.equalsIgnoreCase("F")) {
-            return SISTER.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(COMPANION.name())) {
-            return COMPANION.name();
-        }
-        if (relativeRelationshipCode.equalsIgnoreCase(RELATIVE.name())) {
-            return RELATIVE.name();
+    private String mapOwnerRelationship(String relativeRelationshipCode, String gender) {
+        log.info("Start mapOwnerRelationship relativeRelationshipCode: {}, gender: {}",relativeRelationshipCode, gender);
+        if (relativeRelationshipCode != null) {
+            if (relativeRelationshipCode.equalsIgnoreCase(FATHER.name()) && gender.equalsIgnoreCase("M")) {
+                return SON.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(FATHER.name()) && gender.equalsIgnoreCase("F")) {
+                return DAUGHTER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(SON.name()) && gender.equalsIgnoreCase("M")) {
+                return FATHER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(SON.name()) && gender.equalsIgnoreCase("F")) {
+                return MOTHER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(MOTHER.name()) && gender.equalsIgnoreCase("M")) {
+                return SON.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(MOTHER.name()) && gender.equalsIgnoreCase("F")) {
+                return DAUGHTER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(HUSBAND.name())) {
+                return WIFE.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(WIFE.name())) {
+                return HUSBAND.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(SISTER.name()) && gender.equalsIgnoreCase("M")) {
+                return BROTHER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(SISTER.name()) && gender.equalsIgnoreCase("F")) {
+                return SISTER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(BROTHER.name()) && gender.equalsIgnoreCase("M")) {
+                return BROTHER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(BROTHER.name()) && gender.equalsIgnoreCase("F")) {
+                return SISTER.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(COMPANION.name())) {
+                return COMPANION.name();
+            }
+            if (relativeRelationshipCode.equalsIgnoreCase(RELATIVE.name())) {
+                return RELATIVE.name();
+            }
         }
 
         return COMPANION.name();
@@ -321,14 +363,18 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
      * @return the list of chat contacts
      */
     public List<ChatContactVo> listStaffContact(String suin, Boolean systemDefined) {
+        log.info("Start listStaffContact suin: {}, systemDefined: {}",suin,  systemDefined);
         if (systemDefined == null) {
             List<ChatContactVo> applicantList = chatContactRepository.findContactApplicantList(suin, null);
             List<ChatContactVo> staffList = chatContactRepository.findContactStaffList(suin, null);
             applicantList.addAll(staffList);
+            log.info("Finish listStaffContact systemDefined is null contactListSize: {}",applicantList.size());
             return applicantList;
         } else if (systemDefined) {
+            log.info("Finish listStaffContact systemDefined is true");
             return ((ChatContactRepository) getRepository()).findBySystemDefinedTrue(suin, null);
         } else {
+            log.info("Finish listStaffContact systemDefined is false");
             return ((ChatContactRepository) getRepository()).findBySystemDefinedFalse(suin);
         }
     }
@@ -340,18 +386,22 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
      *
      * @param shaaerNumber represent uin or suin
      * @param contactUin   the chat contact uin to save
+     * @param avatar
      * @return the value object of the saved applicant contact chat
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ChatContactDto createAutoAddedChatContact(String shaaerNumber, String contactUin) {
+    public ChatContactDto createAutoAddedChatContact(String shaaerNumber, String contactUin, String avatar) {
+        log.info("Start createAutoAddedChatContact shaaerNumber: {}, contactUin: {} ",shaaerNumber, contactUin);
         int chatContactTypeId = contactUin.length() == 12 ? EChatContactType.STAFF.getId() : EChatContactType.APPLICANT.getId();
         ChatContactDto contactBuilder = ChatContactDto.builder()
                 .digitalId(shaaerNumber)
                 .contactDigitalId(contactUin)
                 .autoAdded(true)
                 .type(ContactTypeLookupDto.builder().id(chatContactTypeId).build())
+                .avatar(avatar)
                 .build();
         ChatContactDto savedContact = save(contactBuilder);
+        log.info("Finish createAutoAddedChatContact savedChatContactDtoId: {} ",savedContact.getId());
         return savedContact;
     }
 }

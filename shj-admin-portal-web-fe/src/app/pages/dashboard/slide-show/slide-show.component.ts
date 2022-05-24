@@ -68,13 +68,13 @@ export class SlideShowComponent implements OnInit, AfterViewInit {
     this.dashboardItems = this.dashboardService.getDashboardItems().filter(dashboard => {
       return dashboard.selected
     });
-    this.componentLookupRegistry.set(MainComponent.name,MainComponent);
-    this.componentLookupRegistry.set(GeneralNumbersComponent.name,GeneralNumbersComponent);
-    this.componentLookupRegistry.set(IncidentsComponent.name,IncidentsComponent);
-    this.componentLookupRegistry.set(CamerasComponent.name,CamerasComponent);
-    this.componentLookupRegistry.set(MobileComponent.name,MobileComponent);
-    this.componentLookupRegistry.set(RatingComponent.name,RatingComponent);
-    this.componentLookupRegistry.set(TransactionsComponent.name,TransactionsComponent);
+    this.componentLookupRegistry.set('MainComponent',MainComponent);
+    this.componentLookupRegistry.set('GeneralNumbersComponent',GeneralNumbersComponent);
+    this.componentLookupRegistry.set('IncidentsComponent',IncidentsComponent);
+    this.componentLookupRegistry.set('CamerasComponent',CamerasComponent);
+    this.componentLookupRegistry.set('MobileComponent',MobileComponent);
+    this.componentLookupRegistry.set('RatingComponent',RatingComponent);
+    this.componentLookupRegistry.set('TransactionsComponent',TransactionsComponent);
 
     this.chkScreenMode();
     this.elem = document.documentElement;

@@ -34,7 +34,10 @@ public class ApplicantEmergencyDataUploadService extends GenericService<JpaAppli
      * @return
      */
     public ApplicantEmergencyDataUploadDto findByBasicInfoAndPackageCode(ApplicantBasicInfoDto applicantBasicInfo, String packageCode) {
-        return getMapper().fromEntity(applicantEmergencyDataUploadRepository.findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(),
+        log.info("ApplicantEmergencyDataUploadService ::: Start findByBasicInfoAndPackageCode ::: applicantBasicInfoRowNum: {}, packageCode: {}", applicantBasicInfo == null ? null : applicantBasicInfo.getRowNum(), packageCode);
+        ApplicantEmergencyDataUploadDto applicantEmergencyDataUploadDto = getMapper().fromEntity(applicantEmergencyDataUploadRepository.findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(),
                 applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian(), packageCode), mappingContext);
+        log.info("ApplicantEmergencyDataUploadService ::: Finish findByBasicInfoAndPackageCode ::: applicantEmergencyDataUploadDtoIdNumber: {}", applicantBasicInfo == null ? null : applicantEmergencyDataUploadDto == null?null: applicantEmergencyDataUploadDto.getIdNumber());
+        return applicantEmergencyDataUploadDto;
     }
 }

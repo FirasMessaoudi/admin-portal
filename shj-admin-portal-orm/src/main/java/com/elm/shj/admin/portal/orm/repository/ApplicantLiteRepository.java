@@ -10,8 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 import java.util.Date;
 import java.util.List;
 
@@ -42,8 +40,8 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
     @Query("select a from JpaApplicantLite a where " +
             "(a.idNumber = :idNumber and a.dateOfBirthHijri = :dateOfBirthHijri) or " +
             "(a.passportNumber = :passportNumber and a.dateOfBirthGregorian = :dateOfBirthGregorian)")
-    JpaApplicantLite findByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
-                                 @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
+    List<JpaApplicantLite> findByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
+                                           @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO ( applicantDigitalId.uin, applicant.fullNameEn, applicant.fullNameAr, " +
             "ritualSeason.ritualTypeCode, card.statusCode, applicant.photo, " +
@@ -66,7 +64,7 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
             "applicant.idNumberOriginal =:idNumber OR " +
             "applicant.passportNumber =:idNumber )" +
             "AND applicantDigitalId.statusCode=:digitalIdStatus " +
-            "AND card.statusCode <> :canceledCardStatus "+
+            "AND card.statusCode <> :canceledCardStatus " +
             "AND card.statusCode <> :suspendedCardStatus " +
             "order by applicantPackage.startDate desc, applicantPackage.creationDate desc"
     )
@@ -100,4 +98,26 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
     @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantVo(a.fullNameAr, a.fullNameEn, adi.uin, a.photo, l.latitude , l.longitude,a.idNumber,a.passportNumber) From JpaApplicant a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id LEFT JOIN JpaUserLocation l ON l.userId = adi.uin WHERE adi.uin = :uin order by l.creationDate desc")
     List<ApplicantVo> findApplicantDetailsWithLocationByUin(@Param("uin") String uin);
 
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO ( applicantDigitalId.uin, applicant.fullNameEn, applicant.fullNameAr, " +
+            "ritualSeason.ritualTypeCode, card.statusCode, applicant.photo, " +
+            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr  ) " +
+            "FROM JpaApplicantCard card " +
+            "INNER JOIN card.applicantRitual ritual  " +
+            "INNER JOIN ritual.applicant applicant " +
+            "INNER JOIN ritual.applicantPackage applicantPackage " +
+            "INNER JOIN applicant.digitalIds applicantDigitalId " +
+            "INNER JOIN applicantPackage.ritualPackage ritualPackage " +
+            "INNER JOIN ritualPackage.companyRitualSeason companyRitualSeason " +
+            "INNER JOIN companyRitualSeason.ritualSeason ritualSeason " +
+            "INNER JOIN companyRitualSeason.company company " +
+            "LEFT JOIN JpaGroupApplicantList groupApplicantList on groupApplicantList.applicantUin = applicantDigitalId.uin " +
+            "LEFT JOIN groupApplicantList.applicantGroup applicantGroup " +
+            "LEFT JOIN applicantGroup.groupLeader groupLeader " +
+            "LEFT JOIN groupLeader.digitalIds groupLeaderDigitalId " +
+            "WHERE ritualSeason.active = true " +
+            "AND  applicantDigitalId.uin =:uin " +
+            "AND card.id = :cardId " +
+            "order by applicantPackage.startDate desc, applicantPackage.creationDate desc "
+    )
+    List<ApplicantStaffVO> findApplicantRitualByUinAndCardId(@Param("uin") String uin, @Param("cardId") long cardId);
 }

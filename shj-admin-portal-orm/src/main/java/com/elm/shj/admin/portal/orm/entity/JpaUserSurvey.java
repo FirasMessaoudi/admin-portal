@@ -35,9 +35,14 @@ public class JpaUserSurvey implements Serializable {
     @Column(name = "digital_id",nullable = false,updatable = false)
     String digitalId;
 
-    @ManyToOne
-    @JoinColumn(name = "survey_type_code")
-    private JpaSurveyTypeLookup surveyType;
+
+    @Column(name = "type_code")
+    private String surveyType;
+
+
+    @Column(name = "survey_date")
+    @Temporal(TemporalType.DATE)
+    private Date surveyDate;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;

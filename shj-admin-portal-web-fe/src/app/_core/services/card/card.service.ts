@@ -252,7 +252,7 @@ export class CardService {
   }
 
   findRitualSeasons(): Observable<any[]> {
-    return this.http.get<any>('/core/api/lookup/ritual-seasons/list');
+    return this.http.get<any>('/core/api/lookup/ritual-seasons-years/list');
   }
 
   staffCardlist(
@@ -267,6 +267,10 @@ export class CardService {
 
   findCompanyNames(): Observable<CompanyLite[]> {
     return this.http.get<any>('/core/api/lookup/company-names/list');
+  }
+
+  findCompanyNamesBySeason(seasonYear:number): Observable<CompanyLite[]> {
+    return this.http.get<any>('/core/api/lookup/company-names/list/' + seasonYear);
   }
 
   findStaffCardById(id: number): Observable<any> {

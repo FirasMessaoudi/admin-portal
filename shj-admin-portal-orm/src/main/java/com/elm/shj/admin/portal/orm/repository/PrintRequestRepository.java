@@ -50,11 +50,14 @@ public interface PrintRequestRepository extends JpaRepository<JpaPrintRequest, L
                                         @Param("cardNumber") String cardNumber, @Param("uin") String uin,
                                         @Param("startDate") Date startDate, @Param("endDate") Date endDate,Pageable pageable);
 
+    @Query(value = "SELECT distinct pr FROM JpaPrintRequest pr WHERE pr.statusCode=:statusCode")
+    List<JpaPrintRequest> findPrintRequest(@Param("statusCode") String statusCode);
 
-   JpaPrintRequest findFirstByStatusCodeOrderByCreationDateAsc(String statusCode);
+    @Query(value = "SELECT pr from JpaPrintRequest pr where pr.referenceNumber=:referenceNumber")
+   JpaPrintRequest findByReferenceNumber(@Param("referenceNumber") String referenceNumber);
 
     @Modifying
-    @Query("UPDATE JpaPrintRequest pr SET pr.statusCode='SENT_TO_PRINTING' WHERE pr.id = :printRequestId")
-    void updatePrintRequestStatus(@Param("printRequestId") long printRequestId);
+    @Query("UPDATE JpaPrintRequest pr SET pr.statusCode=:status, pr.updateDate = CURRENT_TIMESTAMP WHERE pr.id = :printRequestId")
+    void updatePrintRequestStatus(@Param("printRequestId") long printRequestId, @Param("status") String status);
 
 }

@@ -30,7 +30,7 @@
                min="0" step="1"/>
       </div>
       <div class="form-group col">
-        <label class="col-form-label">{{'printing-management.id_number' | translate }}</label>
+        <label class="col-form-label">{{'general.nin' | translate }}</label>
         <input type="number" formControlName="idNumber" class="form-control"
                onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length <= 9"
                min="0" step="1"/>
@@ -75,7 +75,10 @@
           <span>{{splitString('printing-management.cards_selected_on_the_current_page' | translate, ' X ')[0]}}</span>
           <span class="font-weight-bold text-dcc-primary px-2">{{numberOfSelectedCardsInCurrentPage()}}</span>
           <span>{{splitString('printing-management.cards_selected_on_the_current_page' | translate, ' X ')[1]}}</span>
-          
+          <span class="mx-1 text-light-gray h5" ngbTooltip="{{'printing-management.cards_tooltip' | translate}}">
+            <svg-icon icon="exclamation-circle"></svg-icon>
+          </span>
+
         </div>
         <div id="selectbtns">
           <button [disabled]="isSelectLoading"
@@ -111,7 +114,7 @@
             </th>
             <th class="text-nowrap" scope="col">{{'card-management.name' | translate}}</th>
             <th class="text-nowrap" scope="col">{{'card-management.applicant_id' | translate}}</th>
-            <th class="text-nowrap" scope="col">{{'printing-management.id_number' | translate}}</th>
+            <th class="text-nowrap" scope="col">{{'general.nin' | translate}}</th>
             <th class="text-nowrap" scope="col">{{'card-management.passport_number' | translate}}</th>
           </tr>
           </thead>
@@ -211,7 +214,7 @@
       <tr>
         <th scope="col">{{'card-management.name' | translate}}</th>
         <th scope="col">{{'card-management.applicant_id' | translate}}</th>
-        <th scope="col">{{'printing-management.id_number' | translate}}</th>
+        <th scope="col">{{'general.nin' | translate}}</th>
         <th scope="col">{{'card-management.passport_number' | translate}}</th>
         <th scope="col" class="text-center"></th>
       </tr>

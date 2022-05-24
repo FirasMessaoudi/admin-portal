@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.prinitng;
 
 import com.elm.shj.admin.portal.orm.entity.JpaPrintRequest;
 import com.elm.shj.admin.portal.orm.repository.PrintRequestBatchRepository;
+import com.elm.shj.admin.portal.orm.repository.PrintRequestRepository;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -13,13 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
 /**
  * Service handling print request
  *
@@ -35,6 +36,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
     private final CompanyStaffCardService staffCardService;
     private final PrintRequestBatchRepository printRequestBatchRepository;
+    private final PrintRequestRepository printRequestRepository;
 
     public PrintRequestDto prepare(List<CardVO> cards) {
         // create and save the print request
@@ -51,6 +53,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         // return the print request
         return printRequest;
     }
+
     /**
      * Generates a unique identifier for the print request
      *
@@ -95,20 +98,27 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
 
                         return groupingByCriteriaList;
                     }));
+            //create sequence count to increase sequence number for each batch and avoid duplication
+            AtomicInteger sequenceCount = new AtomicInteger();
+            sequenceCount.set(printRequestBatchRepository.maxSequenceNumber() != null ? printRequestBatchRepository.maxSequenceNumber() + 1 : 1);
             // Create print request batches
             groupedRequestCards.forEach((key, value) -> {
+
                 PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder()
                         // Save batching criteria as comma-separated string
                         .batchTypeCodes(selectedBatchTypes.stream().map(EPrintBatchType::name).collect(Collectors.joining(",")))
                         // Save batching values as comma-separated string
                         .batchTypeValues(String.join(",", key))
                         .printRequestBatchCards(value.stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
-                printRequestBatch.setSequenceNumber(printRequestBatchRepository.maxSequenceNumber() != null ? printRequestBatchRepository.maxSequenceNumber() + 1 : 1);
+                printRequestBatch.setSequenceNumber(sequenceCount.getAndIncrement());
                 printRequest.getPrintRequestBatches().add(printRequestBatch);
             });
         } else {
             // No batching criteria selected save all printing cards as one batch
-            PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder().printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
+            //create sequence count to increase sequence number for each batch and avoid duplication
+            AtomicInteger sequenceCount = new AtomicInteger();
+            sequenceCount.set(printRequestBatchRepository.maxSequenceNumber() != null ? printRequestBatchRepository.maxSequenceNumber() + 1 : 1);
+            PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder().sequenceNumber(sequenceCount.getAndIncrement()).printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
             printRequest.getPrintRequestBatches().add(printRequestBatch);
         }
         // Return nested object
@@ -121,6 +131,8 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
             requestCard.setPrintRequest(printRequest);
             requestCard.setCardId(requestCard.getCard().getId());
         });
+        //sorting batches based on sequence number before adding in the print request
+        printRequest.getPrintRequestBatches().stream().sorted(Comparator.comparingInt(PrintRequestBatchDto::getSequenceNumber));
         printRequest.getPrintRequestBatches().forEach(requestBatch -> {
             requestBatch.setPrintRequest(printRequest);
             requestBatch.getPrintRequestBatchCards().forEach(batchCard -> {
@@ -132,5 +144,19 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         printRequest.setTarget(target);
         printRequest.setConfirmationDate(new Date());
         return super.save(printRequest);
+    }
+
+    public PrintRequestDto findByReferenceNumber(String referenceNumber) {
+        if(referenceNumber == null || referenceNumber.trim().isEmpty())
+            return null;
+        JpaPrintRequest jpaPrintRequest = printRequestRepository.findByReferenceNumber(referenceNumber);
+        if (jpaPrintRequest != null)
+            return this.getMapper().fromEntity(jpaPrintRequest, mappingContext);
+        return null;
+    }
+
+    @Transactional
+    public void updatePrintRequestStatus(long printRequestId, String status) {
+        printRequestRepository.updatePrintRequestStatus(printRequestId, status);
     }
 }

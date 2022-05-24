@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyLiteService extends GenericService<JpaCompanyLite, CompanyLiteDto, Long> {
-
+    //TODO this service should be removed and move methods to CompanyService, no need for it
     private final CompanyLiteRepository companyLiteRepository;
 
     /**

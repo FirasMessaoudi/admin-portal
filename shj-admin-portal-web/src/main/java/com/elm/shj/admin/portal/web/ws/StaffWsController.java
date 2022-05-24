@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
+import com.elm.shj.admin.portal.orm.entity.ApplicantVo;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.GroupApplicantListService;
@@ -11,7 +12,7 @@ import com.elm.shj.admin.portal.services.applicant.PackageHousingService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.EUserType;
 import com.elm.shj.admin.portal.services.dto.PackageHousingDto;
-import com.elm.shj.admin.portal.services.dto.PrintRequestDto;
+import com.elm.shj.admin.portal.services.prinitng.PrintRequestBatchService;
 import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -19,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,6 +48,7 @@ public class StaffWsController {
     private final GroupApplicantListService groupApplicantListService;
     private final PackageHousingService packageHousingService;
     private final PrintRequestLiteService printRequestLiteService;
+    private final PrintRequestBatchService printRequestBatchService;
 
     /**
      * finds company staff
@@ -57,12 +58,14 @@ public class StaffWsController {
      */
     @GetMapping("/find/{suin}")
     public ResponseEntity<WsResponse<?>> findCompanyStaffBySuin(@PathVariable String suin) {
-        log.debug("find company staff by suin {} ", suin);
+        log.info("Start findCompanyStaffBySuin  suin {}" , suin);
         Optional<CompanyStaffVO> staffRitualBySuin = companyStaffService.findStaffRitualBySuin(suin);
-        if (staffRitualBySuin.isPresent())
+        if (staffRitualBySuin.isPresent()) {
+            log.info("Finish findCompanyStaffBySuin {},CompanyStaffVO Suin {}", "SUCCESS",staffRitualBySuin.isPresent()?staffRitualBySuin.get().getSuin(): null);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(staffRitualBySuin).build());
-
+        }
+        log.info("Finish findCompanyStaffBySuin {}, {}", "FAILURE", "COMPANY_STAFF_NOT_FOUND");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                 .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(suin).build()).build());
 
@@ -71,43 +74,59 @@ public class StaffWsController {
     /**
      * finds company staff Or Applicant
      *
-     * @param suin the UIN of the staff
-     * @param value ShaaerNumber( uin/suin) or IdNumber(nin,Iqama number,passport Number)
-     * @param  isShaaerNumber if the user want to search by uin/suin
+     * @param suin      the UIN of the staff
+     * @param value     ShaaerNumber( uin/suin) or IdNumber(nin,Iqama number,passport Number)
+     * @param valueType {0: shaaerDigitalId, 1: id number, 2: qr code or barcode}
      * @return the found company staff or applicant
      */
-    @GetMapping("/search/{suin}/{value}/{isShaaerNumber}")
-    public ResponseEntity<WsResponse<?>> findApplicantOrStaff(@PathVariable String suin, @PathVariable String value, @PathVariable boolean isShaaerNumber) {
-        log.debug("find staff or applicant {} - isShaaerNumber {}", value, isShaaerNumber);
-        if (isShaaerNumber && value.length() == 12) {
-            Optional<ApplicantStaffVO> staff = companyStaffService.findStaffBySuin(value);
+    @GetMapping("/search/{suin}/{value}/{valueType}")
+    public ResponseEntity<WsResponse<?>> findApplicantOrStaff(@PathVariable String suin, @PathVariable String value, @PathVariable int valueType) {
+        log.info("Start findApplicantOrStaff  suin: {}, value: {},   valueType: {}" , suin,   value,   valueType);
+
+        if (value.length() == 13 || value.length() == 12) {
+            Optional<ApplicantStaffVO> staff;
+            if (valueType == 0) {
+                log.debug("findApplicantOrStaff value: {} findStaffBySuin ", value);
+                staff = companyStaffService.findStaffBySuin(value);
+            } else {
+                log.debug("findApplicantOrStaff value: {} findStaffBySuinAndCardId ", value);
+                staff = companyStaffService.findStaffBySuinAndCardId(value);
+            }
             if (staff.isPresent()) {
                 ApplicantStaffVO applicantStaffVO = staff.get();
                 applicantStaffVO.setUserType(EUserType.STAFF.getId());
+                log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}", "SUCCESS", applicantStaffVO ==null? null: applicantStaffVO.getFullNameEn());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                         .body(applicantStaffVO).build());
             }
+            log.info("Finish findCompanyStaffBySuin {}, {}", "FAILURE", "INVALID_INPUT");
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(value).build()).build());
         }
 
-        if (isShaaerNumber && value.length() == 14) {
-            Optional<ApplicantStaffVO> applicant = applicantLiteService.findApplicantRitualByUin(value);
+        if (value.length() == 14 || value.length() == 15) {
+            Optional<ApplicantStaffVO> applicant;
+
+                log.debug("findApplicantOrStaff value: {} findApplicantRitualByUin ", value);
+                applicant = applicantLiteService.findApplicantRitualByUin(value);
+
             if (applicant.isPresent()) {
                 ApplicantStaffVO applicantStaffVO = applicant.get();
                 applicantStaffVO.setUserType(EUserType.APPLICANT.getId());
-                if(applicantStaffVO.getGroupLeaderSuin()!= null && applicantStaffVO.getGroupLeaderSuin().equals(suin)){
+                if (applicantStaffVO.getGroupLeaderSuin() != null && applicantStaffVO.getGroupLeaderSuin().equals(suin)) {
                     applicantStaffVO.setSameStaffGroup(true);
                 }
+                log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}, SameStaffGroup {}", "SUCCESS", applicantStaffVO ==null? null: applicantStaffVO.getFullNameEn(), applicantStaffVO ==null? null: applicantStaffVO.isSameStaffGroup());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                         .body(applicantStaffVO).build());
             }
-
+            log.info("Finish findCompanyStaffBySuin {}, {}", "FAILURE", "INVALID_INPUT");
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(value).build()).build());
         }
 
-        if (isShaaerNumber) {
+        if (valueType == 0 || valueType == 2) {
+            log.info("Finish findCompanyStaffBySuin {}, {}", "FAILURE", "INVALID_INPUT");
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(value).build()).build());
 
@@ -117,6 +136,7 @@ public class StaffWsController {
         if (staff.isPresent()) {
             ApplicantStaffVO applicantStaffVO = staff.get();
             applicantStaffVO.setUserType(EUserType.STAFF.getId());
+            log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}", "SUCCESS", applicantStaffVO ==null? null: applicantStaffVO.getFullNameEn());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(applicantStaffVO).build());
         }
@@ -125,13 +145,14 @@ public class StaffWsController {
         if (applicant.isPresent()) {
             ApplicantStaffVO applicantStaffVO = applicant.get();
             applicantStaffVO.setUserType(EUserType.APPLICANT.getId());
-            if(applicantStaffVO.getGroupLeaderSuin().equals(suin)){
+            if (applicantStaffVO.getGroupLeaderSuin().equals(suin)) {
                 applicantStaffVO.setSameStaffGroup(true);
             }
+            log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}, SameStaffGroup {}", "SUCCESS", applicantStaffVO ==null? null: applicantStaffVO.getFullNameEn(), applicantStaffVO ==null? null: applicantStaffVO.isSameStaffGroup());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(applicantStaffVO).build());
         }
-
+        log.info("Finish findCompanyStaffBySuin {}, {}", "FAILURE", "INVALID_INPUT");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                 .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).referenceNumber(value).build()).build());
 
@@ -139,28 +160,20 @@ public class StaffWsController {
 
     @GetMapping("/applicant-group/{suin}")
     public ResponseEntity<WsResponse<?>> loadApplicantGroupList(@PathVariable String suin) {
+        log.info("Start loadApplicantGroupList  suin: {}" , suin);
+        List<ApplicantVo> groupApplicantListBySuin = groupApplicantListService.findGroupApplicantListBySuin(suin);
+        log.info("Finish loadApplicantGroupList {} groupApplicantListBySuinSize: {}" ,"SUCCESS",  groupApplicantListBySuin == null?null: groupApplicantListBySuin.size());
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(groupApplicantListService.findGroupApplicantListBySuin(suin)).build());
+                .body(groupApplicantListBySuin).build());
     }
 
     @GetMapping("/find/package-housing/{companyRitualSeason}")
     public ResponseEntity<WsResponse<?>> findStaffPackageHousingByCompanyRitualSeason(@PathVariable long companyRitualSeason) {
-        PackageHousingDto packageHousingDto=  packageHousingService.findStaffPackageHousingByCompanyRitualSeason(companyRitualSeason);
+        log.info("Start findStaffPackageHousingByCompanyRitualSeason  companyRitualSeason: {}" , companyRitualSeason);
+        PackageHousingDto packageHousingDto = packageHousingService.findStaffPackageHousingByCompanyRitualSeason(companyRitualSeason);
+        log.info("Finish findStaffPackageHousingByCompanyRitualSeason  packageHousingDto: {}" ,"SUCCESS",  packageHousingDto == null?null: packageHousingDto.getReferenceNumber());
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(packageHousingDto).build());
-    }
-
-    @GetMapping("/find/print-request")
-    public ResponseEntity<WsResponse<?>> findPrintRequest() {
-        log.debug("List print requests based on search criteria...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(printRequestLiteService.findPrintRequest()).build());
-    }
-
-    @PutMapping("/update-print-request-status/{printRequestId}")
-    public ResponseEntity<WsResponse<?>> updatePrintRequestStatus(@PathVariable long printRequestId) {
-        printRequestLiteService.updatePrintRequestStatus(printRequestId);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).build());
     }
 
 

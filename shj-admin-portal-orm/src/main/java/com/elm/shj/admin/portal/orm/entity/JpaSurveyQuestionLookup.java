@@ -25,9 +25,8 @@ public class JpaSurveyQuestionLookup extends JpaLocalizedLookup {
 
     private static final long serialVersionUID = 475930058595116447L;
 
-    @ManyToOne
-    @JoinColumn(name = "survey_type_code",nullable = false)
-    private JpaSurveyTypeLookup surveyType;
+    @Column(name = "survey_type_code",nullable = false)
+    private String surveyTypeCode;
 
     @Column(name= "question_index", nullable = false)
     private int questionIndex;

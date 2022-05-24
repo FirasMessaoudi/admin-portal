@@ -5,9 +5,12 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaUserSurvey;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Temporal;
 
 
-import java.time.LocalDateTime;
+import javax.persistence.TemporalType;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -18,5 +21,7 @@ import java.util.Optional;
  */
 public interface UserSurveyRepository extends JpaRepository<JpaUserSurvey, Long> {
 
-    Optional<JpaUserSurvey> findByDigitalIdAndSurveyTypeAndCreationDate(String digitalId,String surveyType, LocalDateTime today);
+    Optional<JpaUserSurvey> findByDigitalIdAndSurveyTypeAndSurveyDate(String digitalId, String surveyType, Date today);
+    Optional<JpaUserSurvey> findByDigitalIdAndSurveyType(String digitalId, String surveyType);
+
 }

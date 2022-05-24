@@ -23,7 +23,7 @@ public class OnlyCharactersValidator implements ConstraintValidator<OnlyCharacte
     private static final String NUMBERS_REGEX = "\\p{N}";
     private static final String MSG_20004 = "validation.data.constraints.msg.20004";
     private static final String MSG_20013 = "validation.data.constraints.msg.20013";
-    private static final String MSG_20014 = "validation.data.constraints.msg.20014";
+    private static final String MSG_20003 = "validation.data.constraints.msg.20003";
 
     private boolean arabic;
     private boolean allowEmpty;
@@ -57,11 +57,13 @@ public class OnlyCharactersValidator implements ConstraintValidator<OnlyCharacte
             return this.allowEmpty;
         } else if (value.toString().length() < min || value.toString().length() > max) {
             // build new violation message and add it
+            context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(MSG_20004).addConstraintViolation();
             return false;
         } else if (!value.toString().matches(regex)) {
             // build new violation message and add it
-            context.buildConstraintViolationWithTemplate(arabic ? MSG_20013 : MSG_20014).addConstraintViolation();
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(arabic ? MSG_20013 : MSG_20003).addConstraintViolation();
             return false;
         }
         return true;

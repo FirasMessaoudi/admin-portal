@@ -33,6 +33,7 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
     private final PackageHousingService packageHousingService;
     private final ApplicantPackageCateringService applicantPackageCateringService;
 
+    //TODO not used
     @Transactional(readOnly = true)
     public ApplicantPackageDto findApplicantPackageByUinAndReferenceNumber(Long applicantUin, String packageReferenceNumber) {
         Optional<JpaApplicantPackage> applicantPackageOptional = applicantPackageRepository.findByApplicantUinAndRitualPackageReferenceNumber(applicantUin, packageReferenceNumber);
@@ -46,23 +47,32 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
     }
 
     public List<ApplicantRitualPackageVo> findApplicantRitualPackageByUin(long applicantUin) {
-        return applicantPackageRepository.findApplicantRitualPackageByUin(applicantUin);
+        log.info("Start findApplicantRitualPackageByUin ::: applicantUin:{} ", applicantUin);
+        List<ApplicantRitualPackageVo> applicantRitualPackageByUin = applicantPackageRepository.findApplicantRitualPackageByUin(applicantUin);
+        log.info("Finish findApplicantRitualPackageByUin ::: applicantRitualPackageListSize:{} ", applicantRitualPackageByUin.size());
+        return applicantRitualPackageByUin;
 
     }
 
     public ApplicantRitualPackageVo findLatestApplicantRitualPackage(long applicantUin) {
+        log.info("Start findLatestApplicantRitualPackage ::: applicantUin:{} ", applicantUin);
         List<ApplicantRitualPackageVo> applicantRitualSeasons = findApplicantRitualPackageByUin(applicantUin);
         if (applicantRitualSeasons.size() > 0) {
+            log.info("Finish findLatestApplicantRitualPackage ::: ApplicantPackageId:{} ", applicantRitualSeasons.get(0).getApplicantPackageId());
             return applicantRitualSeasons.get(0);
         }
+        log.info("Finish findLatestApplicantRitualPackage ::: not found with applicantUin:{} ", applicantUin);
         return null;
     }
 
     public ApplicantPackageDto findByIdAndApplicantUin(Long id, Long applicantUin){
+        log.info("Start findByIdAndApplicantUin ::: id:{}, applicantUin:{} ", id, applicantUin);
         Optional<JpaApplicantPackage>  applicantPackage = applicantPackageRepository.findByIdAndApplicantUin(id,applicantUin);
         if(applicantPackage.isPresent()){
+            log.info("Finish findByIdAndApplicantUin ::: applicantPackageId:{}",applicantPackage.get().getId());
             return getMapper().fromEntity(applicantPackage.get(),mappingContext);
         }
+        log.info("Finish findByIdAndApplicantUin ::: not found with id:{}, applicantUin:{} ", id, applicantUin);
         return  null;
     }
 
@@ -72,9 +82,19 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
      * @return
      */
     public Long findLatestIdByApplicantUIN(String applicantUin) {
-        Page<Long> applicantPackageIdPage = applicantPackageRepository.findLastIdByApplicantUin(Long.parseLong(applicantUin), PageRequest.of(0, 1));
-        if (applicantPackageIdPage == null) return null;
-        return applicantPackageIdPage.getContent().get(0);
+        log.info("Start findLatestIdByApplicantUIN ::: applicantUin:{} ", applicantUin);
+        try {
+            Page<Long> applicantPackageIdPage = applicantPackageRepository.findLastIdByApplicantUin(Long.parseLong(applicantUin), PageRequest.of(0, 1));
+            if (applicantPackageIdPage == null) {
+                log.info("Finish findLatestIdByApplicantUIN ::: not found with applicantUin:{} ", applicantUin);
+                return null;
+            }
+            log.info("Finish findLatestIdByApplicantUIN ::: applicantPackageIdPage content:{} ", applicantPackageIdPage.getContent().get(0));
+            return applicantPackageIdPage.getContent().get(0);
+        } catch (Exception e) {
+            log.error("Finish findLatestIdByApplicantUIN ::: not found with applicantUin:{} and throw Exception: {}",applicantUin, e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -84,6 +104,7 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
      * @return
      */
     public List<ApplicantPackageCateringDto> findPackageCateringFromRitualPackage(long uin, long applicantPackageId) {
+        log.info("Start findPackageCateringFromRitualPackage ::: applicantUin:{}, applicantPackageId:{} ", uin, applicantPackageId);
         List<ApplicantPackageCateringDto> applicantPackageCateringDtos = new ArrayList<>();
         ApplicantPackageDto applicantPackage = findOne(applicantPackageId);
         List<PackageHousingDto> packageHousingDtos = packageHousingService.findByRitualPackageId(applicantPackage.getRitualPackage().getId());
@@ -92,11 +113,13 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
                 .filter(p -> LocalDateTime.now().isAfter(DateUtils.convertToLocalDate(p.getValidityStart()))
                         && LocalDateTime.now().isBefore(DateUtils.convertToLocalDate(p.getValidityEnd()))).findFirst();
         if (!packageHousingDto.isPresent()) {
+            log.info("Finish findPackageCateringFromRitualPackage ::: not found  with applicantPackageCateringDtosListSize: {}", applicantPackageCateringDtos.size());
             return applicantPackageCateringDtos;
         }
 
         //today's catering
         applicantPackageCateringDtos = applicantPackageCateringService.findAllByApplicantPackageApplicantUinAndPackageCateringPackageHousingId(uin, packageHousingDto.get().getId());
+        log.info("Finish findPackageCateringFromRitualPackage ::: with applicantPackageCateringDtosListSize: {}", applicantPackageCateringDtos.size());
 
         return applicantPackageCateringDtos.stream().sorted(Comparator.comparing(o -> o.getPackageCatering().getMealTime())).collect(Collectors.toList());
     }
@@ -109,14 +132,14 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
      * @return saved applicant package
      */
     public ApplicantPackageDto createApplicantPackage(String packageReferenceNumber, Long applicantUin, String busNumber, String seatNumber) {
-
+        log.info("Start createApplicantPackage ::: packageReferenceNumber: {},  applicantUin: {},  busNumber: {},  seatNumber: {}", packageReferenceNumber,  applicantUin,  busNumber,  seatNumber);
         List<ApplicantPackageHousingDto> applicantPackageHousings;
         List<ApplicantPackageCateringDto> applicantPackageCaterings = new ArrayList<>();
         List<ApplicantPackageTransportationDto> applicantPackageTransportations = new ArrayList<>();
 
         RitualPackageDto ritualPackage = ritualPackageService.findRitualPackageByReferenceNumber(packageReferenceNumber);
         if (ritualPackage == null) {
-            log.error("Unable to find ritual package with this {} package reference number.", packageReferenceNumber);
+            log.info("Finish createApplicantPackage ::: ritualPackage not found with packageReferenceNumber: {},  applicantUin: {},  busNumber: {},  seatNumber: {}", packageReferenceNumber,  applicantUin,  busNumber,  seatNumber);
             return null;
         }
 
@@ -151,7 +174,20 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
             });
             applicantPackage.setApplicantPackageCaterings(applicantPackageCaterings);
         }
-        return save(applicantPackage);
+        ApplicantPackageDto savedApplicantPackage = save(applicantPackage);
+        log.info("Finish createApplicantPackage ::: save applicantPackage  savedApplicantPackage StartDate: {}, EndDate: {}", savedApplicantPackage.getStartDate(), savedApplicantPackage.getEndDate());
+        return savedApplicantPackage;
+    }
+
+    public ApplicantPackageDto findJpaApplicantPackageByApplicantUin(String applicantUin) {
+        log.info("Start findJpaApplicantPackageByApplicantUin ::: applicantUin: {}", applicantUin);
+        Optional<JpaApplicantPackage> applicantPackage = applicantPackageRepository.findJpaApplicantPackageByApplicantUin(Long.parseLong(applicantUin));
+        if(applicantPackage.isPresent()){
+            log.info("Finish findJpaApplicantPackageByApplicantUin ::: StartDate: {}, EndDate:{}", applicantPackage.get().getStartDate(), applicantPackage.get().getEndDate());
+            return getMapper().fromEntity(applicantPackage.get(),mappingContext);
+        }
+        log.info("Finish findJpaApplicantPackageByApplicantUin ::: not found with applicantUin: {}", applicantUin);
+        return  null;
     }
 
 }

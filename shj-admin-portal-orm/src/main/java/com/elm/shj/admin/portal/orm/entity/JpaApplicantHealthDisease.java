@@ -36,7 +36,7 @@ public class JpaApplicantHealthDisease implements Serializable {
     @JoinColumn(name = "applicant_health_id")
     private JpaApplicantHealth applicantHealth;
 
-    @Column(name = "label_ar", nullable = false)
+    @Column(name = "label_ar")
     private String labelAr;
 
     @Column(name = "label_en", nullable = false)

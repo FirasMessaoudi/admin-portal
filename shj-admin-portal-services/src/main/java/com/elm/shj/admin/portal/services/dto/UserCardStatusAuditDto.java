@@ -24,8 +24,8 @@ public class UserCardStatusAuditDto implements Serializable {
     private static final long serialVersionUID = -752004467273695076L;
     private long id;
     String uin;
-    UserDto user;
-    ApplicantCardDto card;
+    private long userId;
+    private long cardId;
     String statusCode;
     Date creationDate;
 }

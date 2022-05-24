@@ -4,7 +4,6 @@
 package com.elm.shj.admin.portal.services.sftp;
 
 import com.jcraft.jsch.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +12,18 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
 import java.io.*;
-import java.lang.reflect.Field;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Service for filesystem manipulation using SFTP
@@ -38,12 +42,16 @@ public class SftpService {
     @Autowired
     @Qualifier("applicantIncidentSftpProperties")
     private SftpProperties applicantIncidentsConfig;
+
+    @Autowired
+    @Qualifier("cardsSftpProperties")
+    private SftpProperties cardsConfig;
     // Set the prompt when logging in for the first time, optional values: (ask | yes | no)
     private static final SimpleDateFormat FILE_NAME_POSTFIX_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
     private static final SimpleDateFormat FOLDER_NAME_FORMAT = new SimpleDateFormat("yyyy_MM_dd");
     private static final String SESSION_CONFIG_STRICT_HOST_KEY_CHECKING = "StrictHostKeyChecking";
     private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
-    private static final String DATA_UPLOAD_CONFIG_PROPERTIES = "dataUploadConfigProperties";
+    private static final String CARDS_CONFIG_PROPERTIES = "cardsConfigProperties";
 
 
     /**
@@ -54,14 +62,14 @@ public class SftpService {
      * @return if the file was uploaded successfully
      * @throws JSchException in case of operation failure
      */
-    public boolean uploadFile(String targetPath, InputStream inputStream,String  configPropertiesType) throws JSchException {
-        SftpProperties config= getSftpPropertiesConfig( configPropertiesType);
+    public boolean uploadFile(String targetPath, InputStream inputStream,String configPropertiesType) throws JSchException {
+        SftpProperties config = getSftpPropertiesConfig(configPropertiesType);
 
-        log.info("Upload File Started, ftpServer [{}:{}], ftpPath [{}]", config.getHost(), config.getPort(), targetPath);
-        ChannelSftp sftp = this.createSftp( configPropertiesType);
+        log.info("Upload File Started, ftpServer [{}:{}], ftpPath [{}], root folder [{}]", config.getHost(), config.getPort(), targetPath, config.getRootFolder());
+        ChannelSftp sftp = this.createSftp(configPropertiesType);
         try {
             createDirs(config.getRootFolder(), sftp);
-            sftp.cd(config.getRootFolder());
+            sftp.cd(sftp.getHome() + config.getRootFolder());
             log.info("Change path to {}", config.getRootFolder());
 
             int index = targetPath.lastIndexOf("/");
@@ -108,7 +116,7 @@ public class SftpService {
         ByteArrayOutputStream outputStream = null;
         try {
             createDirs(config.getRootFolder(), sftp);
-            sftp.cd(config.getRootFolder());
+            sftp.cd(sftp.getHome() + config.getRootFolder());
             log.info("Change path to {}", config.getRootFolder());
             outputStream = new ByteArrayOutputStream();
             sftp.get(targetPath, outputStream);
@@ -139,7 +147,7 @@ public class SftpService {
         ChannelSftp sftp = null;
         try {
             sftp = this.createSftp( configPropertiesType);
-            sftp.cd(config.getRootFolder());
+            sftp.cd(sftp.getHome() + config.getRootFolder());
             sftp.rm(targetPath);
             return true;
         } catch (Exception e) {
@@ -265,6 +273,8 @@ public class SftpService {
         switch (configPropertiesType) {
             case APPLICANT_INCIDENTS_CONFIG_PROPERTIES:
                 return applicantIncidentsConfig;
+            case CARDS_CONFIG_PROPERTIES:
+                return cardsConfig;
             default:
                 return dataUploadConfig;
         }
@@ -292,5 +302,82 @@ public class SftpService {
                 "/" +
                 (isErrorFile ? "error/" : "") +
                 localFileName;
+    }
+
+    // zip a directory, including sub files and sub directories
+    public void zipFolder(Path source) throws IOException {
+
+        // get folder name as zip file name
+        String zipFileName = source.toString() + ".zip";
+
+        try (
+                ZipOutputStream zos = new ZipOutputStream(
+                        new FileOutputStream(zipFileName))
+        ) {
+
+            Files.walkFileTree(source, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path file,
+                                                 BasicFileAttributes attributes) {
+
+                    // only copy files, no symbolic links
+                    if (attributes.isSymbolicLink()) {
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    try (FileInputStream fis = new FileInputStream(file.toFile())) {
+
+                        Path targetFile = source.relativize(file);
+                        zos.putNextEntry(new ZipEntry(targetFile.toString()));
+
+                        byte[] buffer = new byte[1024];
+                        int len;
+                        while ((len = fis.read(buffer)) > 0) {
+                            zos.write(buffer, 0, len);
+                        }
+
+                        // if large file, throws out of memory
+                        //byte[] bytes = Files.readAllBytes(file);
+                        //zos.write(bytes, 0, bytes.length);
+
+                        zos.closeEntry();
+
+                        System.out.printf("Zip file : %s%n", file);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                    System.err.printf("Unable to zip : %s%n%s%n", file, exc);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+
+        }
+
+    }
+
+    public Resource downloadCardsZipFile(String path) throws Exception {
+        SftpProperties config = this.getSftpPropertiesConfig(CARDS_CONFIG_PROPERTIES);
+        log.info("Download File Started, ftpServer [{}:{}], ftpPath [{}]", config.getHost(), config.getPort(), path);
+        ChannelSftp sftp = this.createSftp(CARDS_CONFIG_PROPERTIES);
+        try {
+            sftp.cd(sftp.getHome() + config.getRootFolder());
+            try(ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                sftp.get(path, outputStream);
+                log.info("Download file success. TargetPath: {}", path);
+                String fileName = path.substring(path.lastIndexOf("/") + 1);
+                return new ByteArrayResource(outputStream.toByteArray());
+            }
+        } catch (Exception e) {
+            log.error("Download file failure. TargetPath: {}", path, e);
+            throw new Exception("Download File failure from SFTP");
+        } finally {
+            this.disconnect(sftp);
+        }
     }
 }

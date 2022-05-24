@@ -40,7 +40,6 @@ public class ApplicantBasicInfoDto implements Serializable {
     @CellIndex(index = 1)
     private String passportNumber;
 
-    // @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @GregorianDate(minOffset = -120, maxOffset = -10, groups = CheckSecond.class)
     @CellIndex(index = 2)

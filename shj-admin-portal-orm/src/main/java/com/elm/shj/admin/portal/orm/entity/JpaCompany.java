@@ -39,32 +39,41 @@ public class JpaCompany implements Serializable {
     @Column(name = "label_ar", nullable = false)
     private String labelAr;
 
-    @Column(name = "label_en", nullable = false)
+    @Column(name = "label_en")
     private String labelEn;
 
-    @Column(name = "mission_id", nullable = false)
-    private int missionId;
+    @Column(name = "mission_id")
+    private Integer missionId;
 
-    @Column(name = "contact_number", nullable = false)
+    @Column(name = "contact_number")
     private String contactNumber;
 
     @Column(name = "website")
     private String website;
 
-    @Column(name = "accreditation_organization", nullable = false)
+    @Column(name = "accreditation_organization")
     private String accreditationOrganization;
 
-    @Column(name = "accreditation_number", nullable = false)
+    @Column(name = "accreditation_number")
     private String accreditationNumber;
 
-    @Column(name = "accreditation_date", nullable = false)
+    @Column(name = "accreditation_date")
     private Date accreditationDate;
 
-    @Column(name = "accreditation_expiry", nullable = false)
+    @Column(name = "accreditation_expiry")
     private Date accreditationExpiry;
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "moi_number")
+    private String moiNumber;
+
+    @Column(name = "cr_number")
+    private String crNumber;
+
+    @Column(name = "type_code")
+    private Integer typeCode;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
