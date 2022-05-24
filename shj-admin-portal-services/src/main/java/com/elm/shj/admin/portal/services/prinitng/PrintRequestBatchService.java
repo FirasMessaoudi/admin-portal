@@ -12,6 +12,7 @@ import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,6 +31,9 @@ public class PrintRequestBatchService extends GenericService<JpaPrintRequestBatc
     private final ApplicantCardService applicantCardService;
     private final CompanyStaffCardService companyStaffCardService;
     private final PrintRequestService printRequestService;
+
+    @Value("${card.status.active.enabled}")
+    private boolean cardStatusActiveEnabled;
 
 
     public List<PrintRequestBatchDto> findPrintRequestBatches(long printRequestId) {
@@ -55,12 +59,22 @@ public class PrintRequestBatchService extends GenericService<JpaPrintRequestBatc
             }
             applicantCardList.forEach(c -> {
                 String cardRefNumber = cardsReferenceNumberMap.get(c.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin());
-                if (c.getStatusCode().equalsIgnoreCase(ECardStatus.PRINTED.name()) == false
-                        && (c.getReferenceNumber() == null
-                        || c.getReferenceNumber().equalsIgnoreCase(cardRefNumber) == false)) {
-                    c.setStatusCode(ECardStatus.PRINTED.name());
-                    c.setReferenceNumber(cardRefNumber);
-                    c.setUpdateDate(new Date());
+                if(cardStatusActiveEnabled){
+                    if (!c.getStatusCode().equalsIgnoreCase(ECardStatus.ACTIVE.name())
+                            && (c.getReferenceNumber() == null
+                            || !c.getReferenceNumber().equalsIgnoreCase(cardRefNumber))) {
+                        c.setStatusCode(ECardStatus.ACTIVE.name());
+                        c.setReferenceNumber(cardRefNumber);
+                        c.setUpdateDate(new Date());
+                    }
+                } else {
+                    if (c.getStatusCode().equalsIgnoreCase(ECardStatus.PRINTED.name()) == false
+                            && (c.getReferenceNumber() == null
+                            || c.getReferenceNumber().equalsIgnoreCase(cardRefNumber) == false)) {
+                        c.setStatusCode(ECardStatus.PRINTED.name());
+                        c.setReferenceNumber(cardRefNumber);
+                        c.setUpdateDate(new Date());
+                    }
                 }
             });
             applicantCardService.saveAll(applicantCardList);
@@ -73,15 +87,23 @@ public class PrintRequestBatchService extends GenericService<JpaPrintRequestBatc
             }
             staffCardList.forEach(c -> {
                 String cardRefNumber = cardsReferenceNumberMap.get(c.getCompanyStaffDigitalId().getSuin());
-                if (c.getStatusCode().equalsIgnoreCase(ECardStatus.PRINTED.name()) == false
-                        && (c.getReferenceNumber() == null
-                        || c.getReferenceNumber().equalsIgnoreCase(cardRefNumber) == false)) {
-                    c.setUpdateDate(new Date());
-
-                    c.setStatusCode(ECardStatus.PRINTED.name());
-                    c.setReferenceNumber(cardRefNumber);
+                if(cardStatusActiveEnabled){
+                    if (!c.getStatusCode().equalsIgnoreCase(ECardStatus.ACTIVE.name())
+                            && (c.getReferenceNumber() == null
+                            || !c.getReferenceNumber().equalsIgnoreCase(cardRefNumber))) {
+                        c.setStatusCode(ECardStatus.ACTIVE.name());
+                        c.setReferenceNumber(cardRefNumber);
+                        c.setUpdateDate(new Date());
+                    }
+                } else {
+                    if (c.getStatusCode().equalsIgnoreCase(ECardStatus.PRINTED.name()) == false
+                            && (c.getReferenceNumber() == null
+                            || c.getReferenceNumber().equalsIgnoreCase(cardRefNumber) == false)) {
+                        c.setUpdateDate(new Date());
+                        c.setStatusCode(ECardStatus.PRINTED.name());
+                        c.setReferenceNumber(cardRefNumber);
+                    }
                 }
-
             });
             companyStaffCardService.saveAll(staffCardList);
         }
