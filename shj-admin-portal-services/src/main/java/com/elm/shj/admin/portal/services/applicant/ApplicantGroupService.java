@@ -19,18 +19,27 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
     private final ApplicantGroupRepository applicantGroupRepository;
 
     public ApplicantGroupDto getApplicantGroupByReferenceNumber(String referenceNumber) {
+        log.info("Start getApplicantGroupByReferenceNumber ReferenceNumber:{}", referenceNumber);
         Optional<JpaApplicantGroup> applicantGroupOptional = applicantGroupRepository.findByReferenceNumber(referenceNumber);
         if (applicantGroupOptional.isPresent()) {
-            return getMapper().fromEntity(applicantGroupOptional.get(), mappingContext);
+            ApplicantGroupDto applicantGroupDto = getMapper().fromEntity(applicantGroupOptional.get(), mappingContext);
+            log.info("Finish getApplicantGroupByReferenceNumber ReferenceNumber:{}", applicantGroupDto.getReferenceNumber());
+            return applicantGroupDto;
         }
+        log.info("Finish getApplicantGroupByReferenceNumber not found with referenceNumber: {}", referenceNumber);
         return null;
     }
 
-    public ApplicantGroupDto getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(String referenceNumber,long companyRitualSeasonId) {
-        Optional<JpaApplicantGroup> applicantGroupOptional = applicantGroupRepository.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(referenceNumber,companyRitualSeasonId);
+    public ApplicantGroupDto getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(String referenceNumber, long companyRitualSeasonId) {
+        log.info("Start getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId ReferenceNumber:{}, companyRitualSeasonId:{}", referenceNumber, companyRitualSeasonId);
+        Optional<JpaApplicantGroup> applicantGroupOptional = applicantGroupRepository.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(referenceNumber, companyRitualSeasonId);
         if (applicantGroupOptional.isPresent()) {
-            return getMapper().fromEntity(applicantGroupOptional.get(), mappingContext);
+            ApplicantGroupDto applicantGroupDto = getMapper().fromEntity(applicantGroupOptional.get(), mappingContext);
+            log.info("Finish getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId with ReferenceNumber:{}, companyRitualSeasonId:{}", applicantGroupDto.getReferenceNumber(), companyRitualSeasonId);
+            return applicantGroupDto;
         }
+        log.info("Finish getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId not found with ReferenceNumber:{}, companyRitualSeasonId:{}", referenceNumber, companyRitualSeasonId);
+
         return null;
     }
 

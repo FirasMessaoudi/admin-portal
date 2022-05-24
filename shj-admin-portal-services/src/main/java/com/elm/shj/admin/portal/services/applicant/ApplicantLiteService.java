@@ -41,6 +41,8 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
      * @return the found applicant or empty structure
      */
     public Optional<ApplicantLiteDto> findByUin(String uin) {
+        log.info("Start findByUin uin:{}", uin);
+
         JpaApplicantLite applicant = applicantLiteRepository.findByUin(uin);
         if (applicant != null) {
             ApplicantLiteDto applicantLiteDto = getMapper().fromEntity(applicant, mappingContext);
@@ -53,27 +55,41 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
             applicantLiteDto.setCountryCode(applicant.getContacts().get(0).getCountryCode());
             applicantLiteDto.setHasLocalMobileNumber(applicant.getContacts().get(0).getLocalMobileNumber() != null && !applicant.getContacts().get(0).getLocalMobileNumber().isEmpty());
             applicantLiteDto.setGender(applicant.getGender());
+            log.info("Finish findByUin found with FullNameEn:{}", applicantLiteDto.getFullNameEn());
             return Optional.of(applicantLiteDto);
-        } else return Optional.empty();
+        } else {
+            log.info("Finish findByUin not found with uin:{}", uin);
+            return Optional.empty();
+        }
     }
 
     public boolean existsByUin(String uin) {
-        return ((ApplicantLiteRepository) getRepository()).existsByUin(uin);
+        log.info("Start existsByUin uin:{}", uin);
+        boolean existsByUin = ((ApplicantLiteRepository) getRepository()).existsByUin(uin);
+        log.info("Finish existsByUin isExists:{}", existsByUin);
+        return existsByUin;
     }
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public List<ApplicantLiteDto> findAllWithoutDigitalId() {
-        return mapList(applicantLiteRepository.findAllApplicantsWithoutDigitalId());
+        log.info("Start findAllWithoutDigitalId");
+        List<ApplicantLiteDto> applicantLiteDtos = mapList(applicantLiteRepository.findAllApplicantsWithoutDigitalId());
+        log.info("Finish findAllWithoutDigitalId with applicantLiteDtoListSize:{}", applicantLiteDtos.size());
+        return applicantLiteDtos;
     }
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ApplicantLiteDto findByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
+        log.info("Start findByBasicInfo RowNum:{}", applicantBasicInfo == null?null: applicantBasicInfo.getRowNum());
         List<JpaApplicantLite> applicantLites = applicantLiteRepository.findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(),
                 applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
         if (applicantLites.isEmpty()) {
+            log.info("Finish findByBasicInfo not found with RowNum:{}", applicantBasicInfo == null?null: applicantBasicInfo.getRowNum());
             return null;
         }
-        return getMapper().fromEntity(applicantLites.get(0), mappingContext);
+        ApplicantLiteDto applicantLiteDto = getMapper().fromEntity(applicantLites.get(0), mappingContext);
+        log.info("Finish findByBasicInfo found with FullNameEn:{}", applicantLiteDto == null?null: applicantLiteDto.getFullNameEn());
+        return applicantLiteDto;
     }
 
     /**
@@ -84,23 +100,34 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public boolean existsByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
-        return applicantLiteRepository.existsByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
+        log.info("Start existsByBasicInfo RowNum:{}", applicantBasicInfo == null?null: applicantBasicInfo.getRowNum());
+        boolean exists = applicantLiteRepository.existsByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
+        log.info("Finish existsByBasicInfo isExists:{}", exists);
+        return exists;
     }
 
     public Optional<ApplicantStaffVO> findApplicantRitualByIdNumber(String value) {
+        log.info("Start findApplicantRitualByIdNumber IdNumber:{}", value);
         List<ApplicantStaffVO> applicantList = applicantLiteRepository.findApplicantRitualByIdNumber(value, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
-        return applicantList.size() == 0? Optional.empty(): Optional.of(applicantList.get(0));
+        log.info("Finish findApplicantRitualByIdNumber IdNumber:{}", applicantList.size());
+         if(applicantList.size() == 0) {
+             log.info("Finish findApplicantRitualByIdNumber not found IdNumber:{}", value);
+             return Optional.empty();
+         } else {
+             log.info("Finish findApplicantRitualByIdNumber found with FullNameEn:{}", applicantList.get(0).getFullNameEn());
+             return  Optional.of(applicantList.get(0));
+         }
     }
 
     public Optional<ApplicantStaffVO> findApplicantRitualByUin(String uin) {
-        List<ApplicantStaffVO> applicantList  = applicantLiteRepository.findApplicantRitualByUin(uin, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
-        return applicantList.size() == 0? Optional.empty(): Optional.of(applicantList.get(0));
-    }
-
-    public Optional<ApplicantStaffVO> findApplicantRitualByUinAndCardId(String value) {
-        String uin = value.substring(0,value.length()-1);
-        long cardId = Long.parseLong(value.substring(value.length()-1));
-        List<ApplicantStaffVO> applicantList  = applicantLiteRepository.findApplicantRitualByUinAndCardId(uin, cardId);
-        return applicantList.size() == 0? Optional.empty(): Optional.of(applicantList.get(0));
+        log.info("Start findApplicantRitualByUin uin:{}", uin);
+        List<ApplicantStaffVO> applicantList = applicantLiteRepository.findApplicantRitualByUin(uin, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
+        if(applicantList.size() == 0) {
+            log.info("Finish findApplicantRitualByUin not found uin:{}", uin);
+            return Optional.empty();
+        } else {
+            log.info("Finish findApplicantRitualByUin found with FullNameEn:{}", applicantList.get(0).getFullNameEn());
+            return  Optional.of(applicantList.get(0));
+        }
     }
 }

@@ -106,13 +106,10 @@ public class StaffWsController {
 
         if (value.length() == 14 || value.length() == 15) {
             Optional<ApplicantStaffVO> applicant;
-            if (valueType == 0) {
+
                 log.debug("findApplicantOrStaff value: {} findApplicantRitualByUin ", value);
                 applicant = applicantLiteService.findApplicantRitualByUin(value);
-            } else {
-                log.debug("findApplicantOrStaff value: {} findApplicantRitualByUinAndCardId ", value);
-                applicant = applicantLiteService.findApplicantRitualByUinAndCardId(value);
-            }
+
             if (applicant.isPresent()) {
                 ApplicantStaffVO applicantStaffVO = applicant.get();
                 applicantStaffVO.setUserType(EUserType.APPLICANT.getId());

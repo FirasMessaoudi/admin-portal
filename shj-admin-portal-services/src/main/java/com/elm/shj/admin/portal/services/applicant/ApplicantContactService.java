@@ -17,8 +17,9 @@ import java.util.List;
 public class ApplicantContactService extends GenericService<JpaApplicantContact, ApplicantContactDto, Long> {
 
     private final ApplicantContactRepository applicantContactRepository;
-
+    //TODO this metohod not used
     public List<ApplicantContactDto> findByApplicantId(Long id) {
-        return mapList(applicantContactRepository.findAllByApplicantId(id));
+        List<ApplicantContactDto> applicantContactDtos = mapList(applicantContactRepository.findAllByApplicantId(id));
+        return applicantContactDtos;
     }
 }

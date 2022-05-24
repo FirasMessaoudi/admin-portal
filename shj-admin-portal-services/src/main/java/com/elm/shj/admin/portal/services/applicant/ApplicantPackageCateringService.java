@@ -28,12 +28,18 @@ public class ApplicantPackageCateringService extends GenericService<JpaApplicant
     private final ApplicantPackageCateringRepository applicantPackageCateringRepository;
 
     public List<ApplicantPackageCateringDto> findApplicantPackageCateringByUinAndApplicantPackageId(long applicantUin, long applicantPackageId) {
-        return getMapper().fromEntityList(applicantPackageCateringRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageId(applicantUin, applicantPackageId), mappingContext);
+        log.debug("Start findApplicantPackageCateringByUinAndApplicantPackageId uin:{} , applicantPackageId:{}", applicantUin, applicantPackageId);
+        List<ApplicantPackageCateringDto> applicantPackageCateringDtos = getMapper().fromEntityList(applicantPackageCateringRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageId(applicantUin, applicantPackageId), mappingContext);
+        log.debug("Finish findApplicantPackageCateringByUinAndApplicantPackageId uin:{} , applicantPackageCateringDtosListSize:{}", applicantUin, applicantPackageCateringDtos.size());
+        return applicantPackageCateringDtos;
     }
 
 
     public List<ApplicantPackageCateringDto> findAllByApplicantPackageApplicantUinAndPackageCateringPackageHousingId(long applicantUin, long packageHousingId) {
-        return getMapper().fromEntityList(applicantPackageCateringRepository.findAllByApplicantPackageApplicantUinAndPackageCateringPackageHousingId(applicantUin, packageHousingId), mappingContext);
+        log.debug("Start findAllByApplicantPackageApplicantUinAndPackageCateringPackageHousingId uin:{} , packageHousingId:{}", applicantUin, packageHousingId);
+        List<ApplicantPackageCateringDto> applicantPackageCateringDtos = getMapper().fromEntityList(applicantPackageCateringRepository.findAllByApplicantPackageApplicantUinAndPackageCateringPackageHousingId(applicantUin, packageHousingId), mappingContext);
+        log.debug("Finish findAllByApplicantPackageApplicantUinAndPackageCateringPackageHousingId uin:{} , applicantPackageCateringDtosListSize:{}", applicantUin, applicantPackageCateringDtos.size());
+        return applicantPackageCateringDtos;
     }
 
 }

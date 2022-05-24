@@ -35,11 +35,14 @@ public class ApplicantHealthLiteService extends GenericService<JpaApplicantHealt
      * @return the found health details or empty structure
      */
     public Optional<ApplicantHealthLiteDto> findApplicantHealthDetailsByUinAndApplicantPackageId(String uin, Long applicantPackageId) {
+        log.info("Start findApplicantHealthDetailsByUinAndApplicantPackageId uin:{}, applicantPackageId:{}", uin, applicantPackageId);
         JpaApplicantHealthLite healthProfile = applicantHealthLiteRepository.findByApplicantDigitalIdsUinAndApplicantRitualApplicantPackageId(uin, applicantPackageId);
         if (healthProfile == null) {
+            log.info("Finish findApplicantHealthDetailsByUinAndApplicantPackageId not found with uin:{}, applicantPackageId:{}", uin, applicantPackageId);
             return Optional.empty();
         } else {
             ApplicantHealthLiteDto returnedDto = getMapper().fromEntity(healthProfile, mappingContext);
+            log.info("Finish findApplicantHealthDetailsByUinAndApplicantPackageId uin:{}, applicantPackageId:{}", uin, applicantPackageId);
             return Optional.of(returnedDto);
         }
     }
