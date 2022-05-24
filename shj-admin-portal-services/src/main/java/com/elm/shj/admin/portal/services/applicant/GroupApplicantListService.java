@@ -38,7 +38,7 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
 
     @Transactional
     public boolean registerUserToGroup(String applicantUin, String referenceNumber) {
-
+        log.info("GroupApplicantListService ::: Start registerUserToGroup  applicantUin: {} ,  referenceNumber: {}",applicantUin,  referenceNumber);
         ApplicantGroupDto applicantGroup = applicantGroupService.getApplicantGroupByReferenceNumber(referenceNumber);
 
         if (applicantGroup != null) {
@@ -49,19 +49,21 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
                 groupList.add(groupApplicantListDto);
                 applicantGroup.setGroupApplicantLists(groupList);
                  save(groupApplicantListDto);
+                log.info("GroupApplicantListService ::: Finish registerUserToGroup  return : {}",true);
                 return true;
             }
 
         }
-
+        log.info("GroupApplicantListService ::: Finish registerUserToGroup  return : {}",false);
         return false;
     }
 
     public List<ApplicantVo> findGroupApplicantListBySuin(String suin) {
-        //TODO performance issue to be fixed
+        log.info("GroupApplicantListService ::: Start findGroupApplicantListBySuin  suin: {}",suin);
         //return getMapper().fromEntityList(groupApplicantListRepository.findByApplicantGroupGroupLeaderDigitalIdsSuin(suin), mappingContext);
         List<ApplicantVo> applicantLiteDtoList = groupApplicantListRepository.findApplicantDetailsWithLocationByGroupeLeaderSuin(suin);
         //applicantLiteDtoList.removeAll(Collections.singleton(null));
+        log.info("GroupApplicantListService ::: Start findGroupApplicantListBySuin  applicantLiteDtoListSize: {}",applicantLiteDtoList.size());
         return applicantLiteDtoList;
     }
 }

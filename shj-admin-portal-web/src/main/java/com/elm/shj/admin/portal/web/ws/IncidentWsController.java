@@ -88,7 +88,7 @@ public class IncidentWsController {
 
         log.info("Start create Incident ApplicantIncidentLiteDto ReferenceNumber: {}", applicantIncidentRequest.getReferenceNumber());
         if (incidentAttachment != null) {
-            log.debug("create Incident incidentAttachment not null");
+            log.debug("create Incident without attachment");
             //validate file type, allow only images and video
             if (!incidentAttachment.getOriginalFilename().equals("") && !applicantIncidentLiteService.validateFileExtension(incidentAttachment.getOriginalFilename())) {
                 log.info("Finish create Incident {}, {} ","FAILURE", WsError.EWsError.INVALID_FILE_EXTENSION.getCode());
@@ -116,11 +116,11 @@ public class IncidentWsController {
 
         IncidentTypeLookupDto incidentTypeLookupDto = incidentTypeLookupService.findByCode(applicantIncidentRequest.getTypeCode());
         if (incidentTypeLookupDto == null) {
-            log.info("Finish downloadAttachment {}, {} ","FAILURE", WsError.EWsError.INCIDENT_TYPE_NOT_FOUND.getCode());
+            log.info("Finish create Incident {}, {} ","FAILURE", WsError.EWsError.INCIDENT_TYPE_NOT_FOUND.getCode());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INCIDENT_TYPE_NOT_FOUND.getCode()).build()).build());
         }
         ApplicantIncidentLiteDto applicantIncidentLiteDto = applicantIncidentLiteService.addApplicantIncident(applicantIncidentRequest, incidentAttachment);
-        log.info("Finish downloadAttachment {}, applicantIncidentLiteDtoId: {} ","SUCCESS",applicantIncidentLiteDto.getId());
+        log.info("Finish create Incident {}, ReferenceNumber: {} ","SUCCESS",applicantIncidentLiteDto.getReferenceNumber());
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantIncidentLiteDto).build());
 
     }

@@ -36,6 +36,7 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
      * @param packageReferenceNumber
      * @return
      */
+    //TODO this method not used
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ApplicantHealthDto findByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
         return getMapper().fromEntity(applicantHealthRepository.
@@ -51,11 +52,16 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
      * @return
      */
     public Long findIdByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
-        return applicantHealthRepository.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber);
+        log.info("Start findIdByApplicantIdAndPackageReferenceNumber applicantId:{}, packageReferenceNumber:{}", applicantId, packageReferenceNumber);
+
+        Long idByApplicantIdAndPackageReferenceNumber = applicantHealthRepository.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber);
+        log.info("Finish findIdByApplicantIdAndPackageReferenceNumber id:{}", idByApplicantIdAndPackageReferenceNumber);
+        return idByApplicantIdAndPackageReferenceNumber;
     }
 
     @Transactional
     public Long findIdByApplicantIdAndPackageReferenceNumber(Long applicantId, String packageReferenceNumber, Long applicantRitualId, boolean createIfNotExist) {
+        log.info("Start findIdByApplicantIdAndPackageReferenceNumber applicantId:{}, packageReferenceNumber:{}, applicantRitualId:{}, createIfNotExist:{}", applicantId, packageReferenceNumber, applicantRitualId, createIfNotExist);
         Long applicantHealthId = findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber);
         if (applicantHealthId == null && createIfNotExist) {
             ApplicantHealthDto applicantHealth = ApplicantHealthDto.builder().applicant(ApplicantDto.builder().id(applicantId).build()).packageReferenceNumber(packageReferenceNumber).build();
@@ -65,6 +71,8 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
             applicantHealth = save(applicantHealth);
             applicantHealthId = applicantHealth.getId();
         }
+        log.info("Finish findIdByApplicantIdAndPackageReferenceNumber  applicantHealthId:{}", applicantHealthId);
+
         return applicantHealthId;
     }
 
@@ -78,7 +86,11 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
      */
     @Transactional
     public int updateApplicantHealthApplicantRitual(long applicantRitualId, long applicantId, String packageReferenceNumber) {
-        return applicantHealthRepository.updateApplicantHealthApplicantRitual(applicantRitualId, applicantId, packageReferenceNumber);
+        log.info("Start updateApplicantHealthApplicantRitual applicantId:{}, packageReferenceNumber:{}, applicantRitualId:{}", applicantId, packageReferenceNumber, applicantRitualId);
+
+        int numberOfAffectedRows = applicantHealthRepository.updateApplicantHealthApplicantRitual(applicantRitualId, applicantId, packageReferenceNumber);
+        log.info("Finish updateApplicantHealthApplicantRitual  numberOfAffectedRows:{}",numberOfAffectedRows);
+        return  numberOfAffectedRows;
     }
 
 }

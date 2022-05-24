@@ -28,7 +28,10 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
     private final ApplicantPackageTransportationRepository applicantPackageTransportationRepository;
 
     public List<ApplicantPackageTransportationDto> findApplicantPackageTransportationByUinAndApplicantPackageId(long applicantUin, long companyRitualSeasonId) {
-        return getMapper().fromEntityList(applicantPackageTransportationRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageId(applicantUin, companyRitualSeasonId), mappingContext);
+        log.info("Start findApplicantPackageTransportationByUinAndApplicantPackageId ::: applicantUin:{}, companyRitualSeasonId:{} ", applicantUin,  companyRitualSeasonId);
+        List<ApplicantPackageTransportationDto> applicantPackageTransportationDtos = getMapper().fromEntityList(applicantPackageTransportationRepository.findAllByApplicantPackageApplicantUinAndApplicantPackageId(applicantUin, companyRitualSeasonId), mappingContext);
+        log.info("Finish findApplicantPackageTransportationByUinAndApplicantPackageId ::: applicantPackageTransportationDtosListSize", applicantPackageTransportationDtos.size());
+        return  applicantPackageTransportationDtos;
     }
 
 }

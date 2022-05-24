@@ -51,10 +51,13 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
      */
     @Transactional
     public Optional<ApplicantMainDataDto> findByUin(String uin, long applicantPackageId) {
-        log.debug("Start findByUin for {} uin and {} applicant package id.", uin, applicantPackageId);
+        log.debug("Start findByUin uin:{} , applicantPackageId:{}", uin, applicantPackageId);
         JpaApplicantMainData applicant = applicantMainDataRepository.findByDigitalIdsUin(uin);
 
-        if (applicant == null) return Optional.empty();
+        if (applicant == null) {
+            log.debug("Finish findByUin not found with uin:{} , applicantPackageId:{}", uin, applicantPackageId);
+            return Optional.empty();
+        }
 
         String statusCode = CollectionUtils.isEmpty(applicant.getDigitalIds()) ? "" : applicant.getDigitalIds().get(0).getStatusCode();
         ApplicantMainDataDto applicantMainDataDto = getMapper().fromEntity(applicant, mappingContext);
@@ -79,6 +82,7 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
                 }
             }
         }
+        log.debug("Finish findByUin found with uin:{}", applicantMainDataDto.getUin());
         return Optional.of(applicantMainDataDto);
     }
 }

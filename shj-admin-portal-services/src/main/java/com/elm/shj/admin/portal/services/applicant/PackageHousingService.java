@@ -32,24 +32,35 @@ public class PackageHousingService extends GenericService<JpaPackageHousing, Pac
     private final ApplicantPackageHousingRepository applicantPackageHousingRepository;
 
     public List<PackageHousingDto> findAllCamps() {
-        return mapList(packageHousingRepository.findAllCamps());
+        log.info("PackageHousingService ::: Start findAllCamps ");
+        List<PackageHousingDto> packageHousingDtos = mapList(packageHousingRepository.findAllCamps());
+        log.info("PackageHousingService ::: Finish findAllCamps ::: packageHousingDtosListSize: {} ", packageHousingDtos.size());
+        return  packageHousingDtos;
     }
 
     public PackageHousingDto findCamp(long applicantPackageId, long uin) {
+        log.info("PackageHousingService ::: Start findCamp ::: applicantPackageId: {}, uin: {}",applicantPackageId, uin);
         Optional<JpaApplicantPackageHousing> applicantPackageHousing = applicantPackageHousingRepository.findTopByApplicantPackageApplicantUinAndApplicantPackageIdOrderByCreationDateDesc(uin, applicantPackageId);
         if (applicantPackageHousing.isPresent()) {
+            log.info("PackageHousingService ::: Finish findCamp BedNumber: {}, RoomNumber: {}",applicantPackageHousing.get().getBedNumber(), applicantPackageHousing.get().getRoomNumber());
             return getMapper().fromEntity(applicantPackageHousing.get().getPackageHousing(), mappingContext);
         } else {
+            log.info("PackageHousingService ::: Finish findCamp not found with applicantPackageId: {}, uin: {}",applicantPackageId, uin);
             return null;
         }
     }
 
     public List<PackageHousingDto> findByRitualPackageId(long id) {
-        return mapList(packageHousingRepository.findByRitualPackageId(id));
+        log.info("PackageHousingService ::: Start findByRitualPackageId ::: id: {}",id);
+        List<PackageHousingDto> packageHousingDtos = mapList(packageHousingRepository.findByRitualPackageId(id));
+        log.info("PackageHousingService ::: Finish packageHousingDtosListsize: {}",packageHousingDtos.size());
+        return packageHousingDtos;
     }
 
     public PackageHousingDto findStaffPackageHousingByCompanyRitualSeason(long companyRitualSeason) {
+        log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: companyRitualSeason: {}",companyRitualSeason);
         JpaPackageHousing jpaPackageHousing = packageHousingRepository.findStaffPackageHousingByCompanyRitualSeason(companyRitualSeason);
+        log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: jpaPackageHousingLocationNameEn: {}",jpaPackageHousing.getLocationNameEn());
         return getMapper().fromEntity(jpaPackageHousing,mappingContext);
     }
 }
