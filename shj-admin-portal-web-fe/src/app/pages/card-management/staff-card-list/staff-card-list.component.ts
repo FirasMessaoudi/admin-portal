@@ -59,7 +59,7 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
       this.ritualSeasons = this.ritualSeasons.filter( season => season == this.seasonYear);
     });
 
-    this.cardService.findCompanyNames().subscribe((result) => {
+    this.cardService.findCompanyNamesBySeason(this.seasonYear).subscribe((result) => {
       this.companyNames = result;
     });
     this.cardService.findGroupLeaderTitleLabels().subscribe((result) => {
