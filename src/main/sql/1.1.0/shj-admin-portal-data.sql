@@ -1021,3 +1021,4 @@ GO
 
 INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
 VALUES ('card.status.active.enabled', 'true');
+GO
