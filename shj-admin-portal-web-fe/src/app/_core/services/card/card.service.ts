@@ -269,6 +269,10 @@ export class CardService {
     return this.http.get<any>('/core/api/lookup/company-names/list');
   }
 
+  findCompanyNamesBySeason(seasonYear:number): Observable<CompanyLite[]> {
+    return this.http.get<any>('/core/api/lookup/company-names/list/' + seasonYear);
+  }
+
   findStaffCardById(id: number): Observable<any> {
     return this.http.get<any>('/core/api/staff-cards/find/' + id);
   }
