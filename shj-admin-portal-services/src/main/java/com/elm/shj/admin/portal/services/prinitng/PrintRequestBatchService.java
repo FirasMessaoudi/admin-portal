@@ -32,8 +32,8 @@ public class PrintRequestBatchService extends GenericService<JpaPrintRequestBatc
     private final CompanyStaffCardService companyStaffCardService;
     private final PrintRequestService printRequestService;
 
-    @Value("${card.status.active.enabled}")
-    private boolean cardStatusActiveEnabled;
+    @Value("${activate.printed.card}")
+    private boolean activatePrintedCard;
 
 
     public List<PrintRequestBatchDto> findPrintRequestBatches(long printRequestId) {
@@ -59,7 +59,7 @@ public class PrintRequestBatchService extends GenericService<JpaPrintRequestBatc
             }
             applicantCardList.forEach(c -> {
                 String cardRefNumber = cardsReferenceNumberMap.get(c.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin());
-                if(cardStatusActiveEnabled){
+                if(activatePrintedCard){
                     if (!c.getStatusCode().equalsIgnoreCase(ECardStatus.ACTIVE.name())
                             && (c.getReferenceNumber() == null
                             || !c.getReferenceNumber().equalsIgnoreCase(cardRefNumber))) {
@@ -87,7 +87,7 @@ public class PrintRequestBatchService extends GenericService<JpaPrintRequestBatc
             }
             staffCardList.forEach(c -> {
                 String cardRefNumber = cardsReferenceNumberMap.get(c.getCompanyStaffDigitalId().getSuin());
-                if(cardStatusActiveEnabled){
+                if(activatePrintedCard){
                     if (!c.getStatusCode().equalsIgnoreCase(ECardStatus.ACTIVE.name())
                             && (c.getReferenceNumber() == null
                             || !c.getReferenceNumber().equalsIgnoreCase(cardRefNumber))) {
