@@ -1020,5 +1020,5 @@ INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('scheduler.noti
 GO
 
 INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
-VALUES ('card.status.active.enabled', 'true');
+VALUES ('activate.printed.card', 'true');
 GO
