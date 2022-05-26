@@ -7,6 +7,8 @@ import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.company.*;
+import com.elm.shj.admin.portal.services.data.request.DataRequestService;
+import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
@@ -24,14 +26,18 @@ import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -58,6 +64,7 @@ import java.util.Optional;
 public class IntegrationWsController {
 
     public final static String ISO8601_DATE_PATTERN = "yyyy-MM-dd";
+    private static final int EMPTY_FILE_UPLOADED_RESPONSE_CODE = 560;
 
     private final OtpAuthenticationProvider authenticationProvider;
     private final JwtTokenService jwtTokenService;
@@ -106,6 +113,8 @@ public class IntegrationWsController {
     private final UserLocationService userLocationService;
     private final RitualPackageService ritualPackageService;
     private final BadgeService badgeService;
+    private final DataSegmentService dataSegmentService;
+    private final DataRequestService dataRequestService;
 
     /**
      * Authenticates the user requesting a webservice call
@@ -937,6 +946,38 @@ public class IntegrationWsController {
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(uin).build()).build());
         }
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantService.markAsRegistered(databaseApplicant.get().getId(), channel)).build());
+    }
+
+    /**
+     * @return all data segments
+     */
+    @GetMapping("/data/segments")
+    public ResponseEntity<WsResponse<?>> findAllDataSegments() {
+        log.info("listing all segments");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(dataSegmentService.findOrganizerSegments()).build());
+
+    }
+
+    @PostMapping(value = "/data/request/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<WsResponse<?>> create(@RequestPart("request") @Valid DataRequestDto dataRequest,
+                                                @RequestPart("file") MultipartFile file) throws Exception {
+        log.info("Creating data request for segment#{}", dataRequest.getDataSegment().getId());
+
+        if (dataRequestService.readItemsCount(file) == 0) {
+            return ResponseEntity.status(EMPTY_FILE_UPLOADED_RESPONSE_CODE).body(null);
+
+        } else {
+            dataRequest.setItemCount(dataRequestService.readItemsCount(file));
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(dataRequestService.save(dataRequest, file)).build());
+        }
+
+    }
+
+    @GetMapping("/data/request/list")
+    public ResponseEntity<WsResponse<?>> listDataRequests(Pageable pageable) {
+        log.info("listing all data requests");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(dataRequestService.findAll(pageable)).build());
+
     }
 
 

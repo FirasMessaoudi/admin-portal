@@ -40,7 +40,7 @@ public class DataSegmentManagementController {
     @RolesAllowed({AuthorityConstants.ROLE_MANAGEMENT})
     public List<DataSegmentDto> list() {
         log.info("list all data segments.");
-        return dataSegmentService.findAll();
+        return dataSegmentService.findCommandSegments();
     }
 
 }
