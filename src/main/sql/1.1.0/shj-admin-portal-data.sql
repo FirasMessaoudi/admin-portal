@@ -1018,3 +1018,6 @@ GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('scheduler.notification.template.processing.cron', '0 0/4 * * * *');
 GO
+
+update shc_portal.shc_portal.shc_incident_status_lk set label = N'جاري دراسة البلاغ' where id=1
+GO
