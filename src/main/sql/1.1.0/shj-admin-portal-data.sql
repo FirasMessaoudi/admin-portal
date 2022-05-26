@@ -1041,4 +1041,6 @@ SET
 IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 GO
 update shc_portal.shc_portal.shc_incident_status_lk set label = N'جاري دراسة البلاغ' where id=1
+update shc_portal.shc_portal.shc_incident_status_lk set label = N'تم حل البلاغ' where id=3
+update shc_portal.shc_portal.shc_incident_status_lk set label = N'تم إغلاق البلاغ' where id=5
 GO
