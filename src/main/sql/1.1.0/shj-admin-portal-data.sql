@@ -1013,7 +1013,9 @@ INSERT INTO shc_portal.shc_print_request_status_lk (code, lang, label) VALUES ('
 INSERT INTO shc_portal.shc_print_request_status_lk (code, lang, label) VALUES ('DISTRIBUTED', 'ar', N'تم التوزيع')
 delete from shc_portal.shc_portal.shc_print_request_status_lk where code = 'UNDER_PROCESSING' or code = 'PROCESSED'
 GO
-INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('daily.survey.activation.hour', '17');
+INSERT
+INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('daily.survey.activation.hour', '17');
 GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('scheduler.notification.template.processing.cron', '0 0/4 * * * *');
@@ -1021,4 +1023,20 @@ GO
 
 INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
 VALUES ('activate.printed.card', 'true');
+GO
+  SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
+insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
+values (11, 'staff-data.xlsx', N'بيانات العاملين ',
+        'Staff Data');
+insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
+values (12, 'main-group-data.xlsx', N'بيانات المجموعات الرئيسية',
+        'Main Group Data');
+
+insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
+values (13, 'group-data.xlsx', N'بيانات المجموعات ',
+        'Group Data');
+
+
+SET
+IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 GO
