@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.lookup;
 
 import com.elm.shj.admin.portal.services.company.CompanyLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyService;
 import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.*;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -63,6 +65,7 @@ public class LookupController {
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final MapUtils mapUtils;
     private final CompanyLiteService companyLiteService;
+    private final CompanyService companyService;
     private final RitualSeasonService ritualSeasonService;
     private final DashboardService dashboardService;
     private final AreaLayerLookupService areaLayerLookupService;
@@ -246,6 +249,12 @@ public class LookupController {
     public String loadGoogleMapsApiKey() {
         log.debug("load google maps api key...");
         return mapUtils.retrieveGoogleMapsApiKey();
+    }
+
+    @GetMapping("/company-names/list/{seasonYear}")
+    public List<CompanyLiteDto> listCompanyNames(@PathVariable("seasonYear") int seasonYear) {
+        log.debug("list company names for current season ...");
+        return companyService.findCompaniesBySeason(seasonYear);
     }
 
     @GetMapping("/company-names/list")

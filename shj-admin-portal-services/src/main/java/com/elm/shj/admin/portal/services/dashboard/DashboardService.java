@@ -305,20 +305,16 @@ public class DashboardService {
     }
 
     public List<CountVo> listCountApplicantsByNationalities(int seasonYear) {
-        List<CountVo> countVoList = new ArrayList<>();
-        List<String> nationalities = applicantRepository.findAllNationalities();
+        log.info("Season year  :{}", seasonYear);
+        List<CountVo> applicantsByNationality = applicantRepository.countApplicantsByNationality(seasonYear);
+        applicantsByNationality.sort(Comparator.comparing(CountVo::getCount).reversed());
         long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason(seasonYear, hajjRituals);
-        for (String nat : nationalities) {
-            CountVo countVo = new CountVo();
-            long applicantsNumber = applicantRepository.countTotalApplicantsFromCurrentSeasonByNationality(nat, seasonYear);
-            countVo.setLabel(nat);
-            countVo.setCount(applicantsNumber);
-            countVo.setPercentage(String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
+        List<CountVo> countVoList = new ArrayList<>();
+        for(CountVo countVo: applicantsByNationality){
+            countVo.setPercentage(String.format("%.2f", (double) countVo.getCount() / totalApplicants * 100));
             countVoList.add(countVo);
-        }
-        countVoList.sort(Comparator.comparing(CountVo::getCount).reversed());
-        if (countVoList.size() > 5) {
-            return countVoList.subList(0, 4);
+            if(countVoList.size()>4)
+                break;
         }
         return countVoList;
     }

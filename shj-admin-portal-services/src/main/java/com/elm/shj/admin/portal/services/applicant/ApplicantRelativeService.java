@@ -22,10 +22,11 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class ApplicantRelativeService  extends GenericService<JpaApplicantRelative, ApplicantRelativeDto, Long> {
+public class ApplicantRelativeService extends GenericService<JpaApplicantRelative, ApplicantRelativeDto, Long> {
     private final ApplicantRelativeRepository applicantRelativeRepository;
 
-    public ApplicantRelativeDto findByApplicantIdAndRelativeApplicantId(long applicantId, long relativeApplicantId){
+    //TODO not used
+    public ApplicantRelativeDto findByApplicantIdAndRelativeApplicantId(long applicantId, long relativeApplicantId) {
         Optional<JpaApplicantRelative> applicantRelative = applicantRelativeRepository.findByApplicantIdAndRelativeApplicantId(applicantId, relativeApplicantId);
         return applicantRelative.map(r -> getMapper().fromEntity(r, mappingContext)).orElse(null);
     }
@@ -40,7 +41,10 @@ public class ApplicantRelativeService  extends GenericService<JpaApplicantRelati
      */
     @Transactional
     public int updateApplicantRelativeApplicantRitual(long applicantRitualId, long applicantId, String packageReferenceNumber) {
-        return applicantRelativeRepository.updateApplicantRelativeApplicantRitual(applicantRitualId, applicantId, packageReferenceNumber);
+        log.info("Start updateApplicantRelativeApplicantRitual ::: applicantRitualId: {},  applicantId: {},  packageReferenceNumber: {}", applicantRitualId, applicantId, packageReferenceNumber);
+        int numberOfAffectedRows = applicantRelativeRepository.updateApplicantRelativeApplicantRitual(applicantRitualId, applicantId, packageReferenceNumber);
+        log.info("Finish updateApplicantRelativeApplicantRitual ::: numberOfAffectedRows: {}", numberOfAffectedRows);
+        return numberOfAffectedRows;
     }
 
 
@@ -53,6 +57,9 @@ public class ApplicantRelativeService  extends GenericService<JpaApplicantRelati
      */
     @Transactional
     public List<ApplicantRelativeDto> findApplicantRelativesInLastRitual(String applicantUin, String packageReferenceNumber) {
-        return mapList(((ApplicantRelativeRepository) getRepository()).findByApplicantUinAndPackageReferenceNumber(applicantUin, packageReferenceNumber));
+        log.info("Start findApplicantRelativesInLastRitual ::: applicantUin: {}, packageReferenceNumber: {}", applicantUin, packageReferenceNumber);
+        List<ApplicantRelativeDto> applicantRelativeDtos = mapList(((ApplicantRelativeRepository) getRepository()).findByApplicantUinAndPackageReferenceNumber(applicantUin, packageReferenceNumber));
+        log.info("Finish findApplicantRelativesInLastRitual ::: applicantRelativeDtosListSize: {}", applicantRelativeDtos.size());
+        return applicantRelativeDtos;
     }
 }

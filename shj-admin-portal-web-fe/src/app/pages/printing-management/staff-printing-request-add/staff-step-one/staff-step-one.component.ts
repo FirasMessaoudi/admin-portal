@@ -82,7 +82,7 @@ export class StaffStepOneComponent implements OnInit {
       this.localizedNationalities = this.lookupsService.localizedItems(this.nationalities);
     });
 
-    this.cardService.findCompanyNames().subscribe((result) => {
+    this.cardService.findCompanyNamesBySeason(this.ritualSeasonYear).subscribe((result) => {
       this.companyNames = result;
     });
 

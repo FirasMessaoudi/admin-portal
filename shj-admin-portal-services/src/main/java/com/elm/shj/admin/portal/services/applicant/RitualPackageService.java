@@ -24,41 +24,59 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
     private final RitualPackageRepository ritualPackageRepository;
 
     public boolean existRitualPackageByReferenceNumber(String referenceNumber) {
+        log.info("RitualPackageService ::: Start existRitualPackageByReferenceNumber ::: referenceNumber: {}", referenceNumber);
         Optional<JpaRitualPackage> ritualPackageOptional = ritualPackageRepository.findByReferenceNumber(referenceNumber);
+        log.info("RitualPackageService ::: Finish existRitualPackageByReferenceNumber ::: isExist: {}", ritualPackageOptional.isPresent());
         return ritualPackageOptional.isPresent();
     }
 
     public Long findRitualPackageIdByReferenceNumber(String referenceNumber) {
-        return ritualPackageRepository.findIdByReferenceNumber(referenceNumber);
+        log.info("RitualPackageService ::: Start findRitualPackageIdByReferenceNumber ::: referenceNumber: {}", referenceNumber);
+        Long idByReferenceNumber = ritualPackageRepository.findIdByReferenceNumber(referenceNumber);
+        log.info("RitualPackageService ::: Start findRitualPackageIdByReferenceNumber ::: RitualPackageId: {}", idByReferenceNumber);
+        return idByReferenceNumber;
     }
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public RitualPackageDto findRitualPackageByReferenceNumber(String referenceNumber) {
+        log.info("RitualPackageService ::: Start findRitualPackageByReferenceNumber ::: referenceNumber: {}", referenceNumber);
         Optional<JpaRitualPackage> ritualPackageOptional = ritualPackageRepository.findByReferenceNumber(referenceNumber);
         if (ritualPackageOptional.isPresent()) {
             JpaRitualPackage ritualPackage = ritualPackageOptional.get();
 
             ritualPackage.getPackageTransportations().size();
             ritualPackage.getPackageHousings().size();
-            if(CollectionUtils.isNotEmpty(ritualPackage.getPackageHousings())){
+            if (CollectionUtils.isNotEmpty(ritualPackage.getPackageHousings())) {
                 ritualPackage.getPackageHousings().forEach(ph -> ph.getPackageCatering().size());
             }
-
+            log.info("RitualPackageService ::: Finish findRitualPackageByReferenceNumber ::: startDate: {}, endDate: {}", ritualPackage.getStartDate(), ritualPackage.getEndDate());
             return getMapper().fromEntity(ritualPackage, mappingContext);
         }
+        log.info("RitualPackageService ::: Finish findRitualPackageByReferenceNumber ::: not found and return null");
         return null;
     }
 
     public RitualPackageDto findRitualPackageByCompanyRitualSeasonId(long companyRitualSeasonId) {
+        log.info("RitualPackageService ::: Start findRitualPackageByCompanyRitualSeasonId ::: companyRitualSeasonId: {}", companyRitualSeasonId);
         JpaRitualPackage ritualPackage = ritualPackageRepository.findTopByCompanyRitualSeasonIdOrderByStartDateDescCreationDateDesc(companyRitualSeasonId);
-        return ritualPackage== null? null: getMapper().fromEntity(ritualPackage,mappingContext);
+        if (ritualPackage == null) {
+            log.info("RitualPackageService ::: Finish findRitualPackageByCompanyRitualSeasonId ::: not found and return null");
+            return null;
+
+        } else {
+            log.info("RitualPackageService ::: Finish findRitualPackageByCompanyRitualSeasonId :::  startDate: {}, endDate: {}", ritualPackage.getStartDate(), ritualPackage.getEndDate());
+           return getMapper().fromEntity(ritualPackage, mappingContext);
+        }
     }
 
     public RitualPackageDto findByGroupLeaderDigitalId(String digitalId) {
+        log.info("RitualPackageService ::: Start findByGroupLeaderDigitalId ::: digitalId: {}", digitalId);
         Optional<JpaRitualPackage> ritualPackage = ritualPackageRepository.findByCompanyRitualSeasonCompanyStaffCardsCompanyStaffDigitalIdSuin(digitalId);
         if (ritualPackage.isPresent()) {
+            log.info("RitualPackageService ::: Finish findByGroupLeaderDigitalId ::: startDate: {}, endDate: {}", ritualPackage.get().getStartDate(), ritualPackage.get().getEndDate());
             return getMapper().fromEntity(ritualPackage.get(), mappingContext);
         }
+        log.info("RitualPackageService ::: Finish findByGroupLeaderDigitalId ::: not found and return null");
         return null;
     }
 }

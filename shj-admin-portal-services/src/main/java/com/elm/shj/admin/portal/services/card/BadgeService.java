@@ -557,34 +557,31 @@ public class BadgeService {
     private String getBarCodeFoApplicantItemsAsString(String uin,ApplicantRitualCardLiteDto card) {
         StringBuilder barCodeItems = new StringBuilder();
         barCodeItems.append(uin);
-        barCodeItems.append(card.getCardId());
         barCodeItems.append("#");
         barCodeItems.append(card.getFullNameEn());
         barCodeItems.append("#");
-        barCodeItems.append(convertArabicCharactersToUnicode(card.getFullNameAr()));
-        barCodeItems.append("#");
-        barCodeItems.append(card.getNationalityCode());
-        barCodeItems.append("#");
+//        barCodeItems.append(convertArabicCharactersToUnicode(card.getFullNameAr()));
+//        barCodeItems.append("#");
+//        barCodeItems.append(card.getNationalityCode());
+//        barCodeItems.append("#");
         barCodeItems.append(card.getCompanyName());
-        barCodeItems.append("#");
+
         return barCodeItems.toString();
     }
 
     private String getBarCodeForStaffItemsAsString(CompanyStaffVO staffData, String cardId) {
         StringBuilder barCodeItems = new StringBuilder();
         barCodeItems.append(staffData.getSuin());
-        barCodeItems.append(cardId);
         barCodeItems.append("#");
         barCodeItems.append(staffData.getFullNameEn());
         barCodeItems.append("#");
-        barCodeItems.append(convertArabicCharactersToUnicode(staffData.getFullNameAr()));
-        barCodeItems.append("#");
-        barCodeItems.append(staffData.getJobTitleCode());
-        barCodeItems.append("#");
+//        barCodeItems.append(convertArabicCharactersToUnicode(staffData.getFullNameAr()));
+//        barCodeItems.append("#");
+//        barCodeItems.append(staffData.getJobTitleCode());
+//        barCodeItems.append("#");
         barCodeItems.append(staffData.getCompanyLabelEn());
-        barCodeItems.append("#");
-        barCodeItems.append(staffData.getIdNumber() != null ? staffData.getIdNumber() : staffData.getPassport());
-        barCodeItems.append("#");
+//        barCodeItems.append(staffData.getIdNumber() != null ? staffData.getIdNumber() : staffData.getPassport());
+//        barCodeItems.append("#");
         return barCodeItems.toString();
     }
 
@@ -614,7 +611,7 @@ public class BadgeService {
 
         font = shaaerFont.deriveFont(24f);
         fm = g2d.getFontMetrics(font);
-        String card = "رقم البطاقة " + cardId;
+        String card = "رقم شعائر " + uin;
         yDif += 55;
         xDif = ((BADGE_WIDTH - fm.stringWidth(card)) - 15);
         layout = new TextLayout(card, font, frc);
@@ -635,7 +632,7 @@ public class BadgeService {
     private BufferedImage generateQRcode(String uin, String cardId) {
         try {
             String charset = "UTF-8";
-            String data = uin + cardId;
+            String data = uin +"#"+ cardId;
             Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
             hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
             BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, 300, 300);
