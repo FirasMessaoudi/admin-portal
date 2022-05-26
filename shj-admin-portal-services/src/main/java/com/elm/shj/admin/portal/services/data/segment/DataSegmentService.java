@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.data.segment;
 
 import com.elm.shj.admin.portal.orm.entity.JpaDataSegment;
+import com.elm.shj.admin.portal.orm.repository.DataSegmentRepository;
 import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Service handling data segments
  *
@@ -26,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DataSegmentService extends GenericService<JpaDataSegment, DataSegmentDto, Long> {
+
+    private final DataSegmentRepository dataSegmentRepository;
 
     /**
      * Find all data segments.
@@ -54,5 +60,13 @@ public class DataSegmentService extends GenericService<JpaDataSegment, DataSegme
      */
     public Resource loadTemplateFile(DataSegmentDto dataSegment) {
         return new ClassPathResource("/templates/excel/" + dataSegment.getId() + "/" + dataSegment.getTemplateFileName());
+    }
+
+    public List<DataSegmentDto> findOrganizerSegments() {
+        return mapList(dataSegmentRepository.findByIdIn(Arrays.asList(11L, 12L, 13L)));
+    }
+
+    public List<DataSegmentDto> findCommandSegments() {
+        return mapList(dataSegmentRepository.findByIdNotIn(Arrays.asList(11L, 12L, 13L)));
     }
 }

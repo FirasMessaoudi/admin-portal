@@ -1573,5 +1573,7 @@ alter table shc_portal.shc_company alter column accreditation_date smalldatetime
 go
 alter table shc_portal.shc_company alter column accreditation_expiry smalldatetime null
 go
+ALTER TABLE shc_portal.shc_area_layers ALTER COLUMN layer nvarchar(1000) not null
+GO
 
 
