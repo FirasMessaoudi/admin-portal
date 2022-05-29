@@ -973,6 +973,19 @@ public class IntegrationWsController {
 
     }
 
+    /**
+     * Confirms a newly created data request
+     *
+     * @param dataRequestId the data request id to be confirmed
+     */
+    @PostMapping(value = "/data/request/confirm/{dataRequestId}")
+    public ResponseEntity<WsResponse<?>> confirm(@PathVariable long dataRequestId) throws Exception {
+        log.info("Confirming data request #{}", dataRequestId);
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(dataRequestService.confirm(dataRequestId)).build());
+
+    }
+
     @GetMapping("/data/request/list")
     public ResponseEntity<WsResponse<?>> listDataRequests(Pageable pageable) {
         log.info("listing all data requests");

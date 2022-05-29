@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository for company season package data.
@@ -15,4 +16,6 @@ import java.util.List;
 public interface RitualSeasonRepository extends JpaRepository<JpaRitualSeason, Long> {
     @Query("select distinct season.seasonYear from JpaRitualSeason season   ")
     List<Integer> listRitualSeasonYears();
+
+    Optional<JpaRitualSeason> findByRitualTypeCodeAndSeasonYear(String ritualTypeCode, int season);
 }

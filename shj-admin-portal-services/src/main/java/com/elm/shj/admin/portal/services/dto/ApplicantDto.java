@@ -62,7 +62,7 @@ public class ApplicantDto implements Serializable {
     private String passportNumber;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @GregorianDate(minOffset = -120, maxOffset = -10)
+    @GregorianDate(minOffset = -120, maxOffset = -10, allowNull = true)
     @CellIndex(index = 2)
     private Date dateOfBirthGregorian;
 
@@ -120,6 +120,9 @@ public class ApplicantDto implements Serializable {
     private boolean registered;
     private Date creationDate;
     private Date updateDate;
+    @ApplicantStatus
+    private Integer status;
+    private boolean deleted;
 
     /**
      * Get applicant object from applicant lite object.

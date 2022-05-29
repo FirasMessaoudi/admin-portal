@@ -3,9 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.services.data.validators.CompanyTypeCode;
-import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
-import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
+import com.elm.shj.admin.portal.services.data.validators.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -77,6 +75,11 @@ public class CompanyDto {
     @NotNull(message = "validation.data.constraints.msg.20001")
     @CompanyTypeCode
     private Integer typeCode;
+
+    @RitualTypeCode
+    private String ritualTypeCode;
+    @SeasonYear
+    private int season;
 
     private Date creationDate;
     private Date updateDate;

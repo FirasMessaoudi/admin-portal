@@ -47,6 +47,9 @@ public class JpaApplicantPackage implements Serializable {
     @Column(name = "end_date")
     private Date endDate;
 
+    @Column(name = "arrival_date")
+    private Date arrivalDate;
+
     @ManyToOne
     @JoinColumn(name = "ritual_package_id")
     private JpaRitualPackage ritualPackage;

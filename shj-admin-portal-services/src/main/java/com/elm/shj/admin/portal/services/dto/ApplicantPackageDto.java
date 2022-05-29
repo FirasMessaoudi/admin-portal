@@ -40,6 +40,8 @@ public class ApplicantPackageDto implements Serializable {
 
     private Date endDate;
 
+    private Date arrivalDate;
+
     @JsonBackReference(value = "ritualPackage")
     private RitualPackageDto ritualPackage;
 

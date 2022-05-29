@@ -69,6 +69,8 @@ public class ValidationService {
     private final RitualSeasonRepository ritualSeasonRepository;
     private final PackageHousingRepository packageHousingRepository;
     private final CompanyRepository companyRepository;
+    private final CompanyRitualSeasonRepository companyRitualSeasonRepository;
+
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {
         List<ErrorResponse> errorResponses = new ArrayList<>();
@@ -90,7 +92,7 @@ public class ValidationService {
 
             } else {
                 if (items.get(i).getClass().isAssignableFrom(ApplicantDto.class)) {
-                    saveApplicantsMainData((ApplicantDto) items.get(i));
+                    saveApplicantsMainData((ApplicantDto) items.get(i), errorResponses, i);
                 }
                 if (items.get(i).getClass().isAssignableFrom(ApplicantRitualDto.class)) {
                     saveApplicantRitual((ApplicantRitualDto) items.get(i));
@@ -131,7 +133,20 @@ public class ValidationService {
     }
 
     private void saveCompanies(CompanyDto companyDto) {
-        companyRepository.save((JpaCompany) findMapper(CompanyDto.class).toEntity(companyDto, mappingContext));
+        companyDto.setCode(companyDto.getCode() + "_" + companyDto.getTypeCode());
+        JpaCompany savedCompany = companyRepository.save((JpaCompany) findMapper(CompanyDto.class).toEntity(companyDto, mappingContext));
+        Optional<JpaRitualSeason> ritualSeason = ritualSeasonRepository.findByRitualTypeCodeAndSeasonYear(companyDto.getRitualTypeCode(), companyDto.getSeason());
+        if (ritualSeason.isPresent()) {
+            JpaCompanyRitualSeason companyRitualSeason = new JpaCompanyRitualSeason();
+            companyRitualSeason.setCompany(savedCompany);
+            companyRitualSeason.setRitualSeason(ritualSeason.get());
+            companyRitualSeason.setActive(true);
+            companyRitualSeason.setSeasonStart(ritualSeason.get().getSeasonStart());
+            companyRitualSeason.setSeasonEnd(ritualSeason.get().getSeasonEnd());
+            companyRitualSeasonRepository.save(companyRitualSeason);
+
+        }
+
     }
 
     private void savePackageHousings(PackageHousingDto packageHousingDto) {
@@ -245,13 +260,36 @@ public class ValidationService {
 
     }
 
-    private void saveApplicantsMainData(ApplicantDto applicant) {
+    private void saveApplicantsMainData(ApplicantDto applicant, List<ErrorResponse> errorResponses, int rowNumber) {
         updateApplicantBirthDate(applicant);
         applicant.setDateOfBirthGregorian(updateDate(applicant.getDateOfBirthGregorian()));
         Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
+        if (applicant.getStatus() == null) {
+            applicant.setStatus(1);
+        }
         // if record exists already in DB we need to update it
         if (existingApplicantId != null) {
-            updateExistingApplicant(applicant, existingApplicantId);
+            if (applicant.getStatus() == 2) {
+                updateExistingApplicant(applicant, existingApplicantId);
+            } else if (applicant.getStatus() == 3) {
+                applicant.setDeleted(true);
+                applicantService.save(applicant);
+                return;
+            } else if (applicant.getStatus() == 1) {
+                ErrorResponse errorResponse = new ErrorResponse();
+                errorResponse.setRowNumber(rowNumber + 1);
+                errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30001", "Please enter a valid value. Same value cannot be repeated within the previous registered records"));
+                errorResponses.add(errorResponse);
+                return;
+            }
+        } else {
+            if (applicant.getStatus() == 2 || applicant.getStatus() == 3) {
+                ErrorResponse errorResponse = new ErrorResponse();
+                errorResponse.setRowNumber(rowNumber + 1);
+                errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30002", "No main record found for the input data to update the related sub record"));
+                errorResponses.add(errorResponse);
+                return;
+            }
         }
 
         //TODO: unify this for both data upload and huic

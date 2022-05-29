@@ -32,8 +32,8 @@ public class JpaRitualPackage implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "type_code", nullable = false)
-    private String typeCode;
+    @Column(name = "package_type_code", nullable = false)
+    private String packageTypeCode;
 
     private float price;
 

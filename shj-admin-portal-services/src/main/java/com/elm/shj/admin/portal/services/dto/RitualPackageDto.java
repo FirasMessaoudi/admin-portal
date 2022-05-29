@@ -34,7 +34,7 @@ public class RitualPackageDto implements Serializable {
     private long id;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private String typeCode;
+    private String ritualTypeCode;
 
     private float price;
     private String departureCity;

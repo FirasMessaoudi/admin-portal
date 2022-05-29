@@ -118,6 +118,8 @@ public class JpaApplicant implements Serializable {
     @Column(name = "registration_channel")
     private String channel;
 
+    private boolean deleted;
+
     @PrePersist
     public void prePersist() {
         creationDate = new Date();

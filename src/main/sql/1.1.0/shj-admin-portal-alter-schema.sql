@@ -1575,5 +1575,38 @@ alter table shc_portal.shc_company alter column accreditation_expiry smalldateti
 go
 ALTER TABLE shc_portal.shc_area_layers ALTER COLUMN layer nvarchar(1000) not null
 GO
+ALTER TABLE shc_portal.shc_applicant_package
+    ADD arrival_date smalldatetime NULL;
+GO
+
+EXEC sp_rename 'shc_portal.shc_ritual_package.type_code', 'package_type_code', 'COLUMN';
+GO
+
+ALTER TABLE shc_portal.shc_applicant
+    ADD deleted bit NOT NULL default 0;
+GO
+
+/*---------------------------------------------------
+--  ddl for shc_housing_master table
+---------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_housing_master')
+CREATE TABLE shc_portal.shc_housing_master
+(
+    id               int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    housing_ref_code varchar(45)   NOT NULL,
+    category_code    varchar(45) NULL,
+    type_code        varchar(20)   NOT NULL,
+    site_code        varchar(20) NULL,
+    location_name_ar nvarchar(100) NOT NULL,
+    location_name_en varchar(100)  NOT NULL,
+    address_ar       nvarchar(100) NULL,
+    address_en       varchar(50) NULL,
+    lat              varchar(20) NULL,
+    lng              varchar(20) NULL,
+    zone_code        varchar(20) NULL,
+    creation_date    smalldatetime NOT NULL default current_timestamp,
+    update_date      smalldatetime NULL,
+);
+GO
 
 
