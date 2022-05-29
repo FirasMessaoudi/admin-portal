@@ -58,7 +58,7 @@ public interface ChatContactRepository extends JpaRepository<JpaChatContact, Lon
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ChatContactVo(j.id, j.digitalId, j.contactDigitalId, a.fullNameAr, a.fullNameEn, " +
             "j.type.id, j.alias, j.avatar, j.systemDefined, j.staffTitleCode, j.relationshipCode, j.mobileNumber, j.countryPhonePrefix, j.countryCode, " +
             "j.autoAdded, j.applicantRitualId, j.creationDate, j.updateDate, adi.statusCode, j.deleted) FROM JpaChatContact j " +
-            "JOIN JpaApplicantDigitalId adi ON j.digitalId = adi.uin JOIN JpaApplicant a ON a.id = adi.applicantId WHERE j.id = :id")
+            "JOIN JpaApplicantDigitalId adi ON j.contactDigitalId = adi.uin JOIN JpaApplicant a ON a.id = adi.applicantId WHERE j.id = :id")
     Optional<ChatContactVo> findApplicantContactVoById(@Param("id") Long id);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ChatContactVo(j.id, j.digitalId, j.contactDigitalId, cs.fullNameAr, cs.fullNameEn, " +
