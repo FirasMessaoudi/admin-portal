@@ -129,7 +129,13 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "join card.companyRitualSeason companyRitualSeason " +
             "join companyRitualSeason.ritualSeason ritualSeason " +
             "join companyRitualSeason.company company " +
-            "where digitalId.suin =:suin "+
+            "where digitalId.suin =:suin " +
             "AND card.id = :cardId ")
     ApplicantStaffVO findStaffBySuinAndCardId(@Param("suin") String suin, @Param("cardId") long cardId);
+
+
+    @Query("SELECT cs FROM JpaCompanyStaff cs JOIN cs.digitalIds di JOIN di.companyStaffCards csc JOIN " +
+            "csc.companyRitualSeason cr JOIN cr.Company c WHERE c.code=:code AND  c.typeCode =:typeCode")
+    List<JpaCompanyStaff> findStaffByCompanyCodeAndCompanyTypeCode(@Param("code") String code, @Param("typeCode") long typeCode);
+
 }
