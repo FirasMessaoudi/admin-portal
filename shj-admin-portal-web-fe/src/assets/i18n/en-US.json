@@ -585,10 +585,10 @@
     "mark_as_closed": "Mark as closed",
     "comments": "Comments",
     "comments_caution": "will be shown to the applicant",
-    "dialog_resolve_complaint_confirmation_text": "Are you sure you want to resolve the complaint ?",
-    "dialog_close_complaint_confirmation_text": "Are you sure you want to close the complaint ?",
-    "dialog_resolve_complaint_success_text": "The complaint status changed to resolved",
-    "dialog_close_complaint_success_text": "The complaint status changed to closed",
+    "dialog_resolve_incident_confirmation_text": "Are you sure you want to resolve the incident ?",
+    "dialog_close_incident_confirmation_text": "Are you sure you want to close the incident ?",
+    "dialog_resolve_incident_success_text": "The incident status changed to resolved",
+    "dialog_close_incident_success_text": "The incident status changed to closed",
     "operation_date": "Operation Date"
   },
   "dashboard": {

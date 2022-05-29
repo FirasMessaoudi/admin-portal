@@ -993,5 +993,12 @@ public class IntegrationWsController {
 
     }
 
+    @GetMapping("/staff/find-by-code/{code}/{typeCode}")
+    public ResponseEntity<WsResponse<?>> findEmployeesByCompanyCodeAndTypeCode(@PathVariable String code, @PathVariable long typeCode) {
+        log.info("find employees by code and type code");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findStaffByCompanyCodeAndCompanyTypeCode(code, typeCode)).build());
+
+    }
+
 
 }

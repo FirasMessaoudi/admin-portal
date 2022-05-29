@@ -56,6 +56,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return mapList(companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(uin, sid));
     }
 
+    public List<CompanyStaffDto> findStaffByCompanyCodeAndCompanyTypeCode(String code, long typeCode) {
+        return mapList(companyStaffRepository.findStaffByCompanyCodeAndCompanyTypeCode(code, typeCode));
+    }
+
     public Optional<CompanyStaffDto> findGroupLeaderByApplicantUin(String applicantUin, long companyRitualSeasonId) {
         JpaCompanyStaff companyStaff = companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(applicantUin, companyRitualSeasonId, ECompanyStaffTitle.GROUP_LEADER.name());
         if (companyStaff != null) {
