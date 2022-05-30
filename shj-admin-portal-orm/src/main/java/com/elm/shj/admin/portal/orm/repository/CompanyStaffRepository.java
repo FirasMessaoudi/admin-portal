@@ -135,7 +135,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
 
     @Query("SELECT cs FROM JpaCompanyStaff cs JOIN cs.digitalIds di JOIN di.companyStaffCards csc JOIN " +
-            "csc.companyRitualSeason cr JOIN cr.Company c WHERE c.code=:code AND  c.typeCode =:typeCode")
+            "csc.companyRitualSeason cr JOIN cr.company c WHERE c.code=:code AND  c.typeCode =:typeCode")
     List<JpaCompanyStaff> findStaffByCompanyCodeAndCompanyTypeCode(@Param("code") String code, @Param("typeCode") long typeCode);
 
 }
