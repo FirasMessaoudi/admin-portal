@@ -1040,7 +1040,35 @@ values (13, 'group-data.xlsx', N'بيانات المجموعات ',
 SET
 IDENTITY_INSERT shc_portal.shc_data_segment OFF;
 GO
-update shc_portal.shc_portal.shc_incident_status_lk set label = N'جاري دراسة البلاغ' where id=1
-update shc_portal.shc_portal.shc_incident_status_lk set label = N'تم حل البلاغ' where id=3
-update shc_portal.shc_portal.shc_incident_status_lk set label = N'تم إغلاق البلاغ' where id=5
+update shc_portal.shc_portal.shc_incident_status_lk
+set label = N'جاري دراسة البلاغ'
+where id = 1
+update shc_portal.shc_portal.shc_incident_status_lk
+set label = N'تم حل البلاغ'
+where id = 3
+update shc_portal.shc_portal.shc_incident_status_lk
+set label = N'تم إغلاق البلاغ'
+where id = 5
+    GO
+
+SET IDENTITY_INSERT shc_portal.shc_company_type_lk
+ON;
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
+VALUES (1, 'ESTABLISHMENT', 'ar', N'مؤسسة طوافة');
+INSERT INTO shc_portal.shc_company_type_lk(id, code, lang, label)
+VALUES (2, 'ESTABLISHMENT', 'en', 'Establishment');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
+VALUES (3, 'MISSION', 'ar', N'بعثة');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
+VALUES (4, 'MISSION', 'en', 'Mission');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
+VALUES (5, 'INTERNAL_HAJ_COMPANY', 'ar', N'شركة  حجاج داخل ');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
+VALUES (6, 'INTERNAL_HAJ_COMPANY', 'en', 'Internal Haj Company  ');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
+VALUES (7, 'EXTERNAL_HAJ_COMPANY', 'ar', N'شركة حجاج خارج ');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
+VALUES (8, 'EXTERNAL_HAJ_COMPANY', 'en', 'External  Haj  Company ');
+SET
+IDENTITY_INSERT shc_portal.shc_company_type_lk OFF;
 GO

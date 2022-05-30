@@ -15,15 +15,16 @@ import java.util.stream.Collectors;
  * @author Ahmed Ali
  * @since 1.1.0
  */
-public enum ERitualType {
-    EXTERNAL_HAJJ(1),
-    INTERNAL_HAJJ(2),
-    COURTESY_HAJJ(3),
-    EXTERNAL_UMRAH(4),
-    INTERNAL_UMRAH(5);
+public enum EHousingSite {
+    MENA(1),
+    MUZDALIFA(2),
+    MAKKAH(3),
+    MADINA(4),
+    ARAFAT(5);
+
     private final long id;
 
-    ERitualType(long id) {
+    EHousingSite(long id) {
         this.id = id;
     }
 
@@ -31,8 +32,8 @@ public enum ERitualType {
         return this.id;
     }
 
-    public static ERitualType fromId(long id) {
-        List<ERitualType> result = Arrays.stream(ERitualType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
-        return (ERitualType) CollectionUtils.get(result, 0);
+    public static EHousingSite fromId(long id) {
+        List<EHousingSite> result = Arrays.stream(EHousingSite.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
+        return (EHousingSite) CollectionUtils.get(result, 0);
     }
 }

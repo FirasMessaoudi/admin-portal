@@ -67,7 +67,7 @@ public class ValidationService {
     private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
     private final RitualSeasonRepository ritualSeasonRepository;
-    private final PackageHousingRepository packageHousingRepository;
+    private final HousingMasterRepository housingMasterRepository;
     private final CompanyRepository companyRepository;
     private final CompanyRitualSeasonRepository companyRitualSeasonRepository;
 
@@ -118,8 +118,8 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(RitualSeasonDto.class)) {
                     saveRitualSeasons((RitualSeasonDto) items.get(i));
                 }
-                if (items.get(i).getClass().isAssignableFrom(PackageHousingDto.class)) {
-                    savePackageHousings((PackageHousingDto) items.get(i));
+                if (items.get(i).getClass().isAssignableFrom(HousingMasterDto.class)) {
+                    saveHousingMasterData((HousingMasterDto) items.get(i));
                 }
                 if (items.get(i).getClass().isAssignableFrom(CompanyDto.class)) {
                     saveCompanies((CompanyDto) items.get(i));
@@ -149,10 +149,10 @@ public class ValidationService {
 
     }
 
-    private void savePackageHousings(PackageHousingDto packageHousingDto) {
-        packageHousingDto.setLat(packageHousingDto.getGeoLocation().getLat());
-        packageHousingDto.setLng(packageHousingDto.getGeoLocation().getLng());
-        packageHousingRepository.save((JpaPackageHousing) findMapper(PackageHousingDto.class).toEntity(packageHousingDto, mappingContext));
+    private void saveHousingMasterData(HousingMasterDto housingMasterDto) {
+        housingMasterDto.setLat(housingMasterDto.getGeoLocation().getLat());
+        housingMasterDto.setLng(housingMasterDto.getGeoLocation().getLng());
+        housingMasterRepository.save((JpaHousingMaster) findMapper(HousingMasterDto.class).toEntity(housingMasterDto, mappingContext));
 
 
     }

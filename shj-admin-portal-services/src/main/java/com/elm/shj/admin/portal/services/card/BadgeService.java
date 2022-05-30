@@ -137,7 +137,6 @@ public class BadgeService {
         }
         return BadgeVO.builder().badgeImage(imgStr).build();
 
-
     }
 
     public BadgeVO generateApplicantBadge(String uin, boolean withQr) {

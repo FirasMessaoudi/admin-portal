@@ -31,7 +31,8 @@ public class CompanyDto {
     private long id;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @OnlyCharacters(min = 1, max = 30, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @Pattern(regexp = "([0-9]+)"
+            , message = "validation.data.constraints.msg.20003")
     private String code;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
@@ -41,9 +42,12 @@ public class CompanyDto {
     @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
     private String labelEn;
 
-    private Integer missionId;
+    @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    private String missionId;
 
     @NullOrNotBlank(min = 5, max = 20)
+    @Pattern(regexp = "([0-9]+)"
+            , message = "validation.data.constraints.msg.20003")
     private String contactNumber;
 
     @NullOrNotBlank(min = 5, max = 75)
@@ -66,13 +70,13 @@ public class CompanyDto {
     @Email(message = "validation.data.constraints.msg.20003")
     private String email;
 
-    @OnlyCharacters(min = 3, max = 30, allowEmpty = true, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @Pattern(regexp = "([0-9]+)"
+            , message = "validation.data.constraints.msg.20003")
     private String moiNumber;
-
-    @OnlyCharacters(min = 1, max = 30, allowEmpty = true, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @Pattern(regexp = "([0-9]+)"
+            , message = "validation.data.constraints.msg.20003")
     private String crNumber;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
     @CompanyTypeCode
     private Integer typeCode;
 
@@ -80,6 +84,9 @@ public class CompanyDto {
     private String ritualTypeCode;
     @SeasonYear
     private int season;
+
+    @CountryCode
+    private String country;
 
     private Date creationDate;
     private Date updateDate;

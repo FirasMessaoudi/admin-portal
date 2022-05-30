@@ -172,7 +172,7 @@ public class DataRequestWsController {
         List<ErrorResponse> errorResponses = validationService.validateData(ritualSeasons);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveRitualSeasons {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveRitualSeasons {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -181,13 +181,13 @@ public class DataRequestWsController {
                 Collections.emptyList()).build());
     }
 
-    @PostMapping(value = "/save-housing-data")
-    public ResponseEntity<WsResponse<?>> saveHousingData(@RequestBody List<PackageHousingDto> packageHousings) {
-        log.info("Start saveHousingData PackageHousingDtosSize: {}", packageHousings == null? null:packageHousings.size());
-        List<ErrorResponse> errorResponses = validationService.validateData(packageHousings);
+    @PostMapping(value = "/save-housing-master-data")
+    public ResponseEntity<WsResponse<?>> saveHousingData(@RequestBody List<HousingMasterDto> housingMasterDtos) {
+        log.info("Start saveHousingMasterData housingMasterDtosSize: {}", housingMasterDtos == null ? null : housingMasterDtos.size());
+        List<ErrorResponse> errorResponses = validationService.validateData(housingMasterDtos);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveRitualSeasons {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveRitualSeasons {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }

@@ -43,7 +43,7 @@ public class JpaCompany implements Serializable {
     private String labelEn;
 
     @Column(name = "mission_id")
-    private Integer missionId;
+    private String missionId;
 
     @Column(name = "contact_number")
     private String contactNumber;
@@ -80,6 +80,8 @@ public class JpaCompany implements Serializable {
 
     @Column(name = "update_date")
     private Date updateDate;
+
+    private String country;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "company")
     private List<JpaCompanyRitualSeason> companyRitualSeasons;

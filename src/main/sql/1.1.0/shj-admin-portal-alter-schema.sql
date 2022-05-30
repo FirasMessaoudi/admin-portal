@@ -1609,4 +1609,24 @@ CREATE TABLE shc_portal.shc_housing_master
 );
 GO
 
+alter table shc_portal.shc_company
+    add country_code varchar(10) NULL;
+go
+--  ddl for shc_company_type_lk table
+---------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_company_type_lk')
+CREATE TABLE shc_portal.shc_company_type_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(50) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT company_type_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+ALTER TABLE shc_portal.shc_company ALTER COLUMN mission_id varchar(50);
+GO
+
 

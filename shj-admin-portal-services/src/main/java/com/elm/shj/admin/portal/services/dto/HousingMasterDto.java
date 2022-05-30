@@ -9,6 +9,7 @@ import com.elm.shj.admin.portal.services.data.validators.WithHousingType;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -34,6 +35,8 @@ public class HousingMasterDto implements Serializable {
     @WithHousingSite
     private String siteCode;
     @NotNull(message = "validation.data.constraints.msg.20001")
+    @Pattern(regexp = "([0-9]+)"
+            , message = "validation.data.constraints.msg.20003")
     private String housingReferenceCode;
     @WithHousingCategory
     private String categoryCode;
