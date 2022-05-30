@@ -35,4 +35,6 @@ public class CompanyStaffLiteDto implements Serializable {
     private Date dateOfBirthGregorian;
     private Long dateOfBirthHijri;
     private String gender;
+    private String passportNumber;
+    private String idNumber;
 }

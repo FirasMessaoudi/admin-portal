@@ -6,7 +6,10 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +23,7 @@ import java.util.List;
  * @author salzoubi
  * @since 1.1.0
  **/
-public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, Long> {
+public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, Long> , JpaSpecificationExecutor<JpaCompanyStaff> {
 
     List<JpaCompanyStaff> findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(String applicantUin, long sid);
 
@@ -132,10 +135,5 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "where digitalId.suin =:suin " +
             "AND card.id = :cardId ")
     ApplicantStaffVO findStaffBySuinAndCardId(@Param("suin") String suin, @Param("cardId") long cardId);
-
-
-    @Query("SELECT cs FROM JpaCompanyStaff cs JOIN cs.digitalIds di JOIN di.companyStaffCards csc JOIN " +
-            "csc.companyRitualSeason cr JOIN cr.company c WHERE c.code=:code AND  c.typeCode =:typeCode")
-    List<JpaCompanyStaff> findStaffByCompanyCodeAndCompanyTypeCode(@Param("code") String code, @Param("typeCode") long typeCode);
 
 }
