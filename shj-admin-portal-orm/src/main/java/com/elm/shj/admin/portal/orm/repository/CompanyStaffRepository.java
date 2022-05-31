@@ -148,4 +148,9 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "where staff.id = :staffId ")
     CompanyStaffVO findStaffById(@Param("staffId") long staffId);
 
+    @Modifying
+    @Query("update JpaCompanyStaff staff set staff.titleCode = :jobTitle, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
+    int updateCompanyStaffJobTitle(@Param("jobTitle") String jobTitle, @Param("staffId") long staffId);
+
+
 }

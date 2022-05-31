@@ -252,4 +252,14 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         CompanyStaffVO staff = companyStaffRepository.findStaffById(id);
         return staff == null? Optional.empty(): Optional.of(staff);
     }
+
+    @Transactional
+    public UpdateStaffTitleCmd updateCompanyStaffTitle(UpdateStaffTitleCmd command) {
+        int updatedRowsCount = 0;
+        updatedRowsCount += companyStaffRepository.updateCompanyStaffJobTitle(command.getJobTitle(), command.getId());
+        if(updatedRowsCount < 1){
+            return new UpdateStaffTitleCmd();
+        }
+        return command;
+    }
 }

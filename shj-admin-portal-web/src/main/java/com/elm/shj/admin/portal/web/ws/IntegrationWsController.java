@@ -1016,4 +1016,17 @@ public class IntegrationWsController {
                 .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(String.valueOf(id)).build()).build());
     }
 
+    @PutMapping("/staff/update-job-title")
+    public ResponseEntity<WsResponse<?>> updateCompanyStaffTitle(@RequestBody UpdateStaffTitleCmd command) {
+        log.info("find employees by code and type code");
+        UpdateStaffTitleCmd cmd = companyStaffService.updateCompanyStaffTitle(command);
+        if (cmd == null) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.UPDATE_STAFF_FAILED.getCode()).referenceNumber(String.valueOf(command.getId())).build()).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                    .body(cmd).build());
+        }
+    }
+
 }
