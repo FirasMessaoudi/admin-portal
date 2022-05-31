@@ -62,100 +62,6 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return mapList(companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(uin, sid));
     }
 
-    @Transactional
-    public List<CompanyStaffLiteDto> searchStaff(CompanyStaffFilterDto companyStaffFilterDto) {
-
-        companyStaffFilterDto.setCompanyCode("ELMINHAJJ43");
-
-        List<JpaCompanyStaff> companyStaffs = companyStaffRepository.findAll(withStaffFilter(companyStaffFilterDto));
-        List<CompanyStaffLiteDto> companyStaffList = new ArrayList<>();
-
-        if (companyStaffs != null && !companyStaffs.isEmpty()) {
-            companyStaffs.forEach(companyStaff -> {
-                CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
-                        .id(companyStaff.getId())
-                        .suin(companyStaff.getDigitalIds().isEmpty() ? "" : companyStaff.getDigitalIds().get(0).getSuin())
-                        .fullNameAr(companyStaff.getFullNameAr())
-                        .fullNameEn(companyStaff.getFullNameEn())
-                        .countryCode(companyStaff.getCountryCode())
-                        .mobileNumber(companyStaff.getMobileNumber())
-                        .email(companyStaff.getEmail())
-                        .nationalityCode(companyStaff.getNationalityCode())
-                        .photo(companyStaff.getPhoto())
-                        .titleCode(companyStaff.getTitleCode())
-                        .dateOfBirthGregorian(companyStaff.getDateOfBirthGregorian())
-                        .dateOfBirthHijri(companyStaff.getDateOfBirthHijri())
-                        .gender(companyStaff.getGender())
-                        .passportNumber(companyStaff.getPassportNumber())
-                        .idNumber(companyStaff.getIdNumber())
-                        .build();
-                companyStaffList.add(companyStaffLite);
-            });
-
-        }
-        return companyStaffList;
-    }
-
-    private Specification<JpaCompanyStaff> withStaffFilter(final CompanyStaffFilterDto criteria) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
-            //Create atomic predicates
-            List<Predicate> predicates = new ArrayList<>();
-            Join<JpaCompanyStaff, JpaCompanyStaffDigitalId> digitalId = root.join("digitalIds");
-            Join<JpaCompanyStaffDigitalId, JpaCompanyStaffCard> companyStaffCards = digitalId.join("companyStaffCards");
-            Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = companyStaffCards.join("companyRitualSeason");
-
-            if (criteria.getSuin() != null) {
-                Path<String> suin = digitalId.get("suin");
-                predicates.add(criteriaBuilder.equal(suin, criteria.getSuin()));
-            }
-
-            if (criteria.getJobTitle() != null) {
-                Path<String> jobTitle = root.get("titleCode");
-                predicates.add(criteriaBuilder.equal(jobTitle, criteria.getJobTitle()));
-            }
-
-            if (criteria.getPassportNumber() != null) {
-                Path<String> passportNumber = root.get("passportNumber");
-                predicates.add(criteriaBuilder.equal(passportNumber, criteria.getPassportNumber()));
-            }
-
-            if (criteria.getIdNumber() != null) {
-                Path<String> idNumber = root.get("idNumber");
-                predicates.add(criteriaBuilder.equal(idNumber, criteria.getIdNumber()));
-            }
-
-            if (criteria.getGender() != null) {
-                Path<String> gender = root.get("gender");
-                predicates.add(criteriaBuilder.equal(gender, criteria.getGender()));
-            }
-
-                Join<JpaCompanyRitualSeason, JpaCompany> company = companyRitualSeason.join("company");
-                Path<String> companyCode = company.get("code");
-                predicates.add(criteriaBuilder.equal(companyCode, criteria.getCompanyCode()));
-
-
-            if (criteria.getRitualType() != null) {
-                Join<JpaCompanyRitualSeason, JpaRitualSeason> ritualSeason = companyRitualSeason.join("ritualSeason");
-                predicates.add(criteriaBuilder.equal(ritualSeason.get("ritualTypeCode"), criteria.getRitualType()));
-            }
-
-            if(criteria.getLanguage() != null){
-                if(criteria.getLanguage().equals("en")){
-                    if(criteria.getName() != null){
-                        predicates.add(criteriaBuilder.like(root.get("fullNameEn"), "%" + criteria.getName().trim() + "%"));
-                    }
-                } else {
-                    if(criteria.getName() != null){
-                        predicates.add(criteriaBuilder.like(root.get("fullNameAr"), "%" + criteria.getName().trim() + "%"));
-                    }
-                }
-            }
-
-
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
-    }
-
     public Optional<CompanyStaffDto> findGroupLeaderByApplicantUin(String applicantUin, long companyRitualSeasonId) {
         JpaCompanyStaff companyStaff = companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(applicantUin, companyRitualSeasonId, ECompanyStaffTitle.GROUP_LEADER.name());
         if (companyStaff != null) {
@@ -246,5 +152,98 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         long cardId = Long.parseLong(value.substring(value.length()-1));
         ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffBySuinAndCardId(suin,cardId);
         return staffByIdNumber == null? Optional.empty(): Optional.of(staffByIdNumber);
+    }
+
+    @Transactional
+    public List<CompanyStaffLiteDto> searchStaff(CompanyStaffFilterDto companyStaffFilterDto) {
+
+        companyStaffFilterDto.setCompanyCode("ELMINHAJJ43");
+
+        List<JpaCompanyStaff> companyStaffs = companyStaffRepository.findAll(withStaffFilter(companyStaffFilterDto));
+        List<CompanyStaffLiteDto> companyStaffList = new ArrayList<>();
+
+        if (companyStaffs != null && !companyStaffs.isEmpty()) {
+            companyStaffs.forEach(companyStaff -> {
+                CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
+                        .id(companyStaff.getId())
+                        .suin(companyStaff.getDigitalIds().isEmpty() ? "" : companyStaff.getDigitalIds().get(0).getSuin())
+                        .fullNameAr(companyStaff.getFullNameAr())
+                        .fullNameEn(companyStaff.getFullNameEn())
+                        .countryCode(companyStaff.getCountryCode())
+                        .mobileNumber(companyStaff.getMobileNumber())
+                        .email(companyStaff.getEmail())
+                        .nationalityCode(companyStaff.getNationalityCode())
+                        .titleCode(companyStaff.getTitleCode())
+                        .dateOfBirthGregorian(companyStaff.getDateOfBirthGregorian())
+                        .dateOfBirthHijri(companyStaff.getDateOfBirthHijri())
+                        .gender(companyStaff.getGender())
+                        .passportNumber(companyStaff.getPassportNumber())
+                        .idNumber(companyStaff.getIdNumber())
+                        .build();
+                companyStaffList.add(companyStaffLite);
+            });
+
+        }
+        return companyStaffList;
+    }
+
+    private Specification<JpaCompanyStaff> withStaffFilter(final CompanyStaffFilterDto criteria) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            //Create atomic predicates
+            List<Predicate> predicates = new ArrayList<>();
+            Join<JpaCompanyStaff, JpaCompanyStaffDigitalId> digitalId = root.join("digitalIds");
+            Join<JpaCompanyStaffDigitalId, JpaCompanyStaffCard> companyStaffCards = digitalId.join("companyStaffCards");
+            Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = companyStaffCards.join("companyRitualSeason");
+
+            if (criteria.getSuin() != null && !criteria.getSuin().equals("")) {
+                Path<String> suin = digitalId.get("suin");
+                predicates.add(criteriaBuilder.equal(suin, criteria.getSuin()));
+            }
+
+            if (criteria.getJobTitle() != null && !criteria.getJobTitle().equals("")) {
+                Path<String> jobTitle = root.get("titleCode");
+                predicates.add(criteriaBuilder.equal(jobTitle, criteria.getJobTitle()));
+            }
+
+            if (criteria.getPassportNumber() != null && !criteria.getPassportNumber().equals("")) {
+                Path<String> passportNumber = root.get("passportNumber");
+                predicates.add(criteriaBuilder.equal(passportNumber, criteria.getPassportNumber()));
+            }
+
+            if (criteria.getIdNumber() != null && !criteria.getIdNumber().equals("")) {
+                Path<String> idNumber = root.get("idNumber");
+                predicates.add(criteriaBuilder.equal(idNumber, criteria.getIdNumber()));
+            }
+
+            if (criteria.getGender() != null && !criteria.getGender().equals("")) {
+                Path<String> gender = root.get("gender");
+                predicates.add(criteriaBuilder.equal(gender, criteria.getGender()));
+            }
+
+            Join<JpaCompanyRitualSeason, JpaCompany> company = companyRitualSeason.join("company");
+            Path<String> companyCode = company.get("code");
+            predicates.add(criteriaBuilder.equal(companyCode, criteria.getCompanyCode()));
+
+
+            if (criteria.getRitualType() != null && !criteria.getRitualType().equals("")) {
+                Join<JpaCompanyRitualSeason, JpaRitualSeason> ritualSeason = companyRitualSeason.join("ritualSeason");
+                predicates.add(criteriaBuilder.equal(ritualSeason.get("ritualTypeCode"), criteria.getRitualType()));
+            }
+
+            if(criteria.getLanguage() != null && !criteria.getLanguage().equals("")){
+                if(criteria.getLanguage().equals("en")){
+                    if(criteria.getName() != null && !criteria.getName().equals("")){
+                        predicates.add(criteriaBuilder.like(root.get("fullNameEn"), "%" + criteria.getName().trim() + "%"));
+                    }
+                } else {
+                    if(criteria.getName() != null && !criteria.getName().equals("")){
+                        predicates.add(criteriaBuilder.like(root.get("fullNameAr"), "%" + criteria.getName().trim() + "%"));
+                    }
+                }
+            }
+
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 }
