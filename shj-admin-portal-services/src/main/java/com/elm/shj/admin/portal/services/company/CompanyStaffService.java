@@ -246,4 +246,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
+
+
+    public Optional<CompanyStaffVO> searchStaffById(Long id) {
+        CompanyStaffVO staff = companyStaffRepository.findStaffById(id);
+        return staff == null? Optional.empty(): Optional.of(staff);
+    }
 }
