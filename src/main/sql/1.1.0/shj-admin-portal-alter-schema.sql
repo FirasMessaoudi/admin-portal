@@ -1643,3 +1643,25 @@ alter table shc_portal.shc_ritual_package
 go
 
 
+
+--  ddl for shc_meal_time_type_lk table
+---------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_meal_time_type_lk')
+CREATE TABLE shc_portal.shc_meal_time_type_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(50) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT meal_time_type_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+ALTER TABLE shc_portal.shc_package_catering ALTER COLUMN meal_description varchar(256) null;
+GO
+
+ALTER TABLE shc_portal.shc_package_catering ALTER COLUMN meal_time Time null;
+GO
+
+

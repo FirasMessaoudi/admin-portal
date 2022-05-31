@@ -1076,3 +1076,45 @@ VALUES (10, 'SERVICE_GROUP', 'en', 'Service Group');
 SET
 IDENTITY_INSERT shc_portal.shc_company_type_lk OFF;
 GO
+
+delete
+from shc_portal.shc_meal_type_lk
+where id > 0;
+go
+SET IDENTITY_INSERT shc_portal.shc_meal_type_lk ON;
+INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
+VALUES (1, 'FULL_BOARD', 'ar', N'وجبة الإفطار والغداء والعشاء');
+INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
+VALUES (2, 'FULL_BOARD', 'en', 'Breakfast, lunch, and dinner buffets');
+INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
+VALUES (3, 'BREAKFAST_DINNER', 'ar', N'وجبة الإفطار والعشاء');
+INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
+VALUES (4, 'BREAKFAST_DINNER', 'en', 'Breakfast, and dinner buffets');
+INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
+VALUES (5, 'BREAKFAST_LUNCH', 'ar', N'وجبة الإفطار والغداء');
+INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
+VALUES (6, 'BREAKFAST_LUNCH', 'en', 'Breakfast, and lunch');
+INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
+VALUES (7, 'ONLY_BREAKFAST', 'ar', N'وجبة الإفطار فقط');
+INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
+VALUES (8, 'ONLY_BREAKFAST', 'en', 'Only Breakfast');
+SET
+IDENTITY_INSERT shc_portal.shc_meal_type_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_meal_time_type_lk ON;
+INSERT INTO shc_portal.shc_meal_time_type_lk (id, code, lang, label)
+VALUES (1, 'BREAKFAST', 'ar', N'الإفطار ');
+INSERT INTO shc_portal.shc_meal_time_type_lk (id, code, lang, label)
+VALUES (2, 'BREAKFAST', 'en', 'Breakfast');
+INSERT INTO shc_portal.shc_meal_time_type_lk (id, code, lang, label)
+VALUES (3, 'LUNCH', 'ar', N'الغداء');
+INSERT INTO shc_portal.shc_meal_time_type_lk (id, code, lang, label)
+VALUES (4, 'LUNCH', 'en', 'Lunch');
+INSERT INTO shc_portal.shc_meal_time_type_lk (id, code, lang, label)
+VALUES (5, 'DINNER', 'ar', N'العشاء');
+INSERT INTO shc_portal.shc_meal_time_type_lk (id, code, lang, label)
+VALUES (6, 'DINNER', 'en', 'Dinner');
+SET
+IDENTITY_INSERT shc_portal.shc_meal_time_type_lk OFF;
+GO
