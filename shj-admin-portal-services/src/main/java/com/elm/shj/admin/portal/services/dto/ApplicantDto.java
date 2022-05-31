@@ -122,6 +122,10 @@ public class ApplicantDto implements Serializable {
     private Date updateDate;
     @ApplicantStatus
     private Integer status;
+    @RitualTypeCode
+    private String ritualTypeCode;
+    @SeasonYear
+    private int seasonYear;
     private boolean deleted;
 
     /**

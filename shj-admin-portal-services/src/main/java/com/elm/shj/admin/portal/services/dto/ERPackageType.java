@@ -15,16 +15,13 @@ import java.util.stream.Collectors;
  * @author Ahmed Ali
  * @since 1.1.0
  */
-public enum EHousingCategory {
-    A(1),
-    B(2),
-    C(3),
-    D(4);
-
-
+public enum ERPackageType {
+    ECONOMIC(1),
+    NORMAL(2),
+    VIP(3);
     private final long id;
 
-    EHousingCategory(long id) {
+    ERPackageType(long id) {
         this.id = id;
     }
 
@@ -32,8 +29,8 @@ public enum EHousingCategory {
         return this.id;
     }
 
-    public static EHousingCategory fromId(long id) {
-        List<EHousingCategory> result = Arrays.stream(EHousingCategory.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
-        return result.isEmpty() ? null : (EHousingCategory) CollectionUtils.get(result, 0);
+    public static ERPackageType fromId(long id) {
+        List<ERPackageType> result = Arrays.stream(ERPackageType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
+        return (ERPackageType) CollectionUtils.get(result, 0);
     }
 }

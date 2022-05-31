@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,11 +41,30 @@ public class DataRequestWsController {
 
     @PostMapping(value = "/save-applicant-main-data")
     public ResponseEntity<WsResponse<?>> saveApplicantMainData(@RequestBody List<ApplicantDto> applicantDtos) {
-        log.info("Start saveApplicantMainData ApplicantDtosSize {}", applicantDtos == null? null:applicantDtos.size());
+        log.info("Start saveApplicantMainData ApplicantDtosSize {}", applicantDtos == null ? null : applicantDtos.size());
+        applicantDtos.forEach(applicantDto -> {
+            EMaritalStatus eMaritalStatus = applicantDto.getMaritalStatusCode() != null ? EMaritalStatus.fromId(Long.parseLong(applicantDto.getMaritalStatusCode())) : null;
+            applicantDto.setMaritalStatusCode(eMaritalStatus == null ? null : eMaritalStatus.name());
+            EGenderCode eGenderCode = applicantDto.getGender() != null ? EGenderCode.fromId(Long.parseLong(applicantDto.getGender())) : null;
+            applicantDto.setGender(eGenderCode == null ? null : eGenderCode.name());
+            ERitualType eRitualType = applicantDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(applicantDto.getRitualTypeCode())) : null;
+            applicantDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
+            applicantDto.getContacts().forEach(applicantContactDto -> {
+
+                List<String> languageList = Arrays.asList(applicantContactDto.getLanguageList().split(","));
+                StringBuilder languages = new StringBuilder();
+                languageList.forEach(language -> {
+                    ELanguageCode eLanguageCode = isNumeric(language) ? ELanguageCode.fromId(Long.parseLong(language)) : null;
+                    languages.append(eLanguageCode != null ? eLanguageCode.name() : "N/A");
+                    languages.append(",");
+                });
+                applicantContactDto.setLanguageList(languages.toString());
+            });
+        });
         List<ErrorResponse> errorResponses = validationService.validateData(applicantDtos);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveApplicantMainData {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveApplicantMainData {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -55,11 +75,15 @@ public class DataRequestWsController {
 
     @PostMapping(value = "/save-applicant-ritual-data")
     public ResponseEntity<WsResponse<?>> saveApplicantRitualData(@RequestBody List<ApplicantRitualDto> applicantRitualDtos) {
-        log.info("Start saveApplicantRitualData applicantRitualDtosSize: {}", applicantRitualDtos == null? null:applicantRitualDtos.size());
+        log.info("Start saveApplicantRitualData applicantRitualDtosSize: {}", applicantRitualDtos == null ? null : applicantRitualDtos.size());
+        applicantRitualDtos.forEach(applicantRitualDto -> {
+            ERitualType eRitualType = applicantRitualDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(applicantRitualDto.getRitualTypeCode())) : null;
+            applicantRitualDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
+        });
         List<ErrorResponse> errorResponses = validationService.validateData(applicantRitualDtos);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveApplicantRitualData {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveApplicantRitualData {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -85,11 +109,17 @@ public class DataRequestWsController {
 
     @PostMapping(value = "/save-applicant-relative-data")
     public ResponseEntity<WsResponse<?>> saveApplicantRelativeData(@RequestBody List<ApplicantRelativeDto> applicantRelativeDtos) {
-        log.info("Start saveApplicantRelativeData applicantRelativeDtosSize: {}",  applicantRelativeDtos == null? null:applicantRelativeDtos.size());
+        log.info("Start saveApplicantRelativeData applicantRelativeDtosSize: {}", applicantRelativeDtos == null ? null : applicantRelativeDtos.size());
+        applicantRelativeDtos.forEach(applicantRelativeDto -> {
+            ERitualType eRitualType = applicantRelativeDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(applicantRelativeDto.getRitualTypeCode())) : null;
+            applicantRelativeDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
+            ERelativeRelationship eRelativeRelationship = applicantRelativeDto.getRelationshipCode() != null ? ERelativeRelationship.fromId(Long.parseLong(applicantRelativeDto.getRelationshipCode())) : null;
+            applicantRelativeDto.setRelationshipCode(eRelativeRelationship == null ? null : eRelativeRelationship.name());
+        });
         List<ErrorResponse> errorResponses = validationService.validateData(applicantRelativeDtos);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveApplicantRelativeData {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveApplicantRelativeData {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -168,7 +198,11 @@ public class DataRequestWsController {
 
     @PostMapping(value = "/save-ritual-seasons")
     public ResponseEntity<WsResponse<?>> saveRitualSeasons(@RequestBody List<RitualSeasonDto> ritualSeasons) {
-        log.info("Start saveRitualSeasons RitualSeasonDtosSize: {}", ritualSeasons == null? null:ritualSeasons.size());
+        ritualSeasons.forEach(ritualSeasonDto -> {
+            ERitualType eRitualType = ritualSeasonDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(ritualSeasonDto.getRitualTypeCode())) : null;
+            ritualSeasonDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
+        });
+        log.info("Start saveRitualSeasons RitualSeasonDtosSize: {}", ritualSeasons == null ? null : ritualSeasons.size());
         List<ErrorResponse> errorResponses = validationService.validateData(ritualSeasons);
 
         if (!errorResponses.isEmpty()) {
@@ -184,6 +218,15 @@ public class DataRequestWsController {
     @PostMapping(value = "/save-housing-master-data")
     public ResponseEntity<WsResponse<?>> saveHousingData(@RequestBody List<HousingMasterDto> housingMasterDtos) {
         log.info("Start saveHousingMasterData housingMasterDtosSize: {}", housingMasterDtos == null ? null : housingMasterDtos.size());
+        housingMasterDtos.forEach(housingMasterDto -> {
+            EHousingSite eHousingSite = housingMasterDto.getSiteCode() != null ? EHousingSite.fromId(Long.parseLong(housingMasterDto.getSiteCode())) : null;
+            EHousingCategory eHousingCategory = housingMasterDto.getCategoryCode() != null ? EHousingCategory.fromId(Long.parseLong(housingMasterDto.getCategoryCode())) : null;
+            EHousingType eHousingType = housingMasterDto.getTypeCode() != null ? EHousingType.fromId(Long.parseLong(housingMasterDto.getTypeCode())) : null;
+            housingMasterDto.setSiteCode(eHousingSite == null ? null : eHousingSite.name());
+            housingMasterDto.setCategoryCode(eHousingCategory == null ? null : eHousingCategory.name());
+            housingMasterDto.setTypeCode(eHousingType == null ? null : eHousingType.name());
+
+        });
         List<ErrorResponse> errorResponses = validationService.validateData(housingMasterDtos);
 
         if (!errorResponses.isEmpty()) {
@@ -199,11 +242,15 @@ public class DataRequestWsController {
 
     @PostMapping(value = "/save-companies")
     public ResponseEntity<WsResponse<?>> saveCompanies(@RequestBody List<CompanyDto> companies) {
-        log.info("Start saveCompanies CompanyDtosSize: {}", companies == null? null:companies.size());
+        log.info("Start saveCompanies CompanyDtosSize: {}", companies == null ? null : companies.size());
+        companies.forEach(companyDto -> {
+            ERitualType eRitualType = companyDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(companyDto.getRitualTypeCode())) : null;
+            companyDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
+        });
         List<ErrorResponse> errorResponses = validationService.validateData(companies);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveCompanies {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveCompanies {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -278,13 +325,22 @@ public class DataRequestWsController {
         List<ErrorResponse> errorResponses = validationService.validateData(new ArrayList<>());
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveGroupMainData {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveGroupMainData {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
         log.info("Finish saveGroupMainData {}", "SUCCESS");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
                 Collections.emptyList()).build());
+    }
+
+    private static boolean isNumeric(String str) {
+        try {
+            Long.parseLong(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
 }

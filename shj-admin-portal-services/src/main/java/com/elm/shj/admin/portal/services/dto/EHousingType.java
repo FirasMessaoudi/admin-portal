@@ -31,6 +31,6 @@ public enum EHousingType {
 
     public static EHousingType fromId(long id) {
         List<EHousingType> result = Arrays.stream(EHousingType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
-        return (EHousingType) CollectionUtils.get(result, 0);
+        return result.isEmpty() ? null : (EHousingType) CollectionUtils.get(result, 0);
     }
 }

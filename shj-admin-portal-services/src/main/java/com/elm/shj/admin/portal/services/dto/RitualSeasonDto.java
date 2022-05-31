@@ -32,7 +32,6 @@ public class RitualSeasonDto implements Serializable {
     @SeasonYear
     private int seasonYear;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
     @RitualTypeCode
     private String ritualTypeCode;
 

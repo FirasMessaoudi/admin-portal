@@ -86,7 +86,7 @@ public class CompanyDto {
     private int season;
 
     @CountryCode
-    private String country;
+    private String countryCode;
 
     private Date creationDate;
     private Date updateDate;

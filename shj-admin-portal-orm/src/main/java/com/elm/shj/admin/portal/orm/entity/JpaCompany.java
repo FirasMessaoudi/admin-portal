@@ -82,7 +82,7 @@ public class JpaCompany implements Serializable {
     private Date updateDate;
 
     @Column(name = "country_code")
-    private String country;
+    private String countryCode;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "company")
     private List<JpaCompanyRitualSeason> companyRitualSeasons;
