@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class CompanyTypeCodeValidator implements ConstraintValidator<CompanyTypeCode, Object> {
 
-    private final static List<String> COMPANY_TYPES = Arrays.asList("1", "2", "3", "4");
+    private final static List<String> COMPANY_TYPES = Arrays.asList("1", "2", "3", "4", "5");
 
     /**
      * {@inheritDoc}

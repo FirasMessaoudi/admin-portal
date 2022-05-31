@@ -75,6 +75,11 @@ public class ApplicantRitualDto implements Serializable {
     @CellIndex(index = 11)
     private String seatNumber;
 
+    @RitualTypeCode
+    private String ritualTypeCode;
+    @SeasonYear
+    private int seasonYear;
+
     private Date creationDate;
 
     private Date updateDate;

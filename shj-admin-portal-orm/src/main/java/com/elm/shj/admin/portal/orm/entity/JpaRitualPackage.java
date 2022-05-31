@@ -35,7 +35,7 @@ public class JpaRitualPackage implements Serializable {
     @Column(name = "package_type_code", nullable = false)
     private String packageTypeCode;
 
-    private float price;
+    private Float price;
 
     @Column(name = "departure_city")
     private String departureCity;
@@ -44,13 +44,22 @@ public class JpaRitualPackage implements Serializable {
     private String referenceNumber;
 
     @Column(name = "country_id")
-    private int countryId;
+    private Integer countryId;
 
     @Column(name = "start_date")
     private Date startDate;
 
     @Column(name = "end_date")
     private Date endDate;
+
+    @Column(name = "hajj_office_makkah")
+    private String hajjOfficeMakkah;
+    @Column(name = "hajj_office_madine")
+    private String hajjOfficeMadina;
+    @Column(name = "package_name_ar")
+    private String packageNameAr;
+    @Column(name = "package_name_en")
+    private String packageNameEn;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;

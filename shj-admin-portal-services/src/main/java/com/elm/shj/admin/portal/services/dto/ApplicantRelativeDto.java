@@ -75,6 +75,10 @@ public class ApplicantRelativeDto implements Serializable {
     @CellIndex(index = 9)
     private String packageReferenceNumber;
 
+    @RitualTypeCode
+    private String ritualTypeCode;
+    @SeasonYear
+    private int seasonYear;
     @JsonBackReference(value = "applicantRitual")
     private ApplicantRitualDto applicantRitual;
 }

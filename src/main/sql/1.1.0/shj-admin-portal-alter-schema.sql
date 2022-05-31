@@ -1629,4 +1629,17 @@ GO
 ALTER TABLE shc_portal.shc_company ALTER COLUMN mission_id varchar(50);
 GO
 
+alter table shc_portal.shc_ritual_package
+    add hajj_office_makkah varchar(50) NULL;
+go
+alter table shc_portal.shc_ritual_package
+    add hajj_office_madina varchar(50) NULL;
+go
+alter table shc_portal.shc_ritual_package
+    add package_name_ar nvarchar(50) NULL;
+go
+alter table shc_portal.shc_ritual_package
+    add package_name_en varchar(50) NULL;
+go
+
 

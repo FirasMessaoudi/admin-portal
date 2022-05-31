@@ -1069,6 +1069,10 @@ INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
 VALUES (7, 'EXTERNAL_HAJ_COMPANY', 'ar', N'شركة حجاج خارج ');
 INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
 VALUES (8, 'EXTERNAL_HAJ_COMPANY', 'en', 'External  Haj  Company ');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
+VALUES (9, 'SERVICE_GROUP', 'ar', N'مكتب خدمة ميدانية');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
+VALUES (10, 'SERVICE_GROUP', 'en', 'Service Group');
 SET
 IDENTITY_INSERT shc_portal.shc_company_type_lk OFF;
 GO
