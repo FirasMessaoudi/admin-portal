@@ -81,6 +81,7 @@ public class JpaCompany implements Serializable {
     @Column(name = "update_date")
     private Date updateDate;
 
+    @Column(name = "country_code")
     private String country;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "company")
