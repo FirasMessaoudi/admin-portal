@@ -1664,4 +1664,6 @@ GO
 ALTER TABLE shc_portal.shc_package_catering ALTER COLUMN meal_time Time null;
 GO
 
-
+alter table shc_portal.shc_package_transportation
+    add route_details varchar(256) NULL;
+go

@@ -1077,6 +1077,8 @@ SET
 IDENTITY_INSERT shc_portal.shc_company_type_lk OFF;
 GO
 
+use shc_portal
+go
 delete
 from shc_portal.shc_meal_type_lk
 where id > 0;
