@@ -34,6 +34,6 @@ public enum EHousingSite {
 
     public static EHousingSite fromId(long id) {
         List<EHousingSite> result = Arrays.stream(EHousingSite.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
-        return (EHousingSite) CollectionUtils.get(result, 0);
+        return result.isEmpty() ? null : (EHousingSite) CollectionUtils.get(result, 0);
     }
 }

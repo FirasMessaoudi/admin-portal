@@ -1629,6 +1629,48 @@ GO
 ALTER TABLE shc_portal.shc_company ALTER COLUMN mission_id varchar(50);
 GO
 
+alter table shc_portal.shc_ritual_package
+    add hajj_office_makkah varchar(50) NULL;
+go
+alter table shc_portal.shc_ritual_package
+    add hajj_office_madina varchar(50) NULL;
+go
+alter table shc_portal.shc_ritual_package
+    add package_name_ar nvarchar(50) NULL;
+go
+alter table shc_portal.shc_ritual_package
+    add package_name_en varchar(50) NULL;
+go
+
+
+
+--  ddl for shc_meal_time_type_lk table
+---------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_meal_time_type_lk')
+CREATE TABLE shc_portal.shc_meal_time_type_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(50) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT meal_time_type_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+ALTER TABLE shc_portal.shc_package_catering ALTER COLUMN meal_description varchar(256) null;
+GO
+
+ALTER TABLE shc_portal.shc_package_catering ALTER COLUMN meal_time Time null;
+GO
+
+alter table shc_portal.shc_package_transportation
+    add route_details varchar(256) NULL;
+go
+
+alter table shc_portal.shc_company
+    add establishment_id varchar(45) NULL;
+go
 alter table shc_portal.shc_applicant add emergency_contact_name VARCHAR(255) null
 alter table shc_portal.shc_applicant add emergency_contact_mobile_number VARCHAR(15) null
 GO

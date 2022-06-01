@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
+import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.BadgeService;
@@ -20,6 +21,7 @@ import com.elm.shj.admin.portal.services.user.UserLocationService;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.admin.ValidateStaffCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
+import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -31,6 +33,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -106,6 +109,7 @@ public class IntegrationWsController {
     private final ApplicantIncidentService applicantIncidentService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
+    private final CompanyTypeLookupService companyTypeLookupService;
     private final ChatContactService chatContactService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantPackageService applicantPackageService;
@@ -125,7 +129,7 @@ public class IntegrationWsController {
      */
     @PostMapping("/auth")
     public ResponseEntity<WsResponse<?>> login(@RequestBody Map<String, String> credentials, HttpServletRequest request, HttpServletResponse response) {
-        log.info("start login");
+        log.debug("Auth Webservice request handler");
 
         String callerType = request.getHeader(JwtTokenService.CALLER_TYPE_HEADER_NAME);
         if (callerType == null || !callerType.equals(JwtTokenService.WEB_SERVICE_CALLER_TYPE)) {
@@ -651,6 +655,17 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(incidentTypeLookupService.findAll()).build());
     }
 
+    /**
+     * List all organizer type.
+     *
+     * @return WsResponse of organizer type list
+     */
+    @GetMapping("/organizer-type/list")
+    public ResponseEntity<WsResponse<?>> listOrganizerType() {
+        log.debug("list countries...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyTypeLookupService.findAll()).build());
+    }
+
     @GetMapping("/housing/{uin}/{applicantPackageId}")
     public ResponseEntity<WsResponse<?>> findCampLocation(@PathVariable long uin, @PathVariable long applicantPackageId) {
         log.debug("Camp Location ...");
@@ -1001,6 +1016,31 @@ public class IntegrationWsController {
 
     }
 
+    @GetMapping("/staff/details/{id}")
+    public ResponseEntity<WsResponse<?>> findStaffById(@PathVariable long id) {
+        log.debug("Handler for {}", "Find staff");
+        Optional<CompanyStaffVO> staff = companyStaffService.searchStaffById(id);
+        if (staff.isPresent()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                    .body(staff.get()).build());
+        }
+        log.info("Finish findCompanyStaffBySuin {}, {}", "FAILURE", "COMPANY_STAFF_NOT_FOUND");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(String.valueOf(id)).build()).build());
+    }
+
+    @PutMapping("/staff/update-job-title")
+    public ResponseEntity<WsResponse<?>> updateCompanyStaffTitle(@RequestBody UpdateStaffTitleCmd command) {
+        log.info("find employees by code and type code");
+        UpdateStaffTitleCmd cmd = companyStaffService.updateCompanyStaffTitle(command);
+        if (cmd == null) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.UPDATE_STAFF_FAILED.getCode()).referenceNumber(String.valueOf(command.getId())).build()).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                    .body(cmd).build());
+        }
+    }
     @GetMapping("/applicant/emergency-contact/get/{applicantUin}")
     public ResponseEntity<WsResponse<?>> findApplicantEmergencyContactByApplicantId(@PathVariable String applicantUin) {
         ApplicantEmergencyContactDto applicantEmergencyContactByApplicantId = applicantLiteService.findApplicantEmergencyContactByApplicantId(applicantUin);

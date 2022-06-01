@@ -13,4 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.1.0
  */
 public interface HousingMasterRepository extends JpaRepository<JpaHousingMaster, Long> {
+    boolean existsByHousingReferenceCode(String code);
 }

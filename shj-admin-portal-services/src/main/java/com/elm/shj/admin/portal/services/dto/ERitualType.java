@@ -33,6 +33,6 @@ public enum ERitualType {
 
     public static ERitualType fromId(long id) {
         List<ERitualType> result = Arrays.stream(ERitualType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
-        return (ERitualType) CollectionUtils.get(result, 0);
+        return result.isEmpty() ? null : (ERitualType) CollectionUtils.get(result, 0);
     }
 }

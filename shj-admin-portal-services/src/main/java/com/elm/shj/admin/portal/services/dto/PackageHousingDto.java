@@ -3,14 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.services.data.validators.WithHousingCategory;
-import com.elm.shj.admin.portal.services.data.validators.WithHousingSite;
-import com.elm.shj.admin.portal.services.data.validators.WithHousingType;
+import com.elm.shj.admin.portal.services.data.validators.WithHousingMaster;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -26,29 +22,28 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class PackageHousingDto implements Serializable {
 
     private static final long serialVersionUID = -2333926062779667053L;
 
-    public PackageHousingDto(){
-    }
     private long id;
-    @WithHousingType
     private String typeCode;
-    @WithHousingSite
     private String siteCode;
     private RitualPackageDto ritualPackage;
     private HousingZoneDto housingZone;
     @NotNull(message = "validation.data.constraints.msg.20001")
+    @WithHousingMaster
     private String referenceNumber;
-    @WithHousingCategory
     private String categoryCode;
-    @NotNull(message = "validation.data.constraints.msg.20001")
     private String locationNameAr;
-    @NotNull(message = "validation.data.constraints.msg.20001")
     private String locationNameEn;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private Date validityStart;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "validation.data.constraints.msg.20001")
     private Date validityEnd;
     private String addressEn;
     private String addressAr;
@@ -62,5 +57,4 @@ public class PackageHousingDto implements Serializable {
     private Date creationDate;
     private Date updateDate;
 
-    private GeoLocationDto geoLocation;
 }

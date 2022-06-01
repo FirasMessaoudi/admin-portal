@@ -136,4 +136,21 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "AND card.id = :cardId ")
     ApplicantStaffVO findStaffBySuinAndCardId(@Param("suin") String suin, @Param("cardId") long cardId);
 
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffVO(" +
+            " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode,staff.photo, " +
+            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber,cards.id ) " +
+            "from JpaCompanyStaff staff " +
+            "join staff.digitalIds digitalId " +
+            "join digitalId.companyStaffCards cards " +
+            "join cards.companyRitualSeason companyRitualSeason " +
+            "join companyRitualSeason.ritualSeason ritualSeason " +
+            "join companyRitualSeason.company company " +
+            "where staff.id = :staffId ")
+    CompanyStaffVO findStaffById(@Param("staffId") long staffId);
+
+    @Modifying
+    @Query("update JpaCompanyStaff staff set staff.titleCode = :jobTitle, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
+    int updateCompanyStaffJobTitle(@Param("jobTitle") String jobTitle, @Param("staffId") long staffId);
+
+
 }
