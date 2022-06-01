@@ -1671,6 +1671,12 @@ go
 alter table shc_portal.shc_company
     add establishment_id varchar(45) NULL;
 go
+
+alter table shc_portal.shc_company
+    alter column code varchar(50) not null
+go
+
+
 alter table shc_portal.shc_applicant add emergency_contact_name VARCHAR(255) null
 alter table shc_portal.shc_applicant add emergency_contact_mobile_number VARCHAR(15) null
 GO

@@ -157,8 +157,6 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     @Transactional
     public List<CompanyStaffLiteDto> searchStaff(CompanyStaffFilterDto companyStaffFilterDto) {
 
-        companyStaffFilterDto.setCompanyCode("ELMINHAJJ43");
-
         List<JpaCompanyStaff> companyStaffs = companyStaffRepository.findAll(withStaffFilter(companyStaffFilterDto));
         List<CompanyStaffLiteDto> companyStaffList = new ArrayList<>();
 
