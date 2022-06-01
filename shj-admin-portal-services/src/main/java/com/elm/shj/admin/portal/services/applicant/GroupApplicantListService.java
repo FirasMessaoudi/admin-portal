@@ -38,32 +38,46 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
 
     @Transactional
     public boolean registerUserToGroup(String applicantUin, String referenceNumber) {
-        log.info("GroupApplicantListService ::: Start registerUserToGroup  applicantUin: {} ,  referenceNumber: {}",applicantUin,  referenceNumber);
+        log.info("GroupApplicantListService ::: Start registerUserToGroup  applicantUin: {} ,  referenceNumber: {}", applicantUin, referenceNumber);
         ApplicantGroupDto applicantGroup = applicantGroupService.getApplicantGroupByReferenceNumber(referenceNumber);
 
         if (applicantGroup != null) {
             Optional<JpaGroupApplicantList> groupApplicantListOptional = groupApplicantListRepository.findByApplicantUinAndApplicantGroupReferenceNumber(applicantUin, referenceNumber);
             if (!groupApplicantListOptional.isPresent()) {
                 GroupApplicantListDto groupApplicantListDto = GroupApplicantListDto.builder().applicantUin(applicantUin).applicantGroup(applicantGroup).build();
-                List<GroupApplicantListDto> groupList =new ArrayList<>();
+                List<GroupApplicantListDto> groupList = new ArrayList<>();
                 groupList.add(groupApplicantListDto);
                 applicantGroup.setGroupApplicantLists(groupList);
-                 save(groupApplicantListDto);
-                log.info("GroupApplicantListService ::: Finish registerUserToGroup  return : {}",true);
+                save(groupApplicantListDto);
+                log.info("GroupApplicantListService ::: Finish registerUserToGroup  return : {}", true);
                 return true;
             }
 
         }
-        log.info("GroupApplicantListService ::: Finish registerUserToGroup  return : {}",false);
+        log.info("GroupApplicantListService ::: Finish registerUserToGroup  return : {}", false);
         return false;
     }
 
+    /**
+     * will return all ApplicantVo values except lat and lng
+     */
     public List<ApplicantVo> findGroupApplicantListBySuin(String suin) {
-        log.info("GroupApplicantListService ::: Start findGroupApplicantListBySuin  suin: {}",suin);
+        log.info("GroupApplicantListService ::: Start findGroupApplicantListBySuin  suin: {}", suin);
         //return getMapper().fromEntityList(groupApplicantListRepository.findByApplicantGroupGroupLeaderDigitalIdsSuin(suin), mappingContext);
-        List<ApplicantVo> applicantLiteDtoList = groupApplicantListRepository.findApplicantDetailsWithLocationByGroupeLeaderSuin(suin);
+        List<ApplicantVo> applicantLiteDtoList = groupApplicantListRepository.findApplicantDetailsWithoutLocationByGroupeLeaderSuin(suin);
         //applicantLiteDtoList.removeAll(Collections.singleton(null));
-        log.info("GroupApplicantListService ::: Start findGroupApplicantListBySuin  applicantLiteDtoListSize: {}",applicantLiteDtoList.size());
+        log.info("GroupApplicantListService ::: Start findGroupApplicantListBySuin  applicantLiteDtoListSize: {}", applicantLiteDtoList.size());
+        return applicantLiteDtoList;
+    }
+
+    /**
+     * will return ApplicantVo only values uin, lat and lng
+     */
+    public List<ApplicantVo> findGroupApplicantsLastLocationsBySuin(String suin) {
+        log.info("GroupApplicantListService ::: Start findGroupApplicantsLastLocationsBySuin  suin: {}", suin);
+        List<ApplicantVo> applicantLiteDtoList = groupApplicantListRepository.findApplicantLocationsByGroupeLeaderSuin(suin);
+        //applicantLiteDtoList.removeAll(Collections.singleton(null));
+        log.info("GroupApplicantListService ::: Start findGroupApplicantsLastLocationsBySuin  applicantLiteDtoListSize: {}", applicantLiteDtoList.size());
         return applicantLiteDtoList;
     }
 }

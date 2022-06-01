@@ -120,6 +120,12 @@ public class JpaApplicant implements Serializable {
 
     private boolean deleted;
 
+    @Column(name = "emergency_contact_name")
+    private String emergencyContactName;
+
+    @Column(name = "emergency_contact_mobile_number")
+    private String emergencyContactMobileNumber;
+
     @PrePersist
     public void prePersist() {
         creationDate = new Date();

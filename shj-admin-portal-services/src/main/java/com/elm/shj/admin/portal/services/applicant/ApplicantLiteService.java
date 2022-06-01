@@ -3,13 +3,12 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
+
+import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantLiteRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
-import com.elm.shj.admin.portal.services.dto.ECardStatus;
-import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -129,5 +128,24 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
             log.info("Finish findApplicantRitualByUin found with FullNameEn:{}", applicantList.get(0).getFullNameEn());
             return  Optional.of(applicantList.get(0));
         }
+    }
+
+    public ApplicantEmergencyContactDto findApplicantEmergencyContactByApplicantId(String applicantUin){
+        ApplicantEmergencyContactDto applicantEmergencyContact =  applicantLiteRepository.findApplicantEmergencyContactByApplicantId(applicantUin);
+        return applicantEmergencyContact;
+    }
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public ApplicantEmergencyContactDto updateApplicantEmergencyContactByApplicantId(String applicantUin, ApplicantEmergencyContactDto applicantEmergencyContact) {
+
+        Optional<ApplicantLiteDto> applicant = findByUin(applicantUin);
+        if(applicant.isPresent()== false) {
+            return null;
+        }
+      int numberOfAffectedRows =   applicantLiteRepository.updateApplicantEmergencyContactByApplicantId(applicant.get().getId(), applicantEmergencyContact.getEmergencyContactName(),applicantEmergencyContact.getEmergencyContactMobileNumber());
+      if(numberOfAffectedRows == 1){
+
+      return applicantEmergencyContact;
+      }
+        return null;
     }
 }

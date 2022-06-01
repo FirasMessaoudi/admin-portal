@@ -1629,4 +1629,6 @@ GO
 ALTER TABLE shc_portal.shc_company ALTER COLUMN mission_id varchar(50);
 GO
 
-
+alter table shc_portal.shc_applicant add emergency_contact_name VARCHAR(255) null
+alter table shc_portal.shc_applicant add emergency_contact_mobile_number VARCHAR(15) null
+GO

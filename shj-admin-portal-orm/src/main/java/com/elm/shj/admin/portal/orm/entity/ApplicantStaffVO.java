@@ -36,8 +36,10 @@ public class ApplicantStaffVO implements Serializable {
     private String companyLabelAr;
     private int userType;
     private boolean isSameStaffGroup;
+    private String emergencyContactName;
+    private String emergencyContactMobileNumber;
 
-    public ApplicantStaffVO(String uin, String fullNameEn, String fullNameAr, String ritualTypeCode, String cardStatusCode, String photo, long applicantPackageId, String groupLeaderSuin, String groupLeaderMobileNumber, String groupLeaderMobileNumberInt, String companyLabelEn, String companyLabelAr) {
+    public ApplicantStaffVO(String uin, String fullNameEn, String fullNameAr, String ritualTypeCode, String cardStatusCode, String photo, long applicantPackageId, String groupLeaderSuin, String groupLeaderMobileNumber, String groupLeaderMobileNumberInt, String companyLabelEn, String companyLabelAr,  String emergencyContactName, String emergencyContactMobileNumber) {
         this.uin = uin;
         this.fullNameEn = fullNameEn;
         this.fullNameAr = fullNameAr;
@@ -50,6 +52,8 @@ public class ApplicantStaffVO implements Serializable {
         this.groupLeaderMobileNumberInt = groupLeaderMobileNumberInt;
         this.companyLabelEn = companyLabelEn;
         this.companyLabelAr = companyLabelAr;
+        this.emergencyContactName = emergencyContactName;
+        this.emergencyContactMobileNumber = emergencyContactMobileNumber;
     }
 
     public ApplicantStaffVO(String uin, String fullNameEn, String fullNameAr, String ritualTypeCode, String cardStatusCode, String photo, String companyLabelEn, String companyLabelAr) {

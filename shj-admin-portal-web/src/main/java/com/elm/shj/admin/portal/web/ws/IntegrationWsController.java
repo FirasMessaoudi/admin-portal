@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
+import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.company.*;
@@ -124,7 +125,7 @@ public class IntegrationWsController {
      */
     @PostMapping("/auth")
     public ResponseEntity<WsResponse<?>> login(@RequestBody Map<String, String> credentials, HttpServletRequest request, HttpServletResponse response) {
-        log.debug("Auth Webservice request handler");
+        log.info("start login");
 
         String callerType = request.getHeader(JwtTokenService.CALLER_TYPE_HEADER_NAME);
         if (callerType == null || !callerType.equals(JwtTokenService.WEB_SERVICE_CALLER_TYPE)) {
@@ -998,6 +999,32 @@ public class IntegrationWsController {
         log.info("find employees by code and type code");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.searchStaff(companyStaffFilterDto)).build());
 
+    }
+
+    @GetMapping("/applicant/emergency-contact/get/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findApplicantEmergencyContactByApplicantId(@PathVariable String applicantUin) {
+        ApplicantEmergencyContactDto applicantEmergencyContactByApplicantId = applicantLiteService.findApplicantEmergencyContactByApplicantId(applicantUin);
+        if (applicantEmergencyContactByApplicantId == null) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.NOT_FOUND_IN_ADMIN.getCode()).build()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantEmergencyContactByApplicantId).build());
+    }
+
+    @PutMapping("/applicant/emergency-contact/update/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> updateApplicantEmergencyContactByApplicantId(@PathVariable String applicantUin, @RequestBody ApplicantEmergencyContactDto applicantEmergencyContact) {
+
+        if (applicantEmergencyContact == null || applicantEmergencyContact.getEmergencyContactName() == null || applicantEmergencyContact.getEmergencyContactMobileNumber() == null ||
+                applicantEmergencyContact.getEmergencyContactName().trim().isEmpty() || applicantEmergencyContact.getEmergencyContactMobileNumber().trim().isEmpty()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).build()).build());
+        }
+        ApplicantEmergencyContactDto applicantEmergencyContactByApplicantId = applicantLiteService.updateApplicantEmergencyContactByApplicantId(applicantUin, applicantEmergencyContact);
+        if (applicantEmergencyContactByApplicantId == null) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.NOT_FOUND_IN_ADMIN.getCode()).build()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantEmergencyContactByApplicantId).build());
     }
 
 
