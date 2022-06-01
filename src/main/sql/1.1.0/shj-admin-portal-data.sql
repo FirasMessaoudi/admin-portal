@@ -1073,6 +1073,10 @@ INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
 VALUES (9, 'SERVICE_GROUP', 'ar', N'مكتب خدمة ميدانية');
 INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
 VALUES (10, 'SERVICE_GROUP', 'en', 'Service Group');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
+VALUES (11, 'GOVERNMENT_AGENCY', 'en', 'Emirate and ministry or other government agency');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)
+VALUES (12, 'GOVERNMENT_AGENCY', 'ar', N'إمارةأو وزارة أو هيئة أو جهة حكومية أخرى');
 SET
 IDENTITY_INSERT shc_portal.shc_company_type_lk OFF;
 GO
