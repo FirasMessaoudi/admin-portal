@@ -108,6 +108,7 @@ public class IntegrationWsController {
     private final ApplicantIncidentService applicantIncidentService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
+    private final CompanyTypeLookupService companyTypeLookupService;
     private final ChatContactService chatContactService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantPackageService applicantPackageService;
@@ -651,6 +652,17 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> listIncidentType() {
         log.debug("list incident type...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(incidentTypeLookupService.findAll()).build());
+    }
+
+    /**
+     * List all organizer type.
+     *
+     * @return WsResponse of organizer type list
+     */
+    @GetMapping("/organizer-type/list")
+    public ResponseEntity<WsResponse<?>> listOrganizerType() {
+        log.debug("list countries...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyTypeLookupService.findAll()).build());
     }
 
     @GetMapping("/housing/{uin}/{applicantPackageId}")
