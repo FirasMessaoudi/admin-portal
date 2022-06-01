@@ -54,7 +54,7 @@ public class JpaRitualPackage implements Serializable {
 
     @Column(name = "hajj_office_makkah")
     private String hajjOfficeMakkah;
-    @Column(name = "hajj_office_madine")
+    @Column(name = "hajj_office_madina")
     private String hajjOfficeMadina;
     @Column(name = "package_name_ar")
     private String packageNameAr;
