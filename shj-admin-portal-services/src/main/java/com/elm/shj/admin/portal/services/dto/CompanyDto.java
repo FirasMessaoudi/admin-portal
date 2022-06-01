@@ -88,6 +88,8 @@ public class CompanyDto {
     @CountryCode
     private String countryCode;
 
+    private String establishmentId;
+
     private Date creationDate;
     private Date updateDate;
 

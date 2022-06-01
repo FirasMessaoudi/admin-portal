@@ -1667,3 +1667,7 @@ GO
 alter table shc_portal.shc_package_transportation
     add route_details varchar(256) NULL;
 go
+
+alter table shc_portal.shc_company
+    add establishment_id varchar(45) NULL;
+go
