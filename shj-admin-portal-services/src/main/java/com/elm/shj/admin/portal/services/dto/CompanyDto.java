@@ -70,7 +70,7 @@ public class CompanyDto {
     private String crNumber;
 
     @CompanyTypeCode
-    private Integer typeCode;
+    private String typeCode;
 
     @CountryCode
     private String countryCode;
