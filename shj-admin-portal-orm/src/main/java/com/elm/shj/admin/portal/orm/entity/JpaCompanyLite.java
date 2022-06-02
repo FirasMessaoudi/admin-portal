@@ -39,4 +39,11 @@ public class JpaCompanyLite implements Serializable {
 
     @Column(name = "contact_number", nullable = false)
     private String contactNumber;
+
+    @Column(name = "type_code")
+    private String typeCode;
+    @Column(name = "mission_ref_code")
+    private Integer missionRefCode;
+    @Column(name = "establishment_ref_code")
+    private Integer establishmentRefCode;
 }

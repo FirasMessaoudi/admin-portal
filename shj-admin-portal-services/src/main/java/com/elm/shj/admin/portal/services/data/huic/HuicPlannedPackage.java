@@ -49,7 +49,7 @@ public class HuicPlannedPackage implements Serializable {
     @WithPackageType
     private Long packageTypeCode;
     @CompanyTypeCode
-    private Integer companyTypeCode;
+    private Long companyTypeCode;
     @EstablishmentCode
     private Long establishmentId;
 

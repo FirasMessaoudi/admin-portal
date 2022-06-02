@@ -53,7 +53,7 @@ public class HuicCompany implements Serializable {
     private Long crNumber;
 
     @CompanyTypeCode
-    private Integer companyTypeCode;
+    private Long companyTypeCode;
 
     @RitualTypeCode
     private Long ritualTypeCode;
