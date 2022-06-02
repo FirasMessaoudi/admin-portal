@@ -1763,3 +1763,13 @@ create table shc_portal.shc_inspector_readiness_survey_result
     CONSTRAINT fk_inspector_readiness_survey FOREIGN KEY (inspector_readiness_survey_id) REFERENCES shc_portal.shc_inspector_readiness_survey (id)
 );
 GO
+
+ALTER TABLE shc_portal.shc_country_lk
+DROP CONSTRAINT country_lk_unique;
+
+GO
+
+ALTER TABLE shc_portal.shc_country_lk DROP COLUMN nic_code;
+ALTER TABLE shc_portal.shc_country_lk ADD country_name_prefix VARCHAR(10);
+
+GO
