@@ -3,8 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.ws;
 
-import com.elm.shj.admin.portal.services.data.huicIntegration.ErrorResponse;
-import com.elm.shj.admin.portal.services.data.huicIntegration.ValidationService;
+import com.elm.shj.admin.portal.services.data.huic.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -40,28 +39,27 @@ public class DataRequestWsController {
     private final ValidationService validationService;
 
     @PostMapping(value = "/save-applicant-main-data")
-    public ResponseEntity<WsResponse<?>> saveApplicantMainData(@RequestBody List<ApplicantDto> applicantDtos) {
-        log.info("Start saveApplicantMainData ApplicantDtosSize {}", applicantDtos == null ? null : applicantDtos.size());
-        applicantDtos.forEach(applicantDto -> {
-            EMaritalStatus eMaritalStatus = applicantDto.getMaritalStatusCode() != null ? EMaritalStatus.fromId(Long.parseLong(applicantDto.getMaritalStatusCode())) : null;
-            applicantDto.setMaritalStatusCode(eMaritalStatus == null ? null : eMaritalStatus.name());
-            EGenderCode eGenderCode = applicantDto.getGender() != null ? EGenderCode.fromId(Long.parseLong(applicantDto.getGender())) : null;
-            applicantDto.setGender(eGenderCode == null ? null : eGenderCode.name());
-            ERitualType eRitualType = applicantDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(applicantDto.getRitualTypeCode())) : null;
-            applicantDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
-            applicantDto.getContacts().forEach(applicantContactDto -> {
-
-                List<String> languageList = Arrays.asList(applicantContactDto.getLanguageList().split(","));
-                StringBuilder languages = new StringBuilder();
-                languageList.forEach(language -> {
-                    ELanguageCode eLanguageCode = isNumeric(language) ? ELanguageCode.fromId(Long.parseLong(language)) : null;
-                    languages.append(eLanguageCode != null ? eLanguageCode.name() : "N/A");
-                    languages.append(",");
-                });
-                applicantContactDto.setLanguageList(languages.toString());
+    public ResponseEntity<WsResponse<?>> saveApplicantMainData(@RequestBody List<HuicApplicantMainData> huicApplicantMainDataList) {
+        log.info("Start saveApplicantMainData ApplicantDtosSize {}", huicApplicantMainDataList == null ? null : huicApplicantMainDataList.size());
+        huicApplicantMainDataList.forEach(huicApplicantMainData -> {
+            //mapping the received codes as numbers to the existing codes in our system
+            EMaritalStatus eMaritalStatus = huicApplicantMainData.getMaritalStatus() != null ? EMaritalStatus.fromId(Long.parseLong(huicApplicantMainData.getMaritalStatus())) : null;
+            huicApplicantMainData.setMaritalStatus(eMaritalStatus == null ? null : eMaritalStatus.name());
+            EGenderCode eGenderCode = huicApplicantMainData.getGender() != null ? EGenderCode.fromId(Long.parseLong(huicApplicantMainData.getGender())) : null;
+            huicApplicantMainData.setGender(eGenderCode == null ? null : eGenderCode.name());
+            ERitualType eRitualType = huicApplicantMainData.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(huicApplicantMainData.getRitualTypeCode())) : null;
+            huicApplicantMainData.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
+            List<String> languageList = Arrays.asList(huicApplicantMainData.getLanguageList().split(","));
+            StringBuilder languages = new StringBuilder();
+            languageList.forEach(language -> {
+                ELanguageCode eLanguageCode = isNumeric(language) ? ELanguageCode.fromId(Long.parseLong(language)) : null;
+                languages.append(eLanguageCode != null ? eLanguageCode.name() : "N/A");
+                languages.append(",");
             });
+            huicApplicantMainData.setLanguageList(languages.toString());
+
         });
-        List<ErrorResponse> errorResponses = validationService.validateData(applicantDtos);
+        List<ErrorResponse> errorResponses = validationService.validateData(huicApplicantMainDataList);
 
         if (!errorResponses.isEmpty()) {
             log.info("Finish saveApplicantMainData {}, errorResponses: {}", "FAILURE", errorResponses);
@@ -241,7 +239,7 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-companies")
-    public ResponseEntity<WsResponse<?>> saveCompanies(@RequestBody List<CompanyDto> companies) {
+    public ResponseEntity<WsResponse<?>> saveCompanies(@RequestBody List<HuicCompany> companies) {
         log.info("Start saveCompanies CompanyDtosSize: {}", companies == null ? null : companies.size());
         companies.forEach(companyDto -> {
             ERitualType eRitualType = companyDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(companyDto.getRitualTypeCode())) : null;
@@ -260,12 +258,30 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-planned-packages")
-    public ResponseEntity<WsResponse<?>> savePlannedPackages() {
+    public ResponseEntity<WsResponse<?>> savePlannedPackages(@RequestBody List<HuicPlannedPackage> ritualPackageDtos) {
         log.info("Start savePlannedPackages");
-        List<ErrorResponse> errorResponses = validationService.validateData(new ArrayList<>());
+        ritualPackageDtos.forEach(packageDto -> {
+            ERitualType eRitualType = packageDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(packageDto.getRitualTypeCode())) : null;
+            packageDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
+            EPackageType ePackageType = packageDto.getPackageTypeCode() != null ? EPackageType.fromId(Long.parseLong(packageDto.getPackageTypeCode())) : null;
+            packageDto.setPackageTypeCode(eRitualType == null ? null : ePackageType.name());
+            packageDto.getPackageHousings().forEach(packageHousingDto -> {
+                packageHousingDto.getPackageCaterings().forEach(packageCateringDto -> {
+                    EMealType eMealType = packageCateringDto.getMealType() != null ? EMealType.fromId(Long.parseLong(packageCateringDto.getMealType())) : null;
+                    packageCateringDto.setMealType(eMealType == null ? null : eMealType.name());
+                    EMealTime eMealTime = packageCateringDto.getType() != null ? EMealTime.fromId(Long.parseLong(packageCateringDto.getType())) : null;
+                    packageCateringDto.setType(eMealTime == null ? null : eMealTime.name());
+                });
+            });
+            packageDto.getPackageTransportations().forEach(packageTransportationDto -> {
+                ETransportationType eTransportationType = packageTransportationDto.getTypeCode() != null ? ETransportationType.fromId(Long.parseLong(packageTransportationDto.getTypeCode())) : null;
+                packageTransportationDto.setTypeCode(eTransportationType == null ? null : eTransportationType.name());
+            });
+        });
+        List<ErrorResponse> errorResponses = validationService.validateData(ritualPackageDtos);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish savePlannedPackages {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish savePlannedPackages {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }

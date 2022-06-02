@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
  * @author Ahmed Ali
  * @since 1.1.0
  */
-public enum ERPackageType {
+public enum EPackageType {
     ECONOMIC(1),
     NORMAL(2),
     VIP(3);
     private final long id;
 
-    ERPackageType(long id) {
+    EPackageType(long id) {
         this.id = id;
     }
 
@@ -29,8 +29,8 @@ public enum ERPackageType {
         return this.id;
     }
 
-    public static ERPackageType fromId(long id) {
-        List<ERPackageType> result = Arrays.stream(ERPackageType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
-        return (ERPackageType) CollectionUtils.get(result, 0);
+    public static EPackageType fromId(long id) {
+        List<EPackageType> result = Arrays.stream(EPackageType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
+        return (EPackageType) CollectionUtils.get(result, 0);
     }
 }

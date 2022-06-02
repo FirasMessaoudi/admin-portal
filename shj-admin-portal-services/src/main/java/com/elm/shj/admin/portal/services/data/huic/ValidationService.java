@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021 ELM. All rights reserved.
  */
-package com.elm.shj.admin.portal.services.data.huicIntegration;
+package com.elm.shj.admin.portal.services.data.huic;
 
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
@@ -70,6 +70,7 @@ public class ValidationService {
     private final HousingMasterRepository housingMasterRepository;
     private final CompanyRepository companyRepository;
     private final CompanyRitualSeasonRepository companyRitualSeasonRepository;
+    private final RitualPackageService ritualPackageService;
 
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {
@@ -91,8 +92,8 @@ public class ValidationService {
                 errorResponses.add(errorResponse);
 
             } else {
-                if (items.get(i).getClass().isAssignableFrom(ApplicantDto.class)) {
-                    saveApplicantsMainData((ApplicantDto) items.get(i), errorResponses, i);
+                if (items.get(i).getClass().isAssignableFrom(HuicApplicantMainData.class)) {
+                    saveApplicantsMainData((HuicApplicantMainData) items.get(i), errorResponses, i);
                 }
                 if (items.get(i).getClass().isAssignableFrom(ApplicantRitualDto.class)) {
                     saveApplicantRitual((ApplicantRitualDto) items.get(i));
@@ -121,8 +122,11 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(HousingMasterDto.class)) {
                     saveHousingMasterData((HousingMasterDto) items.get(i));
                 }
-                if (items.get(i).getClass().isAssignableFrom(CompanyDto.class)) {
-                    saveCompanies((CompanyDto) items.get(i));
+                if (items.get(i).getClass().isAssignableFrom(HuicCompany.class)) {
+                    saveCompanies((HuicCompany) items.get(i));
+                }
+                if (items.get(i).getClass().isAssignableFrom(HuicPlannedPackage.class)) {
+                    savePlannedPackages((HuicPlannedPackage) items.get(i));
                 }
             }
 
@@ -132,10 +136,92 @@ public class ValidationService {
         return errorResponses;
     }
 
-    private void saveCompanies(CompanyDto companyDto) {
-        companyDto.setCode(companyDto.getCode() + "_" + companyDto.getTypeCode());
+    private void savePlannedPackages(HuicPlannedPackage plannedPackage) {
+        RitualPackageDto ritualPackageDto = RitualPackageDto.builder()
+                .referenceNumber(plannedPackage.getPackageRefNumber())
+                .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah())
+                .hajjOfficeMadina(plannedPackage.getHajjOfficeMadina())
+                .packageNameAr(plannedPackage.getPackageNameArabic())
+                .packageNameEn(plannedPackage.getPackageNameEnglish())
+                .packageTypeCode(plannedPackage.getPackageTypeCode())
+                .startDate(plannedPackage.getPackageStartDate())
+                .endDate(plannedPackage.getPackageEndDate())
+                .build();
+        List<PackageHousingDto> packageHousingDtos = new ArrayList<>();
+        plannedPackage.getPackageHousings().forEach(huicPackageHousing -> {
+            JpaHousingMaster housingMaster = housingMasterRepository.findByHousingReferenceCode(huicPackageHousing.getRefNumber());
+            PackageHousingDto packageHousing = PackageHousingDto.builder()
+                    .typeCode(housingMaster.getTypeCode())
+                    .siteCode(housingMaster.getSiteCode())
+                    .referenceNumber(huicPackageHousing.getRefNumber())
+                    .categoryCode(housingMaster.getCategoryCode())
+                    .locationNameAr(housingMaster.getLocationNameAr())
+                    .locationNameEn(housingMaster.getLocationNameEn())
+                    .validityEnd(huicPackageHousing.getValidityStart())
+                    .validityEnd(huicPackageHousing.getValidityEnd())
+                    .isDefault(huicPackageHousing.isDefault())
+                    .lat(housingMaster.getLat())
+                    .lng(housingMaster.getLng())
+                    .build();
+            List<PackageCateringDto> packageCateringDtos = new ArrayList<>();
+            huicPackageHousing.getPackageCaterings().forEach(huicPackageCatering -> {
+                PackageCateringDto packageCateringDto = PackageCateringDto.builder()
+                        .mealCode(huicPackageCatering.getMealCode())
+                        .mealTimeCode(huicPackageCatering.getType())
+                        .mealTypeCode(huicPackageCatering.getMealType())
+                        .descriptionAr(huicPackageCatering.getOptionDescriptionAr())
+                        .descriptionEn(huicPackageCatering.getOptionDescriptionEn())
+                        .isDefault(huicPackageCatering.isDefault())
+                        .build();
+                packageCateringDtos.add(packageCateringDto);
+            });
+            packageHousing.setPackageCatering(packageCateringDtos);
+            packageHousingDtos.add(packageHousing);
+        });
+        ritualPackageDto.setPackageHousings(packageHousingDtos);
+        List<PackageTransportationDto> packageTransportationDtos = new ArrayList<>();
+        plannedPackage.getPackageTransportations().forEach(huicPackageTransportation -> {
+            PackageTransportationDto packageTransportationDto = PackageTransportationDto.builder()
+                    .typeCode(huicPackageTransportation.getTypeCode())
+                    .locationFromNameAr(huicPackageTransportation.getLocationFromNameAr())
+                    .locationFromNameEn(huicPackageTransportation.getLocationFromNameEn())
+                    .locationToNameAr(huicPackageTransportation.getLocationToNameAr())
+                    .locationToNameEn(huicPackageTransportation.getLocationToNameEn())
+                    .validityStart(huicPackageTransportation.getValidityStart())
+                    .validityEnd(huicPackageTransportation.getValidityEnd())
+                    .routeDetails(huicPackageTransportation.getRouteDetails())
+                    .build();
+            packageTransportationDtos.add(packageTransportationDto);
+
+        });
+        ritualPackageDto.setPackageTransportations(packageTransportationDtos);
+        //ritualPackageDto.setCompanyRefCode(ritualPackageDto.getCompanyRefCode()+"_"+ritualPackageDto.getCompanyTypeCode());
+        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(plannedPackage.getCompanyRefCode() + "_" + plannedPackage.getCompanyTypeCode(), plannedPackage.getRitualTypeCode(), plannedPackage.getSeasonYear());
+        if (companyRitualSeasonDto != null) {
+            ritualPackageDto.setCompanyRitualSeason(companyRitualSeasonDto);
+
+        }
+        ritualPackageService.save(ritualPackageDto);
+    }
+
+    private void saveCompanies(HuicCompany huicCompany) {
+        CompanyDto companyDto = CompanyDto.builder()
+                .code(huicCompany.getCompanyRefCode() + "_" + huicCompany.getCompanyTypeCode())
+                .labelAr(huicCompany.getCompanyNameAr())
+                .labelEn(huicCompany.getCompanyNameEn())
+                .missionId(huicCompany.getMissionId())
+                .contactNumber(huicCompany.getCompanyContactNumber())
+                .website(huicCompany.getWebsite())
+                .email(huicCompany.getCompanyEmail())
+                .moiNumber(huicCompany.getMoiNumber())
+                .crNumber(huicCompany.getCrNumber())
+                .typeCode(huicCompany.getCompanyTypeCode())
+                .countryCode(huicCompany.getCountry())
+                .establishmentRefCode(huicCompany.getEstablishmentId())
+                .build();
+
         JpaCompany savedCompany = companyRepository.save((JpaCompany) findMapper(CompanyDto.class).toEntity(companyDto, mappingContext));
-        Optional<JpaRitualSeason> ritualSeason = ritualSeasonRepository.findByRitualTypeCodeAndSeasonYear(companyDto.getRitualTypeCode(), companyDto.getSeason());
+        Optional<JpaRitualSeason> ritualSeason = ritualSeasonRepository.findByRitualTypeCodeAndSeasonYear(huicCompany.getRitualTypeCode(), huicCompany.getSeasonYear());
         if (ritualSeason.isPresent()) {
             JpaCompanyRitualSeason companyRitualSeason = new JpaCompanyRitualSeason();
             companyRitualSeason.setCompany(savedCompany);
@@ -260,22 +346,51 @@ public class ValidationService {
 
     }
 
-    private void saveApplicantsMainData(ApplicantDto applicant, List<ErrorResponse> errorResponses, int rowNumber) {
+    private void saveApplicantsMainData(HuicApplicantMainData huicApplicantMainData, List<ErrorResponse> errorResponses, int rowNumber) {
+        ApplicantDto applicant = ApplicantDto.builder().gender(huicApplicantMainData.getGender())
+                .nationalityCode(huicApplicantMainData.getNationality())
+                .idNumber(huicApplicantMainData.getIdNumber())
+                .idNumberOriginal(huicApplicantMainData.getNationalIdOriginalCountry())
+                .passportNumber(huicApplicantMainData.getPassportNo())
+                .dateOfBirthGregorian(huicApplicantMainData.getDateOfBirth())
+                .dateOfBirthHijri(huicApplicantMainData.getDateOfBirthHijri())
+                .fullNameAr(huicApplicantMainData.getFullNameEn())
+                .fullNameOrigin(huicApplicantMainData.getFullNameOriginalLang())
+                .maritalStatusCode(huicApplicantMainData.getMaritalStatus())
+                .photo(huicApplicantMainData.getPhoto())
+                .biometricDataFace(huicApplicantMainData.getBiometricDataFace())
+                .biometricDataFinger(huicApplicantMainData.getBiometricDataFP())
+                .educationLevelCode(huicApplicantMainData.getQualification())
+                .packageReferenceNumber(huicApplicantMainData.getPackageRefNumber())
+                .build();
+        ApplicantContactDto applicantContactDto = ApplicantContactDto.builder()
+                .languageList(huicApplicantMainData.getLanguageList())
+                .email(huicApplicantMainData.getEmail())
+                .localMobileNumber(huicApplicantMainData.getMobileNumber())
+                .intlMobileNumber(huicApplicantMainData.getMobileNumberIntl())
+                .countryCode(huicApplicantMainData.getCountry())
+                .streetName(huicApplicantMainData.getStreet())
+                .districtName(huicApplicantMainData.getDistrict())
+                .cityName(huicApplicantMainData.getCity())
+                .buildingNumber(huicApplicantMainData.getBuildingNo())
+                .postalCode(huicApplicantMainData.getPostalCode())
+                .build();
+        applicant.setContacts(Collections.singletonList(applicantContactDto));
         updateApplicantBirthDate(applicant);
         applicant.setDateOfBirthGregorian(updateDate(applicant.getDateOfBirthGregorian()));
         Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
-        if (applicant.getStatus() == null) {
-            applicant.setStatus(1);
+        if (huicApplicantMainData.getStatus() == null) {
+            huicApplicantMainData.setStatus(1);
         }
         // if record exists already in DB we need to update it
         if (existingApplicantId != null) {
-            if (applicant.getStatus() == 2) {
+            if (huicApplicantMainData.getStatus() == 2) {
                 updateExistingApplicant(applicant, existingApplicantId);
-            } else if (applicant.getStatus() == 3) {
+            } else if (huicApplicantMainData.getStatus() == 3) {
                 applicant.setDeleted(true);
                 applicantService.save(applicant);
                 return;
-            } else if (applicant.getStatus() == 1) {
+            } else if (huicApplicantMainData.getStatus() == 1) {
                 ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.setRowNumber(rowNumber + 1);
                 errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30001", "Please enter a valid value. Same value cannot be repeated within the previous registered records"));
@@ -283,7 +398,7 @@ public class ValidationService {
                 return;
             }
         } else {
-            if (applicant.getStatus() == 2 || applicant.getStatus() == 3) {
+            if (huicApplicantMainData.getStatus() == 2 || huicApplicantMainData.getStatus() == 3) {
                 ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.setRowNumber(rowNumber + 1);
                 errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30002", "No main record found for the input data to update the related sub record"));

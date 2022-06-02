@@ -42,8 +42,11 @@ public class JpaPackageCatering implements Serializable {
     @Column(name = "meal_description", length = 256)
     private String mealDescription;
 
-    @Column(name = "type", length = 45)
-    private String type;
+    @Column(name = "meal_time_code", length = 45, nullable = false)
+    private String mealTimeCode;
+
+    @Column(name = "meal_type_code", length = 45, nullable = false)
+    private String mealTypeCode;
 
     @Column(name = "description_ar", length = 250)
     private String descriptionAr;
