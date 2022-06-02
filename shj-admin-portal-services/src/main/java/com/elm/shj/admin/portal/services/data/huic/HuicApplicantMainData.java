@@ -127,5 +127,5 @@ public class HuicApplicantMainData implements Serializable {
 
     private String establishmentId;
     private String serviceGroupMakkahId;
-    private String serviceGroupMadina;
+    private String serviceGroupMadinaId;
 }
