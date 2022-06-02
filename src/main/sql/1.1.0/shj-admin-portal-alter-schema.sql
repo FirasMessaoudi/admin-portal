@@ -1757,9 +1757,14 @@ create table shc_portal.shc_inspector_readiness_survey_result
     id                            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
     inspector_readiness_survey_id int           NOT NULL,
     question_code                 varchar(20)   NOT NULL,
-    rate                          int           NULL,
+    rate                          int NULL,
     creation_date                 smalldatetime NOT NULL default current_timestamp,
     update_date                   smalldatetime null,
     CONSTRAINT fk_inspector_readiness_survey FOREIGN KEY (inspector_readiness_survey_id) REFERENCES shc_portal.shc_inspector_readiness_survey (id)
 );
 GO
+
+alter table shc_portal.shc_company
+alter
+column label_ar varchar(256)
+go
