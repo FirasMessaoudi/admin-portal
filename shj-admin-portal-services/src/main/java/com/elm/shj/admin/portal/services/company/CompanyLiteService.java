@@ -3,11 +3,14 @@ package com.elm.shj.admin.portal.services.company;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyLite;
 import com.elm.shj.admin.portal.orm.repository.CompanyLiteRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyLiteDto;
+import com.elm.shj.admin.portal.services.dto.ECompanyType;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Service handling company lite
@@ -30,6 +33,10 @@ public class CompanyLiteService extends GenericService<JpaCompanyLite, CompanyLi
      */
     public boolean existsByCode(String companyCode) {
         return companyLiteRepository.existsByCode(companyCode);
+    }
+
+    List<CompanyLiteDto> findEstablishmentCompanies() {
+        return mapList(companyLiteRepository.findByTypeCode(ECompanyType.ESTABLISHMENT.name()));
     }
 
 }

@@ -38,4 +38,5 @@ public class CompanyService extends GenericService<JpaCompany, CompanyLiteDto, L
     }
 
 
+
 }
