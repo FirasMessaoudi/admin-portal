@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
+import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.company.*;
@@ -108,6 +109,7 @@ public class IntegrationWsController {
     private final ApplicantIncidentService applicantIncidentService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
+    private final CompanyTypeLookupService companyTypeLookupService;
     private final ChatContactService chatContactService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantPackageService applicantPackageService;
@@ -653,6 +655,17 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(incidentTypeLookupService.findAll()).build());
     }
 
+    /**
+     * List all organizer type.
+     *
+     * @return WsResponse of organizer type list
+     */
+    @GetMapping("/organizer-type/list")
+    public ResponseEntity<WsResponse<?>> listOrganizerType() {
+        log.debug("list countries...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyTypeLookupService.findAll()).build());
+    }
+
     @GetMapping("/housing/{uin}/{applicantPackageId}")
     public ResponseEntity<WsResponse<?>> findCampLocation(@PathVariable long uin, @PathVariable long applicantPackageId) {
         log.debug("Camp Location ...");
@@ -1028,5 +1041,31 @@ public class IntegrationWsController {
                     .body(cmd).build());
         }
     }
+    @GetMapping("/applicant/emergency-contact/get/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findApplicantEmergencyContactByApplicantId(@PathVariable String applicantUin) {
+        ApplicantEmergencyContactDto applicantEmergencyContactByApplicantId = applicantLiteService.findApplicantEmergencyContactByApplicantId(applicantUin);
+        if (applicantEmergencyContactByApplicantId == null) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.NOT_FOUND_IN_ADMIN.getCode()).build()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantEmergencyContactByApplicantId).build());
+    }
+
+    @PutMapping("/applicant/emergency-contact/update/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> updateApplicantEmergencyContactByApplicantId(@PathVariable String applicantUin, @RequestBody ApplicantEmergencyContactDto applicantEmergencyContact) {
+
+        if (applicantEmergencyContact == null || applicantEmergencyContact.getEmergencyContactName() == null || applicantEmergencyContact.getEmergencyContactMobileNumber() == null ||
+                applicantEmergencyContact.getEmergencyContactName().trim().isEmpty() || applicantEmergencyContact.getEmergencyContactMobileNumber().trim().isEmpty()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.INVALID_INPUT.getCode()).build()).build());
+        }
+        ApplicantEmergencyContactDto applicantEmergencyContactByApplicantId = applicantLiteService.updateApplicantEmergencyContactByApplicantId(applicantUin, applicantEmergencyContact);
+        if (applicantEmergencyContactByApplicantId == null) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.NOT_FOUND_IN_ADMIN.getCode()).build()).build());
+        }
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantEmergencyContactByApplicantId).build());
+    }
+
 
 }

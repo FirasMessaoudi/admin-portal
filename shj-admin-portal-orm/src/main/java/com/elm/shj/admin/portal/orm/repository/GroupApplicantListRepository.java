@@ -17,9 +17,15 @@ public interface GroupApplicantListRepository extends JpaRepository<JpaGroupAppl
 
     List<JpaGroupApplicantList> findByApplicantGroupGroupLeaderDigitalIdsSuin(String suin);
 
-    @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantVo(a.fullNameAr, a.fullNameEn, adi.uin, a.photo, l.latitude , l.longitude,a.idNumber,a.passportNumber) From JpaGroupApplicantList g " +
+
+    @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantVo(a.fullNameAr, a.fullNameEn, adi.uin, a.photo,a.idNumber,a.passportNumber) From JpaGroupApplicantList g " +
+            "JOIN g.applicantGroup ag JOIN ag.groupLeader gl JOIN gl.digitalIds di JOIN JpaApplicantDigitalId adi ON adi.uin = g.applicantUin JOIN JpaApplicant a ON adi.applicantId = a.id WHERE di.suin = :suin "
+            )
+    List<ApplicantVo> findApplicantDetailsWithoutLocationByGroupeLeaderSuin(@Param("suin") String suin);
+
+    @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantVo(adi.uin, l.latitude , l.longitude) From JpaGroupApplicantList g " +
             "JOIN g.applicantGroup ag JOIN ag.groupLeader gl JOIN gl.digitalIds di JOIN JpaApplicantDigitalId adi ON adi.uin = g.applicantUin JOIN JpaApplicant a ON adi.applicantId = a.id LEFT JOIN JpaUserLocation l ON l.userId = adi.uin WHERE di.suin = :suin " +
             "AND ( l IS NULL or l.gpsTime = (SELECT MAX(ul.gpsTime) FROM JpaUserLocation ul WHERE ul.userId  = adi.uin))")
-    List<ApplicantVo> findApplicantDetailsWithLocationByGroupeLeaderSuin(@Param("suin") String suin);
+    List<ApplicantVo> findApplicantLocationsByGroupeLeaderSuin(@Param("suin") String suin);
 
 }

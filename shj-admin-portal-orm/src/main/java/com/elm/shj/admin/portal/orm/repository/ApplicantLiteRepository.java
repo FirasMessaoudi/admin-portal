@@ -3,10 +3,12 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.ApplicantVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -45,7 +47,7 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO ( applicantDigitalId.uin, applicant.fullNameEn, applicant.fullNameAr, " +
             "ritualSeason.ritualTypeCode, card.statusCode, applicant.photo, " +
-            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr  ) " +
+            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr,applicant.emergencyContactName, applicant.emergencyContactMobileNumber  ) " +
             "FROM JpaApplicantCard card " +
             "INNER JOIN card.applicantRitual ritual  " +
             "INNER JOIN ritual.applicant applicant " +
@@ -72,7 +74,7 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO ( applicantDigitalId.uin, applicant.fullNameEn, applicant.fullNameAr, " +
             "ritualSeason.ritualTypeCode, card.statusCode, applicant.photo, " +
-            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr  ) " +
+            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr,applicant.emergencyContactName, applicant.emergencyContactMobileNumber  ) " +
             "FROM JpaApplicantCard card " +
             "INNER JOIN card.applicantRitual ritual  " +
             "INNER JOIN ritual.applicant applicant " +
@@ -95,12 +97,12 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
     )
     List<ApplicantStaffVO> findApplicantRitualByUin(@Param("uin") String uin, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
 
-    @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantVo(a.fullNameAr, a.fullNameEn, adi.uin, a.photo, l.latitude , l.longitude,a.idNumber,a.passportNumber) From JpaApplicant a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id LEFT JOIN JpaUserLocation l ON l.userId = adi.uin WHERE adi.uin = :uin order by l.creationDate desc")
-    List<ApplicantVo> findApplicantDetailsWithLocationByUin(@Param("uin") String uin);
+   /* @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantVo(a.fullNameAr, a.fullNameEn, adi.uin, a.photo, l.latitude , l.longitude,a.idNumber,a.passportNumber) From JpaApplicant a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id LEFT JOIN JpaUserLocation l ON l.userId = adi.uin WHERE adi.uin = :uin order by l.creationDate desc")
+    List<ApplicantVo> findApplicantDetailsWithLocationByUin(@Param("uin") String uin);*/
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO ( applicantDigitalId.uin, applicant.fullNameEn, applicant.fullNameAr, " +
             "ritualSeason.ritualTypeCode, card.statusCode, applicant.photo, " +
-            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr  ) " +
+            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr,applicant.emergencyContactName, applicant.emergencyContactMobileNumber  ) " +
             "FROM JpaApplicantCard card " +
             "INNER JOIN card.applicantRitual ritual  " +
             "INNER JOIN ritual.applicant applicant " +
@@ -120,4 +122,12 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
             "order by applicantPackage.startDate desc, applicantPackage.creationDate desc "
     )
     List<ApplicantStaffVO> findApplicantRitualByUinAndCardId(@Param("uin") String uin, @Param("cardId") long cardId);
+
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto(a.emergencyContactName,a.emergencyContactMobileNumber) from JpaApplicant a " +
+            "join JpaApplicantDigitalId digitalId on digitalId.applicantId = a.id where digitalId.uin = :applicantUin ")
+    ApplicantEmergencyContactDto findApplicantEmergencyContactByApplicantId(@Param("applicantUin") String applicantUin);
+
+    @Modifying
+    @Query("update JpaApplicant set emergencyContactName= :emergencyContactName, emergencyContactMobileNumber= :emergencyContactMobileNumber where id= :applicantId")
+    int updateApplicantEmergencyContactByApplicantId(@Param("applicantId") long applicantId,@Param("emergencyContactName") String emergencyContactName,@Param("emergencyContactMobileNumber") String emergencyContactMobileNumber);
 }

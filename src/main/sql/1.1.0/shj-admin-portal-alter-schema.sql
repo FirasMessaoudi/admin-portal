@@ -1687,3 +1687,12 @@ GO
 EXEC sp_rename 'shc_portal.shc_package_catering.type', 'meal_time_code', 'COLUMN';
 GO
 
+
+alter table shc_portal.shc_company
+    alter column code varchar(50) not null
+go
+
+
+alter table shc_portal.shc_applicant add emergency_contact_name VARCHAR(255) null
+alter table shc_portal.shc_applicant add emergency_contact_mobile_number VARCHAR(15) null
+GO
