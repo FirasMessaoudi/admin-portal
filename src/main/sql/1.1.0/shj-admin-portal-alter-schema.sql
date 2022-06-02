@@ -1697,6 +1697,18 @@ alter table shc_portal.shc_applicant add emergency_contact_name VARCHAR(255) nul
 alter table shc_portal.shc_applicant add emergency_contact_mobile_number VARCHAR(15) null
 GO
 
+if not exists(select * from sys.tables where name = 'shc_readiness_survey_question_lk')
+create table shc_portal.shc_readiness_survey_question_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(100) NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT readiness_survey_question_lk_unique unique (code ASC, lang ASC)
+);
+GO
+
 if not exists(select * from sys.tables where name = 'shc_inspector_readiness_survey')
 CREATE TABLE shc_portal.shc_inspector_readiness_survey
 (
@@ -1708,18 +1720,6 @@ CREATE TABLE shc_portal.shc_inspector_readiness_survey
     establishment_company_code varchar(20),
     service_group_company_code varchar(20),
     creation_date              smalldatetime NOT NULL DEFAULT current_timestamp
-);
-GO
-
-if not exists(select * from sys.tables where name = 'shc_readiness_survey_question_lk')
-create table shc_portal.shc_readiness_survey_question_lk
-(
-    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
-    code          varchar(20)   NOT NULL,
-    lang          varchar(45)   NOT NULL,
-    label         nvarchar(100) NOT NULL,
-    creation_date smalldatetime NOT NULL default current_timestamp,
-    CONSTRAINT survey_question_lk_unique unique (code ASC, lang ASC)
 );
 GO
 
