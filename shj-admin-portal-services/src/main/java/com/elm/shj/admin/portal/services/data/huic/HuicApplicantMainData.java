@@ -32,14 +32,13 @@ public class HuicApplicantMainData implements Serializable {
     private static final long serialVersionUID = 1068726443812588470L;
 
     @Gender
-    private String gender;
+    private Long gender;
     @CountryCode
-    private String nationality;
+    private Long nationality;
 
     @UniquePerRequest
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
-    @CellIndex(index = 0)
-    private String idNumber;
+    private Long idNumber;
 
     @IdNumber(minLength = 5, maxLength = 50)
     private String nationalIdOriginalCountry;
@@ -63,7 +62,7 @@ public class HuicApplicantMainData implements Serializable {
     private String fullNameOriginalLang;
 
     @MaritalStatusCode
-    private String maritalStatus;
+    private Long maritalStatus;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     private String photo;
@@ -92,7 +91,7 @@ public class HuicApplicantMainData implements Serializable {
     private String mobileNumberIntl;
 
     @CountryCode
-    private String country;
+    private Long country;
 
     @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
     @NullOrNotBlank(min = 3, max = 100)
@@ -122,17 +121,17 @@ public class HuicApplicantMainData implements Serializable {
     @ApplicantStatus
     private Integer status;
     @RitualTypeCode
-    private String ritualTypeCode;
+    private Long ritualTypeCode;
     @SeasonYear
     private int seasonYear;
 
-    private String establishmentId;
-    private String serviceGroupMakkahId;
-    private String serviceGroupMadinaId;
+    private Long establishmentId;
+    private Long serviceGroupMakkahId;
+    private Long serviceGroupMadinaId;
 
     public static ApplicantBasicInfoDto fromHuicApplicant(HuicApplicantMainData applicant) {
         ApplicantBasicInfoDto applicantBasicInfo = new ApplicantBasicInfoDto();
-        applicantBasicInfo.setIdNumber(applicant.getIdNumber());
+        applicantBasicInfo.setIdNumber(applicant.getIdNumber().toString());
         applicantBasicInfo.setPassportNumber(applicant.getPassportNo());
         applicantBasicInfo.setDateOfBirthGregorian(applicant.getDateOfBirth());
         applicantBasicInfo.setDateOfBirthHijri(applicant.getDateOfBirthHijri());

@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
+import com.elm.shj.admin.portal.services.dto.ERelativeRelationship;
 import com.elm.shj.admin.portal.services.lookup.RelativeRelationshipLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,7 +26,11 @@ public class RelationshipCodeValidator implements ConstraintValidator<Relationsh
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value == null || relationshipLookupService.existsByCode(value.toString().toUpperCase());
+        if (value.getClass().isAssignableFrom(String.class)) {
+            return value == null || relationshipLookupService.existsByCode(value.toString().toUpperCase());
+        } else {
+            return value == null || ERelativeRelationship.fromId((Long) value) != null;
+        }
     }
 
 }

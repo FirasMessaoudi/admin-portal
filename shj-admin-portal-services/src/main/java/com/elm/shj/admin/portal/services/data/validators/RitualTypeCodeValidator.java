@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
+import com.elm.shj.admin.portal.services.dto.ERitualType;
 import com.elm.shj.admin.portal.services.lookup.RitualTypeLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,7 +26,11 @@ public class RitualTypeCodeValidator implements ConstraintValidator<RitualTypeCo
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value != null && ritualTypeLookupService.existsByCode(value.toString().toUpperCase());
+        if (value.getClass().isAssignableFrom(String.class)) {
+            return value != null && ritualTypeLookupService.existsByCode(value.toString().toUpperCase());
+        } else {
+            return value != null && ERitualType.fromId((Long) value) != null;
+        }
     }
 
 }

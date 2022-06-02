@@ -42,8 +42,8 @@ public class JpaCompany implements Serializable {
     @Column(name = "label_en")
     private String labelEn;
 
-    @Column(name = "mission_id")
-    private String missionId;
+    @Column(name = "mission_ref_code")
+    private Integer missionRefCode;
 
     @Column(name = "contact_number")
     private String contactNumber;
@@ -73,7 +73,7 @@ public class JpaCompany implements Serializable {
     private String crNumber;
 
     @Column(name = "type_code")
-    private Integer typeCode;
+    private String typeCode;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;

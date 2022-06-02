@@ -23,9 +23,9 @@ public class HuicPackageCatering implements Serializable {
     private String mealCode;
 
     @WithMealTime
-    private String type;
+    private Long mealTime;
     @WithMealType
-    private String mealType;
+    private Long mealType;
 
     private String optionDescriptionAr;
 

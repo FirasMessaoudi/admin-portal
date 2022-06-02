@@ -3,9 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
+import com.elm.shj.admin.portal.services.dto.EMealTime;
 import com.elm.shj.admin.portal.services.lookup.MealTimeLookupService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
@@ -26,10 +26,10 @@ public class WithMealTimeValidator implements ConstraintValidator<WithMealTime, 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
 
-        if (value == null || StringUtils.isBlank(value.toString())) {
+        if (value == null) {
             return false;
         } else {
-            return mealTimeLookupService.existsByCode(value.toString());
+            return EMealTime.fromId((Long) value) != null;
         }
     }
 }

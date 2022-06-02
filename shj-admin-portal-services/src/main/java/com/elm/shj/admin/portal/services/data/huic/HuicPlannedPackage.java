@@ -1,9 +1,7 @@
 package com.elm.shj.admin.portal.services.data.huic;
 
 import com.elm.dcc.foundation.commons.validation.ArabicCharacters;
-import com.elm.shj.admin.portal.services.data.validators.CompanyTypeCode;
-import com.elm.shj.admin.portal.services.data.validators.RitualTypeCode;
-import com.elm.shj.admin.portal.services.data.validators.SeasonYear;
+import com.elm.shj.admin.portal.services.data.validators.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -28,14 +26,12 @@ public class HuicPlannedPackage implements Serializable {
     private static final long serialVersionUID = -8577691725500853641L;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @Pattern(regexp = "([0-9]+)"
-            , message = "validation.data.constraints.msg.20003")
-    private String packageRefNumber;
+
+    private Long packageRefNumber;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @Pattern(regexp = "([0-9]+)"
-            , message = "validation.data.constraints.msg.20003")
-    private String companyRefCode;
+
+    private Long companyRefCode;
 
     @Pattern(regexp = "(^[a-zA-Z0-9]*)"
             , message = "validation.data.constraints.msg.20003")
@@ -49,10 +45,13 @@ public class HuicPlannedPackage implements Serializable {
             , message = "validation.data.constraints.msg.20003")
     private String packageNameEnglish;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
-    private String packageTypeCode;
+
+    @WithPackageType
+    private Long packageTypeCode;
     @CompanyTypeCode
     private Integer companyTypeCode;
+    @EstablishmentCode
+    private Long establishmentId;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
 
@@ -62,7 +61,7 @@ public class HuicPlannedPackage implements Serializable {
     private Date packageEndDate;
 
     @RitualTypeCode
-    private String ritualTypeCode;
+    private Long ritualTypeCode;
     @SeasonYear
     private int seasonYear;
 

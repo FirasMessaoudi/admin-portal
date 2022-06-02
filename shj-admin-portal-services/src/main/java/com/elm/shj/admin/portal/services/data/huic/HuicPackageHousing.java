@@ -25,7 +25,7 @@ public class HuicPackageHousing implements Serializable {
     private static final long serialVersionUID = -645928154124537718L;
     @NotNull(message = "validation.data.constraints.msg.20001")
     @WithHousingMaster
-    private String refNumber;
+    private Long refNumber;
     @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "validation.data.constraints.msg.20001")
     private Date validityStart;

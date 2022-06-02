@@ -3,9 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
+import com.elm.shj.admin.portal.services.dto.ETransportationType;
 import com.elm.shj.admin.portal.services.lookup.TransportationTypeLookupService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
@@ -26,10 +26,10 @@ public class WithTransportationTypeValidator implements ConstraintValidator<With
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
 
-        if (value == null || StringUtils.isBlank(value.toString())) {
+        if (value == null) {
             return false;
         } else {
-            return transportationTypeLookupService.existsByCode(value.toString());
+            return ETransportationType.fromId((Long) value) != null;
         }
     }
 }

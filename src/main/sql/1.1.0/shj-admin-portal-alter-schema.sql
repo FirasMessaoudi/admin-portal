@@ -1689,10 +1689,41 @@ GO
 
 
 alter table shc_portal.shc_company
-    alter column code varchar(50) not null
+alter
+column code varchar(50) not null
 go
 
 
-alter table shc_portal.shc_applicant add emergency_contact_name VARCHAR(255) null
-alter table shc_portal.shc_applicant add emergency_contact_mobile_number VARCHAR(15) null
+alter table shc_portal.shc_applicant
+    add emergency_contact_name VARCHAR(255) null
+alter table shc_portal.shc_applicant
+    add emergency_contact_mobile_number VARCHAR(15) null
 GO
+
+alter table shc_portal.shc_company
+alter
+column label_ar nvarchar(256)
+go
+alter table shc_portal.shc_company
+alter
+column label_en nvarchar(256)
+
+go
+alter table shc_portal.shc_company
+alter
+column contact_number varchar(45) null
+go
+
+EXEC sp_rename 'shc_portal.shc_company.mission_id', 'mission_ref_code', 'COLUMN';
+GO
+
+alter table shc_portal.shc_company
+alter
+column mission_ref_code int null
+go
+
+alter table shc_portal.shc_company
+alter
+column type_code varchar (45) null
+go
+

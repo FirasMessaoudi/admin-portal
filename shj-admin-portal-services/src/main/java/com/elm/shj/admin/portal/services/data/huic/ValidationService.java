@@ -142,27 +142,27 @@ public class ValidationService {
     @Transactional
     void savePlannedPackages(HuicPlannedPackage plannedPackage) {
         RitualPackageDto ritualPackageDto = RitualPackageDto.builder()
-                .referenceNumber(plannedPackage.getPackageRefNumber())
+                .referenceNumber(plannedPackage.getPackageRefNumber().toString())
                 .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah())
                 .hajjOfficeMadina(plannedPackage.getHajjOfficeMadina())
                 .packageNameAr(plannedPackage.getPackageNameArabic())
                 .packageNameEn(plannedPackage.getPackageNameEnglish())
-                .packageTypeCode(plannedPackage.getPackageTypeCode())
+                .packageTypeCode(EPackageType.fromId(plannedPackage.getPackageTypeCode()).name())
                 .startDate(plannedPackage.getPackageStartDate())
                 .endDate(plannedPackage.getPackageEndDate())
                 .build();
-        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(plannedPackage.getCompanyRefCode() + "_" + plannedPackage.getCompanyTypeCode(), plannedPackage.getRitualTypeCode(), plannedPackage.getSeasonYear());
+        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(plannedPackage.getCompanyRefCode() + "_" + ECompanyType.fromId(plannedPackage.getCompanyTypeCode()).name(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
         if (companyRitualSeasonDto != null) {
             ritualPackageDto.setCompanyRitualSeason(companyRitualSeasonDto);
 
         }
         RitualPackageDto savedRitualPackage = ritualPackageService.save(ritualPackageDto);
         plannedPackage.getPackageHousings().forEach(huicPackageHousing -> {
-            JpaHousingMaster housingMaster = housingMasterRepository.findByHousingReferenceCode(huicPackageHousing.getRefNumber());
+            JpaHousingMaster housingMaster = housingMasterRepository.findByHousingReferenceCode(huicPackageHousing.getRefNumber().toString());
             PackageHousingDto packageHousing = PackageHousingDto.builder()
                     .typeCode(housingMaster.getTypeCode())
                     .siteCode(housingMaster.getSiteCode())
-                    .referenceNumber(huicPackageHousing.getRefNumber())
+                    .referenceNumber(huicPackageHousing.getRefNumber().toString())
                     .categoryCode(housingMaster.getCategoryCode())
                     .locationNameAr(housingMaster.getLocationNameAr())
                     .locationNameEn(housingMaster.getLocationNameEn())
@@ -179,8 +179,8 @@ public class ValidationService {
             huicPackageHousing.getPackageCaterings().forEach(huicPackageCatering -> {
                 PackageCateringDto packageCateringDto = PackageCateringDto.builder()
                         .mealCode(huicPackageCatering.getMealCode())
-                        .mealTimeCode(huicPackageCatering.getType())
-                        .mealTypeCode(huicPackageCatering.getMealType())
+                        .mealTimeCode(EMealTime.fromId(huicPackageCatering.getMealTime()).name())
+                        .mealTypeCode(EMealType.fromId(huicPackageCatering.getMealType()).name())
                         .descriptionAr(huicPackageCatering.getOptionDescriptionAr())
                         .descriptionEn(huicPackageCatering.getOptionDescriptionEn())
                         .isDefault(huicPackageCatering.isDefault())
@@ -192,7 +192,7 @@ public class ValidationService {
 
         plannedPackage.getPackageTransportations().forEach(huicPackageTransportation -> {
             PackageTransportationDto packageTransportationDto = PackageTransportationDto.builder()
-                    .typeCode(huicPackageTransportation.getTypeCode())
+                    .typeCode(ETransportationType.fromId(huicPackageTransportation.getTypeCode()).name())
                     .locationFromNameAr(huicPackageTransportation.getLocationFromNameAr())
                     .locationFromNameEn(huicPackageTransportation.getLocationFromNameEn())
                     .locationToNameAr(huicPackageTransportation.getLocationToNameAr())
@@ -210,22 +210,22 @@ public class ValidationService {
 
     private void saveCompanies(HuicCompany huicCompany) {
         CompanyDto companyDto = CompanyDto.builder()
-                .code(huicCompany.getCompanyRefCode() + "_" + huicCompany.getCompanyTypeCode())
+                .code(huicCompany.getCompanyRefCode() + "_" + ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
                 .labelAr(huicCompany.getCompanyNameAr())
                 .labelEn(huicCompany.getCompanyNameEn())
-                .missionId(huicCompany.getMissionId())
-                .contactNumber(huicCompany.getCompanyContactNumber())
+                .missionRefCode(huicCompany.getMissionId())
+                .contactNumber(huicCompany.getCompanyContactNumber().toString())
                 .website(huicCompany.getWebsite())
                 .email(huicCompany.getCompanyEmail())
-                .moiNumber(huicCompany.getMoiNumber())
-                .crNumber(huicCompany.getCrNumber())
-                .typeCode(huicCompany.getCompanyTypeCode())
-                .countryCode(huicCompany.getCountry())
+                .moiNumber(huicCompany.getMoiNumber().toString())
+                .crNumber(huicCompany.getCrNumber().toString())
+                .typeCode(ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
+                .countryCode(huicCompany.getCountry().toString())
                 .establishmentRefCode(huicCompany.getEstablishmentId())
                 .build();
 
         JpaCompany savedCompany = companyRepository.save((JpaCompany) findMapper(CompanyDto.class).toEntity(companyDto, mappingContext));
-        Optional<JpaRitualSeason> ritualSeason = ritualSeasonRepository.findByRitualTypeCodeAndSeasonYear(huicCompany.getRitualTypeCode(), huicCompany.getSeasonYear());
+        Optional<JpaRitualSeason> ritualSeason = ritualSeasonRepository.findByRitualTypeCodeAndSeasonYear(ERitualType.fromId(huicCompany.getRitualTypeCode()).name(), huicCompany.getSeasonYear());
         if (ritualSeason.isPresent()) {
             JpaCompanyRitualSeason companyRitualSeason = new JpaCompanyRitualSeason();
             companyRitualSeason.setCompany(savedCompany);
@@ -351,16 +351,18 @@ public class ValidationService {
     }
 
     private void saveApplicantsMainData(HuicApplicantMainData huicApplicantMainData, List<ErrorResponse> errorResponses, int rowNumber) {
-        ApplicantDto applicant = ApplicantDto.builder().gender(huicApplicantMainData.getGender())
-                .nationalityCode(huicApplicantMainData.getNationality())
-                .idNumber(huicApplicantMainData.getIdNumber())
+        //TODO: handle the rest of the fields(ritualType,establishment...)
+        ApplicantDto applicant = ApplicantDto.builder()
+                .gender(EGenderCode.fromId(huicApplicantMainData.getGender()).name())
+                .nationalityCode(huicApplicantMainData.getNationality().toString())
+                .idNumber(huicApplicantMainData.getIdNumber().toString())
                 .idNumberOriginal(huicApplicantMainData.getNationalIdOriginalCountry())
                 .passportNumber(huicApplicantMainData.getPassportNo())
                 .dateOfBirthGregorian(huicApplicantMainData.getDateOfBirth())
                 .dateOfBirthHijri(huicApplicantMainData.getDateOfBirthHijri())
                 .fullNameAr(huicApplicantMainData.getFullNameEn())
                 .fullNameOrigin(huicApplicantMainData.getFullNameOriginalLang())
-                .maritalStatusCode(huicApplicantMainData.getMaritalStatus())
+                .maritalStatusCode(EMaritalStatus.fromId(huicApplicantMainData.getMaritalStatus()).name())
                 .photo(huicApplicantMainData.getPhoto())
                 .biometricDataFace(huicApplicantMainData.getBiometricDataFace())
                 .biometricDataFinger(huicApplicantMainData.getBiometricDataFP())
@@ -372,7 +374,7 @@ public class ValidationService {
                 .email(huicApplicantMainData.getEmail())
                 .localMobileNumber(huicApplicantMainData.getMobileNumber())
                 .intlMobileNumber(huicApplicantMainData.getMobileNumberIntl())
-                .countryCode(huicApplicantMainData.getCountry())
+                .countryCode(huicApplicantMainData.getCountry().toString())
                 .streetName(huicApplicantMainData.getStreet())
                 .districtName(huicApplicantMainData.getDistrict())
                 .cityName(huicApplicantMainData.getCity())

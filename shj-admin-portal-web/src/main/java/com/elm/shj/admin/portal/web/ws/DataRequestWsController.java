@@ -43,12 +43,6 @@ public class DataRequestWsController {
         log.info("Start saveApplicantMainData ApplicantDtosSize {}", huicApplicantMainDataList == null ? null : huicApplicantMainDataList.size());
         huicApplicantMainDataList.forEach(huicApplicantMainData -> {
             //mapping the received codes as numbers to the existing codes in our system
-            EMaritalStatus eMaritalStatus = huicApplicantMainData.getMaritalStatus() != null ? EMaritalStatus.fromId(Long.parseLong(huicApplicantMainData.getMaritalStatus())) : null;
-            huicApplicantMainData.setMaritalStatus(eMaritalStatus == null ? null : eMaritalStatus.name());
-            EGenderCode eGenderCode = huicApplicantMainData.getGender() != null ? EGenderCode.fromId(Long.parseLong(huicApplicantMainData.getGender())) : null;
-            huicApplicantMainData.setGender(eGenderCode == null ? null : eGenderCode.name());
-            ERitualType eRitualType = huicApplicantMainData.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(huicApplicantMainData.getRitualTypeCode())) : null;
-            huicApplicantMainData.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
             List<String> languageList = Arrays.asList(huicApplicantMainData.getLanguageList().split(","));
             StringBuilder languages = new StringBuilder();
             languageList.forEach(language -> {
@@ -241,10 +235,6 @@ public class DataRequestWsController {
     @PostMapping(value = "/save-companies")
     public ResponseEntity<WsResponse<?>> saveCompanies(@RequestBody List<HuicCompany> companies) {
         log.info("Start saveCompanies CompanyDtosSize: {}", companies == null ? null : companies.size());
-        companies.forEach(companyDto -> {
-            ERitualType eRitualType = companyDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(companyDto.getRitualTypeCode())) : null;
-            companyDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
-        });
         List<ErrorResponse> errorResponses = validationService.validateData(companies);
 
         if (!errorResponses.isEmpty()) {
@@ -260,24 +250,6 @@ public class DataRequestWsController {
     @PostMapping(value = "/save-planned-packages")
     public ResponseEntity<WsResponse<?>> savePlannedPackages(@RequestBody List<HuicPlannedPackage> ritualPackageDtos) {
         log.info("Start savePlannedPackages");
-        ritualPackageDtos.forEach(packageDto -> {
-            ERitualType eRitualType = packageDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(packageDto.getRitualTypeCode())) : null;
-            packageDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
-            EPackageType ePackageType = packageDto.getPackageTypeCode() != null ? EPackageType.fromId(Long.parseLong(packageDto.getPackageTypeCode())) : null;
-            packageDto.setPackageTypeCode(eRitualType == null ? null : ePackageType.name());
-            packageDto.getPackageHousings().forEach(packageHousingDto -> {
-                packageHousingDto.getPackageCaterings().forEach(packageCateringDto -> {
-                    EMealType eMealType = packageCateringDto.getMealType() != null ? EMealType.fromId(Long.parseLong(packageCateringDto.getMealType())) : null;
-                    packageCateringDto.setMealType(eMealType == null ? null : eMealType.name());
-                    EMealTime eMealTime = packageCateringDto.getType() != null ? EMealTime.fromId(Long.parseLong(packageCateringDto.getType())) : null;
-                    packageCateringDto.setType(eMealTime == null ? null : eMealTime.name());
-                });
-            });
-            packageDto.getPackageTransportations().forEach(packageTransportationDto -> {
-                ETransportationType eTransportationType = packageTransportationDto.getTypeCode() != null ? ETransportationType.fromId(Long.parseLong(packageTransportationDto.getTypeCode())) : null;
-                packageTransportationDto.setTypeCode(eTransportationType == null ? null : eTransportationType.name());
-            });
-        });
         List<ErrorResponse> errorResponses = validationService.validateData(ritualPackageDtos);
 
         if (!errorResponses.isEmpty()) {

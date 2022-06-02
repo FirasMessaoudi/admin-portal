@@ -24,7 +24,7 @@ public class HuicPackageTransportation implements Serializable {
     private static final long serialVersionUID = -8214844201380607365L;
 
     @WithTransportationType
-    private String typeCode;
+    private Long typeCode;
     @Pattern(regexp = "(^[a-zA-Z0-9]*)"
             , message = "validation.data.constraints.msg.20003")
     private String locationFromNameAr;

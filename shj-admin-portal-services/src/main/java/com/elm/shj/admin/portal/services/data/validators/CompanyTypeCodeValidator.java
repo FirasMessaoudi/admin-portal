@@ -3,10 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
+import com.elm.shj.admin.portal.services.dto.ECompanyType;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Validator for {@link CompanyTypeCode} annotation
@@ -16,14 +16,13 @@ import java.util.List;
  */
 public class CompanyTypeCodeValidator implements ConstraintValidator<CompanyTypeCode, Object> {
 
-    private final static List<String> COMPANY_TYPES = Arrays.asList("1", "2", "3", "4", "5");
 
     /**
      * {@inheritDoc}
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value != null && COMPANY_TYPES.stream().anyMatch(value.toString()::equalsIgnoreCase);
+        return value != null && ECompanyType.fromId((Long) value) != null;
     }
 
 }

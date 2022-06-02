@@ -1124,3 +1124,67 @@ VALUES (6, 'DINNER', 'en', 'Dinner');
 SET
 IDENTITY_INSERT shc_portal.shc_meal_time_type_lk OFF;
 GO
+
+
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en,establishment_ref_code)
+VALUES (1,N'شركة مطوفي حجاج دول جنوب شرق آسيا', 'Company of Pilgrims of South Est Asia countries',1);
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
+VALUES (2, N'ششركة مطوفي حجاج دول جنوب آسيا', 'Company of Pilgrims of South Asia countries', 1);
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
+VALUES (3, N'شركة مطوفي حجاج الدول الأفريقية غير العربية', 'Company of Pilgrims of Africa non Arabic countries', 1);
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
+VALUES (4, N'شركة مطوفي حجاج الدولة العربية', 'Company of Pilgrims of Arabic countries', 1);
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
+VALUES (5, N'شركة مطوفي حجاج تركيا، وحجاج أوروبا وأمريكا وأستراليا',
+        'Company of Pilgrims of Turkey Muslims of Europe America and Australia', 1);
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
+VALUES (6, N'شركة مطوفي حجاج إيران', 'Company of Pilgrims of Iran', 1);
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
+VALUES (7, N'شركة الأدلاء', 'Company Adela', 1);
+go
+
+delete
+from shc_portal.shc_housing_type_lk
+where id > 0;
+go
+SET IDENTITY_INSERT shc_portal.shc_housing_type_lk ON;
+INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
+VALUES (1, 'CAMP', 'ar', N'مخيم');
+INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
+VALUES (2, 'CAMP', 'en', 'Camp');
+INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
+VALUES (3, 'HOTEL', 'ar', N'فندق');
+INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
+VALUES (4, 'HOTEL', 'en', 'Hotel');
+INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
+VALUES (5, 'BUILDING', 'ar', N'عمارة ');
+INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
+VALUES (6, 'BUILDING', 'en', 'Building');
+SET
+IDENTITY_INSERT shc_portal.shc_housing_type_lk OFF;
+GO
+
+delete
+from shc_portal.shc_housing_category_lk
+where id > 0;
+go
+SET IDENTITY_INSERT shc_portal.shc_housing_category_lk ON;
+INSERT INTO shc_portal.shc_housing_category_lk (id, code, lang, label)
+VALUES (1, 'A', 'ar', N'أ');
+INSERT INTO shc_portal.shc_housing_category_lk (id, code, lang, label)
+VALUES (2, 'A', 'en', 'A');
+INSERT INTO shc_portal.shc_housing_category_lk (id, code, lang, label)
+VALUES (3, 'B', 'ar', N'ب');
+INSERT INTO shc_portal.shc_housing_category_lk (id, code, lang, label)
+VALUES (4, 'B', 'en', 'B');
+INSERT INTO shc_portal.shc_housing_category_lk (id, code, lang, label)
+VALUES (5, 'C', 'ar', N'ج ');
+INSERT INTO shc_portal.shc_housing_category_lk (id, code, lang, label)
+VALUES (6, 'C', 'en', 'C');
+INSERT INTO shc_portal.shc_housing_category_lk (id, code, lang, label)
+VALUES (7, 'D', 'ar', N'د ');
+INSERT INTO shc_portal.shc_housing_category_lk (id, code, lang, label)
+VALUES (8, 'D', 'en', 'D');
+SET
+IDENTITY_INSERT shc_portal.shc_housing_category_lk OFF;
+GO

@@ -3,8 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.services.data.validators.CompanyTypeCode;
-import com.elm.shj.admin.portal.services.data.validators.CountryCode;
 import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
 import lombok.*;
@@ -45,8 +43,7 @@ public class CompanyDto {
     @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
     private String labelEn;
 
-    @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
-    private String missionId;
+    private Integer missionRefCode;
 
     @NullOrNotBlank(min = 5, max = 20)
     @Pattern(regexp = "([0-9]+)"
@@ -69,10 +66,8 @@ public class CompanyDto {
             , message = "validation.data.constraints.msg.20003")
     private String crNumber;
 
-    @CompanyTypeCode
-    private Integer typeCode;
+    private String typeCode;
 
-    @CountryCode
     private String countryCode;
 
     private Integer establishmentRefCode;

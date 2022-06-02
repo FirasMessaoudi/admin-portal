@@ -3,25 +3,21 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.dto.EMealType;
-import com.elm.shj.admin.portal.services.lookup.MealTypeLookupService;
+import com.elm.shj.admin.portal.services.dto.EPackageType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * Validator for {@link WithMealType} annotation
+ * Validator for {@link WithPackageType} annotation
  *
  * @author f.messaoudi
  * @since 1.1.0
  */
 @Slf4j
-public class WithMealTypeValidator implements ConstraintValidator<WithMealType, Object> {
+public class WithPackageTypeValidator implements ConstraintValidator<WithPackageType, Object> {
 
-    @Autowired
-    private MealTypeLookupService mealTypeLookupService;
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
@@ -29,7 +25,7 @@ public class WithMealTypeValidator implements ConstraintValidator<WithMealType, 
         if (value == null) {
             return false;
         } else {
-            return EMealType.fromId((Long) value) != null;
+            return EPackageType.fromId((Long) value) != null;
         }
     }
 }
