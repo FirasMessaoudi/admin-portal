@@ -766,15 +766,12 @@ create table shc_portal.shc_ritual_group
 );
 GO
 
-DELETE FROM shc_portal.shc_country_lk where id > 0;
-GO
-
 ALTER TABLE shc_portal.shc_country_lk
 DROP CONSTRAINT country_lk_unique;
 
 GO
 
 ALTER TABLE shc_portal.shc_country_lk DROP COLUMN nic_code;
-ALTER TABLE shc_portal.shc_country_lk ADD country_name_prefix VARCHAR;
+ALTER TABLE shc_portal.shc_country_lk ADD country_name_prefix VARCHAR(10);
 
 GO
