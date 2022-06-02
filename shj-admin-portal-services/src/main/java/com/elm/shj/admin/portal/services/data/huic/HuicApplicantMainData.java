@@ -2,6 +2,7 @@ package com.elm.shj.admin.portal.services.data.huic;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -19,8 +20,8 @@ import java.util.Date;
  */
 @UniqueApplicant
 @FieldDependency.List({
-        @FieldDependency(first = "idNumber", second = "passportNumber"),
-        @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri")
+        @FieldDependency(first = "idNumber", second = "passportNo"),
+        @FieldDependency(first = "dateOfBirth", second = "dateOfBirthHijri")
 })
 @NoArgsConstructor
 @AllArgsConstructor
@@ -128,4 +129,13 @@ public class HuicApplicantMainData implements Serializable {
     private String establishmentId;
     private String serviceGroupMakkahId;
     private String serviceGroupMadinaId;
+
+    public static ApplicantBasicInfoDto fromHuicApplicant(HuicApplicantMainData applicant) {
+        ApplicantBasicInfoDto applicantBasicInfo = new ApplicantBasicInfoDto();
+        applicantBasicInfo.setIdNumber(applicant.getIdNumber());
+        applicantBasicInfo.setPassportNumber(applicant.getPassportNo());
+        applicantBasicInfo.setDateOfBirthGregorian(applicant.getDateOfBirth());
+        applicantBasicInfo.setDateOfBirthHijri(applicant.getDateOfBirthHijri());
+        return applicantBasicInfo;
+    }
 }

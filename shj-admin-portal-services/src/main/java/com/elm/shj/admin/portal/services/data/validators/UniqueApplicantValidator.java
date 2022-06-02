@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.data.validators;
 
 import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
+import com.elm.shj.admin.portal.services.data.huic.HuicApplicantMainData;
 import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import lombok.extern.slf4j.Slf4j;
@@ -33,10 +34,14 @@ public class UniqueApplicantValidator implements ConstraintValidator<UniqueAppli
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        if (value == null || !value.getClass().isAssignableFrom(ApplicantDto.class)) {
+        if (value == null || (!value.getClass().isAssignableFrom(ApplicantDto.class)) && !value.getClass().isAssignableFrom(HuicApplicantMainData.class)) {
             return false;
         }
         // applicant should not exist or override flag should be true
-        return overrideApplicantData || !applicantLiteService.existsByBasicInfo(ApplicantBasicInfoDto.fromApplicant((ApplicantDto) value));
+        if (value.getClass().isAssignableFrom(ApplicantDto.class)) {
+            return overrideApplicantData || !applicantLiteService.existsByBasicInfo(ApplicantBasicInfoDto.fromApplicant((ApplicantDto) value));
+        } else {
+            return overrideApplicantData || !applicantLiteService.existsByBasicInfo(HuicApplicantMainData.fromHuicApplicant((HuicApplicantMainData) value));
+        }
     }
 }

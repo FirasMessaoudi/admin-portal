@@ -71,6 +71,9 @@ public class ValidationService {
     private final CompanyRepository companyRepository;
     private final CompanyRitualSeasonRepository companyRitualSeasonRepository;
     private final RitualPackageService ritualPackageService;
+    private final PackageHousingService packageHousingService;
+    private final PackageCateringService packageCateringService;
+    private final PackageTransportationService packageTransportationService;
 
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {
@@ -136,7 +139,8 @@ public class ValidationService {
         return errorResponses;
     }
 
-    private void savePlannedPackages(HuicPlannedPackage plannedPackage) {
+    @Transactional
+    void savePlannedPackages(HuicPlannedPackage plannedPackage) {
         RitualPackageDto ritualPackageDto = RitualPackageDto.builder()
                 .referenceNumber(plannedPackage.getPackageRefNumber())
                 .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah())
@@ -147,7 +151,12 @@ public class ValidationService {
                 .startDate(plannedPackage.getPackageStartDate())
                 .endDate(plannedPackage.getPackageEndDate())
                 .build();
-        List<PackageHousingDto> packageHousingDtos = new ArrayList<>();
+        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(plannedPackage.getCompanyRefCode() + "_" + plannedPackage.getCompanyTypeCode(), plannedPackage.getRitualTypeCode(), plannedPackage.getSeasonYear());
+        if (companyRitualSeasonDto != null) {
+            ritualPackageDto.setCompanyRitualSeason(companyRitualSeasonDto);
+
+        }
+        RitualPackageDto savedRitualPackage = ritualPackageService.save(ritualPackageDto);
         plannedPackage.getPackageHousings().forEach(huicPackageHousing -> {
             JpaHousingMaster housingMaster = housingMasterRepository.findByHousingReferenceCode(huicPackageHousing.getRefNumber());
             PackageHousingDto packageHousing = PackageHousingDto.builder()
@@ -157,13 +166,16 @@ public class ValidationService {
                     .categoryCode(housingMaster.getCategoryCode())
                     .locationNameAr(housingMaster.getLocationNameAr())
                     .locationNameEn(housingMaster.getLocationNameEn())
-                    .validityEnd(huicPackageHousing.getValidityStart())
+                    .validityStart(huicPackageHousing.getValidityStart())
                     .validityEnd(huicPackageHousing.getValidityEnd())
+                    .addressAr(housingMaster.getAddressAr())
+                    .addressEn(housingMaster.getAddressEn())
                     .isDefault(huicPackageHousing.isDefault())
                     .lat(housingMaster.getLat())
                     .lng(housingMaster.getLng())
+                    .ritualPackage(savedRitualPackage)
                     .build();
-            List<PackageCateringDto> packageCateringDtos = new ArrayList<>();
+            PackageHousingDto savedPackageHousing = packageHousingService.save(packageHousing);
             huicPackageHousing.getPackageCaterings().forEach(huicPackageCatering -> {
                 PackageCateringDto packageCateringDto = PackageCateringDto.builder()
                         .mealCode(huicPackageCatering.getMealCode())
@@ -172,14 +184,12 @@ public class ValidationService {
                         .descriptionAr(huicPackageCatering.getOptionDescriptionAr())
                         .descriptionEn(huicPackageCatering.getOptionDescriptionEn())
                         .isDefault(huicPackageCatering.isDefault())
+                        .packageHousing(savedPackageHousing)
                         .build();
-                packageCateringDtos.add(packageCateringDto);
+                packageCateringService.save(packageCateringDto);
             });
-            packageHousing.setPackageCatering(packageCateringDtos);
-            packageHousingDtos.add(packageHousing);
         });
-        ritualPackageDto.setPackageHousings(packageHousingDtos);
-        List<PackageTransportationDto> packageTransportationDtos = new ArrayList<>();
+
         plannedPackage.getPackageTransportations().forEach(huicPackageTransportation -> {
             PackageTransportationDto packageTransportationDto = PackageTransportationDto.builder()
                     .typeCode(huicPackageTransportation.getTypeCode())
@@ -190,18 +200,12 @@ public class ValidationService {
                     .validityStart(huicPackageTransportation.getValidityStart())
                     .validityEnd(huicPackageTransportation.getValidityEnd())
                     .routeDetails(huicPackageTransportation.getRouteDetails())
+                    .ritualPackage(savedRitualPackage)
                     .build();
-            packageTransportationDtos.add(packageTransportationDto);
+            packageTransportationService.save(packageTransportationDto);
 
         });
-        ritualPackageDto.setPackageTransportations(packageTransportationDtos);
-        //ritualPackageDto.setCompanyRefCode(ritualPackageDto.getCompanyRefCode()+"_"+ritualPackageDto.getCompanyTypeCode());
-        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(plannedPackage.getCompanyRefCode() + "_" + plannedPackage.getCompanyTypeCode(), plannedPackage.getRitualTypeCode(), plannedPackage.getSeasonYear());
-        if (companyRitualSeasonDto != null) {
-            ritualPackageDto.setCompanyRitualSeason(companyRitualSeasonDto);
 
-        }
-        ritualPackageService.save(ritualPackageDto);
     }
 
     private void saveCompanies(HuicCompany huicCompany) {
