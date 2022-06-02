@@ -36,7 +36,6 @@ public class HuicPackageTransportation implements Serializable {
     @Pattern(regexp = "(^[a-zA-Z0-9]*)"
             , message = "validation.data.constraints.msg.20003")
     private String locationToNameEn;
-    private String ritualStepCode;
     private Date validityStart;
     private Date validityEnd;
     @OnlyCharacters(min = 0, max = 256)

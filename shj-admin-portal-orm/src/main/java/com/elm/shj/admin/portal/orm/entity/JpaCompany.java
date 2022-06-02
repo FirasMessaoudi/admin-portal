@@ -85,7 +85,7 @@ public class JpaCompany implements Serializable {
     private String countryCode;
 
     @Column(name = "establishment_ref_code")
-    private int establishmentRefCode;
+    private Integer establishmentRefCode;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "company")
     private List<JpaCompanyRitualSeason> companyRitualSeasons;

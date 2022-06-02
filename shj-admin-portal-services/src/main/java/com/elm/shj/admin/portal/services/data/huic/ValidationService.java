@@ -196,7 +196,7 @@ public class ValidationService {
         });
         ritualPackageDto.setPackageTransportations(packageTransportationDtos);
         //ritualPackageDto.setCompanyRefCode(ritualPackageDto.getCompanyRefCode()+"_"+ritualPackageDto.getCompanyTypeCode());
-        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(plannedPackage.getCompanyRefCode(), plannedPackage.getRitualTypeCode(), plannedPackage.getSeasonYear());
+        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(plannedPackage.getCompanyRefCode() + "_" + plannedPackage.getCompanyTypeCode(), plannedPackage.getRitualTypeCode(), plannedPackage.getSeasonYear());
         if (companyRitualSeasonDto != null) {
             ritualPackageDto.setCompanyRitualSeason(companyRitualSeasonDto);
 
