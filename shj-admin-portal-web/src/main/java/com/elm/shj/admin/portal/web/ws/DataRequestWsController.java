@@ -42,15 +42,16 @@ public class DataRequestWsController {
     public ResponseEntity<WsResponse<?>> saveApplicantMainData(@RequestBody List<HuicApplicantMainData> huicApplicantMainDataList) {
         log.info("Start saveApplicantMainData ApplicantDtosSize {}", huicApplicantMainDataList == null ? null : huicApplicantMainDataList.size());
         huicApplicantMainDataList.forEach(huicApplicantMainData -> {
-            //mapping the received codes as numbers to the existing codes in our system
-            List<String> languageList = Arrays.asList(huicApplicantMainData.getLanguageList().split(","));
-            StringBuilder languages = new StringBuilder();
-            languageList.forEach(language -> {
-                ELanguageCode eLanguageCode = isNumeric(language) ? ELanguageCode.fromId(Long.parseLong(language)) : null;
-                languages.append(eLanguageCode != null ? eLanguageCode.name() : "N/A");
-                languages.append(",");
-            });
-            huicApplicantMainData.setLanguageList(languages.toString());
+            if (huicApplicantMainData.getLanguageList() != null) {
+                List<String> languageList = Arrays.asList(huicApplicantMainData.getLanguageList().split(","));
+                StringBuilder languages = new StringBuilder();
+                languageList.forEach(language -> {
+                    ELanguageCode eLanguageCode = isNumeric(language) ? ELanguageCode.fromId(Long.parseLong(language)) : null;
+                    languages.append(eLanguageCode != null ? eLanguageCode.name() : "N/A");
+                    languages.append(",");
+                });
+                huicApplicantMainData.setLanguageList(languages.toString());
+            }
 
         });
         List<ErrorResponse> errorResponses = validationService.validateData(huicApplicantMainDataList);

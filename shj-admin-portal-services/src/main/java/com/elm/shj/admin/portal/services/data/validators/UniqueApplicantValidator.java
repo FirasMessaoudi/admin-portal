@@ -41,7 +41,7 @@ public class UniqueApplicantValidator implements ConstraintValidator<UniqueAppli
         if (value.getClass().isAssignableFrom(ApplicantDto.class)) {
             return overrideApplicantData || !applicantLiteService.existsByBasicInfo(ApplicantBasicInfoDto.fromApplicant((ApplicantDto) value));
         } else {
-            return overrideApplicantData || !applicantLiteService.existsByBasicInfo(HuicApplicantMainData.fromHuicApplicant((HuicApplicantMainData) value));
+            return !applicantLiteService.existsByBasicInfo(((HuicApplicantMainData) value).getIdNumber() != null ? ((HuicApplicantMainData) value).getIdNumber().toString() : null, ((HuicApplicantMainData) value).getPassportNo(), ((HuicApplicantMainData) value).getNationality().toString());
         }
     }
 }

@@ -5,7 +5,6 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
-import com.elm.shj.admin.portal.orm.entity.ApplicantVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -35,6 +34,13 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
             "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian)")
     boolean existsByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                               @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
+
+    @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
+            "FROM JpaApplicantLite a WHERE " +
+            "(a.idNumber = :idNumber) OR " +
+            "(a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode)")
+    boolean existsByBasicInfo(@Param("idNumber") String idNumber,
+                              @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
 
     @Query("SELECT a FROM JpaApplicantLite a WHERE a.id NOT IN (SELECT ad.applicantId FROM JpaApplicantDigitalId ad)")
     List<JpaApplicantLite> findAllApplicantsWithoutDigitalId();

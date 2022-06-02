@@ -355,12 +355,13 @@ public class ValidationService {
         ApplicantDto applicant = ApplicantDto.builder()
                 .gender(EGenderCode.fromId(huicApplicantMainData.getGender()).name())
                 .nationalityCode(huicApplicantMainData.getNationality().toString())
-                .idNumber(huicApplicantMainData.getIdNumber().toString())
+                .idNumber(huicApplicantMainData.getIdNumber() != null ? huicApplicantMainData.getIdNumber().toString() : null)
                 .idNumberOriginal(huicApplicantMainData.getNationalIdOriginalCountry())
                 .passportNumber(huicApplicantMainData.getPassportNo())
                 .dateOfBirthGregorian(huicApplicantMainData.getDateOfBirth())
                 .dateOfBirthHijri(huicApplicantMainData.getDateOfBirthHijri())
-                .fullNameAr(huicApplicantMainData.getFullNameEn())
+                .fullNameEn(huicApplicantMainData.getFullNameEn())
+                .fullNameAr(huicApplicantMainData.getFullNameAr())
                 .fullNameOrigin(huicApplicantMainData.getFullNameOriginalLang())
                 .maritalStatusCode(EMaritalStatus.fromId(huicApplicantMainData.getMaritalStatus()).name())
                 .photo(huicApplicantMainData.getPhoto())
@@ -384,7 +385,7 @@ public class ValidationService {
         applicant.setContacts(Collections.singletonList(applicantContactDto));
         updateApplicantBirthDate(applicant);
         applicant.setDateOfBirthGregorian(updateDate(applicant.getDateOfBirthGregorian()));
-        Long existingApplicantId = applicantService.findIdByBasicInfo(ApplicantBasicInfoDto.fromApplicant(applicant));
+        Long existingApplicantId = applicantService.findIdByBasicInfo(applicant.getIdNumber(), applicant.getPassportNumber(), applicant.getNationalityCode());
         if (huicApplicantMainData.getStatus() == null) {
             huicApplicantMainData.setStatus(1);
         }
@@ -415,7 +416,10 @@ public class ValidationService {
 
         //TODO: unify this for both data upload and huic
         addApplicantToContact(applicant);
-
+        if (applicant.getPackageReferenceNumber() == null) {
+            String referenceNumber = ritualPackageService.findPackageReferenceNumber(ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
+            applicant.setPackageReferenceNumber(referenceNumber);
+        }
         applicantService.save(applicant);
 
 

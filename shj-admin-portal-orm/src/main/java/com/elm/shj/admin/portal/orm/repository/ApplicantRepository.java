@@ -38,6 +38,12 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     Long findIdByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                            @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
+    @Query(value = "select a.id from JpaApplicant a where " +
+            "(a.idNumber = :idNumber) or " +
+            "(a.passportNumber = :passportNumber and a.nationalityCode = :nationalityCode)")
+    Long findIdByBasicInfo(@Param("idNumber") String idNumber,
+                           @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
+
     @Query(value = "SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
             "FROM JpaApplicant a WHERE " +
             "(a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +

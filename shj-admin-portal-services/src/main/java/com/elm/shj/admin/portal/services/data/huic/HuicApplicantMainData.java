@@ -21,7 +21,6 @@ import java.util.Date;
 @UniqueApplicant
 @FieldDependency.List({
         @FieldDependency(first = "idNumber", second = "passportNo"),
-        @FieldDependency(first = "dateOfBirth", second = "dateOfBirthHijri")
 })
 @NoArgsConstructor
 @AllArgsConstructor
@@ -114,7 +113,6 @@ public class HuicApplicantMainData implements Serializable {
     @NullOrNotBlank(min = 3, max = 30)
     private String postalCode;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
     @WithRitualPackage
     private String packageRefNumber;
 

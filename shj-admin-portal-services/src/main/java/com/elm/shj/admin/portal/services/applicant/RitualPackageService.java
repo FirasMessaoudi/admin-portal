@@ -1,9 +1,7 @@
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
 import com.elm.shj.admin.portal.orm.entity.JpaRitualPackage;
 import com.elm.shj.admin.portal.orm.repository.RitualPackageRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantGroupDto;
 import com.elm.shj.admin.portal.services.dto.RitualPackageDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -78,5 +76,10 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         }
         log.info("RitualPackageService ::: Finish findByGroupLeaderDigitalId ::: not found and return null");
         return null;
+    }
+
+    public String findPackageReferenceNumber(String typeCode, int year) {
+        log.info("RitualPackageService ::: Start findReferenceNumberByTypeCode ::: typeCode: {}", typeCode);
+        return ritualPackageRepository.findReferenceNumberByRitualSeason(typeCode, year);
     }
 }

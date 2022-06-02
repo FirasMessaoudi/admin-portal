@@ -29,7 +29,7 @@ public class SeasonYearValidator implements ConstraintValidator<SeasonYear, Obje
             context.buildConstraintViolationWithTemplate(MSG_20001).addConstraintViolation();
             return false;
         }
-        return (DateUtils.getCurrentHijriYear() - 1 <= seasonYear && seasonYear <= (DateUtils.getCurrentHijriYear() + 1));
+        return (DateUtils.getCurrentHijriYear() == seasonYear || seasonYear == (DateUtils.getCurrentHijriYear() + 1));
     }
 
 }

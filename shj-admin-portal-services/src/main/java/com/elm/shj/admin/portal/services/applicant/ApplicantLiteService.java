@@ -8,7 +8,10 @@ import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantLiteRepository;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
+import com.elm.shj.admin.portal.services.dto.ECardStatus;
+import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -99,9 +102,14 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public boolean existsByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
-        log.info("Start existsByBasicInfo RowNum:{}", applicantBasicInfo == null?null: applicantBasicInfo.getRowNum());
+        log.info("Start existsByBasicInfo RowNum:{}", applicantBasicInfo == null ? null : applicantBasicInfo.getRowNum());
         boolean exists = applicantLiteRepository.existsByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(), applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
         log.info("Finish existsByBasicInfo isExists:{}", exists);
+        return exists;
+    }
+
+    public boolean existsByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
+        boolean exists = applicantLiteRepository.existsByBasicInfo(idNumber, passportNumber, nationalityCode);
         return exists;
     }
 
@@ -109,11 +117,11 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
         log.info("Start findApplicantRitualByIdNumber IdNumber:{}", value);
         List<ApplicantStaffVO> applicantList = applicantLiteRepository.findApplicantRitualByIdNumber(value, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
         log.info("Finish findApplicantRitualByIdNumber IdNumber:{}", applicantList.size());
-         if(applicantList.size() == 0) {
-             log.info("Finish findApplicantRitualByIdNumber not found IdNumber:{}", value);
-             return Optional.empty();
-         } else {
-             log.info("Finish findApplicantRitualByIdNumber found with FullNameEn:{}", applicantList.get(0).getFullNameEn());
+        if (applicantList.size() == 0) {
+            log.info("Finish findApplicantRitualByIdNumber not found IdNumber:{}", value);
+            return Optional.empty();
+        } else {
+            log.info("Finish findApplicantRitualByIdNumber found with FullNameEn:{}", applicantList.get(0).getFullNameEn());
              return  Optional.of(applicantList.get(0));
          }
     }

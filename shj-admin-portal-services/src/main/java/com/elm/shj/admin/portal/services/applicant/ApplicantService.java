@@ -72,6 +72,13 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return idByBasicInfo;
     }
 
+    public Long findIdByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
+        log.info("ApplicantService ::: Start findByBasicInfo :::");
+        Long idByBasicInfo = applicantRepository.findIdByBasicInfo(idNumber, passportNumber, nationalityCode);
+        log.info("ApplicantService ::: Finish findByBasicInfo ::: applicantId: {}", idByBasicInfo);
+        return idByBasicInfo;
+    }
+
     /**
      * checks if an applicant exists with the same basic info exists
      *
