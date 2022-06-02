@@ -23,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyLiteService extends GenericService<JpaCompanyLite, CompanyLiteDto, Long> {
     //TODO this service should be removed and move methods to CompanyService, no need for it
+
     private final CompanyLiteRepository companyLiteRepository;
 
     /**
@@ -35,7 +36,7 @@ public class CompanyLiteService extends GenericService<JpaCompanyLite, CompanyLi
         return companyLiteRepository.existsByCode(companyCode);
     }
 
-    List<CompanyLiteDto> findEstablishmentCompanies() {
+    public List<CompanyLiteDto> findEstablishmentCompanies() {
         return mapList(companyLiteRepository.findByTypeCode(ECompanyType.ESTABLISHMENT.name()));
     }
 

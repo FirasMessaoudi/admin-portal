@@ -3,14 +3,20 @@
  */
 package com.elm.shj.admin.portal.web.ws;
 
+import com.elm.shj.admin.portal.services.company.CompanyLiteService;
+import com.elm.shj.admin.portal.services.dto.CompanyLiteDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Main controller for company related pages
@@ -30,5 +36,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CompanyWsController {
 
+    private final CompanyLiteService companyLiteService;
+    @GetMapping("/camp-readiness-survey/establishment/find")
+    public ResponseEntity<WsResponse<?>> findEstablishmentCompanies() {
+        log.info("Start findEstablishmentCompanies");
+        List<CompanyLiteDto> establishmentCompanies = companyLiteService.findEstablishmentCompanies();
+        log.info("Finish findEstablishmentCompanies  establishmentCompaniesListSize: {}", "SUCCESS", establishmentCompanies.size());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(establishmentCompanies).build());
+    }
 
 }
