@@ -1757,7 +1757,7 @@ create table shc_portal.shc_inspector_readiness_survey_result
     id                            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
     inspector_readiness_survey_id int           NOT NULL,
     question_code                 varchar(20)   NOT NULL,
-    rate                          int NULL,
+    rate                          int           NULL,
     creation_date                 smalldatetime NOT NULL default current_timestamp,
     update_date                   smalldatetime null,
     CONSTRAINT fk_inspector_readiness_survey FOREIGN KEY (inspector_readiness_survey_id) REFERENCES shc_portal.shc_inspector_readiness_survey (id)
@@ -1768,3 +1768,14 @@ alter table shc_portal.shc_company
 alter
 column label_ar varchar(256)
 go
+
+
+ALTER TABLE shc_portal.shc_country_lk
+DROP CONSTRAINT country_lk_unique;
+
+GO
+
+ALTER TABLE shc_portal.shc_country_lk DROP COLUMN nic_code;
+ALTER TABLE shc_portal.shc_country_lk ADD country_name_prefix VARCHAR(10);
+
+GO
