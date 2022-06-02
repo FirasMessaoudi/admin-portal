@@ -3,8 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.services.data.validators.WithMealTime;
-import com.elm.shj.admin.portal.services.data.validators.WithMealType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
@@ -32,11 +30,9 @@ public class PackageCateringDto implements Serializable {
 
     private String mealCode;
 
-    @WithMealTime
-    private String type;
+    private String mealTimeCode;
 
-    @WithMealType
-    private String mealType;
+    private String mealTypeCode;
 
     private Time mealTime;
 

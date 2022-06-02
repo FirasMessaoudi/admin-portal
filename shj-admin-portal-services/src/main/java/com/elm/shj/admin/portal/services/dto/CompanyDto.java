@@ -3,10 +3,11 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.elm.shj.admin.portal.services.data.validators.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.elm.shj.admin.portal.services.data.validators.CompanyTypeCode;
+import com.elm.shj.admin.portal.services.data.validators.CountryCode;
+import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
+import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Future;
@@ -23,8 +24,10 @@ import java.util.List;
  */
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class CompanyDto {
 
     private static final long serialVersionUID = 436091561114554168L;
@@ -55,17 +58,6 @@ public class CompanyDto {
             , message = "validation.data.constraints.msg.20003")
     private String website;
 
-    @OnlyCharacters(min = 3, max = 45, allowNumbers = true, allowSpecialChars = false)
-    private String accreditationOrganization;
-
-    @OnlyCharacters(min = 3, max = 45, allowNumbers = true, allowSpecialChars = false)
-    private String accreditationNumber;
-
-    private Date accreditationDate;
-
-    @Future
-    private Date accreditationExpiry;
-
     @NullOrNotBlank(min = 5, max = 50)
     @Email(message = "validation.data.constraints.msg.20003")
     private String email;
@@ -80,18 +72,26 @@ public class CompanyDto {
     @CompanyTypeCode
     private Integer typeCode;
 
-    @RitualTypeCode
-    private String ritualTypeCode;
-    @SeasonYear
-    private int season;
-
     @CountryCode
     private String countryCode;
 
-    private String establishmentId;
+    private Integer establishmentRefCode;
+
+
+    @OnlyCharacters(min = 3, max = 45, allowNumbers = true, allowSpecialChars = false)
+    private String accreditationOrganization;
+
+    @OnlyCharacters(min = 3, max = 45, allowNumbers = true, allowSpecialChars = false)
+    private String accreditationNumber;
+
+    private Date accreditationDate;
+
+    @Future
+    private Date accreditationExpiry;
 
     private Date creationDate;
     private Date updateDate;
+
 
     //@JsonManagedReference(value = "companyRitualSeasons")
     private List<CompanyRitualSeasonDto> companyRitualSeasons;

@@ -1,10 +1,9 @@
-/*
- * Copyright (c) 2021 ELM. All rights reserved.
- */
-package com.elm.shj.admin.portal.services.dto;
+package com.elm.shj.admin.portal.services.data.huic;
 
 import com.elm.dcc.foundation.commons.validation.ArabicCharacters;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.elm.shj.admin.portal.services.data.validators.CompanyTypeCode;
+import com.elm.shj.admin.portal.services.data.validators.RitualTypeCode;
+import com.elm.shj.admin.portal.services.data.validators.SeasonYear;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -15,9 +14,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Dto class for the  Ritual Package .
+ * class for the  Ritual Package huic .
  *
- * @author Ahmed Ali
+ * @author f.messaoudi
  * @since 1.1.0
  */
 @Getter
@@ -25,21 +24,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RitualPackageDto implements Serializable {
-
-    private static final long serialVersionUID = 811079397522626616L;
-
-    private long id;
-
-
-    private Float price;
-    private String departureCity;
-    private Integer countryId;
+public class HuicPlannedPackage implements Serializable {
+    private static final long serialVersionUID = -8577691725500853641L;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     @Pattern(regexp = "([0-9]+)"
             , message = "validation.data.constraints.msg.20003")
-    private String referenceNumber;
+    private String packageRefNumber;
+
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @Pattern(regexp = "([0-9]+)"
+            , message = "validation.data.constraints.msg.20003")
+    private String companyRefCode;
 
     @Pattern(regexp = "(^[a-zA-Z0-9]*)"
             , message = "validation.data.constraints.msg.20003")
@@ -48,32 +44,30 @@ public class RitualPackageDto implements Serializable {
             , message = "validation.data.constraints.msg.20003")
     private String hajjOfficeMadina;
     @ArabicCharacters(lettersOnly = true, numbersOnly = false)
-    private String packageNameAr;
+    private String packageNameArabic;
     @Pattern(regexp = "(^[a-zA-Z0-9]*)"
             , message = "validation.data.constraints.msg.20003")
-    private String packageNameEn;
+    private String packageNameEnglish;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     private String packageTypeCode;
+    @CompanyTypeCode
+    private Integer companyTypeCode;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
 
-    private Date startDate;
+    private Date packageStartDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date packageEndDate;
 
-    private Date endDate;
+    @RitualTypeCode
+    private String ritualTypeCode;
+    @SeasonYear
+    private int seasonYear;
 
+    List<HuicPackageHousing> packageHousings;
 
-    @JsonBackReference(value = "ritualSeason")
-    private CompanyRitualSeasonDto companyRitualSeason;
+    List<HuicPackageTransportation> packageTransportations;
 
-    @JsonBackReference("applicantPackages")
-    private List<ApplicantPackageDto> applicantPackages;
-    @JsonBackReference("packageHousings")
-    private List<PackageHousingDto> packageHousings;
-    @JsonBackReference("packageTransportations")
-    private List<PackageTransportationDto> packageTransportations;
-
-    private Date creationDate;
-    private Date updateDate;
 }

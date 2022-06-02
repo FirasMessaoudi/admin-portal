@@ -11,7 +11,7 @@ import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
-import com.elm.shj.admin.portal.services.data.huicIntegration.ValidationService;
+import com.elm.shj.admin.portal.services.data.huic.ValidationService;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.reader.EExcelItemReaderErrorType;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;

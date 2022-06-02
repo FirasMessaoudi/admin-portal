@@ -8,9 +8,7 @@ import com.elm.shj.admin.portal.services.data.validators.CountryCode;
 import com.elm.shj.admin.portal.services.data.validators.LanguageCodeList;
 import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
@@ -24,8 +22,10 @@ import java.util.Date;
  * @since 1.0.0
  */
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class ApplicantContactDto implements Serializable {
 
 

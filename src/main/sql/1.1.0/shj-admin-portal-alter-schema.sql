@@ -1671,3 +1671,19 @@ go
 alter table shc_portal.shc_company
     add establishment_id varchar(45) NULL;
 go
+
+EXEC sp_rename 'shc_portal.shc_company.establishment_id', 'establishment_ref_code', 'COLUMN';
+GO
+
+alter table shc_portal.shc_company
+alter
+column establishment_ref_code int NULL;
+go
+
+ALTER TABLE shc_portal.shc_package_catering
+    add meal_type_code varchar(45) not null default '';
+GO
+
+EXEC sp_rename 'shc_portal.shc_package_catering.type', 'meal_time_code', 'COLUMN';
+GO
+

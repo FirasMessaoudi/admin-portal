@@ -1,4 +1,4 @@
-package com.elm.shj.admin.portal.services.data.huicIntegration;
+package com.elm.shj.admin.portal.services.data.huic;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
