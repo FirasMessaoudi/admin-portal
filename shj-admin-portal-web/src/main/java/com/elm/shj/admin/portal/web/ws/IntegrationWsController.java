@@ -1051,7 +1051,7 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantEmergencyContactByApplicantId).build());
     }
 
-    @PutMapping("/applicant/emergency-contact/update/{applicantUin}")
+    @PostMapping("/applicant/emergency-contact/update/{applicantUin}")
     public ResponseEntity<WsResponse<?>> updateApplicantEmergencyContactByApplicantId(@PathVariable String applicantUin, @RequestBody ApplicantEmergencyContactDto applicantEmergencyContact) {
 
         if (applicantEmergencyContact == null || applicantEmergencyContact.getEmergencyContactName() == null || applicantEmergencyContact.getEmergencyContactMobileNumber() == null ||
