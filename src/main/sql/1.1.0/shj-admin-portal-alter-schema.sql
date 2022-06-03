@@ -1,5 +1,4 @@
-USE
-shc_portal
+USE shc_portal
 GO
 
 ALTER TABLE shc_portal.shc_applicant_health
@@ -1671,7 +1670,7 @@ go
 alter table shc_portal.shc_company
     add establishment_id varchar(45) NULL;
 go
-use shc_portal
+
 EXEC sp_rename 'shc_portal.shc_company.establishment_id', 'establishment_ref_code', 'COLUMN';
 GO
 

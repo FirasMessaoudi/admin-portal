@@ -695,16 +695,14 @@ INSERT INTO shc_portal.shc_chat_message_type_lk (code)
 VALUES ('LOCATION');
 GO
 
-Use shc_portal
 SET IDENTITY_INSERT shc_portal.shc_survey_type_lk ON;
 INSERT INTO shc_portal.shc_survey_type_lk(id, code)
 VALUES (1, 'DAILY');
 INSERT INTO shc_portal.shc_survey_type_lk(id, code)
 VALUES (2, 'END_OF_RITUAL');
-SET
-IDENTITY_INSERT shc_portal.shc_survey_type_lk OFF;
-Use
-shc_portal
+SET IDENTITY_INSERT shc_portal.shc_survey_type_lk OFF;
+GO
+
 SET IDENTITY_INSERT shc_portal.shc_survey_question_lk ON;
 INSERT INTO shc_portal.shc_survey_question_lk(id, code, survey_type_code, question_index, lang, label)
 VALUES (1, 'FOOD_SATISFACTION_Q_DAILY', 'DAILY', 1, 'en', 'How satisfied are you with the food?');
@@ -1081,12 +1079,9 @@ SET
 IDENTITY_INSERT shc_portal.shc_company_type_lk OFF;
 GO
 
-use shc_portal
-go
-delete
-from shc_portal.shc_meal_type_lk
-where id > 0;
-go
+delete from shc_portal.shc_meal_type_lk where id > 0;
+GO
+
 SET IDENTITY_INSERT shc_portal.shc_meal_type_lk ON;
 INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
 VALUES (1, 'FULL_BOARD', 'ar', N'وجبة الإفطار والغداء والعشاء');
@@ -1104,8 +1099,7 @@ INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
 VALUES (7, 'ONLY_BREAKFAST', 'ar', N'وجبة الإفطار فقط');
 INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
 VALUES (8, 'ONLY_BREAKFAST', 'en', 'Only Breakfast');
-SET
-IDENTITY_INSERT shc_portal.shc_meal_type_lk OFF;
+SET IDENTITY_INSERT shc_portal.shc_meal_type_lk OFF;
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_meal_time_type_lk ON;
