@@ -1777,7 +1777,6 @@ CONSTRAINT country_lk_unique;
 GO
 
 ALTER TABLE shc_portal.shc_country_lk DROP COLUMN nic_code;
-ALTER TABLE shc_portal.shc_country_lk
-    ADD country_name_prefix VARCHAR(10);
+ALTER TABLE shc_portal.shc_country_lk ADD country_name_prefix VARCHAR(10);
 
 GO
