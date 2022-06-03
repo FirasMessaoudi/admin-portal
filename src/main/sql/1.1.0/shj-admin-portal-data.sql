@@ -1194,28 +1194,23 @@ SET
 IDENTITY_INSERT shc_portal.shc_housing_category_lk OFF;
 GO
 
-delete
-from shc_portal.shc_company
-where code in ('1', '2', '3', '4', '5', '6', '7')
-    go
-INSERT
-INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES ('1_ESTABLISHMENT', N'شركة مطوفي حجاج دول جنوب شرق آسيا', 'Company of Pilgrims of South Est Asia countries', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES ('2_ESTABLISHMENT', N'ششركة مطوفي حجاج دول جنوب آسيا', 'Company of Pilgrims of South Asia countries', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES ('3_ESTABLISHMENT', N'شركة مطوفي حجاج الدول الأفريقية غير العربية',
-        'Company of Pilgrims of Africa non Arabic countries', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES ('4_ESTABLISHMENT', N'شركة مطوفي حجاج الدولة العربية', 'Company of Pilgrims of Arabic countries', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES ('5_ESTABLISHMENT', N'شركة مطوفي حجاج تركيا، وحجاج أوروبا وأمريكا وأستراليا',
-        'Company of Pilgrims of Turkey Muslims of Europe America and Australia', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES ('6_ESTABLISHMENT', N'شركة مطوفي حجاج إيران', 'Company of Pilgrims of Iran', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES ('7_ESTABLISHMENT', N'شركة الأدلاء', 'Company Adela', 1);
-go
+Delete from shc_portal.shc_company where code in ('1', '2', '3', '4', '5', '6', '7');
+GO
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en)
+VALUES ('1_ESTABLISHMENT', N'شركة مطوفي حجاج دول جنوب شرق آسيا', 'South East Asia countries Tawafa Co.');
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en)
+VALUES ('2_ESTABLISHMENT', N'شركة مطوفي حجاج دول جنوب آسيا', 'South Asia countries Tawafa Co.');
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en)
+VALUES ('3_ESTABLISHMENT', N'شركة مطوفي حجاج الدول الأفريقية غير العربية', 'Africa non Arab countries Tawafa Co.');
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en)
+VALUES ('4_ESTABLISHMENT', N'شركة مطوفي حجاج الدولة العربية', 'Arab countries Tawafa Co.');
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en)
+VALUES ('5_ESTABLISHMENT', N'شركة مطوفي حجاج تركيا وحجاج أوروبا وأمريكا وأستراليا', 'Turkey, Europe, America and Australia Tawafa Co.');
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en)
+VALUES ('6_ESTABLISHMENT', N'شركة مطوفي حجاج إيران', 'Iran Tawafa Co.');
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en)
+VALUES ('7_ESTABLISHMENT', N'المجلس التنسيقي لحجاج الداخل', 'Coordination Council For Internal Pilgrims');
+GO
 
 SET IDENTITY_INSERT shc_portal.shc_country_lk ON;
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
