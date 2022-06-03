@@ -1209,7 +1209,9 @@ VALUES ('5_ESTABLISHMENT', N'شركة مطوفي حجاج تركيا وحجاج 
 INSERT INTO shc_portal.shc_company (code, label_ar, label_en)
 VALUES ('6_ESTABLISHMENT', N'شركة مطوفي حجاج إيران', 'Iran Tawafa Co.');
 INSERT INTO shc_portal.shc_company (code, label_ar, label_en)
-VALUES ('7_ESTABLISHMENT', N'المجلس التنسيقي لحجاج الداخل', 'Coordination Council For Internal Pilgrims');
+VALUES ('7_ESTABLISHMENT', N'شركة الأدلاء', 'Company Adela');
+INSERT INTO shc_portal.shc_company (code, label_ar, label_en)
+VALUES ('8_ESTABLISHMENT', N'المجلس التنسيقي لحجاج الداخل', 'Coordination Council For Internal Pilgrims');
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_country_lk ON;
