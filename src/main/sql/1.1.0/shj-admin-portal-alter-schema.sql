@@ -1779,3 +1779,8 @@ ALTER TABLE shc_portal.shc_country_lk DROP COLUMN nic_code;
 ALTER TABLE shc_portal.shc_country_lk ADD country_name_prefix VARCHAR(10);
 
 GO
+
+ALTER TABLE shc_portal.shc_company ALTER COLUMN label_ar NVARCHAR(600)
+ALTER TABLE shc_portal.shc_company ALTER COLUMN label_en NVARCHAR(600)
+ALTER TABLE shc_portal.shc_company ALTER COLUMN email VARCHAR(100)
+GO
