@@ -285,7 +285,9 @@ public class ItemWriter {
                 }
                 if (dataSegment.getId() == EDataSegment.APPLICANT_DATA.getId()) {
                     ApplicantDto applicantDto = ((ApplicantDto) entry.getValue());
-                    applicantDto.setPhoto(applicantDto.getPhoto().replaceAll("(\r\n|\n\r|\r|\n)", ""));
+                    if (applicantDto.getPhoto() != null) {
+                        applicantDto.setPhoto(applicantDto.getPhoto().replaceAll("(\r\n|\n\r|\r|\n)", ""));
+                    }
                 }
                 savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
             }
