@@ -29,7 +29,6 @@ public class DigitalIdScheduler {
     private final DigitalIdService digitalIdService;
     private final ApplicantPackageService applicantPackageService;
     private final ApplicantRitualService applicantRitualService;
-    private final ApplicantContactService applicantContactService;
     private final ApplicantHealthService applicantHealthService;
     private final ApplicantRelativeService applicantRelativeService;
     private final ApplicantEmergencyDataUploadService applicantEmergencyDataUploadService;

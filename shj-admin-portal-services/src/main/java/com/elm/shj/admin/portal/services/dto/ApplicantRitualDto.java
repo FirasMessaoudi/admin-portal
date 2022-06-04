@@ -51,15 +51,15 @@ public class ApplicantRitualDto implements Serializable {
     @CellIndex(index = 5)
     private String groupReferenceNumber;
 
-    @VisaOrPermitNumber(allowEmpty = false)
+    @VisaOrPermitNumber
     @CellIndex(index = 6)
     private String visaNumber;
 
-    @VisaOrPermitNumber(allowEmpty = false)
+    @VisaOrPermitNumber
     @CellIndex(index = 7)
     private String permitNumber;
 
-    @OnlyCharacters(min = 5, max = 50, allowEmpty = false, allowNumbers = true, allowSpecialChars = true)
+    @OnlyCharacters(min = 5, max = 50, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 8)
     private String insuranceNumber;
 
@@ -75,10 +75,11 @@ public class ApplicantRitualDto implements Serializable {
     @CellIndex(index = 11)
     private String seatNumber;
 
-    @RitualTypeCode
-    private String ritualTypeCode;
-    @SeasonYear
-    private int seasonYear;
+    //TODO(aflaifel): needed for HUIC integration
+//    @RitualTypeCode
+//    private String ritualTypeCode;
+//    @SeasonYear
+//    private int seasonYear;
 
     private Date creationDate;
 

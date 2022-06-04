@@ -66,24 +66,25 @@ public class DataRequestWsController {
                 Collections.emptyList()).build());
     }
 
-    @PostMapping(value = "/save-applicant-ritual-data")
-    public ResponseEntity<WsResponse<?>> saveApplicantRitualData(@RequestBody List<ApplicantRitualDto> applicantRitualDtos) {
-        log.info("Start saveApplicantRitualData applicantRitualDtosSize: {}", applicantRitualDtos == null ? null : applicantRitualDtos.size());
-        applicantRitualDtos.forEach(applicantRitualDto -> {
-            ERitualType eRitualType = applicantRitualDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(applicantRitualDto.getRitualTypeCode())) : null;
-            applicantRitualDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
-        });
-        List<ErrorResponse> errorResponses = validationService.validateData(applicantRitualDtos);
-
-        if (!errorResponses.isEmpty()) {
-            log.info("Finish saveApplicantRitualData {}, errorResponses: {}", "FAILURE", errorResponses);
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
-                    errorResponses).build());
-        }
-        log.info("Finish saveApplicantRitualData {}", "SUCCESS");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
-                Collections.emptyList()).build());
-    }
+    //TODO(aflaifel): needed for HUIC but ApplicantRitualDto has to be fixed before
+//    @PostMapping(value = "/save-applicant-ritual-data")
+//    public ResponseEntity<WsResponse<?>> saveApplicantRitualData(@RequestBody List<ApplicantRitualDto> applicantRitualDtos) {
+//        log.info("Start saveApplicantRitualData applicantRitualDtosSize: {}", applicantRitualDtos == null ? null : applicantRitualDtos.size());
+//        applicantRitualDtos.forEach(applicantRitualDto -> {
+//            ERitualType eRitualType = applicantRitualDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(applicantRitualDto.getRitualTypeCode())) : null;
+//            applicantRitualDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
+//        });
+//        List<ErrorResponse> errorResponses = validationService.validateData(applicantRitualDtos);
+//
+//        if (!errorResponses.isEmpty()) {
+//            log.info("Finish saveApplicantRitualData {}, errorResponses: {}", "FAILURE", errorResponses);
+//            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
+//                    errorResponses).build());
+//        }
+//        log.info("Finish saveApplicantRitualData {}", "SUCCESS");
+//        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
+//                Collections.emptyList()).build());
+//    }
 
     @PostMapping(value = "/save-applicant-health-data")
     public ResponseEntity<WsResponse<?>> saveApplicantHealthData(@RequestBody List<ApplicantHealthDto> applicantHealthDtos) {

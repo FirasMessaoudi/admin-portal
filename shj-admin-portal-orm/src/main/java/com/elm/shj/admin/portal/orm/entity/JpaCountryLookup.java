@@ -26,9 +26,9 @@ public class JpaCountryLookup extends JpaLocalizedLookup {
 
     private static final long serialVersionUID = 722517589940056586L;
 
-    @Column(name = "nic_code")
-    private String nicCode;
-
     @Column(name = "country_phone_prefix")
     private String countryPhonePrefix;
+
+    @Column(name = "country_name_prefix")
+    private String countryNamePrefix;
 }
