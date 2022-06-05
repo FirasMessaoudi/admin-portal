@@ -8,9 +8,7 @@ import com.elm.shj.admin.portal.services.data.mapper.NestedCells;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -26,6 +24,8 @@ import java.util.Date;
 @WithRelative
 @WithApplicant
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class ApplicantRelativeDto implements Serializable {
@@ -75,10 +75,6 @@ public class ApplicantRelativeDto implements Serializable {
     @CellIndex(index = 9)
     private String packageReferenceNumber;
 
-    @RitualTypeCode
-    private String ritualTypeCode;
-    @SeasonYear
-    private int seasonYear;
     @JsonBackReference(value = "applicantRitual")
     private ApplicantRitualDto applicantRitual;
 }

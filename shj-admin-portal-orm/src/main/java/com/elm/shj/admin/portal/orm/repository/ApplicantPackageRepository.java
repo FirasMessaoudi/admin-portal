@@ -33,4 +33,6 @@ public interface ApplicantPackageRepository extends JpaRepository<JpaApplicantPa
     Page<Long> findLastIdByApplicantUin(@Param("applicantUin") Long applicantUin, Pageable pageable);
 
     Optional<JpaApplicantPackage> findJpaApplicantPackageByApplicantUin(long applicantUin);
+
+    Optional<JpaApplicantPackage> findTopByApplicantRitualApplicantIdOrderByCreationDateDesc(long applicantId);
 }

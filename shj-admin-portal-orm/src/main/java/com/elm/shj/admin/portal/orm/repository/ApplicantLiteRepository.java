@@ -51,6 +51,11 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
     List<JpaApplicantLite> findByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                                            @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
+    @Query("select a from JpaApplicantLite a where " +
+            "(a.idNumber = :idNumber) or " +
+            "(a.passportNumber = :passportNumber and a.nationalityCode = :nationalityCode)")
+    List<JpaApplicantLite> findByBasicInfo(@Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
+
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO ( applicantDigitalId.uin, applicant.fullNameEn, applicant.fullNameAr, " +
             "ritualSeason.ritualTypeCode, card.statusCode, applicant.photo, " +
             "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr,applicant.emergencyContactName, applicant.emergencyContactMobileNumber  ) " +

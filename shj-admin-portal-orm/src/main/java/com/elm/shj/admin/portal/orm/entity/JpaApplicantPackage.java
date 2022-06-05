@@ -50,6 +50,9 @@ public class JpaApplicantPackage implements Serializable {
     @Column(name = "arrival_date")
     private Date arrivalDate;
 
+    @Column(name = "arrival_city")
+    private String arrivalCity;
+
     @ManyToOne
     @JoinColumn(name = "ritual_package_id")
     private JpaRitualPackage ritualPackage;

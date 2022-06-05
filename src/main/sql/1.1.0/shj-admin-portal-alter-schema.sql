@@ -1781,3 +1781,8 @@ ALTER TABLE shc_portal.shc_country_lk
     ADD country_name_prefix VARCHAR(10);
 
 GO
+
+ALTER TABLE shc_portal.shc_applicant_package
+    ADD arrival_city Varchar(45);
+
+GO

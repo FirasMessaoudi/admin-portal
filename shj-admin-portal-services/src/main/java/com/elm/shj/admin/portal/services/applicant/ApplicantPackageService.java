@@ -182,12 +182,23 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
     public ApplicantPackageDto findJpaApplicantPackageByApplicantUin(String applicantUin) {
         log.info("Start findJpaApplicantPackageByApplicantUin ::: applicantUin: {}", applicantUin);
         Optional<JpaApplicantPackage> applicantPackage = applicantPackageRepository.findJpaApplicantPackageByApplicantUin(Long.parseLong(applicantUin));
-        if(applicantPackage.isPresent()){
+        if (applicantPackage.isPresent()) {
             log.info("Finish findJpaApplicantPackageByApplicantUin ::: StartDate: {}, EndDate:{}", applicantPackage.get().getStartDate(), applicantPackage.get().getEndDate());
-            return getMapper().fromEntity(applicantPackage.get(),mappingContext);
+            return getMapper().fromEntity(applicantPackage.get(), mappingContext);
         }
         log.info("Finish findJpaApplicantPackageByApplicantUin ::: not found with applicantUin: {}", applicantUin);
-        return  null;
+        return null;
+    }
+
+    public ApplicantPackageDto findJpaApplicantPackageByApplicantId(long applicantId) {
+        log.info("Start findJpaApplicantPackageByApplicantId ::: applicantId: {}", applicantId);
+        Optional<JpaApplicantPackage> applicantPackage = applicantPackageRepository.findTopByApplicantRitualApplicantIdOrderByCreationDateDesc(applicantId);
+        if (applicantPackage.isPresent()) {
+            log.info("Finish findJpaApplicantPackageByApplicantId ::: StartDate: {}, EndDate:{}", applicantPackage.get().getStartDate(), applicantPackage.get().getEndDate());
+            return getMapper().fromEntity(applicantPackage.get(), mappingContext);
+        }
+        log.info("Finish findJpaApplicantPackageByApplicantId ::: not found with applicantId: {}", applicantId);
+        return null;
     }
 
 }

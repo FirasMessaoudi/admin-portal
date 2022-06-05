@@ -35,7 +35,6 @@ public class HuicApplicantMainData implements Serializable {
     @CountryCode
     private Long nationality;
 
-    @UniquePerRequest
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     private Long idNumber;
 

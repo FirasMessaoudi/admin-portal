@@ -67,12 +67,8 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-applicant-ritual-data")
-    public ResponseEntity<WsResponse<?>> saveApplicantRitualData(@RequestBody List<ApplicantRitualDto> applicantRitualDtos) {
+    public ResponseEntity<WsResponse<?>> saveApplicantRitualData(@RequestBody List<HuicApplicantRitual> applicantRitualDtos) {
         log.info("Start saveApplicantRitualData applicantRitualDtosSize: {}", applicantRitualDtos == null ? null : applicantRitualDtos.size());
-        applicantRitualDtos.forEach(applicantRitualDto -> {
-            ERitualType eRitualType = applicantRitualDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(applicantRitualDto.getRitualTypeCode())) : null;
-            applicantRitualDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
-        });
         List<ErrorResponse> errorResponses = validationService.validateData(applicantRitualDtos);
 
         if (!errorResponses.isEmpty()) {
@@ -101,14 +97,8 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-applicant-relative-data")
-    public ResponseEntity<WsResponse<?>> saveApplicantRelativeData(@RequestBody List<ApplicantRelativeDto> applicantRelativeDtos) {
+    public ResponseEntity<WsResponse<?>> saveApplicantRelativeData(@RequestBody List<HuicApplicantRelative> applicantRelativeDtos) {
         log.info("Start saveApplicantRelativeData applicantRelativeDtosSize: {}", applicantRelativeDtos == null ? null : applicantRelativeDtos.size());
-        applicantRelativeDtos.forEach(applicantRelativeDto -> {
-            ERitualType eRitualType = applicantRelativeDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(applicantRelativeDto.getRitualTypeCode())) : null;
-            applicantRelativeDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
-            ERelativeRelationship eRelativeRelationship = applicantRelativeDto.getRelationshipCode() != null ? ERelativeRelationship.fromId(Long.parseLong(applicantRelativeDto.getRelationshipCode())) : null;
-            applicantRelativeDto.setRelationshipCode(eRelativeRelationship == null ? null : eRelativeRelationship.name());
-        });
         List<ErrorResponse> errorResponses = validationService.validateData(applicantRelativeDtos);
 
         if (!errorResponses.isEmpty()) {
@@ -279,12 +269,12 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-pre-arrival-data")
-    public ResponseEntity<WsResponse<?>> savePreArrivalData() {
+    public ResponseEntity<WsResponse<?>> savePreArrivalData(@RequestBody List<HuicArrivalData> huicArrivalData) {
         log.info("Start savePreArrivalData");
-        List<ErrorResponse> errorResponses = validationService.validateData(new ArrayList<>());
+        List<ErrorResponse> errorResponses = validationService.validateData(huicArrivalData);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish savePreArrivalData {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish savePreArrivalData {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }

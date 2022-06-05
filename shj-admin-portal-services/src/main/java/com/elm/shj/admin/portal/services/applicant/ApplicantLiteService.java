@@ -82,15 +82,29 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ApplicantLiteDto findByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
-        log.info("Start findByBasicInfo RowNum:{}", applicantBasicInfo == null?null: applicantBasicInfo.getRowNum());
+        log.info("Start findByBasicInfo RowNum:{}", applicantBasicInfo == null ? null : applicantBasicInfo.getRowNum());
         List<JpaApplicantLite> applicantLites = applicantLiteRepository.findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(),
                 applicantBasicInfo.getPassportNumber(), applicantBasicInfo.getDateOfBirthGregorian());
         if (applicantLites.isEmpty()) {
-            log.info("Finish findByBasicInfo not found with RowNum:{}", applicantBasicInfo == null?null: applicantBasicInfo.getRowNum());
+            log.info("Finish findByBasicInfo not found with RowNum:{}", applicantBasicInfo == null ? null : applicantBasicInfo.getRowNum());
             return null;
         }
         ApplicantLiteDto applicantLiteDto = getMapper().fromEntity(applicantLites.get(0), mappingContext);
-        log.info("Finish findByBasicInfo found with FullNameEn:{}", applicantLiteDto == null?null: applicantLiteDto.getFullNameEn());
+        log.info("Finish findByBasicInfo found with FullNameEn:{}", applicantLiteDto == null ? null : applicantLiteDto.getFullNameEn());
+        return applicantLiteDto;
+    }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public ApplicantLiteDto findByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
+        log.info("Start findByBasicInfo RowNum:{}", idNumber == null ? passportNumber : idNumber);
+        List<JpaApplicantLite> applicantLites = applicantLiteRepository.findByBasicInfo(idNumber, passportNumber,
+                nationalityCode);
+        if (applicantLites.isEmpty()) {
+            log.info("Finish findByBasicInfo not found with RowNum:{}", idNumber == null ? passportNumber : idNumber);
+            return null;
+        }
+        ApplicantLiteDto applicantLiteDto = getMapper().fromEntity(applicantLites.get(0), mappingContext);
+        log.info("Finish findByBasicInfo found with FullNameEn:{}", applicantLiteDto == null ? null : applicantLiteDto.getFullNameEn());
         return applicantLiteDto;
     }
 

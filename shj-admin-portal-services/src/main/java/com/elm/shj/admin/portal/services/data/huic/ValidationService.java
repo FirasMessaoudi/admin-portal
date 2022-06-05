@@ -98,14 +98,14 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(HuicApplicantMainData.class)) {
                     saveApplicantsMainData((HuicApplicantMainData) items.get(i), errorResponses, i);
                 }
-                if (items.get(i).getClass().isAssignableFrom(ApplicantRitualDto.class)) {
-                    saveApplicantRitual((ApplicantRitualDto) items.get(i));
+                if (items.get(i).getClass().isAssignableFrom(HuicApplicantRitual.class)) {
+                    saveApplicantRitual((HuicApplicantRitual) items.get(i));
                 }
                 if (items.get(i).getClass().isAssignableFrom(ApplicantHealthDto.class)) {
                     saveApplicantHealth((ApplicantHealthDto) items.get(i), errorResponses, i);
                 }
-                if (items.get(i).getClass().isAssignableFrom(ApplicantRelativeDto.class)) {
-                    saveApplicantRelative((ApplicantRelativeDto) items.get(i), errorResponses, i);
+                if (items.get(i).getClass().isAssignableFrom(HuicApplicantRelative.class)) {
+                    saveApplicantRelative((HuicApplicantRelative) items.get(i), errorResponses, i);
                 }
                 if (items.get(i).getClass().isAssignableFrom(ApplicantHealthDiseaseDto.class)) {
                     saveApplicantHealthDisease((ApplicantHealthDiseaseDto) items.get(i));
@@ -131,12 +131,27 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(HuicPlannedPackage.class)) {
                     savePlannedPackages((HuicPlannedPackage) items.get(i));
                 }
+                if (items.get(i).getClass().isAssignableFrom(HuicArrivalData.class)) {
+                    saveArrivalData((HuicArrivalData) items.get(i));
+                }
             }
 
         }
 
 
         return errorResponses;
+    }
+
+    private void saveArrivalData(HuicArrivalData huicArrivalData) {
+        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(huicArrivalData.getIdNumber() != null ? huicArrivalData.getIdNumber().toString() : null, huicArrivalData.getPassportNo(), huicArrivalData.getNationality().toString());
+        if (applicantLite == null) {
+            return;
+        }
+        ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantLite.getId());
+        applicantPackageDto.setArrivalCity(EArrivalCity.fromId(huicArrivalData.getArrivalCity()).name());
+        applicantPackageDto.setArrivalDate(huicArrivalData.getArrivalDateTime());
+        applicantPackageService.save(applicantPackageDto);
+
     }
 
     @Transactional
@@ -300,15 +315,14 @@ public class ValidationService {
 
     }
 
-    private void saveApplicantRelative(ApplicantRelativeDto applicantRelative, List<ErrorResponse> errorResponses, int rowNumber) {
-        applicantRelative.getApplicantBasicInfo().setDateOfBirthGregorian(updateDate(applicantRelative.getApplicantBasicInfo().getDateOfBirthGregorian()));
-        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantRelative.getApplicantBasicInfo());
+    private void saveApplicantRelative(HuicApplicantRelative huicApplicantRelative, List<ErrorResponse> errorResponses, int rowNumber) {
+        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(huicApplicantRelative.getIdNumber() != null ? huicApplicantRelative.getIdNumber().toString() : null, huicApplicantRelative.getPassportNo(), huicApplicantRelative.getNationality().toString());
         if (applicantLite == null) {
             return;
         }
         Long applicantId = applicantLite.getId();
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
-        Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, applicantRelative.getPackageReferenceNumber(), null, false);
+        Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, huicApplicantRelative.getPackageRefNumber(), null, false);
         if (savedApplicantRitualId == null) {
             ErrorResponse errorResponse = new ErrorResponse();
             errorResponse.setRowNumber(rowNumber + 1);
@@ -316,19 +330,25 @@ public class ValidationService {
             errorResponses.add(errorResponse);
             return;
         }
-        ApplicantLiteDto relativeApplicantLite = applicantLiteService.findByBasicInfo(ApplicantBasicInfoDto.fromRelative(applicantRelative));
-        applicantRelative.setRelativeApplicant(ApplicantDto.fromApplicantLite(relativeApplicantLite));
-        applicantRelative.setApplicant(ApplicantDto.fromApplicantLite(applicantLite));
-        applicantRelative.setApplicantRitual(ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
+        ApplicantRelativeDto applicantRelativeDto = ApplicantRelativeDto.builder()
+                .relationshipCode(ERelativeRelationship.fromId(huicApplicantRelative.getRelationship()).name())
+                .relativeIdNumber(huicApplicantRelative.getIdNumber() == null ? null : huicApplicantRelative.getIdNumber().toString())
+                .relativePassportNumber(huicApplicantRelative.getPassportNo())
+                .packageReferenceNumber(huicApplicantRelative.getPackageRefNumber())
+                .build();
+        ApplicantLiteDto relativeApplicantLite = applicantLiteService.findByBasicInfo(huicApplicantRelative.getRelativeIdNumber() != null ? huicApplicantRelative.getRelativeIdNumber().toString() : null, huicApplicantRelative.getRelativePassportNo(), huicApplicantRelative.getRelativeNationality().toString());
+        applicantRelativeDto.setRelativeApplicant(ApplicantDto.fromApplicantLite(relativeApplicantLite));
+        applicantRelativeDto.setApplicant(ApplicantDto.fromApplicantLite(applicantLite));
+        applicantRelativeDto.setApplicantRitual(ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
         String relativeApplicantUin = (relativeApplicantLite == null || CollectionUtils.isEmpty(relativeApplicantLite.getDigitalIds())) ? null : relativeApplicantLite.getDigitalIds().get(0).getUin();
-        applicantRelativeService.save(applicantRelative);
+        applicantRelativeService.save(applicantRelativeDto);
         // if the applicant digital id and the relative applicant digital id and the applicant ritual are created then add chat contacts
         // check if digital ids are created for the applicant and the relative applicant and applicant ritual is already created.
         if (applicantUin == null || relativeApplicantUin == null || savedApplicantRitualId == null) {
             return;
         }
         //TODO: try to get the relative applicant ritual id as it is needed to create the chat contact
-        chatContactService.createApplicantRelativesChatContacts(applicantRelative, savedApplicantRitualId);
+        chatContactService.createApplicantRelativesChatContacts(applicantRelativeDto, savedApplicantRitualId);
     }
 
     private void saveApplicantHealth(ApplicantHealthDto applicantHealth, List<ErrorResponse> errorResponses, int rowNumber) {
@@ -425,12 +445,25 @@ public class ValidationService {
 
     }
 
-    private void saveApplicantRitual(ApplicantRitualDto applicantRitualDto) {
-        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(applicantRitualDto.getApplicantBasicInfo());
+    private void saveApplicantRitual(HuicApplicantRitual huicApplicantRitual) {
+        //TODO: check bed and room number
+        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(huicApplicantRitual.getIdNumber() != null ? huicApplicantRitual.getIdNumber().toString() : null, huicApplicantRitual.getPassportNo(), huicApplicantRitual.getNationality().toString());
+
         if (applicantLite == null) {
             return;
         }
         Long applicantId = applicantLite.getId();
+        ApplicantRitualDto applicantRitualDto = ApplicantRitualDto.builder()
+                .packageReferenceNumber(huicApplicantRitual.getPackageRefNumber())
+                .visaNumber(huicApplicantRitual.getVisaNumber())
+                .permitNumber(huicApplicantRitual.getPermitNumber())
+                .borderNumber(huicApplicantRitual.getBorderNo())
+                .insuranceNumber(huicApplicantRitual.getInsuranceNumber())
+                .busNumber(huicApplicantRitual.getBusNumber())
+                .seatNumber(huicApplicantRitual.getSeatNumber())
+                .bedNumber(huicApplicantRitual.getBedNumber())
+                .roomNumber(huicApplicantRitual.getRoomNumber())
+                .build();
         String packageReferenceNumber = applicantRitualDto.getPackageReferenceNumber();
         Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, packageReferenceNumber, null, false);
         String applicantUin = digitalIdService.findApplicantUin(applicantId);

@@ -31,6 +31,6 @@ public enum EPackageType {
 
     public static EPackageType fromId(long id) {
         List<EPackageType> result = Arrays.stream(EPackageType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
-        return (EPackageType) CollectionUtils.get(result, 0);
+        return result.isEmpty() ? null : (EPackageType) CollectionUtils.get(result, 0);
     }
 }
