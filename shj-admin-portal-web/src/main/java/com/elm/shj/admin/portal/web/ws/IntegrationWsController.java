@@ -1038,7 +1038,7 @@ public class IntegrationWsController {
      * @param segmentId data segment Id
      * @return the template for the given segment
      */
-    @GetMapping("/tpl/{segmentId}")
+    @GetMapping("/data/request/tpl/{segmentId}")
     public ResponseEntity<Resource> downloadTemplate(@PathVariable long segmentId) {
         DataSegmentDto dataSegment = dataSegmentService.findOne(segmentId);
         log.info("Downloading template for data segment#{}", segmentId);
