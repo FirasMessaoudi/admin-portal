@@ -211,6 +211,7 @@ public class DataProcessorService {
     public boolean isBlankRow(Row row) {
         AtomicBoolean isBlank = new AtomicBoolean(true);
         StreamSupport.stream(Spliterators.spliteratorUnknownSize(row.cellIterator(), Spliterator.ORDERED), false).forEach(cell -> {
+            if(cell.getCellType() == CellType.FORMULA || cell.getRow().getSheet().isColumnHidden(cell.getColumnIndex())) return;
             if (cell.getCellType() != CellType.BLANK) {
                 isBlank.set(false);
             }
