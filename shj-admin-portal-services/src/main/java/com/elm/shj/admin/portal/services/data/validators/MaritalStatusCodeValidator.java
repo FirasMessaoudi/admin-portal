@@ -27,7 +27,7 @@ public class MaritalStatusCodeValidator implements ConstraintValidator<MaritalSt
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        if (value.getClass().isAssignableFrom(String.class)) {
+        if (value == null || value.getClass().isAssignableFrom(String.class)) {
             return value == null || StringUtils.isBlank(value.toString()) || maritalStatusLookupService.existsByCode(value.toString().toUpperCase());
         } else {
             return EMaritalStatus.fromId((Long) value) != null;

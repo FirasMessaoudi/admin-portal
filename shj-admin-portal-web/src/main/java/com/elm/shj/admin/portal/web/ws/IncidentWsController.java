@@ -84,7 +84,7 @@ public class IncidentWsController {
      */
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<WsResponse<?>> create(@RequestPart("incident") @Valid ApplicantIncidentLiteDto applicantIncidentRequest,
-                                                @RequestPart(value = "attachment", required = false) MultipartFile incidentAttachment) throws Exception {
+                                                @RequestPart(value = "attachment", required = false) MultipartFile incidentAttachment) {
 
         log.info("Start create Incident ApplicantIncidentLiteDto ReferenceNumber: {}", applicantIncidentRequest.getReferenceNumber());
         if (incidentAttachment != null) {

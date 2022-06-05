@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * The persistent class for the shc_company database table.
+ * The light persistent class for the shc_company database table.
  *
  * @author Ahmed Ali
  * @since 1.1.0

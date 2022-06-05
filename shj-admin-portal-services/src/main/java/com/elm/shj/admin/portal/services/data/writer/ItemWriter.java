@@ -283,6 +283,12 @@ public class ItemWriter {
                         applicantHealth.setUpdateDate(new Date());
                     }
                 }
+                if (dataSegment.getId() == EDataSegment.APPLICANT_DATA.getId()) {
+                    ApplicantDto applicantDto = ((ApplicantDto) entry.getValue());
+                    if (applicantDto.getPhoto() != null) {
+                        applicantDto.setPhoto(applicantDto.getPhoto().replaceAll("(\r\n|\n\r|\r|\n)", ""));
+                    }
+                }
                 savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(entry.getValue(), mappingContext));
             }
             savedItems.add(savedItem);
