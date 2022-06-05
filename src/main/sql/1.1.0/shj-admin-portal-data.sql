@@ -2499,3 +2499,7 @@ Update shc_portal.shc_company_type_lk set main_type = 1 where id < 11;
 Update shc_portal.shc_company_type_lk set main_type = 2 where id > 10;
 GO
 
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('ritual.season.year', 1443);
+GO
+
