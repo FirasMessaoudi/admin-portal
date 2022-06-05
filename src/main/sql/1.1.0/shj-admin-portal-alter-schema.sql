@@ -1789,3 +1789,8 @@ ALTER TABLE shc_portal.shc_applicant_package
     ADD arrival_city Varchar(45);
 
 GO
+
+alter table shc_portal.shc_company
+alter
+column code varchar(100) not null
+go

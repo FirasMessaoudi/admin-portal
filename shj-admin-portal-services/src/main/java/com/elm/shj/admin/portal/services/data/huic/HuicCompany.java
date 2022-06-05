@@ -9,6 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
  * class for the company huic .
@@ -26,7 +27,7 @@ public class HuicCompany implements Serializable {
     private static final long serialVersionUID = -1268725762902906346L;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private long companyRefCode;
+    private BigInteger companyRefCode;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = true, allowNumbers = true, allowSpecialChars = false)

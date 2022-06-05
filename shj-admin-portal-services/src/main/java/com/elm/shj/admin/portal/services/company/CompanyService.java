@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ public class CompanyService extends GenericService<JpaCompany, CompanyLiteDto, L
     }
 
 
-    public boolean existsByBasicInfo(long companyRefCode, Long companyTypeCode) {
+    public boolean existsByBasicInfo(BigInteger companyRefCode, Long companyTypeCode) {
         return companyRepository.existsByCode(companyRefCode + "_" + ECompanyType.fromId(companyTypeCode).name());
     }
 }
