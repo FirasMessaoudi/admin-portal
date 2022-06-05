@@ -3,6 +3,9 @@
  */
 package com.elm.shj.admin.portal.orm.entity;
 
+import lombok.Getter;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -16,7 +19,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "shc_company_type_lk")
 @NamedQuery(name = "JpaCompanyTypeLookup.findAll", query = "SELECT j FROM JpaCompanyTypeLookup j")
+@Getter
 public class JpaCompanyTypeLookup extends JpaLocalizedLookup {
+
+    @Column(name = "main_type", nullable = false)
+    private Integer mainType;
 
     private static final long serialVersionUID = -2392304678806716967L;
 }

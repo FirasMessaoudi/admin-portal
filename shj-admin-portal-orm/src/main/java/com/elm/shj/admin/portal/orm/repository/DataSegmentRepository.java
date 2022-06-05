@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaDataSegment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -15,7 +17,8 @@ import java.util.List;
  * @since 1.0.0
  */
 public interface DataSegmentRepository extends JpaRepository<JpaDataSegment, Long> {
-    List<JpaDataSegment> findByIdIn(List<Long> ids);
 
-    List<JpaDataSegment> findByIdNotIn(List<Long> ids);
+    @Query("SELECT ds FROM JpaDataSegment ds WHERE ds.id in :ids ")
+    List<JpaDataSegment> findSegments(@Param("ids") List<Long> ids);
+
 }

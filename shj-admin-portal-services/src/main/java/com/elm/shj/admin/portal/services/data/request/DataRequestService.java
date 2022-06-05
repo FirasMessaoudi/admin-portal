@@ -60,16 +60,28 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
     private final SftpService sftpService;
     private final DataProcessorService dataRequestProcessor;
     private final ItemWriter itemWriter;
+    private final DataRequestRepository dataRequestRepository;
 
     /**
-     * Find all data requests.
+     * Find all data requests for command portal
      *
      * @param pageable the current page information
      * @return the list of data requests
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public Page<DataRequestDto> findAll(Pageable pageable) {
-        return mapPage(getRepository().findAll(pageable));
+        return mapPage(dataRequestRepository.finDataRequests(Arrays.asList(1L, 2L, 3L,4L,5L,6L,7L,8L,9L,10L), pageable));
+    }
+
+    /**
+     * Find all data requests for organizer portal
+     *
+     * @param pageable the current page information
+     * @return the list of data requests
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public Page<DataRequestDto> findAllOrganizerDataRequest(Pageable pageable) {
+        return mapPage(dataRequestRepository.finOrganizerDataRequests(Arrays.asList(11L, 12L, 13L), pageable));
     }
 
     /**
@@ -151,9 +163,9 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
      */
     @Async
     @Transactional
-    public void confirm(long dataRequestId) throws Exception {
+    public void confirm(long dataRequestId, String... companyRefCode) throws Exception {
         updateRequestStatus(dataRequestId, EDataRequestStatus.UNDER_PROCESSING);
-        processRequest(dataRequestId);
+        processRequest(dataRequestId, companyRefCode);
     }
 
     @Transactional(propagation = Propagation.NESTED)
@@ -202,7 +214,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
      * @param dataRequestId the data request id to be processed
      */
     @Transactional
-    public <T> void processRequest(long dataRequestId) throws Exception {
+    public <T> void processRequest(long dataRequestId, String... companyRefCode) throws Exception {
         // retrieve the data request
         DataRequestDto dataRequest = findOne(dataRequestId);
         // initial validation
@@ -216,7 +228,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
                 // process the file
                 parserResult = dataRequestProcessor.processRequestFile(originalFile, dataRequest.getDataSegment());
                 // save all parsed items
-                writerValidationResult = itemWriter.write(parserResult.getParsedItems(), dataRequest.getDataSegment(), dataRequestId);
+                writerValidationResult = itemWriter.write(parserResult.getParsedItems(), dataRequest.getDataSegment(), dataRequestId, companyRefCode);
             } catch (Exception e) {
                 log.error("Failed to process the data request id {}.", dataRequestId, e);
                 //update the status of the request

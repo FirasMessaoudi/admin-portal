@@ -37,6 +37,7 @@ public class ExcelItemReaderFactory {
         readersRegistry.put(EDataSegment.STAFF_MAIN_DATA, CompanyStaffDto.class);
         readersRegistry.put(EDataSegment.STAFF_RITUAL_DATA, CompanyStaffRitualDto.class);
         readersRegistry.put(EDataSegment.STAFF_APPLICANT_GROUP_DATA, StaffApplicantGroupDto.class);
+        readersRegistry.put(EDataSegment.STAFF_FULL_MAIN_DATA, CompanyStaffFullDataDto.class);
 
     }
 

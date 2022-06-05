@@ -12,10 +12,7 @@ import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.RichTextString;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.AnnotatedParameterizedType;
@@ -197,6 +194,9 @@ public class ExcelItemReader<T> {
                 assert fieldToProcess != null;
                 ReflectionUtils.makeAccessible(fieldToProcess);
                 Cell cell = row.getCell(row.getFirstCellNum() + cellIndex);
+                if(cell.getCellType() == CellType.FORMULA){
+                    cell.removeFormula();
+                }
                 Object value = readCellValue(cell, fieldToProcess);
                 fieldToProcess.set(target, value);
                 if (value != null && StringUtils.isNotBlank(value.toString()) && uniqueFields.containsKey(fieldToProcess)) {

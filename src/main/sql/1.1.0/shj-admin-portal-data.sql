@@ -2494,3 +2494,8 @@ VALUES (638, 450, 'Other Africans', 'en', '', '');
 
 SET IDENTITY_INSERT shc_portal.shc_country_lk OFF;
 GO
+
+Update shc_portal.shc_company_type_lk set main_type = 1 where id < 11;
+Update shc_portal.shc_company_type_lk set main_type = 2 where id > 10;
+GO
+
