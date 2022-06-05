@@ -27,5 +27,6 @@ public class CompanyTypeLookupDto implements Serializable {
     private String code;
     private String lang;
     private String label;
+    private Integer mainType;
     private Date creationDate;
 }

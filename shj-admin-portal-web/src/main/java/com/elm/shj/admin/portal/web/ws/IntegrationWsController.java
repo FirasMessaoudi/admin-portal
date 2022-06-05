@@ -18,6 +18,7 @@ import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.user.UserLocationService;
+import com.elm.shj.admin.portal.web.admin.DataRequestManagementController;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.admin.ValidateStaffCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
@@ -29,7 +30,9 @@ import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -44,10 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Controller for exposing web services for external party.
@@ -120,6 +120,11 @@ public class IntegrationWsController {
     private final BadgeService badgeService;
     private final DataSegmentService dataSegmentService;
     private final DataRequestService dataRequestService;
+
+    private enum EDataRequestFileTypeWS {
+        O, // Original
+        E // Errors
+    }
 
     /**
      * Authenticates the user requesting a webservice call
@@ -975,7 +980,7 @@ public class IntegrationWsController {
     }
 
     @PostMapping(value = "/data/request/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<WsResponse<?>> create(@RequestPart("request") @Valid DataRequestDto dataRequest,
+    public ResponseEntity<WsResponse<?>> create(@RequestPart("request") DataRequestDto dataRequest,
                                                 @RequestPart("file") MultipartFile file) throws Exception {
         log.info("Creating data request for segment#{}", dataRequest.getDataSegment().getId());
 
@@ -994,19 +999,73 @@ public class IntegrationWsController {
      *
      * @param dataRequestId the data request id to be confirmed
      */
-    @PostMapping(value = "/data/request/confirm/{dataRequestId}")
-    public ResponseEntity<WsResponse<?>> confirm(@PathVariable long dataRequestId) throws Exception {
+    @PostMapping(value = "/data/request/confirm/{dataRequestId}/{companyRefCode}")
+    public ResponseEntity<WsResponse<?>> confirm(@PathVariable long dataRequestId, @PathVariable String companyRefCode) throws Exception {
         log.info("Confirming data request #{}", dataRequestId);
-        dataRequestService.confirm(dataRequestId);
+        dataRequestService.confirm(dataRequestId, companyRefCode);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body("SUCCESS").build());
 
+    }
+
+    @GetMapping("/data/request/{dataRequestId}/file/{fileType}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable long dataRequestId, @PathVariable String fileType) throws Exception {
+        log.info("Downloading file for data request#{} and file type #{}", dataRequestId, fileType);
+        Resource file = null;
+        switch (fileType) {
+            case "O":
+                file = dataRequestService.fetchOriginalFile(dataRequestId);
+                break;
+            case "E":
+                file = dataRequestService.fetchErrorsFile(dataRequestId);
+                break;
+        }
+        if (file != null) {
+            String fileName = "file.xlsx";
+            if (Objects.requireNonNull(file.getDescription()).contains("[")) {
+                fileName = file.getDescription().split("\\[")[1].replaceAll("]", "");
+            }
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .body(file);
+        }
+        return null;
+    }
+
+    /**
+     * Downloads a template for a specific segment
+     *
+     * @param segmentId data segment Id
+     * @return the template for the given segment
+     */
+    @GetMapping("/tpl/{segmentId}")
+    public ResponseEntity<Resource> downloadTemplate(@PathVariable long segmentId) {
+        DataSegmentDto dataSegment = dataSegmentService.findOne(segmentId);
+        log.info("Downloading template for data segment#{}", segmentId);
+        if (dataSegment == null) {
+            log.warn("Now data segment found with #{}", segmentId);
+            return null;
+        }
+        Resource tplFile = dataSegmentService.loadTemplateFile(dataSegment);
+        if (tplFile.exists()) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + tplFile.getFilename() + "\"")
+                    .body(tplFile);
+        }
+        return null;
     }
 
     @GetMapping("/data/request/list")
     public ResponseEntity<WsResponse<?>> listDataRequests(Pageable pageable) {
         log.info("listing all data requests");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(dataRequestService.findAll(pageable)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(dataRequestService.findAllOrganizerDataRequest(pageable)).build());
 
+    }
+
+    @GetMapping("/data/request/find/{dataRequestId}")
+    public ResponseEntity<WsResponse<?>> find(@PathVariable long dataRequestId) {
+        log.debug("Finding data request #{}", dataRequestId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(dataRequestService.findById(dataRequestId)).build());
     }
 
     @PostMapping("/staff/list")
@@ -1041,6 +1100,7 @@ public class IntegrationWsController {
                     .body(cmd).build());
         }
     }
+
     @GetMapping("/applicant/emergency-contact/get/{applicantUin}")
     public ResponseEntity<WsResponse<?>> findApplicantEmergencyContactByApplicantId(@PathVariable String applicantUin) {
         ApplicantEmergencyContactDto applicantEmergencyContactByApplicantId = applicantLiteService.findApplicantEmergencyContactByApplicantId(applicantUin);

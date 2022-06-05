@@ -15,10 +15,14 @@ import com.elm.shj.admin.portal.services.data.huic.ValidationService;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.reader.EExcelItemReaderErrorType;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
+import com.elm.shj.admin.portal.services.data.validators.JobTitleCode;
+import com.elm.shj.admin.portal.services.data.validators.RitualTypeCode;
 import com.elm.shj.admin.portal.services.data.validators.WithGroupReferenceNumber;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.services.utils.ImageUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
@@ -26,6 +30,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -33,6 +38,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -72,6 +81,11 @@ public class ItemWriter {
     private final ApplicantLiteService applicantLiteService;
     private final ValidationService validationService;
 
+    @Value("${ritual.season.year}")
+    private int seasonYear;
+
+    private final static String DEFAULT_AVATAR = "avatar/avatar.png";
+
     /**
      * Populates the registry
      */
@@ -85,6 +99,7 @@ public class ItemWriter {
         repositoryRegistry.put(EDataSegment.APPLICANT_DISEASE_DATA, ApplicantHealthDiseaseRepository.class);
         repositoryRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, ApplicantRitualRepository.class);
         repositoryRegistry.put(EDataSegment.STAFF_MAIN_DATA, CompanyStaffRepository.class);
+        repositoryRegistry.put(EDataSegment.STAFF_FULL_MAIN_DATA, CompanyStaffRepository.class);
         // mapper registry initialization
         mapperRegistry.put(EDataSegment.APPLICANT_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_RELATIVES_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantRelativeDto.class)));
@@ -93,6 +108,7 @@ public class ItemWriter {
         mapperRegistry.put(EDataSegment.APPLICANT_DISEASE_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantHealthDiseaseDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantRitualDto.class)));
         mapperRegistry.put(EDataSegment.STAFF_MAIN_DATA, Objects.requireNonNull(validationService.findMapper(CompanyStaffDto.class)));
+        mapperRegistry.put(EDataSegment.STAFF_FULL_MAIN_DATA, Objects.requireNonNull(validationService.findMapper(CompanyStaffDto.class)));
 
     }
 
@@ -106,7 +122,7 @@ public class ItemWriter {
      */
     @Transactional
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public <T, S> List<DataValidationResult> write(List<AbstractMap.SimpleEntry<Row, T>> items, DataSegmentDto dataSegment, long dataRequestId) {
+    public <T, S> List<DataValidationResult> write(List<AbstractMap.SimpleEntry<Row, T>> items, DataSegmentDto dataSegment, long dataRequestId, String... companyRefCode) {
         if (dataSegment.getId() == EDataSegment.APPLICANT_EMERGENCY_DATA.getId()) {
             JpaRepository applicantRepository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.APPLICANT_DATA));
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
@@ -247,6 +263,120 @@ public class ItemWriter {
             //Temporary for testing only : staff ritual
             items.forEach(entry -> updateCompanyStaffRitualData(entry.getValue()));
             return Collections.emptyList();
+        }
+
+        // saving staff full main data
+        if (dataSegment.getId() == EDataSegment.STAFF_FULL_MAIN_DATA.getId()) {
+            BufferedImage defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            final String defaultAvatar;
+            try {
+                ImageIO.write(defaultImage, "png", bos);
+                byte[] bytes = bos.toByteArray();
+
+                defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
+            } catch (IOException e) {
+                throw new RuntimeException();
+            }
+            // save all items and build data records
+            List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
+            List<S> savedItems = new ArrayList<>();
+            JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
+
+            List<DataValidationResult> dataValidationResults = new ArrayList<>();
+            items.forEach(entry -> {
+                S savedItem;
+                try {
+                    Class clazz = CompanyStaffFullDataDto.class;
+                    int ritualTypeCodeCellIndex = 0;
+                    int jobTileCodeCellIndex = 0;
+                    for (Field field : clazz.getDeclaredFields()) {
+                        if (field.isAnnotationPresent(RitualTypeCode.class))
+                            ritualTypeCodeCellIndex = field.getAnnotation(CellIndex.class).index();
+                        if (field.isAnnotationPresent(JobTitleCode.class))
+                            jobTileCodeCellIndex = field.getAnnotation(CellIndex.class).index();
+                    }
+                    CompanyStaffFullDataDto companyStaffFullData = (CompanyStaffFullDataDto) entry.getValue();
+                    // set default avatar if the photo is null
+                    if(companyStaffFullData.getPhoto() == null) companyStaffFullData.setPhoto(defaultAvatar);
+
+                    // check company ritual season exist for the ritual type, seasson and company
+                    CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], companyStaffFullData.getTypeCode(), seasonYear);
+                    if(companyRitualSeasonDto == null){
+                        dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(ritualTypeCodeCellIndex + 1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage())).valid(false).build());
+                        return;
+                    }
+
+                    // In case of job title code is Others set the job tile code to tileCodeOther
+                    if(companyStaffFullData.getTitleCode().equals("OTHERS")){
+                        if(companyStaffFullData.getTitleCodeOther() != null) {
+                            companyStaffFullData.setTitleCode(companyStaffFullData.getTitleCodeOther());
+                        } else {
+                            dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(jobTileCodeCellIndex + 2)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.FIELD_REQUIRED.getMessage())).valid(false).build());
+                            return;
+                        }
+                    }
+
+                    CompanyStaffDto staff = new CompanyStaffDto();
+                    // copy properties from company staff full data to company staff
+                    BeanUtils.copyProperties(staff, companyStaffFullData);
+                    CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
+                    // if record exists already in DB we need to update it
+                    if (existingStaff != null) {
+                        validationService.updateExistingStaff(staff, existingStaff);
+                        //companyStaffService.save(staff);
+                        savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(staff, mappingContext));
+                    } else {
+                       // companyStaffService.save(staff);
+                        savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(staff, mappingContext));
+                    }
+                    savedItems.add(savedItem);
+                    dataRequestRecords.add(DataRequestRecordDto.builder()
+                            .createDataRequestId(dataRequestId)
+                            .lastUpdateDataRequestId(dataRequestId)
+                            .createDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .itemId(Long.parseLong(BeanUtils.getProperty(savedItem, "id")))
+                            .build());
+
+                    // start adding staff ritual data
+                    CompanyStaffRitualDto companyStaffRitual = new CompanyStaffRitualDto();
+                    companyStaffRitual.setSeason(seasonYear);
+                    companyStaffRitual.setCompanyCode(companyRefCode[0]);
+                    BeanUtils.copyProperties(companyStaffRitual, companyStaffFullData);
+                    updateCompanyStaffRitualData(companyStaffRitual);
+
+                }catch (Exception e){
+                    log.error("Error while creating company staff full data");
+                    ReflectionUtils.handleReflectionException(e);
+
+                }
+
+            });
+
+            // save all records
+            List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(validationService.findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+            // update all items with record ids
+            savedItems.forEach(s -> {
+                savedRecords.stream().filter(r -> {
+                    try {
+                        return StringUtils.equals(BeanUtils.getProperty(r, "itemId"), BeanUtils.getProperty(s, "id"));
+                    } catch (Exception e) {
+                        ReflectionUtils.handleReflectionException(e);
+                        return false;
+                    }
+                }).forEach(r -> {
+                    try {
+                        BeanUtils.setProperty(s, "dataRequestRecordId", BeanUtils.getProperty(r, "id"));
+                    } catch (Exception e) {
+                        ReflectionUtils.handleReflectionException(e);
+                    }
+                });
+            });
+
+            // update saved items
+            repository.saveAll(savedItems);
+            return dataValidationResults;
         }
 
         if (dataSegment.getId() == EDataSegment.APPLICANT_DATA.getId() || dataSegment.getId() == EDataSegment.APPLICANT_HEALTH_DATA.getId() ||
@@ -497,6 +627,10 @@ public class ItemWriter {
             CompanyStaffRitualDto companyStaffRitual = (CompanyStaffRitualDto) item;
             validationService.saveStaffRitual(companyStaffRitual);
         }
+    }
+
+    private  void updateCompanyStaffRitualData(CompanyStaffRitualDto companyStaffRitual) {
+        validationService.saveStaffRitual(companyStaffRitual);
     }
 
 }
