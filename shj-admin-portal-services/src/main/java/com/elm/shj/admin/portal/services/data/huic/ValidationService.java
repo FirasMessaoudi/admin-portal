@@ -388,7 +388,7 @@ public class ValidationService {
                 .fullNameEn(huicApplicantMainData.getFullNameEn())
                 .fullNameAr(huicApplicantMainData.getFullNameAr())
                 .fullNameOrigin(huicApplicantMainData.getFullNameOriginalLang())
-                .maritalStatusCode(EMaritalStatus.fromId(huicApplicantMainData.getMaritalStatus()).name())
+                .maritalStatusCode(huicApplicantMainData.getMaritalStatus() != null ? EMaritalStatus.fromId(huicApplicantMainData.getMaritalStatus()).name() : null)
                 .photo(huicApplicantMainData.getPhoto())
                 .biometricDataFace(huicApplicantMainData.getBiometricDataFace())
                 .biometricDataFinger(huicApplicantMainData.getBiometricDataFP())
