@@ -2,13 +2,11 @@ package com.elm.shj.admin.portal.services.data.huic;
 
 import com.elm.dcc.foundation.commons.validation.ArabicCharacters;
 import com.elm.shj.admin.portal.services.data.validators.*;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,12 +51,10 @@ public class HuicPlannedPackage implements Serializable {
     @EstablishmentCode
     private Long establishmentId;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-
-    private Date packageStartDate;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date packageEndDate;
+    @HijriDate(minOffset = -1, maxOffset = 1)
+    private Long packageStartDate;
+    @HijriDate(minOffset = -1, maxOffset = 1)
+    private Long packageEndDate;
 
     @RitualTypeCode
     private Long ritualTypeCode;

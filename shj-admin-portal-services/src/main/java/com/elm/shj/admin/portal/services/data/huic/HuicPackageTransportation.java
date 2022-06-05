@@ -1,13 +1,13 @@
 package com.elm.shj.admin.portal.services.data.huic;
 
 import com.elm.dcc.foundation.commons.validation.ArabicCharacters;
+import com.elm.shj.admin.portal.services.data.validators.HijriDate;
 import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
 import com.elm.shj.admin.portal.services.data.validators.WithTransportationType;
 import lombok.*;
 
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * class for the Package Transportation huic.
@@ -36,8 +36,10 @@ public class HuicPackageTransportation implements Serializable {
     @Pattern(regexp = "(^[a-zA-Z0-9]*)"
             , message = "validation.data.constraints.msg.20003")
     private String locationToNameEn;
-    private Date validityStart;
-    private Date validityEnd;
+    @HijriDate(minOffset = -1, maxOffset = 1)
+    private Long validityStart;
+    @HijriDate(minOffset = -1, maxOffset = 1)
+    private Long validityEnd;
     @OnlyCharacters(min = 0, max = 256)
     private String routeDetails;
 }

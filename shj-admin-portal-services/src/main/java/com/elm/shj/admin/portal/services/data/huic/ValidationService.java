@@ -30,8 +30,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.chrono.HijrahChronology;
 import java.time.chrono.HijrahDate;
+import java.time.chrono.HijrahEra;
+import java.time.chrono.IsoChronology;
+import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -163,8 +167,8 @@ public class ValidationService {
                 .packageNameAr(plannedPackage.getPackageNameArabic())
                 .packageNameEn(plannedPackage.getPackageNameEnglish())
                 .packageTypeCode(EPackageType.fromId(plannedPackage.getPackageTypeCode()).name())
-                .startDate(plannedPackage.getPackageStartDate())
-                .endDate(plannedPackage.getPackageEndDate())
+                .startDate(toGregorian(plannedPackage.getPackageStartDate()))
+                .endDate(toGregorian(plannedPackage.getPackageEndDate()))
                 .build();
         CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(plannedPackage.getCompanyRefCode() + "_" + ECompanyType.fromId(plannedPackage.getCompanyTypeCode()).name(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
         if (companyRitualSeasonDto != null) {
@@ -212,8 +216,8 @@ public class ValidationService {
                     .locationFromNameEn(huicPackageTransportation.getLocationFromNameEn())
                     .locationToNameAr(huicPackageTransportation.getLocationToNameAr())
                     .locationToNameEn(huicPackageTransportation.getLocationToNameEn())
-                    .validityStart(huicPackageTransportation.getValidityStart())
-                    .validityEnd(huicPackageTransportation.getValidityEnd())
+                    .validityStart(toGregorian(huicPackageTransportation.getValidityStart()))
+                    .validityEnd(toGregorian(huicPackageTransportation.getValidityEnd()))
                     .routeDetails(huicPackageTransportation.getRouteDetails())
                     .ritualPackage(savedRitualPackage)
                     .build();
@@ -439,6 +443,7 @@ public class ValidationService {
         if (applicant.getPackageReferenceNumber() == null) {
             String referenceNumber = ritualPackageService.findPackageReferenceNumber(ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
             applicant.setPackageReferenceNumber(referenceNumber);
+
         }
         applicantService.save(applicant);
 
@@ -657,5 +662,18 @@ public class ValidationService {
             companyStaffCardService.save(companyStaffCardDto);
 
         }
+    }
+
+    public static Date toGregorian(Long hijriDate) {
+        String hijriDateString = String.valueOf(hijriDate);
+        LocalDate muslimDate = LocalDate.of(Integer.valueOf(hijriDateString.substring(0, 4)), Integer.valueOf(hijriDateString.substring(5, 6)), Integer.valueOf(hijriDateString.substring(7, 8)));
+        final HijrahDate hijrahDate = HijrahChronology.INSTANCE.date(HijrahEra.AH,
+                muslimDate.get(ChronoField.YEAR_OF_ERA), muslimDate.get(ChronoField.MONTH_OF_YEAR),
+                muslimDate.get(ChronoField.DAY_OF_MONTH));
+
+        LocalDate localDate = IsoChronology.INSTANCE.date(hijrahDate);
+        return Date.from(localDate.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
     }
 }
