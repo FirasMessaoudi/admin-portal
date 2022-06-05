@@ -17,6 +17,7 @@ import java.io.Serializable;
  * @since 1.1.0
  */
 
+@UniqueCompany
 @NoArgsConstructor
 @Getter
 @Setter

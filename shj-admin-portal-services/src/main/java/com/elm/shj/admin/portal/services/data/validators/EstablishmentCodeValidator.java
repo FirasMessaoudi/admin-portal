@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class EstablishmentCodeValidator implements ConstraintValidator<EstablishmentCode, Object> {
 
-    private final static List<String> ESTABLISHMENT_CODES = Arrays.asList("1", "2", "3", "4", "5", "6", "7");
+    private final static List<String> ESTABLISHMENT_CODES = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9");
 
     /**
      * {@inheritDoc}

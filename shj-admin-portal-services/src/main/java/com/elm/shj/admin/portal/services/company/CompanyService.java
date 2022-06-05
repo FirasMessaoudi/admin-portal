@@ -3,6 +3,7 @@ package com.elm.shj.admin.portal.services.company;
 import com.elm.shj.admin.portal.orm.entity.JpaCompany;
 import com.elm.shj.admin.portal.orm.repository.CompanyRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyLiteDto;
+import com.elm.shj.admin.portal.services.dto.ECompanyType;
 import com.elm.shj.admin.portal.services.dto.ERitualType;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -38,5 +39,7 @@ public class CompanyService extends GenericService<JpaCompany, CompanyLiteDto, L
     }
 
 
-
+    public boolean existsByBasicInfo(long companyRefCode, Long companyTypeCode) {
+        return companyRepository.existsByCode(companyRefCode + "_" + ECompanyType.fromId(companyTypeCode).name());
+    }
 }

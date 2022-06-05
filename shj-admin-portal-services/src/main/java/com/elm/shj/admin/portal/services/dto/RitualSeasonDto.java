@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.shj.admin.portal.services.data.validators.HijriDate;
 import com.elm.shj.admin.portal.services.data.validators.RitualTypeCode;
 import com.elm.shj.admin.portal.services.data.validators.SeasonYear;
+import com.elm.shj.admin.portal.services.data.validators.UniqueRitual;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import java.io.Serializable;
  * @author ahmed elsayed
  * @since 1.1.0
  */
+@UniqueRitual
 @NoArgsConstructor
 @Getter
 @Setter

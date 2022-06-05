@@ -30,4 +30,8 @@ public class RitualSeasonService extends GenericService<JpaRitualSeason, RitualS
     public List<Integer> listRitualSeasonYears() {
         return ritualSeasonRepository.listRitualSeasonYears();
     }
+
+    public boolean existsByBasicInfo(String ritualTypeCode, int seasonYear) {
+        return ritualSeasonRepository.existsByRitualTypeCodeAndSeasonYear(ritualTypeCode, seasonYear);
+    }
 }

@@ -45,4 +45,5 @@ public interface CompanyRepository extends JpaRepository<JpaCompany, Long> {
             "WHERE rs.seasonYear = :seasonYear ")
     List<JpaCompany> findCompaniesBySeason(@Param("seasonYear") int seasonYear);
 
+    boolean existsByCode(String code);
 }

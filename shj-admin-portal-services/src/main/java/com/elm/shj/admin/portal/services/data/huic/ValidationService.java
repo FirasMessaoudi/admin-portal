@@ -236,7 +236,7 @@ public class ValidationService {
                 .crNumber(huicCompany.getCrNumber().toString())
                 .typeCode(ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
                 .countryCode(huicCompany.getCountry().toString())
-                .establishmentRefCode(huicCompany.getEstablishmentId())
+                .establishmentRefCode(huicCompany.getEstablishmentId() != null ? huicCompany.getEstablishmentId() : 9)
                 .build();
 
         JpaCompany savedCompany = companyRepository.save((JpaCompany) findMapper(CompanyDto.class).toEntity(companyDto, mappingContext));

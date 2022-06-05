@@ -1188,16 +1188,21 @@ SET
 IDENTITY_INSERT shc_portal.shc_housing_category_lk OFF;
 GO
 
-Delete from shc_portal.shc_company where code in ('1', '2', '3', '4', '5', '6', '7', '8', '9');
+Delete
+from shc_portal.shc_company
+where code in
+      ('1_ESTABLISHMENT', '2_ESTABLISHMENT', '3_ESTABLISHMENT', '4_ESTABLISHMENT', '5_ESTABLISHMENT', '6_ESTABLISHMENT',
+       '7_ESTABLISHMENT', '8_ESTABLISHMENT', '9_ESTABLISHMENT');
 GO
 INSERT INTO shc_portal.shc_company (code, label_ar, label_en, contact_number)
 VALUES ('1_ESTABLISHMENT', N'شركة مطوفي حجاج دول جنوب شرق آسيا', 'South East Asia countries Tawafa Co.','0125459922');
 INSERT INTO shc_portal.shc_company (code, label_ar, label_en, contact_number)
-VALUES ('2_ESTABLISHMENT', N'شركة مطوفي حجاج دول جنوب آسيا', 'South Asia countries Tawafa Co.','0125344444');
+VALUES ('2_ESTABLISHMENT', N'شركة مطوفي حجاج دول جنوب آسيا', 'South Asia countries Tawafa Co.', '0125344444');
 INSERT INTO shc_portal.shc_company (code, label_ar, label_en, contact_number)
-VALUES ('3_ESTABLISHMENT', N'شركة مطوفي حجاج الدول الأفريقية غير العربية', 'Africa non Arab countries Tawafa Co.','0125435160');
+VALUES ('3_ESTABLISHMENT', N'شركة مطوفي حجاج الدول الأفريقية غير العربية', 'Africa non Arab countries Tawafa Co.',
+        '0125435160');
 INSERT INTO shc_portal.shc_company (code, label_ar, label_en, contact_number)
-VALUES ('4_ESTABLISHMENT', N'شركة مطوفي حجاج الدولة العربية', 'Arab countries Tawafa Co.','920003503');
+VALUES ('4_ESTABLISHMENT', N'شركة مطوفي حجاج الدولة العربية', 'Arab countries Tawafa Co.', '920003503');
 INSERT INTO shc_portal.shc_company (code, label_ar, label_en, contact_number)
 VALUES ('5_ESTABLISHMENT', N'شركة مطوفي حجاج تركيا وحجاج أوروبا وأمريكا وأستراليا', 'Turkey, Europe, America and Australia Tawafa Co.','920012013');
 INSERT INTO shc_portal.shc_company (code, label_ar, label_en, contact_number)

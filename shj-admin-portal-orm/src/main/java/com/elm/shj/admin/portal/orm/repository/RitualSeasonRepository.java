@@ -18,4 +18,6 @@ public interface RitualSeasonRepository extends JpaRepository<JpaRitualSeason, L
     List<Integer> listRitualSeasonYears();
 
     Optional<JpaRitualSeason> findByRitualTypeCodeAndSeasonYear(String ritualTypeCode, int season);
+
+    boolean existsByRitualTypeCodeAndSeasonYear(String ritualTypeCode, int seasonYear);
 }
