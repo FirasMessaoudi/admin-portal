@@ -160,6 +160,7 @@ public class ValidationService {
 
     @Transactional
     void savePlannedPackages(HuicPlannedPackage plannedPackage) {
+        //TODO: check hajj office makkah and hajj office madina
         RitualPackageDto ritualPackageDto = RitualPackageDto.builder()
                 .referenceNumber(plannedPackage.getPackageRefNumber().toString())
                 .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah() != null ? plannedPackage.getHajjOfficeMakkah().toString() : null)
@@ -522,7 +523,7 @@ public class ValidationService {
      * @param applicant
      */
     public void updateApplicantBirthDate(ApplicantDto applicant) {
-        if (applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) {
+        if ((applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) && applicant.getDateOfBirthGregorian() != null) {
             Calendar cl = Calendar.getInstance();
             cl.setTime(applicant.getDateOfBirthGregorian());
             HijrahDate islamyDate = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));

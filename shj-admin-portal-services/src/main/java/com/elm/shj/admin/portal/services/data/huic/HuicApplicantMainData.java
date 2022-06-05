@@ -38,7 +38,9 @@ public class HuicApplicantMainData implements Serializable {
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     private Long idNumber;
 
-    @IdNumber(minLength = 5, maxLength = 50)
+    @NullOrNotBlank(min = 10, max = 150)
+    @Pattern(regexp = "(^[a-zA-Z0-9]*)"
+            , message = "validation.data.constraints.msg.20003")
     private String nationalIdOriginalCountry;
 
     @PassportNumber
