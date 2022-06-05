@@ -15,6 +15,7 @@ import java.util.List;
  * @author f.messaoudi
  * @since 1.1.0
  */
+@WithCompanyRitualSeason
 @Getter
 @Setter
 @AllArgsConstructor
@@ -31,12 +32,8 @@ public class HuicPlannedPackage implements Serializable {
 
     private Long companyRefCode;
 
-    @Pattern(regexp = "(^[a-zA-Z0-9]*)"
-            , message = "validation.data.constraints.msg.20003")
-    private String hajjOfficeMakkah;
-    @Pattern(regexp = "(^[a-zA-Z0-9]*)"
-            , message = "validation.data.constraints.msg.20003")
-    private String hajjOfficeMadina;
+    private Long hajjOfficeMakkah;
+    private Long hajjOfficeMadina;
     @ArabicCharacters(lettersOnly = true, numbersOnly = false)
     private String packageNameArabic;
     @Pattern(regexp = "(^[a-zA-Z0-9]*)"

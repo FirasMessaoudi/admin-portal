@@ -162,8 +162,8 @@ public class ValidationService {
     void savePlannedPackages(HuicPlannedPackage plannedPackage) {
         RitualPackageDto ritualPackageDto = RitualPackageDto.builder()
                 .referenceNumber(plannedPackage.getPackageRefNumber().toString())
-                .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah())
-                .hajjOfficeMadina(plannedPackage.getHajjOfficeMadina())
+                .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah() != null ? plannedPackage.getHajjOfficeMakkah().toString() : null)
+                .hajjOfficeMadina(plannedPackage.getHajjOfficeMadina() != null ? plannedPackage.getHajjOfficeMadina().toString() : null)
                 .packageNameAr(plannedPackage.getPackageNameArabic())
                 .packageNameEn(plannedPackage.getPackageNameEnglish())
                 .packageTypeCode(EPackageType.fromId(plannedPackage.getPackageTypeCode()).name())

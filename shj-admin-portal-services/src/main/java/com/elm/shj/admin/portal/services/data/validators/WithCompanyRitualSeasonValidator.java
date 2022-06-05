@@ -4,16 +4,16 @@
 package com.elm.shj.admin.portal.services.data.validators;
 
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
+import com.elm.shj.admin.portal.services.data.huic.HuicPlannedPackage;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualSeasonDto;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffRitualDto;
+import com.elm.shj.admin.portal.services.dto.ERitualType;
 import com.elm.shj.admin.portal.services.dto.StaffApplicantGroupDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ReflectionUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.lang.reflect.Field;
 
 /**
  * Validator for {@link WithCompanyStaff} annotation
@@ -35,13 +35,17 @@ public class WithCompanyRitualSeasonValidator implements ConstraintValidator<Wit
 
         if (value == null) {
             return false;
-        } else if(value instanceof StaffApplicantGroupDto){
-            StaffApplicantGroupDto  staffApplicantGroupDto = (StaffApplicantGroupDto) value;
+        } else if (value instanceof StaffApplicantGroupDto) {
+            StaffApplicantGroupDto staffApplicantGroupDto = (StaffApplicantGroupDto) value;
             CompanyRitualSeasonDto companyRitualSeason = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(staffApplicantGroupDto.getCompanyCode(), staffApplicantGroupDto.getRitualTypeCode(), staffApplicantGroupDto.getSeason());
             return companyRitualSeason != null;
-        }else{
+        } else if (value instanceof CompanyStaffRitualDto) {
             CompanyStaffRitualDto companyStaffRitualDto = (CompanyStaffRitualDto) value;
             CompanyRitualSeasonDto companyRitualSeason = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyStaffRitualDto.getCompanyCode(), companyStaffRitualDto.getTypeCode(), companyStaffRitualDto.getSeason());
+            return companyRitualSeason != null;
+        } else {
+            HuicPlannedPackage huicPlannedPackage = (HuicPlannedPackage) value;
+            CompanyRitualSeasonDto companyRitualSeason = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(huicPlannedPackage.getCompanyRefCode() + "_" + huicPlannedPackage.getCompanyTypeCode(), ERitualType.fromId(huicPlannedPackage.getRitualTypeCode()).name(), huicPlannedPackage.getSeasonYear());
             return companyRitualSeason != null;
         }
 
