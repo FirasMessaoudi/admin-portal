@@ -5,10 +5,7 @@ package com.elm.shj.admin.portal.services.data.validators;
 
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
 import com.elm.shj.admin.portal.services.data.huic.HuicPlannedPackage;
-import com.elm.shj.admin.portal.services.dto.CompanyRitualSeasonDto;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffRitualDto;
-import com.elm.shj.admin.portal.services.dto.ERitualType;
-import com.elm.shj.admin.portal.services.dto.StaffApplicantGroupDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,7 +42,7 @@ public class WithCompanyRitualSeasonValidator implements ConstraintValidator<Wit
             return companyRitualSeason != null;
         } else {
             HuicPlannedPackage huicPlannedPackage = (HuicPlannedPackage) value;
-            CompanyRitualSeasonDto companyRitualSeason = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(huicPlannedPackage.getCompanyRefCode() + "_" + huicPlannedPackage.getCompanyTypeCode(), ERitualType.fromId(huicPlannedPackage.getRitualTypeCode()).name(), huicPlannedPackage.getSeasonYear());
+            CompanyRitualSeasonDto companyRitualSeason = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(huicPlannedPackage.getCompanyRefCode() + "_" + ECompanyType.fromId(huicPlannedPackage.getCompanyTypeCode()).name(), ERitualType.fromId(huicPlannedPackage.getRitualTypeCode()).name(), huicPlannedPackage.getSeasonYear());
             return companyRitualSeason != null;
         }
 
