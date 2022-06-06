@@ -36,10 +36,10 @@ public class RitualSeasonDto implements Serializable {
 
     @RitualTypeCode
     private String ritualTypeCode;
-
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @HijriDate(minOffset = -1, maxOffset = 1)
     private long seasonStart;
-
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @HijriDate(minOffset = -1, maxOffset = 1)
     private long seasonEnd;
 

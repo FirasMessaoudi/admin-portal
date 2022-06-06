@@ -52,13 +52,24 @@ public class WithApplicantValidator implements ConstraintValidator<WithApplicant
             return applicantService.existsByBasicInfo(applicantBasicInfoDto);
         } else {
             if (value.getClass().isAssignableFrom(HuicApplicantRitual.class)) {
+                if (((HuicApplicantRitual) value).getNationality() == null) {
+                    return false;
+                }
                 return applicantLiteService.existsByBasicInfo(((HuicApplicantRitual) value).getIdNumber() != null ? ((HuicApplicantRitual) value).getIdNumber().toString() : null, ((HuicApplicantRitual) value).getPassportNo(), ((HuicApplicantRitual) value).getNationality().toString());
             }
             if (value.getClass().isAssignableFrom(HuicApplicantRelative.class)) {
+                if (((HuicApplicantRelative) value).getNationality() == null) {
+                    return false;
+                }
                 return applicantLiteService.existsByBasicInfo(((HuicApplicantRelative) value).getIdNumber() != null ? ((HuicApplicantRelative) value).getIdNumber().toString() : null, ((HuicApplicantRelative) value).getPassportNo(), ((HuicApplicantRelative) value).getNationality().toString());
             }
             if (value.getClass().isAssignableFrom(HuicArrivalData.class)) {
-                return applicantLiteService.existsByBasicInfo(((HuicArrivalData) value).getIdNumber() != null ? ((HuicArrivalData) value).getIdNumber().toString() : null, ((HuicArrivalData) value).getPassportNo(), ((HuicArrivalData) value).getNationality().toString());
+                if (value.getClass().isAssignableFrom(HuicArrivalData.class)) {
+                    if (((HuicArrivalData) value).getNationality() == null) {
+                        return false;
+                    }
+                    return applicantLiteService.existsByBasicInfo(((HuicArrivalData) value).getIdNumber() != null ? ((HuicArrivalData) value).getIdNumber().toString() : null, ((HuicArrivalData) value).getPassportNo(), ((HuicArrivalData) value).getNationality().toString());
+                }
             }
             Field applicantBasicInfoField = ReflectionUtils.findField(value.getClass(), "applicantBasicInfo");
             if (applicantBasicInfoField == null) {
