@@ -1804,5 +1804,5 @@ alter
 column date_of_birth_gregorian DATE   NULL;
 GO
 
-ALTER TABLE shc_portal.shc_company_staff ADD title_code_other varchar(30)
+ALTER TABLE shc_portal.shc_company_staff ADD custom_job_title varchar(30)
 GO
