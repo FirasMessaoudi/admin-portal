@@ -123,6 +123,7 @@ public class ItemWriter {
     @Transactional
     @SuppressWarnings({"rawtypes", "unchecked"})
     public <T, S> List<DataValidationResult> write(List<AbstractMap.SimpleEntry<Row, T>> items, DataSegmentDto dataSegment, long dataRequestId, String... companyRefCode) {
+        log.info("Confirming Item writer #{}", companyRefCode);
         if (dataSegment.getId() == EDataSegment.APPLICANT_EMERGENCY_DATA.getId()) {
             JpaRepository applicantRepository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.APPLICANT_DATA));
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();

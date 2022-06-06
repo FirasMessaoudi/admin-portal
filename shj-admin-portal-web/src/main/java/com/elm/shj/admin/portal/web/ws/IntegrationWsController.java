@@ -1002,6 +1002,7 @@ public class IntegrationWsController {
     @PostMapping(value = "/data/request/confirm/{dataRequestId}/{companyRefCode}")
     public ResponseEntity<WsResponse<?>> confirm(@PathVariable long dataRequestId, @PathVariable String companyRefCode) throws Exception {
         log.info("Confirming data request #{}", dataRequestId);
+        log.info("Confirming data request #{}", companyRefCode);
         dataRequestService.confirm(dataRequestId, companyRefCode);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body("SUCCESS").build());
 
