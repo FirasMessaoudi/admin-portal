@@ -245,34 +245,52 @@
           <div class="radio-item align-items-baseline d-flex mr-5">
             <input class="mr-2"
                    name="target"
-                   [value]="0"
-                   type="radio"
-                   [(ngModel)]="checkedCriteria"
-                   id="customRadioInline07">
-            <label for="customRadioInline07">{{ "notification-management.all" | translate }}</label>
-          </div>
-          <div class="radio-item align-items-baseline d-flex mr-5">
-            <input class="mr-2"
-                   name="target"
                    [value]="1"
                    type="radio"
                    [(ngModel)]="checkedCriteria"
-                   id="customRadioInline08">
-            <label for="customRadioInline08">{{ "notification-management.by_applicant_attributes" | translate }}</label>
+                   id="customRadioInline13">
+            <label for="customRadioInline13">{{ "notification-management.all-applicants" | translate }}</label>
           </div>
-          <div class="radio-item align-items-baseline d-flex">
+          <div class="radio-item align-items-baseline d-flex mr-5">
             <input class="mr-2"
                    name="target"
                    [value]="2"
                    type="radio"
                    [(ngModel)]="checkedCriteria"
+                   id="customRadioInline14">
+            <label for="customRadioInline14">{{ "notification-management.all-staff" | translate }}</label>
+          </div>
+          <div class="radio-item align-items-baseline d-flex mr-5">
+            <input class="mr-2"
+                   name="target"
+                   [value]="3"
+                   type="radio"
+                   [(ngModel)]="checkedCriteria"
+                   id="customRadioInline08">
+            <label for="customRadioInline08">{{ "notification-management.by_applicant_attributes" | translate }}</label>
+          </div>
+          <div class="radio-item align-items-baseline d-flex mr-5">
+            <input class="mr-2"
+                   name="target"
+                   [value]="4"
+                   type="radio"
+                   [(ngModel)]="checkedCriteria"
                    id="customRadioInline09">
-            <label for="customRadioInline09">{{ "notification-management.selected_list" | translate }}</label>
+            <label for="customRadioInline09">{{ "notification-management.selected_applicants" | translate }}</label>
+          </div>
+          <div class="radio-item align-items-baseline d-flex mr-5">
+            <input class="mr-2"
+                   name="target"
+                   [value]="5"
+                   type="radio"
+                   [(ngModel)]="checkedCriteria"
+                   id="customRadioInline15">
+            <label for="customRadioInline09">{{ "notification-management.selected_staff" | translate }}</label>
           </div>
         </div>
       </div>
 
-      <div class="searchBox mb-4 animate slideIn delay" *ngIf="checkedCriteria === 1">
+      <div class="searchBox mb-4 animate slideIn delay" *ngIf="checkedCriteria === 3">
         <form [formGroup]="categorizingForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
 
           <div class="form-group col">
@@ -390,9 +408,9 @@
             </div>
           </div>
         </form>
-
       </div>
-      <div *ngIf="checkedCriteria === 2" class="animate slideIn delay mb-4">
+
+      <div *ngIf="checkedCriteria === 4" class="animate slideIn delay mb-4">
         <div class="dashes flex-center-column my-3 p-5" *ngIf="addedApplicants.length === 0">
 
           <img class="my-5" src="assets/images/add-cards.jpg" alt='{{ "printing-management.new_request" | translate }}'>
@@ -411,7 +429,7 @@
           </div>
           <div class="modal-body">
 
-            <form [formGroup]="searchForm" name="searchApplicant" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+            <form [formGroup]="searchApplicantForm" name="searchApplicant" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
               <div class="form-group col">
                 <label class="col-form-label">{{'card-management.applicant_id' | translate }}</label>
                 <input id="uin" formControlName="uin" class="form-control"
@@ -433,7 +451,7 @@
               </div>
 
               <div class="form-group col-12">
-                <button id="searchCard" type="submit" [disabled]="isLoading" (click)="search(0)"
+                <button id="searchCard" type="submit" [disabled]="isLoading" (click)="searchApplicants(0)"
                         class="btn btn-dcc-primary px-5 mr-3">
                   {{ "general.btn_search" | translate }}
                 </button>
@@ -475,8 +493,8 @@
                       <td>
                         <div class="custom-control custom-checkbox my-2">
                           <input type="checkbox" class="custom-control-input" id="applicantCheck-{{applicant.id}}"
-                                 [checked]="isChecked(applicant)"
-                                 (change)="selectOne($event, applicant.id)">
+                                 [checked]="isApplicantChecked(applicant)"
+                                 (change)="selectOneApplicant($event, applicant.id)">
                           <label class="custom-control-label mx-3" for="applicantCheck-{{applicant.id}}"></label>
                         </div>
                       </td>
@@ -497,20 +515,20 @@
             <nav aria-label="Page navigation example" *ngIf="page?.content && page?.totalElements > 0">
               <ul class="pagination justify-content-center">
                 <li class="page-item" [class.disabled]="page?.first">
-                  <a class="page-link" (click)="search(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>
+                  <a class="page-link" (click)="searchApplicants(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>
                 </li>
                 <li class="page-item" [class.disabled]="page?.first">
-                  <a class="page-link" (click)="search(page?.number-1)"
+                  <a class="page-link" (click)="searchApplicants(page?.number-1)"
                      tabindex="-1">{{'general.nav_previous' | translate}}</a>
                 </li>
                 <li class="page-item active">
                   <a class="page-link">{{(page?.number + 1) + ' / ' + page?.totalPages}}</a>
                 </li>
                 <li class="page-item" [class.disabled]="page?.last">
-                  <a class="page-link" (click)="search(page?.number+1)">{{'general.nav_next' | translate}}</a>
+                  <a class="page-link" (click)="searchApplicants(page?.number+1)">{{'general.nav_next' | translate}}</a>
                 </li>
                 <li class="page-item" [class.disabled]="page?.last">
-                  <a class="page-link" (click)="search(page?.totalPages-1)">{{'general.nav_last' | translate}}</a>
+                  <a class="page-link" (click)="searchApplicants(page?.totalPages-1)">{{'general.nav_last' | translate}}</a>
                 </li>
               </ul>
             </nav>
@@ -605,7 +623,216 @@
         </div>
 
       </div>
+      <div *ngIf="checkedCriteria === 5" class="animate slideIn delay mb-4">
+        <div class="dashes flex-center-column my-3 p-5" *ngIf="addedStaff.length === 0">
 
+          <img class="my-5" src="assets/images/add-cards.jpg" alt='{{ "printing-management.new_request" | translate }}'>
+          <button id="addStaff" (click)="openSearchModal(showAdd)" class="btn btn-outline-dcc-primary px-4">
+            <svg-icon styleClass="mr-2" icon="plus"></svg-icon>
+            <span>{{ "general.btn_add" | translate }}</span>
+          </button>
+        </div>
+
+        <ng-template #showAdd let-modal>
+          <div class="modal-header">
+            <h4> {{ "notification-management.add_user_defined_notifications" | translate }}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="resetSelectionModal()">
+              <span aria-hidden="true" class="h2">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <form [formGroup]="searchStaffForm" name="searchStaff" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+              <div class="form-group col">
+                <label class="col-form-label">{{'card-management.applicant_id' | translate }}</label>
+                <input id="suin" formControlName="suin" class="form-control"
+                       onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length < 14"
+                       min="0" step="1">
+              </div>
+
+              <div class="form-group col">
+                <label class="col-form-label">{{"notification-management.staff-title"| translate}}</label>
+                <select class="custom-select" formControlName="staffTitle">
+                  <option [ngValue]="null" selected>{{ "notification-management.all"| translate }}</option>
+                  <option *ngFor="let title of staffTitles" [ngValue]="title.code">
+                    {{title.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-group col-12">
+                <button id="searchStaffCard" type="submit" [disabled]="isLoading" (click)="searchCompanyStaff(0)"
+                        class="btn btn-dcc-primary px-5 mr-3">
+                  {{ "general.btn_search" | translate }}
+                </button>
+              </div>
+
+            </form>
+
+            <div class="table-responsive my-4">
+              <div class="table_scroll">
+                <table id="selectedStaffSearchResult" class="table table-striped table-hover">
+                  <thead>
+                  <tr>
+                    <th scope="col"></th>
+                    <th scope="col">{{'card-management.name' | translate}}</th>
+                    <th scope="col">{{'card-management.applicant_id' | translate}}</th>
+                    <th scope="col">{{'general.nin' | translate}}</th>
+                    <th scope="col">{{'card-management.passport_number' | translate}}</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngIf="isSelectLoading" class="text-center">
+                    <td colspan="10" style="height: 200px;">
+                      <div class="preloader inner_page">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="(!page?.content  || companyStaff.length === 0) && !isSelectLoading"
+                      class="text-center">
+                    <td colspan="10">
+                      <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
+                      <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+                    </td>
+                  </tr>
+                  <ng-container *ngIf="!isSelectLoading">
+                    <tr *ngFor="let staff of companyStaff">
+                      <td>
+                        <div class="custom-control custom-checkbox my-2">
+                          <input type="checkbox" class="custom-control-input" id="{{staff.id}}"
+                                 [checked]="isStaffChecked(staff)"
+                                 (change)="selectOneStaff($event, staff.id)">
+                          <label class="custom-control-label mx-3" for="{{staff.id}}"></label>
+                        </div>
+                      </td>
+                      <td *ngIf="currentLanguage.startsWith('ar')">{{staff?.fullNameAr}}
+                        <br>{{staff?.fullNameEn}}</td>
+                      <td *ngIf="currentLanguage.startsWith('en')">{{staff?.fullNameEn}}
+                        <br>{{staff?.fullNameAr}}</td>
+                      <td>{{staff?.digitalIds[0]?.suin}}</td>
+                      <td>{{staff?.idNumber}}</td>
+                      <td class="ltr">{{staff?.passportNumber}}</td>
+                    </tr>
+                  </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <nav aria-label="Page navigation example" *ngIf="page?.content && page?.totalElements > 0">
+              <ul class="pagination justify-content-center">
+                <li class="page-item" [class.disabled]="page?.first">
+                  <a class="page-link" (click)="searchApplicants(0)" tabindex="-1">{{'general.nav_first' | translate}}</a>
+                </li>
+                <li class="page-item" [class.disabled]="page?.first">
+                  <a class="page-link" (click)="searchApplicants(page?.number-1)"
+                     tabindex="-1">{{'general.nav_previous' | translate}}</a>
+                </li>
+                <li class="page-item active">
+                  <a class="page-link">{{(page?.number + 1) + ' / ' + page?.totalPages}}</a>
+                </li>
+                <li class="page-item" [class.disabled]="page?.last">
+                  <a class="page-link" (click)="searchCompanyStaff(page?.number+1)">{{'general.nav_next' | translate}}</a>
+                </li>
+                <li class="page-item" [class.disabled]="page?.last">
+                  <a class="page-link" (click)="searchCompanyStaff(page?.totalPages-1)">{{'general.nav_last' | translate}}</a>
+                </li>
+              </ul>
+            </nav>
+
+          </div>
+          <div class="modal-footer" *ngIf="selectedStaff?.length">
+            <button type="button" class="btn btn-outline-secondary" (click)="resetSelectionModal()">
+              {{'general.btn_cancel' | translate }}
+            </button>
+
+            <button type="button" class="btn btn-dcc-primary" (click)="addCompanyStaff()">
+              {{'notification-management.add_no_company_staff' | translate : {noCompanyStaff: selectedStaff.length} }}
+            </button>
+          </div>
+        </ng-template>
+
+        <div *ngIf="addedStaff?.length > 0">
+
+          <div class="dashes flex-center-between py-2 px-4">
+
+            <div>
+              <span class="h5 font-weight-bold text-dcc-primary mr-3">{{addedStaff.length}}</span>
+              <span>{{'notification-management.company_staff_were_selected' | translate}}</span>
+            </div>
+
+            <button class="btn btn-outline-dcc-primary px-4" (click)="openSearchModal(showAdd)">
+              {{ "general.btn_add" | translate }}
+            </button>
+
+          </div>
+
+          <div class="table-responsive my-4">
+            <table id="addedStaffSearchResult" class="table table-striped table-hover">
+              <thead>
+              <tr>
+                <th scope="col">{{'card-management.name' | translate}}</th>
+                <th scope="col">{{'card-management.applicant_id' | translate}}</th>
+                <th scope="col">{{'printing-management.id_number' | translate}}</th>
+                <th scope="col">{{'card-management.passport_number' | translate}}</th>
+                <th scope="col" class="text-center"></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngIf="false" class="text-center">
+                <td colspan="10">
+                  <svg-icon styleClass="display-1 text-dcc-light" icon="empty-set"></svg-icon>
+                  <p class="text-light-gray mb-3">{{ "general.table_emtpy_text" | translate }}</p>
+                </td>
+              </tr>
+              <tr
+                *ngFor="let staff of addedStaff | slice: (addedStaffCurrentPage * addedStaffPageSize) - addedApplicantsPageSize :addedStaffCurrentPage * addedStaffPageSize">
+                <td>{{staff?.fullNameAr}} {{staff?.fullNameEn}}</td>
+                <td>{{staff?.digitalIds[0]?.suin}}</td>
+                <td>{{staff?.idNumber}}</td>
+                <td class="ltr">{{staff?.passportNumber}}</td>
+                <td>
+                  <button (click)="undoAddApplicant(staff?.id)"
+                          class="btn btn-sm btn-outline-danger tblView"> {{"general.btn_delete" | translate}}
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="addedStaffCurrentPage === 1">
+                <a class="page-link" (click)="setCurrentStaffPage(1)" tabindex="-1">{{'general.nav_first' | translate}}</a>
+              </li>
+              <li class="page-item" [class.disabled]="addedStaffCurrentPage === 1">
+                <a class="page-link" (click)="setCurrentStaffPage(addedStaffCurrentPage - 1)"
+                   tabindex="-1">{{'general.nav_previous' | translate}}</a>
+              </li>
+              <li class="page-item active">
+                <a
+                  class="page-link">{{addedStaffCurrentPage + ' / ' + getTotalPages(addedApplicants.length, addedApplicantsPageSize)}}</a>
+              </li>
+              <li class="page-item"
+                  [class.disabled]="addedStaffCurrentPage === getTotalPages(addedStaff.length, addedStaffPageSize)">
+                <a class="page-link"
+                   (click)="setCurrentPage(addedStaffCurrentPage + 1)">{{'general.nav_next' | translate}}</a>
+              </li>
+              <li class="page-item"
+                  [class.disabled]="addedStaffCurrentPage === getTotalPages(addedStaff.length, addedStaffPageSize)">
+                <a class="page-link"
+                   (click)="setCurrentPage(getTotalPages(addedStaff.length, addedStaffPageSize))">{{'general.nav_last' | translate}}</a>
+              </li>
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
       <div class="d-flex justify-content-between">
         <button class="btn btn-outline-dcc-primary px-4 mr-1" (click)="cancel()">
           {{"general.btn_cancel" | translate}}</button>
@@ -643,15 +870,23 @@
       <span aria-hidden="true" class="h1">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" *ngIf="checkedCriteria==1 || checkedCriteria ==3 || checkedCriteria ==4">
     <span *ngIf="applicantsCount != null">
     {{(applicantsCount > 0 ? 'notification-management.save_and_send_confirmation_text' : 'notification-management.no_applicants_found_text') | translate : {count: applicantsCount} }}
+    </span>
+  </div>
+  <div class="modal-body" *ngIf="checkedCriteria==2  || checkedCriteria==5">
+    <span *ngIf="staffCount != null">
+    {{(staffCount > 0 ? 'notification-management.save_and_send_confirmation_text' : 'notification-management.no_applicants_found_text') | translate : {count: staffCount} }}
     </span>
   </div>
   <div class="modal-footer">
     <button type="button" (click)="dismiss()"
             class="btn btn-outline-secondary">{{ "general.dialog_confirmation_cancel" | translate }}</button>
-    <button type="button" [disabled]="applicantsCount === null" (click)="save(CONFIRMED)"
+    <button type="button" *ngIf="checkedCriteria==1 || checkedCriteria ==3 || checkedCriteria ==4 " [disabled]="applicantsCount === null" (click)="save(CONFIRMED)"
             class="btn btn-dcc-primary">{{ "general.dialog_confirmation_ok" | translate }}</button>
+    <button type="button" *ngIf="checkedCriteria==2  || checkedCriteria==5" [disabled]="staffCount === null" (click)="save(CONFIRMED)"
+            class="btn btn-dcc-primary">{{ "general.dialog_confirmation_ok" | translate }}</button>
+
   </div>
 </ng-template>

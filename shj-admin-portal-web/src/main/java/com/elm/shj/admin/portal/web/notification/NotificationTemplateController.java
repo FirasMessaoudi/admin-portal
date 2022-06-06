@@ -3,9 +3,12 @@
  */
 package com.elm.shj.admin.portal.web.notification;
 
+import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.applicant.PackageHousingService;
 import com.elm.shj.admin.portal.services.company.CompanyLiteService;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.lookup.CompanyStaffTitleLookupService;
 import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
 import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -20,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +48,9 @@ public class NotificationTemplateController {
     private final NotificationRequestService notificationRequestService;
     private final CompanyLiteService companyLiteService;
     private final PackageHousingService packageHousingService;
+    private final CompanyStaffService companyStaffService;
+    private final ApplicantService applicantService;
+    private final CompanyStaffTitleLookupService companyStaffTitleLookupService;
 
     private final static String SYSTEM_DEFINED = "SYSTEM_DEFINED";
     private final static String USER_DEFINED = "USER_DEFINED";
@@ -120,6 +127,12 @@ public class NotificationTemplateController {
         return packageHousingService.findAllCamps();
     }
 
+    @GetMapping("/staff-title/list")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT + "')")
+    public List<CompanyStaffTitleLookupDto> listStaffRoles(Authentication authentication) {
+        log.debug("List company staff roles...");
+        return companyStaffTitleLookupService.findAll();
+    }
     private boolean validateTemplateContentParams(NotificationTemplateDto notificationTemplate) {
         boolean allParamsValid = true;
         Pattern pattern = Pattern.compile("\\<(.*?)\\>");
@@ -142,4 +155,5 @@ public class NotificationTemplateController {
         }
         return allParamsValid;
     }
+
 }

@@ -143,4 +143,5 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                 });
         return new PageImpl<>(detailedUserNotifications, pageable, userNotifications.getTotalElements());
     }
+
 }

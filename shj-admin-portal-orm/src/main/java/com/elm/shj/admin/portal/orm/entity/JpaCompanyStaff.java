@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -85,13 +87,17 @@ public class JpaCompanyStaff implements Serializable {
     @Column(name = "data_request_record_id")
     private Long dataRequestRecordId;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyStaff")
+
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyStaff",fetch = FetchType.EAGER)
     private List<JpaCompanyStaffDigitalId> digitalIds;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupLeader")
     private List<JpaApplicantGroup> applicantGroups;
 
     private boolean registered;
+
+    @Column(name = "preferred_language")
+    private String preferredLanguage;
 
     @Column(name = "country_code")
     private String countryCode;

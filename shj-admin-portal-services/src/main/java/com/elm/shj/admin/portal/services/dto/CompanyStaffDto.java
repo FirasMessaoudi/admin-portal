@@ -75,8 +75,6 @@ public class CompanyStaffDto {
     @CellIndex(index = 0)
     private String idNumber;
 
-    private String suin;
-
     @JsonBackReference(value = "applicantGroups")
     private List<ApplicantGroupDto> applicantGroups;
 
@@ -106,9 +104,11 @@ public class CompanyStaffDto {
     @CellIndex(index = 12)
     private String email;
 
+    private String preferredLanguage;
+
     private Long dataRequestRecordId;
 
-    @JsonBackReference(value = "digitalIds")
+    //@JsonBackReference(value = "digitalIds")
     private List<CompanyStaffDigitalIdDto> digitalIds;
 
     private String countryCode;

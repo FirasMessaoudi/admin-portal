@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ import java.util.List;
  * @author salzoubi
  * @since 1.1.0
  **/
-public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, Long> , JpaSpecificationExecutor<JpaCompanyStaff> {
+public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, Long>, JpaSpecificationExecutor<JpaCompanyStaff> {
 
     List<JpaCompanyStaff> findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(String applicantUin, long sid);
 
@@ -151,6 +152,22 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     @Modifying
     @Query("update JpaCompanyStaff staff set staff.titleCode = :jobTitle, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
     int updateCompanyStaffJobTitle(@Param("jobTitle") String jobTitle, @Param("staffId") long staffId);
+
+
+
+    @Query("SELECT cs FROM JpaCompanyStaff cs JOIN cs.digitalIds di JOIN di.companyStaffCards csc JOIN " +
+            "csc.companyRitualSeason cr JOIN cr.company c WHERE c.code=:code AND  c.typeCode =:typeCode")
+    List<JpaCompanyStaff> findStaffByCompanyCodeAndCompanyTypeCode(@Param("code") String code, @Param("typeCode") long typeCode);
+
+    @Query("SELECT a FROM JpaCompanyStaff a WHERE a.id IN :selectedStaff")
+    List<JpaCompanyStaff> findAllByIds(@Param("selectedStaff") List<Long> selectedStaff);
+
+   List<JpaCompanyStaff> findAllByRegisteredTrue();
+
+    long countJpaCompanyStaffByRegisteredTrue();
+
+    @Query("SELECT a FROM JpaCompanyStaff a WHERE a.id IN :selectedStaffs")
+    Page<JpaCompanyStaff> findByIds(@Param("selectedStaffs") List<Long> selectedStaffs, Pageable pageable);
 
 
 }
