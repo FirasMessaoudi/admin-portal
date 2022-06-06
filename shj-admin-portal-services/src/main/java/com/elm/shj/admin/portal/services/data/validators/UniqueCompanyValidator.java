@@ -34,7 +34,7 @@ public class UniqueCompanyValidator implements ConstraintValidator<UniqueCompany
             return false;
         }
         HuicCompany huicCompany = (HuicCompany) value;
-        return ECompanyType.fromId(huicCompany.getCompanyTypeCode()) != null && !companyService.existsByBasicInfo(huicCompany.getCompanyRefCode(), huicCompany.getCompanyTypeCode());
+        return ECompanyType.fromId(huicCompany.getCompanyTypeCode()) != null && !companyService.existsByBasicInfo(huicCompany.getCompanyRefCode() + "", huicCompany.getCompanyTypeCode());
     }
 
 }

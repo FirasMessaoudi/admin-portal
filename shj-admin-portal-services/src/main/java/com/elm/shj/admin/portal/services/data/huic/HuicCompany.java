@@ -33,9 +33,10 @@ public class HuicCompany implements Serializable {
     @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = true, allowNumbers = true, allowSpecialChars = false)
     private String companyNameAr;
 
-    @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @OnlyCharacters(min = 10, max = 150, allowEmpty = true, arabic = false, allowNumbers = true, allowSpecialChars = false)
     private String companyNameEn;
 
+    @WithMission
     private Integer missionId;
 
     @NullOrNotBlank(min = 5, max = 20)
@@ -50,9 +51,9 @@ public class HuicCompany implements Serializable {
     @Email(message = "validation.data.constraints.msg.20003")
     private String companyEmail;
 
-    private Long moiNumber;
+    private BigInteger moiNumber;
 
-    private Long crNumber;
+    private BigInteger crNumber;
 
     @CompanyTypeCode
     private Long companyTypeCode;
