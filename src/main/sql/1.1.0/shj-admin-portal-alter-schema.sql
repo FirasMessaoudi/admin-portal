@@ -1885,10 +1885,19 @@ ALTER TABLE shc_portal.shc_applicant_package
 
 GO
 
-ALTER TABLE shc_portal.shc_company_type_lk ADD main_type int
-GO
+ALTER TABLE shc_portal.shc_company_type_lk
+    ADD main_type int
+    GO
 
 alter table shc_portal.shc_company
 alter
 column code varchar(100) not null
 go
+
+ALTER TABLE shc_portal.shc_applicant
+alter
+column date_of_birth_gregorian DATE   NULL;
+GO
+
+ALTER TABLE shc_portal.shc_company_staff ADD custom_job_title varchar(30)
+GO

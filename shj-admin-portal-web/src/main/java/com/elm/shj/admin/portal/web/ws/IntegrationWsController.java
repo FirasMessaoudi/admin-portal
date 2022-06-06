@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
+import com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
 import com.elm.shj.admin.portal.services.applicant.*;
@@ -1002,6 +1003,7 @@ public class IntegrationWsController {
     @PostMapping(value = "/data/request/confirm/{dataRequestId}/{companyRefCode}")
     public ResponseEntity<WsResponse<?>> confirm(@PathVariable long dataRequestId, @PathVariable String companyRefCode) throws Exception {
         log.info("Confirming data request #{}", dataRequestId);
+        log.info("Confirming data request #{}", companyRefCode);
         dataRequestService.confirm(dataRequestId, companyRefCode);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body("SUCCESS").build());
 
@@ -1038,7 +1040,7 @@ public class IntegrationWsController {
      * @param segmentId data segment Id
      * @return the template for the given segment
      */
-    @GetMapping("/tpl/{segmentId}")
+    @GetMapping("/data/request/tpl/{segmentId}")
     public ResponseEntity<Resource> downloadTemplate(@PathVariable long segmentId) {
         DataSegmentDto dataSegment = dataSegmentService.findOne(segmentId);
         log.info("Downloading template for data segment#{}", segmentId);
@@ -1069,7 +1071,7 @@ public class IntegrationWsController {
     }
 
     @PostMapping("/staff/list")
-    public ResponseEntity<WsResponse<?>> findEmployeesByCompanyCodeAndTypeCode(@RequestBody CompanyStaffFilterDto companyStaffFilterDto) {
+    public ResponseEntity<WsResponse<?>> searchStaff(@RequestBody CompanyStaffFilterDto companyStaffFilterDto) {
         log.info("find employees by code and type code");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.searchStaff(companyStaffFilterDto)).build());
 
@@ -1078,7 +1080,7 @@ public class IntegrationWsController {
     @GetMapping("/staff/details/{id}")
     public ResponseEntity<WsResponse<?>> findStaffById(@PathVariable long id) {
         log.debug("Handler for {}", "Find staff");
-        Optional<CompanyStaffVO> staff = companyStaffService.searchStaffById(id);
+        Optional<CompanyStaffFullVO> staff = companyStaffService.searchStaffById(id);
         if (staff.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(staff.get()).build());

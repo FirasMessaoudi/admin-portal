@@ -33,6 +33,8 @@ public class HuicApplicantRelative implements Serializable {
     private Long idNumber;
     @PassportNumber
     private String passportNo;
+
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @CountryCode
     private Long nationality;
     @NotNull(message = "validation.data.constraints.msg.20001")
@@ -49,6 +51,7 @@ public class HuicApplicantRelative implements Serializable {
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     private Long relativeIdNumber;
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @CountryCode
     private Long relativeNationality;
     @PassportNumber

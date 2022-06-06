@@ -75,6 +75,8 @@ public class JpaCompanyStaff implements Serializable {
     @Column(name = "full_name_origin")
     private String fullNameOrigin;
 
+    @Column(name = "custom_job_title")
+    private String customJobTitle;
 
     @Column(name = "creation_date",nullable = false, updatable = false)
     private Date creationDate;

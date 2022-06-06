@@ -4,10 +4,9 @@
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
+import com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -33,6 +32,13 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian)")
     boolean existsByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                               @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
+
+    @Query("SELECT CASE WHEN COUNT(cs)> 0 THEN TRUE ELSE FALSE END " +
+            "FROM JpaCompanyStaff cs WHERE " +
+            "(cs.idNumber = :idNumber) OR " +
+            "(cs.passportNumber = :passportNumber AND cs.nationalityCode = :nationalityCode)")
+    boolean existsByBasicInfo(@Param("idNumber") String idNumber,
+                              @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
 
     @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
             "FROM JpaCompanyStaff a WHERE " +
@@ -148,9 +154,21 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "where staff.id = :staffId ")
     CompanyStaffVO findStaffById(@Param("staffId") long staffId);
 
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO(" +
+            " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode, staff.customJobTitle, staff.photo, " +
+            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber,cards.id ) " +
+            "from JpaCompanyStaff staff " +
+            "join staff.digitalIds digitalId " +
+            "join digitalId.companyStaffCards cards " +
+            "join cards.companyRitualSeason companyRitualSeason " +
+            "join companyRitualSeason.ritualSeason ritualSeason " +
+            "join companyRitualSeason.company company " +
+            "where staff.id = :staffId ")
+    CompanyStaffFullVO findOrganizerStaffById(@Param("staffId") long staffId);
+
     @Modifying
-    @Query("update JpaCompanyStaff staff set staff.titleCode = :jobTitle, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
-    int updateCompanyStaffJobTitle(@Param("jobTitle") String jobTitle, @Param("staffId") long staffId);
+    @Query("update JpaCompanyStaff staff set staff.titleCode = :jobTitle, staff.customJobTitle = :customJobTitle, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
+    int updateCompanyStaffJobTitle(@Param("jobTitle") String jobTitle, @Param("customJobTitle") String customJobTitle, @Param("staffId") long staffId);
 
 
 }

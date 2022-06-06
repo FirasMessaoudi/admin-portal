@@ -160,6 +160,7 @@ public class ValidationService {
 
     @Transactional
     void savePlannedPackages(HuicPlannedPackage plannedPackage) {
+        //TODO: check hajj office makkah and hajj office madina
         RitualPackageDto ritualPackageDto = RitualPackageDto.builder()
                 .referenceNumber(plannedPackage.getPackageRefNumber().toString())
                 .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah() != null ? plannedPackage.getHajjOfficeMakkah().toString() : null)
@@ -236,10 +237,10 @@ public class ValidationService {
                 .contactNumber(huicCompany.getCompanyContactNumber().toString())
                 .website(huicCompany.getWebsite())
                 .email(huicCompany.getCompanyEmail())
-                .moiNumber(huicCompany.getMoiNumber().toString())
-                .crNumber(huicCompany.getCrNumber().toString())
+                .moiNumber(huicCompany.getMoiNumber() != null ? huicCompany.getMoiNumber().toString() : null)
+                .crNumber(huicCompany.getCrNumber() != null ? huicCompany.getCrNumber().toString() : null)
                 .typeCode(ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
-                .countryCode(huicCompany.getCountry().toString())
+                .countryCode(huicCompany.getCountry() != null ? huicCompany.getCountry().toString() : null)
                 .establishmentRefCode(huicCompany.getEstablishmentId() != null ? huicCompany.getEstablishmentId() : 9)
                 .build();
 
@@ -387,7 +388,7 @@ public class ValidationService {
                 .fullNameEn(huicApplicantMainData.getFullNameEn())
                 .fullNameAr(huicApplicantMainData.getFullNameAr())
                 .fullNameOrigin(huicApplicantMainData.getFullNameOriginalLang())
-                .maritalStatusCode(EMaritalStatus.fromId(huicApplicantMainData.getMaritalStatus()).name())
+                .maritalStatusCode(huicApplicantMainData.getMaritalStatus() != null ? EMaritalStatus.fromId(huicApplicantMainData.getMaritalStatus()).name() : null)
                 .photo(huicApplicantMainData.getPhoto())
                 .biometricDataFace(huicApplicantMainData.getBiometricDataFace())
                 .biometricDataFinger(huicApplicantMainData.getBiometricDataFP())
@@ -416,11 +417,20 @@ public class ValidationService {
         // if record exists already in DB we need to update it
         if (existingApplicantId != null) {
             if (huicApplicantMainData.getStatus() == 2) {
-                updateExistingApplicant(applicant, existingApplicantId);
+                boolean isRegistered = applicantService.findApplicantStatus(existingApplicantId);
+                if (!isRegistered) {
+                    updateExistingApplicant(applicant, existingApplicantId);
+                } else {
+                    // if applicant is registered raise an error : cannot update
+                    ErrorResponse errorResponse = new ErrorResponse();
+                    errorResponse.setRowNumber(rowNumber + 1);
+                    errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30001", "This applicant is already registered and cannot be updated"));
+                    errorResponses.add(errorResponse);
+                    return;
+                }
             } else if (huicApplicantMainData.getStatus() == 3) {
+                updateExistingApplicant(applicant, existingApplicantId);
                 applicant.setDeleted(true);
-                applicantService.save(applicant);
-                return;
             } else if (huicApplicantMainData.getStatus() == 1) {
                 ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.setRowNumber(rowNumber + 1);
@@ -522,7 +532,7 @@ public class ValidationService {
      * @param applicant
      */
     public void updateApplicantBirthDate(ApplicantDto applicant) {
-        if (applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) {
+        if ((applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) && applicant.getDateOfBirthGregorian() != null) {
             Calendar cl = Calendar.getInstance();
             cl.setTime(applicant.getDateOfBirthGregorian());
             HijrahDate islamyDate = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
@@ -531,6 +541,9 @@ public class ValidationService {
     }
 
     public void updateExistingApplicant(ApplicantDto applicant, long existingApplicantId) {
+        List<ApplicantRitualDto> applicantRituals = applicantRitualService.findAllByApplicantId(existingApplicantId);
+        applicant.setRituals(applicantRituals);
+
         applicant.setId(existingApplicantId);
         applicant.setUpdateDate(new Date());
     }

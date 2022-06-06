@@ -164,6 +164,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
     @Async
     @Transactional
     public void confirm(long dataRequestId, String... companyRefCode) throws Exception {
+        log.info("Confirming service data request #{}", companyRefCode);
         updateRequestStatus(dataRequestId, EDataRequestStatus.UNDER_PROCESSING);
         processRequest(dataRequestId, companyRefCode);
     }
@@ -215,6 +216,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
      */
     @Transactional
     public <T> void processRequest(long dataRequestId, String... companyRefCode) throws Exception {
+        log.info("Confirming process request #{}", companyRefCode);
         // retrieve the data request
         DataRequestDto dataRequest = findOne(dataRequestId);
         // initial validation

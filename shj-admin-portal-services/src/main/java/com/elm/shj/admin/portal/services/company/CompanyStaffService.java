@@ -73,6 +73,16 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     /**
      * @param idNumber
      * @param passportNumber
+     * @param nationalityCode
+     * @return
+     */
+    public boolean existsByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
+        return ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, passportNumber, nationalityCode);
+    }
+
+    /**
+     * @param idNumber
+     * @param passportNumber
      * @param dateGreg
      * @param dateHijri
      * @return
@@ -80,6 +90,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     public boolean existsByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
         return ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg);
     }
+
     /**
      * @param idNumber
      * @param passportNumber
@@ -172,6 +183,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                         .email(companyStaff.getEmail())
                         .nationalityCode(companyStaff.getNationalityCode())
                         .titleCode(companyStaff.getTitleCode())
+                        .customJobTitle(companyStaff.getCustomJobTitle())
                         .dateOfBirthGregorian(companyStaff.getDateOfBirthGregorian())
                         .dateOfBirthHijri(companyStaff.getDateOfBirthHijri())
                         .gender(companyStaff.getGender())
@@ -246,8 +258,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
 
-    public Optional<CompanyStaffVO> searchStaffById(Long id) {
-        CompanyStaffVO staff = companyStaffRepository.findStaffById(id);
+    public Optional<CompanyStaffFullVO> searchStaffById(Long id) {
+        CompanyStaffFullVO staff = companyStaffRepository.findOrganizerStaffById(id);
         // split the company and set only company ref code
         if(staff.getCompanyCode() != null && !staff.getCompanyCode().equals(""))
             staff.setCompanyCode(staff.getCompanyCode().split("_")[0]);
@@ -257,7 +269,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     @Transactional
     public UpdateStaffTitleCmd updateCompanyStaffTitle(UpdateStaffTitleCmd command) {
         int updatedRowsCount = 0;
-        updatedRowsCount += companyStaffRepository.updateCompanyStaffJobTitle(command.getJobTitle(), command.getId());
+        updatedRowsCount += companyStaffRepository.updateCompanyStaffJobTitle(command.getJobTitle(), command.getCustomJobTitle(), command.getId());
         if(updatedRowsCount < 1){
             return new UpdateStaffTitleCmd();
         }

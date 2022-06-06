@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
  * @since 1.1.0
  */
 public enum ERelativeRelationship {
-    FATHER(1), MOTHER(2), SON(3), DAUGHTER(4), BROTHER(5),
-    SISTER(6), HUSBAND(7), WIFE(8), RELATIVE(9), COMPANION(10);
+    MOTHER(1), FATHER(2), WIFE(3), HUSBAND(4), SON(5),
+    DAUGHTER(6), BROTHER(7), SISTER(8), RELATIVE(9), COMPANION(10);
 
     private final int id;
 

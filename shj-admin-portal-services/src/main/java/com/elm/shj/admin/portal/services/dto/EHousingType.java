@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
  * @since 1.1.0
  */
 public enum EHousingType {
-    HOTEL(1),
-    CAMP(2),
+    CAMP(1),
+    HOTEL(2),
     BUILDING(3);
     private final long id;
 

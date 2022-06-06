@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Enum for ritual types
+ * Enum for comapny types
  *
  * @author Ahmed Ali
  * @since 1.1.0
@@ -20,8 +20,7 @@ public enum ECompanyType {
     MISSION(2),
     INTERNAL_HAJJ_COMPANY(3),
     EXTERNAL_HAJJ_COMPANY(4),
-    SERVICE_GROUP(5),
-    GOVERNMENT_AGENCY(6);
+    SERVICE_GROUP(5);
 
 
     private final long id;
@@ -36,6 +35,6 @@ public enum ECompanyType {
 
     public static ECompanyType fromId(long id) {
         List<ECompanyType> result = Arrays.stream(ECompanyType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
-        return (ECompanyType) CollectionUtils.get(result, 0);
+        return result.isEmpty() ? null : (ECompanyType) CollectionUtils.get(result, 0);
     }
 }
