@@ -31,6 +31,8 @@ public class HuicArrivalData implements Serializable {
     private Long idNumber;
     @PassportNumber
     private String passportNo;
+
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @CountryCode
     private Long nationality;
     @NotNull(message = "validation.data.constraints.msg.20001")

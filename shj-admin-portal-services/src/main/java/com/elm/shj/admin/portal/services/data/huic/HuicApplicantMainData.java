@@ -32,6 +32,7 @@ public class HuicApplicantMainData implements Serializable {
 
     @Gender
     private Long gender;
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @CountryCode
     private Long nationality;
 
@@ -90,6 +91,7 @@ public class HuicApplicantMainData implements Serializable {
     @CellIndex(index = 18)
     private String mobileNumberIntl;
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @CountryCode
     private Long country;
 

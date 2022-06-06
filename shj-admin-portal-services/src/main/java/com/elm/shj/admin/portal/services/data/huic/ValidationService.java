@@ -237,10 +237,10 @@ public class ValidationService {
                 .contactNumber(huicCompany.getCompanyContactNumber().toString())
                 .website(huicCompany.getWebsite())
                 .email(huicCompany.getCompanyEmail())
-                .moiNumber(huicCompany.getMoiNumber().toString())
-                .crNumber(huicCompany.getCrNumber().toString())
+                .moiNumber(huicCompany.getMoiNumber() != null ? huicCompany.getMoiNumber().toString() : null)
+                .crNumber(huicCompany.getCrNumber() != null ? huicCompany.getCrNumber().toString() : null)
                 .typeCode(ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
-                .countryCode(huicCompany.getCountry().toString())
+                .countryCode(huicCompany.getCountry() != null ? huicCompany.getCountry().toString() : null)
                 .establishmentRefCode(huicCompany.getEstablishmentId() != null ? huicCompany.getEstablishmentId() : 9)
                 .build();
 
