@@ -162,4 +162,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
                                        @Param("to") Date to,
                                        @Param("seasonYear") int seasonYear,
                                        @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
+
+    @Query("select a.registered from JpaApplicant  a where a.id = :id")
+    boolean findApplicantStatusById(@Param("id") Long id);
 }

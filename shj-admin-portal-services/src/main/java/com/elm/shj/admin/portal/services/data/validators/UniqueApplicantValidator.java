@@ -42,7 +42,11 @@ public class UniqueApplicantValidator implements ConstraintValidator<UniqueAppli
             return overrideApplicantData || !applicantLiteService.existsByBasicInfo(ApplicantBasicInfoDto.fromApplicant((ApplicantDto) value));
         } else {
             HuicApplicantMainData huicApplicantMainData = (HuicApplicantMainData) value;
-            return (huicApplicantMainData.getStatus() == null || huicApplicantMainData.getStatus() == 2 || huicApplicantMainData.getStatus() == 3) && !applicantLiteService.existsByBasicInfo(((HuicApplicantMainData) value).getIdNumber() != null ? ((HuicApplicantMainData) value).getIdNumber().toString() : null, ((HuicApplicantMainData) value).getPassportNo(), ((HuicApplicantMainData) value).getNationality().toString());
+            if (huicApplicantMainData.getStatus() == null || huicApplicantMainData.getStatus() == 1) {
+                return !applicantLiteService.existsByBasicInfo(((HuicApplicantMainData) value).getIdNumber() != null ? ((HuicApplicantMainData) value).getIdNumber().toString() : null, ((HuicApplicantMainData) value).getPassportNo(), ((HuicApplicantMainData) value).getNationality().toString());
+            } else {
+                return true;
+            }
         }
     }
 }

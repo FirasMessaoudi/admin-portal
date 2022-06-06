@@ -268,9 +268,11 @@ public class ItemWriter {
 
         // saving staff full main data
         if (dataSegment.getId() == EDataSegment.STAFF_FULL_MAIN_DATA.getId()) {
+
             BufferedImage defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             final String defaultAvatar;
+
             try {
                 ImageIO.write(defaultImage, "png", bos);
                 byte[] bytes = bos.toByteArray();

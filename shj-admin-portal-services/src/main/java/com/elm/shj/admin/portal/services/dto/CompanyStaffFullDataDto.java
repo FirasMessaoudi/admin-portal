@@ -43,11 +43,11 @@ public class CompanyStaffFullDataDto implements Serializable {
     private String passportNumber;
 
     @CellIndex(index = 2)
-    @GregorianDate(minOffset = -120, maxOffset = -10)
+    @GregorianDate(minOffset = -120, maxOffset = -10, allowNull = true)
     private Date dateOfBirthGregorian;
 
     @CellIndex(index = 3)
-    @HijriDate(minOffset = -140, maxOffset = -11)
+    @HijriDate(minOffset = -140, maxOffset = -11, allowEmpty = true)
     private Long dateOfBirthHijri;
 
     @OnlyCharacters(min = 10, max = 150, allowEmpty = false)
@@ -76,6 +76,7 @@ public class CompanyStaffFullDataDto implements Serializable {
     @JsonIgnore
     private String nationality;
 
+    @CountryCode
     @CellIndex(index = 10)
     private String nationalityCode;
 

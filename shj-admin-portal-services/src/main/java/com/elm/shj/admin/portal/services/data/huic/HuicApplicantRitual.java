@@ -33,7 +33,6 @@ public class HuicApplicantRitual implements Serializable {
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     @WithRitualPackage
-    @OnlyCharacters(min = 1, max = 16, allowNumbers = true, allowEmpty = false)
     private String packageRefNumber;
     @RitualTypeCode
     private Long ritualTypeCode;

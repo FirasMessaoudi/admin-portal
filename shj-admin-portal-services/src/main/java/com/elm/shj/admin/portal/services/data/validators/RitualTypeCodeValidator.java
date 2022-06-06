@@ -26,8 +26,8 @@ public class RitualTypeCodeValidator implements ConstraintValidator<RitualTypeCo
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        if (value.getClass().isAssignableFrom(String.class)) {
-            return value != null && ritualTypeLookupService.existsByCode(value.toString().toUpperCase());
+        if (value != null && value.getClass().isAssignableFrom(String.class)) {
+            return ritualTypeLookupService.existsByCode(value.toString().toUpperCase());
         } else {
             return value != null && ERitualType.fromId((Long) value) != null;
         }
