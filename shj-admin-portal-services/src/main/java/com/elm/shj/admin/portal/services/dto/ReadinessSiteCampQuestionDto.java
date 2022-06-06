@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,36 +12,39 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The persistent class for the Inspector Readiness Survey Result domain
+ * The persistent class for the ReadinessSiteCampQuestion.
  *
  * @author salzoubi
  * @since 1.1.0
  */
-
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class InspectorReadinessSurveyResultDto implements Serializable {
+public class ReadinessSiteCampQuestionDto implements Serializable {
 
 
-    private static final long serialVersionUID = 4520458744230437008L;
-
+    private static final long serialVersionUID = -6344153557282715952L;
     private long id;
 
 
-    private int inspectorReadinessSurveyId ;
+    private String questionCode;
+
+    private String siteCode;
+
+    private String campCategoryCode;
 
 
-    private String questionCode ;
 
 
-    private int rate;
+
+    private int questionOrder;
 
 
     private Date creationDate;
 
 
     private Date updateDate;
+
+
 
 }

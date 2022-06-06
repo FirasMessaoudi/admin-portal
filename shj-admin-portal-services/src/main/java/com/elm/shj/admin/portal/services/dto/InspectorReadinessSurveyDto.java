@@ -31,19 +31,28 @@ public class InspectorReadinessSurveyDto implements Serializable {
 
     String suin;
 
+
     private String campNumber;
 
-    private int campLocationType;
 
-    private String internalCompanyType;
+    private String campSiteCode;
+
+
+    private String campCategoryCode;
+
+
+    private String internalCompanyCode;
+
 
     private String establishmentCompanyCode;
 
+
     private String serviceGroupCompanyCode;
+
 
     private Date creationDate;
 
-    private Date updateDate;
+
 
 
 

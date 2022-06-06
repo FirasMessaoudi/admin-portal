@@ -19,7 +19,9 @@ public enum ECompanyType {
     ESTABLISHMENT(1),
     MISSION(2),
     INTERNAL_HAJJ_COMPANY(3),
-    EXTERNAL_HAJJ_COMPANY(4);
+    EXTERNAL_HAJJ_COMPANY(4),
+    SERVICE_GROUP(5),
+    GOVERNMENT_AGENCY(6);
 
 
     private final long id;
