@@ -45,7 +45,7 @@ public class UniqueCompanyStaffFullDataValidator implements ConstraintValidator<
             calendar.set(Calendar.HOUR_OF_DAY, 0);
             companyStaffDto.setDateOfBirthGregorian(calendar.getTime());
         }
-        return overrideCompanyStaffData || !companyStaffService.existsByBasicInfo(companyStaffDto.getIdNumber(), companyStaffDto.getPassportNumber(), companyStaffDto.getDateOfBirthGregorian(), companyStaffDto.getDateOfBirthHijri());
+        return overrideCompanyStaffData || !companyStaffService.existsByBasicInfo(companyStaffDto.getIdNumber(), companyStaffDto.getPassportNumber(), companyStaffDto.getNationalityCode());
     }
 
 }

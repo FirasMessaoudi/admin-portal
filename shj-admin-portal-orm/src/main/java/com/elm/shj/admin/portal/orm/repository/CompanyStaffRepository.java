@@ -34,6 +34,13 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     boolean existsByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                               @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
+    @Query("SELECT CASE WHEN COUNT(cs)> 0 THEN TRUE ELSE FALSE END " +
+            "FROM JpaCompanyStaff cs WHERE " +
+            "(cs.idNumber = :idNumber) OR " +
+            "(cs.passportNumber = :passportNumber AND cs.nationalityCode = :nationalityCode)")
+    boolean existsByBasicInfo(@Param("idNumber") String idNumber,
+                              @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
+
     @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
             "FROM JpaCompanyStaff a WHERE " +
             "((a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +

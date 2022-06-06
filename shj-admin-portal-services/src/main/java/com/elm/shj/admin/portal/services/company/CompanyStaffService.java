@@ -73,6 +73,16 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     /**
      * @param idNumber
      * @param passportNumber
+     * @param nationalityCode
+     * @return
+     */
+    public boolean existsByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
+        return ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, passportNumber, nationalityCode);
+    }
+
+    /**
+     * @param idNumber
+     * @param passportNumber
      * @param dateGreg
      * @param dateHijri
      * @return
@@ -80,6 +90,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     public boolean existsByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
         return ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg);
     }
+
     /**
      * @param idNumber
      * @param passportNumber
