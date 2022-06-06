@@ -94,7 +94,7 @@ public class CompanyStaffFullDataDto implements Serializable {
     private String titleCode;
 
     @CellIndex(index = 14)
-    private String titleCodeOther;
+    private String customJobTitle;
 
     @NullOrNotBlank(min = 5, max = 50)
     @Email(message = "validation.data.constraints.msg.20003")
