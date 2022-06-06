@@ -183,6 +183,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                         .email(companyStaff.getEmail())
                         .nationalityCode(companyStaff.getNationalityCode())
                         .titleCode(companyStaff.getTitleCode())
+                        .titleCodeOther(companyStaff.getTitleCodeOther())
                         .dateOfBirthGregorian(companyStaff.getDateOfBirthGregorian())
                         .dateOfBirthHijri(companyStaff.getDateOfBirthHijri())
                         .gender(companyStaff.getGender())
@@ -257,8 +258,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
 
-    public Optional<CompanyStaffVO> searchStaffById(Long id) {
-        CompanyStaffVO staff = companyStaffRepository.findStaffById(id);
+    public Optional<CompanyStaffFullVO> searchStaffById(Long id) {
+        CompanyStaffFullVO staff = companyStaffRepository.findOrganizerStaffById(id);
         // split the company and set only company ref code
         if(staff.getCompanyCode() != null && !staff.getCompanyCode().equals(""))
             staff.setCompanyCode(staff.getCompanyCode().split("_")[0]);
@@ -268,7 +269,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     @Transactional
     public UpdateStaffTitleCmd updateCompanyStaffTitle(UpdateStaffTitleCmd command) {
         int updatedRowsCount = 0;
-        updatedRowsCount += companyStaffRepository.updateCompanyStaffJobTitle(command.getJobTitle(), command.getId());
+        updatedRowsCount += companyStaffRepository.updateCompanyStaffJobTitle(command.getJobTitle(), command.getJobTitleOther(), command.getId());
         if(updatedRowsCount < 1){
             return new UpdateStaffTitleCmd();
         }

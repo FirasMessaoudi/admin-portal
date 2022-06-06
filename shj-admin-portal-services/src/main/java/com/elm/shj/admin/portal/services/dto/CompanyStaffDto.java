@@ -111,6 +111,7 @@ public class CompanyStaffDto {
     @JsonBackReference(value = "digitalIds")
     private List<CompanyStaffDigitalIdDto> digitalIds;
 
+    private String titleCodeOther;
     private String countryCode;
     private boolean registered;
     private Date creationDate;

@@ -29,4 +29,5 @@ public class UpdateStaffTitleCmd implements Serializable {
 
     private long id;
     private String jobTitle;
+    private String jobTitleOther;
 }

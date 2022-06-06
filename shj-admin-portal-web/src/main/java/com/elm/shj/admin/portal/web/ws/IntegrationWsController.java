@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
+import com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
 import com.elm.shj.admin.portal.services.applicant.*;
@@ -1070,7 +1071,7 @@ public class IntegrationWsController {
     }
 
     @PostMapping("/staff/list")
-    public ResponseEntity<WsResponse<?>> findEmployeesByCompanyCodeAndTypeCode(@RequestBody CompanyStaffFilterDto companyStaffFilterDto) {
+    public ResponseEntity<WsResponse<?>> searchStaff(@RequestBody CompanyStaffFilterDto companyStaffFilterDto) {
         log.info("find employees by code and type code");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.searchStaff(companyStaffFilterDto)).build());
 
@@ -1079,7 +1080,7 @@ public class IntegrationWsController {
     @GetMapping("/staff/details/{id}")
     public ResponseEntity<WsResponse<?>> findStaffById(@PathVariable long id) {
         log.debug("Handler for {}", "Find staff");
-        Optional<CompanyStaffVO> staff = companyStaffService.searchStaffById(id);
+        Optional<CompanyStaffFullVO> staff = companyStaffService.searchStaffById(id);
         if (staff.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(staff.get()).build());
