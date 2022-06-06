@@ -92,11 +92,11 @@ GO
 ----------------      shc_company_staff_title_lk           --------------------------------------
 SET IDENTITY_INSERT shc_portal.shc_company_staff_title_lk ON;
 INSERT INTO shc_portal.shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (1, 'GROUP_LEADER', 'en', 'Group Leader ');
-INSERT INTO shc_portal.shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (2, 'GROUP_LEADER', 'ar', N'قائد مجموعة');
-INSERT INTO shc_portal.shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (3, 'GROUP_DOCTOR', 'en', 'Group Doctor ');
-INSERT INTO shc_portal.shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (4, 'GROUP_DOCTOR', 'ar', N'طبيب مجموعة');
-INSERT INTO shc_portal.shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (5, 'GROUP_IMAM', 'en', 'Group Imam');
-INSERT INTO shc_portal.shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (6, 'GROUP_IMAM', 'ar', N'امام مجموعة');
+INSERT INTO shc_portal.shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (2, 'GROUP_LEADER', 'ar', N'مشرف مجموعة');
+INSERT INTO shc_portal.shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (3, 'INSPECTOR', 'en', 'Inspector');
+INSERT INTO shc_portal.shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (4, 'INSPECTOR', 'ar', N'أخصائي جودة');
+INSERT INTO shc_portal.shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (5, 'OTHERS', 'en', 'Others');
+INSERT INTO shc_portal.shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (6, 'OTHERS', 'ar', N'أخرى');
 SET IDENTITY_INSERT shc_portal.shc_company_staff_title_lk OFF;
 GO
 
