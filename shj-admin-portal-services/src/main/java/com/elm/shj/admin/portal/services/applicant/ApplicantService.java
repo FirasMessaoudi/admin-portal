@@ -93,6 +93,11 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return exists;
     }
 
+    public boolean findApplicantStatus(Long id) {
+        log.info("ApplicantService ::: Start findApplicantStatus ::: id: {}", id);
+        return applicantRepository.findApplicantStatusById(id);
+    }
+
 
     /**
      * Finds an applicant by his uin

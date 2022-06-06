@@ -417,11 +417,20 @@ public class ValidationService {
         // if record exists already in DB we need to update it
         if (existingApplicantId != null) {
             if (huicApplicantMainData.getStatus() == 2) {
-                updateExistingApplicant(applicant, existingApplicantId);
+                boolean isRegistered = applicantService.findApplicantStatus(existingApplicantId);
+                if (!isRegistered) {
+                    updateExistingApplicant(applicant, existingApplicantId);
+                } else {
+                    // if applicant is registered raise an error : cannot update
+                    ErrorResponse errorResponse = new ErrorResponse();
+                    errorResponse.setRowNumber(rowNumber + 1);
+                    errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30001", "This applicant is already registered and cannot be updated"));
+                    errorResponses.add(errorResponse);
+                    return;
+                }
             } else if (huicApplicantMainData.getStatus() == 3) {
+                updateExistingApplicant(applicant, existingApplicantId);
                 applicant.setDeleted(true);
-                applicantService.save(applicant);
-                return;
             } else if (huicApplicantMainData.getStatus() == 1) {
                 ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.setRowNumber(rowNumber + 1);
@@ -532,6 +541,9 @@ public class ValidationService {
     }
 
     public void updateExistingApplicant(ApplicantDto applicant, long existingApplicantId) {
+        List<ApplicantRitualDto> applicantRituals = applicantRitualService.findAllByApplicantId(existingApplicantId);
+        applicant.setRituals(applicantRituals);
+
         applicant.setId(existingApplicantId);
         applicant.setUpdateDate(new Date());
     }
