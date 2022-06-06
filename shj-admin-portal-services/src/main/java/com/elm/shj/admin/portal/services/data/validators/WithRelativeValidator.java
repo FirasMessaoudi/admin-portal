@@ -36,8 +36,12 @@ public class WithRelativeValidator implements ConstraintValidator<WithRelative, 
         // search relative applicant by his basic info from the database
         if (value.getClass().isAssignableFrom(ApplicantRelativeDto.class))
             return applicantService.existsByBasicInfo(ApplicantBasicInfoDto.fromRelative((ApplicantRelativeDto) value));
-        else
+        else {
+            if (((HuicApplicantRelative) value).getRelativeNationality() == null) {
+                return false;
+            }
             return applicantService.existsByBasicInfo(((HuicApplicantRelative) value).getRelativeIdNumber() != null ? ((HuicApplicantRelative) value).getRelativeIdNumber().toString() : null, ((HuicApplicantRelative) value).getRelativePassportNo(), ((HuicApplicantRelative) value).getRelativeNationality().toString());
+        }
     }
 
 }

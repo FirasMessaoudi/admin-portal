@@ -25,7 +25,7 @@ public class CountryCodeValidator implements ConstraintValidator<CountryCode, Ob
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value == null || countryLookupService.existsByCode(value.toString().toUpperCase());
+        return value != null && countryLookupService.existsByCode(value.toString().toUpperCase());
     }
 
 }
