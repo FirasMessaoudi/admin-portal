@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.shj.admin.portal.services.data.validators.WithHousingCategory;
 import com.elm.shj.admin.portal.services.data.validators.WithHousingSite;
 import com.elm.shj.admin.portal.services.data.validators.WithHousingType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -29,6 +30,7 @@ public class HousingMasterDto implements Serializable {
 
     private static final long serialVersionUID = -2674840473618482955L;
 
+    @JsonIgnore
     private long id;
     @WithHousingType
     private String typeCode;
@@ -46,10 +48,14 @@ public class HousingMasterDto implements Serializable {
     private String locationNameEn;
     private String addressEn;
     private String addressAr;
+    @JsonIgnore
     private Double lat;
+    @JsonIgnore
     private Double lng;
     private String zoneCode;
+    @JsonIgnore
     private Date creationDate;
+    @JsonIgnore
     private Date updateDate;
     private GeoLocationDto geoLocation;
 }

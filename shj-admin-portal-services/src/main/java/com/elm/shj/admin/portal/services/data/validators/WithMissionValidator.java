@@ -11,13 +11,13 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * Validator for {@link WithServiceGroup} annotation
+ * Validator for {@link WithMission} annotation
  *
  * @author f.messaoudi
  * @since 1.1.0
  */
 @Slf4j
-public class WithServiceGroupValidator implements ConstraintValidator<WithServiceGroup, Object> {
+public class WithMissionValidator implements ConstraintValidator<WithMission, Object> {
 
     @Autowired
     private CompanyService companyService;
@@ -27,7 +27,7 @@ public class WithServiceGroupValidator implements ConstraintValidator<WithServic
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value == null || companyService.existsByBasicInfo(value + "", 5L);
+        return value == null || companyService.existsByBasicInfo(value + "", 2L);
 
     }
 

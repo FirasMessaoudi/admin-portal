@@ -162,9 +162,9 @@ public class ValidationService {
     void savePlannedPackages(HuicPlannedPackage plannedPackage) {
         //TODO: check hajj office makkah and hajj office madina
         RitualPackageDto ritualPackageDto = RitualPackageDto.builder()
-                .referenceNumber(plannedPackage.getPackageRefNumber().toString())
-                .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah() != null ? plannedPackage.getHajjOfficeMakkah().toString() : null)
-                .hajjOfficeMadina(plannedPackage.getHajjOfficeMadina() != null ? plannedPackage.getHajjOfficeMadina().toString() : null)
+                .referenceNumber(plannedPackage.getPackageRefNumber() + "")
+                .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah() + "")
+                .hajjOfficeMadina(plannedPackage.getHajjOfficeMadina() + "")
                 .packageNameAr(plannedPackage.getPackageNameArabic())
                 .packageNameEn(plannedPackage.getPackageNameEnglish())
                 .packageTypeCode(EPackageType.fromId(plannedPackage.getPackageTypeCode()).name())
@@ -178,7 +178,7 @@ public class ValidationService {
         }
         RitualPackageDto savedRitualPackage = ritualPackageService.save(ritualPackageDto);
         plannedPackage.getPackageHousings().forEach(huicPackageHousing -> {
-            JpaHousingMaster housingMaster = housingMasterRepository.findByHousingReferenceCode(huicPackageHousing.getRefNumber().toString());
+            JpaHousingMaster housingMaster = housingMasterRepository.findTopByHousingReferenceCodeOrderByCreationDateDesc(huicPackageHousing.getRefNumber().toString());
             PackageHousingDto packageHousing = PackageHousingDto.builder()
                     .typeCode(housingMaster.getTypeCode())
                     .siteCode(housingMaster.getSiteCode())
@@ -234,13 +234,13 @@ public class ValidationService {
                 .labelAr(huicCompany.getCompanyNameAr())
                 .labelEn(huicCompany.getCompanyNameEn())
                 .missionRefCode(huicCompany.getMissionId())
-                .contactNumber(huicCompany.getCompanyContactNumber().toString())
+                .contactNumber(huicCompany.getCompanyContactNumber() + "")
                 .website(huicCompany.getWebsite())
                 .email(huicCompany.getCompanyEmail())
-                .moiNumber(huicCompany.getMoiNumber() != null ? huicCompany.getMoiNumber().toString() : null)
-                .crNumber(huicCompany.getCrNumber() != null ? huicCompany.getCrNumber().toString() : null)
+                .moiNumber(huicCompany.getMoiNumber() + "")
+                .crNumber(huicCompany.getCrNumber() + "")
                 .typeCode(ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
-                .countryCode(huicCompany.getCountry() != null ? huicCompany.getCountry().toString() : null)
+                .countryCode(huicCompany.getCountry() + "")
                 .establishmentRefCode(huicCompany.getEstablishmentId() != null ? huicCompany.getEstablishmentId() : 9)
                 .build();
 
@@ -260,6 +260,10 @@ public class ValidationService {
     }
 
     private void saveHousingMasterData(HousingMasterDto housingMasterDto) {
+        JpaHousingMaster housingMaster = housingMasterRepository.findTopByHousingReferenceCodeOrderByCreationDateDesc(housingMasterDto.getHousingReferenceCode());
+        if (housingMaster != null) {
+            housingMasterDto.setId(housingMaster.getId());
+        }
         housingMasterDto.setLat(housingMasterDto.getGeoLocation().getLat());
         housingMasterDto.setLng(housingMasterDto.getGeoLocation().getLng());
         housingMasterRepository.save((JpaHousingMaster) findMapper(HousingMasterDto.class).toEntity(housingMasterDto, mappingContext));
