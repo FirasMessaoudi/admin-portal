@@ -183,7 +183,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                         .email(companyStaff.getEmail())
                         .nationalityCode(companyStaff.getNationalityCode())
                         .titleCode(companyStaff.getTitleCode())
-                        .titleCodeOther(companyStaff.getTitleCodeOther())
+                        .customJobTitle(companyStaff.getCustomJobTitle())
                         .dateOfBirthGregorian(companyStaff.getDateOfBirthGregorian())
                         .dateOfBirthHijri(companyStaff.getDateOfBirthHijri())
                         .gender(companyStaff.getGender())
@@ -269,7 +269,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     @Transactional
     public UpdateStaffTitleCmd updateCompanyStaffTitle(UpdateStaffTitleCmd command) {
         int updatedRowsCount = 0;
-        updatedRowsCount += companyStaffRepository.updateCompanyStaffJobTitle(command.getJobTitle(), command.getJobTitleOther(), command.getId());
+        updatedRowsCount += companyStaffRepository.updateCompanyStaffJobTitle(command.getJobTitle(), command.getCustomJobTitle(), command.getId());
         if(updatedRowsCount < 1){
             return new UpdateStaffTitleCmd();
         }

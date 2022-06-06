@@ -155,7 +155,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     CompanyStaffVO findStaffById(@Param("staffId") long staffId);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO(" +
-            " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode, staff.titleCodeOther, staff.photo, " +
+            " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode, staff.customJobTitle, staff.photo, " +
             " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber,cards.id ) " +
             "from JpaCompanyStaff staff " +
             "join staff.digitalIds digitalId " +
@@ -167,8 +167,8 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     CompanyStaffFullVO findOrganizerStaffById(@Param("staffId") long staffId);
 
     @Modifying
-    @Query("update JpaCompanyStaff staff set staff.titleCode = :jobTitle, staff.titleCodeOther = :jobTitleOther, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
-    int updateCompanyStaffJobTitle(@Param("jobTitle") String jobTitle, @Param("jobTitleOther") String jobTitleOther, @Param("staffId") long staffId);
+    @Query("update JpaCompanyStaff staff set staff.titleCode = :jobTitle, staff.customJobTitle = :customJobTitle, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
+    int updateCompanyStaffJobTitle(@Param("jobTitle") String jobTitle, @Param("customJobTitle") String customJobTitle, @Param("staffId") long staffId);
 
 
 }

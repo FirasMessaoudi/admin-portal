@@ -29,7 +29,7 @@ public class CompanyStaffFullVO implements Serializable {
     private String fullNameEn;
     private String fullNameAr;
     private String jobTitleCode;
-    private String jobTitleCodeOther;
+    private String customJobTitle;
     private String photo;
     private String referenceNumber;
     private String cardStatusCode;

@@ -28,7 +28,7 @@ public class CompanyStaffLiteDto implements Serializable {
     private String fullNameEn;
     private String email;
     private String titleCode;
-    private String titleCodeOther;
+    private String customJobTitle;
     private String countryCode;
     private String mobileNumber;
     private String nationalityCode;

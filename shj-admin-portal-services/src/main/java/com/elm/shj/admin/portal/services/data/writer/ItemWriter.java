@@ -312,7 +312,7 @@ public class ItemWriter {
 
                     // In case of job title code is Others set the job tile code to tileCodeOther
                     if(companyStaffFullData.getTitleCode().equals("OTHERS")){
-                        if(companyStaffFullData.getTitleCodeOther() == null) {
+                        if(companyStaffFullData.getCustomJobTitle() == null) {
                             dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(jobTileCodeCellIndex + 2)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.FIELD_REQUIRED.getMessage())).valid(false).build());
                             return;
                         }
