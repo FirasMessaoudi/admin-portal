@@ -1024,7 +1024,7 @@ VALUES ('activate.printed.card', 'true');
 GO
   SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
 insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
-values (11, 'staff-data.xlsx', N'بيانات العاملين ',
+values (11, 'staff-data.xlsm', N'بيانات العاملين ',
         'Staff Data');
 insert into shc_portal.shc_data_segment (id, template_file_name, label_ar, label_en)
 values (12, 'main-group-data.xlsx', N'بيانات المجموعات الرئيسية',
