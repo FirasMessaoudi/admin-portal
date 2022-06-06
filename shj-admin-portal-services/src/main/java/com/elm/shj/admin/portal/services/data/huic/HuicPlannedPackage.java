@@ -7,6 +7,7 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -27,13 +28,13 @@ public class HuicPlannedPackage implements Serializable {
     @NotNull(message = "validation.data.constraints.msg.20001")
 
     private Long packageRefNumber;
-
     @NotNull(message = "validation.data.constraints.msg.20001")
+    private BigInteger companyRefCode;
 
-    private Long companyRefCode;
-
-    private Long hajjOfficeMakkah;
-    private Long hajjOfficeMadina;
+    @WithServiceGroup
+    private BigInteger hajjOfficeMakkah;
+    @WithServiceGroup
+    private BigInteger hajjOfficeMadina;
     @ArabicCharacters(lettersOnly = true, numbersOnly = false)
     private String packageNameArabic;
     @Pattern(regexp = "(^[a-zA-Z0-9]*)"
