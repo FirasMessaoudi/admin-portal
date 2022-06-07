@@ -43,7 +43,7 @@ public class CompanyDto {
     @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = false, allowNumbers = true, allowSpecialChars = false)
     private String labelEn;
 
-    private Integer missionRefCode;
+    private Long missionRefCode;
 
     @NullOrNotBlank(min = 5, max = 20)
     @Pattern(regexp = "([0-9]+)"

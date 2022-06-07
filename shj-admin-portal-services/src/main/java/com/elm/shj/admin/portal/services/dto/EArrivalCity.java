@@ -19,17 +19,17 @@ public enum EArrivalCity {
     MAKKAH(1),
     MADINA(2);
 
-    private final long id;
+    private final int id;
 
-    EArrivalCity(long id) {
+    EArrivalCity(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static EArrivalCity fromId(long id) {
+    public static EArrivalCity fromId(int id) {
         List<EArrivalCity> result = Arrays.stream(EArrivalCity.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (EArrivalCity) CollectionUtils.get(result, 0);
     }

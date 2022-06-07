@@ -29,7 +29,7 @@ public class WithTransportationTypeValidator implements ConstraintValidator<With
         if (value == null) {
             return false;
         } else {
-            return ETransportationType.fromId((Long) value) != null;
+            return ETransportationType.fromId((Integer) value) != null;
         }
     }
 }

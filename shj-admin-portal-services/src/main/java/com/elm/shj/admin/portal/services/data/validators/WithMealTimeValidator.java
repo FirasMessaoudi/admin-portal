@@ -29,7 +29,7 @@ public class WithMealTimeValidator implements ConstraintValidator<WithMealTime, 
         if (value == null) {
             return false;
         } else {
-            return EMealTime.fromId((Long) value) != null;
+            return EMealTime.fromId((Integer) value) != null;
         }
     }
 }

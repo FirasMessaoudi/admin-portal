@@ -39,7 +39,7 @@ public class HuicArrivalData implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date arrivalDateTime;
     @WithArrivalCity
-    private Long arrivalCity;
+    private Integer arrivalCity;
 
 
 }

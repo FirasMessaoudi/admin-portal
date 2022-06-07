@@ -19,17 +19,17 @@ public enum EPackageType {
     ECONOMIC(1),
     NORMAL(2),
     VIP(3);
-    private final long id;
+    private final int id;
 
-    EPackageType(long id) {
+    EPackageType(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static EPackageType fromId(long id) {
+    public static EPackageType fromId(int id) {
         List<EPackageType> result = Arrays.stream(EPackageType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (EPackageType) CollectionUtils.get(result, 0);
     }

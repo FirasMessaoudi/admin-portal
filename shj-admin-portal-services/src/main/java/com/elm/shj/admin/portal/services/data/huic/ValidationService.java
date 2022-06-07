@@ -78,6 +78,9 @@ public class ValidationService {
     private final PackageHousingService packageHousingService;
     private final PackageCateringService packageCateringService;
     private final PackageTransportationService packageTransportationService;
+    private static final String ARABIC_REGEX = "^[\\p{InArabic}\\s-_]+$";
+    private static final String LATIN = "^[\\p{IsLatin}\\s-_]+$";
+
 
     @Transactional
     public <T> List<ErrorResponse> validateData(List<T> items) {

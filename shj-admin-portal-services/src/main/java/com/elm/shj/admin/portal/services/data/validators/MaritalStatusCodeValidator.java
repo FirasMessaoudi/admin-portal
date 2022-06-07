@@ -30,7 +30,7 @@ public class MaritalStatusCodeValidator implements ConstraintValidator<MaritalSt
         if (value == null || value.getClass().isAssignableFrom(String.class)) {
             return value == null || StringUtils.isBlank(value.toString()) || maritalStatusLookupService.existsByCode(value.toString().toUpperCase());
         } else {
-            return EMaritalStatus.fromId((Long) value) != null;
+            return EMaritalStatus.fromId((Integer) value) != null;
         }
     }
 

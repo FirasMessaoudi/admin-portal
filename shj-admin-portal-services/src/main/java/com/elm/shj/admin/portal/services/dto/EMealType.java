@@ -21,17 +21,17 @@ public enum EMealType {
     BREAKFAST_LUNCH(3),
     ONLY_BREAKFAST(4);
 
-    private final long id;
+    private final int id;
 
-    EMealType(long id) {
+    EMealType(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static EMealType fromId(long id) {
+    public static EMealType fromId(int id) {
         List<EMealType> result = Arrays.stream(EMealType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (EMealType) CollectionUtils.get(result, 0);
     }

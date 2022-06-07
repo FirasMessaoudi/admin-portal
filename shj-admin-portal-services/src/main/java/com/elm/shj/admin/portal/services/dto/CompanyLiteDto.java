@@ -26,7 +26,7 @@ public class CompanyLiteDto implements Serializable {
     private String labelEn;
     private String contactNumber;
     private String typeCode;
-    private Integer missionRefCode;
+    private Long missionRefCode;
     private Integer establishmentRefCode;
 
 }

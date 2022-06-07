@@ -21,17 +21,17 @@ public enum ERitualType {
     COURTESY_HAJJ(3),
     EXTERNAL_UMRAH(4),
     INTERNAL_UMRAH(5);
-    private final long id;
+    private final int id;
 
-    ERitualType(long id) {
+    ERitualType(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static ERitualType fromId(long id) {
+    public static ERitualType fromId(int id) {
         List<ERitualType> result = Arrays.stream(ERitualType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (ERitualType) CollectionUtils.get(result, 0);
     }
