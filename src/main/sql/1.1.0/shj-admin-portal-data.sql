@@ -2528,11 +2528,36 @@ VALUES (654, 802, N'كيريباتي', 'en', '', '');
 SET IDENTITY_INSERT shc_portal.shc_country_lk OFF;
 GO
 
-Update shc_portal.shc_company_type_lk set main_type = 1 where id < 11;
-Update shc_portal.shc_company_type_lk set main_type = 2 where id > 10;
+Update shc_portal.shc_company_type_lk
+set main_type = 1
+where id < 11;
+Update shc_portal.shc_company_type_lk
+set main_type = 2
+where id > 10;
 GO
 
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('ritual.season.year', 1443);
+GO
+
+delete
+from shc_portal.shc_package_type_lk
+where id > 0;
+go
+SET IDENTITY_INSERT shc_portal.shc_package_type_lk ON;
+INSERT INTO shc_portal.shc_package_type_lk (id, code, lang, label)
+VALUES (1, 'ECONOMIC', 'ar', N'إقتصادي');
+INSERT INTO shc_portal.shc_package_type_lk (id, code, lang, label)
+VALUES (2, 'ECONOMIC', 'en', 'Economic');
+INSERT INTO shc_portal.shc_package_type_lk (id, code, lang, label)
+VALUES (3, 'NORMAL', 'ar', N'عادي');
+INSERT INTO shc_portal.shc_package_type_lk (id, code, lang, label)
+VALUES (4, 'NORMAL', 'en', 'Normal');
+INSERT INTO shc_portal.shc_package_type_lk (id, code, lang, label)
+VALUES (5, 'VIP', 'ar', N'مميز ');
+INSERT INTO shc_portal.shc_package_type_lk (id, code, lang, label)
+VALUES (6, 'VIP', 'en', 'VIP');
+SET
+IDENTITY_INSERT shc_portal.shc_package_type_lk OFF;
 GO
 
