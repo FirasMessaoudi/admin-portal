@@ -31,7 +31,7 @@ public class HuicApplicantMainData implements Serializable {
     @Gender
     private Integer gender;
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @CountryCode
+    @NationalityCode
     private Long nationality;
 
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
@@ -83,7 +83,7 @@ public class HuicApplicantMainData implements Serializable {
     private String mobileNumberIntl;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @CountryCode
+    @NationalityCode
     private Integer country;
 
     @NullOrNotBlank(min = 0, max = 100)
