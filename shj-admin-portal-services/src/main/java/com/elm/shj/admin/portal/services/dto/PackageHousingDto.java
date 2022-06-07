@@ -48,8 +48,8 @@ public class PackageHousingDto implements Serializable {
     private String addressEn;
     private String addressAr;
     private boolean isDefault;
-    private double lat;
-    private double lng;
+    private Double lat;
+    private Double lng;
     @JsonBackReference("packageCatering")
     private List<PackageCateringDto> packageCatering;
     @JsonBackReference("applicantPackageHousing")
