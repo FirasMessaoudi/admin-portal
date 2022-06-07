@@ -180,11 +180,8 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-ritual-seasons")
-    public ResponseEntity<WsResponse<?>> saveRitualSeasons(@RequestBody List<RitualSeasonDto> ritualSeasons) {
-        ritualSeasons.forEach(ritualSeasonDto -> {
-            ERitualType eRitualType = ritualSeasonDto.getRitualTypeCode() != null ? ERitualType.fromId(Integer.parseInt(ritualSeasonDto.getRitualTypeCode())) : null;
-            ritualSeasonDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
-        });
+    public ResponseEntity<WsResponse<?>> saveRitualSeasons(@RequestBody List<HuicRitualSeason> ritualSeasons) {
+
         log.info("Start saveRitualSeasons RitualSeasonDtosSize: {}", ritualSeasons == null ? null : ritualSeasons.size());
         List<ErrorResponse> errorResponses = validationService.validateData(ritualSeasons);
 
@@ -199,17 +196,8 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-housing-master-data")
-    public ResponseEntity<WsResponse<?>> saveHousingData(@RequestBody List<HousingMasterDto> housingMasterDtos) {
+    public ResponseEntity<WsResponse<?>> saveHousingData(@RequestBody List<HuicHousingMaster> housingMasterDtos) {
         log.info("Start saveHousingMasterData housingMasterDtosSize: {}", housingMasterDtos == null ? null : housingMasterDtos.size());
-        housingMasterDtos.forEach(housingMasterDto -> {
-            EHousingSite eHousingSite = housingMasterDto.getSiteCode() != null ? EHousingSite.fromId(Integer.parseInt(housingMasterDto.getSiteCode())) : null;
-            EHousingCategory eHousingCategory = housingMasterDto.getCategoryCode() != null ? EHousingCategory.fromId(Integer.parseInt(housingMasterDto.getCategoryCode())) : null;
-            EHousingType eHousingType = housingMasterDto.getTypeCode() != null ? EHousingType.fromId(Integer.parseInt(housingMasterDto.getTypeCode())) : null;
-            housingMasterDto.setSiteCode(eHousingSite == null ? null : eHousingSite.name());
-            housingMasterDto.setCategoryCode(eHousingCategory == null ? null : eHousingCategory.name());
-            housingMasterDto.setTypeCode(eHousingType == null ? null : eHousingType.name());
-
-        });
         List<ErrorResponse> errorResponses = validationService.validateData(housingMasterDtos);
 
         if (!errorResponses.isEmpty()) {

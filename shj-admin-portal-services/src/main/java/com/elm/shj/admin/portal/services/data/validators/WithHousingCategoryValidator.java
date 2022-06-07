@@ -3,9 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.lookup.HousingCategoryLookupService;
+import com.elm.shj.admin.portal.services.dto.EHousingCategory;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -19,8 +18,7 @@ import javax.validation.ConstraintValidatorContext;
 @Slf4j
 public class WithHousingCategoryValidator implements ConstraintValidator<WithHousingCategory, Object> {
 
-    @Autowired
-    private HousingCategoryLookupService housingCategoryLookupService;
+
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
@@ -28,7 +26,7 @@ public class WithHousingCategoryValidator implements ConstraintValidator<WithHou
         if (value == null) {
             return true;
         } else {
-            return housingCategoryLookupService.existsByCode(value.toString());
+            return EHousingCategory.fromId((Integer) value) != null;
         }
     }
 }
