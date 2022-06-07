@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Enum for comapny types
  *
- * @author f.messaoudi
+ * @author Ahmed Ali
  * @since 1.1.0
  */
 public enum ECompanyType {

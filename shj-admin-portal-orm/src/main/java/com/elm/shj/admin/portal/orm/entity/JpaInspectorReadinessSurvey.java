@@ -39,11 +39,14 @@ public class JpaInspectorReadinessSurvey implements Serializable {
     @Column(name = "camp_number")
     private String campNumber;
 
-    @Column(name = "camp_location_type ")
-    private int campLocationType;
+    @Column(name = "camp_site_code")
+    private String campSiteCode;
+
+    @Column(name = "camp_category_code")
+    private String campCategoryCode;
 
     @Column(name = "internal_company_code")
-    private String internalCompanyType;
+    private String internalCompanyCode;
 
     @Column(name = "establishment_company_code")
     private String establishmentCompanyCode;
@@ -54,18 +57,14 @@ public class JpaInspectorReadinessSurvey implements Serializable {
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
-    @Column(name = "update_date")
-    private Date updateDate;
+
 
     @PrePersist
     public void prePersist() {
         creationDate = new Date();
     }
 
-    @PreUpdate
-    public void preUpdate() {
-        updateDate = new Date();
-    }
+
 
 
 }

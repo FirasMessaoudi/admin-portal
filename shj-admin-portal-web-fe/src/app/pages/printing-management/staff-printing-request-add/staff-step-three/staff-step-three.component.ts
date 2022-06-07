@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {PrintBatchType} from "@model/print-batch-type.model";
-import {CountryLookup} from "@model/country-lookup.model";
+import {NationalityLookup} from "@model/nationality-lookup.model";
 import {BatchType} from "@model/enum/batch-type.enum";
 import {PrintRequest} from "@model/print-request.model";
 import {Router} from "@angular/router";
@@ -22,7 +22,7 @@ export class StaffStepThreeComponent implements OnInit, OnChanges {
 
   public isCollapsed: boolean[] = [];
   batchTypes: PrintBatchType[];
-  countries: CountryLookup[];
+  countries: NationalityLookup[];
   batchType = BatchType;
   description = '';
 

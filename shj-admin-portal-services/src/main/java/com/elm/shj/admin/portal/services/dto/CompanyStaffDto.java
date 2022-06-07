@@ -62,7 +62,7 @@ public class CompanyStaffDto {
     @CellIndex(index = 7)
     private String gender;
 
-    @CountryCode
+    @NationalityCode
     @CellIndex(index = 8)
     private String nationalityCode;
 

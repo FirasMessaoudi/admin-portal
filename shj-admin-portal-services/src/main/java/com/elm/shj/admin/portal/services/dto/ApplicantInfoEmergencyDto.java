@@ -30,7 +30,7 @@ public class ApplicantInfoEmergencyDto implements Serializable {
     @CellIndex(index = 7)
     private String gender;
 
-    @CountryCode
+    @NationalityCode
     @CellIndex(index = 8)
     private String nationalityCode;
 

@@ -65,6 +65,64 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
         }
     }
 
+    /**
+     * Finds an applicant by his passport number
+     *
+     * @param passportNumber the uin of applicant to find
+     * @return the found applicant or empty structure
+     */
+    public Optional<ApplicantLiteDto> findByPassportNumber(String passportNumber, String nationalityCode) {
+        log.info("Start findByPassportNumber passport number:{}", passportNumber);
+
+        JpaApplicantLite applicant = applicantLiteRepository.findByPassportNumberAndCountryCode(passportNumber, nationalityCode);
+        if (applicant != null) {
+            ApplicantLiteDto applicantLiteDto = getMapper().fromEntity(applicant, mappingContext);
+            applicantLiteDto.setEmail(applicant.getContacts().get(0).getEmail());
+            if (applicant.getContacts().get(0).getLocalMobileNumber() != null && applicant.getContacts().get(0).getLocalMobileNumber().length() != 0) {
+                applicantLiteDto.setMobileNumber(applicant.getContacts().get(0).getLocalMobileNumber());
+            } else {
+                applicantLiteDto.setMobileNumber(applicant.getContacts().get(0).getIntlMobileNumber());
+            }
+            applicantLiteDto.setCountryCode(applicant.getContacts().get(0).getCountryCode());
+            applicantLiteDto.setHasLocalMobileNumber(applicant.getContacts().get(0).getLocalMobileNumber() != null && !applicant.getContacts().get(0).getLocalMobileNumber().isEmpty());
+            applicantLiteDto.setGender(applicant.getGender());
+            log.info("Finish findByPassportNumber found with FullNameEn:{}", applicantLiteDto.getFullNameEn());
+            return Optional.of(applicantLiteDto);
+        } else {
+            log.info("Finish findByPassportNumber not found with passport number:{}", passportNumber);
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Finds an applicant by his id number
+     *
+     * @param idNumber the uin of applicant to find
+     * @return the found applicant or empty structure
+     */
+    public Optional<ApplicantLiteDto> findByIdNumber(String idNumber) {
+        log.info("Start findByIdNumber id number:{}", idNumber);
+
+        JpaApplicantLite applicant = applicantLiteRepository.findByIdNumber(idNumber);
+        if (applicant != null) {
+            ApplicantLiteDto applicantLiteDto = getMapper().fromEntity(applicant, mappingContext);
+            applicantLiteDto.setEmail(applicant.getContacts().get(0).getEmail());
+            if (applicant.getContacts().get(0).getLocalMobileNumber() != null && applicant.getContacts().get(0).getLocalMobileNumber().length() != 0) {
+                applicantLiteDto.setMobileNumber(applicant.getContacts().get(0).getLocalMobileNumber());
+            } else {
+                applicantLiteDto.setMobileNumber(applicant.getContacts().get(0).getIntlMobileNumber());
+            }
+            applicantLiteDto.setCountryCode(applicant.getContacts().get(0).getCountryCode());
+            applicantLiteDto.setHasLocalMobileNumber(applicant.getContacts().get(0).getLocalMobileNumber() != null && !applicant.getContacts().get(0).getLocalMobileNumber().isEmpty());
+            applicantLiteDto.setGender(applicant.getGender());
+            log.info("Finish findByIdNumber found with FullNameEn:{}", applicantLiteDto.getFullNameEn());
+            return Optional.of(applicantLiteDto);
+        } else {
+            log.info("Finish findByIdNumber not found with id number:{}", idNumber);
+            return Optional.empty();
+        }
+    }
+
     public boolean existsByUin(String uin) {
         log.info("Start existsByUin uin:{}", uin);
         boolean existsByUin = ((ApplicantLiteRepository) getRepository()).existsByUin(uin);

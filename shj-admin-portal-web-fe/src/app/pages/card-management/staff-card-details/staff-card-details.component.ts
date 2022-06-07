@@ -8,7 +8,7 @@ import { AuthenticationService, CardService } from '@core/services';
 import { ToastService } from '@shared/components/toast';
 import { Lookup } from '@model/lookup.model';
 import { LookupService } from '@core/utilities/lookup.service';
-import { CountryLookup } from '@model/country-lookup.model';
+import { NationalityLookup } from '@model/nationality-lookup.model';
 import { EAuthority } from '@model/index';
 import { NavigationService } from '@core/utilities/navigation.service';
 import { CardStatus } from '@model/enum/card-status.enum';
@@ -33,7 +33,7 @@ export class StaffCardDetailsComponent implements OnInit {
   housingSites: Lookup[] = [];
   transportationTypes: Lookup[] = [];
   relativeRelationships: Lookup[] = [];
-  countries: CountryLookup[] = [];
+  countries: NationalityLookup[] = [];
   healthSpecialNeeds: Lookup[] = [];
   maritalStatuses: Lookup[] = [];
   ritualStepsLabels: Lookup[] = [];
