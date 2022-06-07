@@ -4,6 +4,7 @@ import com.elm.shj.admin.portal.services.data.validators.WithHousingMaster;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
@@ -32,6 +33,7 @@ public class HuicPackageHousing implements Serializable {
     @NotNull(message = "validation.data.constraints.msg.20001")
     private Date validityEnd;
     private boolean isDefault;
+    @Valid
     List<HuicPackageCatering> packageCaterings;
 
 }

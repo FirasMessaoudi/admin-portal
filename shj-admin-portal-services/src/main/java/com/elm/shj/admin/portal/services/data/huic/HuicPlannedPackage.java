@@ -3,6 +3,7 @@ package com.elm.shj.admin.portal.services.data.huic;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import lombok.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -55,8 +56,10 @@ public class HuicPlannedPackage implements Serializable {
     @SeasonYear
     private int seasonYear;
 
+    @Valid
     List<HuicPackageHousing> packageHousings;
 
+    @Valid
     List<HuicPackageTransportation> packageTransportations;
 
 }
