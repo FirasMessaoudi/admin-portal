@@ -1216,6 +1216,8 @@ VALUES ('9_ESTABLISHMENT', N'شركة فلاي ناس', 'Flynas Company','920033
 GO
 
 
+DELETE FROM shc_portal.shc_country_lk WHERE id > 0;
+GO
 SET IDENTITY_INSERT shc_portal.shc_country_lk ON;
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (1, 101, N'إماراتي', 'ar', '971', 'AE');
@@ -1640,7 +1642,7 @@ VALUES (210, 449, 'Eritrean', 'en', '291', 'ER');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (211, 453, N'جمهورية جنوب السودان', 'ar', '211', 'SS');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (212, 453, 'جمهورية جنوب السودان', 'en', '211', 'SS');
+VALUES (212, 453, N'جمهورية جنوب السودان', 'en', '211', 'SS');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (213, 501, N'أسباني', 'ar', '34', 'ES');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
@@ -2192,7 +2194,7 @@ VALUES (487, 818, N'مدغشقر', 'ar', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (488, 818, 'Madagascan', 'en', '261', 'MDG');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (489, 126, N'وثيقة قطرية ', 'ar', '261', 'MDG');
+VALUES (489, 126, N'وثيقة قطرية', 'ar', '261', 'MDG');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (490, 126, N'وثيقة قطرية', 'en', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
@@ -2204,13 +2206,13 @@ VALUES (493, 116, N'كويتي بدون', 'ar', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (494, 116, 'Kuwaiti Without', 'en', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (495, 121, N'فلسطيني بوثيقة مصرية', 'ar', '', '');
+VALUES (495, 121, N'فلسطيني بوثيقة مصرية', 'ar', '20', 'PS');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (496, 121, 'Palestinian (Egyptian T.Doct.)', 'en', '', '');
+VALUES (496, 121, 'Palestinian (Egyptian T.Doct.)', 'en', '20', 'PS');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (497, 125, N'فلسطيني بوثيقة سورية', 'ar', '', '');
+VALUES (497, 125, N'فلسطيني بوثيقة سورية', 'ar', '963', 'PS');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (498, 125, 'Palestinian (Syrian T.Doct.)', 'en', '', '');
+VALUES (498, 125, 'Palestinian (Syrian T.Doct.)', 'en', '963', 'PS');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (499, 352, N'ميانمار/جواز باكستان', 'ar', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
@@ -2244,7 +2246,7 @@ VALUES (513, 142, N'مقيم/أفراد القبائل', 'ar', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (514, 142, N'مقيم/أفراد القبائل', 'en', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (515, 142, N'مقيم/غير معروف', 'ar', '', '');
+VALUES (515, 143, N'مقيم/غير معروف', 'ar', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (516, 143, N'مقيم/غير معروف', 'en', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
@@ -2364,9 +2366,9 @@ VALUES (573, 901, N'اخرى', 'ar', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (574, 901, N'اخرى', 'en', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (575, 554, N'جزر فيرو', 'ar', '', '');
+VALUES (575, 827, N'جنسية غير معرفه', 'ar', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (576, 554, N'جزر فيرو', 'en', '', '');
+VALUES (576, 827, N'جنسية غير معرفه', 'en', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (577, 820, N'قبيلة النسي', 'ar', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
@@ -2472,26 +2474,57 @@ VALUES (627, 661, N'جزر كوكوس', 'ar', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (628, 661, N'جزر كوكوس', 'en', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (629, 452, N'جزيرةمايوت', 'ar', '', '');
+VALUES (629, 452, N'جزيرة مايوت', 'ar', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (630, 452, N'جزيرةمايوت', 'en', '', '');
+VALUES (630, 452, N'جزيرة مايوت', 'en', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (631, 122, N'فلسطيني بوثيقةعراقية', 'ar', '967', 'PS');
+VALUES (631, 124, N'فلسطيني بوثيقة عراقية', 'ar', '964', 'PS');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (632, 122, 'Palestinian (Iraqi T.Doct.)', 'en', '967', 'PS');
+VALUES (632, 124, 'Palestinian (Iraqi T.Doct.)', 'en', '964', 'PS');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (633, 122, N'فلسطيني بوثيقةلبناني', 'ar', '967', 'PS');
+VALUES (633, 122, N'فلسطيني بوثيقة لبناني', 'ar', '961', 'PS');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (634, 122, 'Palestinian (lebanese T.Doct.)', 'en', '967', 'PS');
+VALUES (634, 122, 'Palestinian (lebanese T.Doct.)', 'en', '961', 'PS');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (635, 122, N'فلسطيني بوثيقةاردنية', 'ar', '967', 'PS');
+VALUES (635, 123, N'فلسطيني بوثيقة اردنية', 'ar', '962', 'PS');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
-VALUES (636, 122, 'Palestinian (Jordanian T.Doct.)', 'en', '967', 'PS');
+VALUES (636, 123, 'Palestinian (Jordanian T.Doct.)', 'en', '962', 'PS');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (637, 450, N'دول افريقية اخري', 'ar', '', '');
 INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
 VALUES (638, 450, 'Other Africans', 'en', '', '');
-
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (639, 998, N'البهره', 'ar', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (640, 998, N'البهره', 'en', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (641, 999, N'جنسية غير معرفه', 'ar', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (642, 999, N'جنسية غير معرفه', 'en', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (643, 828, N'جنسية غير معرفه', 'ar', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (644, 828, N'جنسية غير معرفه', 'en', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (645, 829, N'جنسية غير معرفه', 'ar', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (646, 829, N'جنسية غير معرفه', 'en', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (647, 833, N'جنسية غير معرفه', 'ar', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (648, 833, N'جنسية غير معرفه', 'en', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (649, 835, N'جنسية غير معرفه', 'ar', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (650, 835, N'جنسية غير معرفه', 'en', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (651, 836, N'جنسية غير معرفه', 'ar', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (652, 836, N'جنسية غير معرفه', 'en', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (653, 802, N'كيريباتي', 'ar', '', '');
+INSERT INTO shc_portal.shc_country_lk(id, code, label, lang, country_phone_prefix, country_name_prefix)
+VALUES (654, 802, N'كيريباتي', 'en', '', '');
 SET IDENTITY_INSERT shc_portal.shc_country_lk OFF;
 GO
 

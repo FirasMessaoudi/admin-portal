@@ -1723,25 +1723,17 @@ alter
 column type_code varchar (45) null
 go
 
-
-
-
 alter table shc_portal.shc_company
 alter
 column label_en varchar(256)
 go
 
 
-ALTER TABLE shc_portal.shc_country_lk
-DROP
-CONSTRAINT country_lk_unique;
-
+ALTER TABLE shc_portal.shc_country_lk DROP CONSTRAINT country_lk_unique;
 GO
 
 ALTER TABLE shc_portal.shc_country_lk DROP COLUMN nic_code;
-ALTER TABLE shc_portal.shc_country_lk
-    ADD country_name_prefix VARCHAR(10);
-
+ALTER TABLE shc_portal.shc_country_lk ADD country_name_prefix VARCHAR(10);
 GO
 
 if not exists(select * from sys.tables where name = 'shc_camp_site_lk')
@@ -1858,45 +1850,24 @@ create table shc_portal.shc_inspector_readiness_survey_result
 );
 GO
 
-alter table shc_portal.shc_company
-alter
-column label_en varchar(256)
+alter table shc_portal.shc_company alter column label_en varchar(256);
 go
 
-
-ALTER TABLE shc_portal.shc_country_lk
-DROP
-CONSTRAINT country_lk_unique;
-
+ALTER TABLE shc_portal.shc_company ALTER COLUMN label_ar NVARCHAR(600);
+ALTER TABLE shc_portal.shc_company ALTER COLUMN label_en NVARCHAR(600);
+ALTER TABLE shc_portal.shc_company ALTER COLUMN email VARCHAR(100);
 GO
 
-ALTER TABLE shc_portal.shc_country_lk DROP COLUMN nic_code;
-ALTER TABLE shc_portal.shc_country_lk ADD country_name_prefix VARCHAR(10);
-
+ALTER TABLE shc_portal.shc_applicant_package ADD arrival_city Varchar(45);
 GO
 
-ALTER TABLE shc_portal.shc_company ALTER COLUMN label_ar NVARCHAR(600)
-ALTER TABLE shc_portal.shc_company ALTER COLUMN label_en NVARCHAR(600)
-ALTER TABLE shc_portal.shc_company ALTER COLUMN email VARCHAR(100)
+ALTER TABLE shc_portal.shc_company_type_lk ADD main_type int;
 GO
 
-ALTER TABLE shc_portal.shc_applicant_package
-    ADD arrival_city Varchar(45);
-
-GO
-
-ALTER TABLE shc_portal.shc_company_type_lk
-    ADD main_type int
-    GO
-
-alter table shc_portal.shc_company
-alter
-column code varchar(100) not null
+alter table shc_portal.shc_company alter column code varchar(100) not null;
 go
 
-ALTER TABLE shc_portal.shc_applicant
-alter
-column date_of_birth_gregorian DATE   NULL;
+ALTER TABLE shc_portal.shc_applicant alter column date_of_birth_gregorian DATE NULL;
 GO
 
 ALTER TABLE shc_portal.shc_company_staff ADD custom_job_title varchar(30)
