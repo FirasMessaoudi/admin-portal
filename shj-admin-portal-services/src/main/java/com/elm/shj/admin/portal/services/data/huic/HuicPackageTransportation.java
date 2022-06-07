@@ -22,7 +22,7 @@ public class HuicPackageTransportation implements Serializable {
     private static final long serialVersionUID = -8214844201380607365L;
 
     @WithTransportationType
-    private Long typeCode;
+    private Integer typeCode;
     private String locationFromNameAr;
     private String locationFromNameEn;
     private String locationToNameAr;
@@ -31,6 +31,6 @@ public class HuicPackageTransportation implements Serializable {
     private Long validityStart;
     @HijriDate(minOffset = -1, maxOffset = 1)
     private Long validityEnd;
-    @OnlyCharacters(min = 0, max = 256)
+    @OnlyCharacters(min = 0, max = 400)
     private String routeDetails;
 }

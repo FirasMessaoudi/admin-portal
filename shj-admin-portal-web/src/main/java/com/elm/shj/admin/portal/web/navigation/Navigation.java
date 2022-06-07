@@ -78,6 +78,12 @@ public class Navigation {
 	public static final String API_SUPPLICATIONS ="/api/ws/supplications";
 	//Rosary
 	public static final String API_ROSARY_INTEGRATION  = "/api/ws/rosary";
+
 	public static final String API_COMPANY  = "/api/ws/company";
+
+	//Company Staff
+	public static final String API_COMPANY_STAFF = "/api/company-staff";
+
+
 
 }

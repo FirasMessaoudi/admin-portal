@@ -20,17 +20,17 @@ public enum EMealTime {
     LUNCH(2),
     DINNER(3);
 
-    private final long id;
+    private final int id;
 
-    EMealTime(long id) {
+    EMealTime(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static EMealTime fromId(long id) {
+    public static EMealTime fromId(int id) {
         List<EMealTime> result = Arrays.stream(EMealTime.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (EMealTime) CollectionUtils.get(result, 0);
     }

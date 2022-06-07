@@ -43,7 +43,7 @@ public class JpaCompany implements Serializable {
     private String labelEn;
 
     @Column(name = "mission_ref_code")
-    private Integer missionRefCode;
+    private Long missionRefCode;
 
     @Column(name = "contact_number")
     private String contactNumber;

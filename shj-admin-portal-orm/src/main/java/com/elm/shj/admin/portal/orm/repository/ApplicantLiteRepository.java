@@ -25,6 +25,12 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
     @Query("SELECT a FROM JpaApplicantLite a JOIN a.digitalIds adi WHERE adi.uin = :uin")
     JpaApplicantLite findByUin(@Param("uin") String uin);
 
+    @Query("SELECT a FROM JpaApplicantLite a WHERE a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode")
+    JpaApplicantLite findByPassportNumberAndCountryCode(@Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
+
+    @Query("SELECT a FROM JpaApplicantLite a WHERE a.idNumber = :idNumber")
+    JpaApplicantLite findByIdNumber(@Param("idNumber") String passportNumber);
+
     @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM JpaApplicantLite a INNER JOIN a.digitalIds adi WHERE adi.uin = :uin")
     boolean existsByUin(@Param("uin") String uin);
 

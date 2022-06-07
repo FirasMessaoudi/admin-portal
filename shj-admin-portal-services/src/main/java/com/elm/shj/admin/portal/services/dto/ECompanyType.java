@@ -23,17 +23,17 @@ public enum ECompanyType {
     SERVICE_GROUP(5);
 
 
-    private final long id;
+    private final int id;
 
-    ECompanyType(long id) {
+    ECompanyType(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static ECompanyType fromId(long id) {
+    public static ECompanyType fromId(int id) {
         List<ECompanyType> result = Arrays.stream(ECompanyType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (ECompanyType) CollectionUtils.get(result, 0);
     }

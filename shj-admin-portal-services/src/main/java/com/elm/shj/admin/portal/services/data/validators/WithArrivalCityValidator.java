@@ -22,7 +22,7 @@ public class WithArrivalCityValidator implements ConstraintValidator<WithArrival
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
 
-        return EArrivalCity.fromId((Long) value) != null;
+        return EArrivalCity.fromId((Integer) value) != null;
 
     }
 }

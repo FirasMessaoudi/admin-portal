@@ -29,7 +29,7 @@ public class RitualTypeCodeValidator implements ConstraintValidator<RitualTypeCo
         if (value != null && value.getClass().isAssignableFrom(String.class)) {
             return ritualTypeLookupService.existsByCode(value.toString().toUpperCase());
         } else {
-            return value != null && ERitualType.fromId((Long) value) != null;
+            return value != null && ERitualType.fromId((Integer) value) != null;
         }
     }
 

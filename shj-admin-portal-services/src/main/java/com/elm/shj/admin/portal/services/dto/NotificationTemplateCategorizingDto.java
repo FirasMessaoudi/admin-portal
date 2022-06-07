@@ -51,8 +51,13 @@ public class NotificationTemplateCategorizingDto implements Serializable {
     private String idNumber;
     private String uin;
     private String passportNumber;
+    private String staffTitle;
+    private String suin;
+    private Integer notificationCategory;
 
     private String selectedApplicants;
+
+    private String selectedStaff;
 
     private Date creationDate;
     private Date updateDate;

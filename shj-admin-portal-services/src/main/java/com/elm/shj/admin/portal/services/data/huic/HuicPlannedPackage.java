@@ -5,7 +5,6 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -26,22 +25,22 @@ public class HuicPlannedPackage implements Serializable {
     @NotNull(message = "validation.data.constraints.msg.20001")
     private Long packageRefNumber;
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private BigInteger companyRefCode;
+    private Long companyRefCode;
     @WithServiceGroup
-    private BigInteger hajjOfficeMakkah;
+    private Long hajjOfficeMakkah;
     @WithServiceGroup
-    private BigInteger hajjOfficeMadina;
+    private Long hajjOfficeMadina;
 
     private String packageNameArabic;
 
     private String packageNameEnglish;
 
     @WithPackageType
-    private Long packageTypeCode;
+    private Integer packageTypeCode;
     @CompanyTypeCode
-    private Long companyTypeCode;
+    private Integer companyTypeCode;
     @EstablishmentCode
-    private Long establishmentId;
+    private Integer establishmentId;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     @HijriDate(minOffset = -1, maxOffset = 1)
@@ -52,7 +51,7 @@ public class HuicPlannedPackage implements Serializable {
     private Long packageEndDate;
 
     @RitualTypeCode
-    private Long ritualTypeCode;
+    private Integer ritualTypeCode;
     @SeasonYear
     private int seasonYear;
 

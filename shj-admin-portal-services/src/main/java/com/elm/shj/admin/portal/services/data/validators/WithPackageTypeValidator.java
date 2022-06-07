@@ -25,7 +25,7 @@ public class WithPackageTypeValidator implements ConstraintValidator<WithPackage
         if (value == null) {
             return false;
         } else {
-            return EPackageType.fromId((Long) value) != null;
+            return EPackageType.fromId((Integer) value) != null;
         }
     }
 }

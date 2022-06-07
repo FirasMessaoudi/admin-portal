@@ -7,7 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
-import com.elm.shj.admin.portal.services.lookup.CountryLookupService;
+import com.elm.shj.admin.portal.services.lookup.NationalityLookupService;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
     private static ThreadLocal<List<String>> threadLocalLatestSerialList = ThreadLocal.withInitial(() -> new ArrayList<>());
 
     private final ApplicantDigitalIdRepository applicantDigitalIdRepository;
-    private final CountryLookupService countryLookupService;
+    private final NationalityLookupService nationalityLookupService;
 
     /**
      * Generates smart id for specific applicant
@@ -72,8 +72,8 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
         String genderDigit = String.valueOf(GENDER_DIGITS.get(applicant.getGender().toUpperCase()).get(ThreadLocalRandom.current().nextInt(0, "F".equalsIgnoreCase(applicant.getGender()) ? 4 : 5)));
         // generate country digits
         // retrieve country
-        CountryLookupDto countryLookupDto = countryLookupService.findByCode(applicant.getNationalityCode());
-        String countryDigits = StringUtils.leftPad(StringUtils.right(countryLookupDto.getCountryPhonePrefix().replaceAll("-", "").replaceAll(",", ""), 3), 3, "0");
+        NationalityLookupDto nationalityLookupDto = nationalityLookupService.findByCode(applicant.getNationalityCode());
+        String countryDigits = StringUtils.leftPad(StringUtils.right(nationalityLookupDto.getCountryPhonePrefix().replaceAll("-", "").replaceAll(",", ""), 3), 3, "0");
         // generate date of birth digits
         Date dobGregorian = applicant.getDateOfBirthGregorian() != null ? applicant.getDateOfBirthGregorian() : DateUtils.toGregorian(applicant.getDateOfBirthHijri());
         String dobDigits = YEAR_FORMATTER.format(dobGregorian);

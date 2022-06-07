@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -76,7 +75,7 @@ public class CompanyStaffFullDataDto implements Serializable {
     @JsonIgnore
     private String nationality;
 
-    @CountryCode
+    @NationalityCode
     @CellIndex(index = 10)
     private String nationalityCode;
 

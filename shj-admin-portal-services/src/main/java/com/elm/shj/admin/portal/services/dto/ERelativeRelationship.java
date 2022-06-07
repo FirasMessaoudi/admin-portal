@@ -29,7 +29,7 @@ public enum ERelativeRelationship {
         return this.id;
     }
 
-    public static ERelativeRelationship fromId(long id) {
+    public static ERelativeRelationship fromId(int id) {
         List<ERelativeRelationship> result = Arrays.stream(ERelativeRelationship.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (ERelativeRelationship) CollectionUtils.get(result, 0);
     }

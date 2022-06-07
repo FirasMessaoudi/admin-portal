@@ -19,17 +19,17 @@ public enum EGenderCode {
     M(1),
     F(2);
 
-    private final long id;
+    private final int id;
 
-    EGenderCode(long id) {
+    EGenderCode(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static EGenderCode fromId(long id) {
+    public static EGenderCode fromId(int id) {
         List<EGenderCode> result = Arrays.stream(EGenderCode.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (EGenderCode) CollectionUtils.get(result, 0);
     }

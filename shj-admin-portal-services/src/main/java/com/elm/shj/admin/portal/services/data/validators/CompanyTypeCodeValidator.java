@@ -22,7 +22,7 @@ public class CompanyTypeCodeValidator implements ConstraintValidator<CompanyType
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value != null && ECompanyType.fromId((Long) value) != null;
+        return value != null && ECompanyType.fromId((Integer) value) != null;
     }
 
 }

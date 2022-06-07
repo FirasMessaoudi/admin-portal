@@ -9,7 +9,7 @@ import {PrintRequestStorage} from "@pages/printing-management/printing-request-a
 import {PrintBatchType} from "@model/print-batch-type.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {AuthenticationService, CardService} from "@core/services";
-import {CountryLookup} from "@model/country-lookup.model";
+import {NationalityLookup} from "@model/nationality-lookup.model";
 import {BatchType} from "@model/enum/batch-type.enum";
 import {EAuthority} from "@shared/model";
 
@@ -22,7 +22,7 @@ export class StepThreeComponent implements OnInit {
 
   public isCollapsed: boolean[] = [];
   batchTypes: PrintBatchType[];
-  countries: CountryLookup[];
+  countries: NationalityLookup[];
   batchType = BatchType;
   description = '';
 

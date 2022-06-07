@@ -11,12 +11,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import java.util.*;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -275,4 +284,59 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         }
         return command;
     }
+
+    public List<CompanyStaffDto> findRegisteredStaff(){
+        return mapList(companyStaffRepository.findAllByRegisteredTrue());
+    }
+
+    public long countRegisteredStaff(){
+        return companyStaffRepository.countJpaCompanyStaffByRegisteredTrue();
+    }
+
+    public List<CompanyStaffDto> findAllByIds(List<Long> selectedStaff) {
+        log.info("CompanyStaffService ::: Start findAllByIds selectedStaffListSize: {} ", selectedStaff.size());
+        List<CompanyStaffDto> CompanyStaffDtos = mapList(companyStaffRepository.findAllByIds(selectedStaff));
+        log.info("CompanyStaffService ::: Finish findAllByIds applicantDtosListSize: {} ", CompanyStaffDtos .size());
+        return CompanyStaffDtos ;
+    }
+    public Page<CompanyStaffDto> findByIds(@RequestParam List<Long> selectedStaffs, Pageable pageable) {
+        return mapPage(companyStaffRepository.findByIds(selectedStaffs, pageable));
+    }
+
+    public List<CompanyStaffDto> findAllByCriteria(NotificationTemplateCategorizingDto applicantSearchCriteria, List<Long> excludedIds) {
+
+        return mapList(companyStaffRepository.findAll(withStaffFilter(applicantSearchCriteria ,excludedIds)));
+    }
+
+    public Page<CompanyStaffDto> findAllByCriteriaAndNotInExcludedIds(NotificationTemplateCategorizingDto applicantSearchCriteria, List<Long> excludedIds, Pageable pageable) {
+
+        return mapPage(companyStaffRepository.findAll(withStaffFilter(applicantSearchCriteria ,excludedIds), pageable));
+    }
+    private Specification<JpaCompanyStaff> withStaffFilter(final NotificationTemplateCategorizingDto criteria, List<Long> excludedIds) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            //Create atomic predicates
+            List<Predicate> predicates = new ArrayList<>();
+
+            //Filter registered staff
+            predicates.add(criteriaBuilder.equal(root.get("registered"), true));
+
+            if (criteria.getSuin() != null && criteria.getSuin().trim().length() > 0) {
+                Join<JpaCompanyStaff, JpaCompanyStaffDigitalId> digitalIds = root.join("digitalIds");
+                Path<String> suin = digitalIds.get("suin");
+                predicates.add(criteriaBuilder.equal(suin, criteria.getSuin()));
+                //predicates.add(criteriaBuilder.like(digitalIds.get("suin"), "%" + criteria.getSuin().trim() + "%"));
+            }
+
+            if (criteria.getStaffTitle() != null ) {
+                predicates.add(criteriaBuilder.equal(root.get("titleCode"), criteria.getStaffTitle()));
+            }
+
+            if (excludedIds != null && !excludedIds.isEmpty()) {
+                predicates.add(criteriaBuilder.not(root.get("id").in(excludedIds)));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
 }

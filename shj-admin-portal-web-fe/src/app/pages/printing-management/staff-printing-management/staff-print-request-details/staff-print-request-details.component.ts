@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {PrintRequest} from "@model/print-request.model";
 import {Lookup} from "@model/lookup.model";
 import {PrintBatchType} from "@model/print-batch-type.model";
-import {CountryLookup} from "@model/country-lookup.model";
+import {NationalityLookup} from "@model/nationality-lookup.model";
 import {BatchType} from "@model/enum/batch-type.enum";
 import {PrintRequestStatus} from "@model/enum/print-request-status.enum";
 import {I18nService} from "@dcc-commons-ng/services";
@@ -31,7 +31,7 @@ export class StaffPrintRequestDetailsComponent implements OnInit {
   printRequest: PrintRequest;
   printRequestStatuses: Lookup[];
   batchTypes: PrintBatchType[];
-  countries: CountryLookup[];
+  countries: NationalityLookup[];
   cardStatuses: Lookup[];
   batchType = BatchType;
   printRequestStatus = PrintRequestStatus;

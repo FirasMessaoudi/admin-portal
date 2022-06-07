@@ -4,9 +4,7 @@
 package com.elm.shj.admin.portal.services.lookup;
 
 import com.elm.shj.admin.portal.orm.entity.JpaMaritalStatusLookup;
-import com.elm.shj.admin.portal.orm.repository.CountryLookupRepository;
 import com.elm.shj.admin.portal.orm.repository.MaritalStatusLookupRepository;
-import com.elm.shj.admin.portal.services.dto.CountryLookupDto;
 import com.elm.shj.admin.portal.services.dto.MaritalStatusLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.extern.slf4j.Slf4j;

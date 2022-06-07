@@ -27,7 +27,7 @@ public class WithServiceGroupValidator implements ConstraintValidator<WithServic
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value == null || companyService.existsByBasicInfo(value + "", 5L);
+        return value == null || companyService.existsByBasicInfo(value + "", 5);
 
     }
 

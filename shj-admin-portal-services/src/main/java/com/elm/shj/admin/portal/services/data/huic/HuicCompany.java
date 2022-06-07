@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.math.BigInteger;
 
@@ -29,41 +27,38 @@ public class HuicCompany implements Serializable {
     @NotNull(message = "validation.data.constraints.msg.20001")
     private BigInteger companyRefCode;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
-    @OnlyCharacters(min = 10, max = 150, allowEmpty = false, arabic = true, allowNumbers = true, allowSpecialChars = false)
+
+    @NullOrNotBlank(min = 5, max = 200)
     private String companyNameAr;
 
-    @OnlyCharacters(min = 10, max = 150, allowEmpty = true, arabic = false, allowNumbers = true, allowSpecialChars = false)
+    @NullOrNotBlank(min = 5, max = 200)
     private String companyNameEn;
 
     @WithMission
-    private Integer missionId;
+    private Long missionId;
 
     @NullOrNotBlank(min = 5, max = 20)
     private Long companyContactNumber;
 
-    @NullOrNotBlank(min = 5, max = 75)
-    @Pattern(regexp = "(http:\\/\\/|https:\\/\\/)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?(\\/[a-z0-9])*(\\/?|(\\?[a-z0-9]=[a-z0-9](&[a-z0-9]=[a-z0-9]*)?))"
-            , message = "validation.data.constraints.msg.20003")
+    @NullOrNotBlank(min = 5, max = 200)
     private String website;
 
     @NullOrNotBlank(min = 5, max = 50)
-    @Email(message = "validation.data.constraints.msg.20003")
     private String companyEmail;
 
-    private BigInteger moiNumber;
+    private Long moiNumber;
 
-    private BigInteger crNumber;
+    private Long crNumber;
 
     @CompanyTypeCode
-    private Long companyTypeCode;
+    private Integer companyTypeCode;
 
     @RitualTypeCode
-    private Long ritualTypeCode;
+    private Integer ritualTypeCode;
     @SeasonYear
     private int seasonYear;
     @CountryCode
-    private Long country;
+    private Integer country;
 
     @EstablishmentCode
     private Integer establishmentId;

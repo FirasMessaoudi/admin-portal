@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.NotificationRequestRepository;
 import com.elm.shj.admin.portal.orm.repository.UserNotificationRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import javassist.NotFoundException;
@@ -39,6 +40,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     private final NotificationRequestRepository notificationRequestRepository;
     private final UserNotificationRepository userNotificationRepository;
     private final ApplicantService applicantService;
+    private final CompanyStaffService companyStaffService;
 
     /**
      * will handle processing of user Notifications in notification processing scheduler
@@ -147,19 +149,39 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public void createUserDefinedNotificationRequest(NotificationTemplateDto notificationTemplate) {
         List<ApplicantDto> applicants;
+        List<CompanyStaffDto> companyStaff;
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
         NotificationTemplateCategorizingDto categorizing = notificationTemplate.getNotificationTemplateCategorizing();
-        if (categorizing != null) {
-            if (categorizing.getSelectedApplicants() != null) {
-                List<Long> applicantIds = Arrays.stream(categorizing.getSelectedApplicants().split(",")).map(Long::parseLong).collect(Collectors.toList());
-                applicants = applicantService.findAllByIds(applicantIds);
-            } else {
-                applicants = applicantService.findAllByCriteria(notificationTemplate.getNotificationTemplateCategorizing(), null);
+        if(categorizing != null){
+            if(categorizing.getNotificationCategory() == 1){
+                applicants = applicantService.findAllRegisteredAndHavingActiveRitual();
+                sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
             }
-        } else {
-            applicants = applicantService.findAllRegisteredAndHavingActiveRitual();
+            else if(categorizing.getNotificationCategory() == 2){
+                companyStaff = companyStaffService.findRegisteredStaff();
+                sendNotificationTemplateToCompanyStaff(savedNotificationTemplate, companyStaff);
+            }
+            else if(categorizing.getNotificationCategory() == 3){
+                if (categorizing.getSelectedApplicants() != null) {
+                    List<Long> applicantIds = Arrays.stream(categorizing.getSelectedApplicants().split(",")).map(Long::parseLong).collect(Collectors.toList());
+                    applicants = applicantService.findAllByIds(applicantIds);
+                    sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
+                }
+            }
+            else if(categorizing.getNotificationCategory() == 4){
+                applicants = applicantService.findAllByCriteria(notificationTemplate.getNotificationTemplateCategorizing(), null);
+                sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
+            }
+            else if(categorizing.getNotificationCategory()==5){
+                companyStaff = companyStaffService.findAllByCriteria(notificationTemplate.getNotificationTemplateCategorizing(), null);
+                sendNotificationTemplateToCompanyStaff(savedNotificationTemplate, companyStaff);
+            }
         }
-        sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
+        else {
+            applicants = applicantService.findAllRegisteredAndHavingActiveRitual();
+            sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
+        }
+
     }
 
     @Transactional
@@ -185,16 +207,35 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                         .userId(applicant.getDigitalIds().get(0).getUin())
                         .notificationTemplate(notificationTemplate)
                         .sendingDate(notificationTemplate.getSendingDate())
-                        .userLang(applicant.getPreferredLanguage() != null ? getNotificationLanguage(notificationTemplate, applicant) : NOTIFICATION_DEFAULT_LANGUAGE)
+                        .userLang(applicant.getPreferredLanguage() != null ? getApplicantNotificationLanguage(notificationTemplate, applicant) : NOTIFICATION_DEFAULT_LANGUAGE)
+                        .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
+                        .build())
+                .collect(Collectors.toList());
+        super.saveAll(notificationRequests);
+    }
+    private void sendNotificationTemplateToCompanyStaff(NotificationTemplateDto notificationTemplate, List<CompanyStaffDto> companyStaffDtos) {
+        List<NotificationRequestDto> notificationRequests = companyStaffDtos.stream().map(companyStaff -> NotificationRequestDto
+                        .builder()
+                        .userId(companyStaff.getDigitalIds().stream().findFirst().get().getSuin())
+                        .notificationTemplate(notificationTemplate)
+                        .sendingDate(notificationTemplate.getSendingDate())
+                        .userLang(companyStaff.getPreferredLanguage() != null ? getCompanyNotificationLanguage(notificationTemplate, companyStaff) : NOTIFICATION_DEFAULT_LANGUAGE)
                         .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
                         .build())
                 .collect(Collectors.toList());
         super.saveAll(notificationRequests);
     }
 
-    private String getNotificationLanguage(NotificationTemplateDto notificationTemplate, ApplicantDto applicant) {
+    private String getApplicantNotificationLanguage(NotificationTemplateDto notificationTemplate, ApplicantDto applicant) {
         return notificationTemplate.getNotificationTemplateContents()
                 .stream().filter(c -> applicant.getPreferredLanguage().equalsIgnoreCase(c.getLang()))
+                .findFirst()
+                .map(NotificationTemplateContentDto::getLang)
+                .orElse(NOTIFICATION_DEFAULT_LANGUAGE);
+    }
+    private String getCompanyNotificationLanguage(NotificationTemplateDto notificationTemplate, CompanyStaffDto companyStaffDto) {
+        return notificationTemplate.getNotificationTemplateContents()
+                .stream().filter(c -> companyStaffDto.getPreferredLanguage().equalsIgnoreCase(c.getLang()))
                 .findFirst()
                 .map(NotificationTemplateContentDto::getLang)
                 .orElse(NOTIFICATION_DEFAULT_LANGUAGE);

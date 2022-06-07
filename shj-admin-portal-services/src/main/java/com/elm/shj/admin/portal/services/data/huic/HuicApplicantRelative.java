@@ -28,31 +28,29 @@ public class HuicApplicantRelative implements Serializable {
     private static final long serialVersionUID = -8952254188968130392L;
 
     @RelationshipCode
-    private Long relationship;
+    private Integer relationship;
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     private Long idNumber;
     @PassportNumber
     private String passportNo;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @CountryCode
+    @NationalityCode
     private Long nationality;
     @NotNull(message = "validation.data.constraints.msg.20001")
     @WithRitualPackage
-    @OnlyCharacters(min = 1, max = 16, allowNumbers = true, allowEmpty = false)
     private String packageRefNumber;
     @RitualTypeCode
-    private Long ritualTypeCode;
+    private Integer ritualTypeCode;
     @SeasonYear
     private int seasonYear;
-    ;
     // transient specific mapping for relative applicant as we cannot decorate twice
     // used in data requests either through file upload or integration
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     private Long relativeIdNumber;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @CountryCode
+    @NationalityCode
     private Long relativeNationality;
     @PassportNumber
     private String relativePassportNo;

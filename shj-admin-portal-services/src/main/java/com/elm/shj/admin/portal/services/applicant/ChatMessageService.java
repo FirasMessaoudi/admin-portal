@@ -76,4 +76,8 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
         chatMessageRepository.updateChatMessageReadDate(chatContactId);
         log.info("ChatMessageService ::: Finish markMessagesAsRead ");
     }
+
+    public List<ChatMessageDto> findChatMessagesBySenderIdOrReceiverId(long contactId) {
+        return mapList(chatMessageRepository.findBySenderIdOrReceiverId(contactId, contactId));
+    }
 }

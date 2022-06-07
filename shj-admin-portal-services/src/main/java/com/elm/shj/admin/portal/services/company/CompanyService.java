@@ -39,7 +39,7 @@ public class CompanyService extends GenericService<JpaCompany, CompanyLiteDto, L
     }
 
 
-    public boolean existsByBasicInfo(String companyRefCode, Long companyTypeCode) {
+    public boolean existsByBasicInfo(String companyRefCode, Integer companyTypeCode) {
         return companyRepository.existsByCode(companyRefCode + "_" + ECompanyType.fromId(companyTypeCode).name());
     }
 }

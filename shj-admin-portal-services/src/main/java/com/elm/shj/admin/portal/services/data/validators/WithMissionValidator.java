@@ -27,7 +27,7 @@ public class WithMissionValidator implements ConstraintValidator<WithMission, Ob
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value == null || companyService.existsByBasicInfo(value + "", 2L);
+        return value == null || companyService.existsByBasicInfo(value + "", 2);
 
     }
 

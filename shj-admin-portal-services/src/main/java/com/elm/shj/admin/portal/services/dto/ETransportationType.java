@@ -21,17 +21,17 @@ public enum ETransportationType {
     CAR(3),
     AIRPLANE(4);
 
-    private final long id;
+    private final int id;
 
-    ETransportationType(long id) {
+    ETransportationType(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static ETransportationType fromId(long id) {
+    public static ETransportationType fromId(int id) {
         List<ETransportationType> result = Arrays.stream(ETransportationType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (ETransportationType) CollectionUtils.get(result, 0);
     }
