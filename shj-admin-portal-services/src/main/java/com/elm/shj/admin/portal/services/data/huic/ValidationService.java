@@ -79,7 +79,8 @@ public class ValidationService {
     private final PackageCateringService packageCateringService;
     private final PackageTransportationService packageTransportationService;
     private static final String ARABIC_REGEX = "^[\\p{InArabic}\\s-_]+$";
-    private static final String LATIN = "^[\\p{IsLatin}\\s-_]+$";
+    private static final String LATIN_REGEX = "^[\\p{IsLatin}\\s-_]+$";
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
 
 
     @Transactional
@@ -239,7 +240,7 @@ public class ValidationService {
                 .missionRefCode(huicCompany.getMissionId())
                 .contactNumber(huicCompany.getCompanyContactNumber() + "")
                 .website(huicCompany.getWebsite())
-                .email(huicCompany.getCompanyEmail())
+                .email(huicCompany.getCompanyEmail() != null ? huicCompany.getCompanyEmail().matches(EMAIL_REGEX) ? huicCompany.getCompanyEmail() : null : null)
                 .moiNumber(huicCompany.getMoiNumber() + "")
                 .crNumber(huicCompany.getCrNumber() + "")
                 .typeCode(ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
@@ -409,8 +410,8 @@ public class ValidationService {
                 .passportNumber(huicApplicantMainData.getPassportNo())
                 .dateOfBirthGregorian(huicApplicantMainData.getDateOfBirth())
                 .dateOfBirthHijri(huicApplicantMainData.getDateOfBirthHijri())
-                .fullNameEn(huicApplicantMainData.getFullNameEn())
-                .fullNameAr(huicApplicantMainData.getFullNameAr())
+                .fullNameEn(huicApplicantMainData.getFullNameEn() != null ? huicApplicantMainData.getFullNameEn().matches(LATIN_REGEX) ? huicApplicantMainData.getFullNameEn() : null : null)
+                .fullNameAr(huicApplicantMainData.getFullNameAr() != null ? huicApplicantMainData.getFullNameAr().matches(ARABIC_REGEX) ? huicApplicantMainData.getFullNameAr() : null : null)
                 .fullNameOrigin(huicApplicantMainData.getFullNameOriginalLang())
                 .maritalStatusCode(huicApplicantMainData.getMaritalStatus() != null ? EMaritalStatus.fromId(huicApplicantMainData.getMaritalStatus()).name() : null)
                 .photo(huicApplicantMainData.getPhoto())
@@ -421,7 +422,7 @@ public class ValidationService {
                 .build();
         ApplicantContactDto applicantContactDto = ApplicantContactDto.builder()
                 .languageList(huicApplicantMainData.getLanguageList())
-                .email(huicApplicantMainData.getEmail())
+                .email(huicApplicantMainData.getEmail() != null ? huicApplicantMainData.getEmail().matches(EMAIL_REGEX) ? huicApplicantMainData.getEmail() : null : null)
                 .localMobileNumber(huicApplicantMainData.getMobileNumber())
                 .intlMobileNumber(huicApplicantMainData.getMobileNumberIntl())
                 .countryCode(huicApplicantMainData.getCountry().toString())

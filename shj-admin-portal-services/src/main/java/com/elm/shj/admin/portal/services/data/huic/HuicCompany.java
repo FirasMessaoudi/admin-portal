@@ -28,6 +28,7 @@ public class HuicCompany implements Serializable {
     private BigInteger companyRefCode;
 
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @NullOrNotBlank(min = 5, max = 200)
     private String companyNameAr;
 
