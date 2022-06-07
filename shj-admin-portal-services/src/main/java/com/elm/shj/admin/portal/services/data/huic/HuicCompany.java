@@ -57,7 +57,7 @@ public class HuicCompany implements Serializable {
     private Integer ritualTypeCode;
     @SeasonYear
     private int seasonYear;
-    @CountryCode
+    @NationalityCode
     private Integer country;
 
     @EstablishmentCode
