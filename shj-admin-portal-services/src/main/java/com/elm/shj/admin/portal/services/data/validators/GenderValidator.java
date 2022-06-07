@@ -24,7 +24,7 @@ public class GenderValidator implements ConstraintValidator<Gender, Object> {
         if (value.getClass().isAssignableFrom(String.class)) {
             return "M".equalsIgnoreCase(Objects.toString(value)) || "F".equalsIgnoreCase(Objects.toString(value));
         } else {
-            return value != null && ((value).equals(1L) || ((value).equals(2L)));
+            return value != null && ((value).equals(1) || ((value).equals(2)));
         }
     }
 

@@ -4,15 +4,15 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
-import com.elm.shj.admin.portal.orm.entity.JpaCountryLookup;
+import com.elm.shj.admin.portal.orm.entity.JpaNationalityLookup;
 import org.mapstruct.Mapper;
 
 /**
- * Mapper for {@link CountryLookupDto} class
+ * Mapper for {@link NationalityLookupDto} class
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
  */
 @Mapper(componentModel = "spring")
-public abstract class CountryLookupDtoMapper implements IGenericMapper<CountryLookupDto, JpaCountryLookup> {
+public abstract class NationalityLookupDtoMapper implements IGenericMapper<NationalityLookupDto, JpaNationalityLookup> {
 }

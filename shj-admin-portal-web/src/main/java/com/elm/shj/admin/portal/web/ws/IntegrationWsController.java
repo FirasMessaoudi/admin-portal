@@ -4,8 +4,8 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
-import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
+import com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.company.*;
@@ -18,11 +18,9 @@ import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.user.UserLocationService;
-import com.elm.shj.admin.portal.web.admin.DataRequestManagementController;
 import com.elm.shj.admin.portal.web.admin.ValidateApplicantCmd;
 import com.elm.shj.admin.portal.web.admin.ValidateStaffCmd;
 import com.elm.shj.admin.portal.web.error.ApplicantNotFoundException;
-import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -36,7 +34,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +41,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -77,7 +73,7 @@ public class IntegrationWsController {
     private final CardStatusLookupService cardStatusLookupService;
     private final RelativeRelationshipLookupService relativeRelationshipLookupService;
     private final MaritalStatusLookupService maritalStatusLookupService;
-    private final CountryLookupService countryLookupService;
+    private final NationalityLookupService nationalityLookupService;
     private final HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;
     private final ApplicantService applicantService;
     private final ApplicantHealthLiteService applicantHealthLiteService;
@@ -208,7 +204,7 @@ public class IntegrationWsController {
     @GetMapping("/country/list")
     public ResponseEntity<WsResponse<?>> listCountries() {
         log.debug("list countries...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(countryLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(nationalityLookupService.findAll()).build());
     }
 
     /**
@@ -242,7 +238,14 @@ public class IntegrationWsController {
      */
     @PostMapping("/verify")
     public ResponseEntity<WsResponse<?>> verify(@RequestBody @Validated ValidateApplicantCmd command) {
-        Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(command.getUin());
+        Optional<ApplicantLiteDto> applicant = null;
+        if (command.getType().equals("uin"))
+            applicant = applicantLiteService.findByUin(command.getIdentifier());
+        if (command.getType().equals("passport"))
+            applicant = applicantLiteService.findByPassportNumber(command.getIdentifier(), command.getNationalityCode());
+        if (command.getType().equals("id"))
+            applicant = applicantLiteService.findByIdNumber(command.getIdentifier());
+
         if (applicant.isPresent()) {
             boolean dateOfBirthMatched;
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
@@ -256,14 +259,14 @@ public class IntegrationWsController {
             }
             if (!dateOfBirthMatched) {
                 log.debug("unmatched data for {} uin and {} hijri date of birth and {} gregorian date of birth.",
-                        command.getUin(), command.getDateOfBirthHijri(), command.getDateOfBirthGregorian());
+                        command.getIdentifier(), command.getDateOfBirthHijri(), command.getDateOfBirthGregorian());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                        .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getUin()).build()).build());
+                        .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getIdentifier()).build()).build());
             }
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicant).build());
         } else {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(command.getUin()).build()).build());
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(command.getIdentifier()).build()).build());
         }
     }
 
@@ -1070,7 +1073,7 @@ public class IntegrationWsController {
     }
 
     @PostMapping("/staff/list")
-    public ResponseEntity<WsResponse<?>> findEmployeesByCompanyCodeAndTypeCode(@RequestBody CompanyStaffFilterDto companyStaffFilterDto) {
+    public ResponseEntity<WsResponse<?>> searchStaff(@RequestBody CompanyStaffFilterDto companyStaffFilterDto) {
         log.info("find employees by code and type code");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.searchStaff(companyStaffFilterDto)).build());
 
@@ -1079,7 +1082,7 @@ public class IntegrationWsController {
     @GetMapping("/staff/details/{id}")
     public ResponseEntity<WsResponse<?>> findStaffById(@PathVariable long id) {
         log.debug("Handler for {}", "Find staff");
-        Optional<CompanyStaffVO> staff = companyStaffService.searchStaffById(id);
+        Optional<CompanyStaffFullVO> staff = companyStaffService.searchStaffById(id);
         if (staff.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(staff.get()).build());

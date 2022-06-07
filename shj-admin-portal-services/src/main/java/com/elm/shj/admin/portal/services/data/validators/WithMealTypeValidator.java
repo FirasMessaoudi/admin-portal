@@ -29,7 +29,7 @@ public class WithMealTypeValidator implements ConstraintValidator<WithMealType, 
         if (value == null) {
             return false;
         } else {
-            return EMealType.fromId((Long) value) != null;
+            return EMealType.fromId((Integer) value) != null;
         }
     }
 }

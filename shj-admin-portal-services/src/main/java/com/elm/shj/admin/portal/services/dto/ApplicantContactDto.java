@@ -4,7 +4,7 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
-import com.elm.shj.admin.portal.services.data.validators.CountryCode;
+import com.elm.shj.admin.portal.services.data.validators.NationalityCode;
 import com.elm.shj.admin.portal.services.data.validators.LanguageCodeList;
 import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -53,7 +53,7 @@ public class ApplicantContactDto implements Serializable {
     @CellIndex(index = 18)
     private String intlMobileNumber;
 
-    @CountryCode
+    @NationalityCode
     @CellIndex(index = 19)
     private String countryCode;
 

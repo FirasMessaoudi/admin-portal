@@ -46,7 +46,7 @@ public class DataRequestWsController {
                 List<String> languageList = Arrays.asList(huicApplicantMainData.getLanguageList().split(","));
                 StringBuilder languages = new StringBuilder();
                 languageList.forEach(language -> {
-                    ELanguageCode eLanguageCode = isNumeric(language) ? ELanguageCode.fromId(Long.parseLong(language)) : null;
+                    ELanguageCode eLanguageCode = isNumeric(language) ? ELanguageCode.fromId(Integer.parseInt(language)) : null;
                     languages.append(eLanguageCode != null ? eLanguageCode.name() : "N/A");
                     languages.append(",");
                 });
@@ -182,7 +182,7 @@ public class DataRequestWsController {
     @PostMapping(value = "/save-ritual-seasons")
     public ResponseEntity<WsResponse<?>> saveRitualSeasons(@RequestBody List<RitualSeasonDto> ritualSeasons) {
         ritualSeasons.forEach(ritualSeasonDto -> {
-            ERitualType eRitualType = ritualSeasonDto.getRitualTypeCode() != null ? ERitualType.fromId(Long.parseLong(ritualSeasonDto.getRitualTypeCode())) : null;
+            ERitualType eRitualType = ritualSeasonDto.getRitualTypeCode() != null ? ERitualType.fromId(Integer.parseInt(ritualSeasonDto.getRitualTypeCode())) : null;
             ritualSeasonDto.setRitualTypeCode(eRitualType == null ? null : eRitualType.name());
         });
         log.info("Start saveRitualSeasons RitualSeasonDtosSize: {}", ritualSeasons == null ? null : ritualSeasons.size());
@@ -202,9 +202,9 @@ public class DataRequestWsController {
     public ResponseEntity<WsResponse<?>> saveHousingData(@RequestBody List<HousingMasterDto> housingMasterDtos) {
         log.info("Start saveHousingMasterData housingMasterDtosSize: {}", housingMasterDtos == null ? null : housingMasterDtos.size());
         housingMasterDtos.forEach(housingMasterDto -> {
-            EHousingSite eHousingSite = housingMasterDto.getSiteCode() != null ? EHousingSite.fromId(Long.parseLong(housingMasterDto.getSiteCode())) : null;
-            EHousingCategory eHousingCategory = housingMasterDto.getCategoryCode() != null ? EHousingCategory.fromId(Long.parseLong(housingMasterDto.getCategoryCode())) : null;
-            EHousingType eHousingType = housingMasterDto.getTypeCode() != null ? EHousingType.fromId(Long.parseLong(housingMasterDto.getTypeCode())) : null;
+            EHousingSite eHousingSite = housingMasterDto.getSiteCode() != null ? EHousingSite.fromId(Integer.parseInt(housingMasterDto.getSiteCode())) : null;
+            EHousingCategory eHousingCategory = housingMasterDto.getCategoryCode() != null ? EHousingCategory.fromId(Integer.parseInt(housingMasterDto.getCategoryCode())) : null;
+            EHousingType eHousingType = housingMasterDto.getTypeCode() != null ? EHousingType.fromId(Integer.parseInt(housingMasterDto.getTypeCode())) : null;
             housingMasterDto.setSiteCode(eHousingSite == null ? null : eHousingSite.name());
             housingMasterDto.setCategoryCode(eHousingCategory == null ? null : eHousingCategory.name());
             housingMasterDto.setTypeCode(eHousingType == null ? null : eHousingType.name());

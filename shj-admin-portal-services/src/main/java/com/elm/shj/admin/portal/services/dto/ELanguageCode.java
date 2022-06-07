@@ -23,17 +23,17 @@ public enum ELanguageCode {
     FA(4),
     TR(4);
 
-    private final long id;
+    private final int id;
 
-    ELanguageCode(long id) {
+    ELanguageCode(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static ELanguageCode fromId(long id) {
+    public static ELanguageCode fromId(int id) {
         List<ELanguageCode> result = Arrays.stream(ELanguageCode.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (ELanguageCode) CollectionUtils.get(result, 0);
     }

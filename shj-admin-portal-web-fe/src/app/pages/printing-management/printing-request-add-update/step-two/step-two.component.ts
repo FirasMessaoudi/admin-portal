@@ -7,7 +7,7 @@ import {PrintRequest} from "@model/print-request.model";
 import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
 import {CardService} from "@core/services";
-import {CountryLookup} from "@model/country-lookup.model";
+import {NationalityLookup} from "@model/nationality-lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 
 @Component({
@@ -24,7 +24,7 @@ export class StepTwoComponent implements OnInit {
   isLoading: boolean;
 
   batchTypes: PrintBatchType[];
-  countries: CountryLookup[] = [];
+  countries: NationalityLookup[] = [];
   selectedBatchTypes: string[] = [];
   currentPage: number = 1;
   pageSize: number = 10;

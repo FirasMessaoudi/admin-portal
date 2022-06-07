@@ -4,6 +4,7 @@ import com.elm.shj.admin.portal.services.data.validators.WithMealTime;
 import com.elm.shj.admin.portal.services.data.validators.WithMealType;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -20,12 +21,13 @@ import java.io.Serializable;
 public class HuicPackageCatering implements Serializable {
 
     private static final long serialVersionUID = -8878979584205935800L;
-    private String mealCode;
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    private String mealCode;
     @WithMealTime
-    private Long mealTime;
+    private Integer mealTime;
     @WithMealType
-    private Long mealType;
+    private Integer mealType;
 
     private String optionDescriptionAr;
 

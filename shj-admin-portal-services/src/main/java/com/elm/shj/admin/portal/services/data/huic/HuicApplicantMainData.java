@@ -1,12 +1,10 @@
 package com.elm.shj.admin.portal.services.data.huic;
 
-import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
@@ -31,7 +29,8 @@ public class HuicApplicantMainData implements Serializable {
     private static final long serialVersionUID = 1068726443812588470L;
 
     @Gender
-    private Long gender;
+    private Integer gender;
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @CountryCode
     private Long nationality;
 
@@ -46,71 +45,59 @@ public class HuicApplicantMainData implements Serializable {
     @PassportNumber
     private String passportNo;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @GregorianDate(minOffset = -120, maxOffset = -10, allowNull = true)
     private Date dateOfBirth;
 
-    @HijriDate(minOffset = -140, maxOffset = -11)
+    @HijriDate(minOffset = -140, maxOffset = 0)
     private Long dateOfBirthHijri;
 
-    @OnlyCharacters(min = 6, max = 150, arabic = true)
+    @NullOrNotBlank(min = 5, max = 200)
     private String fullNameAr;
 
-    @OnlyCharacters(min = 10, max = 150, allowEmpty = false)
+    @NullOrNotBlank(min = 5, max = 200)
     private String fullNameEn;
 
-    @NullOrNotBlank(min = 10, max = 150)
+    @NullOrNotBlank(min = 5, max = 200)
     private String fullNameOriginalLang;
 
     @MaritalStatusCode
-    private Long maritalStatus;
+    private Integer maritalStatus;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
     private String photo;
 
     private String biometricDataFP;
 
     private String biometricDataFace;
 
-    @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
-    @NullOrNotBlank(min = 0, max = 100)
     private String qualification;
 
     @LanguageCodeList
     private String languageList;
 
     @NullOrNotBlank(min = 5, max = 50)
-    @Email(message = "validation.data.constraints.msg.20003", regexp = "^[A-Za-z0-9+_.-]+@(.+)$")
     private String email;
 
-    @NullOrNotBlank(min = 5, max = 16)
-    @CellIndex(index = 17)
+    @NullOrNotBlank(min = 5, max = 50)
     private String mobileNumber;
 
-    @NullOrNotBlank(min = 5, max = 30)
-    @CellIndex(index = 18)
+    @NullOrNotBlank(min = 5, max = 50)
     private String mobileNumberIntl;
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @CountryCode
-    private Long country;
+    private Integer country;
 
-    @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
-    @NullOrNotBlank(min = 3, max = 100)
-    @CellIndex(index = 22)
+    @NullOrNotBlank(min = 0, max = 100)
     private String street;
 
-    @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
-    @NullOrNotBlank(min = 3, max = 50)
+    @NullOrNotBlank(min = 0, max = 100)
     private String district;
 
-    @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
-    @NullOrNotBlank(min = 3, max = 50)
+    @NullOrNotBlank(min = 0, max = 100)
     private String city;
 
-    @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
-    @NullOrNotBlank(min = 5, max = 30)
+    @NullOrNotBlank(min = 0, max = 100)
     private String buildingNo;
 
-    @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")
     @NullOrNotBlank(min = 3, max = 30)
     private String postalCode;
 
@@ -120,12 +107,15 @@ public class HuicApplicantMainData implements Serializable {
     @ApplicantStatus
     private Integer status;
     @RitualTypeCode
-    private Long ritualTypeCode;
+    private Integer ritualTypeCode;
     @SeasonYear
     private int seasonYear;
 
-    private Long establishmentId;
+    @EstablishmentCode
+    private Integer establishmentId;
+    @WithServiceGroup
     private Long serviceGroupMakkahId;
+    @WithServiceGroup
     private Long serviceGroupMadinaId;
 
     public static ApplicantBasicInfoDto fromHuicApplicant(HuicApplicantMainData applicant) {

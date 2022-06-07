@@ -3,9 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.lookup;
 
-import com.elm.shj.admin.portal.orm.entity.JpaCountryLookup;
-import com.elm.shj.admin.portal.orm.repository.CountryLookupRepository;
-import com.elm.shj.admin.portal.services.dto.CountryLookupDto;
+import com.elm.shj.admin.portal.orm.entity.JpaNationalityLookup;
+import com.elm.shj.admin.portal.orm.repository.NationalityLookupRepository;
+import com.elm.shj.admin.portal.services.dto.NationalityLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Service handling country lookup
+ * Service handling nationality lookup
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
@@ -23,9 +23,9 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class CountryLookupService extends GenericService<JpaCountryLookup, CountryLookupDto, Long> {
+public class NationalityLookupService extends GenericService<JpaNationalityLookup, NationalityLookupDto, Long> {
 
-    private final CountryLookupRepository countryLookupRepository;
+    private final NationalityLookupRepository nationalityLookupRepository;
 
     /**
      * Checks if a country exists by its code
@@ -34,7 +34,7 @@ public class CountryLookupService extends GenericService<JpaCountryLookup, Count
      * @return if the country is found
      */
     public boolean existsByCode(String countryCode) {
-        return ((CountryLookupRepository) getRepository()).existsByCode(countryCode);
+        return ((NationalityLookupRepository) getRepository()).existsByCode(countryCode);
     }
 
     /**
@@ -43,8 +43,8 @@ public class CountryLookupService extends GenericService<JpaCountryLookup, Count
      * @param countryCode the code of the country to look for
      * @return the found country
      */
-    public CountryLookupDto findByCode(String countryCode) {
-        return getMapper().fromEntity(countryLookupRepository.findFirstByCode(countryCode), mappingContext);
+    public NationalityLookupDto findByCode(String countryCode) {
+        return getMapper().fromEntity(nationalityLookupRepository.findFirstByCode(countryCode), mappingContext);
     }
 
     /**
@@ -53,7 +53,7 @@ public class CountryLookupService extends GenericService<JpaCountryLookup, Count
      * @param countryCode
      * @return
      */
-    public List<CountryLookupDto> findAllByCode(String countryCode) {
-        return getMapper().fromEntityList(countryLookupRepository.findAllByCode(countryCode), mappingContext);
+    public List<NationalityLookupDto> findAllByCode(String countryCode) {
+        return getMapper().fromEntityList(nationalityLookupRepository.findAllByCode(countryCode), mappingContext);
     }
 }

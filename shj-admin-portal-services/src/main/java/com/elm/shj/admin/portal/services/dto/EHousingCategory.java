@@ -22,17 +22,17 @@ public enum EHousingCategory {
     D(4);
 
 
-    private final long id;
+    private final int id;
 
-    EHousingCategory(long id) {
+    EHousingCategory(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static EHousingCategory fromId(long id) {
+    public static EHousingCategory fromId(int id) {
         List<EHousingCategory> result = Arrays.stream(EHousingCategory.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (EHousingCategory) CollectionUtils.get(result, 0);
     }

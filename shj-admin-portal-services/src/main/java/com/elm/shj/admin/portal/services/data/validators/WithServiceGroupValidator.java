@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.math.BigInteger;
 
 /**
  * Validator for {@link WithServiceGroup} annotation
@@ -28,7 +27,7 @@ public class WithServiceGroupValidator implements ConstraintValidator<WithServic
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value == null || companyService.existsByBasicInfo((BigInteger) value, 5L);
+        return value == null || companyService.existsByBasicInfo(value + "", 5);
 
     }
 

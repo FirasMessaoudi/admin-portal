@@ -28,27 +28,26 @@ public class HuicApplicantRitual implements Serializable {
     private Long idNumber;
     @PassportNumber
     private String passportNo;
-    @CountryCode
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @NationalityCode
     private Long nationality;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     @WithRitualPackage
     private String packageRefNumber;
     @RitualTypeCode
-    private Long ritualTypeCode;
+    private Integer ritualTypeCode;
     @SeasonYear
     private int seasonYear;
 
-    @VisaOrPermitNumber(allowEmpty = true)
     private String visaNumber;
 
-    @VisaOrPermitNumber(allowEmpty = true)
     private String permitNumber;
 
     @OnlyCharacters(min = 5, max = 50, allowEmpty = true, allowNumbers = true, allowSpecialChars = true)
     private String insuranceNumber;
 
-    @BorderNumber
+    @NullOrNotBlank(min = 3, max = 15)
     private String borderNo;
 
     @OnlyCharacters(min = 3, max = 20, allowNumbers = true, allowSpecialChars = true)

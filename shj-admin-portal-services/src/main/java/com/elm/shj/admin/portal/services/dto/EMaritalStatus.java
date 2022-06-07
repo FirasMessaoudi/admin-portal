@@ -21,17 +21,17 @@ public enum EMaritalStatus {
     WIDOWED(3),
     DIVORCED(4);
 
-    private final long id;
+    private final int id;
 
-    EMaritalStatus(long id) {
+    EMaritalStatus(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static EMaritalStatus fromId(long id) {
+    public static EMaritalStatus fromId(int id) {
         List<EMaritalStatus> result = Arrays.stream(EMaritalStatus.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (EMaritalStatus) CollectionUtils.get(result, 0);
     }

@@ -37,7 +37,7 @@ import java.util.List;
 public class CompanyWsController {
 
     private final CompanyLiteService companyLiteService;
-    @GetMapping("/camp-readiness-survey/establishment/find")
+    @GetMapping("/establishment/find")
     public ResponseEntity<WsResponse<?>> findEstablishmentCompanies() {
         log.info("Start findEstablishmentCompanies");
         List<CompanyLiteDto> establishmentCompanies = companyLiteService.findEstablishmentCompanies();
@@ -45,5 +45,25 @@ public class CompanyWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(establishmentCompanies).build());
     }
+
+    @GetMapping("/service-group/find")
+    public ResponseEntity<WsResponse<?>> findServiceGroupCompanies() {
+        log.info("Start findServiceGroupCompanies");
+        List<CompanyLiteDto> serviceGroupCompanies = companyLiteService.findServiceGroupCompanies();
+        log.info("Finish findEstablishmentCompanies  findServiceGroupCompanies: {}", "SUCCESS", serviceGroupCompanies.size());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(serviceGroupCompanies).build());
+    }
+
+    @GetMapping("/internal-hajj/find")
+    public ResponseEntity<WsResponse<?>> findInternalHajjCompanies() {
+        log.info("Start findInternalHajjCompanies");
+        List<CompanyLiteDto> internalHajjCompanies = companyLiteService.findInternalHajjCompanies();
+        log.info("Finish findEstablishmentCompanies  findInternalHajjCompanies: {}", "SUCCESS", internalHajjCompanies.size());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(internalHajjCompanies).build());
+    }
+
+
 
 }

@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { ApplicantCard } from '@model/applicant-card.model';
 import { catchError } from 'rxjs/internal/operators';
 import { Lookup } from '@model/lookup.model';
-import { CountryLookup } from '@model/country-lookup.model';
+import { NationalityLookup } from '@model/nationality-lookup.model';
 import { ApplicantCardSearchCriteria } from '@model/applicant-card-search-criteria.model';
 import { StaffCardSearchCriteria } from '@model/staff-card-search-criteria.model';
 import { CompanyLite } from '@model/company-lite.model';
@@ -127,7 +127,7 @@ export class CardService {
     return this.http.get<any>('/core/api/lookup/relative-relationship/list');
   }
 
-  findCountries(): Observable<CountryLookup[]> {
+  findCountries(): Observable<NationalityLookup[]> {
     return this.http.get<any>('/core/api/lookup/country/list');
   }
 

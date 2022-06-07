@@ -40,7 +40,7 @@ public class LookupController {
     private final CardStatusLookupService cardStatusLookupService;
     private final RelativeRelationshipLookupService relativeRelationshipLookupService;
     private final MaritalStatusLookupService maritalStatusLookupService;
-    private final CountryLookupService countryLookupService;
+    private final NationalityLookupService nationalityLookupService;
     private final HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;
     private final PrintRequestStatusLookupService printRequestStatusLookupService;
     private final PrintBatchTypeLookupService printBatchTypeLookupService;
@@ -101,9 +101,9 @@ public class LookupController {
     }
 
     @GetMapping("/country/list")
-    public List<CountryLookupDto> listCountries(Authentication authentication) {
+    public List<NationalityLookupDto> listCountries(Authentication authentication) {
         log.debug("list countries...");
-        return countryLookupService.findAll();
+        return nationalityLookupService.findAll();
     }
 
     @GetMapping("/health-special-needs/list")

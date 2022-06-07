@@ -16,20 +16,20 @@ import java.util.stream.Collectors;
  * @since 1.1.0
  */
 public enum EHousingType {
-    HOTEL(1),
-    CAMP(2),
+    CAMP(1),
+    HOTEL(2),
     BUILDING(3);
-    private final long id;
+    private final int id;
 
-    EHousingType(long id) {
+    EHousingType(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static EHousingType fromId(long id) {
+    public static EHousingType fromId(int id) {
         List<EHousingType> result = Arrays.stream(EHousingType.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (EHousingType) CollectionUtils.get(result, 0);
     }

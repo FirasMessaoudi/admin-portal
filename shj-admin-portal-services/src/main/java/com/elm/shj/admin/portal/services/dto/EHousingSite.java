@@ -22,17 +22,17 @@ public enum EHousingSite {
     MADINA(4),
     ARAFAT(5);
 
-    private final long id;
+    private final int id;
 
-    EHousingSite(long id) {
+    EHousingSite(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public static EHousingSite fromId(long id) {
+    public static EHousingSite fromId(int id) {
         List<EHousingSite> result = Arrays.stream(EHousingSite.values()).filter(e -> e.getId() == id).collect(Collectors.toList());
         return result.isEmpty() ? null : (EHousingSite) CollectionUtils.get(result, 0);
     }

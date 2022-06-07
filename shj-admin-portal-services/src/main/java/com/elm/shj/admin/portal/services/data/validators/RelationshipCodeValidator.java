@@ -29,7 +29,7 @@ public class RelationshipCodeValidator implements ConstraintValidator<Relationsh
         if (value.getClass().isAssignableFrom(String.class)) {
             return value == null || relationshipLookupService.existsByCode(value.toString().toUpperCase());
         } else {
-            return ERelativeRelationship.fromId((Long) value) != null;
+            return ERelativeRelationship.fromId((Integer) value) != null;
         }
     }
 

@@ -1,12 +1,10 @@
 package com.elm.shj.admin.portal.services.data.huic;
 
-import com.elm.dcc.foundation.commons.validation.ArabicCharacters;
 import com.elm.shj.admin.portal.services.data.validators.HijriDate;
 import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
 import com.elm.shj.admin.portal.services.data.validators.WithTransportationType;
 import lombok.*;
 
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 /**
@@ -24,22 +22,15 @@ public class HuicPackageTransportation implements Serializable {
     private static final long serialVersionUID = -8214844201380607365L;
 
     @WithTransportationType
-    private Long typeCode;
-    @Pattern(regexp = "(^[a-zA-Z0-9]*)"
-            , message = "validation.data.constraints.msg.20003")
+    private Integer typeCode;
     private String locationFromNameAr;
-    @Pattern(regexp = "(^[a-zA-Z0-9]*)"
-            , message = "validation.data.constraints.msg.20003")
     private String locationFromNameEn;
-    @ArabicCharacters(lettersOnly = true, numbersOnly = false)
     private String locationToNameAr;
-    @Pattern(regexp = "(^[a-zA-Z0-9]*)"
-            , message = "validation.data.constraints.msg.20003")
     private String locationToNameEn;
     @HijriDate(minOffset = -1, maxOffset = 1)
     private Long validityStart;
     @HijriDate(minOffset = -1, maxOffset = 1)
     private Long validityEnd;
-    @OnlyCharacters(min = 0, max = 256)
+    @OnlyCharacters(min = 0, max = 400)
     private String routeDetails;
 }

@@ -31,13 +31,15 @@ public class HuicArrivalData implements Serializable {
     private Long idNumber;
     @PassportNumber
     private String passportNo;
-    @CountryCode
+
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @NationalityCode
     private Long nationality;
     @NotNull(message = "validation.data.constraints.msg.20001")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date arrivalDateTime;
     @WithArrivalCity
-    private Long arrivalCity;
+    private Integer arrivalCity;
 
 
 }
