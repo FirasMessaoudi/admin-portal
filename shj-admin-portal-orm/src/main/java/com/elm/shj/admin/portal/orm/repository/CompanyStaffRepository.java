@@ -6,7 +6,6 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaff;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

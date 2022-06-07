@@ -3,7 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.dto.RitualSeasonDto;
+import com.elm.shj.admin.portal.services.data.huic.HuicRitualSeason;
+import com.elm.shj.admin.portal.services.dto.ERitualType;
 import com.elm.shj.admin.portal.services.ritual.RitualSeasonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +30,14 @@ public class UniqueRitualValidator implements ConstraintValidator<UniqueRitual, 
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        if (value == null || !value.getClass().isAssignableFrom(RitualSeasonDto.class)) {
+        if (value == null || !value.getClass().isAssignableFrom(HuicRitualSeason.class)) {
             return false;
         }
-        RitualSeasonDto ritualSeason = (RitualSeasonDto) value;
-        return !ritualSeasonService.existsByBasicInfo(ritualSeason.getRitualTypeCode(), ritualSeason.getSeasonYear());
+        HuicRitualSeason ritualSeason = (HuicRitualSeason) value;
+        if (ritualSeason.getRitualTypeCode() == null || ERitualType.fromId(ritualSeason.getRitualTypeCode()) == null) {
+            return false;
+        }
+        return !ritualSeasonService.existsByBasicInfo(ERitualType.fromId(ritualSeason.getRitualTypeCode()).name(), ritualSeason.getSeasonYear());
     }
 
 }

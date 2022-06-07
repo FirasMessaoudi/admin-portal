@@ -3,9 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.lookup.HousingSiteLookupService;
+import com.elm.shj.admin.portal.services.dto.EHousingSite;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -19,8 +18,6 @@ import javax.validation.ConstraintValidatorContext;
 @Slf4j
 public class WithHousingSiteValidator implements ConstraintValidator<WithHousingSite, Object> {
 
-    @Autowired
-    private HousingSiteLookupService housingSiteLookupService;
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
@@ -28,7 +25,7 @@ public class WithHousingSiteValidator implements ConstraintValidator<WithHousing
         if (value == null) {
             return true;
         } else {
-            return housingSiteLookupService.existsByCode(value.toString());
+            return EHousingSite.fromId((Integer) value) != null;
         }
     }
 }

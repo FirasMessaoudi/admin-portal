@@ -126,11 +126,11 @@ public class ValidationService {
                 if (items.get(i).getClass().isAssignableFrom(CompanyStaffRitualDto.class)) {
                     saveCompanyStaffRitualData((CompanyStaffRitualDto) items.get(i));
                 }
-                if (items.get(i).getClass().isAssignableFrom(RitualSeasonDto.class)) {
-                    saveRitualSeasons((RitualSeasonDto) items.get(i));
+                if (items.get(i).getClass().isAssignableFrom(HuicRitualSeason.class)) {
+                    saveRitualSeasons((HuicRitualSeason) items.get(i));
                 }
-                if (items.get(i).getClass().isAssignableFrom(HousingMasterDto.class)) {
-                    saveHousingMasterData((HousingMasterDto) items.get(i));
+                if (items.get(i).getClass().isAssignableFrom(HuicHousingMaster.class)) {
+                    saveHousingMasterData((HuicHousingMaster) items.get(i));
                 }
                 if (items.get(i).getClass().isAssignableFrom(HuicCompany.class)) {
                     saveCompanies((HuicCompany) items.get(i));
@@ -262,20 +262,37 @@ public class ValidationService {
 
     }
 
-    private void saveHousingMasterData(HousingMasterDto housingMasterDto) {
-        JpaHousingMaster housingMaster = housingMasterRepository.findTopByHousingReferenceCodeOrderByCreationDateDesc(housingMasterDto.getHousingReferenceCode());
+    private void saveHousingMasterData(HuicHousingMaster huicHousingMaster) {
+        JpaHousingMaster housingMaster = housingMasterRepository.findTopByHousingReferenceCodeOrderByCreationDateDesc(huicHousingMaster.getHouseRefNumber() + "");
+        HousingMasterDto housingMasterDto = HousingMasterDto.builder()
+                .housingReferenceCode(huicHousingMaster.getHouseRefNumber() + "")
+                .addressAr(huicHousingMaster.getAddressAr())
+                .addressEn(huicHousingMaster.getAddressEn())
+                .locationNameAr(huicHousingMaster.getLocationNameAr())
+                .locationNameEn(huicHousingMaster.getLocationNameEn())
+                .lat(huicHousingMaster.getLocationLongLat() != null ? huicHousingMaster.getLocationLongLat().getLat() : null)
+                .lng(huicHousingMaster.getLocationLongLat() != null ? huicHousingMaster.getLocationLongLat().getLng() : null)
+                .zoneCode(huicHousingMaster.getZoneCode() + "")
+                .categoryCode(huicHousingMaster.getCategoryCode() != null ? EHousingCategory.fromId(huicHousingMaster.getCategoryCode()).name() : null)
+                .typeCode(EHousingType.fromId(huicHousingMaster.getTypeCode()).name())
+                .siteCode(huicHousingMaster.getSiteCode() != null ? EHousingSite.fromId(huicHousingMaster.getSiteCode()).name() : null)
+                .build();
         if (housingMaster != null) {
             housingMasterDto.setId(housingMaster.getId());
         }
-        housingMasterDto.setLat(housingMasterDto.getGeoLocation().getLat());
-        housingMasterDto.setLng(housingMasterDto.getGeoLocation().getLng());
         housingMasterRepository.save((JpaHousingMaster) findMapper(HousingMasterDto.class).toEntity(housingMasterDto, mappingContext));
 
 
     }
 
-    private void saveRitualSeasons(RitualSeasonDto ritualSeasonDto) {
-        ritualSeasonDto.setActivated(true);
+    private void saveRitualSeasons(HuicRitualSeason huicRitualSeason) {
+        RitualSeasonDto ritualSeasonDto = RitualSeasonDto.builder()
+                .ritualTypeCode(ERitualType.fromId(huicRitualSeason.getRitualTypeCode()).name())
+                .seasonStart(huicRitualSeason.getSeasonStart())
+                .seasonEnd(huicRitualSeason.getSeasonEnd())
+                .seasonYear(huicRitualSeason.getSeasonYear())
+                .activated(true)
+                .build();
         ritualSeasonRepository.save((JpaRitualSeason) findMapper(RitualSeasonDto.class).toEntity(ritualSeasonDto, mappingContext));
 
     }
