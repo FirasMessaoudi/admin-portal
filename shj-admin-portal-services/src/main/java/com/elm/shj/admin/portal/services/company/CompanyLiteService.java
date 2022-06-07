@@ -40,8 +40,9 @@ public class CompanyLiteService extends GenericService<JpaCompanyLite, CompanyLi
         return mapList(companyLiteRepository.findByTypeCode(ECompanyType.ESTABLISHMENT.name()));
     }
 
-    public List<CompanyLiteDto> findServiceGroupCompanies() {
-        return mapList(companyLiteRepository.findByTypeCode(ECompanyType.SERVICE_GROUP.name()));
+    public List<CompanyLiteDto> findServiceGroupCompanies(String establishmentCompanyCode) {
+     int refCode =   Integer.parseInt( establishmentCompanyCode.split("_")[0]);
+        return mapList(companyLiteRepository.findByTypeCodeAndEstablishmentRefCode(ECompanyType.SERVICE_GROUP.name(),refCode));
     }
 
     public List<CompanyLiteDto> findInternalHajjCompanies() {

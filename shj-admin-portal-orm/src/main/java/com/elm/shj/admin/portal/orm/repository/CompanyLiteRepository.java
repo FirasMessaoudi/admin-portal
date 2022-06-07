@@ -19,5 +19,5 @@ public interface CompanyLiteRepository extends JpaRepository<JpaCompanyLite, Lon
     boolean existsByCode(String code);
 
     List<JpaCompanyLite> findByTypeCode(String typeCode);
-
+    List<JpaCompanyLite> findByTypeCodeAndEstablishmentRefCode(String typeCode, int refCode);
 }

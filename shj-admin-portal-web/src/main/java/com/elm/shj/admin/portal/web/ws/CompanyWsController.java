@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -46,10 +43,10 @@ public class CompanyWsController {
                 .body(establishmentCompanies).build());
     }
 
-    @GetMapping("/service-group/find")
-    public ResponseEntity<WsResponse<?>> findServiceGroupCompanies() {
+    @GetMapping("/service-group/find/{establishmentCompanyCode}")
+    public ResponseEntity<WsResponse<?>> findServiceGroupCompanies(@PathVariable String establishmentCompanyCode) {
         log.info("Start findServiceGroupCompanies");
-        List<CompanyLiteDto> serviceGroupCompanies = companyLiteService.findServiceGroupCompanies();
+        List<CompanyLiteDto> serviceGroupCompanies = companyLiteService.findServiceGroupCompanies(establishmentCompanyCode);
         log.info("Finish findEstablishmentCompanies  findServiceGroupCompanies: {}", "SUCCESS", serviceGroupCompanies.size());
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(serviceGroupCompanies).build());
