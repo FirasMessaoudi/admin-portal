@@ -33,7 +33,7 @@ public class HuicApplicantMainData implements Serializable {
     @Gender
     private Long gender;
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @CountryCode
+    @NationalityCode
     private Long nationality;
 
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
@@ -92,7 +92,7 @@ public class HuicApplicantMainData implements Serializable {
     private String mobileNumberIntl;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @CountryCode
+    @NationalityCode
     private Long country;
 
     @Pattern(regexp = "[\\w ]*", message = "validation.data.constraints.msg.20003")

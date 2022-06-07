@@ -73,7 +73,7 @@ public class IntegrationWsController {
     private final CardStatusLookupService cardStatusLookupService;
     private final RelativeRelationshipLookupService relativeRelationshipLookupService;
     private final MaritalStatusLookupService maritalStatusLookupService;
-    private final CountryLookupService countryLookupService;
+    private final NationalityLookupService nationalityLookupService;
     private final HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;
     private final ApplicantService applicantService;
     private final ApplicantHealthLiteService applicantHealthLiteService;
@@ -204,7 +204,7 @@ public class IntegrationWsController {
     @GetMapping("/country/list")
     public ResponseEntity<WsResponse<?>> listCountries() {
         log.debug("list countries...");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(countryLookupService.findAll()).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(nationalityLookupService.findAll()).build());
     }
 
     /**

@@ -10,8 +10,8 @@ import com.elm.shj.admin.portal.services.applicant.ApplicantPackageService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualCardLiteDto;
 import com.elm.shj.admin.portal.services.dto.BadgeVO;
-import com.elm.shj.admin.portal.services.dto.CountryLookupDto;
-import com.elm.shj.admin.portal.services.lookup.CountryLookupService;
+import com.elm.shj.admin.portal.services.dto.NationalityLookupDto;
+import com.elm.shj.admin.portal.services.lookup.NationalityLookupService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.utils.ImageUtils;
 import com.google.zxing.BarcodeFormat;
@@ -85,7 +85,7 @@ public class BadgeService {
 
     private final ApplicantRitualCardLiteService applicantCardService;
     private final ApplicantPackageService applicantPackageService;
-    private final CountryLookupService countryLookupService;
+    private final NationalityLookupService nationalityLookupService;
     private final RitualTypeLookupRepository ritualTypeLookupRepository;
     private final CompanyStaffService companyStaffService;
     private final CompanyStaffTitleLookupRepository companyStaffTitleLookupRepository;
@@ -149,10 +149,10 @@ public class BadgeService {
         }
         String ritualType = ritualTypeLookupRepository.findLabelByCodeAndLanguage(applicantRitualCardLite.getRitualType(), "ar");
         // get the nationality
-        List<CountryLookupDto> mainLangCountryLookupList = countryLookupService.findAllByCode(applicantRitualCardLite.getNationalityCode());
-        CountryLookupDto arabicCountryLookup = mainLangCountryLookupList.stream().filter(countryLookup -> countryLookup.getLang().equals("ar")).findFirst().orElse(null);
+        List<NationalityLookupDto> mainLangCountryLookupList = nationalityLookupService.findAllByCode(applicantRitualCardLite.getNationalityCode());
+        NationalityLookupDto arabicCountryLookup = mainLangCountryLookupList.stream().filter(countryLookup -> countryLookup.getLang().equals("ar")).findFirst().orElse(null);
         String nationalityAr = arabicCountryLookup == null ? "" : arabicCountryLookup.getLabel();
-        CountryLookupDto englishCountryLookup = mainLangCountryLookupList.stream().filter(countryLookup -> countryLookup.getLang().equals("en")).findFirst().orElse(null);
+        NationalityLookupDto englishCountryLookup = mainLangCountryLookupList.stream().filter(countryLookup -> countryLookup.getLang().equals("en")).findFirst().orElse(null);
         String nationalityEn = englishCountryLookup == null ? "" : englishCountryLookup.getLabel();
 
         BufferedImage badgeImage = new BufferedImage(BADGE_WIDTH, withQr ? MOBILE_BADGE_HEIGHT : BADGE_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);

@@ -64,4 +64,6 @@ public interface ChatMessageRepository extends JpaRepository<JpaChatMessage, Lon
     @Modifying
     @Query("UPDATE JpaChatMessage message SET message.readDate=CURRENT_TIMESTAMP,  message.updateDate = CURRENT_TIMESTAMP WHERE message.receiver.id = :chatContactId AND message.readDate is null ")
     void updateChatMessageReadDate(@Param("chatContactId") long chatContactId);
+
+    List<JpaChatMessage> findBySenderIdOrReceiverId(long senderId, long receiverId);
 }

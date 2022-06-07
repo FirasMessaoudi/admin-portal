@@ -14,16 +14,16 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Validation annotation to validate that a value is a valid country code in the database
+ * Validation annotation to validate that a value is a valid nationality code in the database
  *
  * @author Aymen DHAOUI
  * @since 1.0.0
  */
 @Target({METHOD, FIELD})
 @Retention(RUNTIME)
-@Constraint(validatedBy = CountryCodeValidator.class)
+@Constraint(validatedBy = NationalityCodeValidator.class)
 @Documented
-public @interface CountryCode {
+public @interface NationalityCode {
 
     String message() default "validation.data.constraints.msg.20006";
 

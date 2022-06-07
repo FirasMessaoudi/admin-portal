@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Page} from "@shared/model";
-import {CountryLookup} from "@model/country-lookup.model";
+import {NationalityLookup} from "@model/nationality-lookup.model";
 import {Lookup} from "@model/lookup.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Subscription} from "rxjs";
@@ -30,7 +30,7 @@ export class StaffStepOneComponent implements OnInit {
   addedCards: Array<any> = [];
   addedCardsCurrentPage: number = 1;
   addedCardsPageSize: number = 10;
-  nationalities: CountryLookup[];
+  nationalities: NationalityLookup[];
   localizedNationalities: Lookup[];
   searchForm: FormGroup;
   isAllSelected: boolean;

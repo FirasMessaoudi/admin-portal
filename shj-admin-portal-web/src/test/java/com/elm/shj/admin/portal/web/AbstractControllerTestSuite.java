@@ -187,7 +187,7 @@ public abstract class AbstractControllerTestSuite {
     protected MaritalStatusLookupService maritalStatusLookupService;
 
     @MockBean
-    protected CountryLookupService countryLookupService;
+    protected NationalityLookupService nationalityLookupService;
 
     @MockBean
     protected HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;

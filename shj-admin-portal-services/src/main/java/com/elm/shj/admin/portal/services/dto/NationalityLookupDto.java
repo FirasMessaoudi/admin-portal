@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Dto class for the country domain.
+ * Dto class for the nationality domain.
  *
  * @author Slim Ben Hadj
  * @since 1.0.0
@@ -19,7 +19,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CountryLookupDto implements Serializable {
+public class NationalityLookupDto implements Serializable {
 
     private static final long serialVersionUID = -3015368529250122708L;
 

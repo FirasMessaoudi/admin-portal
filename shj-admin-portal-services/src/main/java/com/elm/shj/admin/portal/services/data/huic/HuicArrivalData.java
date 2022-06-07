@@ -33,7 +33,7 @@ public class HuicArrivalData implements Serializable {
     private String passportNo;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @CountryCode
+    @NationalityCode
     private Long nationality;
     @NotNull(message = "validation.data.constraints.msg.20001")
     @JsonFormat(pattern = "yyyy-MM-dd")
