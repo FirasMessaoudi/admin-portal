@@ -3,10 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
+import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
@@ -25,9 +22,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.*;
 import java.util.*;
 
 /**
@@ -351,5 +346,96 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         int numberOfAffectedRows = applicantRepository.markAsRegistered(applicantId, channel);
         log.info("ApplicantService ::: Start markAsRegistered numberOfAffectedRows: {}", numberOfAffectedRows);
         return numberOfAffectedRows;
+    }
+
+    public List<ApplicantDto> findOrganizerApplicants(ApplicantSearchCriteriaDto applicantSearchCriteriaDto, Long companyRefCode, String companyTypeCode) {
+        List<ApplicantDto> applicantDtos = mapList(applicantRepository.findAll(withApplicantSearchFilter(applicantSearchCriteriaDto, companyRefCode, companyTypeCode)));
+        return applicantDtos;
+    }
+
+    private Specification<JpaApplicant> withApplicantSearchFilter(final ApplicantSearchCriteriaDto criteria, Long companyRefCode, String companyTypeCode) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            //Create atomic predicates
+            List<Predicate> predicates = new ArrayList<>();
+            Join<JpaApplicant, JpaApplicantDigitalId> digitalIds = root.join("digitalIds");
+           //Join<JpaApplicantDigitalId, JpaGroupApplicantList> groupApplicationList = digitalIds.join("applicantUin");
+           //Join<JpaGroupApplicantList, JpaApplicantGroup> applicantGroup = groupApplicationList.join("applicantGroup");
+
+
+
+            /*final Subquery<JpaGroupApplicantList> groupApplicationList = criteriaQuery.subquery(JpaGroupApplicantList.class);
+            final Root<JpaGroupApplicantList> groupApplication = groupApplicationList.from(JpaGroupApplicantList.class);
+
+            // select up.username from users_profiles ...
+            groupApplicationList.select(groupApplication.get("applicantUin"));
+
+            // select u from users u where u.name in ...
+            predicates.add(digitalIds.get("uin").in(groupApplication));*/
+
+
+            if (criteria.getIdNumber() != null && !criteria.getIdNumber().equals("")) {
+                Path<String> idNumber = root.get("idNumber");
+                predicates.add(criteriaBuilder.equal(idNumber, criteria.getIdNumber()));
+            }
+
+            if (criteria.getUin() != null && !criteria.getUin().equals("")) {
+                Path<String> uin = digitalIds.get("uin");
+                predicates.add(criteriaBuilder.equal(uin, criteria.getUin()));
+            }
+
+            if (criteria.getPassportNumber() != null &&  !criteria.getPassportNumber().equals("")) {
+                Path<String> passportNumber = root.get("passportNumber");
+                predicates.add(criteriaBuilder.equal(passportNumber, criteria.getPassportNumber()));
+            }
+
+            if (criteria.getGender() != null &&  !criteria.getGender().equals("")) {
+                Path<String> gender = root.get("gender");
+                predicates.add(criteriaBuilder.equal(gender, criteria.getGender()));
+            }
+
+            if(criteria.getLanguage() != null && !criteria.getLanguage().equals("")){
+                if(criteria.getLanguage().equals("en")){
+                    if(criteria.getApplicantName() != null && !criteria.getApplicantName().equals("")){
+                        predicates.add(criteriaBuilder.like(root.get("fullNameEn"), "%" + criteria.getApplicantName().trim() + "%"));
+                    }
+                } else {
+                    if(criteria.getApplicantName() != null && !criteria.getApplicantName().equals("")){
+                        predicates.add(criteriaBuilder.like(root.get("fullNameAr"), "%" + criteria.getApplicantName().trim() + "%"));
+                    }
+                }
+            }
+
+
+           /* if (criteria.getGroupNumber() != null &&  !criteria.getGroupNumber().equals("")) {
+                Path<String> referenceNumber = applicantGroup.get("referenceNumber");
+                predicates.add(criteriaBuilder.equal(referenceNumber, String.valueOf(companyRefCode) +"_"+criteria.getGroupNumber()));
+            }*/
+
+            if(companyTypeCode != null){
+                switch (companyTypeCode) {
+                    case "ESTABLISHMENT":
+                        Path<Integer> estRefCode = root.get("estRefCode");
+                        predicates.add(criteriaBuilder.equal(estRefCode, companyRefCode));
+                        break;
+                    case "MISSION":
+                        Path<Integer> missionRefCode = root.get("missionRefCode");
+                        predicates.add(criteriaBuilder.equal(missionRefCode, companyRefCode));
+                        break;
+                    case "SERVICE_GROUP":
+                        Path<Integer> serviceGroupMakkahCode = root.get("serviceGroupMakkahCode");
+                        Path<Integer> serviceGroupMadinaCode = root.get("serviceGroupMadinaCode");
+                        predicates.add(criteriaBuilder.or(criteriaBuilder.equal(serviceGroupMakkahCode, companyRefCode), criteriaBuilder.equal(serviceGroupMadinaCode, companyRefCode)));
+                        break;
+                    case "INTERNAL_HAJ_COMPANY":
+                        Path<Integer> companyCode = root.get("companyCode");
+                        predicates.add(criteriaBuilder.equal(companyCode, String.valueOf(companyRefCode) +"_"+companyTypeCode));
+                        break;
+                    default:
+                        predicates.add(criteriaBuilder.equal(root.get("companyCode"), String.valueOf(companyRefCode) +"_"+companyTypeCode));
+                }
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 }

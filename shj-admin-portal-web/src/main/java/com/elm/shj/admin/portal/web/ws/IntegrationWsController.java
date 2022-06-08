@@ -1131,5 +1131,12 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantEmergencyContactByApplicantId).build());
     }
 
+    @PostMapping("/applicants/list/{companyRefCode}/{companyTypeCode}")
+    public ResponseEntity<WsResponse<?>> findOrganizerApplicants(@RequestBody ApplicantSearchCriteriaDto applicantSearchCriteriaDto, @PathVariable Long companyRefCode, @PathVariable String companyTypeCode) {
+        log.info("find employees by code and type code");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(applicantService.findOrganizerApplicants(applicantSearchCriteriaDto, companyRefCode, companyTypeCode)).build());
+    }
+
 
 }

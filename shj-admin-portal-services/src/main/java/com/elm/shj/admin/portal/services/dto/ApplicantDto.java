@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -121,6 +122,11 @@ public class ApplicantDto implements Serializable {
     private Date creationDate;
     private Date updateDate;
     private boolean deleted;
+    private String companyCode;
+    private Integer estRefCode;
+    private Integer missionRefCode;
+    private Long serviceGroupMakkahCode;
+    private Integer serviceGroupMadinaCode;
 
     /**
      * Get applicant object from applicant lite object.
