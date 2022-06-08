@@ -83,7 +83,7 @@ public class HuicApplicantMainData implements Serializable {
     private String mobileNumberIntl;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @NationalityCode
+    @CountryCode
     private Integer country;
 
     @NullOrNotBlank(min = 0, max = 100)
