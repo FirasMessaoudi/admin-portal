@@ -112,11 +112,16 @@ public class HuicApplicantMainData implements Serializable {
     private int seasonYear;
 
     @EstablishmentCode
-    private Integer establishmentId;
+    private Integer establishmentId; //establishmentRefCode
     @WithServiceGroup
-    private Long serviceGroupMakkahId;
+    private Long serviceGroupMakkahId; //serviceGroupRefCode
     @WithServiceGroup
-    private Long serviceGroupMadinaId;
+    private Long serviceGroupMadinaId; //serviceGroupRefCode
+
+    private Long missionRefCode;
+    private Long companyCode;
+
+
 
     public static ApplicantBasicInfoDto fromHuicApplicant(HuicApplicantMainData applicant) {
         ApplicantBasicInfoDto applicantBasicInfo = new ApplicantBasicInfoDto();

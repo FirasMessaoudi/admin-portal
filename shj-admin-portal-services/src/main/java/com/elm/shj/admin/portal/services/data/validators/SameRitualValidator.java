@@ -53,6 +53,7 @@ public class SameRitualValidator implements ConstraintValidator<SameRitual, Obje
         applicantBasicInfoDto.setPassportNumber(staffApplicantGroupDto.getPassportNumber());
         applicantBasicInfoDto.setDateOfBirthGregorian(staffApplicantGroupDto.getDateOfBirthGregorian());
         applicantBasicInfoDto.setDateOfBirthHijri(staffApplicantGroupDto.getDateOfBirthHijri());
+        //TODO: retrieve only the applicant id
         ApplicantDto applicantDto = applicantService.findByBasicInfo(applicantBasicInfoDto);
         Optional<JpaApplicantDigitalId> applicantDigitalId = applicantDigitalIdRepository.findByApplicantIdAndStatusCode(applicantDto.getId(), EDigitalIdStatus.VALID.name());
         if (applicantDigitalId.isPresent()) {
