@@ -1119,32 +1119,7 @@ SET
 IDENTITY_INSERT shc_portal.shc_meal_time_type_lk OFF;
 GO
 
-delete
-from shc_portal.shc_company
-where code in ('1', '2', '3', '4', '5', '6', '7')
-    go
-
-INSERT
-INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (1, N'شركة مطوفي حجاج دول جنوب شرق آسيا', 'Company of Pilgrims of South Est Asia countries', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (2, N'ششركة مطوفي حجاج دول جنوب آسيا', 'Company of Pilgrims of South Asia countries', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (3, N'شركة مطوفي حجاج الدول الأفريقية غير العربية', 'Company of Pilgrims of Africa non Arabic countries', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (4, N'شركة مطوفي حجاج الدولة العربية', 'Company of Pilgrims of Arabic countries', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (5, N'شركة مطوفي حجاج تركيا، وحجاج أوروبا وأمريكا وأستراليا',
-        'Company of Pilgrims of Turkey Muslims of Europe America and Australia', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (6, N'شركة مطوفي حجاج إيران', 'Company of Pilgrims of Iran', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (7, N'شركة الأدلاء', 'Company Adela', 1);
-go
-
-delete
-from shc_portal.shc_housing_type_lk
-where id > 0;
+delete from shc_portal.shc_housing_type_lk where id > 0;
 go
 SET IDENTITY_INSERT shc_portal.shc_housing_type_lk ON;
 INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
@@ -1159,13 +1134,11 @@ INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
 VALUES (5, 'BUILDING', 'ar', N'عمارة ');
 INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
 VALUES (6, 'BUILDING', 'en', 'Building');
-SET
-IDENTITY_INSERT shc_portal.shc_housing_type_lk OFF;
+SET IDENTITY_INSERT shc_portal.shc_housing_type_lk OFF;
 GO
 
 delete
-from shc_portal.shc_housing_category_lk
-where id > 0;
+from shc_portal.shc_housing_category_lk where id > 0;
 go
 SET IDENTITY_INSERT shc_portal.shc_housing_category_lk ON;
 INSERT INTO shc_portal.shc_housing_category_lk (id, code, lang, label)
@@ -1188,11 +1161,7 @@ SET
 IDENTITY_INSERT shc_portal.shc_housing_category_lk OFF;
 GO
 
-Delete
-from shc_portal.shc_company
-where code in
-      ('1_ESTABLISHMENT', '2_ESTABLISHMENT', '3_ESTABLISHMENT', '4_ESTABLISHMENT', '5_ESTABLISHMENT', '6_ESTABLISHMENT',
-       '7_ESTABLISHMENT', '8_ESTABLISHMENT', '9_ESTABLISHMENT');
+Delete from shc_portal.shc_company where id > 0;
 GO
 INSERT INTO shc_portal.shc_company (code, label_ar, label_en, contact_number)
 VALUES ('1_ESTABLISHMENT', N'شركة مطوفي حجاج دول جنوب شرق آسيا', 'South East Asia countries Tawafa Co.','0125459922');
@@ -3304,4 +3273,7 @@ INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('211','en','Sout
 INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('9998','ar',N'غير محدد الجنسية');
 INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('9998','en','unspecific Nationality');
 SET IDENTITY_INSERT shc_portal.shc_country_lk OFF;
+GO
+
+UPDATE shc_portal.shc_company SET contact_number = '920009498' WHERE code = '8_ESTABLISHMENT';
 GO

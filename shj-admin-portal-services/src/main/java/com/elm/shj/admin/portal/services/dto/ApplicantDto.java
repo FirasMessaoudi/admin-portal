@@ -139,7 +139,7 @@ public class ApplicantDto implements Serializable {
                 .packageReferenceNumber(applicantLiteDto.getPackageReferenceNumber()).dateOfBirthGregorian(applicantLiteDto.getDateOfBirthGregorian())
                 .dateOfBirthHijri(applicantLiteDto.getDateOfBirthHijri()).fullNameAr(applicantLiteDto.getFullNameAr()).fullNameEn(applicantLiteDto.getFullNameEn())
                 .fullNameOrigin(applicantLiteDto.getFullNameOrigin()).preferredLanguage(applicantLiteDto.getPreferredLanguage()).gender(applicantLiteDto.getGender())
-                .photo(applicantLiteDto.getPhoto()).contacts(applicantLiteDto.getContacts()).digitalIds(applicantLiteDto.getDigitalIds())
+                .contacts(applicantLiteDto.getContacts()).digitalIds(applicantLiteDto.getDigitalIds())
                 .build();
     }
 }
