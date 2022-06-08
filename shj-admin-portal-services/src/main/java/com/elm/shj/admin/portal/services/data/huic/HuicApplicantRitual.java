@@ -44,22 +44,22 @@ public class HuicApplicantRitual implements Serializable {
 
     private String permitNumber;
 
-    @OnlyCharacters(min = 0, max = 50, allowEmpty = true, allowNumbers = true, allowSpecialChars = true)
+    @NullOrNotBlank(min = 0, max = 20)
     private String insuranceNumber;
 
-    @NullOrNotBlank(min = 0, max = 15)
+    @NullOrNotBlank(min = 0, max = 20)
     private String borderNo;
 
-    @OnlyCharacters(min = 0, max = 20, allowNumbers = true, allowSpecialChars = true)
+    @NullOrNotBlank(min = 0, max = 20)
     private String busNumber;
 
-    @OnlyCharacters(min = 0, max = 6, allowNumbers = true, allowSpecialChars = true)
+    @NullOrNotBlank(min = 0, max = 20)
     private String seatNumber;
 
-    @OnlyCharacters(min = 0, max = 20, allowNumbers = true, allowSpecialChars = true)
+    @NullOrNotBlank(min = 0, max = 20)
     private String roomNumber;
 
-    @OnlyCharacters(min = 0, max = 6, allowNumbers = true, allowSpecialChars = true)
+    @NullOrNotBlank(min = 0, max = 20)
     private String bedNumber;
 
 }
