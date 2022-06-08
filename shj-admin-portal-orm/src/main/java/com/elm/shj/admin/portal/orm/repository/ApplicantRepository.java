@@ -171,7 +171,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "(:uin is null OR di.uin = :uin) and " +
             "(:groupNumber is null OR ap.referenceNumber = :groupNumber) and " +
             "(:companyCode is null or a.companyCode = :companyCode) and " +
-            "(:establishmentRefCode = -1L or a.estRefCode = :establishmentRefCode) and " +
+            "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
             "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
     List<JpaApplicant> findOrganizerApplicants(@Param("idNumber") String idNumber,  @Param("groupNumber") String groupNumber,

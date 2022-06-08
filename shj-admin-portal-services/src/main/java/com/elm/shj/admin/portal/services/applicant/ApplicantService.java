@@ -349,10 +349,14 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     }
 
     public List<ApplicantDto> findOrganizerApplicants(ApplicantSearchCriteriaDto applicantSearchCriteriaDto, Long companyRefCode, String companyTypeCode) {
+        log.info("Company Ref code ...{}", companyRefCode);
+        log.info("Company type code ...{}", companyTypeCode);
+
         Long establishmentRefCode = -1L;
         Long missionRefCode = -1L;
         Long serviceGroupRefCode = -1L;
         String companyCode = null;
+
         if(companyTypeCode.equals("ESTABLISHMENT")){
             establishmentRefCode = companyRefCode;
         } else if(companyTypeCode.equals("MISSION")){
