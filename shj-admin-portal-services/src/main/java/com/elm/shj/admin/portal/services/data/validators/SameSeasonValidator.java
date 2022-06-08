@@ -50,9 +50,8 @@ public class SameSeasonValidator implements ConstraintValidator<SameSeason, Obje
         applicantBasicInfoDto.setPassportNumber(staffApplicantGroupDto.getPassportNumber());
         applicantBasicInfoDto.setDateOfBirthGregorian(staffApplicantGroupDto.getDateOfBirthGregorian());
         applicantBasicInfoDto.setDateOfBirthHijri(staffApplicantGroupDto.getDateOfBirthHijri());
-        //TODO: retrieve only the applicant id
-        ApplicantDto applicantDto = applicantService.findByBasicInfo(applicantBasicInfoDto);
-        Optional<JpaApplicantDigitalId> applicantDigitalId = applicantDigitalIdRepository.findByApplicantIdAndStatusCode(applicantDto.getId(), EDigitalIdStatus.VALID.name());
+        Long applicantDto = applicantService.findIdByBasicInfo(applicantBasicInfoDto);
+        Optional<JpaApplicantDigitalId> applicantDigitalId = applicantDigitalIdRepository.findByApplicantIdAndStatusCode(applicantDto, EDigitalIdStatus.VALID.name());
         if (applicantDigitalId.isPresent()) {
             CompanyRitualSeasonLiteDto latestCompanyRitualSeason = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(Long.parseLong(applicantDigitalId.get().getUin()));
             if (latestCompanyRitualSeason != null) {
