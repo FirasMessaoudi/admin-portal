@@ -1,7 +1,7 @@
 package com.elm.shj.admin.portal.services.data.huic;
 
 import com.elm.shj.admin.portal.services.data.validators.HijriDate;
-import com.elm.shj.admin.portal.services.data.validators.OnlyCharacters;
+import com.elm.shj.admin.portal.services.data.validators.NullOrNotBlank;
 import com.elm.shj.admin.portal.services.data.validators.WithTransportationType;
 import lombok.*;
 
@@ -31,6 +31,6 @@ public class HuicPackageTransportation implements Serializable {
     private Long validityStart;
     @HijriDate(minOffset = -1, maxOffset = 1)
     private Long validityEnd;
-    @OnlyCharacters(min = 0, max = 400)
+    @NullOrNotBlank(min = 0, max = 600)
     private String routeDetails;
 }
