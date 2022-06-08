@@ -53,8 +53,10 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
     private List<NationalityLookupDto> nationalityLookupList;
 
     private void loadNationalityLookup() {
+        log.info("start loading nationalities in digital id scheduler.");
         //load nationality lookup
         nationalityLookupList = nationalityLookupService.findAll();
+        log.info("finish loading nationalities in digital id scheduler.");
     }
 
     /**
