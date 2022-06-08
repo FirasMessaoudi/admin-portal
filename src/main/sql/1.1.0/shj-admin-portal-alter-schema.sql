@@ -1906,3 +1906,9 @@ GO
 
 ALTER TABLE shc_portal.shc_applicant ADD madina_service_group_ref_code int
 GO
+
+ALTER TABLE shc_portal.shc_applicant ADD huic_batch_number int;
+GO
+
+ALTER TABLE shc_portal.shc_ritual_package ADD huic_batch_number int;
+GO
