@@ -1890,3 +1890,19 @@ GO
 ALTER TABLE shc_portal.shc_readiness_survey_question_description_lk ALTER COLUMN label nvarchar(500) NOT NULL;
 ALTER TABLE shc_portal.shc_readiness_survey_question_lk ALTER COLUMN label nvarchar(400) NOT NULL;
 GO
+
+ALTER TABLE shc_portal.shc_applicant ADD company_code varchar(100)
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD establishment_ref_code int
+GO
+
+
+ALTER TABLE shc_portal.shc_applicant ADD mission_ref_code int
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD makkah_service_group_ref_code int
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD madina_service_group_ref_code int
+GO
