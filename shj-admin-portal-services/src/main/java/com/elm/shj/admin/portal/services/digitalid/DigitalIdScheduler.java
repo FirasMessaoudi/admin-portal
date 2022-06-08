@@ -41,7 +41,7 @@ public class DigitalIdScheduler {
     public void generateIdsForNewApplicants() {
         log.debug("Generate applicants digital ids scheduler started...");
         LockAssert.assertLocked();
-        applicantLiteService.findAllWithoutDigitalId().forEach(applicantLiteDto -> {
+        applicantLiteService.findAllWithoutDigitalId().getContent().forEach(applicantLiteDto -> {
             // generate and save digital id for each applicant
             ApplicantDigitalIdDto applicantDigitalId = digitalIdService.save(ApplicantDigitalIdDto.builder()
                     .statusCode(EDigitalIdStatus.VALID.name())
