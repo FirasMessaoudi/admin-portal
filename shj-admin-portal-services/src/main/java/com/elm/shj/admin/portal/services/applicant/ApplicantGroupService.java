@@ -46,7 +46,9 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
 
     public List<ApplicantGroupDto> findGroupsByCompanyCode(String companyCode) {
         log.info("Start findGroupsByCompanyCode companyCode:{}", companyCode);
-        return mapList(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode));
+        List<ApplicantGroupDto> applicantGroups = mapList(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode));
+        applicantGroups.forEach(applicantGroupDto -> applicantGroupDto.setReferenceNumber(applicantGroupDto.getReferenceNumber().indexOf("_") != -1 ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber()));
+        return applicantGroups;
     }
 
 }
