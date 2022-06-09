@@ -46,7 +46,7 @@ public class CompanyLiteService extends GenericService<JpaCompanyLite, CompanyLi
     }
 
     public List<CompanyLiteDto> findInternalHajjCompanies() {
-        return mapList(companyLiteRepository.findByTypeCode(ECompanyType.INTERNAL_HAJJ_COMPANY.name()));
+        return mapList(companyLiteRepository.findByTypeCode(ECompanyType.INTERNAL_HAJ_COMPANY.name()));
     }
 
 }
