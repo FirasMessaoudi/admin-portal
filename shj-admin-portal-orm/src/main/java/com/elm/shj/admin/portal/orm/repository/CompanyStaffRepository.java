@@ -49,6 +49,13 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     boolean existsByBasicInfoAndTitleIsGroupLeader(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                                                    @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian, @Param("titleCode") String titleCode);
 
+    @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
+            "FROM JpaCompanyStaff a WHERE " +
+            "((a.idNumber = :idNumber) OR " +
+            "(a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode)) AND a.titleCode=:titleCode")
+    boolean existsByBasicInfoAndTitleIsGroupLeader(@Param("idNumber") String idNumber,
+                                                   @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode, @Param("titleCode") String titleCode);
+
     @Query("select s from JpaCompanyStaff s where s.id not in (select sdi.companyStaff.id from JpaCompanyStaffDigitalId sdi where sdi.seasonYear =:season)")
     List<JpaCompanyStaff> findAllWithoutSuin(@Param("season") int season);
 
@@ -59,6 +66,12 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     JpaCompanyStaff findByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                                     @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
+    @Query("SELECT a " +
+            "FROM JpaCompanyStaff a WHERE " +
+            "(a.idNumber = :idNumber) OR " +
+            "(a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode)")
+    JpaCompanyStaff findByBasicInfo(@Param("idNumber") String idNumber,
+                                    @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
 
     @Query("SELECT a " +
             "FROM JpaCompanyStaff a WHERE " +

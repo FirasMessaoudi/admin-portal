@@ -22,7 +22,6 @@ import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.utils.ImageUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
@@ -100,6 +99,7 @@ public class ItemWriter {
         repositoryRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, ApplicantRitualRepository.class);
         repositoryRegistry.put(EDataSegment.STAFF_MAIN_DATA, CompanyStaffRepository.class);
         repositoryRegistry.put(EDataSegment.STAFF_FULL_MAIN_DATA, CompanyStaffRepository.class);
+        repositoryRegistry.put(EDataSegment.MAIN_GROUP_DATA, ApplicantGroupRepository.class);
         // mapper registry initialization
         mapperRegistry.put(EDataSegment.APPLICANT_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_RELATIVES_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantRelativeDto.class)));
@@ -109,6 +109,7 @@ public class ItemWriter {
         mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantRitualDto.class)));
         mapperRegistry.put(EDataSegment.STAFF_MAIN_DATA, Objects.requireNonNull(validationService.findMapper(CompanyStaffDto.class)));
         mapperRegistry.put(EDataSegment.STAFF_FULL_MAIN_DATA, Objects.requireNonNull(validationService.findMapper(CompanyStaffDto.class)));
+        mapperRegistry.put(EDataSegment.MAIN_GROUP_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantGroupDto.class)));
 
     }
 
@@ -264,6 +265,72 @@ public class ItemWriter {
             //Temporary for testing only : staff ritual
             items.forEach(entry -> updateCompanyStaffRitualData(entry.getValue()));
             return Collections.emptyList();
+        }
+
+        if (dataSegment.getId() == EDataSegment.MAIN_GROUP_DATA.getId()) {
+            List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
+            List<S> savedItems = new ArrayList<>();
+            JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
+            List<DataValidationResult> dataValidationResults = new ArrayList<>();
+            items.forEach(entry -> {
+                S savedItem;
+                Class clazz = GroupMainDataDto.class;
+                int ritualTypeCodeCellIndex = 0;
+                for (Field field : clazz.getDeclaredFields()) {
+                    if (field.isAnnotationPresent(RitualTypeCode.class))
+                        ritualTypeCodeCellIndex = field.getAnnotation(CellIndex.class).index();
+                }
+                GroupMainDataDto groupMainDataDto = (GroupMainDataDto) entry.getValue();
+                CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], groupMainDataDto.getRitualTypeCode(), seasonYear);
+                if (companyRitualSeasonDto == null) {
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(ritualTypeCodeCellIndex)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage())).valid(false).build());
+                    return;
+                }
+                CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationality());
+                String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
+                ApplicantGroupDto applicantGroupDto = ApplicantGroupDto.builder()
+                        .groupLeader(existingStaff)
+                        .groupName(groupMainDataDto.getGroupName())
+                        .companyRitualSeason(companyRitualSeasonDto)
+                        .referenceNumber(groupMainDataDto.getGroupReferenceNumber() + "_" + companyCode)
+                        .build();
+                savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(applicantGroupDto, mappingContext));
+                savedItems.add(savedItem);
+                try {
+                    dataRequestRecords.add(DataRequestRecordDto.builder()
+                            .createDataRequestId(dataRequestId)
+                            .lastUpdateDataRequestId(dataRequestId)
+                            .createDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .itemId(Long.parseLong(BeanUtils.getProperty(savedItem, "id")))
+                            .build());
+                } catch (Exception e) {
+                    ReflectionUtils.handleReflectionException(e);
+                }
+                List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(validationService.findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+                // update all items with record ids
+                savedItems.forEach(s -> {
+                    savedRecords.stream().filter(r -> {
+                        try {
+                            return StringUtils.equals(BeanUtils.getProperty(r, "itemId"), BeanUtils.getProperty(s, "id"));
+                        } catch (Exception e) {
+                            ReflectionUtils.handleReflectionException(e);
+                            return false;
+                        }
+                    }).forEach(r -> {
+                        try {
+                            BeanUtils.setProperty(s, "dataRequestRecordId", BeanUtils.getProperty(r, "id"));
+                        } catch (Exception e) {
+                            ReflectionUtils.handleReflectionException(e);
+                        }
+                    });
+                });
+
+
+            });
+            // update saved items
+            repository.saveAll(savedItems);
+            return dataValidationResults;
         }
 
         // saving staff full main data
