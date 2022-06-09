@@ -116,6 +116,7 @@ public class IntegrationWsController {
     private final BadgeService badgeService;
     private final DataSegmentService dataSegmentService;
     private final DataRequestService dataRequestService;
+    private ApplicantGroupService applicantGroupService;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
@@ -1136,6 +1137,13 @@ public class IntegrationWsController {
         log.info("find employees by code and type code");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(applicantService.findOrganizerApplicants(applicantSearchCriteriaDto, companyRefCode, companyTypeCode)).build());
+    }
+
+    @GetMapping("/group/list/{companyRefCode}/{companyTypeCode}")
+    public ResponseEntity<WsResponse<?>> findOrganizationGroups(@PathVariable Long companyRefCode, @PathVariable String companyTypeCode) {
+        log.info("find applicant groups by company");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(applicantGroupService.findGroupsByCompanyCode(companyRefCode + "_" + companyTypeCode)).build());
     }
 
 

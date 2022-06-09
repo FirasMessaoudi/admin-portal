@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,6 +42,11 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         log.info("Finish getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId not found with ReferenceNumber:{}, companyRitualSeasonId:{}", referenceNumber, companyRitualSeasonId);
 
         return null;
+    }
+
+    public List<ApplicantGroupDto> findGroupsByCompanyCode(String companyCode) {
+        log.info("Start findGroupsByCompanyCode companyCode:{}", companyCode);
+        return mapList(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode));
     }
 
 }

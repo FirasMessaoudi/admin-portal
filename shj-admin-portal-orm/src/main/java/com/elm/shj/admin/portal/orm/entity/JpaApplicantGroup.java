@@ -60,6 +60,9 @@ public class JpaApplicantGroup implements Serializable {
     @Column(name = "entry_transportation_type_code")
     private String entryTransportationTypeCode;
 
+    @Column(name = "group_name")
+    private String groupName;
+
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 

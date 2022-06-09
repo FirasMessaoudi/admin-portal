@@ -1898,11 +1898,18 @@ ALTER TABLE shc_portal.shc_applicant ADD establishment_ref_code int
 GO
 
 
-ALTER TABLE shc_portal.shc_applicant ADD mission_ref_code int
-GO
+ALTER TABLE shc_portal.shc_applicant
+    ADD mission_ref_code int
+    GO
 
-ALTER TABLE shc_portal.shc_applicant ADD makkah_service_group_ref_code int
-GO
+ALTER TABLE shc_portal.shc_applicant
+    ADD makkah_service_group_ref_code int
+    GO
 
-ALTER TABLE shc_portal.shc_applicant ADD madina_service_group_ref_code int
+ALTER TABLE shc_portal.shc_applicant
+    ADD madina_service_group_ref_code int
+    GO
+
+ALTER TABLE shc_portal.shc_applicant_group
+    ADD group_name nvarchar(50)  NULL;
 GO
