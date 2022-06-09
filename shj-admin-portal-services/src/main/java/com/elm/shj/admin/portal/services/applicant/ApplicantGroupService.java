@@ -3,6 +3,7 @@ package com.elm.shj.admin.portal.services.applicant;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
 import com.elm.shj.admin.portal.orm.repository.ApplicantGroupRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantGroupDto;
+import com.elm.shj.admin.portal.services.dto.GroupNameLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -51,4 +53,16 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         return applicantGroups;
     }
 
+    public List<GroupNameLookupDto> findGroupsNameLookupByCompanyCode(String companyCode) {
+        log.info("Start findGroupsNameLookupByCompanyCode companyCode:{}", companyCode);
+        List<GroupNameLookupDto> groupNameLookup = mapList(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode)).stream().map(applicantGroupDto -> mapGroupName(applicantGroupDto)).collect(Collectors.toList());
+        return groupNameLookup;
+    }
+
+    private GroupNameLookupDto mapGroupName(ApplicantGroupDto applicantGroupDto){
+        GroupNameLookupDto groupNameLookup = GroupNameLookupDto.builder()
+                                            .code(applicantGroupDto.getReferenceNumber().indexOf("_") != -1 ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber())
+                                            .label(applicantGroupDto.getGroupName()).build();
+        return groupNameLookup;
+    }
 }

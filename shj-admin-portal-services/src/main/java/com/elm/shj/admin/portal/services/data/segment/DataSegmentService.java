@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.data.segment;
 import com.elm.shj.admin.portal.orm.entity.JpaDataSegment;
 import com.elm.shj.admin.portal.orm.repository.DataSegmentRepository;
 import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
+import com.elm.shj.admin.portal.services.dto.EOrganizerTypes;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +60,14 @@ public class DataSegmentService extends GenericService<JpaDataSegment, DataSegme
      * @return the data segment template file as resource
      */
     public Resource loadTemplateFile(DataSegmentDto dataSegment) {
+        return new ClassPathResource("/templates/excel/" + dataSegment.getId() + "/" + dataSegment.getTemplateFileName());
+    }
+
+    public Resource loadOrganizerTemplateFile(DataSegmentDto dataSegment, String organizerType) {
+        if(organizerType.equals(EOrganizerTypes.GOVERNMENT_AGENCY.name())){
+            String fileName[] = dataSegment.getTemplateFileName().split("\\.");
+            dataSegment.setTemplateFileName(fileName[0] + "-gov." + fileName[1]);
+        }
         return new ClassPathResource("/templates/excel/" + dataSegment.getId() + "/" + dataSegment.getTemplateFileName());
     }
 

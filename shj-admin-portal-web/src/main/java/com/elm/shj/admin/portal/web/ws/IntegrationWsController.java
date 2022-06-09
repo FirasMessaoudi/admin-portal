@@ -1050,15 +1050,15 @@ public class IntegrationWsController {
      * @param segmentId data segment Id
      * @return the template for the given segment
      */
-    @GetMapping("/data/request/tpl/{segmentId}")
-    public ResponseEntity<Resource> downloadTemplate(@PathVariable long segmentId) {
+    @GetMapping("/data/request/tpl/{segmentId}/{organizerType}")
+    public ResponseEntity<Resource> downloadTemplate(@PathVariable long segmentId, @PathVariable String organizerType) {
         DataSegmentDto dataSegment = dataSegmentService.findOne(segmentId);
         log.info("Downloading template for data segment#{}", segmentId);
         if (dataSegment == null) {
             log.warn("Now data segment found with #{}", segmentId);
             return null;
         }
-        Resource tplFile = dataSegmentService.loadTemplateFile(dataSegment);
+        Resource tplFile = dataSegmentService.loadOrganizerTemplateFile(dataSegment, organizerType);
         if (tplFile.exists()) {
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + tplFile.getFilename() + "\"")
@@ -1153,5 +1153,11 @@ public class IntegrationWsController {
                 .body(applicantGroupService.findGroupsByCompanyCode(companyRefCode + "_" + companyTypeCode)).build());
     }
 
+    @GetMapping("/group-name/list/{companyRefCode}/{companyTypeCode}")
+    public ResponseEntity<WsResponse<?>> findGroupsNameLookupByCompanyCode(@PathVariable Long companyRefCode, @PathVariable String companyTypeCode) {
+        log.info("find applicant groups by company");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(applicantGroupService.findGroupsNameLookupByCompanyCode(companyRefCode + "_" + companyTypeCode)).build());
+    }
 
 }

@@ -357,20 +357,20 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         Long serviceGroupRefCode = -1L;
         String companyCode = null;
 
-        if(companyTypeCode.equals("ESTABLISHMENT")){
+        if(companyTypeCode.equals(EOrganizerTypes.ESTABLISHMENT.name())){
             establishmentRefCode = companyRefCode;
-        } else if(companyTypeCode.equals("MISSION")){
+        } else if(companyTypeCode.equals(EOrganizerTypes.MISSION.name())){
             missionRefCode = companyRefCode;
-        } else if(companyTypeCode.equals("SERVICE_GROUP")){
+        } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
             serviceGroupRefCode = companyRefCode;
-        } else if(companyTypeCode.equals("INTERNAL_HAJ_COMPANY")){
-            companyCode = String.valueOf(companyRefCode) +"_"+companyTypeCode;
-        } else {
-            companyCode = String.valueOf(companyRefCode) +"_"+companyTypeCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name())){
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
         }
 
         if(applicantSearchCriteriaDto.getGroupNumber() != null && !applicantSearchCriteriaDto.getGroupNumber().equals("")){
-            applicantSearchCriteriaDto.setGroupNumber(String.valueOf(companyRefCode) + "_" + applicantSearchCriteriaDto.getGroupNumber());
+            applicantSearchCriteriaDto.setGroupNumber(applicantSearchCriteriaDto.getGroupNumber() + "_" + String.valueOf(companyRefCode));
         }
         List<ApplicantDto> applicantDtos = mapList(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
                                             applicantSearchCriteriaDto.getPassportNumber(), applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
