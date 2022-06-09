@@ -30,5 +30,4 @@ public class ApplicantSearchCriteriaDto implements Serializable {
     private String groupNumber;
     private String gender;
     private String passportNumber;
-    private String language;
 }

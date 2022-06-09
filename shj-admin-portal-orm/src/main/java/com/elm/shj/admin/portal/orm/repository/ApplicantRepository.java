@@ -167,7 +167,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "(:idNumber is null OR a.idNumber = :idNumber) and "+
             "(:passportNumber is null OR a.passportNumber = :passportNumber) and " +
             "(:gender is null OR a.gender = :gender) and " +
-            "((:applicantName is null OR a.fullNameEn = :applicantName OR a.fullNameAr = :applicantName)) and " +
+            "((:applicantName is null OR a.fullNameEn like :applicantName OR a.fullNameAr like :applicantName)) and " +
             "(:uin is null OR di.uin = :uin) and " +
             "(:groupNumber is null OR ap.referenceNumber = :groupNumber) and " +
             "(:companyCode is null or a.companyCode = :companyCode) and " +
