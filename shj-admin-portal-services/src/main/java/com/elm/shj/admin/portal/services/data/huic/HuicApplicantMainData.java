@@ -34,10 +34,10 @@ public class HuicApplicantMainData implements Serializable {
     @NationalityCode
     private Long nationality;
 
-    @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
+    @IdNumber(minLength = 0, maxLength = 16, ninOrIqama = true)
     private Long idNumber;
 
-    @NullOrNotBlank(min = 10, max = 150)
+    @NullOrNotBlank(min = 0, max = 150)
     @Pattern(regexp = "(^[a-zA-Z0-9]*)"
             , message = "validation.data.constraints.msg.20003")
     private String nationalIdOriginalCountry;
@@ -50,13 +50,13 @@ public class HuicApplicantMainData implements Serializable {
     @HijriDate(minOffset = -140, maxOffset = 0)
     private Long dateOfBirthHijri;
 
-    @NullOrNotBlank(min = 5, max = 200)
+    @NullOrNotBlank(min = 0, max = 200)
     private String fullNameAr;
 
-    @NullOrNotBlank(min = 5, max = 200)
+    @NullOrNotBlank(min = 0, max = 200)
     private String fullNameEn;
 
-    @NullOrNotBlank(min = 5, max = 200)
+    @NullOrNotBlank(min = 0, max = 200)
     private String fullNameOriginalLang;
 
     @MaritalStatusCode
@@ -73,17 +73,17 @@ public class HuicApplicantMainData implements Serializable {
     @LanguageCodeList
     private String languageList;
 
-    @NullOrNotBlank(min = 5, max = 50)
+    @NullOrNotBlank(min = 0, max = 50)
     private String email;
 
-    @NullOrNotBlank(min = 5, max = 50)
+    @NullOrNotBlank(min = 0, max = 50)
     private String mobileNumber;
 
-    @NullOrNotBlank(min = 5, max = 50)
+    @NullOrNotBlank(min = 0, max = 50)
     private String mobileNumberIntl;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @NationalityCode
+    @CountryCode
     private Integer country;
 
     @NullOrNotBlank(min = 0, max = 100)
@@ -98,7 +98,7 @@ public class HuicApplicantMainData implements Serializable {
     @NullOrNotBlank(min = 0, max = 100)
     private String buildingNo;
 
-    @NullOrNotBlank(min = 3, max = 30)
+    @NullOrNotBlank(min = 0, max = 30)
     private String postalCode;
 
     @WithRitualPackage
@@ -112,11 +112,16 @@ public class HuicApplicantMainData implements Serializable {
     private int seasonYear;
 
     @EstablishmentCode
-    private Integer establishmentId;
+    private Integer establishmentId; //establishmentRefCode
     @WithServiceGroup
-    private Long serviceGroupMakkahId;
+    private Long serviceGroupMakkahId; //serviceGroupRefCode
     @WithServiceGroup
-    private Long serviceGroupMadinaId;
+    private Long serviceGroupMadinaId; //serviceGroupRefCode
+
+    private Long missionRefCode;
+    private Long companyCode;
+
+
 
     public static ApplicantBasicInfoDto fromHuicApplicant(HuicApplicantMainData applicant) {
         ApplicantBasicInfoDto applicantBasicInfo = new ApplicantBasicInfoDto();

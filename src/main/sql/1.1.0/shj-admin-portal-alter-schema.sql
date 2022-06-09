@@ -1819,7 +1819,6 @@ create table shc_portal.shc_readiness_site_camp_question
     question_code               varchar(20)   NOT NULL,
     site_code                   varchar(20)   NOT NULL,
     camp_category_code          varchar(20)   NOT NULL,
-
     question_order                       int NOT NULL,
     creation_date smalldatetime NOT NULL default current_timestamp,
 );
@@ -1886,4 +1885,30 @@ create table shc_portal.shc_country_lk
     creation_date smalldatetime NOT NULL default current_timestamp,
     CONSTRAINT country_lk_unique unique (code ASC, lang ASC)
 );
+GO
+
+ALTER TABLE shc_portal.shc_readiness_survey_question_description_lk ALTER COLUMN label nvarchar(500) NOT NULL;
+ALTER TABLE shc_portal.shc_readiness_survey_question_lk ALTER COLUMN label nvarchar(400) NOT NULL;
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD company_code varchar(100)
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD establishment_ref_code int
+GO
+
+
+ALTER TABLE shc_portal.shc_applicant ADD mission_ref_code int
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD makkah_service_group_ref_code int
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD madina_service_group_ref_code int
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD huic_batch_number int;
+GO
+
+ALTER TABLE shc_portal.shc_ritual_package ADD huic_batch_number int;
 GO

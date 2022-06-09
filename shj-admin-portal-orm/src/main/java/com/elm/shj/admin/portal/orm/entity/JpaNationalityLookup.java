@@ -19,7 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "shc_nationality_lk")
-@NamedQuery(name = "JpaCountryLookup.findAll", query = "SELECT j FROM JpaNationalityLookup j")
+@NamedQuery(name = "JpaNationalityLookup.findAll", query = "SELECT j FROM JpaNationalityLookup j")
 @Getter
 @Setter
 public class JpaNationalityLookup extends JpaLocalizedLookup {

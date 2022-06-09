@@ -27,7 +27,7 @@ public class HuicArrivalData implements Serializable {
 
 
     private static final long serialVersionUID = -2526608219169871962L;
-    @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
+    @IdNumber(minLength = 0, maxLength = 16, ninOrIqama = true)
     private Long idNumber;
     @PassportNumber
     private String passportNo;

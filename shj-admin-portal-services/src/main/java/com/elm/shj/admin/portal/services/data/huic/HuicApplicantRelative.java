@@ -29,7 +29,7 @@ public class HuicApplicantRelative implements Serializable {
 
     @RelationshipCode
     private Integer relationship;
-    @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
+    @IdNumber(minLength = 0, maxLength = 16, ninOrIqama = true)
     private Long idNumber;
     @PassportNumber
     private String passportNo;
@@ -46,7 +46,7 @@ public class HuicApplicantRelative implements Serializable {
     private int seasonYear;
     // transient specific mapping for relative applicant as we cannot decorate twice
     // used in data requests either through file upload or integration
-    @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
+    @IdNumber(minLength = 0, maxLength = 16, ninOrIqama = true)
     private Long relativeIdNumber;
 
     @NotNull(message = "validation.data.constraints.msg.20001")

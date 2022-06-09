@@ -28,22 +28,23 @@ public class HuicCompany implements Serializable {
     private BigInteger companyRefCode;
 
 
-    @NullOrNotBlank(min = 5, max = 200)
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @NullOrNotBlank(min = 0, max = 200)
     private String companyNameAr;
 
-    @NullOrNotBlank(min = 5, max = 200)
+    @NullOrNotBlank(min = 0, max = 200)
     private String companyNameEn;
 
     @WithMission
     private Long missionId;
 
-    @NullOrNotBlank(min = 5, max = 20)
+    @NullOrNotBlank(min = 0, max = 50)
     private Long companyContactNumber;
 
-    @NullOrNotBlank(min = 5, max = 200)
+    @NullOrNotBlank(min = 0, max = 200)
     private String website;
 
-    @NullOrNotBlank(min = 5, max = 50)
+    @NullOrNotBlank(min = 0, max = 50)
     private String companyEmail;
 
     private Long moiNumber;
@@ -57,7 +58,7 @@ public class HuicCompany implements Serializable {
     private Integer ritualTypeCode;
     @SeasonYear
     private int seasonYear;
-    @NationalityCode
+    @CountryCode
     private Integer country;
 
     @EstablishmentCode

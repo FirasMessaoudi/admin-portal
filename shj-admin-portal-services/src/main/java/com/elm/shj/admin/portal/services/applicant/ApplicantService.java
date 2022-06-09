@@ -3,10 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
+import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
@@ -25,9 +22,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.*;
 import java.util.*;
 
 /**
@@ -351,5 +346,35 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         int numberOfAffectedRows = applicantRepository.markAsRegistered(applicantId, channel);
         log.info("ApplicantService ::: Start markAsRegistered numberOfAffectedRows: {}", numberOfAffectedRows);
         return numberOfAffectedRows;
+    }
+
+    public List<ApplicantDto> findOrganizerApplicants(ApplicantSearchCriteriaDto applicantSearchCriteriaDto, Long companyRefCode, String companyTypeCode) {
+        log.info("Company Ref code ...{}", companyRefCode);
+        log.info("Company type code ...{}", companyTypeCode);
+
+        Long establishmentRefCode = -1L;
+        Long missionRefCode = -1L;
+        Long serviceGroupRefCode = -1L;
+        String companyCode = null;
+
+        if(companyTypeCode.equals("ESTABLISHMENT")){
+            establishmentRefCode = companyRefCode;
+        } else if(companyTypeCode.equals("MISSION")){
+            missionRefCode = companyRefCode;
+        } else if(companyTypeCode.equals("SERVICE_GROUP")){
+            serviceGroupRefCode = companyRefCode;
+        } else if(companyTypeCode.equals("INTERNAL_HAJ_COMPANY")){
+            companyCode = String.valueOf(companyRefCode) +"_"+companyTypeCode;
+        } else {
+            companyCode = String.valueOf(companyRefCode) +"_"+companyTypeCode;
+        }
+
+        if(applicantSearchCriteriaDto.getGroupNumber() != null && !applicantSearchCriteriaDto.getGroupNumber().equals("")){
+            applicantSearchCriteriaDto.setGroupNumber(String.valueOf(companyRefCode) + "_" + applicantSearchCriteriaDto.getGroupNumber());
+        }
+        List<ApplicantDto> applicantDtos = mapList(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
+                                            applicantSearchCriteriaDto.getPassportNumber(), applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
+                applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode));
+        return applicantDtos;
     }
 }

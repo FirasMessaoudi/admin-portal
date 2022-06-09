@@ -50,6 +50,15 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
     private final ApplicantDigitalIdRepository applicantDigitalIdRepository;
     private final NationalityLookupService nationalityLookupService;
 
+    private List<NationalityLookupDto> nationalityLookupList;
+
+    private void loadNationalityLookup() {
+        log.info("start loading nationalities in digital id scheduler.");
+        //load nationality lookup
+        nationalityLookupList = nationalityLookupService.findAll();
+        log.info("finish loading nationalities in digital id scheduler.");
+    }
+
     /**
      * Generates smart id for specific applicant
      * <pre>
@@ -72,7 +81,10 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
         String genderDigit = String.valueOf(GENDER_DIGITS.get(applicant.getGender().toUpperCase()).get(ThreadLocalRandom.current().nextInt(0, "F".equalsIgnoreCase(applicant.getGender()) ? 4 : 5)));
         // generate country digits
         // retrieve country
-        NationalityLookupDto nationalityLookupDto = nationalityLookupService.findByCode(applicant.getNationalityCode());
+        if (this.nationalityLookupList == null || this.nationalityLookupList.isEmpty()) {
+            loadNationalityLookup();
+        }
+        NationalityLookupDto nationalityLookupDto = nationalityLookupList.stream().filter(nationality -> nationality.getCode().equals(applicant.getNationalityCode())).findFirst().get();
         String countryDigits = StringUtils.leftPad(StringUtils.right(nationalityLookupDto.getCountryPhonePrefix().replaceAll("-", "").replaceAll(",", ""), 3), 3, "0");
         // generate date of birth digits
         Date dobGregorian = applicant.getDateOfBirthGregorian() != null ? applicant.getDateOfBirthGregorian() : DateUtils.toGregorian(applicant.getDateOfBirthHijri());

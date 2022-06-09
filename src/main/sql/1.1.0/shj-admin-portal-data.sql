@@ -1119,32 +1119,7 @@ SET
 IDENTITY_INSERT shc_portal.shc_meal_time_type_lk OFF;
 GO
 
-delete
-from shc_portal.shc_company
-where code in ('1', '2', '3', '4', '5', '6', '7')
-    go
-
-INSERT
-INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (1, N'شركة مطوفي حجاج دول جنوب شرق آسيا', 'Company of Pilgrims of South Est Asia countries', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (2, N'ششركة مطوفي حجاج دول جنوب آسيا', 'Company of Pilgrims of South Asia countries', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (3, N'شركة مطوفي حجاج الدول الأفريقية غير العربية', 'Company of Pilgrims of Africa non Arabic countries', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (4, N'شركة مطوفي حجاج الدولة العربية', 'Company of Pilgrims of Arabic countries', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (5, N'شركة مطوفي حجاج تركيا، وحجاج أوروبا وأمريكا وأستراليا',
-        'Company of Pilgrims of Turkey Muslims of Europe America and Australia', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (6, N'شركة مطوفي حجاج إيران', 'Company of Pilgrims of Iran', 1);
-INSERT INTO shc_portal.shc_company (code, label_ar, label_en, establishment_ref_code)
-VALUES (7, N'شركة الأدلاء', 'Company Adela', 1);
-go
-
-delete
-from shc_portal.shc_housing_type_lk
-where id > 0;
+delete from shc_portal.shc_housing_type_lk where id > 0;
 go
 SET IDENTITY_INSERT shc_portal.shc_housing_type_lk ON;
 INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
@@ -1159,13 +1134,11 @@ INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
 VALUES (5, 'BUILDING', 'ar', N'عمارة ');
 INSERT INTO shc_portal.shc_housing_type_lk (id, code, lang, label)
 VALUES (6, 'BUILDING', 'en', 'Building');
-SET
-IDENTITY_INSERT shc_portal.shc_housing_type_lk OFF;
+SET IDENTITY_INSERT shc_portal.shc_housing_type_lk OFF;
 GO
 
 delete
-from shc_portal.shc_housing_category_lk
-where id > 0;
+from shc_portal.shc_housing_category_lk where id > 0;
 go
 SET IDENTITY_INSERT shc_portal.shc_housing_category_lk ON;
 INSERT INTO shc_portal.shc_housing_category_lk (id, code, lang, label)
@@ -1188,11 +1161,7 @@ SET
 IDENTITY_INSERT shc_portal.shc_housing_category_lk OFF;
 GO
 
-Delete
-from shc_portal.shc_company
-where code in
-      ('1_ESTABLISHMENT', '2_ESTABLISHMENT', '3_ESTABLISHMENT', '4_ESTABLISHMENT', '5_ESTABLISHMENT', '6_ESTABLISHMENT',
-       '7_ESTABLISHMENT', '8_ESTABLISHMENT', '9_ESTABLISHMENT');
+Delete from shc_portal.shc_company where id > 0;
 GO
 INSERT INTO shc_portal.shc_company (code, label_ar, label_en, contact_number)
 VALUES ('1_ESTABLISHMENT', N'شركة مطوفي حجاج دول جنوب شرق آسيا', 'South East Asia countries Tawafa Co.','0125459922');
@@ -2557,7 +2526,754 @@ INSERT INTO shc_portal.shc_package_type_lk (id, code, lang, label)
 VALUES (5, 'VIP', 'ar', N'مميز ');
 INSERT INTO shc_portal.shc_package_type_lk (id, code, lang, label)
 VALUES (6, 'VIP', 'en', 'VIP');
-SET
-IDENTITY_INSERT shc_portal.shc_package_type_lk OFF;
+SET IDENTITY_INSERT shc_portal.shc_package_type_lk OFF;
 GO
 
+DELETE FROM shc_portal.shc_country_lk WHERE id > 0;
+GO
+SET IDENTITY_INSERT shc_portal.shc_country_lk ON;
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('503','ar',N'السلفادور');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('503','en','Salvador');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('504','ar',N'هندوراس');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('504','en','Honduras');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('675','ar',N'بابوا نيوغينيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('675','en','Papua New Guinea');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1112','ar',N'كندا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1112','en','Canada');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1246','ar',N'باربادوس');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1246','en','Barbados');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('5962','ar',N'مارتينيكو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('5962','en','Martinique');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2681','ar',N'انتيكو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2681','en','Antigua');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('246','ar',N'ديغوغارسيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('246','en','Diego Garcia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('247','ar',N'اسنسيون جزر');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('247','en','Ascension Island');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('5961','ar',N'فرنسية انتيل');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('5961','en','French Antilles');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('8691','ar',N'نفيس');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('8691','en','Nevis');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('664','ar',N'مونت سيرات');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('664','en','Montserrat');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('242','ar',N'جمهورية الكونغو برازافيل');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('242','en','Republic of the Congo ( Brazzaville )');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('8082','ar',N'جزيرة ويك');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('8082','en','Wake Island');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('8081','ar',N'جزيرة ميدواي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('8081','en','Midway Island');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('3811','ar',N'سيبيريا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('3811','en','Siberia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('5991','ar',N'كوراكاو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('5991','en','Curacao');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2552','ar',N'زنجبار');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2552','en','Zanzibar');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('263','ar',N'زمبابوي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('263','en','Zimbabwe');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('254','ar',N'كينيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('254','en','Kenya');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('236','ar',N'افريقيا الوسطى');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('236','en','Central African Republic');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('94','ar',N'سريلانكا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('94','en','Sri Lanka');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('86','ar',N'الصين');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('86','en','China (PRC)');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('234','ar',N'نيجيريا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('234','en','Nigeria');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('998','ar',N'اوزبكستان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('998','en','Uzbekistan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('376','ar',N'اندورا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('376','en','Andorra');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('57','ar',N'كولومبيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('57','en','Colombia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('372','ar',N'ايستونيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('372','en','Estonia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('27','ar',N'جنوب افريقيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('27','en','South Africa');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('20','ar',N'مصر');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('20','en','Egypt');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1','ar',N'الولايات المتحدة الأمريكية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1','en','United States of America');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('502','ar',N'غواتيمالا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('502','en','Guatemala');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('501','ar',N'بيليز');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('501','en','Belize');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('500','ar',N'جزر فولكلاند');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('500','en','Falkland Islands Dem. Rep. of (former Zaire)');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('473','ar',N'غرينادا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('473','en','Grenada');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('441','ar',N'بيرمودا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('441','en','Bermuda');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('423','ar',N'لختنشتاين');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('423','en','Liechtenstein');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('51','ar',N'البيرو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('51','en','Peru');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('31','ar',N'هولندا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('31','en','Netherlands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('48','ar',N'بولندا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('48','en','Poland');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('47','ar',N'النرويج');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('47','en','Norway');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('46','ar',N'السويد');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('46','en','Sweden');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('45','ar',N'الدنمارك');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('45','en','Denmark');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('290','ar',N'سانت هيلانة');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('290','en','St. Helena');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('284','ar',N'جزيرة فيرجين البريطانية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('284','en','British Virgin Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('267','ar',N'بوتسوانا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('267','en','Botswana');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('252','ar',N'الصومال');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('252','en','Somalia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('421','ar',N'سلوفاكيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('421','en','Slovakia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('389','ar',N'مقدونيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('389','en','Macedonia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('56','ar',N'تشيلي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('56','en','Chile');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('98','ar',N'إيران');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('98','en','Iran');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('229','ar',N'بنين');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('229','en','Benin');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('32','ar',N'بلجيكا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('32','en','Belgium');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('227','ar',N'النيجر');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('227','en','Niger');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('226','ar',N'بوركينا فاسو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('226','en','Burkina Faso');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('225','ar',N'كوت دايفوار');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('225','en','Ivory Coast');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('224','ar',N'غينيا كوناكري');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('224','en','Guinea Conakry (PRP)');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('223','ar',N'جمهورية مالي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('223','en','Mali');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('222','ar',N'موريتانيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('222','en','Mauritania');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('221','ar',N'السنغال');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('221','en','Senegal');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('220','ar',N'جامبيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('220','en','Gambia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('218','ar',N'ليبيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('218','en','Libya');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('216','ar',N'تونس');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('216','en','Tunisia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('213','ar',N'الجزائر');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('213','en','Algeria');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('248','ar',N'جزر سيشيل');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('248','en','Seychelles');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('55','ar',N'البرازيل');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('55','en','Brazil');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('49','ar',N'ألمانيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('49','en','Germany');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('876','ar',N'جامايكا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('876','en','Jamaica');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('266','ar',N'ليسوتو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('266','en','Lesotho');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('358','ar',N'فنلندا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('358','en','Finland');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('357','ar',N'قبرص');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('357','en','Cyprus');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('356','ar',N'مالطا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('356','en','Malta');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('355','ar',N'البانيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('355','en','Albania');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('354','ar',N'ايسلندا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('354','en','Iceland');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('353','ar',N'ايرلندا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('353','en','Ireland');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('228','ar',N'توجو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('228','en','Togo');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('352','ar',N'لوكسمبورج');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('352','en','Luxembourg');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('351','ar',N'البرتغال');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('351','en','Portugal');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('54','ar',N'الأرجنتين');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('54','en','Argentina');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('53','ar',N'كوبا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('53','en','Cuba');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('30','ar',N'اليونان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('30','en','Greece');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('61','ar',N'أستراليا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('61','en','Australia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('93','ar',N'أفغانستان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('93','en','Afghanistan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('92','ar',N'باكستان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('92','en','Pakistan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('91','ar',N'الهند');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('91','en','India');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('90','ar',N'تركيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('90','en','Turkey');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('84','ar',N'فيتنام');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('84','en','Vietnam');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('82','ar',N'كوريا الجنوبية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('82','en','South Korea');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('81','ar',N'اليابان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('81','en','Japan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('66','ar',N'تايلاند');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('66','en','Thailand');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('65','ar',N'سنغافورة');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('65','en','Singapore');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('64','ar',N'نيوزيلاند');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('64','en','New Zealand');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('62','ar',N'إندونيسيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('62','en','Indonesia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('235','ar',N'تشاد');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('235','en','Chad');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('60','ar',N'ماليزيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('60','en','Malaysia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('58','ar',N'فينزويلا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('58','en','Venezuela');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('230','ar',N'موريشس');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('230','en','Mauritius');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('245','ar',N'غينيا بيساو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('245','en','Guinea-Bissau');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('244','ar',N'أنغولا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('244','en','Angola');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('243','ar',N'جمهورية الكونغو الديمقراطية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('243','en','Democratic Republic of the Congo');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('241','ar',N'جابون');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('241','en','Gabon');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('240','ar',N'غينيا الإستوائية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('240','en','Equatorial Guinea');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('239','ar',N'برينسيب');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('239','en','S.o Tomى and Principe');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('238','ar',N'جزر رأس أخضر');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('238','en','Cape Verde Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('237','ar',N'الكاميرون');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('237','en','Cameroon');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('886','ar',N'تايوان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('886','en','Taiwan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('63','ar',N'الفليبين');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('63','en','Philippines');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('6702','ar',N'جزر ماريانا الشمالية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('6702','en','Northern Marianas Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('961','ar',N'لبنان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('961','en','Lebanon');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('960','ar',N'المالديف');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('960','en','Maldives');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('880','ar',N'بنجلاديش');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('880','en','Bangladesh');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('868','ar',N'ترنداد وتوباجو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('868','en','Trinidad , Tobago');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('856','ar',N'لاوس');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('856','en','Laos');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('855','ar',N'كمبوديا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('855','en','Cambodia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('853','ar',N'مكاو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('853','en','Macau');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('809','ar',N'جمهورية دومينيكان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('809','en','Dominican Republic');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('784','ar',N'سنت فينسنت و جريندين');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('784','en','St. Vincent , Grenadines');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2683','ar',N'سويزلاند');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2683','en','Swaziland');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('8692','ar',N'سانت كتس ونيفيس');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('8692','en','St. Kitts/Nevis');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('594','ar',N'جيانا الفرنسية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('594','en','French Guiana');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('7001','ar',N'كازخستان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('7001','en','Kazakhstan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('965','ar',N'الكويت');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('965','en','Kuwait');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('5992','ar',N'هولندية انتيل');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('5992','en','Netherlands Antilles');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('3812','ar',N'يوغسلافيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('3812','en','Yugoslavia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2692','ar',N'جزيرة مايوت');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2692','en','Mayotte Island');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2691','ar',N'جزر القمر');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2691','en','Comoros Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('674','ar',N'نورو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('674','en','Nauru');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('673','ar',N'بروناي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('673','en','Brunei');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('671','ar',N'جوام');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('671','en','Guam');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('359','ar',N'بلغاريا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('359','en','Bulgaria');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('598','ar',N'الاوروغواي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('598','en','Uruguay');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('962','ar',N'الأردن');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('962','en','Jordan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('595','ar',N'الباراغواي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('595','en','Paraguay');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('7002','ar',N'روسيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('7002','en','Russia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1242','ar',N'الباهاماز');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1242','en','Bahamas');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('370','ar',N'ليتوانيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('370','en','Lithuania');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('850','ar',N'كوريا الشمالية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('850','en','North Korea');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('758','ar',N'سانت لوشيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('758','en','St. Lucia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('691','ar',N'ميكرونيسيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('691','en','Micronesia (Federal States of)');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('690','ar',N'توكيلاو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('690','en','Tokelau');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('689','ar',N'بولينيسيا الفرنسية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('689','en','French Polynesia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('688','ar',N'توفالو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('688','en','Tuvalu');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('687','ar',N'كاليدونيا الجديدة');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('687','en','New Caledonia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('767','ar',N'دومينيكان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('767','en','Dominican');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2682','ar',N'باربودا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2682','en','Barbuda');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2642','ar',N'ناميبيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2642','en','Namibia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2641','ar',N'انجويليا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2641','en','Anguilla');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('963','ar',N'سوريا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('963','en','Syria');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1787','ar',N'بورتوريكو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1787','en','Puerto Rico');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('964','ar',N'العراق');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('964','en','Iraq');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1061','ar',N'جزيرة كريسماس');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1061','en','Christmas Island');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1039','ar',N'فاتيكان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('1039','en','Vatican City');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('996','ar',N'قرغيزستان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('996','en','Kyrgyzstan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('995','ar',N'جورجيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('995','en','Georgia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('993','ar',N'تركمانستان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('993','en','Turkmenistan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('992','ar',N'طاجكستان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('992','en','Tajikistan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('977','ar',N'نيبال');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('977','en','Nepal');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('975','ar',N'بهوتان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('975','en','Bhutan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('972','ar',N'فلسطين عرب');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('972','en','Philistine (Arab 48)');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('971','ar',N'الامارات العربية المتحدة');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('971','en','United Arab Emirates');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('374','ar',N'ارمينيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('374','en','Armenia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('649','ar',N'جزر تركس وكيكوس');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('649','en','Turks and Caicos Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('681','ar',N'جزيرة والس وفوتونا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('681','en','Wallis and Futuna Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('680','ar',N'بيلو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('680','en','Palau');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('679','ar',N'جزر فيجي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('679','en','Fiji');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('678','ar',N'فانويتو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('678','en','Vanuatu');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('677','ar',N'جزيرة سليمان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('677','en','Solomon Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('676','ar',N'تونجا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('676','en','Tonga Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('387','ar',N'البوسنة والهرسك');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('387','en','Bosnia and Herzegovina');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('386','ar',N'سلوفينيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('386','en','Slovenia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('385','ar',N'كرواتيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('385','en','Croatia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('380','ar',N'اوكرانيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('380','en','Ukraine');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('378','ar',N'سان مارينو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('378','en','San Marino');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('377','ar',N'موناكو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('377','en','Monaco');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('683','ar',N'نيو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('683','en','Niue');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('967','ar',N'اليمن');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('967','en','Yemen');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('968','ar',N'عمان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('968','en','Oman');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('970','ar',N'فلسطين');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('970','en','Philistine');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('973','ar',N'البحرين');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('973','en','Bahrain');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('974','ar',N'قطر');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('974','en','Qatar');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('994','ar',N'أذربيجان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('994','en','Azerbaijan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('375','ar',N'بيلاروسيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('375','en','Belarus');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('420','ar',N'تشيكيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('420','en','Czech Republic');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('852','ar',N'هونغ كونغ');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('852','en','Hong Kong');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('371','ar',N'لاتفيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('371','en','Latvia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('373','ar',N'مولدوفا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('373','en','Moldavia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('684','ar',N'ساموا الامريكية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('684','en','American Samoa');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('976','ar',N'منغوليا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('976','en','Mongolia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('6721','ar',N'انتاركتيكا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('6721','en','Antarctica');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('592','ar',N'جواني');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('592','en','Guyana');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('591','ar',N'بوليفيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('591','en','Bolivia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('590','ar',N'جيودي لوب');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('590','en','Guadeloupe');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('509','ar',N'هاييي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('509','en','Haiti');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('508','ar',N'سانت بيير وميكلون');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('508','en','St. Pierre ,Miquelon');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('507','ar',N'بنما');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('507','en','Panama');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('506','ar',N'كوستاريكا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('506','en','Costa Rica');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('505','ar',N'نيكاراغوا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('505','en','Nicaragua');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('966','ar',N'المملكة العربية السعودية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('966','en','Saudi Arabia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('597','ar',N'سورينام');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('597','en','Suriname');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2061','ar',N'جزرة كوكو- كيلنج');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2061','en','Cocos-Keeling Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('686','ar',N'كيريباتي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('686','en','Kiribati');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('692','ar',N'جزر مارشال');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('692','en','Marshall Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('682','ar',N'جزر كوك');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('682','en','Cook Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('6722','ar',N'جزر نورفولك');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('6722','en','Norfolk Island');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('593','ar',N'الاكوادور');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('593','en','Ecuador');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2551','ar',N'تنزانيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('2551','en','Tanzania');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('685','ar',N'ساموا الغربية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('685','en','Western Samoa');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('6701','ar',N'تيمور الشرقية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('6701','en','East Timor');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('44','ar',N'المملكة المتحدة');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('44','en','United Kingdom');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('43','ar',N'النمسا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('43','en','Austria');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('41','ar',N'سويسرا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('41','en','Switzerland');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('40','ar',N'رومانيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('40','en','Romania');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('39','ar',N'إيطاليا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('39','en','Italy');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('36','ar',N'هنغاريا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('36','en','Hungary');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('34','ar',N'أسبانيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('34','en','Spain');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('33','ar',N'فرنسا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('33','en','France');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('95','ar',N'مانيمار');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('95','en','Myanmar');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('52','ar',N'المكسيك');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('52','en','Mexico');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('250','ar',N'رواندا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('250','en','Rwanda');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('233','ar',N'غانا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('233','en','Ghana');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('232','ar',N'سيراليون');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('232','en','Sierra Leone');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('231','ar',N'ليبيريا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('231','en','Liberia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('262','ar',N'رينيون');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('262','en','Réunion Island');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('261','ar',N'ملاجاسي/مدغشقر');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('261','en','Madagascar');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('260','ar',N'زامبيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('260','en','Zambia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('258','ar',N'موزمبيق');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('258','en','Mozambique');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('257','ar',N'بوروندي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('257','en','Burundi');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('256','ar',N'أوغندا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('256','en','Uganda');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('253','ar',N'جيبوتي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('253','en','Djibouti');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('212','ar',N'المغرب');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('212','en','Morocco');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('251','ar',N'إثيوبيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('251','en','Ethiopia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('249','ar',N'السودان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('249','en','Sudan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('265','ar',N'مالاوي');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('265','en','Malawi');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('350','ar',N'جبل طارق');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('350','en','Gibraltar');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('345','ar',N'جزر كايمن');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('345','en','Cayman Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('340','ar',N'جزر فيرجين الامريكية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('340','en','US Virgin Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('299','ar',N'جرين لاند');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('299','en','Greenland');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('298','ar',N'جزر فيرو');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('298','en','Faeroe Islands');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('297','ar',N'اروبا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('297','en','Aruba');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('291','ar',N'إرتريا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('291','en','Eritrea');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('550','ar',N'كوسوفا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('550','en','KOSOVO');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('7872','ar',N'داغستان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('7872','en','Dagestan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('381','ar',N'صربيا');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('381','en','Serbia');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('382','ar',N'الجبل الاسود');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('382','en','MONTENEGRO');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('9999','ar',N'البهرة');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('9999','en','Bohrah');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('211','ar',N'جنوب السودان');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('211','en','South Sudan');
+
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('9998','ar',N'غير محدد الجنسية');
+INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('9998','en','unspecific Nationality');
+SET IDENTITY_INSERT shc_portal.shc_country_lk OFF;
+GO
+
+UPDATE shc_portal.shc_company SET contact_number = '920009498' WHERE code = '8_ESTABLISHMENT';
+GO

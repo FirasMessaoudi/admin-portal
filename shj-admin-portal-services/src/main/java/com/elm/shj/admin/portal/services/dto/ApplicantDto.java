@@ -121,6 +121,11 @@ public class ApplicantDto implements Serializable {
     private Date creationDate;
     private Date updateDate;
     private boolean deleted;
+    private String companyCode;
+    private Integer establishmentRefCode;
+    private Integer missionRefCode;
+    private Long serviceGroupMakkahCode;
+    private Integer serviceGroupMadinaCode;
 
     /**
      * Get applicant object from applicant lite object.
@@ -134,7 +139,7 @@ public class ApplicantDto implements Serializable {
                 .packageReferenceNumber(applicantLiteDto.getPackageReferenceNumber()).dateOfBirthGregorian(applicantLiteDto.getDateOfBirthGregorian())
                 .dateOfBirthHijri(applicantLiteDto.getDateOfBirthHijri()).fullNameAr(applicantLiteDto.getFullNameAr()).fullNameEn(applicantLiteDto.getFullNameEn())
                 .fullNameOrigin(applicantLiteDto.getFullNameOrigin()).preferredLanguage(applicantLiteDto.getPreferredLanguage()).gender(applicantLiteDto.getGender())
-                .photo(applicantLiteDto.getPhoto()).contacts(applicantLiteDto.getContacts()).digitalIds(applicantLiteDto.getDigitalIds())
+                .contacts(applicantLiteDto.getContacts()).digitalIds(applicantLiteDto.getDigitalIds())
                 .build();
     }
 }
