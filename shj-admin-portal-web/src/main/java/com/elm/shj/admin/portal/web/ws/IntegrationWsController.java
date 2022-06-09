@@ -117,7 +117,7 @@ public class IntegrationWsController {
     private final BadgeService badgeService;
     private final DataSegmentService dataSegmentService;
     private final DataRequestService dataRequestService;
-    private ApplicantGroupService applicantGroupService;
+    private final ApplicantGroupService applicantGroupService;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
