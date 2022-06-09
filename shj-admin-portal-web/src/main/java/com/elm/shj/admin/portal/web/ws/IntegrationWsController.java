@@ -95,6 +95,7 @@ public class IntegrationWsController {
     private final CompanyRitualSeasonLiteService companyRitualSeasonLiteService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
     private final HealthImmunizationLookupService healthImmunizationLookupService;
+    private final NotificationTemplateStatusLookupService notificationTemplateStatusLookupService;
     private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
     private final ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
     private final NotificationCategoryLookupService notificationCategoryLookupService;
@@ -608,6 +609,12 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> listImmunization() {
         log.debug("list health immunizations...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(healthImmunizationLookupService.findAll()).build());
+    }
+
+    @GetMapping("/notification-template-status/list")
+    public ResponseEntity<WsResponse<?>> listNotificationTemplateStatuses() {
+        log.debug("list notification template statuses...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(notificationTemplateStatusLookupService.findAll()).build());
     }
 
     @GetMapping("/religious-occasions-day/list")

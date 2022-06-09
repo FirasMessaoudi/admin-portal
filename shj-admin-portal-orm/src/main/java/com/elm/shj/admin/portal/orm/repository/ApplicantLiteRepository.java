@@ -6,6 +6,8 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -49,7 +51,7 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
                               @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
 
     @Query("SELECT a FROM JpaApplicantLite a WHERE a.id NOT IN (SELECT ad.applicantId FROM JpaApplicantDigitalId ad)")
-    List<JpaApplicantLite> findAllApplicantsWithoutDigitalId();
+    Page<JpaApplicantLite> findAllApplicantsWithoutDigitalId(Pageable pageable);
 
     @Query("select a from JpaApplicantLite a where " +
             "(a.idNumber = :idNumber and a.dateOfBirthHijri = :dateOfBirthHijri) or " +

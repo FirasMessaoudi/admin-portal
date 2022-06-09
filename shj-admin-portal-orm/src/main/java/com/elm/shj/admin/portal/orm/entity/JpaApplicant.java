@@ -89,7 +89,7 @@ public class JpaApplicant implements Serializable {
     private String companyCode;
 
     @Column(name = "establishment_ref_code")
-    private Integer estRefCode;
+    private Integer establishmentRefCode;
 
     @Column(name = "mission_ref_code")
     private Integer missionRefCode;

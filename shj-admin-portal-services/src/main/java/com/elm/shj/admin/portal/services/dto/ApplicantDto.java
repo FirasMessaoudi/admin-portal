@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import javax.persistence.Column;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -123,7 +122,7 @@ public class ApplicantDto implements Serializable {
     private Date updateDate;
     private boolean deleted;
     private String companyCode;
-    private Integer estRefCode;
+    private Integer establishmentRefCode;
     private Integer missionRefCode;
     private Long serviceGroupMakkahCode;
     private Integer serviceGroupMadinaCode;
@@ -140,7 +139,7 @@ public class ApplicantDto implements Serializable {
                 .packageReferenceNumber(applicantLiteDto.getPackageReferenceNumber()).dateOfBirthGregorian(applicantLiteDto.getDateOfBirthGregorian())
                 .dateOfBirthHijri(applicantLiteDto.getDateOfBirthHijri()).fullNameAr(applicantLiteDto.getFullNameAr()).fullNameEn(applicantLiteDto.getFullNameEn())
                 .fullNameOrigin(applicantLiteDto.getFullNameOrigin()).preferredLanguage(applicantLiteDto.getPreferredLanguage()).gender(applicantLiteDto.getGender())
-                .photo(applicantLiteDto.getPhoto()).contacts(applicantLiteDto.getContacts()).digitalIds(applicantLiteDto.getDigitalIds())
+                .contacts(applicantLiteDto.getContacts()).digitalIds(applicantLiteDto.getDigitalIds())
                 .build();
     }
 }

@@ -1913,3 +1913,9 @@ ALTER TABLE shc_portal.shc_applicant
 ALTER TABLE shc_portal.shc_applicant_group
     ADD group_name nvarchar(50)  NULL;
 GO
+
+ALTER TABLE shc_portal.shc_applicant ADD huic_batch_number int;
+GO
+
+ALTER TABLE shc_portal.shc_ritual_package ADD huic_batch_number int;
+GO

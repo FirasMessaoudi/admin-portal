@@ -36,7 +36,7 @@ public class ApplicantLiteDto implements Serializable {
     private String fullNameOrigin;
     private String preferredLanguage;
     private String gender;
-    private String photo;
+//    private String photo;
     private List<ApplicantContactDto> contacts;
     private List<ApplicantDigitalIdDto> digitalIds;
 
