@@ -364,13 +364,13 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         } else if(companyTypeCode.equals("SERVICE_GROUP")){
             serviceGroupRefCode = companyRefCode;
         } else if(companyTypeCode.equals("INTERNAL_HAJ_COMPANY")){
-            companyCode = String.valueOf(companyRefCode) +"_"+companyTypeCode;
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
         } else {
-            companyCode = String.valueOf(companyRefCode) +"_"+companyTypeCode;
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
         }
 
         if(applicantSearchCriteriaDto.getGroupNumber() != null && !applicantSearchCriteriaDto.getGroupNumber().equals("")){
-            applicantSearchCriteriaDto.setGroupNumber(String.valueOf(companyRefCode) + "_" + applicantSearchCriteriaDto.getGroupNumber());
+            applicantSearchCriteriaDto.setGroupNumber(applicantSearchCriteriaDto.getGroupNumber() + "_" + String.valueOf(companyRefCode));
         }
         List<ApplicantDto> applicantDtos = mapList(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
                                             applicantSearchCriteriaDto.getPassportNumber(), applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
