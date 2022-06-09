@@ -357,15 +357,15 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         Long serviceGroupRefCode = -1L;
         String companyCode = null;
 
-        if(companyTypeCode.equals("ESTABLISHMENT")){
+        if(companyTypeCode.equals(EOrganizerTypes.ESTABLISHMENT.name())){
             establishmentRefCode = companyRefCode;
-        } else if(companyTypeCode.equals("MISSION")){
+        } else if(companyTypeCode.equals(EOrganizerTypes.MISSION.name())){
             missionRefCode = companyRefCode;
-        } else if(companyTypeCode.equals("SERVICE_GROUP")){
+        } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
             serviceGroupRefCode = companyRefCode;
-        } else if(companyTypeCode.equals("INTERNAL_HAJ_COMPANY")){
+        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name())){
             companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
-        } else {
+        } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
             companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
         }
 
