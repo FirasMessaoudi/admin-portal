@@ -17,7 +17,7 @@ public interface ReadinessSiteCampQuestionRepository extends JpaRepository<JpaRe
             "from JpaReadinessSiteCampQuestion q " +
             "join JpaReadinessSurveyQuestionLookup qlk on qlk.code = q.questionCode " +
             "join JpaReadinessSurveyQuestionCategoryLookup clk on clk.code = qlk.questionCategoryCode " +
-            "left join JpaReadinessSiteCampQuestionDescription d on q.questionCode = d.questionCode " +
+            "left join JpaReadinessSiteCampQuestionDescription d on q.questionCode = d.questionCode and d.campCategoryCode= :campCategoryCode and d.siteCode= :campSiteCode " +
             "left join JpaReadinessSurveyQuestionDescriptionLookup dlk on dlk.code = d.questionDescriptionCode and dlk.lang =:lang " +
             "where q.campCategoryCode = :campCategoryCode and q.siteCode = :campSiteCode  " +
             "and qlk.lang =:lang and clk.lang =:lang " +
