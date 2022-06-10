@@ -6,12 +6,15 @@ package com.elm.shj.admin.portal.services.ritual;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,8 +40,11 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
      *
      * @return the list of applicants
      */
-    public List<ApplicantRitualDto> findAllWithoutCards() {
-        return mapList(applicantRitualRepository.findWithExistingDigitalIdAndWithoutCard());
+    public Page<ApplicantRitualDto> findAllWithoutCards() {
+        log.info("Start findAllWithoutCards");
+        Page<ApplicantRitualDto> applicantRitualsPage =  mapPage(applicantRitualRepository.findWithExistingDigitalIdAndWithoutCard(PageRequest.of(0, 300)));
+        log.info("Finish findAllWithoutCards with {} cards", applicantRitualsPage.getContent().size());
+        return applicantRitualsPage;
     }
 
     /**

@@ -1919,3 +1919,10 @@ GO
 
 ALTER TABLE shc_portal.shc_ritual_package ADD huic_batch_number int;
 GO
+
+ALTER TABLE shc_portal.shc_ritual_package ALTER COLUMN package_name_ar NVARCHAR(400);
+ALTER TABLE shc_portal.shc_ritual_package ALTER COLUMN package_name_en VARCHAR(200);
+GO
+
+ALTER TABLE shc_portal.shc_company ADD huic_batch_number int;
+GO

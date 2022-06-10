@@ -36,8 +36,8 @@ public class DigitalIdScheduler {
     /**
      * Scheduled job to create digital IDs for new applicants
      */
-    @Scheduled(fixedDelay = 60000)
-    @SchedulerLock(name = "generate-digital-ids-task")
+//    @Scheduled(fixedDelay = 5000)
+//    @SchedulerLock(name = "generate-digital-ids-task")
     public void generateIdsForNewApplicants() {
         log.debug("Generate applicants digital ids scheduler started...");
         LockAssert.assertLocked();
@@ -50,21 +50,21 @@ public class DigitalIdScheduler {
                     .build());
 
             // check if there is a record for applicant emergency data upload to get transportation details.
-            ApplicantEmergencyDataUploadDto applicantEmergencyDataUpload = applicantEmergencyDataUploadService.findByBasicInfoAndPackageCode(
-                    ApplicantBasicInfoDto.fromApplicantDigitalIdInfo(applicantLiteDto), applicantLiteDto.getPackageReferenceNumber());
-
-            String busNumber = applicantEmergencyDataUpload != null ? applicantEmergencyDataUpload.getBusNumber() : null;
-            String seatNumber = applicantEmergencyDataUpload != null ? applicantEmergencyDataUpload.getSeatNumber() : null;
+//            ApplicantEmergencyDataUploadDto applicantEmergencyDataUpload = applicantEmergencyDataUploadService.findByBasicInfoAndPackageCode(
+//                    ApplicantBasicInfoDto.fromApplicantDigitalIdInfo(applicantLiteDto), applicantLiteDto.getPackageReferenceNumber());
+//
+//            String busNumber = applicantEmergencyDataUpload != null ? applicantEmergencyDataUpload.getBusNumber() : null;
+//            String seatNumber = applicantEmergencyDataUpload != null ? applicantEmergencyDataUpload.getSeatNumber() : null;
 
             // create applicant package
             ApplicantPackageDto savedApplicantPackage = applicantPackageService.createApplicantPackage(applicantLiteDto.getPackageReferenceNumber(),
-                    Long.parseLong(applicantDigitalId.getUin()), busNumber, seatNumber);
+                    Long.parseLong(applicantDigitalId.getUin()), null, null);
 
             //create or update applicant ritual;
             Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantLiteDto.getId(), applicantLiteDto.getPackageReferenceNumber(), savedApplicantPackage, true);
             //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
-            applicantHealthService.updateApplicantHealthApplicantRitual(savedApplicantRitualId, applicantLiteDto.getId(), applicantLiteDto.getPackageReferenceNumber());
-            applicantRelativeService.updateApplicantRelativeApplicantRitual(savedApplicantRitualId, applicantLiteDto.getId(), applicantLiteDto.getPackageReferenceNumber());
+//            applicantHealthService.updateApplicantHealthApplicantRitual(savedApplicantRitualId, applicantLiteDto.getId(), applicantLiteDto.getPackageReferenceNumber());
+//            applicantRelativeService.updateApplicantRelativeApplicantRitual(savedApplicantRitualId, applicantLiteDto.getId(), applicantLiteDto.getPackageReferenceNumber());
         });
         log.debug("Generate applicants digital ids scheduler finished...");
     }

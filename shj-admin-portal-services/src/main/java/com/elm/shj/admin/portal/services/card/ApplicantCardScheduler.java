@@ -34,24 +34,26 @@ public class ApplicantCardScheduler {
     /**
      * Scheduled job to create cards for new applicant ritual records
      */
-    @Scheduled(cron = "${scheduler.generate.card.applicant.ritual.cron}")
+//    @Scheduled(cron = "${scheduler.generate.card.applicant.ritual.cron}")
+    @Scheduled(fixedDelay = 4000)
     @SchedulerLock(name = "generate-applicant-ritual-cards-task")
     public void generateIdsForNewApplicants() {
         log.debug("Generate applicants cards scheduler started...");
         LockAssert.assertLocked();
-        applicantRitualService.findAllWithoutCards().forEach(applicantRitual -> {
+        applicantRitualService.findAllWithoutCards().getContent().forEach(applicantRitual -> {
             // generate and save the card
             ApplicantCardDto savedCard = applicantCardService.save(ApplicantCardDto.builder().applicantRitual(applicantRitual).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
             userCardStatusAuditService.saveUserCardStatusAudit(savedCard, Constants.SYSTEM_USER_ID_NUMBER);
 
         });
+        log.debug("Generate applicants cards scheduler finished...");
     }
 
     /**
      * Scheduled job to update card status based on ritual end date
      */
-    @Scheduled(cron = "${scheduler.update.applicant.card.status.cron}")
-    @SchedulerLock(name = "expire-ritual-applicant-card")
+//    @Scheduled(cron = "${scheduler.update.applicant.card.status.cron}")
+//    @SchedulerLock(name = "expire-ritual-applicant-card")
     public void expireRitualApplicantCard() {
         log.debug("Expire ritual applicant card scheduler started...");
         LockAssert.assertLocked();
