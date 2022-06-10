@@ -36,6 +36,20 @@ public class JpaApplicantBasic implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
+    private String gender;
+
+    @Column(name = "nationality_code")
+    private String nationalityCode;
+
+    @Column(name = "date_of_birth_gregorian")
+    private Date dateOfBirthGregorian;
+
+    @Column(name = "date_of_birth_hijri")
+    private Long dateOfBirthHijri;
+
+    @Column(name = "first_package_reference_number")
+    private String packageReferenceNumber;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "applicant_id", updatable = false)
     private List<JpaApplicantDigitalId> digitalIds;

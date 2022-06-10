@@ -36,8 +36,8 @@ public class ApplicantCardScheduler {
      * Scheduled job to create cards for new applicant ritual records
      */
 //    @Scheduled(cron = "${scheduler.generate.card.applicant.ritual.cron}")
-    @Scheduled(fixedDelay = 4000)
-    @SchedulerLock(name = "generate-applicant-ritual-cards-task")
+//    @Scheduled(fixedDelay = 1000)
+//    @SchedulerLock(name = "generate-applicant-ritual-cards-task")
     public void generateIdsForNewApplicants() {
         log.debug("Generate applicants cards scheduler started...");
         LockAssert.assertLocked();

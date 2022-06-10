@@ -34,7 +34,7 @@ public class ApplicantRitualBasicService extends GenericService<JpaApplicantRitu
      */
     public Page<ApplicantRitualBasicDto> findAllWithoutCards() {
         log.info("Start findAllWithoutCards");
-        Page<ApplicantRitualBasicDto> applicantRitualIdsPage =  mapPage(applicantRitualBasicRepository.findWithExistingDigitalIdAndWithoutCard(PageRequest.of(0, 300)));
+        Page<ApplicantRitualBasicDto> applicantRitualIdsPage =  mapPage(applicantRitualBasicRepository.findWithExistingDigitalIdAndWithoutCard(PageRequest.of(0, 500)));
         log.info("Finish findAllWithoutCards with {} cards", applicantRitualIdsPage.getContent().size());
         return applicantRitualIdsPage;
     }

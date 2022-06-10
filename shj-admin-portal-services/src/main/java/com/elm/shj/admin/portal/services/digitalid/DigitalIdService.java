@@ -72,7 +72,7 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
      * @param applicant the applicant to generate smart id for
      * @return the generated smart id
      */
-    public String generate(ApplicantLiteDto applicant) {
+    public String generate(ApplicantBasicDto applicant) {
         // check inputs
         Assert.isTrue(Arrays.asList("M", "F").contains(applicant.getGender().toUpperCase()), "Invalid Applicant Gender!");
         Assert.notNull(applicant.getDateOfBirthGregorian(), "Invalid Applicant Date of Birth!");
