@@ -3,10 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.card;
 
-import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantCardBasicDto;
 import com.elm.shj.admin.portal.services.dto.Constants;
 import com.elm.shj.admin.portal.services.dto.ECardStatus;
-import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualBasicService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockAssert;
@@ -26,7 +26,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantCardScheduler {
 
-    private final ApplicantRitualService applicantRitualService;
+    private final ApplicantRitualBasicService applicantRitualBasicService;
+    private final ApplicantCardBasicService applicantCardBasicService;
     private final ApplicantCardService applicantCardService;
     private final UserCardStatusAuditService userCardStatusAuditService;
 
@@ -40,10 +41,10 @@ public class ApplicantCardScheduler {
     public void generateIdsForNewApplicants() {
         log.debug("Generate applicants cards scheduler started...");
         LockAssert.assertLocked();
-        applicantRitualService.findAllWithoutCards().getContent().forEach(applicantRitual -> {
+        applicantRitualBasicService.findAllWithoutCards().getContent().forEach(applicantRitualBasic -> {
             // generate and save the card
-            ApplicantCardDto savedCard = applicantCardService.save(ApplicantCardDto.builder().applicantRitual(applicantRitual).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
-            userCardStatusAuditService.saveUserCardStatusAudit(savedCard, Constants.SYSTEM_USER_ID_NUMBER);
+            ApplicantCardBasicDto savedCard = applicantCardBasicService.save(ApplicantCardBasicDto.builder().applicantRitual(applicantRitualBasic).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
+            userCardStatusAuditService.saveUserBasicCardStatusAudit(savedCard, Constants.SYSTEM_USER_ID_NUMBER);
 
         });
         log.debug("Generate applicants cards scheduler finished...");
