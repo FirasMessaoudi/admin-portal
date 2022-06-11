@@ -50,7 +50,7 @@ public class CompanyStaffDto {
     @CellIndex(index = 1)
     private String passportNumber;
 
-    @GregorianDate(minOffset = -120, maxOffset = -10 ,allowNull = false)
+    @GregorianDate(minOffset = -120, maxOffset = -10 ,allowNull = true)
     @CellIndex(index = 2)
     private Date dateOfBirthGregorian;
 
