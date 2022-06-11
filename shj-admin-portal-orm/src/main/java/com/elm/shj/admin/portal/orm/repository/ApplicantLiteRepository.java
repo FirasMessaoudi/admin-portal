@@ -116,32 +116,6 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
     )
     List<ApplicantStaffVO> findApplicantRitualByUin(@Param("uin") String uin, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
 
-   /* @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantVo(a.fullNameAr, a.fullNameEn, adi.uin, a.photo, l.latitude , l.longitude,a.idNumber,a.passportNumber) From JpaApplicant a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id LEFT JOIN JpaUserLocation l ON l.userId = adi.uin WHERE adi.uin = :uin order by l.creationDate desc")
-    List<ApplicantVo> findApplicantDetailsWithLocationByUin(@Param("uin") String uin);*/
-
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO ( applicantDigitalId.uin, applicant.fullNameEn, applicant.fullNameAr, " +
-            "ritualSeason.ritualTypeCode, card.statusCode, applicant.photo, " +
-            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr,applicant.emergencyContactName, applicant.emergencyContactMobileNumber  ) " +
-            "FROM JpaApplicantCard card " +
-            "INNER JOIN card.applicantRitual ritual  " +
-            "INNER JOIN ritual.applicant applicant " +
-            "INNER JOIN ritual.applicantPackage applicantPackage " +
-            "INNER JOIN applicant.digitalIds applicantDigitalId " +
-            "INNER JOIN applicantPackage.ritualPackage ritualPackage " +
-            "INNER JOIN ritualPackage.companyRitualSeason companyRitualSeason " +
-            "INNER JOIN companyRitualSeason.ritualSeason ritualSeason " +
-            "INNER JOIN companyRitualSeason.company company " +
-            "LEFT JOIN JpaGroupApplicantList groupApplicantList on groupApplicantList.applicantUin = applicantDigitalId.uin " +
-            "LEFT JOIN groupApplicantList.applicantGroup applicantGroup " +
-            "LEFT JOIN applicantGroup.groupLeader groupLeader " +
-            "LEFT JOIN groupLeader.digitalIds groupLeaderDigitalId " +
-            "WHERE ritualSeason.active = true " +
-            "AND  applicantDigitalId.uin =:uin " +
-            "AND card.id = :cardId " +
-            "order by applicantPackage.startDate desc, applicantPackage.creationDate desc "
-    )
-    List<ApplicantStaffVO> findApplicantRitualByUinAndCardId(@Param("uin") String uin, @Param("cardId") long cardId);
-
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto(a.emergencyContactName,a.emergencyContactMobileNumber) from JpaApplicant a " +
             "join JpaApplicantDigitalId digitalId on digitalId.applicantId = a.id where digitalId.uin = :applicantUin ")
     ApplicantEmergencyContactDto findApplicantEmergencyContactByApplicantId(@Param("applicantUin") String applicantUin);

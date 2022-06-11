@@ -77,4 +77,6 @@ public class JpaApplicantLite implements Serializable {
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "applicant_id")
     private List<JpaApplicantDigitalId> digitalIds;
+
+    private boolean deleted;
 }

@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.services.card;
 
 import com.elm.shj.admin.portal.orm.entity.JpaUserCardStatusAudit;
+import com.elm.shj.admin.portal.services.dto.ApplicantCardBasicDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
 import com.elm.shj.admin.portal.services.dto.UserCardStatusAuditDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -24,6 +25,11 @@ import org.springframework.stereotype.Service;
 public class UserCardStatusAuditService extends GenericService<JpaUserCardStatusAudit, UserCardStatusAuditDto, Long> {
 
     public void saveUserCardStatusAudit(ApplicantCardDto card, long userId) {
+        save(UserCardStatusAuditDto.builder().cardId(card.getId()).statusCode(card.getStatusCode()).userId(userId)
+                .uin(card.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin()).build());
+    }
+
+    public void saveUserBasicCardStatusAudit(ApplicantCardBasicDto card, long userId) {
         save(UserCardStatusAuditDto.builder().cardId(card.getId()).statusCode(card.getStatusCode()).userId(userId)
                 .uin(card.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin()).build());
     }

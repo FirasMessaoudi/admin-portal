@@ -44,4 +44,5 @@ public class ApplicantLiteDto implements Serializable {
     private boolean hasLocalMobileNumber;
     private String mobileNumber;
     private String countryCode;
+    private boolean deleted;
 }
