@@ -44,6 +44,6 @@ public @interface GregorianDate {
     /**
      * @return whether to accept null values or not
      */
-    boolean allowNull() default false;
+    boolean allowNull() default true;
 
 }
