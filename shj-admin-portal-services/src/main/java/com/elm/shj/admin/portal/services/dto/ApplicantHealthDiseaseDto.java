@@ -46,7 +46,7 @@ public class ApplicantHealthDiseaseDto implements Serializable {
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     @WithRitualPackage
-    @OnlyCharacters(min = 1, max = 16, allowNumbers = true, allowEmpty = false)
+    @OnlyCharacters(min = 1, max = 50, allowNumbers = true, allowEmpty = false)
     @CellIndex(index = 6)
     private String packageReferenceNumber;
 
