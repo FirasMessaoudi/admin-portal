@@ -33,7 +33,7 @@ public class JpaApplicantCardBasic implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "applicant_ritual_id", updatable = false)
-    private JpaApplicantRitual applicantRitual;
+    private JpaApplicantRitualBasic applicantRitual;
 
     @Column(name = "status_code")
     private String statusCode;

@@ -36,7 +36,8 @@ public class ApplicantLiteDto implements Serializable {
     private String fullNameOrigin;
     private String preferredLanguage;
     private String gender;
-//    private String photo;
+    //TODO(aflaifel): Remove this or user another version of JpaApplicant without photo
+    private String photo;
     private List<ApplicantContactDto> contacts;
     private List<ApplicantDigitalIdDto> digitalIds;
 
