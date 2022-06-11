@@ -71,7 +71,7 @@ public class ApplicantRelativeDto implements Serializable {
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     @WithRitualPackage
-    @OnlyCharacters(min = 1, max = 50, allowNumbers = true, allowEmpty = false)
+    @OnlyCharacters(min = 1, max = 50, allowNumbers = true, allowEmpty = false, allowSpecialChars = true)
     @CellIndex(index = 9)
     private String packageReferenceNumber;
 

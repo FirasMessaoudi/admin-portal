@@ -5,7 +5,10 @@ package com.elm.shj.admin.portal.services.digitalid;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantBasicDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantDigitalIdDto;
+import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
+import com.elm.shj.admin.portal.services.dto.NationalityLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.lookup.NationalityLookupService;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
@@ -75,7 +78,7 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
     public String generate(ApplicantBasicDto applicant) {
         // check inputs
         Assert.isTrue(Arrays.asList("M", "F").contains(applicant.getGender().toUpperCase()), "Invalid Applicant Gender!");
-        Assert.notNull(applicant.getDateOfBirthGregorian(), "Invalid Applicant Date of Birth!");
+        Assert.isTrue(applicant.getDateOfBirthGregorian() != null || (applicant.getDateOfBirthHijri() != null && applicant.getDateOfBirthHijri() != 0), "Invalid Applicant Date of Birth!");
         Assert.hasText(applicant.getNationalityCode(), "Invalid Applicant Nationality!");
         // generate gender digit
         String genderDigit = String.valueOf(GENDER_DIGITS.get(applicant.getGender().toUpperCase()).get(ThreadLocalRandom.current().nextInt(0, "F".equalsIgnoreCase(applicant.getGender()) ? 4 : 5)));

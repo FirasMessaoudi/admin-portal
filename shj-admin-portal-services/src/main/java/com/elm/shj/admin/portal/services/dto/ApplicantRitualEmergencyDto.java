@@ -29,7 +29,7 @@ public class ApplicantRitualEmergencyDto implements Serializable {
 
     private Long id;
 
-    @OnlyCharacters(min = 1, max = 50, allowNumbers = true, allowEmpty = false)
+    @OnlyCharacters(min = 1, max = 50, allowNumbers = true, allowEmpty = false, allowSpecialChars = true)
     @CellIndex(index = 26)
     private String groupReferenceNumber;
 
