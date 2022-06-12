@@ -57,4 +57,5 @@ public class ApplicantMainDataDto implements Serializable {
     private String uin;
 
     private String preferredLanguage;
+    private String groupNumber;
 }
