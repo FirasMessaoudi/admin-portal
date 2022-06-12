@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.sms;
 
 import com.elm.shj.admin.portal.services.dto.HUICRequestDto;
 import com.elm.shj.admin.portal.services.dto.SmsRequestDto;
+import com.elm.shj.admin.portal.services.dto.SmsResponseDto;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
@@ -22,6 +23,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
 import javax.net.ssl.SSLException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Service handling otp operations
@@ -57,7 +59,8 @@ public class SmsService {
                 .build();
         HttpClient httpClient = HttpClient.create().secure(t -> t.sslContext(sslContext));
 
-        return WebClient
+        AtomicBoolean smsSent = new AtomicBoolean(false);
+        WebClient
                 .builder()
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .defaultHeader(HttpHeaders.AUTHORIZATION, String.format("Bearer %s",smsApiToken))
@@ -66,7 +69,9 @@ public class SmsService {
                 .post()
                 .body(BodyInserters.fromValue(huicSmsRequest))
                 .retrieve()
-                .toBodilessEntity()
-                .block().getStatusCode().value() == HttpStatus.OK.value();
+                .bodyToMono(SmsResponseDto.class)
+                .doOnSuccess(smsResponse -> smsSent.set(true))
+                .block();
+        return smsSent.get();
     }
 }
