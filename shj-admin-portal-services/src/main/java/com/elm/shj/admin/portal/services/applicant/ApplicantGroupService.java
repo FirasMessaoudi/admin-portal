@@ -8,6 +8,8 @@ import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,10 +48,10 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         return null;
     }
 
-    public List<ApplicantGroupDto> findGroupsByCompanyCode(String companyCode) {
+    public Page<ApplicantGroupDto> findGroupsByCompanyCode(String companyCode, Pageable pageable) {
         log.info("Start findGroupsByCompanyCode companyCode:{}", companyCode);
-        List<ApplicantGroupDto> applicantGroups = mapList(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode));
-        applicantGroups.forEach(applicantGroupDto -> applicantGroupDto.setReferenceNumber(applicantGroupDto.getReferenceNumber().indexOf("_") != -1 ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber()));
+        Page<ApplicantGroupDto> applicantGroups = mapPage(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode, pageable));
+        applicantGroups.getContent().forEach(applicantGroupDto -> applicantGroupDto.setReferenceNumber(applicantGroupDto.getReferenceNumber().indexOf("_") != -1 ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber()));
         return applicantGroups;
     }
 

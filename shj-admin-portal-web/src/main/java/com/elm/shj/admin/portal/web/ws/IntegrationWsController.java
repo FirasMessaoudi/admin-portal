@@ -1275,15 +1275,15 @@ public class IntegrationWsController {
     }
 
     @GetMapping("/group/list/{companyRefCode}/{companyTypeCode}")
-    public ResponseEntity<WsResponse<?>> findOrganizationGroups(@PathVariable Long companyRefCode, @PathVariable String companyTypeCode) {
+    public ResponseEntity<WsResponse<?>> findOrganizationGroups(@PathVariable Long companyRefCode, @PathVariable String companyTypeCode, Pageable pageable) {
         log.info("find applicant groups by company");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(applicantGroupService.findGroupsByCompanyCode(companyRefCode + "_" + companyTypeCode)).build());
+                .body(applicantGroupService.findGroupsByCompanyCode(companyRefCode + "_" + companyTypeCode, pageable)).build());
     }
 
     @GetMapping("/group-name/list/{companyRefCode}/{companyTypeCode}")
     public ResponseEntity<WsResponse<?>> findGroupsNameLookupByCompanyCode(@PathVariable Long companyRefCode, @PathVariable String companyTypeCode) {
-        log.info("find applicant groups by company");
+        log.info("find groups name Lookup ");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(applicantGroupService.findGroupsNameLookupByCompanyCode(companyRefCode + "_" + companyTypeCode)).build());
     }
