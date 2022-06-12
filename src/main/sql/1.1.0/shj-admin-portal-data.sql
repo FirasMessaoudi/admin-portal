@@ -3276,28 +3276,8 @@ INSERT INTO shc_portal.shc_country_lk (code, lang, Label)
 VALUES ('9998', 'ar', N'غير محدد الجنسية');
 INSERT INTO shc_portal.shc_country_lk (code, lang, Label)
 VALUES ('9998', 'en', 'unspecific Nationality');
-SET
-IDENTITY_INSERT shc_portal.shc_country_lk OFF;
+SET IDENTITY_INSERT shc_portal.shc_country_lk OFF;
 GO
 
-UPDATE shc_portal.shc_company
-SET contact_number = '920009498'
-WHERE code = '8_ESTABLISHMENT';
-GO
-SET IDENTITY_INSERT shc_portal.shc_meal_time_type_lk ON;
-INSERT INTO shc_portal.shc_meal_time_type_lk (id, code, lang, label)
-VALUES (7, 'OTHERS', 'ar', N'أخرى ');
-INSERT INTO shc_portal.shc_meal_time_type_lk (id, code, lang, label)
-VALUES (8, 'OTHERS', 'en', 'Others');
-SET
-IDENTITY_INSERT shc_portal.shc_meal_time_type_lk OFF;
-GO
-
-SET IDENTITY_INSERT shc_portal.shc_meal_type_lk ON;
-INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
-VALUES (9, 'OTHERS', 'ar', N'أخرى');
-INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
-VALUES (10, 'OTHERS', 'en', 'Others');
-SET
-IDENTITY_INSERT shc_portal.shc_meal_type_lk OFF;
+UPDATE shc_portal.shc_company SET contact_number = '920009498' WHERE code = '8_ESTABLISHMENT';
 GO
