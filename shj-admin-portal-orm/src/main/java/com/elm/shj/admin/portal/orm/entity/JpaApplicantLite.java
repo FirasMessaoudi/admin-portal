@@ -65,7 +65,8 @@ public class JpaApplicantLite implements Serializable {
     @Column(name = "preferred_language")
     private String preferredLanguage;
 
-//    private String photo;
+    //TODO(aflaifel): Remove this or user another version of JpaApplicant without photo
+    private String photo;
 
     private String gender;
 

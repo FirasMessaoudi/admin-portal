@@ -32,9 +32,9 @@ public class CompanyStaffExpirationScheduler {
     private final CompanyStaffDigitalIdRepository companyStaffDigitalIdRepository;
     private final ChatContactService chatContactService;
 
-//    @PostConstruct
-//    @Scheduled(cron = "${scheduler.staff.digitalId.invalidate.cron}")
-//    @SchedulerLock(name = "staff-digitalId-card-expiration-task")
+    @PostConstruct
+    @Scheduled(cron = "${scheduler.staff.digitalId.invalidate.cron}")
+    @SchedulerLock(name = "staff-digitalId-card-expiration-task")
     void markStaffDigitalIdAsInvalid() {
         log.debug("verify staff expiration scheduler started ...");
         long currentHijriDate = DateUtils.toHijri(new Date());
