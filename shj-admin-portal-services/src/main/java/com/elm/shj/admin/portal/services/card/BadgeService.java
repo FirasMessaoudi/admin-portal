@@ -366,12 +366,12 @@ public class BadgeService {
         int xDif = ((BADGE_WIDTH - fm.stringWidth(fullNameAr + "")) / 2);
         int yDif = PHOTO_MAX_HEIGHT + fm.getAscent() + (int) Math.round(0.85 * 96) - 8;
 
-        TextLayout layout = new TextLayout(fullNameAr, font, frc);
+        TextLayout layout = new TextLayout(fullNameAr + "", font, frc);
         layout.draw(g2d, xDif, yDif);
 
         xDif = ((BADGE_WIDTH - fm.stringWidth(fullNameEn + "")) / 2);
         yDif += 44;
-        layout = new TextLayout(fullNameEn, font, frc);
+        layout = new TextLayout(fullNameEn + "", font, frc);
         layout.draw(g2d, xDif, yDif);
 
         // draw a line underneath it
