@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -23,8 +22,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
 import javax.net.ssl.SSLException;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 /**
  * Service handling otp operations
@@ -60,22 +57,16 @@ public class SmsService {
                 .build();
         HttpClient httpClient = HttpClient.create().secure(t -> t.sslContext(sslContext));
 
-        AtomicBoolean smsSent = new AtomicBoolean(false);
-        WebClient
+        return !WebClient
                 .builder()
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .defaultHeader(HttpHeaders.AUTHORIZATION, String.format("Bearer %s",smsApiToken))
-                .baseUrl(smsApiUrl)
                 .build()
                 .post()
+                .uri(smsApiUrl)
                 .body(BodyInserters.fromValue(huicSmsRequest))
                 .retrieve()
                 .bodyToMono(SmsResponseDto.class)
-                .doOnSuccess(smsResponse -> smsSent.set(true))
-                .doOnError(throwable -> {
-                    log.error("OTP sms could not sent", throwable);
-                })
-                .block();
-        return smsSent.get();
+                .block().getHasErrors();
     }
 }
