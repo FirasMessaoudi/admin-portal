@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
+import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
 import com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.BadgeService;
@@ -366,6 +367,7 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findApplicantMainData(@PathVariable String uin, @PathVariable long applicantPackageId) {
         log.debug("Handler for {}", "Find applicant main data by uin");
 
+        // get the latest package
         Optional<ApplicantMainDataDto> mainDataDtoOptional = applicantMainDataService.findByUin(uin, applicantPackageId);
         if (mainDataDtoOptional.isPresent()) {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(mainDataDtoOptional.get()).build());
@@ -377,6 +379,89 @@ public class IntegrationWsController {
         }
 
     }
+
+    // Start Organizer applicant main data, details, health and group leader
+    /**
+     * finds organizer an applicant by his UIN
+     *
+     * @param uin                the applicant's uin to find
+     * @return the found applicant or <code>null</code>
+     */
+    @GetMapping("/find/main-data/{uin}")
+    public ResponseEntity<WsResponse<?>> findOrganizerApplicantMainData(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find applicant main data by uin");
+
+        ApplicantRitualPackageVo applicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(uin));
+        Optional<ApplicantMainDataDto> mainDataDtoOptional = applicantMainDataService.findByUin(uin, applicantPackage.getApplicantPackageId());
+        if (mainDataDtoOptional.isPresent()) {
+            mainDataDtoOptional.get().setGroupNumber(applicantGroupService.findGroupNumber(mainDataDtoOptional.get().getUin()));
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(mainDataDtoOptional.get()).build());
+
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(uin).build()).build());
+
+        }
+
+    }
+
+    /**
+     * finds an applicant package by his UIN and  id
+     *
+     * @param uin                the applicant's uin to find
+     * @return the found applicant package data
+     */
+    @GetMapping("/applicant/package/{uin}")
+    public ResponseEntity<WsResponse<?>> findOrganizerApplicantPackageData(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find applicant package details  by uin");
+
+        ApplicantRitualPackageVo applicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(uin));
+
+        ApplicantPackageDetailsDto applicantPackageDetails = new ApplicantPackageDetailsDto();
+        ApplicantPackageDto applicantPackageDto = applicantPackageService.findOne(applicantPackage.getApplicantPackageId());
+        applicantPackageDetails.setApplicantPackageHousings(applicantPackageHousingService.findApplicantPackageHousingByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackage.getApplicantPackageId()));
+        applicantPackageDetails.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackage.getApplicantPackageId()));
+        applicantPackageDetails.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackage.getApplicantPackageId()));
+        applicantPackageDetails.setCompanyLite(companyService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId(), Long.parseLong(uin)));
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageDetails).build());
+
+    }
+
+    /**
+     * finds applicant's health details by his UIN
+     *
+     * @param uin                the applicant's uin
+     * @return the applicant health details or <code>null</code>
+     */
+    @GetMapping("/health/{uin}")
+    public ResponseEntity<WsResponse<?>> findOrganizerApplicantHealthDetails(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find applicant health details by uin and ritual id");
+        ApplicantRitualPackageVo applicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(uin));
+        Optional<ApplicantHealthLiteDto> applicantHealth = applicantHealthLiteService.findApplicantHealthDetailsByUinAndApplicantPackageId(uin, applicantPackage.getApplicantPackageId());
+        if (applicantHealth.isPresent()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantHealth).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(uin).build()).build());
+        }
+    }
+
+    /**
+     * finds an applicant group leaders by his UIN and SEASON ID
+     * to be used by applicant portal
+     *
+     * @param uin      the applicant's group leaders details by  uin
+     * @return the company staff list
+     */
+    @GetMapping("/find/group-leader/{uin}")
+    public ResponseEntity<WsResponse<?>> findOrganizerApplicantGroupLeader(@PathVariable String uin) {
+        log.debug("Handler for {}", "Find company employee by uin and season ");
+        ApplicantRitualPackageVo applicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(uin));
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, applicantPackage.getCompanyRitualSeasonId())).build());
+    }
+
+    // End Organizer applicant main data, details, health and group leader
 
     /**
      * finds an applicant card details by his UIN

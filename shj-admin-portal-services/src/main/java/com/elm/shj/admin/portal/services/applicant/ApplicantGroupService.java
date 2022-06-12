@@ -61,8 +61,15 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
 
     private GroupNameLookupDto mapGroupName(ApplicantGroupDto applicantGroupDto){
         GroupNameLookupDto groupNameLookup = GroupNameLookupDto.builder()
-                                            .code(applicantGroupDto.getReferenceNumber().indexOf("_") != -1 ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber())
-                                            .label(applicantGroupDto.getGroupName()).build();
+                .code(applicantGroupDto.getReferenceNumber().indexOf("_") != -1 ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber())
+                .label(applicantGroupDto.getGroupName()).build();
         return groupNameLookup;
+    }
+
+    public String findGroupNumber(String uin) {
+        log.info("Start findGroupNumber uin:{}", uin);
+        String groupNumber = applicantGroupRepository.findReferenceNumberByUin(uin);
+        groupNumber = groupNumber.indexOf("_") != -1 ? groupNumber.substring(0, groupNumber.indexOf("_")) : groupNumber;
+        return groupNumber;
     }
 }
