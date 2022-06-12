@@ -363,13 +363,13 @@ public class BadgeService {
 
         FontMetrics fm = g2d.getFontMetrics(font);
 
-        int xDif = ((BADGE_WIDTH - fm.stringWidth(fullNameAr)) / 2);
-        int yDif = PHOTO_MAX_HEIGHT + fm.getAscent() + (int)Math.round(0.85*96) - 8;
+        int xDif = ((BADGE_WIDTH - fm.stringWidth(fullNameAr + "")) / 2);
+        int yDif = PHOTO_MAX_HEIGHT + fm.getAscent() + (int) Math.round(0.85 * 96) - 8;
 
         TextLayout layout = new TextLayout(fullNameAr, font, frc);
         layout.draw(g2d, xDif, yDif);
 
-        xDif = ((BADGE_WIDTH - fm.stringWidth(fullNameEn)) / 2);
+        xDif = ((BADGE_WIDTH - fm.stringWidth(fullNameEn + "")) / 2);
         yDif += 44;
         layout = new TextLayout(fullNameEn, font, frc);
         layout.draw(g2d, xDif, yDif);
@@ -384,12 +384,12 @@ public class BadgeService {
 
         yDif += 30;
         // xDif += 95;
-        xDif = ((BADGE_WIDTH - fm.stringWidth(nationalityAr)) / 2);
+        xDif = ((BADGE_WIDTH - fm.stringWidth(nationalityAr + "")) / 2);
 
         layout = new TextLayout(nationalityAr, font, frc);
         layout.draw(g2d, xDif, yDif);
 
-        xDif = ((BADGE_WIDTH - fm.stringWidth(nationalityEn)) / 2);
+        xDif = ((BADGE_WIDTH - fm.stringWidth(nationalityEn + "")) / 2);
         yDif += 36;
         layout = new TextLayout(nationalityEn, font, frc);
         layout.draw(g2d, xDif, yDif);
