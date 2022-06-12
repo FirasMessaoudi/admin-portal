@@ -1,6 +1,8 @@
 package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +15,8 @@ public interface ApplicantGroupRepository extends JpaRepository<JpaApplicantGrou
     Optional<JpaApplicantGroup> findByReferenceNumber(String referenceNumber);
 
     Optional<JpaApplicantGroup> getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(String referenceNumber, long companyRitualSeasonId);
+
+    Page<JpaApplicantGroup> findByCompanyRitualSeasonCompanyCode(String companyCode, Pageable pageable);
 
     List<JpaApplicantGroup> findByCompanyRitualSeasonCompanyCode(String companyCode);
 
