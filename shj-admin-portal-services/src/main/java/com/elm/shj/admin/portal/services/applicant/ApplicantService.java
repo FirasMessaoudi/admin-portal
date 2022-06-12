@@ -371,10 +371,17 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
 
         if(applicantSearchCriteriaDto.getGroupNumber() != null && !applicantSearchCriteriaDto.getGroupNumber().equals("")){
             applicantSearchCriteriaDto.setGroupNumber(applicantSearchCriteriaDto.getGroupNumber() + "_" + String.valueOf(companyRefCode));
+            List<ApplicantDto> applicantDtos = mapList(applicantRepository.findOrganizerApplicantsWithGroupNumberFilter(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
+                    applicantSearchCriteriaDto.getPassportNumber(), applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
+                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode));
+            return applicantDtos;
+        } else {
+            List<ApplicantDto> applicantDtos = mapList(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getPassportNumber(),
+                    applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
+                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode));
+            return applicantDtos;
         }
-        List<ApplicantDto> applicantDtos = mapList(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
-                                            applicantSearchCriteriaDto.getPassportNumber(), applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
-                applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode));
-        return applicantDtos;
+
+
     }
 }

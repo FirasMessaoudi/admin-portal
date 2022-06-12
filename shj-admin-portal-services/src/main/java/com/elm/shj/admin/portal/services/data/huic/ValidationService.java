@@ -729,6 +729,64 @@ public class ValidationService {
         }
     }
 
+    public void saveStaffFullRitual(CompanyStaffRitualDto companyStaffRitual) {
+        CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(companyStaffRitual.getIdNumber(), companyStaffRitual.getPassportNumber(), companyStaffRitual.getDateOfBirthGregorian(), companyStaffRitual.getDateOfBirthHijri());
+        CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
+        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
+        //existingStaff.setCompanyRitualSeason(companyRitualSeasonDto);
+        if (companyStaffDigitalId != null) {
+            // if he has a digital id for that same season
+            List<CompanyStaffCardDto> companyStaffCardDtos = companyStaffCardService.findByDigitalId(companyStaffDigitalId.getSuin());
+            // if no cards for digitalId and SEASON
+            if (companyStaffCardDtos.isEmpty()) {
+                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
+                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                companyStaffCardService.save(companyStaffCardDto);
+                return;
+
+            }
+
+            //find staff cards for different company or different ritual
+            List<CompanyStaffCardDto> companyStaffCards2 = companyStaffCardService.findByDigitalIdAndDifferentCompanyOrRitual(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+            if (CollectionUtils.isNotEmpty(companyStaffCards2)) {
+                companyStaffCards2.forEach(c -> {
+                    c.setStatusCode(ECardStatus.EXPIRED.name());
+                });
+                companyStaffCardService.saveAll(companyStaffCards2);
+                return;
+            }
+
+            // find staff cards for same company and same ritual
+            List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+            if (companyStaffCards.isEmpty()) {
+                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
+                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                companyStaffCardService.save(companyStaffCardDto);
+                return;
+            }
+
+
+        } else {
+            // create new digital id for that staff in case he has no digital id for that same season
+            CompanyStaffDigitalIdDto staffDigitalId = new CompanyStaffDigitalIdDto();
+            staffDigitalId.setCompanyStaff(existingStaff);
+            staffDigitalId.setSeasonYear(companyStaffRitual.getSeason());
+            staffDigitalId.setSuin(companyStaffDigitalIdService.generate(existingStaff, companyStaffRitual.getSeason()));
+            staffDigitalId.setStatusCode(EStaffDigitalIdStatus.VALID.name());
+            CompanyStaffDigitalIdDto savedDigitalId = companyStaffDigitalIdService.save(staffDigitalId);
+            CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+            companyStaffCardDto.setCompanyStaffDigitalId(savedDigitalId);
+            companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+            companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+            companyStaffCardService.save(companyStaffCardDto);
+
+        }
+    }
+
     public static Date toGregorian(Long hijriDate) {
         String hijriDateString = String.valueOf(hijriDate);
         LocalDate muslimDate = LocalDate.of(Integer.valueOf(hijriDateString.substring(0, 4)), Integer.valueOf(hijriDateString.substring(5, 6)), Integer.valueOf(hijriDateString.substring(7, 8)));
