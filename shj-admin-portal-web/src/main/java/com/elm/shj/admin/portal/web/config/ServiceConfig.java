@@ -33,7 +33,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableTransactionManagement
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @ComponentScan(basePackages = {"com.elm.shj.admin.portal.services", "com.elm.dcc.foundation.commons.core.mapper"})
-@EnableSchedulerLock(defaultLockAtMostFor = "180s")
+@EnableSchedulerLock(defaultLockAtMostFor = "2h")
 public class ServiceConfig {
 
     @Value("${spring.jpa.default_schema}")

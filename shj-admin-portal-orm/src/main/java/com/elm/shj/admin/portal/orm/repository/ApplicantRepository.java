@@ -174,9 +174,24 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
             "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
-    List<JpaApplicant> findOrganizerApplicants(@Param("idNumber") String idNumber,  @Param("groupNumber") String groupNumber,
+    List<JpaApplicant> findOrganizerApplicantsWithGroupNumberFilter(@Param("idNumber") String idNumber,  @Param("groupNumber") String groupNumber,
                                         @Param("passportNumber") String passportNumber,  @Param("applicantName") String applicantName,
                                         @Param("gender") String gender, @Param("uin") String uin, @Param("companyCode") String companyCode,
                                           @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                           @Param("serviceGroupRefCode") long serviceGroupRefCode);
+
+    @Query("select a FROM JpaApplicant a JOIN a.digitalIds di where " +
+            "(:idNumber is null OR a.idNumber = :idNumber) and "+
+            "(:passportNumber is null OR a.passportNumber = :passportNumber) and " +
+            "(:gender is null OR a.gender = :gender) and " +
+            "((:applicantName is null OR a.fullNameEn like '%'+:applicantName+'%' OR a.fullNameAr like '%'+:applicantName+'%')) and " +
+            "(:uin is null OR di.uin = :uin) and " +
+            "(:companyCode is null or a.companyCode = :companyCode) and " +
+            "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
+            "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
+            "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
+    List<JpaApplicant> findOrganizerApplicants(@Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber,  @Param("applicantName") String applicantName,
+                                                                    @Param("gender") String gender, @Param("uin") String uin, @Param("companyCode") String companyCode,
+                                                                    @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
+                                                                    @Param("serviceGroupRefCode") long serviceGroupRefCode);
 }
