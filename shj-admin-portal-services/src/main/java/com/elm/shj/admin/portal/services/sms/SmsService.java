@@ -24,6 +24,7 @@ import reactor.netty.http.client.HttpClient;
 
 import javax.net.ssl.SSLException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 /**
  * Service handling otp operations
@@ -71,6 +72,9 @@ public class SmsService {
                 .retrieve()
                 .bodyToMono(SmsResponseDto.class)
                 .doOnSuccess(smsResponse -> smsSent.set(true))
+                .doOnError(throwable -> {
+                    log.error("OTP sms could not sent", throwable);
+                })
                 .block();
         return smsSent.get();
     }
