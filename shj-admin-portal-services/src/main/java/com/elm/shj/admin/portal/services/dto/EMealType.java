@@ -19,7 +19,8 @@ public enum EMealType {
     FULL_BOARD(1),
     BREAKFAST_DINNER(2),
     BREAKFAST_LUNCH(3),
-    ONLY_BREAKFAST(4);
+    ONLY_BREAKFAST(4),
+    OTHERS(5);
 
     private final int id;
 

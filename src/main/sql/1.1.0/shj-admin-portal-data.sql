@@ -3267,13 +3267,37 @@ INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('382','en','MONT
 INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('9999','ar',N'البهرة');
 INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('9999','en','Bohrah');
 
-INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('211','ar',N'جنوب السودان');
-INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('211','en','South Sudan');
+INSERT INTO shc_portal.shc_country_lk (code, lang, Label)
+VALUES ('211', 'ar', N'جنوب السودان');
+INSERT INTO shc_portal.shc_country_lk (code, lang, Label)
+VALUES ('211', 'en', 'South Sudan');
 
-INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('9998','ar',N'غير محدد الجنسية');
-INSERT INTO shc_portal.shc_country_lk (code,lang,Label) VALUES ('9998','en','unspecific Nationality');
-SET IDENTITY_INSERT shc_portal.shc_country_lk OFF;
+INSERT INTO shc_portal.shc_country_lk (code, lang, Label)
+VALUES ('9998', 'ar', N'غير محدد الجنسية');
+INSERT INTO shc_portal.shc_country_lk (code, lang, Label)
+VALUES ('9998', 'en', 'unspecific Nationality');
+SET
+IDENTITY_INSERT shc_portal.shc_country_lk OFF;
 GO
 
-UPDATE shc_portal.shc_company SET contact_number = '920009498' WHERE code = '8_ESTABLISHMENT';
+UPDATE shc_portal.shc_company
+SET contact_number = '920009498'
+WHERE code = '8_ESTABLISHMENT';
+GO
+SET IDENTITY_INSERT shc_portal.shc_meal_time_type_lk ON;
+INSERT INTO shc_portal.shc_meal_time_type_lk (id, code, lang, label)
+VALUES (7, 'OTHERS', 'ar', N'أخرى ');
+INSERT INTO shc_portal.shc_meal_time_type_lk (id, code, lang, label)
+VALUES (8, 'OTHERS', 'en', 'Others');
+SET
+IDENTITY_INSERT shc_portal.shc_meal_time_type_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_meal_type_lk ON;
+INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
+VALUES (9, 'OTHERS', 'ar', N'أخرى');
+INSERT INTO shc_portal.shc_meal_type_lk (id, code, lang, label)
+VALUES (10, 'OTHERS', 'en', 'Others');
+SET
+IDENTITY_INSERT shc_portal.shc_meal_type_lk OFF;
 GO

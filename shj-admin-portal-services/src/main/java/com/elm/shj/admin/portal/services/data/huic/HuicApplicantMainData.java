@@ -19,6 +19,8 @@ import java.util.Date;
 @UniqueApplicant
 @FieldDependency.List({
         @FieldDependency(first = "idNumber", second = "passportNo"),
+        @FieldDependency(first = "dateOfBirth", second = "dateOfBirthHijri"),
+
 })
 @NoArgsConstructor
 @AllArgsConstructor

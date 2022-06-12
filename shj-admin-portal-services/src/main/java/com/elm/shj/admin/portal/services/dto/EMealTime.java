@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 public enum EMealTime {
     BREAKFAST(1),
     LUNCH(2),
-    DINNER(3);
+    DINNER(3),
+    OTHERS(4);
 
     private final int id;
 
