@@ -43,6 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1208,9 +1209,9 @@ public class IntegrationWsController {
     }
 
     @PostMapping("/staff/list")
-    public ResponseEntity<WsResponse<?>> searchStaff(@RequestBody CompanyStaffFilterDto companyStaffFilterDto) {
+    public ResponseEntity<WsResponse<?>> searchStaff(@RequestBody CompanyStaffFilterDto companyStaffFilterDto, Pageable pageable) {
         log.info("find employees by code and type code");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.searchStaff(companyStaffFilterDto)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.searchStaff(companyStaffFilterDto, pageable)).build());
 
     }
 
@@ -1267,10 +1268,10 @@ public class IntegrationWsController {
     }
 
     @PostMapping("/applicants/list/{companyRefCode}/{companyTypeCode}")
-    public ResponseEntity<WsResponse<?>> findOrganizerApplicants(@RequestBody ApplicantSearchCriteriaDto applicantSearchCriteriaDto, @PathVariable Long companyRefCode, @PathVariable String companyTypeCode) {
+    public ResponseEntity<WsResponse<?>> findOrganizerApplicants(@RequestBody ApplicantSearchCriteriaDto applicantSearchCriteriaDto, @PathVariable Long companyRefCode, @PathVariable String companyTypeCode, Pageable pageable) {
         log.info("find employees by code and type code");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(applicantService.findOrganizerApplicants(applicantSearchCriteriaDto, companyRefCode, companyTypeCode)).build());
+                .body(applicantService.findOrganizerApplicants(applicantSearchCriteriaDto, companyRefCode, companyTypeCode, pageable)).build());
     }
 
     @GetMapping("/group/list/{companyRefCode}/{companyTypeCode}")
@@ -1286,5 +1287,17 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(applicantGroupService.findGroupsNameLookupByCompanyCode(companyRefCode + "_" + companyTypeCode)).build());
     }
+
+    /*@GetMapping("/applicant/group/export/{companyRefCode}/{companyTypeCode}")
+    public ResponseEntity<Resource> exportApplicantGroupTemplate(@PathVariable Long companyRefCode, @PathVariable String companyTypeCode) throws IOException {
+        log.info("find applicant groups by company");
+        Resource file = applicantService.exportApplicantGroupTemplate(companyRefCode, companyTypeCode);
+        if (file.exists()) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                    .body(file);
+        }
+        return null;
+    }*/
 
 }

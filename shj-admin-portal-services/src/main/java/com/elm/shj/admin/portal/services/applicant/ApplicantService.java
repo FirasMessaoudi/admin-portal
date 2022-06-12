@@ -13,7 +13,11 @@ import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.criteria.*;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -348,7 +353,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return numberOfAffectedRows;
     }
 
-    public List<ApplicantDto> findOrganizerApplicants(ApplicantSearchCriteriaDto applicantSearchCriteriaDto, Long companyRefCode, String companyTypeCode) {
+    public Page<ApplicantDto> findOrganizerApplicants(ApplicantSearchCriteriaDto applicantSearchCriteriaDto, Long companyRefCode, String companyTypeCode, Pageable pageable) {
         log.info("Company Ref code ...{}", companyRefCode);
         log.info("Company type code ...{}", companyTypeCode);
 
@@ -371,17 +376,47 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
 
         if(applicantSearchCriteriaDto.getGroupNumber() != null && !applicantSearchCriteriaDto.getGroupNumber().equals("")){
             applicantSearchCriteriaDto.setGroupNumber(applicantSearchCriteriaDto.getGroupNumber() + "_" + String.valueOf(companyRefCode));
-            List<ApplicantDto> applicantDtos = mapList(applicantRepository.findOrganizerApplicantsWithGroupNumberFilter(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
+            Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findOrganizerApplicantsWithGroupNumberFilter(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
                     applicantSearchCriteriaDto.getPassportNumber(), applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
-                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode));
+                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable));
             return applicantDtos;
         } else {
-            List<ApplicantDto> applicantDtos = mapList(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getPassportNumber(),
+            Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getPassportNumber(),
                     applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
-                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode));
+                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable));
             return applicantDtos;
         }
-
-
     }
+
+    /*public Resource exportApplicantGroupTemplate(Long companyRefCode, String companyTypeCode) throws IOException {
+        Resource resource = new ClassPathResource("/templates/excel/" + 13 + "/" + "");
+        XSSFWorkbook workbook = new XSSFWorkbook(resource.getInputStream());
+        // read first sheet
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        // read first row
+        int headerRowNum = sheet.getFirstRowNum();
+
+        Long establishmentRefCode = -1L;
+        Long missionRefCode = -1L;
+        Long serviceGroupRefCode = -1L;
+        String companyCode = null;
+
+        if(companyTypeCode.equals(EOrganizerTypes.ESTABLISHMENT.name())){
+            establishmentRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.MISSION.name())){
+            missionRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
+            serviceGroupRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name())){
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        }
+        List<ApplicantDto> applicantDtos = mapList(applicantRepository.findOrganizerApplicantsForExport(companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode));
+        applicantDtos.stream().forEach(applicant -> {
+
+        });
+
+        return  null;
+    }*/
 }

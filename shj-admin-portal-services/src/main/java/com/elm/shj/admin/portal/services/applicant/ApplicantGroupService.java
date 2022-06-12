@@ -69,6 +69,7 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
     public String findGroupNumber(String uin) {
         log.info("Start findGroupNumber uin:{}", uin);
         String groupNumber = applicantGroupRepository.findReferenceNumberByUin(uin);
+        if(groupNumber == null || groupNumber.equals("")) return "";
         groupNumber = groupNumber.indexOf("_") != -1 ? groupNumber.substring(0, groupNumber.indexOf("_")) : groupNumber;
         return groupNumber;
     }

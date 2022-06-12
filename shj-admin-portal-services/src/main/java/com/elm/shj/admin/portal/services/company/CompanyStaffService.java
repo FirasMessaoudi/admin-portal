@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -182,13 +183,13 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
     @Transactional
-    public List<CompanyStaffLiteDto> searchStaff(CompanyStaffFilterDto companyStaffFilterDto) {
+    public Page<CompanyStaffLiteDto> searchStaff(CompanyStaffFilterDto companyStaffFilterDto, Pageable pageable) {
 
-        List<JpaCompanyStaff> companyStaffs = companyStaffRepository.findAll(withStaffFilter(companyStaffFilterDto));
+        Page<JpaCompanyStaff> companyStaffs = companyStaffRepository.findAll(withStaffFilter(companyStaffFilterDto), pageable);
         List<CompanyStaffLiteDto> companyStaffList = new ArrayList<>();
 
-        if (companyStaffs != null && !companyStaffs.isEmpty()) {
-            companyStaffs.forEach(companyStaff -> {
+        if (companyStaffs.getContent() != null && !companyStaffs.getContent().isEmpty()) {
+            companyStaffs.getContent().forEach(companyStaff -> {
                 CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
                         .id(companyStaff.getId())
                         .suin(companyStaff.getDigitalIds().isEmpty() ? "" : companyStaff.getDigitalIds().get(0).getSuin())
@@ -210,7 +211,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             });
 
         }
-        return companyStaffList;
+        Page<CompanyStaffLiteDto> companyStaff = new PageImpl<>(companyStaffList);
+        return companyStaff;
     }
 
     private Specification<JpaCompanyStaff> withStaffFilter(final CompanyStaffFilterDto criteria) {
