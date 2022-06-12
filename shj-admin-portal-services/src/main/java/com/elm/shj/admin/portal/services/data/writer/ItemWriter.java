@@ -100,6 +100,8 @@ public class ItemWriter {
         repositoryRegistry.put(EDataSegment.STAFF_MAIN_DATA, CompanyStaffRepository.class);
         repositoryRegistry.put(EDataSegment.STAFF_FULL_MAIN_DATA, CompanyStaffRepository.class);
         repositoryRegistry.put(EDataSegment.MAIN_GROUP_DATA, ApplicantGroupRepository.class);
+        repositoryRegistry.put(EDataSegment.GROUP_DATA, GroupApplicantListRepository.class);
+
         // mapper registry initialization
         mapperRegistry.put(EDataSegment.APPLICANT_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_RELATIVES_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantRelativeDto.class)));
@@ -110,6 +112,7 @@ public class ItemWriter {
         mapperRegistry.put(EDataSegment.STAFF_MAIN_DATA, Objects.requireNonNull(validationService.findMapper(CompanyStaffDto.class)));
         mapperRegistry.put(EDataSegment.STAFF_FULL_MAIN_DATA, Objects.requireNonNull(validationService.findMapper(CompanyStaffDto.class)));
         mapperRegistry.put(EDataSegment.MAIN_GROUP_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantGroupDto.class)));
+        mapperRegistry.put(EDataSegment.GROUP_DATA, Objects.requireNonNull(validationService.findMapper(GroupApplicantListDto.class)));
 
     }
 
@@ -265,6 +268,69 @@ public class ItemWriter {
             //Temporary for testing only : staff ritual
             items.forEach(entry -> updateCompanyStaffRitualData(entry.getValue()));
             return Collections.emptyList();
+        }
+
+        if (dataSegment.getId() == EDataSegment.GROUP_DATA.getId()) {
+            List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
+            List<S> savedItems = new ArrayList<>();
+            JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
+            List<DataValidationResult> dataValidationResults = new ArrayList<>();
+            items.forEach(entry -> {
+                S savedItem;
+                GroupDataDto groupDataDto = (GroupDataDto) entry.getValue();
+                CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], groupDataDto.getRitualTypeCode(), seasonYear);
+                if (companyRitualSeasonDto == null) {
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(3)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
+                    return;
+                }
+                String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
+                ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupDataDto.getGroupReferenceNumber() + "_" + companyCode, companyRitualSeasonDto.getId());
+                if (applicantGroupDto == null) {
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(3)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
+                    return;
+                }
+                ApplicantLiteDto applicantLiteDto = applicantLiteService.findByBasicInfo(groupDataDto.getIdNumber(), groupDataDto.getPassportNumber(), groupDataDto.getNationality());
+                GroupApplicantListDto groupApplicantListDto = GroupApplicantListDto.builder()
+                        .applicantGroup(applicantGroupDto)
+                        .applicantUin(applicantLiteDto.getDigitalIds().get(0).getUin())
+                        .build();
+                savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(groupApplicantListDto, mappingContext));
+                savedItems.add(savedItem);
+                try {
+                    dataRequestRecords.add(DataRequestRecordDto.builder()
+                            .createDataRequestId(dataRequestId)
+                            .lastUpdateDataRequestId(dataRequestId)
+                            .createDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .itemId(Long.parseLong(BeanUtils.getProperty(savedItem, "id")))
+                            .build());
+                } catch (Exception e) {
+                    ReflectionUtils.handleReflectionException(e);
+                }
+                List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(validationService.findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+                // update all items with record ids
+                savedItems.forEach(s -> {
+                    savedRecords.stream().filter(r -> {
+                        try {
+                            return StringUtils.equals(BeanUtils.getProperty(r, "itemId"), BeanUtils.getProperty(s, "id"));
+                        } catch (Exception e) {
+                            ReflectionUtils.handleReflectionException(e);
+                            return false;
+                        }
+                    }).forEach(r -> {
+                        try {
+                            BeanUtils.setProperty(s, "dataRequestRecordId", BeanUtils.getProperty(r, "id"));
+                        } catch (Exception e) {
+                            ReflectionUtils.handleReflectionException(e);
+                        }
+                    });
+                });
+
+
+            });
+            // update saved items
+            repository.saveAll(savedItems);
+            return dataValidationResults;
         }
 
         if (dataSegment.getId() == EDataSegment.MAIN_GROUP_DATA.getId()) {

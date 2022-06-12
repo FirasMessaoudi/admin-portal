@@ -9,6 +9,7 @@ import com.elm.shj.admin.portal.services.data.huic.HuicApplicantRelative;
 import com.elm.shj.admin.portal.services.data.huic.HuicApplicantRitual;
 import com.elm.shj.admin.portal.services.data.huic.HuicArrivalData;
 import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
+import com.elm.shj.admin.portal.services.dto.GroupDataDto;
 import com.elm.shj.admin.portal.services.dto.StaffApplicantGroupDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,12 @@ public class WithApplicantValidator implements ConstraintValidator<WithApplicant
             applicantBasicInfoDto.setDateOfBirthHijri(staffApplicantGroupDto.getDateOfBirthHijri());
             return applicantService.existsByBasicInfo(applicantBasicInfoDto);
         } else {
+            if (value.getClass().isAssignableFrom(GroupDataDto.class)) {
+                if (((GroupDataDto) value).getNationality() == null) {
+                    return false;
+                }
+                return applicantLiteService.existsByBasicInfo(((GroupDataDto) value).getIdNumber(), ((GroupDataDto) value).getPassportNumber(), ((GroupDataDto) value).getNationality());
+            }
             if (value.getClass().isAssignableFrom(HuicApplicantRitual.class)) {
                 if (((HuicApplicantRitual) value).getNationality() == null) {
                     return false;

@@ -18,7 +18,8 @@ public enum EExcelItemReaderErrorType {
     DUPLICATE_VALUE("validation.data.constraints.msg.30001"),
     NOT_SAME_VALUE("validation.data.constraints.msg.30004"),
     NOT_GROUP_WITH_DIFFERENT_LEADERS("validation.data.constraints.msg.30005"),
-    NOT_RITUAL_TYPE_FOUND("validation.data.constraints.msg.30019");
+    NOT_RITUAL_TYPE_FOUND("validation.data.constraints.msg.30019"),
+    NOT_APPLICANT_GROUP_FOUND("validation.data.constraints.msg.30021");
 
     String message;
 
