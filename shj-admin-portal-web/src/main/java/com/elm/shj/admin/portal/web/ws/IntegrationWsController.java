@@ -46,7 +46,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * Controller for exposing web services for external party.
@@ -158,44 +157,6 @@ public class IntegrationWsController {
         jwtTokenService.attachTokenCookie(response, authentication);
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(authentication.getToken()).build());
-    }
-
-    /**
-     * OTP request
-     *
-     * @param params
-     * @return generated OTP
-     */
-    @PostMapping("/otp")
-    public ResponseEntity<WsResponse<?>> generateOtp(@RequestBody Map<String, String> params, HttpServletRequest request) {
-        log.debug("Otp Webservice request handler");
-
-        String callerType = request.getHeader(JwtTokenService.CALLER_TYPE_HEADER_NAME);
-        if (callerType == null || !callerType.equals(JwtTokenService.WEB_SERVICE_CALLER_TYPE)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body("Access denied").build());
-        }
-
-        try {
-            String countryCode = params.get("countryCode");
-            String mobileNumber = params.get("mobileNumber");
-            String idNumber = params.get("idNumber");
-            String uinNumber = params.get("uinNumber");
-            String principal = Stream
-                    .of(countryCode,mobileNumber,idNumber,uinNumber)
-                    .filter(Objects::nonNull)
-                    .filter(s->!s.isEmpty())
-                    .filter(s -> !s.isBlank())
-                    .findAny()
-                    .orElseThrow(()-> new IllegalArgumentException("Not a valid param"));
-
-            String otp = otpService.createOtp(principal,countryCode,mobileNumber);
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(otp).build());
-
-        } catch (RecaptchaException rex) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                    WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body("Multiple failed login attempts").build());
-        }
     }
 
     /**
