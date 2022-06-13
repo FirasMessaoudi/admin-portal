@@ -40,7 +40,7 @@ public class SmsService {
     @Value("${sms.api.url}")
     private String smsApiUrl;
 
-    public boolean sendMessage(String countryCode, String recipientNumber, String body, String comments) throws SSLException {
+    public boolean sendMessage(Integer countryCode, String recipientNumber, String body, String comments) throws SSLException {
         SmsRequestDto smsRequest = SmsRequestDto
                 .builder()
                 .countryCode(countryCode)
@@ -57,7 +57,7 @@ public class SmsService {
                 .build();
         HttpClient httpClient = HttpClient.create().secure(t -> t.sslContext(sslContext));
 
-        return !WebClient
+        SmsResponseDto smsResponse = WebClient
                 .builder()
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .defaultHeader(HttpHeaders.AUTHORIZATION, String.format("Bearer %s",smsApiToken))
@@ -67,6 +67,12 @@ public class SmsService {
                 .body(BodyInserters.fromValue(huicSmsRequest))
                 .retrieve()
                 .bodyToMono(SmsResponseDto.class)
-                .block().getHasErrors();
+                .block();
+        if(smsResponse.getHasErrors()) {
+            log.info("OTP sending has some error");
+        } else {
+            log.info("OTP sent successfully");
+        }
+        return !smsResponse.getHasErrors();
     }
 }

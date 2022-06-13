@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SmsRequestDto {
 
-    private String countryCode;
+    private Integer countryCode;
     private String receiverNumber;
     private String body;
     private String comment;
