@@ -57,6 +57,7 @@ public class SmsService {
                 .build();
         HttpClient httpClient = HttpClient.create().secure(t -> t.sslContext(sslContext));
 
+        log.info("Sms request {}", smsRequest);
         SmsResponseDto smsResponse = WebClient
                 .builder()
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
