@@ -54,6 +54,8 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     private final NationalityLookupRepository nationalityLookupRepository;
     private final RitualTypeLookupRepository ritualTypeLookupRepository;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
+    private final Integer GROUP_DATA_SEGMENT_NUMBER = 13;
+    private final String GROUP_DATA_FILE_NAME = "group-data.xlsx";
 
 
     /**
@@ -395,7 +397,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     }
 
     public Resource exportApplicantGroupTemplate(Long companyRefCode, String companyTypeCode) throws Exception {
-        Resource resource = new ClassPathResource("/templates/excel/" + 13 + "/" + "group-data.xlsx");
+        Resource resource = new ClassPathResource("/templates/excel/" + GROUP_DATA_SEGMENT_NUMBER + "/" + GROUP_DATA_FILE_NAME);
         XSSFWorkbook workbook = new XSSFWorkbook(resource.getInputStream());
         // read first sheet
         XSSFSheet sheet = workbook.getSheetAt(0);
@@ -456,7 +458,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
          outputStream = new ByteArrayOutputStream();
         workbook.write(outputStream);
         workbook.close();
-        return new ByteArrayResource(outputStream.toByteArray(), "group-data.xlsx");
+        return new ByteArrayResource(outputStream.toByteArray(), GROUP_DATA_FILE_NAME);
         } catch (Exception e) {
             log.error("Download file failure. TargetPath: {}", e);
             throw new Exception("Download File failure");
