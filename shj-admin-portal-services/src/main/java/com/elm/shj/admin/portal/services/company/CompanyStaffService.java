@@ -54,6 +54,59 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .dateOfBirthGregorian(companyStaff.getDateOfBirthGregorian())
                     .dateOfBirthHijri(companyStaff.getDateOfBirthHijri())
                     .gender(companyStaff.getGender())
+                    .idNumber(companyStaff.getIdNumber())
+                    .passportNumber(companyStaff.getPassportNumber())
+                    .digitalIds(companyStaff.getDigitalIds())
+                    .build();
+            return Optional.of(companyStaffLite);
+        } else return Optional.empty();
+    }
+
+    public Optional<CompanyStaffLiteDto> findByPassportNumber(String passportNumber, String nationalityCode) {
+        CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findByPassportAndNationalityCode(passportNumber, nationalityCode, EDigitalIdStatus.VALID.name()), mappingContext);
+        if (companyStaff != null) {
+            CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
+                    .id(companyStaff.getId())
+                    .suin(companyStaff.getDigitalIds().get(0).getSuin())
+                    .fullNameAr(companyStaff.getFullNameAr())
+                    .fullNameEn(companyStaff.getFullNameEn())
+                    .countryCode(companyStaff.getCountryCode())
+                    .mobileNumber(companyStaff.getMobileNumber())
+                    .email(companyStaff.getEmail())
+                    .nationalityCode(companyStaff.getNationalityCode())
+                    .photo(companyStaff.getPhoto())
+                    .titleCode(companyStaff.getTitleCode())
+                    .dateOfBirthGregorian(companyStaff.getDateOfBirthGregorian())
+                    .dateOfBirthHijri(companyStaff.getDateOfBirthHijri())
+                    .gender(companyStaff.getGender())
+                    .idNumber(companyStaff.getIdNumber())
+                    .passportNumber(companyStaff.getPassportNumber())
+                    .digitalIds(companyStaff.getDigitalIds())
+                    .build();
+            return Optional.of(companyStaffLite);
+        } else return Optional.empty();
+    }
+
+    public Optional<CompanyStaffLiteDto> findByIdNumber(String idNumber) {
+        CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findByIdNumber(idNumber, EDigitalIdStatus.VALID.name()), mappingContext);
+        if (companyStaff != null) {
+            CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
+                    .id(companyStaff.getId())
+                    .suin(companyStaff.getDigitalIds().get(0).getSuin())
+                    .fullNameAr(companyStaff.getFullNameAr())
+                    .fullNameEn(companyStaff.getFullNameEn())
+                    .countryCode(companyStaff.getCountryCode())
+                    .mobileNumber(companyStaff.getMobileNumber())
+                    .email(companyStaff.getEmail())
+                    .nationalityCode(companyStaff.getNationalityCode())
+                    .photo(companyStaff.getPhoto())
+                    .titleCode(companyStaff.getTitleCode())
+                    .dateOfBirthGregorian(companyStaff.getDateOfBirthGregorian())
+                    .dateOfBirthHijri(companyStaff.getDateOfBirthHijri())
+                    .gender(companyStaff.getGender())
+                    .idNumber(companyStaff.getIdNumber())
+                    .passportNumber(companyStaff.getPassportNumber())
+                    .digitalIds(companyStaff.getDigitalIds())
                     .build();
             return Optional.of(companyStaffLite);
         } else return Optional.empty();
