@@ -195,4 +195,19 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
                                                                     @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                                                     @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
 
+    @Query("select a FROM JpaApplicant a where " +
+            "(:companyCode is null or a.companyCode = :companyCode) and " +
+            "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
+            "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
+            "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
+    List<JpaApplicant> findOrganizerApplicantsForExport(@Param("companyCode") String companyCode,
+                                                        @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
+                                                        @Param("serviceGroupRefCode") long serviceGroupRefCode);
+
+
+    @Query("SELECT rs.ritualTypeCode FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
+            "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
+            "WHERE a.id = :applicantId ")
+    String findRitualTypeByApplicantId(@Param("applicantId") long applicantId);
+
 }
