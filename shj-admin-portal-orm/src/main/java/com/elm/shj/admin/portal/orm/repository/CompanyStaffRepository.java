@@ -84,6 +84,12 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     @Query("SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE sdi.suin = :suin AND sdi.statusCode=:statusCode")
     JpaCompanyStaff findBySuin(@Param("suin") String suin, @Param("statusCode") String statusCode);
 
+    @Query("SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE  s.passportNumber=:passportNumber AND s.nationalityCode =:nationality AND sdi.statusCode=:statusCode")
+    JpaCompanyStaff findByPassportAndNationalityCode(@Param("passportNumber") String passportNumber, @Param("nationality") String nationalityCode, @Param("statusCode") String statusCode);
+
+    @Query("SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE s.idNumber=:idNumber AND sdi.statusCode=:statusCode")
+    JpaCompanyStaff findByIdNumber(@Param("idNumber") String idNumber, @Param("statusCode") String statusCode);
+
     JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(String applicantUin, long companyRitualSeason, String titleCode);
 
     @Modifying
