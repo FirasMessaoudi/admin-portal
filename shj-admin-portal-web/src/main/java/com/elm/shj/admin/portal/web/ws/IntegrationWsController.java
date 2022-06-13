@@ -849,7 +849,15 @@ public class IntegrationWsController {
 
     @PostMapping("/verify-staff")
     public ResponseEntity<WsResponse<?>> verifyStaff(@RequestBody ValidateStaffCmd validateStaffCmd) {
-        Optional<CompanyStaffLiteDto> staff = companyStaffService.findBySuin(validateStaffCmd.getSuin());
+        log.info(validateStaffCmd.getIdentifier());
+        Optional<CompanyStaffLiteDto> staff = Optional.empty();
+        if (validateStaffCmd.getType().equals("suin"))
+            staff = companyStaffService.findBySuin(validateStaffCmd.getIdentifier());
+        if (validateStaffCmd.getType().equals("passport"))
+            staff = companyStaffService.findByPassportNumber(validateStaffCmd.getIdentifier(), validateStaffCmd.getNationalityCode());
+        if (validateStaffCmd.getType().equals("id"))
+            staff = companyStaffService.findByIdNumber(validateStaffCmd.getIdentifier());
+
         if (staff.isPresent()) {
             boolean dateOfBirthMatched;
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
@@ -862,7 +870,7 @@ public class IntegrationWsController {
                     dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
                 } catch (ParseException e) {
                     return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                            .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getSuin()).build()).build());
+                            .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getIdentifier()).build()).build());
                 }
 
             } else {
@@ -870,14 +878,14 @@ public class IntegrationWsController {
             }
             if (!dateOfBirthMatched) {
                 log.debug("unmatched data for {} suin and {} hijri date of birth and {} gregorian date of birth.",
-                        validateStaffCmd.getSuin(), validateStaffCmd.getDateOfBirthHijri(), validateStaffCmd.getDateOfBirthGregorian());
+                        validateStaffCmd.getIdentifier(), validateStaffCmd.getDateOfBirthHijri(), validateStaffCmd.getDateOfBirthGregorian());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                        .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getSuin()).build()).build());
+                        .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getIdentifier()).build()).build());
             }
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(staff).build());
         } else {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                    .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(validateStaffCmd.getSuin()).build()).build());
+                    .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(validateStaffCmd.getIdentifier()).build()).build());
         }
     }
 

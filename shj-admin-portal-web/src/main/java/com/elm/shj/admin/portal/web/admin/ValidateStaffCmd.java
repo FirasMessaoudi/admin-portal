@@ -21,7 +21,9 @@ public class ValidateStaffCmd implements Serializable {
 
     private static final long serialVersionUID = 6641483817347109390L;
 
-    private String suin;
+    private String type;
+    private String nationalityCode;
+    private String identifier;
 
     @Past
     private String dateOfBirthGregorian;

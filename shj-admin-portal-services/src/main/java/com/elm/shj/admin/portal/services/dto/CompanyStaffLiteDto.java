@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Dto class for the applicant company staff lite domain.
@@ -36,6 +37,7 @@ public class CompanyStaffLiteDto implements Serializable {
     private Date dateOfBirthGregorian;
     private Long dateOfBirthHijri;
     private String gender;
+    private List<CompanyStaffDigitalIdDto> digitalIds;
     private String passportNumber;
     private String idNumber;
 }
