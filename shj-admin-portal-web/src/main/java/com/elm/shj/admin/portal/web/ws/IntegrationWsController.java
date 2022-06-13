@@ -1248,16 +1248,21 @@ public class IntegrationWsController {
                 .body(applicantGroupService.findGroupsNameLookupByCompanyCode(companyRefCode + "_" + companyTypeCode)).build());
     }
 
-    /*@GetMapping("/applicant/group/export/{companyRefCode}/{companyTypeCode}")
-    public ResponseEntity<Resource> exportApplicantGroupTemplate(@PathVariable Long companyRefCode, @PathVariable String companyTypeCode) throws IOException {
+    @GetMapping("/applicant/group/export/{companyRefCode}/{companyTypeCode}")
+    public ResponseEntity<Resource> exportApplicantGroupTemplate(@PathVariable Long companyRefCode, @PathVariable String companyTypeCode) throws Exception {
         log.info("find applicant groups by company");
         Resource file = applicantService.exportApplicantGroupTemplate(companyRefCode, companyTypeCode);
-        if (file.exists()) {
+        if (file != null) {
+            String fileName = "file.xlsx";
+            if (Objects.requireNonNull(file.getDescription()).contains("[")) {
+                fileName = file.getDescription().split("\\[")[1].replaceAll("]", "");
+            }
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                     .body(file);
         }
         return null;
-    }*/
+    }
 
 }
