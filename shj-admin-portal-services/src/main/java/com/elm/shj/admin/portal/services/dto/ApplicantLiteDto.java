@@ -26,6 +26,7 @@ public class ApplicantLiteDto implements Serializable {
 
     private long id;
     private String nationalityCode;
+    private String countryPhonePrefix;
     private String idNumber;
     private String passportNumber;
     private String packageReferenceNumber;
