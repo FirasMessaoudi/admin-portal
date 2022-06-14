@@ -15,6 +15,7 @@ import java.util.List;
  * @since 1.1.0
  */
 @WithCompanyRitualSeason
+@UniquePackage
 @Getter
 @Setter
 @AllArgsConstructor
