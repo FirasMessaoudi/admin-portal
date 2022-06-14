@@ -93,8 +93,6 @@ public class CompanyStaffFullDataDto implements Serializable {
     @CellIndex(index = 13)
     private String titleCode;
 
-    @NullOrNotBlank(min = 1, max = 30)
-    @OnlyCharacters(min = 0, max = 150, arabic = true, allowEmpty=false)
     @CellIndex(index = 14)
     private String customJobTitle;
 
