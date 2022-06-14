@@ -385,7 +385,6 @@ public class IntegrationWsController {
     }
 
     // Start Organizer applicant main data, details, health and group leader
-
     /**
      * finds organizer an applicant by his UIN
      *
@@ -1274,6 +1273,7 @@ public class IntegrationWsController {
         }
         return null;
     }
+
 
     /**
      * @param uin
