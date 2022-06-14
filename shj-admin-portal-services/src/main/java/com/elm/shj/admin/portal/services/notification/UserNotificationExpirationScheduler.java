@@ -38,9 +38,9 @@ public class UserNotificationExpirationScheduler {
     @Value("${user.notification.expiration.batch.size}")
     private int userNotificationExpirationBatchSize;
 
-    @PostConstruct
-    @Scheduled(cron = "${scheduler.user.notification.expiration.cron}")
-    @SchedulerLock(name = "user-notification-expiration-task")
+//    @PostConstruct
+//    @Scheduled(cron = "${scheduler.user.notification.expiration.cron}")
+//    @SchedulerLock(name = "user-notification-expiration-task")
     void markUserNotificationsAsExpired() {
         int pageNum = 0;
         log.debug("mark User Notifications As Expired scheduler started ...");
