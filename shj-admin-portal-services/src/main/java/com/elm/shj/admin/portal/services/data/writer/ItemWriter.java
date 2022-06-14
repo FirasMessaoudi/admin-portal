@@ -280,16 +280,16 @@ public class ItemWriter {
                 GroupDataDto groupDataDto = (GroupDataDto) entry.getValue();
                 CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], groupDataDto.getRitualTypeCode(), seasonYear);
                 if (companyRitualSeasonDto == null) {
-                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(3)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(4)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
                     return;
                 }
                 String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
                 ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupDataDto.getGroupReferenceNumber() + "_" + companyCode, companyRitualSeasonDto.getId());
                 if (applicantGroupDto == null) {
-                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(3)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(4)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
                     return;
                 }
-                ApplicantLiteDto applicantLiteDto = applicantLiteService.findByBasicInfo(groupDataDto.getIdNumber(), groupDataDto.getPassportNumber(), groupDataDto.getNationality());
+                ApplicantLiteDto applicantLiteDto = applicantLiteService.findByBasicInfo(groupDataDto.getIdNumber(), groupDataDto.getPassportNumber(), groupDataDto.getNationalityCode());
                 GroupApplicantListDto groupApplicantListDto = GroupApplicantListDto.builder()
                         .applicantGroup(applicantGroupDto)
                         .applicantUin(applicantLiteDto.getDigitalIds().get(0).getUin())
@@ -352,7 +352,7 @@ public class ItemWriter {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(ritualTypeCodeCellIndex)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage())).valid(false).build());
                     return;
                 }
-                CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationality());
+                CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationalityCode());
                 String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
                 ApplicantGroupDto applicantGroupDto = ApplicantGroupDto.builder()
                         .groupLeader(existingStaff)
@@ -455,6 +455,7 @@ public class ItemWriter {
 
                     CompanyStaffDto staff = new CompanyStaffDto();
                     // copy properties from company staff full data to company staff
+
                     BeanUtils.copyProperties(staff, companyStaffFullData);
                     CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
                     // if record exists already in DB we need to update it

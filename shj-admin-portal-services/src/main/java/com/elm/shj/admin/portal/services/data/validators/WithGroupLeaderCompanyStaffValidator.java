@@ -38,7 +38,7 @@ public class WithGroupLeaderCompanyStaffValidator implements ConstraintValidator
             return companyStaffService.existsByBasicInfoAndTitleIsGroupLeader(staffApplicantGroupDto.getStaffIdNumber(), staffApplicantGroupDto.getStaffPassportNumber(), staffApplicantGroupDto.getStaffDateOfBirthGregorian(), staffApplicantGroupDto.getStaffDateOfBirthHijri());
         } else {
             GroupMainDataDto groupMainDataDto = (GroupMainDataDto) value;
-            return companyStaffService.existsByBasicInfoAndTitleIsGroupLeader(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationality());
+            return companyStaffService.existsByBasicInfoAndTitleIsGroupLeader(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationalityCode());
 
         }
 
