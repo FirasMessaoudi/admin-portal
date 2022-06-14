@@ -54,8 +54,8 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     private final NationalityLookupRepository nationalityLookupRepository;
     private final RitualTypeLookupRepository ritualTypeLookupRepository;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
-    private final Integer GROUP_DATA_SEGMENT_NUMBER = 13;
     private final String GROUP_DATA_FILE_NAME = "group-data.xlsx";
+    private final String HOUSING_DATA_FILE_NAME = "housing-data.xlsx";
 
 
     /**
@@ -397,7 +397,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     }
 
     public Resource exportApplicantGroupTemplate(Long companyRefCode, String companyTypeCode) throws Exception {
-        Resource resource = new ClassPathResource("/templates/excel/" + GROUP_DATA_SEGMENT_NUMBER + "/" + GROUP_DATA_FILE_NAME);
+        Resource resource = new ClassPathResource("/templates/export-template/" + GROUP_DATA_FILE_NAME);
         XSSFWorkbook workbook = new XSSFWorkbook(resource.getInputStream());
         // read first sheet
         XSSFSheet sheet = workbook.getSheetAt(0);
@@ -468,4 +468,67 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             }
         }
     }
+
+    public Resource exportApplicantHousingTemplate(Long companyRefCode, String companyTypeCode) throws Exception {
+        Resource resource = new ClassPathResource("/templates/export-template/" + HOUSING_DATA_FILE_NAME);
+        XSSFWorkbook workbook = new XSSFWorkbook(resource.getInputStream());
+        // read first sheet
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        // read first row
+        AtomicInteger headerRowNum = new AtomicInteger(sheet.getFirstRowNum()+1);
+
+        Long establishmentRefCode = -1L;
+        Long missionRefCode = -1L;
+        Long serviceGroupRefCode = -1L;
+        String companyCode = null;
+
+        if(companyTypeCode.equals(EOrganizerTypes.ESTABLISHMENT.name())){
+            establishmentRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.MISSION.name())){
+            missionRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
+            serviceGroupRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name())){
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        }
+        AtomicInteger cellIndex = new AtomicInteger();
+
+        List<ApplicantDto> applicantDtos = mapList(applicantRepository.findOrganizerApplicantsForExport(companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode));
+
+        applicantDtos.stream().forEach(applicant -> {
+            Row row = sheet.getRow(headerRowNum.getAndIncrement());
+
+            Cell idNumber = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            idNumber.setCellValue(applicant.getIdNumber());
+
+            Cell passportNumber = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            passportNumber.setCellValue(applicant.getPassportNumber());
+
+            Cell nationality = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            nationality.setCellValue(nationalityLookupRepository.findLabelByCodeAndLanguage(applicant.getNationalityCode(), "ar"));
+
+            Cell nationalityCode = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            nationalityCode.setCellValue(applicant.getNationalityCode());
+            cellIndex.set(0);
+
+        });
+
+        ByteArrayOutputStream outputStream = null;
+        try{
+            outputStream = new ByteArrayOutputStream();
+            workbook.write(outputStream);
+            workbook.close();
+            return new ByteArrayResource(outputStream.toByteArray(), HOUSING_DATA_FILE_NAME);
+        } catch (Exception e) {
+            log.error("Download file failure. TargetPath: {}", e);
+            throw new Exception("Download File failure");
+        } finally {
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        }
+    }
+
 }
