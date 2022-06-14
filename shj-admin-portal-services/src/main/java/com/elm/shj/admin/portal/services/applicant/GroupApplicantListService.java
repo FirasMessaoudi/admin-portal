@@ -80,4 +80,21 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
         log.info("GroupApplicantListService ::: Start findGroupApplicantsLastLocationsBySuin  applicantLiteDtoListSize: {}", applicantLiteDtoList.size());
         return applicantLiteDtoList;
     }
+
+    public GroupApplicantListDto findByUin(String uin, String groupRefNumber) {
+        Optional<JpaGroupApplicantList> groupApplicantList = groupApplicantListRepository.findByApplicantUinAndApplicantGroupReferenceNumber(uin, groupRefNumber);
+        return groupApplicantList.map(jpaGroupApplicantList -> getMapper().fromEntity(jpaGroupApplicantList, mappingContext)).orElse(null);
+    }
+
+    public boolean updateGroup(String uin, String oldGroup, String newGroup) {
+        ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumber(newGroup);
+        GroupApplicantListDto groupApplicantList = findByUin(uin, oldGroup);
+        if (groupApplicantList != null && applicantGroupDto != null) {
+            groupApplicantList.setApplicantGroup(applicantGroupDto);
+            save(groupApplicantList);
+            return true;
+        }
+        return false;
+
+    }
 }

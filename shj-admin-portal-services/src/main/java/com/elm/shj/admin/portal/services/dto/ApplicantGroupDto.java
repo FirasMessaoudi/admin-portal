@@ -50,6 +50,8 @@ public class ApplicantGroupDto implements Serializable {
 
     private Date updateDate;
 
+    private long countApplicants;
+
     @JsonBackReference(value = "groupApplicantLists")
     private List<GroupApplicantListDto> groupApplicantLists;
 

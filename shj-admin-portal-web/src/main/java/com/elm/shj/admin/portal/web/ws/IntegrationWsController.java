@@ -43,7 +43,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -124,6 +123,7 @@ public class IntegrationWsController {
     private final DataSegmentService dataSegmentService;
     private final DataRequestService dataRequestService;
     private final ApplicantGroupService applicantGroupService;
+    private final GroupApplicantListService groupApplicantListService;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
@@ -424,6 +424,7 @@ public class IntegrationWsController {
     }
 
     // Start Organizer applicant main data, details, health and group leader
+
     /**
      * finds organizer an applicant by his UIN
      *
@@ -1299,5 +1300,25 @@ public class IntegrationWsController {
         }
         return null;
     }*/
+
+    /**
+     * @param uin
+     * @param oldGroup
+     * @param newGroup
+     * @return
+     */
+
+    @PutMapping("/applicant/update-group/{uin}/{oldGroup}/{newGroup}")
+    public ResponseEntity<WsResponse<?>> updateApplicantGroup(@PathVariable String uin, @PathVariable String oldGroup, @PathVariable String newGroup) {
+        boolean updated = groupApplicantListService.updateGroup(uin, oldGroup, newGroup);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
+
+    }
+
+    @PutMapping("/applicant/update-health-profile")
+    public ResponseEntity<WsResponse<?>> updateApplicantHealthProfile(@RequestBody ApplicantHealthLiteDto applicantHealthLiteDto) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantHealthLiteService.save(applicantHealthLiteDto)).build());
+
+    }
 
 }

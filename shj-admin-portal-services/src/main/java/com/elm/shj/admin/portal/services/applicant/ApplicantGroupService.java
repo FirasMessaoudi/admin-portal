@@ -2,6 +2,7 @@ package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
 import com.elm.shj.admin.portal.orm.repository.ApplicantGroupRepository;
+import com.elm.shj.admin.portal.orm.repository.GroupApplicantListRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantGroupDto;
 import com.elm.shj.admin.portal.services.dto.GroupNameLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class ApplicantGroupService extends GenericService<JpaApplicantGroup, ApplicantGroupDto, Long> {
 
     private final ApplicantGroupRepository applicantGroupRepository;
+    private final GroupApplicantListRepository groupApplicantListRepository;
 
     public ApplicantGroupDto getApplicantGroupByReferenceNumber(String referenceNumber) {
         log.info("Start getApplicantGroupByReferenceNumber ReferenceNumber:{}", referenceNumber);
@@ -51,7 +53,9 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
     public Page<ApplicantGroupDto> findGroupsByCompanyCode(String companyCode, Pageable pageable) {
         log.info("Start findGroupsByCompanyCode companyCode:{}", companyCode);
         Page<ApplicantGroupDto> applicantGroups = mapPage(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode, pageable));
-        applicantGroups.getContent().forEach(applicantGroupDto -> applicantGroupDto.setReferenceNumber(applicantGroupDto.getReferenceNumber().indexOf("_") != -1 ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber()));
+        applicantGroups.getContent().forEach(
+                applicantGroupDto -> applicantGroupDto.setReferenceNumber(applicantGroupDto.getReferenceNumber().indexOf("_") != -1 ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber()));
+        applicantGroups.getContent().forEach(applicantGroupDto -> applicantGroupDto.setCountApplicants(groupApplicantListRepository.countByApplicantGroupId(applicantGroupDto.getId())));
         return applicantGroups;
     }
 

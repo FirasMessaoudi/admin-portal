@@ -20,7 +20,8 @@ public enum ECompanyType {
     MISSION(2),
     INTERNAL_HAJ_COMPANY(3),
     EXTERNAL_HAJ_COMPANY(4),
-    SERVICE_GROUP(5);
+    SERVICE_GROUP(5),
+    GOVERNMENT_AGENCY(6);
 
 
     private final int id;
