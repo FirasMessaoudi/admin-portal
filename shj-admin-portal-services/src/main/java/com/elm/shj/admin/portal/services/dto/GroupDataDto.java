@@ -54,7 +54,7 @@ public class GroupDataDto implements Serializable {
     private String ritualType;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @CellIndex(index = 6)
+    @CellIndex(index = 7)
     @RitualTypeCode
     private String ritualTypeCode;
 
