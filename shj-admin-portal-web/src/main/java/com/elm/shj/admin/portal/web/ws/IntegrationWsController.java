@@ -1276,18 +1276,20 @@ public class IntegrationWsController {
 
 
     /**
-     * @param uin
-     * @param oldGroup
-     * @param newGroup
+     * @param updateGroupCmd
      * @return
      */
-
-    @PutMapping("/applicant/update-group/{uin}/{oldGroup}/{newGroup}")
-    public ResponseEntity<WsResponse<?>> updateApplicantGroup(@PathVariable String uin, @PathVariable String oldGroup, @PathVariable String newGroup) {
-        boolean updated = groupApplicantListService.updateGroup(uin, oldGroup, newGroup);
+    @PutMapping("/applicant/update-group")
+    public ResponseEntity<WsResponse<?>> updateApplicantGroup(@RequestBody UpdateGroupCmd updateGroupCmd) {
+        boolean updated = groupApplicantListService.updateGroup(updateGroupCmd.getUin(), updateGroupCmd.getOldGroup(), updateGroupCmd.getNewGroup());
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
 
     }
+
+    /**
+     * @param applicantHealthLiteDto
+     * @return
+     */
 
     @PutMapping("/applicant/update-health-profile")
     public ResponseEntity<WsResponse<?>> updateApplicantHealthProfile(@RequestBody ApplicantHealthLiteDto applicantHealthLiteDto) {
