@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -35,15 +36,25 @@ public class GroupDataDto implements Serializable {
     @CellIndex(index = 1)
     private String passportNumber;
 
-    @NationalityCode
+    @NullOrNotBlank(min = 1, max = 30)
     @CellIndex(index = 2)
+    @JsonIgnore
     private String nationality;
 
+    @NationalityCode
     @CellIndex(index = 3)
+    private String nationalityCode;
+
+    @CellIndex(index = 4)
     private String groupReferenceNumber;
 
+    @CellIndex(index = 6)
+    @NullOrNotBlank(min = 1, max = 30)
+    @JsonIgnore
+    private String ritualType;
+
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @CellIndex(index = 4)
+    @CellIndex(index = 6)
     @RitualTypeCode
     private String ritualTypeCode;
 
