@@ -48,13 +48,13 @@ public class GroupDataDto implements Serializable {
     @CellIndex(index = 4)
     private String groupReferenceNumber;
 
-    @CellIndex(index = 6)
+    @CellIndex(index = 5)
     @NullOrNotBlank(min = 1, max = 30)
     @JsonIgnore
     private String ritualType;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @CellIndex(index = 7)
+    @CellIndex(index = 6)
     @RitualTypeCode
     private String ritualTypeCode;
 
