@@ -52,8 +52,8 @@ public class ApplicantCardScheduler {
     /**
      * Scheduled job to update card status based on ritual end date
      */
-    @Scheduled(cron = "${scheduler.update.applicant.card.status.cron}")
-    @SchedulerLock(name = "expire-ritual-applicant-card")
+//    @Scheduled(cron = "${scheduler.update.applicant.card.status.cron}")
+//    @SchedulerLock(name = "expire-ritual-applicant-card")
     public void expireRitualApplicantCard() {
         log.debug("Expire ritual applicant card scheduler started...");
         LockAssert.assertLocked();
