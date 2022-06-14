@@ -1297,4 +1297,21 @@ public class IntegrationWsController {
 
     }
 
+    @GetMapping("/applicant/housing/export/{companyRefCode}/{companyTypeCode}")
+    public ResponseEntity<Resource> exportApplicantHousingTemplate(@PathVariable Long companyRefCode, @PathVariable String companyTypeCode) throws Exception {
+        log.info("find applicant groups by company");
+        Resource file = applicantService.exportApplicantHousingTemplate(companyRefCode, companyTypeCode);
+        if (file != null) {
+            String fileName = "file.xlsx";
+            if (Objects.requireNonNull(file.getDescription()).contains("[")) {
+                fileName = file.getDescription().split("\\[")[1].replaceAll("]", "");
+            }
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .body(file);
+        }
+        return null;
+    }
+
 }

@@ -28,10 +28,7 @@ public class JobTitleCodeValidator implements ConstraintValidator<JobTitleCode, 
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        if(!value.toString().toUpperCase().equals("OTHERS"))
-            return  value != null && companyStaffTitleLookupService.existsByCode(value.toString().toUpperCase());
-        else
-            return true;
+        return  value != null && companyStaffTitleLookupService.existsByCode(value.toString().toUpperCase());
     }
 
 }

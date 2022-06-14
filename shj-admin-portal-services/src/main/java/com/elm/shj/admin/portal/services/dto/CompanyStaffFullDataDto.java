@@ -88,6 +88,7 @@ public class CompanyStaffFullDataDto implements Serializable {
     @JsonIgnore
     private String jobTitle;
 
+    @NullOrNotBlank(min = 1, max = 30)
     @JobTitleCode
     @CellIndex(index = 13)
     private String titleCode;
