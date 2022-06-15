@@ -186,11 +186,17 @@ public class ValidationService {
 
         }
         RitualPackageDto existingPackage = ritualPackageService.findByCodeAndRitual(plannedPackage.getPackageRefNumber().toString(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
+        existingPackage.getApplicantPackages().size();
+        existingPackage.getPackageHousings().size();
+        existingPackage.getPackageTransportations().size();
+
         if (existingPackage != null) {
             ritualPackageDto.setId(existingPackage.getId());
             ritualPackageDto.setPackageTransportations(existingPackage.getPackageTransportations());
             ritualPackageDto.setPackageHousings(existingPackage.getPackageHousings());
             ritualPackageDto.setApplicantPackages(existingPackage.getApplicantPackages());
+
+            //TODO: find all of them by package id
 
         }
         RitualPackageDto savedRitualPackage = ritualPackageService.save(ritualPackageDto);
