@@ -38,6 +38,9 @@ public class JpaApplicantPackageHousing implements Serializable {
     @Column(name = "bed_number")
     private String bedNumber;
 
+    @Column(name = "camp_info")
+    private String campInfo;
+
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 

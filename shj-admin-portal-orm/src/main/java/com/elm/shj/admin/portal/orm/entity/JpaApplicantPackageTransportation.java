@@ -41,6 +41,9 @@ public class JpaApplicantPackageTransportation implements Serializable {
     @Column(name = "vehicle_number")
     private String vehicleNumber;
 
+    @Column(name = "vehicle_info")
+    private String vehicleInfo;
+
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 

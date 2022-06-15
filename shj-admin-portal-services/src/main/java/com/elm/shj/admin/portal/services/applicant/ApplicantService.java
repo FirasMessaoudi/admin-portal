@@ -361,7 +361,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return numberOfAffectedRows;
     }
 
-    public Page<ApplicantDto> findOrganizerApplicants(ApplicantSearchCriteriaDto applicantSearchCriteriaDto, Long companyRefCode, String companyTypeCode, Pageable pageable) {
+    public Page<ApplicantInfoForGroup> findOrganizerApplicants(ApplicantSearchCriteriaDto applicantSearchCriteriaDto, Long companyRefCode, String companyTypeCode, Pageable pageable) {
         log.info("Company Ref code ...{}", companyRefCode);
         log.info("Company type code ...{}", companyTypeCode);
 
@@ -383,15 +383,15 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         }
 
         if(applicantSearchCriteriaDto.getGroupNumber() != null && !applicantSearchCriteriaDto.getGroupNumber().equals("")){
-            applicantSearchCriteriaDto.setGroupNumber(applicantSearchCriteriaDto.getGroupNumber() + "_" + String.valueOf(companyRefCode));
-            Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findOrganizerApplicantsWithGroupNumberFilter(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
+            applicantSearchCriteriaDto.setGroupNumber(applicantSearchCriteriaDto.getGroupNumber() + "_" + String.valueOf(companyRefCode)+ "_" + companyTypeCode);
+            Page<ApplicantInfoForGroup> applicantDtos = applicantRepository.findOrganizerApplicantsWithGroupNumberFilter(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
                     applicantSearchCriteriaDto.getPassportNumber(), applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
-                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable));
+                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable);
             return applicantDtos;
         } else {
-            Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getPassportNumber(),
+            Page<ApplicantInfoForGroup> applicantDtos = applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getPassportNumber(),
                     applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
-                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable));
+                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable);
             return applicantDtos;
         }
     }
