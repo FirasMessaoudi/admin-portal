@@ -17,6 +17,7 @@ import java.io.Serializable;
  */
 
 @WithApplicant
+@WithPackage
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -24,6 +25,7 @@ import java.io.Serializable;
 @Builder
 public class HuicApplicantRitual implements Serializable {
 
+    private static final long serialVersionUID = 3960122257793536522L;
     @IdNumber(minLength = 0, maxLength = 16, ninOrIqama = true)
     private Long idNumber;
     @PassportNumber

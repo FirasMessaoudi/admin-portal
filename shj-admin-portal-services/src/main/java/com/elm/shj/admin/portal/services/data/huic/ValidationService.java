@@ -17,6 +17,7 @@ import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.services.ritual.RitualSeasonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -78,6 +79,7 @@ public class ValidationService {
     private final PackageHousingService packageHousingService;
     private final PackageCateringService packageCateringService;
     private final PackageTransportationService packageTransportationService;
+    private final RitualSeasonService ritualSeasonService;
     private static final String ARABIC_REGEX = "^[\\p{InArabic}\\s-_]+$";
     private static final String LATIN_REGEX = "^[\\p{IsLatin}\\s-_]+$";
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
@@ -180,6 +182,14 @@ public class ValidationService {
         CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(plannedPackage.getCompanyRefCode() + "_" + ECompanyType.fromId(plannedPackage.getCompanyTypeCode()).name(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
         if (companyRitualSeasonDto != null) {
             ritualPackageDto.setCompanyRitualSeason(companyRitualSeasonDto);
+
+        }
+        RitualPackageDto existingPackage = ritualPackageService.findRitualPackageByReferenceNumber(plannedPackage.getPackageRefNumber() + "_" + ERitualType.fromId(plannedPackage.getRitualTypeCode()).name());
+        if (existingPackage != null) {
+            ritualPackageDto.setId(existingPackage.getId());
+            ritualPackageDto.setPackageTransportations(existingPackage.getPackageTransportations());
+            ritualPackageDto.setPackageHousings(existingPackage.getPackageHousings());
+            ritualPackageDto.setApplicantPackages(existingPackage.getApplicantPackages());
 
         }
         RitualPackageDto savedRitualPackage = ritualPackageService.save(ritualPackageDto);
@@ -328,6 +338,7 @@ public class ValidationService {
     }
 
     private void saveRitualSeasons(HuicRitualSeason huicRitualSeason) {
+        RitualSeasonDto existingRitual = ritualSeasonService.findByRitualTypeAndSeason(ERitualType.fromId(huicRitualSeason.getRitualTypeCode()).name(), huicRitualSeason.getSeasonYear());
         RitualSeasonDto ritualSeasonDto = RitualSeasonDto.builder()
                 .ritualTypeCode(ERitualType.fromId(huicRitualSeason.getRitualTypeCode()).name())
                 .seasonStart(huicRitualSeason.getSeasonStart())
@@ -335,6 +346,11 @@ public class ValidationService {
                 .seasonYear(huicRitualSeason.getSeasonYear())
                 .activated(true)
                 .build();
+        if (existingRitual != null) {
+            ritualSeasonDto.setId(existingRitual.getId());
+            ritualSeasonDto.setCompanyRitualSeasons(existingRitual.getCompanyRitualSeasons());
+
+        }
         ritualSeasonRepository.save((JpaRitualSeason) findMapper(RitualSeasonDto.class).toEntity(ritualSeasonDto, mappingContext));
 
     }
@@ -518,7 +534,7 @@ public class ValidationService {
         addApplicantToContact(applicant);
         if (applicant.getPackageReferenceNumber() == null) {
             String referenceNumber = ritualPackageService.findPackageReferenceNumber(ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
-            applicant.setPackageReferenceNumber(referenceNumber);
+            applicant.setPackageReferenceNumber(referenceNumber + "_" + ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name());
 
         }
         applicantService.save(applicant);
@@ -535,7 +551,7 @@ public class ValidationService {
         }
         Long applicantId = applicantLite.getId();
         ApplicantRitualDto applicantRitualDto = ApplicantRitualDto.builder()
-                .packageReferenceNumber(huicApplicantRitual.getPackageRefNumber())
+                .packageReferenceNumber(huicApplicantRitual.getPackageRefNumber() + "_" + ERitualType.fromId(huicApplicantRitual.getRitualTypeCode()).name())
                 .visaNumber(huicApplicantRitual.getVisaNumber())
                 .permitNumber(huicApplicantRitual.getPermitNumber())
                 .borderNumber(huicApplicantRitual.getBorderNo())
