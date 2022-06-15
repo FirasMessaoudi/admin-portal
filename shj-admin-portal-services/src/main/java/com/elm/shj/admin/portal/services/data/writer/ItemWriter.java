@@ -453,10 +453,10 @@ public class ItemWriter {
                         }
                     }
 
-                    CompanyStaffDto staff = new CompanyStaffDto();
+                    CompanyStaffDto staff = mapCompanyStaffDto(companyStaffFullData);
                     // copy properties from company staff full data to company staff
 
-                    BeanUtils.copyProperties(staff, companyStaffFullData);
+                   // BeanUtils.copyProperties(staff, companyStaffFullData);
                     CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
                     // if record exists already in DB we need to update it
                     if (existingStaff != null) {
@@ -477,10 +477,10 @@ public class ItemWriter {
                             .build());
 
                     // start adding staff ritual data
-                    CompanyStaffRitualDto companyStaffRitual = new CompanyStaffRitualDto();
-                    companyStaffRitual.setSeason(seasonYear);
-                    companyStaffRitual.setCompanyCode(companyRefCode[0]);
-                    BeanUtils.copyProperties(companyStaffRitual, companyStaffFullData);
+                    CompanyStaffRitualDto companyStaffRitual = mapCompanyStaffRitualDto(companyStaffFullData, companyRefCode[0]);
+                    //companyStaffRitual.setSeason(seasonYear);
+                    //companyStaffRitual.setCompanyCode(companyRefCode[0]);
+                    //BeanUtils.copyProperties(companyStaffRitual, companyStaffFullData);
                     updateCompanyStaffRitualData(companyStaffRitual);
 
                 }catch (Exception e){
@@ -597,6 +597,41 @@ public class ItemWriter {
         repository.saveAll(savedItems);
 
         return Collections.emptyList();
+    }
+
+    private CompanyStaffDto mapCompanyStaffDto(CompanyStaffFullDataDto companyStaffFullData){
+        CompanyStaffDto companyStaff = CompanyStaffDto.builder()
+                .idNumber(companyStaffFullData.getIdNumber())
+                .passportNumber(companyStaffFullData.getPassportNumber())
+                .dateOfBirthGregorian(companyStaffFullData.getDateOfBirthGregorian())
+                .dateOfBirthHijri(companyStaffFullData.getDateOfBirthHijri())
+                .fullNameAr(companyStaffFullData.getFullNameAr())
+                .fullNameEn(companyStaffFullData.getFullNameEn())
+                .fullNameOrigin(companyStaffFullData.getFullNameOrigin())
+                .gender(companyStaffFullData.getGender())
+                .nationalityCode(companyStaffFullData.getNationalityCode())
+                .idNumberOriginal(companyStaffFullData.getIdNumberOriginal())
+                .titleCode(companyStaffFullData.getTitleCode())
+                .customJobTitle(companyStaffFullData.getCustomJobTitle())
+                .email(companyStaffFullData.getEmail())
+                .mobileNumber(companyStaffFullData.getMobileNumber())
+                .mobileNumberIntl(companyStaffFullData.getMobileNumberIntl())
+                .photo(companyStaffFullData.getPhoto())
+                .build();
+        return companyStaff;
+    }
+
+    private CompanyStaffRitualDto mapCompanyStaffRitualDto(CompanyStaffFullDataDto companyStaffFullData, String companyCode){
+        CompanyStaffRitualDto companyStaffRitual = CompanyStaffRitualDto.builder()
+                .idNumber(companyStaffFullData.getIdNumber())
+                .passportNumber(companyStaffFullData.getPassportNumber())
+                .dateOfBirthGregorian(companyStaffFullData.getDateOfBirthGregorian())
+                .dateOfBirthHijri(companyStaffFullData.getDateOfBirthHijri())
+                .companyCode(companyCode)
+                .typeCode(companyStaffFullData.getTypeCode())
+                .season(seasonYear)
+                .build();
+        return companyStaffRitual;
     }
 
 
