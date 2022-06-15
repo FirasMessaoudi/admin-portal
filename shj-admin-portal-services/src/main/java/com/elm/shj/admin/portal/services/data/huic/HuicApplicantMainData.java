@@ -36,7 +36,6 @@ public class HuicApplicantMainData implements Serializable {
     @NationalityCode
     private Long nationality;
 
-    @IdNumber(minLength = 0, maxLength = 16, ninOrIqama = true)
     private Long idNumber;
 
     @NullOrNotBlank(min = 0, max = 150)
@@ -44,7 +43,6 @@ public class HuicApplicantMainData implements Serializable {
             , message = "validation.data.constraints.msg.20003")
     private String nationalIdOriginalCountry;
 
-    @PassportNumber
     private String passportNo;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
