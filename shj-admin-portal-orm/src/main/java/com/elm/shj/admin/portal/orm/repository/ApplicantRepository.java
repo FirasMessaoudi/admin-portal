@@ -163,7 +163,8 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Query("select a.registered from JpaApplicant  a where a.id = :id")
     boolean findApplicantStatusById(@Param("id") Long id);
 
-    @Query("select a FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga ON di.uin = ga.applicantUin JOIN ga.applicantGroup ap where " +
+    @Query("select new com.elm.shj.admin.portal.orm.entity.ApplicantInfoForGroup(a.id,a.idNumber,a.passportNumber,di.uin,a.fullNameAr,a.fullNameEn) " +
+            "FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga ON di.uin = ga.applicantUin JOIN ga.applicantGroup ap where " +
             "(:idNumber is null OR a.idNumber = :idNumber) and "+
             "(:passportNumber is null OR a.passportNumber = :passportNumber) and " +
             "(:gender is null OR a.gender = :gender) and " +
@@ -174,13 +175,14 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
             "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
-    Page<JpaApplicant> findOrganizerApplicantsWithGroupNumberFilter(@Param("idNumber") String idNumber,  @Param("groupNumber") String groupNumber,
+    Page<ApplicantInfoForGroup> findOrganizerApplicantsWithGroupNumberFilter(@Param("idNumber") String idNumber,  @Param("groupNumber") String groupNumber,
                                         @Param("passportNumber") String passportNumber,  @Param("applicantName") String applicantName,
                                         @Param("gender") String gender, @Param("uin") String uin, @Param("companyCode") String companyCode,
                                           @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                           @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
 
-    @Query("select a FROM JpaApplicant a JOIN a.digitalIds di where " +
+    @Query("select new com.elm.shj.admin.portal.orm.entity.ApplicantInfoForGroup(a.id,a.idNumber,a.passportNumber,di.uin,a.fullNameAr,a.fullNameEn)  " +
+            "FROM JpaApplicant a JOIN a.digitalIds di where " +
             "(:idNumber is null OR a.idNumber = :idNumber) and "+
             "(:passportNumber is null OR a.passportNumber = :passportNumber) and " +
             "(:gender is null OR a.gender = :gender) and " +
@@ -190,7 +192,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
             "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
-    Page<JpaApplicant> findOrganizerApplicants(@Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber,  @Param("applicantName") String applicantName,
+    Page<ApplicantInfoForGroup> findOrganizerApplicants(@Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber,  @Param("applicantName") String applicantName,
                                                                     @Param("gender") String gender, @Param("uin") String uin, @Param("companyCode") String companyCode,
                                                                     @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                                                     @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
@@ -209,5 +211,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
             "WHERE a.id = :applicantId ")
     String findRitualTypeByApplicantId(@Param("applicantId") long applicantId);
+
+
 
 }

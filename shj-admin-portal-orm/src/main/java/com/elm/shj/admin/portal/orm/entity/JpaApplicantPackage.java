@@ -31,7 +31,7 @@ public class JpaApplicantPackage implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
     private long id;
-
+//TODO should be String not long
     @Column(name = "applicant_uin", nullable = false)
     private long applicantUin;
 

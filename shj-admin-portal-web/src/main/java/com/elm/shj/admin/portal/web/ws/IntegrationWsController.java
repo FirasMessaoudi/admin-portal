@@ -1314,4 +1314,11 @@ public class IntegrationWsController {
         return null;
     }
 
+    @GetMapping("/group/find/{groupId}/{companyRefCode}/{companyTypeCode}")
+    public ResponseEntity<WsResponse<?>> findGroupDetails(@PathVariable long groupId,@PathVariable String companyRefCode, @PathVariable String companyTypeCode) {
+        log.info("find applicant groups by company");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(applicantGroupService.findGroupDetailsByGroupId(groupId,companyRefCode,companyTypeCode)).build());
+    }
+
 }
