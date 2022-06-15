@@ -53,10 +53,10 @@ public class WithApplicantValidator implements ConstraintValidator<WithApplicant
             return applicantService.existsByBasicInfo(applicantBasicInfoDto);
         } else {
             if (value.getClass().isAssignableFrom(GroupDataDto.class)) {
-                if (((GroupDataDto) value).getNationality() == null) {
+                if (((GroupDataDto) value).getNationalityCode() == null) {
                     return false;
                 }
-                return applicantLiteService.existsByBasicInfo(((GroupDataDto) value).getIdNumber(), ((GroupDataDto) value).getPassportNumber(), ((GroupDataDto) value).getNationality());
+                return applicantLiteService.existsByBasicInfo(((GroupDataDto) value).getIdNumber(), ((GroupDataDto) value).getPassportNumber(), ((GroupDataDto) value).getNationalityCode());
             }
             if (value.getClass().isAssignableFrom(HuicApplicantRitual.class)) {
                 if (((HuicApplicantRitual) value).getNationality() == null) {
