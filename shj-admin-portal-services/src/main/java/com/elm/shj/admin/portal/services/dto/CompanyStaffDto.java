@@ -6,9 +6,7 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -22,8 +20,10 @@ import java.util.List;
  * @since 1.1.0
  */
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @UniqueCompanyStaff
 @FieldDependency.List({
         @FieldDependency(first = "idNumber", second = "passportNumber"),
