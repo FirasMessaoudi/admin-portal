@@ -17,7 +17,6 @@ import java.util.Date;
  * @since 1.1.0
  */
 @UniqueApplicant
-@WithPackage
 @FieldDependency.List({
         @FieldDependency(first = "idNumber", second = "passportNo"),
         @FieldDependency(first = "dateOfBirth", second = "dateOfBirthHijri"),
@@ -37,7 +36,6 @@ public class HuicApplicantMainData implements Serializable {
     @NationalityCode
     private Long nationality;
 
-    @IdNumber(minLength = 0, maxLength = 16, ninOrIqama = true)
     private Long idNumber;
 
     @NullOrNotBlank(min = 0, max = 150)
@@ -45,7 +43,6 @@ public class HuicApplicantMainData implements Serializable {
             , message = "validation.data.constraints.msg.20003")
     private String nationalIdOriginalCountry;
 
-    @PassportNumber
     private String passportNo;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
@@ -104,6 +101,7 @@ public class HuicApplicantMainData implements Serializable {
     @NullOrNotBlank(min = 0, max = 30)
     private String postalCode;
 
+    @WithRitualPackage
     private String packageRefNumber;
 
     @ApplicantStatus

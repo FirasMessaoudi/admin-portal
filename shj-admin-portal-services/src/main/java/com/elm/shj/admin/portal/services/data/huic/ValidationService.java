@@ -80,6 +80,7 @@ public class ValidationService {
     private final PackageCateringService packageCateringService;
     private final PackageTransportationService packageTransportationService;
     private final RitualSeasonService ritualSeasonService;
+    private final ApplicantContactService applicantContactService;
     private static final String ARABIC_REGEX = "^[\\p{InArabic}\\s-_]+$";
     private static final String LATIN_REGEX = "^[\\p{IsLatin}\\s-_]+$";
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
@@ -168,7 +169,7 @@ public class ValidationService {
     void savePlannedPackages(HuicPlannedPackage plannedPackage) {
         //TODO: check hajj office makkah and hajj office madina
         RitualPackageDto ritualPackageDto = RitualPackageDto.builder()
-                .referenceNumber(plannedPackage.getPackageRefNumber() + "_" + ERitualType.fromId(plannedPackage.getRitualTypeCode()).name())
+                .referenceNumber(plannedPackage.getPackageRefNumber() + "")
                 .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah() + "")
                 .hajjOfficeMadina(plannedPackage.getHajjOfficeMadina() + "")
                 .packageNameAr(plannedPackage.getPackageNameArabic())
@@ -184,7 +185,7 @@ public class ValidationService {
             ritualPackageDto.setCompanyRitualSeason(companyRitualSeasonDto);
 
         }
-        RitualPackageDto existingPackage = ritualPackageService.findRitualPackageByReferenceNumber(plannedPackage.getPackageRefNumber() + "_" + ERitualType.fromId(plannedPackage.getRitualTypeCode()).name());
+        RitualPackageDto existingPackage = ritualPackageService.findByCodeAndRitual(plannedPackage.getPackageRefNumber().toString(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
         if (existingPackage != null) {
             ritualPackageDto.setId(existingPackage.getId());
             ritualPackageDto.setPackageTransportations(existingPackage.getPackageTransportations());
@@ -476,6 +477,9 @@ public class ValidationService {
                 .biometricDataFinger(huicApplicantMainData.getBiometricDataFP())
                 .educationLevelCode(huicApplicantMainData.getQualification())
                 .packageReferenceNumber(huicApplicantMainData.getPackageRefNumber())
+                .establishmentRefCode(huicApplicantMainData.getEstablishmentId())
+                .serviceGroupMadinaCode(huicApplicantMainData.getServiceGroupMadinaId())
+                .serviceGroupMakkahCode(huicApplicantMainData.getServiceGroupMakkahId())
                 .build();
         ApplicantContactDto applicantContactDto = ApplicantContactDto.builder()
                 .languageList(huicApplicantMainData.getLanguageList())
@@ -534,7 +538,7 @@ public class ValidationService {
         addApplicantToContact(applicant);
         if (applicant.getPackageReferenceNumber() == null) {
             String referenceNumber = ritualPackageService.findPackageReferenceNumber(ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
-            applicant.setPackageReferenceNumber(referenceNumber + "_" + ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name());
+            applicant.setPackageReferenceNumber(referenceNumber);
 
         }
         applicantService.save(applicant);
@@ -551,7 +555,7 @@ public class ValidationService {
         }
         Long applicantId = applicantLite.getId();
         ApplicantRitualDto applicantRitualDto = ApplicantRitualDto.builder()
-                .packageReferenceNumber(huicApplicantRitual.getPackageRefNumber() + "_" + ERitualType.fromId(huicApplicantRitual.getRitualTypeCode()).name())
+                .packageReferenceNumber(huicApplicantRitual.getPackageRefNumber())
                 .visaNumber(huicApplicantRitual.getVisaNumber())
                 .permitNumber(huicApplicantRitual.getPermitNumber())
                 .borderNumber(huicApplicantRitual.getBorderNo())
@@ -624,8 +628,13 @@ public class ValidationService {
 
     public void updateExistingApplicant(ApplicantDto applicant, long existingApplicantId) {
         List<ApplicantRitualDto> applicantRituals = applicantRitualService.findAllByApplicantId(existingApplicantId);
+        List<ApplicantContactDto> applicantContactDtos = applicantContactService.findByApplicantId(existingApplicantId);
+        if (!applicantContactDtos.isEmpty()) {
+            if (!applicant.getContacts().isEmpty()) {
+                applicant.getContacts().get(0).setId(applicantContactDtos.get(0).getId());
+            }
+        }
         applicant.setRituals(applicantRituals);
-
         applicant.setId(existingApplicantId);
         applicant.setUpdateDate(new Date());
     }

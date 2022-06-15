@@ -125,7 +125,7 @@ public class ApplicantDto implements Serializable {
     private Integer establishmentRefCode;
     private Integer missionRefCode;
     private Long serviceGroupMakkahCode;
-    private Integer serviceGroupMadinaCode;
+    private Long serviceGroupMadinaCode;
 
     /**
      * Get applicant object from applicant lite object.

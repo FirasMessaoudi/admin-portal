@@ -29,9 +29,7 @@ public class HuicApplicantRelative implements Serializable {
 
     @RelationshipCode
     private Integer relationship;
-    @IdNumber(minLength = 0, maxLength = 16, ninOrIqama = true)
     private Long idNumber;
-    @PassportNumber
     private String passportNo;
 
     @NotNull(message = "validation.data.constraints.msg.20001")

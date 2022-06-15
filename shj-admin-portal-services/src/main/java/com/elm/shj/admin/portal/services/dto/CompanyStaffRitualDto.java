@@ -5,9 +5,7 @@ package com.elm.shj.admin.portal.services.dto;
 
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,8 +19,10 @@ import java.util.Date;
 @WithCompanyStaff
 @WithCompanyRitualSeason
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @FieldDependency.List({
         @FieldDependency(first = "idNumber", second = "passportNumber"),
         @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri")

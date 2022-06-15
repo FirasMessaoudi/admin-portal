@@ -26,4 +26,7 @@ public interface RitualPackageRepository extends JpaRepository<JpaRitualPackage,
 
     @Query("select rp.referenceNumber from JpaRitualPackage rp where rp.companyRitualSeason.ritualSeason.ritualTypeCode = :ritualTypeCode and rp.companyRitualSeason.ritualSeason.seasonYear = :seasonYear")
     String findReferenceNumberByRitualSeason(@Param("ritualTypeCode") String ritualTypeCode, @Param("seasonYear") int seasonYear);
+
+    @Query("select rp from JpaRitualPackage rp where rp.referenceNumber = :referenceNumber and rp.companyRitualSeason.ritualSeason.ritualTypeCode = :ritualTypeCode and rp.companyRitualSeason.ritualSeason.seasonYear = :seasonYear")
+    Optional<JpaRitualPackage> findByReferenceNumberAndRitual(@Param("referenceNumber") String referenceNumber, @Param("ritualTypeCode") String ritualTypeCode, @Param("seasonYear") int seasonYear);
 }
