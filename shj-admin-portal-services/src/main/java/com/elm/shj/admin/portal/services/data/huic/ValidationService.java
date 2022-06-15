@@ -235,6 +235,7 @@ public class ValidationService {
     }
 
     private void saveCompanies(HuicCompany huicCompany) {
+        Long existingCompanyId = companyRepository.findIdByCode(huicCompany.getCompanyRefCode() + "_" + ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name());
         CompanyDto companyDto = CompanyDto.builder()
                 .code(huicCompany.getCompanyRefCode() + "_" + ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
                 .labelAr(huicCompany.getCompanyNameAr())
@@ -249,43 +250,56 @@ public class ValidationService {
                 .countryCode(huicCompany.getCountry() + "")
                 .establishmentRefCode(huicCompany.getEstablishmentId() != null ? huicCompany.getEstablishmentId() : 9)
                 .build();
+        if (existingCompanyId != null) {
+            companyDto.setId(existingCompanyId);
+            List<CompanyRitualSeasonDto> companyRitualSeasonDtos = companyRitualSeasonService.findByCompanyId(existingCompanyId);
+            if (!companyRitualSeasonDtos.isEmpty()) {
+                companyDto.setCompanyRitualSeasons(companyRitualSeasonDtos);
+            }
+        }
 
         JpaCompany savedCompany = companyRepository.save((JpaCompany) findMapper(CompanyDto.class).toEntity(companyDto, mappingContext));
         Optional<JpaRitualSeason> ritualSeason = ritualSeasonRepository.findByRitualTypeCodeAndSeasonYear(ERitualType.fromId(huicCompany.getRitualTypeCode()).name(), huicCompany.getSeasonYear());
         if (ritualSeason.isPresent()) {
-            JpaCompanyRitualSeason companyRitualSeason = new JpaCompanyRitualSeason();
-            companyRitualSeason.setCompany(savedCompany);
-            companyRitualSeason.setRitualSeason(ritualSeason.get());
-            companyRitualSeason.setActive(true);
-            companyRitualSeason.setSeasonStart(ritualSeason.get().getSeasonStart());
-            companyRitualSeason.setSeasonEnd(ritualSeason.get().getSeasonEnd());
-            companyRitualSeasonRepository.save(companyRitualSeason);
-            // if ritual is external create another company ritual season for courtesy hajj
-            if (huicCompany.getRitualTypeCode() == 1) {
-                JpaCompanyRitualSeason companyRitualSeasonCourtsey = new JpaCompanyRitualSeason();
-                Optional<JpaRitualSeason> ritualSeasonCourtesy = ritualSeasonRepository.findByRitualTypeCodeAndSeasonYear(ERitualType.fromId(3).name(), huicCompany.getSeasonYear());
-                if (ritualSeasonCourtesy.isPresent()) {
-                    companyRitualSeasonCourtsey.setRitualSeason(ritualSeasonCourtesy.get());
-                    companyRitualSeasonCourtsey.setSeasonStart(ritualSeasonCourtesy.get().getSeasonStart());
-                    companyRitualSeasonCourtsey.setSeasonEnd(ritualSeasonCourtesy.get().getSeasonEnd());
-                } else {
-                    JpaRitualSeason newRitual = new JpaRitualSeason();
-                    newRitual.setActive(true);
-                    newRitual.setRitualTypeCode(ERitualType.fromId(3).name());
-                    newRitual.setSeasonYear(huicCompany.getSeasonYear());
-                    newRitual.setSeasonStart(ritualSeason.get().getSeasonStart());
-                    newRitual.setSeasonEnd(ritualSeason.get().getSeasonEnd());
-                    JpaRitualSeason saveRitualSeason = ritualSeasonRepository.save(newRitual);
-                    companyRitualSeasonCourtsey.setRitualSeason(saveRitualSeason);
-                    companyRitualSeasonCourtsey.setSeasonEnd(saveRitualSeason.getSeasonEnd());
-                    companyRitualSeasonCourtsey.setSeasonStart(saveRitualSeason.getSeasonStart());
-                }
-                companyRitualSeasonCourtsey.setCompany(savedCompany);
-                companyRitualSeasonCourtsey.setActive(true);
-
-                companyRitualSeasonRepository.save(companyRitualSeasonCourtsey);
+            boolean existsByCompanyAndRitual = false;
+            if (existingCompanyId != null) {
+                existsByCompanyAndRitual = companyRitualSeasonRepository.existsByCompanyIdAndRitualSeasonId(existingCompanyId, ritualSeason.get().getId());
             }
+            if (!existsByCompanyAndRitual) {
+                JpaCompanyRitualSeason companyRitualSeason = new JpaCompanyRitualSeason();
+                companyRitualSeason.setCompany(savedCompany);
+                companyRitualSeason.setRitualSeason(ritualSeason.get());
+                companyRitualSeason.setActive(true);
+                companyRitualSeason.setSeasonStart(ritualSeason.get().getSeasonStart());
+                companyRitualSeason.setSeasonEnd(ritualSeason.get().getSeasonEnd());
+                companyRitualSeasonRepository.save(companyRitualSeason);
+                // if ritual is external create another company ritual season for courtesy hajj
+                if (huicCompany.getRitualTypeCode() == 1) {
+                    JpaCompanyRitualSeason companyRitualSeasonCourtsey = new JpaCompanyRitualSeason();
+                    Optional<JpaRitualSeason> ritualSeasonCourtesy = ritualSeasonRepository.findByRitualTypeCodeAndSeasonYear(ERitualType.fromId(3).name(), huicCompany.getSeasonYear());
+                    if (ritualSeasonCourtesy.isPresent()) {
+                        companyRitualSeasonCourtsey.setRitualSeason(ritualSeasonCourtesy.get());
+                        companyRitualSeasonCourtsey.setSeasonStart(ritualSeasonCourtesy.get().getSeasonStart());
+                        companyRitualSeasonCourtsey.setSeasonEnd(ritualSeasonCourtesy.get().getSeasonEnd());
+                    } else {
+                        JpaRitualSeason newRitual = new JpaRitualSeason();
+                        newRitual.setActive(true);
+                        newRitual.setRitualTypeCode(ERitualType.fromId(3).name());
+                        newRitual.setSeasonYear(huicCompany.getSeasonYear());
+                        newRitual.setSeasonStart(ritualSeason.get().getSeasonStart());
+                        newRitual.setSeasonEnd(ritualSeason.get().getSeasonEnd());
+                        JpaRitualSeason saveRitualSeason = ritualSeasonRepository.save(newRitual);
+                        companyRitualSeasonCourtsey.setRitualSeason(saveRitualSeason);
+                        companyRitualSeasonCourtsey.setSeasonEnd(saveRitualSeason.getSeasonEnd());
+                        companyRitualSeasonCourtsey.setSeasonStart(saveRitualSeason.getSeasonStart());
+                    }
+                    companyRitualSeasonCourtsey.setCompany(savedCompany);
+                    companyRitualSeasonCourtsey.setActive(true);
 
+                    companyRitualSeasonRepository.save(companyRitualSeasonCourtsey);
+                }
+
+            }
         }
 
     }
