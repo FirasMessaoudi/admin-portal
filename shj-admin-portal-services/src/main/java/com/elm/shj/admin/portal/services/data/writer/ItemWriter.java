@@ -83,7 +83,8 @@ public class ItemWriter {
     @Value("${ritual.season.year}")
     private int seasonYear;
 
-    private final static String DEFAULT_AVATAR = "avatar/avatar.png";
+    private final static String DEFAULT_AVATAR_MALE = "avatar/staff-male.png";
+    private final static String DEFAULT_AVATAR_FEMALE = "avatar/applicant-staff-female.png";
 
     /**
      * Populates the registry
@@ -402,18 +403,6 @@ public class ItemWriter {
         // saving staff full main data
         if (dataSegment.getId() == EDataSegment.STAFF_FULL_MAIN_DATA.getId()) {
 
-            BufferedImage defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            final String defaultAvatar;
-
-            try {
-                ImageIO.write(defaultImage, "png", bos);
-                byte[] bytes = bos.toByteArray();
-
-                defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
-            } catch (IOException e) {
-                throw new RuntimeException();
-            }
             // save all items and build data records
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
             List<S> savedItems = new ArrayList<>();
@@ -433,8 +422,32 @@ public class ItemWriter {
                             jobTileCodeCellIndex = field.getAnnotation(CellIndex.class).index();
                     }
                     CompanyStaffFullDataDto companyStaffFullData = (CompanyStaffFullDataDto) entry.getValue();
+
                     // set default avatar if the photo is null
-                    if(companyStaffFullData.getPhoto() == null) companyStaffFullData.setPhoto(defaultAvatar);
+                    if(companyStaffFullData.getPhoto() == null){
+
+                        BufferedImage defaultImage;
+
+                        if(companyStaffFullData.getGender().equals("M")) {
+                            defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_MALE);
+                        } else {
+                            defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_FEMALE);
+                        }
+
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        final String defaultAvatar;
+
+                        try {
+                            ImageIO.write(defaultImage, "png", bos);
+                            byte[] bytes = bos.toByteArray();
+
+                            defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
+                        } catch (IOException e) {
+                            throw new RuntimeException();
+                        }
+
+                        companyStaffFullData.setPhoto(defaultAvatar);
+                    }
 
                     // check company ritual season exist for the ritual type, seasson and company
                     CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyRefCode[0], companyStaffFullData.getTypeCode(), seasonYear);
@@ -481,7 +494,7 @@ public class ItemWriter {
                     //companyStaffRitual.setSeason(seasonYear);
                     //companyStaffRitual.setCompanyCode(companyRefCode[0]);
                     //BeanUtils.copyProperties(companyStaffRitual, companyStaffFullData);
-                    updateCompanyStaffRitualData(companyStaffRitual);
+                    updateCompanyStaffRitualData(companyStaffRitual, Long.parseLong(BeanUtils.getProperty(savedItem, "id")));
 
                 }catch (Exception e){
                     log.error("Error while creating company staff full data");
@@ -801,8 +814,8 @@ public class ItemWriter {
         }
     }
 
-    private  void updateCompanyStaffRitualData(CompanyStaffRitualDto companyStaffRitual) {
-        validationService.saveStaffFullRitual(companyStaffRitual);
+    private  void updateCompanyStaffRitualData(CompanyStaffRitualDto companyStaffRitual, Long staffId) {
+        validationService.saveStaffFullRitual(companyStaffRitual, staffId);
     }
 
 }

@@ -774,8 +774,8 @@ public class ValidationService {
         }
     }
 
-    public void saveStaffFullRitual(CompanyStaffRitualDto companyStaffRitual) {
-        CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(companyStaffRitual.getIdNumber(), companyStaffRitual.getPassportNumber(), companyStaffRitual.getDateOfBirthGregorian(), companyStaffRitual.getDateOfBirthHijri());
+    public void saveStaffFullRitual(CompanyStaffRitualDto companyStaffRitual, long staffId) {
+        CompanyStaffDto existingStaff = companyStaffService.findOne(staffId);
         CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
         CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
         //existingStaff.setCompanyRitualSeason(companyRitualSeasonDto);
