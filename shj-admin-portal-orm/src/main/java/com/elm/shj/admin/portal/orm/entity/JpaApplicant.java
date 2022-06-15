@@ -98,7 +98,7 @@ public class JpaApplicant implements Serializable {
     private Long serviceGroupMakkahCode;
 
     @Column(name = "madina_service_group_ref_code")
-    private Integer serviceGroupMadinaCode;
+    private Long serviceGroupMadinaCode;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "applicant_id", updatable = false)
