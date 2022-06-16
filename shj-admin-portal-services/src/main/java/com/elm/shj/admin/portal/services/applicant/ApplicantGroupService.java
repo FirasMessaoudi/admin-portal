@@ -85,8 +85,8 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
     public ApplicantGroupDetailsVo findGroupDetailsByGroupId(long groupId, String companyRefCode, String companyTypeCode) {
         log.info("ApplicantGroupService ::: Start findGroupDetailsByGroupId {}", groupId);
         String multipleValue = "M";
-        StringBuffer referenceNumber = new StringBuffer().append(groupId).append("_").append(companyRefCode).append("_").append(companyTypeCode);
-        List<ApplicantGroupDetailsVo> groupDetailsByGroupId = applicantGroupRepository.findGroupDetailsByGroupId(referenceNumber.toString());
+        StringBuffer fullCompanyCode = new StringBuffer(companyRefCode).append("_").append(companyTypeCode);
+        List<ApplicantGroupDetailsVo> groupDetailsByGroupId = applicantGroupRepository.findGroupDetailsByGroupId(String.valueOf(groupId),fullCompanyCode.toString());
         ApplicantGroupDetailsVo result = new ApplicantGroupDetailsVo();
         long countCampInfo = groupDetailsByGroupId.stream().map(p -> p.getCampInfo()).distinct().count();
         long countBusInfo = groupDetailsByGroupId.stream().map(p -> p.getBusInfo()).distinct().count();
