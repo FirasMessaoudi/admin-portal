@@ -48,3 +48,15 @@ UNION ALL SELECT id,3,1,14431101,14431230,0,0,0,0 FROM shc_portal.shc_company C 
 GO
 
 -- INSERT INTO shc_portal.shc_company_ritual_step_lk
+
+UPDATE shc_portal.shc_config
+SET conf_key = 'huic.sms.api.token'
+WHERE conf_key = 'sms.api.token';
+
+UPDATE shc_portal.shc_config
+SET conf_key = 'huic.sms.api.url'
+WHERE conf_key = 'sms.api.url';
+
+INSERT INTO shc_portal.shc_config(conf_key, conf_value)
+VALUES('huic.sms.api.mock.enabled','true');
+GO
