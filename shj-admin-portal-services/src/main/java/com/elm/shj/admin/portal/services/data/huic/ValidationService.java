@@ -18,6 +18,7 @@ import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.ritual.RitualSeasonService;
+import com.elm.shj.admin.portal.services.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -175,8 +176,8 @@ public class ValidationService {
                 .packageNameAr(plannedPackage.getPackageNameArabic())
                 .packageNameEn(plannedPackage.getPackageNameEnglish())
                 .packageTypeCode(EPackageType.fromId(plannedPackage.getPackageTypeCode()).name())
-                .startDate(toGregorian(plannedPackage.getPackageStartDate()))
-                .endDate(toGregorian(plannedPackage.getPackageEndDate()))
+                .startDate(DateUtils.toGregorian(plannedPackage.getPackageStartDate()))
+                .endDate(DateUtils.toGregorian(plannedPackage.getPackageEndDate()))
                 .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah() + "")
                 .hajjOfficeMadina(plannedPackage.getHajjOfficeMadina() + "")
                 .build();
@@ -237,8 +238,8 @@ public class ValidationService {
                     .locationFromNameEn(huicPackageTransportation.getLocationFromNameEn())
                     .locationToNameAr(huicPackageTransportation.getLocationToNameAr())
                     .locationToNameEn(huicPackageTransportation.getLocationToNameEn())
-                    .validityStart(toGregorian(huicPackageTransportation.getValidityStart()))
-                    .validityEnd(toGregorian(huicPackageTransportation.getValidityEnd()))
+                    .validityStart(DateUtils.toGregorian(huicPackageTransportation.getValidityStart()))
+                    .validityEnd(DateUtils.toGregorian(huicPackageTransportation.getValidityEnd()))
                     .routeDetails(huicPackageTransportation.getRouteDetails())
                     .ritualPackage(savedRitualPackage)
                     .build();
@@ -432,6 +433,16 @@ public class ValidationService {
         applicantRelativeDto.setApplicant(ApplicantDto.fromApplicantLite(applicantLite));
         applicantRelativeDto.setApplicantRitual(ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
         String relativeApplicantUin = (relativeApplicantLite == null || CollectionUtils.isEmpty(relativeApplicantLite.getDigitalIds())) ? null : relativeApplicantLite.getDigitalIds().get(0).getUin();
+        ApplicantRelativeDto existingRelative = applicantRelativeService.findByApplicantIdAndRelativeApplicantId(applicantId, relativeApplicantLite.getId());
+        if (existingRelative != null) {
+            if (existingRelative.getRelationshipCode().equals(ERelativeRelationship.fromId(huicApplicantRelative.getRelationship()).name())) {
+                return;
+            } else {
+                applicantRelativeDto.setId(existingRelative.getId());
+                applicantRelativeService.save(applicantRelativeDto);
+                return;
+            }
+        }
         applicantRelativeService.save(applicantRelativeDto);
         // if the applicant digital id and the relative applicant digital id and the applicant ritual are created then add chat contacts
         // check if digital ids are created for the applicant and the relative applicant and applicant ritual is already created.
