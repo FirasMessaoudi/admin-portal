@@ -20,4 +20,6 @@ public interface CompanyRitualStepLookupRepository extends JpaRepository<JpaComp
 
     @Query(value = "select j from JpaCompanyRitualStepLookup j")
     List<JpaCompanyRitualStepLookup> findAllWithDescription();
+
+    List<JpaCompanyRitualStepLookup> findAllByLang(String lang);
 }

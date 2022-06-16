@@ -33,4 +33,6 @@ public interface ApplicantGroupRepository extends JpaRepository<JpaApplicantGrou
             "left join package.applicantPackageTransportations trans " +
             "where ag.referenceNumber = :referenceNumber ")
     List<ApplicantGroupDetailsVo> findGroupDetailsByGroupId(@Param("referenceNumber") String referenceNumber);
+
+    Optional<JpaApplicantGroup> findTopByReferenceNumberAndCompanyRitualSeasonCompanyCodeOrderByCreationDateDesc(String refNumber, String companyCode);
 }

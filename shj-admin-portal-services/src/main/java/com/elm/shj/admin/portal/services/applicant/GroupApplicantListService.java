@@ -5,10 +5,11 @@ package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantVo;
 import com.elm.shj.admin.portal.orm.entity.JpaGroupApplicantList;
-import com.elm.shj.admin.portal.orm.repository.ApplicantLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.GroupApplicantListRepository;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
 import com.elm.shj.admin.portal.services.dto.ApplicantGroupDto;
 import com.elm.shj.admin.portal.services.dto.GroupApplicantListDto;
+import com.elm.shj.admin.portal.services.dto.UpdateGroupCmd;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +33,8 @@ import java.util.Optional;
 public class GroupApplicantListService extends GenericService<JpaGroupApplicantList, GroupApplicantListDto, Long> {
 
     private final GroupApplicantListRepository groupApplicantListRepository;
-    private final ApplicantLiteRepository applicantLiteRepository;
     private final ApplicantGroupService applicantGroupService;
-    private final ApplicantLiteService applicantLiteService;
-
+    private final CompanyRitualSeasonService companyRitualSeasonService;
     @Transactional
     public boolean registerUserToGroup(String applicantUin, String referenceNumber) {
         log.info("GroupApplicantListService ::: Start registerUserToGroup  applicantUin: {} ,  referenceNumber: {}", applicantUin, referenceNumber);
@@ -81,14 +80,17 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
         return applicantLiteDtoList;
     }
 
-    public GroupApplicantListDto findByUin(String uin, String groupRefNumber) {
-        Optional<JpaGroupApplicantList> groupApplicantList = groupApplicantListRepository.findByApplicantUinAndApplicantGroupReferenceNumber(uin, groupRefNumber);
+    public GroupApplicantListDto findByUin(String uin, long id) {
+        Optional<JpaGroupApplicantList> groupApplicantList = groupApplicantListRepository.findTopByApplicantUinAndApplicantGroupIdOrderByCreationDateDesc(uin, id);
         return groupApplicantList.map(jpaGroupApplicantList -> getMapper().fromEntity(jpaGroupApplicantList, mappingContext)).orElse(null);
     }
 
-    public boolean updateGroup(String uin, String oldGroup, String newGroup) {
-        ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumber(newGroup);
-        GroupApplicantListDto groupApplicantList = findByUin(uin, oldGroup);
+    public boolean updateGroup(UpdateGroupCmd updateGroupCmd) {
+        ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompany(updateGroupCmd.getNewGroup(), updateGroupCmd.getCompanyCode());
+        if (applicantGroupDto == null) {
+            return false;
+        }
+        GroupApplicantListDto groupApplicantList = findByUin(updateGroupCmd.getUin(), applicantGroupDto.getId());
         if (groupApplicantList != null && applicantGroupDto != null) {
             groupApplicantList.setApplicantGroup(applicantGroupDto);
             save(groupApplicantList);

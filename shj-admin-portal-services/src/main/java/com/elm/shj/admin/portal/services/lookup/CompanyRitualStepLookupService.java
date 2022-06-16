@@ -5,7 +5,6 @@ package com.elm.shj.admin.portal.services.lookup;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualStepLookup;
 import com.elm.shj.admin.portal.orm.repository.CompanyRitualStepLookupRepository;
-import com.elm.shj.admin.portal.orm.repository.CompanyRitualStepRepository;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualStepLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -30,4 +29,5 @@ public class CompanyRitualStepLookupService extends GenericService<JpaCompanyRit
    public List<JpaCompanyRitualStepLookup> findAllWithDescription(){
         return  repository.findAllWithDescription();
     }
+
 }

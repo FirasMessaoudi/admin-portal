@@ -38,6 +38,15 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         return null;
     }
 
+    public ApplicantGroupDto getApplicantGroupByReferenceNumberAndCompany(String referenceNumber, String companyCode) {
+        Optional<JpaApplicantGroup> applicantGroupOptional = applicantGroupRepository.findTopByReferenceNumberAndCompanyRitualSeasonCompanyCodeOrderByCreationDateDesc(referenceNumber, companyCode);
+        if (applicantGroupOptional.isPresent()) {
+            ApplicantGroupDto applicantGroupDto = getMapper().fromEntity(applicantGroupOptional.get(), mappingContext);
+            return applicantGroupDto;
+        }
+        return null;
+    }
+
     public ApplicantGroupDto getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(String referenceNumber, long companyRitualSeasonId) {
         log.info("Start getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId ReferenceNumber:{}, companyRitualSeasonId:{}", referenceNumber, companyRitualSeasonId);
         Optional<JpaApplicantGroup> applicantGroupOptional = applicantGroupRepository.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(referenceNumber, companyRitualSeasonId);
@@ -55,8 +64,6 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         log.info("Start findGroupsByCompanyCode companyCode:{}", companyCode);
 
         Page<ApplicantGroupDto> applicantGroups = mapPage(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode, pageable));
-        applicantGroups.getContent().forEach(
-                applicantGroupDto -> applicantGroupDto.setReferenceNumber(applicantGroupDto.getReferenceNumber().contains("_") ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber()));
         applicantGroups.getContent().forEach(applicantGroupDto -> applicantGroupDto.setCountApplicants(groupApplicantListRepository.countByApplicantGroupId(applicantGroupDto.getId())));
         return applicantGroups;
     }

@@ -13,6 +13,8 @@ public interface GroupApplicantListRepository extends JpaRepository<JpaGroupAppl
 
     Optional<JpaGroupApplicantList> findByApplicantUinAndApplicantGroupReferenceNumber(String applicantUin, String applicantGroupReferenceNumber);
 
+    Optional<JpaGroupApplicantList> findTopByApplicantUinAndApplicantGroupIdOrderByCreationDateDesc(String applicantUin, long id);
+
     Optional<JpaGroupApplicantList> findTopByApplicantUinOrderByCreationDateDesc(String uin);
 
     List<JpaGroupApplicantList> findByApplicantGroupGroupLeaderDigitalIdsSuin(String suin);
