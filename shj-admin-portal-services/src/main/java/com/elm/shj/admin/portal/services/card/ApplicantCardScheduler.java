@@ -35,7 +35,7 @@ public class ApplicantCardScheduler {
     /**
      * Scheduled job to create cards for new applicant ritual records
      */
-    @Scheduled(fixedDelay = 2000)
+    @Scheduled(fixedDelayString = "${scheduler.generate.card.applicant.ritual.delay.milliseconds}")
     @SchedulerLock(name = "generate-applicant-ritual-cards-task")
     public void generateIdsForNewApplicants() {
         log.debug("Generate applicants cards scheduler started...");

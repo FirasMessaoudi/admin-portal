@@ -40,8 +40,7 @@ public class DigitalIdScheduler {
     /**
      * Scheduled job to create digital IDs for new applicants
      */
-//    @Scheduled(cron = "${scheduler.generate.digital.ids.cron}")
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelayString = "${scheduler.generate.digital.ids.delay.milliseconds}")
     @SchedulerLock(name = "generate-digital-ids-task")
     public void generateIdsForNewApplicants() {
         log.debug("Generate applicants digital ids scheduler started...");
