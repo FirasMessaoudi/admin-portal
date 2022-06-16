@@ -30,6 +30,7 @@ public class ApplicantPackageHousingDto implements Serializable {
     private long id;
     private String roomNumber;
     private String bedNumber;
+    private String campInfo;
     private Date creationDate;
     private Date updateDate;
     private ApplicantPackageDto applicantPackage;

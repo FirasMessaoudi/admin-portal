@@ -16,7 +16,6 @@ import java.math.BigInteger;
  * @since 1.1.0
  */
 
-@UniqueCompany
 @NoArgsConstructor
 @Getter
 @Setter

@@ -54,7 +54,7 @@ public class CompanyStaffFullDataDto implements Serializable {
     private String fullNameEn;
 
     @CellIndex(index = 5)
-    @OnlyCharacters(min = 6, max = 150, arabic = true)
+    @OnlyCharacters(min = 6, max = 150, arabic = true, allowEmpty = false)
     private String fullNameAr;
 
     @NullOrNotBlank(min = 0, max = 150)

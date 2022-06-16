@@ -83,7 +83,8 @@ public class ItemWriter {
     @Value("${ritual.season.year}")
     private int seasonYear;
 
-    private final static String DEFAULT_AVATAR = "avatar/avatar.png";
+    private final static String DEFAULT_AVATAR_MALE = "avatar/staff-male.png";
+    private final static String DEFAULT_AVATAR_FEMALE = "avatar/applicant-staff-female.png";
 
     /**
      * Populates the registry
@@ -402,18 +403,6 @@ public class ItemWriter {
         // saving staff full main data
         if (dataSegment.getId() == EDataSegment.STAFF_FULL_MAIN_DATA.getId()) {
 
-            BufferedImage defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            final String defaultAvatar;
-
-            try {
-                ImageIO.write(defaultImage, "png", bos);
-                byte[] bytes = bos.toByteArray();
-
-                defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
-            } catch (IOException e) {
-                throw new RuntimeException();
-            }
             // save all items and build data records
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
             List<S> savedItems = new ArrayList<>();
@@ -433,8 +422,32 @@ public class ItemWriter {
                             jobTileCodeCellIndex = field.getAnnotation(CellIndex.class).index();
                     }
                     CompanyStaffFullDataDto companyStaffFullData = (CompanyStaffFullDataDto) entry.getValue();
+
                     // set default avatar if the photo is null
-                    if(companyStaffFullData.getPhoto() == null) companyStaffFullData.setPhoto(defaultAvatar);
+                    if(companyStaffFullData.getPhoto() == null){
+
+                        BufferedImage defaultImage;
+
+                        if(companyStaffFullData.getGender().equals("M")) {
+                            defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_MALE);
+                        } else {
+                            defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_FEMALE);
+                        }
+
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        final String defaultAvatar;
+
+                        try {
+                            ImageIO.write(defaultImage, "png", bos);
+                            byte[] bytes = bos.toByteArray();
+
+                            defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
+                        } catch (IOException e) {
+                            throw new RuntimeException();
+                        }
+
+                        companyStaffFullData.setPhoto(defaultAvatar);
+                    }
 
                     // check company ritual season exist for the ritual type, seasson and company
                     CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyRefCode[0], companyStaffFullData.getTypeCode(), seasonYear);
@@ -453,10 +466,10 @@ public class ItemWriter {
                         }
                     }
 
-                    CompanyStaffDto staff = new CompanyStaffDto();
+                    CompanyStaffDto staff = mapCompanyStaffDto(companyStaffFullData);
                     // copy properties from company staff full data to company staff
 
-                    BeanUtils.copyProperties(staff, companyStaffFullData);
+                   // BeanUtils.copyProperties(staff, companyStaffFullData);
                     CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
                     // if record exists already in DB we need to update it
                     if (existingStaff != null) {
@@ -477,11 +490,11 @@ public class ItemWriter {
                             .build());
 
                     // start adding staff ritual data
-                    CompanyStaffRitualDto companyStaffRitual = new CompanyStaffRitualDto();
-                    companyStaffRitual.setSeason(seasonYear);
-                    companyStaffRitual.setCompanyCode(companyRefCode[0]);
-                    BeanUtils.copyProperties(companyStaffRitual, companyStaffFullData);
-                    updateCompanyStaffRitualData(companyStaffRitual);
+                    CompanyStaffRitualDto companyStaffRitual = mapCompanyStaffRitualDto(companyStaffFullData, companyRefCode[0]);
+                    //companyStaffRitual.setSeason(seasonYear);
+                    //companyStaffRitual.setCompanyCode(companyRefCode[0]);
+                    //BeanUtils.copyProperties(companyStaffRitual, companyStaffFullData);
+                    updateCompanyStaffRitualData(companyStaffRitual, Long.parseLong(BeanUtils.getProperty(savedItem, "id")));
 
                 }catch (Exception e){
                     log.error("Error while creating company staff full data");
@@ -597,6 +610,41 @@ public class ItemWriter {
         repository.saveAll(savedItems);
 
         return Collections.emptyList();
+    }
+
+    private CompanyStaffDto mapCompanyStaffDto(CompanyStaffFullDataDto companyStaffFullData){
+        CompanyStaffDto companyStaff = CompanyStaffDto.builder()
+                .idNumber(companyStaffFullData.getIdNumber())
+                .passportNumber(companyStaffFullData.getPassportNumber())
+                .dateOfBirthGregorian(companyStaffFullData.getDateOfBirthGregorian())
+                .dateOfBirthHijri(companyStaffFullData.getDateOfBirthHijri())
+                .fullNameAr(companyStaffFullData.getFullNameAr())
+                .fullNameEn(companyStaffFullData.getFullNameEn())
+                .fullNameOrigin(companyStaffFullData.getFullNameOrigin())
+                .gender(companyStaffFullData.getGender())
+                .nationalityCode(companyStaffFullData.getNationalityCode())
+                .idNumberOriginal(companyStaffFullData.getIdNumberOriginal())
+                .titleCode(companyStaffFullData.getTitleCode())
+                .customJobTitle(companyStaffFullData.getCustomJobTitle())
+                .email(companyStaffFullData.getEmail())
+                .mobileNumber(companyStaffFullData.getMobileNumber())
+                .mobileNumberIntl(companyStaffFullData.getMobileNumberIntl())
+                .photo(companyStaffFullData.getPhoto())
+                .build();
+        return companyStaff;
+    }
+
+    private CompanyStaffRitualDto mapCompanyStaffRitualDto(CompanyStaffFullDataDto companyStaffFullData, String companyCode){
+        CompanyStaffRitualDto companyStaffRitual = CompanyStaffRitualDto.builder()
+                .idNumber(companyStaffFullData.getIdNumber())
+                .passportNumber(companyStaffFullData.getPassportNumber())
+                .dateOfBirthGregorian(companyStaffFullData.getDateOfBirthGregorian())
+                .dateOfBirthHijri(companyStaffFullData.getDateOfBirthHijri())
+                .companyCode(companyCode)
+                .typeCode(companyStaffFullData.getTypeCode())
+                .season(seasonYear)
+                .build();
+        return companyStaffRitual;
     }
 
 
@@ -766,8 +814,8 @@ public class ItemWriter {
         }
     }
 
-    private  void updateCompanyStaffRitualData(CompanyStaffRitualDto companyStaffRitual) {
-        validationService.saveStaffFullRitual(companyStaffRitual);
+    private  void updateCompanyStaffRitualData(CompanyStaffRitualDto companyStaffRitual, Long staffId) {
+        validationService.saveStaffFullRitual(companyStaffRitual, staffId);
     }
 
 }

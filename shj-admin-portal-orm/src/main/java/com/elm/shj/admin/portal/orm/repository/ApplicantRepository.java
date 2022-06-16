@@ -163,7 +163,8 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Query("select a.registered from JpaApplicant  a where a.id = :id")
     boolean findApplicantStatusById(@Param("id") Long id);
 
-    @Query("select a FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga ON di.uin = ga.applicantUin JOIN ga.applicantGroup ap where " +
+    @Query("select a " +
+            "FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga ON di.uin = ga.applicantUin JOIN ga.applicantGroup ap where " +
             "(:idNumber is null OR a.idNumber = :idNumber) and "+
             "(:passportNumber is null OR a.passportNumber = :passportNumber) and " +
             "(:gender is null OR a.gender = :gender) and " +
@@ -180,7 +181,8 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
                                           @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                           @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
 
-    @Query("select a FROM JpaApplicant a JOIN a.digitalIds di where " +
+    @Query("select a  " +
+            "FROM JpaApplicant a JOIN a.digitalIds di where " +
             "(:idNumber is null OR a.idNumber = :idNumber) and "+
             "(:passportNumber is null OR a.passportNumber = :passportNumber) and " +
             "(:gender is null OR a.gender = :gender) and " +
@@ -209,5 +211,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
             "WHERE a.id = :applicantId ")
     String findRitualTypeByApplicantId(@Param("applicantId") long applicantId);
+
+
 
 }

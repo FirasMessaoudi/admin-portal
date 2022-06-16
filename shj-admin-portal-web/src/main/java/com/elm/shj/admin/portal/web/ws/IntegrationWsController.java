@@ -245,12 +245,12 @@ public class IntegrationWsController {
      */
     @PostMapping("/verify")
     public ResponseEntity<WsResponse<?>> verify(@RequestBody @Validated ValidateApplicantCmd command) {
-        Optional<ApplicantLiteDto> applicant = null;
-        if (command.getType().equals("uin"))
+        Optional<ApplicantLiteDto> applicant = Optional.empty();
+        if (command.getType().equals(ELoginType.uin.name()))
             applicant = applicantLiteService.findByUin(command.getIdentifier());
-        if (command.getType().equals("passport"))
+        if (command.getType().equals(ELoginType.passport.name()))
             applicant = applicantLiteService.findByPassportNumber(command.getIdentifier(), command.getNationalityCode());
-        if (command.getType().equals("id"))
+        if (command.getType().equals(ELoginType.id.name()))
             applicant = applicantLiteService.findByIdNumber(command.getIdentifier());
 
         if (applicant.isPresent()) {
@@ -1312,6 +1312,13 @@ public class IntegrationWsController {
                     .body(file);
         }
         return null;
+    }
+
+    @GetMapping("/group/find/{groupId}/{companyRefCode}/{companyTypeCode}")
+    public ResponseEntity<WsResponse<?>> findGroupDetails(@PathVariable long groupId,@PathVariable String companyRefCode, @PathVariable String companyTypeCode) {
+        log.info("find applicant groups by company");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(applicantGroupService.findGroupDetailsByGroupId(groupId,companyRefCode,companyTypeCode)).build());
     }
 
 }
