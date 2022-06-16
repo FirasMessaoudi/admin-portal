@@ -264,7 +264,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             });
 
         }
-        Page<CompanyStaffLiteDto> companyStaff = new PageImpl<>(companyStaffList, pageable, companyStaffs.getTotalPages());
+        Page<CompanyStaffLiteDto> companyStaff = new PageImpl<>(companyStaffList, pageable, companyStaffs.getTotalElements());
         return companyStaff;
     }
 
