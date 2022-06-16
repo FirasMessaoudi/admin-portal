@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,7 +56,7 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
 
         Page<ApplicantGroupDto> applicantGroups = mapPage(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode, pageable));
         applicantGroups.getContent().forEach(
-                applicantGroupDto -> applicantGroupDto.setReferenceNumber(applicantGroupDto.getReferenceNumber().indexOf("_") != -1 ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber()));
+                applicantGroupDto -> applicantGroupDto.setReferenceNumber(applicantGroupDto.getReferenceNumber().contains("_") ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber()));
         applicantGroups.getContent().forEach(applicantGroupDto -> applicantGroupDto.setCountApplicants(groupApplicantListRepository.countByApplicantGroupId(applicantGroupDto.getId())));
         return applicantGroups;
     }

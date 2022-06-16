@@ -284,8 +284,8 @@ public class ItemWriter {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(4)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
                     return;
                 }
-                String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
-                ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupDataDto.getGroupReferenceNumber() + "_" + companyCode, companyRitualSeasonDto.getId());
+                // String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
+                ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupDataDto.getGroupReferenceNumber() + "_" + companyRefCode, companyRitualSeasonDto.getId());
                 if (applicantGroupDto == null) {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(4)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
                     return;
@@ -354,12 +354,18 @@ public class ItemWriter {
                     return;
                 }
                 CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationalityCode());
-                String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
+                // String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
+                ApplicantGroupDto existingGroup = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupMainDataDto.getGroupReferenceNumber() + "_" + companyRefCode[0], companyRitualSeasonDto.getId());
+                if (existingGroup != null) {
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.DUPLICATE_VALUE.getMessage())).valid(false).build());
+                    return;
+
+                }
                 ApplicantGroupDto applicantGroupDto = ApplicantGroupDto.builder()
                         .groupLeader(existingStaff)
                         .groupName(groupMainDataDto.getGroupName())
                         .companyRitualSeason(companyRitualSeasonDto)
-                        .referenceNumber(groupMainDataDto.getGroupReferenceNumber() + "_" + companyCode)
+                        .referenceNumber(groupMainDataDto.getGroupReferenceNumber() + "_" + companyRefCode[0])
                         .build();
                 savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(applicantGroupDto, mappingContext));
                 savedItems.add(savedItem);
