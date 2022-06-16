@@ -1164,10 +1164,10 @@ public class IntegrationWsController {
         return null;
     }
 
-    @GetMapping("/data/request/list")
-    public ResponseEntity<WsResponse<?>> listDataRequests(Pageable pageable) {
+    @GetMapping("/data/request/list/{companyRefCode}/{companyTypeCode}")
+    public ResponseEntity<WsResponse<?>> listDataRequests(@PathVariable long companyRefCode, @PathVariable String companyTypeCode, Pageable pageable) {
         log.info("listing all data requests");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(dataRequestService.findAllOrganizerDataRequest(pageable)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(dataRequestService.findAllOrganizerDataRequest(companyRefCode, companyTypeCode, pageable)).build());
 
     }
 
@@ -1315,7 +1315,7 @@ public class IntegrationWsController {
     }
 
     @GetMapping("/group/find/{groupId}/{companyRefCode}/{companyTypeCode}")
-    public ResponseEntity<WsResponse<?>> findGroupDetails(@PathVariable long groupId,@PathVariable String companyRefCode, @PathVariable String companyTypeCode) {
+    public ResponseEntity<WsResponse<?>> findGroupDetails(@PathVariable String groupId,@PathVariable String companyRefCode, @PathVariable String companyTypeCode) {
         log.info("find applicant groups by company");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(applicantGroupService.findGroupDetailsByGroupId(groupId,companyRefCode,companyTypeCode)).build());
