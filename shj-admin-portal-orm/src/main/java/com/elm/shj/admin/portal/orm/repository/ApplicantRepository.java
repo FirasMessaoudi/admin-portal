@@ -164,13 +164,13 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     boolean findApplicantStatusById(@Param("id") Long id);
 
     @Query("select a " +
-            "FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga ON di.uin = ga.applicantUin JOIN ga.applicantGroup ap where " +
+            "FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga ON di.uin = ga.applicantUin JOIN ga.applicantGroup ap JOIN ap.companyRitualSeason crs JOIN crs.company c where " +
             "(:idNumber is null OR a.idNumber = :idNumber) and "+
             "(:passportNumber is null OR a.passportNumber = :passportNumber) and " +
             "(:gender is null OR a.gender = :gender) and " +
             "((:applicantName is null OR a.fullNameEn like '%'+:applicantName+'%' OR a.fullNameAr like '%'+:applicantName+'%')) and " +
             "(:uin is null OR di.uin = :uin) and " +
-            "(:groupNumber is null OR ap.referenceNumber = :groupNumber) and " +
+            "((:groupNumber is null OR ap.referenceNumber = :groupNumber) and c.code = :companyFullCode) and" +
             "(:companyCode is null or a.companyCode = :companyCode) and " +
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
@@ -179,7 +179,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
                                         @Param("passportNumber") String passportNumber,  @Param("applicantName") String applicantName,
                                         @Param("gender") String gender, @Param("uin") String uin, @Param("companyCode") String companyCode,
                                           @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
-                                          @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
+                                          @Param("serviceGroupRefCode") long serviceGroupRefCode,  @Param("companyFullCode") String companyFullCode, Pageable pageable);
 
     @Query("select a  " +
             "FROM JpaApplicant a JOIN a.digitalIds di where " +
