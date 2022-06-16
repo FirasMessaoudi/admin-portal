@@ -186,9 +186,6 @@ public class ValidationService {
 
         }
         RitualPackageDto existingPackage = ritualPackageService.findByCodeAndRitual(plannedPackage.getPackageRefNumber().toString(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
-        existingPackage.getApplicantPackages().size();
-        existingPackage.getPackageHousings().size();
-        existingPackage.getPackageTransportations().size();
 
         if (existingPackage != null) {
             ritualPackageDto.setId(existingPackage.getId());
