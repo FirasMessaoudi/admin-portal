@@ -174,7 +174,7 @@
                                                     Dear ${user.firstName},
                                                 </h2>
                                                 <p style="font-size: 14px; margin: 0; color: #707070">
-                                                    You requested a reset password in Shaaer platform. You can login to
+                                                    You requested a reset password in Hajj App platform. You can login to
                                                     the system using the following
                                                     username <#setting number_format="0" />${user.nin}<#setting number_format="" />
                                                     and the temporary password sent to your mobile
