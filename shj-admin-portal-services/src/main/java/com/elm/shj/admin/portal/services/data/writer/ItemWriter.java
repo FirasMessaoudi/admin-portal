@@ -10,6 +10,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.data.huic.ValidationService;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
@@ -20,6 +21,7 @@ import com.elm.shj.admin.portal.services.data.validators.RitualTypeCode;
 import com.elm.shj.admin.portal.services.data.validators.WithGroupReferenceNumber;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.lookup.CompanyRitualStepLookupService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +81,8 @@ public class ItemWriter {
     private final DigitalIdService digitalIdService;
     private final ApplicantLiteService applicantLiteService;
     private final ValidationService validationService;
+    private final CompanyRitualStepService companyRitualStepService;
+    private final CompanyRitualStepLookupService companyRitualStepLookupService;
 
     @Value("${ritual.season.year}")
     private int seasonYear;
@@ -285,7 +289,7 @@ public class ItemWriter {
                     return;
                 }
                 // String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
-                ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupDataDto.getGroupReferenceNumber() + "_" + companyRefCode, companyRitualSeasonDto.getId());
+                ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
                 if (applicantGroupDto == null) {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(4)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
                     return;
@@ -355,7 +359,7 @@ public class ItemWriter {
                 }
                 CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationalityCode());
                 // String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
-                ApplicantGroupDto existingGroup = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupMainDataDto.getGroupReferenceNumber() + "_" + companyRefCode[0], companyRitualSeasonDto.getId());
+                ApplicantGroupDto existingGroup = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupMainDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
                 if (existingGroup != null) {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.DUPLICATE_VALUE.getMessage())).valid(false).build());
                     return;
@@ -365,7 +369,7 @@ public class ItemWriter {
                         .groupLeader(existingStaff)
                         .groupName(groupMainDataDto.getGroupName())
                         .companyRitualSeason(companyRitualSeasonDto)
-                        .referenceNumber(groupMainDataDto.getGroupReferenceNumber() + "_" + companyRefCode[0])
+                        .referenceNumber(groupMainDataDto.getGroupReferenceNumber())
                         .build();
                 savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(applicantGroupDto, mappingContext));
                 savedItems.add(savedItem);

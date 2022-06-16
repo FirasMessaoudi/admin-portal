@@ -26,4 +26,6 @@ public class UpdateGroupCmd implements Serializable {
     private String oldGroup;
     @NotNull
     private String newGroup;
+
+    private String companyCode;
 }

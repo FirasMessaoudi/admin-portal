@@ -36,4 +36,6 @@ public interface ApplicantGroupRepository extends JpaRepository<JpaApplicantGrou
             "where ag.referenceNumber = :referenceNumber " +
             "AND company.code= :companyCode ")
     List<ApplicantGroupDetailsVo> findGroupDetailsByGroupId(@Param("referenceNumber") String referenceNumber, @Param("companyCode") String companyCode);
+
+    Optional<JpaApplicantGroup> findTopByReferenceNumberAndCompanyRitualSeasonCompanyCodeOrderByCreationDateDesc(String refNumber, String companyCode);
 }
