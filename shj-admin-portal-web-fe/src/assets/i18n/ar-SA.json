@@ -301,7 +301,7 @@
     "ritual_type": "نوع الشعيرة",
     "hamlah": "الحملة",
     "motawef": "المطوف",
-    "applicant_id": "هوية شعائر",
+    "applicant_id": "رقم البطاقة",
     "card_number": "الرقم التسلسلي للبطاقة",
     "card_status": "حالة البطاقة",
     "suspend_card": "إيقاف البطاقة",
@@ -573,7 +573,7 @@
   },
   "incident-management": {
     "title": "إدارة البلاغات",
-    "applicant_shaaer_id": "رقم هوية شعائر",
+    "applicant_shaaer_id": "رقم البطاقة",
     "applicant_name": "اسم مقدم البلاغ",
     "incident_type": "نوع البلاغ",
     "incident_date": "تاريخ تقديم البلاغ",

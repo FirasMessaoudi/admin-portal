@@ -302,7 +302,7 @@
     "ritual_type": "Ritual Type",
     "hamlah": "Hamlah",
     "motawef": "Al Motawef",
-    "applicant_id": "Shaaer ID",
+    "applicant_id": "Card Number",
     "card_number": "Card Serial Number",
     "card_status": "Card Status",
     "suspend_card": "Suspend Card",
@@ -574,7 +574,7 @@
   },
   "incident-management": {
     "title": "Incident Management",
-    "applicant_shaaer_id": "Applicant Shaaer ID",
+    "applicant_shaaer_id": "Applicant Card Number",
     "applicant_name": "Applicant Name",
     "incident_type": "Incident Type",
     "incident_date": "Incident Date",
