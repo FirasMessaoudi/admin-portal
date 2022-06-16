@@ -33,7 +33,7 @@ public interface DataRequestRepository extends JpaRepository<JpaDataRequest, Lon
     @Query("SELECT dr FROM JpaDataRequest dr WHERE dr.dataSegment.id in :ids")
     Page<JpaDataRequest> finDataRequests(@Param("ids") List<Long> ids, Pageable pageable);
 
-    @Query("SELECT dr FROM JpaDataRequest dr WHERE dr.dataSegment.id in :ids order by dr.creationDate desc ")
-    Page<JpaDataRequest> finOrganizerDataRequests(@Param("ids") List<Long> ids, Pageable pageable);
+    @Query("SELECT dr FROM JpaDataRequest dr WHERE dr.dataSegment.id in :ids AND dr.companyCode = :companyCode order by dr.creationDate desc ")
+    Page<JpaDataRequest> finOrganizerDataRequests(@Param("ids") List<Long> ids,  @Param("companyCode") String companyCode, Pageable pageable);
 
 }
