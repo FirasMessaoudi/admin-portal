@@ -45,7 +45,7 @@ public class OtpService {
     private LoadingCache<String, String> otpCache;
 
     private final OtpGenerator otpGenerator;
-    private final HUICSmsService HUICSmsService;
+    private final HUICSmsService huicSmsService;
     private final MessageSource messageSource;
 
     @PostConstruct
@@ -72,7 +72,7 @@ public class OtpService {
             otpCache.put(principal, generatedOtp);
             String locale = principal.startsWith("1") ? "ar" : "en";
             String registerUserSms = messageSource.getMessage(OTP_SMS_NOTIFICATION_MSG, new String[]{generatedOtp}, Locale.forLanguageTag(locale));
-            return HUICSmsService.sendMessage(countryCode,mobileNumber, registerUserSms, "comments") ? generatedOtp : null;
+            return huicSmsService.sendMessage(countryCode,mobileNumber, registerUserSms, "comments") ? generatedOtp : null;
         } catch (NoSuchAlgorithmException | InvalidKeyException | RuntimeException | SSLException e) {
             log.error("Unable to generate OTP : " + e.getMessage(), e);
             return null;
