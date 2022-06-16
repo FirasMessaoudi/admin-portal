@@ -76,7 +76,7 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
 
     private GroupNameLookupDto mapGroupName(ApplicantGroupDto applicantGroupDto) {
         GroupNameLookupDto groupNameLookup = GroupNameLookupDto.builder()
-                .code(applicantGroupDto.getReferenceNumber().indexOf("_") != -1 ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber())
+                .code(applicantGroupDto.getReferenceNumber())
                 .label(applicantGroupDto.getGroupName()).build();
         return groupNameLookup;
     }
