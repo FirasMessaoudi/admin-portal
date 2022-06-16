@@ -22,6 +22,19 @@ INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('sms.api.url', 'https://172.16.72.65/api/SmartCards/smsService');
 GO
 
+-- update mobile number of default users
+UPDATE shc_portal.shc_user SET mobile_number = '551367731' WHERE nin in ('1234567897', '9366014457', '1234567891');
+GO
+
+Delete FROM shc_portal.shc_portal.shc_ritual_season WHERE ID > 0;
+GO
+SET IDENTITY_INSERT shc_portal.shc_portal.shc_ritual_season ON;
+INSERT INTO shc_portal.shc_portal.shc_ritual_season (id, season_year, ritual_type_code, season_start, season_end, active) VALUES (1, 1443, 'EXTERNAL_HAJJ', 14431101, 14431230, 'true');
+INSERT INTO shc_portal.shc_portal.shc_ritual_season (id, season_year, ritual_type_code, season_start, season_end, active) VALUES (2, 1443, 'INTERNAL_HAJJ', 14431101, 14431230, 'true');
+INSERT INTO shc_portal.shc_portal.shc_ritual_season (id, season_year, ritual_type_code, season_start, season_end, active) VALUES (3, 1443, 'COURTESY_HAJJ', 14431101, 14431230, 'true');
+SET IDENTITY_INSERT shc_portal.shc_portal.shc_ritual_season OFF;
+GO
+
 insert into shc_portal.shc_company (label_ar,label_en,code) values (N'وزارة الداخلية','Ministry of Interior Affairs','1_GOVERNMENT_AGENCY')
 insert into shc_portal.shc_company (label_ar,label_en,code) values (N'وزارة الشؤون الإسلامية والدعوة والإرشاد','Ministry of Islamic Affairs','2_GOVERNMENT_AGENCY')
 insert into shc_portal.shc_company (label_ar,label_en,code) values (N'وزارة الصحة','Ministry of Health','3_GOVERNMENT_AGENCY')
@@ -58,17 +71,10 @@ insert into shc_portal.shc_company (label_ar,label_en,code) values (N'برنام
 insert into shc_portal.shc_company (label_ar,label_en,code) values (N'الغرفة التجارية الصناعية بمكة المكرمة','Chamber of Commerce and Industry in Makkah','34_GOVERNMENT_AGENCY')
 insert into shc_portal.shc_company (label_ar,label_en,code) values (N'المجلس التنسيقي لحجاج الداخل ','Coordination Council For Internal Pilgrims','35_GOVERNMENT_AGENCY')
 insert into shc_portal.shc_company (label_ar,label_en,code) values (N'النقابة العامة للسيارات ','Naqaba','36_GOVERNMENT_AGENCY')
-insert into shc_portal.shc_company (label_ar,label_en,code) values (N'علم','ELM','37_GOVERNMENT_AGENCY')
-INSERT INTO shc_portal.shc_company_ritual_season (company_id,ritual_season_id,active,season_start,season_end,total_quota,air_quota,sea_quota,land_quota,creation_date)
-SELECT id,2,1,14431101,14431230,0,0,0,0,getdate()
-FROM shc_portal.shc_company C
-where code like '%govern%'
-UNION ALL
-SELECT id,3,1,14431101,14431230,0,0,0,0,getdate()
-FROM shc_portal.shc_company C
-where code like '%govern%'
-UNION ALL
-SELECT id,4,1,14431101,14431230,0,0,0,0,getdate()
-FROM shc_portal.shc_company C
-where code like '%govern%'
+insert into shc_portal.shc_company (label_ar,label_en,code) values (N'علم','ELM','37_GOVERNMENT_AGENCY');
+GO
+INSERT INTO shc_portal.shc_company_ritual_season (company_id,ritual_season_id,active,season_start,season_end,total_quota,air_quota,sea_quota,land_quota)
+SELECT id,1,1,14431101,14431230,0,0,0,0 FROM shc_portal.shc_company C where code like '%govern%'
+UNION ALL SELECT id,2,1,14431101,14431230,0,0,0,0 FROM shc_portal.shc_company C where code like '%govern%'
+UNION ALL SELECT id,3,1,14431101,14431230,0,0,0,0 FROM shc_portal.shc_company C where code like '%govern%'
 GO
