@@ -89,11 +89,11 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         return groupNumber;
     }
 
-    public ApplicantGroupDetailsVo findGroupDetailsByGroupId(long groupId, String companyRefCode, String companyTypeCode) {
+    public ApplicantGroupDetailsVo findGroupDetailsByGroupId(String groupId, String companyRefCode, String companyTypeCode) {
         log.info("ApplicantGroupService ::: Start findGroupDetailsByGroupId {}", groupId);
         String multipleValue = "M";
         StringBuffer fullCompanyCode = new StringBuffer(companyRefCode).append("_").append(companyTypeCode);
-        List<ApplicantGroupDetailsVo> groupDetailsByGroupId = applicantGroupRepository.findGroupDetailsByGroupId(String.valueOf(groupId),fullCompanyCode.toString());
+        List<ApplicantGroupDetailsVo> groupDetailsByGroupId = applicantGroupRepository.findGroupDetailsByGroupId(groupId,fullCompanyCode.toString());
         ApplicantGroupDetailsVo result = new ApplicantGroupDetailsVo();
         long countCampInfo = groupDetailsByGroupId.stream().map(p -> p.getCampInfo()).distinct().count();
         long countBusInfo = groupDetailsByGroupId.stream().map(p -> p.getBusInfo()).distinct().count();

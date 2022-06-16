@@ -214,6 +214,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "JOIN digitalId.companyStaffCards staffCard " +
             "JOIN staffCard.companyRitualSeason ritualSeason " +
             "JOIN ritualSeason.company c "+
-            "where c.code = :companyCode ")
+            "where c.code = :companyCode " +
+            "And staff.titleCode = 'GROUP_LEADER'")
     List<CompanyStaffVO> findGroupLeadersListByCompanyCode(@Param("companyCode") String companyCode);
 }
