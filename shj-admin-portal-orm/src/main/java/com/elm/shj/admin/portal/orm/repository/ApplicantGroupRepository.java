@@ -27,10 +27,15 @@ public interface ApplicantGroupRepository extends JpaRepository<JpaApplicantGrou
     @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantGroupDetailsVo(ag.id,ag.localOfficeId,ag.groupName,gl.fullNameAr,gl.fullNameEn,gl.idNumber,gl.passportNumber,trans.vehicleInfo,housing.campInfo) " +
             "FROM JpaApplicantGroup ag " +
             "join ag.groupLeader gl " +
+            "JOIN ag.companyRitualSeason companyRitualSeason " +
+            "JOIN companyRitualSeason.company company " +
             "left join ag.groupApplicantLists al " +
             "left join JpaApplicantPackage package on CAST(package.applicantUin as text) = al.applicantUin " +
             "left join package.applicantPackageHousings housing " +
             "left join package.applicantPackageTransportations trans " +
-            "where ag.referenceNumber = :referenceNumber ")
-    List<ApplicantGroupDetailsVo> findGroupDetailsByGroupId(@Param("referenceNumber") String referenceNumber);
+            "where ag.referenceNumber = :referenceNumber " +
+            "AND company.code= :companyCode ")
+    List<ApplicantGroupDetailsVo> findGroupDetailsByGroupId(@Param("referenceNumber") String referenceNumber, @Param("companyCode") String companyCode);
+
+    Optional<JpaApplicantGroup> findTopByReferenceNumberAndCompanyRitualSeasonCompanyCodeOrderByCreationDateDesc(String refNumber, String companyCode);
 }

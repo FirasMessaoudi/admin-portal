@@ -1281,7 +1281,7 @@ public class IntegrationWsController {
      */
     @PutMapping("/applicant/update-group")
     public ResponseEntity<WsResponse<?>> updateApplicantGroup(@RequestBody UpdateGroupCmd updateGroupCmd) {
-        boolean updated = groupApplicantListService.updateGroup(updateGroupCmd.getUin(), updateGroupCmd.getOldGroup(), updateGroupCmd.getNewGroup());
+        boolean updated = groupApplicantListService.updateGroup(updateGroupCmd);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
 
     }

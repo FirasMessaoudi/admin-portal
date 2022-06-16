@@ -38,6 +38,15 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         return null;
     }
 
+    public ApplicantGroupDto getApplicantGroupByReferenceNumberAndCompany(String referenceNumber, String companyCode) {
+        Optional<JpaApplicantGroup> applicantGroupOptional = applicantGroupRepository.findTopByReferenceNumberAndCompanyRitualSeasonCompanyCodeOrderByCreationDateDesc(referenceNumber, companyCode);
+        if (applicantGroupOptional.isPresent()) {
+            ApplicantGroupDto applicantGroupDto = getMapper().fromEntity(applicantGroupOptional.get(), mappingContext);
+            return applicantGroupDto;
+        }
+        return null;
+    }
+
     public ApplicantGroupDto getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(String referenceNumber, long companyRitualSeasonId) {
         log.info("Start getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId ReferenceNumber:{}, companyRitualSeasonId:{}", referenceNumber, companyRitualSeasonId);
         Optional<JpaApplicantGroup> applicantGroupOptional = applicantGroupRepository.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(referenceNumber, companyRitualSeasonId);
@@ -55,8 +64,6 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         log.info("Start findGroupsByCompanyCode companyCode:{}", companyCode);
 
         Page<ApplicantGroupDto> applicantGroups = mapPage(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode, pageable));
-        applicantGroups.getContent().forEach(
-                applicantGroupDto -> applicantGroupDto.setReferenceNumber(applicantGroupDto.getReferenceNumber().contains("_") ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber()));
         applicantGroups.getContent().forEach(applicantGroupDto -> applicantGroupDto.setCountApplicants(groupApplicantListRepository.countByApplicantGroupId(applicantGroupDto.getId())));
         return applicantGroups;
     }
@@ -69,7 +76,7 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
 
     private GroupNameLookupDto mapGroupName(ApplicantGroupDto applicantGroupDto) {
         GroupNameLookupDto groupNameLookup = GroupNameLookupDto.builder()
-                .code(applicantGroupDto.getReferenceNumber().indexOf("_") != -1 ? applicantGroupDto.getReferenceNumber().substring(0, applicantGroupDto.getReferenceNumber().indexOf("_")) : applicantGroupDto.getReferenceNumber())
+                .code(applicantGroupDto.getReferenceNumber())
                 .label(applicantGroupDto.getGroupName()).build();
         return groupNameLookup;
     }
@@ -85,8 +92,8 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
     public ApplicantGroupDetailsVo findGroupDetailsByGroupId(long groupId, String companyRefCode, String companyTypeCode) {
         log.info("ApplicantGroupService ::: Start findGroupDetailsByGroupId {}", groupId);
         String multipleValue = "M";
-        StringBuffer referenceNumber = new StringBuffer().append(groupId).append("_").append(companyRefCode).append("_").append(companyTypeCode);
-        List<ApplicantGroupDetailsVo> groupDetailsByGroupId = applicantGroupRepository.findGroupDetailsByGroupId(referenceNumber.toString());
+        StringBuffer fullCompanyCode = new StringBuffer(companyRefCode).append("_").append(companyTypeCode);
+        List<ApplicantGroupDetailsVo> groupDetailsByGroupId = applicantGroupRepository.findGroupDetailsByGroupId(String.valueOf(groupId),fullCompanyCode.toString());
         ApplicantGroupDetailsVo result = new ApplicantGroupDetailsVo();
         long countCampInfo = groupDetailsByGroupId.stream().map(p -> p.getCampInfo()).distinct().count();
         long countBusInfo = groupDetailsByGroupId.stream().map(p -> p.getBusInfo()).distinct().count();

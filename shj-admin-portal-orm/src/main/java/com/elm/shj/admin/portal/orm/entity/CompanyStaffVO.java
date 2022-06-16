@@ -46,4 +46,34 @@ public class CompanyStaffVO implements Serializable {
     private String nationalityCode;
     private String cardReferenceNumber;
     private long cardId;
+    private long id;
+    public CompanyStaffVO(String suin, String fullNameEn, String fullNameAr, String jobTitleCode, String photo, String referenceNumber, String cardStatusCode, String ritualTypeCode, int ritualSeason, String companyLabelEn, String companyLabelAr, String companyCode, String idNumber, String passport, String fullNameOrigin, Date dateOfBirthGregorian, Long dateOfBirthHijri, String gender, String nationalityCode, String cardReferenceNumber, long cardId) {
+        this.suin = suin;
+        this.fullNameEn = fullNameEn;
+        this.fullNameAr = fullNameAr;
+        this.jobTitleCode = jobTitleCode;
+        this.photo = photo;
+        this.referenceNumber = referenceNumber;
+        this.cardStatusCode = cardStatusCode;
+        this.ritualTypeCode = ritualTypeCode;
+        this.ritualSeason = ritualSeason;
+        this.companyLabelEn = companyLabelEn;
+        this.companyLabelAr = companyLabelAr;
+        this.companyCode = companyCode;
+        this.idNumber = idNumber;
+        this.passport = passport;
+        this.fullNameOrigin = fullNameOrigin;
+        this.dateOfBirthGregorian = dateOfBirthGregorian;
+        this.dateOfBirthHijri = dateOfBirthHijri;
+        this.gender = gender;
+        this.nationalityCode = nationalityCode;
+        this.cardReferenceNumber = cardReferenceNumber;
+        this.cardId = cardId;
+    }
+
+    public CompanyStaffVO(long id,  String fullNameEn, String fullNameAr) {
+        this.id = id;
+        this.fullNameEn = fullNameEn;
+        this.fullNameAr = fullNameAr;
+    }
 }

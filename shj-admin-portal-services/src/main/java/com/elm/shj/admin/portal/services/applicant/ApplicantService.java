@@ -383,10 +383,11 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         }
 
         if(applicantSearchCriteriaDto.getGroupNumber() != null && !applicantSearchCriteriaDto.getGroupNumber().equals("")){
-            applicantSearchCriteriaDto.setGroupNumber(applicantSearchCriteriaDto.getGroupNumber() + "_" + String.valueOf(companyRefCode)+ "_" + companyTypeCode);
+            //applicantSearchCriteriaDto.setGroupNumber(applicantSearchCriteriaDto.getGroupNumber() + "_" + String.valueOf(companyRefCode)+ "_" + companyTypeCode);
+            String companyFullCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
             Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findOrganizerApplicantsWithGroupNumberFilter(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
                     applicantSearchCriteriaDto.getPassportNumber(), applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
-                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable));
+                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, companyFullCode, pageable));
             return applicantDtos;
         } else {
             Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getPassportNumber(),
