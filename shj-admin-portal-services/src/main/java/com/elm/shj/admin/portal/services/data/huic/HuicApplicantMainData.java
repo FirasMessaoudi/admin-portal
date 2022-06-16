@@ -16,6 +16,7 @@ import java.util.Date;
  * @author f.messaoudi
  * @since 1.1.0
  */
+@WithPackage
 @UniqueApplicant
 @FieldDependency.List({
         @FieldDependency(first = "idNumber", second = "passportNo"),
@@ -101,7 +102,7 @@ public class HuicApplicantMainData implements Serializable {
     @NullOrNotBlank(min = 0, max = 30)
     private String postalCode;
 
-    @WithRitualPackage
+    //@WithRitualPackage
     private String packageRefNumber;
 
     @ApplicantStatus

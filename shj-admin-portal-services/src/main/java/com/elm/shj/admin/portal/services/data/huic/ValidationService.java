@@ -190,11 +190,16 @@ public class ValidationService {
 
         if (existingPackage != null) {
             ritualPackageDto.setId(existingPackage.getId());
-            ritualPackageDto.setPackageTransportations(existingPackage.getPackageTransportations());
-            ritualPackageDto.setPackageHousings(existingPackage.getPackageHousings());
-            ritualPackageDto.setApplicantPackages(existingPackage.getApplicantPackages());
 
-            //TODO: find all of them by package id
+
+            List<ApplicantPackageDto> applicantPackageDtos = applicantPackageService.findByRitualPackage(existingPackage.getId());
+            List<PackageHousingDto> packageHousingDtos = packageHousingService.findByRitualPackageId(existingPackage.getId());
+            List<PackageTransportationDto> packageTransportationDtos = packageTransportationService.findByRitualPackageId(existingPackage.getId());
+
+            ritualPackageDto.setApplicantPackages(applicantPackageDtos);
+            ritualPackageDto.setPackageTransportations(packageTransportationDtos);
+            ritualPackageDto.setPackageHousings(packageHousingDtos);
+
 
         }
         RitualPackageDto savedRitualPackage = ritualPackageService.save(ritualPackageDto);

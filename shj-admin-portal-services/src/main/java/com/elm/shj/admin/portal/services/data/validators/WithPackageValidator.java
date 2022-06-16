@@ -36,10 +36,10 @@ public class WithPackageValidator implements ConstraintValidator<WithPackage, Ob
 
         if (value.getClass().isAssignableFrom(HuicApplicantMainData.class)) {
             HuicApplicantMainData huicApplicantMainData = (HuicApplicantMainData) value;
-            return huicApplicantMainData.getPackageRefNumber() == null || (ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()) != null && ritualPackageService.existRitualPackageByReferenceNumber(huicApplicantMainData.getPackageRefNumber() + "_" + ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name()));
+            return huicApplicantMainData.getPackageRefNumber() == null || (ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()) != null && ritualPackageService.findByCodeAndRitual(huicApplicantMainData.getPackageRefNumber(), ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear()) != null);
         } else {
             HuicApplicantRitual huicApplicantRitual = (HuicApplicantRitual) value;
-            return huicApplicantRitual.getPackageRefNumber() != null && ERitualType.fromId(huicApplicantRitual.getRitualTypeCode()) != null && ritualPackageService.existRitualPackageByReferenceNumber(huicApplicantRitual.getPackageRefNumber() + "_" + ERitualType.fromId(huicApplicantRitual.getRitualTypeCode()).name());
+            return huicApplicantRitual.getPackageRefNumber() != null && ERitualType.fromId(huicApplicantRitual.getRitualTypeCode()) != null && ritualPackageService.findByCodeAndRitual(huicApplicantRitual.getPackageRefNumber(), ERitualType.fromId(huicApplicantRitual.getRitualTypeCode()).name(), huicApplicantRitual.getSeasonYear()) != null;
         }
 
 

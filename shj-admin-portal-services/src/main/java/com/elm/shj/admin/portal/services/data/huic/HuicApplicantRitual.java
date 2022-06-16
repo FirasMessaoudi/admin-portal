@@ -16,6 +16,7 @@ import java.io.Serializable;
  * @since 11.0
  */
 
+@WithPackage
 @WithApplicant
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,7 +33,6 @@ public class HuicApplicantRitual implements Serializable {
     private Long nationality;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @WithRitualPackage
     private String packageRefNumber;
     @RitualTypeCode
     private Integer ritualTypeCode;
