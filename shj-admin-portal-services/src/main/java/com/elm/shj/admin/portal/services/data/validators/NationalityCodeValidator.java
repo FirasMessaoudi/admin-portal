@@ -25,7 +25,7 @@ public class NationalityCodeValidator implements ConstraintValidator<Nationality
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        return value == null || nationalityLookupService.existsByCode(value.toString().toUpperCase());
+        return value == null || value.toString().isBlank() || nationalityLookupService.existsByCode(value.toString().toUpperCase());
     }
 
 }
