@@ -29,6 +29,7 @@
   "general": {
     "app_name": "تطبيق الحج",
     "app_title": "تطبيق الحج",
+    "app_tag": "التحكم والسيطرة",
     "dialog_alert_title": "تنبيه",
     "dialog_confirmation_title": "تأكيد",
     "dialog_confirmation_text": "هل أنت متأكد؟",

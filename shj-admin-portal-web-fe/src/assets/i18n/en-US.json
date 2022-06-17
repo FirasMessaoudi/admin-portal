@@ -30,6 +30,7 @@
   "general": {
     "app_name": "Hajj App",
     "app_title": "Hajj App",
+    "app_tag": "Command & Control",
     "dialog_alert_title": "Alert",
     "dialog_confirmation_title": "Confirmation",
     "dialog_confirmation_text": "Are you sure?",
