@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +27,7 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
 
     private final ApplicantGroupRepository applicantGroupRepository;
     private final GroupApplicantListRepository groupApplicantListRepository;
-
+    public static final String className = "ApplicantGroupService :::";
     public ApplicantGroupDto getApplicantGroupByReferenceNumber(String referenceNumber) {
         log.info("Start getApplicantGroupByReferenceNumber ReferenceNumber:{}", referenceNumber);
         Optional<JpaApplicantGroup> applicantGroupOptional = applicantGroupRepository.findByReferenceNumber(referenceNumber);
@@ -112,5 +114,19 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         }
         log.info("ApplicantGroupService ::: Finish findGroupDetailsByGroupId {}", result.getGroupName());
         return result;
+    }
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public boolean updateGroupLeader(String groupNumber, String companyRefCode, String companyTypeCode, long staffId) {
+        log.info("{} Start updateGroupLeader  groupNumber: {},  companyRefCode: {}, companyTypeCode: {},  staffId: {}",className, groupNumber,  companyRefCode,  companyTypeCode,  staffId);
+        ApplicantGroupDetailsVo groupDetailsByGroupId = findGroupDetailsByGroupId(groupNumber, companyRefCode, companyTypeCode);
+        if(groupDetailsByGroupId == null ) {
+            log.debug("{} findGroupDetailsByGroupId not found",className);
+            return false;
+        }
+
+        int affectedRows =  applicantGroupRepository.updateGroupLeader(groupDetailsByGroupId.getId(), staffId);
+
+        log.info("{} Finish updateGroupLeader  affectedRows: {}",className, affectedRows);
+        return affectedRows != 0;
     }
 }

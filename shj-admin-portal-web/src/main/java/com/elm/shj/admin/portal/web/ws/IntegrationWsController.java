@@ -1321,4 +1321,12 @@ public class IntegrationWsController {
                 .body(applicantGroupService.findGroupDetailsByGroupId(groupId,companyRefCode,companyTypeCode)).build());
     }
 
+    @PostMapping("/group/group-leader/update/{groupId}/{companyRefCode}/{companyTypeCode}/{staffId}")
+    public ResponseEntity<WsResponse<?>> updateGroupLeader(@PathVariable String groupId,@PathVariable String companyRefCode, @PathVariable String companyTypeCode, @PathVariable String staffId) {
+        log.info("IntegrationWsController ::: updateGroupLeader start");
+        boolean updated = applicantGroupService.updateGroupLeader(groupId,companyRefCode, companyTypeCode, Long.parseLong(staffId));
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
+
+    }
+
 }
