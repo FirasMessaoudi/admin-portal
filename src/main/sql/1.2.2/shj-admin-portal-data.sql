@@ -58,3 +58,10 @@ INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_i
 VALUES (20, 'TAWAF_AL_WADAA', 'en', 'Tawaf Alwadaa', 10, 21.423617600219412, 39.82591208333528);
 SET IDENTITY_INSERT shc_portal.shc_portal.shc_company_ritual_step_lk OFF;
 GO
+
+UPDATE shc_portal.shc_config SET conf_value = 'Hajj App' WHERE conf_key = 'elm.providers.email.from.name';
+GO
+
+UPDATE shc_portal.shc_config SET conf_value = '0 0/40 * * * *' WHERE conf_key = 'scheduler.notification.template.processing.cron';
+UPDATE shc_portal.shc_config SET conf_value = '0 0/50 * * * *' WHERE conf_key = 'scheduler.notification.processing.cron';
+GO
