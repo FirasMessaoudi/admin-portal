@@ -78,9 +78,9 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         return null;
     }
 
-    public String findPackageReferenceNumber(String typeCode, int year) {
+    public String findPackageReferenceNumber(String companyCode, String typeCode, int year) {
         log.info("RitualPackageService ::: Start findReferenceNumberByTypeCode ::: typeCode: {}", typeCode);
-        return ritualPackageRepository.findReferenceNumberByRitualSeason(typeCode, year);
+        return ritualPackageRepository.findReferenceNumberByRitualSeason(companyCode, typeCode, year);
     }
 
     public RitualPackageDto findByCodeAndRitual(String referenceCode, String typeCode, int year) {
@@ -93,4 +93,5 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         log.info("RitualPackageService ::: Finish findByCodeAndRitual ::: not found and return null");
         return null;
     }
+
 }

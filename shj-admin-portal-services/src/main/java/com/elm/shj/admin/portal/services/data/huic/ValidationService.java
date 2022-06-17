@@ -556,7 +556,23 @@ public class ValidationService {
         //TODO: unify this for both data upload and huic
         addApplicantToContact(applicant);
         if (applicant.getPackageReferenceNumber() == null) {
-            String referenceNumber = ritualPackageService.findPackageReferenceNumber(ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
+            String referenceNumber = null;
+            //if establishment id not null link applicant with default package of that establishment
+            if (applicant.getEstablishmentRefCode() != null) {
+                referenceNumber = ritualPackageService.findPackageReferenceNumber(applicant.getEstablishmentRefCode() + "_ESTABLISHMENT", ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
+            }
+            //if establishment is null
+            else {
+                // if ritual type is courtesy
+                // link applicant with flyness package
+                if (huicApplicantMainData.getRitualTypeCode() == 3) {
+                    referenceNumber = ritualPackageService.findPackageReferenceNumber("9_ESTABLISHMENT", ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
+                } else {
+                    //if ritual type not courtesy
+                    //link applicant with default establishment package
+                    referenceNumber = ritualPackageService.findPackageReferenceNumber("10_ESTABLISHMENT", ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
+                }
+            }
             applicant.setPackageReferenceNumber(referenceNumber);
 
         }
