@@ -44,7 +44,7 @@ VALUES ('elm.providers.email.password', '');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('elm.providers.email.from.address', 'no-reply@elm.sa');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
-VALUES ('elm.providers.email.from.name', 'Elm Product');
+VALUES ('elm.providers.email.from.name', 'Hajj App');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('elm.providers.email.smtp.auth', 'false');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
