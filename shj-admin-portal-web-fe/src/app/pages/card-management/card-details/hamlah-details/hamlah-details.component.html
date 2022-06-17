@@ -122,14 +122,7 @@
       <tr *ngFor="let catering of card?.applicantPackageCaterings">
         <td class="ltr">{{ 'card-management.'+catering?.packageCatering?.mealTypeCode | translate}}</td>
         <td class="ltr">{{ currentLanguage.startsWith("en")? catering?.packageCatering?.descriptionEn : catering?.packageCatering?.descriptionAr }}</td>
-        <td class="ltr">
-          {{ catering?.packageCatering?.mealTimeCode }}
-          {{'general.from' | translate}}
-          {{ catering?.packageCatering?.packageHousing?.validityStart | gregorianDateFormat}}
-          {{'general.to' | translate}}
-          {{ catering?.packageCatering?.packageHousing?.validityStart | gregorianDateFormat}}
-
-        </td>
+        <td class="ltr">{{ catering?.packageCatering?.mealTimeCode }}</td>
         <td class="ltr">
           {{
           catering?.packageCatering?.packageHousing?.siteCode
