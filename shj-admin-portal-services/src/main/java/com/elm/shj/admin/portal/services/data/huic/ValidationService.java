@@ -573,6 +573,9 @@ public class ValidationService {
             return;
         }
         Long applicantId = applicantLite.getId();
+        if (huicApplicantRitual.getPackageRefNumber() == null) {
+            huicApplicantRitual.setPackageRefNumber(applicantLite.getPackageReferenceNumber());
+        }
         ApplicantRitualDto applicantRitualDto = ApplicantRitualDto.builder()
                 .packageReferenceNumber(huicApplicantRitual.getPackageRefNumber())
                 .visaNumber(huicApplicantRitual.getVisaNumber())

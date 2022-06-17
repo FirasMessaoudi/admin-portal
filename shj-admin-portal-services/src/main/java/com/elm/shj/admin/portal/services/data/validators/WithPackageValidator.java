@@ -39,7 +39,7 @@ public class WithPackageValidator implements ConstraintValidator<WithPackage, Ob
             return huicApplicantMainData.getPackageRefNumber() == null || (ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()) != null && ritualPackageService.findByCodeAndRitual(huicApplicantMainData.getPackageRefNumber(), ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear()) != null);
         } else {
             HuicApplicantRitual huicApplicantRitual = (HuicApplicantRitual) value;
-            return huicApplicantRitual.getPackageRefNumber() != null && ERitualType.fromId(huicApplicantRitual.getRitualTypeCode()) != null && ritualPackageService.findByCodeAndRitual(huicApplicantRitual.getPackageRefNumber(), ERitualType.fromId(huicApplicantRitual.getRitualTypeCode()).name(), huicApplicantRitual.getSeasonYear()) != null;
+            return huicApplicantRitual.getPackageRefNumber() == null || (ERitualType.fromId(huicApplicantRitual.getRitualTypeCode()) != null && ritualPackageService.findByCodeAndRitual(huicApplicantRitual.getPackageRefNumber(), ERitualType.fromId(huicApplicantRitual.getRitualTypeCode()).name(), huicApplicantRitual.getSeasonYear()) != null);
         }
 
 
