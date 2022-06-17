@@ -50,6 +50,9 @@ public class JpaDataRequest implements Serializable {
     @Column(name = "error_count")
     private long errorCount;
 
+    @Column(name = "company_code")
+    private String companyCode;
+
     @ManyToOne
     @JoinColumn(name = "data_segment_id")
     private JpaDataSegment dataSegment;

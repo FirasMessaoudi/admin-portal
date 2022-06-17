@@ -27,8 +27,9 @@
     "invalid": "القيمة التي أدخلتها غير صحيحة"
   },
   "general": {
-    "app_name": "منتج علم",
+    "app_name": "تطبيق الحج",
     "app_title": "تطبيق الحج",
+    "app_tag": "التحكم والسيطرة",
     "dialog_alert_title": "تنبيه",
     "dialog_confirmation_title": "تأكيد",
     "dialog_confirmation_text": "هل أنت متأكد؟",
@@ -382,6 +383,11 @@
     "company_name": "اسم الشركة",
     "company_contact_number": "رقم تواصل الشركة",
     "location": "الموقع",
+    "FULL_BOARD": "كامل الوجبات",
+    "BREAKFAST_DINNER": "افطار وعشاء",
+    "BREAKFAST_LUNCH": "افطار وغداء",
+    "ONLY_BREAKFAST": "افطار فقط",
+    "OTHERS": "أخرى",
     "package_details": "بيانات الباقة",
     "status_active": "نشط",
     "user_not_authorized": "المستخدم لا تتوفر له الصلاحية المحددة لإتخاذ هذا الإجراء",

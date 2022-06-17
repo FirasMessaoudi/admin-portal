@@ -5,6 +5,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -38,4 +39,8 @@ public interface ApplicantGroupRepository extends JpaRepository<JpaApplicantGrou
     List<ApplicantGroupDetailsVo> findGroupDetailsByGroupId(@Param("referenceNumber") String referenceNumber, @Param("companyCode") String companyCode);
 
     Optional<JpaApplicantGroup> findTopByReferenceNumberAndCompanyRitualSeasonCompanyCodeOrderByCreationDateDesc(String refNumber, String companyCode);
+
+    @Modifying
+    @Query("update JpaApplicantGroup set groupLeader.id = :staffId where id = :groupId ")
+    int updateGroupLeader(@Param("groupId")long groupId,@Param("staffId") long staffId);
 }

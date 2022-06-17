@@ -354,7 +354,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         log.debug("SMS notification status: {}", smsSent);
 
         String appUrl = request.getScheme() + "://" + request.getHeader("host");
-        String logoURL = appUrl + "/assets/images/logo.png";
+        String logoURL = appUrl + "/assets/images/login_logo.png";
         String headerURL = appUrl + "/assets/images/header.png";
         String dotsPatternURL = appUrl + "/assets/images/dots-pattern.png";
         // Send Email notification

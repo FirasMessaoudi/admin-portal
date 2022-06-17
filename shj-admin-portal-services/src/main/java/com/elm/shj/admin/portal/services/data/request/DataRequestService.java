@@ -70,7 +70,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public Page<DataRequestDto> findAll(Pageable pageable) {
-        return mapPage(dataRequestRepository.finDataRequests(Arrays.asList(1L, 2L, 3L,4L,5L,6L,7L,8L,9L,10L), pageable));
+        return mapPage(dataRequestRepository.finDataRequests(Arrays.asList(1L, 2L, 3L,4L,5L,6L,7L,8L,9L), pageable));
     }
 
     /**
@@ -80,8 +80,9 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
      * @return the list of data requests
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public Page<DataRequestDto> findAllOrganizerDataRequest(Pageable pageable) {
-        return mapPage(dataRequestRepository.finOrganizerDataRequests(Arrays.asList(11L, 12L, 13L), pageable));
+    public Page<DataRequestDto> findAllOrganizerDataRequest(long companyRefCode, String companyTypeCode, Pageable pageable) {
+
+        return mapPage(dataRequestRepository.finOrganizerDataRequests(Arrays.asList(11L, 12L, 13L), String.valueOf(companyRefCode) + "_" + companyTypeCode, pageable));
     }
 
     /**
