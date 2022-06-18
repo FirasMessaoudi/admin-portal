@@ -10,5 +10,5 @@ package com.elm.shj.admin.portal.services.dto;
  * @since 1.1.0
  */
 public enum ECompanyStaffTitle {
-    GROUP_LEADER
+    GROUP_LEADER, INSPECTOR, OTHER
 }

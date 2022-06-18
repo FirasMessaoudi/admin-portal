@@ -54,3 +54,5 @@ UPDATE shc_portal.shc_config SET conf_key = 'huic.sms.api.url' WHERE conf_key = 
 
 INSERT INTO shc_portal.shc_config(conf_key, conf_value) VALUES('huic.sms.api.mock.enabled','true');
 GO
+
+
