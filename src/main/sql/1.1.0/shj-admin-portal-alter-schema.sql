@@ -1926,3 +1926,8 @@ GO
 
 ALTER TABLE shc_portal.shc_company ADD huic_batch_number int;
 GO
+
+ALTER TABLE shc_portal.shc_notification_template_categorizing ADD notification_category int not null;
+GO
+ALTER TABLE shc_portal.shc_notification_template_categorizing ADD selected_staff nvarchar(max);
+GO
