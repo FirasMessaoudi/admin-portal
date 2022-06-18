@@ -294,3 +294,7 @@ GO
 
 UPDATE shc_portal.shc_user SET email = 'aelsayed@elm.sa' WHERE nin in ('1234567897', '9366014457', '1234567891');
 GO
+
+UPDATE shc_portal.shc_company SET contact_number = '8001111752' WHERE code = '1_ESTABLISHMENT';
+UPDATE shc_portal.shc_company SET contact_number = '8002450013' WHERE code = '2_ESTABLISHMENT';
+GO
