@@ -19,10 +19,15 @@ import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,10 +51,40 @@ public class ChatContactWsController {
 
 
     private final ChatContactService chatContactService;
+    public static final List<SseEmitter> emitters = Collections.synchronizedList( new ArrayList<>());
+
     private final ApplicantLiteService applicantLiteService;
     private final CompanyStaffService companyStaffService;
     private final ChatMessageService chatMessageService;
     private final ApplicantRitualService applicantRitualService;
+
+    @RequestMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter initSseEmitters() {
+        SseEmitter emitter = new SseEmitter(500000L);
+        emitters.add(emitter);
+        emitter.onTimeout(emitter :: complete);
+        emitter.onCompletion(() -> emitters.remove(emitter));
+        return emitter;
+    }
+
+    @GetMapping("/chat-messages/{contactId}")
+    public void fetchChatMessages(@PathVariable long contactId) {
+        List<ChatMessageDto> chatMessages = chatMessageService.findChatMessagesBySenderIdOrReceiverId(contactId);
+        List<SseEmitter> sseEmitterListToRemove = new ArrayList<>();
+        emitters.forEach(sseEmitter -> {
+            chatMessages.forEach(chatMessage -> {
+                try {
+
+                    sseEmitter.send(chatMessage, MediaType.APPLICATION_JSON);
+                } catch (IOException e) {
+                    sseEmitter.complete();
+                    sseEmitterListToRemove.add(sseEmitter);
+                    e.printStackTrace();
+                }
+            });
+        });
+        emitters.removeAll(sseEmitterListToRemove);
+    }
 
     /**
      * finds chat contacts by uin and applicant ritual ID
