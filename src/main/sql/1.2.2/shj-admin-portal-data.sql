@@ -1,8 +1,8 @@
 USE shc_portal
 GO
-INSERT INTO shc_portal.shc_config(conf_key, conf_value) VALUES('scheduler.generate.digital.ids.delay.milliseconds','600000');
+INSERT INTO shc_portal.shc_config(conf_key, conf_value) VALUES('scheduler.generate.digital.ids.delay.milliseconds','300000');
 INSERT INTO shc_portal.shc_config(conf_key, conf_value)
-VALUES ('scheduler.generate.card.applicant.ritual.delay.milliseconds', '900000');
+VALUES ('scheduler.generate.card.applicant.ritual.delay.milliseconds', '600000');
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_data_segment ON;
@@ -290,4 +290,7 @@ insert into shc_portal.shc_ritual_package (reference_number, company_ritual_seas
 values ('99999920', (select cr.id from shc_portal.shc_company_ritual_season cr, shc_portal.shc_company c where cr.ritual_season_id = 2 and c.code='10_ESTABLISHMENT' and c.id=cr.company_id), 'NORMAL', CONVERT (date, '06-01-2022', 110), CONVERT (date, '07-31-2022', 110))
 insert into shc_portal.shc_ritual_package (reference_number, company_ritual_season_id, package_type_code, start_date, end_date)
 values ('99999921', (select cr.id from shc_portal.shc_company_ritual_season cr, shc_portal.shc_company c where cr.ritual_season_id = 3 and c.code='10_ESTABLISHMENT' and c.id=cr.company_id), 'NORMAL', CONVERT (date, '06-01-2022', 110), CONVERT (date, '07-31-2022', 110))
+GO
+
+UPDATE shc_portal.shc_user SET email = 'aelsayed@elm.sa' WHERE nin in ('1234567897', '9366014457', '1234567891');
 GO
