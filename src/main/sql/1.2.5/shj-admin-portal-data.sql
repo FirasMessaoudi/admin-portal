@@ -48,3 +48,16 @@ GO
 
 UPDATE shc_portal.shc_config set conf_value = 'true' where conf_key = 'data.request.company.staff.override';
 GO
+
+
+update shc_portal.shc_company_ritual_step_lk set edit_mode = 'DATE_TIME' where code= 'TAWAF_AL_QUDOM'
+update shc_portal.shc_company_ritual_step_lk set edit_mode = 'TIME' where code= 'STAY_IN_MINA'
+update shc_portal.shc_company_ritual_step_lk set edit_mode = 'TIME' where code= 'ARAFAT'
+update shc_portal.shc_company_ritual_step_lk set edit_mode = 'TIME' where code= 'STAY_IN_MUZDALIFA'
+update shc_portal.shc_company_ritual_step_lk set edit_mode = 'TIME' where code= 'THROUGH_GAMARAT_STONES_10'
+update shc_portal.shc_company_ritual_step_lk set edit_mode = 'DATE_TIME' where code= 'TAWAF_ELFADAH'
+update shc_portal.shc_company_ritual_step_lk set edit_mode = 'TIME' where code= 'THROUGH_GAMARAT_STONES_11'
+update shc_portal.shc_company_ritual_step_lk set edit_mode = 'TIME' where code= 'THROUGH_GAMARAT_STONES_12'
+update shc_portal.shc_company_ritual_step_lk set edit_mode = 'TIME' where code= 'THROUGH_GAMARAT_STONES_13'
+update shc_portal.shc_company_ritual_step_lk set edit_mode = 'DATE_TIME' where code= 'TAWAF_AL_WADAA'
+GO
