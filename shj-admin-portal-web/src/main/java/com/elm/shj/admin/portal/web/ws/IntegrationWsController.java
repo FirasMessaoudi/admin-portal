@@ -1328,7 +1328,7 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
     }
 
-    @GetMapping("/group-leader/list/{companyRefCode}/{companyTypeCode}")
+    @GetMapping("/group/group-leader/list/{companyRefCode}/{companyTypeCode}")
     public ResponseEntity<WsResponse<?>> findGroupLeadersListByCompanyCode(@PathVariable String companyRefCode,@PathVariable String companyTypeCode) {
         log.info("Start   findGroupLeadersListByCompanyCode  companyRefCode: {}, companyTypeCode: {} ", companyRefCode, companyTypeCode);
         String companyCode = new StringBuffer(companyRefCode).append("_").append(companyTypeCode).toString();

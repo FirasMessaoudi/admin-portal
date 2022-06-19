@@ -28,7 +28,7 @@ public interface CompanyRitualStepLookupRepository extends JpaRepository<JpaComp
     List<JpaCompanyRitualStepLookup> findAllByLang(String lang);
 
 
-    @Query("Select new com.elm.shj.admin.portal.orm.entity.GroupRitualStepVo(s.id,s.applicantGroup.id,s.stepCode,slk.stepIndex,slk.editMode,s.time) " +
+    @Query("Select distinct new com.elm.shj.admin.portal.orm.entity.GroupRitualStepVo(s.id,s.applicantGroup.id,s.stepCode,slk.stepIndex,slk.editMode,s.time) " +
             "from JpaCompanyRitualStep s " +
             "join JpaCompanyRitualStepLookup slk on slk.code = s.stepCode " +
             "where s.applicantGroup.id = :groupId")
