@@ -208,13 +208,5 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     Page<JpaCompanyStaff> findByIds(@Param("selectedStaffs") List<Long> selectedStaffs, Pageable pageable);
 
 
-    @Query("Select new com.elm.shj.admin.portal.orm.entity.CompanyStaffVO(staff.id,staff.fullNameEn,staff.fullNameAr) " +
-            "from JpaCompanyStaff staff " +
-           "JOIN staff.digitalIds digitalId " +
-            "JOIN digitalId.companyStaffCards staffCard " +
-            "JOIN staffCard.companyRitualSeason ritualSeason " +
-            "JOIN ritualSeason.company c "+
-            "where c.code = :companyCode " +
-            "And staff.titleCode = 'GROUP_LEADER'")
-    List<CompanyStaffVO> findGroupLeadersListByCompanyCode(@Param("companyCode") String companyCode);
+
 }

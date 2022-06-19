@@ -181,15 +181,7 @@ public class StaffWsController {
                 .body(packageHousingDto).build());
     }
 
-    @GetMapping("/group-leader/list/{companyRefCode}/{companyTypeCode}")
-    public ResponseEntity<WsResponse<?>> findGroupLeadersListByCompanyCode(@PathVariable String companyRefCode,@PathVariable String companyTypeCode) {
-        log.info("StaffWsController ::: Start   findGroupLeadersListByCompanyCode  companyRefCode: {}, companyTypeCode: {} ", companyRefCode, companyTypeCode);
-        String companyCode = new StringBuffer(companyRefCode).append("_").append(companyTypeCode).toString();
-        List<CompanyStaffVO>  list = companyStaffService.findGroupLeadersListByCompanyCode(companyCode);
-        log.info("StaffWsController ::: Finish   findGroupLeadersListByCompanyCode list.size: {} ", list.size());
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(list).build());
-    }
+
 
 
 }

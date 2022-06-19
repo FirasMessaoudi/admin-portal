@@ -8,3 +8,7 @@ GO
 
 ALTER TABLE shc_portal.shc_data_request ADD company_code varchar(100)
 GO
+
+ALTER TABLE shc_portal.shc_company_ritual_step_lk Add edit_mode VARCHAR(45)  NULL;
+GO
+

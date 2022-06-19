@@ -4,9 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
-import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
-import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
-import com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO;
+import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.company.*;
@@ -45,6 +43,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -1321,12 +1321,37 @@ public class IntegrationWsController {
                 .body(applicantGroupService.findGroupDetailsByGroupId(groupId,companyRefCode,companyTypeCode)).build());
     }
 
-    @PostMapping("/group/group-leader/update/{groupId}/{companyRefCode}/{companyTypeCode}/{staffId}")
-    public ResponseEntity<WsResponse<?>> updateGroupLeader(@PathVariable String groupId,@PathVariable String companyRefCode, @PathVariable String companyTypeCode, @PathVariable String staffId) {
-        log.info("IntegrationWsController ::: updateGroupLeader start");
-        boolean updated = applicantGroupService.updateGroupLeader(groupId,companyRefCode, companyTypeCode, Long.parseLong(staffId));
+    @PostMapping("/group/group-leader/update/{groupId}/{staffId}")
+    public ResponseEntity<WsResponse<?>> updateGroupLeader(@PathVariable long groupId, @PathVariable long staffId) {
+        log.info("updateGroupLeader start");
+        boolean updated = applicantGroupService.updateGroupLeader(groupId,staffId);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
+    }
 
+    @GetMapping("/group-leader/list/{companyRefCode}/{companyTypeCode}")
+    public ResponseEntity<WsResponse<?>> findGroupLeadersListByCompanyCode(@PathVariable String companyRefCode,@PathVariable String companyTypeCode) {
+        log.info("Start   findGroupLeadersListByCompanyCode  companyRefCode: {}, companyTypeCode: {} ", companyRefCode, companyTypeCode);
+        String companyCode = new StringBuffer(companyRefCode).append("_").append(companyTypeCode).toString();
+        List<CompanyStaffVO>  list = applicantGroupService.findGroupLeadersListByCompanyCode(companyCode);
+        log.info("Finish   findGroupLeadersListByCompanyCode list.size: {} ", list.size());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(list).build());
+    }
+
+    @GetMapping("group/ritual-step/list/{groupId}")
+    public ResponseEntity<WsResponse<?>> findGroupRitualStepList(@PathVariable long groupId) {
+        log.info("Start findGroupRitualStepList  groupId: {} ", groupId);
+        List<GroupRitualStepVo>  list= companyRitualStepLookupService.findCompanyRitualStepsByGroupId(groupId);
+        log.info("Finish findGroupRitualStepList list.size: {} ", list.size());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(list).build());
+    }
+
+    @PostMapping("/group/ritual-step/update/{groupId}/{stepCode}/{hijriDate}/{time}")
+    public ResponseEntity<WsResponse<?>> updateGroupRitualStep(@PathVariable long groupId, @PathVariable String stepCode, @PathVariable long hijriDate, @PathVariable String time) {
+        log.info("updateGroupRitualStep start");
+        boolean updated = companyRitualStepService.updateGroupRitualStep(groupId,stepCode,hijriDate,time);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
     }
 
 }

@@ -401,8 +401,5 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         };
     }
 
-    public List<CompanyStaffVO> findGroupLeadersListByCompanyCode(String companyCode) {
-        return companyStaffRepository.findGroupLeadersListByCompanyCode(companyCode);
 
-    }
 }
