@@ -8,9 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -32,13 +30,13 @@ public class GroupRitualStepVo implements Serializable {
     private long id;
     private long groupId;
     private String code;
-    private String stepIndex;
+    private long stepIndex;
     private String editMode;
     private Date stepDateTime;
     private LocalTime stepTime;
     private long stepHijriDate;
 
-    public GroupRitualStepVo(long id, long groupId, String code, String stepIndex, String editMode, Date stepDateTime) {
+    public GroupRitualStepVo(long id, long groupId, String code, long stepIndex, String editMode, Date stepDateTime) {
         this.id = id;
         this.groupId = groupId;
         this.code = code;

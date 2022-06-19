@@ -53,14 +53,24 @@ public class PackageHousingService extends GenericService<JpaPackageHousing, Pac
     public List<PackageHousingDto> findByRitualPackageId(long id) {
         log.info("PackageHousingService ::: Start findByRitualPackageId ::: id: {}",id);
         List<PackageHousingDto> packageHousingDtos = mapList(packageHousingRepository.findByRitualPackageId(id));
-        log.info("PackageHousingService ::: Finish packageHousingDtosListsize: {}",packageHousingDtos.size());
+        log.info("PackageHousingService ::: Finish packageHousingDtosListsize: {}", packageHousingDtos.size());
         return packageHousingDtos;
     }
 
     public PackageHousingDto findStaffPackageHousingByCompanyRitualSeason(long companyRitualSeason) {
-        log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: companyRitualSeason: {}",companyRitualSeason);
+        log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: companyRitualSeason: {}", companyRitualSeason);
         JpaPackageHousing jpaPackageHousing = packageHousingRepository.findStaffPackageHousingByCompanyRitualSeason(companyRitualSeason);
-        log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: jpaPackageHousingLocationNameEn: {}",jpaPackageHousing.getLocationNameEn());
-        return getMapper().fromEntity(jpaPackageHousing,mappingContext);
+        log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: jpaPackageHousingLocationNameEn: {}", jpaPackageHousing.getLocationNameEn());
+        return getMapper().fromEntity(jpaPackageHousing, mappingContext);
+    }
+
+    public PackageHousingDto findByRitualPackageIdAndSiteCode(long id, String siteCode) {
+        log.info("PackageHousingService ::: Start findByRitualPackageIdAndSiteCode ::: ritualPackage: {}", id);
+        Optional<JpaPackageHousing> jpaPackageHousing = packageHousingRepository.findTopByRitualPackageIdAndSiteCode(id, siteCode);
+        if (jpaPackageHousing.isPresent()) {
+            return getMapper().fromEntity(jpaPackageHousing.get(), mappingContext);
+        }
+        return null;
+
     }
 }
