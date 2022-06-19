@@ -47,4 +47,9 @@ public class ApplicantLiteDto implements Serializable {
     private String mobileNumber;
     private String countryCode;
     private boolean deleted;
+    private String companyCode;
+    private Integer establishmentRefCode;
+    private Integer missionRefCode;
+    private Long serviceGroupMakkahCode;
+    private Long serviceGroupMadinaCode;
 }

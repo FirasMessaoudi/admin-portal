@@ -181,7 +181,7 @@ public class ChatContactWsController {
         Optional<CompanyStaffLiteDto> companyStaff = companyStaffService.findBySuin(suin);
         if (companyStaff.isPresent()) {
             ChatContactVo staffContact = chatContactService.createStaffContact(digitalId, ritualId.equals(-1L) ? null : ritualId, companyStaff);
-           // log.info("Finish createStaff {}, staffContactDigitalId: {}", "SUCCESS", staffContact.getDigitalId());
+            // log.info("Finish createStaff {}, staffContactDigitalId: {}", "SUCCESS", staffContact.getDigitalId());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(staffContact).build());
         }

@@ -33,7 +33,7 @@ public class ApplicantBasicService extends GenericService<JpaApplicantBasic, App
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public Page<ApplicantBasicDto> findAllWithoutDigitalId() {
         log.info("Start findAllWithoutDigitalId");
-        Page<ApplicantBasicDto> applicantLiteDtos = mapPage(applicantBasicRepository.findAllApplicantsWithoutDigitalId(PageRequest.of(0, 500)));
+        Page<ApplicantBasicDto> applicantLiteDtos = mapPage(applicantBasicRepository.findAllApplicantsWithoutDigitalId(PageRequest.of(0, 1000)));
         log.info("Finish findAllWithoutDigitalId with {} digital ids", applicantLiteDtos.getContent().size());
         return applicantLiteDtos;
     }

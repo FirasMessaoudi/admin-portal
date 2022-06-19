@@ -40,4 +40,6 @@ public class CompanyStaffLiteDto implements Serializable {
     private List<CompanyStaffDigitalIdDto> digitalIds;
     private String passportNumber;
     private String idNumber;
+    private Double latitude;
+    private Double longitude;
 }
