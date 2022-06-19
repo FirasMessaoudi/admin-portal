@@ -203,54 +203,62 @@ public class ValidationService {
 
         }
         RitualPackageDto savedRitualPackage = ritualPackageService.save(ritualPackageDto);
-        plannedPackage.getPackageHousings().forEach(huicPackageHousing -> {
-            JpaHousingMaster housingMaster = housingMasterRepository.findTopByHousingReferenceCodeOrderByCreationDateDesc(huicPackageHousing.getRefNumber().toString());
-            PackageHousingDto packageHousing = PackageHousingDto.builder()
-                    .typeCode(housingMaster.getTypeCode())
-                    .siteCode(housingMaster.getSiteCode())
-                    .referenceNumber(huicPackageHousing.getRefNumber().toString())
-                    .categoryCode(housingMaster.getCategoryCode())
-                    .locationNameAr(housingMaster.getLocationNameAr())
-                    .locationNameEn(housingMaster.getLocationNameEn())
-                    .validityStart(huicPackageHousing.getValidityStart())
-                    .validityEnd(huicPackageHousing.getValidityEnd())
-                    .addressAr(housingMaster.getAddressAr())
-                    .addressEn(housingMaster.getAddressEn())
-                    .isDefault(huicPackageHousing.isDefault())
-                    .lat(housingMaster.getLat())
-                    .lng(housingMaster.getLng())
-                    .ritualPackage(savedRitualPackage)
-                    .build();
-            PackageHousingDto savedPackageHousing = packageHousingService.save(packageHousing);
-            huicPackageHousing.getPackageCaterings().forEach(huicPackageCatering -> {
-                PackageCateringDto packageCateringDto = PackageCateringDto.builder()
-                        .mealCode(huicPackageCatering.getMealCode())
-                        .mealTimeCode(EMealTime.fromId(huicPackageCatering.getMealTime()).name())
-                        .mealTypeCode(EMealType.fromId(huicPackageCatering.getMealType()).name())
-                        .descriptionAr(huicPackageCatering.getOptionDescriptionAr())
-                        .descriptionEn(huicPackageCatering.getOptionDescriptionEn())
-                        .isDefault(huicPackageCatering.isDefault())
-                        .packageHousing(savedPackageHousing)
+        if (plannedPackage.getPackageHousings() != null) {
+            plannedPackage.getPackageHousings().forEach(huicPackageHousing -> {
+                JpaHousingMaster housingMaster = housingMasterRepository.findTopByHousingReferenceCodeOrderByCreationDateDesc(huicPackageHousing.getRefNumber().toString());
+                PackageHousingDto packageHousing = PackageHousingDto.builder()
+                        .typeCode(housingMaster.getTypeCode())
+                        .siteCode(housingMaster.getSiteCode())
+                        .referenceNumber(huicPackageHousing.getRefNumber().toString())
+                        .categoryCode(housingMaster.getCategoryCode())
+                        .locationNameAr(housingMaster.getLocationNameAr())
+                        .locationNameEn(housingMaster.getLocationNameEn())
+                        .validityStart(huicPackageHousing.getValidityStart())
+                        .validityEnd(huicPackageHousing.getValidityEnd())
+                        .addressAr(housingMaster.getAddressAr())
+                        .addressEn(housingMaster.getAddressEn())
+                        .isDefault(huicPackageHousing.isDefault())
+                        .lat(housingMaster.getLat())
+                        .lng(housingMaster.getLng())
+                        .ritualPackage(savedRitualPackage)
                         .build();
-                packageCateringService.save(packageCateringDto);
+                PackageHousingDto savedPackageHousing = packageHousingService.save(packageHousing);
+                if (huicPackageHousing.getPackageCaterings() != null) {
+                    huicPackageHousing.getPackageCaterings().forEach(huicPackageCatering -> {
+                        PackageCateringDto packageCateringDto = PackageCateringDto.builder()
+                                .mealCode(huicPackageCatering.getMealCode())
+                                .mealTimeCode(EMealTime.fromId(huicPackageCatering.getMealTime()).name())
+                                .mealTypeCode(EMealType.fromId(huicPackageCatering.getMealType()).name())
+                                .descriptionAr(huicPackageCatering.getOptionDescriptionAr())
+                                .descriptionEn(huicPackageCatering.getOptionDescriptionEn())
+                                .isDefault(huicPackageCatering.isDefault())
+                                .packageHousing(savedPackageHousing)
+                                .build();
+                        packageCateringService.save(packageCateringDto);
+                    });
+                }
+
             });
-        });
+        }
 
-        plannedPackage.getPackageTransportations().forEach(huicPackageTransportation -> {
-            PackageTransportationDto packageTransportationDto = PackageTransportationDto.builder()
-                    .typeCode(ETransportationType.fromId(huicPackageTransportation.getTypeCode()).name())
-                    .locationFromNameAr(huicPackageTransportation.getLocationFromNameAr())
-                    .locationFromNameEn(huicPackageTransportation.getLocationFromNameEn())
-                    .locationToNameAr(huicPackageTransportation.getLocationToNameAr())
-                    .locationToNameEn(huicPackageTransportation.getLocationToNameEn())
-                    .validityStart(DateUtils.toGregorian(huicPackageTransportation.getValidityStart()))
-                    .validityEnd(DateUtils.toGregorian(huicPackageTransportation.getValidityEnd()))
-                    .routeDetails(huicPackageTransportation.getRouteDetails())
-                    .ritualPackage(savedRitualPackage)
-                    .build();
-            packageTransportationService.save(packageTransportationDto);
+        if (plannedPackage.getPackageTransportations() != null) {
+            plannedPackage.getPackageTransportations().forEach(huicPackageTransportation -> {
+                PackageTransportationDto packageTransportationDto = PackageTransportationDto.builder()
+                        .typeCode(ETransportationType.fromId(huicPackageTransportation.getTypeCode()).name())
+                        .locationFromNameAr(huicPackageTransportation.getLocationFromNameAr())
+                        .locationFromNameEn(huicPackageTransportation.getLocationFromNameEn())
+                        .locationToNameAr(huicPackageTransportation.getLocationToNameAr())
+                        .locationToNameEn(huicPackageTransportation.getLocationToNameEn())
+                        .validityStart(DateUtils.toGregorian(huicPackageTransportation.getValidityStart()))
+                        .validityEnd(DateUtils.toGregorian(huicPackageTransportation.getValidityEnd()))
+                        .routeDetails(huicPackageTransportation.getRouteDetails())
+                        .ritualPackage(savedRitualPackage)
+                        .build();
 
-        });
+                packageTransportationService.save(packageTransportationDto);
+
+            });
+        }
 
     }
 
@@ -567,10 +575,13 @@ public class ValidationService {
                 // link applicant with flyness package
                 if (huicApplicantMainData.getRitualTypeCode() == 3) {
                     referenceNumber = ritualPackageService.findPackageReferenceNumber("9_ESTABLISHMENT", ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
+                    applicant.setEstablishmentRefCode(9);
                 } else {
                     //if ritual type not courtesy
                     //link applicant with default establishment package
                     referenceNumber = ritualPackageService.findPackageReferenceNumber("10_ESTABLISHMENT", ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
+                    applicant.setEstablishmentRefCode(10);
+
                 }
             }
             applicant.setPackageReferenceNumber(referenceNumber);

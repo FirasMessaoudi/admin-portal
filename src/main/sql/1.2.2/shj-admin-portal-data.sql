@@ -189,6 +189,23 @@ values ((select id from shc_company where code = '6_ESTABLISHMENT'), 3, 'true',
 
 
 insert into shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end)
+values ((select id from shc_company where code = '9_ESTABLISHMENT'), 1, 'true',
+        (select season_start from shc_ritual_season where id = 1),
+        (select season_end from shc_ritual_season where id = 1));
+
+insert into shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end)
+values ((select id from shc_company where code = '9_ESTABLISHMENT'), 2, 'true',
+        (select season_start from shc_ritual_season where id = 2),
+        (select season_end from shc_ritual_season where id = 2));
+
+insert into shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end)
+values ((select id from shc_company where code = '9_ESTABLISHMENT'), 3, 'true',
+        (select season_start from shc_ritual_season where id = 3),
+        (select season_end from shc_ritual_season where id = 3));
+
+
+
+insert into shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end)
 values ((select id from shc_company where code = '10_ESTABLISHMENT'), 1, 'true',
         (select season_start from shc_ritual_season where id = 1),
         (select season_end from shc_ritual_season where id = 1));
@@ -308,5 +325,19 @@ values ('99999920', (select cr.id from shc_company_ritual_season cr, shc_company
 
 insert into shc_ritual_package (reference_number, company_ritual_season_id, package_type_code, start_date, end_date)
 values ('99999921', (select cr.id from shc_company_ritual_season cr, shc_company c where cr.ritual_season_id = 3 and c.code='10_ESTABLISHMENT' and c.id=cr.company_id), 'NORMAL', CONVERT (date, '06-01-2022', 110), CONVERT (date, '07-31-2022', 110))
+
+/*
+ establishment_9
+ */
+
+insert into shc_ritual_package (reference_number, company_ritual_season_id, package_type_code, start_date, end_date)
+values ('99999922', (select cr.id from shc_company_ritual_season cr, shc_company c where cr.ritual_season_id = 1 and c.code='9_ESTABLISHMENT' and c.id=cr.company_id), 'NORMAL', CONVERT (date, '06-01-2022', 110), CONVERT (date, '07-31-2022', 110))
+
+insert into shc_ritual_package (reference_number, company_ritual_season_id, package_type_code, start_date, end_date)
+values ('99999923', (select cr.id from shc_company_ritual_season cr, shc_company c where cr.ritual_season_id = 2 and c.code='9_ESTABLISHMENT' and c.id=cr.company_id), 'NORMAL', CONVERT (date, '06-01-2022', 110), CONVERT (date, '07-31-2022', 110))
+
+insert into shc_ritual_package (reference_number, company_ritual_season_id, package_type_code, start_date, end_date)
+values ('99999924', (select cr.id from shc_company_ritual_season cr, shc_company c where cr.ritual_season_id = 3 and c.code='9_ESTABLISHMENT' and c.id=cr.company_id), 'NORMAL', CONVERT (date, '06-01-2022', 110), CONVERT (date, '07-31-2022', 110))
+
 
 
