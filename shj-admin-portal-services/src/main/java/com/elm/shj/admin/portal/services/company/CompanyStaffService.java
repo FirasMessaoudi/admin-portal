@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.user.UserLocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyStaffService extends GenericService<JpaCompanyStaff, CompanyStaffDto, Long> {
 
+    private final UserLocationService userLocationService;
     private final CompanyStaffRepository companyStaffRepository;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
     public final static Pattern  EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -243,6 +245,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
         if (companyStaffs.getContent() != null && !companyStaffs.getContent().isEmpty()) {
             companyStaffs.getContent().forEach(companyStaff -> {
+                UserLocationDto userLocationDto = userLocationService.findTopByUserIdAndUserTypeOrderByCreationDateDesc(companyStaff.getDigitalIds().isEmpty() ? null : companyStaff.getDigitalIds().get(0).getSuin(),
+                        EUserType.STAFF.name());
                 CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
                         .id(companyStaff.getId())
                         .suin(companyStaff.getDigitalIds().isEmpty() ? "" : companyStaff.getDigitalIds().get(0).getSuin())
@@ -259,6 +263,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                         .gender(companyStaff.getGender())
                         .passportNumber(companyStaff.getPassportNumber())
                         .idNumber(companyStaff.getIdNumber())
+                        .latitude(userLocationDto == null ? null : userLocationDto.getLatitude())
+                        .longitude(userLocationDto == null ? null : userLocationDto.getLongitude())
                         .build();
                 companyStaffList.add(companyStaffLite);
             });
