@@ -115,6 +115,7 @@ public class CompanyStaffFullDataDto implements Serializable {
     @RitualTypeCode
     private String typeCode;
 
+    @CellIndex(index = 20)
     private String photo;
 
     private Long dataRequestRecordId;

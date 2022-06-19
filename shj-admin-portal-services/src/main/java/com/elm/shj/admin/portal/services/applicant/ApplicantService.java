@@ -364,6 +364,8 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     public Page<ApplicantDto> findOrganizerApplicants(ApplicantSearchCriteriaDto applicantSearchCriteriaDto, Long companyRefCode, String companyTypeCode, Pageable pageable) {
         log.info("Company Ref code ...{}", companyRefCode);
         log.info("Company type code ...{}", companyTypeCode);
+        log.info("Applicant search criteria... {}", applicantSearchCriteriaDto);
+        log.info("Group reference number... {}", applicantSearchCriteriaDto.getGroupNumber());
 
         Long establishmentRefCode = -1L;
         Long missionRefCode = -1L;
@@ -385,9 +387,12 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         if(applicantSearchCriteriaDto.getGroupNumber() != null && !applicantSearchCriteriaDto.getGroupNumber().equals("")){
             //applicantSearchCriteriaDto.setGroupNumber(applicantSearchCriteriaDto.getGroupNumber() + "_" + String.valueOf(companyRefCode)+ "_" + companyTypeCode);
             String companyFullCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+            log.info("Group reference number... {}", applicantSearchCriteriaDto.getGroupNumber());
             Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findOrganizerApplicantsWithGroupNumberFilter(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
                     applicantSearchCriteriaDto.getPassportNumber(), applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
                     applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, companyFullCode, pageable));
+            log.info("Result of applicant content ... {}", applicantDtos);
+            log.info("Result of applicant list ... {}", applicantDtos.getContent());
             return applicantDtos;
         } else {
             Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getPassportNumber(),
