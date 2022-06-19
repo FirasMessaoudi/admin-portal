@@ -1328,7 +1328,7 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
     }
 
-    @GetMapping("/group-leader/list/{companyRefCode}/{companyTypeCode}")
+    @GetMapping("/group/group-leader/list/{companyRefCode}/{companyTypeCode}")
     public ResponseEntity<WsResponse<?>> findGroupLeadersListByCompanyCode(@PathVariable String companyRefCode,@PathVariable String companyTypeCode) {
         log.info("Start   findGroupLeadersListByCompanyCode  companyRefCode: {}, companyTypeCode: {} ", companyRefCode, companyTypeCode);
         String companyCode = new StringBuffer(companyRefCode).append("_").append(companyTypeCode).toString();
@@ -1347,10 +1347,10 @@ public class IntegrationWsController {
                 .body(list).build());
     }
 
-    @PostMapping("/group/ritual-step/update/{groupId}/{stepCode}/{hijriDate}/{time}")
-    public ResponseEntity<WsResponse<?>> updateGroupRitualStep(@PathVariable long groupId, @PathVariable String stepCode, @PathVariable long hijriDate, @PathVariable String time) {
+    @PostMapping("/group/ritual-step/update")
+    public ResponseEntity<WsResponse<?>> updateGroupRitualStep(@RequestBody UpdateCompanyRitualStepCmd updateCompanyRitualStepCmd) {
         log.info("updateGroupRitualStep start");
-        boolean updated = companyRitualStepService.updateGroupRitualStep(groupId,stepCode,hijriDate,time);
+        boolean updated = companyRitualStepService.updateGroupRitualStep(updateCompanyRitualStepCmd.getGroupId(),updateCompanyRitualStepCmd.getStepCode(),updateCompanyRitualStepCmd.getHijriDate(),updateCompanyRitualStepCmd.getTime());
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
     }
 
