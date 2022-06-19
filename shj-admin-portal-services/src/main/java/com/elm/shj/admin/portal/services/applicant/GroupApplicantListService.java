@@ -90,13 +90,20 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
         if (applicantGroupDto == null) {
             return false;
         }
-        GroupApplicantListDto groupApplicantList = findByUin(updateGroupCmd.getUin(), applicantGroupDto.getId());
-        if (groupApplicantList != null && applicantGroupDto != null) {
-            groupApplicantList.setApplicantGroup(applicantGroupDto);
-            save(groupApplicantList);
+
+        GroupApplicantListDto existingGroupApplicantList = getMapper().fromEntity(groupApplicantListRepository.findTopByApplicantUinOrderByCreationDateDesc(updateGroupCmd.getUin()).orElse(null), mappingContext);
+
+        if (existingGroupApplicantList != null) {
+            existingGroupApplicantList.setApplicantGroup(applicantGroupDto);
+            save(existingGroupApplicantList);
+            return true;
+        } else {
+            GroupApplicantListDto groupApplicantListDto = GroupApplicantListDto.builder()
+                                .applicantGroup(applicantGroupDto)
+                                .applicantUin(updateGroupCmd.getUin()).build();
+            save(groupApplicantListDto);
             return true;
         }
-        return false;
 
     }
 }
