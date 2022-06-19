@@ -1,6 +1,7 @@
 package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantGroupDetailsVo;
+import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
 import com.elm.shj.admin.portal.orm.repository.ApplicantGroupRepository;
 import com.elm.shj.admin.portal.orm.repository.GroupApplicantListRepository;
@@ -27,7 +28,6 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
 
     private final ApplicantGroupRepository applicantGroupRepository;
     private final GroupApplicantListRepository groupApplicantListRepository;
-    public static final String className = "ApplicantGroupService :::";
     public ApplicantGroupDto getApplicantGroupByReferenceNumber(String referenceNumber) {
         log.info("Start getApplicantGroupByReferenceNumber ReferenceNumber:{}", referenceNumber);
         Optional<JpaApplicantGroup> applicantGroupOptional = applicantGroupRepository.findByReferenceNumber(referenceNumber);
@@ -116,17 +116,19 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         return result;
     }
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public boolean updateGroupLeader(String groupNumber, String companyRefCode, String companyTypeCode, long staffId) {
-        log.info("{} Start updateGroupLeader  groupNumber: {},  companyRefCode: {}, companyTypeCode: {},  staffId: {}",className, groupNumber,  companyRefCode,  companyTypeCode,  staffId);
-        ApplicantGroupDetailsVo groupDetailsByGroupId = findGroupDetailsByGroupId(groupNumber, companyRefCode, companyTypeCode);
-        if(groupDetailsByGroupId == null ) {
-            log.debug("{} findGroupDetailsByGroupId not found",className);
-            return false;
-        }
+    public boolean updateGroupLeader(long groupId, long staffId) {
+        log.info("Start updateGroupLeader  groupId: {},    staffId: {}", groupId,    staffId);
 
-        int affectedRows =  applicantGroupRepository.updateGroupLeader(groupDetailsByGroupId.getId(), staffId);
+        int affectedRows =  applicantGroupRepository.updateGroupLeader(groupId, staffId);
 
-        log.info("{} Finish updateGroupLeader  affectedRows: {}",className, affectedRows);
+        log.info("Finish updateGroupLeader  affectedRows: {}", affectedRows);
         return affectedRows != 0;
     }
+
+    public List<CompanyStaffVO> findGroupLeadersListByCompanyCode(String companyCode) {
+        return applicantGroupRepository.findGroupLeadersListByCompanyCode(companyCode);
+
+    }
+
+
 }

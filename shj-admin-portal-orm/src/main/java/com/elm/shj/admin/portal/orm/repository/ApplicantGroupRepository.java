@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import com.elm.shj.admin.portal.orm.entity.CompanyStaffVO;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,4 +44,14 @@ public interface ApplicantGroupRepository extends JpaRepository<JpaApplicantGrou
     @Modifying
     @Query("update JpaApplicantGroup set groupLeader.id = :staffId where id = :groupId ")
     int updateGroupLeader(@Param("groupId")long groupId,@Param("staffId") long staffId);
+
+    @Query("Select new com.elm.shj.admin.portal.orm.entity.CompanyStaffVO(staff.id,staff.fullNameEn,staff.fullNameAr) " +
+            "from JpaCompanyStaff staff " +
+            "JOIN staff.digitalIds digitalId " +
+            "JOIN digitalId.companyStaffCards staffCard " +
+            "JOIN staffCard.companyRitualSeason ritualSeason " +
+            "JOIN ritualSeason.company c "+
+            "where c.code = :companyCode " +
+            "And staff.titleCode = 'GROUP_LEADER'")
+    List<CompanyStaffVO> findGroupLeadersListByCompanyCode(@Param("companyCode") String companyCode);
 }

@@ -759,6 +759,39 @@ public class ValidationService {
         staff.setApplicantGroups(existingStaff.getApplicantGroups());
     }
 
+    public void updateGroupApplicantList(GroupApplicantListDto groupApplicantList, GroupApplicantListDto existingGroupApplicantList) {
+        groupApplicantList.setId(existingGroupApplicantList.getId());
+        groupApplicantList.setApplicantGroup(existingGroupApplicantList.getApplicantGroup());
+        groupApplicantList.setApplicantUin(existingGroupApplicantList.getApplicantUin());
+    }
+
+    public Boolean isValidApplicant(ApplicantLiteDto applicantLiteDto, String companyCode){
+        long companyRefCode = Long.valueOf(companyCode.contains("_") ? companyCode.substring(0, companyCode.indexOf("_")) : companyCode);
+        String companyType = companyCode.split("_")[1];
+        EOrganizerTypes organizerTypes= EOrganizerTypes.valueOf(companyType);
+        Boolean isValidApplicant = false;
+        switch (organizerTypes){
+            case ESTABLISHMENT:
+                isValidApplicant = null != applicantLiteDto.getEstablishmentRefCode() && applicantLiteDto.getEstablishmentRefCode() == companyRefCode;
+                break;
+            case MISSION:
+                isValidApplicant = null != applicantLiteDto.getMissionRefCode() && applicantLiteDto.getMissionRefCode() == companyRefCode;
+                break;
+            case EXTERNAL_HAJ_COMPANY:
+                isValidApplicant = null != applicantLiteDto.getCompanyCode() && applicantLiteDto.getCompanyCode().equals(companyCode);
+                break;
+            case INTERNAL_HAJ_COMPANY:
+                isValidApplicant = null != applicantLiteDto.getCompanyCode() && applicantLiteDto.getCompanyCode().equals(companyCode);
+                break;
+            case SERVICE_GROUP:
+                isValidApplicant = (null != applicantLiteDto.getServiceGroupMadinaCode() && applicantLiteDto.getServiceGroupMadinaCode() == companyRefCode) || (null != applicantLiteDto.getServiceGroupMakkahCode() && applicantLiteDto.getServiceGroupMakkahCode() == companyRefCode);
+                break;
+            default:
+                isValidApplicant = false;
+        }
+        return isValidApplicant;
+    }
+
     public void saveStaffRitual(CompanyStaffRitualDto companyStaffRitual) {
         CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(companyStaffRitual.getIdNumber(), companyStaffRitual.getPassportNumber(), companyStaffRitual.getDateOfBirthGregorian(), companyStaffRitual.getDateOfBirthHijri());
         CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());

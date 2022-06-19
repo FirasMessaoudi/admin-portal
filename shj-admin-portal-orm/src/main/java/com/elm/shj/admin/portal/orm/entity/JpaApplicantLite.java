@@ -65,6 +65,21 @@ public class JpaApplicantLite implements Serializable {
     @Column(name = "preferred_language")
     private String preferredLanguage;
 
+    @Column(name = "company_code")
+    private String companyCode;
+
+    @Column(name = "establishment_ref_code")
+    private Integer establishmentRefCode;
+
+    @Column(name = "mission_ref_code")
+    private Integer missionRefCode;
+
+    @Column(name = "makkah_service_group_ref_code")
+    private Long serviceGroupMakkahCode;
+
+    @Column(name = "madina_service_group_ref_code")
+    private Long serviceGroupMadinaCode;
+
     //TODO(aflaifel): Remove this or user another version of JpaApplicant without photo
     private String photo;
 

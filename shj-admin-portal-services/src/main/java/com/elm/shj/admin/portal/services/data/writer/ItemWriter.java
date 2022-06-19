@@ -295,11 +295,27 @@ public class ItemWriter {
                     return;
                 }
                 ApplicantLiteDto applicantLiteDto = applicantLiteService.findByBasicInfo(groupDataDto.getIdNumber(), groupDataDto.getPassportNumber(), groupDataDto.getNationalityCode());
+
+                // validate applicant is belong to loggend in  user company
+                if(!validationService.isValidApplicant(applicantLiteDto, companyRefCode[0])){
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_FOUND.getMessage())).valid(false).build());
+                    return;
+                }
+
+                // check applicant is already exist for that group then no need to add new update the existin applicant
+                GroupApplicantListDto existingGroupApplicant = groupApplicantListService.findByUin(applicantLiteDto.getDigitalIds().get(0).getUin(), applicantGroupDto.getId());
+
                 GroupApplicantListDto groupApplicantListDto = GroupApplicantListDto.builder()
                         .applicantGroup(applicantGroupDto)
                         .applicantUin(applicantLiteDto.getDigitalIds().get(0).getUin())
                         .build();
-                savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(groupApplicantListDto, mappingContext));
+
+                if(existingGroupApplicant != null){
+                    validationService.updateGroupApplicantList(groupApplicantListDto, existingGroupApplicant);
+                    savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(groupApplicantListDto, mappingContext));
+                } else {
+                    savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(groupApplicantListDto, mappingContext));
+                }
                 savedItems.add(savedItem);
                 try {
                     dataRequestRecords.add(DataRequestRecordDto.builder()
