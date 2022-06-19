@@ -20,7 +20,9 @@ public enum EExcelItemReaderErrorType {
     NOT_GROUP_WITH_DIFFERENT_LEADERS("validation.data.constraints.msg.30005"),
     NOT_RITUAL_TYPE_FOUND("validation.data.constraints.msg.30019"),
     NOT_APPLICANT_GROUP_FOUND("validation.data.constraints.msg.30021"),
-    NOT_APPLICANT_FOUND("validation.data.constraints.msg.20015");
+    NOT_APPLICANT_FOUND("validation.data.constraints.msg.20015"),
+    APPLICANT_PACKAGE_NOT_FOUND("validation.data.constraints.msg.30023"),
+    PACKAGE_HOUSING_NOT_FOUND("validation.data.constraints.msg.30024");
 
     String message;
 

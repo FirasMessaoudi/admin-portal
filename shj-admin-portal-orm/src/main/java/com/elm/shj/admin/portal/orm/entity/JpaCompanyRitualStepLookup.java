@@ -32,8 +32,12 @@ public class JpaCompanyRitualStepLookup extends JpaLocalizedLookup {
 
     private String summary;
     @Column(name = "step_index")
-    private String stepIndex;
+    private long stepIndex;
     @Column(name = "edit_mode")
     private String editMode;
+    @Column(name = "location_lat")
+    private double locationLat;
+    @Column(name = "location_lng")
+    private double locationLng;
 
 }
