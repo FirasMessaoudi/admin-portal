@@ -3,10 +3,10 @@
  */
 package com.elm.shj.admin.portal.services.card;
 
-import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantCardBasicDto;
 import com.elm.shj.admin.portal.services.dto.Constants;
 import com.elm.shj.admin.portal.services.dto.ECardStatus;
-import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualBasicService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockAssert;
@@ -26,7 +26,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ApplicantCardScheduler {
 
-    private final ApplicantRitualService applicantRitualService;
+    private final ApplicantRitualBasicService applicantRitualBasicService;
+    private final ApplicantCardBasicService applicantCardBasicService;
     private final ApplicantCardService applicantCardService;
     private final UserCardStatusAuditService userCardStatusAuditService;
 
@@ -34,24 +35,25 @@ public class ApplicantCardScheduler {
     /**
      * Scheduled job to create cards for new applicant ritual records
      */
-    @Scheduled(cron = "${scheduler.generate.card.applicant.ritual.cron}")
+    @Scheduled(fixedDelayString = "${scheduler.generate.card.applicant.ritual.delay.milliseconds}")
     @SchedulerLock(name = "generate-applicant-ritual-cards-task")
     public void generateIdsForNewApplicants() {
         log.debug("Generate applicants cards scheduler started...");
         LockAssert.assertLocked();
-        applicantRitualService.findAllWithoutCards().forEach(applicantRitual -> {
+        applicantRitualBasicService.findAllWithoutCards().getContent().forEach(applicantRitualBasic -> {
             // generate and save the card
-            ApplicantCardDto savedCard = applicantCardService.save(ApplicantCardDto.builder().applicantRitual(applicantRitual).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
-            userCardStatusAuditService.saveUserCardStatusAudit(savedCard, Constants.SYSTEM_USER_ID_NUMBER);
+            ApplicantCardBasicDto savedCard = applicantCardBasicService.save(ApplicantCardBasicDto.builder().applicantRitual(applicantRitualBasic).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
+            userCardStatusAuditService.saveUserBasicCardStatusAudit(savedCard, Constants.SYSTEM_USER_ID_NUMBER);
 
         });
+        log.debug("Generate applicants cards scheduler finished...");
     }
 
     /**
      * Scheduled job to update card status based on ritual end date
      */
-    @Scheduled(cron = "${scheduler.update.applicant.card.status.cron}")
-    @SchedulerLock(name = "expire-ritual-applicant-card")
+//    @Scheduled(cron = "${scheduler.update.applicant.card.status.cron}")
+//    @SchedulerLock(name = "expire-ritual-applicant-card")
     public void expireRitualApplicantCard() {
         log.debug("Expire ritual applicant card scheduler started...");
         LockAssert.assertLocked();

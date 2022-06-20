@@ -194,8 +194,10 @@ public class ExcelItemReader<T> {
                 assert fieldToProcess != null;
                 ReflectionUtils.makeAccessible(fieldToProcess);
                 Cell cell = row.getCell(row.getFirstCellNum() + cellIndex);
-                if(cell.getCellType() == CellType.FORMULA){
-                    cell.removeFormula();
+                if(cell != null){
+                    if(cell.getCellType() == CellType.FORMULA){
+                        cell.removeFormula();
+                    }
                 }
                 Object value = readCellValue(cell, fieldToProcess);
                 fieldToProcess.set(target, value);

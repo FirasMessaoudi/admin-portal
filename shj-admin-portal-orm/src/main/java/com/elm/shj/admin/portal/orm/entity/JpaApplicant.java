@@ -85,6 +85,21 @@ public class JpaApplicant implements Serializable {
     @Column(name = "data_request_record_id")
     private Long dataRequestRecordId;
 
+    @Column(name = "company_code")
+    private String companyCode;
+
+    @Column(name = "establishment_ref_code")
+    private Integer establishmentRefCode;
+
+    @Column(name = "mission_ref_code")
+    private Integer missionRefCode;
+
+    @Column(name = "makkah_service_group_ref_code")
+    private Long serviceGroupMakkahCode;
+
+    @Column(name = "madina_service_group_ref_code")
+    private Long serviceGroupMadinaCode;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "applicant_id", updatable = false)
     private List<JpaApplicantDigitalId> digitalIds;

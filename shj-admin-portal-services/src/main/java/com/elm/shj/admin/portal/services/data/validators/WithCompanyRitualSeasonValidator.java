@@ -42,6 +42,9 @@ public class WithCompanyRitualSeasonValidator implements ConstraintValidator<Wit
             return companyRitualSeason != null;
         } else {
             HuicPlannedPackage huicPlannedPackage = (HuicPlannedPackage) value;
+            if (huicPlannedPackage.getCompanyRefCode() == null || ECompanyType.fromId(huicPlannedPackage.getCompanyTypeCode()) == null || ERitualType.fromId(huicPlannedPackage.getRitualTypeCode()) == null) {
+                return false;
+            }
             CompanyRitualSeasonDto companyRitualSeason = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(huicPlannedPackage.getCompanyRefCode() + "_" + ECompanyType.fromId(huicPlannedPackage.getCompanyTypeCode()).name(), ERitualType.fromId(huicPlannedPackage.getRitualTypeCode()).name(), huicPlannedPackage.getSeasonYear());
             return companyRitualSeason != null;
         }

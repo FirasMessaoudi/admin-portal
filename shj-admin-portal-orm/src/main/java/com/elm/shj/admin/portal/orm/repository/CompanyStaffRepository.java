@@ -49,6 +49,13 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     boolean existsByBasicInfoAndTitleIsGroupLeader(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                                                    @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian, @Param("titleCode") String titleCode);
 
+    @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
+            "FROM JpaCompanyStaff a WHERE " +
+            "((a.idNumber = :idNumber) OR " +
+            "(a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode)) AND a.titleCode=:titleCode")
+    boolean existsByBasicInfoAndTitleIsGroupLeader(@Param("idNumber") String idNumber,
+                                                   @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode, @Param("titleCode") String titleCode);
+
     @Query("select s from JpaCompanyStaff s where s.id not in (select sdi.companyStaff.id from JpaCompanyStaffDigitalId sdi where sdi.seasonYear =:season)")
     List<JpaCompanyStaff> findAllWithoutSuin(@Param("season") int season);
 
@@ -59,6 +66,12 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     JpaCompanyStaff findByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                                     @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
+    @Query("SELECT a " +
+            "FROM JpaCompanyStaff a WHERE " +
+            "(a.idNumber = :idNumber) OR " +
+            "(a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode)")
+    JpaCompanyStaff findByBasicInfo(@Param("idNumber") String idNumber,
+                                    @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
 
     @Query("SELECT a " +
             "FROM JpaCompanyStaff a WHERE " +
@@ -70,6 +83,12 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
     @Query("SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE sdi.suin = :suin AND sdi.statusCode=:statusCode")
     JpaCompanyStaff findBySuin(@Param("suin") String suin, @Param("statusCode") String statusCode);
+
+    @Query("SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE  s.passportNumber=:passportNumber AND s.nationalityCode =:nationality AND sdi.statusCode=:statusCode")
+    JpaCompanyStaff findByPassportAndNationalityCode(@Param("passportNumber") String passportNumber, @Param("nationality") String nationalityCode, @Param("statusCode") String statusCode);
+
+    @Query("SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE s.idNumber=:idNumber AND sdi.statusCode=:statusCode")
+    JpaCompanyStaff findByIdNumber(@Param("idNumber") String idNumber, @Param("statusCode") String statusCode);
 
     JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(String applicantUin, long companyRitualSeason, String titleCode);
 
@@ -187,6 +206,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
     @Query("SELECT a FROM JpaCompanyStaff a WHERE a.id IN :selectedStaffs")
     Page<JpaCompanyStaff> findByIds(@Param("selectedStaffs") List<Long> selectedStaffs, Pageable pageable);
+
 
 
 }

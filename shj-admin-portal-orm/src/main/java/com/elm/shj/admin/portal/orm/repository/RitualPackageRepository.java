@@ -24,6 +24,9 @@ public interface RitualPackageRepository extends JpaRepository<JpaRitualPackage,
 
     Optional<JpaRitualPackage> findByCompanyRitualSeasonCompanyStaffCardsCompanyStaffDigitalIdSuin(String digitalId);
 
-    @Query("select rp.referenceNumber from JpaRitualPackage rp where rp.companyRitualSeason.ritualSeason.ritualTypeCode = :ritualTypeCode and rp.companyRitualSeason.ritualSeason.seasonYear = :seasonYear")
-    String findReferenceNumberByRitualSeason(@Param("ritualTypeCode") String ritualTypeCode, @Param("seasonYear") int seasonYear);
+    @Query("select rp.referenceNumber from JpaRitualPackage rp where rp.companyRitualSeason.company.code = :companyCode and rp.companyRitualSeason.ritualSeason.ritualTypeCode = :ritualTypeCode and rp.companyRitualSeason.ritualSeason.seasonYear = :seasonYear")
+    String findReferenceNumberByRitualSeason(@Param("companyCode") String companyCode, @Param("ritualTypeCode") String ritualTypeCode, @Param("seasonYear") int seasonYear);
+
+    @Query("select rp from JpaRitualPackage rp where rp.referenceNumber = :referenceNumber and rp.companyRitualSeason.ritualSeason.ritualTypeCode = :ritualTypeCode and rp.companyRitualSeason.ritualSeason.seasonYear = :seasonYear")
+    Optional<JpaRitualPackage> findByReferenceNumberAndRitual(@Param("referenceNumber") String referenceNumber, @Param("ritualTypeCode") String ritualTypeCode, @Param("seasonYear") int seasonYear);
 }

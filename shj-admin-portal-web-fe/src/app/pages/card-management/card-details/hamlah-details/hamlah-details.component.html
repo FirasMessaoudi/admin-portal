@@ -40,15 +40,15 @@
     </div>
     <div class="form-group col">
       <label class="col-form-label">{{'card-management.housing_included' | translate}}</label>
-      <span class="form-control-plaintext ">{{(card?.applicantPackageHousings.length>0? 'general.yes' : 'general.no') | translate}}</span>
+      <span class="form-control-plaintext ">{{(card?.applicantPackageHousings.length>0 ? 'general.label_yes' : 'general.label_no') | translate}}</span>
     </div>
     <div class="form-group col">
       <label class="col-form-label">{{'card-management.transportation_included' | translate}}</label>
-      <span class="form-control-plaintext ">{{(card?.applicantPackageTransportations.length>0? 'general.yes' : 'general.no') | translate}}</span>
+      <span class="form-control-plaintext ">{{(card?.applicantPackageTransportations.length>0 ? 'general.label_yes' : 'general.label_no') | translate}}</span>
     </div>
     <div class="form-group col">
       <label class="col-form-label">{{'card-management.catering_included' | translate}}</label>
-      <span class="form-control-plaintext ">{{(card?.applicantPackageCaterings.length>0? 'general.yes' : 'general.no') | translate}}</span>
+      <span class="form-control-plaintext ">{{(card?.applicantPackageCaterings.length>0 ? 'general.label_yes' : 'general.label_no') | translate}}</span>
     </div>
   </div>
 </section>
@@ -120,16 +120,9 @@
       </thead>
       <tbody>
       <tr *ngFor="let catering of card?.applicantPackageCaterings">
-        <td class="ltr">{{ 'card-management.'+catering?.packageCatering?.type | translate}}</td>
+        <td class="ltr">{{ 'card-management.'+catering?.packageCatering?.mealTypeCode | translate}}</td>
         <td class="ltr">{{ currentLanguage.startsWith("en")? catering?.packageCatering?.descriptionEn : catering?.packageCatering?.descriptionAr }}</td>
-        <td class="ltr">
-          {{ catering?.packageCatering?.mealTime }}
-          {{'general.from' | translate}}
-          {{ catering?.packageCatering?.packageHousing?.validityStart | gregorianDateFormat}}
-          {{'general.to' | translate}}
-          {{ catering?.packageCatering?.packageHousing?.validityStart | gregorianDateFormat}}
-
-        </td>
+        <td>{{'card-management.'+catering?.packageCatering?.mealTimeCode | translate}}</td>
         <td class="ltr">
           {{
           catering?.packageCatering?.packageHousing?.siteCode

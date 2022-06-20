@@ -6,9 +6,7 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -22,8 +20,10 @@ import java.util.List;
  * @since 1.1.0
  */
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @UniqueCompanyStaff
 @FieldDependency.List({
         @FieldDependency(first = "idNumber", second = "passportNumber"),
@@ -50,7 +50,7 @@ public class CompanyStaffDto {
     @CellIndex(index = 1)
     private String passportNumber;
 
-    @GregorianDate(minOffset = -120, maxOffset = -10 ,allowNull = false)
+    @GregorianDate(minOffset = -120, maxOffset = -10 ,allowNull = true)
     @CellIndex(index = 2)
     private Date dateOfBirthGregorian;
 
@@ -108,7 +108,7 @@ public class CompanyStaffDto {
 
     private Long dataRequestRecordId;
 
-    //@JsonBackReference(value = "digitalIds")
+    @JsonBackReference(value = "digitalIds")
     private List<CompanyStaffDigitalIdDto> digitalIds;
 
     private String customJobTitle;

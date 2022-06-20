@@ -7,13 +7,10 @@ import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.user.UserLocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,10 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import java.util.*;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -41,6 +34,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyStaffService extends GenericService<JpaCompanyStaff, CompanyStaffDto, Long> {
 
+    private final UserLocationService userLocationService;
     private final CompanyStaffRepository companyStaffRepository;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
     public final static Pattern  EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -62,6 +56,59 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .dateOfBirthGregorian(companyStaff.getDateOfBirthGregorian())
                     .dateOfBirthHijri(companyStaff.getDateOfBirthHijri())
                     .gender(companyStaff.getGender())
+                    .idNumber(companyStaff.getIdNumber())
+                    .passportNumber(companyStaff.getPassportNumber())
+                    .digitalIds(companyStaff.getDigitalIds())
+                    .build();
+            return Optional.of(companyStaffLite);
+        } else return Optional.empty();
+    }
+
+    public Optional<CompanyStaffLiteDto> findByPassportNumber(String passportNumber, String nationalityCode) {
+        CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findByPassportAndNationalityCode(passportNumber, nationalityCode, EDigitalIdStatus.VALID.name()), mappingContext);
+        if (companyStaff != null) {
+            CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
+                    .id(companyStaff.getId())
+                    .suin(companyStaff.getDigitalIds().get(0).getSuin())
+                    .fullNameAr(companyStaff.getFullNameAr())
+                    .fullNameEn(companyStaff.getFullNameEn())
+                    .countryCode(companyStaff.getCountryCode())
+                    .mobileNumber(companyStaff.getMobileNumber())
+                    .email(companyStaff.getEmail())
+                    .nationalityCode(companyStaff.getNationalityCode())
+                    .photo(companyStaff.getPhoto())
+                    .titleCode(companyStaff.getTitleCode())
+                    .dateOfBirthGregorian(companyStaff.getDateOfBirthGregorian())
+                    .dateOfBirthHijri(companyStaff.getDateOfBirthHijri())
+                    .gender(companyStaff.getGender())
+                    .idNumber(companyStaff.getIdNumber())
+                    .passportNumber(companyStaff.getPassportNumber())
+                    .digitalIds(companyStaff.getDigitalIds())
+                    .build();
+            return Optional.of(companyStaffLite);
+        } else return Optional.empty();
+    }
+
+    public Optional<CompanyStaffLiteDto> findByIdNumber(String idNumber) {
+        CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findByIdNumber(idNumber, EDigitalIdStatus.VALID.name()), mappingContext);
+        if (companyStaff != null) {
+            CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
+                    .id(companyStaff.getId())
+                    .suin(companyStaff.getDigitalIds().get(0).getSuin())
+                    .fullNameAr(companyStaff.getFullNameAr())
+                    .fullNameEn(companyStaff.getFullNameEn())
+                    .countryCode(companyStaff.getCountryCode())
+                    .mobileNumber(companyStaff.getMobileNumber())
+                    .email(companyStaff.getEmail())
+                    .nationalityCode(companyStaff.getNationalityCode())
+                    .photo(companyStaff.getPhoto())
+                    .titleCode(companyStaff.getTitleCode())
+                    .dateOfBirthGregorian(companyStaff.getDateOfBirthGregorian())
+                    .dateOfBirthHijri(companyStaff.getDateOfBirthHijri())
+                    .gender(companyStaff.getGender())
+                    .idNumber(companyStaff.getIdNumber())
+                    .passportNumber(companyStaff.getPassportNumber())
+                    .digitalIds(companyStaff.getDigitalIds())
                     .build();
             return Optional.of(companyStaffLite);
         } else return Optional.empty();
@@ -110,6 +157,11 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     public boolean existsByBasicInfoAndTitleIsGroupLeader(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
         return ((CompanyStaffRepository) getRepository()).existsByBasicInfoAndTitleIsGroupLeader(idNumber, dateHijri, passportNumber, dateGreg, ECompanyStaffTitle.GROUP_LEADER.name());
     }
+
+    public boolean existsByBasicInfoAndTitleIsGroupLeader(String idNumber, String passportNumber, String nationalityCode) {
+        return ((CompanyStaffRepository) getRepository()).existsByBasicInfoAndTitleIsGroupLeader(idNumber, passportNumber, nationalityCode, ECompanyStaffTitle.GROUP_LEADER.name());
+    }
+
     /**
      * @param idNumber
      * @param passportNumber
@@ -120,6 +172,17 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     public CompanyStaffDto findByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
         return getMapper().fromEntity(companyStaffRepository.findByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg), mappingContext);
     }
+
+    /**
+     * @param idNumber
+     * @param passportNumber
+     * @param nationalityCode
+     * @return CompanyStaffDto
+     */
+    public CompanyStaffDto findByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
+        return getMapper().fromEntity(companyStaffRepository.findByBasicInfo(idNumber, passportNumber, nationalityCode), mappingContext);
+    }
+
     /**
      * @param idNumber
      * @param passportNumber
@@ -175,13 +238,15 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
     @Transactional
-    public List<CompanyStaffLiteDto> searchStaff(CompanyStaffFilterDto companyStaffFilterDto) {
+    public Page<CompanyStaffLiteDto> searchStaff(CompanyStaffFilterDto companyStaffFilterDto, Pageable pageable) {
 
-        List<JpaCompanyStaff> companyStaffs = companyStaffRepository.findAll(withStaffFilter(companyStaffFilterDto));
+        Page<JpaCompanyStaff> companyStaffs = companyStaffRepository.findAll(withStaffFilter(companyStaffFilterDto), pageable);
         List<CompanyStaffLiteDto> companyStaffList = new ArrayList<>();
 
-        if (companyStaffs != null && !companyStaffs.isEmpty()) {
-            companyStaffs.forEach(companyStaff -> {
+        if (companyStaffs.getContent() != null && !companyStaffs.getContent().isEmpty()) {
+            companyStaffs.getContent().forEach(companyStaff -> {
+                UserLocationDto userLocationDto = userLocationService.findTopByUserIdAndUserTypeOrderByCreationDateDesc(companyStaff.getDigitalIds().isEmpty() ? null : companyStaff.getDigitalIds().get(0).getSuin(),
+                        EUserType.STAFF.name());
                 CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
                         .id(companyStaff.getId())
                         .suin(companyStaff.getDigitalIds().isEmpty() ? "" : companyStaff.getDigitalIds().get(0).getSuin())
@@ -198,12 +263,15 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                         .gender(companyStaff.getGender())
                         .passportNumber(companyStaff.getPassportNumber())
                         .idNumber(companyStaff.getIdNumber())
+                        .latitude(userLocationDto == null ? null : userLocationDto.getLatitude())
+                        .longitude(userLocationDto == null ? null : userLocationDto.getLongitude())
                         .build();
                 companyStaffList.add(companyStaffLite);
             });
 
         }
-        return companyStaffList;
+        Page<CompanyStaffLiteDto> companyStaff = new PageImpl<>(companyStaffList, pageable, companyStaffs.getTotalElements());
+        return companyStaff;
     }
 
     private Specification<JpaCompanyStaff> withStaffFilter(final CompanyStaffFilterDto criteria) {
@@ -338,5 +406,6 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
+
 
 }

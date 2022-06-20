@@ -41,7 +41,7 @@ public class ApplicantBasicInfoDto implements Serializable {
     private String passportNumber;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @GregorianDate(minOffset = -120, maxOffset = -10, groups = CheckSecond.class)
+    @GregorianDate(minOffset = -120, maxOffset = -10, allowNull = true, groups = CheckSecond.class)
     @CellIndex(index = 2)
     private Date dateOfBirthGregorian;
 

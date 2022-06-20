@@ -35,4 +35,6 @@ public interface ApplicantPackageRepository extends JpaRepository<JpaApplicantPa
     Optional<JpaApplicantPackage> findJpaApplicantPackageByApplicantUin(long applicantUin);
 
     Optional<JpaApplicantPackage> findTopByApplicantRitualApplicantIdOrderByCreationDateDesc(long applicantId);
+
+    List<JpaApplicantPackage> findByRitualPackageId(long id);
 }

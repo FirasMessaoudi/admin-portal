@@ -9,8 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static  java.util.AbstractMap.SimpleEntry;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -39,6 +38,18 @@ public class CompanyRitualSeasonService extends GenericService<JpaCompanyRitualS
             return Optional.of( getMapper().fromEntity(companyRitualSeason.get(), mappingContext).getId());
         else
             return Optional.empty();
+    }
+
+    public CompanyRitualSeasonDto getCompanyRitualSeason(String companyCode, String typeCode, int seasonYear) {
+        Optional<JpaCompanyRitualSeason> companyRitualSeason = companyRitualSeasonRepository.findByCompanyCodeAndRitualTypeAndSeasonYear(companyCode, typeCode, seasonYear);
+        if (companyRitualSeason.isPresent())
+            return getMapper().fromEntity(companyRitualSeason.get(), mappingContext);
+        else
+            return null;
+    }
+
+    public List<CompanyRitualSeasonDto> findByCompanyId(Long companyId) {
+        return mapList(companyRitualSeasonRepository.findByCompanyId(companyId));
     }
 
 

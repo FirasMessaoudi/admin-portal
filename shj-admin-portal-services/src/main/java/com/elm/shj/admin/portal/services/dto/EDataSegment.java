@@ -29,7 +29,9 @@ public enum EDataSegment {
     STAFF_APPLICANT_GROUP_DATA(10),
     STAFF_FULL_MAIN_DATA(11),
     MAIN_GROUP_DATA(12),
-    GROUP_DATA(13);
+    GROUP_DATA(13),
+    APPLICANT_HOUSING_DATA(14);
+
 
     private final long id;
 

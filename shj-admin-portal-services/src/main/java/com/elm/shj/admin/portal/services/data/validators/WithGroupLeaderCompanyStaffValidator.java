@@ -4,7 +4,7 @@
 package com.elm.shj.admin.portal.services.data.validators;
 
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffRitualDto;
+import com.elm.shj.admin.portal.services.dto.GroupMainDataDto;
 import com.elm.shj.admin.portal.services.dto.StaffApplicantGroupDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +29,19 @@ public class WithGroupLeaderCompanyStaffValidator implements ConstraintValidator
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        if (value == null || !value.getClass().isAssignableFrom(StaffApplicantGroupDto.class)) {
+        if (value == null || (!value.getClass().isAssignableFrom(StaffApplicantGroupDto.class) && !value.getClass().isAssignableFrom(GroupMainDataDto.class))) {
             return false;
         }
 
-        StaffApplicantGroupDto  staffApplicantGroupDto = (StaffApplicantGroupDto) value;
-        return companyStaffService.existsByBasicInfoAndTitleIsGroupLeader(staffApplicantGroupDto.getStaffIdNumber(), staffApplicantGroupDto.getStaffPassportNumber(), staffApplicantGroupDto.getStaffDateOfBirthGregorian(), staffApplicantGroupDto.getStaffDateOfBirthHijri());
+        if (value.getClass().isAssignableFrom(StaffApplicantGroupDto.class)) {
+            StaffApplicantGroupDto staffApplicantGroupDto = (StaffApplicantGroupDto) value;
+            return companyStaffService.existsByBasicInfoAndTitleIsGroupLeader(staffApplicantGroupDto.getStaffIdNumber(), staffApplicantGroupDto.getStaffPassportNumber(), staffApplicantGroupDto.getStaffDateOfBirthGregorian(), staffApplicantGroupDto.getStaffDateOfBirthHijri());
+        } else {
+            GroupMainDataDto groupMainDataDto = (GroupMainDataDto) value;
+            return companyStaffService.existsByBasicInfoAndTitleIsGroupLeader(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationalityCode());
+
+        }
+
 
     }
 

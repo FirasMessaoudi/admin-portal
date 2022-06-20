@@ -4,7 +4,6 @@
 package com.elm.shj.admin.portal.services.user;
 
 import com.elm.dcc.foundation.providers.email.service.EmailService;
-import com.elm.dcc.foundation.providers.sms.service.SmsGatewayService;
 import com.elm.shj.admin.portal.orm.entity.JpaUser;
 import com.elm.shj.admin.portal.orm.repository.RoleRepository;
 import com.elm.shj.admin.portal.orm.repository.UserRepository;
@@ -12,6 +11,7 @@ import com.elm.shj.admin.portal.services.dto.RoleDto;
 import com.elm.shj.admin.portal.services.dto.UserDto;
 import com.elm.shj.admin.portal.services.dto.UserRoleDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.sms.HUICSmsService;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.net.ssl.SSLException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
@@ -42,7 +43,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
 
     public static final String CREATE_USER_SMS_NOTIFICATION_KEY = "user.mngt.new.user.sms.notification";
     public static final String RESET_PASSWORD_SMS_NOTIFICATION_KEY = "reset.password.sms.notification";
-    public static final String REGISTRATION_EMAIL_SUBJECT = "Welcome to Shaaer Platform مرحبا بك في منصة شعائر";
+    public static final String REGISTRATION_EMAIL_SUBJECT = "Welcome to Hajj App Platform مرحبا بك في منصة تطبيق الحج";
     public static final String REGISTRATION_EMAIL_TPL_NAME = "email-registration.ftl";
     public static final String RESET_PASSWORD_EMAIL_SUBJECT = "Reset User Password إعادة تعيين كلمة السر";
     public static final String RESET_PASSWORD_EMAIL_TPL_NAME = "email-reset-password.ftl";
@@ -51,7 +52,7 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final MessageSource messageSource;
-    private final SmsGatewayService smsGatewayService;
+    private final HUICSmsService huicSmsService;
     private final EmailService emailService;
     private final HttpServletRequest request;
 
@@ -328,7 +329,12 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         String[] smsNotificationArgs = new String[]{user.getPassword()};
         String locale = isCitizen(user.getNin()) ? "ar" : "en";
         String createdUserSms = messageSource.getMessage(RESET_PASSWORD_SMS_NOTIFICATION_KEY, smsNotificationArgs, Locale.forLanguageTag(locale));
-        boolean smsSent = smsGatewayService.sendMessage(user.getMobileNumber().longValue(), createdUserSms);
+        boolean smsSent = false;
+        try {
+            smsSent = huicSmsService.sendMessage(966, String.valueOf(user.getMobileNumber()), createdUserSms, "comments");
+        } catch (SSLException e) {
+            log.error("Unable to send SMS for {}", user.getMobileNumber(), e);
+        }
         log.debug("SMS notification status: {}", smsSent);
 
         // Send Email notification
@@ -350,11 +356,16 @@ public class UserService extends GenericService<JpaUser, UserDto, Long> {
         String[] smsNotificationArgs = new String[]{user.getPassword()};
         String locale = isCitizen(user.getNin()) ? "ar" : "en";
         String createdUserSms = messageSource.getMessage(CREATE_USER_SMS_NOTIFICATION_KEY, smsNotificationArgs, Locale.forLanguageTag(locale));
-        boolean smsSent = smsGatewayService.sendMessage(user.getMobileNumber().longValue(), createdUserSms);
+        boolean smsSent = false;
+        try {
+            smsSent = huicSmsService.sendMessage(966, String.valueOf(user.getMobileNumber()), createdUserSms, "comments");
+        } catch (SSLException e) {
+            log.error("Unable to send SMS for {}", user.getMobileNumber(), e);
+        }
         log.debug("SMS notification status: {}", smsSent);
 
         String appUrl = request.getScheme() + "://" + request.getHeader("host");
-        String logoURL = appUrl + "/assets/images/logo.png";
+        String logoURL = appUrl + "/assets/images/login_logo.png";
         String headerURL = appUrl + "/assets/images/header.png";
         String dotsPatternURL = appUrl + "/assets/images/dots-pattern.png";
         // Send Email notification

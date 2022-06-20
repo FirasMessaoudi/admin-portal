@@ -26,6 +26,7 @@ public class ApplicantLiteDto implements Serializable {
 
     private long id;
     private String nationalityCode;
+    private String countryPhonePrefix;
     private String idNumber;
     private String passportNumber;
     private String packageReferenceNumber;
@@ -36,6 +37,7 @@ public class ApplicantLiteDto implements Serializable {
     private String fullNameOrigin;
     private String preferredLanguage;
     private String gender;
+    //TODO(aflaifel): Remove this or user another version of JpaApplicant without photo
     private String photo;
     private List<ApplicantContactDto> contacts;
     private List<ApplicantDigitalIdDto> digitalIds;
@@ -44,4 +46,10 @@ public class ApplicantLiteDto implements Serializable {
     private boolean hasLocalMobileNumber;
     private String mobileNumber;
     private String countryCode;
+    private boolean deleted;
+    private String companyCode;
+    private Integer establishmentRefCode;
+    private Integer missionRefCode;
+    private Long serviceGroupMakkahCode;
+    private Long serviceGroupMadinaCode;
 }

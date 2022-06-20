@@ -6,10 +6,12 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.shj.admin.portal.services.data.validators.HijriDate;
 import com.elm.shj.admin.portal.services.data.validators.RitualTypeCode;
 import com.elm.shj.admin.portal.services.data.validators.SeasonYear;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Dto class for the ritual season domain.
@@ -42,4 +44,6 @@ public class RitualSeasonDto implements Serializable {
     private long seasonEnd;
 
     private boolean activated;
+    @JsonIgnore
+    List<CompanyRitualSeasonDto> companyRitualSeasons;
 }

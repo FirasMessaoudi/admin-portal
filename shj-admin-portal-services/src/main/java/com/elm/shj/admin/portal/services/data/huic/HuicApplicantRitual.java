@@ -16,6 +16,7 @@ import java.io.Serializable;
  * @since 11.0
  */
 
+@WithPackage
 @WithApplicant
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,16 +25,14 @@ import java.io.Serializable;
 @Builder
 public class HuicApplicantRitual implements Serializable {
 
-    @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
+    private static final long serialVersionUID = 3960122257793536522L;
     private Long idNumber;
-    @PassportNumber
     private String passportNo;
     @NotNull(message = "validation.data.constraints.msg.20001")
     @NationalityCode
     private Long nationality;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @WithRitualPackage
     private String packageRefNumber;
     @RitualTypeCode
     private Integer ritualTypeCode;
@@ -44,22 +43,22 @@ public class HuicApplicantRitual implements Serializable {
 
     private String permitNumber;
 
-    @OnlyCharacters(min = 5, max = 50, allowEmpty = true, allowNumbers = true, allowSpecialChars = true)
+    @NullOrNotBlank(min = 0, max = 20)
     private String insuranceNumber;
 
-    @NullOrNotBlank(min = 3, max = 15)
+    @NullOrNotBlank(min = 0, max = 20)
     private String borderNo;
 
-    @OnlyCharacters(min = 3, max = 20, allowNumbers = true, allowSpecialChars = true)
+    @NullOrNotBlank(min = 0, max = 20)
     private String busNumber;
 
-    @OnlyCharacters(min = 1, max = 6, allowNumbers = true, allowSpecialChars = true)
+    @NullOrNotBlank(min = 0, max = 20)
     private String seatNumber;
 
-    @OnlyCharacters(min = 1, max = 20, allowNumbers = true, allowSpecialChars = true)
+    @NullOrNotBlank(min = 0, max = 20)
     private String roomNumber;
 
-    @OnlyCharacters(min = 1, max = 6, allowNumbers = true, allowSpecialChars = true)
+    @NullOrNotBlank(min = 0, max = 20)
     private String bedNumber;
 
 }

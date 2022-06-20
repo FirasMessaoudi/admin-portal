@@ -26,7 +26,8 @@ import java.util.Date;
 @UniqueCompanyStaffFullData
 @FieldDependency.List({
         @FieldDependency(first = "idNumber", second = "passportNumber"),
-        @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri")
+        @FieldDependency(first = "dateOfBirthGregorian", second = "dateOfBirthHijri"),
+        @FieldDependency(first = "fullNameEn", second = "fullNameAr")
 })
 public class CompanyStaffFullDataDto implements Serializable {
     private long id;
@@ -49,7 +50,7 @@ public class CompanyStaffFullDataDto implements Serializable {
     @HijriDate(minOffset = -140, maxOffset = -11, allowEmpty = true)
     private Long dateOfBirthHijri;
 
-    @OnlyCharacters(min = 10, max = 150, allowEmpty = false)
+    @OnlyCharacters(min = 0, max = 150, allowEmpty = true)
     @CellIndex(index = 4)
     private String fullNameEn;
 
@@ -57,22 +58,20 @@ public class CompanyStaffFullDataDto implements Serializable {
     @OnlyCharacters(min = 6, max = 150, arabic = true)
     private String fullNameAr;
 
-    @NullOrNotBlank(min = 10, max = 150)
+    @NullOrNotBlank(min = 0, max = 150)
     @CellIndex(index = 6)
     private String fullNameOrigin;
 
-    @NullOrNotBlank(min = 1, max = 15)
     @CellIndex(index = 7)
-    @JsonIgnore
+    @OnlyCharacters(min = 1, max = 150, arabic = true, allowEmpty = false)
     private String genderType;
 
     @Gender
     @CellIndex(index = 8)
     private String gender;
 
-    @NullOrNotBlank(min = 1, max = 30)
     @CellIndex(index = 9)
-    @JsonIgnore
+    @OnlyCharacters(min = 1, max = 150, arabic = true, allowEmpty = false)
     private String nationality;
 
     @NationalityCode
@@ -83,11 +82,11 @@ public class CompanyStaffFullDataDto implements Serializable {
     @CellIndex(index = 11)
     private String idNumberOriginal;
 
-    @NullOrNotBlank(min = 1, max = 30)
     @CellIndex(index = 12)
-    @JsonIgnore
+    @OnlyCharacters(min = 1, max = 150, arabic = true, allowEmpty = false)
     private String jobTitle;
 
+    @NullOrNotBlank(min = 1, max = 30)
     @JobTitleCode
     @CellIndex(index = 13)
     private String titleCode;
@@ -109,14 +108,14 @@ public class CompanyStaffFullDataDto implements Serializable {
     private String mobileNumberIntl;
 
     @CellIndex(index = 18)
-    @NullOrNotBlank(min = 1, max = 30)
-    @JsonIgnore
+    @OnlyCharacters(min = 1, max = 150, arabic = true, allowEmpty = false)
     private String ritualType;
 
     @CellIndex(index = 19)
     @RitualTypeCode
     private String typeCode;
 
+    @CellIndex(index = 20)
     private String photo;
 
     private Long dataRequestRecordId;

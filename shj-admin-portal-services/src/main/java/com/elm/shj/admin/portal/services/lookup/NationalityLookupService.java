@@ -28,27 +28,27 @@ public class NationalityLookupService extends GenericService<JpaNationalityLooku
     private final NationalityLookupRepository nationalityLookupRepository;
 
     /**
-     * Checks if a country exists by its code
+     * Checks if a nationality exists by its code
      *
-     * @param countryCode the code of the country to look for
-     * @return if the country is found
+     * @param countryCode the code of the nationality to look for
+     * @return if the nationality is found
      */
     public boolean existsByCode(String countryCode) {
         return ((NationalityLookupRepository) getRepository()).existsByCode(countryCode);
     }
 
     /**
-     * finds if a country by its code
+     * finds if a nationality by its code
      *
-     * @param countryCode the code of the country to look for
-     * @return the found country
+     * @param countryCode the code of the nationality to look for
+     * @return the found nationality
      */
     public NationalityLookupDto findByCode(String countryCode) {
         return getMapper().fromEntity(nationalityLookupRepository.findFirstByCode(countryCode), mappingContext);
     }
 
     /**
-     * Find country with all its labels based on the code.
+     * Find nationality with all its labels based on the code.
      *
      * @param countryCode
      * @return

@@ -111,6 +111,9 @@ public class StaffCardManagementController {
         if (companyStaffCardDto == null) {
             throw new CardDetailsNotFoundException("no card found with id : " + cardId);
         }
+        if(companyStaffCardDto.getCompanyRitualSeason() != null)
+            companyStaffCardDto.getCompanyRitualSeason().getCompany().setCode(companyStaffCardDto.getCompanyRitualSeason().getCompany().getCode().contains("_") ?
+                    companyStaffCardDto.getCompanyRitualSeason().getCompany().getCode().substring(0, companyStaffCardDto.getCompanyRitualSeason().getCompany().getCode().indexOf("_")) : companyStaffCardDto.getCompanyRitualSeason().getCompany().getCode());
         return companyStaffCardDto;
     }
 

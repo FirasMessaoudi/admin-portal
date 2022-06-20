@@ -6,6 +6,7 @@ package com.elm.shj.admin.portal.services.user;
 
 import com.elm.shj.admin.portal.orm.entity.JpaUserLocation;
 import com.elm.shj.admin.portal.orm.repository.UserLocationRepository;
+import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
 import com.elm.shj.admin.portal.services.dto.UserLocationDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -54,5 +55,9 @@ public class UserLocationService extends GenericService<JpaUserLocation, UserLoc
             return false;
         this.saveAll(validLocations);
         return true;
+    }
+
+    public UserLocationDto findTopByUserIdAndUserTypeOrderByCreationDateDesc(String uin, String type){
+        return getMapper().fromEntity(userLocationRepository.findTopByUserIdAndUserTypeOrderByCreationDateDesc(uin, type).orElse(null), mappingContext);
     }
 }

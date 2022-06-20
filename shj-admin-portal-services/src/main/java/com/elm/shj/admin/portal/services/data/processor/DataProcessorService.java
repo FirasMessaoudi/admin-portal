@@ -76,7 +76,7 @@ public class DataProcessorService {
                     // add all reading errors
                     dataValidationResults.addAll(excelItemReader.getDataReadingErrors());
                     // run validations
-                    Set<ConstraintViolation<T>> violations = validator.validate(item);
+                    Set<ConstraintViolation<T>> violations = new HashSet<>(validator.validate(item));
                     violations.addAll(validator.validate(item, CheckFirst.class));
                     violations.addAll(validator.validate(item, CheckSecond.class));
                     if (violations.isEmpty()) {

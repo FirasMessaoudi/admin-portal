@@ -78,8 +78,20 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         return null;
     }
 
-    public String findPackageReferenceNumber(String typeCode, int year) {
+    public String findPackageReferenceNumber(String companyCode, String typeCode, int year) {
         log.info("RitualPackageService ::: Start findReferenceNumberByTypeCode ::: typeCode: {}", typeCode);
-        return ritualPackageRepository.findReferenceNumberByRitualSeason(typeCode, year);
+        return ritualPackageRepository.findReferenceNumberByRitualSeason(companyCode, typeCode, year);
     }
+
+    public RitualPackageDto findByCodeAndRitual(String referenceCode, String typeCode, int year) {
+        log.info("RitualPackageService ::: Start findByCodeAndRitual ::: referenceCode: {}", referenceCode);
+        Optional<JpaRitualPackage> ritualPackage = ritualPackageRepository.findByReferenceNumberAndRitual(referenceCode, typeCode, year);
+        if (ritualPackage.isPresent()) {
+            log.info("RitualPackageService ::: Finish findByCodeAndRitual ::: startDate: {}, endDate: {}", ritualPackage.get().getStartDate(), ritualPackage.get().getEndDate());
+            return getMapper().fromEntity(ritualPackage.get(), mappingContext);
+        }
+        log.info("RitualPackageService ::: Finish findByCodeAndRitual ::: not found and return null");
+        return null;
+    }
+
 }

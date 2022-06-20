@@ -6,7 +6,9 @@ package com.elm.shj.admin.portal.services.data.writer;
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
+import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualStep;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
@@ -20,9 +22,9 @@ import com.elm.shj.admin.portal.services.data.validators.RitualTypeCode;
 import com.elm.shj.admin.portal.services.data.validators.WithGroupReferenceNumber;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.lookup.CompanyRitualStepLookupService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.utils.ImageUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
@@ -80,11 +82,15 @@ public class ItemWriter {
     private final DigitalIdService digitalIdService;
     private final ApplicantLiteService applicantLiteService;
     private final ValidationService validationService;
-
+    private final CompanyRitualStepRepository companyRitualStepRepository;
+    private final CompanyRitualStepLookupService companyRitualStepLookupService;
+    private final PackageHousingService packageHousingService;
+    private final ApplicantPackageHousingService applicantPackageHousingService;
     @Value("${ritual.season.year}")
     private int seasonYear;
 
-    private final static String DEFAULT_AVATAR = "avatar/avatar.png";
+    private final static String DEFAULT_AVATAR_MALE = "avatar/staff-male.png";
+    private final static String DEFAULT_AVATAR_FEMALE = "avatar/applicant-staff-female.png";
 
     /**
      * Populates the registry
@@ -100,6 +106,10 @@ public class ItemWriter {
         repositoryRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, ApplicantRitualRepository.class);
         repositoryRegistry.put(EDataSegment.STAFF_MAIN_DATA, CompanyStaffRepository.class);
         repositoryRegistry.put(EDataSegment.STAFF_FULL_MAIN_DATA, CompanyStaffRepository.class);
+        repositoryRegistry.put(EDataSegment.MAIN_GROUP_DATA, ApplicantGroupRepository.class);
+        repositoryRegistry.put(EDataSegment.GROUP_DATA, GroupApplicantListRepository.class);
+        repositoryRegistry.put(EDataSegment.APPLICANT_HOUSING_DATA, ApplicantPackageHousingRepository.class);
+
         // mapper registry initialization
         mapperRegistry.put(EDataSegment.APPLICANT_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_RELATIVES_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantRelativeDto.class)));
@@ -109,6 +119,9 @@ public class ItemWriter {
         mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantRitualDto.class)));
         mapperRegistry.put(EDataSegment.STAFF_MAIN_DATA, Objects.requireNonNull(validationService.findMapper(CompanyStaffDto.class)));
         mapperRegistry.put(EDataSegment.STAFF_FULL_MAIN_DATA, Objects.requireNonNull(validationService.findMapper(CompanyStaffDto.class)));
+        mapperRegistry.put(EDataSegment.MAIN_GROUP_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantGroupDto.class)));
+        mapperRegistry.put(EDataSegment.GROUP_DATA, Objects.requireNonNull(validationService.findMapper(GroupApplicantListDto.class)));
+        mapperRegistry.put(EDataSegment.APPLICANT_HOUSING_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantPackageHousingDto.class)));
 
     }
 
@@ -266,21 +279,232 @@ public class ItemWriter {
             return Collections.emptyList();
         }
 
+        if (dataSegment.getId() == EDataSegment.GROUP_DATA.getId()) {
+            List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
+            List<S> savedItems = new ArrayList<>();
+            JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
+            List<DataValidationResult> dataValidationResults = new ArrayList<>();
+            items.forEach(entry -> {
+                S savedItem;
+                GroupDataDto groupDataDto = (GroupDataDto) entry.getValue();
+                CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], groupDataDto.getRitualTypeCode(), seasonYear);
+                if (companyRitualSeasonDto == null) {
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(4)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
+                    return;
+                }
+                // String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
+                ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
+                if (applicantGroupDto == null) {
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(4)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
+                    return;
+                }
+                ApplicantLiteDto applicantLiteDto = applicantLiteService.findByBasicInfo(groupDataDto.getIdNumber(), groupDataDto.getPassportNumber(), groupDataDto.getNationalityCode());
+
+                // validate applicant is belong to loggend in  user company
+                if(!validationService.isValidApplicant(applicantLiteDto, companyRefCode[0])){
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_FOUND.getMessage())).valid(false).build());
+                    return;
+                }
+
+                // check applicant is already exist for that group then no need to add new update the existin applicant
+                GroupApplicantListDto existingGroupApplicant = groupApplicantListService.findByUin(applicantLiteDto.getDigitalIds().get(0).getUin(), applicantGroupDto.getId());
+
+                GroupApplicantListDto groupApplicantListDto = GroupApplicantListDto.builder()
+                        .applicantGroup(applicantGroupDto)
+                        .applicantUin(applicantLiteDto.getDigitalIds().get(0).getUin())
+                        .build();
+
+                if(existingGroupApplicant != null){
+                    validationService.updateGroupApplicantList(groupApplicantListDto, existingGroupApplicant);
+                    savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(groupApplicantListDto, mappingContext));
+                } else {
+                    savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(groupApplicantListDto, mappingContext));
+                }
+                savedItems.add(savedItem);
+                try {
+                    dataRequestRecords.add(DataRequestRecordDto.builder()
+                            .createDataRequestId(dataRequestId)
+                            .lastUpdateDataRequestId(dataRequestId)
+                            .createDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .itemId(Long.parseLong(BeanUtils.getProperty(savedItem, "id")))
+                            .build());
+                } catch (Exception e) {
+                    ReflectionUtils.handleReflectionException(e);
+                }
+                List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(validationService.findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+                // update all items with record ids
+                savedItems.forEach(s -> {
+                    savedRecords.stream().filter(r -> {
+                        try {
+                            return StringUtils.equals(BeanUtils.getProperty(r, "itemId"), BeanUtils.getProperty(s, "id"));
+                        } catch (Exception e) {
+                            ReflectionUtils.handleReflectionException(e);
+                            return false;
+                        }
+                    }).forEach(r -> {
+                        try {
+                            BeanUtils.setProperty(s, "dataRequestRecordId", BeanUtils.getProperty(r, "id"));
+                        } catch (Exception e) {
+                            ReflectionUtils.handleReflectionException(e);
+                        }
+                    });
+                });
+
+
+            });
+            // update saved items
+            repository.saveAll(savedItems);
+            return dataValidationResults;
+        }
+
+        if (dataSegment.getId() == EDataSegment.MAIN_GROUP_DATA.getId()) {
+            List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
+            List<S> savedItems = new ArrayList<>();
+            JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
+            List<DataValidationResult> dataValidationResults = new ArrayList<>();
+            items.forEach(entry -> {
+                S savedItem;
+                Class clazz = GroupMainDataDto.class;
+                int ritualTypeCodeCellIndex = 0;
+                for (Field field : clazz.getDeclaredFields()) {
+                    if (field.isAnnotationPresent(RitualTypeCode.class))
+                        ritualTypeCodeCellIndex = field.getAnnotation(CellIndex.class).index();
+                }
+                GroupMainDataDto groupMainDataDto = (GroupMainDataDto) entry.getValue();
+                CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], groupMainDataDto.getRitualTypeCode(), seasonYear);
+                if (companyRitualSeasonDto == null) {
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(ritualTypeCodeCellIndex)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage())).valid(false).build());
+                    return;
+                }
+                CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationalityCode());
+                // String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
+                ApplicantGroupDto existingGroup = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupMainDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
+                if (existingGroup != null) {
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.DUPLICATE_VALUE.getMessage())).valid(false).build());
+                    return;
+
+                }
+                ApplicantGroupDto applicantGroupDto = ApplicantGroupDto.builder()
+                        .groupLeader(existingStaff)
+                        .groupName(groupMainDataDto.getGroupName())
+                        .companyRitualSeason(companyRitualSeasonDto)
+                        .referenceNumber(groupMainDataDto.getGroupReferenceNumber())
+                        .build();
+                savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(applicantGroupDto, mappingContext));
+                List<CompanyRitualStepLookupDto> companyRitualStepLookupDtos = companyRitualStepLookupService.findAllWithLang();
+                companyRitualStepLookupDtos.forEach(companyRitualStepLookupDto -> {
+                    JpaCompanyRitualStep companyRitualStep = new JpaCompanyRitualStep();
+                    companyRitualStep.setStepCode(companyRitualStepLookupDto.getCode());
+                    companyRitualStep.setStepIndex(companyRitualStepLookupDto.getStepIndex());
+                    companyRitualStep.setLocationLat(companyRitualStepLookupDto.getLocationLat());
+                    companyRitualStep.setLocationLng(companyRitualStepLookupDto.getLocationLng());
+                    //TODO: to be checked
+                    companyRitualStep.setLocationNameAr("");
+                    companyRitualStep.setLocationNameEn("");
+                    companyRitualStep.setTime(new Date());
+                    companyRitualStep.setApplicantGroup((JpaApplicantGroup) savedItem);
+                    companyRitualStepRepository.save(companyRitualStep);
+
+                });
+
+                savedItems.add(savedItem);
+                try {
+                    dataRequestRecords.add(DataRequestRecordDto.builder()
+                            .createDataRequestId(dataRequestId)
+                            .lastUpdateDataRequestId(dataRequestId)
+                            .createDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .lastUpdateDataRequestRowNum((long) entry.getKey().getRowNum())
+                            .itemId(Long.parseLong(BeanUtils.getProperty(savedItem, "id")))
+                            .build());
+                } catch (Exception e) {
+                    ReflectionUtils.handleReflectionException(e);
+                }
+                List savedRecords = dataRequestRecordRepository.saveAll(Objects.requireNonNull(validationService.findMapper(DataRequestRecordDto.class)).toEntityList(dataRequestRecords, mappingContext));
+                // update all items with record ids
+                savedItems.forEach(s -> {
+                    savedRecords.stream().filter(r -> {
+                        try {
+                            return StringUtils.equals(BeanUtils.getProperty(r, "itemId"), BeanUtils.getProperty(s, "id"));
+                        } catch (Exception e) {
+                            ReflectionUtils.handleReflectionException(e);
+                            return false;
+                        }
+                    }).forEach(r -> {
+                        try {
+                            BeanUtils.setProperty(s, "dataRequestRecordId", BeanUtils.getProperty(r, "id"));
+                        } catch (Exception e) {
+                            ReflectionUtils.handleReflectionException(e);
+                        }
+                    });
+                });
+
+
+            });
+            // update saved items
+            repository.saveAll(savedItems);
+            return dataValidationResults;
+        }
+
+        if (dataSegment.getId() == EDataSegment.APPLICANT_HOUSING_DATA.getId()) {
+            List<DataValidationResult> dataValidationResults = new ArrayList<>();
+            items.forEach(entry -> {
+                ApplicantHousingDataDto applicantHousingDataDto = (ApplicantHousingDataDto) entry.getValue();
+                Long applicantId = applicantService.findIdByBasicInfo(applicantHousingDataDto.getIdNumber(), applicantHousingDataDto.getPassportNumber(), applicantHousingDataDto.getNationalityCode());
+                if (applicantId == null) {
+                    return;
+                }
+                ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantId);
+                if (applicantPackageDto == null) {
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.APPLICANT_PACKAGE_NOT_FOUND.getMessage())).valid(false).build());
+                    return;
+                }
+
+                PackageHousingDto menaHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.MENA.name());
+                PackageHousingDto arafetHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.ARAFAT.name());
+
+                if (menaHousing == null && arafetHousing == null) {
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.PACKAGE_HOUSING_NOT_FOUND.getMessage())).valid(false).build());
+                    return;
+                }
+
+                if (menaHousing != null) {
+                    ApplicantPackageHousingDto applicantPackageHousingMena = applicantPackageHousingService.findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
+                    if (applicantPackageHousingMena != null) {
+                        applicantPackageHousingMena.setSiteCampRefCode(applicantHousingDataDto.getMenaCampRefCode());
+                        applicantPackageHousingMena.setSiteBedNumber(applicantHousingDataDto.getMenaBedNumber());
+                        applicantPackageHousingMena.setSiteCorridor(applicantHousingDataDto.getMenaCorridor());
+                        applicantPackageHousingMena.setSiteFloor(applicantHousingDataDto.getMenaFloor());
+                        applicantPackageHousingMena.setSiteRoom(applicantHousingDataDto.getMenaRoom());
+                        applicantPackageHousingMena.setSiteTent(applicantHousingDataDto.getMenaTent());
+                        applicantPackageHousingService.save(applicantPackageHousingMena);
+
+                    }
+
+                }
+                if (arafetHousing != null) {
+                    ApplicantPackageHousingDto applicantPackageHousingArafet = applicantPackageHousingService.findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafetHousing.getId());
+                    if (applicantPackageHousingArafet != null) {
+                        applicantPackageHousingArafet.setSiteCampRefCode(applicantHousingDataDto.getArafetCampRefCode());
+                        applicantPackageHousingArafet.setSiteBedNumber(applicantHousingDataDto.getArafetBedNumber());
+                        applicantPackageHousingArafet.setSiteCorridor(applicantHousingDataDto.getArafetCorridor());
+                        applicantPackageHousingArafet.setSiteFloor(applicantHousingDataDto.getArafetFloor());
+                        applicantPackageHousingArafet.setSiteRoom(applicantHousingDataDto.getArafetRoom());
+                        applicantPackageHousingArafet.setSiteTent(applicantHousingDataDto.getArafetTent());
+                        applicantPackageHousingService.save(applicantPackageHousingArafet);
+
+                    }
+
+                }
+
+            });
+            // update saved items
+            return dataValidationResults;
+        }
+
         // saving staff full main data
         if (dataSegment.getId() == EDataSegment.STAFF_FULL_MAIN_DATA.getId()) {
 
-            BufferedImage defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            final String defaultAvatar;
-
-            try {
-                ImageIO.write(defaultImage, "png", bos);
-                byte[] bytes = bos.toByteArray();
-
-                defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
-            } catch (IOException e) {
-                throw new RuntimeException();
-            }
             // save all items and build data records
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
             List<S> savedItems = new ArrayList<>();
@@ -300,27 +524,54 @@ public class ItemWriter {
                             jobTileCodeCellIndex = field.getAnnotation(CellIndex.class).index();
                     }
                     CompanyStaffFullDataDto companyStaffFullData = (CompanyStaffFullDataDto) entry.getValue();
+
                     // set default avatar if the photo is null
-                    if(companyStaffFullData.getPhoto() == null) companyStaffFullData.setPhoto(defaultAvatar);
+                    if(companyStaffFullData.getPhoto() == null){
+
+                        BufferedImage defaultImage;
+
+                        if(companyStaffFullData.getGender().equals("M")) {
+                            defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_MALE);
+                        } else {
+                            defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_FEMALE);
+                        }
+
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        final String defaultAvatar;
+
+                        try {
+                            ImageIO.write(defaultImage, "png", bos);
+                            byte[] bytes = bos.toByteArray();
+
+                            defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
+                        } catch (IOException e) {
+                            throw new RuntimeException();
+                        }
+
+                        companyStaffFullData.setPhoto(defaultAvatar);
+                    }
 
                     // check company ritual season exist for the ritual type, seasson and company
-                    CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], companyStaffFullData.getTypeCode(), seasonYear);
+                    CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyRefCode[0], companyStaffFullData.getTypeCode(), seasonYear);
                     if(companyRitualSeasonDto == null){
                         dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(ritualTypeCodeCellIndex)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage())).valid(false).build());
                         return;
                     }
 
                     // In case of job title code is Others set the job tile code to tileCodeOther
-                    if(companyStaffFullData.getTitleCode().equals("OTHERS")){
-                        if(companyStaffFullData.getCustomJobTitle() == null) {
-                            dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(jobTileCodeCellIndex + 2)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.FIELD_REQUIRED.getMessage())).valid(false).build());
-                            return;
+                    if(companyStaffFullData.getTitleCode() != null){
+                        if(companyStaffFullData.getTitleCode().equals("OTHERS")){
+                            if(companyStaffFullData.getCustomJobTitle() == null) {
+                                dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(jobTileCodeCellIndex + 2)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.FIELD_REQUIRED.getMessage())).valid(false).build());
+                                return;
+                            }
                         }
                     }
 
-                    CompanyStaffDto staff = new CompanyStaffDto();
+                    CompanyStaffDto staff = mapCompanyStaffDto(companyStaffFullData);
                     // copy properties from company staff full data to company staff
-                    BeanUtils.copyProperties(staff, companyStaffFullData);
+
+                   // BeanUtils.copyProperties(staff, companyStaffFullData);
                     CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
                     // if record exists already in DB we need to update it
                     if (existingStaff != null) {
@@ -341,11 +592,11 @@ public class ItemWriter {
                             .build());
 
                     // start adding staff ritual data
-                    CompanyStaffRitualDto companyStaffRitual = new CompanyStaffRitualDto();
-                    companyStaffRitual.setSeason(seasonYear);
-                    companyStaffRitual.setCompanyCode(companyRefCode[0]);
-                    BeanUtils.copyProperties(companyStaffRitual, companyStaffFullData);
-                    updateCompanyStaffRitualData(companyStaffRitual);
+                    CompanyStaffRitualDto companyStaffRitual = mapCompanyStaffRitualDto(companyStaffFullData, companyRefCode[0]);
+                    //companyStaffRitual.setSeason(seasonYear);
+                    //companyStaffRitual.setCompanyCode(companyRefCode[0]);
+                    //BeanUtils.copyProperties(companyStaffRitual, companyStaffFullData);
+                    updateCompanyStaffRitualData(companyStaffRitual, Long.parseLong(BeanUtils.getProperty(savedItem, "id")));
 
                 }catch (Exception e){
                     log.error("Error while creating company staff full data");
@@ -461,6 +712,41 @@ public class ItemWriter {
         repository.saveAll(savedItems);
 
         return Collections.emptyList();
+    }
+
+    private CompanyStaffDto mapCompanyStaffDto(CompanyStaffFullDataDto companyStaffFullData){
+        CompanyStaffDto companyStaff = CompanyStaffDto.builder()
+                .idNumber(companyStaffFullData.getIdNumber())
+                .passportNumber(companyStaffFullData.getPassportNumber())
+                .dateOfBirthGregorian(companyStaffFullData.getDateOfBirthGregorian())
+                .dateOfBirthHijri(companyStaffFullData.getDateOfBirthHijri())
+                .fullNameAr(companyStaffFullData.getFullNameAr())
+                .fullNameEn(companyStaffFullData.getFullNameEn())
+                .fullNameOrigin(companyStaffFullData.getFullNameOrigin())
+                .gender(companyStaffFullData.getGender())
+                .nationalityCode(companyStaffFullData.getNationalityCode())
+                .idNumberOriginal(companyStaffFullData.getIdNumberOriginal())
+                .titleCode(companyStaffFullData.getTitleCode())
+                .customJobTitle(companyStaffFullData.getCustomJobTitle())
+                .email(companyStaffFullData.getEmail())
+                .mobileNumber(companyStaffFullData.getMobileNumber())
+                .mobileNumberIntl(companyStaffFullData.getMobileNumberIntl())
+                .photo(companyStaffFullData.getPhoto())
+                .build();
+        return companyStaff;
+    }
+
+    private CompanyStaffRitualDto mapCompanyStaffRitualDto(CompanyStaffFullDataDto companyStaffFullData, String companyCode){
+        CompanyStaffRitualDto companyStaffRitual = CompanyStaffRitualDto.builder()
+                .idNumber(companyStaffFullData.getIdNumber())
+                .passportNumber(companyStaffFullData.getPassportNumber())
+                .dateOfBirthGregorian(companyStaffFullData.getDateOfBirthGregorian())
+                .dateOfBirthHijri(companyStaffFullData.getDateOfBirthHijri())
+                .companyCode(companyCode)
+                .typeCode(companyStaffFullData.getTypeCode())
+                .season(seasonYear)
+                .build();
+        return companyStaffRitual;
     }
 
 
@@ -630,8 +916,8 @@ public class ItemWriter {
         }
     }
 
-    private  void updateCompanyStaffRitualData(CompanyStaffRitualDto companyStaffRitual) {
-        validationService.saveStaffRitual(companyStaffRitual);
+    private  void updateCompanyStaffRitualData(CompanyStaffRitualDto companyStaffRitual, Long staffId) {
+        validationService.saveStaffFullRitual(companyStaffRitual, staffId);
     }
 
 }

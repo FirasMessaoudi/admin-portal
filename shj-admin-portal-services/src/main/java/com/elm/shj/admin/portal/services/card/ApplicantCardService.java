@@ -236,6 +236,10 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
                 applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackageId));
                 applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackageId));
                 applicantCardDto.setCompanyLite(companyService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId(), Long.parseLong(uin)));
+                if(applicantCardDto.getCompanyLite() != null)
+                    applicantCardDto.getCompanyLite().setCode(applicantCardDto.getCompanyLite().getCode().contains("_") ?
+                            applicantCardDto.getCompanyLite().getCode().substring(0, applicantCardDto.getCompanyLite().getCode().indexOf("_")) : applicantCardDto.getCompanyLite().getCode());
+
                 List<CompanyRitualStepDto> companyRitualSteps = companyRitualStepService.findCompanyRitualStepsByApplicantUin(uin);
                 applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
                 List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId());

@@ -17,6 +17,8 @@ import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.services.ritual.RitualSeasonService;
+import com.elm.shj.admin.portal.services.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -78,8 +80,11 @@ public class ValidationService {
     private final PackageHousingService packageHousingService;
     private final PackageCateringService packageCateringService;
     private final PackageTransportationService packageTransportationService;
+    private final RitualSeasonService ritualSeasonService;
+    private final ApplicantContactService applicantContactService;
     private static final String ARABIC_REGEX = "^[\\p{InArabic}\\s-_]+$";
-    private static final String LATIN = "^[\\p{IsLatin}\\s-_]+$";
+    private static final String LATIN_REGEX = "^[\\p{IsLatin}\\s-_]+$";
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
 
 
     @Transactional
@@ -171,67 +176,94 @@ public class ValidationService {
                 .packageNameAr(plannedPackage.getPackageNameArabic())
                 .packageNameEn(plannedPackage.getPackageNameEnglish())
                 .packageTypeCode(EPackageType.fromId(plannedPackage.getPackageTypeCode()).name())
-                .startDate(toGregorian(plannedPackage.getPackageStartDate()))
-                .endDate(toGregorian(plannedPackage.getPackageEndDate()))
+                .startDate(DateUtils.toGregorian(plannedPackage.getPackageStartDate()))
+                .endDate(DateUtils.toGregorian(plannedPackage.getPackageEndDate()))
+                .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah() + "")
+                .hajjOfficeMadina(plannedPackage.getHajjOfficeMadina() + "")
                 .build();
         CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(plannedPackage.getCompanyRefCode() + "_" + ECompanyType.fromId(plannedPackage.getCompanyTypeCode()).name(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
         if (companyRitualSeasonDto != null) {
             ritualPackageDto.setCompanyRitualSeason(companyRitualSeasonDto);
 
         }
+        RitualPackageDto existingPackage = ritualPackageService.findByCodeAndRitual(plannedPackage.getPackageRefNumber().toString(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
+
+        if (existingPackage != null) {
+            ritualPackageDto.setId(existingPackage.getId());
+
+
+            List<ApplicantPackageDto> applicantPackageDtos = applicantPackageService.findByRitualPackage(existingPackage.getId());
+            List<PackageHousingDto> packageHousingDtos = packageHousingService.findByRitualPackageId(existingPackage.getId());
+            List<PackageTransportationDto> packageTransportationDtos = packageTransportationService.findByRitualPackageId(existingPackage.getId());
+
+            ritualPackageDto.setApplicantPackages(applicantPackageDtos);
+            ritualPackageDto.setPackageTransportations(packageTransportationDtos);
+            ritualPackageDto.setPackageHousings(packageHousingDtos);
+
+
+        }
         RitualPackageDto savedRitualPackage = ritualPackageService.save(ritualPackageDto);
-        plannedPackage.getPackageHousings().forEach(huicPackageHousing -> {
-            JpaHousingMaster housingMaster = housingMasterRepository.findTopByHousingReferenceCodeOrderByCreationDateDesc(huicPackageHousing.getRefNumber().toString());
-            PackageHousingDto packageHousing = PackageHousingDto.builder()
-                    .typeCode(housingMaster.getTypeCode())
-                    .siteCode(housingMaster.getSiteCode())
-                    .referenceNumber(huicPackageHousing.getRefNumber().toString())
-                    .categoryCode(housingMaster.getCategoryCode())
-                    .locationNameAr(housingMaster.getLocationNameAr())
-                    .locationNameEn(housingMaster.getLocationNameEn())
-                    .validityStart(huicPackageHousing.getValidityStart())
-                    .validityEnd(huicPackageHousing.getValidityEnd())
-                    .addressAr(housingMaster.getAddressAr())
-                    .addressEn(housingMaster.getAddressEn())
-                    .isDefault(huicPackageHousing.isDefault())
-                    .lat(housingMaster.getLat())
-                    .lng(housingMaster.getLng())
-                    .ritualPackage(savedRitualPackage)
-                    .build();
-            PackageHousingDto savedPackageHousing = packageHousingService.save(packageHousing);
-            huicPackageHousing.getPackageCaterings().forEach(huicPackageCatering -> {
-                PackageCateringDto packageCateringDto = PackageCateringDto.builder()
-                        .mealCode(huicPackageCatering.getMealCode())
-                        .mealTimeCode(EMealTime.fromId(huicPackageCatering.getMealTime()).name())
-                        .mealTypeCode(EMealType.fromId(huicPackageCatering.getMealType()).name())
-                        .descriptionAr(huicPackageCatering.getOptionDescriptionAr())
-                        .descriptionEn(huicPackageCatering.getOptionDescriptionEn())
-                        .isDefault(huicPackageCatering.isDefault())
-                        .packageHousing(savedPackageHousing)
+        if (plannedPackage.getPackageHousings() != null) {
+            plannedPackage.getPackageHousings().forEach(huicPackageHousing -> {
+                JpaHousingMaster housingMaster = housingMasterRepository.findTopByHousingReferenceCodeOrderByCreationDateDesc(huicPackageHousing.getRefNumber().toString());
+                PackageHousingDto packageHousing = PackageHousingDto.builder()
+                        .typeCode(housingMaster.getTypeCode())
+                        .siteCode(housingMaster.getSiteCode())
+                        .referenceNumber(huicPackageHousing.getRefNumber().toString())
+                        .categoryCode(housingMaster.getCategoryCode())
+                        .locationNameAr(housingMaster.getLocationNameAr())
+                        .locationNameEn(housingMaster.getLocationNameEn())
+                        .validityStart(huicPackageHousing.getValidityStart())
+                        .validityEnd(huicPackageHousing.getValidityEnd())
+                        .addressAr(housingMaster.getAddressAr())
+                        .addressEn(housingMaster.getAddressEn())
+                        .isDefault(huicPackageHousing.isDefault())
+                        .lat(housingMaster.getLat())
+                        .lng(housingMaster.getLng())
+                        .ritualPackage(savedRitualPackage)
                         .build();
-                packageCateringService.save(packageCateringDto);
+                PackageHousingDto savedPackageHousing = packageHousingService.save(packageHousing);
+                if (huicPackageHousing.getPackageCaterings() != null) {
+                    huicPackageHousing.getPackageCaterings().forEach(huicPackageCatering -> {
+                        PackageCateringDto packageCateringDto = PackageCateringDto.builder()
+                                .mealCode(huicPackageCatering.getMealCode())
+                                .mealTimeCode(EMealTime.fromId(huicPackageCatering.getMealTime()).name())
+                                .mealTypeCode(EMealType.fromId(huicPackageCatering.getMealType()).name())
+                                .descriptionAr(huicPackageCatering.getOptionDescriptionAr())
+                                .descriptionEn(huicPackageCatering.getOptionDescriptionEn())
+                                .isDefault(huicPackageCatering.isDefault())
+                                .packageHousing(savedPackageHousing)
+                                .build();
+                        packageCateringService.save(packageCateringDto);
+                    });
+                }
+
             });
-        });
+        }
 
-        plannedPackage.getPackageTransportations().forEach(huicPackageTransportation -> {
-            PackageTransportationDto packageTransportationDto = PackageTransportationDto.builder()
-                    .typeCode(ETransportationType.fromId(huicPackageTransportation.getTypeCode()).name())
-                    .locationFromNameAr(huicPackageTransportation.getLocationFromNameAr())
-                    .locationFromNameEn(huicPackageTransportation.getLocationFromNameEn())
-                    .locationToNameAr(huicPackageTransportation.getLocationToNameAr())
-                    .locationToNameEn(huicPackageTransportation.getLocationToNameEn())
-                    .validityStart(toGregorian(huicPackageTransportation.getValidityStart()))
-                    .validityEnd(toGregorian(huicPackageTransportation.getValidityEnd()))
-                    .routeDetails(huicPackageTransportation.getRouteDetails())
-                    .ritualPackage(savedRitualPackage)
-                    .build();
-            packageTransportationService.save(packageTransportationDto);
+        if (plannedPackage.getPackageTransportations() != null) {
+            plannedPackage.getPackageTransportations().forEach(huicPackageTransportation -> {
+                PackageTransportationDto packageTransportationDto = PackageTransportationDto.builder()
+                        .typeCode(ETransportationType.fromId(huicPackageTransportation.getTypeCode()).name())
+                        .locationFromNameAr(huicPackageTransportation.getLocationFromNameAr())
+                        .locationFromNameEn(huicPackageTransportation.getLocationFromNameEn())
+                        .locationToNameAr(huicPackageTransportation.getLocationToNameAr())
+                        .locationToNameEn(huicPackageTransportation.getLocationToNameEn())
+                        .validityStart(DateUtils.toGregorian(huicPackageTransportation.getValidityStart()))
+                        .validityEnd(DateUtils.toGregorian(huicPackageTransportation.getValidityEnd()))
+                        .routeDetails(huicPackageTransportation.getRouteDetails())
+                        .ritualPackage(savedRitualPackage)
+                        .build();
 
-        });
+                packageTransportationService.save(packageTransportationDto);
+
+            });
+        }
 
     }
 
     private void saveCompanies(HuicCompany huicCompany) {
+        Long existingCompanyId = companyRepository.findIdByCode(huicCompany.getCompanyRefCode() + "_" + ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name());
         CompanyDto companyDto = CompanyDto.builder()
                 .code(huicCompany.getCompanyRefCode() + "_" + ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
                 .labelAr(huicCompany.getCompanyNameAr())
@@ -239,25 +271,63 @@ public class ValidationService {
                 .missionRefCode(huicCompany.getMissionId())
                 .contactNumber(huicCompany.getCompanyContactNumber() + "")
                 .website(huicCompany.getWebsite())
-                .email(huicCompany.getCompanyEmail())
+                .email(huicCompany.getCompanyEmail() != null ? huicCompany.getCompanyEmail().matches(EMAIL_REGEX) ? huicCompany.getCompanyEmail() : null : null)
                 .moiNumber(huicCompany.getMoiNumber() + "")
                 .crNumber(huicCompany.getCrNumber() + "")
                 .typeCode(ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
                 .countryCode(huicCompany.getCountry() + "")
                 .establishmentRefCode(huicCompany.getEstablishmentId() != null ? huicCompany.getEstablishmentId() : 9)
                 .build();
+        if (existingCompanyId != null) {
+            companyDto.setId(existingCompanyId);
+            List<CompanyRitualSeasonDto> companyRitualSeasonDtos = companyRitualSeasonService.findByCompanyId(existingCompanyId);
+            if (!companyRitualSeasonDtos.isEmpty()) {
+                companyDto.setCompanyRitualSeasons(companyRitualSeasonDtos);
+            }
+        }
 
         JpaCompany savedCompany = companyRepository.save((JpaCompany) findMapper(CompanyDto.class).toEntity(companyDto, mappingContext));
         Optional<JpaRitualSeason> ritualSeason = ritualSeasonRepository.findByRitualTypeCodeAndSeasonYear(ERitualType.fromId(huicCompany.getRitualTypeCode()).name(), huicCompany.getSeasonYear());
         if (ritualSeason.isPresent()) {
-            JpaCompanyRitualSeason companyRitualSeason = new JpaCompanyRitualSeason();
-            companyRitualSeason.setCompany(savedCompany);
-            companyRitualSeason.setRitualSeason(ritualSeason.get());
-            companyRitualSeason.setActive(true);
-            companyRitualSeason.setSeasonStart(ritualSeason.get().getSeasonStart());
-            companyRitualSeason.setSeasonEnd(ritualSeason.get().getSeasonEnd());
-            companyRitualSeasonRepository.save(companyRitualSeason);
+            boolean existsByCompanyAndRitual = false;
+            if (existingCompanyId != null) {
+                existsByCompanyAndRitual = companyRitualSeasonRepository.existsByCompanyIdAndRitualSeasonId(existingCompanyId, ritualSeason.get().getId());
+            }
+            if (!existsByCompanyAndRitual) {
+                JpaCompanyRitualSeason companyRitualSeason = new JpaCompanyRitualSeason();
+                companyRitualSeason.setCompany(savedCompany);
+                companyRitualSeason.setRitualSeason(ritualSeason.get());
+                companyRitualSeason.setActive(true);
+                companyRitualSeason.setSeasonStart(ritualSeason.get().getSeasonStart());
+                companyRitualSeason.setSeasonEnd(ritualSeason.get().getSeasonEnd());
+                companyRitualSeasonRepository.save(companyRitualSeason);
+                // if ritual is external create another company ritual season for courtesy hajj
+                if (huicCompany.getRitualTypeCode() == 1) {
+                    JpaCompanyRitualSeason companyRitualSeasonCourtsey = new JpaCompanyRitualSeason();
+                    Optional<JpaRitualSeason> ritualSeasonCourtesy = ritualSeasonRepository.findByRitualTypeCodeAndSeasonYear(ERitualType.fromId(3).name(), huicCompany.getSeasonYear());
+                    if (ritualSeasonCourtesy.isPresent()) {
+                        companyRitualSeasonCourtsey.setRitualSeason(ritualSeasonCourtesy.get());
+                        companyRitualSeasonCourtsey.setSeasonStart(ritualSeasonCourtesy.get().getSeasonStart());
+                        companyRitualSeasonCourtsey.setSeasonEnd(ritualSeasonCourtesy.get().getSeasonEnd());
+                    } else {
+                        JpaRitualSeason newRitual = new JpaRitualSeason();
+                        newRitual.setActive(true);
+                        newRitual.setRitualTypeCode(ERitualType.fromId(3).name());
+                        newRitual.setSeasonYear(huicCompany.getSeasonYear());
+                        newRitual.setSeasonStart(ritualSeason.get().getSeasonStart());
+                        newRitual.setSeasonEnd(ritualSeason.get().getSeasonEnd());
+                        JpaRitualSeason saveRitualSeason = ritualSeasonRepository.save(newRitual);
+                        companyRitualSeasonCourtsey.setRitualSeason(saveRitualSeason);
+                        companyRitualSeasonCourtsey.setSeasonEnd(saveRitualSeason.getSeasonEnd());
+                        companyRitualSeasonCourtsey.setSeasonStart(saveRitualSeason.getSeasonStart());
+                    }
+                    companyRitualSeasonCourtsey.setCompany(savedCompany);
+                    companyRitualSeasonCourtsey.setActive(true);
 
+                    companyRitualSeasonRepository.save(companyRitualSeasonCourtsey);
+                }
+
+            }
         }
 
     }
@@ -286,6 +356,7 @@ public class ValidationService {
     }
 
     private void saveRitualSeasons(HuicRitualSeason huicRitualSeason) {
+        RitualSeasonDto existingRitual = ritualSeasonService.findByRitualTypeAndSeason(ERitualType.fromId(huicRitualSeason.getRitualTypeCode()).name(), huicRitualSeason.getSeasonYear());
         RitualSeasonDto ritualSeasonDto = RitualSeasonDto.builder()
                 .ritualTypeCode(ERitualType.fromId(huicRitualSeason.getRitualTypeCode()).name())
                 .seasonStart(huicRitualSeason.getSeasonStart())
@@ -293,6 +364,11 @@ public class ValidationService {
                 .seasonYear(huicRitualSeason.getSeasonYear())
                 .activated(true)
                 .build();
+        if (existingRitual != null) {
+            ritualSeasonDto.setId(existingRitual.getId());
+            ritualSeasonDto.setCompanyRitualSeasons(existingRitual.getCompanyRitualSeasons());
+
+        }
         ritualSeasonRepository.save((JpaRitualSeason) findMapper(RitualSeasonDto.class).toEntity(ritualSeasonDto, mappingContext));
 
     }
@@ -370,6 +446,16 @@ public class ValidationService {
         applicantRelativeDto.setApplicant(ApplicantDto.fromApplicantLite(applicantLite));
         applicantRelativeDto.setApplicantRitual(ApplicantRitualDto.builder().id(savedApplicantRitualId).build());
         String relativeApplicantUin = (relativeApplicantLite == null || CollectionUtils.isEmpty(relativeApplicantLite.getDigitalIds())) ? null : relativeApplicantLite.getDigitalIds().get(0).getUin();
+        ApplicantRelativeDto existingRelative = applicantRelativeService.findByApplicantIdAndRelativeApplicantId(applicantId, relativeApplicantLite.getId());
+        if (existingRelative != null) {
+            if (existingRelative.getRelationshipCode().equals(ERelativeRelationship.fromId(huicApplicantRelative.getRelationship()).name())) {
+                return;
+            } else {
+                applicantRelativeDto.setId(existingRelative.getId());
+                applicantRelativeService.save(applicantRelativeDto);
+                return;
+            }
+        }
         applicantRelativeService.save(applicantRelativeDto);
         // if the applicant digital id and the relative applicant digital id and the applicant ritual are created then add chat contacts
         // check if digital ids are created for the applicant and the relative applicant and applicant ritual is already created.
@@ -409,8 +495,8 @@ public class ValidationService {
                 .passportNumber(huicApplicantMainData.getPassportNo())
                 .dateOfBirthGregorian(huicApplicantMainData.getDateOfBirth())
                 .dateOfBirthHijri(huicApplicantMainData.getDateOfBirthHijri())
-                .fullNameEn(huicApplicantMainData.getFullNameEn())
-                .fullNameAr(huicApplicantMainData.getFullNameAr())
+                .fullNameEn(huicApplicantMainData.getFullNameEn() != null ? huicApplicantMainData.getFullNameEn().matches(LATIN_REGEX) ? huicApplicantMainData.getFullNameEn() : null : null)
+                .fullNameAr(huicApplicantMainData.getFullNameAr() != null ? huicApplicantMainData.getFullNameAr().matches(ARABIC_REGEX) ? huicApplicantMainData.getFullNameAr() : null : null)
                 .fullNameOrigin(huicApplicantMainData.getFullNameOriginalLang())
                 .maritalStatusCode(huicApplicantMainData.getMaritalStatus() != null ? EMaritalStatus.fromId(huicApplicantMainData.getMaritalStatus()).name() : null)
                 .photo(huicApplicantMainData.getPhoto())
@@ -418,10 +504,13 @@ public class ValidationService {
                 .biometricDataFinger(huicApplicantMainData.getBiometricDataFP())
                 .educationLevelCode(huicApplicantMainData.getQualification())
                 .packageReferenceNumber(huicApplicantMainData.getPackageRefNumber())
+                .establishmentRefCode(huicApplicantMainData.getEstablishmentId())
+                .serviceGroupMadinaCode(huicApplicantMainData.getServiceGroupMadinaId())
+                .serviceGroupMakkahCode(huicApplicantMainData.getServiceGroupMakkahId())
                 .build();
         ApplicantContactDto applicantContactDto = ApplicantContactDto.builder()
                 .languageList(huicApplicantMainData.getLanguageList())
-                .email(huicApplicantMainData.getEmail())
+                .email(huicApplicantMainData.getEmail() != null ? huicApplicantMainData.getEmail().matches(EMAIL_REGEX) ? huicApplicantMainData.getEmail() : null : null)
                 .localMobileNumber(huicApplicantMainData.getMobileNumber())
                 .intlMobileNumber(huicApplicantMainData.getMobileNumberIntl())
                 .countryCode(huicApplicantMainData.getCountry().toString())
@@ -475,7 +564,26 @@ public class ValidationService {
         //TODO: unify this for both data upload and huic
         addApplicantToContact(applicant);
         if (applicant.getPackageReferenceNumber() == null) {
-            String referenceNumber = ritualPackageService.findPackageReferenceNumber(ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
+            String referenceNumber = null;
+            //if establishment id not null link applicant with default package of that establishment
+            if (applicant.getEstablishmentRefCode() != null) {
+                referenceNumber = ritualPackageService.findPackageReferenceNumber(applicant.getEstablishmentRefCode() + "_ESTABLISHMENT", ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
+            }
+            //if establishment is null
+            else {
+                // if ritual type is courtesy
+                // link applicant with flyness package
+                if (huicApplicantMainData.getRitualTypeCode() == 3) {
+                    referenceNumber = ritualPackageService.findPackageReferenceNumber("9_ESTABLISHMENT", ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
+                    applicant.setEstablishmentRefCode(9);
+                } else {
+                    //if ritual type not courtesy
+                    //link applicant with default establishment package
+                    referenceNumber = ritualPackageService.findPackageReferenceNumber("10_ESTABLISHMENT", ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
+                    applicant.setEstablishmentRefCode(10);
+
+                }
+            }
             applicant.setPackageReferenceNumber(referenceNumber);
 
         }
@@ -492,6 +600,9 @@ public class ValidationService {
             return;
         }
         Long applicantId = applicantLite.getId();
+        if (huicApplicantRitual.getPackageRefNumber() == null) {
+            huicApplicantRitual.setPackageRefNumber(applicantLite.getPackageReferenceNumber());
+        }
         ApplicantRitualDto applicantRitualDto = ApplicantRitualDto.builder()
                 .packageReferenceNumber(huicApplicantRitual.getPackageRefNumber())
                 .visaNumber(huicApplicantRitual.getVisaNumber())
@@ -566,8 +677,13 @@ public class ValidationService {
 
     public void updateExistingApplicant(ApplicantDto applicant, long existingApplicantId) {
         List<ApplicantRitualDto> applicantRituals = applicantRitualService.findAllByApplicantId(existingApplicantId);
+        List<ApplicantContactDto> applicantContactDtos = applicantContactService.findByApplicantId(existingApplicantId);
+        if (!applicantContactDtos.isEmpty()) {
+            if (!applicant.getContacts().isEmpty()) {
+                applicant.getContacts().get(0).setId(applicantContactDtos.get(0).getId());
+            }
+        }
         applicant.setRituals(applicantRituals);
-
         applicant.setId(existingApplicantId);
         applicant.setUpdateDate(new Date());
     }
@@ -643,10 +759,101 @@ public class ValidationService {
         staff.setApplicantGroups(existingStaff.getApplicantGroups());
     }
 
+    public void updateGroupApplicantList(GroupApplicantListDto groupApplicantList, GroupApplicantListDto existingGroupApplicantList) {
+        groupApplicantList.setId(existingGroupApplicantList.getId());
+        groupApplicantList.setApplicantGroup(existingGroupApplicantList.getApplicantGroup());
+        groupApplicantList.setApplicantUin(existingGroupApplicantList.getApplicantUin());
+    }
+
+    public Boolean isValidApplicant(ApplicantLiteDto applicantLiteDto, String companyCode){
+        long companyRefCode = Long.valueOf(companyCode.contains("_") ? companyCode.substring(0, companyCode.indexOf("_")) : companyCode);
+        String companyType = companyCode.split("_")[1];
+        EOrganizerTypes organizerTypes= EOrganizerTypes.valueOf(companyType);
+        Boolean isValidApplicant = false;
+        switch (organizerTypes){
+            case ESTABLISHMENT:
+                isValidApplicant = null != applicantLiteDto.getEstablishmentRefCode() && applicantLiteDto.getEstablishmentRefCode() == companyRefCode;
+                break;
+            case MISSION:
+                isValidApplicant = null != applicantLiteDto.getMissionRefCode() && applicantLiteDto.getMissionRefCode() == companyRefCode;
+                break;
+            case EXTERNAL_HAJ_COMPANY:
+                isValidApplicant = null != applicantLiteDto.getCompanyCode() && applicantLiteDto.getCompanyCode().equals(companyCode);
+                break;
+            case INTERNAL_HAJ_COMPANY:
+                isValidApplicant = null != applicantLiteDto.getCompanyCode() && applicantLiteDto.getCompanyCode().equals(companyCode);
+                break;
+            case SERVICE_GROUP:
+                isValidApplicant = (null != applicantLiteDto.getServiceGroupMadinaCode() && applicantLiteDto.getServiceGroupMadinaCode() == companyRefCode) || (null != applicantLiteDto.getServiceGroupMakkahCode() && applicantLiteDto.getServiceGroupMakkahCode() == companyRefCode);
+                break;
+            default:
+                isValidApplicant = false;
+        }
+        return isValidApplicant;
+    }
+
     public void saveStaffRitual(CompanyStaffRitualDto companyStaffRitual) {
         CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(companyStaffRitual.getIdNumber(), companyStaffRitual.getPassportNumber(), companyStaffRitual.getDateOfBirthGregorian(), companyStaffRitual.getDateOfBirthHijri());
         CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
         CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
+        //existingStaff.setCompanyRitualSeason(companyRitualSeasonDto);
+        if (companyStaffDigitalId != null) {
+            // if he has a digital id for that same season
+            List<CompanyStaffCardDto> companyStaffCardDtos = companyStaffCardService.findByDigitalId(companyStaffDigitalId.getSuin());
+            // if no cards for digitalId and SEASON
+            if (companyStaffCardDtos.isEmpty()) {
+                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
+                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                companyStaffCardService.save(companyStaffCardDto);
+                return;
+
+            }
+
+            //find staff cards for different company or different ritual
+            List<CompanyStaffCardDto> companyStaffCards2 = companyStaffCardService.findByDigitalIdAndDifferentCompanyOrRitual(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+            if (CollectionUtils.isNotEmpty(companyStaffCards2)) {
+                companyStaffCards2.forEach(c -> {
+                    c.setStatusCode(ECardStatus.EXPIRED.name());
+                });
+                companyStaffCardService.saveAll(companyStaffCards2);
+                return;
+            }
+
+            // find staff cards for same company and same ritual
+            List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+            if (companyStaffCards.isEmpty()) {
+                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
+                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                companyStaffCardService.save(companyStaffCardDto);
+                return;
+            }
+
+
+        } else {
+            // create new digital id for that staff in case he has no digital id for that same season
+            CompanyStaffDigitalIdDto staffDigitalId = new CompanyStaffDigitalIdDto();
+            staffDigitalId.setCompanyStaff(existingStaff);
+            staffDigitalId.setSeasonYear(companyStaffRitual.getSeason());
+            staffDigitalId.setSuin(companyStaffDigitalIdService.generate(existingStaff, companyStaffRitual.getSeason()));
+            staffDigitalId.setStatusCode(EStaffDigitalIdStatus.VALID.name());
+            CompanyStaffDigitalIdDto savedDigitalId = companyStaffDigitalIdService.save(staffDigitalId);
+            CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+            companyStaffCardDto.setCompanyStaffDigitalId(savedDigitalId);
+            companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+            companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+            companyStaffCardService.save(companyStaffCardDto);
+
+        }
+    }
+
+    public void saveStaffFullRitual(CompanyStaffRitualDto companyStaffRitual, long staffId) {
+        CompanyStaffDto existingStaff = companyStaffService.findOne(staffId);
+        CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
+        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
         //existingStaff.setCompanyRitualSeason(companyRitualSeasonDto);
         if (companyStaffDigitalId != null) {
             // if he has a digital id for that same season

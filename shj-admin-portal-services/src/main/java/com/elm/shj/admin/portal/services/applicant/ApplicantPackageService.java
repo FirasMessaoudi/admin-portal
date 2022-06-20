@@ -201,4 +201,7 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
         return null;
     }
 
+    public List<ApplicantPackageDto> findByRitualPackage(long id) {
+        return mapList(applicantPackageRepository.findByRitualPackageId(id));
+    }
 }

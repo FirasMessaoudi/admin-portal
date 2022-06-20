@@ -21,8 +21,7 @@ import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/d
 import {HijriGregorianDatetimepickerComponent} from '@shared/modules/hijri-gregorian-datepicker/datetimepicker/hijri-gregorian-datetimepicker.component';
 import {ageRangeValidator, validateIsRequired,} from '@pages/notification-management/notification-custom-validator';
 import {NotificationTemplateCategorizing} from '@model/notification-template-categorizing.model';
-import {Staff} from "@model/staff.model";
-import {CompanyStaffTitleLookup} from "@model/company-staff-title-lookup";
+import {CompanyStaffTitleLookup} from '@model/company-staff-title-lookup';
 import {CompanyStaff} from "@model/company-staff.model";
 import {StaffService} from "@core/services/staff/staff.service";
 
@@ -44,7 +43,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   activeId;
   checkedCriteria: number = 0;
   creationDate: Date = new Date();
-  notificationTemplate: NotificationTemplate;
   isLoading: boolean;
   nationalities: Lookup[] = [];
   companies: CompanyLite[] = [];
@@ -66,7 +64,6 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   addedStaffPageSize: number = 10;
   isSelectAllClicked: boolean;
   isSelectLoading: boolean;
-  selectedSendingDate: NgbDateStruct;
   minSendingDateGregorian: NgbDateStruct;
   minSendingDateHijri: NgbDateStruct;
   dateString: string;

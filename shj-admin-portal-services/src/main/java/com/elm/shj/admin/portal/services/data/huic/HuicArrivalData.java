@@ -3,7 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.data.huic;
 
-import com.elm.shj.admin.portal.services.data.validators.*;
+import com.elm.shj.admin.portal.services.data.validators.NationalityCode;
+import com.elm.shj.admin.portal.services.data.validators.WithApplicant;
+import com.elm.shj.admin.portal.services.data.validators.WithArrivalCity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,9 +29,7 @@ public class HuicArrivalData implements Serializable {
 
 
     private static final long serialVersionUID = -2526608219169871962L;
-    @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     private Long idNumber;
-    @PassportNumber
     private String passportNo;
 
     @NotNull(message = "validation.data.constraints.msg.20001")

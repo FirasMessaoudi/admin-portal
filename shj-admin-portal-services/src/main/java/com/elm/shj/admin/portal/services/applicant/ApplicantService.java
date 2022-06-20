@@ -3,20 +3,23 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
-import com.elm.shj.admin.portal.orm.repository.ApplicantContactRepository;
-import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
-import com.elm.shj.admin.portal.orm.repository.ApplicantRepository;
+import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.audit.MobileAuditLogService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.lookup.NationalityLookupService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -25,10 +28,11 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Service handling applicant
@@ -47,7 +51,11 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantDigitalIdRepository applicantDigitalIdRepository;
     private final ApplicantPackageService applicantPackageService;
+    private final NationalityLookupRepository nationalityLookupRepository;
+    private final RitualTypeLookupRepository ritualTypeLookupRepository;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
+    private final String GROUP_DATA_FILE_NAME = "group-data.xlsx";
+    private final String HOUSING_DATA_FILE_NAME = "housing-data.xlsx";
 
 
     /**
@@ -352,4 +360,181 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         log.info("ApplicantService ::: Start markAsRegistered numberOfAffectedRows: {}", numberOfAffectedRows);
         return numberOfAffectedRows;
     }
+
+    public Page<ApplicantDto> findOrganizerApplicants(ApplicantSearchCriteriaDto applicantSearchCriteriaDto, Long companyRefCode, String companyTypeCode, Pageable pageable) {
+        log.info("Company Ref code ...{}", companyRefCode);
+        log.info("Company type code ...{}", companyTypeCode);
+        log.info("Applicant search criteria... {}", applicantSearchCriteriaDto);
+        log.info("Group reference number... {}", applicantSearchCriteriaDto.getGroupNumber());
+
+        Long establishmentRefCode = -1L;
+        Long missionRefCode = -1L;
+        Long serviceGroupRefCode = -1L;
+        String companyCode = null;
+
+        if(companyTypeCode.equals(EOrganizerTypes.ESTABLISHMENT.name())){
+            establishmentRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.MISSION.name())){
+            missionRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
+            serviceGroupRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name())){
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        }
+
+        if(applicantSearchCriteriaDto.getGroupNumber() != null && !applicantSearchCriteriaDto.getGroupNumber().equals("")){
+            //applicantSearchCriteriaDto.setGroupNumber(applicantSearchCriteriaDto.getGroupNumber() + "_" + String.valueOf(companyRefCode)+ "_" + companyTypeCode);
+            String companyFullCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+            log.info("Group reference number... {}", applicantSearchCriteriaDto.getGroupNumber());
+            Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findOrganizerApplicantsWithGroupNumberFilter(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
+                    applicantSearchCriteriaDto.getPassportNumber(), applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
+                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, companyFullCode, pageable));
+            log.info("Result of applicant content ... {}", applicantDtos);
+            log.info("Result of applicant list ... {}", applicantDtos.getContent());
+            return applicantDtos;
+        } else {
+            Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getPassportNumber(),
+                    applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
+                    applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable));
+            return applicantDtos;
+        }
+    }
+
+    public Resource exportApplicantGroupTemplate(Long companyRefCode, String companyTypeCode) throws Exception {
+        Resource resource = new ClassPathResource("/templates/export-template/" + GROUP_DATA_FILE_NAME);
+        XSSFWorkbook workbook = new XSSFWorkbook(resource.getInputStream());
+        // read first sheet
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        // read first row
+        AtomicInteger headerRowNum = new AtomicInteger(sheet.getFirstRowNum()+1);
+
+        Long establishmentRefCode = -1L;
+        Long missionRefCode = -1L;
+        Long serviceGroupRefCode = -1L;
+        String companyCode = null;
+
+        if(companyTypeCode.equals(EOrganizerTypes.ESTABLISHMENT.name())){
+            establishmentRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.MISSION.name())){
+            missionRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
+            serviceGroupRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name())){
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        }
+        AtomicInteger cellIndex = new AtomicInteger();
+
+        List<ApplicantDto> applicantDtos = mapList(applicantRepository.findOrganizerApplicantsForExport(companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode));
+
+        applicantDtos.stream().forEach(applicant -> {
+            Row row = sheet.getRow(headerRowNum.getAndIncrement());
+
+            Cell idNumber = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            idNumber.setCellValue(applicant.getIdNumber());
+
+            Cell passportNumber = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            passportNumber.setCellValue(applicant.getPassportNumber());
+
+            Cell nationality = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            nationality.setCellValue(nationalityLookupRepository.findLabelByCodeAndLanguage(applicant.getNationalityCode(), "ar"));
+
+            Cell nationalityCode = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            nationalityCode.setCellValue(applicant.getNationalityCode());
+
+            Cell groupRefNumber = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            groupRefNumber.setCellValue("");
+
+            String ritualType = applicantRepository.findRitualTypeByApplicantId(applicant.getId());
+            Cell ritualTypeCell = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            ritualTypeCell.setCellValue(ritualTypeLookupRepository.findLabelByCodeAndLanguage(ritualType, "ar"));
+
+            Cell ritualTypeCodeCell = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            ritualTypeCodeCell.setCellValue(ritualType);
+
+            cellIndex.set(0);
+
+        });
+
+        ByteArrayOutputStream outputStream = null;
+        try{
+         outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+        return new ByteArrayResource(outputStream.toByteArray(), GROUP_DATA_FILE_NAME);
+        } catch (Exception e) {
+            log.error("Download file failure. TargetPath: {}", e);
+            throw new Exception("Download File failure");
+        } finally {
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        }
+    }
+
+    public Resource exportApplicantHousingTemplate(Long companyRefCode, String companyTypeCode) throws Exception {
+        Resource resource = new ClassPathResource("/templates/export-template/" + HOUSING_DATA_FILE_NAME);
+        XSSFWorkbook workbook = new XSSFWorkbook(resource.getInputStream());
+        // read first sheet
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        // read first row
+        AtomicInteger headerRowNum = new AtomicInteger(sheet.getFirstRowNum()+1);
+
+        Long establishmentRefCode = -1L;
+        Long missionRefCode = -1L;
+        Long serviceGroupRefCode = -1L;
+        String companyCode = null;
+
+        if(companyTypeCode.equals(EOrganizerTypes.ESTABLISHMENT.name())){
+            establishmentRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.MISSION.name())){
+            missionRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
+            serviceGroupRefCode = companyRefCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name())){
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
+            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        }
+        AtomicInteger cellIndex = new AtomicInteger();
+
+        List<ApplicantDto> applicantDtos = mapList(applicantRepository.findOrganizerApplicantsForExport(companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode));
+
+        applicantDtos.stream().forEach(applicant -> {
+            Row row = sheet.getRow(headerRowNum.getAndIncrement());
+
+            Cell idNumber = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            idNumber.setCellValue(applicant.getIdNumber());
+
+            Cell passportNumber = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            passportNumber.setCellValue(applicant.getPassportNumber());
+
+            Cell nationality = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            nationality.setCellValue(nationalityLookupRepository.findLabelByCodeAndLanguage(applicant.getNationalityCode(), "ar"));
+
+            Cell nationalityCode = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
+            nationalityCode.setCellValue(applicant.getNationalityCode());
+            cellIndex.set(0);
+
+        });
+
+        ByteArrayOutputStream outputStream = null;
+        try{
+            outputStream = new ByteArrayOutputStream();
+            workbook.write(outputStream);
+            workbook.close();
+            return new ByteArrayResource(outputStream.toByteArray(), HOUSING_DATA_FILE_NAME);
+        } catch (Exception e) {
+            log.error("Download file failure. TargetPath: {}", e);
+            throw new Exception("Download File failure");
+        } finally {
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        }
+    }
+
 }

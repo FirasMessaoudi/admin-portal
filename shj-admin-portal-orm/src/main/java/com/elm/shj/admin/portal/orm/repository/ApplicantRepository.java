@@ -3,10 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.ApplicantMobileTrackingVo;
-import com.elm.shj.admin.portal.orm.entity.CountVo;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
-import com.elm.shj.admin.portal.orm.entity.LocalizedCountVo;
+import com.elm.shj.admin.portal.orm.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -165,4 +162,56 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
 
     @Query("select a.registered from JpaApplicant  a where a.id = :id")
     boolean findApplicantStatusById(@Param("id") Long id);
+
+    @Query("select a " +
+            "FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga ON di.uin = ga.applicantUin JOIN ga.applicantGroup ap JOIN ap.companyRitualSeason crs JOIN crs.company c where " +
+            "(:idNumber is null OR a.idNumber = :idNumber) and "+
+            "(:passportNumber is null OR a.passportNumber = :passportNumber) and " +
+            "(:gender is null OR a.gender = :gender) and " +
+            "((:applicantName is null OR a.fullNameEn like '%'+:applicantName+'%' OR a.fullNameAr like '%'+:applicantName+'%')) and " +
+            "(:uin is null OR di.uin = :uin) and " +
+            "((:groupNumber is null OR ap.referenceNumber = :groupNumber) and c.code = :companyFullCode) and" +
+            "(:companyCode is null or a.companyCode = :companyCode) and " +
+            "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
+            "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
+            "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
+    Page<JpaApplicant> findOrganizerApplicantsWithGroupNumberFilter(@Param("idNumber") String idNumber,  @Param("groupNumber") String groupNumber,
+                                        @Param("passportNumber") String passportNumber,  @Param("applicantName") String applicantName,
+                                        @Param("gender") String gender, @Param("uin") String uin, @Param("companyCode") String companyCode,
+                                          @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
+                                          @Param("serviceGroupRefCode") long serviceGroupRefCode,  @Param("companyFullCode") String companyFullCode, Pageable pageable);
+
+    @Query("select a  " +
+            "FROM JpaApplicant a JOIN a.digitalIds di where " +
+            "(:idNumber is null OR a.idNumber = :idNumber) and "+
+            "(:passportNumber is null OR a.passportNumber = :passportNumber) and " +
+            "(:gender is null OR a.gender = :gender) and " +
+            "((:applicantName is null OR a.fullNameEn like '%'+:applicantName+'%' OR a.fullNameAr like '%'+:applicantName+'%')) and " +
+            "(:uin is null OR di.uin = :uin) and " +
+            "(:companyCode is null or a.companyCode = :companyCode) and " +
+            "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
+            "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
+            "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
+    Page<JpaApplicant> findOrganizerApplicants(@Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber,  @Param("applicantName") String applicantName,
+                                                                    @Param("gender") String gender, @Param("uin") String uin, @Param("companyCode") String companyCode,
+                                                                    @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
+                                                                    @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
+
+    @Query("select a FROM JpaApplicant a where " +
+            "(:companyCode is null or a.companyCode = :companyCode) and " +
+            "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
+            "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
+            "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
+    List<JpaApplicant> findOrganizerApplicantsForExport(@Param("companyCode") String companyCode,
+                                                        @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
+                                                        @Param("serviceGroupRefCode") long serviceGroupRefCode);
+
+
+    @Query("SELECT rs.ritualTypeCode FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
+            "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
+            "WHERE a.id = :applicantId ")
+    String findRitualTypeByApplicantId(@Param("applicantId") long applicantId);
+
+
+
 }

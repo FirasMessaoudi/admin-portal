@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -30,5 +31,13 @@ public class JpaCompanyRitualStepLookup extends JpaLocalizedLookup {
     private String description;
 
     private String summary;
+    @Column(name = "step_index")
+    private long stepIndex;
+    @Column(name = "edit_mode")
+    private String editMode;
+    @Column(name = "location_lat")
+    private double locationLat;
+    @Column(name = "location_lng")
+    private double locationLng;
 
 }

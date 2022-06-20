@@ -50,7 +50,7 @@ public class ManifestService {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(shaaerFont);
         } catch (IOException | FontFormatException e) {
-            log.error("Error while creating Shaaer font.", e);
+            log.error("Error while creating Hajj App font.", e);
         }
     }
 
