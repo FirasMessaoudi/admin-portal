@@ -35,9 +35,9 @@ public interface ApplicantGroupRepository extends JpaRepository<JpaApplicantGrou
             "left join JpaApplicantPackage package on CAST(package.applicantUin as text) = al.applicantUin " +
             "left join package.applicantPackageHousings housing " +
             "left join package.applicantPackageTransportations trans " +
-            "where ag.referenceNumber = :referenceNumber " +
+            "where ag.id = :groupId " +
             "AND company.code= :companyCode ")
-    List<ApplicantGroupDetailsVo> findGroupDetailsByGroupId(@Param("referenceNumber") String referenceNumber, @Param("companyCode") String companyCode);
+    List<ApplicantGroupDetailsVo> findGroupDetailsByGroupId(@Param("groupId") long groupId, @Param("companyCode") String companyCode);
 
     Optional<JpaApplicantGroup> findTopByReferenceNumberAndCompanyRitualSeasonCompanyCodeOrderByCreationDateDesc(String refNumber, String companyCode);
 
