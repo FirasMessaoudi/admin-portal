@@ -31,3 +31,10 @@ GO
 
 ALTER TABLE shc_portal.shc_applicant ALTER COLUMN date_of_birth_gregorian date NULL;
 GO
+
+ALTER TABLE shc_portal.shc_package_transportation ALTER COLUMN location_from_name_ar NVARCHAR(650);
+ALTER TABLE shc_portal.shc_package_transportation ALTER COLUMN location_from_name_en NVARCHAR(650);
+ALTER TABLE shc_portal.shc_package_transportation ALTER COLUMN location_to_name_ar NVARCHAR(650);
+ALTER TABLE shc_portal.shc_package_transportation ALTER COLUMN location_to_name_en NVARCHAR(650);
+ALTER TABLE shc_portal.shc_package_transportation ALTER COLUMN route_details NVARCHAR(650);
+go
