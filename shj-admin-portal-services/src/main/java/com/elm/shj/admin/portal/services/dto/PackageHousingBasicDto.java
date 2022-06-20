@@ -29,7 +29,7 @@ public class PackageHousingBasicDto implements Serializable {
     private long id;
     private String typeCode;
     private String siteCode;
-    private RitualPackageBasicDto ritualPackage;
+    private RitualPackageBasicWithDetailsDto ritualPackage;
     private HousingZoneBasicDto housingZone;
 
     @NotNull(message = "validation.data.constraints.msg.20001")

@@ -65,7 +65,7 @@ public class JpaPackageTransportationBasic implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "package_id", nullable = false)
-    private JpaRitualPackageBasic ritualPackage;
+    private JpaRitualPackageBasicWithDetails ritualPackage;
 
     @PrePersist
     public void prePersist() {

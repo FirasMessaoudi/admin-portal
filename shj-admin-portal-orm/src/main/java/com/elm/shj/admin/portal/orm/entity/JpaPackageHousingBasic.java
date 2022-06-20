@@ -38,7 +38,7 @@ public class JpaPackageHousingBasic implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "package_id", nullable = false)
-    private JpaRitualPackageBasic ritualPackage;
+    private JpaRitualPackageBasicWithDetails ritualPackage;
 
     @ManyToOne
     @JoinColumn(name = "zone_id")
@@ -76,7 +76,7 @@ public class JpaPackageHousingBasic implements Serializable {
     private double lng;
 
     @LazyCollection(LazyCollectionOption.TRUE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageHousing")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "packageHousing")
     private List<JpaPackageCateringBasic> packageCatering;
 
     @Column(name = "creation_date", nullable = false, updatable = false)

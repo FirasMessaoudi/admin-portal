@@ -208,7 +208,7 @@ public class ValidationService {
                         .validityStart(DateUtils.toGregorian(huicPackageTransportation.getValidityStart()))
                         .validityEnd(DateUtils.toGregorian(huicPackageTransportation.getValidityEnd()))
                         .routeDetails(huicPackageTransportation.getRouteDetails())
-                        .ritualPackage(existingRitualPackageId == null ? null : RitualPackageBasicDto.builder().id(existingRitualPackageId).build())
+                        .ritualPackage(existingRitualPackageId == null ? ritualPackageDto : RitualPackageBasicWithDetailsDto.builder().id(existingRitualPackageId).build())
                         .build();
                 packageTransportationBasicList.add(packageTransportationDto);
             });
@@ -235,7 +235,7 @@ public class ValidationService {
                         .isDefault(huicPackageHousing.isDefault())
                         .lat(housingMaster.getLat())
                         .lng(housingMaster.getLng())
-                        .ritualPackage(existingRitualPackageId == null ? null : RitualPackageBasicDto.builder().id(existingRitualPackageId).build())
+                        .ritualPackage(existingRitualPackageId == null ? ritualPackageDto : RitualPackageBasicWithDetailsDto.builder().id(existingRitualPackageId).build())
                         .build();
                 //get the package housing catering
                 if (huicPackageHousing.getPackageCaterings() != null) {
@@ -249,6 +249,7 @@ public class ValidationService {
                                 .descriptionAr(huicPackageCatering.getOptionDescriptionAr())
                                 .descriptionEn(huicPackageCatering.getOptionDescriptionEn())
                                 .isDefault(huicPackageCatering.isDefault())
+                                .packageHousing(packageHousing)
                                 .build();
                         packageCateringBasicList.add(packageCateringDto);
                     });
