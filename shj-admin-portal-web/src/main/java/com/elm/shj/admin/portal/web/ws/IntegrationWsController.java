@@ -1359,4 +1359,11 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
     }
 
+    @PostMapping("/applicant/housing-camp/update")
+    public ResponseEntity<WsResponse<?>> updateApplicantHousingCamp(@RequestBody UpdateApplicantHousingCampDto updateApplicantHousingCampDto) {
+        log.info("updateApplicantHousingCamp start");
+        boolean updated = applicantPackageHousingService.updateApplicantHousingCamp(updateApplicantHousingCampDto);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
+    }
+
 }
