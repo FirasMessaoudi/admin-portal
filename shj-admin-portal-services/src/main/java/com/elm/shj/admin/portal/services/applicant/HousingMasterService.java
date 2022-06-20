@@ -11,6 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  * Service handling housing master
@@ -27,5 +31,16 @@ public class HousingMasterService extends GenericService<JpaHousingMaster, Housi
 
     public boolean existsByHousingReferenceCode(String code) {
         return housingMasterRepository.existsByHousingReferenceCode(code);
+    }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public HousingMasterDto findLatestHousingMasterByReferenceCode(String refNumber) {
+        log.info("Start findLatestHousingMasterByReferenceCode with {} reference number.", refNumber);
+        Optional<JpaHousingMaster> housingMaster = housingMasterRepository.findTopByHousingReferenceCodeOrderByCreationDateDesc(refNumber);
+        if (housingMaster.isPresent()) {
+            log.info("Finish findLatestHousingMasterByReferenceCode and found {} housing master id", housingMaster.get().getId());
+            return getMapper().fromEntity(housingMaster.get(), mappingContext);
+        }
+        return null;
     }
 }

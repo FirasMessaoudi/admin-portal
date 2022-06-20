@@ -1,5 +1,4 @@
-USE
-shc_portal
+USE shc_portal
 GO
 
 insert into shc_portal.shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end,

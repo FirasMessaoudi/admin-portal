@@ -17,8 +17,8 @@ public interface RitualPackageRepository extends JpaRepository<JpaRitualPackage,
 
     Optional<JpaRitualPackage> findByReferenceNumber(String referenceNumber);
 
-    @Query("SELECT rp.id FROM JpaRitualPackage rp WHERE rp.referenceNumber = :referenceNumber")
-    Long findIdByReferenceNumber(@Param("referenceNumber") String referenceNumber);
+    @Query("SELECT rp.id FROM JpaRitualPackage rp WHERE rp.referenceNumber = :referenceNumber and rp.companyRitualSeason.ritualSeason.ritualTypeCode = :ritualTypeCode and rp.companyRitualSeason.ritualSeason.seasonYear = :seasonYear")
+    Long findIdByReferenceNumberAndRitualTypeAndSeason(@Param("referenceNumber") String referenceNumber, @Param("ritualTypeCode") String ritualTypeCode, @Param("seasonYear") int seasonYear);
 
     JpaRitualPackage findTopByCompanyRitualSeasonIdOrderByStartDateDescCreationDateDesc(long companyRitualSeason);
 

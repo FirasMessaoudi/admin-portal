@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 ELM. All rights reserved.
+ * Copyright (c) 2022 ELM. All rights reserved.
  */
 package com.elm.shj.admin.portal.services.dto;
 
@@ -12,22 +12,19 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
- * Dto class for the  Ritual Package .
+ * Dto class for the  Ritual Package Basic.
  *
- * @author Ahmed Ali
- * @since 1.1.0
+ * @author ahmad flaifel
+ * @since 1.2.5
  */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RitualPackageDto implements Serializable {
-
-    private static final long serialVersionUID = 811079397522626616L;
+public class RitualPackageBasicDto implements Serializable {
 
     private long id;
 
@@ -63,16 +60,7 @@ public class RitualPackageDto implements Serializable {
     private Date endDate;
 
     @JsonBackReference(value = "ritualSeason")
-    private CompanyRitualSeasonDto companyRitualSeason;
-
-    @JsonBackReference("applicantPackages")
-    private List<ApplicantPackageDto> applicantPackages;
-
-    @JsonBackReference("packageHousings")
-    private List<PackageHousingDto> packageHousings;
-
-    @JsonBackReference("packageTransportations")
-    private List<PackageTransportationDto> packageTransportations;
+    private CompanyRitualSeasonBasicDto companyRitualSeason;
 
     private Date creationDate;
     private Date updateDate;

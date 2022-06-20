@@ -145,10 +145,6 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
     }
 
-    public CompanyStaffCardDto findStaffCardById(long cardId) {
-        return getMapper().fromEntity(companyStaffCardRepository.findByIdAndStatusCodeNot(cardId, ECardStatus.REISSUED.name()), mappingContext);
-    }
-
     @Transactional
     public CompanyStaffCardDto changeCardStatus(CompanyStaffCardDto card, String actionCode, Optional<Long> userId) {
         if (actionCode.equalsIgnoreCase(ECardStatusAction.CANCEL_CARD.name())) {
