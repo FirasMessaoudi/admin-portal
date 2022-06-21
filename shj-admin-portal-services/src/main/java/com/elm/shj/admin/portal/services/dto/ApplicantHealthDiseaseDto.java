@@ -36,11 +36,11 @@ public class ApplicantHealthDiseaseDto implements Serializable {
     @JsonBackReference
     private ApplicantHealthDto applicantHealth;
 
-    @OnlyCharacters(min = 3, max = 50, allowNumbers = true)
+    @OnlyCharacters(min = 3, max = 650, allowNumbers = true)
     @CellIndex(index = 5)
     private String labelAr;
 
-    @OnlyCharacters(min = 3, max = 50, allowEmpty = false, allowNumbers = true)
+    @OnlyCharacters(min = 3, max = 650, allowEmpty = false, allowNumbers = true)
     @CellIndex(index = 4)
     private String labelEn;
 

@@ -44,10 +44,10 @@ public class RitualPackageBasicWithDetailsDto implements Serializable {
     @Pattern(regexp = "(^[a-zA-Z0-9]*)", message = "validation.data.constraints.msg.20003")
     private String hajjOfficeMadina;
 
-    @ArabicCharacters(lettersOnly = true, numbersOnly = false)
+    //@ArabicCharacters(lettersOnly = true, numbersOnly = false)
     private String packageNameAr;
 
-    @Pattern(regexp = "(^[a-zA-Z0-9]*)", message = "validation.data.constraints.msg.20003")
+    //@Pattern(regexp = "(^[a-zA-Z0-9]*)", message = "validation.data.constraints.msg.20003")
     private String packageNameEn;
 
     @NotNull(message = "validation.data.constraints.msg.20001")

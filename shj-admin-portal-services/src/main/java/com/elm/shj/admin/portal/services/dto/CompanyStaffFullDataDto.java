@@ -50,15 +50,15 @@ public class CompanyStaffFullDataDto implements Serializable {
     @HijriDate(minOffset = -140, maxOffset = -11, allowEmpty = true)
     private Long dateOfBirthHijri;
 
-    @OnlyCharacters(min = 0, max = 150, allowEmpty = true)
+    @OnlyCharacters(min = 0, max = 650)
     @CellIndex(index = 4)
     private String fullNameEn;
 
     @CellIndex(index = 5)
-    @OnlyCharacters(min = 0, max = 150)
+    @OnlyCharacters(min = 0, max = 650)
     private String fullNameAr;
 
-    @NullOrNotBlank(min = 0, max = 150)
+    @NullOrNotBlank(min = 0, max = 650)
     @CellIndex(index = 6)
     private String fullNameOrigin;
 
