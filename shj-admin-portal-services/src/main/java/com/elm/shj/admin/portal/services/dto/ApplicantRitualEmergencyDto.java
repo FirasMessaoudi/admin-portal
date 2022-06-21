@@ -29,7 +29,7 @@ public class ApplicantRitualEmergencyDto implements Serializable {
 
     private Long id;
 
-    @OnlyCharacters(min = 1, max = 50, allowNumbers = true, allowEmpty = false, allowSpecialChars = true)
+    //@OnlyCharacters(min = 1, max = 50, allowNumbers = true, allowEmpty = false, allowSpecialChars = true)
     @CellIndex(index = 26)
     private String groupReferenceNumber;
 
@@ -42,7 +42,7 @@ public class ApplicantRitualEmergencyDto implements Serializable {
     @CellIndex(index = 28)
     private String permitNumber;
 
-    @OnlyCharacters(min = 5, max = 50, allowEmpty = false, allowNumbers = true, allowSpecialChars = true)
+    //@OnlyCharacters(min = 5, max = 50, allowEmpty = false, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 29)
     private String insuranceNumber;
 
@@ -50,11 +50,11 @@ public class ApplicantRitualEmergencyDto implements Serializable {
     @CellIndex(index = 30)
     private String borderNumber;
 
-    @OnlyCharacters(allowEmpty = false, min = 3, max = 20, allowNumbers = true, allowSpecialChars = true)
+    //@OnlyCharacters(allowEmpty = false, min = 3, max = 20, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 31)
     private String busNumber;
 
-    @OnlyCharacters(allowEmpty = false, min = 1, max = 6, allowNumbers = true, allowSpecialChars = true)
+    //@OnlyCharacters(allowEmpty = false, min = 1, max = 6, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 32)
     private String seatNumber;
 
