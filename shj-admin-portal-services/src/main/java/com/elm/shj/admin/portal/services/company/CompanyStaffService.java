@@ -115,7 +115,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
     public List<CompanyStaffDto> findRelatedEmployeesByApplicantUinAndSeasonId(String uin, long sid) {
-        return mapList(companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(uin, sid));
+        return mapList(companyStaffRepository.findApplicantCompanyStaff(uin, sid));
     }
 
     public Optional<CompanyStaffDto> findGroupLeaderByApplicantUin(String applicantUin, long companyRitualSeasonId) {

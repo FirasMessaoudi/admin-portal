@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 public enum EHousingType {
     CAMP(1),
     HOTEL(2),
-    BUILDING(3);
+    BUILDING(3),
+    APARTMENT(4);
     private final int id;
 
     EHousingType(int id) {

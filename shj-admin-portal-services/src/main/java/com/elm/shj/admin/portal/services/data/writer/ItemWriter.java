@@ -309,7 +309,7 @@ public class ItemWriter {
                 }
 
                 // check applicant is already exist for that group then no need to add new update the existin applicant
-                GroupApplicantListDto existingGroupApplicant = groupApplicantListService.findByUin(applicantLiteDto.getDigitalIds().get(0).getUin(), applicantGroupDto.getId());
+                GroupApplicantListDto existingGroupApplicant = groupApplicantListService.findByUin(applicantLiteDto.getDigitalIds().get(0).getUin());
 
                 GroupApplicantListDto groupApplicantListDto = GroupApplicantListDto.builder()
                         .applicantGroup(applicantGroupDto)
