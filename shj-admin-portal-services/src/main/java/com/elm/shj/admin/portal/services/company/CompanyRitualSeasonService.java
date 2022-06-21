@@ -48,6 +48,14 @@ public class CompanyRitualSeasonService extends GenericService<JpaCompanyRitualS
             return null;
     }
 
+    public Long getCompanyRitualSeasonId(String companyCode, String typeCode, int seasonYear) {
+        Long companyRitualSeasonId = companyRitualSeasonRepository.findIdByCompanyCodeAndRitualTypeAndSeasonYear(companyCode, typeCode, seasonYear);
+        log.info("companyRitualSeasonId .. {}", companyRitualSeasonId);
+        return companyRitualSeasonId;
+    }
+
+
+
     public List<CompanyRitualSeasonDto> findByCompanyId(Long companyId) {
         return mapList(companyRitualSeasonRepository.findByCompanyId(companyId));
     }
