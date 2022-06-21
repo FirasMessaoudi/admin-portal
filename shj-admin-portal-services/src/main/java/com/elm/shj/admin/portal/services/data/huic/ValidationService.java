@@ -264,11 +264,12 @@ public class ValidationService {
         if (savedRitualPackageBasicWithDetails != null) {
             savedRitualPackageId = savedRitualPackageBasicWithDetails.getId();
         }
-        log.info("Finish savePlannedPackages for {} package reference number and ritual package with {} saved.", plannedPackage.getPackageRefNumber(), savedRitualPackageId);
+        log.info("Finish savePlannedPackages for {} package reference number and ritual package with {} id saved.", plannedPackage.getPackageRefNumber(), savedRitualPackageId);
     }
 
     private void saveCompanies(HuicCompany huicCompany) {
         Long existingCompanyId = companyRepository.findIdByCode(huicCompany.getCompanyRefCode() + "_" + ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name());
+        // in case of no establishment and ritual type is internal then link it with establishment 8, otherwise no business so far.
         CompanyDto companyDto = CompanyDto.builder()
                 .code(huicCompany.getCompanyRefCode() + "_" + ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
                 .labelAr(huicCompany.getCompanyNameAr())
@@ -281,7 +282,7 @@ public class ValidationService {
                 .crNumber(huicCompany.getCrNumber() + "")
                 .typeCode(ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
                 .countryCode(huicCompany.getCountry() + "")
-                .establishmentRefCode(huicCompany.getEstablishmentId() != null ? huicCompany.getEstablishmentId() : 9)
+                .establishmentRefCode((huicCompany.getEstablishmentId() == null && huicCompany.getRitualTypeCode().intValue() == ERitualType.INTERNAL_HAJJ.getId()) ? 8 : huicCompany.getEstablishmentId())
                 .build();
         if (existingCompanyId != null) {
             companyDto.setId(existingCompanyId);

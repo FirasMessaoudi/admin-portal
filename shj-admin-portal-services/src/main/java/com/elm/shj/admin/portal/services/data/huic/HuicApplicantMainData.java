@@ -51,13 +51,13 @@ public class HuicApplicantMainData implements Serializable {
     @HijriDate(minOffset = -140, maxOffset = 0)
     private Long dateOfBirthHijri;
 
-    @NullOrNotBlank(min = 0, max = 200)
+    @NullOrNotBlank(min = 0, max = 650)
     private String fullNameAr;
 
-    @NullOrNotBlank(min = 0, max = 200)
+    @NullOrNotBlank(min = 0, max = 650)
     private String fullNameEn;
 
-    @NullOrNotBlank(min = 0, max = 200)
+    @NullOrNotBlank(min = 0, max = 650)
     private String fullNameOriginalLang;
 
     @MaritalStatusCode

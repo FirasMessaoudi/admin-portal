@@ -65,3 +65,13 @@ ALTER TABLE shc_portal.shc_ritual_package ALTER column package_name_en nvarchar(
 ALTER TABLE shc_portal.shc_role ALTER column label_ar nvarchar(650) not null
 ALTER TABLE shc_portal.shc_role ALTER column label_en nvarchar(650) not null
 GO
+
+ALTER TABLE shc_portal.shc_package_housing ALTER COLUMN location_name_ar nvarchar(650) not null
+ALTER TABLE shc_portal.shc_package_housing ALTER COLUMN location_name_en nvarchar(650) not null
+ALTER TABLE shc_portal.shc_package_housing ALTER COLUMN address_ar nvarchar(650)
+ALTER TABLE shc_portal.shc_package_housing ALTER COLUMN address_en nvarchar(650)
+ALTER TABLE shc_portal.shc_applicant_package_catering ALTER COLUMN option_ar nvarchar(650)
+ALTER TABLE shc_portal.shc_applicant_package_catering ALTER COLUMN option_en nvarchar(650)
+ALTER TABLE shc_portal.shc_applicant ALTER COLUMN full_name_origin nvarchar(650)
+ALTER TABLE shc_portal.shc_company_staff ALTER COLUMN full_name_origin nvarchar(650)
+GO

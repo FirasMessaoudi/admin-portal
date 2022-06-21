@@ -36,17 +36,17 @@ public class ApplicantHealthDiseaseDto implements Serializable {
     @JsonBackReference
     private ApplicantHealthDto applicantHealth;
 
-    @OnlyCharacters(min = 3, max = 50, allowNumbers = true)
+//    //@OnlyCharacters(min = 3, max = 650, allowNumbers = true)
     @CellIndex(index = 5)
     private String labelAr;
 
-    @OnlyCharacters(min = 3, max = 50, allowEmpty = false, allowNumbers = true)
+//    //@OnlyCharacters(min = 3, max = 650, allowEmpty = false, allowNumbers = true)
     @CellIndex(index = 4)
     private String labelEn;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     @WithRitualPackage
-    @OnlyCharacters(min = 1, max = 50, allowNumbers = true, allowEmpty = false, allowSpecialChars = true)
+//    //@OnlyCharacters(min = 1, max = 50, allowNumbers = true, allowEmpty = false, allowSpecialChars = true)
     @CellIndex(index = 6)
     private String packageReferenceNumber;
 
