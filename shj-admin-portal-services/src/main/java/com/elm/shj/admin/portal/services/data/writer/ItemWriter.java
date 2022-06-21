@@ -382,7 +382,6 @@ public class ItemWriter {
                 CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationalityCode());
                 // String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
                 ApplicantGroupDto existingGroup = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupMainDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
-                existingGroup.getCompanyRitualSteps().size();
                 ApplicantGroupDto applicantGroupDto = ApplicantGroupDto.builder()
                         .groupLeader(existingStaff)
                         .groupName(groupMainDataDto.getGroupName())
