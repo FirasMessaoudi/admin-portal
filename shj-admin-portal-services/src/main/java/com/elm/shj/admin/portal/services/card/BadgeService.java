@@ -587,15 +587,20 @@ public class BadgeService {
         g2d.setColor(new Color(0xFF212121));
         Font font = shaaerFont.deriveFont(20f);
 
+
+        String labelEn = applicantRitualCard.getIdNumber() != null ?"ID Number":" Passport" ;
+        String labelAr =applicantRitualCard.getIdNumber() != null ?"رقم الهوية":"جواز السفر" ;
+        String value= applicantRitualCard.getIdNumber() != null ? applicantRitualCard.getIdNumber() : applicantRitualCard.getPassportNumber();
+
         FontMetrics fm = g2d.getFontMetrics(font);
         FontRenderContext frc = g2d.getFontRenderContext();
-        int xDif = ((BADGE_WIDTH - fm.stringWidth("رقم الهوية")) - 60);
+        int xDif = (BADGE_WIDTH - fm.stringWidth(labelAr) - 60);
         int yDif = rectYApplicant + 70;
-        TextLayout layout = new TextLayout("رقم الهوية", font, frc);
+        TextLayout layout = new TextLayout(labelAr, font, frc);
         layout.draw(g2d, xDif, yDif);
         g2d.setColor(new Color(0xFF6e6d6b));
         yDif += 30;
-        layout = new TextLayout("ID Number", font, frc);
+        layout = new TextLayout(labelEn, font, frc);
         layout.draw(g2d, xDif - 10, yDif);
 
 
@@ -610,7 +615,7 @@ public class BadgeService {
         font = font.deriveFont(
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
-        layout = new TextLayout(applicantRitualCard.getIdNumber(), font, frc);
+        layout = new TextLayout(value, font, frc);
         layout.draw(g2d, xDif - 10, yDif);
         font = font.deriveFont(
                 Collections.singletonMap(
