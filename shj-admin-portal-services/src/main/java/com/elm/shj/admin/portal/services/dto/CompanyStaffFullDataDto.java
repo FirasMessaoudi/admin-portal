@@ -50,12 +50,12 @@ public class CompanyStaffFullDataDto implements Serializable {
     @HijriDate(minOffset = -140, maxOffset = -11, allowEmpty = true)
     private Long dateOfBirthHijri;
 
-    @OnlyCharacters(min = 0, max = 650)
+    @OnlyCharacters(min = 0, max = 650, allowEmpty = true)
     @CellIndex(index = 4)
     private String fullNameEn;
 
     @CellIndex(index = 5)
-    @OnlyCharacters(min = 0, max = 650)
+    @OnlyCharacters(min = 6, max = 650)
     private String fullNameAr;
 
     @NullOrNotBlank(min = 0, max = 650)
@@ -63,7 +63,7 @@ public class CompanyStaffFullDataDto implements Serializable {
     private String fullNameOrigin;
 
     @CellIndex(index = 7)
-    @OnlyCharacters(min = 1, max = 150, allowEmpty = false)
+    @OnlyCharacters(min = 1, max = 150, arabic = true, allowEmpty = false)
     private String genderType;
 
     @Gender
@@ -71,7 +71,7 @@ public class CompanyStaffFullDataDto implements Serializable {
     private String gender;
 
     @CellIndex(index = 9)
-    @OnlyCharacters(min = 1, max = 150, allowEmpty = false)
+    @OnlyCharacters(min = 1, max = 150, arabic = true, allowEmpty = false)
     private String nationality;
 
     @NationalityCode
@@ -83,7 +83,7 @@ public class CompanyStaffFullDataDto implements Serializable {
     private String idNumberOriginal;
 
     @CellIndex(index = 12)
-    @OnlyCharacters(min = 1, max = 150, allowEmpty = false)
+    @OnlyCharacters(min = 1, max = 150, arabic = true, allowEmpty = false)
     private String jobTitle;
 
     @NullOrNotBlank(min = 1, max = 30)
@@ -108,7 +108,7 @@ public class CompanyStaffFullDataDto implements Serializable {
     private String mobileNumberIntl;
 
     @CellIndex(index = 18)
-    @OnlyCharacters(min = 1, max = 150, allowEmpty = false)
+    @OnlyCharacters(min = 1, max = 150, arabic = true, allowEmpty = false)
     private String ritualType;
 
     @CellIndex(index = 19)
