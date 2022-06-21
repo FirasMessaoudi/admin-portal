@@ -32,4 +32,7 @@ public interface GroupApplicantListRepository extends JpaRepository<JpaGroupAppl
             "AND ( l IS NULL or l.gpsTime = (SELECT MAX(ul.gpsTime) FROM JpaUserLocation ul WHERE ul.userId  = adi.uin))")
     List<ApplicantVo> findApplicantLocationsByGroupeLeaderSuin(@Param("suin") String suin);
 
+    @Query("select distinct (g.applicantGroup.companyRitualSeason.company.establishmentRefCode) from JpaGroupApplicantList g where g.applicantUin = :uin ")
+    Integer findApplicantEstablishment(@Param("uin") String uin);
+
 }

@@ -86,6 +86,8 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
     }
 
     public boolean updateGroup(UpdateGroupCmd updateGroupCmd) {
+        log.info("GroupApplicantListService ::: Start updateGroup  oldGroup: {}", updateGroupCmd.getOldGroup());
+
         ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompany(updateGroupCmd.getNewGroup(), updateGroupCmd.getCompanyCode());
         if (applicantGroupDto == null) {
             return false;
@@ -99,11 +101,16 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
             return true;
         } else {
             GroupApplicantListDto groupApplicantListDto = GroupApplicantListDto.builder()
-                                .applicantGroup(applicantGroupDto)
-                                .applicantUin(updateGroupCmd.getUin()).build();
+                    .applicantGroup(applicantGroupDto)
+                    .applicantUin(updateGroupCmd.getUin()).build();
             save(groupApplicantListDto);
             return true;
         }
 
+    }
+
+    public Integer findApplicantEstablishment(String uin) {
+        log.info("GroupApplicantListService ::: Start findApplicantEstablishment  uin: {}", uin);
+        return groupApplicantListRepository.findApplicantEstablishment(uin);
     }
 }

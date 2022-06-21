@@ -12,8 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockAssert;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Scheduler to generate automatically Cards for new added applicantRituals
@@ -31,6 +35,9 @@ public class ApplicantCardScheduler {
     private final ApplicantCardService applicantCardService;
     private final UserCardStatusAuditService userCardStatusAuditService;
 
+    @Value("${generate.applicant.card.scheduler.active.nodes}")
+    private String schedulerActiveNodes;
+
 
     /**
      * Scheduled job to create cards for new applicant ritual records
@@ -38,6 +45,22 @@ public class ApplicantCardScheduler {
     @Scheduled(fixedDelayString = "${scheduler.generate.card.applicant.ritual.delay.milliseconds}")
     @SchedulerLock(name = "generate-applicant-ritual-cards-task")
     public void generateIdsForNewApplicants() {
+        String runningIpAddress;
+        try {
+            runningIpAddress = InetAddress.getLocalHost().getHostAddress();
+            log.info("running IP address for potential applicant card scheduler is: {}", runningIpAddress);
+        } catch (UnknownHostException e) {
+            log.error("Error while getting the running ip address. Applicant card scheduler will not run.", e);
+            return;
+        }
+        if (schedulerActiveNodes == null || schedulerActiveNodes.isEmpty()) {
+            log.warn("Applicant card scheduler will not run, no active nodes are configured in database.");
+            return;
+        }
+        if (!schedulerActiveNodes.contains(runningIpAddress)) {
+            log.warn("Applicant card scheduler will not run, {} ip is not in the configured active nodes list.");
+            return;
+        }
         log.debug("Generate applicants cards scheduler started...");
         LockAssert.assertLocked();
         applicantRitualBasicService.findAllWithoutCards().getContent().forEach(applicantRitualBasic -> {

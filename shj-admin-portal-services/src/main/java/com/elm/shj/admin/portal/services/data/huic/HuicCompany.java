@@ -28,10 +28,10 @@ public class HuicCompany implements Serializable {
 
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @NullOrNotBlank(min = 0, max = 200)
+    @NullOrNotBlank(min = 0, max = 650)
     private String companyNameAr;
 
-    @NullOrNotBlank(min = 0, max = 200)
+    @NullOrNotBlank(min = 0, max = 650)
     private String companyNameEn;
 
     @WithMission

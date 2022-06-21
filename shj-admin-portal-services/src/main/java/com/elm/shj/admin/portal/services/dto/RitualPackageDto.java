@@ -41,36 +41,36 @@ public class RitualPackageDto implements Serializable {
             , message = "validation.data.constraints.msg.20003")
     private String referenceNumber;
 
-    @Pattern(regexp = "(^[a-zA-Z0-9]*)"
-            , message = "validation.data.constraints.msg.20003")
+    @Pattern(regexp = "(^[a-zA-Z0-9]*)", message = "validation.data.constraints.msg.20003")
     private String hajjOfficeMakkah;
-    @Pattern(regexp = "(^[a-zA-Z0-9]*)"
-            , message = "validation.data.constraints.msg.20003")
+
+    @Pattern(regexp = "(^[a-zA-Z0-9]*)", message = "validation.data.constraints.msg.20003")
     private String hajjOfficeMadina;
-    @ArabicCharacters(lettersOnly = true, numbersOnly = false)
+
+    //@ArabicCharacters(lettersOnly = true, numbersOnly = false)
     private String packageNameAr;
-    @Pattern(regexp = "(^[a-zA-Z0-9]*)"
-            , message = "validation.data.constraints.msg.20003")
+
+    //@Pattern(regexp = "(^[a-zA-Z0-9]*)", message = "validation.data.constraints.msg.20003")
     private String packageNameEn;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     private String packageTypeCode;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-
     private Date startDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
-
     private Date endDate;
-
 
     @JsonBackReference(value = "ritualSeason")
     private CompanyRitualSeasonDto companyRitualSeason;
 
     @JsonBackReference("applicantPackages")
     private List<ApplicantPackageDto> applicantPackages;
+
     @JsonBackReference("packageHousings")
     private List<PackageHousingDto> packageHousings;
+
     @JsonBackReference("packageTransportations")
     private List<PackageTransportationDto> packageTransportations;
 

@@ -16,8 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockAssert;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Scheduler to generate automatically Applicant Digital ID
@@ -37,12 +41,31 @@ public class DigitalIdScheduler {
     private final ApplicantHealthService applicantHealthService;
     private final ApplicantRelativeService applicantRelativeService;
 
+    @Value("${generate.digital.ids.scheduler.active.nodes}")
+    private String schedulerActiveNodes;
+
     /**
      * Scheduled job to create digital IDs for new applicants
      */
     @Scheduled(fixedDelayString = "${scheduler.generate.digital.ids.delay.milliseconds}")
     @SchedulerLock(name = "generate-digital-ids-task")
     public void generateIdsForNewApplicants() {
+        String runningIpAddress;
+        try {
+            runningIpAddress = InetAddress.getLocalHost().getHostAddress();
+            log.info("running IP address for potential digital id scheduler is: {}", runningIpAddress);
+        } catch (UnknownHostException e) {
+            log.error("Error while getting the running ip address. Digital Id scheduler will not run.", e);
+            return;
+        }
+        if (schedulerActiveNodes == null || schedulerActiveNodes.isEmpty()) {
+            log.warn("Digital Id scheduler will not run, no active nodes are configured in database.");
+            return;
+        }
+        if (!schedulerActiveNodes.contains(runningIpAddress)) {
+            log.warn("Digital Id scheduler will not run, {} ip is not in the configured active nodes list.");
+            return;
+        }
         log.debug("Generate applicants digital ids scheduler started...");
         LockAssert.assertLocked();
         applicantBasicService.findAllWithoutDigitalId().getContent().forEach(applicantBasicDto -> {

@@ -1,5 +1,4 @@
-USE
-shc_portal
+USE shc_portal
 GO
 
 insert into shc_portal.shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end,
@@ -60,4 +59,18 @@ update shc_portal.shc_company_ritual_step_lk set edit_mode = 'TIME' where code= 
 update shc_portal.shc_company_ritual_step_lk set edit_mode = 'TIME' where code= 'THROUGH_GAMARAT_STONES_12'
 update shc_portal.shc_company_ritual_step_lk set edit_mode = 'TIME' where code= 'THROUGH_GAMARAT_STONES_13'
 update shc_portal.shc_company_ritual_step_lk set edit_mode = 'DATE_TIME' where code= 'TAWAF_AL_WADAA'
+GO
+
+INSERT INTO shc_portal.shc_company (label_ar, label_en, code) values (N'شركة كِدانة للتنمية والتطوير', 'KIDANA', '38_GOVERNMENT_AGENCY');
+GO
+INSERT INTO shc_portal.shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end, total_quota, air_quota, sea_quota, land_quota)
+VALUES ((SELECT id FROM shc_portal.shc_company WHERE code = '38_GOVERNMENT_AGENCY'), 1, 'true', 14431101, 14431230, 0, 0, 0, 0);
+INSERT INTO shc_portal.shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end, total_quota, air_quota, sea_quota, land_quota)
+VALUES ((SELECT id FROM shc_portal.shc_company WHERE code = '38_GOVERNMENT_AGENCY'), 2, 'true', 14431101, 14431230, 0, 0, 0, 0);
+INSERT INTO shc_portal.shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end, total_quota, air_quota, sea_quota, land_quota)
+VALUES ((SELECT id FROM shc_portal.shc_company WHERE code = '38_GOVERNMENT_AGENCY'), 3, 'true', 14431101, 14431230, 0, 0, 0, 0);
+GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('generate.digital.ids.scheduler.active.nodes', '127.0.0.1,localhost');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('generate.applicant.card.scheduler.active.nodes', '127.0.0.1,localhost');
 GO

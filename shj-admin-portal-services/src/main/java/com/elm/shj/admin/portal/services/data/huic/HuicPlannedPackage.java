@@ -57,7 +57,6 @@ public class HuicPlannedPackage implements Serializable {
     private int seasonYear;
 
     @Valid
-    //@NotNull(message = "validation.data.constraints.msg.20001")
     List<HuicPackageHousing> packageHousings;
 
     @Valid

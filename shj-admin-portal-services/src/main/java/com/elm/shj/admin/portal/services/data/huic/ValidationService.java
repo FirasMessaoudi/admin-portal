@@ -9,10 +9,12 @@ import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonBasicService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.data.validators.CheckFirst;
 import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
+import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdBasicService;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -27,6 +29,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolation;
@@ -70,16 +73,16 @@ public class ValidationService {
     private final CompanyStaffService companyStaffService;
     private final CompanyStaffRepository companyStaffRepository;
     private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
+    private final CompanyStaffDigitalIdBasicService companyStaffDigitalIdBasicService;
     private final CompanyStaffCardService companyStaffCardService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
+    private final CompanyRitualSeasonBasicService companyRitualSeasonBasicService;
     private final RitualSeasonRepository ritualSeasonRepository;
-    private final HousingMasterRepository housingMasterRepository;
+    private final HousingMasterService housingMasterService;
     private final CompanyRepository companyRepository;
     private final CompanyRitualSeasonRepository companyRitualSeasonRepository;
     private final RitualPackageService ritualPackageService;
-    private final PackageHousingService packageHousingService;
-    private final PackageCateringService packageCateringService;
-    private final PackageTransportationService packageTransportationService;
+    private final RitualPackageBasicWithDetailsService ritualPackageBasicWithDetailsService;
     private final RitualSeasonService ritualSeasonService;
     private final ApplicantContactService applicantContactService;
     private static final String ARABIC_REGEX = "^[\\p{InArabic}\\s-_]+$";
@@ -166,13 +169,11 @@ public class ValidationService {
 
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     void savePlannedPackages(HuicPlannedPackage plannedPackage) {
-        //TODO: check hajj office makkah and hajj office madina
-        RitualPackageDto ritualPackageDto = RitualPackageDto.builder()
+        log.info("Start savePlannedPackages for {} package reference number.", plannedPackage.getPackageRefNumber());
+        RitualPackageBasicWithDetailsDto ritualPackageDto = RitualPackageBasicWithDetailsDto.builder()
                 .referenceNumber(plannedPackage.getPackageRefNumber() + "")
-                .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah() + "")
-                .hajjOfficeMadina(plannedPackage.getHajjOfficeMadina() + "")
                 .packageNameAr(plannedPackage.getPackageNameArabic())
                 .packageNameEn(plannedPackage.getPackageNameEnglish())
                 .packageTypeCode(EPackageType.fromId(plannedPackage.getPackageTypeCode()).name())
@@ -181,32 +182,46 @@ public class ValidationService {
                 .hajjOfficeMakkah(plannedPackage.getHajjOfficeMakkah() + "")
                 .hajjOfficeMadina(plannedPackage.getHajjOfficeMadina() + "")
                 .build();
-        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(plannedPackage.getCompanyRefCode() + "_" + ECompanyType.fromId(plannedPackage.getCompanyTypeCode()).name(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
+
+        CompanyRitualSeasonBasicDto companyRitualSeasonDto = companyRitualSeasonBasicService.getLatestCompanyRitualSeasonByRitualSeason(plannedPackage.getCompanyRefCode() + "_" + ECompanyType.fromId(plannedPackage.getCompanyTypeCode()).name(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
         if (companyRitualSeasonDto != null) {
             ritualPackageDto.setCompanyRitualSeason(companyRitualSeasonDto);
-
         }
-        RitualPackageDto existingPackage = ritualPackageService.findByCodeAndRitual(plannedPackage.getPackageRefNumber().toString(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
 
-        if (existingPackage != null) {
-            ritualPackageDto.setId(existingPackage.getId());
-
-
-            List<ApplicantPackageDto> applicantPackageDtos = applicantPackageService.findByRitualPackage(existingPackage.getId());
-            List<PackageHousingDto> packageHousingDtos = packageHousingService.findByRitualPackageId(existingPackage.getId());
-            List<PackageTransportationDto> packageTransportationDtos = packageTransportationService.findByRitualPackageId(existingPackage.getId());
-
-            ritualPackageDto.setApplicantPackages(applicantPackageDtos);
-            ritualPackageDto.setPackageTransportations(packageTransportationDtos);
-            ritualPackageDto.setPackageHousings(packageHousingDtos);
-
-
+        //check if ritual package is exist
+        Long existingRitualPackageId = ritualPackageService.findIdByReferenceAndRitualTypeAndSeason(plannedPackage.getPackageRefNumber().toString(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
+        if (existingRitualPackageId != null) {
+            ritualPackageDto.setId(existingRitualPackageId);
         }
-        RitualPackageDto savedRitualPackage = ritualPackageService.save(ritualPackageDto);
+
+        //get the package transportation
+        if (plannedPackage.getPackageTransportations() != null) {
+            log.info("Start creating the package transportation for {} package reference number.", plannedPackage.getPackageRefNumber());
+            List<PackageTransportationBasicDto> packageTransportationBasicList = new ArrayList<>();
+            plannedPackage.getPackageTransportations().forEach(huicPackageTransportation -> {
+                PackageTransportationBasicDto packageTransportationDto = PackageTransportationBasicDto.builder()
+                        .typeCode(ETransportationType.fromId(huicPackageTransportation.getTypeCode()).name())
+                        .locationFromNameAr(huicPackageTransportation.getLocationFromNameAr())
+                        .locationFromNameEn(huicPackageTransportation.getLocationFromNameEn())
+                        .locationToNameAr(huicPackageTransportation.getLocationToNameAr())
+                        .locationToNameEn(huicPackageTransportation.getLocationToNameEn())
+                        .validityStart(DateUtils.toGregorian(huicPackageTransportation.getValidityStart()))
+                        .validityEnd(DateUtils.toGregorian(huicPackageTransportation.getValidityEnd()))
+                        .routeDetails(huicPackageTransportation.getRouteDetails())
+                        .ritualPackage(existingRitualPackageId == null ? ritualPackageDto : RitualPackageBasicWithDetailsDto.builder().id(existingRitualPackageId).build())
+                        .build();
+                packageTransportationBasicList.add(packageTransportationDto);
+            });
+            ritualPackageDto.setPackageTransportations(packageTransportationBasicList);
+        }
+
+        //get the package housing
         if (plannedPackage.getPackageHousings() != null) {
+            log.info("Start creating the package housing for {} package reference number.", plannedPackage.getPackageRefNumber());
+            List<PackageHousingBasicDto> packageHousingBasicList = new ArrayList<>();
             plannedPackage.getPackageHousings().forEach(huicPackageHousing -> {
-                JpaHousingMaster housingMaster = housingMasterRepository.findTopByHousingReferenceCodeOrderByCreationDateDesc(huicPackageHousing.getRefNumber().toString());
-                PackageHousingDto packageHousing = PackageHousingDto.builder()
+                HousingMasterDto housingMaster = housingMasterService.findLatestHousingMasterByReferenceCode(huicPackageHousing.getRefNumber().toString());
+                PackageHousingBasicDto packageHousing = PackageHousingBasicDto.builder()
                         .typeCode(housingMaster.getTypeCode())
                         .siteCode(housingMaster.getSiteCode())
                         .referenceNumber(huicPackageHousing.getRefNumber().toString())
@@ -220,50 +235,41 @@ public class ValidationService {
                         .isDefault(huicPackageHousing.isDefault())
                         .lat(housingMaster.getLat())
                         .lng(housingMaster.getLng())
-                        .ritualPackage(savedRitualPackage)
+                        .ritualPackage(existingRitualPackageId == null ? ritualPackageDto : RitualPackageBasicWithDetailsDto.builder().id(existingRitualPackageId).build())
                         .build();
-                PackageHousingDto savedPackageHousing = packageHousingService.save(packageHousing);
+                //get the package housing catering
                 if (huicPackageHousing.getPackageCaterings() != null) {
+                    log.info("Start creating the package housing catering for {} package reference number and {} housing master reference code.", plannedPackage.getPackageRefNumber(), housingMaster.getHousingReferenceCode());
+                    List<PackageCateringBasicDto> packageCateringBasicList = new ArrayList<>();
                     huicPackageHousing.getPackageCaterings().forEach(huicPackageCatering -> {
-                        PackageCateringDto packageCateringDto = PackageCateringDto.builder()
+                        PackageCateringBasicDto packageCateringDto = PackageCateringBasicDto.builder()
                                 .mealCode(huicPackageCatering.getMealCode())
                                 .mealTimeCode(EMealTime.fromId(huicPackageCatering.getMealTime()).name())
                                 .mealTypeCode(EMealType.fromId(huicPackageCatering.getMealType()).name())
                                 .descriptionAr(huicPackageCatering.getOptionDescriptionAr())
                                 .descriptionEn(huicPackageCatering.getOptionDescriptionEn())
                                 .isDefault(huicPackageCatering.isDefault())
-                                .packageHousing(savedPackageHousing)
+                                .packageHousing(packageHousing)
                                 .build();
-                        packageCateringService.save(packageCateringDto);
+                        packageCateringBasicList.add(packageCateringDto);
                     });
+                    packageHousing.setPackageCatering(packageCateringBasicList);
                 }
-
+                packageHousingBasicList.add(packageHousing);
             });
+            ritualPackageDto.setPackageHousings(packageHousingBasicList);
         }
-
-        if (plannedPackage.getPackageTransportations() != null) {
-            plannedPackage.getPackageTransportations().forEach(huicPackageTransportation -> {
-                PackageTransportationDto packageTransportationDto = PackageTransportationDto.builder()
-                        .typeCode(ETransportationType.fromId(huicPackageTransportation.getTypeCode()).name())
-                        .locationFromNameAr(huicPackageTransportation.getLocationFromNameAr())
-                        .locationFromNameEn(huicPackageTransportation.getLocationFromNameEn())
-                        .locationToNameAr(huicPackageTransportation.getLocationToNameAr())
-                        .locationToNameEn(huicPackageTransportation.getLocationToNameEn())
-                        .validityStart(DateUtils.toGregorian(huicPackageTransportation.getValidityStart()))
-                        .validityEnd(DateUtils.toGregorian(huicPackageTransportation.getValidityEnd()))
-                        .routeDetails(huicPackageTransportation.getRouteDetails())
-                        .ritualPackage(savedRitualPackage)
-                        .build();
-
-                packageTransportationService.save(packageTransportationDto);
-
-            });
+        RitualPackageBasicWithDetailsDto savedRitualPackageBasicWithDetails = ritualPackageBasicWithDetailsService.save(ritualPackageDto);
+        Long savedRitualPackageId = null;
+        if (savedRitualPackageBasicWithDetails != null) {
+            savedRitualPackageId = savedRitualPackageBasicWithDetails.getId();
         }
-
+        log.info("Finish savePlannedPackages for {} package reference number and ritual package with {} id saved.", plannedPackage.getPackageRefNumber(), savedRitualPackageId);
     }
 
     private void saveCompanies(HuicCompany huicCompany) {
         Long existingCompanyId = companyRepository.findIdByCode(huicCompany.getCompanyRefCode() + "_" + ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name());
+        // in case of no establishment and ritual type is internal then link it with establishment 8, otherwise no business so far.
         CompanyDto companyDto = CompanyDto.builder()
                 .code(huicCompany.getCompanyRefCode() + "_" + ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
                 .labelAr(huicCompany.getCompanyNameAr())
@@ -276,7 +282,7 @@ public class ValidationService {
                 .crNumber(huicCompany.getCrNumber() + "")
                 .typeCode(ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
                 .countryCode(huicCompany.getCountry() + "")
-                .establishmentRefCode(huicCompany.getEstablishmentId() != null ? huicCompany.getEstablishmentId() : 9)
+                .establishmentRefCode((huicCompany.getEstablishmentId() == null && huicCompany.getRitualTypeCode().intValue() == ERitualType.INTERNAL_HAJJ.getId()) ? 8 : huicCompany.getEstablishmentId())
                 .build();
         if (existingCompanyId != null) {
             companyDto.setId(existingCompanyId);
@@ -333,7 +339,8 @@ public class ValidationService {
     }
 
     private void saveHousingMasterData(HuicHousingMaster huicHousingMaster) {
-        JpaHousingMaster housingMaster = housingMasterRepository.findTopByHousingReferenceCodeOrderByCreationDateDesc(huicHousingMaster.getHouseRefNumber() + "");
+        //TODO: replace this by findId only method, no need for the whole object.
+        HousingMasterDto existingHousingMaster = housingMasterService.findLatestHousingMasterByReferenceCode(huicHousingMaster.getHouseRefNumber() + "");
         HousingMasterDto housingMasterDto = HousingMasterDto.builder()
                 .housingReferenceCode(huicHousingMaster.getHouseRefNumber() + "")
                 .addressAr(huicHousingMaster.getAddressAr())
@@ -347,12 +354,10 @@ public class ValidationService {
                 .typeCode(EHousingType.fromId(huicHousingMaster.getTypeCode()).name())
                 .siteCode(huicHousingMaster.getSiteCode() != null ? EHousingSite.fromId(huicHousingMaster.getSiteCode()).name() : null)
                 .build();
-        if (housingMaster != null) {
-            housingMasterDto.setId(housingMaster.getId());
+        if (existingHousingMaster != null) {
+            housingMasterDto.setId(existingHousingMaster.getId());
         }
-        housingMasterRepository.save((JpaHousingMaster) findMapper(HousingMasterDto.class).toEntity(housingMasterDto, mappingContext));
-
-
+        housingMasterService.save(housingMasterDto);
     }
 
     private void saveRitualSeasons(HuicRitualSeason huicRitualSeason) {
@@ -794,7 +799,7 @@ public class ValidationService {
 
     public void saveStaffRitual(CompanyStaffRitualDto companyStaffRitual) {
         CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(companyStaffRitual.getIdNumber(), companyStaffRitual.getPassportNumber(), companyStaffRitual.getDateOfBirthGregorian(), companyStaffRitual.getDateOfBirthHijri());
-        CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
+        CompanyStaffDigitalIdBasicDto companyStaffDigitalId = companyStaffDigitalIdBasicService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
         CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
         //existingStaff.setCompanyRitualSeason(companyRitualSeasonDto);
         if (companyStaffDigitalId != null) {
@@ -803,7 +808,7 @@ public class ValidationService {
             // if no cards for digitalId and SEASON
             if (companyStaffCardDtos.isEmpty()) {
                 CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
+                companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
                 companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
                 companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                 companyStaffCardService.save(companyStaffCardDto);
@@ -825,7 +830,7 @@ public class ValidationService {
             List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
             if (companyStaffCards.isEmpty()) {
                 CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
+                companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
                 companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
                 companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                 companyStaffCardService.save(companyStaffCardDto);
@@ -852,7 +857,7 @@ public class ValidationService {
 
     public void saveStaffFullRitual(CompanyStaffRitualDto companyStaffRitual, long staffId) {
         CompanyStaffDto existingStaff = companyStaffService.findOne(staffId);
-        CompanyStaffDigitalIdDto companyStaffDigitalId = companyStaffDigitalIdService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
+        CompanyStaffDigitalIdBasicDto companyStaffDigitalId = companyStaffDigitalIdBasicService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
         CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
         //existingStaff.setCompanyRitualSeason(companyRitualSeasonDto);
         if (companyStaffDigitalId != null) {
@@ -861,7 +866,7 @@ public class ValidationService {
             // if no cards for digitalId and SEASON
             if (companyStaffCardDtos.isEmpty()) {
                 CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
+                companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
                 companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
                 companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                 companyStaffCardService.save(companyStaffCardDto);
@@ -883,7 +888,7 @@ public class ValidationService {
             List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
             if (companyStaffCards.isEmpty()) {
                 CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
-                companyStaffCardDto.setCompanyStaffDigitalId(companyStaffDigitalId);
+                companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
                 companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
                 companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
                 companyStaffCardService.save(companyStaffCardDto);

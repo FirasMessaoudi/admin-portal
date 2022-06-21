@@ -12,6 +12,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualStep;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
+import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.data.huic.ValidationService;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
@@ -83,6 +84,7 @@ public class ItemWriter {
     private final ApplicantLiteService applicantLiteService;
     private final ValidationService validationService;
     private final CompanyRitualStepRepository companyRitualStepRepository;
+    private final CompanyRitualStepService companyRitualStepService;
     private final CompanyRitualStepLookupService companyRitualStepLookupService;
     private final PackageHousingService packageHousingService;
     private final ApplicantPackageHousingService applicantPackageHousingService;
@@ -289,13 +291,13 @@ public class ItemWriter {
                 GroupDataDto groupDataDto = (GroupDataDto) entry.getValue();
                 CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], groupDataDto.getRitualTypeCode(), seasonYear);
                 if (companyRitualSeasonDto == null) {
-                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(4)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(5)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
                     return;
                 }
                 // String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
                 ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
                 if (applicantGroupDto == null) {
-                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(4)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(5)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
                     return;
                 }
                 ApplicantLiteDto applicantLiteDto = applicantLiteService.findByBasicInfo(groupDataDto.getIdNumber(), groupDataDto.getPassportNumber(), groupDataDto.getNationalityCode());
@@ -380,33 +382,37 @@ public class ItemWriter {
                 CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationalityCode());
                 // String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
                 ApplicantGroupDto existingGroup = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupMainDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
-                if (existingGroup != null) {
-                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.DUPLICATE_VALUE.getMessage())).valid(false).build());
-                    return;
-
-                }
                 ApplicantGroupDto applicantGroupDto = ApplicantGroupDto.builder()
                         .groupLeader(existingStaff)
                         .groupName(groupMainDataDto.getGroupName())
                         .companyRitualSeason(companyRitualSeasonDto)
                         .referenceNumber(groupMainDataDto.getGroupReferenceNumber())
                         .build();
-                savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(applicantGroupDto, mappingContext));
-                List<CompanyRitualStepLookupDto> companyRitualStepLookupDtos = companyRitualStepLookupService.findAllWithLang();
-                companyRitualStepLookupDtos.forEach(companyRitualStepLookupDto -> {
-                    JpaCompanyRitualStep companyRitualStep = new JpaCompanyRitualStep();
-                    companyRitualStep.setStepCode(companyRitualStepLookupDto.getCode());
-                    companyRitualStep.setStepIndex(companyRitualStepLookupDto.getStepIndex());
-                    companyRitualStep.setLocationLat(companyRitualStepLookupDto.getLocationLat());
-                    companyRitualStep.setLocationLng(companyRitualStepLookupDto.getLocationLng());
-                    //TODO: to be checked
-                    companyRitualStep.setLocationNameAr("");
-                    companyRitualStep.setLocationNameEn("");
-                    companyRitualStep.setTime(new Date());
-                    companyRitualStep.setApplicantGroup((JpaApplicantGroup) savedItem);
-                    companyRitualStepRepository.save(companyRitualStep);
+                if (existingGroup != null) {
+                    applicantGroupDto.setId(existingGroup.getId());
+                    applicantGroupDto.setCompanyRitualSteps(existingGroup.getCompanyRitualSteps());
+                    applicantGroupDto.setGroupApplicantLists(existingGroup.getGroupApplicantLists());
 
-                });
+                }
+
+                savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(applicantGroupDto, mappingContext));
+                if (existingGroup == null) {
+                    List<CompanyRitualStepLookupDto> companyRitualStepLookupDtos = companyRitualStepLookupService.findAllWithLang();
+                    companyRitualStepLookupDtos.forEach(companyRitualStepLookupDto -> {
+                        JpaCompanyRitualStep companyRitualStep = new JpaCompanyRitualStep();
+                        companyRitualStep.setStepCode(companyRitualStepLookupDto.getCode());
+                        companyRitualStep.setStepIndex(companyRitualStepLookupDto.getStepIndex());
+                        companyRitualStep.setLocationLat(companyRitualStepLookupDto.getLocationLat());
+                        companyRitualStep.setLocationLng(companyRitualStepLookupDto.getLocationLng());
+                        //TODO: to be checked
+                        companyRitualStep.setLocationNameAr("");
+                        companyRitualStep.setLocationNameEn("");
+                        companyRitualStep.setTime(new Date());
+                        companyRitualStep.setApplicantGroup((JpaApplicantGroup) savedItem);
+                        companyRitualStepRepository.save(companyRitualStep);
+
+                    });
+                }
 
                 savedItems.add(savedItem);
                 try {
@@ -572,7 +578,7 @@ public class ItemWriter {
                     // copy properties from company staff full data to company staff
 
                    // BeanUtils.copyProperties(staff, companyStaffFullData);
-                    CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
+                    CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getNationalityCode());
                     // if record exists already in DB we need to update it
                     if (existingStaff != null) {
                         validationService.updateExistingStaff(staff, existingStaff);

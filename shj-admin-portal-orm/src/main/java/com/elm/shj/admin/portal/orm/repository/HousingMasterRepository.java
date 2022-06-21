@@ -6,6 +6,8 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.JpaHousingMaster;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 /**
  * Repository for housing master  table.
  *
@@ -15,5 +17,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface HousingMasterRepository extends JpaRepository<JpaHousingMaster, Long> {
     boolean existsByHousingReferenceCode(String code);
 
-    JpaHousingMaster findTopByHousingReferenceCodeOrderByCreationDateDesc(String refNumber);
+    Optional<JpaHousingMaster> findTopByHousingReferenceCodeOrderByCreationDateDesc(String refNumber);
 }

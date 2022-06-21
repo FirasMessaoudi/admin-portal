@@ -40,4 +40,10 @@ public class ApplicantRitualCardLiteDto implements Serializable {
     private String leaderMobile;
     private String nationalityCode;
     private String companyName;
+    private String idNumber;
+    private String cardNumber;
+    private String companyNameAr;
+    private String establishmentNameAr;
+    private String establishmentNameEn;
+    private Integer establishmentId;
 }
