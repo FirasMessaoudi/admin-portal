@@ -291,13 +291,13 @@ public class ItemWriter {
                 GroupDataDto groupDataDto = (GroupDataDto) entry.getValue();
                 CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], groupDataDto.getRitualTypeCode(), seasonYear);
                 if (companyRitualSeasonDto == null) {
-                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(4)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(5)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
                     return;
                 }
                 // String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
                 ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
                 if (applicantGroupDto == null) {
-                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(4)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(5)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
                     return;
                 }
                 ApplicantLiteDto applicantLiteDto = applicantLiteService.findByBasicInfo(groupDataDto.getIdNumber(), groupDataDto.getPassportNumber(), groupDataDto.getNationalityCode());
