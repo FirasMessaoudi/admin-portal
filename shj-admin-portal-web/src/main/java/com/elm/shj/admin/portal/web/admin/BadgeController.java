@@ -52,4 +52,14 @@ public class BadgeController {
         return null;
     }
 
+    @GetMapping("/applicant/back/{digitalId}")
+    public BadgeVO generateApplicantBackBadge(@PathVariable String digitalId) {
+        //TODO: do some validation for the passed digital id and return error message if needed
+        if (digitalId.length() == 14) {
+            //valid uin
+            return badgeService.generateBackBadge(digitalId);
+        }
+        return null;
+    }
+
 }

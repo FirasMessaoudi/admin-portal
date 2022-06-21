@@ -761,12 +761,11 @@ public class ValidationService {
         staff.setId(existingStaff.getId());
         staff.setDigitalIds(existingStaff.getDigitalIds());
         staff.setDataRequestRecordId(existingStaff.getDataRequestRecordId());
-        staff.setApplicantGroups(existingStaff.getApplicantGroups());
+//        staff.setApplicantGroups(existingStaff.getApplicantGroups());
     }
 
     public void updateGroupApplicantList(GroupApplicantListDto groupApplicantList, GroupApplicantListDto existingGroupApplicantList) {
         groupApplicantList.setId(existingGroupApplicantList.getId());
-        groupApplicantList.setApplicantGroup(existingGroupApplicantList.getApplicantGroup());
         groupApplicantList.setApplicantUin(existingGroupApplicantList.getApplicantUin());
     }
 

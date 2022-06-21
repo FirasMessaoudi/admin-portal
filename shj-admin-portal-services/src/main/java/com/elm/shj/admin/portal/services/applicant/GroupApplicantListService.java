@@ -113,4 +113,8 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
         log.info("GroupApplicantListService ::: Start findApplicantEstablishment  uin: {}", uin);
         return groupApplicantListRepository.findApplicantEstablishment(uin);
     }
+
+    public GroupApplicantListDto findByUin(String uin){
+        return  getMapper().fromEntity(groupApplicantListRepository.findTopByApplicantUinOrderByCreationDateDesc(uin).orElse(null), mappingContext);
+    }
 }

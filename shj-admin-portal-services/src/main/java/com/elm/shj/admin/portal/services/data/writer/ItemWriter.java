@@ -5,10 +5,7 @@ package com.elm.shj.admin.portal.services.data.writer;
 
 import com.elm.dcc.foundation.commons.core.mapper.CycleAvoidingMappingContext;
 import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
-import com.elm.shj.admin.portal.orm.entity.JpaCompanyRitualStep;
+import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
@@ -68,6 +65,7 @@ public class ItemWriter {
     private final ApplicationContext context;
     private final ApplicantService applicantService;
     private final ApplicantGroupService applicantGroupService;
+    private final ApplicantGroupBasicService applicantGroupBasicService;
     private final ApplicantHealthSpecialNeedsRepository applicantHealthSpecialNeedsRepository;
     private final DataRequestRecordRepository dataRequestRecordRepository;
     private final ApplicantPackageService applicantPackageService;
@@ -108,7 +106,7 @@ public class ItemWriter {
         repositoryRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, ApplicantRitualRepository.class);
         repositoryRegistry.put(EDataSegment.STAFF_MAIN_DATA, CompanyStaffRepository.class);
         repositoryRegistry.put(EDataSegment.STAFF_FULL_MAIN_DATA, CompanyStaffRepository.class);
-        repositoryRegistry.put(EDataSegment.MAIN_GROUP_DATA, ApplicantGroupRepository.class);
+        repositoryRegistry.put(EDataSegment.MAIN_GROUP_DATA, ApplicantGroupBasicRepository.class);
         repositoryRegistry.put(EDataSegment.GROUP_DATA, GroupApplicantListRepository.class);
         repositoryRegistry.put(EDataSegment.APPLICANT_HOUSING_DATA, ApplicantPackageHousingRepository.class);
 
@@ -121,7 +119,7 @@ public class ItemWriter {
         mapperRegistry.put(EDataSegment.APPLICANT_RITUAL_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantRitualDto.class)));
         mapperRegistry.put(EDataSegment.STAFF_MAIN_DATA, Objects.requireNonNull(validationService.findMapper(CompanyStaffDto.class)));
         mapperRegistry.put(EDataSegment.STAFF_FULL_MAIN_DATA, Objects.requireNonNull(validationService.findMapper(CompanyStaffDto.class)));
-        mapperRegistry.put(EDataSegment.MAIN_GROUP_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantGroupDto.class)));
+        mapperRegistry.put(EDataSegment.MAIN_GROUP_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantGroupBasicDto.class)));
         mapperRegistry.put(EDataSegment.GROUP_DATA, Objects.requireNonNull(validationService.findMapper(GroupApplicantListDto.class)));
         mapperRegistry.put(EDataSegment.APPLICANT_HOUSING_DATA, Objects.requireNonNull(validationService.findMapper(ApplicantPackageHousingDto.class)));
 
@@ -309,7 +307,7 @@ public class ItemWriter {
                 }
 
                 // check applicant is already exist for that group then no need to add new update the existin applicant
-                GroupApplicantListDto existingGroupApplicant = groupApplicantListService.findByUin(applicantLiteDto.getDigitalIds().get(0).getUin(), applicantGroupDto.getId());
+                GroupApplicantListDto existingGroupApplicant = groupApplicantListService.findByUin(applicantLiteDto.getDigitalIds().get(0).getUin());
 
                 GroupApplicantListDto groupApplicantListDto = GroupApplicantListDto.builder()
                         .applicantGroup(applicantGroupDto)
@@ -379,38 +377,32 @@ public class ItemWriter {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(ritualTypeCodeCellIndex)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage())).valid(false).build());
                     return;
                 }
-                CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationalityCode());
-                // String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
-                ApplicantGroupDto existingGroup = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupMainDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
-                ApplicantGroupDto applicantGroupDto = ApplicantGroupDto.builder()
-                        .groupLeader(existingStaff)
+                Long existingStaffId = companyStaffService.findIdByBasicInfo(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationalityCode());
+                Long existingApplicantGroupId = applicantGroupBasicService.findIdByReferenceNumberAndCompanyRitualSeason(groupMainDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
+                ApplicantGroupBasicDto applicantGroupDto = ApplicantGroupBasicDto.builder()
+                        .groupLeaderId(existingStaffId)
                         .groupName(groupMainDataDto.getGroupName())
-                        .companyRitualSeason(companyRitualSeasonDto)
+                        .companyRitualSeasonId(companyRitualSeasonDto.getId())
                         .referenceNumber(groupMainDataDto.getGroupReferenceNumber())
                         .build();
-                if (existingGroup != null) {
-                    applicantGroupDto.setId(existingGroup.getId());
-                    applicantGroupDto.setCompanyRitualSteps(existingGroup.getCompanyRitualSteps());
-                    applicantGroupDto.setGroupApplicantLists(existingGroup.getGroupApplicantLists());
-
+                if (existingApplicantGroupId != null) {
+                    applicantGroupDto.setId(existingApplicantGroupId);
                 }
 
                 savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(applicantGroupDto, mappingContext));
-                if (existingGroup == null) {
+                if (existingApplicantGroupId == null) {
                     List<CompanyRitualStepLookupDto> companyRitualStepLookupDtos = companyRitualStepLookupService.findAllWithLang();
                     companyRitualStepLookupDtos.forEach(companyRitualStepLookupDto -> {
-                        JpaCompanyRitualStep companyRitualStep = new JpaCompanyRitualStep();
-                        companyRitualStep.setStepCode(companyRitualStepLookupDto.getCode());
-                        companyRitualStep.setStepIndex(companyRitualStepLookupDto.getStepIndex());
-                        companyRitualStep.setLocationLat(companyRitualStepLookupDto.getLocationLat());
-                        companyRitualStep.setLocationLng(companyRitualStepLookupDto.getLocationLng());
-                        //TODO: to be checked
-                        companyRitualStep.setLocationNameAr("");
-                        companyRitualStep.setLocationNameEn("");
-                        companyRitualStep.setTime(new Date());
-                        companyRitualStep.setApplicantGroup((JpaApplicantGroup) savedItem);
-                        companyRitualStepRepository.save(companyRitualStep);
-
+                        CompanyRitualStepDto companyRitualStep = CompanyRitualStepDto.builder()
+                        .stepCode(companyRitualStepLookupDto.getCode())
+                        .stepIndex(companyRitualStepLookupDto.getStepIndex())
+                        .locationLat(companyRitualStepLookupDto.getLocationLat())
+                        .locationLng(companyRitualStepLookupDto.getLocationLng())
+                        .locationNameAr("")
+                        .locationNameEn("")
+                        .time(new Date())
+                        .applicantGroup((ApplicantGroupDto.builder().id(((JpaApplicantGroupBasic) savedItem).getId()).build())).build();
+                        companyRitualStepService.save(companyRitualStep);
                     });
                 }
 
@@ -444,8 +436,6 @@ public class ItemWriter {
                         }
                     });
                 });
-
-
             });
             // update saved items
             repository.saveAll(savedItems);
