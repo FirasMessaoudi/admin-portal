@@ -110,6 +110,9 @@ public class IntegrationWsController {
     private final ApplicantIncidentService applicantIncidentService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
+    private final ComplaintStatusLookupService complaintStatusLookupService;
+    private final CityLookupService cityLookupService;
+    private final ComplaintTypeLookupService complaintTypeLookupService;
     private final CompanyTypeLookupService companyTypeLookupService;
     private final ChatContactService chatContactService;
     private final ApplicantRitualService applicantRitualService;
@@ -1354,4 +1357,21 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
     }
 
+    @GetMapping("/complaint-types/list")
+    public ResponseEntity<WsResponse<?>> listComplaintStatus() {
+        log.debug("list complaint type...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(complaintTypeLookupService.findAll()).build());
+    }
+
+    @GetMapping("/complaint-sts/list")
+    public ResponseEntity<WsResponse<?>> listComplaintTypes() {
+        log.debug("list complaint statuses...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(complaintStatusLookupService.findAll()).build());
+    }
+
+    @GetMapping("/city/list")
+    public ResponseEntity<WsResponse<?>> listCities() {
+        log.debug("list cities...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(cityLookupService.findAll()).build());
+    }
 }
