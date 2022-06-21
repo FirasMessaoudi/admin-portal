@@ -525,15 +525,14 @@ public class IntegrationWsController {
      * to be used by applicant portal
      *
      * @param uin      the applicant's group leaders details by  uin
-     * @param seasonId the applicant's group leaders details by  season id
      * @return the company staff list
      */
-    @GetMapping("/find/company-staff/group-leader/{uin}/{seasonId}")
-    public ResponseEntity<WsResponse<?>> findGroupLeaderByUinAndSeasonId(@PathVariable String uin, @PathVariable long seasonId) {
+    @GetMapping("/find/company-staff/group-leader/{uin}")
+    public ResponseEntity<WsResponse<?>> findGroupLeaderByUinAndSeasonId(@PathVariable String uin) {
         log.debug("Handler for {}", "Find company employee by uin and season ");
-        Optional<CompanyStaffDto> groupLeader = companyStaffService.findGroupLeaderByApplicantUin(uin, seasonId);
-        if (groupLeader.isPresent()) {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(groupLeader.get()).build());
+       String mobileNumber = companyStaffService.findGroupLeaderMobileByApplicantUin(uin);
+        if (mobileNumber != null) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(mobileNumber).build());
         }
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())

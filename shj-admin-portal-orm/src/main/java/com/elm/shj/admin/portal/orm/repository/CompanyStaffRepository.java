@@ -107,16 +107,8 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     @Query("SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE s.idNumber=:idNumber AND sdi.statusCode=:statusCode")
     JpaCompanyStaff findByIdNumber(@Param("idNumber") String idNumber, @Param("statusCode") String statusCode);
 
-    //TODO(aflaifel): Saleem to revert back this update
-    @Query("Select staff " +
-            "from JpaApplicantGroup g " +
-            "join g.groupApplicantLists  list " +
-            "join g.groupLeader staff " +
-            "join JpaApplicantPackage package on CAST(package.applicantUin as text) = list.applicantUin " +
-            "where list.applicantUin = :applicantUin " +
-            "and package.id = :packageId " +
-            "and staff.titleCode = :titleCode")
-    JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(@Param("applicantUin")String applicantUin,@Param("packageId") long packageId,@Param("titleCode") String titleCode);
+
+    JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(String applicantUin, long companyRitualSeason, String titleCode);
 
     @Query("Select staff.mobileNumber from JpaApplicantGroup ag join ag.groupApplicantLists gal join ag.groupLeader staff WHERE gal.applicantUin = :applicantUin")
     String findGroupLeaderMobileNumberByApplicantUin(@Param("applicantUin") String applicantUin);

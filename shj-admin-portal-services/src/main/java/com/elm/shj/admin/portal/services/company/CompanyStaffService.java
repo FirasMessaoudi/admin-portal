@@ -126,6 +126,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return Optional.empty();
     }
 
+    public String findGroupLeaderMobileByApplicantUin(String applicantUin) {
+        return companyStaffRepository.findGroupLeaderMobileNumberByApplicantUin(applicantUin);
+    }
+
     /**
      * @param idNumber
      * @param passportNumber
