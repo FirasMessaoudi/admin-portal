@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
 import lombok.*;
 
 import java.io.Serializable;
@@ -42,6 +43,8 @@ public class CompanyRitualStepDto implements Serializable {
     private String locationNameAr;
 
     private String locationNameEn;
+
+    private ApplicantGroupDto applicantGroup;
 
     private Date creationDate;
 

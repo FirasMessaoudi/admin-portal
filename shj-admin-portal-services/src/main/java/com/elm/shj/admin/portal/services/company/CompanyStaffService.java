@@ -183,6 +183,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return getMapper().fromEntity(companyStaffRepository.findByBasicInfo(idNumber, passportNumber, nationalityCode), mappingContext);
     }
 
+    public Long findIdByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
+        return companyStaffRepository.findIdByBasicInfo(idNumber, passportNumber, nationalityCode);
+    }
+
     /**
      * @param idNumber
      * @param passportNumber
