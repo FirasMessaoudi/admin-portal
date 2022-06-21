@@ -107,6 +107,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     @Query("SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE s.idNumber=:idNumber AND sdi.statusCode=:statusCode")
     JpaCompanyStaff findByIdNumber(@Param("idNumber") String idNumber, @Param("statusCode") String statusCode);
 
+    //TODO(aflaifel): Saleem to revert back this update
     @Query("Select staff " +
             "from JpaApplicantGroup g " +
             "join g.groupApplicantLists  list " +
@@ -116,6 +117,9 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "and package.id = :packageId " +
             "and staff.titleCode = :titleCode")
     JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(@Param("applicantUin")String applicantUin,@Param("packageId") long packageId,@Param("titleCode") String titleCode);
+
+    @Query("Select staff.mobileNumber from JpaApplicantGroup ag join ag.groupApplicantLists gal join ag.groupLeader staff WHERE gal.applicantUin = :applicantUin")
+    String findGroupLeaderMobileNumberByApplicantUin(@Param("applicantUin") String applicantUin);
 
     @Modifying
     @Query("update JpaCompanyStaff staff set staff.countryCode = :countryCode, staff.email = :email, " +
