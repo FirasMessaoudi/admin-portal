@@ -162,24 +162,26 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                 sendNotificationTemplateToCompanyStaff(savedNotificationTemplate, companyStaff);
             }
             else if(categorizing.getNotificationCategory() == 3){
+                applicants = applicantService.findAllByCriteria(notificationTemplate.getNotificationTemplateCategorizing(), null);
+                sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
+            }
+            else if(categorizing.getNotificationCategory() == 4){
+
                 if (categorizing.getSelectedApplicants() != null) {
                     List<Long> applicantIds = Arrays.stream(categorizing.getSelectedApplicants().split(",")).map(Long::parseLong).collect(Collectors.toList());
                     applicants = applicantService.findAllByIds(applicantIds);
                     sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
                 }
             }
-            else if(categorizing.getNotificationCategory() == 4){
-                applicants = applicantService.findAllByCriteria(notificationTemplate.getNotificationTemplateCategorizing(), null);
-                sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
-            }
             else if(categorizing.getNotificationCategory()==5){
-                companyStaff = companyStaffService.findAllByCriteria(notificationTemplate.getNotificationTemplateCategorizing(), null);
-                sendNotificationTemplateToCompanyStaff(savedNotificationTemplate, companyStaff);
+                //companyStaff = companyStaffService.findAllByCriteria(notificationTemplate.getNotificationTemplateCategorizing(), null);
+                //sendNotificationTemplateToCompanyStaff(savedNotificationTemplate, companyStaff);
+                if (categorizing.getSelectedStaff() != null) {
+                    List<Long> staffIds = Arrays.stream(categorizing.getSelectedApplicants().split(",")).map(Long::parseLong).collect(Collectors.toList());
+                    companyStaff = companyStaffService.findAllByIds(staffIds);
+                    sendNotificationTemplateToCompanyStaff(savedNotificationTemplate, companyStaff);
+                }
             }
-        }
-        else {
-            applicants = applicantService.findAllRegisteredAndHavingActiveRitual();
-            sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
         }
 
     }

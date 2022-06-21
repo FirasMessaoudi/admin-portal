@@ -73,14 +73,23 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
         returnedDto.setNationalityCode(applicantRitual.get().getApplicant().getNationalityCode().toUpperCase());
         returnedDto.setPhoto(applicantRitual.get().getApplicant().getPhoto());
         returnedDto.setHijriSeason(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getSeasonYear());
+        returnedDto.setIdNumber(applicantRitual.get().getApplicant().getIdNumber() != null ? applicantRitual.get().getApplicant().getIdNumber() : applicantRitual.get().getApplicant().getPassportNumber());
         //TODO: get the first leader, this logic has to be reviewed when card business requirement is more clear.
-        if(groupLeader.isPresent()){
+        if (groupLeader.isPresent()) {
             returnedDto.setLeaderMobile(groupLeader.get().getMobileNumber());
             returnedDto.setLeaderNameAr(groupLeader.get().getFullNameAr());
             returnedDto.setLeaderNameEn(groupLeader.get().getFullNameEn());
         }
         returnedDto.setCompanyName(company.getLabelEn());
+        returnedDto.setCompanyNameAr(company.getLabelAr());
         returnedDto.setCardId(applicantCardDto.getId());
+        returnedDto.setCardNumber(applicantCardDto.getReferenceNumber());
+        returnedDto.setEstablishmentId(company.getEstablishmentRefCode() != null ? company.getEstablishmentRefCode() : 9);
+        CompanyLiteDto establishment = companyService.findByBasicInfo(company.getEstablishmentRefCode() != null ? company.getEstablishmentRefCode() + "" : 9 + "", 1);
+        if (establishment != null) {
+            returnedDto.setEstablishmentNameAr(establishment.getLabelAr());
+            returnedDto.setEstablishmentNameEn(establishment.getLabelEn());
+        }
         return Optional.of(returnedDto);
     }
 

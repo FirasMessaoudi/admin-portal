@@ -125,32 +125,6 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
         return super.save(dto);
     }
 
-    /**
-     * @param staffId
-     * @param season
-     * @return list of companyStaffDigitalId
-     */
-    public CompanyStaffDigitalIdDto findByBasicInfo(long staffId, int season) {
-        Optional<JpaCompanyStaffDigitalId> digitalId=  companyStaffDigitalIdRepository.findByBasicInfo(staffId,season,EDigitalIdStatus.VALID.name()) ;
-        if (digitalId!=null && digitalId.isPresent()) {
-            return getMapper().fromEntity(digitalId.get(), mappingContext);
-        }
-        return null;
-
-    }
-
-    /**
-     * @param suin
-     * @param season
-     * @return  companyStaffDigitalId
-     */
-    public CompanyStaffDigitalIdDto findBySuinAndSeasonYearAndStatusCode(String suin, int season) {
-        Optional<JpaCompanyStaffDigitalId> digitalId=  companyStaffDigitalIdRepository.findBySuinAndSeasonYearAndStatusCode(suin,season, EDigitalIdStatus.VALID.name()) ;
-        if (digitalId.isPresent()) {
-            return getMapper().fromEntity(digitalId.get(), mappingContext);
-        }
-        return null;
-    }
 
     /**
      * Find all staff without digital IDs

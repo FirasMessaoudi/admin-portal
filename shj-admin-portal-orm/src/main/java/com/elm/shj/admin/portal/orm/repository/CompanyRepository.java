@@ -50,4 +50,6 @@ public interface CompanyRepository extends JpaRepository<JpaCompany, Long> {
     @Query("select c.id from JpaCompany c where c.code = :code")
     Long findIdByCode(@Param("code") String code);
 
+    JpaCompany findByCode(String code);
+
 }

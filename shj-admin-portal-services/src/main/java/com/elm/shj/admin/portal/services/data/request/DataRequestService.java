@@ -82,7 +82,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public Page<DataRequestDto> findAllOrganizerDataRequest(long companyRefCode, String companyTypeCode, Pageable pageable) {
 
-        return mapPage(dataRequestRepository.finOrganizerDataRequests(Arrays.asList(11L, 12L, 13L), String.valueOf(companyRefCode) + "_" + companyTypeCode, pageable));
+        return mapPage(dataRequestRepository.finOrganizerDataRequests(Arrays.asList(11L, 12L, 13L, 14L), String.valueOf(companyRefCode) + "_" + companyTypeCode, pageable));
     }
 
     /**

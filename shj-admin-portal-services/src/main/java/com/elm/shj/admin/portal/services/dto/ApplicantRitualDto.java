@@ -43,11 +43,11 @@ public class ApplicantRitualDto implements Serializable {
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     @WithRitualPackage
-    @OnlyCharacters(min = 1, max = 50, allowNumbers = true, allowEmpty = false, allowSpecialChars = true)
+    //@OnlyCharacters(min = 1, max = 50, allowNumbers = true, allowEmpty = false, allowSpecialChars = true)
     @CellIndex(index = 4)
     private String packageReferenceNumber;
 
-    @OnlyCharacters(min = 0, max = 50, allowNumbers = true)
+    //@OnlyCharacters(min = 0, max = 50, allowNumbers = true)
     @CellIndex(index = 5)
     private String groupReferenceNumber;
 
@@ -59,7 +59,7 @@ public class ApplicantRitualDto implements Serializable {
     @CellIndex(index = 7)
     private String permitNumber;
 
-    @OnlyCharacters(min = 0, max = 50, allowNumbers = true, allowSpecialChars = true)
+    //@OnlyCharacters(min = 0, max = 50, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 8)
     private String insuranceNumber;
 
@@ -67,11 +67,11 @@ public class ApplicantRitualDto implements Serializable {
     @CellIndex(index = 9)
     private String borderNumber;
 
-    @OnlyCharacters(min = 0, max = 20, allowNumbers = true, allowSpecialChars = true)
+    //@OnlyCharacters(min = 0, max = 20, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 10)
     private String busNumber;
 
-    @OnlyCharacters(min = 0, max = 6, allowNumbers = true, allowSpecialChars = true)
+    //@OnlyCharacters(min = 0, max = 6, allowNumbers = true, allowSpecialChars = true)
     @CellIndex(index = 11)
     private String seatNumber;
 

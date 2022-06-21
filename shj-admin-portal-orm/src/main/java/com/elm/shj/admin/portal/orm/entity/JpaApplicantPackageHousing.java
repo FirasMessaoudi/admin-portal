@@ -55,6 +55,24 @@ public class JpaApplicantPackageHousing implements Serializable {
     @JoinColumn(name = "package_housing_id")
     private JpaPackageHousing packageHousing;
 
+    @Column(name = "site_camp_ref_code")
+    private String siteCampRefCode;
+
+    @Column(name = "site_tent")
+    private String siteTent;
+
+    @Column(name = "site_floor")
+    private String siteFloor;
+
+    @Column(name = "site_corridor")
+    private String siteCorridor;
+
+    @Column(name = "site_room")
+    private String siteRoom;
+
+    @Column(name = "site_bed_number")
+    private String siteBedNumber;
+
     @PrePersist
     public void prePersist() {
         creationDate = new Date();

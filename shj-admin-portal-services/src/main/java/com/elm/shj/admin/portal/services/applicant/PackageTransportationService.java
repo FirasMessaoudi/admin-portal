@@ -27,7 +27,7 @@ public class PackageTransportationService extends GenericService<JpaPackageTrans
     private final PackageTransportationRepository packageTransportationRepository;
 
     public List<PackageTransportationDto> findByRitualPackageId(long id) {
-
+        log.info("Start findByRitualPackageId {} id", id);
         return mapList(packageTransportationRepository.findByRitualPackageId(id));
     }
 

@@ -32,7 +32,9 @@ public class CompanyRitualStepLookupDto implements Serializable {
     private String description;
     private Date creationDate;
     private String summary;
-    private String stepIndex;
+    private long stepIndex;
     private String editMode;
+    private double locationLat;
+    private double locationLng;
 
 }

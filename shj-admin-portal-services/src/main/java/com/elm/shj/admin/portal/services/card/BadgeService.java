@@ -22,7 +22,6 @@ import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.pdf417.PDF417Writer;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -54,12 +53,12 @@ import java.util.*;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class BadgeService {
 
-    private final static int BADGE_WIDTH = (int) Math.round(5.74 * 96);
-    private final static int BADGE_HEIGHT = (int) Math.round(9.12 * 96);
+    private final static int BADGE_WIDTH = (int) Math.round(5.71 * 95);
+    private final static int BADGE_HEIGHT = (int) Math.round(8.52 * 96);
     private final static int ICON_WIDTH = (int) Math.round(0.42 * 96);
     private final static int ICON_HEIGHT = (int) Math.round(0.48 * 96);
-    private final static int PHOTO_MAX_HEIGHT = (int) Math.round(2.58 * 96);
-    private final static int QR_CODE_MAX_HEIGHT = (int) Math.round(2.61 * 68);
+    private final static int PHOTO_MAX_HEIGHT = (int) Math.round(1.85 * 96);
+    private final static int QR_CODE_MAX_HEIGHT = (int) Math.round(1.9 * 68);
 
     private final static int MOHU_LOGO_MAX_HEIGHT = (int) Math.round(1.15 * 96);
     private final static int TABLE_HEADER_HEIGHT = 64;
@@ -69,6 +68,10 @@ public class BadgeService {
     private final static String BADGE_RESOURCES_PATH = "badge/";
     private final static String ELM_FONT_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "DINNextLTArabic-Regular-2.ttf";
     private final static String TOP_BG_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "top-bg.png";
+
+    private final static String TOP_BG_NEW_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "top_BG.png";
+    private final static String HAJJ_APP_LOGO_FILE_NAME = BADGE_RESOURCES_PATH + "logo.png";
+
     private final static String BOTTOM_BG_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "bottom-bg.png";
     private final static String MOHU_LOGO_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "mohu-logo.png";
     private final static String TENT_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "tent.jpg";
@@ -92,7 +95,7 @@ public class BadgeService {
 
     static {
         try {
-            shaaerFont = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(new ClassPathResource(ELM_FONT_RESOURCE_FILE_NAME).getInputStream()));
+            shaaerFont = Font.createFont(Font.PLAIN, Objects.requireNonNull(new ClassPathResource(ELM_FONT_RESOURCE_FILE_NAME).getInputStream()));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(shaaerFont);
         } catch (IOException | FontFormatException e) {
@@ -110,7 +113,7 @@ public class BadgeService {
         BufferedImage badgeImage = new BufferedImage(BADGE_WIDTH, STAFF_BADGE_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g2d = badgeImage.createGraphics();
 
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(Color.lightGray);
         g2d.fillRect(0, 0, BADGE_WIDTH, STAFF_BADGE_HEIGHT);
 
         g2d.setColor(new Color(86, 86, 86));
@@ -154,20 +157,19 @@ public class BadgeService {
         String nationalityAr = arabicCountryLookup == null ? "" : arabicCountryLookup.getLabel();
         NationalityLookupDto englishCountryLookup = mainLangCountryLookupList.stream().filter(countryLookup -> countryLookup.getLang().equals("en")).findFirst().orElse(null);
         String nationalityEn = englishCountryLookup == null ? "" : englishCountryLookup.getLabel();
-
         BufferedImage badgeImage = new BufferedImage(BADGE_WIDTH, withQr ? MOBILE_BADGE_HEIGHT : BADGE_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g2d = badgeImage.createGraphics();
 
-        g2d.setColor(Color.WHITE);
-        g2d.fillRect(0, 0, BADGE_WIDTH, withQr ? MOBILE_BADGE_HEIGHT : BADGE_HEIGHT);
+        g2d.setColor(new Color(0xFFF7F7F7));
+        g2d.fillRect(0, 0, BADGE_WIDTH, BADGE_HEIGHT);
 
         g2d.setColor(new Color(86, 86, 86));
 
         ImageUtils.applyQualityRenderingHints(g2d);
 
-        addHeaderBg(g2d, withQr);
-        addFooterBg(g2d, withQr);
-        addZone(g2d);
+        addHeaderBg(g2d, withQr, applicantRitualCardLite.getEstablishmentId());
+        //addFooterBg(g2d, withQr);
+        //addZone(g2d);
         g2d.setColor(new Color(86, 86, 86));
         addPilgrimImage(g2d, applicantRitualCardLite.getPhoto(), true);
 
@@ -175,14 +177,11 @@ public class BadgeService {
 
         addRitual(g2d, ritualType, applicantRitualCardLite.getHijriSeason() + "");
 
-        addCampRectangle(g2d, applicantRitualCardLite.getUnitCode(), applicantRitualCardLite.getGroupCode(), applicantRitualCardLite.getCampCode());
-        addBusRectangle(g2d, applicantRitualCardLite.getBusNumber(), applicantRitualCardLite.getSeatNumber());
-        addLeaderRectangle(g2d, applicantRitualCardLite.getLeaderNameAr(), applicantRitualCardLite.getLeaderMobile());
-        String decodedBarCode = getBarCodeFoApplicantItemsAsString(uin, applicantRitualCardLite);
-        addBarCode(g2d, decodedBarCode, true);
-        if (withQr) {
-            addQrCodeRectangle(g2d, uin, String.valueOf(applicantRitualCardLite.getCardId()), ritualType, applicantRitualCardLite.getHijriSeason());
-        }
+        //addCampRectangle(g2d, applicantRitualCardLite.getUnitCode(), applicantRitualCardLite.getGroupCode(), applicantRitualCardLite.getCampCode());
+        //addBusRectangle(g2d, applicantRitualCardLite.getBusNumber(), applicantRitualCardLite.getSeatNumber());
+        addCompanyRectangle(g2d, applicantRitualCardLite, uin);
+        //String decodedBarCode = getBarCodeFoApplicantItemsAsString(uin, applicantRitualCardLite);
+        //addBarCode(g2d, decodedBarCode, true);
 
         String imgStr = null;
         try {
@@ -219,8 +218,10 @@ public class BadgeService {
         }
     }
 
-    private void addHeaderBg(Graphics2D g2d, boolean withQr) {
-        BufferedImage topBackground = ImageUtils.loadFromClasspath(TOP_BG_RESOURCE_FILE_NAME);
+    private void addHeaderBg(Graphics2D g2d, boolean withQr, Integer establishmentCode) {
+
+
+        BufferedImage topBackground = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + establishmentCode + "_top_BG.png");
         if (topBackground != null) {
             g2d.drawImage(ImageUtils.resizeImage(topBackground, BADGE_WIDTH, withQr ? MOBILE_BADGE_HEIGHT : BADGE_HEIGHT), 0, 0, null);
         }
@@ -310,19 +311,26 @@ public class BadgeService {
 
         // add the logo image
         Image img = ImageUtils.resizeImage(ministryImage, MOHU_LOGO_MAX_HEIGHT, MOHU_LOGO_MAX_HEIGHT);
-        g2d.drawImage(img, BADGE_WIDTH - img.getWidth(null) - 32, (int) Math.round(1.5 * 96), null);
+        g2d.drawImage(img, BADGE_WIDTH - img.getWidth(null) - 32, (int) Math.round(2.2 * 96), null);
+
+        BufferedImage shaaerImage = ImageUtils.loadFromClasspath(HAJJ_APP_LOGO_FILE_NAME);
+        if (shaaerImage == null) return;
+
+        // add the logo image
+        Image image = ImageUtils.resizeImage(shaaerImage, MOHU_LOGO_MAX_HEIGHT, MOHU_LOGO_MAX_HEIGHT);
+        g2d.drawImage(image, BADGE_WIDTH - image.getWidth(null) - 450, (int) Math.round(2.2 * 96), null);
 
 
         // draw a line underneath it
 
-        g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        int xDif = BADGE_WIDTH - img.getWidth(null) - 32;
-        int yDif = (int) Math.round(1.5 * 96) + img.getHeight(null) + 8;
-        g2d.drawLine(xDif, yDif, xDif + img.getWidth(null), yDif);
+        //g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        //int xDif = BADGE_WIDTH - img.getWidth(null) - 32;
+        //int yDif = (int) Math.round(1.5 * 96) + img.getHeight(null) + 8;
+        //g2d.drawLine(xDif, yDif, xDif + img.getWidth(null), yDif);
 
-        FontRenderContext frc = g2d.getFontRenderContext();
+        //FontRenderContext frc = g2d.getFontRenderContext();
 
-        Font font = shaaerFont.deriveFont(22f);
+        /*Font font = shaaerFont.deriveFont(22f);
         xDif -= 30;
         yDif += 10;
         TextLayout layout = new TextLayout(ritualType, font, frc);
@@ -332,7 +340,7 @@ public class BadgeService {
         xDif += 30;
         layout = new TextLayout(ritualYear, font, frc);
         yDif += 32;
-        layout.draw(g2d, xDif + img.getWidth(null) / 2 - 22, yDif);
+        layout.draw(g2d, xDif + img.getWidth(null) / 2 - 22, yDif);*/
     }
 
     private void addStaffNameAndJob(Graphics2D g2d, String fullNameAr, String jobTitle) {
@@ -359,16 +367,17 @@ public class BadgeService {
     private void addNameAndNationality(Graphics2D g2d, String fullNameAr, String fullNameEn, String nationalityAr, String nationalityEn) {
         FontRenderContext frc = g2d.getFontRenderContext();
 
-        Font font = shaaerFont.deriveFont(32f);
+        Font font = shaaerFont.deriveFont(26f);
 
         FontMetrics fm = g2d.getFontMetrics(font);
 
         int xDif = ((BADGE_WIDTH - fm.stringWidth(fullNameAr + "")) / 2);
-        int yDif = PHOTO_MAX_HEIGHT + fm.getAscent() + (int) Math.round(0.85 * 96) - 8;
-
+        int yDif = PHOTO_MAX_HEIGHT + fm.getAscent() + (int) Math.round(1.25 * 96) - 8;
+        g2d.setColor(Color.black);
         TextLayout layout = new TextLayout(fullNameAr + "", font, frc);
         layout.draw(g2d, xDif, yDif);
 
+        g2d.setColor(new Color(86, 86, 86));
         xDif = ((BADGE_WIDTH - fm.stringWidth(fullNameEn + "")) / 2);
         yDif += 44;
         layout = new TextLayout(fullNameEn + "", font, frc);
@@ -376,30 +385,31 @@ public class BadgeService {
 
         // draw a line underneath it
         yDif += 18;
-        g2d.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2d.setColor(new Color(0xFFD3D3D3));
+        g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2d.drawLine((int) (BADGE_WIDTH * 0.125), yDif, (int) (BADGE_WIDTH * 0.875), yDif);
-
-        font = shaaerFont.deriveFont(24f);
+        g2d.setColor(new Color(86, 86, 86));
+        font = shaaerFont.deriveFont(22f);
         fm = g2d.getFontMetrics(font);
 
         yDif += 30;
         // xDif += 95;
-        xDif = ((BADGE_WIDTH - fm.stringWidth(nationalityAr + "")) / 2);
+        xDif = ((BADGE_WIDTH - fm.stringWidth(nationalityAr + " | " + nationalityEn)) / 2);
 
-        layout = new TextLayout(nationalityAr, font, frc);
+        layout = new TextLayout(nationalityAr + " | " + nationalityEn, font, frc);
         layout.draw(g2d, xDif, yDif);
 
-        xDif = ((BADGE_WIDTH - fm.stringWidth(nationalityEn + "")) / 2);
-        yDif += 36;
-        layout = new TextLayout(nationalityEn, font, frc);
-        layout.draw(g2d, xDif, yDif);
+        //  xDif = ((BADGE_WIDTH - fm.stringWidth(nationalityEn + "")) / 2);
+        // yDif += 36;
+        // layout = new TextLayout(nationalityEn, font, frc);
+        //layout.draw(g2d, xDif, yDif);
     }
 
     private void addPilgrimImage(Graphics2D g2d, String base64Photo, boolean isApplicant) {
-        BufferedImage pilgrimImage = ImageUtils.loadFromBase64String(base64Photo);
+        BufferedImage pilgrimImage = ImageUtils.loadImageInCircle(base64Photo);
         if (pilgrimImage != null) {
             Image img = ImageUtils.resizeImage(pilgrimImage, PHOTO_MAX_HEIGHT, PHOTO_MAX_HEIGHT);
-            int yDif = isApplicant ? (int) Math.round(0.9 * 100) : Math.round(2 * 93);
+            int yDif = isApplicant ? (int) Math.round(0.2 * 100) : Math.round(2 * 93);
             g2d.drawImage(img, (BADGE_WIDTH - img.getWidth(null)) / 2, yDif, null);
         }
     }
@@ -492,6 +502,132 @@ public class BadgeService {
         }
     }
 
+    private void addCompanyRectangle(Graphics2D g2d, ApplicantRitualCardLiteDto applicantRitualCard, String uin) {
+        int rectHeight = (int) Math.round(2 * 84);
+        int rectWidth = (int) Math.round(5.28 * 96);
+        int rectX = 21;
+        int rectY = PHOTO_MAX_HEIGHT + (int) Math.round(2.75 * 96);
+        //company rect
+        RoundRectangle2D roundedRectangle = new RoundRectangle2D.Float(rectX, rectY, rectWidth, rectHeight, 24, 24);
+
+        g2d.setColor(new Color(0xFFD3D3D3));
+        g2d.draw(roundedRectangle);
+        g2d.setColor(Color.white);
+        g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, 24, 24);
+
+        g2d.setColor(new Color(0xFFD3D3D3));
+        Line2D verticalLine = new Line2D.Float(rectX + rectWidth / 2, rectY, rectX + rectWidth / 2, rectY + rectHeight);
+        g2d.draw(verticalLine);
+
+        writeTable(g2d, rectWidth, rectX, rectY + 25, new String[]{makeLabelFit(applicantRitualCard.getEstablishmentNameEn()), makeLabelFit(applicantRitualCard.getCompanyName())}, new String[]{makeLabelFit(applicantRitualCard.getEstablishmentNameAr()), makeLabelFit(applicantRitualCard.getCompanyNameAr())});
+
+
+        //applicant details
+        g2d.setColor(new Color(0xFFD3D3D3));
+        int rectYApplicant = PHOTO_MAX_HEIGHT + (int) Math.round(5.12 * 89);
+        RoundRectangle2D applicantDetailsRectangle = new RoundRectangle2D.Float(rectX, rectYApplicant, rectWidth, rectHeight, 24, 24);
+        g2d.draw(applicantDetailsRectangle);
+        g2d.setColor(Color.white);
+        g2d.fillRoundRect(rectX, rectYApplicant, rectWidth, rectHeight, 24, 24);
+        g2d.setColor(new Color(0xFF212121));
+        Font font = shaaerFont.deriveFont(20f);
+
+        FontMetrics fm = g2d.getFontMetrics(font);
+        FontRenderContext frc = g2d.getFontRenderContext();
+        int xDif = ((BADGE_WIDTH - fm.stringWidth("رقم الهوية")) - 60);
+        int yDif = rectYApplicant + 70;
+        TextLayout layout = new TextLayout("رقم الهوية", font, frc);
+        layout.draw(g2d, xDif, yDif);
+        g2d.setColor(new Color(0xFF848484));
+        yDif += 30;
+        layout = new TextLayout("ID Number", font, frc);
+        layout.draw(g2d, xDif - 10, yDif);
+
+
+        BufferedImage qrCode = makeRoundedCorner(generateQRcode(uin, applicantRitualCard.getCardId() + ""), 30);
+
+        Image img = ImageUtils.resizeImage(qrCode, QR_CODE_MAX_HEIGHT, QR_CODE_MAX_HEIGHT);
+        g2d.drawImage(img, (BADGE_WIDTH - img.getWidth(null)) / 2, yDif - 60, null);
+
+        yDif += 45;
+        g2d.setColor(Color.black);
+        font = shaaerFont.deriveFont(22f);
+        font = font.deriveFont(
+                Collections.singletonMap(
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+        layout = new TextLayout(applicantRitualCard.getIdNumber(), font, frc);
+        layout.draw(g2d, xDif - 10, yDif);
+        font = font.deriveFont(
+                Collections.singletonMap(
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_REGULAR));
+        int yDifLeft = rectYApplicant + 70;
+        int xDifLeft = (BADGE_WIDTH / 2 - 220);
+        g2d.setColor(new Color(0xFF212121));
+        font = shaaerFont.deriveFont(20f);
+        layout = new TextLayout("البطاقة الذكية", font, frc);
+        layout.draw(g2d, xDifLeft, yDifLeft);
+        yDifLeft += 30;
+        g2d.setColor(new Color(0xFF848484));
+        layout = new TextLayout(" Smart Card", font, frc);
+        layout.draw(g2d, xDifLeft, yDifLeft);
+        yDifLeft += 45;
+        g2d.setColor(Color.black);
+        font = shaaerFont.deriveFont(22f);
+        font = font.deriveFont(
+                Collections.singletonMap(
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+        layout = new TextLayout(applicantRitualCard.getCardNumber() + "", font, frc);
+        layout.draw(g2d, xDifLeft - 20, yDifLeft);
+    }
+
+    public String makeLabelFit(String label) {
+        if (label.length() > 28) {
+            return label.substring(0, 23) + "...";
+        }
+        return label + " ";
+    }
+
+    public BufferedImage makeRoundedCorner(BufferedImage image,
+                                           int cornerRadius) {
+        int w = image.getWidth();
+        int h = image.getHeight();
+        BufferedImage output = new BufferedImage(w, h,
+                BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2 = output.createGraphics();
+
+        // This is what we want, but it only does hard-clipping, i.e. aliasing
+        // g2.setClip(new RoundRectangle2D ...)
+
+        // so instead fake soft-clipping by first drawing the desired clip shape
+        // in fully opaque white with antialiasing enabled...
+        g2.setComposite(AlphaComposite.Src);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(Color.WHITE);
+        g2.fill(new RoundRectangle2D.Float(0, 0, w, h, cornerRadius,
+                cornerRadius));
+
+        // ... then compositing the image on top,
+        // using the white shape from above as alpha source
+        g2.setComposite(AlphaComposite.SrcAtop);
+        g2.drawImage(image, 0, 0, null);
+
+        g2.dispose();
+
+        return output;
+    }
+    protected int toARGB(String nm) {
+        Long longValue = Long.decode(nm);
+        int i = longValue.intValue();
+        int a = (i >> 24) & 0xFF;
+        int r = (i >> 16) & 0xFF;
+        int g = (i >> 8) & 0xFF;
+        int b = i & 0xFF;
+        return ((a & 0xFF) << 24) | ((b & 0xFF) << 16) | ((g & 0xFF) << 8) | ((r & 0xFF));
+    }
+
+
     private void addLeaderRectangle(Graphics2D g2d, String leaderName, String leaderMobile) {
         int rectHeight = (int) Math.round(1.15 * 96);
         int rectWidth = (int) Math.round(5.28 * 96);
@@ -517,6 +653,7 @@ public class BadgeService {
     }
 
     private void writeTable(Graphics2D g2d, int rectWidth, int rectX, int rectY, String[] headersAr, String[] headersEn, String[] values) {
+        g2d.setColor(new Color(86, 86, 86));
         FontRenderContext frc = g2d.getFontRenderContext();
         Font font;
         LineMetrics lm;
@@ -539,6 +676,36 @@ public class BadgeService {
             lm = font.getLineMetrics(values[i], frc);
             layout = new TextLayout(values[i], font, frc);
             layout.draw(g2d, rectX + (i * rectWidth/ headersAr.length) + (int) (rectWidth/ headersAr.length - font.getStringBounds(values[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 56);
+        }
+    }
+
+    private void writeTable(Graphics2D g2d, int rectWidth, int rectX, int rectY, String[] labelEn, String[] labelAr) {
+        FontRenderContext frc = g2d.getFontRenderContext();
+        Font font;
+        LineMetrics lm;
+        TextLayout layout;
+        for (int i = 0; i< labelAr.length; i++) {
+            font = shaaerFont.deriveFont(21f);
+            /*font = font.deriveFont(
+                    Collections.singletonMap(
+                            TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));*/
+            // header AR
+            lm = font.getLineMetrics(labelAr[i], frc);
+            layout = new TextLayout(labelAr[i], font, frc);
+            g2d.setColor(new Color(0xFF212121));
+            layout.draw(g2d, rectX + (i * rectWidth / labelAr.length) + (int) (rectWidth / labelAr.length - font.getStringBounds(labelAr[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 26);
+            // header EN
+            font = shaaerFont.deriveFont(21f);
+            //  g2d.setColor(new Color(86, 86, 86, 20));
+            lm = font.getLineMetrics(labelEn[i], frc);
+            layout = new TextLayout(labelEn[i], font, frc);
+            g2d.setColor(new Color(0xFF848484));
+            layout.draw(g2d, rectX + (i * rectWidth / labelAr.length) + (int) (rectWidth / labelAr.length - font.getStringBounds(labelEn[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 66);
+            // values
+            /*font = shaaerFont.deriveFont(26f);
+            lm = font.getLineMetrics(values[i], frc);
+            layout = new TextLayout(values[i], font, frc);
+            layout.draw(g2d, rectX + (i * rectWidth/ headersAr.length) + (int) (rectWidth/ headersAr.length - font.getStringBounds(values[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 56);*/
         }
     }
 
@@ -602,7 +769,7 @@ public class BadgeService {
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
 
         FontMetrics fm = g2d.getFontMetrics(font);
-        g2d.setColor(new Color(59, 121, 55));
+        g2d.setColor(new Color(59, 121, 55, 6));
         int xDif = ((BADGE_WIDTH - fm.stringWidth("فعالة")) - 15);
         int yDif = BADGE_HEIGHT + 70;
         TextLayout layout = new TextLayout("فعالة", font, frc);
@@ -631,11 +798,11 @@ public class BadgeService {
     private BufferedImage generateQRcode(String uin, String cardId) {
         try {
             String charset = "UTF-8";
-            String data = uin +"#"+ cardId;
-            Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
-            hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-            BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, 300, 300);
-            MatrixToImageConfig conf = new MatrixToImageConfig(0xFF37793B, 0xFFEBF1EB);
+            String data = uin + "#" + cardId;
+            Map<EncodeHintType, Object> hashMap = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
+            hashMap.put(EncodeHintType.MARGIN, 2);
+            BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, 300, 300, hashMap);
+            MatrixToImageConfig conf = new MatrixToImageConfig(0xFF212121, 0xFFF5F5F5);
             BufferedImage qrcode = MatrixToImageWriter.toBufferedImage(matrix, conf);
             //MatrixToImageWriter.writeToPath(matrix, "png", root.resolve(Paths.get("qrCode.png")));
             return qrcode;

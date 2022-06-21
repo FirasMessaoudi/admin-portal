@@ -43,8 +43,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -293,8 +291,15 @@ public class IntegrationWsController {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_FOUND.getCode()).referenceNumber(command.getUin()).build()).build());
         }
-
-        boolean dateOfBirthMatched = command.getDateOfBirthHijri() == databaseApplicant.get().getDateOfBirthHijri();
+        boolean dateOfBirthMatched;
+        SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
+        if (command.getDateOfBirthGregorian() != null) {
+            String applicantDateFormatted = sdf.format(databaseApplicant.get().getDateOfBirthGregorian());
+            String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
+            dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
+        } else {
+            dateOfBirthMatched = command.getDateOfBirthHijri() == databaseApplicant.get().getDateOfBirthHijri();
+        }
         if (!dateOfBirthMatched) {
             log.error("invalid data for uin {} and date of birth {}", command.getUin(), command.getDateOfBirthHijri());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
@@ -1318,7 +1323,7 @@ public class IntegrationWsController {
     }
 
     @GetMapping("/group/find/{groupId}/{companyRefCode}/{companyTypeCode}")
-    public ResponseEntity<WsResponse<?>> findGroupDetails(@PathVariable String groupId,@PathVariable String companyRefCode, @PathVariable String companyTypeCode) {
+    public ResponseEntity<WsResponse<?>> findGroupDetails(@PathVariable long groupId,@PathVariable String companyRefCode, @PathVariable String companyTypeCode) {
         log.info("find applicant groups by company");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(applicantGroupService.findGroupDetailsByGroupId(groupId,companyRefCode,companyTypeCode)).build());
@@ -1331,7 +1336,7 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
     }
 
-    @GetMapping("/group-leader/list/{companyRefCode}/{companyTypeCode}")
+    @GetMapping("/group/group-leader/list/{companyRefCode}/{companyTypeCode}")
     public ResponseEntity<WsResponse<?>> findGroupLeadersListByCompanyCode(@PathVariable String companyRefCode,@PathVariable String companyTypeCode) {
         log.info("Start   findGroupLeadersListByCompanyCode  companyRefCode: {}, companyTypeCode: {} ", companyRefCode, companyTypeCode);
         String companyCode = new StringBuffer(companyRefCode).append("_").append(companyTypeCode).toString();
@@ -1350,10 +1355,17 @@ public class IntegrationWsController {
                 .body(list).build());
     }
 
-    @PostMapping("/group/ritual-step/update/{groupId}/{stepCode}/{hijriDate}/{time}")
-    public ResponseEntity<WsResponse<?>> updateGroupRitualStep(@PathVariable long groupId, @PathVariable String stepCode, @PathVariable long hijriDate, @PathVariable String time) {
+    @PostMapping("/group/ritual-step/update")
+    public ResponseEntity<WsResponse<?>> updateGroupRitualStep(@RequestBody UpdateCompanyRitualStepCmd updateCompanyRitualStepCmd) {
         log.info("updateGroupRitualStep start");
-        boolean updated = companyRitualStepService.updateGroupRitualStep(groupId,stepCode,hijriDate,time);
+        boolean updated = companyRitualStepService.updateGroupRitualStep(updateCompanyRitualStepCmd.getGroupId(),updateCompanyRitualStepCmd.getStepCode(),updateCompanyRitualStepCmd.getHijriDate(),updateCompanyRitualStepCmd.getTime());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
+    }
+
+    @PostMapping("/applicant/housing-camp/update")
+    public ResponseEntity<WsResponse<?>> updateApplicantHousingCamp(@RequestBody UpdateApplicantHousingCampDto updateApplicantHousingCampDto) {
+        log.info("updateApplicantHousingCamp start");
+        boolean updated = applicantPackageHousingService.updateApplicantHousingCamp(updateApplicantHousingCampDto);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
     }
 

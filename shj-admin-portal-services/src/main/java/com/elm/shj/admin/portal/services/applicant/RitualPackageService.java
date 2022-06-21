@@ -28,13 +28,6 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         return ritualPackageOptional.isPresent();
     }
 
-    public Long findRitualPackageIdByReferenceNumber(String referenceNumber) {
-        log.info("RitualPackageService ::: Start findRitualPackageIdByReferenceNumber ::: referenceNumber: {}", referenceNumber);
-        Long idByReferenceNumber = ritualPackageRepository.findIdByReferenceNumber(referenceNumber);
-        log.info("RitualPackageService ::: Start findRitualPackageIdByReferenceNumber ::: RitualPackageId: {}", idByReferenceNumber);
-        return idByReferenceNumber;
-    }
-
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public RitualPackageDto findRitualPackageByReferenceNumber(String referenceNumber) {
         log.info("RitualPackageService ::: Start findRitualPackageByReferenceNumber ::: referenceNumber: {}", referenceNumber);
@@ -92,6 +85,14 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         }
         log.info("RitualPackageService ::: Finish findByCodeAndRitual ::: not found and return null");
         return null;
+    }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public Long findIdByReferenceAndRitualTypeAndSeason(String referenceCode, String typeCode, int year) {
+        log.info("Start findIdByReferenceAndRitualTypeAndSeason for {} reference number", referenceCode);
+        Long ritualPackageId = ritualPackageRepository.findIdByReferenceNumberAndRitualTypeAndSeason(referenceCode, typeCode, year);
+        log.info("Finish findIdByReferenceAndRitualTypeAndSeason and found {} ritual package id.", ritualPackageId);
+        return ritualPackageId;
     }
 
 }

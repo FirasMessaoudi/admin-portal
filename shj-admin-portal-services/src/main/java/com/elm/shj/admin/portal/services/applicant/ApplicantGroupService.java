@@ -91,7 +91,7 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         return groupNumber;
     }
 
-    public ApplicantGroupDetailsVo findGroupDetailsByGroupId(String groupId, String companyRefCode, String companyTypeCode) {
+    public ApplicantGroupDetailsVo findGroupDetailsByGroupId(long groupId, String companyRefCode, String companyTypeCode) {
         log.info("ApplicantGroupService ::: Start findGroupDetailsByGroupId {}", groupId);
         String multipleValue = "M";
         StringBuffer fullCompanyCode = new StringBuffer(companyRefCode).append("_").append(companyTypeCode);
