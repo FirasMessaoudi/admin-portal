@@ -49,9 +49,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     private static final String RESOLVE_INCIDENT_TEMPLATE_NAME = "RESOLVE_INCIDENT";
     private static final String CLOSE_INCIDENT_TEMPLATE_NAME = "CLOSE_INCIDENT";
 
-    private static final SimpleDateFormat REF_NUMBER_FORMAT = new SimpleDateFormat("SSS");
-    private static final int REQUEST_REF_NUMBER_LENGTH = 12;
-    private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantComplaintsConfigProperties";
+    private static final String APPLICANT_COMPLAINTS_CONFIG_PROPERTIES = "applicantComplaintsConfigProperties";
 
     /**
      * Find all complaint.
@@ -76,8 +74,8 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
         } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
             companyCode = companyRefCode + "_" + companyTypeCode;
         }
-        return mapPage(applicantComplaintRepository.findApplicantComplaintFilter(criteria.getComplaintNumber(), criteria.getComplaintType(), 
-                criteria.getStatus().getCode(), criteria.getApplicantName(), atStartOfDay(criteria.getFromDate()), atEndOfDay(criteria.getToDate()),
+        return mapPage(applicantComplaintRepository.findApplicantComplaintFilter(criteria.getComplaintNumber(), criteria.getComplaintType(),
+                criteria.getStatus(), criteria.getApplicantName(), atStartOfDay(criteria.getFromDate()), atEndOfDay(criteria.getToDate()),
                 criteria.getApplicantId(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable));
     }
 
@@ -130,24 +128,28 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
         if (!complaintAttachment.isPresent()) {
             return null;
         }
-        return sftpService.downloadFile(complaintAttachment.get().getFilePath(), APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
+        return sftpService.downloadFile(complaintAttachment.get().getFilePath(), APPLICANT_COMPLAINTS_CONFIG_PROPERTIES);
     }
 
     /**
      * Updates applicant complaint
      *
-     * @param complaintId the ID number of the complaint to update
+     * @param complaint the ID number of the complaint to update
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public void update(long complaintId, ApplicantComplaintVo applicantComplaintVo) throws NotFoundException {
+    public void update(ApplicantComplaintLiteDto complaint, ApplicantComplaintVo applicantComplaintVo) throws NotFoundException {
 
         if (EComplaintResolutionType.RESOLVED.equals(applicantComplaintVo.getOperation())) {
-            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.getCode());
-            sendComplaintNotification(complaintId, RESOLVE_INCIDENT_TEMPLATE_NAME);
+            applicantComplaintRepository.update(complaint.getId(), applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.getCode());
+            sendComplaintNotification(complaint.getId(), RESOLVE_INCIDENT_TEMPLATE_NAME);
         }
         if (EComplaintResolutionType.CLOSED.equals(applicantComplaintVo.getOperation())) {
-            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.getCode());
-            sendComplaintNotification(complaintId, CLOSE_INCIDENT_TEMPLATE_NAME);
+            applicantComplaintRepository.update(complaint.getId(), applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.getCode());
+            sendComplaintNotification(complaint.getId(), CLOSE_INCIDENT_TEMPLATE_NAME);
+        }
+
+        if (complaint.getCrmTicketNumber() != null && !complaint.getCrmTicketNumber().isEmpty()) {
+            //TODO: Update CRM Complaint status
         }
     }
 

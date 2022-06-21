@@ -41,8 +41,8 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
             "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
-    Page<JpaApplicantComplaint> findApplicantComplaintFilter(@Param("referenceNumber") String referenceNumber, @Param("typeCode") int typeCode,
-                                                             @Param("statusCode") int statusCode, @Param("applicantName") String applicantName,
+    Page<JpaApplicantComplaint> findApplicantComplaintFilter(@Param("referenceNumber") String referenceNumber, @Param("typeCode") Integer typeCode,
+                                                             @Param("statusCode") Integer statusCode, @Param("applicantName") String applicantName,
                                                              @Param("startDate") Date startDate, @Param("endDate") Date endDate,
                                                              @Param("applicantId") String applicantId, @Param("companyCode") String companyCode,
                                                              @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,

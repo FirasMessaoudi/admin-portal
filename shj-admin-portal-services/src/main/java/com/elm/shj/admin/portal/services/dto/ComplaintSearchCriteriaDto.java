@@ -29,5 +29,5 @@ public class ComplaintSearchCriteriaDto implements Serializable {
     private Integer complaintType;
     private Date fromDate;
     private Date toDate;
-    private EComplaintStatus status;
+    private Integer status;
 }

@@ -70,7 +70,7 @@ public class ComplaintWsController {
 
         if (complaint != null && complaint.getStatusCode() == EComplaintStatus.UNDER_PROCESSING.getCode()) {
 
-            applicantComplaintService.update(complaintId, applicantComplaintVo);
+            applicantComplaintService.update(complaint, applicantComplaintVo);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(StringUtils.EMPTY).build());
         } else {
