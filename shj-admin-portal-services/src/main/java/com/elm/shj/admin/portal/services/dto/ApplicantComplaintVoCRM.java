@@ -10,10 +10,10 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- * Applicant Incident value object.
+ * Applicant complaint value object for crm.
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Getter
 @Setter
@@ -22,7 +22,7 @@ public class ApplicantComplaintVoCRM implements Serializable {
     private static final long serialVersionUID = 6800775521807599452L;
 
     @JsonProperty("Status")
-    private int status;
+    private EComplaintResolutionType status;
     @JsonProperty("Comments")
     private String resolutionComment;
 

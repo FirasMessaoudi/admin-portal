@@ -7,10 +7,10 @@ import com.elm.shj.admin.portal.orm.entity.JpaCityLookup;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Repository for complaint status lookup repository.
+ * Repository for city lookup repository.
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 public interface CityLookupRepository extends JpaRepository<JpaCityLookup, Long> {
 }

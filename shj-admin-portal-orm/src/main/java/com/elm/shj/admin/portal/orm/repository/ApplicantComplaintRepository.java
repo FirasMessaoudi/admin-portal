@@ -13,19 +13,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.Optional;
 
 /**
- * Repository for applicant incident table.
+ * Repository for applicant complaint table.
  *
- * @author Othman Alamoud
- * @since 1.2.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicantComplaint, Long>, JpaSpecificationExecutor<JpaApplicantComplaint> {
+
 
     @Modifying
     @Query("update JpaApplicantComplaint incident set incident.statusCode = :status, " +
             "incident.resolutionComment = :resolutionComment, incident.updateDate = current_timestamp where incident.id =:incidentId")
-    void update(@Param("incidentId") long incidentId, @Param("resolutionComment") String resolutionComment, @Param("status") String status);
+    void update(@Param("incidentId") long incidentId, @Param("resolutionComment") String resolutionComment, @Param("status") int status);
 
     @Query("SELECT c FROM JpaApplicantComplaint c JOIN c.applicantRitual ar JOIN ar.applicant a JOIN ar.applicant.digitalIds di where " +
             "(:referenceNumber is null OR c.referenceNumber like '%'+:referenceNumber+'%') and " +
@@ -39,8 +41,8 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
             "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
-    Page<JpaApplicantComplaint> findApplicantComplaintFilter(@Param("referenceNumber") String referenceNumber, @Param("typeCode") String typeCode,
-                                                             @Param("statusCode") String statusCode, @Param("applicantName") String applicantName,
+    Page<JpaApplicantComplaint> findApplicantComplaintFilter(@Param("referenceNumber") String referenceNumber, @Param("typeCode") int typeCode,
+                                                             @Param("statusCode") int statusCode, @Param("applicantName") String applicantName,
                                                              @Param("startDate") Date startDate, @Param("endDate") Date endDate,
                                                              @Param("applicantId") String applicantId, @Param("companyCode") String companyCode,
                                                              @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,

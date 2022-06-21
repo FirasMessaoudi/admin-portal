@@ -9,10 +9,10 @@ import com.elm.shj.admin.portal.orm.entity.JpaCityLookup;
 import org.mapstruct.Mapper;
 
 /**
- * Mapper for {@link ComplaintStatusLookupDto} class
+ * Mapper for {@link CityLookupDtoMapper} class
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Mapper(componentModel = "spring")
 public abstract class CityLookupDtoMapper implements IGenericMapper<CityLookupDto, JpaCityLookup> {

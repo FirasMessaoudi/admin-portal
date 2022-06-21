@@ -14,9 +14,9 @@ import java.util.Date;
 /**
  * The persistent class for the shc_applicant_complaint database table.
  *
- * @author Ahmed Ali
- * @since 1.1.0
- */
+ * @author othman alamoud
+ * @since 1.2.6
+ * */
 @Entity
 @Table(name = "shc_complaint_attachment")
 @NamedQuery(name = "JpaComplaintAttachmentLite.findAll", query = "SELECT j FROM JpaComplaintAttachmentLite j")
@@ -25,7 +25,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class JpaComplaintAttachmentLite implements Serializable {
 
-    private static final long serialVersionUID = 6286463714119294368L;
+    private static final long serialVersionUID = -6421025504092047467L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

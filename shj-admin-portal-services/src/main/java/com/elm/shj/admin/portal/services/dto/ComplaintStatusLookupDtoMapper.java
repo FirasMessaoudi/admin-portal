@@ -11,8 +11,8 @@ import org.mapstruct.Mapper;
 /**
  * Mapper for {@link ComplaintStatusLookupDto} class
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Mapper(componentModel = "spring")
 public abstract class ComplaintStatusLookupDtoMapper implements IGenericMapper<ComplaintStatusLookupDto, JpaComplaintStatusLookup> {

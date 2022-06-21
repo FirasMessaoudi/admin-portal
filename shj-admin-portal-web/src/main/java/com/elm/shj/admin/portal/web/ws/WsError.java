@@ -36,7 +36,8 @@ public class WsError {
         SURVEY_ALREADY_SUBMITTED(131),
         SUPPLICATION_COUNTER_EXIST_ALREADY(132),
         SURVEY_NOT_AVAILABLE(133),
-        INVALID_SURVEY_TYPE(134);
+        INVALID_SURVEY_TYPE(134),
+        COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING(135);
         int code;
 
         EWsError(int code) {

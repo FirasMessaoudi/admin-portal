@@ -1,9 +1,8 @@
 package com.elm.shj.admin.portal.web.ws;
 
+import com.elm.shj.admin.portal.services.complaint.ApplicantComplaintLiteService;
 import com.elm.shj.admin.portal.services.complaint.ApplicantComplaintService;
-import com.elm.shj.admin.portal.services.dto.ApplicantComplaintVo;
-import com.elm.shj.admin.portal.services.dto.ApplicantComplaintVoCRM;
-import com.elm.shj.admin.portal.services.dto.ComplaintSearchCriteriaDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import javassist.NotFoundException;
@@ -26,7 +25,7 @@ import java.util.Objects;
  * Controller for exposing web services for external party for applicant complaint.
  *
  * @author othman alamoud
- * @since 1.2.0
+ * @since 1.2.6
  */
 @CrossOrigin(
         originPatterns = "*",
@@ -41,6 +40,7 @@ import java.util.Objects;
 public class ComplaintWsController {
 
     private final ApplicantComplaintService applicantComplaintService;
+    private final ApplicantComplaintLiteService applicantComplaintLiteService;
 
     @PostMapping("/list/{companyRefCode}/{companyTypeCode}")
     private ResponseEntity<WsResponse<?>> list(@PathVariable Long companyRefCode, @PathVariable String companyTypeCode, @RequestBody ComplaintSearchCriteriaDto criteriaDto, Pageable pageable){
@@ -66,9 +66,18 @@ public class ComplaintWsController {
     public ResponseEntity<WsResponse<?>> handleComplaint(@PathVariable long complaintId,
                                                   @RequestBody ApplicantComplaintVo applicantComplaintVo) throws NotFoundException {
         log.debug("Handle complaint #{}", complaintId);
-        applicantComplaintService.update(complaintId, applicantComplaintVo);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(StringUtils.EMPTY).build());
+        ApplicantComplaintLiteDto complaint = applicantComplaintLiteService.findOne(complaintId);
+
+        if (complaint != null && complaint.getStatusCode() == EComplaintStatus.UNDER_PROCESSING.getCode()) {
+
+            applicantComplaintService.update(complaintId, applicantComplaintVo);
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                    .body(StringUtils.EMPTY).build());
+        } else {
+            log.info("Finished Handle complaint #{}, Failure {}", complaintId, "COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING");
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING").build()).build());
+        }
     }
 
     /**
@@ -96,17 +105,25 @@ public class ComplaintWsController {
         return null;
     }
 
-//    /**
-//     * Handles complaint by marking it as resolved or closed and update resolution comment
-//     *
-//     * @param complaintId the ID of the complaint to update
-//     * @return the {@link ResponseEntity} with status
-//     */
-//    @PutMapping("/handle")
-//    public ResponseEntity<WsResponse<?>> handleComplaintByCRM(@RequestBody ApplicantComplaintVoCRM applicantComplaintVo) throws NotFoundException {
-//        log.debug("Handle complaint CrmTicketNumber{}", applicantComplaintVo.getCrmTicketNumber());
-//        applicantComplaintService.updateByCrm(applicantComplaintVo);
-//        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-//                .body(StringUtils.EMPTY).build());
-//    }
+    /**
+     * Handles complaint by marking it as resolved or closed and update resolution comment
+     *
+     * @body ApplicantComplaintVoCRM of the complaint to update
+     * @return the {@link ResponseEntity} with status
+     */
+    @PutMapping("/handle")
+    public ResponseEntity<WsResponse<?>> handleComplaintByCRM(@RequestBody ApplicantComplaintVoCRM applicantComplaintVo) throws NotFoundException {
+        log.debug("Handle complaint CrmTicketNumber{}", applicantComplaintVo.getCrmTicketNumber());
+        ApplicantComplaintLiteDto complaint = applicantComplaintLiteService.findByCrmTicketNumber(applicantComplaintVo.getCrmTicketNumber());
+
+        if (complaint != null && complaint.getStatusCode() == EComplaintStatus.UNDER_PROCESSING.getCode()) {
+            applicantComplaintService.updateByCrm(complaint.getId(), applicantComplaintVo);
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                    .body(StringUtils.EMPTY).build());
+        } else {
+            log.info("Finished Handle complaint CrmTicketNumber{}, Failure {}", applicantComplaintVo.getCrmTicketNumber(), "COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING");
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING").build()).build());
+        }
+    }
 }

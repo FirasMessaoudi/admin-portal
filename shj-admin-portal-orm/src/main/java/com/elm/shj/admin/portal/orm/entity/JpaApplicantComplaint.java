@@ -17,8 +17,8 @@ import java.util.List;
 /**
  * The persistent class for the shc_applicant_complaint database table.
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Entity
 @Table(name = "shc_applicant_complaint")
@@ -28,7 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 public class JpaApplicantComplaint implements Serializable {
 
-    private static final long serialVersionUID = 3754291597972237947L;
+    private static final long serialVersionUID = 893621013109878978L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

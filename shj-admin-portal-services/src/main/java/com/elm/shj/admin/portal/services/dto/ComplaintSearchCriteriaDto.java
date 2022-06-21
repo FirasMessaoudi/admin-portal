@@ -11,10 +11,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Incident filter value object.
+ * Complaint filter value object.
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Getter
 @Setter
@@ -26,8 +26,8 @@ public class ComplaintSearchCriteriaDto implements Serializable {
     private String complaintNumber;
     private String applicantId;
     private String applicantName;
-    private String complaintType;
+    private Integer complaintType;
     private Date fromDate;
     private Date toDate;
-    private String status;
+    private EComplaintStatus status;
 }

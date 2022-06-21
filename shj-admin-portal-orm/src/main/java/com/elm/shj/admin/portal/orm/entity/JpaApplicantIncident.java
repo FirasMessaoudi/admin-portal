@@ -28,7 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 public class JpaApplicantIncident implements Serializable {
 
-    private static final long serialVersionUID = 3754291597972237947L;
+    private static final long serialVersionUID = -2157631683246820896L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

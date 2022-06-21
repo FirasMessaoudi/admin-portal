@@ -6,10 +6,10 @@ package com.elm.shj.admin.portal.services.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- * Enum for applicant incident resolution type
+ * Enum for applicant complaint resolution type
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 
 public enum EComplaintResolutionType {

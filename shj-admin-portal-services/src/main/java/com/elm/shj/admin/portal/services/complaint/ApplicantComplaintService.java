@@ -33,8 +33,8 @@ import java.util.Optional;
 /**
  * Service handling Applicant Complaint operations
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Service
 @Slf4j
@@ -77,7 +77,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
             companyCode = companyRefCode + "_" + companyTypeCode;
         }
         return mapPage(applicantComplaintRepository.findApplicantComplaintFilter(criteria.getComplaintNumber(), criteria.getComplaintType(), 
-                criteria.getStatus(), criteria.getApplicantName(), atStartOfDay(criteria.getFromDate()), atEndOfDay(criteria.getToDate()),
+                criteria.getStatus().getCode(), criteria.getApplicantName(), atStartOfDay(criteria.getFromDate()), atEndOfDay(criteria.getToDate()),
                 criteria.getApplicantId(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable));
     }
 
@@ -142,32 +142,33 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     public void update(long complaintId, ApplicantComplaintVo applicantComplaintVo) throws NotFoundException {
 
         if (EComplaintResolutionType.RESOLVED.equals(applicantComplaintVo.getOperation())) {
-            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.name());
+            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.getCode());
             sendComplaintNotification(complaintId, RESOLVE_INCIDENT_TEMPLATE_NAME);
         }
         if (EComplaintResolutionType.CLOSED.equals(applicantComplaintVo.getOperation())) {
-            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.name());
+            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.getCode());
             sendComplaintNotification(complaintId, CLOSE_INCIDENT_TEMPLATE_NAME);
         }
     }
 
-//    /**
-//     * Updates applicant complaint
-//     *
-//     * @param complaintId the ID number of the complaint to update
-//     */
-//    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-//    public void updateByCrm(ApplicantComplaintVoCRM applicantComplaintVo) throws NotFoundException {
-//
-//        if (EComplaintType.RESOLVED.equals(applicantComplaintVo.getOperation())) {
-//            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.name());
-//            sendComplaintNotification(complaintId, RESOLVE_INCIDENT_TEMPLATE_NAME);
-//        }
-//        if (EComplaintType.RESOLVED.equals(applicantComplaintVo.getOperation())) {
-//            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.name());
-//            sendComplaintNotification(complaintId, CLOSE_INCIDENT_TEMPLATE_NAME);
-//        }
-//    }
+    /**
+     * Updates applicant complaint
+     *
+     * @param complaintId the ID number of the complaint to update
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public void updateByCrm(long complaintId, ApplicantComplaintVoCRM applicantComplaintVo) throws NotFoundException {
+
+        if (EComplaintResolutionType.RESOLVED.equals(applicantComplaintVo.getStatus())) {
+            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.getCode());
+            sendComplaintNotification(complaintId, RESOLVE_INCIDENT_TEMPLATE_NAME);
+        }
+        if (EComplaintResolutionType.RESOLVED.equals(applicantComplaintVo.getStatus())) {
+            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.getCode());
+            sendComplaintNotification(complaintId, CLOSE_INCIDENT_TEMPLATE_NAME);
+        }
+
+    }
 
     private void sendComplaintNotification(long complaintId, String closeComplaintTemplateName) throws NotFoundException {
         Optional<NotificationTemplateDto> notificationTemplate = notificationTemplateService.findEnabledNotificationTemplateByNameCode(closeComplaintTemplateName);

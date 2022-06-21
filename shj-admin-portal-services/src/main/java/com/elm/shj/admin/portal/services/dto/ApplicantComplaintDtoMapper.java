@@ -11,10 +11,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /**
- * Mapper for {@link ApplicantComplaintDto} class
+ * Mapper for {@link ApplicantComplaintDtoMapper} class
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Mapper(componentModel = "spring")
 public abstract class ApplicantComplaintDtoMapper implements IGenericMapper<ApplicantComplaintDto, JpaApplicantComplaint>{

@@ -14,20 +14,20 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Dto class for applicant complaint domain.
+ * Dto class for applicant incident domain.
  *
- * @author othman alamoud
- * @since 1.2.6
+ * @author Slim Ben Hadj
+ * @since 1.1.0
  */
 @Getter
 @Setter
 @NoArgsConstructor
-public class ApplicantComplaintDto implements Serializable {
+public class ApplicantComplaintLiteDto implements Serializable {
 
-    private static final long serialVersionUID = 5885377938235938843L;
+    private static final long serialVersionUID = -5654394816918782403L;
 
     private long id;
-    private ApplicantRitualDto applicantRitual;
+    private long applicantRitualId;
     private int statusCode;
     private String referenceNumber;
     private int typeCode;
@@ -37,12 +37,11 @@ public class ApplicantComplaintDto implements Serializable {
     private Double locationLat;
     private Double locationLng;
     private String resolutionComment;
-    private List<ComplaintAttachmentDto> complaintAttachments;
-    private Date creationDate;
-    private Date updateDate;
     private String areaCode;
     private Integer city;
     private String campNumber;
     private String crmTicketNumber;
-
+    private List<IncidentAttachmentLiteDto> incidentAttachments;
+    private Date creationDate;
+    private Date updateDate;
 }

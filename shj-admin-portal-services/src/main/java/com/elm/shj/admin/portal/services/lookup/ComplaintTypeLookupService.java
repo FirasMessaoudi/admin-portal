@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 /**
  * Service handling Complaint type lookup
  *
- * @author f.messaoudi
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Service
 @Slf4j

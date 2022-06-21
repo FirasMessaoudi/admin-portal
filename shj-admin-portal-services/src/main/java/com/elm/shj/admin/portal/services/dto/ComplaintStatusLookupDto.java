@@ -11,10 +11,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Dto class for incident status domain.
+ * Dto class for complaint status domain.
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Getter
 @Setter

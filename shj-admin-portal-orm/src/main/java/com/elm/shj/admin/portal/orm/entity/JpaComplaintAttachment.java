@@ -14,8 +14,8 @@ import java.util.Date;
 /**
  * The persistent class for the shc_applicant_complaint database table.
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Entity
 @Table(name = "shc_complaint_attachment")
@@ -25,7 +25,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class JpaComplaintAttachment implements Serializable {
 
-    private static final long serialVersionUID = 6286463714119294368L;
+    private static final long serialVersionUID = 7776410571220637393L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

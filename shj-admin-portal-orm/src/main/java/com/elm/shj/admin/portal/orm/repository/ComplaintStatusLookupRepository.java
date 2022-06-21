@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * Repository for complaint status lookup repository.
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 public interface ComplaintStatusLookupRepository extends JpaRepository<JpaComplaintStatusLookup, Long> {
 }

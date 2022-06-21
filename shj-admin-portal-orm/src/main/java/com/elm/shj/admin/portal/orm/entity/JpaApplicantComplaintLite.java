@@ -17,8 +17,8 @@ import java.util.List;
 /**
  * The persistent class for the shc_applicant_complaint database table.
  *
- * @author Ahmed Ali
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Entity
 @Table(name = "shc_applicant_complaint")

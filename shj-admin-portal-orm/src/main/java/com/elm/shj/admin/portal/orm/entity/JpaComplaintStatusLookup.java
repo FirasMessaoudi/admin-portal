@@ -11,8 +11,8 @@ import java.util.Date;
 /**
  * The persistent class for the shc_complaint_status_lk database table.
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Entity
 @Table(name = "shc_complaint_status_lk")
@@ -20,7 +20,7 @@ import java.util.Date;
 @Getter
 public class JpaComplaintStatusLookup {
 
-    private static final long serialVersionUID = -1876540546830728632L;
+    private static final long serialVersionUID = -9054921182899148506L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
