@@ -3,6 +3,7 @@ package com.elm.shj.admin.portal.web.ws;
 import com.elm.shj.admin.portal.services.complaint.ApplicantComplaintLiteService;
 import com.elm.shj.admin.portal.services.complaint.ApplicantComplaintService;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.lookup.ComplaintTypeLookupService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import javassist.NotFoundException;
@@ -13,12 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.Objects;
 
 /**
@@ -41,7 +44,65 @@ public class ComplaintWsController {
 
     private final ApplicantComplaintService applicantComplaintService;
     private final ApplicantComplaintLiteService applicantComplaintLiteService;
+    private final ComplaintTypeLookupService complaintTypeLookupService;
 
+    private static final int MIN_GEO_CORDINATES = -90;
+    private static final int MAX_GEO_CORDINATES = 90;
+
+    /**
+     * Creates a new applicant complaint
+     *
+     * @param applicantComplaintRequest applicant complaint details
+     * @return WsResponse of the persisted applicant complaint
+     */
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<WsResponse<?>> create(@RequestPart("complaint") @Valid ApplicantComplaintLiteDto applicantComplaintRequest,
+                                                @RequestPart(value = "attachment", required = false) MultipartFile complaintAttachment) {
+
+        log.info("Start create Complaint ApplicantComplaintLiteDto ReferenceNumber: {}", applicantComplaintRequest.getReferenceNumber());
+        if (complaintAttachment != null) {
+            log.debug("create Complaint without attachment");
+            //validate file type, allow only images and video
+            if (!complaintAttachment.getOriginalFilename().equals("") && !applicantComplaintLiteService.validateFileExtension(complaintAttachment.getOriginalFilename())) {
+                log.info("Finish create Complaint {}, {} ","FAILURE", WsError.EWsError.INVALID_FILE_EXTENSION.getCode());
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_FILE_EXTENSION.getCode()).build()).build());
+            }
+            //validate file size, max size is allowed 15MB
+            if (!complaintAttachment.getOriginalFilename().equals("") && !applicantComplaintLiteService.validateFileSize(complaintAttachment.getSize() / (1024 * 1024))) {
+                log.info("Finish create Complaint {}, {} ","FAILURE", WsError.EWsError.ExCEED_MAX_SIZE.getCode());
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.ExCEED_MAX_SIZE.getCode()).build()).build());
+            }
+        }
+        if (applicantComplaintRequest.getLocationLat() != null && applicantComplaintRequest.getLocationLng() != null) {
+            log.debug("create Complaint applicantComplaintRequest Location not null");
+            // validate latitude cordinates, it should be between -90 and +90
+            if (applicantComplaintRequest.getLocationLat().intValue() < MIN_GEO_CORDINATES || applicantComplaintRequest.getLocationLat().intValue() > MAX_GEO_CORDINATES) {
+                log.info("Finish create Complaint {}, {} ","FAILURE", WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode());
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
+            }
+            // validate longitude cordinates, it should be between -90 and +90
+            if (applicantComplaintRequest.getLocationLng().intValue() < MIN_GEO_CORDINATES || applicantComplaintRequest.getLocationLng().intValue() > MAX_GEO_CORDINATES) {
+                log.info("Finish create Complaint {}, {} ","FAILURE", WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode());
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
+            }
+            // validate camp number, it should be provided if city is holy sites
+            if (applicantComplaintRequest.getCity() == ECity.HOLY_SITES.getCode() && applicantComplaintRequest.getCampNumber() == null) {
+                log.info("Finish create Complaint {}, {} ","FAILURE", WsError.EWsError.COMPLAINT_CAMP_NUMBER_NOT_PROVIDED.getCode());
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.COMPLAINT_CAMP_NUMBER_NOT_PROVIDED.getCode()).build()).build());
+            }
+        }
+
+        ComplaintTypeLookupDto complaintTypeLookupDto = complaintTypeLookupService.findByCode(applicantComplaintRequest.getTypeCode());
+        if (complaintTypeLookupDto == null) {
+            log.info("Finish create Complaint {}, {} ","FAILURE", WsError.EWsError.COMPLAINT_TYPE_NOT_FOUND.getCode());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.COMPLAINT_TYPE_NOT_FOUND.getCode()).build()).build());
+        }
+        ApplicantComplaintLiteDto applicantComplaintLiteDto = applicantComplaintLiteService.addApplicantComplaint(applicantComplaintRequest, complaintAttachment);
+        log.info("Finish create Complaint {}, ReferenceNumber: {} ","SUCCESS",applicantComplaintLiteDto.getReferenceNumber());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantComplaintLiteDto).build());
+
+    }
+    
     @PostMapping("/list/{companyRefCode}/{companyTypeCode}")
     private ResponseEntity<WsResponse<?>> list(@PathVariable Long companyRefCode, @PathVariable String companyTypeCode, @RequestBody ComplaintSearchCriteriaDto criteriaDto, Pageable pageable){
 
@@ -76,7 +137,7 @@ public class ComplaintWsController {
         } else {
             log.info("Finished Handle complaint #{}, Failure {}", complaintId, "COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING");
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING").build()).build());
+                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING").build()).build());
         }
     }
 
@@ -123,7 +184,7 @@ public class ComplaintWsController {
         } else {
             log.info("Finished Handle complaint CrmTicketNumber{}, Failure {}", applicantComplaintVo.getCrmTicketNumber(), "COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING");
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING").build()).build());
+                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING").build()).build());
         }
     }
 }

@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Dto class for applicant incident domain.
+ * Dto class for applicant complaint domain.
  *
  * @author Slim Ben Hadj
  * @since 1.1.0
@@ -41,7 +41,7 @@ public class ApplicantComplaintLiteDto implements Serializable {
     private Integer city;
     private String campNumber;
     private String crmTicketNumber;
-    private List<IncidentAttachmentLiteDto> incidentAttachments;
+    private List<ComplaintAttachmentLiteDto> complaintAttachments;
     private Date creationDate;
     private Date updateDate;
 }

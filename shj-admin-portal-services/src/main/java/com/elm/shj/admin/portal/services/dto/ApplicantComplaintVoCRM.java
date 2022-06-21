@@ -22,7 +22,7 @@ public class ApplicantComplaintVoCRM implements Serializable {
     private static final long serialVersionUID = 6800775521807599452L;
 
     @JsonProperty("Status")
-    private EComplaintResolutionType status;
+    private Integer status;
     @JsonProperty("Comments")
     private String resolutionComment;
 

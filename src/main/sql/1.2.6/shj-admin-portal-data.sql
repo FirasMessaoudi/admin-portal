@@ -66,3 +66,31 @@ VALUES (10, 5, 'en', 'Others');
 SET IDENTITY_INSERT shc_portal.shc_city_lk OFF;
 
 GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('crm.url', 'https://haj-dev.alasilacx.sa');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('crm.auth.url', '/api/v1/Auth/GetToken');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('crm.complaint.update.url', '/api/v1/Ticket/UpdateStatus');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('crm.access.username', 'haj.integration.user@haj.gov.sa');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('crm.access.password', 'P@$$w0rd');
+
+GO 
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.complaint.client.protocol', 'sftp');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.complaint.client.host', '127.0.0.1');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.complaint.client.port', '22');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.complaint.client.username', 'sftp-user');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.complaint.client.password', 'Aa123456');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.complaint.client.root-folder', '/data/smart-hajj/applicant-complaints/');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.complaint.client.session-strict-host-key-checking', 'no');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.complaint.client.session-connect-timeout', '15000');
+INSERT INTO shc_portal.shc_portal.shc_config (conf_key, conf_value)
+VALUES ('sftp.complaint.client.channel-connected-timeout', '15000');
+
+GO

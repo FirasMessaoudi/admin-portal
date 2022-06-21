@@ -16,18 +16,24 @@ import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -40,6 +46,20 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ApplicantComplaintService extends GenericService<JpaApplicantComplaint, ApplicantComplaintDto, Long> {
+
+    private final WebClient webClient;
+
+    @Value("${crm.auth.url}")
+    private String crmAuthUrl;
+    @Value("${crm.url}")
+    private String crmUrl;
+    @Value("${crm.complaint.update.url}")
+    private String crmUpdateComplaintUrl;
+
+    @Value("${crm.access.username}")
+    private String crmAccessUsername;
+    @Value("${crm.access.password}")
+    private String crmAccessPassword;
 
     private final ApplicantComplaintRepository applicantComplaintRepository;
     private final SftpService sftpService;
@@ -150,6 +170,20 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
 
         if (complaint.getCrmTicketNumber() != null && !complaint.getCrmTicketNumber().isEmpty()) {
             //TODO: Update CRM Complaint status
+            ApplicantComplaintVoCRM applicantComplaintVoCRM = new ApplicantComplaintVoCRM();
+            applicantComplaintVoCRM.setCrmTicketNumber(complaint.getCrmTicketNumber());
+            applicantComplaintVoCRM.setStatus(applicantComplaintVo.getOperation().getCode());
+            applicantComplaintVoCRM.setSmartIDTicketNumber(complaint.getReferenceNumber());
+            applicantComplaintVoCRM.setResolutionComment(applicantComplaintVo.getResolutionComment());
+            try {
+                callCRM(crmUpdateComplaintUrl, HttpMethod.POST, applicantComplaintVoCRM,
+                        new ParameterizedTypeReference<ComplaintUpdateCRMDto>() {
+                        });
+                log.info("complaint successfully updated #{}", complaint.getId());
+            } catch (Exception e){
+                log.error("Failed update the status on CRM of complaint #{}", complaint.getId());
+
+            }
         }
     }
 
@@ -182,5 +216,24 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
         String uin = applicantComplaint.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin();
         String preferredLanguage = applicantComplaint.getApplicantRitual().getApplicant().getPreferredLanguage();
         notificationRequestService.sendComplaintNotification(notificationTemplate.get(), uin, preferredLanguage);
+    }
+
+    public <B, R> R callCRM(String serviceRelativeUrl, HttpMethod httpMethod, B bodyToSend,
+                            ParameterizedTypeReference<R> responseTypeReference)  {
+        CrmAuthResponse accessTokenWsResponse = webClient.post().uri(crmUrl + crmAuthUrl)
+                .body(BodyInserters.fromValue(LoginRequestCRM.builder().username(crmAccessUsername).password(crmAccessPassword).build()))
+                .retrieve().bodyToMono(CrmAuthResponse.class).block();
+        if (CrmAuthResponse.ECrmResponseStatus.SUCCESS.getCode() != accessTokenWsResponse.getResponseCode()) {
+            // cannot authenticate, throw an exception
+            // TODO: handle failure of authentication .
+        }
+        // check if no body
+        if (bodyToSend == null) {
+
+            return webClient.method(httpMethod).uri(crmUrl + serviceRelativeUrl).headers(header -> header.setBearerAuth(accessTokenWsResponse.getToken()))
+                    .retrieve().bodyToMono(responseTypeReference).block();
+        }
+        return webClient.method(httpMethod).uri(crmUrl + serviceRelativeUrl).headers(header -> header.setBearerAuth(accessTokenWsResponse.getToken()))
+                .body(BodyInserters.fromValue(bodyToSend)).retrieve().bodyToMono(responseTypeReference).block();
     }
 }
