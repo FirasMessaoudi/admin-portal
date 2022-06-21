@@ -70,3 +70,7 @@ VALUES ((SELECT id FROM shc_portal.shc_company WHERE code = '38_GOVERNMENT_AGENC
 INSERT INTO shc_portal.shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end, total_quota, air_quota, sea_quota, land_quota)
 VALUES ((SELECT id FROM shc_portal.shc_company WHERE code = '38_GOVERNMENT_AGENCY'), 3, 'true', 14431101, 14431230, 0, 0, 0, 0);
 GO
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('generate.digital.ids.scheduler.active.nodes', '127.0.0.1,localhost');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value) VALUES ('generate.applicant.card.scheduler.active.nodes', '127.0.0.1,localhost');
+GO

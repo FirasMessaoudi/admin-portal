@@ -264,7 +264,7 @@ public class ValidationService {
         if (savedRitualPackageBasicWithDetails != null) {
             savedRitualPackageId = savedRitualPackageBasicWithDetails.getId();
         }
-        log.info("Finish savePlannedPackages for {} package reference number and ritual package with {} saved.", plannedPackage.getPackageRefNumber(), savedRitualPackageId);
+        log.info("Finish savePlannedPackages for {} package reference number and ritual package with {} id saved.", plannedPackage.getPackageRefNumber(), savedRitualPackageId);
     }
 
     private void saveCompanies(HuicCompany huicCompany) {
