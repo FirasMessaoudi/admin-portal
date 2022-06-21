@@ -855,10 +855,11 @@ public class ValidationService {
         }
     }
 
+    @Transactional
     public void saveStaffFullRitual(CompanyStaffRitualDto companyStaffRitual, long staffId) {
         CompanyStaffDto existingStaff = companyStaffService.findOne(staffId);
         CompanyStaffDigitalIdBasicDto companyStaffDigitalId = companyStaffDigitalIdBasicService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
-        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
+//        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
         //existingStaff.setCompanyRitualSeason(companyRitualSeasonDto);
         if (companyStaffDigitalId != null) {
             // if he has a digital id for that same season
@@ -868,7 +869,8 @@ public class ValidationService {
                 CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
                 companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
                 companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
+                        .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
                 companyStaffCardService.save(companyStaffCardDto);
                 return;
 
@@ -890,7 +892,8 @@ public class ValidationService {
                 CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
                 companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
                 companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
+                        .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
                 companyStaffCardService.save(companyStaffCardDto);
                 return;
             }
@@ -907,7 +910,8 @@ public class ValidationService {
             CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
             companyStaffCardDto.setCompanyStaffDigitalId(savedDigitalId);
             companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-            companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+            companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
+                    .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
             companyStaffCardService.save(companyStaffCardDto);
 
         }
