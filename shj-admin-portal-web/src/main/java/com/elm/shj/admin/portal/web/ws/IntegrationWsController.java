@@ -121,6 +121,7 @@ public class IntegrationWsController {
     private final DataRequestService dataRequestService;
     private final ApplicantGroupService applicantGroupService;
     private final GroupApplicantListService groupApplicantListService;
+    private final MealTimeLookupService mealTimeLookupService;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
@@ -733,6 +734,12 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> listMealTypes() {
         log.debug("list meal types...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(mealTypeLookupService.findAll()).build());
+    }
+
+    @GetMapping("/meal-time/list")
+    public ResponseEntity<WsResponse<?>> listMealTime() {
+        log.debug("list meal types...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(mealTimeLookupService.findAll()).build());
     }
 
     /**
