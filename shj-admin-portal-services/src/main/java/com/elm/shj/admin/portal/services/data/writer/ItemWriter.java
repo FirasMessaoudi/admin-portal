@@ -579,7 +579,7 @@ public class ItemWriter {
                     // copy properties from company staff full data to company staff
 
                    // BeanUtils.copyProperties(staff, companyStaffFullData);
-                    CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getDateOfBirthGregorian(), staff.getDateOfBirthHijri());
+                    CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getNationalityCode());
                     // if record exists already in DB we need to update it
                     if (existingStaff != null) {
                         validationService.updateExistingStaff(staff, existingStaff);

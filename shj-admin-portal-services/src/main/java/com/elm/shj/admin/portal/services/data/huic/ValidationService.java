@@ -78,14 +78,11 @@ public class ValidationService {
     private final CompanyRitualSeasonService companyRitualSeasonService;
     private final CompanyRitualSeasonBasicService companyRitualSeasonBasicService;
     private final RitualSeasonRepository ritualSeasonRepository;
-    private final HousingMasterRepository housingMasterRepository;
     private final HousingMasterService housingMasterService;
     private final CompanyRepository companyRepository;
     private final CompanyRitualSeasonRepository companyRitualSeasonRepository;
     private final RitualPackageService ritualPackageService;
-    private final PackageHousingService packageHousingService;
-    private final PackageCateringService packageCateringService;
-    private final PackageTransportationService packageTransportationService;
+    private final RitualPackageBasicWithDetailsService ritualPackageBasicWithDetailsService;
     private final RitualSeasonService ritualSeasonService;
     private final ApplicantContactService applicantContactService;
     private static final String ARABIC_REGEX = "^[\\p{InArabic}\\s-_]+$";
@@ -211,7 +208,7 @@ public class ValidationService {
                         .validityStart(DateUtils.toGregorian(huicPackageTransportation.getValidityStart()))
                         .validityEnd(DateUtils.toGregorian(huicPackageTransportation.getValidityEnd()))
                         .routeDetails(huicPackageTransportation.getRouteDetails())
-                        .ritualPackage(existingRitualPackageId == null ? null : RitualPackageBasicDto.builder().id(existingRitualPackageId).build())
+                        .ritualPackage(existingRitualPackageId == null ? ritualPackageDto : RitualPackageBasicWithDetailsDto.builder().id(existingRitualPackageId).build())
                         .build();
                 packageTransportationBasicList.add(packageTransportationDto);
             });
@@ -238,7 +235,7 @@ public class ValidationService {
                         .isDefault(huicPackageHousing.isDefault())
                         .lat(housingMaster.getLat())
                         .lng(housingMaster.getLng())
-                        .ritualPackage(existingRitualPackageId == null ? null : RitualPackageBasicDto.builder().id(existingRitualPackageId).build())
+                        .ritualPackage(existingRitualPackageId == null ? ritualPackageDto : RitualPackageBasicWithDetailsDto.builder().id(existingRitualPackageId).build())
                         .build();
                 //get the package housing catering
                 if (huicPackageHousing.getPackageCaterings() != null) {
@@ -252,6 +249,7 @@ public class ValidationService {
                                 .descriptionAr(huicPackageCatering.getOptionDescriptionAr())
                                 .descriptionEn(huicPackageCatering.getOptionDescriptionEn())
                                 .isDefault(huicPackageCatering.isDefault())
+                                .packageHousing(packageHousing)
                                 .build();
                         packageCateringBasicList.add(packageCateringDto);
                     });
@@ -261,7 +259,12 @@ public class ValidationService {
             });
             ritualPackageDto.setPackageHousings(packageHousingBasicList);
         }
-        log.info("Finish savePlannedPackages for {} package reference number.", plannedPackage.getPackageRefNumber());
+        RitualPackageBasicWithDetailsDto savedRitualPackageBasicWithDetails = ritualPackageBasicWithDetailsService.save(ritualPackageDto);
+        Long savedRitualPackageId = null;
+        if (savedRitualPackageBasicWithDetails != null) {
+            savedRitualPackageId = savedRitualPackageBasicWithDetails.getId();
+        }
+        log.info("Finish savePlannedPackages for {} package reference number and ritual package with {} saved.", plannedPackage.getPackageRefNumber(), savedRitualPackageId);
     }
 
     private void saveCompanies(HuicCompany huicCompany) {

@@ -31,7 +31,7 @@ public class PackageTransportationBasicDto implements Serializable {
     private Date validityStart;
     private Date validityEnd;
     private String routeDetails;
-    private RitualPackageBasicDto ritualPackage;
+    private RitualPackageBasicWithDetailsDto ritualPackage;
     private Date creationDate;
     private Date updateDate;
 }
