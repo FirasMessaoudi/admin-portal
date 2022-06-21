@@ -405,6 +405,11 @@ public class BadgeService {
         layout.draw(g2d, xDif, yDif);
     }
     private void addNameAndNationality(Graphics2D g2d, String fullNameAr, String fullNameEn, String nationalityAr, String nationalityEn) {
+        fullNameEn=  fullNameEn == null ? "---": fullNameEn;
+        fullNameAr=  fullNameAr == null ? "---": fullNameAr;
+        nationalityAr=  nationalityAr == null ? "---": nationalityAr;
+        nationalityEn=  nationalityEn == null ? "---": nationalityEn;
+
         FontRenderContext frc = g2d.getFontRenderContext();
 
         Font font = shaaerFont.deriveFont(26f);
@@ -552,6 +557,7 @@ public class BadgeService {
     }
 
     private void addCompanyRectangle(Graphics2D g2d, ApplicantRitualCardLiteDto applicantRitualCard, String uin) {
+        uin = uin == null ? "---":uin;
         int rectHeight = (int) Math.round(2 * 84);
         int rectWidth = (int) Math.round(5.28 * 96);
         int rectX = 21;
