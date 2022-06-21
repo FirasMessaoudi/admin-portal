@@ -56,7 +56,7 @@ public class ApplicantInfoEmergencyDto implements Serializable {
     @CellIndex(index = 3)
     private Long dateOfBirthHijri;
 
-    @OnlyCharacters(min = 6, max = 150, arabic = true)
+    @OnlyCharacters(min = 6, max = 150)
     @CellIndex(index = 5)
     private String fullNameAr;
 

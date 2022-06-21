@@ -34,7 +34,7 @@ public class CompanyStaffDto {
     private long id;
 
     @CellIndex(index = 5)
-    @OnlyCharacters(min = 6, max = 150, arabic = true)
+    @OnlyCharacters(min = 6, max = 150)
     private String fullNameAr;
 
     @OnlyCharacters(min = 10, max = 150, allowEmpty = false)
