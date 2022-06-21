@@ -84,6 +84,12 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     JpaCompanyStaff findByBasicInfo(@Param("idNumber") String idNumber,
                                     @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
 
+    @Query("SELECT a.id " +
+            "FROM JpaCompanyStaff a WHERE " +
+            "(a.idNumber = :idNumber) OR " +
+            "(a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode)")
+    Long findIdByBasicInfo(@Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
+
     @Query("SELECT a " +
             "FROM JpaCompanyStaff a WHERE " +
             "((a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
