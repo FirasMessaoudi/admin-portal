@@ -766,7 +766,6 @@ public class ValidationService {
 
     public void updateGroupApplicantList(GroupApplicantListDto groupApplicantList, GroupApplicantListDto existingGroupApplicantList) {
         groupApplicantList.setId(existingGroupApplicantList.getId());
-        groupApplicantList.setApplicantGroup(existingGroupApplicantList.getApplicantGroup());
         groupApplicantList.setApplicantUin(existingGroupApplicantList.getApplicantUin());
     }
 
