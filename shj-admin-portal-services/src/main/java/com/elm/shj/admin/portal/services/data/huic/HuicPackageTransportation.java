@@ -23,14 +23,18 @@ public class HuicPackageTransportation implements Serializable {
 
     @WithTransportationType
     private Integer typeCode;
+
     private String locationFromNameAr;
     private String locationFromNameEn;
     private String locationToNameAr;
     private String locationToNameEn;
+
     @HijriDate(minOffset = -1, maxOffset = 1)
     private Long validityStart;
+
     @HijriDate(minOffset = -1, maxOffset = 1)
     private Long validityEnd;
+
     @NullOrNotBlank(min = 0, max = 600)
     private String routeDetails;
 }

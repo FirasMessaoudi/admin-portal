@@ -26,7 +26,18 @@ import java.util.List;
  **/
 public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, Long>, JpaSpecificationExecutor<JpaCompanyStaff> {
 
-    List<JpaCompanyStaff> findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(String applicantUin, long sid);
+    @Query("Select staff " +
+            "from JpaApplicantGroup g " +
+            "join g.groupApplicantLists  list " +
+            "join JpaCompanyRitualSeason ritualSeason on ritualSeason.id = g.companyRitualSeason.id " +
+            "JOIN ritualSeason.company c " +
+            "join JpaCompanyStaffCard staffCard on staffCard.companyRitualSeason.id = ritualSeason.id " +
+            "join staffCard.companyStaffDigitalId staffDigitalId " +
+            "join staffDigitalId.companyStaff staff " +
+            "join JpaApplicantPackage package on CAST(package.applicantUin as text) = list.applicantUin " +
+            "where list.applicantUin = :applicantUin " +
+            "and package.id = :sid ")
+    List<JpaCompanyStaff> findApplicantCompanyStaff(@Param("applicantUin") String applicantUin,@Param("sid") long sid);
 
     @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
             "FROM JpaCompanyStaff a WHERE " +
@@ -73,6 +84,12 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     JpaCompanyStaff findByBasicInfo(@Param("idNumber") String idNumber,
                                     @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
 
+    @Query("SELECT a.id " +
+            "FROM JpaCompanyStaff a WHERE " +
+            "(a.idNumber = :idNumber) OR " +
+            "(a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode)")
+    Long findIdByBasicInfo(@Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
+
     @Query("SELECT a " +
             "FROM JpaCompanyStaff a WHERE " +
             "((a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
@@ -90,7 +107,11 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     @Query("SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE s.idNumber=:idNumber AND sdi.statusCode=:statusCode")
     JpaCompanyStaff findByIdNumber(@Param("idNumber") String idNumber, @Param("statusCode") String statusCode);
 
+
     JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(String applicantUin, long companyRitualSeason, String titleCode);
+
+    @Query("Select staff.mobileNumber from JpaApplicantGroup ag join ag.groupApplicantLists gal join ag.groupLeader staff WHERE gal.applicantUin = :applicantUin")
+    String findGroupLeaderMobileNumberByApplicantUin(@Param("applicantUin") String applicantUin);
 
     @Modifying
     @Query("update JpaCompanyStaff staff set staff.countryCode = :countryCode, staff.email = :email, " +

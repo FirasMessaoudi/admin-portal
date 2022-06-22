@@ -24,8 +24,10 @@ public class HuicPackageCatering implements Serializable {
 
     @NotNull(message = "validation.data.constraints.msg.20001")
     private String mealCode;
+
     @WithMealTime
     private Integer mealTime;
+
     @WithMealType
     private Integer mealType;
 

@@ -115,7 +115,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
     public List<CompanyStaffDto> findRelatedEmployeesByApplicantUinAndSeasonId(String uin, long sid) {
-        return mapList(companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(uin, sid));
+        return mapList(companyStaffRepository.findApplicantCompanyStaff(uin, sid));
     }
 
     public Optional<CompanyStaffDto> findGroupLeaderByApplicantUin(String applicantUin, long companyRitualSeasonId) {
@@ -124,6 +124,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             return Optional.of(getMapper().fromEntity(companyStaff, mappingContext));
         }
         return Optional.empty();
+    }
+
+    public String findGroupLeaderMobileByApplicantUin(String applicantUin) {
+        return companyStaffRepository.findGroupLeaderMobileNumberByApplicantUin(applicantUin);
     }
 
     /**
@@ -181,6 +185,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
      */
     public CompanyStaffDto findByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
         return getMapper().fromEntity(companyStaffRepository.findByBasicInfo(idNumber, passportNumber, nationalityCode), mappingContext);
+    }
+
+    public Long findIdByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
+        return companyStaffRepository.findIdByBasicInfo(idNumber, passportNumber, nationalityCode);
     }
 
     /**
