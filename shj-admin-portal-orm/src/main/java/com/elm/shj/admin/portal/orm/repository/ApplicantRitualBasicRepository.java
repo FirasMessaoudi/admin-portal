@@ -18,6 +18,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface ApplicantRitualBasicRepository extends JpaRepository<JpaApplicantRitualBasic, Long> {
 
     @Query("select ar from JpaApplicantRitualBasic ar left join JpaApplicantCardBasic ac on ar.id = ac.applicantRitual.id " +
-            "left join JpaApplicantDigitalId adi on ar.applicant.id = adi.applicantId where ac.id is null")
+            "inner join JpaApplicantDigitalId adi on ar.applicant.id = adi.applicantId where ac.id is null")
     Page<JpaApplicantRitualBasic> findWithExistingDigitalIdAndWithoutCard(Pageable pageable);
 }
