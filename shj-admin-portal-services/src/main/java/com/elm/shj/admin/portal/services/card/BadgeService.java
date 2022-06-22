@@ -144,6 +144,12 @@ public class BadgeService {
     }
 
     public BadgeVO generateBackBadge(String uin) {
+        Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(uin);
+        ApplicantRitualCardLiteDto applicantRitualCardLite = applicantCardService.findCardDetailsByUinAndPackageId(uin, applicantPackageId).orElse(null);
+        if (applicantRitualCardLite == null) {
+            log.error("Cannot generate badge, no ritual details for the applicant with {} uin", uin);
+            return null;
+        }
         BufferedImage badgeImage = new BufferedImage(BADGE_WIDTH, BADGE_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g2d = badgeImage.createGraphics();
 
@@ -153,8 +159,10 @@ public class BadgeService {
         g2d.setColor(new Color(86, 86, 86));
 
         ImageUtils.applyQualityRenderingHints(g2d);
-        addBackBadgeBg(g2d);
-        addBackBadgeFooter(g2d);
+        addBackBadgeBg(g2d, applicantRitualCardLite.getEstablishmentId());
+        addBackBadgeText1(g2d, applicantRitualCardLite.getEstablishmentContactNumber());
+        addBackBadgeText2(g2d);
+        addBackBadgeFooter(g2d, applicantRitualCardLite.getEstablishmentId());
         addHeaderQrCode(g2d, uin);
         String imgStr = null;
         try {
@@ -166,15 +174,80 @@ public class BadgeService {
     }
 
 
-    private void addBackBadgeBg(Graphics2D g2d) {
-        BufferedImage topBackground = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "Back-BG.png");
+    private void addBackBadgeBg(Graphics2D g2d, Integer establishmentId) {
+        BufferedImage topBackground = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + establishmentId + "Back-BG.png");
         if (topBackground != null) {
             g2d.drawImage(ImageUtils.resizeImage(topBackground, BADGE_WIDTH, BADGE_HEIGHT), 0, 0, null);
         }
+        FontRenderContext frc = g2d.getFontRenderContext();
+
+        Font font = shaaerFont.deriveFont(22f);
+
+        FontMetrics fm = g2d.getFontMetrics(font);
+
+        int xDif = 140;
+        int yDif = 60;
+        g2d.setColor(Color.white);
+        TextLayout layout = new TextLayout("للمزيد من الخدمات يرجى مسح الرمز وتحميل", font, frc);
+        layout.draw(g2d, xDif, yDif);
+        xDif = 30;
+        font = font.deriveFont(
+                Collections.singletonMap(
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+        layout = new TextLayout("تطبيق الحج", font, frc);
+        layout.draw(g2d, xDif, yDif);
+        yDif += 35;
+        xDif = 30;
+        font = font.deriveFont(
+                Collections.singletonMap(
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_REGULAR));
+        layout = new TextLayout("For more Services, please scan the QR code and", font, frc);
+        layout.draw(g2d, xDif, yDif);
+
+        yDif += 25;
+        xDif = 140;
+        layout = new TextLayout("download the ", font, frc);
+        layout.draw(g2d, xDif, yDif);
+        xDif = 140 + fm.stringWidth("download the ");
+        font = font.deriveFont(
+                Collections.singletonMap(
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+        layout = new TextLayout("Hajj Application", font, frc);
+        layout.draw(g2d, xDif, yDif);
+
+
     }
 
-    private void addBackBadgeFooter(Graphics2D g2d) {
-        BufferedImage bottomBackground = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "Group 338.png");
+    private void addBackBadgeText1(Graphics2D g2d, String contactNumber) {
+        BufferedImage topBackground = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "card-back-text1.png");
+        if (topBackground != null) {
+            g2d.drawImage(ImageUtils.resizeImage(topBackground, BADGE_WIDTH, BADGE_HEIGHT), 0, 280, null);
+        }
+        FontRenderContext frc = g2d.getFontRenderContext();
+
+        Font font = shaaerFont.deriveFont(21f);
+
+        FontMetrics fm = g2d.getFontMetrics(font);
+
+        int xDif = ((BADGE_WIDTH - fm.stringWidth("123456788")) / 2);
+        int yDif = 280 + topBackground.getHeight() + 30;
+        g2d.setColor(Color.black);
+        font = font.deriveFont(
+                Collections.singletonMap(
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+        TextLayout layout = new TextLayout(contactNumber + "", font, frc);
+        layout.draw(g2d, xDif, yDif);
+    }
+
+    private void addBackBadgeText2(Graphics2D g2d) {
+        BufferedImage topBackground = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "card-back-text2.png");
+        if (topBackground != null) {
+            g2d.drawImage(ImageUtils.resizeImage(topBackground, BADGE_WIDTH, BADGE_HEIGHT), 0, 530, null);
+        }
+    }
+
+    private void addBackBadgeFooter(Graphics2D g2d, Integer establishmentId) {
+        BufferedImage bottomBackground = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + establishmentId + "back-footer.png");
         if (bottomBackground != null) {
             Image img = ImageUtils.resizeImage(bottomBackground, BADGE_WIDTH, BADGE_HEIGHT);
             g2d.drawImage(ImageUtils.resizeImage(bottomBackground, BADGE_WIDTH / 2 - 50, BADGE_HEIGHT), BADGE_WIDTH / 2 - 260, BADGE_HEIGHT - img.getHeight(null) + 250, null);

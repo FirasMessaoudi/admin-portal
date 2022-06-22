@@ -90,6 +90,7 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
         if (establishment != null) {
             returnedDto.setEstablishmentNameAr(establishment.getLabelAr());
             returnedDto.setEstablishmentNameEn(establishment.getLabelEn());
+            returnedDto.setEstablishmentContactNumber(establishment.getContactNumber());
         }
         return Optional.of(returnedDto);
     }
