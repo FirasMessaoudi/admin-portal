@@ -26,8 +26,8 @@ public class ComplaintSearchCriteriaDto implements Serializable {
     private String complaintNumber;
     private String applicantId;
     private String applicantName;
-    private Integer complaintType;
+    private String complaintType;
     private Date fromDate;
     private Date toDate;
-    private Integer status;
+    private String status;
 }

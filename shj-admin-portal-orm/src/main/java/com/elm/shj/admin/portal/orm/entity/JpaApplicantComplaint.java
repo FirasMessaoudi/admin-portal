@@ -43,10 +43,10 @@ public class JpaApplicantComplaint implements Serializable {
     private JpaApplicantRitual applicantRitual;
 
     @Column(name = "status_code")
-    private int statusCode;
+    private String statusCode;
 
     @Column(name = "type_code")
-    private int typeCode;
+    private String typeCode;
 
     private String description;
 
@@ -60,8 +60,8 @@ public class JpaApplicantComplaint implements Serializable {
     private String resolutionComment;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantComplaint")
-    private List<JpaComplaintAttachment>  complaintAttachments;
+    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantComplaint")
+    private JpaComplaintAttachment complaintAttachment;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
@@ -73,7 +73,7 @@ public class JpaApplicantComplaint implements Serializable {
     private String areaCode;
 
     @Column(name = "city")
-    private Integer city;
+    private String city;
 
     @Column(name = "camp_number")
     private String campNumber;

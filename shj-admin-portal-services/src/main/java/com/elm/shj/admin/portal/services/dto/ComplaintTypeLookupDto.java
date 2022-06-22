@@ -24,7 +24,7 @@ public class ComplaintTypeLookupDto implements Serializable {
     private static final long serialVersionUID = -5519794686804429980L;
 
     private long id;
-    private int code;
+    private String code;
     private String lang;
     private String label;
     private Date creationDate;

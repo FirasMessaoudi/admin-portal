@@ -20,7 +20,7 @@ public class ApplicantComplaintVo implements Serializable {
 
     private static final long serialVersionUID = 1382831750888750241L;
 
-    private EComplaintResolutionType operation;
+    private String operation;
 
     private String resolutionComment;
 }

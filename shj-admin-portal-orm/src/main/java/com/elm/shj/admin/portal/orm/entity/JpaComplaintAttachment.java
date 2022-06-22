@@ -35,7 +35,7 @@ public class JpaComplaintAttachment implements Serializable {
     @Column(name = "file_path")
     private String filePath;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "applicant_complaint_id")
     private JpaApplicantComplaint applicantComplaint;
 

@@ -75,7 +75,7 @@ public class ApplicantComplaintLiteService extends GenericService<JpaApplicantCo
         String referenceNumber = generateReferenceNumber();
         // generate and set reference number
         applicantComplaintLiteDto.setReferenceNumber(referenceNumber);
-        applicantComplaintLiteDto.setStatusCode(EComplaintStatus.UNDER_PROCESSING.getCode());
+        applicantComplaintLiteDto.setStatusCode(EComplaintStatus.UNDER_PROCESSING.name());
         //  lat and long
         List<AreaLayerDto> areaLayers = areaLayerService.findAll();
 

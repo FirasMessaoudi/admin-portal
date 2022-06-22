@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -27,7 +28,7 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
     @Modifying
     @Query("update JpaApplicantComplaint incident set incident.statusCode = :status, " +
             "incident.resolutionComment = :resolutionComment, incident.updateDate = current_timestamp where incident.id =:incidentId")
-    void update(@Param("incidentId") long incidentId, @Param("resolutionComment") String resolutionComment, @Param("status") int status);
+    void update(@Param("incidentId") long complaintId, @Param("resolutionComment") String resolutionComment, @Param("status") String status);
 
     @Query("SELECT c FROM JpaApplicantComplaint c JOIN c.applicantRitual ar JOIN ar.applicant a JOIN ar.applicant.digitalIds di where " +
             "(:referenceNumber is null OR c.referenceNumber like '%'+:referenceNumber+'%') and " +
@@ -41,12 +42,14 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
             "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
-    Page<JpaApplicantComplaint> findApplicantComplaintFilter(@Param("referenceNumber") String referenceNumber, @Param("typeCode") Integer typeCode,
-                                                             @Param("statusCode") Integer statusCode, @Param("applicantName") String applicantName,
+    Page<JpaApplicantComplaint> findApplicantComplaintFilter(@Param("referenceNumber") String referenceNumber, @Param("typeCode") String typeCode,
+                                                             @Param("statusCode") String statusCode, @Param("applicantName") String applicantName,
                                                              @Param("startDate") Date startDate, @Param("endDate") Date endDate,
                                                              @Param("applicantId") String applicantId, @Param("companyCode") String companyCode,
                                                              @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                                              @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
+
+    List<JpaApplicantComplaint> findTop50ByCreationDateLessThanEqualAndStatusCode(Date creationDate, int statusCode);
 
 
 

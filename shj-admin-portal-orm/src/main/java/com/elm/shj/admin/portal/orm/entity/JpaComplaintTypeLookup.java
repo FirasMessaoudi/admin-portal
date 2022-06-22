@@ -28,7 +28,7 @@ public class JpaComplaintTypeLookup {
     private long id;
 
     @Column(name = "code", nullable = false)
-    private int code;
+    private String code;
 
     @Column(name = "lang", nullable = false)
     private String lang;

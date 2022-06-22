@@ -85,11 +85,12 @@ public class ComplaintWsController {
                 log.info("Finish create Complaint {}, {} ","FAILURE", WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
             }
-            // validate camp number, it should be provided if city is holy sites
-            if (applicantComplaintRequest.getCity() == ECity.HOLY_SITES.getCode() && applicantComplaintRequest.getCampNumber() == null) {
-                log.info("Finish create Complaint {}, {} ","FAILURE", WsError.EWsError.COMPLAINT_CAMP_NUMBER_NOT_PROVIDED.getCode());
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.COMPLAINT_CAMP_NUMBER_NOT_PROVIDED.getCode()).build()).build());
-            }
+        }
+
+        // validate camp number, it should be provided if city is holy sites
+        if (applicantComplaintRequest.getCity().equals(ECity.HOLY_SITES.name()) && (applicantComplaintRequest.getCampNumber() == null || applicantComplaintRequest.getCampNumber().isEmpty())) {
+            log.info("Finish create Complaint {}, {} ","FAILURE", WsError.EWsError.COMPLAINT_CAMP_NUMBER_NOT_PROVIDED.getCode());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.COMPLAINT_CAMP_NUMBER_NOT_PROVIDED.getCode()).build()).build());
         }
 
         ComplaintTypeLookupDto complaintTypeLookupDto = complaintTypeLookupService.findByCode(applicantComplaintRequest.getTypeCode());
@@ -129,15 +130,15 @@ public class ComplaintWsController {
         log.debug("Handle complaint #{}", complaintId);
         ApplicantComplaintLiteDto complaint = applicantComplaintLiteService.findOne(complaintId);
 
-        if (complaint != null && complaint.getStatusCode() == EComplaintStatus.UNDER_PROCESSING.getCode()) {
+        if (complaint != null && complaint.getStatusCode().equals(EComplaintStatus.UNDER_PROCESSING.name())) {
 
             applicantComplaintService.update(complaint, applicantComplaintVo);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(StringUtils.EMPTY).build());
         } else {
-            log.info("Finished Handle complaint #{}, Failure {}", complaintId, "COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING");
+            log.info("Finished Handle complaint #{}, Failure {}", complaintId, "COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING");
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING").build()).build());
+                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING").build()).build());
         }
     }
 
@@ -148,7 +149,7 @@ public class ComplaintWsController {
      * @return WsResponse of  the saved complaint attachment
      */
     @GetMapping("/attachments/{attachmentId}")
-    public ResponseEntity<Resource> downloadAttachment(@PathVariable long attachmentId) throws Exception {
+    public ResponseEntity<?> downloadAttachment(@PathVariable long attachmentId) throws Exception {
         log.info("Downloading complaint attachment with id# {} ", attachmentId);
         Resource attachment = applicantComplaintService.downloadApplicantComplaintAttachment(attachmentId);
         if (attachment != null) {
@@ -162,8 +163,11 @@ public class ComplaintWsController {
                     .ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"")
                     .body(attachment);
+        } else {
+            log.info("Finished Downloading complaint attachment #{}, Failure {}", attachmentId, "COMPLAINT_ATTACHMENT_NOT_FOUND");
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_ATTACHMENT_NOT_FOUND.getCode()).referenceNumber("COMPLAINT_ATTACHMENT_NOT_FOUND").build()).build());
         }
-        return null;
     }
 
     /**
@@ -177,14 +181,14 @@ public class ComplaintWsController {
         log.debug("Handle complaint CrmTicketNumber{}", applicantComplaintVo.getCrmTicketNumber());
         ApplicantComplaintLiteDto complaint = applicantComplaintLiteService.findByCrmTicketNumber(applicantComplaintVo.getCrmTicketNumber());
 
-        if (complaint != null && complaint.getStatusCode() == EComplaintStatus.UNDER_PROCESSING.getCode()) {
+        if (complaint != null && complaint.getStatusCode().equals(EComplaintStatus.UNDER_PROCESSING.name())) {
             applicantComplaintService.updateByCrm(complaint.getId(), applicantComplaintVo);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(StringUtils.EMPTY).build());
         } else {
-            log.info("Finished Handle complaint CrmTicketNumber{}, Failure {}", applicantComplaintVo.getCrmTicketNumber(), "COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING");
+            log.info("Finished Handle complaint CrmTicketNumber {}, Failure {}", applicantComplaintVo.getCrmTicketNumber(), "COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING");
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_NOT_UNDER_PROCESSING").build()).build());
+                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING").build()).build());
         }
     }
 }

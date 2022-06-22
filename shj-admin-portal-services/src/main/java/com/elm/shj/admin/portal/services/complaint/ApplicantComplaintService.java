@@ -28,12 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -159,12 +157,12 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void update(ApplicantComplaintLiteDto complaint, ApplicantComplaintVo applicantComplaintVo) throws NotFoundException {
 
-        if (EComplaintResolutionType.RESOLVED.equals(applicantComplaintVo.getOperation())) {
-            applicantComplaintRepository.update(complaint.getId(), applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.getCode());
+        if (EComplaintResolutionType.MARK_AS_RESOLVED.name().equals(applicantComplaintVo.getOperation())) {
+            applicantComplaintRepository.update(complaint.getId(), applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.name());
             sendComplaintNotification(complaint.getId(), RESOLVE_INCIDENT_TEMPLATE_NAME);
         }
-        if (EComplaintResolutionType.CLOSED.equals(applicantComplaintVo.getOperation())) {
-            applicantComplaintRepository.update(complaint.getId(), applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.getCode());
+        if (EComplaintResolutionType.MARK_AS_CLOSED.name().equals(applicantComplaintVo.getOperation())) {
+            applicantComplaintRepository.update(complaint.getId(), applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.name());
             sendComplaintNotification(complaint.getId(), CLOSE_INCIDENT_TEMPLATE_NAME);
         }
 
@@ -172,7 +170,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
             //TODO: Update CRM Complaint status
             ApplicantComplaintVoCRM applicantComplaintVoCRM = new ApplicantComplaintVoCRM();
             applicantComplaintVoCRM.setCrmTicketNumber(complaint.getCrmTicketNumber());
-            applicantComplaintVoCRM.setStatus(applicantComplaintVo.getOperation().getCode());
+            applicantComplaintVoCRM.setStatus(EComplaintResolutionType.valueOf(applicantComplaintVo.getOperation()).getCrmCode());
             applicantComplaintVoCRM.setSmartIDTicketNumber(complaint.getReferenceNumber());
             applicantComplaintVoCRM.setResolutionComment(applicantComplaintVo.getResolutionComment());
             try {
@@ -195,12 +193,12 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void updateByCrm(long complaintId, ApplicantComplaintVoCRM applicantComplaintVo) throws NotFoundException {
 
-        if (EComplaintResolutionType.RESOLVED.equals(applicantComplaintVo.getStatus())) {
-            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.getCode());
+        if (EComplaintResolutionType.MARK_AS_RESOLVED.getCrmCode() == applicantComplaintVo.getStatus()) {
+            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.name());
             sendComplaintNotification(complaintId, RESOLVE_INCIDENT_TEMPLATE_NAME);
         }
-        if (EComplaintResolutionType.RESOLVED.equals(applicantComplaintVo.getStatus())) {
-            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.getCode());
+        if (EComplaintResolutionType.MARK_AS_CLOSED.getCrmCode() == applicantComplaintVo.getStatus()) {
+            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.name());
             sendComplaintNotification(complaintId, CLOSE_INCIDENT_TEMPLATE_NAME);
         }
 

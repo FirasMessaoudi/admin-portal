@@ -24,7 +24,7 @@ public class CityLookupDto implements Serializable {
     private static final long serialVersionUID = 349062794062613813L;
 
     private long id;
-    private int code;
+    private String code;
     private String lang;
     private String label;
     private Date creationDate;

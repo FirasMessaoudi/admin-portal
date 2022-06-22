@@ -23,7 +23,7 @@ public class ComplaintTypeLookupService extends GenericService<JpaComplaintTypeL
      * @param typeCode the code of the complaint to look for
      * @return the found complaint
      */
-    public ComplaintTypeLookupDto findByCode(Integer typeCode) {
+    public ComplaintTypeLookupDto findByCode(String typeCode) {
         return getMapper().fromEntity(((ComplaintTypeLookupRepository) getRepository()).findFirstByCode(typeCode), mappingContext);
     }
 }

@@ -13,5 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.2.6
  */
 public interface ComplaintTypeLookupRepository extends JpaRepository<JpaComplaintTypeLookup, Long> {
-    JpaComplaintTypeLookup findFirstByCode(int code);
+    JpaComplaintTypeLookup findFirstByCode(String code);
 }

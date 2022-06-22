@@ -42,10 +42,10 @@ public class JpaApplicantComplaintLite implements Serializable {
     private long applicantRitualId;
 
     @Column(name = "status_code")
-    private int statusCode;
+    private String statusCode;
 
     @Column(name = "type_code")
-    private int typeCode;
+    private String typeCode;
 
     private String description;
 
@@ -72,7 +72,7 @@ public class JpaApplicantComplaintLite implements Serializable {
     private String areaCode;
 
     @Column(name = "city")
-    private Integer city;
+    private String city;
 
     @Column(name = "camp_number")
     private String campNumber;

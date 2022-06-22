@@ -14,23 +14,23 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public enum ECity {
     MAKKAH(1), HOLY_SITES(2),MADINAH(3),JEDDAH(4),OTHERS(5);
 
-    private final int code;
+    private final int crmCode;
 
     ECity(int code) {
-        this.code = code;
+        this.crmCode = code;
     }
 
     @JsonCreator
     public static ECity getCode(int code) {
         for (final ECity s: ECity.values()) {
-            if (s.code== code) {
+            if (s.crmCode == code) {
                 return s;
             }
         }
         return null;
     }
 
-    public int getCode() {
-        return code;
+    public int getCrmCode() {
+        return crmCode;
     }
 }

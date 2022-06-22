@@ -7,14 +7,14 @@ create table shc_portal.shc_applicant_complaint
     id                  int            NOT NULL PRIMARY KEY IDENTITY (1, 1),
     reference_number    varchar(45)    NOT NULL,
     applicant_ritual_id int            NOT NULL,
-    status_code         int            NOT NULL,
-    type_code           int            NOT NULL,
+    status_code         varchar(20)    NOT NULL,
+    type_code           varchar(20)    NOT NULL,
     description         nvarchar(1000) NOT NULL,
     area_code           varchar(20),
     location_lat        decimal(10, 8) NULL,
     location_lng        decimal(11, 8) NULL,
     resolution_comment  nvarchar(1000) NULL,
-    city                int            NOT NULL,
+    city                varchar(20)    NOT NULL,
     camp_number         nvarchar(50)   NULL,
     crm_ticket_number   nvarchar(50)   NULL,
     creation_date       smalldatetime  NOT NULL default current_timestamp,
@@ -37,7 +37,7 @@ if not exists(select * from sys.tables where name = 'shc_complaint_status_lk')
 create table shc_portal.shc_complaint_status_lk
 (
     id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
-    code          int           NOT NULL,
+    code          varchar(20)   NOT NULL,
     lang          varchar(45)   NOT NULL,
     label         nvarchar(50)  NOT NULL,
     creation_date smalldatetime NOT NULL default current_timestamp,
@@ -48,7 +48,7 @@ if not exists(select * from sys.tables where name = 'shc_complaint_type_lk')
 create table shc_portal.shc_complaint_type_lk
 (
     id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
-    code          int           NOT NULL,
+    code          varchar(20)   NOT NULL,
     lang          varchar(45)   NOT NULL,
     label         nvarchar(50)  NOT NULL,
     creation_date smalldatetime NOT NULL default current_timestamp,
@@ -60,7 +60,7 @@ if not exists(select * from sys.tables where name = 'shc_city_lk')
 create table shc_portal.shc_city_lk
 (
     id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
-    code          int           NOT NULL,
+    code          varchar(20)   NOT NULL,
     lang          varchar(45)   NOT NULL,
     label         nvarchar(50)  NOT NULL,
     creation_date smalldatetime NOT NULL default current_timestamp,

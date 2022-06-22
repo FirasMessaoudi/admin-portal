@@ -28,9 +28,9 @@ public class ApplicantComplaintDto implements Serializable {
 
     private long id;
     private ApplicantRitualDto applicantRitual;
-    private int statusCode;
+    private String statusCode;
     private String referenceNumber;
-    private int typeCode;
+    private String typeCode;
     @NotNull(message = "validation.data.constraints.msg.20001")
     @Size(min = 1, max = 500)
     private String description;
@@ -41,7 +41,7 @@ public class ApplicantComplaintDto implements Serializable {
     private Date creationDate;
     private Date updateDate;
     private String areaCode;
-    private Integer city;
+    private String city;
     private String campNumber;
     private String crmTicketNumber;
 
