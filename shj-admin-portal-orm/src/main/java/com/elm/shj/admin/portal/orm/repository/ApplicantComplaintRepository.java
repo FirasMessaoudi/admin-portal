@@ -26,9 +26,14 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
 
 
     @Modifying
-    @Query("update JpaApplicantComplaint incident set incident.statusCode = :status, " +
-            "incident.resolutionComment = :resolutionComment, incident.updateDate = current_timestamp where incident.id =:incidentId")
-    void update(@Param("incidentId") long complaintId, @Param("resolutionComment") String resolutionComment, @Param("status") String status);
+    @Query("update JpaApplicantComplaint complaint set complaint.statusCode = :status, " +
+            "complaint.resolutionComment = :resolutionComment, complaint.updateDate = current_timestamp where complaint.id =:complaintId")
+    void update(@Param("complaintId") long complaintId, @Param("resolutionComment") String resolutionComment, @Param("status") String status);
+
+    @Modifying
+    @Query("update JpaApplicantComplaint complaint set complaint.statusCode = :status, " +
+            "complaint.crmTicketNumber = :crmTicketNumber, complaint.updateDate = current_timestamp where complaint.id =:complaintId")
+    void updateCRMTicketNumber(@Param("complaintId") long complaintId, @Param("crmTicketNumber") String crmTicketNumber);
 
     @Query("SELECT c FROM JpaApplicantComplaint c JOIN c.applicantRitual ar JOIN ar.applicant a JOIN ar.applicant.digitalIds di where " +
             "(:referenceNumber is null OR c.referenceNumber like '%'+:referenceNumber+'%') and " +
@@ -49,7 +54,7 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
                                                              @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                                              @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
 
-    List<JpaApplicantComplaint> findTop50ByCreationDateLessThanEqualAndStatusCode(Date creationDate, int statusCode);
+    List<JpaApplicantComplaint> findTop50ByCreationDateLessThanEqualAndStatusCode(Date creationDate, String statusCode);
 
 
 

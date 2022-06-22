@@ -86,7 +86,7 @@ public class ApplicantComplaintScheduler {
         LockAssert.assertLocked();
         //TODO
         Date date = new Date(System.currentTimeMillis() - 3600 * 1000 * 24);
-        List<JpaApplicantComplaint> complaints = applicantComplaintRepository.findTop50ByCreationDateLessThanEqualAndStatusCode(date, EComplaintStatus.UNDER_PROCESSING.getCode());
+        List<JpaApplicantComplaint> complaints = applicantComplaintRepository.findTop50ByCreationDateLessThanEqualAndStatusCode(date, EComplaintStatus.UNDER_PROCESSING.name());
 
         complaints.stream().forEach(complaint -> {
             try {
@@ -98,7 +98,7 @@ public class ApplicantComplaintScheduler {
                     // TODO: handle failure of authentication .
                 }
                 ApplicantCreateUserVoCRM user = new ApplicantCreateUserVoCRM();
-                user.setCustomerType(1);
+                user.setCustomerType(ECustomerTypeCRM.PILGRIM.getCrmCode());
                 user.setDigitalID(complaint.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin());
                 user.setIdNumber(complaint.getApplicantRitual().getApplicant().getIdNumber());
                 user.setPassportNumber(complaint.getApplicantRitual().getApplicant().getPassportNumber());
@@ -140,9 +140,11 @@ public class ApplicantComplaintScheduler {
                 newComplaint.setCity(ECity.valueOf(complaint.getCity()).getCrmCode());
                 newComplaint.setCampNumber(complaint.getCampNumber());
 
-                callCRM(crmCreateComplaintUrl, HttpMethod.POST, newComplaint, accessTokenWsResponse.getToken(),
+                ComplaintUpdateCRMDto updateCRMDto = callCRM(crmCreateComplaintUrl, HttpMethod.POST, newComplaint, accessTokenWsResponse.getToken(),
                         new ParameterizedTypeReference<ComplaintUpdateCRMDto>() {
                         });
+
+                applicantComplaintRepository.updateCRMTicketNumber(complaint.getId(), updateCRMDto.getCrmTicketNumber());
                 log.info("complaint successfully created #{}", complaint.getId());
             } catch (Exception e) {
                 log.error("Failed create complaint of #{}", complaint.getId());

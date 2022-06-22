@@ -22,9 +22,8 @@ public class ComplaintUpdateCRMDto implements Serializable {
 
     private static final long serialVersionUID = 7859415865388347182L;
 
-    private String ComplaintSearchCriteriaDto;
-    private String SmartIDTicketNumber;
-    private String Comments;
-    private Integer Status;
+    private String crmTicketNumber;
+    private String message;
+    private Integer responseCode;
 
 }
