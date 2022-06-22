@@ -17,7 +17,7 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface ApplicantBasicRepository extends JpaRepository<JpaApplicantBasic, Long> {
 
-    @Query("SELECT a FROM JpaApplicantBasic a WHERE a.id NOT IN (SELECT ad.applicantId FROM JpaApplicantDigitalId ad)")
+    @Query("SELECT a FROM JpaApplicantBasic a LEFT JOIN JpaApplicantDigitalId ad on a.id = ad.applicantId WHERE ad.id IS NULL")
     Page<JpaApplicantBasic> findAllApplicantsWithoutDigitalId(Pageable pageable);
 
 }
