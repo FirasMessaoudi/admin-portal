@@ -29,7 +29,7 @@ public class WithCompanyRitualSeasonValidator implements ConstraintValidator<Wit
      */
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-
+        //TODO(aflaifel): get the companyRitualSeasonId not the whole object
         if (value == null) {
             return false;
         } else if (value instanceof StaffApplicantGroupDto) {
@@ -49,12 +49,9 @@ public class WithCompanyRitualSeasonValidator implements ConstraintValidator<Wit
                     ERitualType.fromId(huicPlannedPackage.getRitualTypeCode()) == null) {
                 return false;
             }
-            CompanyRitualSeasonDto companyRitualSeason = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(huicPlannedPackage.getCompanyRefCode() + "_" + ECompanyType.fromId(huicPlannedPackage.getCompanyTypeCode()).name(), ERitualType.fromId(huicPlannedPackage.getRitualTypeCode()).name(), huicPlannedPackage.getSeasonYear());
-            return companyRitualSeason != null;
+            Long companyRitualSeasonId = companyRitualSeasonService.getCompanyRitualSeasonId(huicPlannedPackage.getCompanyRefCode() + "_" + ECompanyType.fromId(huicPlannedPackage.getCompanyTypeCode()).name(), ERitualType.fromId(huicPlannedPackage.getRitualTypeCode()).name(), huicPlannedPackage.getSeasonYear());
+            return companyRitualSeasonId != null;
         }
-
-
-
     }
 
 }
