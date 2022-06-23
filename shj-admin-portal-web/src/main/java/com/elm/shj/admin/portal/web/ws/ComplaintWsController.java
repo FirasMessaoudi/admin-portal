@@ -124,7 +124,7 @@ public class ComplaintWsController {
      * @param complaintId the ID of the complaint to update
      * @return the {@link ResponseEntity} with status
      */
-    @PutMapping("/handle/{complaintId}")
+    @PostMapping("/handle/{complaintId}")
     public ResponseEntity<WsResponse<?>> handleComplaint(@PathVariable long complaintId,
                                                   @RequestBody ApplicantComplaintVo applicantComplaintVo) throws NotFoundException {
         log.debug("Handle complaint #{}", complaintId);
@@ -176,7 +176,7 @@ public class ComplaintWsController {
      * @body ApplicantComplaintVoCRM of the complaint to update
      * @return the {@link ResponseEntity} with status
      */
-    @PutMapping("/handle")
+    @PostMapping("/handle")
     public ResponseEntity<WsResponse<?>> handleComplaintByCRM(@RequestBody ApplicantComplaintVoCRM applicantComplaintVo) throws NotFoundException {
         log.debug("Handle complaint CrmTicketNumber{}", applicantComplaintVo.getCrmTicketNumber());
         ApplicantComplaintLiteDto complaint = applicantComplaintLiteService.findByCrmTicketNumber(applicantComplaintVo.getCrmTicketNumber());

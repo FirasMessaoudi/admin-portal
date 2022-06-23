@@ -42,4 +42,13 @@ public class CompanyStaffDigitalIdBasicService extends GenericService<JpaCompany
         return null;
 
     }
+
+    public CompanyStaffDigitalIdBasicDto findByBasicInfoWithoutDigitalIdStatus(long staffId, int season) {
+        Optional<JpaCompanyStaffDigitalIdBasic> digitalId = companyStaffDigitalIdBasicRepository.findByBasicInfo(staffId,season) ;
+        if (digitalId != null && digitalId.isPresent()) {
+            return getMapper().fromEntity(digitalId.get(), mappingContext);
+        }
+        return null;
+
+    }
 }

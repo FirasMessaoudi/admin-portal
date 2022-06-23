@@ -837,7 +837,7 @@ public class IntegrationWsController {
      * @param lang the preferred language to update user with
      * @return WsResponse of applicant (in case of success) or error (in case of failure)
      */
-    @PutMapping("/applicant/language/{uin}/{lang}")
+    @PostMapping("/applicant/language/{uin}/{lang}")
     public ResponseEntity<WsResponse<?>> updateUserPreferredLanguage(@PathVariable String lang, @PathVariable String uin) {
         //FixMe: performance enhancement why here use applicantLiteService.findByUin and inside  applicantService.updatePreferredLanguage call findByUin again, here called unnecessary two queries, we can handle them in one query
         Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(uin);
@@ -961,7 +961,7 @@ public class IntegrationWsController {
      * @param uin            The UIN of the applicant.
      * @param mobileLoggedIn flag set to true when login, and false when logout
      */
-    @PutMapping("/applicant/mobile-login/{uin}/{mobileLoggedIn}")
+    @PostMapping("/applicant/mobile-login/{uin}/{mobileLoggedIn}")
     public ResponseEntity<WsResponse<?>> updateLoggedInFromMobileAppFlag(@PathVariable String uin, @PathVariable boolean mobileLoggedIn) {
         Optional<ApplicantDto> applicant = applicantService.findByUin(uin);
         if (applicant.isPresent()) {
@@ -1219,7 +1219,7 @@ public class IntegrationWsController {
                 .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(String.valueOf(id)).build()).build());
     }
 
-    @PutMapping("/staff/update-job-title")
+    @PostMapping("/staff/update-job-title")
     public ResponseEntity<WsResponse<?>> updateCompanyStaffTitle(@RequestBody UpdateStaffTitleCmd command) {
         log.info("find employees by code and type code");
         UpdateStaffTitleCmd cmd = companyStaffService.updateCompanyStaffTitle(command);
@@ -1301,7 +1301,7 @@ public class IntegrationWsController {
      * @param updateGroupCmd
      * @return
      */
-    @PutMapping("/applicant/update-group")
+    @PostMapping("/applicant/update-group")
     public ResponseEntity<WsResponse<?>> updateApplicantGroup(@RequestBody UpdateGroupCmd updateGroupCmd) {
         boolean updated = groupApplicantListService.updateGroup(updateGroupCmd);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
@@ -1313,7 +1313,7 @@ public class IntegrationWsController {
      * @return
      */
 
-    @PutMapping("/applicant/update-health-profile")
+    @PostMapping("/applicant/update-health-profile")
     public ResponseEntity<WsResponse<?>> updateApplicantHealthProfile(@RequestBody ApplicantHealthLiteDto applicantHealthLiteDto) {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantHealthLiteService.save(applicantHealthLiteDto)).build());
 
@@ -1425,4 +1425,12 @@ public class IntegrationWsController {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.saveOrUpdateStaffFullMainData(companyStaffMainFullDataDto, avatar)).build());
         }
     }
+
+    @PostMapping("/staff/delete/{staffId}")
+    public ResponseEntity<WsResponse<?>> deletStaff(@PathVariable Long staffId) {
+        log.info("deletStaff start");
+        boolean deleted = companyStaffService.deleteStaff(staffId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(deleted).build());
+    }
+
 }

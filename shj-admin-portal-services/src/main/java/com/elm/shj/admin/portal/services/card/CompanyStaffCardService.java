@@ -196,4 +196,12 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
         return  companyStaffCardRepository.findAllByStaffDigitalIds(digitalIds, Arrays.asList(ECardStatus.CANCELLED.name(),ECardStatus.EXPIRED.name(),ECardStatus.SUSPENDED.name()));
 
     }
+
+    public void updateStaffCardStatusByStaffId(long staffId){
+        companyStaffCardRepository.updateCompanyStaffCardStatus(staffId);
+    }
+
+    public CompanyStaffCardDto findStaffCardByStaffId(Long staffId){
+        return getMapper().fromEntity(companyStaffCardRepository.findStaffCard(staffId), mappingContext);
+    }
 }

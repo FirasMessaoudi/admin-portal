@@ -85,4 +85,11 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
             "where card.statusCode not in :cardStatusCodeList " +
             "and digitalId.suin in :digitalIdList ")
     List<ApplicantBasicInfoVo> findAllByStaffDigitalIds(@Param("digitalIdList") List<String> digitalIdList,@Param("cardStatusCodeList") List<String> cardStatusCodeList);
+
+    @Query("SELECT staffCard FROM JpaCompanyStaffCard staffCard join staffCard.companyStaffDigitalId csd join csd.companyStaff cs WHERE cs.id = :staffId and staffCard.statusCode <> 'EXPIRED' ")
+    JpaCompanyStaffCard findStaffCard(@Param("staffId") Long staffId);
+
+    @Modifying
+    @Query("UPDATE JpaCompanyStaffCard csc SET csc.statusCode= 'EXPIRED', csc.updateDate = CURRENT_TIMESTAMP WHERE csc.id = :staffCardId")
+    void updateCompanyStaffCardStatus(@Param("staffCardId") long staffCardId);
 }

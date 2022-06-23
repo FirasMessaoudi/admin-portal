@@ -103,7 +103,7 @@ export class NotificationService {
   updateNotificationTemplate(notificationTemplate: NotificationTemplate): Observable<any> {
     let headers = new HttpHeaders();
     headers = headers.set('X-XSRF-TOKEN', this.cookieService.get("XSRF-TOKEN"));
-    return this.http.put<any>('/core/api/notification/template/update', notificationTemplate, {'headers': headers})
+    return this.http.post<any>('/core/api/notification/template/update', notificationTemplate, {'headers': headers})
       .pipe(catchError((error: HttpErrorResponse) => {
           if (error.status == 558) {
             return of(error);
@@ -127,7 +127,7 @@ export class NotificationService {
   updateUserDefined(notificationTemplate: NotificationTemplate): Observable<any> {
     let headers = new HttpHeaders();
     headers = headers.set('X-XSRF-TOKEN', this.cookieService.get("XSRF-TOKEN"));
-    return this.http.put<any>('/core/api/notification/template/user-defined/update', notificationTemplate, {'headers': headers})
+    return this.http.post<any>('/core/api/notification/template/user-defined/update', notificationTemplate, {'headers': headers})
       .pipe(catchError((error: HttpErrorResponse) => {
           if (error.hasOwnProperty('error')) {
             return of(error.error);

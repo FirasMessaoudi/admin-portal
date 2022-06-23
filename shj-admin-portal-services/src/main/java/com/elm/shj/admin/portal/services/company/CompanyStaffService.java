@@ -234,10 +234,11 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     public int updateCompanyStaff(long staffId, UpdateStaffCmd command) {
         int updatedRowsCount = 0;
 
-            updatedRowsCount += companyStaffRepository.updateCompanyStaffLocalNumber(command.getEmail(), command.getMobileNumber(), staffId);
-
-            updatedRowsCount += companyStaffRepository.updateCompanyStaffIntlNumber(command.getEmail(), command.getCountryPhonePrefix(), command.getMobileNumber(), staffId);
-
+        if (command.getCountryPhonePrefix().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
+            updatedRowsCount += companyStaffRepository.updateCompanyStaffLocalNumber(command.getEmail(),command.getCountryCode(), command.getMobileNumber(), staffId);
+        } else {
+            updatedRowsCount += companyStaffRepository.updateCompanyStaffIntlNumber(command.getEmail(),command.getCountryCode(), command.getCountryPhonePrefix(), command.getMobileNumber(), staffId);
+        }
         return updatedRowsCount;
     }
 
@@ -318,6 +319,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             Join<JpaCompanyStaffDigitalId, JpaCompanyStaffCard> companyStaffCards = digitalId.join("companyStaffCards");
             Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = companyStaffCards.join("companyRitualSeason");
 
+            predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
+
             if (criteria.getSuin() != null && !criteria.getSuin().equals("")) {
                 Path<String> suin = digitalId.get("suin");
                 predicates.add(criteriaBuilder.equal(suin, criteria.getSuin()));
@@ -346,10 +349,6 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             Join<JpaCompanyRitualSeason, JpaCompany> company = companyRitualSeason.join("company");
             Path<String> companyCode = company.get("code");
             predicates.add(criteriaBuilder.equal(companyCode, criteria.getCompanyCode()));
-
-            Path<Boolean> isDieleted = root.get("deleted");
-            predicates.add(criteriaBuilder.equal(isDieleted, Boolean.FALSE));
-
 
             if (criteria.getRitualType() != null && !criteria.getRitualType().equals("")) {
                 Join<JpaCompanyRitualSeason, JpaRitualSeason> ritualSeason = companyRitualSeason.join("ritualSeason");
@@ -511,8 +510,11 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
     private void saveStaffFullRitual(CompanyStaffRitualDto companyStaffRitual, long staffId) {
         CompanyStaffDto existingStaff = findOne(staffId);
-        CompanyStaffDigitalIdBasicDto companyStaffDigitalId = companyStaffDigitalIdBasicService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
+        CompanyStaffDigitalIdBasicDto companyStaffDigitalId = companyStaffDigitalIdBasicService.findByBasicInfoWithoutDigitalIdStatus(existingStaff.getId(), companyStaffRitual.getSeason());
         if (companyStaffDigitalId != null) {
+            //set digital id status is valid
+            companyStaffDigitalId.setStatusCode(EDigitalIdStatus.VALID.name());
+            companyStaffDigitalIdBasicService.save(companyStaffDigitalId);
             // if he has a digital id for that same season
             List<CompanyStaffCardDto> companyStaffCardDtos = companyStaffCardService.findByDigitalId(companyStaffDigitalId.getSuin());
             // if no cards for digitalId and SEASON
@@ -617,5 +619,27 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return dataValidationResults;
     }
 
+    @Transactional
+    public boolean deleteStaff(Long staffId){
+        log.info("Start delete staff by staff id. {}", staffId);
+        if(staffId == null) return false;
+        // update staff as deleted true
+        CompanyStaffDto staff = findOne(staffId);
+        staff.setDeleted(Boolean.TRUE);
+        save(staff);
+        log.info("Update staff. {}", staff);
+        // update digital id status INVALID
+        if(staff == null) return false;
+
+        log.info("Start update digital id status by staff id. {}", staff.getId());
+        companyStaffDigitalIdService.updateDigitalIdStatus(staffId);
+
+        CompanyStaffCardDto companyStaffCardDto = companyStaffCardService.findStaffCardByStaffId(staffId);
+        // update staff car status Cancelled
+        companyStaffCardService.updateStaffCardStatusByStaffId(companyStaffCardDto.getId());
+        log.info("Update staff successfully ..");
+
+        return true;
+    }
 
 }
