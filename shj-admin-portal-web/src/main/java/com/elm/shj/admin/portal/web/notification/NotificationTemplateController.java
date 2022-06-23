@@ -91,7 +91,7 @@ public class NotificationTemplateController {
         return notificationTemplateService.findOne(templateId);
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.SYSTEM_DEFINED_NOTIFICATION_DETAILS + "')")
     public ResponseEntity<NotificationTemplateDto> updateNotificationTemplate(@RequestBody @Validated NotificationTemplateDto notificationTemplate) {
         if (!validateTemplateContentParams(notificationTemplate))
@@ -100,7 +100,7 @@ public class NotificationTemplateController {
         return ResponseEntity.ok(updatedNotificationTemplate);
     }
 
-    @PutMapping("/user-defined/update")
+    @PostMapping("/user-defined/update")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.EDIT_USER + "')")
     public ResponseEntity<NotificationTemplateDto> updateUserDefinedNotificationTemplate(@RequestBody @Validated NotificationTemplateDto notificationTemplate) {
         log.debug("Handler for {}", "Update User Defined Notification");

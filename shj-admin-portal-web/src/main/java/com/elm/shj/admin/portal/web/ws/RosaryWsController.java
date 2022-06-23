@@ -80,19 +80,19 @@ public class RosaryWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(supplicationUserCounterService.findAllSupplicationsCounterByDigitalId(digitalId)).build());
     }
-    @PutMapping("/delete-supplication/{id}")
+    @PostMapping("/delete-supplication/{id}")
     public ResponseEntity<WsResponse<?>> deleteSupplication(@PathVariable("id") long id){
         log.debug("Delete supplication by digital Id {}   ",id);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(userSupplicationService.deleteSupplication(id)).build());
     }
-    @PutMapping("/reset-supplication-number/{id}")
+    @PostMapping("/reset-supplication-number/{id}")
     public ResponseEntity<WsResponse<?>> resetSupplicationLastNumber(@PathVariable("id") long id){
         log.debug("modify supplication by digital Id {}   ",id);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(supplicationUserCounterService.resetSupplicationCounter(id)).build());
     }
-    @PutMapping("/update-supplication-numbers/{id}/{total}/{last}")
+    @PostMapping("/update-supplication-numbers/{id}/{total}/{last}")
     public ResponseEntity<WsResponse<?>> updateSupplicationNumbers(@PathVariable("id") long id,@PathVariable("total") int total,@PathVariable("last") int last){
         log.debug("modify supplication numbers by digital Id {}   ",id);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())

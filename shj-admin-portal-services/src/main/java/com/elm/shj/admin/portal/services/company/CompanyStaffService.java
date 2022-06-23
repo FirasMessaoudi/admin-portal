@@ -618,5 +618,27 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return dataValidationResults;
     }
 
+    @Transactional
+    public boolean deleteStaff(Long staffId){
+        log.info("Start delete staff by staff id. {}", staffId);
+        if(staffId == null) return false;
+        // update staff as deleted true
+        CompanyStaffDto staff = findOne(staffId);
+        staff.setDeleted(Boolean.TRUE);
+        save(staff);
+        log.info("Update staff. {}", staff);
+        // update digital id status INVALID
+        if(staff == null) return false;
+
+        log.info("Start update digital id status by staff id. {}", staff.getId());
+        companyStaffDigitalIdService.updateDigitalIdStatus(staffId);
+
+        CompanyStaffCardDto companyStaffCardDto = companyStaffCardService.findStaffCardByStaffId(staffId);
+        // update staff car status Cancelled
+        companyStaffCardService.updateStaffCardStatusByStaffId(companyStaffCardDto.getId());
+        log.info("Update staff successfully ..");
+
+        return true;
+    }
 
 }
