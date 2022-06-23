@@ -107,8 +107,8 @@ export class ResetPasswordComponent implements OnInit {
     }
     let user = {
       idNumber: this.resetPasswordForm.controls.idNumber.value,
-      dateOfBirthGregorian: this.dateOfBirthPicker.selectedDateType == DateType.Gregorian ? this.resetPasswordForm.controls.dateOfBirthGregorian.value : null,
-      dateOfBirthHijri: this.dateOfBirthPicker.selectedDateType == DateType.Hijri ? this.resetPasswordForm.controls.dateOfBirthHijri.value : null
+      dateOfBirthGregorian: this.resetPasswordForm.controls.dateOfBirthGregorian.value,
+      dateOfBirthHijri: this.resetPasswordForm.controls.dateOfBirthHijri.value
     }
     // everything is fine we move to recaptcha check
     // if we get a successful response from recaptcha, then we send the form
