@@ -81,6 +81,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .idNumber(companyStaff.getIdNumber())
                     .passportNumber(companyStaff.getPassportNumber())
                     .digitalIds(companyStaff.getDigitalIds())
+                    .mobileNumberIntl(companyStaff.getMobileNumberIntl())
+                    .countryPhonePrefix(companyStaff.getCountryPhonePrefix())
                     .build();
             return Optional.of(companyStaffLite);
         } else return Optional.empty();
@@ -106,6 +108,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .idNumber(companyStaff.getIdNumber())
                     .passportNumber(companyStaff.getPassportNumber())
                     .digitalIds(companyStaff.getDigitalIds())
+                    .mobileNumberIntl(companyStaff.getMobileNumberIntl())
+                    .countryPhonePrefix(companyStaff.getCountryPhonePrefix())
                     .build();
             return Optional.of(companyStaffLite);
         } else return Optional.empty();
@@ -131,6 +135,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .idNumber(companyStaff.getIdNumber())
                     .passportNumber(companyStaff.getPassportNumber())
                     .digitalIds(companyStaff.getDigitalIds())
+                    .mobileNumberIntl(companyStaff.getMobileNumberIntl())
+                    .countryPhonePrefix(companyStaff.getCountryPhonePrefix())
                     .build();
             return Optional.of(companyStaffLite);
         } else return Optional.empty();
