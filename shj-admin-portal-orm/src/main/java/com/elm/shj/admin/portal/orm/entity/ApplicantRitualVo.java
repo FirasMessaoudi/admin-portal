@@ -29,6 +29,12 @@ public class ApplicantRitualVo implements Serializable {
         applicant = new ApplicantBasicInfoVo(fullNameAr, fullNameEn, uin);
     }
 
+    public ApplicantRitualVo(String fullNameAr, String fullNameEn,String fullNameOrigin, String idNumber, String passportNumber, Long dateOfBirthHijri,
+                             Date dateOfBirthGregorian, String gender, String nationalityCode,String email,
+                             String localMobileNumber, String intlMobileNumber, String uin) {
+        applicant = new ApplicantBasicInfoVo(fullNameAr, fullNameEn, fullNameOrigin, idNumber, passportNumber, dateOfBirthHijri, dateOfBirthGregorian, gender, nationalityCode, email, localMobileNumber, intlMobileNumber, uin);
+    }
+
     public ApplicantRitualVo(String fullNameAr, String fullNameEn, String uin, String preferredLanguage) {
         applicant = new ApplicantBasicInfoVo(fullNameAr, fullNameEn, uin, preferredLanguage);
     }

@@ -5,8 +5,10 @@ package com.elm.shj.admin.portal.services.complaint;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantComplaint;
 import com.elm.shj.admin.portal.orm.entity.JpaComplaintAttachment;
+import com.elm.shj.admin.portal.orm.entity.JpaComplaintAttachmentLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantComplaintLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantComplaintRepository;
+import com.elm.shj.admin.portal.orm.repository.ComplaintAttachmentLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ComplaintAttachmentRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -64,6 +66,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     private final ApplicantComplaintLiteRepository applicantComplaintLiteRepository;
     private final SftpService sftpService;
     private final ComplaintAttachmentRepository complaintAttachmentRepository;
+    private final ComplaintAttachmentLiteRepository complaintAttachmentLiteRepository;
     private final NotificationRequestService notificationRequestService;
     private final NotificationTemplateService notificationTemplateService;
     private static final String RESOLVE_INCIDENT_TEMPLATE_NAME = "RESOLVE_INCIDENT";
@@ -145,7 +148,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
      * @return the attachment of the applicant complaint
      */
     public Resource downloadApplicantComplaintAttachment(long complaintAttachmentId) throws Exception {
-        Optional<JpaComplaintAttachment> complaintAttachment = complaintAttachmentRepository.findById(complaintAttachmentId);
+        Optional<JpaComplaintAttachmentLite> complaintAttachment = complaintAttachmentLiteRepository.findById(complaintAttachmentId);
         if (!complaintAttachment.isPresent()) {
             return null;
         }

@@ -56,8 +56,12 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
                                                             @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                                             @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
 
-
-    List<JpaApplicantComplaint> findTop50ByCreationDateLessThanEqualAndStatusCode(Date creationDate, String statusCode);
+    @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.typeCode, c.description,c.locationLat, c.locationLng,c.creationDate, att.id,a.fullNameAr,a.fullNameEn,a.fullNameOrigin, a.idNumber, a.passportNumber,a.dateOfBirthHijri, a.dateOfBirthGregorian,a.gender,a.nationalityCode,ac.email,ac.localMobileNumber,ac.intlMobileNumber, di.uin, COUNT(c)) " +
+            "FROM JpaApplicantComplaint c JOIN c.applicantRitual ar JOIN ar.applicant a JOIN  a.digitalIds di JOIN a.contacts ac LEFT JOIN c.complaintAttachment att " +
+            "WHERE (:statusCode is null OR c.statusCode = :statusCode) and " +
+            "c.creationDate <= :creationDate " +
+            "GROUP BY c.id,c.referenceNumber,c.typeCode, c.description,c.locationLat, c.locationLng,c.creationDate, att.id,a.fullNameAr,a.fullNameEn,a.fullNameOrigin, a.idNumber, a.passportNumber,a.dateOfBirthHijri, a.dateOfBirthGregorian,a.gender,a.nationalityCode,ac.email,ac.localMobileNumber,ac.intlMobileNumber, di.uin")
+    Page<ApplicantComplaintVo> findTop50ByCreationDateLessThanEqualAndStatusCode(@Param("creationDate") Date creationDate, @Param("statusCode") String statusCode, Pageable pageable);
 
 
 

@@ -35,9 +35,8 @@ public class JpaComplaintAttachmentLite implements Serializable {
     @Column(name = "file_path")
     private String filePath;
 
-    @OneToOne
-    @JoinColumn(name = "applicant_complaint_id")
-    private JpaApplicantComplaintLite applicantComplaintLite;
+    @Column(name = "applicant_complaint_id")
+    private long applicantComplaintId;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;

@@ -3,7 +3,8 @@
  */
 package com.elm.shj.admin.portal.services.complaint;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantComplaint;
+import com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo;
+import com.elm.shj.admin.portal.orm.repository.ApplicantComplaintLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantComplaintRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,10 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -58,6 +63,7 @@ public class ApplicantComplaintScheduler {
     private final WebClient webClient;
 
     private final ApplicantComplaintRepository applicantComplaintRepository;
+    private final ApplicantComplaintLiteRepository applicantComplaintLiteRepository;
 
 
     /**
@@ -82,11 +88,14 @@ public class ApplicantComplaintScheduler {
             log.warn("Applicant complaint scheduler will not run, {} ip is not in the configured active nodes list.", runningIpAddress);
             return;
         }
+
         log.debug("Generate applicants complaints scheduler started...");
         LockAssert.assertLocked();
         //TODO
         Date date = new Date(System.currentTimeMillis() - 3600 * 1000 * 24);
-        List<JpaApplicantComplaint> complaints = applicantComplaintRepository.findTop50ByCreationDateLessThanEqualAndStatusCode(date, EComplaintStatus.UNDER_PROCESSING.name());
+        Pageable pageable = PageRequest.of(0, 50,
+                Sort.by(Sort.Direction.DESC, "id"));
+        Page<ApplicantComplaintVo> complaints = applicantComplaintRepository.findTop50ByCreationDateLessThanEqualAndStatusCode(date, EComplaintStatus.UNDER_PROCESSING.name(), pageable);
 
         complaints.stream().forEach(complaint -> {
             try {
@@ -99,7 +108,7 @@ public class ApplicantComplaintScheduler {
                 }
                 ApplicantCreateUserVoCRM user = new ApplicantCreateUserVoCRM();
                 user.setCustomerType(ECustomerTypeCRM.PILGRIM.getCrmCode());
-                user.setDigitalID(complaint.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin());
+                user.setDigitalID(complaint.getApplicantRitual().getApplicant().getUin());
                 user.setIdNumber(complaint.getApplicantRitual().getApplicant().getIdNumber());
                 user.setPassportNumber(complaint.getApplicantRitual().getApplicant().getPassportNumber());
                 user.setDateOfBirthHijri(complaint.getApplicantRitual().getApplicant().getDateOfBirthHijri().toString());
@@ -111,20 +120,20 @@ public class ApplicantComplaintScheduler {
                 user.setFullNameOrginalLang(complaint.getApplicantRitual().getApplicant().getFullNameOrigin());
                 user.setGender(complaint.getApplicantRitual().getApplicant().getGender());
                 user.setNationalityCode(complaint.getApplicantRitual().getApplicant().getNationalityCode());
-                if (!complaint.getApplicantRitual().getApplicant().getContacts().isEmpty()) {
-                    user.setEmail(complaint.getApplicantRitual().getApplicant().getContacts().get(0).getEmail());
-                    if (complaint.getApplicantRitual().getApplicant().getContacts().get(0).getLocalMobileNumber() != null)
-                        user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getContacts().get(0).getLocalMobileNumber());
-                    else
-                        user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getContacts().get(0).getIntlMobileNumber());
-                }
+
+                user.setEmail(complaint.getApplicantRitual().getApplicant().getEmail());
+                if (complaint.getApplicantRitual().getApplicant().getLocalMobileNumber() != null)
+                    user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getLocalMobileNumber());
+                else
+                    user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getIntlMobileNumber());
+
 
                 callCRM(crmCreateUserProfileUrl, HttpMethod.POST, user, accessTokenWsResponse.getToken(),
                         new ParameterizedTypeReference<ComplaintUpdateCRMDto>() {
                         });
 
                 ApplicantCreateComplaintVoCRM newComplaint = new ApplicantCreateComplaintVoCRM();
-                newComplaint.setDigitalID(complaint.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin());
+                newComplaint.setDigitalID(complaint.getApplicantRitual().getApplicant().getUin());
                 newComplaint.setIdNumber(complaint.getApplicantRitual().getApplicant().getIdNumber());
                 newComplaint.setPassportNumber(complaint.getApplicantRitual().getApplicant().getPassportNumber());
                 newComplaint.setNationalityCode(complaint.getApplicantRitual().getApplicant().getNationalityCode());

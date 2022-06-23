@@ -72,4 +72,23 @@ public class ApplicantComplaintVo implements Serializable {
         this.updateDate = updateDate;
         applicantRitual = new ApplicantRitualVo(fullNameAr,fullNameEn,uin,preferredLanguage);
     }
+
+    public ApplicantComplaintVo(Long id,String referenceNumber, String typeCode, String description,Double locationLat, Double locationLng,Date creationDate, Long complaintAttachmentId, String fullNameAr, String fullNameEn,
+                                String fullNameOrigin, String idNumber, String passportNumber, Long dateOfBirthHijri,
+                                Date dateOfBirthGregorian, String gender, String nationalityCode,String email,
+                                String localMobileNumber, String intlMobileNumber, String uin, Long count)
+    {
+        this.id = id;
+        this.referenceNumber = referenceNumber;
+        this.creationDate = creationDate;
+        this.typeCode = typeCode;
+        this.description = description;
+        this.locationLat = locationLat;
+        this.locationLng = locationLng;
+        this.count = count;
+        if (complaintAttachmentId != null) {
+            this.complaintAttachment = new ComplaintAttachmentVo(complaintAttachmentId, null);
+        }
+        applicantRitual = new ApplicantRitualVo(fullNameAr,fullNameEn, fullNameOrigin, idNumber, passportNumber, dateOfBirthHijri, dateOfBirthGregorian, gender, nationalityCode, email, localMobileNumber, intlMobileNumber,uin);
+    }
 }

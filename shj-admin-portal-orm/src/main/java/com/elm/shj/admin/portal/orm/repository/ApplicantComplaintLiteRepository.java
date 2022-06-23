@@ -26,9 +26,12 @@ public interface ApplicantComplaintLiteRepository extends JpaRepository<JpaAppli
     List<String> fetchReferenceNumByReferenceNumLike(@Param("referenceNum") String referenceNum);
 
     @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.creationDate,c.statusCode, c.typeCode, c.description, c.locationLat, c.locationLng, att.id, att.filePath, c.resolutionComment, c.updateDate,a.fullNameAr,a.fullNameEn, di.uin, a.preferredLanguage) " +
-            "FROM JpaApplicantComplaintLite c JOIN JpaApplicantRitualBasic ar ON c.applicantRitualId = ar.id JOIN JpaApplicant a ON a.id = ar.applicant.id JOIN JpaApplicantDigitalId di ON di.applicantId = a.id LEFT JOIN JpaComplaintAttachment att ON att.applicantComplaint = c.id " +
+            "FROM JpaApplicantComplaintLite c JOIN JpaApplicantRitualBasic ar ON c.applicantRitualId = ar.id JOIN JpaApplicant a ON a.id = ar.applicant.id JOIN JpaApplicantDigitalId di ON di.applicantId = a.id LEFT JOIN JpaComplaintAttachment att ON att.applicantComplaint.id = c.id " +
             "WHERE c.id = :id")
     ApplicantComplaintVo findOneLite(@Param("id") Long id);
+
+
+
 
 
 }
