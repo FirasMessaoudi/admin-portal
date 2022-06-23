@@ -10,6 +10,9 @@ import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.company.*;
 import com.elm.shj.admin.portal.services.data.request.DataRequestService;
 import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
+import com.elm.shj.admin.portal.services.data.validators.CheckFirst;
+import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
+import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
@@ -28,6 +31,7 @@ import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -41,6 +45,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -125,6 +131,8 @@ public class IntegrationWsController {
     private final ApplicantGroupService applicantGroupService;
     private final GroupApplicantListService groupApplicantListService;
     private final MealTimeLookupService mealTimeLookupService;
+    private final Validator validator;
+    private final MessageSource messageSource;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
@@ -1391,5 +1399,30 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> listCities() {
         log.debug("list cities...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(cityLookupService.findAll()).build());
+    }
+
+    @PostMapping(value = "/save-staff-main-data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<WsResponse<?>> saveOrUpdateStaffFullMainData(@RequestPart("staff") CompanyStaffMainFullDataDto companyStaffMainFullDataDto,
+                                                                       @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
+        log.info("saveOrUpdateStaffFullMainData start");
+
+        List<DataValidationResult> dataValidationResults = new ArrayList<>();
+
+        dataValidationResults.addAll(companyStaffService.isValidCompanyRitualSeason(companyStaffMainFullDataDto));
+
+        Set<ConstraintViolation<CompanyStaffMainFullDataDto>> violations = new HashSet<>(validator.validate(companyStaffMainFullDataDto));
+        violations.addAll(validator.validate(companyStaffMainFullDataDto, CheckFirst.class));
+        violations.addAll(validator.validate(companyStaffMainFullDataDto, CheckSecond.class));
+        if (!violations.isEmpty()) {
+            // otherwise add errors
+            violations.forEach(v -> dataValidationResults.add(DataValidationResult.builder().valid(false)
+                    .errorMessages(Collections.singletonList(messageSource.getMessage(v.getMessage(), null, Locale.forLanguageTag("en")) + " \n " + messageSource.getMessage(v.getMessage(), null, Locale.forLanguageTag("ar"))))
+                    .attributeName(v.getPropertyPath().toString()).build()));
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(dataValidationResults).build());
+        } else if (!dataValidationResults.isEmpty()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(dataValidationResults).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.saveOrUpdateStaffFullMainData(companyStaffMainFullDataDto, avatar)).build());
+        }
     }
 }

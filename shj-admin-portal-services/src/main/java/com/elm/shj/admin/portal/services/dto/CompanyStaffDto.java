@@ -116,4 +116,6 @@ public class CompanyStaffDto {
     private boolean registered;
     private Date creationDate;
     private Date updateDate;
+    private Boolean deleted;
+    private String countryPhonePrefix;
 }
