@@ -58,10 +58,6 @@ public class JpaApplicantComplaintLite implements Serializable {
     @Column(name = "resolution_comment")
     private String resolutionComment;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantComplaintLite")
-    private List<JpaComplaintAttachmentLite>  complaintAttachments;
-
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 

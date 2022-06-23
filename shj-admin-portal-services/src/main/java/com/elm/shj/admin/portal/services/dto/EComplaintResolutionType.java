@@ -17,7 +17,7 @@ public enum EComplaintResolutionType {
     RESOLVED(2), CLOSED(3);
 
 //    String string;
-    private final int crmCode;
+    private final Integer crmCode;
 
     EComplaintResolutionType(int code) {
         this.crmCode = code;
@@ -33,7 +33,7 @@ public enum EComplaintResolutionType {
         return null;
     }
 
-    public int getCrmCode() {
+    public Integer getCrmCode() {
         return crmCode;
     }
 }
