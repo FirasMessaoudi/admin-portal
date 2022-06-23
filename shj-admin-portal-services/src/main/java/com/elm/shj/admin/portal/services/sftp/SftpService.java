@@ -51,6 +51,7 @@ public class SftpService {
     private static final SimpleDateFormat FOLDER_NAME_FORMAT = new SimpleDateFormat("yyyy_MM_dd");
     private static final String SESSION_CONFIG_STRICT_HOST_KEY_CHECKING = "StrictHostKeyChecking";
     private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
+    private static final String APPLICANT_COMPLAINTS_CONFIG_PROPERTIES = "applicantComplaintsConfigProperties";
     private static final String CARDS_CONFIG_PROPERTIES = "cardsConfigProperties";
 
 

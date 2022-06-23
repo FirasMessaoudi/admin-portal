@@ -231,12 +231,16 @@ public class BadgeService {
 
         int xDif = ((BADGE_WIDTH - fm.stringWidth("123456788")) / 2);
         int yDif = 280 + topBackground.getHeight() + 30;
+        BufferedImage phone = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "phone-icon.PNG");
+        if (topBackground != null) {
+            g2d.drawImage(ImageUtils.resizeImage(phone, 25, 25), xDif - 25, yDif - 20, null);
+        }
         g2d.setColor(Color.black);
         font = font.deriveFont(
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
         TextLayout layout = new TextLayout(contactNumber + "", font, frc);
-        layout.draw(g2d, xDif, yDif);
+        layout.draw(g2d, xDif + 5, yDif);
     }
 
     private void addBackBadgeText2(Graphics2D g2d) {

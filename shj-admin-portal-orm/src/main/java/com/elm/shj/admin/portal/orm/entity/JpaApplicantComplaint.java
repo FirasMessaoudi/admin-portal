@@ -15,20 +15,20 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * The persistent class for the shc_applicant_incident database table.
+ * The persistent class for the shc_applicant_complaint database table.
  *
- * @author Slim Ben Hadj
- * @since 1.1.0
+ * @author othman alamoud
+ * @since 1.2.6
  */
 @Entity
-@Table(name = "shc_applicant_incident")
-@NamedQuery(name = "JpaApplicantIncident.findAll", query = "SELECT j FROM JpaApplicantIncident j")
+@Table(name = "shc_applicant_complaint")
+@NamedQuery(name = "JpaApplicantComplaint.findAll", query = "SELECT j FROM JpaApplicantComplaint j")
 @Getter
 @Setter
 @NoArgsConstructor
-public class JpaApplicantIncident implements Serializable {
+public class JpaApplicantComplaint implements Serializable {
 
-    private static final long serialVersionUID = -2157631683246820896L;
+    private static final long serialVersionUID = 893621013109878978L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -60,8 +60,8 @@ public class JpaApplicantIncident implements Serializable {
     private String resolutionComment;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantIncident")
-    private List<JpaIncidentAttachment>  incidentAttachments;
+    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantComplaint")
+    private JpaComplaintAttachment complaintAttachment;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
@@ -71,6 +71,15 @@ public class JpaApplicantIncident implements Serializable {
 
     @Column(name = "area_code")
     private String areaCode;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "camp_number")
+    private String campNumber;
+
+    @Column(name = "crm_ticket_number")
+    private String crmTicketNumber;
 
     @PrePersist
     public void prePersist() {
