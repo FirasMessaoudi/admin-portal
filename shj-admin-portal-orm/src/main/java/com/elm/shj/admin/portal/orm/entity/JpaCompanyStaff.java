@@ -101,8 +101,13 @@ public class JpaCompanyStaff implements Serializable {
     @Column(name = "preferred_language")
     private String preferredLanguage;
 
+    @Column(name = "country_phone_prefix")
+    private String countryPhonePrefix;
+
     @Column(name = "country_code")
     private String countryCode;
+
+    private Boolean deleted;
 
     @PrePersist
     public void prePersist() {

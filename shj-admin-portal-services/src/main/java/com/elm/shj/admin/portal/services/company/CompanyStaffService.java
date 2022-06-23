@@ -5,12 +5,21 @@ package com.elm.shj.admin.portal.services.company;
 
 import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
+import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
+import com.elm.shj.admin.portal.services.data.reader.EExcelItemReaderErrorType;
+import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
+import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdBasicService;
+import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.user.UserLocationService;
+import com.elm.shj.admin.portal.services.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,14 +27,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,6 +49,17 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     private final CompanyStaffRepository companyStaffRepository;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
     public final static Pattern  EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    private final CompanyRitualSeasonService companyRitualSeasonService;
+    private final CompanyStaffDigitalIdService companyStaffDigitalIdService;
+    private final CompanyStaffCardService companyStaffCardService;
+    private final CompanyStaffDigitalIdBasicService companyStaffDigitalIdBasicService;
+    private final MessageSource messageSource;
+
+    @Value("${ritual.season.year}")
+    private int seasonYear;
+
+    private final static String DEFAULT_AVATAR_MALE = "avatar/staff-male.png";
+    private final static String DEFAULT_AVATAR_FEMALE = "avatar/applicant-staff-female.png";
 
     public Optional<CompanyStaffLiteDto> findBySuin(String suin) {
         CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findBySuin(suin, EDigitalIdStatus.VALID.name()), mappingContext);
@@ -319,6 +341,9 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             Path<String> companyCode = company.get("code");
             predicates.add(criteriaBuilder.equal(companyCode, criteria.getCompanyCode()));
 
+            Path<Boolean> isDieleted = root.get("deleted");
+            predicates.add(criteriaBuilder.equal(isDieleted, Boolean.FALSE));
+
 
             if (criteria.getRitualType() != null && !criteria.getRitualType().equals("")) {
                 Join<JpaCompanyRitualSeason, JpaRitualSeason> ritualSeason = companyRitualSeason.join("ritualSeason");
@@ -326,7 +351,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             }
 
             if(criteria.getLanguage() != null && !criteria.getLanguage().equals("")){
-                if(criteria.getLanguage().equals("en")){
+                if(criteria.getLanguage().contains("en")){
                     if(criteria.getName() != null && !criteria.getName().equals("")){
                         predicates.add(criteriaBuilder.like(root.get("fullNameEn"), "%" + criteria.getName().trim() + "%"));
                     }
@@ -413,6 +438,174 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+
+    public CompanyStaffMainFullDataDto saveOrUpdateStaffFullMainData(CompanyStaffMainFullDataDto companyStaffMainFullData, MultipartFile avatar){
+
+        CompanyStaffDto staff = mapCompanyStaffDto(companyStaffMainFullData);
+        CompanyStaffDto existingStaff = findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getNationalityCode());
+
+        // if record exists already in DB we need to update it
+        if (existingStaff != null) {
+            if(avatar == null){
+                staff.setPhoto(existingStaff.getPhoto());
+            } else {
+                try {
+                    BufferedImage image = ImageIO.read(avatar.getInputStream());
+                    staff.setPhoto(ImageUtils.imgToBase64String(image));
+                } catch (IOException e) {
+                    throw new RuntimeException();
+                }
+            }
+            staff.setId(existingStaff.getId());
+            staff.setDigitalIds(existingStaff.getDigitalIds());
+            staff = save(staff);
+        } else {
+            if(avatar == null){
+                BufferedImage defaultImage;
+                if(companyStaffMainFullData.getGender().equals("M")) {
+                    defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_MALE);
+                } else {
+                    defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_FEMALE);
+                }
+
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                final String defaultAvatar;
+
+                try {
+                    ImageIO.write(defaultImage, "png", bos);
+                    byte[] bytes = bos.toByteArray();
+
+                    defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
+                } catch (IOException e) {
+                    throw new RuntimeException();
+                }
+
+                staff.setPhoto(defaultAvatar);
+            } else {
+                try {
+                    BufferedImage image = ImageIO.read(avatar.getInputStream());
+                    staff.setPhoto(ImageUtils.imgToBase64String(image));
+                } catch (IOException e) {
+                    throw new RuntimeException();
+                }
+            }
+            staff = save(staff);
+        }
+
+        // start adding staff ritual data
+        CompanyStaffRitualDto companyStaffRitual = mapCompanyStaffRitualDto(companyStaffMainFullData);
+        saveStaffFullRitual(companyStaffRitual, staff.getId());
+
+        return companyStaffMainFullData;
+    }
+
+    private void saveStaffFullRitual(CompanyStaffRitualDto companyStaffRitual, long staffId) {
+        CompanyStaffDto existingStaff = findOne(staffId);
+        CompanyStaffDigitalIdBasicDto companyStaffDigitalId = companyStaffDigitalIdBasicService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
+        if (companyStaffDigitalId != null) {
+            // if he has a digital id for that same season
+            List<CompanyStaffCardDto> companyStaffCardDtos = companyStaffCardService.findByDigitalId(companyStaffDigitalId.getSuin());
+            // if no cards for digitalId and SEASON
+            if (companyStaffCardDtos.isEmpty()) {
+                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
+                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
+                        .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
+                companyStaffCardService.save(companyStaffCardDto);
+                return;
+
+            }
+
+            //find staff cards for different company or different ritual
+            List<CompanyStaffCardDto> companyStaffCards2 = companyStaffCardService.findByDigitalIdAndDifferentCompanyOrRitual(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+            if (CollectionUtils.isNotEmpty(companyStaffCards2)) {
+                companyStaffCards2.forEach(c -> {
+                    c.setStatusCode(ECardStatus.EXPIRED.name());
+                });
+                companyStaffCardService.saveAll(companyStaffCards2);
+                return;
+            }
+
+            // find staff cards for same company and same ritual
+            List<CompanyStaffCardDto> companyStaffCards = companyStaffCardService.findByDigitalIdCompanyCodeRitualType(companyStaffDigitalId.getSuin(), companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode());
+            if (companyStaffCards.isEmpty()) {
+                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
+                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
+                        .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
+                companyStaffCardService.save(companyStaffCardDto);
+                return;
+            }
+
+
+        } else {
+            // create new digital id for that staff in case he has no digital id for that same season
+            CompanyStaffDigitalIdDto staffDigitalId = new CompanyStaffDigitalIdDto();
+            staffDigitalId.setCompanyStaff(existingStaff);
+            staffDigitalId.setSeasonYear(companyStaffRitual.getSeason());
+            staffDigitalId.setSuin(companyStaffDigitalIdService.generate(existingStaff, companyStaffRitual.getSeason()));
+            staffDigitalId.setStatusCode(EStaffDigitalIdStatus.VALID.name());
+            CompanyStaffDigitalIdDto savedDigitalId = companyStaffDigitalIdService.save(staffDigitalId);
+            CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+            companyStaffCardDto.setCompanyStaffDigitalId(savedDigitalId);
+            companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+            companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
+                    .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
+            companyStaffCardService.save(companyStaffCardDto);
+
+        }
+    }
+
+    private CompanyStaffDto mapCompanyStaffDto(CompanyStaffMainFullDataDto companyStaffFullData){
+        CompanyStaffDto companyStaff = CompanyStaffDto.builder()
+                .idNumber(companyStaffFullData.getIdNumber())
+                .passportNumber(companyStaffFullData.getPassportNumber())
+                .dateOfBirthGregorian(companyStaffFullData.getDateOfBirthGregorian())
+                .dateOfBirthHijri(companyStaffFullData.getDateOfBirthHijri())
+                .fullNameAr(companyStaffFullData.getFullNameAr())
+                .fullNameEn(companyStaffFullData.getFullNameEn())
+                .fullNameOrigin(companyStaffFullData.getFullNameOrigin())
+                .gender(companyStaffFullData.getGender())
+                .nationalityCode(companyStaffFullData.getNationalityCode())
+                .idNumberOriginal(companyStaffFullData.getIdNumberOriginal())
+                .titleCode(companyStaffFullData.getJobTitle())
+                .customJobTitle(companyStaffFullData.getCustomJobTitle())
+                .email(companyStaffFullData.getEmail())
+                .mobileNumber(companyStaffFullData.getMobileNumber())
+                .mobileNumberIntl(companyStaffFullData.getMobileNumberIntl())
+                .countryPhonePrefix(companyStaffFullData.getCountryPhonePrefix())
+                .deleted(Boolean.FALSE)
+                .build();
+        return companyStaff;
+    }
+
+    private CompanyStaffRitualDto mapCompanyStaffRitualDto(CompanyStaffMainFullDataDto companyStaffFullData){
+        CompanyStaffRitualDto companyStaffRitual = CompanyStaffRitualDto.builder()
+                .idNumber(companyStaffFullData.getIdNumber())
+                .passportNumber(companyStaffFullData.getPassportNumber())
+                .dateOfBirthGregorian(companyStaffFullData.getDateOfBirthGregorian())
+                .dateOfBirthHijri(companyStaffFullData.getDateOfBirthHijri())
+                .companyCode(companyStaffFullData.getCompanyCode())
+                .typeCode(companyStaffFullData.getRitualTypeCode())
+                .season(seasonYear)
+                .build();
+        return companyStaffRitual;
+    }
+
+    public List<DataValidationResult> isValidCompanyRitualSeason(CompanyStaffMainFullDataDto companyStaffMainFullData){
+        List<DataValidationResult> dataValidationResults = new ArrayList<>();
+        // check company ritual season exist for the ritual type, seasson and company
+        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyStaffMainFullData.getCompanyCode(), companyStaffMainFullData.getRitualTypeCode(), seasonYear);
+        if(companyRitualSeasonDto == null){
+            dataValidationResults.add(DataValidationResult.builder().valid(false)
+                    .errorMessages(Collections.singletonList(messageSource.getMessage(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage(), null, Locale.forLanguageTag("en")) + " \n " + messageSource.getMessage(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage(), null, Locale.forLanguageTag("ar"))))
+                    .attributeName("ritualTypeCode").build());
+        }
+        return dataValidationResults;
     }
 
 
