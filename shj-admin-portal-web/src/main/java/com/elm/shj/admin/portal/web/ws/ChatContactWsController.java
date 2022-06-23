@@ -196,7 +196,7 @@ public class ChatContactWsController {
      * @param contact applicant chat contact details
      * @return WsResponse of the persisted chat contact
      */
-    @PutMapping(value = "/update/{id}")
+    @PostMapping(value = "/update/{id}")
     public ResponseEntity<WsResponse<?>> updateContact(@PathVariable Long id,
                                                        @RequestBody @Valid ChatContactDto contact) {
         log.info("Start updateContact id: {}, DigitalId: {}, ContactDigitalId:{}", id, contact.getDigitalId(), contact.getContactDigitalId());
@@ -447,7 +447,7 @@ public class ChatContactWsController {
                 .body(chatMessageDto).build());
     }
 
-    @PutMapping("/read-chat-messages/{chatContactId}")
+    @PostMapping("/read-chat-messages/{chatContactId}")
     public ResponseEntity<WsResponse<?>> markChatMessageAsRead(@PathVariable("chatContactId") long chatContactId) {
         log.info("Start markChatMessageAsRead chatContactId: {} ", chatContactId);
         chatMessageService.markMessagesAsRead(chatContactId);

@@ -70,7 +70,7 @@ public class IncidentManagementController {
      * @param incidentId the ID of the incident to update
      * @return the {@link ResponseEntity} with status
      */
-    @PutMapping("/handle/{incidentId}")
+    @PostMapping("/handle/{incidentId}")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.NOTIFICATION_MANAGEMENT + "')")
     //TODO Change it to INCIDENT_MANAGEMENT
     public ResponseEntity<String> handleIncident(@PathVariable long incidentId,
