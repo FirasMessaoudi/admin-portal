@@ -20,4 +20,7 @@ public interface CompanyStaffDigitalIdBasicRepository extends JpaRepository<JpaC
 
     @Query(value = "select c from JpaCompanyStaffDigitalIdBasic c where c.companyStaffId = :staffId and c.seasonYear = :seasonYear and c.statusCode=:statusCode")
     Optional<JpaCompanyStaffDigitalIdBasic> findByBasicInfo(@Param("staffId") long staffId, @Param("seasonYear") int seasonYear, @Param("statusCode") String statusCode);
+
+    @Query(value = "select c from JpaCompanyStaffDigitalIdBasic c where c.companyStaffId = :staffId and c.seasonYear = :seasonYear")
+    Optional<JpaCompanyStaffDigitalIdBasic> findByBasicInfo(@Param("staffId") long staffId, @Param("seasonYear") int seasonYear);
 }
