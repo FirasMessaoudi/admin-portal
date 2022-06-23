@@ -23,6 +23,7 @@ import com.elm.shj.admin.portal.services.data.validators.WithGroupReferenceNumbe
 import com.elm.shj.admin.portal.services.digitalid.DigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.lookup.CompanyRitualStepLookupService;
+import com.elm.shj.admin.portal.services.lookup.NationalityLookupService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
@@ -84,11 +85,14 @@ public class ItemWriter {
     private final CompanyRitualStepLookupService companyRitualStepLookupService;
     private final PackageHousingService packageHousingService;
     private final ApplicantPackageHousingService applicantPackageHousingService;
+    private final NationalityLookupService nationalityLookupService;
+
     @Value("${ritual.season.year}")
     private int seasonYear;
 
     private final static String DEFAULT_AVATAR_MALE = "avatar/staff-male.png";
     private final static String DEFAULT_AVATAR_FEMALE = "avatar/applicant-staff-female.png";
+    private final static String DEFAULT_COUNTRY_CODE_PREFIX = "966";
 
     /**
      * Populates the registry
@@ -726,6 +730,8 @@ public class ItemWriter {
                 .mobileNumber(companyStaffFullData.getMobileNumber())
                 .mobileNumberIntl(companyStaffFullData.getMobileNumberIntl())
                 .photo(companyStaffFullData.getPhoto())
+                .countryPhonePrefix(companyStaffFullData.getNationalityCode() == null ? DEFAULT_COUNTRY_CODE_PREFIX : nationalityLookupService.findByCode(companyStaffFullData.getNationalityCode()).getCountryPhonePrefix())
+                .deleted(Boolean.FALSE)
                 .build();
         return companyStaff;
     }

@@ -81,6 +81,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .idNumber(companyStaff.getIdNumber())
                     .passportNumber(companyStaff.getPassportNumber())
                     .digitalIds(companyStaff.getDigitalIds())
+                    .mobileNumberIntl(companyStaff.getMobileNumberIntl())
+                    .countryPhonePrefix(companyStaff.getCountryPhonePrefix())
                     .build();
             return Optional.of(companyStaffLite);
         } else return Optional.empty();
@@ -106,6 +108,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .idNumber(companyStaff.getIdNumber())
                     .passportNumber(companyStaff.getPassportNumber())
                     .digitalIds(companyStaff.getDigitalIds())
+                    .mobileNumberIntl(companyStaff.getMobileNumberIntl())
+                    .countryPhonePrefix(companyStaff.getCountryPhonePrefix())
                     .build();
             return Optional.of(companyStaffLite);
         } else return Optional.empty();
@@ -131,6 +135,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .idNumber(companyStaff.getIdNumber())
                     .passportNumber(companyStaff.getPassportNumber())
                     .digitalIds(companyStaff.getDigitalIds())
+                    .mobileNumberIntl(companyStaff.getMobileNumberIntl())
+                    .countryPhonePrefix(companyStaff.getCountryPhonePrefix())
                     .build();
             return Optional.of(companyStaffLite);
         } else return Optional.empty();
@@ -227,11 +233,11 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     @Transactional
     public int updateCompanyStaff(long staffId, UpdateStaffCmd command) {
         int updatedRowsCount = 0;
-        if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
-            updatedRowsCount += companyStaffRepository.updateCompanyStaffLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), staffId);
-        } else {
-            updatedRowsCount += companyStaffRepository.updateCompanyStaffIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), staffId);
-        }
+
+            updatedRowsCount += companyStaffRepository.updateCompanyStaffLocalNumber(command.getEmail(), command.getMobileNumber(), staffId);
+
+            updatedRowsCount += companyStaffRepository.updateCompanyStaffIntlNumber(command.getEmail(), command.getCountryPhonePrefix(), command.getMobileNumber(), staffId);
+
         return updatedRowsCount;
     }
 
@@ -461,6 +467,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             staff.setId(existingStaff.getId());
             staff.setDigitalIds(existingStaff.getDigitalIds());
             staff = save(staff);
+            companyStaffMainFullData.setId(staff.getId());
         } else {
             if(avatar == null){
                 BufferedImage defaultImage;
@@ -492,6 +499,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                 }
             }
             staff = save(staff);
+            companyStaffMainFullData.setId(staff.getId());
         }
 
         // start adding staff ritual data
@@ -576,7 +584,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                 .customJobTitle(companyStaffFullData.getCustomJobTitle())
                 .email(companyStaffFullData.getEmail())
                 .mobileNumber(companyStaffFullData.getMobileNumber())
-                .mobileNumberIntl(companyStaffFullData.getMobileNumberIntl())
+                .mobileNumberIntl(companyStaffFullData.getCountryPhonePrefix() + companyStaffFullData.getMobileNumber())
                 .countryPhonePrefix(companyStaffFullData.getCountryPhonePrefix())
                 .deleted(Boolean.FALSE)
                 .build();
@@ -597,13 +605,14 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
     public List<DataValidationResult> isValidCompanyRitualSeason(CompanyStaffMainFullDataDto companyStaffMainFullData){
+        String attributeName = "ritualTypeCode";
         List<DataValidationResult> dataValidationResults = new ArrayList<>();
         // check company ritual season exist for the ritual type, seasson and company
         CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyStaffMainFullData.getCompanyCode(), companyStaffMainFullData.getRitualTypeCode(), seasonYear);
         if(companyRitualSeasonDto == null){
             dataValidationResults.add(DataValidationResult.builder().valid(false)
                     .errorMessages(Collections.singletonList(messageSource.getMessage(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage(), null, Locale.forLanguageTag("en")) + " \n " + messageSource.getMessage(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage(), null, Locale.forLanguageTag("ar"))))
-                    .attributeName("ritualTypeCode").build());
+                    .attributeName(attributeName).build());
         }
         return dataValidationResults;
     }

@@ -45,4 +45,7 @@ public class UpdateStaffCmd implements Serializable {
     @Past
     private Date dateOfBirthGregorian;
 
+    private String mobileNumberIntl;
+    private String countryPhonePrefix;
+
 }

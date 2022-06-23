@@ -114,15 +114,15 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     String findGroupLeaderMobileNumberByApplicantUin(@Param("applicantUin") String applicantUin);
 
     @Modifying
-    @Query("update JpaCompanyStaff staff set staff.countryCode = :countryCode, staff.email = :email, " +
+    @Query("update JpaCompanyStaff staff set staff.countryPhonePrefix = :countryPhonePrefix, staff.email = :email, " +
             "staff.mobileNumberIntl =:intlMobileNumber, staff.registered = TRUE, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
-    int updateCompanyStaffIntlNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("intlMobileNumber") String intlMobileNumber, @Param("staffId") long staffId);
+    int updateCompanyStaffIntlNumber(@Param("email") String email, @Param("countryPhonePrefix") String countryPhonePrefix, @Param("intlMobileNumber") String intlMobileNumber, @Param("staffId") long staffId);
 
 
     @Modifying
-    @Query("update JpaCompanyStaff staff set staff.countryCode = :countryCode, staff.email = :email, " +
+    @Query("update JpaCompanyStaff staff set  staff.email = :email, " +
             "staff.mobileNumber =:localMobileNumber, staff.registered = TRUE, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
-    int updateCompanyStaffLocalNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("localMobileNumber") String localMobileNumber, @Param("staffId") long staffId);
+    int updateCompanyStaffLocalNumber(@Param("email") String email, @Param("localMobileNumber") String localMobileNumber, @Param("staffId") long staffId);
 
     JpaCompanyStaff findByIdAndRegisteredTrue(long id);
 
@@ -198,14 +198,15 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO(" +
             " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode, staff.customJobTitle, staff.photo, " +
-            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber,cards.id ) " +
+            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber," +
+            "cards.id, staff.mobileNumber, staff.countryPhonePrefix, staff.email) " +
             "from JpaCompanyStaff staff " +
             "join staff.digitalIds digitalId " +
             "join digitalId.companyStaffCards cards " +
             "join cards.companyRitualSeason companyRitualSeason " +
             "join companyRitualSeason.ritualSeason ritualSeason " +
             "join companyRitualSeason.company company " +
-            "where staff.id = :staffId ")
+            "where staff.id = :staffId and cards.statusCode <> 'EXPIRED'")
     CompanyStaffFullVO findOrganizerStaffById(@Param("staffId") long staffId);
 
     @Modifying
