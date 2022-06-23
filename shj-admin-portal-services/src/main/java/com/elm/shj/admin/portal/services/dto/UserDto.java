@@ -35,7 +35,7 @@ public class UserDto implements Serializable {
     private long id;
     @Past
     private Date dateOfBirthGregorian;
-    private int dateOfBirthHijri;
+    private Integer dateOfBirthHijri;
     @Length(max = 50, min = 3)
     @Email
     private String email;
