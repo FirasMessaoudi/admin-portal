@@ -512,8 +512,11 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
     private void saveStaffFullRitual(CompanyStaffRitualDto companyStaffRitual, long staffId) {
         CompanyStaffDto existingStaff = findOne(staffId);
-        CompanyStaffDigitalIdBasicDto companyStaffDigitalId = companyStaffDigitalIdBasicService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
+        CompanyStaffDigitalIdBasicDto companyStaffDigitalId = companyStaffDigitalIdBasicService.findByBasicInfoWithoutDigitalIdStatus(existingStaff.getId(), companyStaffRitual.getSeason());
         if (companyStaffDigitalId != null) {
+            //set digital id status is valid
+            companyStaffDigitalId.setStatusCode(EDigitalIdStatus.VALID.name());
+            companyStaffDigitalIdBasicService.save(companyStaffDigitalId);
             // if he has a digital id for that same season
             List<CompanyStaffCardDto> companyStaffCardDtos = companyStaffCardService.findByDigitalId(companyStaffDigitalId.getSuin());
             // if no cards for digitalId and SEASON
