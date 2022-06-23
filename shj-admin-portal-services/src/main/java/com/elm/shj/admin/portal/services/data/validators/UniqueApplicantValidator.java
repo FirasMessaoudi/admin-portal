@@ -43,7 +43,9 @@ public class UniqueApplicantValidator implements ConstraintValidator<UniqueAppli
         } else {
             HuicApplicantMainData huicApplicantMainData = (HuicApplicantMainData) value;
             if (huicApplicantMainData.getStatus() == null || huicApplicantMainData.getStatus() == 1) {
-                return !applicantLiteService.existsByBasicInfo(((HuicApplicantMainData) value).getIdNumber() != null ? ((HuicApplicantMainData) value).getIdNumber().toString() : null, ((HuicApplicantMainData) value).getPassportNo(), ((HuicApplicantMainData) value).getNationality().toString());
+                String idNumber = ((HuicApplicantMainData) value).getIdNumber() != null ? ((HuicApplicantMainData) value).getIdNumber().toString() : null;
+                String nationalityCode = ((HuicApplicantMainData) value).getNationality() != null ? ((HuicApplicantMainData) value).getNationality().toString() : null;
+                return !applicantLiteService.existsByBasicInfo(idNumber, ((HuicApplicantMainData) value).getPassportNo(), nationalityCode);
             } else {
                 return true;
             }
