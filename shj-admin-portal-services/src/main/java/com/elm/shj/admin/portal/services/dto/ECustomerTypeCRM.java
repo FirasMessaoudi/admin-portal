@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public enum ECustomerTypeCRM {
     PILGRIM(1), STAFF(2);
 
-    private final int crmCode;
+    private final Integer crmCode;
 
     ECustomerTypeCRM(int code) {
         this.crmCode = code;
@@ -30,7 +30,7 @@ public enum ECustomerTypeCRM {
         return null;
     }
 
-    public int getCrmCode() {
+    public Integer getCrmCode() {
         return crmCode;
     }
 }

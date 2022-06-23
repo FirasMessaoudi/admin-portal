@@ -30,7 +30,7 @@ public enum EComplaintStatus {
         return null;
     }
 
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 }

@@ -12,9 +12,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @since 1.2.6
  */
 public enum EComplaintType {
-    UNDER_PROCESSING(1), RESOLVED(2),CLOSED(3);
+    FOOD(1), TRANSPORTATION(2),HOUSING(3),GENERAL(4);
 
-    private final int crmCode;
+    private final Integer crmCode;
 
     EComplaintType(int code) {
         this.crmCode = code;
@@ -30,7 +30,7 @@ public enum EComplaintType {
         return null;
     }
 
-    public int getCrmCode() {
+    public Integer getCrmCode() {
         return crmCode;
     }
 }

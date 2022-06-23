@@ -111,10 +111,13 @@ public class ApplicantComplaintScheduler {
                 user.setDigitalID(complaint.getApplicantRitual().getApplicant().getUin());
                 user.setIdNumber(complaint.getApplicantRitual().getApplicant().getIdNumber());
                 user.setPassportNumber(complaint.getApplicantRitual().getApplicant().getPassportNumber());
-                user.setDateOfBirthHijri(complaint.getApplicantRitual().getApplicant().getDateOfBirthHijri().toString());
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                String dateOfBirth = simpleDateFormat.format(complaint.getApplicantRitual().getApplicant().getDateOfBirthGregorian());
-                user.setDateOfBirth(dateOfBirth);
+                if (complaint.getApplicantRitual().getApplicant().getDateOfBirthHijri() != null)
+                    user.setDateOfBirthHijri(complaint.getApplicantRitual().getApplicant().getDateOfBirthHijri().toString());
+                if (complaint.getApplicantRitual().getApplicant().getDateOfBirthGregorian() != null) {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String dateOfBirth = simpleDateFormat.format(complaint.getApplicantRitual().getApplicant().getDateOfBirthGregorian());
+                    user.setDateOfBirth(dateOfBirth);
+                }
                 user.setFullNameEn(complaint.getApplicantRitual().getApplicant().getFullNameEn());
                 user.setFullNameAr(complaint.getApplicantRitual().getApplicant().getFullNameAr());
                 user.setFullNameOrginalLang(complaint.getApplicantRitual().getApplicant().getFullNameOrigin());
@@ -128,8 +131,8 @@ public class ApplicantComplaintScheduler {
                     user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getIntlMobileNumber());
 
 
-                callCRM(crmCreateUserProfileUrl, HttpMethod.POST, user, accessTokenWsResponse.getToken(),
-                        new ParameterizedTypeReference<ComplaintUpdateCRMDto>() {
+                CreateUserCRMDto createUserCRMDto = callCRM(crmCreateUserProfileUrl, HttpMethod.POST, user, accessTokenWsResponse.getToken(),
+                        new ParameterizedTypeReference<CreateUserCRMDto>() {
                         });
 
                 ApplicantCreateComplaintVoCRM newComplaint = new ApplicantCreateComplaintVoCRM();
@@ -146,17 +149,22 @@ public class ApplicantComplaintScheduler {
                 newComplaint.setLocationLng(complaint.getLocationLng());
                 newComplaint.setLocationLat(complaint.getLocationLat());
                 newComplaint.setAttachmentId(String.valueOf(complaint.getComplaintAttachment().getId()));
-                newComplaint.setCity(ECity.valueOf(complaint.getCity()).getCrmCode());
+                if (complaint.getCity() != null)
+                    newComplaint.setCity(ECity.valueOf(complaint.getCity()).getCrmCode());
+                else
+                    newComplaint.setCity(ECity.OTHERS.getCrmCode());
                 newComplaint.setCampNumber(complaint.getCampNumber());
 
                 ComplaintUpdateCRMDto updateCRMDto = callCRM(crmCreateComplaintUrl, HttpMethod.POST, newComplaint, accessTokenWsResponse.getToken(),
                         new ParameterizedTypeReference<ComplaintUpdateCRMDto>() {
                         });
 
+
                 applicantComplaintRepository.updateCRMTicketNumber(complaint.getId(), updateCRMDto.getCrmTicketNumber());
                 log.info("complaint successfully created #{}", complaint.getId());
             } catch (Exception e) {
-                log.error("Failed create complaint of #{}", complaint.getId());
+                e.printStackTrace();
+                log.error("Failed create complaint of #{}, exception {}", complaint.getId(), e.getMessage());
 
             }
         });

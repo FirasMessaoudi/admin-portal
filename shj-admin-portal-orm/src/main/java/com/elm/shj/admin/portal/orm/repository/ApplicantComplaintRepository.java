@@ -12,9 +12,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Repository for applicant complaint table.
@@ -30,9 +30,9 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
             "complaint.resolutionComment = :resolutionComment, complaint.updateDate = current_timestamp where complaint.id =:complaintId")
     void update(@Param("complaintId") long complaintId, @Param("resolutionComment") String resolutionComment, @Param("status") String status);
 
+    @Transactional
     @Modifying
-    @Query("update JpaApplicantComplaint complaint set complaint.statusCode = :status, " +
-            "complaint.crmTicketNumber = :crmTicketNumber, complaint.updateDate = current_timestamp where complaint.id =:complaintId")
+    @Query("update JpaApplicantComplaint complaint set complaint.crmTicketNumber = :crmTicketNumber, complaint.updateDate = current_timestamp where complaint.id =:complaintId")
     void updateCRMTicketNumber(@Param("complaintId") long complaintId, @Param("crmTicketNumber") String crmTicketNumber);
 
     @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.creationDate,c.statusCode, c.typeCode,a.fullNameAr,a.fullNameEn, di.uin, COUNT(c)) " +
@@ -56,11 +56,11 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
                                                             @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                                             @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
 
-    @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.typeCode, c.description,c.locationLat, c.locationLng,c.creationDate, att.id,a.fullNameAr,a.fullNameEn,a.fullNameOrigin, a.idNumber, a.passportNumber,a.dateOfBirthHijri, a.dateOfBirthGregorian,a.gender,a.nationalityCode,ac.email,ac.localMobileNumber,ac.intlMobileNumber, di.uin, COUNT(c)) " +
+    @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.typeCode, c.city, c.description,c.locationLat, c.locationLng,c.creationDate, att.id,a.fullNameAr,a.fullNameEn,a.fullNameOrigin, a.idNumber, a.passportNumber,a.dateOfBirthHijri, a.dateOfBirthGregorian,a.gender,a.nationalityCode,ac.email,ac.localMobileNumber,ac.intlMobileNumber, di.uin, COUNT(c)) " +
             "FROM JpaApplicantComplaint c JOIN c.applicantRitual ar JOIN ar.applicant a JOIN  a.digitalIds di JOIN a.contacts ac LEFT JOIN c.complaintAttachment att " +
             "WHERE (:statusCode is null OR c.statusCode = :statusCode) and " +
-            "c.creationDate <= :creationDate " +
-            "GROUP BY c.id,c.referenceNumber,c.typeCode, c.description,c.locationLat, c.locationLng,c.creationDate, att.id,a.fullNameAr,a.fullNameEn,a.fullNameOrigin, a.idNumber, a.passportNumber,a.dateOfBirthHijri, a.dateOfBirthGregorian,a.gender,a.nationalityCode,ac.email,ac.localMobileNumber,ac.intlMobileNumber, di.uin")
+            "c.creationDate <= :creationDate AND c.crmTicketNumber is null " +
+            "GROUP BY c.id,c.referenceNumber,c.typeCode,c.city, c.description,c.locationLat, c.locationLng,c.creationDate, att.id,a.fullNameAr,a.fullNameEn,a.fullNameOrigin, a.idNumber, a.passportNumber,a.dateOfBirthHijri, a.dateOfBirthGregorian,a.gender,a.nationalityCode,ac.email,ac.localMobileNumber,ac.intlMobileNumber, di.uin")
     Page<ApplicantComplaintVo> findTop50ByCreationDateLessThanEqualAndStatusCode(@Param("creationDate") Date creationDate, @Param("statusCode") String statusCode, Pageable pageable);
 
 

@@ -3,9 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -17,7 +15,9 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@Builder(toBuilder = true)
 @NoArgsConstructor
+@AllArgsConstructor
 public class ComplaintUpdateCRMDto implements Serializable {
 
     private static final long serialVersionUID = 7859415865388347182L;
