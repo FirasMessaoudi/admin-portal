@@ -133,8 +133,8 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
      * @return the found complaint or <code>null</code>
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantComplaintDto findById(long complaintId) {
-        return findOne(complaintId);
+    public com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo findByIdLite(long complaintId) {
+        return applicantComplaintLiteRepository.findOneLite(complaintId);
     }
 
 
@@ -211,8 +211,8 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
             throw new NotFoundException("no Template found for  " + closeComplaintTemplateName);
         }
 
-        ApplicantComplaintDto applicantComplaint = findById(complaintId);
-        String uin = applicantComplaint.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin();
+        com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo applicantComplaint = applicantComplaintLiteRepository.findOneLite(complaintId);
+        String uin = applicantComplaint.getApplicantRitual().getApplicant().getUin();
         String preferredLanguage = applicantComplaint.getApplicantRitual().getApplicant().getPreferredLanguage();
         notificationRequestService.sendComplaintNotification(notificationTemplate.get(), uin, preferredLanguage);
     }

@@ -27,10 +27,19 @@ public class ApplicantBasicInfoVo implements Serializable {
     private String fullNameAr;
     private String fullNameEn;
     private String serialNumber;
+    private String preferredLanguage;
+
 
     public ApplicantBasicInfoVo(String fullNameAr, String fullNameEn, String uin){
         this.fullNameAr = fullNameAr;
         this.fullNameEn = fullNameEn;
         this.uin = uin;
+    }
+
+    public ApplicantBasicInfoVo(String fullNameAr, String fullNameEn, String uin, String preferredLanguage){
+        this.fullNameAr = fullNameAr;
+        this.fullNameEn = fullNameEn;
+        this.uin = uin;
+        this.preferredLanguage = preferredLanguage;
     }
 }

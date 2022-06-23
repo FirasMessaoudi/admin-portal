@@ -26,4 +26,9 @@ public class ComplaintAttachmentVo implements Serializable {
     private long id;
     private String filePath;
     private Date creationDate;
+
+    public ComplaintAttachmentVo(Long id, String filePath){
+        this.id = id;
+        this.filePath = filePath;
+    }
 }

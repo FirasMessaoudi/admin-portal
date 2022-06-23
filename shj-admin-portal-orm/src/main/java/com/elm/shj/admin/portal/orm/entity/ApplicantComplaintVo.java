@@ -55,4 +55,21 @@ public class ApplicantComplaintVo implements Serializable {
         applicantRitual = new ApplicantRitualVo(fullNameAr,fullNameEn,uin);
         this.count = count;
     }
+
+    public ApplicantComplaintVo(Long id, String referenceNumber, Date creationDate, String statusCode, String typeCode, String description, Double locationLat, Double locationLng, Long complaintAttachmentId, String filePath, String resolutionComment, Date updateDate, String fullNameAr, String fullNameEn, String uin, String preferredLanguage){
+        this.id = id;
+        this.referenceNumber = referenceNumber;
+        this.creationDate = creationDate;
+        this.statusCode = statusCode;
+        this.typeCode = typeCode;
+        this.description = description;
+        this.locationLat = locationLat;
+        this.locationLng = locationLng;
+        if (complaintAttachmentId != null) {
+            this.complaintAttachment = new ComplaintAttachmentVo(complaintAttachmentId, filePath);
+        }
+        this.resolutionComment = resolutionComment;
+        this.updateDate = updateDate;
+        applicantRitual = new ApplicantRitualVo(fullNameAr,fullNameEn,uin,preferredLanguage);
+    }
 }
