@@ -227,11 +227,11 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     @Transactional
     public int updateCompanyStaff(long staffId, UpdateStaffCmd command) {
         int updatedRowsCount = 0;
-        if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
-            updatedRowsCount += companyStaffRepository.updateCompanyStaffLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), staffId);
-        } else {
-            updatedRowsCount += companyStaffRepository.updateCompanyStaffIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), staffId);
-        }
+
+            updatedRowsCount += companyStaffRepository.updateCompanyStaffLocalNumber(command.getEmail(), command.getMobileNumber(), staffId);
+
+            updatedRowsCount += companyStaffRepository.updateCompanyStaffIntlNumber(command.getEmail(), command.getCountryPhonePrefix(), command.getMobileNumber(), staffId);
+
         return updatedRowsCount;
     }
 

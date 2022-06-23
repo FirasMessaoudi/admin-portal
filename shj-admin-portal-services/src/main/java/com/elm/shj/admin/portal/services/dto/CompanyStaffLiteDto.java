@@ -32,6 +32,8 @@ public class CompanyStaffLiteDto implements Serializable {
     private String customJobTitle;
     private String countryCode;
     private String mobileNumber;
+    private String mobileNumberIntl;
+    private String countryPhonePrefix;
     private String nationalityCode;
     private String photo;
     private Date dateOfBirthGregorian;
@@ -42,4 +44,5 @@ public class CompanyStaffLiteDto implements Serializable {
     private String idNumber;
     private Double latitude;
     private Double longitude;
+
 }
