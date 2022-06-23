@@ -80,7 +80,7 @@ public class JpaUser implements Serializable {
 	private int mobileNumber;
 
 	@Column(nullable = false)
-	private long nin;
+	private Long nin;
 
 	@Column(name = "NUMBER_OF_TRIES")
 	private int numberOfTries;

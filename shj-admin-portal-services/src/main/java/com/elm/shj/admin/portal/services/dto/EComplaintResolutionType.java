@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum EComplaintResolutionType {
 
-    MARK_AS_RESOLVED(2), MARK_AS_CLOSED(3);
+    RESOLVED(2), CLOSED(3);
 
 //    String string;
     private final int crmCode;

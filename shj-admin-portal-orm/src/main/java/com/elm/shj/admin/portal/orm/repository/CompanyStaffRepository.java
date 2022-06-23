@@ -198,14 +198,15 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO(" +
             " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode, staff.customJobTitle, staff.photo, " +
-            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber,cards.id ) " +
+            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber," +
+            "cards.id, staff.mobileNumber, staff.countryPhonePrefix, staff.email) " +
             "from JpaCompanyStaff staff " +
             "join staff.digitalIds digitalId " +
             "join digitalId.companyStaffCards cards " +
             "join cards.companyRitualSeason companyRitualSeason " +
             "join companyRitualSeason.ritualSeason ritualSeason " +
             "join companyRitualSeason.company company " +
-            "where staff.id = :staffId ")
+            "where staff.id = :staffId and cards.statusCode <> 'EXPIRED'")
     CompanyStaffFullVO findOrganizerStaffById(@Param("staffId") long staffId);
 
     @Modifying

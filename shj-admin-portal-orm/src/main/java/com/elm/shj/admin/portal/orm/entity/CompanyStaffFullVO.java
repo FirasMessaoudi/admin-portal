@@ -47,4 +47,7 @@ public class CompanyStaffFullVO implements Serializable {
     private String nationalityCode;
     private String cardReferenceNumber;
     private long cardId;
+    private String mobileNumber;
+    private String countryPhonePrefix;
+    private String email;
 }

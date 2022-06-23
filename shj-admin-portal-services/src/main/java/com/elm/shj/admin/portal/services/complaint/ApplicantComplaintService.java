@@ -157,11 +157,10 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void update(ApplicantComplaintLiteDto complaint, ApplicantComplaintVo applicantComplaintVo) throws NotFoundException {
 
-        if (EComplaintResolutionType.MARK_AS_RESOLVED.name().equals(applicantComplaintVo.getOperation())) {
+        if (EComplaintResolutionType.RESOLVED.name().equals(applicantComplaintVo.getOperation())) {
             applicantComplaintRepository.update(complaint.getId(), applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.name());
             sendComplaintNotification(complaint.getId(), RESOLVE_INCIDENT_TEMPLATE_NAME);
-        }
-        if (EComplaintResolutionType.MARK_AS_CLOSED.name().equals(applicantComplaintVo.getOperation())) {
+        } else if (EComplaintResolutionType.CLOSED.name().equals(applicantComplaintVo.getOperation())) {
             applicantComplaintRepository.update(complaint.getId(), applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.name());
             sendComplaintNotification(complaint.getId(), CLOSE_INCIDENT_TEMPLATE_NAME);
         }
@@ -193,11 +192,10 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void updateByCrm(long complaintId, ApplicantComplaintVoCRM applicantComplaintVo) throws NotFoundException {
 
-        if (EComplaintResolutionType.MARK_AS_RESOLVED.getCrmCode() == applicantComplaintVo.getStatus()) {
+        if (EComplaintResolutionType.RESOLVED.getCrmCode() == applicantComplaintVo.getStatus()) {
             applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.name());
             sendComplaintNotification(complaintId, RESOLVE_INCIDENT_TEMPLATE_NAME);
-        }
-        if (EComplaintResolutionType.MARK_AS_CLOSED.getCrmCode() == applicantComplaintVo.getStatus()) {
+        } else if (EComplaintResolutionType.CLOSED.getCrmCode() == applicantComplaintVo.getStatus()) {
             applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.name());
             sendComplaintNotification(complaintId, CLOSE_INCIDENT_TEMPLATE_NAME);
         }
