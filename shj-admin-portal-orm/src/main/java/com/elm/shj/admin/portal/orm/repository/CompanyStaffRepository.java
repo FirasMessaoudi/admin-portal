@@ -206,7 +206,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "join cards.companyRitualSeason companyRitualSeason " +
             "join companyRitualSeason.ritualSeason ritualSeason " +
             "join companyRitualSeason.company company " +
-            "where staff.id = :staffId and cards.statusCode <> 'EXPIRED'")
+            "where staff.id = :staffId and cards.statusCode NOT IN ('CANCELLED', 'EXPIRED', 'SUSPENDED')")
     CompanyStaffFullVO findOrganizerStaffById(@Param("staffId") long staffId);
 
     @Modifying

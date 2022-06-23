@@ -1425,4 +1425,12 @@ public class IntegrationWsController {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.saveOrUpdateStaffFullMainData(companyStaffMainFullDataDto, avatar)).build());
         }
     }
+
+    @PostMapping("/staff/delete/{staffId}")
+    public ResponseEntity<WsResponse<?>> deletStaff(@PathVariable Long staffId) {
+        log.info("deletStaff start");
+        boolean deleted = companyStaffService.deleteStaff(staffId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(deleted).build());
+    }
+
 }

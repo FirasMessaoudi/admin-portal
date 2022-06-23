@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyStaffDigitalId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -40,4 +41,8 @@ public interface CompanyStaffDigitalIdRepository extends JpaRepository<JpaCompan
 
     @Query("select cdi.suin from JpaCompanyStaffDigitalId  cdi where cdi.companyStaff.id=:staffId AND cdi.seasonYear=:seasonYear AND cdi.statusCode=:statusCode ")
     String findStaffSuinByStaffIdAndStatusCodeAndSeasonYear(@Param("staffId") long staffId,@Param("seasonYear") int seasonYear,@Param("statusCode")  String statusCode);
+
+    @Modifying
+    @Query("UPDATE JpaCompanyStaffDigitalId cdi SET cdi.statusCode= 'INVALID', cdi.updateDate = CURRENT_TIMESTAMP WHERE cdi.companyStaff.id = :staffId")
+    void updateDigitalIdStatusByStaffId(@Param("staffId") long staffId);
 }
