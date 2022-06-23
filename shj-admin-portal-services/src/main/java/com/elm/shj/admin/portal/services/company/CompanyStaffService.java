@@ -319,6 +319,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             Join<JpaCompanyStaffDigitalId, JpaCompanyStaffCard> companyStaffCards = digitalId.join("companyStaffCards");
             Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = companyStaffCards.join("companyRitualSeason");
 
+            predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
+
             if (criteria.getSuin() != null && !criteria.getSuin().equals("")) {
                 Path<String> suin = digitalId.get("suin");
                 predicates.add(criteriaBuilder.equal(suin, criteria.getSuin()));
@@ -347,10 +349,6 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             Join<JpaCompanyRitualSeason, JpaCompany> company = companyRitualSeason.join("company");
             Path<String> companyCode = company.get("code");
             predicates.add(criteriaBuilder.equal(companyCode, criteria.getCompanyCode()));
-
-            Path<Boolean> isDieleted = root.get("deleted");
-            predicates.add(criteriaBuilder.equal(isDieleted, Boolean.FALSE));
-
 
             if (criteria.getRitualType() != null && !criteria.getRitualType().equals("")) {
                 Join<JpaCompanyRitualSeason, JpaRitualSeason> ritualSeason = companyRitualSeason.join("ritualSeason");
