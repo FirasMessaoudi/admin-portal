@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.complaint;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantComplaint;
 import com.elm.shj.admin.portal.orm.entity.JpaComplaintAttachment;
+import com.elm.shj.admin.portal.orm.repository.ApplicantComplaintLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantComplaintRepository;
 import com.elm.shj.admin.portal.orm.repository.ComplaintAttachmentRepository;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -60,6 +61,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     private String crmAccessPassword;
 
     private final ApplicantComplaintRepository applicantComplaintRepository;
+    private final ApplicantComplaintLiteRepository applicantComplaintLiteRepository;
     private final SftpService sftpService;
     private final ComplaintAttachmentRepository complaintAttachmentRepository;
     private final NotificationRequestService notificationRequestService;
@@ -75,7 +77,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
      * @param pageable the current page information
      * @return the list of complaint
      */
-    public Page<ApplicantComplaintDto> findAll(ComplaintSearchCriteriaDto criteria, Long companyRefCode, String companyTypeCode, Pageable pageable) {
+    public Page<com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo> findAll(ComplaintSearchCriteriaDto criteria, Long companyRefCode, String companyTypeCode, Pageable pageable) {
         Long establishmentRefCode = -1L;
         Long missionRefCode = -1L;
         Long serviceGroupRefCode = -1L;
@@ -92,9 +94,10 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
         } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
             companyCode = companyRefCode + "_" + companyTypeCode;
         }
-        return mapPage(applicantComplaintRepository.findApplicantComplaintFilter(criteria.getComplaintNumber(), criteria.getComplaintType(),
+        return applicantComplaintRepository.findApplicantComplaintFilter(criteria.getComplaintNumber(), criteria.getComplaintType(),
                 criteria.getStatus(), criteria.getApplicantName(), atStartOfDay(criteria.getFromDate()), atEndOfDay(criteria.getToDate()),
-                criteria.getApplicantId(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable));
+                criteria.getApplicantId(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable);
+
     }
 
     private Date atStartOfDay(Date date) {

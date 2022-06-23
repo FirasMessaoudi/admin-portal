@@ -90,4 +90,8 @@ public class JpaApplicantComplaint implements Serializable {
     public void preUpdate() {
         updateDate = new Date();
     }
+
+    public JpaApplicantComplaint(long id){
+        this.id = id;
+    }
 }

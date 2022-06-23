@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantComplaint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Repository for applicant complaint table.
@@ -35,7 +35,8 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
             "complaint.crmTicketNumber = :crmTicketNumber, complaint.updateDate = current_timestamp where complaint.id =:complaintId")
     void updateCRMTicketNumber(@Param("complaintId") long complaintId, @Param("crmTicketNumber") String crmTicketNumber);
 
-    @Query("SELECT c FROM JpaApplicantComplaint c JOIN c.applicantRitual ar JOIN ar.applicant a JOIN ar.applicant.digitalIds di where " +
+    @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.creationDate,c.statusCode, c.typeCode,a.fullNameAr,a.fullNameEn, di.uin, COUNT(c)) " +
+            "FROM JpaApplicantComplaint c JOIN c.applicantRitual ar JOIN ar.applicant a JOIN ar.applicant.digitalIds di where " +
             "(:referenceNumber is null OR c.referenceNumber like '%'+:referenceNumber+'%') and " +
             "(:typeCode is null OR c.typeCode = :typeCode) and " +
             "(:statusCode is null OR c.statusCode = :statusCode) and " +
@@ -46,13 +47,15 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
             "(:companyCode is null or a.companyCode = :companyCode) and " +
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
-            "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
-    Page<JpaApplicantComplaint> findApplicantComplaintFilter(@Param("referenceNumber") String referenceNumber, @Param("typeCode") String typeCode,
-                                                             @Param("statusCode") String statusCode, @Param("applicantName") String applicantName,
-                                                             @Param("startDate") Date startDate, @Param("endDate") Date endDate,
-                                                             @Param("applicantId") String applicantId, @Param("companyCode") String companyCode,
-                                                             @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
-                                                             @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
+            "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) " +
+            "GROUP BY c.id,c.referenceNumber,c.creationDate,c.statusCode,c.typeCode,a.fullNameAr,a.fullNameEn, di.uin")
+    Page<ApplicantComplaintVo> findApplicantComplaintFilter(@Param("referenceNumber") String referenceNumber, @Param("typeCode") String typeCode,
+                                                            @Param("statusCode") String statusCode, @Param("applicantName") String applicantName,
+                                                            @Param("startDate") Date startDate, @Param("endDate") Date endDate,
+                                                            @Param("applicantId") String applicantId, @Param("companyCode") String companyCode,
+                                                            @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
+                                                            @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
+
 
     List<JpaApplicantComplaint> findTop50ByCreationDateLessThanEqualAndStatusCode(Date creationDate, String statusCode);
 
