@@ -105,18 +105,6 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
     }
 
     /**
-     * Find uncommitted applicant ritual based on applicant id and package reference number.
-     *
-     * @param applicantId
-     * @param referenceNumber
-     * @return
-     */
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantRitualDto findDirtyByApplicantIdAndPackageReferenceNumber(long applicantId, String referenceNumber) {
-        return getMapper().fromEntity(applicantRitualRepository.findByApplicantIdAndPackageReferenceNumber(applicantId, referenceNumber), mappingContext);
-    }
-
-    /**
      * Set applicant package for the applicant ritual.
      *
      * @param newApplicantPackageId

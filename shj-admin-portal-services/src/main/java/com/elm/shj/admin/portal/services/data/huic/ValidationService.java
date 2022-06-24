@@ -493,6 +493,8 @@ public class ValidationService {
     }
 
     private void saveApplicantsMainData(HuicApplicantMainData huicApplicantMainData, List<ErrorResponse> errorResponses, int rowNumber) {
+        log.info("Start saveApplicantsMainData for {} id number, {} passport number, {} nationality, {} package ref number.",
+                huicApplicantMainData.getIdNumber(), huicApplicantMainData.getPassportNo(), huicApplicantMainData.getNationality(), huicApplicantMainData.getPackageRefNumber());
         ApplicantBasicDto applicant = ApplicantBasicDto.builder()
                 .gender(EGenderCode.fromId(huicApplicantMainData.getGender()).name())
                 .nationalityCode(huicApplicantMainData.getNationality().toString())
@@ -501,8 +503,8 @@ public class ValidationService {
                 .passportNumber(huicApplicantMainData.getPassportNo())
                 .dateOfBirthGregorian(huicApplicantMainData.getDateOfBirth())
                 .dateOfBirthHijri(huicApplicantMainData.getDateOfBirthHijri())
-                .fullNameEn(huicApplicantMainData.getFullNameEn() != null ? huicApplicantMainData.getFullNameEn().matches(LATIN_REGEX) ? huicApplicantMainData.getFullNameEn() : null : null)
-                .fullNameAr(huicApplicantMainData.getFullNameAr() != null ? huicApplicantMainData.getFullNameAr().matches(ARABIC_REGEX) ? huicApplicantMainData.getFullNameAr() : null : null)
+                .fullNameEn(huicApplicantMainData.getFullNameEn())
+                .fullNameAr(huicApplicantMainData.getFullNameAr())
                 .fullNameOrigin(huicApplicantMainData.getFullNameOriginalLang())
                 .maritalStatusCode(huicApplicantMainData.getMaritalStatus() != null ? EMaritalStatus.fromId(huicApplicantMainData.getMaritalStatus()).name() : null)
                 .photo(huicApplicantMainData.getPhoto())
@@ -529,15 +531,12 @@ public class ValidationService {
 
         applicant.setContacts(Collections.singletonList(applicantContactDto));
         updateApplicantLiteBirthDate(applicant);
-        applicant.setDateOfBirthGregorian(updateDate(applicant.getDateOfBirthGregorian()));
+
         Long existingApplicantId = applicantService.findIdByBasicInfo(applicant.getIdNumber(), applicant.getPassportNumber(), applicant.getNationalityCode());
 
-        if (huicApplicantMainData.getStatus() == null) {
-            huicApplicantMainData.setStatus(1);
-        }
         // if record exists already in DB we need to update it
         if (existingApplicantId != null) {
-            if (huicApplicantMainData.getStatus() == 2) {
+            if (huicApplicantMainData.getStatus() == 2) { // update
                 boolean isRegistered = applicantService.findApplicantStatus(existingApplicantId);
                 if (!isRegistered) {
                     updateExistingApplicantLite(applicant, existingApplicantId);
@@ -549,10 +548,10 @@ public class ValidationService {
                     errorResponses.add(errorResponse);
                     return;
                 }
-            } else if (huicApplicantMainData.getStatus() == 3) {
+            } else if (huicApplicantMainData.getStatus() == 3) { //delete
                 updateExistingApplicantLite(applicant, existingApplicantId);
                 applicant.setDeleted(true);
-            } else if (huicApplicantMainData.getStatus() == 1) {
+            } else { //invalid
                 ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.setRowNumber(rowNumber + 1);
                 errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30001", "Please enter a valid value. Same value cannot be repeated within the previous registered records"));
@@ -572,7 +571,7 @@ public class ValidationService {
         //TODO: unify this for both data upload and huic
         addApplicantLiteToContact(applicant);
         if (applicant.getPackageReferenceNumber() == null) {
-            String referenceNumber = null;
+            String referenceNumber;
             //if establishment id not null link applicant with default package of that establishment
             if (applicant.getEstablishmentRefCode() != null) {
                 referenceNumber = ritualPackageService.findPackageReferenceNumber(applicant.getEstablishmentRefCode() + "_ESTABLISHMENT", ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
@@ -593,26 +592,28 @@ public class ValidationService {
                 }
             }
             applicant.setPackageReferenceNumber(referenceNumber);
-
         }
         applicantBasicService.save(applicant);
-
-
+        log.info("Finish saveApplicantsMainData for {} id number, {} passport number, {} nationality, {} package ref number. ",
+                huicApplicantMainData.getIdNumber(), huicApplicantMainData.getPassportNo(), huicApplicantMainData.getNationality(), huicApplicantMainData.getPackageRefNumber());
     }
 
     private void saveApplicantRitual(HuicApplicantRitual huicApplicantRitual) {
-        //TODO: check bed and room number
-        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(huicApplicantRitual.getIdNumber() != null ? huicApplicantRitual.getIdNumber().toString() : null, huicApplicantRitual.getPassportNo(), huicApplicantRitual.getNationality().toString());
-
-        if (applicantLite == null) {
+        log.info("Start saveApplicantRitual for {} id number, {} passport number, {} nationality, {} package ref number.",
+                huicApplicantRitual.getIdNumber(), huicApplicantRitual.getPassportNo(), huicApplicantRitual.getNationality(), huicApplicantRitual.getPackageRefNumber());
+        Long applicantId = applicantBasicService.findIdByBasicInfo(huicApplicantRitual.getIdNumber() != null ? huicApplicantRitual.getIdNumber().toString() : null, huicApplicantRitual.getPassportNo(), huicApplicantRitual.getNationality().toString());
+        if (applicantId == null) {
             return;
         }
-        Long applicantId = applicantLite.getId();
-        if (huicApplicantRitual.getPackageRefNumber() == null) {
-            huicApplicantRitual.setPackageRefNumber(applicantLite.getPackageReferenceNumber());
+
+        String packageReferenceNumber = huicApplicantRitual.getPackageRefNumber();
+        if (packageReferenceNumber == null) {
+            packageReferenceNumber = applicantBasicService.findPackageReferenceNumberById(applicantId);
         }
+
+        //construct the applicant ritual
         ApplicantRitualDto applicantRitualDto = ApplicantRitualDto.builder()
-                .packageReferenceNumber(huicApplicantRitual.getPackageRefNumber())
+                .packageReferenceNumber(packageReferenceNumber)
                 .visaNumber(huicApplicantRitual.getVisaNumber())
                 .permitNumber(huicApplicantRitual.getPermitNumber())
                 .borderNumber(huicApplicantRitual.getBorderNo())
@@ -622,13 +623,15 @@ public class ValidationService {
                 .bedNumber(huicApplicantRitual.getBedNumber())
                 .roomNumber(huicApplicantRitual.getRoomNumber())
                 .build();
-        String packageReferenceNumber = applicantRitualDto.getPackageReferenceNumber();
-        Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, packageReferenceNumber, null, false);
+
+        //find existing applicant ritual
+        Long savedApplicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber);
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
         updateApplicantRitual(applicantRitualDto, savedApplicantRitualId, applicantId, applicantUin);
         applicantRitualDto.setApplicant(ApplicantDto.builder().id(applicantId).build());
         applicantRitualService.save(applicantRitualDto);
-
+        log.info("Finish saveApplicantRitual for {} id number, {} passport number, {} nationality, {} package ref number.",
+                huicApplicantRitual.getIdNumber(), huicApplicantRitual.getPassportNo(), huicApplicantRitual.getNationality(), huicApplicantRitual.getPackageRefNumber());
     }
 
     /**

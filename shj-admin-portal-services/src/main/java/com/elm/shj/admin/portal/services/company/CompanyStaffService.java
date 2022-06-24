@@ -373,7 +373,6 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         };
     }
 
-
     public Optional<CompanyStaffFullVO> searchStaffById(Long id) {
         CompanyStaffFullVO staff = companyStaffRepository.findOrganizerStaffById(id);
         // split the company and set only company ref code

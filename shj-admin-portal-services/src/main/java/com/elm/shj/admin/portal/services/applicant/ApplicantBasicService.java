@@ -37,4 +37,20 @@ public class ApplicantBasicService extends GenericService<JpaApplicantBasic, App
         log.info("Finish findAllWithoutDigitalId with {} digital ids", applicantLiteDtos.getContent().size());
         return applicantLiteDtos;
     }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public Long findIdByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
+        log.info("Start findIdByBasicInfo for {} id number, {} passport number, {} nationality code.", idNumber, passportNumber, nationalityCode);
+        Long applicantId = applicantBasicRepository.findIdByBasicInfo(idNumber, passportNumber, nationalityCode);
+        log.info("Finish findIdByBasicInfo and found {} applicant id.", applicantId);
+        return applicantId;
+    }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public String findPackageReferenceNumberById(Long applicantId) {
+        log.info("Start findPackageReferenceNumberById for {} id.", applicantId);
+        String packageRefNumber = applicantBasicRepository.findPackageReferenceNumberById(applicantId);
+        log.info("Finish findPackageReferenceNumberById and found {} packageRefNumber.", packageRefNumber);
+        return packageRefNumber;
+    }
 }

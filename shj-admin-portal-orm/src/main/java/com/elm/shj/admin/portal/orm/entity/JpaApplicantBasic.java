@@ -88,6 +88,7 @@ public class JpaApplicantBasic implements Serializable {
     private Long serviceGroupMadinaCode;
 
     private String photo;
+
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "applicant")
     private List<JpaApplicantContactBasic> contacts;
