@@ -36,4 +36,7 @@ public interface CompanyRitualSeasonRepository extends JpaRepository<JpaCompanyR
 
     List<JpaCompanyRitualSeason> findByCompanyId(Long companyId);
 
+    @Query("SELECT crs FROM JpaCompanyRitualSeason crs  WHERE crs.company.code=:companyCode")
+    List<JpaCompanyRitualSeason> findCompanyRitualByCompanyCode(@Param("companyCode") String companyCode);
+
 }
