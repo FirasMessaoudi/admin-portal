@@ -206,8 +206,8 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "join cards.companyRitualSeason companyRitualSeason " +
             "join companyRitualSeason.ritualSeason ritualSeason " +
             "join companyRitualSeason.company company " +
-            "where staff.id = :staffId and cards.statusCode <> 'EXPIRED'")
-    CompanyStaffFullVO findOrganizerStaffById(@Param("staffId") long staffId);
+            "where staff.id = :staffId")
+    List<CompanyStaffFullVO> findOrganizerStaffById(@Param("staffId") long staffId);
 
     @Modifying
     @Query("update JpaCompanyStaff staff set staff.titleCode = :jobTitle, staff.customJobTitle = :customJobTitle, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")

@@ -374,11 +374,12 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
     public Optional<CompanyStaffFullVO> searchStaffById(Long id) {
-        CompanyStaffFullVO staff = companyStaffRepository.findOrganizerStaffById(id);
+        List<CompanyStaffFullVO> staff = companyStaffRepository.findOrganizerStaffById(id);
+        CompanyStaffFullVO companyStaffFullVO = staff.get(staff.size() - 1);
         // split the company and set only company ref code
-        if(staff.getCompanyCode() != null && !staff.getCompanyCode().equals(""))
-            staff.setCompanyCode(staff.getCompanyCode().contains("_") ? staff.getCompanyCode().substring(0, staff.getCompanyCode().indexOf("_")) : staff.getCompanyCode());
-        return staff == null? Optional.empty(): Optional.of(staff);
+        if(companyStaffFullVO.getCompanyCode() != null && !companyStaffFullVO.getCompanyCode().equals(""))
+            companyStaffFullVO.setCompanyCode(companyStaffFullVO.getCompanyCode().contains("_") ? companyStaffFullVO.getCompanyCode().substring(0, companyStaffFullVO.getCompanyCode().indexOf("_")) : companyStaffFullVO.getCompanyCode());
+        return companyStaffFullVO == null? Optional.empty(): Optional.of(companyStaffFullVO);
     }
 
     @Transactional
@@ -536,6 +537,12 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     c.setStatusCode(ECardStatus.EXPIRED.name());
                 });
                 companyStaffCardService.saveAll(companyStaffCards2);
+                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
+                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
+                        .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
+                companyStaffCardService.save(companyStaffCardDto);
                 return;
             }
 
