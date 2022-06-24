@@ -301,6 +301,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                         .passportNumber(companyStaff.getPassportNumber())
                         .idNumber(companyStaff.getIdNumber())
                         .linkedWithGroup(applicantGroupBasicService.existsByGroupLeader(companyStaff.getId()))
+                        .photo(companyStaff.getPhoto())
                         .build();
 
                 companyStaffList.add(companyStaffLite);
