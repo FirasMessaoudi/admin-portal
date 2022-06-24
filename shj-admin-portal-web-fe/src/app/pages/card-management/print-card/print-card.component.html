@@ -1,0 +1,65 @@
+ 
+<a class="d-block button_back" href="javascript:void(0);" (click)="goBack()">
+  <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
+  <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
+</a>
+<div class="content__wrapper">
+  <div class="title__Page">
+    <h3 class="sectionTitle">{{"card-management.print_card_title" | translate }}</h3>
+  </div>
+
+  <!-- <h5 class="subtitle__Page mb-4">{{'incident-management.incident_details' | translate}}</h5> -->
+  <div class="content__section">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+      <div class="form-group col">
+        <label class="col-form-label">{{"card-management.full_image_card" | translate }}</label>
+        <p style="border-radius: 25px;border: 2px solid #73AD21;padding: 20px;width: 250px;height:400px;">Photo</p>
+      </div>
+      <div class="form-group col">
+        <label class="col-form-label">{{"card-management.partial_image_card" | translate }}</label>
+        <p style="border-radius: 25px;border: 2px solid #73AD21;padding: 20px;width: 250px;height:400px;">Photo</p>
+      </div>
+    </div>  
+
+    <form #printCardForm="ngForm"> 
+     
+      <ng-template #contentFull let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Full Printing </h4>
+          <button type="button"  style="border:none;"  (click)="modal.dismiss('Cross click')">X</button>
+        </div>
+        <div class="modal-body">
+          <p>Please make sure to add blank card inside Printer</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Print</button>
+        </div>
+      </ng-template>  
+
+
+      <ng-template #contentPrePrinted let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Printing on Preprinted Design</h4>
+          <button type="button" style="border:none;" (click)="modal.dismiss('Cross click')">X</button>
+        </div>
+        <div class="modal-body">
+          <p>Please make sure to add pre printed design card inside Printer</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Print</button>
+        </div>
+      </ng-template>
+
+
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+        <div class="form-group col">
+          <button class="btn btn-dcc-primary px-4" (click)="printFullImage(contentPrePrinted)">{{"card-management.print_blank_card" | translate}}</button>         
+        </div>
+        <div class="form-group col">
+          <button  class="btn btn-dcc-primary px-4" onclick="myFunction('')">{{"card-management.print_preprinted_card" | translate}}</button>
+        </div>
+      </div> 
+    </form>
+  </div>
+
+</div>

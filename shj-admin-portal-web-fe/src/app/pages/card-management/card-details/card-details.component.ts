@@ -156,23 +156,39 @@ export class CardDetailsComponent implements OnInit {
     if (this.isUserHasAllowedAuthority(actionCode)) {
       this.confirmDialogService.confirm(this.translate.instant(confirmationText), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
         if (confirm) {
-          this.cardService.changeCardStatus(this.card.id, actionCode).subscribe(result => {
-            this.card = result;
-            this.cardId = this.card.id;
-            let cardStatusChangedText = '';
-            if (actionCode == this.actions.ACTIVATE_CARD) {
-              cardStatusChangedText = 'card-management.dialog_activated_card_success_text';
-            } else if (actionCode == this.actions.SUSPEND_CARD) {
-              cardStatusChangedText = 'card-management.dialog_suspended_card_success_text';
-            } else if (actionCode == this.actions.CANCEL_CARD) {
-              cardStatusChangedText = 'card-management.dialog_canceled_card_success_text';
-            } else {
-              cardStatusChangedText = 'card-management.dialog_reissued_card_success_text';
-            }
-            this.toastr.success(this.translate.instant(cardStatusChangedText), this.translate.instant('general.dialog_edit_title'));
-          }, error => {
-            this.toastr.warning(this.translate.instant("general.dialog_error_text"), this.translate.instant("general.dialog_edit_title"));
-          });
+
+          if(actionCode == this.actions.REPRINT_CARD)          
+          {
+           console.log("Reprint The Card");
+           this.router.navigate(['/card/print',this.card.id]);
+          }
+          else 
+          {
+            this.cardService.changeCardStatus(this.card.id, actionCode).subscribe(result => {
+              this.card = result;
+              this.cardId = this.card.id;
+              let cardStatusChangedText = '';
+              if (actionCode == this.actions.ACTIVATE_CARD) {
+                cardStatusChangedText = 'card-management.dialog_activated_card_success_text';
+              } else if (actionCode == this.actions.SUSPEND_CARD) {
+                cardStatusChangedText = 'card-management.dialog_suspended_card_success_text';
+              } else if (actionCode == this.actions.CANCEL_CARD) {
+                cardStatusChangedText = 'card-management.dialog_canceled_card_success_text';
+              } 
+              else if(actionCode == this.actions.REPRINT_CARD){
+                cardStatusChangedText = 'card-management.dialog_canceled_card_success_text';
+              }
+              else {
+                cardStatusChangedText = 'card-management.dialog_reissued_card_success_text';
+              }
+              this.toastr.success(this.translate.instant(cardStatusChangedText), this.translate.instant('general.dialog_edit_title'));
+            }, error => {
+              this.toastr.warning(this.translate.instant("general.dialog_error_text"), this.translate.instant("general.dialog_edit_title"));
+            });
+
+          }
+
+        
         }
       });
     } else {
@@ -194,6 +210,9 @@ export class CardDetailsComponent implements OnInit {
         return this.authenticationService.hasAuthority(EAuthority.ACTIVATE_CARD);
       }
       case 'cancel_card': {
+        return this.authenticationService.hasAuthority(EAuthority.CANCEL_CARD);
+      }
+      case 'reprint_card': {
         return this.authenticationService.hasAuthority(EAuthority.CANCEL_CARD);
       }
       default: {
