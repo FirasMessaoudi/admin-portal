@@ -319,7 +319,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             Join<JpaCompanyStaffDigitalId, JpaCompanyStaffCard> companyStaffCards = digitalId.join("companyStaffCards");
             Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = companyStaffCards.join("companyRitualSeason");
 
-            predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
+           predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
 
             if (criteria.getSuin() != null && !criteria.getSuin().equals("")) {
                 Path<String> suin = digitalId.get("suin");
@@ -377,7 +377,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         CompanyStaffFullVO staff = companyStaffRepository.findOrganizerStaffById(id);
         // split the company and set only company ref code
         if(staff.getCompanyCode() != null && !staff.getCompanyCode().equals(""))
-            staff.setCompanyCode(staff.getCompanyCode().split("_")[0]);
+            staff.setCompanyCode(staff.getCompanyCode().contains("_") ? staff.getCompanyCode().substring(0, staff.getCompanyCode().indexOf("_")) : staff.getCompanyCode());
         return staff == null? Optional.empty(): Optional.of(staff);
     }
 
