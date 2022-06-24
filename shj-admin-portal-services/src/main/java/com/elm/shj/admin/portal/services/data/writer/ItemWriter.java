@@ -730,7 +730,7 @@ public class ItemWriter {
                 .mobileNumber(companyStaffFullData.getMobileNumber())
                 .mobileNumberIntl(companyStaffFullData.getMobileNumberIntl())
                 .photo(companyStaffFullData.getPhoto())
-                .countryPhonePrefix(companyStaffFullData.getNationalityCode() == null ? DEFAULT_COUNTRY_CODE_PREFIX : nationalityLookupService.findByCode(companyStaffFullData.getNationalityCode()).getCountryPhonePrefix())
+                .countryPhonePrefix(companyStaffFullData.getNationalityCode() == null || companyStaffFullData.getNationalityCode().equals("") ? DEFAULT_COUNTRY_CODE_PREFIX : nationalityLookupService.findByCode(companyStaffFullData.getNationalityCode()).getCountryPhonePrefix())
                 .deleted(Boolean.FALSE)
                 .build();
         return companyStaff;
