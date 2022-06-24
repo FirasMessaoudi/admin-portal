@@ -44,5 +44,6 @@ public class CompanyStaffLiteDto implements Serializable {
     private String idNumber;
     private Double latitude;
     private Double longitude;
+    private boolean linkedWithGroup;
 
 }
