@@ -97,3 +97,6 @@ VALUES ('generate.applicant.complaint.scheduler.active.nodes', '127.0.0.1,localh
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('scheduler.generate.applicant.complaint.delay.milliseconds', '900000');
 GO
+
+UPDATE shc_portal.shc_company_staff set deleted = 0 where id > 0;
+GO

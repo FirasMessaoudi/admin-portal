@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service handling CompanyRitualSeason
@@ -60,5 +61,9 @@ public class CompanyRitualSeasonService extends GenericService<JpaCompanyRitualS
         return mapList(companyRitualSeasonRepository.findByCompanyId(companyId));
     }
 
+    public List<String> findByCompanyCode(String companyCode) {
+        List<CompanyRitualSeasonDto> companyRitualSeasons = mapList(companyRitualSeasonRepository.findCompanyRitualByCompanyCode(companyCode));
+        return companyRitualSeasons.stream().map(crs -> crs.getRitualSeason().getRitualTypeCode()).collect(Collectors.toList());
+    }
 
 }

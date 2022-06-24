@@ -2,6 +2,7 @@ package com.elm.shj.admin.portal.services.applicant;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroupBasic;
 import com.elm.shj.admin.portal.orm.repository.ApplicantGroupBasicRepository;
+import com.elm.shj.admin.portal.orm.repository.ApplicantLiteRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantGroupBasicDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +30,12 @@ public class ApplicantGroupBasicService extends GenericService<JpaApplicantGroup
         return null;
     }
 
+
+    public boolean existsByGroupLeader(Long groupLeaderId) {
+        log.info("Start existsByGroupLeader groupLeaderId:{}", groupLeaderId);
+        boolean existsByGroupLeader = applicantGroupBasicRepository.existsByGroupLeader(groupLeaderId);
+        log.info("Finish existsByGroupLeader isExists:{}", existsByGroupLeader);
+        return existsByGroupLeader;
+    }
 
 }

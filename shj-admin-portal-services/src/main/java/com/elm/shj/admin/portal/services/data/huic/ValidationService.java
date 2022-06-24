@@ -802,7 +802,7 @@ public class ValidationService {
 
     public Boolean isValidApplicant(ApplicantLiteDto applicantLiteDto, String companyCode){
         long companyRefCode = Long.valueOf(companyCode.contains("_") ? companyCode.substring(0, companyCode.indexOf("_")) : companyCode);
-        String companyType = companyCode.split("_")[1];
+        String companyType = companyCode.substring(companyCode.indexOf("_")+1, companyCode.length());
         EOrganizerTypes organizerTypes= EOrganizerTypes.valueOf(companyType);
         Boolean isValidApplicant = false;
         switch (organizerTypes){
