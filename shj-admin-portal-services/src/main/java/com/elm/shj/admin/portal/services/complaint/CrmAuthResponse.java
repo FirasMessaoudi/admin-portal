@@ -3,9 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.complaint;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.util.MultiValueMap;
 
 /**
@@ -15,7 +13,9 @@ import org.springframework.util.MultiValueMap;
  * @since 1.2.6 */
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class CrmAuthResponse {
 
     public enum ECrmResponseStatus {

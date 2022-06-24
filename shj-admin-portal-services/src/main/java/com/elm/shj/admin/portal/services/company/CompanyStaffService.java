@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.services.company;
 
 import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.CompanyStaffRepository;
+import com.elm.shj.admin.portal.services.applicant.ApplicantGroupBasicService;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.data.reader.EExcelItemReaderErrorType;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
@@ -54,6 +55,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     private final CompanyStaffCardService companyStaffCardService;
     private final CompanyStaffDigitalIdBasicService companyStaffDigitalIdBasicService;
     private final MessageSource messageSource;
+    private final ApplicantGroupBasicService applicantGroupBasicService;
 
     @Value("${ritual.season.year}")
     private int seasonYear;
@@ -282,8 +284,6 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
         if (companyStaffs.getContent() != null && !companyStaffs.getContent().isEmpty()) {
             companyStaffs.getContent().forEach(companyStaff -> {
-                UserLocationDto userLocationDto = userLocationService.findTopByUserIdAndUserTypeOrderByCreationDateDesc(companyStaff.getDigitalIds().isEmpty() ? null : companyStaff.getDigitalIds().get(0).getSuin(),
-                        EUserType.STAFF.name());
                 CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
                         .id(companyStaff.getId())
                         .suin(companyStaff.getDigitalIds().isEmpty() ? "" : companyStaff.getDigitalIds().get(0).getSuin())
@@ -300,9 +300,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                         .gender(companyStaff.getGender())
                         .passportNumber(companyStaff.getPassportNumber())
                         .idNumber(companyStaff.getIdNumber())
-                        .latitude(userLocationDto == null ? null : userLocationDto.getLatitude())
-                        .longitude(userLocationDto == null ? null : userLocationDto.getLongitude())
+                        .linkedWithGroup(applicantGroupBasicService.existsByGroupLeader(companyStaff.getId()))
+                        .photo(companyStaff.getPhoto())
                         .build();
+
                 companyStaffList.add(companyStaffLite);
             });
 
@@ -318,6 +319,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             Join<JpaCompanyStaff, JpaCompanyStaffDigitalId> digitalId = root.join("digitalIds");
             Join<JpaCompanyStaffDigitalId, JpaCompanyStaffCard> companyStaffCards = digitalId.join("companyStaffCards");
             Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = companyStaffCards.join("companyRitualSeason");
+
+           predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
 
             if (criteria.getSuin() != null && !criteria.getSuin().equals("")) {
                 Path<String> suin = digitalId.get("suin");
@@ -348,10 +351,6 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             Path<String> companyCode = company.get("code");
             predicates.add(criteriaBuilder.equal(companyCode, criteria.getCompanyCode()));
 
-            Path<Boolean> isDieleted = root.get("deleted");
-            predicates.add(criteriaBuilder.equal(isDieleted, Boolean.FALSE));
-
-
             if (criteria.getRitualType() != null && !criteria.getRitualType().equals("")) {
                 Join<JpaCompanyRitualSeason, JpaRitualSeason> ritualSeason = companyRitualSeason.join("ritualSeason");
                 predicates.add(criteriaBuilder.equal(ritualSeason.get("ritualTypeCode"), criteria.getRitualType()));
@@ -379,7 +378,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         CompanyStaffFullVO staff = companyStaffRepository.findOrganizerStaffById(id);
         // split the company and set only company ref code
         if(staff.getCompanyCode() != null && !staff.getCompanyCode().equals(""))
-            staff.setCompanyCode(staff.getCompanyCode().split("_")[0]);
+            staff.setCompanyCode(staff.getCompanyCode().contains("_") ? staff.getCompanyCode().substring(0, staff.getCompanyCode().indexOf("_")) : staff.getCompanyCode());
         return staff == null? Optional.empty(): Optional.of(staff);
     }
 

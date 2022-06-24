@@ -5,7 +5,10 @@ package com.elm.shj.admin.portal.services.complaint;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantComplaint;
 import com.elm.shj.admin.portal.orm.entity.JpaComplaintAttachment;
+import com.elm.shj.admin.portal.orm.entity.JpaComplaintAttachmentLite;
+import com.elm.shj.admin.portal.orm.repository.ApplicantComplaintLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantComplaintRepository;
+import com.elm.shj.admin.portal.orm.repository.ComplaintAttachmentLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ComplaintAttachmentRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
@@ -60,8 +63,10 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     private String crmAccessPassword;
 
     private final ApplicantComplaintRepository applicantComplaintRepository;
+    private final ApplicantComplaintLiteRepository applicantComplaintLiteRepository;
     private final SftpService sftpService;
     private final ComplaintAttachmentRepository complaintAttachmentRepository;
+    private final ComplaintAttachmentLiteRepository complaintAttachmentLiteRepository;
     private final NotificationRequestService notificationRequestService;
     private final NotificationTemplateService notificationTemplateService;
     private static final String RESOLVE_INCIDENT_TEMPLATE_NAME = "RESOLVE_INCIDENT";
@@ -75,7 +80,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
      * @param pageable the current page information
      * @return the list of complaint
      */
-    public Page<ApplicantComplaintDto> findAll(ComplaintSearchCriteriaDto criteria, Long companyRefCode, String companyTypeCode, Pageable pageable) {
+    public Page<com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo> findAll(ComplaintSearchCriteriaDto criteria, Long companyRefCode, String companyTypeCode, Pageable pageable) {
         Long establishmentRefCode = -1L;
         Long missionRefCode = -1L;
         Long serviceGroupRefCode = -1L;
@@ -92,9 +97,10 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
         } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
             companyCode = companyRefCode + "_" + companyTypeCode;
         }
-        return mapPage(applicantComplaintRepository.findApplicantComplaintFilter(criteria.getComplaintNumber(), criteria.getComplaintType(),
+        return applicantComplaintRepository.findApplicantComplaintFilter(criteria.getComplaintNumber(), criteria.getComplaintType(),
                 criteria.getStatus(), criteria.getApplicantName(), atStartOfDay(criteria.getFromDate()), atEndOfDay(criteria.getToDate()),
-                criteria.getApplicantId(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable));
+                criteria.getApplicantId(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable);
+
     }
 
     private Date atStartOfDay(Date date) {
@@ -130,8 +136,8 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
      * @return the found complaint or <code>null</code>
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantComplaintDto findById(long complaintId) {
-        return findOne(complaintId);
+    public com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo findByIdLite(long complaintId) {
+        return applicantComplaintLiteRepository.findOneLite(complaintId);
     }
 
 
@@ -142,7 +148,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
      * @return the attachment of the applicant complaint
      */
     public Resource downloadApplicantComplaintAttachment(long complaintAttachmentId) throws Exception {
-        Optional<JpaComplaintAttachment> complaintAttachment = complaintAttachmentRepository.findById(complaintAttachmentId);
+        Optional<JpaComplaintAttachmentLite> complaintAttachment = complaintAttachmentLiteRepository.findById(complaintAttachmentId);
         if (!complaintAttachment.isPresent()) {
             return null;
         }
@@ -208,8 +214,8 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
             throw new NotFoundException("no Template found for  " + closeComplaintTemplateName);
         }
 
-        ApplicantComplaintDto applicantComplaint = findById(complaintId);
-        String uin = applicantComplaint.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin();
+        com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo applicantComplaint = applicantComplaintLiteRepository.findOneLite(complaintId);
+        String uin = applicantComplaint.getApplicantRitual().getApplicant().getUin();
         String preferredLanguage = applicantComplaint.getApplicantRitual().getApplicant().getPreferredLanguage();
         notificationRequestService.sendComplaintNotification(notificationTemplate.get(), uin, preferredLanguage);
     }

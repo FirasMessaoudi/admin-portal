@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public enum ECity {
     MAKKAH(1), HOLY_SITES(2),MADINAH(3),JEDDAH(4),OTHERS(5);
 
-    private final int crmCode;
+    private final Integer crmCode;
 
     ECity(int code) {
         this.crmCode = code;
@@ -30,7 +30,7 @@ public enum ECity {
         return null;
     }
 
-    public int getCrmCode() {
+    public Integer getCrmCode() {
         return crmCode;
     }
 }

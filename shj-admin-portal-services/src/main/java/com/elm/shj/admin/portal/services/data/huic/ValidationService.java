@@ -60,6 +60,7 @@ public class ValidationService {
     private final ApplicantService applicantService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantLiteService applicantLiteService;
+    private final ApplicantBasicService applicantBasicService;
     private final DigitalIdService digitalIdService;
     private final ApplicantPackageService applicantPackageService;
     private final ApplicantRelativeService applicantRelativeService;
@@ -432,6 +433,7 @@ public class ValidationService {
         }
         Long applicantId = applicantLite.getId();
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
+        //TODO: to be reviewed , why update ??
         Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, huicApplicantRelative.getPackageRefNumber(), null, false);
         if (savedApplicantRitualId == null) {
             ErrorResponse errorResponse = new ErrorResponse();
@@ -491,8 +493,7 @@ public class ValidationService {
     }
 
     private void saveApplicantsMainData(HuicApplicantMainData huicApplicantMainData, List<ErrorResponse> errorResponses, int rowNumber) {
-        //TODO: handle the rest of the fields(ritualType,establishment...)
-        ApplicantDto applicant = ApplicantDto.builder()
+        ApplicantBasicDto applicant = ApplicantBasicDto.builder()
                 .gender(EGenderCode.fromId(huicApplicantMainData.getGender()).name())
                 .nationalityCode(huicApplicantMainData.getNationality().toString())
                 .idNumber(huicApplicantMainData.getIdNumber() != null ? huicApplicantMainData.getIdNumber().toString() : null)
@@ -513,7 +514,7 @@ public class ValidationService {
                 .serviceGroupMadinaCode(huicApplicantMainData.getServiceGroupMadinaId())
                 .serviceGroupMakkahCode(huicApplicantMainData.getServiceGroupMakkahId())
                 .build();
-        ApplicantContactDto applicantContactDto = ApplicantContactDto.builder()
+        ApplicantContactBasicDto applicantContactDto = ApplicantContactBasicDto.builder()
                 .languageList(huicApplicantMainData.getLanguageList())
                 .email(huicApplicantMainData.getEmail() != null ? huicApplicantMainData.getEmail().matches(EMAIL_REGEX) ? huicApplicantMainData.getEmail() : null : null)
                 .localMobileNumber(huicApplicantMainData.getMobileNumber())
@@ -525,10 +526,12 @@ public class ValidationService {
                 .buildingNumber(huicApplicantMainData.getBuildingNo())
                 .postalCode(huicApplicantMainData.getPostalCode())
                 .build();
+
         applicant.setContacts(Collections.singletonList(applicantContactDto));
-        updateApplicantBirthDate(applicant);
+        updateApplicantLiteBirthDate(applicant);
         applicant.setDateOfBirthGregorian(updateDate(applicant.getDateOfBirthGregorian()));
         Long existingApplicantId = applicantService.findIdByBasicInfo(applicant.getIdNumber(), applicant.getPassportNumber(), applicant.getNationalityCode());
+
         if (huicApplicantMainData.getStatus() == null) {
             huicApplicantMainData.setStatus(1);
         }
@@ -537,7 +540,7 @@ public class ValidationService {
             if (huicApplicantMainData.getStatus() == 2) {
                 boolean isRegistered = applicantService.findApplicantStatus(existingApplicantId);
                 if (!isRegistered) {
-                    updateExistingApplicant(applicant, existingApplicantId);
+                    updateExistingApplicantLite(applicant, existingApplicantId);
                 } else {
                     // if applicant is registered raise an error : cannot update
                     ErrorResponse errorResponse = new ErrorResponse();
@@ -547,7 +550,7 @@ public class ValidationService {
                     return;
                 }
             } else if (huicApplicantMainData.getStatus() == 3) {
-                updateExistingApplicant(applicant, existingApplicantId);
+                updateExistingApplicantLite(applicant, existingApplicantId);
                 applicant.setDeleted(true);
             } else if (huicApplicantMainData.getStatus() == 1) {
                 ErrorResponse errorResponse = new ErrorResponse();
@@ -567,7 +570,7 @@ public class ValidationService {
         }
 
         //TODO: unify this for both data upload and huic
-        addApplicantToContact(applicant);
+        addApplicantLiteToContact(applicant);
         if (applicant.getPackageReferenceNumber() == null) {
             String referenceNumber = null;
             //if establishment id not null link applicant with default package of that establishment
@@ -592,7 +595,7 @@ public class ValidationService {
             applicant.setPackageReferenceNumber(referenceNumber);
 
         }
-        applicantService.save(applicant);
+        applicantBasicService.save(applicant);
 
 
     }
@@ -680,6 +683,26 @@ public class ValidationService {
         }
     }
 
+    public void updateApplicantLiteBirthDate(ApplicantBasicDto applicant) {
+        if ((applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) && applicant.getDateOfBirthGregorian() != null) {
+            Calendar cl = Calendar.getInstance();
+            cl.setTime(applicant.getDateOfBirthGregorian());
+            HijrahDate islamyDate = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+            applicant.setDateOfBirthHijri(Long.parseLong(islamyDate.toString().substring(islamyDate.toString().indexOf("AH") + 3).replace("-", "")));
+        }
+    }
+
+    public void updateExistingApplicantLite(ApplicantBasicDto applicant, long existingApplicantId) {
+        List<ApplicantContactDto> applicantContactDtos = applicantContactService.findByApplicantId(existingApplicantId);
+        if (!applicantContactDtos.isEmpty()) {
+            if (!applicant.getContacts().isEmpty()) {
+                applicant.getContacts().get(0).setId(applicantContactDtos.get(0).getId());
+            }
+        }
+        applicant.setId(existingApplicantId);
+        applicant.setUpdateDate(new Date());
+    }
+
     public void updateExistingApplicant(ApplicantDto applicant, long existingApplicantId) {
         List<ApplicantRitualDto> applicantRituals = applicantRitualService.findAllByApplicantId(existingApplicantId);
         List<ApplicantContactDto> applicantContactDtos = applicantContactService.findByApplicantId(existingApplicantId);
@@ -713,6 +736,14 @@ public class ValidationService {
     }
 
     public void addApplicantToContact(ApplicantDto applicant) {
+        if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
+            applicant.getContacts().forEach(ac -> {
+                ac.setApplicant(applicant);
+            });
+        }
+    }
+
+    public void addApplicantLiteToContact(ApplicantBasicDto applicant) {
         if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
             applicant.getContacts().forEach(ac -> {
                 ac.setApplicant(applicant);
@@ -771,7 +802,7 @@ public class ValidationService {
 
     public Boolean isValidApplicant(ApplicantLiteDto applicantLiteDto, String companyCode){
         long companyRefCode = Long.valueOf(companyCode.contains("_") ? companyCode.substring(0, companyCode.indexOf("_")) : companyCode);
-        String companyType = companyCode.split("_")[1];
+        String companyType = companyCode.substring(companyCode.indexOf("_")+1, companyCode.length());
         EOrganizerTypes organizerTypes= EOrganizerTypes.valueOf(companyType);
         Boolean isValidApplicant = false;
         switch (organizerTypes){

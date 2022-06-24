@@ -115,7 +115,7 @@ public class ComplaintWsController {
     private ResponseEntity<WsResponse<?>> findById(@PathVariable Long id){
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(applicantComplaintService.findById(id)).build());
+                .body(applicantComplaintService.findByIdLite(id)).build());
     }
 
     /**

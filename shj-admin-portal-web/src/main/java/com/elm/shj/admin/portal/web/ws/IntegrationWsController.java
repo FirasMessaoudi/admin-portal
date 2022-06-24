@@ -1433,4 +1433,9 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(deleted).build());
     }
 
+    @GetMapping("/company/ritual-types/{companyCode}")
+    public ResponseEntity<WsResponse<?>> companyRitualTypes(@PathVariable String companyCode) {
+        log.debug("list of ritual types for companyCode {}", companyCode);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyRitualSeasonService.findByCompanyCode(companyCode)).build());
+    }
 }
