@@ -13,7 +13,6 @@ import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdBasicSer
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
-import com.elm.shj.admin.portal.services.user.UserLocationService;
 import com.elm.shj.admin.portal.services.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +45,6 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyStaffService extends GenericService<JpaCompanyStaff, CompanyStaffDto, Long> {
 
-    private final UserLocationService userLocationService;
     private final CompanyStaffRepository companyStaffRepository;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
     public final static Pattern  EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
