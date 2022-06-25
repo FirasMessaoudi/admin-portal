@@ -38,6 +38,9 @@ public class ApplicantIncidentLiteDto implements Serializable {
     private Double locationLng;
     private String resolutionComment;
     private String areaCode;
+    private String city;
+    private String campNumber;
+    private String crmTicketNumber;
     private List<IncidentAttachmentLiteDto> incidentAttachments;
     private Date creationDate;
     private Date updateDate;

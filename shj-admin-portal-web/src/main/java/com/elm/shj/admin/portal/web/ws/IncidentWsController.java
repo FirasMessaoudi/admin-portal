@@ -4,6 +4,7 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.dto.ApplicantIncidentLiteDto;
+import com.elm.shj.admin.portal.services.dto.ECity;
 import com.elm.shj.admin.portal.services.dto.IncidentTypeLookupDto;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentLiteService;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
@@ -112,6 +113,12 @@ public class IncidentWsController {
                 log.info("Finish create Incident {}, {} ","FAILURE", WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
             }
+        }
+
+        // validate camp number, it should be provided if city is holy sites
+        if (applicantIncidentRequest.getCity().equals(ECity.HOLY_SITES.name()) && (applicantIncidentRequest.getCampNumber() == null || applicantIncidentRequest.getCampNumber().isEmpty())) {
+            log.info("Finish create Incident {}, {} ","FAILURE", WsError.EWsError.CAMP_NUMBER_NOT_PROVIDED.getCode());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.CAMP_NUMBER_NOT_PROVIDED.getCode()).build()).build());
         }
 
         IncidentTypeLookupDto incidentTypeLookupDto = incidentTypeLookupService.findByCode(applicantIncidentRequest.getTypeCode());
