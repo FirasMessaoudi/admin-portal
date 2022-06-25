@@ -68,13 +68,11 @@ create table shc_portal.shc_city_lk
 
 GO
 
-ALTER TABLE shc_portal.shc_company_staff
-    ADD country_phone_prefix varchar(17)
-    GO
+ALTER TABLE shc_portal.shc_company_staff ADD country_phone_prefix varchar(17)
+GO
 
-ALTER TABLE shc_portal.shc_company_staff
-    ADD deleted bit default 0
-    GO
+ALTER TABLE shc_portal.shc_company_staff ADD deleted bit default 0
+GO
 
 ALTER TABLE shc_portal.shc_applicant ALTER COLUMN emergency_contact_mobile_number varchar(45);
 GO

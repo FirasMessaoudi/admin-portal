@@ -92,6 +92,8 @@ INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('sftp.complaint.client.session-connect-timeout', '15000');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('sftp.complaint.client.channel-connected-timeout', '15000');
+Go
+
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
 VALUES ('generate.applicant.complaint.scheduler.active.nodes', '127.0.0.1,localhost');
 INSERT INTO shc_portal.shc_config (conf_key, conf_value)
