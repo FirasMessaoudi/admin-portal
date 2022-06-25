@@ -319,6 +319,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = companyStaffCards.join("companyRitualSeason");
 
            predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
+            predicates.add(criteriaBuilder.notEqual(companyStaffCards.get("statusCode"), ECardStatus.EXPIRED.name()));
+            predicates.add(criteriaBuilder.notEqual(companyStaffCards.get("statusCode"), ECardStatus.REISSUED.name()));
 
             if (criteria.getSuin() != null && !criteria.getSuin().equals("")) {
                 Path<String> suin = digitalId.get("suin");
