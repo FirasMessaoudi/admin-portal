@@ -17,7 +17,7 @@ export class ApplicantService {
 
   getApplicantBadge(cardNumber:String): Observable<any> { 
     const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
-    return this.http.get<any>(`/core/api/applicants/badge/frontback/${cardNumber}`,{ 'headers': headers });
+    return this.http.get<any>(`/core/api/applicants/badge/applicant/frontback/${cardNumber}`,{ 'headers': headers });
   }
 
   findByIds(ids, pageNumber: any): Observable<any> {

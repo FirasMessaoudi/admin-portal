@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -75,6 +76,14 @@ public class ApplicantController {
     public BadgeVO findApplicantBadge(@PathVariable String applicantUin, @PathVariable boolean withQr) {
         return badgeService.generateApplicantBadge(applicantUin, withQr);
 
+    }
+
+    @GetMapping("/badge/applicant/frontback/{applicantUin}")
+    public List<BadgeVO> findApplicantBadgeFrontAndBack(@PathVariable String applicantUin) {
+        List<BadgeVO> badges = new ArrayList<>();
+        badges.add(badgeService.generateApplicantBadge(applicantUin, false));
+        badges.add(badgeService.generateBackBadge(applicantUin));
+        return badges;
     }
 
 }
