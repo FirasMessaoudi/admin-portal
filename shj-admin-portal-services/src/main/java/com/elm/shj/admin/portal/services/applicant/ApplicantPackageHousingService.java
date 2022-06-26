@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
     private final ApplicantService applicantService;
     private final ApplicantPackageService applicantPackageService;
     private final PackageHousingService packageHousingService;
+    private static final String GROUP_APPLICANT_CAMP_MULTI= "multi";
 
     public List<ApplicantPackageHousingDto> findApplicantPackageHousingByUinAndApplicantPackageId(long applicantUin, long companyRitualSeasonId) {
         log.debug("Start findApplicantPackageHousingByUinAndApplicantPackageId uin:{} , companyRitualSeasonId:{}", applicantUin, companyRitualSeasonId);
@@ -87,5 +89,122 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
         }
 
         return false;
+    }
+
+    public ApplicantCampDetailDto findApplicantCampDetails(String applicantUin){
+        log.info("updateApplicantHousingCampDto .. {}", applicantUin);
+        ApplicantDto applicantDto = applicantService.findByUin(applicantUin).orElse(null);
+        ApplicantCampDetailDto applicantCampDetail = new ApplicantCampDetailDto();
+        if(applicantDto == null)
+            return applicantCampDetail;
+
+        ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantDto.getId());
+
+        PackageHousingDto menaHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.MENA.name());
+        PackageHousingDto arafatHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.ARAFAT.name());
+
+        if (menaHousing == null && arafatHousing == null) {
+            return  applicantCampDetail;
+        }
+
+        ApplicantPackageHousingDto applicantPackageHousingMena = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
+        ApplicantPackageHousingDto applicantPackageHousingArafat = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
+
+        if (applicantPackageHousingMena != null && applicantPackageHousingArafat != null) {
+            //set applicant package housing mena information
+            applicantCampDetail.setMenaCampRefCode(applicantPackageHousingMena.getSiteCampRefCode());
+            applicantCampDetail.setMenaCorridor(applicantPackageHousingMena.getSiteCorridor());
+            applicantCampDetail.setMenaFloor(applicantPackageHousingMena.getSiteFloor());
+            applicantCampDetail.setMenaTent(applicantPackageHousingMena.getSiteTent());
+            applicantCampDetail.setMenaBedNumber(applicantPackageHousingMena.getSiteBedNumber());
+            applicantCampDetail.setMenaRoom(applicantPackageHousingMena.getSiteRoom());
+
+            //set applicant package housing arafat information
+            applicantCampDetail.setArafatCampRefCode(applicantPackageHousingArafat.getSiteCampRefCode());
+            applicantCampDetail.setArafatCorridor(applicantPackageHousingArafat.getSiteCorridor());
+            applicantCampDetail.setArafatFloor(applicantPackageHousingArafat.getSiteFloor());
+            applicantCampDetail.setArafatTent(applicantPackageHousingArafat.getSiteTent());
+            applicantCampDetail.setArafatBedNumber(applicantPackageHousingArafat.getSiteBedNumber());
+            applicantCampDetail.setArafatRoom(applicantPackageHousingArafat.getSiteRoom());
+        }
+
+        return applicantCampDetail;
+    }
+
+    public GroupApplicantCampDto findGroupApplicantCampReferenceNumber(Long groupId){
+        log.info("groupId .. {}", groupId);
+        List<Long> applicantIdlIst = applicantService.findApplicantByGroupId(groupId);
+        log.info("applicantIdlIst ... {}" + applicantIdlIst) ;
+
+        List<ApplicantPackageHousingDto> applicantPackageHousingMenaList = new ArrayList<>();
+        List<ApplicantPackageHousingDto> applicantPackageHousingArafatList = new ArrayList<>();
+        GroupApplicantCampDto groupApplicantCamp = new GroupApplicantCampDto();
+
+        applicantIdlIst.forEach(applicantId -> {
+            ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantId);
+
+            PackageHousingDto menaHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.MENA.name());
+            PackageHousingDto arafatHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.ARAFAT.name());
+
+            if (menaHousing != null) {
+                ApplicantPackageHousingDto applicantPackageHousingMena = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
+                applicantPackageHousingMenaList.add(applicantPackageHousingMena);
+            }
+
+            if (arafatHousing != null) {
+                ApplicantPackageHousingDto applicantPackageHousingArafat = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
+                applicantPackageHousingArafatList.add(applicantPackageHousingArafat);
+            }
+        });
+
+        if(!applicantPackageHousingMenaList.isEmpty()){
+            if(applicantPackageHousingMenaList.stream().map(ApplicantPackageHousingDto::getSiteCampRefCode).distinct().count() <= 1){
+                groupApplicantCamp.setMenaCampRefNumber(applicantPackageHousingMenaList.get(0).getSiteCampRefCode());
+            } else {
+                groupApplicantCamp.setMenaCampRefNumber(GROUP_APPLICANT_CAMP_MULTI);
+            }
+        }
+
+        if(!applicantPackageHousingArafatList.isEmpty()){
+            if(applicantPackageHousingArafatList.stream().map(ApplicantPackageHousingDto::getSiteCampRefCode).distinct().count() <= 1){
+                groupApplicantCamp.setArafatCampRefNumber(applicantPackageHousingArafatList.get(0).getSiteCampRefCode());
+            } else {
+                groupApplicantCamp.setArafatCampRefNumber(GROUP_APPLICANT_CAMP_MULTI);
+            }
+        }
+        groupApplicantCamp.setGroupId(groupId);
+
+        return groupApplicantCamp;
+    }
+
+    @Transactional
+    public Boolean updateGroupApplicantHousingCamp(GroupApplicantCampDto groupApplicantCamp){
+        log.info("groupId .. {}", groupApplicantCamp.getGroupId());
+        List<Long> applicantIdlIst = applicantService.findApplicantByGroupId(groupApplicantCamp.getGroupId());
+        log.info("applicantIdlIst ... {}" + applicantIdlIst) ;
+
+        if(applicantIdlIst.isEmpty()){
+            return false;
+        }
+        applicantIdlIst.forEach(applicantId -> {
+            ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantId);
+
+            PackageHousingDto menaHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.MENA.name());
+            PackageHousingDto arafatHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.ARAFAT.name());
+
+            if (menaHousing != null) {
+                ApplicantPackageHousingDto applicantPackageHousingMena = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
+                applicantPackageHousingMena.setSiteCampRefCode(groupApplicantCamp.getMenaCampRefNumber());
+                save(applicantPackageHousingMena);
+            }
+
+            if (arafatHousing != null) {
+                ApplicantPackageHousingDto applicantPackageHousingArafat = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
+                applicantPackageHousingArafat.setSiteCampRefCode(groupApplicantCamp.getArafatCampRefNumber());
+                save(applicantPackageHousingArafat);
+            }
+        });
+
+        return true;
     }
 }

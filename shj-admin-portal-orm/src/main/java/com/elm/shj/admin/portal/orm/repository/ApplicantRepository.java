@@ -212,6 +212,9 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "WHERE a.id = :applicantId ")
     String findRitualTypeByApplicantId(@Param("applicantId") long applicantId);
 
-
+    @Query("select a.id " +
+            "FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga ON di.uin = ga.applicantUin JOIN ga.applicantGroup ap JOIN ap.companyRitualSeason crs JOIN crs.company c where " +
+            " ap.id = :groupId")
+    List<Long> findApplicantByGroupId(@Param("groupId") Long groupId);
 
 }
