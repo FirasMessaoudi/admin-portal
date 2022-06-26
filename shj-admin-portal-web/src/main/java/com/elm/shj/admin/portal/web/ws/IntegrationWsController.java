@@ -1075,7 +1075,7 @@ public class IntegrationWsController {
      * @param applicantUin
      * @return generated back and front badge for applicant
      */
-    @GetMapping("/badge/applicant/frontback/{applicantUin}}")
+    @GetMapping("/badge/applicant/frontback/{applicantUin}")
     public ResponseEntity<WsResponse<?>> findApplicantBadgeFrontAndBack(@PathVariable String applicantUin) {
         List<BadgeVO> badges = new ArrayList<>();
         badges.add(badgeService.generateApplicantBadge(applicantUin, false));
