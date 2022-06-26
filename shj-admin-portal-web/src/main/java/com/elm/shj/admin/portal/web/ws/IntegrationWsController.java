@@ -1066,8 +1066,34 @@ public class IntegrationWsController {
      * @return generated badge for staff
      */
     @GetMapping("/badge/staff/generate/{suin}")
-    public ResponseEntity<WsResponse<?>> findApplicantBadge(@PathVariable String suin) {
+    public ResponseEntity<WsResponse<?>> findStaffBadge(@PathVariable String suin) {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateStaffCard(suin)).build());
+
+    }
+
+    /**
+     * @param applicantUin
+     * @return generated back and front badge for applicant
+     */
+    @GetMapping("/badge/applicant/frontback/{applicantUin}}")
+    public ResponseEntity<WsResponse<?>> findApplicantBadgeFrontAndBack(@PathVariable String applicantUin) {
+        List<BadgeVO> badges = new ArrayList<>();
+        badges.add(badgeService.generateApplicantBadge(applicantUin, false));
+        badges.add(badgeService.generateBackBadge(applicantUin));
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badges).build());
+
+    }
+
+    /**
+     * @param suin
+     * @return generated front and back badge for staff
+     */
+    @GetMapping("/badge/staff/frontback/{suin}")
+    public ResponseEntity<WsResponse<?>> findStaffBadgeFrontAndBack(@PathVariable String suin) {
+        List<BadgeVO> badges = new ArrayList<>();
+        badges.add(badgeService.generateStaffCard(suin));
+        badges.add(badgeService.generateStaffBackBadge(suin));
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badges).build());
 
     }
 

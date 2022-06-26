@@ -433,8 +433,7 @@ public class ValidationService {
         }
         Long applicantId = applicantLite.getId();
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
-        //TODO: to be reviewed , why update ??
-        Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, huicApplicantRelative.getPackageRefNumber(), null, false);
+        Long savedApplicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, huicApplicantRelative.getPackageRefNumber());
         if (savedApplicantRitualId == null) {
             ErrorResponse errorResponse = new ErrorResponse();
             errorResponse.setRowNumber(rowNumber + 1);
