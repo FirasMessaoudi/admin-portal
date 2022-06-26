@@ -70,11 +70,11 @@ public class ApplicantDto implements Serializable {
     @CellIndex(index = 3)
     private Long dateOfBirthHijri;
 
-    @OnlyCharacters(min = 5, max = 650)
+//    //@OnlyCharacters(min = 5, max = 650)
     @CellIndex(index = 5)
     private String fullNameAr;
 
-    @OnlyCharacters(min = 5, max = 650, allowEmpty = false)
+//    //@OnlyCharacters(min = 5, max = 650, allowEmpty = false)
     @CellIndex(index = 4)
     private String fullNameEn;
 

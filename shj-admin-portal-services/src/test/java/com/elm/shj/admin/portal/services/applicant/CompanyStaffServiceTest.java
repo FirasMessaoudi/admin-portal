@@ -63,7 +63,7 @@ public class CompanyStaffServiceTest {
         List<JpaCompanyStaff> jpaCompanyStaff = new ArrayList<JpaCompanyStaff>();
         List<CompanyStaffDto> companyStaffDto = new ArrayList<CompanyStaffDto>();
 
-        Mockito.when(companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(anyString(), anyLong())).thenReturn(jpaCompanyStaff);
+        Mockito.when(companyStaffRepository.findApplicantCompanyStaff(anyString(), anyLong())).thenReturn(jpaCompanyStaff);
         Mockito.lenient().when(companyStaffMapper.fromEntityList(any(), any())).thenReturn(companyStaffDto);
 
         List<CompanyStaffDto> resultDto = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(TEST_UIN, TEST_SEASON);
@@ -76,7 +76,7 @@ public class CompanyStaffServiceTest {
     public void test_find_related_employees_byApplicantUin_not_found(){
         List<JpaCompanyStaff> jpaCompanyStaff = new ArrayList<JpaCompanyStaff>();
         jpaCompanyStaff.clear();
-        Mockito.when(companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(anyString(), anyLong())).thenReturn(jpaCompanyStaff);
+        Mockito.when(companyStaffRepository.findApplicantCompanyStaff(anyString(), anyLong())).thenReturn(jpaCompanyStaff);
 
         List<CompanyStaffDto> resultDto = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(TEST_UIN, TEST_SEASON);
         assertTrue(resultDto.isEmpty());

@@ -36,24 +36,4 @@ public class CompanyRitualSeasonBasicService extends GenericService<JpaCompanyRi
         }
         return null;
     }
-
-//    public Optional<Long> findLatestCompanyRitualSeasonIdBySuin(String suin) {
-//        Optional<JpaCompanyRitualSeason> companyRitualSeason = companyRitualSeasonRepository.findTopByCompanyStaffCardsCompanyStaffDigitalIdSuin(suin);
-//        if (companyRitualSeason.isPresent())
-//            return Optional.of( getMapper().fromEntity(companyRitualSeason.get(), mappingContext).getId());
-//        else
-//            return Optional.empty();
-//    }
-//
-//    public CompanyRitualSeasonDto getCompanyRitualSeason(String companyCode, String typeCode, int seasonYear) {
-//        Optional<JpaCompanyRitualSeason> companyRitualSeason = companyRitualSeasonRepository.findByCompanyCodeAndRitualTypeAndSeasonYear(companyCode, typeCode, seasonYear);
-//        if (companyRitualSeason.isPresent())
-//            return getMapper().fromEntity(companyRitualSeason.get(), mappingContext);
-//        else
-//            return null;
-//    }
-//
-//    public List<CompanyRitualSeasonDto> findByCompanyId(Long companyId) {
-//        return mapList(companyRitualSeasonRepository.findByCompanyId(companyId));
-//    }
 }

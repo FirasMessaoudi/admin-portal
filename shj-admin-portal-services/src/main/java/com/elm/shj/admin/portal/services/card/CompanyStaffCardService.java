@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard, CompanyStaffCardDto, Long> {
     private final CompanyStaffCardRepository companyStaffCardRepository;
-    List<String> cardStatus = Arrays.asList(ECardStatus.ACTIVE.name(), ECardStatus.READY_TO_PRINT.name(), ECardStatus.SENT_FOR_PRINT.name(), ECardStatus.PRINTED.name(), ECardStatus.DISTRIBUTED.name(), ECardStatus.SUSPENDED.name());
+    List<String> cardStatus = Arrays.asList(ECardStatus.ACTIVE.name(), ECardStatus.READY_TO_PRINT.name(), ECardStatus.SENT_FOR_PRINT.name(), ECardStatus.PRINTED.name(), ECardStatus.DISTRIBUTED.name(), ECardStatus.SUSPENDED.name(), ECardStatus.CANCELLED.name());
 
     /**
      * find company staff cards by suin
@@ -195,5 +195,13 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
     public List<ApplicantBasicInfoVo> findStaffBasicInfoByDigitalIds(List<String> digitalIds) {
         return  companyStaffCardRepository.findAllByStaffDigitalIds(digitalIds, Arrays.asList(ECardStatus.CANCELLED.name(),ECardStatus.EXPIRED.name(),ECardStatus.SUSPENDED.name()));
 
+    }
+
+    public void updateStaffCardStatusByStaffId(long staffId){
+        companyStaffCardRepository.updateCompanyStaffCardStatus(staffId);
+    }
+
+    public CompanyStaffCardDto findStaffCardByStaffId(Long staffId){
+        return getMapper().fromEntity(companyStaffCardRepository.findStaffCard(staffId), mappingContext);
     }
 }

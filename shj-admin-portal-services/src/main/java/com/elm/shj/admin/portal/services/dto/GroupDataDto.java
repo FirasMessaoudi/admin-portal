@@ -46,6 +46,8 @@ public class GroupDataDto implements Serializable {
     private String nationalityCode;
 
     @CellIndex(index = 4)
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @NullOrNotBlank(min = 1, max = 45)
     private String groupReferenceNumber;
 
     @CellIndex(index = 5)

@@ -1,33 +1,20 @@
 USE shc_portal
 GO
 
-insert into shc_portal.shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end,
-                                                  total_quota,
-                                                  air_quota, sea_quota, land_quota)
-values ((select id from shc_portal.shc_company where code = '9_ESTABLISHMENT'), 1, 'true',
-        (select season_start from shc_portal.shc_ritual_season where id = 1),
-        (select season_end from shc_portal.shc_ritual_season where id = 1), 0, 0, 0, 0);
+insert into shc_portal.shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end, total_quota, air_quota, sea_quota, land_quota)
+values ((select id from shc_portal.shc_company where code = '9_ESTABLISHMENT'), 1, 'true', 14431101, 14431230, 0, 0, 0, 0);
 
-insert into shc_portal.shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end,
-                                                  total_quota,
-                                                  air_quota, sea_quota, land_quota)
-values ((select id from shc_portal.shc_company where code = '9_ESTABLISHMENT'), 2, 'true',
-        (select season_start from shc_portal.shc_ritual_season where id = 2),
-        (select season_end from shc_portal.shc_ritual_season where id = 2), 0, 0, 0, 0);
+insert into shc_portal.shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end, total_quota, air_quota, sea_quota, land_quota)
+values ((select id from shc_portal.shc_company where code = '9_ESTABLISHMENT'), 2, 'true', 14431101, 14431230, 0, 0, 0, 0);
 
-insert into shc_portal.shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end,
-                                                  total_quota,
-                                                  air_quota, sea_quota, land_quota)
-values ((select id from shc_portal.shc_company where code = '9_ESTABLISHMENT'), 3, 'true',
-        (select season_start from shc_portal.shc_ritual_season where id = 3),
-        (select season_end from shc_portal.shc_ritual_season where id = 3), 0, 0, 0, 0);
+insert into shc_portal.shc_company_ritual_season (company_id, ritual_season_id, active, season_start, season_end, total_quota, air_quota, sea_quota, land_quota)
+values ((select id from shc_portal.shc_company where code = '9_ESTABLISHMENT'), 3, 'true', 14431101, 14431230, 0, 0, 0, 0);
 
 /*
  establishment_9
  */
 
-insert into shc_portal.shc_ritual_package (reference_number, company_ritual_season_id, package_type_code, start_date,
-                                           end_date)
+insert into shc_portal.shc_ritual_package (reference_number, company_ritual_season_id, package_type_code, start_date, end_date)
 values ('99999922', (select cr.id
                      from shc_portal.shc_company_ritual_season cr,
                           shc_portal.shc_company c

@@ -27,8 +27,16 @@ public interface CompanyRitualSeasonRepository extends JpaRepository<JpaCompanyR
             "c.code = :companyCode AND rs.ritualTypeCode = :ritualTypeCode AND rs.seasonYear = :seasonYear AND rs.active=TRUE order by crs.seasonStart desc")
     Optional<JpaCompanyRitualSeason> findByCompanyCodeAndRitualTypeAndSeasonYear(@Param("companyCode") String companyCode, @Param("ritualTypeCode") String ritualTypeCode, @Param("seasonYear") int seasonYear);
 
+    @Query("SELECT crs.id FROM JpaCompanyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs where " +
+            "c.code = :companyCode AND rs.ritualTypeCode = :ritualTypeCode AND rs.seasonYear = :seasonYear AND rs.active=TRUE order by crs.seasonStart desc")
+    Long findIdByCompanyCodeAndRitualTypeAndSeasonYear(@Param("companyCode") String companyCode, @Param("ritualTypeCode") String ritualTypeCode, @Param("seasonYear") int seasonYear);
+
+
     boolean existsByCompanyIdAndRitualSeasonId(Long companyId, Long ritualId);
 
     List<JpaCompanyRitualSeason> findByCompanyId(Long companyId);
+
+    @Query("SELECT crs FROM JpaCompanyRitualSeason crs  WHERE crs.company.code=:companyCode")
+    List<JpaCompanyRitualSeason> findCompanyRitualByCompanyCode(@Param("companyCode") String companyCode);
 
 }

@@ -68,7 +68,7 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(final Authentication authentication) {
         log.debug("starting authentication process");
 
-        long idNumber = Long.parseLong(authentication.getName());
+        long idNumber = Long.parseLong(authentication.getName().trim());
         String password = (String) authentication.getCredentials();
 
         UserDto user = userService.findByNin(idNumber).orElseThrow(() ->

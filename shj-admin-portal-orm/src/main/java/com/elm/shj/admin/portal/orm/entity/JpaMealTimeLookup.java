@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * @since 1.1.0
  */
 @Entity
-@Table(name = "shc_meal_time_lk")
+@Table(name = "shc_meal_time_type_lk")
 @NamedQuery(name = "JpaMealTimeLookup.findAll", query = "SELECT j FROM JpaMealTimeLookup j")
 
 public class JpaMealTimeLookup extends JpaLocalizedLookup {

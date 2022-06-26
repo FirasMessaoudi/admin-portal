@@ -37,10 +37,10 @@ public class CompanyDto {
     private String code;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @OnlyCharacters(min = 10, max = 650, allowEmpty = false, allowNumbers = true, allowSpecialChars = false)
+    //@OnlyCharacters(min = 10, max = 650, allowEmpty = false, allowNumbers = true, allowSpecialChars = false)
     private String labelAr;
 
-    @OnlyCharacters(min = 10, max = 650, allowEmpty = false, allowNumbers = true, allowSpecialChars = false)
+    //@OnlyCharacters(min = 10, max = 650, allowEmpty = false, allowNumbers = true, allowSpecialChars = false)
     private String labelEn;
 
     private Long missionRefCode;
@@ -73,10 +73,10 @@ public class CompanyDto {
     private Integer establishmentRefCode;
 
 
-    @OnlyCharacters(min = 3, max = 45, allowNumbers = true, allowSpecialChars = false)
+    //@OnlyCharacters(min = 3, max = 45, allowNumbers = true, allowSpecialChars = false)
     private String accreditationOrganization;
 
-    @OnlyCharacters(min = 3, max = 45, allowNumbers = true, allowSpecialChars = false)
+    //@OnlyCharacters(min = 3, max = 45, allowNumbers = true, allowSpecialChars = false)
     private String accreditationNumber;
 
     private Date accreditationDate;

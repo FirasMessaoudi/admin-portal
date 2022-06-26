@@ -48,7 +48,10 @@ public class GroupMainDataDto implements Serializable {
     @CellIndex(index = 3)
     private String nationalityCode;
 
+    @NotNull(message = "validation.data.constraints.msg.20001")
     @CellIndex(index = 4)
+    @NotNull(message = "validation.data.constraints.msg.20001")
+    @NullOrNotBlank(min = 1, max = 45)
     private String groupReferenceNumber;
 
     @CellIndex(index = 5)
@@ -58,6 +61,7 @@ public class GroupMainDataDto implements Serializable {
     @NullOrNotBlank(min = 1, max = 30)
     @JsonIgnore
     private String ritualType;
+
     @NotNull(message = "validation.data.constraints.msg.20001")
     @CellIndex(index = 7)
     @RitualTypeCode
