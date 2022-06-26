@@ -142,4 +142,8 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
     public String findStaffSuinStatusCode(String suin) {
         return companyStaffDigitalIdRepository.findStaffSuinStatusCode(suin);
     }
+
+    public void updateDigitalIdStatus(long staffId) {
+        companyStaffDigitalIdRepository.updateDigitalIdStatusByStaffId(staffId);
+    }
 }

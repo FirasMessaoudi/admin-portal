@@ -24,4 +24,5 @@ public class DataValidationResult {
     private boolean valid;
     private List<String> errorMessages;
     private Cell cell;
+    private String attributeName;
 }

@@ -80,6 +80,11 @@ public class DigitalIdScheduler {
             ApplicantPackageDto savedApplicantPackage = applicantPackageService.createApplicantPackage(applicantBasicDto.getPackageReferenceNumber(),
                     Long.parseLong(applicantDigitalId.getUin()), null, null);
 
+            if (savedApplicantPackage == null) {
+                log.warn("no applicant ritual is created for {} uin and {} package reference number.", applicantDigitalId.getUin(), applicantBasicDto.getPackageReferenceNumber());
+                return;
+            }
+
             //create or update applicant ritual;
             Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantBasicDto.getId(), applicantBasicDto.getPackageReferenceNumber(), savedApplicantPackage, true);
             //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)

@@ -203,6 +203,23 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
         super.save(notificationRequest);
     }
 
+    @Transactional
+    public void sendComplaintNotification(NotificationTemplateDto notificationTemplate, String uin, String preferredLanguage) {
+        NotificationRequestDto notificationRequest = NotificationRequestDto
+                .builder()
+                .userId(uin)
+                .notificationTemplate(notificationTemplate)
+                .userLang(notificationTemplate.getNotificationTemplateContents()
+                        .stream().filter(c -> preferredLanguage.equalsIgnoreCase(c.getLang()))
+                        .findFirst()
+                        .map(NotificationTemplateContentDto::getLang)
+                        .orElse(NOTIFICATION_DEFAULT_LANGUAGE))
+                .sendingDate(new Date())
+                .processingStatus(NotificationProcessingStatusLookupDto.builder().id(ENotificationProcessingStatus.NEW.getId()).build())
+                .build();
+        super.save(notificationRequest);
+    }
+
     private void sendNotificationTemplateToApplicants(NotificationTemplateDto notificationTemplate, List<ApplicantDto> applicants) {
         List<NotificationRequestDto> notificationRequests = applicants.stream().map(applicant -> NotificationRequestDto
                         .builder()

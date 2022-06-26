@@ -28,7 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 public class JpaApplicantIncidentLite implements Serializable {
 
-    private static final long serialVersionUID = 3754291597972237947L;
+    private static final long serialVersionUID = -8447602546087621808L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -70,6 +70,15 @@ public class JpaApplicantIncidentLite implements Serializable {
 
     @Column(name = "area_code")
     private String areaCode;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "camp_number")
+    private String campNumber;
+
+    @Column(name = "crm_ticket_number")
+    private String crmTicketNumber;
 
     @PrePersist
     public void prePersist() {

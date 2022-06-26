@@ -54,7 +54,7 @@ public class PrintingManagementWsController {
                 .body(allPrintRequest).build());
     }
 
-    @PutMapping("/update-print-request-status/{printRequestId}/{target}")
+    @PostMapping("/update-print-request-status/{printRequestId}/{target}")
     public ResponseEntity<WsResponse<?>> updatePrintRequestStatusToSendToPrinting(@PathVariable long printRequestId, @PathVariable String target) {
         log.info("Start updatePrintRequestStatusToSendToPrinting  printRequestId {},  target {}" , printRequestId,  target);
         printRequestLiteService.updatePrintRequestStatusToSendToPrinting(printRequestId, target);
@@ -71,7 +71,7 @@ public class PrintingManagementWsController {
                 .body(printRequestBatches).build());
     }
 
-    @PutMapping("/update-batch-details/{printRequestReferenceNumber}/{batchSequenceNumber}")
+    @PostMapping("/update-batch-details/{printRequestReferenceNumber}/{batchSequenceNumber}")
     public ResponseEntity<WsResponse<?>> updateBatchDetails(@PathVariable String printRequestReferenceNumber, @PathVariable String batchSequenceNumber, @RequestBody Map<String, String> batchCards) {
         log.info("Start updateBatchDetails  printRequestReferenceNumber {},  batchSequenceNumber {}, batchCardsListsize {}" , printRequestReferenceNumber,  batchSequenceNumber, batchCards == null? null: batchCards.size());
         try {
@@ -86,7 +86,7 @@ public class PrintingManagementWsController {
 
     }
 
-    @PutMapping("/update-print-request/status/{printRequestReferenceNumber}/{printRequestStatus}")
+    @PostMapping("/update-print-request/status/{printRequestReferenceNumber}/{printRequestStatus}")
     public ResponseEntity<WsResponse<?>> updatePrintRequestStatus(@PathVariable String printRequestReferenceNumber, @PathVariable String printRequestStatus) {
         log.info("Start updatePrintRequestStatus  printRequestReferenceNumber {},  printRequestStatus {}" , printRequestReferenceNumber,  printRequestStatus);
         try {

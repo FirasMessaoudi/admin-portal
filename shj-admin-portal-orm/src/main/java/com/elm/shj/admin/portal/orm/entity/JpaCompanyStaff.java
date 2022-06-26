@@ -93,7 +93,7 @@ public class JpaCompanyStaff implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "companyStaff",fetch = FetchType.EAGER)
     private List<JpaCompanyStaffDigitalId> digitalIds;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "groupLeader")
+    @OneToMany(mappedBy = "groupLeader")
     private List<JpaApplicantGroup> applicantGroups;
 
     private boolean registered;
@@ -101,8 +101,13 @@ public class JpaCompanyStaff implements Serializable {
     @Column(name = "preferred_language")
     private String preferredLanguage;
 
+    @Column(name = "country_phone_prefix")
+    private String countryPhonePrefix;
+
     @Column(name = "country_code")
     private String countryCode;
+
+    private Boolean deleted;
 
     @PrePersist
     public void prePersist() {

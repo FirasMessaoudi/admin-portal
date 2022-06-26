@@ -4,9 +4,7 @@
 package com.elm.shj.admin.portal.services.data.validators;
 
 import com.elm.shj.admin.portal.services.dto.EMealTime;
-import com.elm.shj.admin.portal.services.lookup.MealTimeLookupService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -19,9 +17,6 @@ import javax.validation.ConstraintValidatorContext;
  */
 @Slf4j
 public class WithMealTimeValidator implements ConstraintValidator<WithMealTime, Object> {
-
-    @Autowired
-    private MealTimeLookupService mealTimeLookupService;
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {

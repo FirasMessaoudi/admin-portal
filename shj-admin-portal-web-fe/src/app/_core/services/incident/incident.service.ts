@@ -64,7 +64,7 @@ export class IncidentService {
   handle(incidentId: number, incidentVo: ApplicantIncidentVo): Observable<any> {
     let headers = new HttpHeaders();
     headers = headers.set('X-XSRF-TOKEN', this.cookieService.get("XSRF-TOKEN"));
-    return this.http.put<any>('/core/api/incidents/handle/' + incidentId, incidentVo, {'headers': headers})
+    return this.http.post<any>('/core/api/incidents/handle/' + incidentId, incidentVo, {'headers': headers})
       .pipe(catchError((error: HttpErrorResponse) => {
           if (error.hasOwnProperty('error')) {
             return of(error.error);

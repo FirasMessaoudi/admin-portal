@@ -537,4 +537,8 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         }
     }
 
+    public List<Long> findApplicantByGroupId(Long groupId){
+        return applicantRepository.findApplicantByGroupId(groupId);
+    }
+
 }

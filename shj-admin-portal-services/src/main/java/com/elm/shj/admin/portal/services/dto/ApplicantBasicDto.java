@@ -26,9 +26,36 @@ public class ApplicantBasicDto implements Serializable {
 
     private long id;
     private String gender;
+    private String idNumber;
+    private String passportNumber;
     private String nationalityCode;
     private Date dateOfBirthGregorian;
     private Long dateOfBirthHijri;
     private String packageReferenceNumber;
     private List<ApplicantDigitalIdDto> digitalIds;
+    private String countryPhonePrefix;
+    private String fullNameAr;
+    private String fullNameEn;
+    private String fullNameOrigin;
+    private String preferredLanguage;
+    private String photo;
+    private List<ApplicantContactBasicDto> contacts;
+    private String email;
+    private boolean hasLocalMobileNumber;
+    private String mobileNumber;
+    private String countryCode;
+    private boolean deleted;
+    private String companyCode;
+    private Integer establishmentRefCode;
+    private Integer missionRefCode;
+    private Long serviceGroupMakkahCode;
+    private Long serviceGroupMadinaCode;
+    private String idNumberOriginal;
+    private String maritalStatusCode;
+    private String biometricDataFinger;
+    private String biometricDataFace;
+    private String educationLevelCode;
+    private Date updateDate;
+    private Date creationDate;
+
 }

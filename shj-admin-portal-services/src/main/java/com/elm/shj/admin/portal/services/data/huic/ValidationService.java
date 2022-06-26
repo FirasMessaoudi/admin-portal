@@ -60,6 +60,7 @@ public class ValidationService {
     private final ApplicantService applicantService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantLiteService applicantLiteService;
+    private final ApplicantBasicService applicantBasicService;
     private final DigitalIdService digitalIdService;
     private final ApplicantPackageService applicantPackageService;
     private final ApplicantRelativeService applicantRelativeService;
@@ -269,6 +270,7 @@ public class ValidationService {
 
     private void saveCompanies(HuicCompany huicCompany) {
         Long existingCompanyId = companyRepository.findIdByCode(huicCompany.getCompanyRefCode() + "_" + ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name());
+        // in case of no establishment and ritual type is internal then link it with establishment 8, otherwise no business so far.
         CompanyDto companyDto = CompanyDto.builder()
                 .code(huicCompany.getCompanyRefCode() + "_" + ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
                 .labelAr(huicCompany.getCompanyNameAr())
@@ -281,7 +283,7 @@ public class ValidationService {
                 .crNumber(huicCompany.getCrNumber() + "")
                 .typeCode(ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name())
                 .countryCode(huicCompany.getCountry() + "")
-                .establishmentRefCode(huicCompany.getEstablishmentId() != null ? huicCompany.getEstablishmentId() : 9)
+                .establishmentRefCode((huicCompany.getEstablishmentId() == null && huicCompany.getRitualTypeCode().intValue() == ERitualType.INTERNAL_HAJJ.getId()) ? 8 : huicCompany.getEstablishmentId())
                 .build();
         if (existingCompanyId != null) {
             companyDto.setId(existingCompanyId);
@@ -431,7 +433,7 @@ public class ValidationService {
         }
         Long applicantId = applicantLite.getId();
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
-        Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, huicApplicantRelative.getPackageRefNumber(), null, false);
+        Long savedApplicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, huicApplicantRelative.getPackageRefNumber());
         if (savedApplicantRitualId == null) {
             ErrorResponse errorResponse = new ErrorResponse();
             errorResponse.setRowNumber(rowNumber + 1);
@@ -490,8 +492,9 @@ public class ValidationService {
     }
 
     private void saveApplicantsMainData(HuicApplicantMainData huicApplicantMainData, List<ErrorResponse> errorResponses, int rowNumber) {
-        //TODO: handle the rest of the fields(ritualType,establishment...)
-        ApplicantDto applicant = ApplicantDto.builder()
+        log.info("Start saveApplicantsMainData for {} id number, {} passport number, {} nationality, {} package ref number.",
+                huicApplicantMainData.getIdNumber(), huicApplicantMainData.getPassportNo(), huicApplicantMainData.getNationality(), huicApplicantMainData.getPackageRefNumber());
+        ApplicantBasicDto applicant = ApplicantBasicDto.builder()
                 .gender(EGenderCode.fromId(huicApplicantMainData.getGender()).name())
                 .nationalityCode(huicApplicantMainData.getNationality().toString())
                 .idNumber(huicApplicantMainData.getIdNumber() != null ? huicApplicantMainData.getIdNumber().toString() : null)
@@ -499,8 +502,8 @@ public class ValidationService {
                 .passportNumber(huicApplicantMainData.getPassportNo())
                 .dateOfBirthGregorian(huicApplicantMainData.getDateOfBirth())
                 .dateOfBirthHijri(huicApplicantMainData.getDateOfBirthHijri())
-                .fullNameEn(huicApplicantMainData.getFullNameEn() != null ? huicApplicantMainData.getFullNameEn().matches(LATIN_REGEX) ? huicApplicantMainData.getFullNameEn() : null : null)
-                .fullNameAr(huicApplicantMainData.getFullNameAr() != null ? huicApplicantMainData.getFullNameAr().matches(ARABIC_REGEX) ? huicApplicantMainData.getFullNameAr() : null : null)
+                .fullNameEn(huicApplicantMainData.getFullNameEn())
+                .fullNameAr(huicApplicantMainData.getFullNameAr())
                 .fullNameOrigin(huicApplicantMainData.getFullNameOriginalLang())
                 .maritalStatusCode(huicApplicantMainData.getMaritalStatus() != null ? EMaritalStatus.fromId(huicApplicantMainData.getMaritalStatus()).name() : null)
                 .photo(huicApplicantMainData.getPhoto())
@@ -512,7 +515,7 @@ public class ValidationService {
                 .serviceGroupMadinaCode(huicApplicantMainData.getServiceGroupMadinaId())
                 .serviceGroupMakkahCode(huicApplicantMainData.getServiceGroupMakkahId())
                 .build();
-        ApplicantContactDto applicantContactDto = ApplicantContactDto.builder()
+        ApplicantContactBasicDto applicantContactDto = ApplicantContactBasicDto.builder()
                 .languageList(huicApplicantMainData.getLanguageList())
                 .email(huicApplicantMainData.getEmail() != null ? huicApplicantMainData.getEmail().matches(EMAIL_REGEX) ? huicApplicantMainData.getEmail() : null : null)
                 .localMobileNumber(huicApplicantMainData.getMobileNumber())
@@ -524,19 +527,18 @@ public class ValidationService {
                 .buildingNumber(huicApplicantMainData.getBuildingNo())
                 .postalCode(huicApplicantMainData.getPostalCode())
                 .build();
+
         applicant.setContacts(Collections.singletonList(applicantContactDto));
-        updateApplicantBirthDate(applicant);
-        applicant.setDateOfBirthGregorian(updateDate(applicant.getDateOfBirthGregorian()));
+        updateApplicantLiteBirthDate(applicant);
+
         Long existingApplicantId = applicantService.findIdByBasicInfo(applicant.getIdNumber(), applicant.getPassportNumber(), applicant.getNationalityCode());
-        if (huicApplicantMainData.getStatus() == null) {
-            huicApplicantMainData.setStatus(1);
-        }
+
         // if record exists already in DB we need to update it
         if (existingApplicantId != null) {
-            if (huicApplicantMainData.getStatus() == 2) {
+            if (huicApplicantMainData.getStatus() == 2) { // update
                 boolean isRegistered = applicantService.findApplicantStatus(existingApplicantId);
                 if (!isRegistered) {
-                    updateExistingApplicant(applicant, existingApplicantId);
+                    updateExistingApplicantLite(applicant, existingApplicantId);
                 } else {
                     // if applicant is registered raise an error : cannot update
                     ErrorResponse errorResponse = new ErrorResponse();
@@ -545,10 +547,10 @@ public class ValidationService {
                     errorResponses.add(errorResponse);
                     return;
                 }
-            } else if (huicApplicantMainData.getStatus() == 3) {
-                updateExistingApplicant(applicant, existingApplicantId);
+            } else if (huicApplicantMainData.getStatus() == 3) { //delete
+                updateExistingApplicantLite(applicant, existingApplicantId);
                 applicant.setDeleted(true);
-            } else if (huicApplicantMainData.getStatus() == 1) {
+            } else { //invalid
                 ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.setRowNumber(rowNumber + 1);
                 errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30001", "Please enter a valid value. Same value cannot be repeated within the previous registered records"));
@@ -566,9 +568,9 @@ public class ValidationService {
         }
 
         //TODO: unify this for both data upload and huic
-        addApplicantToContact(applicant);
+        addApplicantLiteToContact(applicant);
         if (applicant.getPackageReferenceNumber() == null) {
-            String referenceNumber = null;
+            String referenceNumber;
             //if establishment id not null link applicant with default package of that establishment
             if (applicant.getEstablishmentRefCode() != null) {
                 referenceNumber = ritualPackageService.findPackageReferenceNumber(applicant.getEstablishmentRefCode() + "_ESTABLISHMENT", ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
@@ -589,26 +591,28 @@ public class ValidationService {
                 }
             }
             applicant.setPackageReferenceNumber(referenceNumber);
-
         }
-        applicantService.save(applicant);
-
-
+        applicantBasicService.save(applicant);
+        log.info("Finish saveApplicantsMainData for {} id number, {} passport number, {} nationality, {} package ref number. ",
+                huicApplicantMainData.getIdNumber(), huicApplicantMainData.getPassportNo(), huicApplicantMainData.getNationality(), huicApplicantMainData.getPackageRefNumber());
     }
 
     private void saveApplicantRitual(HuicApplicantRitual huicApplicantRitual) {
-        //TODO: check bed and room number
-        ApplicantLiteDto applicantLite = applicantLiteService.findByBasicInfo(huicApplicantRitual.getIdNumber() != null ? huicApplicantRitual.getIdNumber().toString() : null, huicApplicantRitual.getPassportNo(), huicApplicantRitual.getNationality().toString());
-
-        if (applicantLite == null) {
+        log.info("Start saveApplicantRitual for {} id number, {} passport number, {} nationality, {} package ref number.",
+                huicApplicantRitual.getIdNumber(), huicApplicantRitual.getPassportNo(), huicApplicantRitual.getNationality(), huicApplicantRitual.getPackageRefNumber());
+        Long applicantId = applicantBasicService.findIdByBasicInfo(huicApplicantRitual.getIdNumber() != null ? huicApplicantRitual.getIdNumber().toString() : null, huicApplicantRitual.getPassportNo(), huicApplicantRitual.getNationality().toString());
+        if (applicantId == null) {
             return;
         }
-        Long applicantId = applicantLite.getId();
-        if (huicApplicantRitual.getPackageRefNumber() == null) {
-            huicApplicantRitual.setPackageRefNumber(applicantLite.getPackageReferenceNumber());
+
+        String packageReferenceNumber = huicApplicantRitual.getPackageRefNumber();
+        if (packageReferenceNumber == null) {
+            packageReferenceNumber = applicantBasicService.findPackageReferenceNumberById(applicantId);
         }
+
+        //construct the applicant ritual
         ApplicantRitualDto applicantRitualDto = ApplicantRitualDto.builder()
-                .packageReferenceNumber(huicApplicantRitual.getPackageRefNumber())
+                .packageReferenceNumber(packageReferenceNumber)
                 .visaNumber(huicApplicantRitual.getVisaNumber())
                 .permitNumber(huicApplicantRitual.getPermitNumber())
                 .borderNumber(huicApplicantRitual.getBorderNo())
@@ -618,13 +622,15 @@ public class ValidationService {
                 .bedNumber(huicApplicantRitual.getBedNumber())
                 .roomNumber(huicApplicantRitual.getRoomNumber())
                 .build();
-        String packageReferenceNumber = applicantRitualDto.getPackageReferenceNumber();
-        Long savedApplicantRitualId = applicantRitualService.findAndUpdate(applicantId, packageReferenceNumber, null, false);
+
+        //find existing applicant ritual
+        Long savedApplicantRitualId = applicantRitualService.findIdByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber);
         String applicantUin = digitalIdService.findApplicantUin(applicantId);
         updateApplicantRitual(applicantRitualDto, savedApplicantRitualId, applicantId, applicantUin);
         applicantRitualDto.setApplicant(ApplicantDto.builder().id(applicantId).build());
         applicantRitualService.save(applicantRitualDto);
-
+        log.info("Finish saveApplicantRitual for {} id number, {} passport number, {} nationality, {} package ref number.",
+                huicApplicantRitual.getIdNumber(), huicApplicantRitual.getPassportNo(), huicApplicantRitual.getNationality(), huicApplicantRitual.getPackageRefNumber());
     }
 
     /**
@@ -679,6 +685,26 @@ public class ValidationService {
         }
     }
 
+    public void updateApplicantLiteBirthDate(ApplicantBasicDto applicant) {
+        if ((applicant.getDateOfBirthHijri() == null || applicant.getDateOfBirthHijri() == 0) && applicant.getDateOfBirthGregorian() != null) {
+            Calendar cl = Calendar.getInstance();
+            cl.setTime(applicant.getDateOfBirthGregorian());
+            HijrahDate islamyDate = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+            applicant.setDateOfBirthHijri(Long.parseLong(islamyDate.toString().substring(islamyDate.toString().indexOf("AH") + 3).replace("-", "")));
+        }
+    }
+
+    public void updateExistingApplicantLite(ApplicantBasicDto applicant, long existingApplicantId) {
+        List<ApplicantContactDto> applicantContactDtos = applicantContactService.findByApplicantId(existingApplicantId);
+        if (!applicantContactDtos.isEmpty()) {
+            if (!applicant.getContacts().isEmpty()) {
+                applicant.getContacts().get(0).setId(applicantContactDtos.get(0).getId());
+            }
+        }
+        applicant.setId(existingApplicantId);
+        applicant.setUpdateDate(new Date());
+    }
+
     public void updateExistingApplicant(ApplicantDto applicant, long existingApplicantId) {
         List<ApplicantRitualDto> applicantRituals = applicantRitualService.findAllByApplicantId(existingApplicantId);
         List<ApplicantContactDto> applicantContactDtos = applicantContactService.findByApplicantId(existingApplicantId);
@@ -712,6 +738,14 @@ public class ValidationService {
     }
 
     public void addApplicantToContact(ApplicantDto applicant) {
+        if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
+            applicant.getContacts().forEach(ac -> {
+                ac.setApplicant(applicant);
+            });
+        }
+    }
+
+    public void addApplicantLiteToContact(ApplicantBasicDto applicant) {
         if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
             applicant.getContacts().forEach(ac -> {
                 ac.setApplicant(applicant);
@@ -760,18 +794,17 @@ public class ValidationService {
         staff.setId(existingStaff.getId());
         staff.setDigitalIds(existingStaff.getDigitalIds());
         staff.setDataRequestRecordId(existingStaff.getDataRequestRecordId());
-        staff.setApplicantGroups(existingStaff.getApplicantGroups());
+//        staff.setApplicantGroups(existingStaff.getApplicantGroups());
     }
 
     public void updateGroupApplicantList(GroupApplicantListDto groupApplicantList, GroupApplicantListDto existingGroupApplicantList) {
         groupApplicantList.setId(existingGroupApplicantList.getId());
-        groupApplicantList.setApplicantGroup(existingGroupApplicantList.getApplicantGroup());
         groupApplicantList.setApplicantUin(existingGroupApplicantList.getApplicantUin());
     }
 
     public Boolean isValidApplicant(ApplicantLiteDto applicantLiteDto, String companyCode){
         long companyRefCode = Long.valueOf(companyCode.contains("_") ? companyCode.substring(0, companyCode.indexOf("_")) : companyCode);
-        String companyType = companyCode.split("_")[1];
+        String companyType = companyCode.substring(companyCode.indexOf("_")+1, companyCode.length());
         EOrganizerTypes organizerTypes= EOrganizerTypes.valueOf(companyType);
         Boolean isValidApplicant = false;
         switch (organizerTypes){
@@ -854,10 +887,11 @@ public class ValidationService {
         }
     }
 
+    @Transactional
     public void saveStaffFullRitual(CompanyStaffRitualDto companyStaffRitual, long staffId) {
         CompanyStaffDto existingStaff = companyStaffService.findOne(staffId);
-        CompanyStaffDigitalIdBasicDto companyStaffDigitalId = companyStaffDigitalIdBasicService.findByBasicInfo(existingStaff.getId(), companyStaffRitual.getSeason());
-        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
+        CompanyStaffDigitalIdBasicDto companyStaffDigitalId = companyStaffDigitalIdBasicService.findByBasicInfoWithoutDigitalIdStatus(existingStaff.getId(), companyStaffRitual.getSeason());
+//        CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason());
         //existingStaff.setCompanyRitualSeason(companyRitualSeasonDto);
         if (companyStaffDigitalId != null) {
             // if he has a digital id for that same season
@@ -867,7 +901,8 @@ public class ValidationService {
                 CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
                 companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
                 companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
+                        .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
                 companyStaffCardService.save(companyStaffCardDto);
                 return;
 
@@ -880,6 +915,12 @@ public class ValidationService {
                     c.setStatusCode(ECardStatus.EXPIRED.name());
                 });
                 companyStaffCardService.saveAll(companyStaffCards2);
+                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
+                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
+                        .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
+                companyStaffCardService.save(companyStaffCardDto);
                 return;
             }
 
@@ -889,7 +930,8 @@ public class ValidationService {
                 CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
                 companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
                 companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-                companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+                companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
+                        .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
                 companyStaffCardService.save(companyStaffCardDto);
                 return;
             }
@@ -906,7 +948,8 @@ public class ValidationService {
             CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
             companyStaffCardDto.setCompanyStaffDigitalId(savedDigitalId);
             companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
-            companyStaffCardDto.setCompanyRitualSeason(companyRitualSeasonDto);
+            companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
+                    .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
             companyStaffCardService.save(companyStaffCardDto);
 
         }

@@ -38,6 +38,12 @@ public class JpaApplicantBasic implements Serializable {
 
     private String gender;
 
+    @Column(name = "id_number")
+    private String idNumber;
+
+    @Column(name = "passport_number")
+    private String passportNumber;
+
     @Column(name = "nationality_code")
     private String nationalityCode;
 
@@ -53,4 +59,80 @@ public class JpaApplicantBasic implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "applicant_id", updatable = false)
     private List<JpaApplicantDigitalId> digitalIds;
+
+    @Column(name = "full_name_ar")
+    private String fullNameAr;
+
+    @Column(name = "full_name_en")
+    private String fullNameEn;
+
+    @Column(name = "full_name_origin")
+    private String fullNameOrigin;
+
+    @Column(name = "preferred_language")
+    private String preferredLanguage;
+
+    @Column(name = "company_code")
+    private String companyCode;
+
+    @Column(name = "establishment_ref_code")
+    private Integer establishmentRefCode;
+
+    @Column(name = "mission_ref_code")
+    private Integer missionRefCode;
+
+    @Column(name = "makkah_service_group_ref_code")
+    private Long serviceGroupMakkahCode;
+
+    @Column(name = "madina_service_group_ref_code")
+    private Long serviceGroupMadinaCode;
+
+    private String photo;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "applicant")
+    private List<JpaApplicantContactBasic> contacts;
+
+    private boolean deleted;
+    @Column(name = "id_number_original")
+    private String idNumberOriginal;
+    @Column(name = "marital_status_code")
+    private String maritalStatusCode;
+
+    @Column(name = "biometric_data_finger")
+    private String biometricDataFinger;
+
+    @Column(name = "biometric_data_face")
+    private String biometricDataFace;
+
+    @Column(name = "education_level_code")
+    private String educationLevelCode;
+
+    @Column(name = "UPDATE_DATE")
+    private Date updateDate;
+
+    @Column(name = "creation_date", nullable = false, updatable = false)
+    private Date creationDate;
+
+    @PreUpdate
+    public void preUpdate() {
+        updateDate = new Date();
+        upperCase();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+        upperCase();
+    }
+
+    private void upperCase() {
+        maritalStatusCode = StringUtils.upperCase(maritalStatusCode);
+        gender = StringUtils.upperCase(gender);
+        nationalityCode = StringUtils.upperCase(nationalityCode);
+        educationLevelCode = StringUtils.upperCase(educationLevelCode);
+        educationLevelCode = StringUtils.upperCase(educationLevelCode);
+    }
+
+
 }

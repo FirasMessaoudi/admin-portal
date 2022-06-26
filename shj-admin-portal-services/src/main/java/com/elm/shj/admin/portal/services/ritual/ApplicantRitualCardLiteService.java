@@ -73,7 +73,8 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
         returnedDto.setNationalityCode(applicantRitual.get().getApplicant().getNationalityCode().toUpperCase());
         returnedDto.setPhoto(applicantRitual.get().getApplicant().getPhoto());
         returnedDto.setHijriSeason(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getSeasonYear());
-        returnedDto.setIdNumber(applicantRitual.get().getApplicant().getIdNumber() != null ? applicantRitual.get().getApplicant().getIdNumber() : applicantRitual.get().getApplicant().getPassportNumber());
+        returnedDto.setIdNumber(applicantRitual.get().getApplicant().getIdNumber());
+        returnedDto.setPassportNumber(applicantRitual.get().getApplicant().getPassportNumber());
         //TODO: get the first leader, this logic has to be reviewed when card business requirement is more clear.
         if (groupLeader.isPresent()) {
             returnedDto.setLeaderMobile(groupLeader.get().getMobileNumber());
@@ -89,6 +90,7 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
         if (establishment != null) {
             returnedDto.setEstablishmentNameAr(establishment.getLabelAr());
             returnedDto.setEstablishmentNameEn(establishment.getLabelEn());
+            returnedDto.setEstablishmentContactNumber(establishment.getContactNumber());
         }
         return Optional.of(returnedDto);
     }

@@ -10,6 +10,9 @@ import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.company.*;
 import com.elm.shj.admin.portal.services.data.request.DataRequestService;
 import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
+import com.elm.shj.admin.portal.services.data.validators.CheckFirst;
+import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
+import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
@@ -28,6 +31,7 @@ import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -41,6 +45,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -108,6 +114,9 @@ public class IntegrationWsController {
     private final ApplicantIncidentService applicantIncidentService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
+    private final ComplaintStatusLookupService complaintStatusLookupService;
+    private final CityLookupService cityLookupService;
+    private final ComplaintTypeLookupService complaintTypeLookupService;
     private final CompanyTypeLookupService companyTypeLookupService;
     private final ChatContactService chatContactService;
     private final ApplicantRitualService applicantRitualService;
@@ -121,6 +130,9 @@ public class IntegrationWsController {
     private final DataRequestService dataRequestService;
     private final ApplicantGroupService applicantGroupService;
     private final GroupApplicantListService groupApplicantListService;
+    private final MealTimeLookupService mealTimeLookupService;
+    private final Validator validator;
+    private final MessageSource messageSource;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
@@ -467,7 +479,7 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findOrganizerApplicantGroupLeader(@PathVariable String uin) {
         log.debug("Handler for {}", "Find company employee by uin and season ");
         ApplicantRitualPackageVo applicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(uin));
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, applicantPackage.getCompanyRitualSeasonId())).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin, applicantPackage.getCompanyRitualSeasonId())).build());
     }
 
     // End Organizer applicant main data, details, health and group leader
@@ -516,7 +528,7 @@ public class IntegrationWsController {
     @GetMapping("/find/company-employees/{uin}/{seasonId}")
     public ResponseEntity<WsResponse<?>> findCompanyEmployeesByUinAndSeasonId(@PathVariable String uin, @PathVariable long seasonId) {
         log.debug("Handler for {}", "Find company employee by uin and season ");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, seasonId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin, seasonId)).build());
     }
 
     /**
@@ -524,15 +536,14 @@ public class IntegrationWsController {
      * to be used by applicant portal
      *
      * @param uin      the applicant's group leaders details by  uin
-     * @param seasonId the applicant's group leaders details by  season id
      * @return the company staff list
      */
-    @GetMapping("/find/company-staff/group-leader/{uin}/{seasonId}")
-    public ResponseEntity<WsResponse<?>> findGroupLeaderByUinAndSeasonId(@PathVariable String uin, @PathVariable long seasonId) {
+    @GetMapping("/find/company-staff/group-leader/{uin}")
+    public ResponseEntity<WsResponse<?>> findGroupLeaderByUinAndSeasonId(@PathVariable String uin) {
         log.debug("Handler for {}", "Find company employee by uin and season ");
-        Optional<CompanyStaffDto> groupLeader = companyStaffService.findGroupLeaderByApplicantUin(uin, seasonId);
-        if (groupLeader.isPresent()) {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(groupLeader.get()).build());
+       String mobileNumber = companyStaffService.findGroupLeaderMobileByApplicantUin(uin);
+        if (mobileNumber != null) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(mobileNumber).build());
         }
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
@@ -735,6 +746,12 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(mealTypeLookupService.findAll()).build());
     }
 
+    @GetMapping("/meal-time/list")
+    public ResponseEntity<WsResponse<?>> listMealTime() {
+        log.debug("list meal types...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(mealTimeLookupService.findAll()).build());
+    }
+
     /**
      * List of incidents.
      *
@@ -820,7 +837,7 @@ public class IntegrationWsController {
      * @param lang the preferred language to update user with
      * @return WsResponse of applicant (in case of success) or error (in case of failure)
      */
-    @PutMapping("/applicant/language/{uin}/{lang}")
+    @PostMapping("/applicant/language/{uin}/{lang}")
     public ResponseEntity<WsResponse<?>> updateUserPreferredLanguage(@PathVariable String lang, @PathVariable String uin) {
         //FixMe: performance enhancement why here use applicantLiteService.findByUin and inside  applicantService.updatePreferredLanguage call findByUin again, here called unnecessary two queries, we can handle them in one query
         Optional<ApplicantLiteDto> applicant = applicantLiteService.findByUin(uin);
@@ -944,7 +961,7 @@ public class IntegrationWsController {
      * @param uin            The UIN of the applicant.
      * @param mobileLoggedIn flag set to true when login, and false when logout
      */
-    @PutMapping("/applicant/mobile-login/{uin}/{mobileLoggedIn}")
+    @PostMapping("/applicant/mobile-login/{uin}/{mobileLoggedIn}")
     public ResponseEntity<WsResponse<?>> updateLoggedInFromMobileAppFlag(@PathVariable String uin, @PathVariable boolean mobileLoggedIn) {
         Optional<ApplicantDto> applicant = applicantService.findByUin(uin);
         if (applicant.isPresent()) {
@@ -1049,8 +1066,34 @@ public class IntegrationWsController {
      * @return generated badge for staff
      */
     @GetMapping("/badge/staff/generate/{suin}")
-    public ResponseEntity<WsResponse<?>> findApplicantBadge(@PathVariable String suin) {
+    public ResponseEntity<WsResponse<?>> findStaffBadge(@PathVariable String suin) {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateStaffCard(suin)).build());
+
+    }
+
+    /**
+     * @param applicantUin
+     * @return generated back and front badge for applicant
+     */
+    @GetMapping("/badge/applicant/frontback/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findApplicantBadgeFrontAndBack(@PathVariable String applicantUin) {
+        List<BadgeVO> badges = new ArrayList<>();
+        badges.add(badgeService.generateApplicantBadge(applicantUin, false));
+        badges.add(badgeService.generateBackBadge(applicantUin));
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badges).build());
+
+    }
+
+    /**
+     * @param suin
+     * @return generated front and back badge for staff
+     */
+    @GetMapping("/badge/staff/frontback/{suin}")
+    public ResponseEntity<WsResponse<?>> findStaffBadgeFrontAndBack(@PathVariable String suin) {
+        List<BadgeVO> badges = new ArrayList<>();
+        badges.add(badgeService.generateStaffCard(suin));
+        badges.add(badgeService.generateStaffBackBadge(suin));
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badges).build());
 
     }
 
@@ -1202,7 +1245,7 @@ public class IntegrationWsController {
                 .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_FOUND.getCode()).referenceNumber(String.valueOf(id)).build()).build());
     }
 
-    @PutMapping("/staff/update-job-title")
+    @PostMapping("/staff/update-job-title")
     public ResponseEntity<WsResponse<?>> updateCompanyStaffTitle(@RequestBody UpdateStaffTitleCmd command) {
         log.info("find employees by code and type code");
         UpdateStaffTitleCmd cmd = companyStaffService.updateCompanyStaffTitle(command);
@@ -1284,7 +1327,7 @@ public class IntegrationWsController {
      * @param updateGroupCmd
      * @return
      */
-    @PutMapping("/applicant/update-group")
+    @PostMapping("/applicant/update-group")
     public ResponseEntity<WsResponse<?>> updateApplicantGroup(@RequestBody UpdateGroupCmd updateGroupCmd) {
         boolean updated = groupApplicantListService.updateGroup(updateGroupCmd);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
@@ -1296,7 +1339,7 @@ public class IntegrationWsController {
      * @return
      */
 
-    @PutMapping("/applicant/update-health-profile")
+    @PostMapping("/applicant/update-health-profile")
     public ResponseEntity<WsResponse<?>> updateApplicantHealthProfile(@RequestBody ApplicantHealthLiteDto applicantHealthLiteDto) {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantHealthLiteService.save(applicantHealthLiteDto)).build());
 
@@ -1366,4 +1409,77 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(updated).build());
     }
 
+    @GetMapping("/complaint-types/list")
+    public ResponseEntity<WsResponse<?>> listComplaintStatus() {
+        log.debug("list complaint type...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(complaintTypeLookupService.findAll()).build());
+    }
+
+    @GetMapping("/complaint-sts/list")
+    public ResponseEntity<WsResponse<?>> listComplaintTypes() {
+        log.debug("list complaint statuses...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(complaintStatusLookupService.findAll()).build());
+    }
+
+    @GetMapping("/city/list")
+    public ResponseEntity<WsResponse<?>> listCities() {
+        log.debug("list cities...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(cityLookupService.findAll()).build());
+    }
+
+    @PostMapping(value = "/save-staff-main-data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<WsResponse<?>> saveOrUpdateStaffFullMainData(@RequestPart("staff") CompanyStaffMainFullDataDto companyStaffMainFullDataDto,
+                                                                       @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
+        log.info("saveOrUpdateStaffFullMainData start");
+
+        List<DataValidationResult> dataValidationResults = new ArrayList<>();
+
+        dataValidationResults.addAll(companyStaffService.isValidCompanyRitualSeason(companyStaffMainFullDataDto));
+
+        Set<ConstraintViolation<CompanyStaffMainFullDataDto>> violations = new HashSet<>(validator.validate(companyStaffMainFullDataDto));
+        violations.addAll(validator.validate(companyStaffMainFullDataDto, CheckFirst.class));
+        violations.addAll(validator.validate(companyStaffMainFullDataDto, CheckSecond.class));
+        if (!violations.isEmpty()) {
+            // otherwise add errors
+            violations.forEach(v -> dataValidationResults.add(DataValidationResult.builder().valid(false)
+                    .errorMessages(Collections.singletonList(messageSource.getMessage(v.getMessage(), null, Locale.forLanguageTag("en")) + " \n " + messageSource.getMessage(v.getMessage(), null, Locale.forLanguageTag("ar"))))
+                    .attributeName(v.getPropertyPath().toString()).build()));
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(dataValidationResults).build());
+        } else if (!dataValidationResults.isEmpty()) {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(dataValidationResults).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.saveOrUpdateStaffFullMainData(companyStaffMainFullDataDto, avatar)).build());
+        }
+    }
+
+    @PostMapping("/staff/delete/{staffId}")
+    public ResponseEntity<WsResponse<?>> deleteStaff(@PathVariable Long staffId) {
+        log.info("deleteStaff start");
+        boolean deleted = companyStaffService.deleteStaff(staffId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(deleted).build());
+    }
+
+    @GetMapping("/company/ritual-types/{companyCode}")
+    public ResponseEntity<WsResponse<?>> companyRitualTypes(@PathVariable String companyCode) {
+        log.debug("list of ritual types for companyCode {}", companyCode);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyRitualSeasonService.findByCompanyCode(companyCode)).build());
+    }
+
+    @GetMapping("/applicant/housing-camp/details/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findApplicantCampDetails(@PathVariable String applicantUin) {
+        log.debug("find applicant camp details by applicant uin. {}", applicantUin);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageHousingService.findApplicantCampDetails(applicantUin)).build());
+    }
+
+    @GetMapping("/group/housing-camp/details/{groupId}")
+    public ResponseEntity<WsResponse<?>> findGroupApplicantCampReferenceNumber(@PathVariable Long groupId) {
+        log.debug("find group applicant camp reference number by group id. {}", groupId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageHousingService.findGroupApplicantCampReferenceNumber(groupId)).build());
+    }
+
+    @PostMapping("/group/housing-camp/update")
+    public ResponseEntity<WsResponse<?>> UpdateGroupApplicantHousingCamp(@RequestBody GroupApplicantCampDto groupApplicantCamp) {
+        log.debug("Update Group Applicant housing camp. {}", groupApplicantCamp);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageHousingService.updateGroupApplicantHousingCamp(groupApplicantCamp)).build());
+    }
 }

@@ -26,7 +26,18 @@ import java.util.List;
  **/
 public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, Long>, JpaSpecificationExecutor<JpaCompanyStaff> {
 
-    List<JpaCompanyStaff> findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonId(String applicantUin, long sid);
+    @Query("Select staff " +
+            "from JpaApplicantGroup g " +
+            "join g.groupApplicantLists  list " +
+            "join JpaCompanyRitualSeason ritualSeason on ritualSeason.id = g.companyRitualSeason.id " +
+            "JOIN ritualSeason.company c " +
+            "join JpaCompanyStaffCard staffCard on staffCard.companyRitualSeason.id = ritualSeason.id " +
+            "join staffCard.companyStaffDigitalId staffDigitalId " +
+            "join staffDigitalId.companyStaff staff " +
+            "join JpaApplicantPackage package on CAST(package.applicantUin as text) = list.applicantUin " +
+            "where list.applicantUin = :applicantUin " +
+            "and package.id = :sid ")
+    List<JpaCompanyStaff> findApplicantCompanyStaff(@Param("applicantUin") String applicantUin,@Param("sid") long sid);
 
     @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
             "FROM JpaCompanyStaff a WHERE " +
@@ -73,6 +84,12 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     JpaCompanyStaff findByBasicInfo(@Param("idNumber") String idNumber,
                                     @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
 
+    @Query("SELECT a.id " +
+            "FROM JpaCompanyStaff a WHERE " +
+            "(a.idNumber = :idNumber) OR " +
+            "(a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode)")
+    Long findIdByBasicInfo(@Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
+
     @Query("SELECT a " +
             "FROM JpaCompanyStaff a WHERE " +
             "((a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
@@ -90,16 +107,20 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     @Query("SELECT s FROM JpaCompanyStaff s JOIN s.digitalIds sdi WHERE s.idNumber=:idNumber AND sdi.statusCode=:statusCode")
     JpaCompanyStaff findByIdNumber(@Param("idNumber") String idNumber, @Param("statusCode") String statusCode);
 
+
     JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(String applicantUin, long companyRitualSeason, String titleCode);
 
+    @Query("Select staff.mobileNumber from JpaApplicantGroup ag join ag.groupApplicantLists gal join ag.groupLeader staff WHERE gal.applicantUin = :applicantUin")
+    String findGroupLeaderMobileNumberByApplicantUin(@Param("applicantUin") String applicantUin);
+
     @Modifying
-    @Query("update JpaCompanyStaff staff set staff.countryCode = :countryCode, staff.email = :email, " +
+    @Query("update JpaCompanyStaff staff set staff.countryCode = :countryCode, staff.countryPhonePrefix = :countryPhonePrefix, staff.email = :email, " +
             "staff.mobileNumberIntl =:intlMobileNumber, staff.registered = TRUE, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
-    int updateCompanyStaffIntlNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("intlMobileNumber") String intlMobileNumber, @Param("staffId") long staffId);
+    int updateCompanyStaffIntlNumber(@Param("email") String email,@Param("countryCode") String countryCode, @Param("countryPhonePrefix") String countryPhonePrefix, @Param("intlMobileNumber") String intlMobileNumber, @Param("staffId") long staffId);
 
 
     @Modifying
-    @Query("update JpaCompanyStaff staff set staff.countryCode = :countryCode, staff.email = :email, " +
+    @Query("update JpaCompanyStaff staff set staff.countryCode = :countryCode,  staff.email = :email, " +
             "staff.mobileNumber =:localMobileNumber, staff.registered = TRUE, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
     int updateCompanyStaffLocalNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("localMobileNumber") String localMobileNumber, @Param("staffId") long staffId);
 
@@ -177,15 +198,16 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO(" +
             " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode, staff.customJobTitle, staff.photo, " +
-            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber,cards.id ) " +
+            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber," +
+            "cards.id, staff.mobileNumber, staff.countryPhonePrefix, staff.email) " +
             "from JpaCompanyStaff staff " +
             "join staff.digitalIds digitalId " +
             "join digitalId.companyStaffCards cards " +
             "join cards.companyRitualSeason companyRitualSeason " +
             "join companyRitualSeason.ritualSeason ritualSeason " +
             "join companyRitualSeason.company company " +
-            "where staff.id = :staffId ")
-    CompanyStaffFullVO findOrganizerStaffById(@Param("staffId") long staffId);
+            "where staff.id = :staffId")
+    List<CompanyStaffFullVO> findOrganizerStaffById(@Param("staffId") long staffId);
 
     @Modifying
     @Query("update JpaCompanyStaff staff set staff.titleCode = :jobTitle, staff.customJobTitle = :customJobTitle, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")

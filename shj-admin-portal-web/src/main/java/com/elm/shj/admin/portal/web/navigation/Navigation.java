@@ -60,6 +60,8 @@ public class Navigation {
 	public static final String API_INCIDENTS = "/api/incidents";
 	// Incident Integration
 	public static final String API_INCIDENTS_INTEGRATION = "/api/ws/incidents";
+	// Complaint Integration
+	public static final String API_COMPLAINTS_INTEGRATION = "/api/ws/complaints";
 	// Chat Contact Integration
 	public static final String API_CHAT_CONTACT_INTEGRATION = "/api/ws/chat-contact";
 	public static final String API_STAFF_INTEGRATION = "/api/ws/staff";

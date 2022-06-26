@@ -145,7 +145,7 @@ public class StaffWsController {
         if (applicant.isPresent()) {
             ApplicantStaffVO applicantStaffVO = applicant.get();
             applicantStaffVO.setUserType(EUserType.APPLICANT.getId());
-            if (applicantStaffVO.getGroupLeaderSuin().equals(suin)) {
+            if (applicantStaffVO.getGroupLeaderSuin() != null && applicantStaffVO.getGroupLeaderSuin().equals(suin)) {
                 applicantStaffVO.setSameStaffGroup(true);
             }
             log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}, SameStaffGroup {}", "SUCCESS", applicantStaffVO == null ? null : applicantStaffVO.getFullNameEn(), applicantStaffVO == null ? null : applicantStaffVO.isSameStaffGroup());

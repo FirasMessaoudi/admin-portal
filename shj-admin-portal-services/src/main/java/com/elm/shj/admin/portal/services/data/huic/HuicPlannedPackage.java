@@ -53,6 +53,7 @@ public class HuicPlannedPackage implements Serializable {
 
     @RitualTypeCode
     private Integer ritualTypeCode;
+
     @SeasonYear
     private int seasonYear;
 
