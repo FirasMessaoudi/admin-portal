@@ -160,7 +160,7 @@ export class CardDetailsComponent implements OnInit {
           if(actionCode == this.actions.REPRINT_CARD)          
           {
            console.log("Reprint The Card");
-           this.router.navigate(['/card/print',this.card.id]);
+           this.router.navigate(['/card/print',this.card?.referenceNumber]);
           }
           else 
           {

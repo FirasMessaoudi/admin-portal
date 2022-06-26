@@ -11,7 +11,9 @@ import { ConfirmDialogService } from '@shared/components/confirm-dialog';
 import {NavigationService} from "@core/utilities/navigation.service";
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { HttpClient } from '@angular/common/http';
-
+import { PrintDetails } from '@model/print-details.model';
+import { ApplicantService } from '@core/services/applicant/applicant.service';
+import { PrintInfo } from '@model//print-info.model';
 @Component({
   selector: 'app-print-card',
   templateUrl: './print-card.component.html',
@@ -19,6 +21,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PrintCardComponent implements OnInit { 
 
+  cardNumber:string;
+  printDetails: PrintDetails;
+  printInfo:PrintInfo;
+  
   constructor(    
     private router: Router,
     private i18nService: I18nService,
@@ -31,12 +37,13 @@ export class PrintCardComponent implements OnInit {
     private formBuilder: FormBuilder,
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
-    private http: HttpClient
+    private http: HttpClient,
+    private applicantService: ApplicantService,
   ) {    
   }
 
   ngOnInit(): void {    
-    
+    this.cardNumber = this.route.snapshot.paramMap.get('id');
   }   
 
   navigateToList() {
@@ -48,11 +55,16 @@ export class PrintCardComponent implements OnInit {
   }  
 
   printFullImage(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      console.log("A");     
-      this.http.get<any>('http://localhost:5001/weatherforecast').subscribe((result) =>{
-        
-      });
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {    
+    this.applicantService.getApplicantBadge(this.cardNumber).subscribe(result =>
+    {           
+      const headers = { 'content-type': 'application/json'};  
+      const body=JSON.stringify(this.printDetails);
+      console.log(body);
+      //this.http.post('http://localhost:5000/printservice/print', body,{'headers':headers}).subscribe(data =>{});
+    });
+    console.log("Starting Print");
+
     }, (reason) => {
       console.log("B");;
     });

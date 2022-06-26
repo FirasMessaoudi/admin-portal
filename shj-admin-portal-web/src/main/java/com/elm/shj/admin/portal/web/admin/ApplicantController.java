@@ -4,15 +4,19 @@
 package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.dto.BadgeVO;
 import com.elm.shj.admin.portal.services.dto.NotificationTemplateCategorizingDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
+import com.elm.shj.admin.portal.web.ws.WsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -31,6 +35,7 @@ import java.util.List;
 public class ApplicantController {
 
     private final ApplicantService applicantService;
+    private final BadgeService badgeService;
     /**
      * finds a list of applicants matching criteria
      *
@@ -64,6 +69,12 @@ public class ApplicantController {
     public long countCategorizedApplicants(@RequestBody NotificationTemplateCategorizingDto criteria) {
         log.debug("Count applicants having current ritual...");
         return applicantService.countAllByCriteria(criteria, null);
+    }
+
+    @GetMapping("/badge/generate/{applicantUin}/{withQr}")
+    public BadgeVO findApplicantBadge(@PathVariable String applicantUin, @PathVariable boolean withQr) {
+        return badgeService.generateApplicantBadge(applicantUin, withQr);
+
     }
 
 }
