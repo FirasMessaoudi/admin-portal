@@ -479,7 +479,7 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findOrganizerApplicantGroupLeader(@PathVariable String uin) {
         log.debug("Handler for {}", "Find company employee by uin and season ");
         ApplicantRitualPackageVo applicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(uin));
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, applicantPackage.getCompanyRitualSeasonId())).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin, applicantPackage.getCompanyRitualSeasonId())).build());
     }
 
     // End Organizer applicant main data, details, health and group leader
@@ -528,7 +528,7 @@ public class IntegrationWsController {
     @GetMapping("/find/company-employees/{uin}/{seasonId}")
     public ResponseEntity<WsResponse<?>> findCompanyEmployeesByUinAndSeasonId(@PathVariable String uin, @PathVariable long seasonId) {
         log.debug("Handler for {}", "Find company employee by uin and season ");
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, seasonId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin, seasonId)).build());
     }
 
     /**
@@ -1427,8 +1427,8 @@ public class IntegrationWsController {
     }
 
     @PostMapping("/staff/delete/{staffId}")
-    public ResponseEntity<WsResponse<?>> deletStaff(@PathVariable Long staffId) {
-        log.info("deletStaff start");
+    public ResponseEntity<WsResponse<?>> deleteStaff(@PathVariable Long staffId) {
+        log.info("deleteStaff start");
         boolean deleted = companyStaffService.deleteStaff(staffId);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(deleted).build());
     }

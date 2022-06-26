@@ -133,14 +133,6 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
     }
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public Page<ApplicantLiteDto> findAllWithoutDigitalId() {
-        log.info("Start findAllWithoutDigitalId");
-        Page<ApplicantLiteDto> applicantLiteDtos = mapPage(applicantLiteRepository.findAllApplicantsWithoutDigitalId(PageRequest.of(0, 500)));
-        log.info("Finish findAllWithoutDigitalId with {} digital ids", applicantLiteDtos.getContent().size());
-        return applicantLiteDtos;
-    }
-
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ApplicantLiteDto findByBasicInfo(ApplicantBasicInfoDto applicantBasicInfo) {
         log.info("Start findByBasicInfo RowNum:{}", applicantBasicInfo == null ? null : applicantBasicInfo.getRowNum());
         List<JpaApplicantLite> applicantLites = applicantLiteRepository.findByBasicInfo(applicantBasicInfo.getIdNumber(), applicantBasicInfo.getDateOfBirthHijri(),

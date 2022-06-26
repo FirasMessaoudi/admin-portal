@@ -6,9 +6,12 @@ package com.elm.shj.admin.portal.services.lookup;
 import com.elm.shj.admin.portal.orm.entity.JpaUserSurvey;
 import com.elm.shj.admin.portal.orm.repository.UserSurveyRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantPackageService;
-import com.elm.shj.admin.portal.services.applicant.RitualPackageService;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
+import com.elm.shj.admin.portal.services.dto.CompanyRitualSeasonDto;
+import com.elm.shj.admin.portal.services.dto.UserSurveyDto;
+import com.elm.shj.admin.portal.services.dto.UserSurveyQuestionDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +19,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Time;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 
 /**
  * Service handling User Survey Question
@@ -39,7 +38,7 @@ public class UserSurveyService extends GenericService<JpaUserSurvey, UserSurveyD
     private final UserSurveyRepository userSurveyRepository;
     private final UserSurveyQuestionService userSurveyQuestionService;
     private final ApplicantPackageService applicantPackageService;
-    private final RitualPackageService ritualPackageService;
+    private final CompanyRitualSeasonService companyRitualSeasonService;
     @Value("${daily.survey.activation.hour}")
     private int dailySurveyActivationHour;
 
@@ -79,7 +78,9 @@ public class UserSurveyService extends GenericService<JpaUserSurvey, UserSurveyD
     public boolean checkGroupLeaderEndOfRitualDateValid(String digitalId) {
         Calendar cal = Calendar.getInstance();
         Date currentDate = cal.getInstance().getTime();
-        Date endRitualDate = ritualPackageService.findByGroupLeaderDigitalId(digitalId).getEndDate();
+        Optional<CompanyRitualSeasonDto> companyRitualSeason = companyRitualSeasonService.findLatestCompanyRitualSeasonBySuin(digitalId);
+        if (!companyRitualSeason.isPresent()) return false;
+        Date endRitualDate = DateUtils.toGregorian(companyRitualSeason.get().getRitualSeason().getSeasonEnd());
         Date maxDate = new Date(endRitualDate.getTime()+ 172800000);
         Date minDate = new Date(endRitualDate.getTime()- 86400000);
         if (currentDate.after(minDate) && currentDate.before(maxDate)) {

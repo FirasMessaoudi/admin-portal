@@ -13,7 +13,6 @@ import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdBasicSer
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
-import com.elm.shj.admin.portal.services.user.UserLocationService;
 import com.elm.shj.admin.portal.services.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +45,6 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyStaffService extends GenericService<JpaCompanyStaff, CompanyStaffDto, Long> {
 
-    private final UserLocationService userLocationService;
     private final CompanyStaffRepository companyStaffRepository;
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
     public final static Pattern  EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -301,6 +299,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                         .passportNumber(companyStaff.getPassportNumber())
                         .idNumber(companyStaff.getIdNumber())
                         .linkedWithGroup(applicantGroupBasicService.existsByGroupLeader(companyStaff.getId()))
+                        .photo(companyStaff.getPhoto())
                         .build();
 
                 companyStaffList.add(companyStaffLite);
@@ -320,6 +319,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = companyStaffCards.join("companyRitualSeason");
 
            predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
+            predicates.add(criteriaBuilder.notEqual(companyStaffCards.get("statusCode"), ECardStatus.EXPIRED.name()));
+            predicates.add(criteriaBuilder.notEqual(companyStaffCards.get("statusCode"), ECardStatus.REISSUED.name()));
 
             if (criteria.getSuin() != null && !criteria.getSuin().equals("")) {
                 Path<String> suin = digitalId.get("suin");
@@ -372,13 +373,13 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         };
     }
 
-
     public Optional<CompanyStaffFullVO> searchStaffById(Long id) {
-        CompanyStaffFullVO staff = companyStaffRepository.findOrganizerStaffById(id);
+        List<CompanyStaffFullVO> staff = companyStaffRepository.findOrganizerStaffById(id);
+        CompanyStaffFullVO companyStaffFullVO = staff.get(staff.size() - 1);
         // split the company and set only company ref code
-        if(staff.getCompanyCode() != null && !staff.getCompanyCode().equals(""))
-            staff.setCompanyCode(staff.getCompanyCode().contains("_") ? staff.getCompanyCode().substring(0, staff.getCompanyCode().indexOf("_")) : staff.getCompanyCode());
-        return staff == null? Optional.empty(): Optional.of(staff);
+        if(companyStaffFullVO.getCompanyCode() != null && !companyStaffFullVO.getCompanyCode().equals(""))
+            companyStaffFullVO.setCompanyCode(companyStaffFullVO.getCompanyCode().contains("_") ? companyStaffFullVO.getCompanyCode().substring(0, companyStaffFullVO.getCompanyCode().indexOf("_")) : companyStaffFullVO.getCompanyCode());
+        return companyStaffFullVO == null? Optional.empty(): Optional.of(companyStaffFullVO);
     }
 
     @Transactional
@@ -536,6 +537,12 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     c.setStatusCode(ECardStatus.EXPIRED.name());
                 });
                 companyStaffCardService.saveAll(companyStaffCards2);
+                CompanyStaffCardDto companyStaffCardDto = new CompanyStaffCardDto();
+                companyStaffCardDto.setCompanyStaffDigitalId(CompanyStaffDigitalIdDto.builder().id(companyStaffDigitalId.getId()).build());
+                companyStaffCardDto.setStatusCode(ECardStatus.READY_TO_PRINT.name());
+                companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
+                        .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
+                companyStaffCardService.save(companyStaffCardDto);
                 return;
             }
 

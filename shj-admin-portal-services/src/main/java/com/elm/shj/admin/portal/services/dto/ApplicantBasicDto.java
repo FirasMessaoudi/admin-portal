@@ -26,14 +26,14 @@ public class ApplicantBasicDto implements Serializable {
 
     private long id;
     private String gender;
+    private String idNumber;
+    private String passportNumber;
     private String nationalityCode;
     private Date dateOfBirthGregorian;
     private Long dateOfBirthHijri;
     private String packageReferenceNumber;
     private List<ApplicantDigitalIdDto> digitalIds;
     private String countryPhonePrefix;
-    private String idNumber;
-    private String passportNumber;
     private String fullNameAr;
     private String fullNameEn;
     private String fullNameOrigin;
