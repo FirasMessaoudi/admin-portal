@@ -44,6 +44,8 @@ public class ApplicantComplaintScheduler {
 
     @Value("${generate.applicant.complaint.scheduler.active.nodes}")
     private String schedulerActiveNodes;
+    @Value("${complaint.period.minutes}")
+    private Long complaintPeriodInMinutes;
 
 
     @Value("${crm.auth.url}")
@@ -92,7 +94,7 @@ public class ApplicantComplaintScheduler {
         log.debug("Generate applicants complaints scheduler started...");
         LockAssert.assertLocked();
         //TODO
-        Date date = new Date(System.currentTimeMillis() - 3600 * 1000 * 24);
+        Date date = new Date(System.currentTimeMillis() - 60 * 1000 * complaintPeriodInMinutes);
         Pageable pageable = PageRequest.of(0, 50,
                 Sort.by(Sort.Direction.DESC, "id"));
         Page<ApplicantComplaintVo> complaints = applicantComplaintRepository.findTop50ByCreationDateLessThanEqualAndStatusCode(date, EComplaintStatus.UNDER_PROCESSING.name(), pageable);

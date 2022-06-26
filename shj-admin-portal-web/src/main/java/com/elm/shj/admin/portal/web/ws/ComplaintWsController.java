@@ -88,7 +88,7 @@ public class ComplaintWsController {
         }
 
         // validate camp number, it should be provided if city is holy sites
-        if (applicantComplaintRequest.getCity().equals(ECity.HOLY_SITES.name()) && (applicantComplaintRequest.getCampNumber() == null || applicantComplaintRequest.getCampNumber().isEmpty())) {
+        if (applicantComplaintRequest.getCity() != null && applicantComplaintRequest.getCity().equals(ECity.HOLY_SITES.name()) && (applicantComplaintRequest.getCampNumber() == null || applicantComplaintRequest.getCampNumber().isEmpty())) {
             log.info("Finish create Complaint {}, {} ","FAILURE", WsError.EWsError.CAMP_NUMBER_NOT_PROVIDED.getCode());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.CAMP_NUMBER_NOT_PROVIDED.getCode()).build()).build());
         }
