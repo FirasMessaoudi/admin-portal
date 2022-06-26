@@ -48,6 +48,7 @@ public class BadgeController {
     public BadgeVO generateStaffBadge(@PathVariable String digitalId) {
         if (digitalId.length() == 12) {
             // valid suin
+            return badgeService.generateStaffCard(digitalId);
         }
         return null;
     }
@@ -58,6 +59,16 @@ public class BadgeController {
         if (digitalId.length() == 14) {
             //valid uin
             return badgeService.generateBackBadge(digitalId);
+        }
+        return null;
+    }
+
+    @GetMapping("/staff/back/{digitalId}")
+    public BadgeVO generateStaffBackBadge(@PathVariable String digitalId) {
+        //TODO: do some validation for the passed digital id and return error message if needed
+        if (digitalId.length() == 12) {
+            //valid uin
+            return badgeService.generateStaffBackBadge(digitalId);
         }
         return null;
     }
