@@ -60,6 +60,8 @@ public class PackageHousingService extends GenericService<JpaPackageHousing, Pac
     public PackageHousingDto findStaffPackageHousingByCompanyRitualSeason(long companyRitualSeason) {
         log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: companyRitualSeason: {}", companyRitualSeason);
         JpaPackageHousing jpaPackageHousing = packageHousingRepository.findStaffPackageHousingByCompanyRitualSeason(companyRitualSeason);
+        if(jpaPackageHousing == null)
+            return null;
         log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: jpaPackageHousingLocationNameEn: {}", jpaPackageHousing.getLocationNameEn());
         return getMapper().fromEntity(jpaPackageHousing, mappingContext);
     }
