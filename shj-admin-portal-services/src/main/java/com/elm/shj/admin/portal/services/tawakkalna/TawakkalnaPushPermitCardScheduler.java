@@ -85,13 +85,13 @@ public class TawakkalnaPushPermitCardScheduler {
         TawakkalnaApplicantInputDto tawakkalnaApplicantInputDto = new TawakkalnaApplicantInputDto();
 
         if(applicantPermitCard.getNationalityCode()>0)
-        tawakkalnaApplicantInputDto.setNationalId(applicantPermitCard.getNationalityCode());
+        tawakkalnaApplicantInputDto.setNationalityCode(applicantPermitCard.getNationalityCode());
+
+        if(applicantPermitCard.getIqamaNin()>0)
+            tawakkalnaApplicantInputDto.setNationalId(applicantPermitCard.getIqamaNin());
 
         if(!checkIfStringNullorEmpty(applicantPermitCard.getPassportNumber()))
         tawakkalnaApplicantInputDto.setPassportNumber(applicantPermitCard.getPassportNumber());
-
-        if(applicantPermitCard.getIqamaNin()>0)
-        tawakkalnaApplicantInputDto.setNationalityCode(applicantPermitCard.getIqamaNin());
 
         if(!checkIfStringNullorEmpty(applicantPermitCard.getCardNumber()))
         tawakkalnaApplicantInputDto.setSmartCardNumber(applicantPermitCard.getCardNumber());

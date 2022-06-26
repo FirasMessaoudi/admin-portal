@@ -18,7 +18,7 @@ public class TawakkalnaApplicantInputDto implements Serializable {
     private String passportNumber;
 
     @JsonProperty("nationalitycode")
-    private int nationalityCode;
+    private long nationalityCode;
 
     @JsonProperty("smartcardnumber")
     private String smartCardNumber;
