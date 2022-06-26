@@ -1464,4 +1464,22 @@ public class IntegrationWsController {
         log.debug("list of ritual types for companyCode {}", companyCode);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyRitualSeasonService.findByCompanyCode(companyCode)).build());
     }
+
+    @GetMapping("/applicant/housing-camp/details/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findApplicantCampDetails(@PathVariable String applicantUin) {
+        log.debug("find applicant camp details by applicant uin. {}", applicantUin);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageHousingService.findApplicantCampDetails(applicantUin)).build());
+    }
+
+    @GetMapping("/group/housing-camp/details/{groupId}")
+    public ResponseEntity<WsResponse<?>> findGroupApplicantCampReferenceNumber(@PathVariable Long groupId) {
+        log.debug("find group applicant camp reference number by group id. {}", groupId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageHousingService.findGroupApplicantCampReferenceNumber(groupId)).build());
+    }
+
+    @PostMapping("/group/housing-camp/update")
+    public ResponseEntity<WsResponse<?>> UpdateGroupApplicantHousingCamp(@RequestBody GroupApplicantCampDto groupApplicantCamp) {
+        log.debug("Update Group Applicant housing camp. {}", groupApplicantCamp);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageHousingService.updateGroupApplicantHousingCamp(groupApplicantCamp)).build());
+    }
 }
