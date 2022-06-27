@@ -12,28 +12,26 @@
   <form #printCardForm="ngForm"> 
      
     <ng-template #contentFull let-modal>
-      <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title"> </h4>
+      <div class="modal-header">        
         <button type="button"  style="border:none;"  (click)="modal.dismiss('Cross click')">X</button>
       </div>
       <div class="modal-body">
         <p>Please make sure to add blank card inside Printer</p>
       </div>
-      <div class="modal-footer">
+      <div>
         <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Print</button>
       </div>
     </ng-template>  
 
 
     <ng-template #contentPrePrinted let-modal>
-      <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title"></h4>
+      <div class="modal-header">        
         <button type="button" style="border:none;" (click)="modal.dismiss('Cross click')">X</button>
       </div>
       <div class="modal-body">
         <p>Please make sure to add pre printed design card inside Printer</p>
       </div>
-      <div class="modal-footer">
+      <div>
         <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Print</button>
       </div>
     </ng-template>
@@ -41,10 +39,10 @@
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       <div class="form-group col">
-        <button class="btn btn-dcc-primary px-4" (click)="printFullImage(contentPrePrinted)">{{"card-management.print_blank_card" | translate}}</button>         
+        <button class="btn btn-dcc-primary px-2" (click)="printFullImage(contentFull)">{{"card-management.print_blank_card" | translate}}</button>
+        &nbsp;&nbsp;<button  class="btn btn-dcc-primary" (click)="printImageOnPrintedDesign(contentPrePrinted)">{{"card-management.print_preprinted_card" | translate}}</button>         
       </div>
       <div class="form-group col">
-        <button  class="btn btn-dcc-primary px-4" onclick="myFunction('')">{{"card-management.print_preprinted_card" | translate}}</button>
       </div>
     </div> 
   </form>

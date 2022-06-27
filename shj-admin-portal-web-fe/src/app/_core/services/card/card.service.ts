@@ -9,6 +9,7 @@ import { ApplicantCardSearchCriteria } from '@model/applicant-card-search-criter
 import { StaffCardSearchCriteria } from '@model/staff-card-search-criteria.model';
 import { CompanyLite } from '@model/company-lite.model';
 import { CompanyStaffCard } from '@app/_shared/model/staff-card.model';
+import { PrintDetails } from '@model/print-details.model';
 
 @Injectable({
   providedIn: 'root',
@@ -275,5 +276,10 @@ export class CardService {
 
   findStaffCardById(id: number): Observable<any> {
     return this.http.get<any>('/core/api/staff-cards/find/' + id);
+  }
+
+  sendPrintRequestToPrinter(body:string,headers:any)
+  {
+    return this.http.post('http://localhost:5000/printservice/print', body,{'headers':headers})
   }
 }
