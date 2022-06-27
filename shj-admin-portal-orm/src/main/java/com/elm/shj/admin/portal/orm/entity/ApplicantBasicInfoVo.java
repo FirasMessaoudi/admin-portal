@@ -39,6 +39,7 @@ public class ApplicantBasicInfoVo implements Serializable {
     private String email;
     private String localMobileNumber;
     private String intlMobileNumber;
+    private String countryCode;
 
 
     public ApplicantBasicInfoVo(String fullNameAr, String fullNameEn, String uin){
@@ -49,7 +50,7 @@ public class ApplicantBasicInfoVo implements Serializable {
 
     public ApplicantBasicInfoVo(String fullNameAr, String fullNameEn, String fullNameOrigin, String idNumber, String passportNumber, Long dateOfBirthHijri,
                                 Date dateOfBirthGregorian, String gender, String nationalityCode, String email,
-                                String localMobileNumber, String intlMobileNumber, String uin){
+                                String localMobileNumber, String intlMobileNumber, String countryCode, String uin){
         this.fullNameAr = fullNameAr;
         this.fullNameEn = fullNameEn;
         this.fullNameOrigin = fullNameOrigin;
@@ -62,6 +63,7 @@ public class ApplicantBasicInfoVo implements Serializable {
         this.email = email;
         this.localMobileNumber = localMobileNumber;
         this.intlMobileNumber = intlMobileNumber;
+        this.countryCode = countryCode;
         this.uin = uin;
     }
 
