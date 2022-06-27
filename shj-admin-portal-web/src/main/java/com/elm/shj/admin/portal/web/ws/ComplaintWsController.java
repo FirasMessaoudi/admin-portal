@@ -164,9 +164,9 @@ public class ComplaintWsController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"")
                     .body(attachment);
         } else {
-            log.info("Finished Downloading complaint attachment #{}, Failure {}", attachmentId, "COMPLAINT_ATTACHMENT_NOT_FOUND");
+            log.info("Finished Downloading complaint attachment #{}, Failure {}", attachmentId, "ATTACHMENT_NOT_FOUND");
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_ATTACHMENT_NOT_FOUND.getCode()).referenceNumber("COMPLAINT_ATTACHMENT_NOT_FOUND").build()).build());
+                    .body(WsError.builder().error(WsError.EWsError.ATTACHMENT_NOT_FOUND.getCode()).referenceNumber("ATTACHMENT_NOT_FOUND").build()).build());
         }
     }
 
