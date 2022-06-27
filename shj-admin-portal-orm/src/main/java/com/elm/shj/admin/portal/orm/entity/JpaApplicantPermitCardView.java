@@ -26,7 +26,7 @@ public class JpaApplicantPermitCardView implements Serializable {
     private String frontQr;
 
     @Column(name = "iqama_nin")
-    private int iqamaNin;
+    private String iqamaNin;
 
     @Column(name = "passport_number")
     private String passportNumber;
@@ -63,4 +63,5 @@ public class JpaApplicantPermitCardView implements Serializable {
 
     @Column(name = "card_status")
     private int cardStatus;
+
 }

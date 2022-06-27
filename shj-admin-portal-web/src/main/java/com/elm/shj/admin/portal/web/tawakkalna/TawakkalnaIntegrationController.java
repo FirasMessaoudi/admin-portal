@@ -21,7 +21,8 @@ public class TawakkalnaIntegrationController {
     @PostMapping("/push-applicant-info")
     public TawakkalnaApplicantOutputDto pushApplicantInfo(@RequestBody TawakkalnaApplicantInputDto input) {
         log.info("Starting Pushing Tawakkalna Data");
-        return tawakkalnaIntegrationService.pushApplicantInfo(input);
+        //return tawakkalnaIntegrationService.pushApplicantInfo(input);
+        return null;
     }
 
 }

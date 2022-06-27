@@ -62,11 +62,10 @@ public class TawakkalnaPushPermitCardScheduler {
                 log.debug("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard: Data Fetched Successfully ");
                 for(JpaApplicantPermitCardView applicantPermitCard :  applicantPermitCards)
                 {
-                    TawakkalnaApplicantInputDto tawakkalnaApplicantInputDto =initailizeTawakkalnaApplicantInput(applicantPermitCard);
                     log.debug("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard: Initialize Object Successfully ");
                     // Push Card Permit Data to Tawakkalna
                     log.debug("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard: Pushing to  tawakkalnaIntegrationService Calling External Web Service ");
-                    TawakkalnaApplicantOutputDto serviceResult  = tawakkalnaIntegrationService.pushApplicantInfo(tawakkalnaApplicantInputDto);
+                    TawakkalnaApplicantOutputDto serviceResult  = tawakkalnaIntegrationService.pushApplicantInfo(applicantPermitCard);
                     log.debug("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard: Pushing to  tawakkalnaIntegrationService Calling External Web Service Successfully Finished");
                 }
             }
@@ -79,60 +78,5 @@ public class TawakkalnaPushPermitCardScheduler {
         log.debug("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard finished...");
     }
 
-    private TawakkalnaApplicantInputDto initailizeTawakkalnaApplicantInput(JpaApplicantPermitCardView applicantPermitCard)
-    {
-        // Create Object Input For External Tawakkalna Service
-        TawakkalnaApplicantInputDto tawakkalnaApplicantInputDto = new TawakkalnaApplicantInputDto();
 
-        if(applicantPermitCard.getNationalityCode()>0)
-        tawakkalnaApplicantInputDto.setNationalityCode(applicantPermitCard.getNationalityCode());
-
-        if(applicantPermitCard.getIqamaNin()>0)
-            tawakkalnaApplicantInputDto.setNationalId(applicantPermitCard.getIqamaNin());
-
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getPassportNumber()))
-        tawakkalnaApplicantInputDto.setPassportNumber(applicantPermitCard.getPassportNumber());
-
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getCardNumber()))
-        tawakkalnaApplicantInputDto.setSmartCardNumber(applicantPermitCard.getCardNumber());
-
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getCardSerial()))
-        tawakkalnaApplicantInputDto.setCardSerial(Long.parseLong(applicantPermitCard.getCardSerial()));
-
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getBackPhoneNumber()))
-        tawakkalnaApplicantInputDto.setPhoneNumber(applicantPermitCard.getBackPhoneNumber());
-
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getFrontQr()))
-        tawakkalnaApplicantInputDto.setFrontQrValue(applicantPermitCard.getFrontQr());
-
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getEstablishmentRefCode()))
-        tawakkalnaApplicantInputDto.setEstablishmentId(Integer.parseInt(applicantPermitCard.getEstablishmentRefCode()));
-
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getEstablishmentAr()))
-        tawakkalnaApplicantInputDto.setEstablishmentNameAr(applicantPermitCard.getEstablishmentAr());
-
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getEstablishmentEn()))
-        tawakkalnaApplicantInputDto.setEstablishmentNameEn(applicantPermitCard.getEstablishmentEn());
-
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getCompanyNameAr()))
-        tawakkalnaApplicantInputDto.setCompanyNameAr(applicantPermitCard.getCompanyNameAr());
-
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getCompanyNameEn()))
-        tawakkalnaApplicantInputDto.setCompanyNameEn(applicantPermitCard.getCompanyNameEn());
-
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getServiceOfficeNumber()))
-        tawakkalnaApplicantInputDto.setServicegroupnumber(applicantPermitCard.getServiceOfficeNumber());
-
-        if(applicantPermitCard.getCardStatus()>0)
-        tawakkalnaApplicantInputDto.setCardstatus(applicantPermitCard.getCardStatus());
-        return tawakkalnaApplicantInputDto;
-    }
-
-    private boolean checkIfStringNullorEmpty(String property)
-    {
-        if (property == null || property.isEmpty() || property.trim().isEmpty())
-            return true;
-        else
-            return false;
-    }
 }

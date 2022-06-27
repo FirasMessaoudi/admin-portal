@@ -28,6 +28,9 @@ public class JpaApplicantPermitCard implements Serializable {
     @Column(name = "is_card_pushed")
     private boolean isCardPushed;
 
+    @Column(name = "card_status")
+    private int cardStatus;
+
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
