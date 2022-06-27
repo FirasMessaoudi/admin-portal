@@ -3,11 +3,11 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.services.card.ApplicantCardBasicService;
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
-import com.elm.shj.admin.portal.services.dto.ApplicantCardDto;
-import com.elm.shj.admin.portal.services.dto.ApplicantCardSearchCriteriaDto;
-import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
-import com.elm.shj.admin.portal.services.dto.NotificationSearchCriteriaDto;
+import com.elm.shj.admin.portal.services.card.UserCardStatusAuditService;
+import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.ritual.ApplicantRitualBasicService;
 import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
@@ -44,8 +44,10 @@ import java.util.Set;
 public class ApplicantCardController {
 
     private final ApplicantCardService applicantCardService;
-
     private final JwtTokenService jwtTokenService;
+    private final ApplicantCardBasicService applicantCardBasicService;
+    private final UserCardStatusAuditService userCardStatusAuditService;
+    private final ApplicantRitualBasicService applicantRitualBasicService;
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.CARD_MANAGEMENT + "')")
@@ -164,6 +166,23 @@ public class ApplicantCardController {
         }
         return true;
 
+    }
+
+    @PostMapping("/generate-card")
+    public ApplicantCardBasicDto generateCard(@RequestBody ApplicantCreateCardDto applicantCreateCardDto,Authentication authentication)  {
+        // Get Applicant Card
+        ApplicantCardDto card = applicantCardService.findApplicantCard(applicantCreateCardDto.getCardId());
+
+        // Cancel The Card
+        JwtToken loggedInUser = (JwtToken) authentication;
+        Optional<Long> userId = jwtTokenService.retrieveUserIdFromToken(loggedInUser.getToken());
+        card = applicantCardService.buildApplicantCard(applicantCardService.changeCardStatus(card, applicantCreateCardDto.getActionCode(), userId));
+
+        // Sent Card Reprint
+        ApplicantRitualBasicDto applicantRitualBasic =  applicantRitualBasicService.findOne(applicantCreateCardDto.getRitualId());
+        ApplicantCardBasicDto savedCard = applicantCardBasicService.save(ApplicantCardBasicDto.builder().applicantRitual(applicantRitualBasic).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
+        userCardStatusAuditService.saveUserBasicCardStatusAudit(savedCard, Constants.SYSTEM_USER_ID_NUMBER);
+        return savedCard;
     }
 
 }

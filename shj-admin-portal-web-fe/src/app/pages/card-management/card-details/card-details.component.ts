@@ -17,6 +17,7 @@ import {CardStatus} from "@model/enum/card-status.enum";
 import {DigitalIdStatus} from "@model/enum/digital-id-status.enum";
 import {CardStatusActions} from "@model/enum/card-status-actions.enum";
 import {ConfirmDialogService} from "@shared/components/confirm-dialog";
+import { GenerateCardInput } from '@model/generate-card-input.model';
 
 @Component({
   selector: 'app-card-details',
@@ -159,8 +160,15 @@ export class CardDetailsComponent implements OnInit {
 
           if(actionCode == this.actions.REPRINT_CARD)          
           {
-           console.log("Reprint The Card");
-           this.router.navigate(['/card/print',this.card?.applicantRitual?.applicant?.digitalIds[0]?.uin]);
+              let generatCardInput:GenerateCardInput = {
+                  actionCode: this.actions.CANCEL_CARD,
+                  cardId: this.card.id,
+                  ritualId: this.card?.applicantRitual?.id
+              };
+           //this.cardService.generateCard(generatCardInput).subscribe(result=>{           
+           //console.log("Reprint The Card");           
+           //});  
+           this.router.navigate(['/card/print',this.card?.applicantRitual?.applicant?.digitalIds[0]?.uin]);         
           }
           else 
           {
