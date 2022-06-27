@@ -56,7 +56,7 @@ public class ApplicantComplaintVo implements Serializable {
         this.count = count;
     }
 
-    public ApplicantComplaintVo(Long id, String referenceNumber, Date creationDate, String statusCode, String typeCode, String city, String description, Double locationLat, Double locationLng, Long complaintAttachmentId, String filePath, String resolutionComment, Date updateDate, String fullNameAr, String fullNameEn, String uin, String preferredLanguage){
+    public ApplicantComplaintVo(Long id, String referenceNumber, Date creationDate, String statusCode, String typeCode, String city, String description, Double locationLat, Double locationLng, String campNumber, Long complaintAttachmentId, String filePath, String resolutionComment, Date updateDate, String fullNameAr, String fullNameEn, String uin, String preferredLanguage){
         this.id = id;
         this.referenceNumber = referenceNumber;
         this.creationDate = creationDate;
@@ -66,6 +66,7 @@ public class ApplicantComplaintVo implements Serializable {
         this.locationLat = locationLat;
         this.locationLng = locationLng;
         this.city = city;
+        this.campNumber = campNumber;
         if (complaintAttachmentId != null) {
             this.complaintAttachment = new ComplaintAttachmentVo(complaintAttachmentId, filePath);
         }
@@ -77,7 +78,7 @@ public class ApplicantComplaintVo implements Serializable {
     public ApplicantComplaintVo(Long id,String referenceNumber, String typeCode, String city, String description,Double locationLat, Double locationLng,Date creationDate, Long complaintAttachmentId, String fullNameAr, String fullNameEn,
                                 String fullNameOrigin, String idNumber, String passportNumber, Long dateOfBirthHijri,
                                 Date dateOfBirthGregorian, String gender, String nationalityCode,String email,
-                                String localMobileNumber, String intlMobileNumber, String uin, Long count)
+                                String localMobileNumber, String intlMobileNumber, String uin)
     {
         this.id = id;
         this.referenceNumber = referenceNumber;
@@ -87,7 +88,6 @@ public class ApplicantComplaintVo implements Serializable {
         this.locationLat = locationLat;
         this.locationLng = locationLng;
         this.city = city;
-        this.count = count;
         if (complaintAttachmentId != null) {
             this.complaintAttachment = new ComplaintAttachmentVo(complaintAttachmentId, null);
         }

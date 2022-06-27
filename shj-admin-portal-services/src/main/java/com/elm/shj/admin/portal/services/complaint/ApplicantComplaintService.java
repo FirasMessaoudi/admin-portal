@@ -4,7 +4,6 @@
 package com.elm.shj.admin.portal.services.complaint;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantComplaint;
-import com.elm.shj.admin.portal.orm.entity.JpaComplaintAttachment;
 import com.elm.shj.admin.portal.orm.entity.JpaComplaintAttachmentLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantComplaintLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantComplaintRepository;
@@ -34,7 +33,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -173,7 +174,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
 
         if (complaint.getCrmTicketNumber() != null && !complaint.getCrmTicketNumber().isEmpty()) {
             //TODO: Update CRM Complaint status
-            ApplicantComplaintVoCRM applicantComplaintVoCRM = new ApplicantComplaintVoCRM();
+            ApplicantIncidentComplaintVoCRM applicantComplaintVoCRM = new ApplicantIncidentComplaintVoCRM();
             applicantComplaintVoCRM.setCrmTicketNumber(complaint.getCrmTicketNumber());
             applicantComplaintVoCRM.setStatus(EComplaintResolutionType.valueOf(applicantComplaintVo.getOperation()).getCrmCode());
             applicantComplaintVoCRM.setSmartIDTicketNumber(complaint.getReferenceNumber());
@@ -196,7 +197,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
      * @param complaintId the ID number of the complaint to update
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public void updateByCrm(long complaintId, ApplicantComplaintVoCRM applicantComplaintVo) throws NotFoundException {
+    public void updateByCrm(long complaintId, ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
 
         if (EComplaintResolutionType.RESOLVED.getCrmCode() == applicantComplaintVo.getStatus()) {
             applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.name());
@@ -237,5 +238,14 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
         }
         return webClient.method(httpMethod).uri(crmUrl + serviceRelativeUrl).headers(header -> header.setBearerAuth(accessTokenWsResponse.getToken()))
                 .body(BodyInserters.fromValue(bodyToSend)).retrieve().bodyToMono(responseTypeReference).block();
+    }
+
+    public List<ApplicantComplaintDto> findAllByApplicantRitualId(long applicantRitualId) {
+        List<JpaApplicantComplaint> allByApplicantRitualId = applicantComplaintRepository.findAllByApplicantRitualId(applicantRitualId);
+        if(allByApplicantRitualId == null){
+            return new ArrayList<>();
+        }
+        List<ApplicantComplaintDto> applicantComplaintDtos = getMapper().fromEntityList(allByApplicantRitualId, mappingContext);
+        return applicantComplaintDtos;
     }
 }

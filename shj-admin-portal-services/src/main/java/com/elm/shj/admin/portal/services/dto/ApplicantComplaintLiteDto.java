@@ -41,7 +41,7 @@ public class ApplicantComplaintLiteDto implements Serializable {
     private String city;
     private String campNumber;
     private String crmTicketNumber;
-    private List<ComplaintAttachmentLiteDto> complaintAttachments;
+    private ComplaintAttachmentLiteDto complaintAttachment;
     private Date creationDate;
     private Date updateDate;
 }

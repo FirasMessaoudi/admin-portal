@@ -44,6 +44,8 @@ public class ApplicantComplaintScheduler {
 
     @Value("${generate.applicant.complaint.scheduler.active.nodes}")
     private String schedulerActiveNodes;
+    @Value("${complaint.period.minutes}")
+    private Long complaintPeriodInMinutes;
 
 
     @Value("${crm.auth.url}")
@@ -92,12 +94,10 @@ public class ApplicantComplaintScheduler {
         log.debug("Generate applicants complaints scheduler started...");
         LockAssert.assertLocked();
         //TODO
-        Date date = new Date(System.currentTimeMillis() - 3600 * 1000 * 24);
-        Pageable pageable = PageRequest.of(0, 50,
-                Sort.by(Sort.Direction.DESC, "id"));
-        Page<ApplicantComplaintVo> complaints = applicantComplaintRepository.findTop50ByCreationDateLessThanEqualAndStatusCode(date, EComplaintStatus.UNDER_PROCESSING.name(), pageable);
+        Date date = new Date(System.currentTimeMillis() - 60 * 1000 * complaintPeriodInMinutes);
+        List<ApplicantComplaintVo> complaints = applicantComplaintRepository.findByCreationDateLessThanEqualAndStatusCode(date, EComplaintStatus.UNDER_PROCESSING.name());
 
-        complaints.stream().forEach(complaint -> {
+        complaints.forEach(complaint -> {
             try {
                 CrmAuthResponse accessTokenWsResponse = webClient.post().uri(crmUrl + crmAuthUrl)
                         .body(BodyInserters.fromValue(LoginRequestCRM.builder().username(crmAccessUsername).password(crmAccessPassword).build()))
@@ -148,7 +148,8 @@ public class ApplicantComplaintScheduler {
                 newComplaint.setRegisterDateTime(format.format(complaint.getCreationDate()));
                 newComplaint.setLocationLng(complaint.getLocationLng());
                 newComplaint.setLocationLat(complaint.getLocationLat());
-                newComplaint.setAttachmentId(String.valueOf(complaint.getComplaintAttachment().getId()));
+                if (complaint.getComplaintAttachment() != null && complaint.getComplaintAttachment().getId() > 0)
+                    newComplaint.setAttachmentId(String.valueOf(complaint.getComplaintAttachment().getId()));
                 if (complaint.getCity() != null)
                     newComplaint.setCity(ECity.valueOf(complaint.getCity()).getCrmCode());
                 else

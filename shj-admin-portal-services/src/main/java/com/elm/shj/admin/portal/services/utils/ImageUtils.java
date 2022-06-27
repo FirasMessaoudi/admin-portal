@@ -195,4 +195,10 @@ public class ImageUtils {
         ImageIO.write(img, "png", os);
         return Base64.getEncoder().encodeToString(os.toByteArray());
     }
+
+    public static String imgToBase64StringBmp(final BufferedImage img) throws IOException {
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(img, "bmp", os);
+        return Base64.getEncoder().encodeToString(os.toByteArray());
+    }
 }

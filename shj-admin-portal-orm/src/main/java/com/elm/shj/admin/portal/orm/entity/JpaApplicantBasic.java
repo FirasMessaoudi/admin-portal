@@ -108,6 +108,8 @@ public class JpaApplicantBasic implements Serializable {
     @Column(name = "education_level_code")
     private String educationLevelCode;
 
+    private boolean registered;
+
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 

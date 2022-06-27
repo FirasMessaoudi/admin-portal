@@ -52,6 +52,7 @@ public class GroupMainDataDto implements Serializable {
     @CellIndex(index = 4)
     @NotNull(message = "validation.data.constraints.msg.20001")
     @NullOrNotBlank(min = 1, max = 45)
+    @UniquePerRequest
     private String groupReferenceNumber;
 
     @CellIndex(index = 5)
