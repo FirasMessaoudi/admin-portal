@@ -8,6 +8,8 @@ import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.company.*;
+import com.elm.shj.admin.portal.services.complaint.ApplicantComplaintLiteService;
+import com.elm.shj.admin.portal.services.complaint.ApplicantComplaintService;
 import com.elm.shj.admin.portal.services.data.request.DataRequestService;
 import com.elm.shj.admin.portal.services.data.segment.DataSegmentService;
 import com.elm.shj.admin.portal.services.data.validators.CheckFirst;
@@ -28,8 +30,10 @@ import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
@@ -39,6 +43,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -133,6 +139,8 @@ public class IntegrationWsController {
     private final MealTimeLookupService mealTimeLookupService;
     private final Validator validator;
     private final MessageSource messageSource;
+    private final ApplicantComplaintLiteService applicantComplaintLiteService;
+    private final ApplicantComplaintService applicantComplaintService;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
@@ -1481,5 +1489,72 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> UpdateGroupApplicantHousingCamp(@RequestBody GroupApplicantCampDto groupApplicantCamp) {
         log.debug("Update Group Applicant housing camp. {}", groupApplicantCamp);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageHousingService.updateGroupApplicantHousingCamp(groupApplicantCamp)).build());
+    }
+
+    /**
+     * Handles incident/complaint by marking it as resolved or closed and update resolution comment
+     *
+     * @body ApplicantIncidentComplaintVoCRM of the incident/complaint to update
+     * @return the {@link ResponseEntity} with status
+     */
+    @PostMapping("/incident-complaint/handle")
+    public ResponseEntity<WsResponse<?>> handleComplaintByCRM(@RequestBody ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
+        log.debug("Handle incident/complaint CrmTicketNumber {}, smartIDTicketNumber {}", applicantComplaintVo.getCrmTicketNumber(), applicantComplaintVo.getSmartIDTicketNumber());
+
+        if (applicantComplaintVo.getMainType().equals(ETicketMainTypeCRM.Complaint.getId())) {
+            ApplicantComplaintLiteDto complaint = applicantComplaintLiteService.findByCrmTicketNumber(applicantComplaintVo.getCrmTicketNumber());
+
+            if (complaint != null && complaint.getStatusCode().equals(EComplaintStatus.UNDER_PROCESSING.name())) {
+                applicantComplaintService.updateByCrm(complaint.getId(), applicantComplaintVo);
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                        .body(StringUtils.EMPTY).build());
+            } else {
+                log.info("Finished Handle complaint CrmTicketNumber {}, Failure {}", applicantComplaintVo.getCrmTicketNumber(), "COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING");
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                        .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING").build()).build());
+            }
+        } else if (applicantComplaintVo.getMainType().equals(ETicketMainTypeCRM.Incident.getId())){
+            //TODO: Implementation of incident
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                    .body(StringUtils.EMPTY).build());
+        } else {
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(StringUtils.EMPTY).build());
+        }
+    }
+
+    /**
+     * Downloads applicant incident/complaint attachment
+     *
+     * @param attachmentId data request Id
+     * @return WsResponse of  the saved complaint attachment
+     */
+    @GetMapping("/attachment/{mainType}/{attachmentId}")
+    public ResponseEntity<?> downloadAttachment(@PathVariable long attachmentId, @PathVariable int mainType) throws Exception {
+        log.info("Downloading incident/complaint attachment with id# {} ", attachmentId);
+        String attachmentName = null;
+        Resource attachment = null;
+        if (mainType == ETicketMainTypeCRM.Complaint.getId()) {
+            attachment = applicantComplaintService.downloadApplicantComplaintAttachment(attachmentId);
+        } else if (mainType == ETicketMainTypeCRM.Incident.getId()) {
+            attachment = applicantIncidentService.downloadApplicantIncidentAttachment(attachmentId);
+        }
+
+        if (attachment != null) {
+            attachmentName = "img.jpg";
+            if (Objects.requireNonNull(attachment.getDescription()).contains("[")) {
+                attachmentName = attachment.getDescription().split("\\[")[1].replaceAll("]", "");
+            }
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"");
+        } else {
+            log.info("Finished Downloading complaint attachment #{}, Failure {}", attachmentId, "ATTACHMENT_NOT_FOUND");
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .body(WsError.builder().error(WsError.EWsError.ATTACHMENT_NOT_FOUND.getCode()).referenceNumber("ATTACHMENT_NOT_FOUND").build()).build());
+        }
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"")
+                .body(attachment);
     }
 }

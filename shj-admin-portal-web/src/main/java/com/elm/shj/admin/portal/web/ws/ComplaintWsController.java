@@ -169,26 +169,4 @@ public class ComplaintWsController {
                     .body(WsError.builder().error(WsError.EWsError.COMPLAINT_ATTACHMENT_NOT_FOUND.getCode()).referenceNumber("COMPLAINT_ATTACHMENT_NOT_FOUND").build()).build());
         }
     }
-
-    /**
-     * Handles complaint by marking it as resolved or closed and update resolution comment
-     *
-     * @body ApplicantComplaintVoCRM of the complaint to update
-     * @return the {@link ResponseEntity} with status
-     */
-    @PostMapping("/handle")
-    public ResponseEntity<WsResponse<?>> handleComplaintByCRM(@RequestBody ApplicantComplaintVoCRM applicantComplaintVo) throws NotFoundException {
-        log.debug("Handle complaint CrmTicketNumber{}", applicantComplaintVo.getCrmTicketNumber());
-        ApplicantComplaintLiteDto complaint = applicantComplaintLiteService.findByCrmTicketNumber(applicantComplaintVo.getCrmTicketNumber());
-
-        if (complaint != null && complaint.getStatusCode().equals(EComplaintStatus.UNDER_PROCESSING.name())) {
-            applicantComplaintService.updateByCrm(complaint.getId(), applicantComplaintVo);
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                    .body(StringUtils.EMPTY).build());
-        } else {
-            log.info("Finished Handle complaint CrmTicketNumber {}, Failure {}", applicantComplaintVo.getCrmTicketNumber(), "COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING");
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                    .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING").build()).build());
-        }
-    }
 }
