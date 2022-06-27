@@ -191,4 +191,11 @@ public class ComplaintWsController {
                     .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING").build()).build());
         }
     }
+
+    @PostMapping("/applicant/list/{applicantRitualId}")
+    private ResponseEntity<WsResponse<?>> list(@PathVariable long applicantRitualId){
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(applicantComplaintService.findAllByApplicantRitualId(applicantRitualId)).build());
+    }
 }

@@ -15,6 +15,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Repository for applicant complaint table.
@@ -64,5 +65,6 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
     Page<ApplicantComplaintVo> findTop50ByCreationDateLessThanEqualAndStatusCode(@Param("creationDate") Date creationDate, @Param("statusCode") String statusCode, Pageable pageable);
 
 
+    List<JpaApplicantComplaint> findAllByApplicantRitualId(long applicantRitualId);
 
 }
