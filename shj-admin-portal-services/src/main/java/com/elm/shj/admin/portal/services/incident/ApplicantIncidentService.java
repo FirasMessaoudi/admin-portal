@@ -177,6 +177,25 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         }
     }
 
+    /**
+     * Updates applicant complaint
+     *
+     * @param incidentId the ID number of the incident to update
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public void updateByCrm(long incidentId, ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
+
+        if (EIncidentStatus.RESOLVED.getCrmCode().equals(applicantComplaintVo.getStatus())) {
+            applicantIncidentRepository.update(incidentId, applicantComplaintVo.getResolutionComment(), EIncidentStatus.RESOLVED.name());
+            sendIncidentNotification(incidentId, RESOLVE_INCIDENT_TEMPLATE_NAME);
+        } else if (EIncidentStatus.CLOSED.getCrmCode().equals(applicantComplaintVo.getStatus())) {
+            applicantIncidentRepository.update(incidentId, applicantComplaintVo.getResolutionComment(), EIncidentStatus.CLOSED.name());
+            sendIncidentNotification(incidentId, CLOSE_INCIDENT_TEMPLATE_NAME);
+        }
+
+    }
+
+
     private void sendIncidentNotification(long incidentId, String closeIncidentTemplateName) throws NotFoundException {
         Optional<NotificationTemplateDto> notificationTemplate = notificationTemplateService.findEnabledNotificationTemplateByNameCode(closeIncidentTemplateName);
         if (notificationTemplate == null || !notificationTemplate.isPresent()) {

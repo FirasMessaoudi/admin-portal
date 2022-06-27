@@ -125,10 +125,10 @@ public class ApplicantComplaintScheduler {
                 user.setNationalityCode(complaint.getApplicantRitual().getApplicant().getNationalityCode());
 
                 user.setEmail(complaint.getApplicantRitual().getApplicant().getEmail());
-                if (complaint.getApplicantRitual().getApplicant().getLocalMobileNumber() != null)
-                    user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getLocalMobileNumber());
+                if (complaint.getApplicantRitual().getApplicant().getLocalMobileNumber() != null && complaint.getApplicantRitual().getApplicant().getLocalMobileNumber().isEmpty())
+                    user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getCountryCode() + complaint.getApplicantRitual().getApplicant().getLocalMobileNumber());
                 else
-                    user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getIntlMobileNumber());
+                    user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getCountryCode() + complaint.getApplicantRitual().getApplicant().getIntlMobileNumber());
 
 
                 CreateUserCRMDto createUserCRMDto = callCRM(crmCreateUserProfileUrl, HttpMethod.POST, user, accessTokenWsResponse.getToken(),

@@ -20,7 +20,7 @@ import java.util.List;
  * @since 1.1.0
  */
 public interface ApplicantComplaintLiteRepository extends JpaRepository<JpaApplicantComplaintLite, Long>, JpaSpecificationExecutor<JpaApplicantComplaintLite> {
-    JpaApplicantComplaintLite findByCrmTicketNumber(String crmTicketNumber);
+    JpaApplicantComplaintLite findByCrmTicketNumberOrReferenceNumber(String crmTicketNumber, String referenceNumber);
 
     @Query("select substring(j.referenceNumber,5, 8) from JpaApplicantComplaintLite j where j.referenceNumber like :referenceNum% order by substring(j.referenceNumber, 5, 8) desc")
     List<String> fetchReferenceNumByReferenceNumLike(@Param("referenceNum") String referenceNum);

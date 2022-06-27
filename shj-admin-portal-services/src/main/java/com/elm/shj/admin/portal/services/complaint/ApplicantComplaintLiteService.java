@@ -64,8 +64,8 @@ public class ApplicantComplaintLiteService extends GenericService<JpaApplicantCo
     private static final String APPLICANT_COMPLAINTS_CONFIG_PROPERTIES = "applicantComplaintsConfigProperties";
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantComplaintLiteDto findByCrmTicketNumber(String crmTicketNumber) {
-        return getMapper().fromEntity(applicantComplaintLiteRepository.findByCrmTicketNumber(crmTicketNumber), mappingContext);
+    public ApplicantComplaintLiteDto findByCrmTicketNumberOrSmartIDTicketNumber(String crmTicketNumber, String smartIDTicketNumber) {
+        return getMapper().fromEntity(applicantComplaintLiteRepository.findByCrmTicketNumberOrReferenceNumber(crmTicketNumber, smartIDTicketNumber), mappingContext);
     }
     /**
      * {@inheritDoc}
