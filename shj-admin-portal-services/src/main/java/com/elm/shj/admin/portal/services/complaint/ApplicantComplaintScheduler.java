@@ -95,11 +95,9 @@ public class ApplicantComplaintScheduler {
         LockAssert.assertLocked();
         //TODO
         Date date = new Date(System.currentTimeMillis() - 60 * 1000 * complaintPeriodInMinutes);
-        Pageable pageable = PageRequest.of(0, 50,
-                Sort.by(Sort.Direction.DESC, "id"));
-        Page<ApplicantComplaintVo> complaints = applicantComplaintRepository.findTop50ByCreationDateLessThanEqualAndStatusCode(date, EComplaintStatus.UNDER_PROCESSING.name(), pageable);
+        List<ApplicantComplaintVo> complaints = applicantComplaintRepository.findByCreationDateLessThanEqualAndStatusCode(date, EComplaintStatus.UNDER_PROCESSING.name());
 
-        complaints.stream().forEach(complaint -> {
+        complaints.forEach(complaint -> {
             try {
                 CrmAuthResponse accessTokenWsResponse = webClient.post().uri(crmUrl + crmAuthUrl)
                         .body(BodyInserters.fromValue(LoginRequestCRM.builder().username(crmAccessUsername).password(crmAccessPassword).build()))
@@ -127,10 +125,10 @@ public class ApplicantComplaintScheduler {
                 user.setNationalityCode(complaint.getApplicantRitual().getApplicant().getNationalityCode());
 
                 user.setEmail(complaint.getApplicantRitual().getApplicant().getEmail());
-                if (complaint.getApplicantRitual().getApplicant().getLocalMobileNumber() != null)
-                    user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getLocalMobileNumber());
+                if (complaint.getApplicantRitual().getApplicant().getLocalMobileNumber() != null && complaint.getApplicantRitual().getApplicant().getLocalMobileNumber().isEmpty())
+                    user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getCountryCode() + complaint.getApplicantRitual().getApplicant().getLocalMobileNumber());
                 else
-                    user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getIntlMobileNumber());
+                    user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getCountryCode() + complaint.getApplicantRitual().getApplicant().getIntlMobileNumber());
 
 
                 CreateUserCRMDto createUserCRMDto = callCRM(crmCreateUserProfileUrl, HttpMethod.POST, user, accessTokenWsResponse.getToken(),
@@ -150,7 +148,8 @@ public class ApplicantComplaintScheduler {
                 newComplaint.setRegisterDateTime(format.format(complaint.getCreationDate()));
                 newComplaint.setLocationLng(complaint.getLocationLng());
                 newComplaint.setLocationLat(complaint.getLocationLat());
-                newComplaint.setAttachmentId(String.valueOf(complaint.getComplaintAttachment().getId()));
+                if (complaint.getComplaintAttachment() != null && complaint.getComplaintAttachment().getId() > 0)
+                    newComplaint.setAttachmentId(String.valueOf(complaint.getComplaintAttachment().getId()));
                 if (complaint.getCity() != null)
                     newComplaint.setCity(ECity.valueOf(complaint.getCity()).getCrmCode());
                 else

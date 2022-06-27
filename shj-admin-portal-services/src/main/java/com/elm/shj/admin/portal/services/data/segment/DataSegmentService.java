@@ -72,7 +72,7 @@ public class DataSegmentService extends GenericService<JpaDataSegment, DataSegme
     }
 
     public List<DataSegmentDto> findOrganizerSegments() {
-        return mapList(dataSegmentRepository.findSegments(Arrays.asList(11L, 12L, 13L)));
+        return mapList(dataSegmentRepository.findSegments(Arrays.asList(11L, 12L, 13L, 14L)));
     }
 
     public List<DataSegmentDto> findCommandSegments() {

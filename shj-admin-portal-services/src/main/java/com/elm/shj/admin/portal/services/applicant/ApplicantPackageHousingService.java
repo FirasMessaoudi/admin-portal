@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Service handling applicant package housing
@@ -32,6 +30,7 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
     private final ApplicantService applicantService;
     private final ApplicantPackageService applicantPackageService;
     private final PackageHousingService packageHousingService;
+    private final ApplicantPackageHousingBasicService applicantPackageHousingBasicService;
     private static final String GROUP_APPLICANT_CAMP_MULTI= "multi";
 
     public List<ApplicantPackageHousingDto> findApplicantPackageHousingByUinAndApplicantPackageId(long applicantUin, long companyRitualSeasonId) {
@@ -60,14 +59,40 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
         PackageHousingDto menaHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.MENA.name());
         PackageHousingDto arafatHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.ARAFAT.name());
 
-        if (menaHousing == null && arafatHousing == null) {
-            return  false;
+        if (menaHousing == null) {
+            PackageHousingDto packageHousingMena = PackageHousingDto.builder()
+                    .ritualPackage(applicantPackageDto.getRitualPackage())
+                    .housingZone(HousingZoneDto.builder().id(1L).build())
+                    .referenceNumber(updateApplicantHousingCampDto.getMenaCampRefCode())
+                    .typeCode(EHousingType.CAMP.name())
+                    .siteCode(EHousingSite.MENA.name())
+                    .locationNameEn(updateApplicantHousingCampDto.getMenaCampRefCode())
+                    .locationNameAr(updateApplicantHousingCampDto.getMenaCampRefCode())
+                    .validityStart(new GregorianCalendar(2022, Calendar.JULY, 5).getTime())
+                    .validityEnd(new GregorianCalendar(2022, Calendar.JULY, 13).getTime())
+                    .build();
+            menaHousing = packageHousingService.save(packageHousingMena);
+        }
+
+        if (arafatHousing == null) {
+            PackageHousingDto packageHousingMena = PackageHousingDto.builder()
+                    .ritualPackage(applicantPackageDto.getRitualPackage())
+                    .housingZone(HousingZoneDto.builder().id(1L).build())
+                    .referenceNumber(updateApplicantHousingCampDto.getArafatCampRefCode())
+                    .typeCode(EHousingType.CAMP.name())
+                    .siteCode(EHousingSite.ARAFAT.name())
+                    .locationNameEn(updateApplicantHousingCampDto.getArafatCampRefCode())
+                    .locationNameAr(updateApplicantHousingCampDto.getArafatCampRefCode())
+                    .validityStart(new GregorianCalendar(2022, Calendar.JULY, 8).getTime())
+                    .validityEnd(new GregorianCalendar(2022, Calendar.JULY, 8).getTime())
+                    .build();
+            arafatHousing = packageHousingService.save(packageHousingMena);
         }
 
         ApplicantPackageHousingDto applicantPackageHousingMena = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
         ApplicantPackageHousingDto applicantPackageHousingArafat = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
 
-        if (applicantPackageHousingMena != null && applicantPackageHousingArafat != null) {
+        if (applicantPackageHousingMena != null) {
             //update applicant package housing mena information
             applicantPackageHousingMena.setSiteCampRefCode(updateApplicantHousingCampDto.getMenaCampRefCode());
             applicantPackageHousingMena.setSiteBedNumber(updateApplicantHousingCampDto.getMenaBedNumber());
@@ -76,7 +101,21 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
             applicantPackageHousingMena.setSiteRoom(updateApplicantHousingCampDto.getMenaRoom());
             applicantPackageHousingMena.setSiteTent(updateApplicantHousingCampDto.getMenaTent());
             save(applicantPackageHousingMena);
+        }else {
+            ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
+                    .applicantPackageId(applicantPackageDto.getId())
+                    .packageHousingId(menaHousing.getId())
+                    .siteCampRefCode(updateApplicantHousingCampDto.getMenaCampRefCode())
+                    .siteBedNumber(updateApplicantHousingCampDto.getMenaBedNumber())
+                    .siteCorridor(updateApplicantHousingCampDto.getMenaCorridor())
+                    .siteFloor(updateApplicantHousingCampDto.getMenaFloor())
+                    .siteRoom(updateApplicantHousingCampDto.getMenaRoom())
+                    .siteTent(updateApplicantHousingCampDto.getMenaTent())
+                    .build();
+            applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
+        }
 
+        if(applicantPackageHousingArafat != null){
             //update applicant package housing arafat information
             applicantPackageHousingArafat.setSiteCampRefCode(updateApplicantHousingCampDto.getArafatCampRefCode());
             applicantPackageHousingArafat.setSiteBedNumber(updateApplicantHousingCampDto.getArafatBedNumber());
@@ -86,6 +125,18 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
             applicantPackageHousingArafat.setSiteTent(updateApplicantHousingCampDto.getArafatTent());
             save(applicantPackageHousingArafat);
             return true;
+        } else {
+            ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
+                    .applicantPackageId(applicantPackageDto.getId())
+                    .packageHousingId(arafatHousing.getId())
+                    .siteCampRefCode(updateApplicantHousingCampDto.getArafatCampRefCode())
+                    .siteBedNumber(updateApplicantHousingCampDto.getArafatBedNumber())
+                    .siteCorridor(updateApplicantHousingCampDto.getArafatCorridor())
+                    .siteFloor(updateApplicantHousingCampDto.getArafatFloor())
+                    .siteRoom(updateApplicantHousingCampDto.getArafatRoom())
+                    .siteTent(updateApplicantHousingCampDto.getArafatTent())
+                    .build();
+            applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
         }
 
         return false;
@@ -110,7 +161,7 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
         ApplicantPackageHousingDto applicantPackageHousingMena = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
         ApplicantPackageHousingDto applicantPackageHousingArafat = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
 
-        if (applicantPackageHousingMena != null && applicantPackageHousingArafat != null) {
+        if (applicantPackageHousingMena != null) {
             //set applicant package housing mena information
             applicantCampDetail.setMenaCampRefCode(applicantPackageHousingMena.getSiteCampRefCode());
             applicantCampDetail.setMenaCorridor(applicantPackageHousingMena.getSiteCorridor());
@@ -119,6 +170,9 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
             applicantCampDetail.setMenaBedNumber(applicantPackageHousingMena.getSiteBedNumber());
             applicantCampDetail.setMenaRoom(applicantPackageHousingMena.getSiteRoom());
 
+        }
+
+        if(applicantPackageHousingArafat != null){
             //set applicant package housing arafat information
             applicantCampDetail.setArafatCampRefCode(applicantPackageHousingArafat.getSiteCampRefCode());
             applicantCampDetail.setArafatCorridor(applicantPackageHousingArafat.getSiteCorridor());
@@ -192,17 +246,62 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
             PackageHousingDto menaHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.MENA.name());
             PackageHousingDto arafatHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.ARAFAT.name());
 
-            if (menaHousing != null) {
-                ApplicantPackageHousingDto applicantPackageHousingMena = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
-                applicantPackageHousingMena.setSiteCampRefCode(groupApplicantCamp.getMenaCampRefNumber());
-                save(applicantPackageHousingMena);
+            if (menaHousing == null) {
+                PackageHousingDto packageHousingMena = PackageHousingDto.builder()
+                        .ritualPackage(applicantPackageDto.getRitualPackage())
+                        .housingZone(HousingZoneDto.builder().id(1L).build())
+                        .referenceNumber(groupApplicantCamp.getMenaCampRefNumber())
+                        .typeCode(EHousingType.CAMP.name())
+                        .siteCode(EHousingSite.MENA.name())
+                        .locationNameEn(groupApplicantCamp.getMenaCampRefNumber())
+                        .locationNameAr(groupApplicantCamp.getMenaCampRefNumber())
+                        .validityStart(new GregorianCalendar(2022, Calendar.JULY, 5).getTime())
+                        .validityEnd(new GregorianCalendar(2022, Calendar.JULY, 13).getTime())
+                        .build();
+                menaHousing = packageHousingService.save(packageHousingMena);
             }
 
-            if (arafatHousing != null) {
-                ApplicantPackageHousingDto applicantPackageHousingArafat = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
+            if (arafatHousing == null) {
+                PackageHousingDto packageHousingMena = PackageHousingDto.builder()
+                        .ritualPackage(applicantPackageDto.getRitualPackage())
+                        .housingZone(HousingZoneDto.builder().id(1L).build())
+                        .referenceNumber(groupApplicantCamp.getArafatCampRefNumber())
+                        .typeCode(EHousingType.CAMP.name())
+                        .siteCode(EHousingSite.ARAFAT.name())
+                        .locationNameEn(groupApplicantCamp.getArafatCampRefNumber())
+                        .locationNameAr(groupApplicantCamp.getArafatCampRefNumber())
+                        .validityStart(new GregorianCalendar(2022, Calendar.JULY, 8).getTime())
+                        .validityEnd(new GregorianCalendar(2022, Calendar.JULY, 8).getTime())
+                        .build();
+                arafatHousing = packageHousingService.save(packageHousingMena);
+            }
+
+            ApplicantPackageHousingDto applicantPackageHousingMena = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
+            if (applicantPackageHousingMena != null) {
+                applicantPackageHousingMena.setSiteCampRefCode(groupApplicantCamp.getMenaCampRefNumber());
+                save(applicantPackageHousingMena);
+            } else {
+                ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
+                        .applicantPackageId(applicantPackageDto.getId())
+                        .packageHousingId(menaHousing.getId())
+                        .siteCampRefCode(groupApplicantCamp.getMenaCampRefNumber())
+                        .build();
+                applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
+            }
+
+            ApplicantPackageHousingDto applicantPackageHousingArafat = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
+            if (applicantPackageHousingArafat != null) {
                 applicantPackageHousingArafat.setSiteCampRefCode(groupApplicantCamp.getArafatCampRefNumber());
                 save(applicantPackageHousingArafat);
+            } else {
+                ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
+                        .applicantPackageId(applicantPackageDto.getId())
+                        .packageHousingId(arafatHousing.getId())
+                        .siteCampRefCode(groupApplicantCamp.getArafatCampRefNumber())
+                        .build();
+                applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
             }
+
         });
 
         return true;
