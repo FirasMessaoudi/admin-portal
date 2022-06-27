@@ -60,17 +60,6 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         }
     }
 
-    public RitualPackageDto findByGroupLeaderDigitalId(String digitalId) {
-        log.info("RitualPackageService ::: Start findByGroupLeaderDigitalId ::: digitalId: {}", digitalId);
-        Optional<JpaRitualPackage> ritualPackage = ritualPackageRepository.findByCompanyRitualSeasonCompanyStaffCardsCompanyStaffDigitalIdSuin(digitalId);
-        if (ritualPackage.isPresent()) {
-            log.info("RitualPackageService ::: Finish findByGroupLeaderDigitalId ::: startDate: {}, endDate: {}", ritualPackage.get().getStartDate(), ritualPackage.get().getEndDate());
-            return getMapper().fromEntity(ritualPackage.get(), mappingContext);
-        }
-        log.info("RitualPackageService ::: Finish findByGroupLeaderDigitalId ::: not found and return null");
-        return null;
-    }
-
     public String findPackageReferenceNumber(String companyCode, String typeCode, int year) {
         log.info("RitualPackageService ::: Start findReferenceNumberByTypeCode ::: typeCode: {}", typeCode);
         return ritualPackageRepository.findReferenceNumberByRitualSeason(companyCode, typeCode, year);

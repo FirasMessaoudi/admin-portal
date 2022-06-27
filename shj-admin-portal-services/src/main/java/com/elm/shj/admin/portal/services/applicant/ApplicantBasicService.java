@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 /**
  * Service handling lightweight version of applicant
  *
@@ -44,6 +46,18 @@ public class ApplicantBasicService extends GenericService<JpaApplicantBasic, App
         Long applicantId = applicantBasicRepository.findIdByBasicInfo(idNumber, passportNumber, nationalityCode);
         log.info("Finish findIdByBasicInfo and found {} applicant id.", applicantId);
         return applicantId;
+    }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public ApplicantBasicDto findByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
+        log.info("Start findByBasicInfo for {} id number, {} passport number, {} nationality code.", idNumber, passportNumber, nationalityCode);
+        Optional<JpaApplicantBasic> applicantBasic = applicantBasicRepository.findByBasicInfo(idNumber, passportNumber, nationalityCode);
+        if (applicantBasic.isPresent()) {
+            log.info("Finish findByBasicInfo and found {} applicant id.", applicantBasic.get().getId());
+            return getMapper().fromEntity(applicantBasic.get(), mappingContext);
+        }
+        log.info("Finish findByBasicInfo for {} id number, {} passport number, {} nationality code and no applicant found.", idNumber, passportNumber, nationalityCode);
+        return null;
     }
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)

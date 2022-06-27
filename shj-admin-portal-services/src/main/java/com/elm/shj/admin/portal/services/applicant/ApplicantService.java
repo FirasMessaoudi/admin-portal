@@ -80,6 +80,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return idByBasicInfo;
     }
 
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public Long findIdByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
         log.info("ApplicantService ::: Start findByBasicInfo :::");
         Long idByBasicInfo = applicantRepository.findIdByBasicInfo(idNumber, passportNumber, nationalityCode);
@@ -100,12 +101,6 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         log.info("ApplicantService ::: Finish existsByBasicInfo ::: isExists: {}", exists);
         return exists;
     }
-
-    public boolean findApplicantStatus(Long id) {
-        log.info("ApplicantService ::: Start findApplicantStatus ::: id: {}", id);
-        return applicantRepository.findApplicantStatusById(id);
-    }
-
 
     /**
      * Finds an applicant by his uin
