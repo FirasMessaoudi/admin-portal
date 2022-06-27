@@ -74,16 +74,27 @@ public class ApplicantController {
 
     @GetMapping("/badge/generate/{applicantUin}/{withQr}")
     public BadgeVO findApplicantBadge(@PathVariable String applicantUin, @PathVariable boolean withQr) {
-        return badgeService.generateApplicantBadge(applicantUin, withQr);
+        return badgeService.generateApplicantBadge(applicantUin);
 
     }
 
     @GetMapping("/badge/applicant/frontback/{applicantUin}")
     public List<BadgeVO> findApplicantBadgeFrontAndBack(@PathVariable String applicantUin) {
         List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateApplicantBadge(applicantUin, false));
+        badges.add(badgeService.generateApplicantBadge(applicantUin));
         badges.add(badgeService.generateBackBadge(applicantUin));
         return badges;
+    }
+
+    @GetMapping("/applicant/all/{applicantUin}")
+    public List<BadgeVO> findApplicantFullBadgeFrontAndBack(@PathVariable String applicantUin) {
+        List<BadgeVO> badges = new ArrayList<>();
+        badges.add(badgeService.generateApplicantBadge(applicantUin));
+        badges.add(badgeService.generateBackBadge(applicantUin));
+        badges.add(badgeService.generatePrePrintedApplicantBadge(applicantUin));
+        badges.add(badgeService.generatePrePrintedBackBadge(applicantUin));
+        return badges;
+
     }
 
 }

@@ -93,7 +93,18 @@ export class PrintCardComponent implements OnInit {
   }
   printImageOnPrintedDesign(content) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      this.printCard();
+      this.applicantService.getApplicantFullBadge(this.cardNumber).subscribe(
+        result=>
+        {
+          if(result && result.length>0 && result.length==4)
+          {            
+            this.base64ImageFrontPrinter =  result[2].badgeImage;
+            this.base64ImageBackPrinter =  result[3].badgeImage;
+            this.printCard();
+          }
+
+        });
+      
     }, (reason) => {
       console.log("D");
     });
@@ -103,7 +114,7 @@ export class PrintCardComponent implements OnInit {
   {
     const headers = { 'content-type': 'application/json'}; 
       this.printDetails = { 
-        sessionId:this.cardNumber,
+        sessionId:`${this.cardNumber}${Math.random()}${Math.random()}${Math.random()}`,
         imageBase64String:this.base64ImageFrontPrinter,
         backImageBase64String:this.base64ImageBackPrinter,
         isDualSide:true

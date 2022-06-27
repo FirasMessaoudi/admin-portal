@@ -20,6 +20,11 @@ export class ApplicantService {
     return this.http.get<any>(`/core/api/applicants/badge/applicant/frontback/${cardNumber}`,{ 'headers': headers });
   }
 
+  getApplicantFullBadge(cardNumber:String): Observable<any> { 
+    const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
+    return this.http.get<any>(`/core/api/applicants/applicant/all/${cardNumber}`,{ 'headers': headers });
+  }
+
   findByIds(ids, pageNumber: any): Observable<any> {
     let params = new HttpParams().set('page', pageNumber);
     if (ids.length > 0) {
