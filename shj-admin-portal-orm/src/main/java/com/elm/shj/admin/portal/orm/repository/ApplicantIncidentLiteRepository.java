@@ -18,6 +18,8 @@ import java.util.List;
  * @since 1.1.0
  */
 public interface ApplicantIncidentLiteRepository extends JpaRepository<JpaApplicantIncidentLite, Long>, JpaSpecificationExecutor<JpaApplicantIncidentLite> {
+
+    JpaApplicantIncidentLite findByCrmTicketNumberOrReferenceNumber(String crmTicketNumber, String referenceNumber);
     List<JpaApplicantIncidentLite> findByApplicantRitualId(long applicantRitualId);
 
     @Query("select substring(j.referenceNumber,5, 8) from JpaApplicantIncidentLite j where j.referenceNumber like :referenceNum% order by substring(j.referenceNumber, 5, 8) desc")

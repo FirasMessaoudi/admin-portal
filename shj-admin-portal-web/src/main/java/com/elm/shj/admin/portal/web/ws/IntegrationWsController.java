@@ -17,6 +17,7 @@ import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.incident.ApplicantIncidentLiteService;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.otp.OtpService;
@@ -118,6 +119,7 @@ public class IntegrationWsController {
     private final LanguageLookupService languageLookupService;
     private final PackageHousingService packageHousingService;
     private final ApplicantIncidentService applicantIncidentService;
+    private final ApplicantIncidentLiteService applicantIncidentLiteService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
     private final ComplaintStatusLookupService complaintStatusLookupService;
@@ -1498,11 +1500,11 @@ public class IntegrationWsController {
      * @return the {@link ResponseEntity} with status
      */
     @PostMapping("/incident-complaint/handle")
-    public ResponseEntity<WsResponse<?>> handleComplaintByCRM(@RequestBody ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
+    public ResponseEntity<WsResponse<?>> handleIncidentComplaintByCRM(@RequestBody ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
         log.debug("Handle incident/complaint CrmTicketNumber {}, smartIDTicketNumber {}", applicantComplaintVo.getCrmTicketNumber(), applicantComplaintVo.getSmartIDTicketNumber());
 
         if (applicantComplaintVo.getMainType().equals(ETicketMainTypeCRM.Complaint.getId())) {
-            ApplicantComplaintLiteDto complaint = applicantComplaintLiteService.findByCrmTicketNumber(applicantComplaintVo.getCrmTicketNumber());
+            ApplicantComplaintLiteDto complaint = applicantComplaintLiteService.findByCrmTicketNumberOrSmartIDTicketNumber(applicantComplaintVo.getCrmTicketNumber(), applicantComplaintVo.getSmartIDTicketNumber());
 
             if (complaint != null && complaint.getStatusCode().equals(EComplaintStatus.UNDER_PROCESSING.name())) {
                 applicantComplaintService.updateByCrm(complaint.getId(), applicantComplaintVo);
@@ -1514,9 +1516,16 @@ public class IntegrationWsController {
                         .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING").build()).build());
             }
         } else if (applicantComplaintVo.getMainType().equals(ETicketMainTypeCRM.Incident.getId())){
-            //TODO: Implementation of incident
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                    .body(StringUtils.EMPTY).build());
+            ApplicantIncidentLiteDto incident = applicantIncidentLiteService.findByCrmTicketNumberOrSmartIDTicketNumber(applicantComplaintVo.getCrmTicketNumber(), applicantComplaintVo.getSmartIDTicketNumber());
+            if (incident != null && incident.getStatusCode().equals(EComplaintStatus.UNDER_PROCESSING.name())) {
+                applicantIncidentService.updateByCrm(incident.getId(), applicantComplaintVo);
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                        .body(StringUtils.EMPTY).build());
+            } else {
+                log.info("Finished Handle complaint CrmTicketNumber {}, Failure {}", applicantComplaintVo.getCrmTicketNumber(), "COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING");
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                        .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING").build()).build());
+            }
         } else {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(StringUtils.EMPTY).build());
