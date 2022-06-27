@@ -17,7 +17,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-public class ApplicantComplaintVoCRM implements Serializable {
+public class ApplicantIncidentComplaintVoCRM implements Serializable {
 
     private static final long serialVersionUID = 6800775521807599452L;
 
@@ -30,4 +30,7 @@ public class ApplicantComplaintVoCRM implements Serializable {
     private String crmTicketNumber;
     @JsonProperty("SmartIDTicketNumber")
     private String smartIDTicketNumber;
+
+    @JsonProperty("MainType")
+    private Integer mainType;// 1: Incident, 2: Complaint
 }
