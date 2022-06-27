@@ -26,7 +26,6 @@ public class ComplaintAttachmentLiteDto implements Serializable {
 
     private long id;
     private String filePath;
-    @JsonBackReference(value = "applicantComplaintLite")
-    private ApplicantComplaintLiteDto applicantComplaintLite;
+    private long applicantComplaintId;
     private Date creationDate;
 }

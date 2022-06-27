@@ -26,8 +26,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class JpaApplicantContactBasic implements Serializable {
 
-
     private static final long serialVersionUID = 6321914982318336030L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)

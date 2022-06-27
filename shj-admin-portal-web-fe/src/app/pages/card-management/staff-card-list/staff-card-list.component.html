@@ -21,6 +21,19 @@
       <form [formGroup]="searchForm" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
 
         <div class="form-group col">
+          <label class="col-form-label">{{ "general.nin" | translate }}</label>
+          <input type="number" formControlName="idNumber" class="form-control"
+                 onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57 && this.value.length<=9"
+                 min="0" step="1"/>
+
+        </div>
+
+        <div class="form-group col">
+          <label class="col-form-label">{{ "card-management.passport_number" | translate }}</label>
+          <input type="text" formControlName="passportNumber" class="form-control" maxlength="50"/>
+        </div>
+
+        <div class="form-group col">
           <label class="col-form-label">{{ "card-management.ritual_season" | translate }}</label>
           <select formControlName="ritualSeason" class="custom-select">
             <option [ngValue]="null" selected>{{"general.select_option" | translate}}</option>

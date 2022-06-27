@@ -55,6 +55,7 @@ public class ApplicantBasicDto implements Serializable {
     private String biometricDataFinger;
     private String biometricDataFace;
     private String educationLevelCode;
+    private boolean registered;
     private Date updateDate;
     private Date creationDate;
 

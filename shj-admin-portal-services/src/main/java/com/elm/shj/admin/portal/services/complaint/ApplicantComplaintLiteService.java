@@ -47,6 +47,7 @@ import java.util.stream.Stream;
 public class ApplicantComplaintLiteService extends GenericService<JpaApplicantComplaintLite, ApplicantComplaintLiteDto, Long> {
 
     private final ApplicantComplaintLiteRepository applicantComplaintLiteRepository;
+    private final ComplaintAttachmentLiteService complaintAttachmentLiteService;
 
     @Value("${incident.file.allowed.extensions}")
     private String allowedFileExtensions;
@@ -109,6 +110,7 @@ public class ApplicantComplaintLiteService extends GenericService<JpaApplicantCo
             }
         }
 
+        ComplaintAttachmentLiteDto complaintAttachmentDto = null;
         // upload the file in the SFTP
         try {
             if (attachment != null && !attachment.isEmpty() && attachment.getSize() > 0) {
@@ -116,12 +118,8 @@ public class ApplicantComplaintLiteService extends GenericService<JpaApplicantCo
 
                 Path p = Paths.get(attachment.getOriginalFilename());
                 String sftpPath = sftpService.generateSftpFilePath(p.getFileName().toString(), referenceNumber, false);
-                List<ComplaintAttachmentLiteDto> complaintAttachmentList = new ArrayList<>();
-                ComplaintAttachmentLiteDto complaintAttachmentDto = new ComplaintAttachmentLiteDto();
+                complaintAttachmentDto = new ComplaintAttachmentLiteDto();
                 complaintAttachmentDto.setFilePath(sftpPath);
-                complaintAttachmentDto.setApplicantComplaintLite(applicantComplaintLiteDto);
-                complaintAttachmentList.add(complaintAttachmentDto);
-                applicantComplaintLiteDto.setComplaintAttachments(complaintAttachmentList);
                 sftpService.uploadFile(sftpPath, attachment.getInputStream(), APPLICANT_COMPLAINTS_CONFIG_PROPERTIES);
                 log.info("file uploaded successfully to: {}", sftpPath);
             }
@@ -134,7 +132,11 @@ public class ApplicantComplaintLiteService extends GenericService<JpaApplicantCo
             throw new IllegalArgumentException("Unable to upload file to SFTP");
         }
         // persist the request
-        ApplicantComplaintLiteDto createdApplicantComplaint = super.save(applicantComplaintLiteDto);
+        ApplicantComplaintLiteDto createdApplicantComplaint = save(applicantComplaintLiteDto);
+        if (complaintAttachmentDto != null){
+            complaintAttachmentDto.setApplicantComplaintId(createdApplicantComplaint.getId());
+            createdApplicantComplaint.setComplaintAttachment(complaintAttachmentLiteService.save(complaintAttachmentDto));
+        }
         log.info("applicant complaint created successfully with id# {}", createdApplicantComplaint.getId());
         // return the persisted object
         return createdApplicantComplaint;
@@ -161,6 +163,10 @@ public class ApplicantComplaintLiteService extends GenericService<JpaApplicantCo
         long nextSequence = CollectionUtils.isEmpty(threadLocalLatestSerialList.get()) ? 1 : Long.parseLong(threadLocalLatestSerialList.get().get(0)) + 1;
         String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 8, "0");
         return referenceNumPrefix+ serialDigits  ;
+    }
+
+    public ApplicantComplaintLiteDto save(ApplicantComplaintLiteDto dto){
+        return getMapper().fromEntity(getRepository().save(getMapper().toEntity(dto, mappingContext)), mappingContext);
     }
 
 }

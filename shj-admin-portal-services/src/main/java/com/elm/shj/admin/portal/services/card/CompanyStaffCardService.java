@@ -89,6 +89,20 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
             List<Predicate> predicates = new ArrayList<>();
             Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = root.join("companyRitualSeason");
             Join<JpaCompanyRitualSeason, JpaRitualSeason> ritualSeason = companyRitualSeason.join("ritualSeason");
+            Join<JpaCompanyStaffCard, JpaCompanyStaffDigitalId> companyStaffDigitalId = root.join("companyStaffDigitalId");
+
+            predicates.add(criteriaBuilder.notEqual(root.get("statusCode"), ECardStatus.EXPIRED.name()));
+            predicates.add(criteriaBuilder.notEqual(root.get("statusCode"), ECardStatus.REISSUED.name()));
+
+
+            if (criteria.getIdNumber() != null) {
+                predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("idNumber"), criteria.getIdNumber()));
+            }
+
+            if (criteria.getPassportNumber() != null) {
+                predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("passportNumber"), criteria.getPassportNumber()));
+            }
+
             if (criteria.getRitualType() != null) {
                 Path<String> ritualTypeCode = ritualSeason.get("ritualTypeCode");
                 predicates.add(criteriaBuilder.equal(ritualTypeCode, criteria.getRitualType()));
@@ -106,7 +120,6 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
             }
 
             if (criteria.getJobTitle() != null) {
-                Join<JpaCompanyStaffCard, JpaCompanyStaffDigitalId> companyStaffDigitalId = root.join("companyStaffDigitalId");
                 predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("titleCode"), criteria.getJobTitle()));
             }
 
@@ -115,7 +128,6 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
             }
 
             if (criteria.getSuin() != null && !criteria.getSuin().equals("")) {
-                Join<JpaCompanyStaffCard, JpaCompanyStaffDigitalId> companyStaffDigitalId = root.join("companyStaffDigitalId");
                 predicates.add(criteriaBuilder.equal(companyStaffDigitalId.get("suin"), criteria.getSuin()));
             }
 
