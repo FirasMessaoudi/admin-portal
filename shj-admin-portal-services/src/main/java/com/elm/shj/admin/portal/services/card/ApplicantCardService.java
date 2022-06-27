@@ -242,8 +242,10 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
 
                 List<CompanyRitualStepDto> companyRitualSteps = companyRitualStepService.findCompanyRitualStepsByApplicantUin(uin);
                 applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
-                List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId());
-                applicantCardDto.setGroupLeaders(groupLeaders);
+                Optional<CompanyStaffDto> groupLeader = companyStaffService.findGroupLeaderByApplicantUin(uin, applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId());
+                if (groupLeader.isPresent()) {
+                    applicantCardDto.setGroupLeaders(Collections.singletonList(groupLeader.get()));
+                }
             }
         }
         return applicantCardDto;
