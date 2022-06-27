@@ -492,8 +492,8 @@ public class ValidationService {
     }
 
     private void saveApplicantsMainData(HuicApplicantMainData huicApplicantMainData, List<ErrorResponse> errorResponses, int rowNumber) {
-        log.info("Start saveApplicantsMainData for {} id number, {} passport number, {} nationality, {} package ref number.",
-                huicApplicantMainData.getIdNumber(), huicApplicantMainData.getPassportNo(), huicApplicantMainData.getNationality(), huicApplicantMainData.getPackageRefNumber());
+        log.info("Start saveApplicantsMainData for {} id number, {} passport number, {} nationality, {} package ref number, {} status.",
+                huicApplicantMainData.getIdNumber(), huicApplicantMainData.getPassportNo(), huicApplicantMainData.getNationality(), huicApplicantMainData.getPackageRefNumber(), huicApplicantMainData.getStatus());
         ApplicantBasicDto applicant = ApplicantBasicDto.builder()
                 .gender(EGenderCode.fromId(huicApplicantMainData.getGender()).name())
                 .nationalityCode(huicApplicantMainData.getNationality().toString())
@@ -529,36 +529,41 @@ public class ValidationService {
                 .build();
 
         applicant.setContacts(Collections.singletonList(applicantContactDto));
+        applicantContactDto.setApplicant(applicant);
         updateApplicantLiteBirthDate(applicant);
 
-        Long existingApplicantId = applicantService.findIdByBasicInfo(applicant.getIdNumber(), applicant.getPassportNumber(), applicant.getNationalityCode());
+        ApplicantBasicDto existingApplicantBasic = applicantBasicService.findByBasicInfo(applicant.getIdNumber(), applicant.getPassportNumber(), applicant.getNationalityCode());
 
         // if record exists already in DB we need to update it
-        if (existingApplicantId != null) {
-            if (huicApplicantMainData.getStatus() == 2) { // update
-                boolean isRegistered = applicantService.findApplicantStatus(existingApplicantId);
-                if (!isRegistered) {
-                    updateExistingApplicantLite(applicant, existingApplicantId);
-                } else {
-                    // if applicant is registered raise an error : cannot update
-                    ErrorResponse errorResponse = new ErrorResponse();
-                    errorResponse.setRowNumber(rowNumber + 1);
-                    errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30001", "This applicant is already registered and cannot be updated"));
-                    errorResponses.add(errorResponse);
-                    return;
-                }
-            } else if (huicApplicantMainData.getStatus() == 3) { //delete
-                updateExistingApplicantLite(applicant, existingApplicantId);
-                applicant.setDeleted(true);
-            } else { //invalid
+        if (existingApplicantBasic != null) {
+            if (huicApplicantMainData.getStatus() != 2 && huicApplicantMainData.getStatus() != 3) { //invalid status value
                 ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.setRowNumber(rowNumber + 1);
                 errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30001", "Please enter a valid value. Same value cannot be repeated within the previous registered records"));
                 errorResponses.add(errorResponse);
                 return;
             }
-        } else {
-            if (huicApplicantMainData.getStatus() == 2 || huicApplicantMainData.getStatus() == 3) {
+
+            if (huicApplicantMainData.getStatus() == 2 && existingApplicantBasic.isRegistered()) { //registered cannot be updated
+                log.info("applicant with {} id is already registered.", existingApplicantBasic.getId());
+                // if applicant is registered raise an error : cannot update
+                ErrorResponse errorResponse = new ErrorResponse();
+                errorResponse.setRowNumber(rowNumber + 1);
+                errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30001", "This applicant is already registered and cannot be updated"));
+                errorResponses.add(errorResponse);
+                return;
+            }
+
+            applicantContactDto.setId(existingApplicantBasic.getContacts().get(0).getId());
+            applicant.setId(existingApplicantBasic.getId());
+            applicant.setUpdateDate(new Date());
+
+            if (huicApplicantMainData.getStatus() == 3) { //delete
+                applicant.setDeleted(true);
+                applicant.setRegistered(false);
+            }
+        } else { // status have to be 1 (add new) or return error
+            if (huicApplicantMainData.getStatus() != 1) {
                 ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.setRowNumber(rowNumber + 1);
                 errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30002", "No main record found for the input data to update the related sub record"));
@@ -568,7 +573,6 @@ public class ValidationService {
         }
 
         //TODO: unify this for both data upload and huic
-        addApplicantLiteToContact(applicant);
         if (applicant.getPackageReferenceNumber() == null) {
             String referenceNumber;
             //if establishment id not null link applicant with default package of that establishment
@@ -577,24 +581,21 @@ public class ValidationService {
             }
             //if establishment is null
             else {
-                // if ritual type is courtesy
-                // link applicant with flyness package
+                // if ritual type is courtesy link applicant with flynass package
                 if (huicApplicantMainData.getRitualTypeCode() == 3) {
                     referenceNumber = ritualPackageService.findPackageReferenceNumber("9_ESTABLISHMENT", ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
                     applicant.setEstablishmentRefCode(9);
                 } else {
-                    //if ritual type not courtesy
-                    //link applicant with default establishment package
+                    //if ritual type not courtesy link applicant with default establishment package
                     referenceNumber = ritualPackageService.findPackageReferenceNumber("10_ESTABLISHMENT", ERitualType.fromId(huicApplicantMainData.getRitualTypeCode()).name(), huicApplicantMainData.getSeasonYear());
                     applicant.setEstablishmentRefCode(10);
-
                 }
             }
             applicant.setPackageReferenceNumber(referenceNumber);
         }
         applicantBasicService.save(applicant);
-        log.info("Finish saveApplicantsMainData for {} id number, {} passport number, {} nationality, {} package ref number. ",
-                huicApplicantMainData.getIdNumber(), huicApplicantMainData.getPassportNo(), huicApplicantMainData.getNationality(), huicApplicantMainData.getPackageRefNumber());
+        log.info("Finish saveApplicantsMainData for {} id number, {} passport number, {} nationality, {} package ref number, {} status.",
+                huicApplicantMainData.getIdNumber(), huicApplicantMainData.getPassportNo(), huicApplicantMainData.getNationality(), huicApplicantMainData.getPackageRefNumber(), huicApplicantMainData.getStatus());
     }
 
     private void saveApplicantRitual(HuicApplicantRitual huicApplicantRitual) {
@@ -694,17 +695,6 @@ public class ValidationService {
         }
     }
 
-    public void updateExistingApplicantLite(ApplicantBasicDto applicant, long existingApplicantId) {
-        List<ApplicantContactDto> applicantContactDtos = applicantContactService.findByApplicantId(existingApplicantId);
-        if (!applicantContactDtos.isEmpty()) {
-            if (!applicant.getContacts().isEmpty()) {
-                applicant.getContacts().get(0).setId(applicantContactDtos.get(0).getId());
-            }
-        }
-        applicant.setId(existingApplicantId);
-        applicant.setUpdateDate(new Date());
-    }
-
     public void updateExistingApplicant(ApplicantDto applicant, long existingApplicantId) {
         List<ApplicantRitualDto> applicantRituals = applicantRitualService.findAllByApplicantId(existingApplicantId);
         List<ApplicantContactDto> applicantContactDtos = applicantContactService.findByApplicantId(existingApplicantId);
@@ -738,14 +728,6 @@ public class ValidationService {
     }
 
     public void addApplicantToContact(ApplicantDto applicant) {
-        if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
-            applicant.getContacts().forEach(ac -> {
-                ac.setApplicant(applicant);
-            });
-        }
-    }
-
-    public void addApplicantLiteToContact(ApplicantBasicDto applicant) {
         if (CollectionUtils.isNotEmpty(applicant.getContacts())) {
             applicant.getContacts().forEach(ac -> {
                 ac.setApplicant(applicant);

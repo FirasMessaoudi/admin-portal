@@ -33,7 +33,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -236,5 +238,14 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
         }
         return webClient.method(httpMethod).uri(crmUrl + serviceRelativeUrl).headers(header -> header.setBearerAuth(accessTokenWsResponse.getToken()))
                 .body(BodyInserters.fromValue(bodyToSend)).retrieve().bodyToMono(responseTypeReference).block();
+    }
+
+    public List<ApplicantComplaintDto> findAllByApplicantRitualId(long applicantRitualId) {
+        List<JpaApplicantComplaint> allByApplicantRitualId = applicantComplaintRepository.findAllByApplicantRitualId(applicantRitualId);
+        if(allByApplicantRitualId == null){
+            return new ArrayList<>();
+        }
+        List<ApplicantComplaintDto> applicantComplaintDtos = getMapper().fromEntityList(allByApplicantRitualId, mappingContext);
+        return applicantComplaintDtos;
     }
 }
