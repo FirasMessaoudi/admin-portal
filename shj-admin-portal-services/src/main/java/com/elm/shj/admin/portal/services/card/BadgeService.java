@@ -118,7 +118,7 @@ public class BadgeService {
         String nationalityAr = arabicCountryLookup == null ? "" : arabicCountryLookup.getLabel();
         NationalityLookupDto englishCountryLookup = mainLangCountryLookupList.stream().filter(countryLookup -> countryLookup.getLang().equals("en")).findFirst().orElse(null);
         String nationalityEn = englishCountryLookup == null ? "" : englishCountryLookup.getLabel();
-        BufferedImage badgeImage = new BufferedImage(BADGE_WIDTH, BADGE_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
+        BufferedImage badgeImage = new BufferedImage(BADGE_WIDTH, BADGE_HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = badgeImage.createGraphics();
 
         g2d.setColor(new Color(0xFFF7F7F7));
