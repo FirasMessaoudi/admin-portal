@@ -739,7 +739,7 @@ public class BadgeService {
 
         FontMetrics fm = g2d.getFontMetrics(font);
         FontRenderContext frc = g2d.getFontRenderContext();
-        int xDif = (BADGE_WIDTH - fm.stringWidth(labelAr) - 60);
+        int xDif = (BADGE_WIDTH - fm.stringWidth(labelAr) - 120);
         int yDif = rectYApplicant + 70;
         TextLayout layout = new TextLayout(labelAr, font, frc);
         layout.draw(g2d, xDif, yDif);
