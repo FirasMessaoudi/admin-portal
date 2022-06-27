@@ -62,8 +62,7 @@ export class PrintCardComponent implements OnInit {
           this.base64ImageFront=`data:image/bmp;base64,${result[0].badgeImage}`;
           this.base64ImageFrontPrinter = result[0].badgeImage;
 
-        }
-        
+        }       
         
         if(result[1])
         {
