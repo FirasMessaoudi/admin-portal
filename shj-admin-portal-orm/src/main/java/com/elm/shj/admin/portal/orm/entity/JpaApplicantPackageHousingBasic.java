@@ -1,0 +1,84 @@
+/*
+ *  Copyright (c) 2022 ELM. All rights reserved.
+ */
+package com.elm.shj.admin.portal.orm.entity;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * the persistent class for the shc_applicant_package_housing table
+ *
+ * @author rameez imtiaz
+ * @since 1.2.0
+ */
+@Entity
+@Table(name = "shc_applicant_package_housing")
+@NamedQuery(name = "JpaApplicantPackageHousingBasic.findAll", query = "SELECT j FROM JpaApplicantPackageHousingBasic j")
+@Getter
+@Setter
+@NoArgsConstructor
+public class JpaApplicantPackageHousingBasic implements Serializable {
+
+    private static final long serialVersionUID = 4952018589817964421L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(unique = true, nullable = false)
+    private long id;
+
+    @Column(name = "room_number")
+    private String roomNumber;
+
+    @Column(name = "bed_number")
+    private String bedNumber;
+
+    @Column(name = "camp_info")
+    private String campInfo;
+
+    @Column(name = "creation_date", nullable = false, updatable = false)
+    private Date creationDate;
+
+    @Column(name = "update_date")
+    private Date updateDate;
+
+    @Column(name = "applicant_package_id")
+    private Long applicantPackageId;
+
+    @Column(name = "package_housing_id")
+    private Long packageHousingId;
+
+    @Column(name = "site_camp_ref_code")
+    private String siteCampRefCode;
+
+    @Column(name = "site_tent")
+    private String siteTent;
+
+    @Column(name = "site_floor")
+    private String siteFloor;
+
+    @Column(name = "site_corridor")
+    private String siteCorridor;
+
+    @Column(name = "site_room")
+    private String siteRoom;
+
+    @Column(name = "site_bed_number")
+    private String siteBedNumber;
+
+    @PrePersist
+    public void prePersist() {
+        creationDate = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updateDate = new Date();
+    }
+
+}
