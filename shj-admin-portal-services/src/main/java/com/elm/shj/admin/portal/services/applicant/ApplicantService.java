@@ -56,7 +56,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     private final RitualTypeLookupRepository ritualTypeLookupRepository;
     private final UserLocationService userLocationService;
 
-    public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
+
     public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(966|009665|9665|\\+9665|05|5)([0-9]{8})$";
     private final String GROUP_DATA_FILE_NAME = "group-data.xlsx";
     private final String HOUSING_DATA_FILE_NAME = "housing-data.xlsx";
