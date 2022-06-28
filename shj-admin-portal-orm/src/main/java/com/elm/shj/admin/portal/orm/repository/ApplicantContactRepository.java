@@ -21,14 +21,14 @@ public interface ApplicantContactRepository extends JpaRepository<JpaApplicantCo
     @Modifying
     @Query("update JpaApplicantContact contact set  contact.email = :email, " +
             "contact.intlMobileNumber =:intlMobileNumber, contact.updateDate = CURRENT_TIMESTAMP where contact.applicant.id =:applicantId")
-    int updateContactIntlNumber(@Param("email") String email, @Param("countryCode") String countryCode,
+    int updateContactIntlNumber(@Param("email") String email,
                                 @Param("intlMobileNumber") String intlMobileNumber, @Param("applicantId") long applicantId);
 
 
     @Modifying
     @Query("update JpaApplicantContact contact set  contact.email = :email, " +
             "contact.localMobileNumber =:localMobileNumber, contact.updateDate = CURRENT_TIMESTAMP where contact.applicant.id =:applicantId")
-    int updateContactLocalNumber(@Param("email") String email, @Param("countryCode") String countryCode,
+    int updateContactLocalNumber(@Param("email") String email,
                                  @Param("localMobileNumber") String localMobileNumber, @Param("applicantId") long applicantId);
     List<JpaApplicantContact> findAllByApplicantId(Long id);
 }
