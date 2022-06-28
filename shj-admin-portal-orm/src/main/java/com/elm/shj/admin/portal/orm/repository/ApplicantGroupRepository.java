@@ -52,6 +52,8 @@ public interface ApplicantGroupRepository extends JpaRepository<JpaApplicantGrou
             "JOIN staffCard.companyRitualSeason ritualSeason " +
             "JOIN ritualSeason.company c "+
             "where c.code = :companyCode " +
-            "And staff.titleCode = 'GROUP_LEADER'")
+            "And staff.titleCode = 'GROUP_LEADER'" +
+            "AND staffCard.statusCode <> 'EXPIRED' " +
+            "AND staffCard.statusCode <> 'REISSUED' ")
     List<CompanyStaffVO> findGroupLeadersListByCompanyCode(@Param("companyCode") String companyCode);
 }
