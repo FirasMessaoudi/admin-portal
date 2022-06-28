@@ -174,7 +174,9 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
             if (packageTransportation != null) {
                 log.info("packageTransportation  found for applicant ritual package... {}" + applicantPackageDto.getRitualPackage().getId());
                 ApplicantPackageTransportationDto applicantPackageTransportation = findByApplicantPackageIdAndTransportationId(applicantPackageDto.getId(), packageTransportation.getId());
-                applicantPackageTransportationList.add(applicantPackageTransportation);
+                if (applicantPackageTransportation != null) {
+                    applicantPackageTransportationList.add(applicantPackageTransportation);
+                }
             }
         });
         StringBuilder vehicleNumber = new StringBuilder();
