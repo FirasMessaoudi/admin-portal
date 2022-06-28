@@ -30,7 +30,7 @@ public class ApplicantCreateComplaintVoCRM implements Serializable {
     private Double locationLng;
     private Double locationLat;
     private String attachmentId;
-    private String attchementType;
+    private String attachmentType;
     private Integer city;
     private String campNumber;
 
@@ -94,9 +94,9 @@ public class ApplicantCreateComplaintVoCRM implements Serializable {
         return attachmentId;
     }
 
-    @JsonProperty("AttchementType")
-    public String getAttchementType() {
-        return attchementType;
+    @JsonProperty("AttachmentType")
+    public String getAttachmentType() {
+        return attachmentType;
     }
 
     @JsonProperty("City")

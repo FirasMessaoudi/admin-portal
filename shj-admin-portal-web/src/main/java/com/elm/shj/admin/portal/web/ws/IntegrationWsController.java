@@ -826,6 +826,20 @@ public class IntegrationWsController {
     }
 
     /**
+     * find applicant ritual
+     *
+     * @param uin
+     * @param applicantPackageId
+     * @return
+     */
+    @GetMapping("/ritual/id/{uin}/{applicantPackageId}")
+    public ResponseEntity<WsResponse<?>> findIdApplicantRitual(@PathVariable String uin, @PathVariable long applicantPackageId) {
+        log.debug("Handler for {}", "Find applicant ritual id by uin");
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantRitualService.findIdByApplicantUinAndApplicantPackageId(uin, applicantPackageId)).build());
+    }
+
+    /**
      * Check the existence of an applicant based his UIN.
      *
      * @param uin The UIN of the applicant.
@@ -1542,5 +1556,29 @@ public class IntegrationWsController {
                 .ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"")
                 .body(attachment);
+    }
+
+    @GetMapping("/applicant/package-transportation/details/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findApplicantVehicleNumberInfo(@PathVariable String applicantUin) {
+        log.debug("find applicant vehicle number details by applicant uin. {}", applicantUin);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.findApplicantVehicleNumberInfo(applicantUin)).build());
+    }
+
+    @GetMapping("/group/package-transportation/details/{groupId}")
+    public ResponseEntity<WsResponse<?>> findGroupApplicantVebicleNumber(@PathVariable Long groupId) {
+        log.debug("find group applicant vehicle number number by group id. {}", groupId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.findGroupApplicantVebicleNumber(groupId)).build());
+    }
+
+    @PostMapping("/group/package-transportation/update")
+    public ResponseEntity<WsResponse<?>> updateGroupApplicantTranportation(@RequestBody UpdateApplicantTransportationDto updateApplicantTransportationDto) {
+        log.debug("Update Group Applicant pacckage transportation vehicl. {}", updateApplicantTransportationDto);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.updateGroupApplicantTranportation(updateApplicantTransportationDto)).build());
+    }
+
+    @PostMapping("/applicant/package-transportation/update")
+    public ResponseEntity<WsResponse<?>> updateApplicantTransportation(@RequestBody UpdateApplicantTransportationDto updateApplicantTransportationDto) {
+        log.debug("Update Applicant pacckage transportation vehicl. {}", updateApplicantTransportationDto);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.updateApplicantTransportation(updateApplicantTransportationDto)).build());
     }
 }

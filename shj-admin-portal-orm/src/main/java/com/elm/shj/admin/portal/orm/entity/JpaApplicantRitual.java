@@ -78,6 +78,10 @@ public class JpaApplicantRitual implements Serializable {
     @OneToMany(mappedBy = "applicantRitual")
     private Set<JpaApplicantIncident> applicantIncidents;
 
+    @LazyCollection(LazyCollectionOption.TRUE)
+    @OneToMany(mappedBy = "applicantRitual")
+    private Set<JpaApplicantComplaint> applicantComplaints;
+
     @PrePersist
     public void prePersist() {
         creationDate = new Date();

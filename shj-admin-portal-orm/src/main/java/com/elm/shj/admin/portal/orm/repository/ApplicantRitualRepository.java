@@ -32,6 +32,9 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
 
     Optional<JpaApplicantRitual> findByApplicantDigitalIdsUinAndApplicantPackageId(String uin, Long applicantPackageId);
 
+    @Query("SELECT a.id FROM JpaApplicantRitual a JOIN a.applicant.digitalIds di WHERE di.uin = :uin AND a.applicantPackage.id = :applicantPackageId")
+    Long findIdByApplicantDigitalIdsUinAndApplicantPackageId(@Param("uin") String uin, @Param("applicantPackageId") Long applicantPackageId);
+
     List<JpaApplicantRitual> findAllByApplicantId(Long id);
 
     JpaApplicantRitual findFirstByApplicantDigitalIdsUinOrderByCreationDateDesc(String uin);

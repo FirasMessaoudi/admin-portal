@@ -165,6 +165,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
 
     @Query("select a " +
             "FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga ON di.uin = ga.applicantUin JOIN ga.applicantGroup ap JOIN ap.companyRitualSeason crs JOIN crs.company c where " +
+            "a.deleted = FALSE and a.packageReferenceNumber is not null and "+
             "(:idNumber is null OR a.idNumber = :idNumber) and "+
             "(:passportNumber is null OR a.passportNumber = :passportNumber) and " +
             "(:gender is null OR a.gender = :gender) and " +
@@ -183,6 +184,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
 
     @Query("select a  " +
             "FROM JpaApplicant a JOIN a.digitalIds di where " +
+            "a.deleted = FALSE and a.packageReferenceNumber is not null and "+
             "(:idNumber is null OR a.idNumber = :idNumber) and "+
             "(:passportNumber is null OR a.passportNumber = :passportNumber) and " +
             "(:gender is null OR a.gender = :gender) and " +
@@ -198,6 +200,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
                                                                     @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
 
     @Query("select a FROM JpaApplicant a where " +
+            "a.deleted = FALSE and a.packageReferenceNumber is not null and "+
             "(:companyCode is null or a.companyCode = :companyCode) and " +
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
@@ -209,12 +212,17 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
 
     @Query("SELECT rs.ritualTypeCode FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
-            "WHERE a.id = :applicantId ")
-    String findRitualTypeByApplicantId(@Param("applicantId") long applicantId);
+            "WHERE a.id = :applicantId ORDER BY a.creationDate DESC")
+    List<String> findRitualTypeByApplicantId(@Param("applicantId") long applicantId);
 
     @Query("select a.id " +
             "FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga ON di.uin = ga.applicantUin JOIN ga.applicantGroup ap JOIN ap.companyRitualSeason crs JOIN crs.company c where " +
             " ap.id = :groupId")
     List<Long> findApplicantByGroupId(@Param("groupId") Long groupId);
+
+    @Query(value = "SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
+            "FROM JpaApplicant a WHERE " +
+            "a.id = :applicantId AND a.deleted=FALSE AND a.packageReferenceNumber is not null")
+    boolean isValidApplicant(@Param("applicantId") Long applicantId);
 
 }

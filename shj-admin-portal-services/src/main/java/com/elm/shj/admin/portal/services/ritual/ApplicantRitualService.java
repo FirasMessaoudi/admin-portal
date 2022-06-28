@@ -66,6 +66,10 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
         return null;
     }
 
+    public Long findIdByApplicantUinAndApplicantPackageId(String uin, Long applicantPackageId) {
+        return applicantRitualRepository.findIdByApplicantDigitalIdsUinAndApplicantPackageId(uin, applicantPackageId);
+    }
+
 
     @Transactional
     public ApplicantRitualDto findApplicantRitualWithContactsAndRelatives(Long applicantRitualId) {
