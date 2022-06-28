@@ -17,6 +17,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import java.text.MessageFormat;
 import java.util.List;
@@ -137,11 +138,12 @@ public class TawakkalnaIntegrationService extends GenericService<JpaApplicantPer
         // Jackson Class to Log Serialize Object
         ObjectMapper jsonMapper = new ObjectMapper();
         TawakkalnaApplicantOutputDto tawakkalnaApplicantOutput=null;
+        // Create Service Log Object
+        JpaTawakkalnaServiceLog tawakkalnaServiceLog = null;
         try
         {
-            // Create Service Log Object
-            JpaTawakkalnaServiceLog tawakkalnaServiceLog = new JpaTawakkalnaServiceLog();
 
+            tawakkalnaServiceLog = new JpaTawakkalnaServiceLog();
             TawakkalnaApplicantInputDto input = initailizeTawakkalnaApplicantInput(applicantPermitCard);
             // Call TAWAKKALNA API GET TOKEN
             TawakkalnaInputDto tokenInput = TawakkalnaInputDto.builder().clientId(tawakkalnaLoginClientClientId).clientSecret(tawakkalnaLoginClientClientSecret).build();
@@ -164,9 +166,6 @@ public class TawakkalnaIntegrationService extends GenericService<JpaApplicantPer
                 headers.set("Authorization", "Bearer "+ bearerToken);
                 HttpEntity<TawakkalnaApplicantInputDto> tawakkalnaApplicantInputDto = new HttpEntity<>(input,headers);
                 log.debug("TawakkalnaIntegrationService:Card Permit Input Request {}",jsonMapper.writeValueAsString(input));
-                responsePushPermitCard = restTemplate.postForObject(MessageFormat.format("{0}{1}", tawakkalnaBaseUrl,tawakkalnaPushPermitCardUrl), tawakkalnaApplicantInputDto,String.class);
-                log.debug("TawakkalnaIntegrationService:External Response from pushpermitcard {} ",responsePushPermitCard);
-                log.debug("TawakkalnaIntegrationService:Finish TawakkalnaIntegrationService pushApplicantInfo");
 
                 // Log Tawkkalna Card Push Permit API
                 tawakkalnaServiceLog.setTawakkalnaServiceUrl(MessageFormat.format("{0}{1}", tawakkalnaBaseUrl,tawakkalnaPushPermitCardUrl));
@@ -174,6 +173,12 @@ public class TawakkalnaIntegrationService extends GenericService<JpaApplicantPer
                     tawakkalnaServiceLog.setSourceRequest(jsonMapper.writeValueAsString(applicantPermitCard));
                 if(tawakkalnaApplicantInputDto!=null)
                     tawakkalnaServiceLog.setTawakkalnaRequest(jsonMapper.writeValueAsString(tawakkalnaApplicantInputDto));
+
+                responsePushPermitCard = restTemplate.postForObject(MessageFormat.format("{0}{1}", tawakkalnaBaseUrl,tawakkalnaPushPermitCardUrl), tawakkalnaApplicantInputDto,String.class);
+                log.debug("TawakkalnaIntegrationService:External Response from pushpermitcard {} ",responsePushPermitCard);
+                log.debug("TawakkalnaIntegrationService:Finish TawakkalnaIntegrationService pushApplicantInfo");
+
+
                 if(!checkIfStringNullorEmpty(responsePushPermitCard))
                     tawakkalnaServiceLog.setTawakkalnaResponse(responsePushPermitCard);
                 logTawakkalnaRequestRespone(tawakkalnaServiceLog);
@@ -187,6 +192,12 @@ public class TawakkalnaIntegrationService extends GenericService<JpaApplicantPer
                 tawakkalnaApplicantOutput = TawakkalnaApplicantOutputDto.builder().status(operationStatus).build();
             }
 
+        }
+        catch (HttpClientErrorException e)
+        {
+            tawakkalnaServiceLog.setTawakkalnaResponse(e.toString());
+            logTawakkalnaRequestRespone(tawakkalnaServiceLog);
+            log.error("TawakkalnaIntegrationService:Error while push card permit info to tawakkalna",  e);
         }
         catch (Exception e)
         {
