@@ -2,8 +2,10 @@ package com.elm.shj.admin.portal.services.tawakkalna;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPermitCard;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPermitCardView;
+import com.elm.shj.admin.portal.orm.entity.JpaTawakkalnaServiceLog;
 import com.elm.shj.admin.portal.orm.repository.ApplicantPermitCardRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantPermitCardViewRepository;
+import com.elm.shj.admin.portal.orm.repository.TawakkalnaServiceLogRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,8 +27,9 @@ import java.util.List;
 public class TawakkalnaIntegrationService extends GenericService<JpaApplicantPermitCard, ApplicantPermitCardDto, Long>  {
     private final ApplicantPermitCardRepository applicantPermitCardRepository;
     private final RestTemplate restTemplate;
-
     private final ApplicantPermitCardViewRepository applicantPermitCardViewRepository;
+
+    private final TawakkalnaServiceLogRepository tawakkalnaServiceLogRepository;
 
     @Value("${tawakkalna.base.url}")
     private String tawakkalnaBaseUrl;
@@ -61,6 +64,12 @@ public class TawakkalnaIntegrationService extends GenericService<JpaApplicantPer
         applicantPermitCardToAdd.setCardStatus(input.getCardstatus());
         applicantPermitCardRepository.saveAndFlush(applicantPermitCardToAdd);
         return true;
+    }
+
+    // Service Trace Log Request Response Tawakkalna
+    private void logTawakkalnaRequestRespone(JpaTawakkalnaServiceLog tawakkalnaServiceLog)
+    {
+        tawakkalnaServiceLogRepository.saveAndFlush(tawakkalnaServiceLog);
     }
 
     private TawakkalnaApplicantInputDto initailizeTawakkalnaApplicantInput(JpaApplicantPermitCardView applicantPermitCard)
@@ -127,10 +136,12 @@ public class TawakkalnaIntegrationService extends GenericService<JpaApplicantPer
         boolean operationStatus=false;
         // Jackson Class to Log Serialize Object
         ObjectMapper jsonMapper = new ObjectMapper();
-
         TawakkalnaApplicantOutputDto tawakkalnaApplicantOutput=null;
         try
         {
+            // Create Service Log Object
+            JpaTawakkalnaServiceLog tawakkalnaServiceLog = new JpaTawakkalnaServiceLog();
+
             TawakkalnaApplicantInputDto input = initailizeTawakkalnaApplicantInput(applicantPermitCard);
             // Call TAWAKKALNA API GET TOKEN
             TawakkalnaInputDto tokenInput = TawakkalnaInputDto.builder().clientId(tawakkalnaLoginClientClientId).clientSecret(tawakkalnaLoginClientClientSecret).build();
@@ -156,6 +167,16 @@ public class TawakkalnaIntegrationService extends GenericService<JpaApplicantPer
                 responsePushPermitCard = restTemplate.postForObject(MessageFormat.format("{0}{1}", tawakkalnaBaseUrl,tawakkalnaPushPermitCardUrl), tawakkalnaApplicantInputDto,String.class);
                 log.debug("TawakkalnaIntegrationService:External Response from pushpermitcard {} ",responsePushPermitCard);
                 log.debug("TawakkalnaIntegrationService:Finish TawakkalnaIntegrationService pushApplicantInfo");
+
+                // Log Tawkkalna Card Push Permit API
+                tawakkalnaServiceLog.setTawakkalnaServiceUrl(MessageFormat.format("{0}{1}", tawakkalnaBaseUrl,tawakkalnaPushPermitCardUrl));
+                if(applicantPermitCard!=null)
+                    tawakkalnaServiceLog.setSourceRequest(jsonMapper.writeValueAsString(applicantPermitCard));
+                if(tawakkalnaApplicantInputDto!=null)
+                    tawakkalnaServiceLog.setTawakkalnaRequest(jsonMapper.writeValueAsString(tawakkalnaApplicantInputDto));
+                if(!checkIfStringNullorEmpty(responsePushPermitCard))
+                    tawakkalnaServiceLog.setTawakkalnaResponse(responsePushPermitCard);
+                logTawakkalnaRequestRespone(tawakkalnaServiceLog);
             }
 
             if(responsePushPermitCard !=null && responsePushPermitCard.length() >0)
