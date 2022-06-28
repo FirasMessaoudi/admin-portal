@@ -44,4 +44,6 @@ public class ApplicantIncidentLiteDto implements Serializable {
     private List<IncidentAttachmentLiteDto> incidentAttachments;
     private Date creationDate;
     private Date updateDate;
+    private String mobileNumber;
+
 }

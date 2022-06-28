@@ -44,5 +44,7 @@ public class ApplicantComplaintDto implements Serializable {
     private String city;
     private String campNumber;
     private String crmTicketNumber;
+    private String mobileNumber;
+
 
 }

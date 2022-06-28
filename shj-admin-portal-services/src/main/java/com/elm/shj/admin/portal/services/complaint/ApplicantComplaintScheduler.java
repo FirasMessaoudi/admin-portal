@@ -11,13 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockAssert;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -109,26 +106,44 @@ public class ApplicantComplaintScheduler {
                 ApplicantCreateUserVoCRM user = new ApplicantCreateUserVoCRM();
                 user.setCustomerType(ECustomerTypeCRM.PILGRIM.getCrmCode());
                 user.setDigitalID(complaint.getApplicantRitual().getApplicant().getUin());
-                user.setIdNumber(complaint.getApplicantRitual().getApplicant().getIdNumber());
-                user.setPassportNumber(complaint.getApplicantRitual().getApplicant().getPassportNumber());
+                if (complaint.getApplicantRitual().getApplicant().getIdNumber() != null)
+                    user.setIdNumber(complaint.getApplicantRitual().getApplicant().getIdNumber());
+                else
+                    user.setIdNumber(StringUtils.EMPTY);
+                if (complaint.getApplicantRitual().getApplicant().getPassportNumber() != null )
+                    user.setPassportNumber(complaint.getApplicantRitual().getApplicant().getPassportNumber());
+                else
+                    user.setPassportNumber(StringUtils.EMPTY);
                 if (complaint.getApplicantRitual().getApplicant().getDateOfBirthHijri() != null)
                     user.setDateOfBirthHijri(complaint.getApplicantRitual().getApplicant().getDateOfBirthHijri().toString());
+                else
+                    user.setDateOfBirthHijri(StringUtils.EMPTY);
                 if (complaint.getApplicantRitual().getApplicant().getDateOfBirthGregorian() != null) {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     String dateOfBirth = simpleDateFormat.format(complaint.getApplicantRitual().getApplicant().getDateOfBirthGregorian());
                     user.setDateOfBirth(dateOfBirth);
-                }
-                user.setFullNameEn(complaint.getApplicantRitual().getApplicant().getFullNameEn());
-                user.setFullNameAr(complaint.getApplicantRitual().getApplicant().getFullNameAr());
-                user.setFullNameOrginalLang(complaint.getApplicantRitual().getApplicant().getFullNameOrigin());
+                } else
+                    user.setDateOfBirth(StringUtils.EMPTY);
+                if (complaint.getApplicantRitual().getApplicant().getFullNameEn() != null )
+                    user.setFullNameEn(complaint.getApplicantRitual().getApplicant().getFullNameEn());
+                else
+                    user.setFullNameEn(StringUtils.EMPTY);
+                if (complaint.getApplicantRitual().getApplicant().getFullNameAr() != null )
+                    user.setFullNameAr(complaint.getApplicantRitual().getApplicant().getFullNameAr());
+                else
+                    user.setFullNameAr(StringUtils.EMPTY);
+                if (complaint.getApplicantRitual().getApplicant().getFullNameOrigin() != null )
+                    user.setFullNameOrginalLang(complaint.getApplicantRitual().getApplicant().getFullNameOrigin());
+                else
+                    user.setFullNameOrginalLang(StringUtils.EMPTY);
                 user.setGender(complaint.getApplicantRitual().getApplicant().getGender());
                 user.setNationalityCode(complaint.getApplicantRitual().getApplicant().getNationalityCode());
 
-                user.setEmail(complaint.getApplicantRitual().getApplicant().getEmail());
-                if (complaint.getApplicantRitual().getApplicant().getLocalMobileNumber() != null && complaint.getApplicantRitual().getApplicant().getLocalMobileNumber().isEmpty())
-                    user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getCountryCode() + complaint.getApplicantRitual().getApplicant().getLocalMobileNumber());
+                if (complaint.getApplicantRitual().getApplicant().getEmail() != null )
+                    user.setEmail(complaint.getApplicantRitual().getApplicant().getEmail());
                 else
-                    user.setMobileNumber(complaint.getApplicantRitual().getApplicant().getCountryCode() + complaint.getApplicantRitual().getApplicant().getIntlMobileNumber());
+                    user.setEmail(StringUtils.EMPTY);
+                user.setMobileNumber(complaint.getMobileNumber());
 
 
                 CreateUserCRMDto createUserCRMDto = callCRM(crmCreateUserProfileUrl, HttpMethod.POST, user, accessTokenWsResponse.getToken(),
@@ -137,8 +152,14 @@ public class ApplicantComplaintScheduler {
 
                 ApplicantCreateComplaintVoCRM newComplaint = new ApplicantCreateComplaintVoCRM();
                 newComplaint.setDigitalID(complaint.getApplicantRitual().getApplicant().getUin());
-                newComplaint.setIdNumber(complaint.getApplicantRitual().getApplicant().getIdNumber());
-                newComplaint.setPassportNumber(complaint.getApplicantRitual().getApplicant().getPassportNumber());
+                if (complaint.getApplicantRitual().getApplicant().getIdNumber() != null )
+                    newComplaint.setIdNumber(complaint.getApplicantRitual().getApplicant().getIdNumber());
+                else
+                    newComplaint.setIdNumber(StringUtils.EMPTY);
+                if (complaint.getApplicantRitual().getApplicant().getPassportNumber() != null )
+                    newComplaint.setPassportNumber(complaint.getApplicantRitual().getApplicant().getPassportNumber());
+                else
+                    newComplaint.setPassportNumber(StringUtils.EMPTY);
                 newComplaint.setNationalityCode(complaint.getApplicantRitual().getApplicant().getNationalityCode());
                 newComplaint.setMainType(ETicketMainTypeCRM.Complaint.getId());
                 newComplaint.setSmartIDTicketNumber(complaint.getReferenceNumber());
@@ -146,15 +167,27 @@ public class ApplicantComplaintScheduler {
                 newComplaint.setTicketSubType(EComplaintType.valueOf(complaint.getTypeCode()).getCrmCode());
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
                 newComplaint.setRegisterDateTime(format.format(complaint.getCreationDate()));
-                newComplaint.setLocationLng(complaint.getLocationLng());
-                newComplaint.setLocationLat(complaint.getLocationLat());
+                if (complaint.getLocationLng() != null )
+                    newComplaint.setLocationLng(complaint.getLocationLng());
+                else
+                    newComplaint.setLocationLng(0D);
+                if (complaint.getLocationLat() != null )
+                    newComplaint.setLocationLat(complaint.getLocationLat());
+                else
+                    newComplaint.setLocationLat(0D);
                 if (complaint.getComplaintAttachment() != null && complaint.getComplaintAttachment().getId() > 0)
                     newComplaint.setAttachmentId(String.valueOf(complaint.getComplaintAttachment().getId()));
+                else
+                    newComplaint.setAttachmentId(StringUtils.EMPTY);
                 if (complaint.getCity() != null)
                     newComplaint.setCity(ECity.valueOf(complaint.getCity()).getCrmCode());
                 else
                     newComplaint.setCity(ECity.OTHERS.getCrmCode());
-                newComplaint.setCampNumber(complaint.getCampNumber());
+                if (complaint.getCampNumber() != null)
+                    newComplaint.setCampNumber(complaint.getCampNumber());
+                else
+                    newComplaint.setCampNumber(StringUtils.EMPTY);
+                newComplaint.setAttachmentType(StringUtils.EMPTY);
 
                 ComplaintUpdateCRMDto updateCRMDto = callCRM(crmCreateComplaintUrl, HttpMethod.POST, newComplaint, accessTokenWsResponse.getToken(),
                         new ParameterizedTypeReference<ComplaintUpdateCRMDto>() {
