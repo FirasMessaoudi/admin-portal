@@ -239,20 +239,13 @@ public class BadgeService {
         ImageUtils.applyQualityRenderingHints(g2d);
 
         addHeaderBg(g2d, false, applicantRitualCardLite.getEstablishmentId());
-        //addFooterBg(g2d, withQr);
-        //addZone(g2d);
         g2d.setColor(new Color(86, 86, 86));
         addPilgrimImage(g2d, applicantRitualCardLite.getPhoto(), true);
 
         addNameAndNationality(g2d, applicantRitualCardLite.getFullNameAr(), applicantRitualCardLite.getFullNameEn(), nationalityAr, nationalityEn, false);
 
         addRitual(g2d, ritualType, applicantRitualCardLite.getHijriSeason() + "");
-
-        //addCampRectangle(g2d, applicantRitualCardLite.getUnitCode(), applicantRitualCardLite.getGroupCode(), applicantRitualCardLite.getCampCode());
-        //addBusRectangle(g2d, applicantRitualCardLite.getBusNumber(), applicantRitualCardLite.getSeatNumber());
         addCompanyRectangle(g2d, applicantRitualCardLite, null, uin, false);
-        //String decodedBarCode = getBarCodeFoApplicantItemsAsString(uin, applicantRitualCardLite);
-        //addBarCode(g2d, decodedBarCode, true);
 
         String imgStr = null;
         try {
@@ -457,7 +450,7 @@ public class BadgeService {
         BufferedImage bottomBackground = isStaff ? ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "staff-footer-back.png") : ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + establishmentId + "back-footer.png");
         if (bottomBackground != null) {
             Image img = ImageUtils.resizeImage(bottomBackground, BADGE_WIDTH, BADGE_HEIGHT);
-            g2d.drawImage(ImageUtils.resizeImage(bottomBackground, BADGE_WIDTH / 2 - 50, BADGE_HEIGHT), BADGE_WIDTH / 2 - 300, BADGE_HEIGHT - img.getHeight(null) + 250, null);
+            g2d.drawImage(ImageUtils.resizeImage(bottomBackground, BADGE_WIDTH / 2 - 50, BADGE_HEIGHT), BADGE_WIDTH / 2 - 300, BADGE_HEIGHT - img.getHeight(null) + 300, null);
         }
 
     }
@@ -632,7 +625,7 @@ public class BadgeService {
 
         FontMetrics fm = g2d.getFontMetrics(font);
         FontRenderContext frc = g2d.getFontRenderContext();
-        int xDif = (BADGE_WIDTH - fm.stringWidth(labelAr) - 120);
+        int xDif = (BADGE_WIDTH - fm.stringWidth(labelAr) - 80);
         int yDif = rectYApplicant + 70;
         TextLayout layout = new TextLayout(labelAr, font, frc);
         layout.draw(g2d, xDif, yDif);
@@ -659,7 +652,7 @@ public class BadgeService {
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_REGULAR));
         int yDifLeft = rectYApplicant + 70;
-        int xDifLeft = (BADGE_WIDTH / 2 - 220);
+        int xDifLeft = (BADGE_WIDTH / 2 - 250);
         g2d.setColor(new Color(0xFF212121));
         font = shaaerFont.deriveFont(20f);
         layout = new TextLayout("البطاقة الذكية", font, frc);
