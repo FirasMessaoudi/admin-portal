@@ -826,6 +826,20 @@ public class IntegrationWsController {
     }
 
     /**
+     * find applicant ritual
+     *
+     * @param uin
+     * @param applicantPackageId
+     * @return
+     */
+    @GetMapping("/ritual/id/{uin}/{applicantPackageId}")
+    public ResponseEntity<WsResponse<?>> findIdApplicantRitual(@PathVariable String uin, @PathVariable long applicantPackageId) {
+        log.debug("Handler for {}", "Find applicant ritual id by uin");
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantRitualService.findIdByApplicantUinAndApplicantPackageId(uin, applicantPackageId)).build());
+    }
+
+    /**
      * Check the existence of an applicant based his UIN.
      *
      * @param uin The UIN of the applicant.
