@@ -459,7 +459,11 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             Cell groupRefNumber = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
             groupRefNumber.setCellValue("");
 
-            String ritualType = applicantRepository.findRitualTypeByApplicantId(applicant.getId());
+            String ritualType="";
+            if(!applicantRepository.findRitualTypeByApplicantId(applicant.getId()).isEmpty()){
+                ritualType = applicantRepository.findRitualTypeByApplicantId(applicant.getId()).get(0);
+            }
+
             Cell ritualTypeCell = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
             ritualTypeCell.setCellValue(ritualTypeLookupRepository.findLabelByCodeAndLanguage(ritualType, "ar"));
 

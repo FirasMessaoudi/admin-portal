@@ -213,7 +213,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Query("SELECT rs.ritualTypeCode FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
             "WHERE a.id = :applicantId ORDER BY a.creationDate DESC")
-    String findRitualTypeByApplicantId(@Param("applicantId") long applicantId);
+    List<String> findRitualTypeByApplicantId(@Param("applicantId") long applicantId);
 
     @Query("select a.id " +
             "FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga ON di.uin = ga.applicantUin JOIN ga.applicantGroup ap JOIN ap.companyRitualSeason crs JOIN crs.company c where " +
