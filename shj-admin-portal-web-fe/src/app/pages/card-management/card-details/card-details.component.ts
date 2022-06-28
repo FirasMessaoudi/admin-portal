@@ -44,7 +44,7 @@ export class CardDetailsComponent implements OnInit {
   applicantStatuses: Lookup[] = [];
   immunizations: Lookup[];
   languageNativeName = Language;
-  renderBackLink = false;
+  renderBackLink = false; 
 
 
   constructor(private route: ActivatedRoute,

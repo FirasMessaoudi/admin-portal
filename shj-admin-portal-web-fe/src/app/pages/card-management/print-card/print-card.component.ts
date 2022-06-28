@@ -27,8 +27,13 @@ export class PrintCardComponent implements OnInit {
   printInfo:PrintInfo;
   base64ImageFront:string;
   base64ImageBack:string;
-  base64ImageFrontPrinter:string;
-  base64ImageBackPrinter:string;
+  base64FullImageFrontPrinter:string;
+  base64FullImageBackPrinter:string;
+  base64PartialImageFrontPrinter:string;
+  base64PartialImageBackPrinter:string;
+  dualPrintingMode:boolean=true;
+  showSpinner:boolean=false;
+
   constructor(    
     private router: Router,
     private i18nService: I18nService,
@@ -54,20 +59,24 @@ export class PrintCardComponent implements OnInit {
 
  loadCardImages()
  {
-  this.applicantService.getApplicantBadge(this.cardNumber).subscribe(result =>
+  this.showSpinner=true;
+  this.applicantService.getApplicantFullBadge(this.cardNumber).subscribe(result =>
     {       
 
+      this.showSpinner=false;
       if(result && result.length>0)
       {
         if(result[0])
         {
           this.base64ImageFront=`data:image/bmp;base64,${result[0].badgeImage}`;
-          this.base64ImageFrontPrinter = result[0].badgeImage;
+          this.base64FullImageFrontPrinter = result[0].badgeImage;
+          this.base64PartialImageFrontPrinter = result[2].badgeImage;
         } 
         if(result[1])
         {
           this.base64ImageBack=`data:image/bmp;base64,${result[1].badgeImage}`;
-          this.base64ImageBackPrinter = result[1].badgeImage;
+          this.base64FullImageBackPrinter = result[1].badgeImage;
+          this.base64PartialImageBackPrinter = result[3].badgeImage;
         }
         
       }
@@ -86,40 +95,34 @@ export class PrintCardComponent implements OnInit {
 
   printFullImage(content) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {   
-      this.printCard();
+      let printDetails : PrintDetails = { 
+        sessionId:`${this.cardNumber}${Math.random()}${Math.random()}${Math.random()}`,
+        imageBase64String:this.base64FullImageFrontPrinter,
+        backImageBase64String:this.base64FullImageBackPrinter,
+        isDualSide:this.dualPrintingMode
+      };
+      this.printCard(printDetails);
     }, (reason) => {
       console.log("B");;
     });
   }
   printImageOnPrintedDesign(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      this.applicantService.getApplicantFullBadge(this.cardNumber).subscribe(
-        result=>
-        {
-          if(result && result.length>0 && result.length==4)
-          {            
-            this.base64ImageFrontPrinter =  result[2].badgeImage;
-            this.base64ImageBackPrinter =  result[3].badgeImage;
-            this.printCard();
-          }
-
-        });
-      
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {      
+      let printDetails : PrintDetails = { 
+        sessionId:`${this.cardNumber}${Math.random()}${Math.random()}${Math.random()}`,
+        imageBase64String:this.base64PartialImageFrontPrinter,
+        backImageBase64String:this.base64PartialImageBackPrinter,
+        isDualSide:this.dualPrintingMode
+      };
+      this.printCard(printDetails);      
     }, (reason) => {
       console.log("D");
     });
-  }  
-
-  printCard()
+  }    
+  printCard(printRequest:PrintDetails) 
   {
-    const headers = { 'content-type': 'application/json'}; 
-      this.printDetails = { 
-        sessionId:`${this.cardNumber}${Math.random()}${Math.random()}${Math.random()}`,
-        imageBase64String:this.base64ImageFrontPrinter,
-        backImageBase64String:this.base64ImageBackPrinter,
-        isDualSide:true
-      };
-      const body=JSON.stringify(this.printDetails);      
+    const headers = { 'content-type': 'application/json'};       
+      const body=JSON.stringify(printRequest);      
       this.cardService.sendPrintRequestToPrinter(body,headers).subscribe(data =>{});
   }
  
