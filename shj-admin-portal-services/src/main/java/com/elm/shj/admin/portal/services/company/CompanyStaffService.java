@@ -639,4 +639,8 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return true;
     }
 
+    public Boolean exitsStaffInCompany(Long staffId, Long companyRitualSeasonId) {
+        return companyStaffRepository.exitsStaffInCompany(staffId, companyRitualSeasonId);
+    }
+
 }

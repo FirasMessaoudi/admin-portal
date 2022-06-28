@@ -552,4 +552,8 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return applicantRepository.findApplicantByGroupId(groupId);
     }
 
+    public Boolean isValidApplicant(Long applicantId){
+        return applicantRepository.isValidApplicant(applicantId);
+    }
+
 }

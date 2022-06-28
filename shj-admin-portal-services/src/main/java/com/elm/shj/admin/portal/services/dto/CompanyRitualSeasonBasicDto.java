@@ -28,19 +28,19 @@ public class CompanyRitualSeasonBasicDto {
     private RitualSeasonDto ritualSeason;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private long seasonStart;
+    private Long seasonStart;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private long seasonEnd;
+    private Long seasonEnd;
 
-    private int totalQuota;
-    private int airQuota;
-    private int seaQuota;
-    private int landQuota;
+    private Integer totalQuota;
+    private Integer airQuota;
+    private Integer seaQuota;
+    private Integer landQuota;
     private CompanyLiteDto company;
     private Date creationDate;
     private Date updateDate;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    private boolean isActive;
+    private Boolean isActive;
 }
