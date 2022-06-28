@@ -26,6 +26,7 @@ public class ApplicantGroupDetailsVo implements Serializable {
     private static final long serialVersionUID = 7617423887048517970L;
 
     private long id;
+    private long groupLeaderId;
 
     private long localOfficeId;
 
