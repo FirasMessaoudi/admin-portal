@@ -143,7 +143,7 @@ public class IntegrationWsController {
     private final MessageSource messageSource;
     private final ApplicantComplaintLiteService applicantComplaintLiteService;
     private final ApplicantComplaintService applicantComplaintService;
-    private final ApplicantHealthService applicantHealthService;
+    private final ApplicantHealthBasicService applicantHealthBasicService;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
@@ -1325,9 +1325,10 @@ public class IntegrationWsController {
      * @return
      */
 
-    @PostMapping("/applicant/update-health-profile")
-    public ResponseEntity<WsResponse<?>> updateApplicantHealthProfile(@RequestBody ApplicantHealthDto applicantHealthDto) {
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantHealthService.save(applicantHealthDto)).build());
+    @PutMapping("/applicant/update-health-profile")
+    public ResponseEntity<WsResponse<?>> updateApplicantHealthProfile(@RequestBody ApplicantHealthBasicDto applicantHealthDto) {
+        log.info("update applicant health with id {} ", applicantHealthDto.getId());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantHealthBasicService.update(applicantHealthDto)).build());
 
     }
 
