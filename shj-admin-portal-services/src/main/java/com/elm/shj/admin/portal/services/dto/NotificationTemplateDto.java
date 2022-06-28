@@ -47,4 +47,5 @@ public class NotificationTemplateDto implements Serializable {
     private Date creationDate;
     private Date updateDate;
     private Date sendingDate;
+    private String companyCode;
 }

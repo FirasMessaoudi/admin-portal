@@ -242,16 +242,6 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return updatedRowsCount;
     }
 
-    public Optional<CompanyStaffDto> findByStaffId(long staffId) {
-        JpaCompanyStaff staff = companyStaffRepository.findByIdAndRegisteredTrue(staffId);
-        return (staff != null) ? Optional.of(getMapper().fromEntity(staff, mappingContext)) : Optional.empty();
-    }
-
-    public boolean validateStaffEmail(String email){
-        Matcher matcher = EMAIL_ADDRESS_REGEX.matcher(email);
-        return matcher.find();
-    }
-
     public Optional<CompanyStaffVO> findStaffRitualBySuin(String suin) {
         CompanyStaffVO staffRitual = companyStaffRepository.findStaffMainData(suin);
         return staffRitual == null? Optional.empty(): Optional.of(staffRitual);

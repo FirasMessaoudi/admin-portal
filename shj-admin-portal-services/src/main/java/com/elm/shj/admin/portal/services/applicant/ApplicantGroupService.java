@@ -6,8 +6,11 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
 import com.elm.shj.admin.portal.orm.repository.ApplicantGroupRepository;
 import com.elm.shj.admin.portal.orm.repository.GroupApplicantListRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantGroupDto;
+import com.elm.shj.admin.portal.services.dto.EUserType;
 import com.elm.shj.admin.portal.services.dto.GroupNameLookupDto;
+import com.elm.shj.admin.portal.services.dto.UserLocationDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.user.UserLocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,7 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
 
     private final ApplicantGroupRepository applicantGroupRepository;
     private final GroupApplicantListRepository groupApplicantListRepository;
+    private final UserLocationService userLocationService;
     public ApplicantGroupDto getApplicantGroupByReferenceNumber(String referenceNumber) {
         log.info("Start getApplicantGroupByReferenceNumber ReferenceNumber:{}", referenceNumber);
         Optional<JpaApplicantGroup> applicantGroupOptional = applicantGroupRepository.findByReferenceNumber(referenceNumber);
@@ -66,7 +70,13 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         log.info("Start findGroupsByCompanyCode companyCode:{}", companyCode);
 
         Page<ApplicantGroupDto> applicantGroups = mapPage(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode, pageable));
-        applicantGroups.getContent().forEach(applicantGroupDto -> applicantGroupDto.setCountApplicants(groupApplicantListRepository.countByApplicantGroupId(applicantGroupDto.getId())));
+        applicantGroups.getContent().forEach(applicantGroupDto -> {
+            applicantGroupDto.setCountApplicants(groupApplicantListRepository.countByApplicantGroupId(applicantGroupDto.getId()));
+            UserLocationDto userLocationDto = userLocationService.findTopByUserIdAndUserTypeOrderByCreationDateDesc(applicantGroupDto.getGroupLeader().getDigitalIds().isEmpty() ? null : applicantGroupDto.getGroupLeader().getDigitalIds().get(0).getSuin(),
+                    EUserType.STAFF.name());
+            applicantGroupDto.getGroupLeader().setLatitude(userLocationDto == null ? null : userLocationDto.getLatitude());
+            applicantGroupDto.getGroupLeader().setLongitude(userLocationDto == null ? null : userLocationDto.getLongitude());
+        });
         return applicantGroups;
     }
 
