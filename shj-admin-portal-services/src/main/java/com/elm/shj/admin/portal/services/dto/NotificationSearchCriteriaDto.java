@@ -34,4 +34,5 @@ public class NotificationSearchCriteriaDto implements Serializable {
     private Date creationDateEnd;
     private Date sendingDateStart;
     private Date sendingDateEnd;
+    private String companyCode;
 }
