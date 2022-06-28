@@ -37,7 +37,7 @@ public class ApplicantGroupDto implements Serializable {
 
     private CompanyStaffDto groupLeader;
 
-    @JsonBackReference
+    @JsonBackReference(value = "companyRitualSeason")
     private CompanyRitualSeasonDto companyRitualSeason;
 
     private String groupTypeCode;

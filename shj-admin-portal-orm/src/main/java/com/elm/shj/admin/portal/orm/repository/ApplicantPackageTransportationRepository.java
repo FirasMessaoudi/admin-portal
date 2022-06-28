@@ -3,10 +3,12 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageTransportation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository for applicant package transportation
@@ -17,5 +19,7 @@ import java.util.List;
 public interface ApplicantPackageTransportationRepository extends JpaRepository<JpaApplicantPackageTransportation, Long> {
 
     List<JpaApplicantPackageTransportation> findAllByApplicantPackageApplicantUinAndApplicantPackageId(long applicantUin, long applicantPackageId);
+
+    Optional<JpaApplicantPackageTransportation> findTopByApplicantPackageIdAndPackageTransportationId(long applicantPackageId, long packageTransportationId);
 
 }

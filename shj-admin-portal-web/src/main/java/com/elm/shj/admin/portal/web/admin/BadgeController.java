@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Main controller for badge related services
  *
@@ -39,7 +42,7 @@ public class BadgeController {
         //TODO: do some validation for the passed digital id and return error message if needed
         if (digitalId.length() == 14) {
             //valid uin
-            return badgeService.generateApplicantBadge(digitalId, false);
+            return badgeService.generateApplicantBadge(digitalId);
         }
         return null;
     }
@@ -53,24 +56,25 @@ public class BadgeController {
         return null;
     }
 
-    @GetMapping("/applicant/back/{digitalId}")
-    public BadgeVO generateApplicantBackBadge(@PathVariable String digitalId) {
-        //TODO: do some validation for the passed digital id and return error message if needed
-        if (digitalId.length() == 14) {
-            //valid uin
-            return badgeService.generateBackBadge(digitalId);
-        }
-        return null;
+    @GetMapping("/applicant/all/{applicantUin}")
+    public List<BadgeVO> findApplicantBadgeFrontAndBack(@PathVariable String applicantUin) {
+        List<BadgeVO> badges = new ArrayList<>();
+        badges.add(badgeService.generateApplicantBadge(applicantUin));
+        badges.add(badgeService.generateBackBadge(applicantUin));
+        badges.add(badgeService.generatePrePrintedApplicantBadge(applicantUin));
+        badges.add(badgeService.generatePrePrintedBackBadge(applicantUin));
+        return badges;
+
     }
 
-    @GetMapping("/staff/back/{digitalId}")
-    public BadgeVO generateStaffBackBadge(@PathVariable String digitalId) {
-        //TODO: do some validation for the passed digital id and return error message if needed
-        if (digitalId.length() == 12) {
-            //valid uin
-            return badgeService.generateStaffBackBadge(digitalId);
-        }
-        return null;
+    @GetMapping("/staff/all/{suin}")
+    public List<BadgeVO> findStaffBadgeFrontAndBack(@PathVariable String suin) {
+        List<BadgeVO> badges = new ArrayList<>();
+        badges.add(badgeService.generateStaffCard(suin));
+        badges.add(badgeService.generateStaffBackBadge(suin));
+        badges.add(badgeService.generatePrePrintedStaffCard(suin));
+        return badges;
     }
+
 
 }

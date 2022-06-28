@@ -147,6 +147,11 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
     }
 
 
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public ApplicantIncidentLiteDto findByCrmTicketNumberOrSmartIDTicketNumber(String crmTicketNumber, String smartIDTicketNumber) {
+        return getMapper().fromEntity(applicantIncidentLiteRepository.findByCrmTicketNumberOrReferenceNumber(crmTicketNumber, smartIDTicketNumber), mappingContext);
+    }
+
     /**
      * Generates a unique identifier for the applicant incident
      *

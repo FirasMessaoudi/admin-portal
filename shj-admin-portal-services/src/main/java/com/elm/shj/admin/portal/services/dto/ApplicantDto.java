@@ -126,6 +126,8 @@ public class ApplicantDto implements Serializable {
     private Integer missionRefCode;
     private Long serviceGroupMakkahCode;
     private Long serviceGroupMadinaCode;
+    private Double latitude;
+    private Double longitude;
 
     /**
      * Get applicant object from applicant lite object.

@@ -118,4 +118,6 @@ public class CompanyStaffDto {
     private Date updateDate;
     private Boolean deleted;
     private String countryPhonePrefix;
+    private Double latitude;
+    private Double longitude;
 }

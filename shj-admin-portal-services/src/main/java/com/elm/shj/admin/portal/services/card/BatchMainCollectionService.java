@@ -81,7 +81,7 @@ public class BatchMainCollectionService extends GenericService<JpaBatchMainColle
                         try {
                             BadgeVO badge;
                             if (batchCollectionVO.getTarget().equals(EPrintingRequestTarget.APPLICANT.name())) {
-                                badge = badgeService.generateApplicantBadge(digitalId, false);
+                                badge = badgeService.generateApplicantBadge(digitalId);
                             } else {
                                 badge = badgeService.generateStaffCard(digitalId);
                             }

@@ -17,6 +17,7 @@ import com.elm.shj.admin.portal.services.data.validators.CheckSecond;
 import com.elm.shj.admin.portal.services.data.validators.DataValidationResult;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.incident.ApplicantIncidentLiteService;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.otp.OtpService;
@@ -118,6 +119,7 @@ public class IntegrationWsController {
     private final LanguageLookupService languageLookupService;
     private final PackageHousingService packageHousingService;
     private final ApplicantIncidentService applicantIncidentService;
+    private final ApplicantIncidentLiteService applicantIncidentLiteService;
     private final IncidentStatusLookupService incidentStatusLookupService;
     private final IncidentTypeLookupService incidentTypeLookupService;
     private final ComplaintStatusLookupService complaintStatusLookupService;
@@ -141,6 +143,7 @@ public class IntegrationWsController {
     private final MessageSource messageSource;
     private final ApplicantComplaintLiteService applicantComplaintLiteService;
     private final ApplicantComplaintService applicantComplaintService;
+    private final ApplicantHealthService applicantHealthService;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
@@ -1065,7 +1068,7 @@ public class IntegrationWsController {
      */
     @GetMapping("/badge/generate/{applicantUin}/{withQr}")
     public ResponseEntity<WsResponse<?>> findApplicantBadge(@PathVariable String applicantUin, @PathVariable boolean withQr) {
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateApplicantBadge(applicantUin, withQr)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateApplicantBadge(applicantUin)).build());
 
     }
 
@@ -1079,31 +1082,6 @@ public class IntegrationWsController {
 
     }
 
-    /**
-     * @param applicantUin
-     * @return generated back and front badge for applicant
-     */
-    @GetMapping("/badge/applicant/frontback/{applicantUin}")
-    public ResponseEntity<WsResponse<?>> findApplicantBadgeFrontAndBack(@PathVariable String applicantUin) {
-        List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateApplicantBadge(applicantUin, false));
-        badges.add(badgeService.generateBackBadge(applicantUin));
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badges).build());
-
-    }
-
-    /**
-     * @param suin
-     * @return generated front and back badge for staff
-     */
-    @GetMapping("/badge/staff/frontback/{suin}")
-    public ResponseEntity<WsResponse<?>> findStaffBadgeFrontAndBack(@PathVariable String suin) {
-        List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateStaffCard(suin));
-        badges.add(badgeService.generateStaffBackBadge(suin));
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badges).build());
-
-    }
 
     /**
      * save user registration action to audit mobile log
@@ -1343,13 +1321,13 @@ public class IntegrationWsController {
     }
 
     /**
-     * @param applicantHealthLiteDto
+     * @param applicantHealthDto
      * @return
      */
 
     @PostMapping("/applicant/update-health-profile")
-    public ResponseEntity<WsResponse<?>> updateApplicantHealthProfile(@RequestBody ApplicantHealthLiteDto applicantHealthLiteDto) {
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantHealthLiteService.save(applicantHealthLiteDto)).build());
+    public ResponseEntity<WsResponse<?>> updateApplicantHealthProfile(@RequestBody ApplicantHealthDto applicantHealthDto) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantHealthService.save(applicantHealthDto)).build());
 
     }
 
@@ -1498,11 +1476,11 @@ public class IntegrationWsController {
      * @return the {@link ResponseEntity} with status
      */
     @PostMapping("/incident-complaint/handle")
-    public ResponseEntity<WsResponse<?>> handleComplaintByCRM(@RequestBody ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
+    public ResponseEntity<WsResponse<?>> handleIncidentComplaintByCRM(@RequestBody ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
         log.debug("Handle incident/complaint CrmTicketNumber {}, smartIDTicketNumber {}", applicantComplaintVo.getCrmTicketNumber(), applicantComplaintVo.getSmartIDTicketNumber());
 
         if (applicantComplaintVo.getMainType().equals(ETicketMainTypeCRM.Complaint.getId())) {
-            ApplicantComplaintLiteDto complaint = applicantComplaintLiteService.findByCrmTicketNumber(applicantComplaintVo.getCrmTicketNumber());
+            ApplicantComplaintLiteDto complaint = applicantComplaintLiteService.findByCrmTicketNumberOrSmartIDTicketNumber(applicantComplaintVo.getCrmTicketNumber(), applicantComplaintVo.getSmartIDTicketNumber());
 
             if (complaint != null && complaint.getStatusCode().equals(EComplaintStatus.UNDER_PROCESSING.name())) {
                 applicantComplaintService.updateByCrm(complaint.getId(), applicantComplaintVo);
@@ -1514,9 +1492,16 @@ public class IntegrationWsController {
                         .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING").build()).build());
             }
         } else if (applicantComplaintVo.getMainType().equals(ETicketMainTypeCRM.Incident.getId())){
-            //TODO: Implementation of incident
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                    .body(StringUtils.EMPTY).build());
+            ApplicantIncidentLiteDto incident = applicantIncidentLiteService.findByCrmTicketNumberOrSmartIDTicketNumber(applicantComplaintVo.getCrmTicketNumber(), applicantComplaintVo.getSmartIDTicketNumber());
+            if (incident != null && incident.getStatusCode().equals(EComplaintStatus.UNDER_PROCESSING.name())) {
+                applicantIncidentService.updateByCrm(incident.getId(), applicantComplaintVo);
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                        .body(StringUtils.EMPTY).build());
+            } else {
+                log.info("Finished Handle complaint CrmTicketNumber {}, Failure {}", applicantComplaintVo.getCrmTicketNumber(), "COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING");
+                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                        .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING").build()).build());
+            }
         } else {
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                     .body(StringUtils.EMPTY).build());
@@ -1556,5 +1541,29 @@ public class IntegrationWsController {
                 .ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"")
                 .body(attachment);
+    }
+
+    @GetMapping("/applicant/package-transportation/details/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findApplicantVehicleNumberInfo(@PathVariable String applicantUin) {
+        log.debug("find applicant vehicle number details by applicant uin. {}", applicantUin);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.findApplicantVehicleNumberInfo(applicantUin)).build());
+    }
+
+    @GetMapping("/group/package-transportation/details/{groupId}")
+    public ResponseEntity<WsResponse<?>> findGroupApplicantVebicleNumber(@PathVariable Long groupId) {
+        log.debug("find group applicant vehicle number number by group id. {}", groupId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.findGroupApplicantVebicleNumber(groupId)).build());
+    }
+
+    @PostMapping("/group/package-transportation/update")
+    public ResponseEntity<WsResponse<?>> updateGroupApplicantTranportation(@RequestBody UpdateApplicantTransportationDto updateApplicantTransportationDto) {
+        log.debug("Update Group Applicant pacckage transportation vehicl. {}", updateApplicantTransportationDto);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.updateGroupApplicantTranportation(updateApplicantTransportationDto)).build());
+    }
+
+    @PostMapping("/applicant/package-transportation/update")
+    public ResponseEntity<WsResponse<?>> updateApplicantTransportation(@RequestBody UpdateApplicantTransportationDto updateApplicantTransportationDto) {
+        log.debug("Update Applicant pacckage transportation vehicl. {}", updateApplicantTransportationDto);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.updateApplicantTransportation(updateApplicantTransportationDto)).build());
     }
 }

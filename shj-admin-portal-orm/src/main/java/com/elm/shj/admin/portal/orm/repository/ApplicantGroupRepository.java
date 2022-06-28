@@ -26,7 +26,7 @@ public interface ApplicantGroupRepository extends JpaRepository<JpaApplicantGrou
     @Query("SELECT ag.referenceNumber FROM JpaApplicantGroup ag JOIN ag.groupApplicantLists ga WHERE ga.applicantUin =  :uin ")
     String findReferenceNumberByUin(@Param("uin") String uin);
 
-    @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantGroupDetailsVo(ag.id,ag.localOfficeId,ag.groupName,gl.fullNameAr,gl.fullNameEn,gl.idNumber,gl.passportNumber,trans.vehicleInfo,housing.campInfo) " +
+    @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantGroupDetailsVo(ag.id,gl.id,ag.localOfficeId,ag.groupName,gl.fullNameAr,gl.fullNameEn,gl.idNumber,gl.passportNumber,trans.vehicleInfo,housing.campInfo) " +
             "FROM JpaApplicantGroup ag " +
             "join ag.groupLeader gl " +
             "JOIN ag.companyRitualSeason companyRitualSeason " +
