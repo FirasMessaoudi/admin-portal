@@ -44,6 +44,7 @@ public class ApplicantComplaintVo implements Serializable {
     private String city;
     private String campNumber;
     private String crmTicketNumber;
+    private String mobileNumber;
     private long count;
 
     public ApplicantComplaintVo(Long id, String referenceNumber, Date creationDate, String statusCode, String typeCode, String fullNameAr, String fullNameEn, String uin, Long count){
@@ -75,7 +76,7 @@ public class ApplicantComplaintVo implements Serializable {
         applicantRitual = new ApplicantRitualVo(fullNameAr,fullNameEn,uin,preferredLanguage);
     }
 
-    public ApplicantComplaintVo(Long id,String referenceNumber, String typeCode, String city, String description,Double locationLat, Double locationLng,Date creationDate, Long complaintAttachmentId, String fullNameAr, String fullNameEn,
+    public ApplicantComplaintVo(Long id,String referenceNumber, String typeCode, String city, String description,Double locationLat, Double locationLng,String mobileNumber,Date creationDate, Long complaintAttachmentId, String fullNameAr, String fullNameEn,
                                 String fullNameOrigin, String idNumber, String passportNumber, Long dateOfBirthHijri,
                                 Date dateOfBirthGregorian, String gender, String nationalityCode,String email,
                                 String localMobileNumber, String intlMobileNumber,String countryCode, String uin)
@@ -88,6 +89,7 @@ public class ApplicantComplaintVo implements Serializable {
         this.locationLat = locationLat;
         this.locationLng = locationLng;
         this.city = city;
+        this.mobileNumber = mobileNumber;
         if (complaintAttachmentId != null) {
             this.complaintAttachment = new ComplaintAttachmentVo(complaintAttachmentId, null);
         }
