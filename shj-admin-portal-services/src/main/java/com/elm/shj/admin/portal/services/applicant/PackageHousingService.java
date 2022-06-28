@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,6 +74,16 @@ public class PackageHousingService extends GenericService<JpaPackageHousing, Pac
             return getMapper().fromEntity(jpaPackageHousing.get(), mappingContext);
         }
         return null;
+
+    }
+
+    public List<PackageHousingDto> findAllByRitualPackageIdAndSiteCode(long id, String siteCode) {
+        log.info("PackageHousingService ::: Start findByRitualPackageIdAndSiteCode ::: ritualPackage: {}", id);
+        List<JpaPackageHousing> jpaPackageHousing = packageHousingRepository.findByRitualPackageIdAndSiteCode(id, siteCode);
+        if (!jpaPackageHousing.isEmpty()) {
+            return mapList(jpaPackageHousing);
+        }
+        return Collections.emptyList();
 
     }
 }

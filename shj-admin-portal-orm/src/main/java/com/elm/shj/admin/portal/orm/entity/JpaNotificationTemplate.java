@@ -97,6 +97,9 @@ public class JpaNotificationTemplate implements Serializable {
     @Column(name = "sending_date")
     private Date sendingDate;
 
+    @Column(name = "company_code")
+    private String companyCode;
+
     @PrePersist
     public void prePersist() {
         creationDate = new Date();

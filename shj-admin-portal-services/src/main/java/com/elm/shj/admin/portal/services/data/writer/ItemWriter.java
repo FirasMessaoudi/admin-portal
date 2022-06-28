@@ -459,10 +459,10 @@ public class ItemWriter {
                     return;
                 }
 
-                PackageHousingDto menaHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.MENA.name());
-                PackageHousingDto arafetHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.ARAFAT.name());
+                List<PackageHousingDto> menaHousingList = packageHousingService.findAllByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.MENA.name());
+                List<PackageHousingDto> arafetHousingList = packageHousingService.findAllByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.ARAFAT.name());
 
-                if (menaHousing == null) {
+                if (menaHousingList.isEmpty()) {
                     PackageHousingDto packageHousingMena = PackageHousingDto.builder()
                             .ritualPackage(applicantPackageDto.getRitualPackage())
                             .housingZone(HousingZoneDto.builder().id(1L).build())
@@ -474,10 +474,48 @@ public class ItemWriter {
                             .validityStart(new GregorianCalendar(2022, Calendar.JULY, 5).getTime())
                             .validityEnd(new GregorianCalendar(2022, Calendar.JULY, 13).getTime())
                             .build();
-                    menaHousing = packageHousingService.save(packageHousingMena);
+                    packageHousingMena = packageHousingService.save(packageHousingMena);
+
+                    ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
+                            .applicantPackageId(applicantPackageDto.getId())
+                            .packageHousingId(packageHousingMena.getId())
+                            .siteCampRefCode(applicantHousingDataDto.getMenaCampRefCode())
+                            .siteBedNumber(applicantHousingDataDto.getMenaBedNumber())
+                            .siteCorridor(applicantHousingDataDto.getMenaCorridor())
+                            .siteFloor(applicantHousingDataDto.getMenaFloor())
+                            .siteRoom(applicantHousingDataDto.getMenaRoom())
+                            .siteTent(applicantHousingDataDto.getMenaTent())
+                            .build();
+                    applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
+                } else {
+                    menaHousingList.forEach(menaHousing ->{
+                        ApplicantPackageHousingDto applicantPackageHousingMena = applicantPackageHousingService.findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
+                        if (applicantPackageHousingMena != null) {
+                            applicantPackageHousingMena.setSiteCampRefCode(applicantHousingDataDto.getMenaCampRefCode());
+                            applicantPackageHousingMena.setSiteBedNumber(applicantHousingDataDto.getMenaBedNumber());
+                            applicantPackageHousingMena.setSiteCorridor(applicantHousingDataDto.getMenaCorridor());
+                            applicantPackageHousingMena.setSiteFloor(applicantHousingDataDto.getMenaFloor());
+                            applicantPackageHousingMena.setSiteRoom(applicantHousingDataDto.getMenaRoom());
+                            applicantPackageHousingMena.setSiteTent(applicantHousingDataDto.getMenaTent());
+                            applicantPackageHousingService.save(applicantPackageHousingMena);
+
+                        } else {
+                            ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
+                                    .applicantPackageId(applicantPackageDto.getId())
+                                    .packageHousingId(menaHousing.getId())
+                                    .siteCampRefCode(applicantHousingDataDto.getMenaCampRefCode())
+                                    .siteBedNumber(applicantHousingDataDto.getMenaBedNumber())
+                                    .siteCorridor(applicantHousingDataDto.getMenaCorridor())
+                                    .siteFloor(applicantHousingDataDto.getMenaFloor())
+                                    .siteRoom(applicantHousingDataDto.getMenaRoom())
+                                    .siteTent(applicantHousingDataDto.getMenaTent())
+                                    .build();
+                            applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
+                        }
+                    });
                 }
 
-                if (arafetHousing == null) {
+                if (arafetHousingList.isEmpty()) {
                     PackageHousingDto packageHousingMena = PackageHousingDto.builder()
                             .ritualPackage(applicantPackageDto.getRitualPackage())
                             .housingZone(HousingZoneDto.builder().id(1L).build())
@@ -489,57 +527,46 @@ public class ItemWriter {
                             .validityStart(new GregorianCalendar(2022, Calendar.JULY, 8).getTime())
                             .validityEnd(new GregorianCalendar(2022, Calendar.JULY, 8).getTime())
                             .build();
-                    arafetHousing = packageHousingService.save(packageHousingMena);
+                    packageHousingMena = packageHousingService.save(packageHousingMena);
+
+                    ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
+                            .applicantPackageId(applicantPackageDto.getId())
+                            .packageHousingId(packageHousingMena.getId())
+                            .siteCampRefCode(applicantHousingDataDto.getArafetCampRefCode())
+                            .siteBedNumber(applicantHousingDataDto.getArafetBedNumber())
+                            .siteCorridor(applicantHousingDataDto.getArafetCorridor())
+                            .siteFloor(applicantHousingDataDto.getArafetFloor())
+                            .siteRoom(applicantHousingDataDto.getArafetRoom())
+                            .siteTent(applicantHousingDataDto.getArafetTent())
+                            .build();
+                    applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
+                } else {
+                    arafetHousingList.forEach(arafatHousing -> {
+                        ApplicantPackageHousingDto applicantPackageHousingArafet = applicantPackageHousingService.findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
+                        if (applicantPackageHousingArafet != null) {
+                            applicantPackageHousingArafet.setSiteCampRefCode(applicantHousingDataDto.getArafetCampRefCode());
+                            applicantPackageHousingArafet.setSiteBedNumber(applicantHousingDataDto.getArafetBedNumber());
+                            applicantPackageHousingArafet.setSiteCorridor(applicantHousingDataDto.getArafetCorridor());
+                            applicantPackageHousingArafet.setSiteFloor(applicantHousingDataDto.getArafetFloor());
+                            applicantPackageHousingArafet.setSiteRoom(applicantHousingDataDto.getArafetRoom());
+                            applicantPackageHousingArafet.setSiteTent(applicantHousingDataDto.getArafetTent());
+                            applicantPackageHousingService.save(applicantPackageHousingArafet);
+
+                        } else {
+                            ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
+                                    .applicantPackageId(applicantPackageDto.getId())
+                                    .packageHousingId(arafatHousing.getId())
+                                    .siteCampRefCode(applicantHousingDataDto.getArafetCampRefCode())
+                                    .siteBedNumber(applicantHousingDataDto.getArafetBedNumber())
+                                    .siteCorridor(applicantHousingDataDto.getArafetCorridor())
+                                    .siteFloor(applicantHousingDataDto.getArafetFloor())
+                                    .siteRoom(applicantHousingDataDto.getArafetRoom())
+                                    .siteTent(applicantHousingDataDto.getArafetTent())
+                                    .build();
+                            applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
+                        }
+                    });
                 }
-
-
-                    ApplicantPackageHousingDto applicantPackageHousingMena = applicantPackageHousingService.findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
-                    if (applicantPackageHousingMena != null) {
-                        applicantPackageHousingMena.setSiteCampRefCode(applicantHousingDataDto.getMenaCampRefCode());
-                        applicantPackageHousingMena.setSiteBedNumber(applicantHousingDataDto.getMenaBedNumber());
-                        applicantPackageHousingMena.setSiteCorridor(applicantHousingDataDto.getMenaCorridor());
-                        applicantPackageHousingMena.setSiteFloor(applicantHousingDataDto.getMenaFloor());
-                        applicantPackageHousingMena.setSiteRoom(applicantHousingDataDto.getMenaRoom());
-                        applicantPackageHousingMena.setSiteTent(applicantHousingDataDto.getMenaTent());
-                        applicantPackageHousingService.save(applicantPackageHousingMena);
-
-                    } else {
-                        ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
-                                        .applicantPackageId(applicantPackageDto.getId())
-                                        .packageHousingId(menaHousing.getId())
-                                        .siteCampRefCode(applicantHousingDataDto.getMenaCampRefCode())
-                                        .siteBedNumber(applicantHousingDataDto.getMenaBedNumber())
-                                        .siteCorridor(applicantHousingDataDto.getMenaCorridor())
-                                        .siteFloor(applicantHousingDataDto.getMenaFloor())
-                                        .siteRoom(applicantHousingDataDto.getMenaRoom())
-                                        .siteTent(applicantHousingDataDto.getMenaTent())
-                                        .build();
-                        applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
-                    }
-
-                    ApplicantPackageHousingDto applicantPackageHousingArafet = applicantPackageHousingService.findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafetHousing.getId());
-                    if (applicantPackageHousingArafet != null) {
-                        applicantPackageHousingArafet.setSiteCampRefCode(applicantHousingDataDto.getArafetCampRefCode());
-                        applicantPackageHousingArafet.setSiteBedNumber(applicantHousingDataDto.getArafetBedNumber());
-                        applicantPackageHousingArafet.setSiteCorridor(applicantHousingDataDto.getArafetCorridor());
-                        applicantPackageHousingArafet.setSiteFloor(applicantHousingDataDto.getArafetFloor());
-                        applicantPackageHousingArafet.setSiteRoom(applicantHousingDataDto.getArafetRoom());
-                        applicantPackageHousingArafet.setSiteTent(applicantHousingDataDto.getArafetTent());
-                        applicantPackageHousingService.save(applicantPackageHousingArafet);
-
-                    } else {
-                        ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
-                                .applicantPackageId(applicantPackageDto.getId())
-                                .packageHousingId(arafetHousing.getId())
-                                .siteCampRefCode(applicantHousingDataDto.getArafetCampRefCode())
-                                .siteBedNumber(applicantHousingDataDto.getArafetBedNumber())
-                                .siteCorridor(applicantHousingDataDto.getArafetCorridor())
-                                .siteFloor(applicantHousingDataDto.getArafetFloor())
-                                .siteRoom(applicantHousingDataDto.getArafetRoom())
-                                .siteTent(applicantHousingDataDto.getArafetTent())
-                                .build();
-                        applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
-                    }
 
             });
             // update saved items
