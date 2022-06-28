@@ -141,9 +141,9 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         int updatedRowsCount = 0;
         if (latestPackage != null) {
             if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
-                updatedRowsCount = applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId);
+                updatedRowsCount = applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getMobileNumber(), applicantId);
             } else {
-                updatedRowsCount = applicantContactRepository.updateContactIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId);
+                updatedRowsCount = applicantContactRepository.updateContactIntlNumber(command.getEmail(),  command.getMobileNumber(), applicantId);
             }
             updatedRowsCount += applicantRepository.markAsRegistered(applicantId, command.getChannel());
 
