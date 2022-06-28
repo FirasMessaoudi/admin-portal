@@ -173,7 +173,6 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
                 }
             });
         }
-
         return false;
     }
 
@@ -189,32 +188,31 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
         PackageHousingDto menaHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.MENA.name());
         PackageHousingDto arafatHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.ARAFAT.name());
 
-        if (menaHousing == null && arafatHousing == null) {
-            return  applicantCampDetail;
+        if (menaHousing != null) {
+            ApplicantPackageHousingDto applicantPackageHousingMena = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
+            if (applicantPackageHousingMena != null) {
+                //set applicant package housing mena information
+                applicantCampDetail.setMenaCampRefCode(applicantPackageHousingMena.getSiteCampRefCode());
+                applicantCampDetail.setMenaCorridor(applicantPackageHousingMena.getSiteCorridor());
+                applicantCampDetail.setMenaFloor(applicantPackageHousingMena.getSiteFloor());
+                applicantCampDetail.setMenaTent(applicantPackageHousingMena.getSiteTent());
+                applicantCampDetail.setMenaBedNumber(applicantPackageHousingMena.getSiteBedNumber());
+                applicantCampDetail.setMenaRoom(applicantPackageHousingMena.getSiteRoom());
+
+            }
         }
 
-        ApplicantPackageHousingDto applicantPackageHousingMena = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
-        ApplicantPackageHousingDto applicantPackageHousingArafat = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
-
-        if (applicantPackageHousingMena != null) {
-            //set applicant package housing mena information
-            applicantCampDetail.setMenaCampRefCode(applicantPackageHousingMena.getSiteCampRefCode());
-            applicantCampDetail.setMenaCorridor(applicantPackageHousingMena.getSiteCorridor());
-            applicantCampDetail.setMenaFloor(applicantPackageHousingMena.getSiteFloor());
-            applicantCampDetail.setMenaTent(applicantPackageHousingMena.getSiteTent());
-            applicantCampDetail.setMenaBedNumber(applicantPackageHousingMena.getSiteBedNumber());
-            applicantCampDetail.setMenaRoom(applicantPackageHousingMena.getSiteRoom());
-
-        }
-
-        if(applicantPackageHousingArafat != null){
-            //set applicant package housing arafat information
-            applicantCampDetail.setArafatCampRefCode(applicantPackageHousingArafat.getSiteCampRefCode());
-            applicantCampDetail.setArafatCorridor(applicantPackageHousingArafat.getSiteCorridor());
-            applicantCampDetail.setArafatFloor(applicantPackageHousingArafat.getSiteFloor());
-            applicantCampDetail.setArafatTent(applicantPackageHousingArafat.getSiteTent());
-            applicantCampDetail.setArafatBedNumber(applicantPackageHousingArafat.getSiteBedNumber());
-            applicantCampDetail.setArafatRoom(applicantPackageHousingArafat.getSiteRoom());
+        if(arafatHousing != null) {
+            ApplicantPackageHousingDto applicantPackageHousingArafat = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
+            if (applicantPackageHousingArafat != null) {
+                //set applicant package housing arafat information
+                applicantCampDetail.setArafatCampRefCode(applicantPackageHousingArafat.getSiteCampRefCode());
+                applicantCampDetail.setArafatCorridor(applicantPackageHousingArafat.getSiteCorridor());
+                applicantCampDetail.setArafatFloor(applicantPackageHousingArafat.getSiteFloor());
+                applicantCampDetail.setArafatTent(applicantPackageHousingArafat.getSiteTent());
+                applicantCampDetail.setArafatBedNumber(applicantPackageHousingArafat.getSiteBedNumber());
+                applicantCampDetail.setArafatRoom(applicantPackageHousingArafat.getSiteRoom());
+            }
         }
 
         return applicantCampDetail;

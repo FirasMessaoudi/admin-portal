@@ -54,6 +54,6 @@ public interface PackageHousingRepository extends JpaRepository<JpaPackageHousin
 
     Optional<JpaPackageHousing> findTopByRitualPackageIdAndSiteCode(long id, String siteCode);
 
-    List<JpaPackageHousing> findByRitualPackageIdAndSiteCode(long id, String siteCode);
+    List<JpaPackageHousing> findAllByRitualPackageIdAndSiteCode(long id, String siteCode);
 
 }

@@ -79,7 +79,7 @@ public class PackageHousingService extends GenericService<JpaPackageHousing, Pac
 
     public List<PackageHousingDto> findAllByRitualPackageIdAndSiteCode(long id, String siteCode) {
         log.info("PackageHousingService ::: Start findByRitualPackageIdAndSiteCode ::: ritualPackage: {}", id);
-        List<JpaPackageHousing> jpaPackageHousing = packageHousingRepository.findByRitualPackageIdAndSiteCode(id, siteCode);
+        List<JpaPackageHousing> jpaPackageHousing = packageHousingRepository.findAllByRitualPackageIdAndSiteCode(id, siteCode);
         if (!jpaPackageHousing.isEmpty()) {
             return mapList(jpaPackageHousing);
         }
