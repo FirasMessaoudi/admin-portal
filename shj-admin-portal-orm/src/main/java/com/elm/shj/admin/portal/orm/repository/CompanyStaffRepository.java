@@ -229,6 +229,9 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     @Query("SELECT a FROM JpaCompanyStaff a WHERE a.id IN :selectedStaffs")
     Page<JpaCompanyStaff> findByIds(@Param("selectedStaffs") List<Long> selectedStaffs, Pageable pageable);
 
-
+    @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
+            "FROM JpaCompanyStaff a JOIN a.digitalIds di JOIN di.companyStaffCards csc JOIN csc.companyRitualSeason crs WHERE " +
+            "a.id = :staffId AND crs.id = :companyRitualSeasonId AND a.deleted=FALSE")
+    boolean exitsStaffInCompany(@Param("staffId") Long staffId, @Param("companyRitualSeasonId") Long companyRitualSeasonId);
 
 }

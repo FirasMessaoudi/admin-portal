@@ -190,9 +190,9 @@ public class ValidationService {
         }
 
         //check if ritual package is exist
-        Long existingRitualPackageId = ritualPackageService.findIdByReferenceAndRitualTypeAndSeason(plannedPackage.getPackageRefNumber().toString(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
-        if (existingRitualPackageId != null) {
-            ritualPackageDto.setId(existingRitualPackageId);
+        RitualPackageBasicWithDetailsDto existingRitualPackage = ritualPackageBasicWithDetailsService.findByReferenceAndRitualTypeAndSeason(plannedPackage.getPackageRefNumber().toString(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
+        if (existingRitualPackage != null) {
+            ritualPackageDto.setId(existingRitualPackage.getId());
         }
 
         //get the package transportation
@@ -209,11 +209,11 @@ public class ValidationService {
                         .validityStart(DateUtils.toGregorian(huicPackageTransportation.getValidityStart()))
                         .validityEnd(DateUtils.toGregorian(huicPackageTransportation.getValidityEnd()))
                         .routeDetails(huicPackageTransportation.getRouteDetails())
-                        .ritualPackage(existingRitualPackageId == null ? ritualPackageDto : RitualPackageBasicWithDetailsDto.builder().id(existingRitualPackageId).build())
+                        .ritualPackage(existingRitualPackage)
                         .build();
                 packageTransportationBasicList.add(packageTransportationDto);
             });
-            ritualPackageDto.setPackageTransportations(packageTransportationBasicList);
+            ritualPackageDto.getPackageTransportations().addAll(packageTransportationBasicList);
         }
 
         //get the package housing
@@ -222,6 +222,7 @@ public class ValidationService {
             List<PackageHousingBasicDto> packageHousingBasicList = new ArrayList<>();
             plannedPackage.getPackageHousings().forEach(huicPackageHousing -> {
                 HousingMasterDto housingMaster = housingMasterService.findLatestHousingMasterByReferenceCode(huicPackageHousing.getRefNumber().toString());
+                //TODO: what if housing master is not there
                 PackageHousingBasicDto packageHousing = PackageHousingBasicDto.builder()
                         .typeCode(housingMaster.getTypeCode())
                         .siteCode(housingMaster.getSiteCode())
@@ -236,8 +237,9 @@ public class ValidationService {
                         .isDefault(huicPackageHousing.isDefault())
                         .lat(housingMaster.getLat())
                         .lng(housingMaster.getLng())
-                        .ritualPackage(existingRitualPackageId == null ? ritualPackageDto : RitualPackageBasicWithDetailsDto.builder().id(existingRitualPackageId).build())
+                        .ritualPackage(existingRitualPackage)
                         .build();
+
                 //get the package housing catering
                 if (huicPackageHousing.getPackageCaterings() != null) {
                     log.info("Start creating the package housing catering for {} package reference number and {} housing master reference code.", plannedPackage.getPackageRefNumber(), housingMaster.getHousingReferenceCode());
@@ -258,7 +260,8 @@ public class ValidationService {
                 }
                 packageHousingBasicList.add(packageHousing);
             });
-            ritualPackageDto.setPackageHousings(packageHousingBasicList);
+            // add the new package housing list to the exiting one.
+            ritualPackageDto.getPackageHousings().addAll(packageHousingBasicList);
         }
         RitualPackageBasicWithDetailsDto savedRitualPackageBasicWithDetails = ritualPackageBasicWithDetailsService.save(ritualPackageDto);
         Long savedRitualPackageId = null;

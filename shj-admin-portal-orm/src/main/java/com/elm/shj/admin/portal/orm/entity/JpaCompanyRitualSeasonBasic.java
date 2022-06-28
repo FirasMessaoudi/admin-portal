@@ -35,22 +35,22 @@ public class JpaCompanyRitualSeasonBasic implements Serializable {
     private JpaRitualSeasonBasic ritualSeason;
 
     @Column(name = "season_start", nullable = false)
-    private long seasonStart;
+    private Long seasonStart;
 
     @Column(name = "season_end", nullable = false)
-    private long seasonEnd;
+    private Long seasonEnd;
 
     @Column(name = "total_quota")
-    private int totalQuota;
+    private Integer totalQuota;
 
     @Column(name = "air_quota")
-    private int airQuota;
+    private Integer airQuota;
 
     @Column(name = "sea_quota")
-    private int seaQuota;
+    private Integer seaQuota;
 
     @Column(name = "land_quota")
-    private int landQuota;
+    private Integer landQuota;
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
@@ -63,7 +63,7 @@ public class JpaCompanyRitualSeasonBasic implements Serializable {
     private Date updateDate;
 
     @Column(name = "active")
-    private boolean isActive;
+    private Boolean isActive;
 
     @PrePersist
     public void prePersist() {
