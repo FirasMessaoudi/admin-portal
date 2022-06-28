@@ -10,6 +10,7 @@ import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.elm.shj.admin.portal.services.lookup.NationalityLookupService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
+import com.elm.shj.admin.portal.services.user.UserLocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -53,7 +54,10 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     private final ApplicantPackageService applicantPackageService;
     private final NationalityLookupRepository nationalityLookupRepository;
     private final RitualTypeLookupRepository ritualTypeLookupRepository;
-    public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
+    private final UserLocationService userLocationService;
+
+
+    public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(966|009665|9665|\\+9665|05|5)([0-9]{8})$";
     private final String GROUP_DATA_FILE_NAME = "group-data.xlsx";
     private final String HOUSING_DATA_FILE_NAME = "housing-data.xlsx";
 
@@ -383,17 +387,29 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             //applicantSearchCriteriaDto.setGroupNumber(applicantSearchCriteriaDto.getGroupNumber() + "_" + String.valueOf(companyRefCode)+ "_" + companyTypeCode);
             String companyFullCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
             log.info("Group reference number... {}", applicantSearchCriteriaDto.getGroupNumber());
-            Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findOrganizerApplicantsWithGroupNumberFilter(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
+            Page<ApplicantDto> applicants = mapPage(applicantRepository.findOrganizerApplicantsWithGroupNumberFilter(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getGroupNumber(),
                     applicantSearchCriteriaDto.getPassportNumber(), applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
                     applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, companyFullCode, pageable));
-            log.info("Result of applicant content ... {}", applicantDtos);
-            log.info("Result of applicant list ... {}", applicantDtos.getContent());
-            return applicantDtos;
+            log.info("Result of applicant content ... {}", applicants);
+            log.info("Result of applicant list ... {}", applicants.getContent());
+            applicants.getContent().forEach(applicant -> {
+                UserLocationDto userLocationDto = userLocationService.findTopByUserIdAndUserTypeOrderByCreationDateDesc(applicant.getDigitalIds().isEmpty() ? null : applicant.getDigitalIds().get(0).getUin(),
+                        EUserType.APPLICANT.name());
+                applicant.setLatitude(userLocationDto == null ? null : userLocationDto.getLatitude());
+                applicant.setLongitude(userLocationDto == null ? null : userLocationDto.getLongitude());
+            });
+            return applicants;
         } else {
-            Page<ApplicantDto> applicantDtos = mapPage(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getPassportNumber(),
+            Page<ApplicantDto> applicants = mapPage(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getPassportNumber(),
                     applicantSearchCriteriaDto.getApplicantName(), applicantSearchCriteriaDto.getGender(),
                     applicantSearchCriteriaDto.getUin(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable));
-            return applicantDtos;
+            applicants.getContent().forEach(applicant -> {
+                UserLocationDto userLocationDto = userLocationService.findTopByUserIdAndUserTypeOrderByCreationDateDesc(applicant.getDigitalIds().isEmpty() ? null : applicant.getDigitalIds().get(0).getUin(),
+                        EUserType.APPLICANT.name());
+                applicant.setLatitude(userLocationDto == null ? null : userLocationDto.getLatitude());
+                applicant.setLongitude(userLocationDto == null ? null : userLocationDto.getLongitude());
+            });
+            return applicants;
         }
     }
 

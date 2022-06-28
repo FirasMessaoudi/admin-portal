@@ -139,6 +139,9 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
             if (notificationSearchCriteria.getSendingDateEnd() != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("sendingDate"), atEndOfDay(notificationSearchCriteria.getSendingDateEnd())));
             }
+            if (notificationSearchCriteria.getCompanyCode() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("companyCode"), notificationSearchCriteria.getCompanyCode()));
+            }
             criteriaQuery.distinct(true);
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };

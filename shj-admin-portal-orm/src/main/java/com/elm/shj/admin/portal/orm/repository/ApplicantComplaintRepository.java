@@ -64,6 +64,6 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
     List<ApplicantComplaintVo> findByCreationDateLessThanEqualAndStatusCode(@Param("creationDate") Date creationDate, @Param("statusCode") String statusCode);
 
 
-    List<JpaApplicantComplaint> findAllByApplicantRitualId(long applicantRitualId);
+    List<JpaApplicantComplaint> findByApplicantRitualId(long applicantRitualId);
 
 }

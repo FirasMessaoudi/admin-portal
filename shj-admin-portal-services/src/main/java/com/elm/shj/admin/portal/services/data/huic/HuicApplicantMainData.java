@@ -1,7 +1,6 @@
 package com.elm.shj.admin.portal.services.data.huic;
 
 import com.elm.shj.admin.portal.services.data.validators.*;
-import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -29,10 +28,12 @@ import java.util.Date;
 @Setter
 @Builder
 public class HuicApplicantMainData implements Serializable {
+
     private static final long serialVersionUID = 1068726443812588470L;
 
     @Gender
     private Integer gender;
+
     @NotNull(message = "validation.data.constraints.msg.20001")
     @NationalityCode
     private Long nationality;
@@ -45,6 +46,7 @@ public class HuicApplicantMainData implements Serializable {
     private String nationalIdOriginalCountry;
 
     private String passportNo;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
 
@@ -107,29 +109,22 @@ public class HuicApplicantMainData implements Serializable {
 
     @ApplicantStatus
     private Integer status;
+
     @RitualTypeCode
     private Integer ritualTypeCode;
+
     @SeasonYear
     private int seasonYear;
 
     @EstablishmentCode
     private Integer establishmentId; //establishmentRefCode
+
     @WithServiceGroup
     private Long serviceGroupMakkahId; //serviceGroupRefCode
+
     @WithServiceGroup
     private Long serviceGroupMadinaId; //serviceGroupRefCode
 
     private Long missionRefCode;
     private Long companyCode;
-
-
-
-    public static ApplicantBasicInfoDto fromHuicApplicant(HuicApplicantMainData applicant) {
-        ApplicantBasicInfoDto applicantBasicInfo = new ApplicantBasicInfoDto();
-        applicantBasicInfo.setIdNumber(applicant.getIdNumber().toString());
-        applicantBasicInfo.setPassportNumber(applicant.getPassportNo());
-        applicantBasicInfo.setDateOfBirthGregorian(applicant.getDateOfBirth());
-        applicantBasicInfo.setDateOfBirthHijri(applicant.getDateOfBirthHijri());
-        return applicantBasicInfo;
-    }
 }

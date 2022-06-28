@@ -143,6 +143,7 @@ public class IntegrationWsController {
     private final MessageSource messageSource;
     private final ApplicantComplaintLiteService applicantComplaintLiteService;
     private final ApplicantComplaintService applicantComplaintService;
+    private final ApplicantHealthService applicantHealthService;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
@@ -1067,7 +1068,7 @@ public class IntegrationWsController {
      */
     @GetMapping("/badge/generate/{applicantUin}/{withQr}")
     public ResponseEntity<WsResponse<?>> findApplicantBadge(@PathVariable String applicantUin, @PathVariable boolean withQr) {
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateApplicantBadge(applicantUin, withQr)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateApplicantBadge(applicantUin)).build());
 
     }
 
@@ -1081,31 +1082,6 @@ public class IntegrationWsController {
 
     }
 
-    /**
-     * @param applicantUin
-     * @return generated back and front badge for applicant
-     */
-    @GetMapping("/badge/applicant/frontback/{applicantUin}")
-    public ResponseEntity<WsResponse<?>> findApplicantBadgeFrontAndBack(@PathVariable String applicantUin) {
-        List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateApplicantBadge(applicantUin, false));
-        badges.add(badgeService.generateBackBadge(applicantUin));
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badges).build());
-
-    }
-
-    /**
-     * @param suin
-     * @return generated front and back badge for staff
-     */
-    @GetMapping("/badge/staff/frontback/{suin}")
-    public ResponseEntity<WsResponse<?>> findStaffBadgeFrontAndBack(@PathVariable String suin) {
-        List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateStaffCard(suin));
-        badges.add(badgeService.generateStaffBackBadge(suin));
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badges).build());
-
-    }
 
     /**
      * save user registration action to audit mobile log
@@ -1345,13 +1321,13 @@ public class IntegrationWsController {
     }
 
     /**
-     * @param applicantHealthLiteDto
+     * @param applicantHealthDto
      * @return
      */
 
     @PostMapping("/applicant/update-health-profile")
-    public ResponseEntity<WsResponse<?>> updateApplicantHealthProfile(@RequestBody ApplicantHealthLiteDto applicantHealthLiteDto) {
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantHealthLiteService.save(applicantHealthLiteDto)).build());
+    public ResponseEntity<WsResponse<?>> updateApplicantHealthProfile(@RequestBody ApplicantHealthDto applicantHealthDto) {
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantHealthService.save(applicantHealthDto)).build());
 
     }
 
@@ -1565,5 +1541,29 @@ public class IntegrationWsController {
                 .ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"")
                 .body(attachment);
+    }
+
+    @GetMapping("/applicant/package-transportation/details/{applicantUin}")
+    public ResponseEntity<WsResponse<?>> findApplicantVehicleNumberInfo(@PathVariable String applicantUin) {
+        log.debug("find applicant vehicle number details by applicant uin. {}", applicantUin);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.findApplicantVehicleNumberInfo(applicantUin)).build());
+    }
+
+    @GetMapping("/group/package-transportation/details/{groupId}")
+    public ResponseEntity<WsResponse<?>> findGroupApplicantVebicleNumber(@PathVariable Long groupId) {
+        log.debug("find group applicant vehicle number number by group id. {}", groupId);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.findGroupApplicantVebicleNumber(groupId)).build());
+    }
+
+    @PostMapping("/group/package-transportation/update")
+    public ResponseEntity<WsResponse<?>> updateGroupApplicantTranportation(@RequestBody UpdateApplicantTransportationDto updateApplicantTransportationDto) {
+        log.debug("Update Group Applicant pacckage transportation vehicl. {}", updateApplicantTransportationDto);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.updateGroupApplicantTranportation(updateApplicantTransportationDto)).build());
+    }
+
+    @PostMapping("/applicant/package-transportation/update")
+    public ResponseEntity<WsResponse<?>> updateApplicantTransportation(@RequestBody UpdateApplicantTransportationDto updateApplicantTransportationDto) {
+        log.debug("Update Applicant pacckage transportation vehicl. {}", updateApplicantTransportationDto);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.updateApplicantTransportation(updateApplicantTransportationDto)).build());
     }
 }
