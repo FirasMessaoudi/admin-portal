@@ -4,9 +4,9 @@
 </a>
 <div class="content__wrapper">
   <div class="title__Page">
-    <h3 class="sectionTitle">{{"card-management.print_card_title" | translate }}</h3>
-  </div>
-  <!-- <h5 class="subtitle__Page mb-4">{{'incident-management.incident_details' | translate}}</h5> -->
+    <h3 class="sectionTitle" *ngIf="personType && loadApplicantPerson">{{"card-management.print_applicant_card_title" | translate }}</h3>
+    <h3 class="sectionTitle" *ngIf="personType && !loadApplicantPerson">{{"card-management.print_staff_card_title" | translate }}</h3>
+  </div>  
   <form #printCardForm="ngForm"> 
      
     <ng-template #contentFull let-modal>

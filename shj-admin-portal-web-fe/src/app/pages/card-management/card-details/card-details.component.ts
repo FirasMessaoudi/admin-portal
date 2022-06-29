@@ -165,10 +165,10 @@ export class CardDetailsComponent implements OnInit {
                   cardId: this.card.id,
                   ritualId: this.card?.applicantRitual?.id
               };
-           //this.cardService.generateCard(generatCardInput).subscribe(result=>{           
-           //console.log("Reprint The Card");           
-           //});  
-           this.router.navigate(['/card/print',this.card?.applicantRitual?.applicant?.digitalIds[0]?.uin]);         
+         // this.cardService.generateCard(generatCardInput).subscribe(result=>{           
+            this.router.navigate(['/card/print',this.card?.applicantRitual?.applicant?.digitalIds[0]?.uin,'APPLICANT']);                
+          // });  
+             
           }
           else 
           {

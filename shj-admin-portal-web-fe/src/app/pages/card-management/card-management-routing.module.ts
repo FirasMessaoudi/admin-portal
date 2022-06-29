@@ -35,7 +35,7 @@ const routes: Routes = [
     canActivate: [AuthenticationGuard],
   },
   {
-    path: 'card/print/:id',
+    path: 'card/print/:id/:type',
     component: PrintCardComponent,
     canActivate: [AuthenticationGuard],
   }

@@ -15,6 +15,7 @@ import { PrintDetails } from '@model/print-details.model';
 import { ApplicantService } from '@core/services/applicant/applicant.service';
 import { PrintInfo } from '@model//print-info.model';
 import { CardService } from '@core/services/card/card.service';
+import { PersonType } from '@model/enum/person-type.enum';
 @Component({
   selector: 'app-print-card',
   templateUrl: './print-card.component.html',
@@ -33,6 +34,9 @@ export class PrintCardComponent implements OnInit {
   base64PartialImageBackPrinter:string;
   dualPrintingMode:boolean=true;
   showSpinner:boolean=false;
+  personType:string;  
+  personTypeCONST : PersonType= PersonType.APPLICANT;
+  loadApplicantPerson:boolean=false;
 
   constructor(    
     private router: Router,
@@ -54,35 +58,59 @@ export class PrintCardComponent implements OnInit {
 
   ngOnInit(): void {    
     this.cardNumber = this.route.snapshot.paramMap.get('id');
-    this.loadCardImages();
+    this.personType = this.route.snapshot.paramMap.get('type'); 
+    this.showSpinner=true;
+    if(this.personType == this.personTypeCONST)
+    {
+      this.loadApplicantPerson =true;
+      this.loadApplicantCardImages();
+    }
+    else 
+    {
+      this.loadStaffCardImages();
+    }
+    
   }   
 
- loadCardImages()
- {
-  this.showSpinner=true;
-  this.applicantService.getApplicantFullBadge(this.cardNumber).subscribe(result =>
-    {       
-
-      this.showSpinner=false;
-      if(result && result.length>0)
+  resolvePrintImages(result:any)
+  {
+    if(result && result.length>0)
+    {
+      if(result[0])
       {
-        if(result[0])
-        {
-          this.base64ImageFront=`data:image/bmp;base64,${result[0].badgeImage}`;
-          this.base64FullImageFrontPrinter = result[0].badgeImage;
-          this.base64PartialImageFrontPrinter = result[2].badgeImage;
-        } 
-        if(result[1])
-        {
-          this.base64ImageBack=`data:image/bmp;base64,${result[1].badgeImage}`;
-          this.base64FullImageBackPrinter = result[1].badgeImage;
-          this.base64PartialImageBackPrinter = result[3].badgeImage;
-        }
-        
+        this.base64ImageFront=`data:image/bmp;base64,${result[0].badgeImage}`;
+        this.base64FullImageFrontPrinter = result[0].badgeImage;
+        this.base64PartialImageFrontPrinter = result[2].badgeImage;
+      } 
+      if(result[1])
+      {
+        this.base64ImageBack=`data:image/bmp;base64,${result[1].badgeImage}`;
+        this.base64FullImageBackPrinter = result[1].badgeImage;
+        this.base64PartialImageBackPrinter = result[3].badgeImage;
       }
       
-    });
+    }
+  }
 
+  loadStaffCardImages()
+  {
+   
+   this.applicantService.getApplicantFullBadge(this.cardNumber).subscribe(result =>
+     {
+        this.showSpinner=false;
+        this.resolvePrintImages(result);
+       
+     });
+  }
+
+ loadApplicantCardImages()
+ {
+  
+  this.applicantService.getApplicantFullBadge(this.cardNumber).subscribe(result =>
+    {
+       this.showSpinner=false;
+       this.resolvePrintImages(result);      
+    });
  }
 
   navigateToList() {
@@ -99,7 +127,7 @@ export class PrintCardComponent implements OnInit {
         sessionId:`${this.cardNumber}${Math.random()}${Math.random()}${Math.random()}`,
         imageBase64String:this.base64FullImageFrontPrinter,
         backImageBase64String:this.base64FullImageBackPrinter,
-        isDualSide:this.dualPrintingMode
+        isDualSide:true
       };
       this.printCard(printDetails);
     }, (reason) => {
