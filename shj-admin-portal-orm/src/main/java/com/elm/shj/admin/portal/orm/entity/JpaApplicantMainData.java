@@ -64,6 +64,12 @@ public class JpaApplicantMainData implements Serializable {
     @Column(name = "marital_status_code")
     private String maritalStatusCode;
 
+    @Column(name = "emergency_contact_name")
+    private String emergencyContactName;
+
+    @Column(name = "emergency_contact_mobile_number")
+    private String emergencyContactMobileNumber;
+
     private String photo;
 
     @LazyCollection(LazyCollectionOption.FALSE)
