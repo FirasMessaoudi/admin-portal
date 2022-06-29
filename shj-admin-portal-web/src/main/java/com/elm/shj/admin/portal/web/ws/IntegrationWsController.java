@@ -772,7 +772,7 @@ public class IntegrationWsController {
     @GetMapping("/incident/list/{applicantRitualId}")
     public ResponseEntity<WsResponse<?>> listApplicantRelatedIncidents(@PathVariable long applicantRitualId) {
         log.info("list incidents...");
-        List<ApplicantIncidentDto> applicantIncidents = applicantIncidentService.listApplicantRelatedIncidents(applicantRitualId);
+        List<ApplicantIncidentLiteDto> applicantIncidents = applicantIncidentLiteService.listApplicantRelatedIncidents(applicantRitualId);
         if (applicantIncidents == null || applicantIncidents.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(null).build());

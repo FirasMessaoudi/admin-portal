@@ -53,4 +53,8 @@ public class ApplicantIncidentComplaintVoCRM implements Serializable {
     public String getSmartIDTicketNumber() {
         return smartIDTicketNumber;
     }
+
+    public Integer getMainType() {
+        return mainType;
+    }
 }

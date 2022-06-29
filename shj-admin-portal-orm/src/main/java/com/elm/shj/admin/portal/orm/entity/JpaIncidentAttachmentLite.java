@@ -37,7 +37,7 @@ public class JpaIncidentAttachmentLite implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "applicant_incident_id")
-    private JpaApplicantIncident applicantIncident;
+    private JpaApplicantIncidentLite applicantIncident;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;

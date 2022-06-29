@@ -60,7 +60,7 @@ public class JpaApplicantIncidentLite implements Serializable {
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantIncident")
-    private JpaIncidentAttachmentLite  incidentAttachments;
+    private JpaIncidentAttachmentLite  incidentAttachment;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;

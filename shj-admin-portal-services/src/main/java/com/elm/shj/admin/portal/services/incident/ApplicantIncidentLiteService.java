@@ -181,5 +181,14 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
         return fileSize > maxFileSize ? false : true;
     }
 
+    /**
+     * List of applicant related incidents.
+     *
+     * @param applicantRitualId
+     * @return List of applicant related incidents
+     */
+    public List<ApplicantIncidentLiteDto> listApplicantRelatedIncidents(long applicantRitualId) {
+        return mapList(applicantIncidentLiteRepository.findByApplicantRitualId(applicantRitualId));
+    }
 }
 
