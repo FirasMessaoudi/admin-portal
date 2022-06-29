@@ -22,8 +22,6 @@ public interface RitualPackageRepository extends JpaRepository<JpaRitualPackage,
 
     JpaRitualPackage findTopByCompanyRitualSeasonIdOrderByStartDateDescCreationDateDesc(long companyRitualSeason);
 
-    Optional<JpaRitualPackage> findByCompanyRitualSeasonCompanyStaffCardsCompanyStaffDigitalIdSuin(String digitalId);
-
     @Query("select rp.referenceNumber from JpaRitualPackage rp where rp.companyRitualSeason.company.code = :companyCode and rp.companyRitualSeason.ritualSeason.ritualTypeCode = :ritualTypeCode and rp.companyRitualSeason.ritualSeason.seasonYear = :seasonYear")
     String findReferenceNumberByRitualSeason(@Param("companyCode") String companyCode, @Param("ritualTypeCode") String ritualTypeCode, @Param("seasonYear") int seasonYear);
 

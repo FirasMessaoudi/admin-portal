@@ -18,12 +18,13 @@ import org.mapstruct.Mapping;
  */
 @Mapper(componentModel = "spring")
 public abstract class ApplicantComplaintDtoMapper implements IGenericMapper<ApplicantComplaintDto, JpaApplicantComplaint>{
-    @Override
-    @Mapping(target = "applicantRitual.relatives", ignore = true)
-    @Mapping(target = "applicantRitual.applicantHealths", ignore = true)
-    @Mapping(target = "applicantRitual.applicant.relatives", ignore = true)
-    @Mapping(target = "applicantRitual.applicant.rituals", ignore = true)
-    @Mapping(target = "applicantRitual.applicant.contacts", ignore = true)
+
+//    @Mapping(target = "applicantRitual.relatives", ignore = true)
+//    @Mapping(target = "applicantRitual.applicantHealths", ignore = true)
+//    @Mapping(target = "applicantRitual.applicant.relatives", ignore = true)
+//    @Mapping(target = "applicantRitual.applicant.rituals", ignore = true)
+//    @Mapping(target = "applicantRitual.applicant.contacts", ignore = true)
+@Override
     public abstract ApplicantComplaintDto fromEntity(JpaApplicantComplaint entity, @Context CycleAvoidingMappingContext cycleAvoidingMappingContext);
 
 }

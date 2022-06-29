@@ -27,7 +27,7 @@ public class ApplicantComplaintDto implements Serializable {
     private static final long serialVersionUID = 5885377938235938843L;
 
     private long id;
-    private ApplicantRitualDto applicantRitual;
+    private ApplicantRitualBasicDto applicantRitual;
     private String statusCode;
     private String referenceNumber;
     private String typeCode;
@@ -44,5 +44,7 @@ public class ApplicantComplaintDto implements Serializable {
     private String city;
     private String campNumber;
     private String crmTicketNumber;
+    private String mobileNumber;
+
 
 }

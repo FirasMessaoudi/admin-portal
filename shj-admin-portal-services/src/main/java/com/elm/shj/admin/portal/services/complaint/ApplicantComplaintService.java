@@ -241,11 +241,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     }
 
     public List<ApplicantComplaintDto> findAllByApplicantRitualId(long applicantRitualId) {
-        List<JpaApplicantComplaint> allByApplicantRitualId = applicantComplaintRepository.findAllByApplicantRitualId(applicantRitualId);
-        if(allByApplicantRitualId == null){
-            return new ArrayList<>();
-        }
-        List<ApplicantComplaintDto> applicantComplaintDtos = getMapper().fromEntityList(allByApplicantRitualId, mappingContext);
-        return applicantComplaintDtos;
+
+        return mapList(applicantComplaintRepository.findByApplicantRitualId(applicantRitualId));
     }
 }

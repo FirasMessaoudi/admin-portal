@@ -40,7 +40,7 @@ public class JpaApplicantComplaint implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "applicant_ritual_id")
-    private JpaApplicantRitual applicantRitual;
+    private JpaApplicantRitualBasic applicantRitual;
 
     @Column(name = "status_code")
     private String statusCode;
@@ -80,6 +80,9 @@ public class JpaApplicantComplaint implements Serializable {
 
     @Column(name = "crm_ticket_number")
     private String crmTicketNumber;
+
+    @Column(name = "mobile_number")
+    private String mobileNumber;
 
     @PrePersist
     public void prePersist() {

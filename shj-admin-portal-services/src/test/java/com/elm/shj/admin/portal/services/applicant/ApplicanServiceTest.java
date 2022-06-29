@@ -57,7 +57,7 @@ public class ApplicanServiceTest {
     private CycleAvoidingMappingContext mappingContext;
 
 
-    @Test
+   /* @Test
     public void test_update_applicant_local_contacts() {
         UpdateApplicantCmd command = new UpdateApplicantCmd();
         command.setUin(TEST_UIN);
@@ -73,7 +73,7 @@ public class ApplicanServiceTest {
         command.setMobileNumber(TEST_INTL_MOBILE);
         applicantService.updateApplicantContacts(TEST_APPLICANT_ID, command);
         verify(applicantContactRepository, times(1)).updateContactIntlNumber(any(), any(), anyString(), anyLong());
-    }
+    }*/
 
     @Test
     public void test_find_by_uin_success() {

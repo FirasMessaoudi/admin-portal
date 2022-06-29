@@ -44,11 +44,11 @@ public class HuicPlannedPackage implements Serializable {
     private Integer establishmentId;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @HijriDate(minOffset = -1, maxOffset = 1)
+    @HijriDate(minOffset = -140, maxOffset = 1)
     private Long packageStartDate;
 
     @NotNull(message = "validation.data.constraints.msg.20001")
-    @HijriDate(minOffset = -1, maxOffset = 1)
+    @HijriDate(minOffset = -140, maxOffset = 1)
     private Long packageEndDate;
 
     @RitualTypeCode

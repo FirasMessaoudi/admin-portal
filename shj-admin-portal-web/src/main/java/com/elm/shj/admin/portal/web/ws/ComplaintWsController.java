@@ -170,7 +170,7 @@ public class ComplaintWsController {
         }
     }
 
-    @PostMapping("/applicant/list/{applicantRitualId}")
+    @GetMapping("/applicant/list/{applicantRitualId}")
     private ResponseEntity<WsResponse<?>> list(@PathVariable long applicantRitualId){
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())

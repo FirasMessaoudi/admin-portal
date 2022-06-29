@@ -56,7 +56,8 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     private final RitualTypeLookupRepository ritualTypeLookupRepository;
     private final UserLocationService userLocationService;
 
-    public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(009665|9665|\\+9665|05|5)([0-9]{8})$";
+
+    public final static String SAUDI_MOBILE_NUMBER_REGEX = "^(966|009665|9665|\\+9665|05|5)([0-9]{8})$";
     private final String GROUP_DATA_FILE_NAME = "group-data.xlsx";
     private final String HOUSING_DATA_FILE_NAME = "housing-data.xlsx";
 
@@ -140,9 +141,9 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         int updatedRowsCount = 0;
         if (latestPackage != null) {
             if (command.getMobileNumber().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
-                updatedRowsCount = applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId);
+                updatedRowsCount = applicantContactRepository.updateContactLocalNumber(command.getEmail(), command.getMobileNumber(), applicantId);
             } else {
-                updatedRowsCount = applicantContactRepository.updateContactIntlNumber(command.getEmail(), command.getCountryCode(), command.getMobileNumber(), applicantId);
+                updatedRowsCount = applicantContactRepository.updateContactIntlNumber(command.getEmail(),  command.getMobileNumber(), applicantId);
             }
             updatedRowsCount += applicantRepository.markAsRegistered(applicantId, command.getChannel());
 
@@ -458,7 +459,11 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             Cell groupRefNumber = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
             groupRefNumber.setCellValue("");
 
-            String ritualType = applicantRepository.findRitualTypeByApplicantId(applicant.getId());
+            String ritualType="";
+            if(!applicantRepository.findRitualTypeByApplicantId(applicant.getId()).isEmpty()){
+                ritualType = applicantRepository.findRitualTypeByApplicantId(applicant.getId()).get(0);
+            }
+
             Cell ritualTypeCell = row.getCell(row.getFirstCellNum() + cellIndex.getAndIncrement());
             ritualTypeCell.setCellValue(ritualTypeLookupRepository.findLabelByCodeAndLanguage(ritualType, "ar"));
 
@@ -549,6 +554,10 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
 
     public List<Long> findApplicantByGroupId(Long groupId){
         return applicantRepository.findApplicantByGroupId(groupId);
+    }
+
+    public Boolean isValidApplicant(Long applicantId){
+        return applicantRepository.isValidApplicant(applicantId);
     }
 
 }
