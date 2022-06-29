@@ -53,35 +53,19 @@ public class BadgeService {
 
     private final static int BADGE_WIDTH = 648;
     private final static int BADGE_HEIGHT = 1016;
-    private final static int ICON_WIDTH = (int) Math.round(0.42 * 96);
-    private final static int ICON_HEIGHT = (int) Math.round(0.48 * 96);
     private final static int PHOTO_MAX_HEIGHT = (int) Math.round(2.17 * 99);
-    private final static int QR_CODE_MAX_HEIGHT = (int) Math.round(1.9 * 68);
+    private final static int QR_CODE_MAX_HEIGHT = (int) Math.round(1.98 * 80);
     private final static int QR_CODE_BACK_MAX_HEIGHT = (int) Math.round(1.82 * 78);
 
     private final static int MOHU_LOGO_MAX_HEIGHT = (int) Math.round(1.15 * 96);
-    private final static int TABLE_HEADER_HEIGHT = 64;
-    private final static int TABLE_VERTICAL_OFFSET = 22;
-    private final static int MOBILE_BADGE_HEIGHT = (int) Math.round(12.12 * 96);
+
 
     private final static String BADGE_RESOURCES_PATH = "badge/";
     private final static String ELM_FONT_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "DINNextLTArabic-Regular-2.ttf";
-    private final static String TOP_BG_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "top-bg.png";
 
-    private final static String TOP_BG_NEW_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "top_BG.png";
     private final static String HAJJ_APP_LOGO_FILE_NAME = BADGE_RESOURCES_PATH + "logo.png";
-
-    private final static String BOTTOM_BG_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "bottom-bg.png";
     private final static String MOHU_LOGO_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "mohu-logo.png";
-    private final static String TENT_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "tent.jpg";
-    private final static String BUS_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "bus.jpg";
-    private final static String LEADER_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "leader.jpg";
-    private final static int STAFF_BADGE_HEIGHT = (int) Math.round(11.12 * 96);
-    private final static String STAFF_TOP_BG_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "staff-top-bg.png";
-    private final static String STAFF_LEFT_LOGO_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "staff-left-logo.png";
-    private final static String STAFF_RIGHT_LOGO_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "staff-right-logo.png";
     private final static String STAFF_CARD_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "staff-status.PNG";
-    private final static String STAFF_FOOTER_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "staff-footer.png";
 
     private static Font shaaerFont;
 
@@ -136,8 +120,6 @@ public class BadgeService {
 
         addRitual(g2d, ritualType, staffData.getRitualSeason() + "");
 
-        //addCampRectangle(g2d, applicantRitualCardLite.getUnitCode(), applicantRitualCardLite.getGroupCode(), applicantRitualCardLite.getCampCode());
-        //addBusRectangle(g2d, applicantRitualCardLite.getBusNumber(), applicantRitualCardLite.getSeatNumber());
         addCompanyRectangle(g2d, null, staffData, suin, false);
         String imgStr = null;
         try {
@@ -410,11 +392,11 @@ public class BadgeService {
     private void addBackBadgeText1(Graphics2D g2d, String contactNumber, boolean isPrePrinted) {
         BufferedImage topBackground = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "card-back-text1.png");
         if (topBackground != null && !isPrePrinted) {
-            g2d.drawImage(ImageUtils.resizeImage(topBackground, BADGE_WIDTH, BADGE_HEIGHT), 0, 370, null);
+            g2d.drawImage(ImageUtils.resizeImage(topBackground, BADGE_WIDTH - 30, BADGE_HEIGHT), 21, 370, null);
         }
         FontRenderContext frc = g2d.getFontRenderContext();
 
-        Font font = shaaerFont.deriveFont(21f);
+        Font font = shaaerFont.deriveFont(23f);
 
         FontMetrics fm = g2d.getFontMetrics(font);
 
@@ -422,27 +404,29 @@ public class BadgeService {
         int yDif = 400 + topBackground.getHeight() + 30;
         BufferedImage phone = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "phone-icon.PNG");
         if (topBackground != null) {
-            g2d.drawImage(ImageUtils.resizeImage(phone, 25, 25), xDif - 25, yDif - 20, null);
+            g2d.drawImage(ImageUtils.resizeImage(phone, 30, 30), xDif - 25, yDif - 20, null);
         }
-        g2d.setColor(Color.black);
-        font = font.deriveFont(
-                Collections.singletonMap(
-                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
-        TextLayout layout = new TextLayout(contactNumber + "", font, frc);
-        layout.draw(g2d, xDif + 5, yDif);
+        if (contactNumber != null) {
+            g2d.setColor(Color.black);
+            font = font.deriveFont(
+                    Collections.singletonMap(
+                            TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+            TextLayout layout = new TextLayout(contactNumber + "", font, frc);
+            layout.draw(g2d, xDif + 5, yDif);
+        }
     }
 
     private void addBackBadgeText2(Graphics2D g2d) {
         BufferedImage topBackground = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "card-back-text2.png");
         if (topBackground != null) {
-            g2d.drawImage(ImageUtils.resizeImage(topBackground, BADGE_WIDTH, BADGE_HEIGHT), 0, 660, null);
+            g2d.drawImage(ImageUtils.resizeImage(topBackground, BADGE_WIDTH - 30, BADGE_HEIGHT), 21, 660, null);
         }
     }
 
     private void addStaffBackBadgeText(Graphics2D g2d) {
         BufferedImage topBackground = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "staff-back-text.PNG");
         if (topBackground != null) {
-            g2d.drawImage(ImageUtils.resizeImage(topBackground, BADGE_WIDTH, BADGE_HEIGHT), 0, 390, null);
+            g2d.drawImage(ImageUtils.resizeImage(topBackground, BADGE_WIDTH - 30, BADGE_HEIGHT), 21, 390, null);
         }
     }
 
@@ -567,7 +551,7 @@ public class BadgeService {
 
     private void addCompanyRectangle(Graphics2D g2d, ApplicantRitualCardLiteDto applicantRitualCard, CompanyStaffVO staffData, String uin, boolean isPrePrinted) {
         uin = uin == null ? "---" : uin;
-        int rectHeightDetails = (int) Math.round(2 * 84);
+        int rectHeightDetails = (int) Math.round(2.13 * 91);
         int rectHeight = applicantRitualCard != null ? (int) Math.round(2 * 84) : (int) Math.round(1.5 * 84);
         int rectWidth = (int) Math.round(6.28 * 96);
         int rectX = 21;
@@ -628,11 +612,13 @@ public class BadgeService {
         int xDif = (BADGE_WIDTH - fm.stringWidth(labelAr) - 80);
         int yDif = rectYApplicant + 70;
         TextLayout layout = new TextLayout(labelAr, font, frc);
-        layout.draw(g2d, xDif, yDif);
+        if (!isPrePrinted)
+            layout.draw(g2d, xDif, yDif);
         g2d.setColor(new Color(0xFF6e6d6b));
         yDif += 30;
         layout = new TextLayout(labelEn, font, frc);
-        layout.draw(g2d, xDif - 10, yDif);
+        if (!isPrePrinted)
+            layout.draw(g2d, xDif - 10, yDif);
 
 
         BufferedImage qrCode = makeRoundedCorner(generateQRcode(uin, applicantRitualCard != null ? applicantRitualCard.getCardId() + "" : staffData.getCardId() + "", false), 30);
@@ -656,11 +642,13 @@ public class BadgeService {
         g2d.setColor(new Color(0xFF212121));
         font = shaaerFont.deriveFont(20f);
         layout = new TextLayout("البطاقة الذكية", font, frc);
-        layout.draw(g2d, xDifLeft, yDifLeft);
+        if (!isPrePrinted)
+            layout.draw(g2d, xDifLeft, yDifLeft);
         yDifLeft += 30;
         g2d.setColor(new Color(0xFF6e6d6b));
         layout = new TextLayout(" Smart Card", font, frc);
-        layout.draw(g2d, xDifLeft, yDifLeft);
+        if (!isPrePrinted)
+            layout.draw(g2d, xDifLeft, yDifLeft);
         yDifLeft += 45;
         g2d.setColor(Color.black);
         font = shaaerFont.deriveFont(22f);
