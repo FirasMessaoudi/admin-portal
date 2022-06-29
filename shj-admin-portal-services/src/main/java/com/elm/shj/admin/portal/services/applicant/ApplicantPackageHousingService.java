@@ -222,7 +222,7 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
         return applicantCampDetail;
     }
 
-    public GroupApplicantCampDto findGroupApplicantCampReferenceNumber(Long groupId){
+    public GroupApplicantCampDto findGroupApplicantCampReferenceNumber(Long groupId) {
         log.info("groupId .. {}", groupId);
         List<Long> applicantIdlIst = applicantService.findApplicantByGroupId(groupId);
         log.info("applicantIdlIst ... {}" + applicantIdlIst) ;
@@ -239,16 +239,20 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
 
             if (menaHousing != null) {
                 ApplicantPackageHousingDto applicantPackageHousingMena = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
-                applicantPackageHousingMenaList.add(applicantPackageHousingMena);
+                if (applicantPackageHousingMena != null) {
+                    applicantPackageHousingMenaList.add(applicantPackageHousingMena);
+                }
             }
 
             if (arafatHousing != null) {
                 ApplicantPackageHousingDto applicantPackageHousingArafat = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
-                applicantPackageHousingArafatList.add(applicantPackageHousingArafat);
+                if (applicantPackageHousingArafat != null) {
+                    applicantPackageHousingArafatList.add(applicantPackageHousingArafat);
+                }
             }
         });
 
-        if(!applicantPackageHousingMenaList.isEmpty()){
+        if(!applicantPackageHousingMenaList.isEmpty()) {
             if(applicantPackageHousingMenaList.stream().map(ApplicantPackageHousingDto::getSiteCampRefCode).distinct().count() <= 1){
                 groupApplicantCamp.setMenaCampRefNumber(applicantPackageHousingMenaList.get(0).getSiteCampRefCode());
             } else {
