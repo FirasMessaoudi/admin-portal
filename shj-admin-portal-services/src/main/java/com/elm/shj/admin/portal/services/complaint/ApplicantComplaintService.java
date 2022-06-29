@@ -70,8 +70,8 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     private final ComplaintAttachmentLiteRepository complaintAttachmentLiteRepository;
     private final NotificationRequestService notificationRequestService;
     private final NotificationTemplateService notificationTemplateService;
-    private static final String RESOLVE_INCIDENT_TEMPLATE_NAME = "RESOLVE_INCIDENT";
-    private static final String CLOSE_INCIDENT_TEMPLATE_NAME = "CLOSE_INCIDENT";
+    private static final String RESOLVE_INCIDENT_TEMPLATE_NAME = "RESOLVE_COMPLAINT";
+    private static final String CLOSE_INCIDENT_TEMPLATE_NAME = "CLOSE_COMPLAINT";
 
     private static final String APPLICANT_COMPLAINTS_CONFIG_PROPERTIES = "applicantComplaintsConfigProperties";
 
