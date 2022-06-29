@@ -128,6 +128,8 @@ public class ApplicantDto implements Serializable {
     private Long serviceGroupMadinaCode;
     private Double latitude;
     private Double longitude;
+    private String emergencyContactMobileNumber;
+    private String emergencyContactName;
 
     /**
      * Get applicant object from applicant lite object.

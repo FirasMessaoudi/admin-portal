@@ -38,6 +38,8 @@ public class ApplicantMainDataDto implements Serializable {
     private String fullNameOrigin;
     private String maritalStatusCode;
     private String photo;
+    private String emergencyContactMobileNumber;
+    private String emergencyContactName;
 
     /*From Applicant, Applicant Ritual and Applicant Relatives*/
     private List<ApplicantRelativeDto> relatives;
