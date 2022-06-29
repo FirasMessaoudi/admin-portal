@@ -116,13 +116,13 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     @Modifying
     @Query("update JpaCompanyStaff staff set staff.countryCode = :countryCode, staff.countryPhonePrefix = :countryPhonePrefix, staff.email = :email, " +
             "staff.mobileNumberIntl =:intlMobileNumber, staff.registered = TRUE, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
-    int updateCompanyStaffIntlNumber(@Param("email") String email,@Param("countryCode") String countryCode, @Param("countryPhonePrefix") String countryPhonePrefix, @Param("intlMobileNumber") String intlMobileNumber, @Param("staffId") long staffId);
+    int updateCompanyStaffIntlNumber(@Param("email") String email, @Param("countryPhonePrefix") String countryPhonePrefix, @Param("intlMobileNumber") String intlMobileNumber, @Param("staffId") long staffId);
 
 
     @Modifying
     @Query("update JpaCompanyStaff staff set staff.countryCode = :countryCode,  staff.email = :email, " +
             "staff.mobileNumber =:localMobileNumber, staff.registered = TRUE, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
-    int updateCompanyStaffLocalNumber(@Param("email") String email, @Param("countryCode") String countryCode, @Param("localMobileNumber") String localMobileNumber, @Param("staffId") long staffId);
+    int updateCompanyStaffLocalNumber(@Param("email") String email,  @Param("localMobileNumber") String localMobileNumber, @Param("staffId") long staffId);
 
     JpaCompanyStaff findByIdAndRegisteredTrue(long id);
 
