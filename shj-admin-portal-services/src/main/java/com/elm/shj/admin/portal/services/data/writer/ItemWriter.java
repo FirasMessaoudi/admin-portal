@@ -10,6 +10,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroupBasic;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonBasicService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualStepService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
@@ -87,6 +88,7 @@ public class ItemWriter {
     private final ApplicantPackageHousingService applicantPackageHousingService;
     private final NationalityLookupService nationalityLookupService;
     private final ApplicantPackageHousingBasicService applicantPackageHousingBasicService;
+    private final CompanyRitualSeasonBasicService companyRitualSeasonBasicService;
 
     @Value("${ritual.season.year}")
     private int seasonYear;
@@ -303,6 +305,12 @@ public class ItemWriter {
                 }
                 ApplicantLiteDto applicantLiteDto = applicantLiteService.findByBasicInfo(groupDataDto.getIdNumber(), groupDataDto.getPassportNumber(), groupDataDto.getNationalityCode());
 
+                // validate applicant is delted false and package reference number is not null
+                if(!applicantService.isValidApplicant(applicantLiteDto.getId())){
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_ID_NUMBER.getMessage())).valid(false).build());
+                    return;
+                }
+
                 // validate applicant is belong to loggend in  user company
                 if(!validationService.isValidApplicant(applicantLiteDto, companyRefCode[0])){
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_FOUND.getMessage())).valid(false).build());
@@ -375,12 +383,19 @@ public class ItemWriter {
                         ritualTypeCodeCellIndex = field.getAnnotation(CellIndex.class).index();
                 }
                 GroupMainDataDto groupMainDataDto = (GroupMainDataDto) entry.getValue();
-                CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], groupMainDataDto.getRitualTypeCode(), seasonYear);
+                CompanyRitualSeasonBasicDto companyRitualSeasonDto = companyRitualSeasonBasicService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], groupMainDataDto.getRitualTypeCode(), seasonYear);
                 if (companyRitualSeasonDto == null) {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(ritualTypeCodeCellIndex)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage())).valid(false).build());
                     return;
                 }
+
                 Long existingStaffId = companyStaffService.findIdByBasicInfo(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationalityCode());
+                Boolean existsStaffInCompany = companyStaffService.exitsStaffInCompany(existingStaffId, companyRitualSeasonDto.getId());
+                if(!existsStaffInCompany){
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_ID_NUMBER.getMessage())).valid(false).build());
+                    return;
+                }
+
                 Long existingApplicantGroupId = applicantGroupBasicService.findIdByReferenceNumberAndCompanyRitualSeason(groupMainDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
                 ApplicantGroupBasicDto applicantGroupDto = ApplicantGroupBasicDto.builder()
                         .groupLeaderId(existingStaffId)
@@ -451,6 +466,12 @@ public class ItemWriter {
                 ApplicantHousingDataDto applicantHousingDataDto = (ApplicantHousingDataDto) entry.getValue();
                 Long applicantId = applicantService.findIdByBasicInfo(applicantHousingDataDto.getIdNumber(), applicantHousingDataDto.getPassportNumber(), applicantHousingDataDto.getNationalityCode());
                 if (applicantId == null) {
+                    return;
+                }
+
+                // validate applicant is delted false and package reference number is not null
+                if(!applicantService.isValidApplicant(applicantId)){
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_ID_NUMBER.getMessage())).valid(false).build());
                     return;
                 }
                 ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantId);

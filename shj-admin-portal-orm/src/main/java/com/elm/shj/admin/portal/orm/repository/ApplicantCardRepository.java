@@ -71,7 +71,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
             "and applicantDigitalId.uin in :digitalIdList ")
     List<JpaApplicantCard> findApplicantCardsByPrintRequestBatchIdAndDigitalIds(@Param("digitalIdList") List<String> digitalIdList , @Param("batchId") long batchId);
 
-    JpaApplicantCard findByApplicantRitualId(long applicantRitualId);
+    JpaApplicantCard findByApplicantRitualIdAndStatusCodeNotIn(long applicantRitualId, List<String> cardsStatus);
 
     @Modifying
     @Query("UPDATE JpaApplicantCard appCard SET appCard.statusCode=:status, appCard.updateDate = CURRENT_TIMESTAMP WHERE appCard.id IN :cardsIds")

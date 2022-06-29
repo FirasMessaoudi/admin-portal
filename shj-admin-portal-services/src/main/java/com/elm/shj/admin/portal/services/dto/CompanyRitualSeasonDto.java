@@ -3,7 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -35,7 +35,7 @@ public class CompanyRitualSeasonDto {
 
     private List<RitualPackageDto> ritualPackages;
 
-    @JsonManagedReference
+    @JsonBackReference
     private List<ApplicantGroupDto> applicantGroups;
 
     @NotNull(message = "validation.data.constraints.msg.20001")

@@ -297,7 +297,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     }
 
     public ApplicantCardDto findApplicantCardByApplicantRitualId(long applicantRitualId) {
-        return getMapper().fromEntity(applicantCardRepository.findByApplicantRitualId(applicantRitualId), mappingContext);
+        return getMapper().fromEntity(applicantCardRepository.findByApplicantRitualIdAndStatusCodeNotIn(applicantRitualId, Arrays.asList(ECardStatus.CANCELLED.name(), ECardStatus.EXPIRED.name(), ECardStatus.SUSPENDED.name())), mappingContext);
     }
 
     public void updateCardStatus(List<Long> cardsIds){

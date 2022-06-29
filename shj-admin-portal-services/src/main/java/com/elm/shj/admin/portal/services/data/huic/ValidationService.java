@@ -190,9 +190,11 @@ public class ValidationService {
         }
 
         //check if ritual package is exist
-        Long existingRitualPackageId = ritualPackageService.findIdByReferenceAndRitualTypeAndSeason(plannedPackage.getPackageRefNumber().toString(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
-        if (existingRitualPackageId != null) {
-            ritualPackageDto.setId(existingRitualPackageId);
+        RitualPackageBasicWithDetailsDto existingRitualPackage = ritualPackageBasicWithDetailsService.findByReferenceAndRitualTypeAndSeason(plannedPackage.getPackageRefNumber().toString(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
+        if (existingRitualPackage != null) {
+            ritualPackageDto.setId(existingRitualPackage.getId());
+            ritualPackageDto.setPackageHousings(existingRitualPackage.getPackageHousings());
+            ritualPackageDto.setPackageTransportations(existingRitualPackage.getPackageTransportations());
         }
 
         //get the package transportation
@@ -209,11 +211,15 @@ public class ValidationService {
                         .validityStart(DateUtils.toGregorian(huicPackageTransportation.getValidityStart()))
                         .validityEnd(DateUtils.toGregorian(huicPackageTransportation.getValidityEnd()))
                         .routeDetails(huicPackageTransportation.getRouteDetails())
-                        .ritualPackage(existingRitualPackageId == null ? ritualPackageDto : RitualPackageBasicWithDetailsDto.builder().id(existingRitualPackageId).build())
+                        .ritualPackage(ritualPackageDto)
                         .build();
                 packageTransportationBasicList.add(packageTransportationDto);
             });
-            ritualPackageDto.setPackageTransportations(packageTransportationBasicList);
+            if (ritualPackageDto.getPackageTransportations() != null && !ritualPackageDto.getPackageTransportations().isEmpty()) { // old transportations exist
+                ritualPackageDto.getPackageTransportations().addAll(packageTransportationBasicList);
+            } else {
+                ritualPackageDto.setPackageTransportations(packageTransportationBasicList);
+            }
         }
 
         //get the package housing
@@ -222,6 +228,7 @@ public class ValidationService {
             List<PackageHousingBasicDto> packageHousingBasicList = new ArrayList<>();
             plannedPackage.getPackageHousings().forEach(huicPackageHousing -> {
                 HousingMasterDto housingMaster = housingMasterService.findLatestHousingMasterByReferenceCode(huicPackageHousing.getRefNumber().toString());
+                //TODO: what if housing master is not there
                 PackageHousingBasicDto packageHousing = PackageHousingBasicDto.builder()
                         .typeCode(housingMaster.getTypeCode())
                         .siteCode(housingMaster.getSiteCode())
@@ -236,8 +243,9 @@ public class ValidationService {
                         .isDefault(huicPackageHousing.isDefault())
                         .lat(housingMaster.getLat())
                         .lng(housingMaster.getLng())
-                        .ritualPackage(existingRitualPackageId == null ? ritualPackageDto : RitualPackageBasicWithDetailsDto.builder().id(existingRitualPackageId).build())
+                        .ritualPackage(ritualPackageDto)
                         .build();
+
                 //get the package housing catering
                 if (huicPackageHousing.getPackageCaterings() != null) {
                     log.info("Start creating the package housing catering for {} package reference number and {} housing master reference code.", plannedPackage.getPackageRefNumber(), housingMaster.getHousingReferenceCode());
@@ -258,7 +266,11 @@ public class ValidationService {
                 }
                 packageHousingBasicList.add(packageHousing);
             });
-            ritualPackageDto.setPackageHousings(packageHousingBasicList);
+            if (ritualPackageDto.getPackageHousings() != null && !ritualPackageDto.getPackageHousings().isEmpty()) { // old housings exist
+                ritualPackageDto.getPackageHousings().addAll(packageHousingBasicList);
+            } else {
+                ritualPackageDto.setPackageHousings(packageHousingBasicList);
+            }
         }
         RitualPackageBasicWithDetailsDto savedRitualPackageBasicWithDetails = ritualPackageBasicWithDetailsService.save(ritualPackageDto);
         Long savedRitualPackageId = null;

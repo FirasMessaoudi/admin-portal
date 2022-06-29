@@ -83,6 +83,7 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
                 ApplicantPackageTransportationDto applicantPackageTransportationDto = findByApplicantPackageIdAndTransportationId(applicantPackageDto.getId(), packageTransportationDto.getId());
                 if (applicantPackageTransportationDto != null) {
                     applicantPackageTransportationDto.setVehicleNumber(updateApplicantTransportationDto.getVehicleNumber());
+                    applicantPackageTransportationDto.setUpdateDate(new Date());
                     save(applicantPackageTransportationDto);
 
                 } else {
@@ -91,6 +92,7 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
                             .applicantPackage(applicantPackageDto)
                             .packageTransportation(packageTransportationDto)
                             .vehicleNumber(updateApplicantTransportationDto.getVehicleNumber())
+                            .updateDate(new Date())
                             .build();
                     save(applicantPackageTransportation);
                 }
@@ -137,6 +139,7 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
                     ApplicantPackageTransportationDto applicantPackageTransportationDto = findByApplicantPackageIdAndTransportationId(applicantPackageDto.getId(), packageTransportationDto.getId());
                     if (applicantPackageTransportationDto != null) {
                         applicantPackageTransportationDto.setVehicleNumber(updateApplicantTransportationDto.getVehicleNumber());
+                        applicantPackageTransportationDto.setUpdateDate(new Date());
                         save(applicantPackageTransportationDto);
 
                     } else {
@@ -145,6 +148,7 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
                                 .applicantPackage(applicantPackageDto)
                                 .packageTransportation(packageTransportationDto)
                                 .vehicleNumber(updateApplicantTransportationDto.getVehicleNumber())
+                                .updateDate(new Date())
                                 .build();
                         save(applicantPackageTransportation);
                     }
@@ -170,7 +174,9 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
             if (packageTransportation != null) {
                 log.info("packageTransportation  found for applicant ritual package... {}" + applicantPackageDto.getRitualPackage().getId());
                 ApplicantPackageTransportationDto applicantPackageTransportation = findByApplicantPackageIdAndTransportationId(applicantPackageDto.getId(), packageTransportation.getId());
-                applicantPackageTransportationList.add(applicantPackageTransportation);
+                if (applicantPackageTransportation != null) {
+                    applicantPackageTransportationList.add(applicantPackageTransportation);
+                }
             }
         });
         StringBuilder vehicleNumber = new StringBuilder();
