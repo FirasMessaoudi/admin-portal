@@ -59,8 +59,8 @@ public class JpaApplicantIncidentLite implements Serializable {
     private String resolutionComment;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantIncidentLite")
-    private List<JpaIncidentAttachmentLite>  incidentAttachments;
+    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantIncident")
+    private JpaIncidentAttachmentLite  incidentAttachments;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;

@@ -6,8 +6,10 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncidentLite;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,5 +26,10 @@ public interface ApplicantIncidentLiteRepository extends JpaRepository<JpaApplic
 
     @Query("select substring(j.referenceNumber,5, 8) from JpaApplicantIncidentLite j where j.referenceNumber like :referenceNum% order by substring(j.referenceNumber, 5, 8) desc")
     List<String> fetchReferenceNumByReferenceNumLike(@Param("referenceNum") String referenceNum);
+
+    @Transactional
+    @Modifying
+    @Query("update JpaApplicantIncidentLite i set i.crmTicketNumber = :crmTicketNumber, i.updateDate = current_timestamp where i.id =:incidentId")
+    void updateCRMTicketNumber(@Param("incidentId") long incidentId, @Param("crmTicketNumber") String crmTicketNumber);
 
 }
