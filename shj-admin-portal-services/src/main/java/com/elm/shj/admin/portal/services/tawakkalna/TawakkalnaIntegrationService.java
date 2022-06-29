@@ -6,7 +6,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaTawakkalnaServiceLog;
 import com.elm.shj.admin.portal.orm.repository.ApplicantPermitCardRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantPermitCardViewRepository;
 import com.elm.shj.admin.portal.orm.repository.TawakkalnaServiceLogRepository;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantPermitCardDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,19 +17,18 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
 import java.text.MessageFormat;
 import java.util.List;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class TawakkalnaIntegrationService extends GenericService<JpaApplicantPermitCard, ApplicantPermitCardDto, Long>  {
+public class TawakkalnaIntegrationService extends GenericService<JpaApplicantPermitCard, ApplicantPermitCardDto, Long> {
     private final ApplicantPermitCardRepository applicantPermitCardRepository;
     private final RestTemplate restTemplate;
     private final ApplicantPermitCardViewRepository applicantPermitCardViewRepository;
-
     private final TawakkalnaServiceLogRepository tawakkalnaServiceLogRepository;
 
     @Value("${tawakkalna.base.url}")
@@ -47,21 +46,19 @@ public class TawakkalnaIntegrationService extends GenericService<JpaApplicantPer
     @Value("${tawakkalna.login.client.clientsecret}")
     private String tawakkalnaLoginClientClientSecret;
 
-    public  List<JpaApplicantPermitCardView> getApplicantForCardsPermitPush()
-    {
-       //List<ApplicantPermitCardDto> applicantPermitCardDto =  mapList(applicantPermitCardRepository.findAll());
-       //return applicantPermitCardDto;
-        List<JpaApplicantPermitCardView> applicantPermitCardsVo =applicantPermitCardViewRepository.findAll();
+    public List<JpaApplicantPermitCardView> getApplicantForCardsPermitPush() {
+        //List<ApplicantPermitCardDto> applicantPermitCardDto =  mapList(applicantPermitCardRepository.findAll());
+        //return applicantPermitCardDto;
+        List<JpaApplicantPermitCardView> applicantPermitCardsVo = applicantPermitCardViewRepository.findAll();
         return applicantPermitCardsVo;
     }
 
-    private boolean saveApplicantPermitCard(TawakkalnaApplicantInputDto input)
-    {
+    private boolean saveApplicantPermitCard(TawakkalnaApplicantRequest input) {
         // Insert Applicant Permit Card
         JpaApplicantPermitCard applicantPermitCardToAdd = new JpaApplicantPermitCard();
         applicantPermitCardToAdd.setCardSerial(Long.toString(input.getCardSerial()));
         applicantPermitCardToAdd.setCardNumber(input.getSmartCardNumber());
-        applicantPermitCardToAdd.setCardPushed(true);
+        applicantPermitCardToAdd.setPushed(true);
         applicantPermitCardToAdd.setCardStatus(input.getCardstatus());
         applicantPermitCardRepository.saveAndFlush(applicantPermitCardToAdd);
         return true;
@@ -73,137 +70,121 @@ public class TawakkalnaIntegrationService extends GenericService<JpaApplicantPer
         tawakkalnaServiceLogRepository.saveAndFlush(tawakkalnaServiceLog);
     }
 
-    private TawakkalnaApplicantInputDto initailizeTawakkalnaApplicantInput(JpaApplicantPermitCardView applicantPermitCard)
-    {
+    private TawakkalnaApplicantRequest initailizeTawakkalnaApplicantInput(JpaApplicantPermitCardView applicantPermitCard) {
         // Create Object Input For External Tawakkalna Service
-        TawakkalnaApplicantInputDto tawakkalnaApplicantInputDto = new TawakkalnaApplicantInputDto();
+        TawakkalnaApplicantRequest tawakkalnaApplicantRequest = new TawakkalnaApplicantRequest();
 
-        if(applicantPermitCard.getNationalityCode()>0)
-            tawakkalnaApplicantInputDto.setNationalityCode(applicantPermitCard.getNationalityCode());
+        if (applicantPermitCard.getNationalityCode() > 0)
+            tawakkalnaApplicantRequest.setNationalityCode(applicantPermitCard.getNationalityCode());
 
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getIqamaNin()))
-            tawakkalnaApplicantInputDto.setNationalId(Long.parseLong(applicantPermitCard.getIqamaNin()));
+        if (checkIfStringNullorEmpty(applicantPermitCard.getIqamaNin()))
+            tawakkalnaApplicantRequest.setNationalId(Long.parseLong(applicantPermitCard.getIqamaNin()));
 
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getPassportNumber()))
-            tawakkalnaApplicantInputDto.setPassportNumber(applicantPermitCard.getPassportNumber());
+        if (checkIfStringNullorEmpty(applicantPermitCard.getPassportNumber()))
+            tawakkalnaApplicantRequest.setPassportNumber(applicantPermitCard.getPassportNumber());
 
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getCardNumber()))
-            tawakkalnaApplicantInputDto.setSmartCardNumber(applicantPermitCard.getCardNumber());
+        if (checkIfStringNullorEmpty(applicantPermitCard.getCardNumber()))
+            tawakkalnaApplicantRequest.setSmartCardNumber(applicantPermitCard.getCardNumber());
 
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getCardSerial()))
-            tawakkalnaApplicantInputDto.setCardSerial(Long.parseLong(applicantPermitCard.getCardSerial()));
+        if (checkIfStringNullorEmpty(applicantPermitCard.getCardSerial()))
+            tawakkalnaApplicantRequest.setCardSerial(Long.parseLong(applicantPermitCard.getCardSerial()));
 
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getBackPhoneNumber()))
-            tawakkalnaApplicantInputDto.setPhoneNumber(applicantPermitCard.getBackPhoneNumber());
+        if (checkIfStringNullorEmpty(applicantPermitCard.getBackPhoneNumber()))
+            tawakkalnaApplicantRequest.setPhoneNumber(applicantPermitCard.getBackPhoneNumber());
 
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getFrontQr()))
-            tawakkalnaApplicantInputDto.setFrontQrValue(applicantPermitCard.getFrontQr());
+        if (checkIfStringNullorEmpty(applicantPermitCard.getFrontQr()))
+            tawakkalnaApplicantRequest.setFrontQrValue(applicantPermitCard.getFrontQr());
 
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getEstablishmentRefCode()))
-            tawakkalnaApplicantInputDto.setEstablishmentId(Integer.parseInt(applicantPermitCard.getEstablishmentRefCode()));
+        if (checkIfStringNullorEmpty(applicantPermitCard.getEstablishmentRefCode()))
+            tawakkalnaApplicantRequest.setEstablishmentId(Integer.parseInt(applicantPermitCard.getEstablishmentRefCode()));
 
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getEstablishmentAr()))
-            tawakkalnaApplicantInputDto.setEstablishmentNameAr(applicantPermitCard.getEstablishmentAr());
+        if (checkIfStringNullorEmpty(applicantPermitCard.getEstablishmentAr()))
+            tawakkalnaApplicantRequest.setEstablishmentNameAr(applicantPermitCard.getEstablishmentAr());
 
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getEstablishmentEn()))
-            tawakkalnaApplicantInputDto.setEstablishmentNameEn(applicantPermitCard.getEstablishmentEn());
+        if (checkIfStringNullorEmpty(applicantPermitCard.getEstablishmentEn()))
+            tawakkalnaApplicantRequest.setEstablishmentNameEn(applicantPermitCard.getEstablishmentEn());
 
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getCompanyNameAr()))
-            tawakkalnaApplicantInputDto.setCompanyNameAr(applicantPermitCard.getCompanyNameAr());
+        if (checkIfStringNullorEmpty(applicantPermitCard.getCompanyNameAr()))
+            tawakkalnaApplicantRequest.setCompanyNameAr(applicantPermitCard.getCompanyNameAr());
 
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getCompanyNameEn()))
-            tawakkalnaApplicantInputDto.setCompanyNameEn(applicantPermitCard.getCompanyNameEn());
+        if (checkIfStringNullorEmpty(applicantPermitCard.getCompanyNameEn()))
+            tawakkalnaApplicantRequest.setCompanyNameEn(applicantPermitCard.getCompanyNameEn());
 
-        if(!checkIfStringNullorEmpty(applicantPermitCard.getServiceOfficeNumber()))
-            tawakkalnaApplicantInputDto.setServicegroupnumber(applicantPermitCard.getServiceOfficeNumber());
+        if (checkIfStringNullorEmpty(applicantPermitCard.getServiceOfficeNumber()))
+            tawakkalnaApplicantRequest.setServicegroupnumber(applicantPermitCard.getServiceOfficeNumber());
 
-        if(applicantPermitCard.getCardStatus()>0)
-            tawakkalnaApplicantInputDto.setCardstatus(applicantPermitCard.getCardStatus());
+        if (applicantPermitCard.getCardStatus() > 0)
+            tawakkalnaApplicantRequest.setCardstatus(applicantPermitCard.getCardStatus());
 
-        return tawakkalnaApplicantInputDto;
+        return tawakkalnaApplicantRequest;
     }
 
-    private boolean checkIfStringNullorEmpty(String property)
-    {
-        if (property == null || property.isEmpty() || property.trim().isEmpty())
-            return true;
-        else
-            return false;
+    private boolean checkIfStringNullorEmpty(String property) {
+        return property != null && !property.isEmpty() && !property.trim().isEmpty();
     }
 
-
-    public TawakkalnaApplicantOutputDto pushApplicantInfo(JpaApplicantPermitCardView applicantPermitCard)   {
+    public TawakkalnaApplicantResponse pushApplicantInfo(JpaApplicantPermitCardView applicantPermitCard) {
         log.debug("TawakkalnaIntegrationService:Start TawakkalnaIntegrationService pushApplicantInfo");
-        boolean operationStatus=false;
-        // Jackson Class to Log Serialize Object
+        boolean operationStatus = false;
         ObjectMapper jsonMapper = new ObjectMapper();
-        TawakkalnaApplicantOutputDto tawakkalnaApplicantOutput=null;
+        TawakkalnaApplicantResponse tawakkalnaApplicantOutput = null;
         // Create Service Log Object
         JpaTawakkalnaServiceLog tawakkalnaServiceLog = null;
-        try
-        {
+        try {
 
             tawakkalnaServiceLog = new JpaTawakkalnaServiceLog();
-            TawakkalnaApplicantInputDto input = initailizeTawakkalnaApplicantInput(applicantPermitCard);
+            TawakkalnaApplicantRequest input = initailizeTawakkalnaApplicantInput(applicantPermitCard);
             // Call TAWAKKALNA API GET TOKEN
-            TawakkalnaInputDto tokenInput = TawakkalnaInputDto.builder().clientId(tawakkalnaLoginClientClientId).clientSecret(tawakkalnaLoginClientClientSecret).build();
+            TawakkalnaAuthRequest tokenInput = TawakkalnaAuthRequest.builder().clientId(tawakkalnaLoginClientClientId).clientSecret(tawakkalnaLoginClientClientSecret).build();
             // Setting Up Header
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<TawakkalnaInputDto> request = new HttpEntity<>(tokenInput,headers);
-            log.debug("TawakkalnaIntegrationService:Token Input {}",jsonMapper.writeValueAsString(tokenInput));
-            log.debug("TawakkalnaIntegrationService:Token Header {}",jsonMapper.writeValueAsString(headers));
+            HttpEntity<TawakkalnaAuthRequest> request = new HttpEntity<>(tokenInput, headers);
 
             // TODO: Manage to Call Token API only once if it expires
             // Call API to get Token
-            String bearerToken = restTemplate.postForObject(MessageFormat.format("{0}{1}", tawakkalnaBaseUrl,tawakkalnaLoginClientUrl), request,String.class);
-            log.debug("TawakkalnaIntegrationService:Tawakkalna login-client Response Token Returned {} ",bearerToken);
+            String bearerToken = restTemplate.postForObject(MessageFormat.format("{0}{1}", tawakkalnaBaseUrl, tawakkalnaLoginClientUrl), request, String.class);
+            log.debug("TawakkalnaIntegrationService:Tawakkalna login-client Response Token Returned {} ", bearerToken);
 
-            String responsePushPermitCard = new String();
+            String responsePushPermitCard = "";
 
-            if(bearerToken !=null && bearerToken.length() >0) // Call Push Permit Card
+            if (bearerToken != null && bearerToken.length() > 0) // Call Push Permit Card
             {
-                headers.set("Authorization", "Bearer "+ bearerToken);
-                HttpEntity<TawakkalnaApplicantInputDto> tawakkalnaApplicantInputDto = new HttpEntity<>(input,headers);
-                log.debug("TawakkalnaIntegrationService:Card Permit Input Request {}",jsonMapper.writeValueAsString(input));
+                headers.set("Authorization", "Bearer " + bearerToken);
+                HttpEntity<TawakkalnaApplicantRequest> tawakkalnaApplicantRequest = new HttpEntity<>(input, headers);
 
-                // Log Tawkkalna Card Push Permit API
-                tawakkalnaServiceLog.setTawakkalnaServiceUrl(MessageFormat.format("{0}{1}", tawakkalnaBaseUrl,tawakkalnaPushPermitCardUrl));
+                tawakkalnaServiceLog.setServiceUrl(MessageFormat.format("{0}{1}", tawakkalnaBaseUrl,tawakkalnaPushPermitCardUrl));
                 if(applicantPermitCard!=null)
-                    tawakkalnaServiceLog.setSourceRequest(jsonMapper.writeValueAsString(applicantPermitCard));
-                if(tawakkalnaApplicantInputDto!=null)
-                    tawakkalnaServiceLog.setTawakkalnaRequest(jsonMapper.writeValueAsString(tawakkalnaApplicantInputDto));
+                    tawakkalnaServiceLog.setSource(jsonMapper.writeValueAsString(applicantPermitCard));
+                if(input!=null)
+                    tawakkalnaServiceLog.setRequest(jsonMapper.writeValueAsString(input));
 
-                responsePushPermitCard = restTemplate.postForObject(MessageFormat.format("{0}{1}", tawakkalnaBaseUrl,tawakkalnaPushPermitCardUrl), tawakkalnaApplicantInputDto,String.class);
-                log.debug("TawakkalnaIntegrationService:External Response from pushpermitcard {} ",responsePushPermitCard);
+                responsePushPermitCard = restTemplate.postForObject(MessageFormat.format("{0}{1}", tawakkalnaBaseUrl, tawakkalnaPushPermitCardUrl), tawakkalnaApplicantRequest, String.class);
+                log.debug("TawakkalnaIntegrationService:External Response from pushpermitcard {} ", responsePushPermitCard);
                 log.debug("TawakkalnaIntegrationService:Finish TawakkalnaIntegrationService pushApplicantInfo");
 
+                if(checkIfStringNullorEmpty(responsePushPermitCard))
+                    tawakkalnaServiceLog.setResponse(responsePushPermitCard);
 
-                if(!checkIfStringNullorEmpty(responsePushPermitCard))
-                    tawakkalnaServiceLog.setTawakkalnaResponse(responsePushPermitCard);
                 logTawakkalnaRequestRespone(tawakkalnaServiceLog);
+
             }
 
-            if(responsePushPermitCard !=null && responsePushPermitCard.length() >0)
-            {
+            if (responsePushPermitCard != null && responsePushPermitCard.length() > 0) {
                 // Insert Data
                 saveApplicantPermitCard(input);
                 operationStatus = true;
-                tawakkalnaApplicantOutput = TawakkalnaApplicantOutputDto.builder().status(operationStatus).build();
+                tawakkalnaApplicantOutput = TawakkalnaApplicantResponse.builder().status(operationStatus).build();
             }
 
-        }
-        catch (HttpClientErrorException e)
-        {
-            tawakkalnaServiceLog.setTawakkalnaResponse(e.toString());
+        } catch (Exception e) {
+            tawakkalnaServiceLog.setResponse(e.toString());
             logTawakkalnaRequestRespone(tawakkalnaServiceLog);
-            log.error("TawakkalnaIntegrationService:Error while push card permit info to tawakkalna",  e);
-        }
-        catch (Exception e)
-        {
-            log.error("TawakkalnaIntegrationService:Error while push card permit info to tawakkalna",  e);
+            log.error("TawakkalnaIntegrationService:Error while push card permit info to tawakkalna", e);
         }
         return tawakkalnaApplicantOutput;
 
     }
+
+
 }

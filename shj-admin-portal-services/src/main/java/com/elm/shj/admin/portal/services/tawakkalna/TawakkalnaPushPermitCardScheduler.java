@@ -1,11 +1,7 @@
 package com.elm.shj.admin.portal.services.tawakkalna;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPermitCardView;
-import com.elm.shj.admin.portal.services.dto.ApplicantPermitCardDto;
-import com.elm.shj.admin.portal.services.dto.TawakkalnaApplicantInputDto;
-import com.elm.shj.admin.portal.services.dto.TawakkalnaApplicantOutputDto;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockAssert;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -23,19 +19,18 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class TawakkalnaPushPermitCardScheduler {
     private final TawakkalnaIntegrationService tawakkalnaIntegrationService;
-    @Value("${push.applicant.permit.card.scheduler.active.nodes}")
+    @Value("${tawakkalna.scheduler.push.cards.active.nodes.strategy}")
     private String schedulerActiveNodes;
-    @Scheduled(fixedDelayString = "${scheduler.push.applicant.permit.card.delay.milliseconds}")
+
+    @Scheduled(fixedDelayString = "${tawakkalna.scheduler.push.cards.delay.milliseconds}")
     @SchedulerLock(name = "tawakkalna-push-permit-card-scheduler")
     public void pushApplicantPermitCards() {
         String runningIpAddress;
-        try{
+        try {
             runningIpAddress = InetAddress.getLocalHost().getHostAddress();
             log.info("TawakkalnaPushPermitCardScheduler:running IP address for potential applicant card scheduler is: {}", runningIpAddress);
-        }
-        catch (UnknownHostException e)
-        {
-            log.error("TawakkalnaPushPermitCardScheduler:Error while getting the running ip address. Scheduler TawakkalnaPushPermitCardScheduler will not run.",  e);
+        } catch (UnknownHostException e) {
+            log.error("TawakkalnaPushPermitCardScheduler:Error while getting the running ip address. Scheduler TawakkalnaPushPermitCardScheduler will not run.", e);
             return;
         }
         if (schedulerActiveNodes == null || schedulerActiveNodes.isEmpty()) {
@@ -51,31 +46,26 @@ public class TawakkalnaPushPermitCardScheduler {
         LockAssert.assertLocked();
 
         // Fetch Record to Process
-        try
-        {
-            log.debug("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard: Getting Data to Process ");
+        try {
+            log.info("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard: Getting Data to Process ");
             // Get Data To Process
-            List<JpaApplicantPermitCardView>  applicantPermitCards =  tawakkalnaIntegrationService.getApplicantForCardsPermitPush();
+            List<JpaApplicantPermitCardView> applicantPermitCards = tawakkalnaIntegrationService.getApplicantForCardsPermitPush();
 
-            if(applicantPermitCards!=null && !applicantPermitCards.isEmpty())
-            {
+            if (applicantPermitCards != null && !applicantPermitCards.isEmpty()) {
                 log.debug("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard: Data Fetched Successfully ");
-                for(JpaApplicantPermitCardView applicantPermitCard :  applicantPermitCards)
-                {
+                for (JpaApplicantPermitCardView applicantPermitCard : applicantPermitCards) {
                     log.debug("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard: Initialize Object Successfully ");
                     // Push Card Permit Data to Tawakkalna
                     log.debug("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard: Pushing to  tawakkalnaIntegrationService Calling External Web Service ");
-                    TawakkalnaApplicantOutputDto serviceResult  = tawakkalnaIntegrationService.pushApplicantInfo(applicantPermitCard);
+                    TawakkalnaApplicantResponse serviceResult = tawakkalnaIntegrationService.pushApplicantInfo(applicantPermitCard);
                     log.debug("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard: Pushing to  tawakkalnaIntegrationService Calling External Web Service Successfully Finished");
                 }
             }
 
+        } catch (Exception e) {
+            log.error("TawakkalnaPushPermitCardScheduler:Error on Scheduler Tawakkalna Push PermitCard ", e);
         }
-        catch (Exception e)
-        {
-            log.error("TawakkalnaPushPermitCardScheduler:Error on Scheduler Tawakkalna Push PermitCard ",  e);
-        }
-        log.debug("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard finished...");
+        log.info("TawakkalnaPushPermitCardScheduler:Scheduler Tawakkalna Push PermitCard finished...");
     }
 
 

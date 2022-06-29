@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "shc_applicant_permit_card")
+@Table(name = "shc_tawakkalna_applicant_card")
 @NamedQuery(name = "JpaApplicantPermitCard.findAll", query = "SELECT j FROM JpaApplicantPermitCard j")
 @Getter
 @Setter
@@ -25,8 +25,8 @@ public class JpaApplicantPermitCard implements Serializable {
     @Column(name = "card_serial")
     private String cardSerial;
 
-    @Column(name = "is_card_pushed")
-    private boolean isCardPushed;
+    @Column(name = "pushed")
+    private boolean pushed;
 
     @Column(name = "card_status")
     private int cardStatus;

@@ -15,14 +15,14 @@ export class ApplicantService {
   constructor(private http: HttpClient) {
   }
 
-  getApplicantBadge(cardNumber:String): Observable<any> { 
+  getApplicantBadge(uin:String): Observable<any> { 
     const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
-    return this.http.get<any>(`/core/api/applicants/badge/applicant/frontback/${cardNumber}`,{ 'headers': headers });
+    return this.http.get<any>(`/core/api/applicants/badge/applicant/frontback/${uin}`,{ 'headers': headers });
   }
 
-  getApplicantFullBadge(cardNumber:String): Observable<any> { 
+  getApplicantFullBadge(uin:String): Observable<any> { 
     const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
-    return this.http.get<any>(`/core/api/applicants/applicant/all/${cardNumber}`,{ 'headers': headers });
+    return this.http.get<any>(`/core/api/applicants/applicant/all/${uin}`,{ 'headers': headers });
   }
 
   findByIds(ids, pageNumber: any): Observable<any> {

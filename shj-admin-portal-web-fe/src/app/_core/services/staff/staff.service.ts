@@ -44,4 +44,10 @@ export class StaffService {
         })
       );
   }
+
+  getStaffFullBadge(uin:String): Observable<any> { 
+    const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
+    return this.http.get<any>(`/core/api/company-staff/staff/all/${uin}`,{ 'headers': headers });
+  }
+  
 }

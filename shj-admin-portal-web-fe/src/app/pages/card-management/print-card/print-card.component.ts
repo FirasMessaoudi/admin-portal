@@ -16,6 +16,7 @@ import { ApplicantService } from '@core/services/applicant/applicant.service';
 import { PrintInfo } from '@model//print-info.model';
 import { CardService } from '@core/services/card/card.service';
 import { PersonType } from '@model/enum/person-type.enum';
+import { StaffService } from '@core/services/staff/staff.service';
 @Component({
   selector: 'app-print-card',
   templateUrl: './print-card.component.html',
@@ -23,7 +24,7 @@ import { PersonType } from '@model/enum/person-type.enum';
 })
 export class PrintCardComponent implements OnInit { 
 
-  cardNumber:string;
+  uin:string;
   printDetails: PrintDetails;
   printInfo:PrintInfo;
   base64ImageFront:string;
@@ -52,12 +53,13 @@ export class PrintCardComponent implements OnInit {
     private renderer2: Renderer2,
     private http: HttpClient,
     private applicantService: ApplicantService,
-    private cardService:CardService
+    private cardService:CardService,
+    private staffService:StaffService
   ) {    
   }
 
   ngOnInit(): void {    
-    this.cardNumber = this.route.snapshot.paramMap.get('id');
+    this.uin = this.route.snapshot.paramMap.get('id');
     this.personType = this.route.snapshot.paramMap.get('type'); 
     this.showSpinner=true;
     if(this.personType == this.personTypeCONST)
@@ -95,7 +97,7 @@ export class PrintCardComponent implements OnInit {
   loadStaffCardImages()
   {
    
-   this.applicantService.getApplicantFullBadge(this.cardNumber).subscribe(result =>
+   this.staffService.getStaffFullBadge(this.uin).subscribe(result =>
      {
         this.showSpinner=false;
         this.resolvePrintImages(result);
@@ -106,7 +108,7 @@ export class PrintCardComponent implements OnInit {
  loadApplicantCardImages()
  {
   
-  this.applicantService.getApplicantFullBadge(this.cardNumber).subscribe(result =>
+  this.applicantService.getApplicantFullBadge(this.uin).subscribe(result =>
     {
        this.showSpinner=false;
        this.resolvePrintImages(result);      
@@ -124,7 +126,7 @@ export class PrintCardComponent implements OnInit {
   printFullImage(content) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {   
       let printDetails : PrintDetails = { 
-        sessionId:`${this.cardNumber}${Math.random()}${Math.random()}${Math.random()}`,
+        sessionId:`${this.uin}${Math.random()}${Math.random()}${Math.random()}`,
         imageBase64String:this.base64FullImageFrontPrinter,
         backImageBase64String:this.base64FullImageBackPrinter,
         isDualSide:true
@@ -137,7 +139,7 @@ export class PrintCardComponent implements OnInit {
   printImageOnPrintedDesign(content) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {      
       let printDetails : PrintDetails = { 
-        sessionId:`${this.cardNumber}${Math.random()}${Math.random()}${Math.random()}`,
+        sessionId:`${this.uin}${Math.random()}${Math.random()}${Math.random()}`,
         imageBase64String:this.base64PartialImageFrontPrinter,
         backImageBase64String:this.base64PartialImageBackPrinter,
         isDualSide:this.dualPrintingMode

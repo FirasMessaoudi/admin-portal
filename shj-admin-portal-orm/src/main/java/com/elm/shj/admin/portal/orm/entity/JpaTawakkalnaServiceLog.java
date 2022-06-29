@@ -19,17 +19,17 @@ public class JpaTawakkalnaServiceLog {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "source_request")
-    private String sourceRequest;
+    @Column(name = "source")
+    private String source;
 
-    @Column(name = "tawakkalna_service_url")
-    private String tawakkalnaServiceUrl;
+    @Column(name = "service_url")
+    private String serviceUrl;
 
-    @Column(name = "tawakkalna_request")
-    private String tawakkalnaRequest;
+    @Column(name = "request")
+    private String request;
 
-    @Column(name = "tawakkalna_response")
-    private String tawakkalnaResponse;
+    @Column(name = "response")
+    private String response;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;

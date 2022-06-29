@@ -10,7 +10,7 @@ import java.util.Date;
 @Setter
 @Getter
 @Entity
-@Table(name = "tawakkalna_view")
+@Table(name = "shc_v_tawakkalna_processing")
 public class JpaApplicantPermitCardView implements Serializable {
     @Id
     @Column(name = "id")
@@ -63,5 +63,4 @@ public class JpaApplicantPermitCardView implements Serializable {
 
     @Column(name = "card_status")
     private int cardStatus;
-
 }
