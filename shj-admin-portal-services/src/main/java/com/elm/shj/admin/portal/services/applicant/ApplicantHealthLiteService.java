@@ -46,4 +46,13 @@ public class ApplicantHealthLiteService extends GenericService<JpaApplicantHealt
             return Optional.of(returnedDto);
         }
     }
+
+    public Long findApplicantRitualIdByHealth(Long applicantHealthId) {
+        return applicantHealthLiteRepository.findApplicantRitualId(applicantHealthId);
+    }
+
+    public String findPackageByHealth(Long applicantHealthId) {
+        return applicantHealthLiteRepository.findApplicantHealthPackage(applicantHealthId);
+    }
+
 }

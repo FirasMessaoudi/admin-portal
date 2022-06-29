@@ -75,11 +75,11 @@ public class JpaRitualPackageBasicWithDetails implements Serializable {
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 
-    @LazyCollection(LazyCollectionOption.TRUE)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "ritualPackage")
     private List<JpaPackageHousingBasic> packageHousings;
 
-    @LazyCollection(LazyCollectionOption.TRUE)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "ritualPackage")
     private List<JpaPackageTransportationBasic> packageTransportations;
 
