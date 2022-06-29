@@ -47,6 +47,7 @@ public class BadgeController {
         return null;
     }
 
+
     @GetMapping("/staff/{digitalId}")
     public BadgeVO generateStaffBadge(@PathVariable String digitalId) {
         if (digitalId.length() == 12) {
@@ -74,6 +75,26 @@ public class BadgeController {
         badges.add(badgeService.generateStaffBackBadge(suin));
         badges.add(badgeService.generatePrePrintedStaffCard(suin));
         return badges;
+    }
+
+    @GetMapping("/applicant/pre/{digitalId}")
+    public BadgeVO generateApplicantPreBadge(@PathVariable String digitalId) {
+        //TODO: do some validation for the passed digital id and return error message if needed
+        if (digitalId.length() == 14) {
+            //valid uin
+            return badgeService.generatePrePrintedApplicantBadge(digitalId);
+        }
+        return null;
+    }
+
+    @GetMapping("/applicant/back/{digitalId}")
+    public BadgeVO generateApplicantBackBadge(@PathVariable String digitalId) {
+        //TODO: do some validation for the passed digital id and return error message if needed
+        if (digitalId.length() == 14) {
+            //valid uin
+            return badgeService.generateBackBadge(digitalId);
+        }
+        return null;
     }
 
 
