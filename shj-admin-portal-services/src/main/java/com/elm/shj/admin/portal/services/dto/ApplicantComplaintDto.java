@@ -37,7 +37,7 @@ public class ApplicantComplaintDto implements Serializable {
     private Double locationLat;
     private Double locationLng;
     private String resolutionComment;
-    private List<ComplaintAttachmentDto> complaintAttachments;
+    private ComplaintAttachmentDto complaintAttachment;
     private Date creationDate;
     private Date updateDate;
     private String areaCode;

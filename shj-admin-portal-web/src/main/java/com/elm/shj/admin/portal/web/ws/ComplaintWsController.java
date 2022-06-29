@@ -174,6 +174,6 @@ public class ComplaintWsController {
     private ResponseEntity<WsResponse<?>> list(@PathVariable long applicantRitualId){
 
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                .body(applicantComplaintService.findAllByApplicantRitualId(applicantRitualId)).build());
+                .body(applicantComplaintLiteService.findAllByApplicantRitualId(applicantRitualId)).build());
     }
 }

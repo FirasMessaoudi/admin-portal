@@ -70,6 +70,10 @@ public class JpaApplicantComplaintLite implements Serializable {
     @Column(name = "city")
     private String city;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "applicantComplaint")
+    private JpaComplaintAttachmentLite  complaintAttachment;
+
     @Column(name = "camp_number")
     private String campNumber;
 

@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Dto class for applicant complaint domain.
@@ -45,4 +44,8 @@ public class ApplicantComplaintLiteDto implements Serializable {
     private String mobileNumber;
     private Date creationDate;
     private Date updateDate;
+
+    public ApplicantComplaintLiteDto(long id) {
+        this.id = id;
+    }
 }

@@ -240,8 +240,5 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
                 .body(BodyInserters.fromValue(bodyToSend)).retrieve().bodyToMono(responseTypeReference).block();
     }
 
-    public List<ApplicantComplaintDto> findAllByApplicantRitualId(long applicantRitualId) {
 
-        return mapList(applicantComplaintRepository.findByApplicantRitualId(applicantRitualId));
-    }
 }
