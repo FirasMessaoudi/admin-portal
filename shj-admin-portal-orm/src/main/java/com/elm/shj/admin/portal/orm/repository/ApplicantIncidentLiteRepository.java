@@ -32,4 +32,9 @@ public interface ApplicantIncidentLiteRepository extends JpaRepository<JpaApplic
     @Query("update JpaApplicantIncidentLite i set i.crmTicketNumber = :crmTicketNumber, i.updateDate = current_timestamp where i.id =:incidentId")
     void updateCRMTicketNumber(@Param("incidentId") long incidentId, @Param("crmTicketNumber") String crmTicketNumber);
 
+    @Transactional
+    @Modifying
+    @Query("update JpaApplicantIncidentLite i set i.crmStatusUpdated = true, i.updateDate = current_timestamp where i.id =:incidentId")
+    void updateCRMUpdateStatus(@Param("incidentId") long incidentId);
+
 }

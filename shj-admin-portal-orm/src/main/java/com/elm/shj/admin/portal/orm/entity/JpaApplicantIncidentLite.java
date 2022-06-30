@@ -83,6 +83,9 @@ public class JpaApplicantIncidentLite implements Serializable {
     @Column(name = "mobile_number")
     private String mobileNumber;
 
+    @Column(name = "crm_status_updated")
+    private Boolean crmStatusUpdated;
+
     @PrePersist
     public void prePersist() {
         this.creationDate = new Date();

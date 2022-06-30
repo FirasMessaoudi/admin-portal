@@ -7,7 +7,6 @@ import com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo;
 import com.elm.shj.admin.portal.orm.entity.ApplicantRitualVo;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualBasicRepository;
-import com.elm.shj.admin.portal.services.complaint.CrmAuthResponse;
 import com.elm.shj.admin.portal.services.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -202,15 +201,20 @@ public class IntegrationService {
         return accessTokenWsResponse;
     }
 
-    private  <B, R> R callCRM(String serviceRelativeUrl, HttpMethod httpMethod, B bodyToSend, String token,
+    public   <B, R> R callCRM(String serviceRelativeUrl, HttpMethod httpMethod, B bodyToSend, String token,
                             ParameterizedTypeReference<R> responseTypeReference)  {
+        if (token == null) {
+            CrmAuthResponse accessTokenWsResponse = callCrmAuth();
+            token = accessTokenWsResponse.getToken();
+        }
+        String finalToken = token;
         // check if no body
         if (bodyToSend == null) {
 
-            return webClient.method(httpMethod).uri(crmUrl + serviceRelativeUrl).headers(header -> header.setBearerAuth(token))
+            return webClient.method(httpMethod).uri(crmUrl + serviceRelativeUrl).headers(header -> header.setBearerAuth(finalToken))
                     .retrieve().bodyToMono(responseTypeReference).block();
         }
-        return webClient.method(httpMethod).uri(crmUrl + serviceRelativeUrl).headers(header -> header.setBearerAuth(token))
+        return webClient.method(httpMethod).uri(crmUrl + serviceRelativeUrl).headers(header -> header.setBearerAuth(finalToken))
                 .body(BodyInserters.fromValue(bodyToSend)).retrieve().bodyToMono(responseTypeReference).block();
     }
 

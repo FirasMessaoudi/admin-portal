@@ -5,3 +5,7 @@ ALTER TABLE shc_portal.shc_applicant_health_disease ALTER COLUMN label_en nvarch
 ALTER TABLE [shc_portal].[shc_portal].[shc_company] ADD company_uid uniqueidentifier NOT NULL DEFAULT(NEWID())
 
 GO
+ALTER TABLE shc_portal.shc_applicant_complaint ADD crm_status_updated bit NULL;
+ALTER TABLE shc_portal.shc_applicant_incident ADD crm_status_updated bit NULL;
+
+GO

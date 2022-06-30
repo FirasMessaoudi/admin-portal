@@ -123,7 +123,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      */
     public Page<ApplicantCardDto> searchApplicantCards(ApplicantCardSearchCriteriaDto criteria, Pageable pageable) {
         Page<ApplicantCardDto> applicantCardDtos = mapPage(applicantCardRepository.findAll(withApplicantCardFilter(criteria), pageable));
-        applicantCardDtos.getContent().stream().forEach(applicantCardDto -> {
+        applicantCardDtos.getContent().forEach(applicantCardDto -> {
             ApplicantRitualDto applicantRitualDto = applicantRitualService.findApplicantRitualWithContactsAndRelatives(applicantCardDto.getApplicantRitual().getId());
             ApplicantPackageDto applicantPackageDto = applicantRitualDto.getApplicantPackage();
             applicantCardDto.getApplicantRitual().setTypeCode(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode());

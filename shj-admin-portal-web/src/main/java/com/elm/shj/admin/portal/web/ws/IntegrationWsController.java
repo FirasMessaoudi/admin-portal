@@ -1581,4 +1581,11 @@ public class IntegrationWsController {
         log.debug("Update Applicant pacckage transportation vehicl. {}", updateApplicantTransportationDto);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.updateApplicantTransportation(updateApplicantTransportationDto)).build());
     }
+
+    @GetMapping("/company/find-uid/{companyCode}")
+    public ResponseEntity<WsResponse<?>> findUidByCode(@PathVariable String companyCode) {
+        log.debug("find company uid for companyCode {}", companyCode);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyService.findUidByCode(companyCode)).build());
+    }
+
 }

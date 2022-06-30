@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2021 ELM. All rights reserved.
  */
-package com.elm.shj.admin.portal.services.complaint;
+package com.elm.shj.admin.portal.services.integration;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.util.MultiValueMap;
 
 /**
  * Web service operation result
@@ -14,8 +13,10 @@ import lombok.Setter;
  * @since 1.2.6 */
 @Getter
 @Setter
-@Builder
-public class CrmUpdateComplaintResponse {
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class CrmAuthResponse {
 
     public enum ECrmResponseStatus {
         SUCCESS(200), FAILURE(400);
@@ -26,11 +27,11 @@ public class CrmUpdateComplaintResponse {
             this.code = code;
         }
 
-        int getCode() {
+        public int getCode() {
             return code;
         }
     }
-    private String crmTicketNumber;
+    private String token;
     private Integer responseCode;
     private String message;
 }
