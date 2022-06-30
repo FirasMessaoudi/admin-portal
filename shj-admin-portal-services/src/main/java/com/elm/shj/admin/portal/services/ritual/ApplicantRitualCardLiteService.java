@@ -92,6 +92,11 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
             returnedDto.setEstablishmentNameEn(establishment.getLabelEn());
             returnedDto.setEstablishmentContactNumber(establishment.getContactNumber());
         }
+        CompanyLiteDto serviceGroup = companyService.findByBasicInfo(applicantRitual.get().getApplicant().getServiceGroupMakkahCode() + "", 5);
+        if (serviceGroup != null) {
+            returnedDto.setServiceNameAr(serviceGroup.getLabelAr());
+            returnedDto.setServiceNameEn(serviceGroup.getLabelEn());
+        }
         return Optional.of(returnedDto);
     }
 

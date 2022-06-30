@@ -48,4 +48,6 @@ public class ApplicantRitualCardLiteDto implements Serializable {
     private Integer establishmentId;
     private String passportNumber;
     private String establishmentContactNumber;
+    private String serviceNameAr;
+    private String serviceNameEn;
 }
