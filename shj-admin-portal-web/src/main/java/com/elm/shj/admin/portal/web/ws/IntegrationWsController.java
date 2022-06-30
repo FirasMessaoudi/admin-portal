@@ -490,7 +490,7 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findOrganizerApplicantGroupLeader(@PathVariable String uin) {
         log.debug("Handler for {}", "Find company employee by uin and season ");
         ApplicantRitualPackageVo applicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(uin));
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin, applicantPackage.getCompanyRitualSeasonId())).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin)).build());
     }
 
     // End Organizer applicant main data, details, health and group leader
