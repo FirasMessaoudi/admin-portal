@@ -77,11 +77,21 @@ public class DigitalIdScheduler {
                     .build());
 
             // create applicant package
+            if (applicantBasicDto.getPackageReferenceNumber() == null || applicantBasicDto.getPackageReferenceNumber().isEmpty()) {
+                // get the package reference number from the applicant ritual
+                String applicantRitualPackageRefNumber = applicantRitualService.findLatestPackageReferenceNumberByApplicantId(applicantBasicDto.getId());
+                if (applicantRitualPackageRefNumber == null || applicantRitualPackageRefNumber.isEmpty()) {
+                    log.warn("No package reference number for the applicant {} id, even in the applicant ritual.", applicantBasicDto.getId());
+                    return;
+                }
+                applicantBasicDto.setPackageReferenceNumber(applicantRitualPackageRefNumber);
+            }
+
             ApplicantPackageDto savedApplicantPackage = applicantPackageService.createApplicantPackage(applicantBasicDto.getPackageReferenceNumber(),
                     Long.parseLong(applicantDigitalId.getUin()), null, null);
 
             if (savedApplicantPackage == null) {
-                log.warn("no applicant ritual is created for {} uin and {} package reference number.", applicantDigitalId.getUin(), applicantBasicDto.getPackageReferenceNumber());
+                log.warn("no applicant package is created for {} uin and {} package reference number.", applicantDigitalId.getUin(), applicantBasicDto.getPackageReferenceNumber());
                 return;
             }
 
