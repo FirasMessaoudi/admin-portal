@@ -630,7 +630,7 @@ public class BadgeService {
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
         layout = new TextLayout(value, font, frc);
-        layout.draw(g2d, xDif - 10, isPrePrinted ? yDif + 15 : yDif);
+        layout.draw(g2d, xDif - 10, isPrePrinted ? yDif + 30 : yDif);
         font = font.deriveFont(
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_REGULAR));
@@ -653,7 +653,7 @@ public class BadgeService {
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
         layout = new TextLayout(uin, font, frc);
-        layout.draw(g2d, xDifLeft - 20, isPrePrinted ? yDifLeft + 15 : yDifLeft);
+        layout.draw(g2d, xDifLeft - 20, isPrePrinted ? yDifLeft + 30 : yDifLeft);
     }
 
     public String makeLabelFit(String label) {
