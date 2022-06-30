@@ -7,9 +7,12 @@ ALTER TABLE shc_portal.shc_applicant_group ALTER COLUMN reference_number nvarcha
 GO
 
 ALTER TABLE shc_portal.shc_applicant_incident
-    ADD mobile_number VARCHAR(20) NOT NULL DEFAULT('')
+    ADD mobile_number VARCHAR(20) NOT NULL DEFAULT ('')
 
 ALTER TABLE shc_portal.shc_applicant_complaint
-    ADD mobile_number VARCHAR(20) NOT NULL DEFAULT('')
-
+    ADD mobile_number VARCHAR(20) NOT NULL DEFAULT ('')
     GO
+
+
+ALTER TABLE shc_portal.shc_applicant_health_disease ALTER COLUMN label_en nvarchar(650) NULL;
+GO
