@@ -48,15 +48,15 @@ public class JpaApplicantHealthBasic implements Serializable {
     @Column(name = "insurance_policy_number")
     private String insurancePolicyNumber;
 
-    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "applicantHealth")
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "applicantHealth", orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthDiseaseBasic> diseases;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy = "applicantHealth")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy = "applicantHealth", orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthSpecialNeedsBasic> specialNeeds;
 
-    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "applicantHealth")
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "applicantHealth", orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<JpaApplicantHealthImmunizationBasic> immunizations;
 

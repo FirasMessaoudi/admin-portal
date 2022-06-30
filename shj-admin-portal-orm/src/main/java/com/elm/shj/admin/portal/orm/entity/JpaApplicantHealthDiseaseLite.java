@@ -31,9 +31,9 @@ public class JpaApplicantHealthDiseaseLite implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-    @Column(name = "label_ar", nullable = false)
+    @Column(name = "label_ar")
     private String labelAr;
 
-    @Column(name = "label_en", nullable = false)
+    @Column(name = "label_en")
     private String labelEn;
 }

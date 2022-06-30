@@ -110,6 +110,8 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
     JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(String applicantUin, long companyRitualSeason, String titleCode);
 
+    JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndTitleCode(String applicantUin, String titleCode);
+
     @Query("Select staff.mobileNumber from JpaApplicantGroup ag join ag.groupApplicantLists gal join ag.groupLeader staff WHERE gal.applicantUin = :applicantUin")
     String findGroupLeaderMobileNumberByApplicantUin(@Param("applicantUin") String applicantUin);
 
@@ -128,7 +130,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffVO(" +
             " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode,staff.photo, " +
-            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber,cards.id ) " +
+            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber,cards.id,staff.customJobTitle ) " +
             "from JpaCompanyStaff staff " +
             "join staff.digitalIds digitalId " +
             "join digitalId.companyStaffCards cards " +
@@ -188,7 +190,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffVO(" +
             " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode,staff.photo, " +
-            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber,cards.id ) " +
+            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber,cards.id,staff.customJobTitle ) " +
             "from JpaCompanyStaff staff " +
             "join staff.digitalIds digitalId " +
             "join digitalId.companyStaffCards cards " +

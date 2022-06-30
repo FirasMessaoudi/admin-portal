@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.services.dto.ECity;
 import com.elm.shj.admin.portal.services.dto.IncidentTypeLookupDto;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentLiteService;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
+import com.elm.shj.admin.portal.services.incident.IncidentAttachmentLiteService;
 import com.elm.shj.admin.portal.services.lookup.IncidentTypeLookupService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -48,6 +49,7 @@ public class IncidentWsController {
     private static final int MAX_GEO_CORDINATES = 90;
 
     private final ApplicantIncidentService applicantIncidentService;
+    private final IncidentAttachmentLiteService incidentAttachmentLiteService;
     private final ApplicantIncidentLiteService applicantIncidentLiteService;
     private final IncidentTypeLookupService incidentTypeLookupService;
 
@@ -60,7 +62,7 @@ public class IncidentWsController {
     @GetMapping("/attachment/{attachmentId}")
     public ResponseEntity<Resource> downloadAttachment(@PathVariable long attachmentId) throws Exception {
         log.info("Start downloadAttachment attachmentId: {} ", attachmentId);
-        Resource attachment = applicantIncidentService.downloadApplicantIncidentAttachment(attachmentId);
+        Resource attachment = incidentAttachmentLiteService.downloadApplicantIncidentAttachment(attachmentId);
 
         if (attachment != null) {
             String attachmentName = "img.jpg";
@@ -132,5 +134,12 @@ public class IncidentWsController {
 
     }
 
+
+    @GetMapping("/find/{id}")
+    private ResponseEntity<WsResponse<?>> findById(@PathVariable Long id){
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(applicantIncidentLiteService.findById(id)).build());
+    }
 
 }

@@ -21,6 +21,9 @@ public interface ApplicantPackageRepository extends JpaRepository<JpaApplicantPa
 
     Optional<JpaApplicantPackage> findByApplicantUinAndRitualPackageReferenceNumber(Long uin, String referenceNumber);
 
+    @Query("SELECT ap.id FROM JpaApplicantPackage ap WHERE ap.applicantRitual.id = :applicantRitualId")
+    Optional<Long> findIdByApplicantRitualId(@Param("applicantRitualId") Long applicantRitualId);
+
     @Query("select New com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo(a.id, a.applicantUin, a.startDate, a.endDate," +
             " a.ritualPackage.companyRitualSeason.ritualSeason.ritualTypeCode," +
             "a.ritualPackage.companyRitualSeason.ritualSeason.seasonYear, a.ritualPackage.companyRitualSeason.id)" +
@@ -36,5 +39,4 @@ public interface ApplicantPackageRepository extends JpaRepository<JpaApplicantPa
 
     Optional<JpaApplicantPackage> findTopByApplicantRitualApplicantIdOrderByCreationDateDesc(long applicantId);
 
-    List<JpaApplicantPackage> findByRitualPackageId(long id);
 }

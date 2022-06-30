@@ -134,7 +134,7 @@ public class ApplicantComplaintLiteService extends GenericService<JpaApplicantCo
         // persist the request
         ApplicantComplaintLiteDto createdApplicantComplaint = save(applicantComplaintLiteDto);
         if (complaintAttachmentDto != null){
-            complaintAttachmentDto.setApplicantComplaintId(createdApplicantComplaint.getId());
+            complaintAttachmentDto.setApplicantComplaint(new ApplicantComplaintLiteDto(createdApplicantComplaint.getId()));
             createdApplicantComplaint.setComplaintAttachment(complaintAttachmentLiteService.save(complaintAttachmentDto));
         }
         log.info("applicant complaint created successfully with id# {}", createdApplicantComplaint.getId());
@@ -169,5 +169,9 @@ public class ApplicantComplaintLiteService extends GenericService<JpaApplicantCo
         return getMapper().fromEntity(getRepository().save(getMapper().toEntity(dto, mappingContext)), mappingContext);
     }
 
+    public List<ApplicantComplaintLiteDto> findAllByApplicantRitualId(long applicantRitualId) {
+
+        return mapList(applicantComplaintLiteRepository.findByApplicantRitualId(applicantRitualId));
+    }
 }
 

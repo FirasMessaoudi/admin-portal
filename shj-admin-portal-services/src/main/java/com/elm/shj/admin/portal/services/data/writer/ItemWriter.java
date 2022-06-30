@@ -466,6 +466,7 @@ public class ItemWriter {
                 ApplicantHousingDataDto applicantHousingDataDto = (ApplicantHousingDataDto) entry.getValue();
                 Long applicantId = applicantService.findIdByBasicInfo(applicantHousingDataDto.getIdNumber(), applicantHousingDataDto.getPassportNumber(), applicantHousingDataDto.getNationalityCode());
                 if (applicantId == null) {
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_ID_NUMBER.getMessage())).valid(false).build());
                     return;
                 }
 
@@ -665,6 +666,13 @@ public class ItemWriter {
 
                    // BeanUtils.copyProperties(staff, companyStaffFullData);
                     CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getNationalityCode());
+
+                    if(existingStaff != null){
+                        if(applicantGroupBasicService.existsByGroupLeader(existingStaff.getId()) && !companyStaffService.exitsStaffInCompany(existingStaff.getId(), companyRitualSeasonDto.getId())){
+                            dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.STAFF_ID_ALREADY_EXITS_IN_COMPANY.getMessage())).valid(false).build());
+                            return;
+                        }
+                    }
                     // if record exists already in DB we need to update it
                     if (existingStaff != null) {
                         validationService.updateExistingStaff(staff, existingStaff);

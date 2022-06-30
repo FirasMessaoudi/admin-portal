@@ -26,7 +26,7 @@ public class IncidentAttachmentLiteDto implements Serializable {
 
     private long id;
     private String filePath;
-    @JsonBackReference(value = "applicantIncidentLite")
-    private ApplicantIncidentLiteDto applicantIncidentLite;
+    @JsonBackReference(value = "applicantIncident")
+    private ApplicantIncidentLiteDto applicantIncident;
     private Date creationDate;
 }

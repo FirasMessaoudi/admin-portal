@@ -94,6 +94,7 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
             predicates.add(criteriaBuilder.notEqual(root.get("statusCode"), ECardStatus.EXPIRED.name()));
             predicates.add(criteriaBuilder.notEqual(root.get("statusCode"), ECardStatus.REISSUED.name()));
 
+            predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("deleted"), false));
 
             if (criteria.getIdNumber() != null) {
                 predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("idNumber"), criteria.getIdNumber()));
@@ -209,11 +210,13 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
 
     }
 
-    public void updateStaffCardStatusByStaffId(long staffId){
-        companyStaffCardRepository.updateCompanyStaffCardStatus(staffId);
+    public void updateStaffCardStatusByStaffId(List<Long> staffCardIdList){
+        companyStaffCardRepository.updateCompanyStaffCardStatus(staffCardIdList);
     }
 
-    public CompanyStaffCardDto findStaffCardByStaffId(Long staffId){
-        return getMapper().fromEntity(companyStaffCardRepository.findStaffCard(staffId), mappingContext);
+    public List<Long> findStaffCardByStaffId(Long staffId){
+        List<Long> staffCardIdList = companyStaffCardRepository.findStaffCard(staffId);
+
+        return staffCardIdList;
     }
 }

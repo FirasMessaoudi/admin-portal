@@ -52,4 +52,7 @@ public interface CompanyRepository extends JpaRepository<JpaCompany, Long> {
 
     JpaCompany findByCode(String code);
 
+    @Query("select c.uid from JpaCompany c where c.code = :code")
+    String findUidByCode(@Param("code") String code);
+
 }

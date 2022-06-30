@@ -46,4 +46,8 @@ public class CompanyService extends GenericService<JpaCompany, CompanyLiteDto, L
     public CompanyLiteDto findByBasicInfo(String companyRefCode, Integer companyTypeCode) {
         return getMapper().fromEntity(companyRepository.findByCode(companyRefCode + "_" + ECompanyType.fromId(companyTypeCode).name()), mappingContext);
     }
+
+    public String findUidByCode(String companyCode){
+        return companyRepository.findUidByCode(companyCode);
+    }
 }

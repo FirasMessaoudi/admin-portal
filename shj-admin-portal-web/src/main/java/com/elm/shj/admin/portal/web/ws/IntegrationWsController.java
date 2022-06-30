@@ -490,7 +490,7 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findOrganizerApplicantGroupLeader(@PathVariable String uin) {
         log.debug("Handler for {}", "Find company employee by uin and season ");
         ApplicantRitualPackageVo applicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(uin));
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin, applicantPackage.getCompanyRitualSeasonId())).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin)).build());
     }
 
     // End Organizer applicant main data, details, health and group leader
@@ -772,7 +772,7 @@ public class IntegrationWsController {
     @GetMapping("/incident/list/{applicantRitualId}")
     public ResponseEntity<WsResponse<?>> listApplicantRelatedIncidents(@PathVariable long applicantRitualId) {
         log.info("list incidents...");
-        List<ApplicantIncidentDto> applicantIncidents = applicantIncidentService.listApplicantRelatedIncidents(applicantRitualId);
+        List<ApplicantIncidentLiteDto> applicantIncidents = applicantIncidentLiteService.listApplicantRelatedIncidents(applicantRitualId);
         if (applicantIncidents == null || applicantIncidents.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(null).build());
@@ -1491,7 +1491,7 @@ public class IntegrationWsController {
      * @return the {@link ResponseEntity} with status
      */
     @PostMapping("/incident-complaint/handle")
-    public ResponseEntity<WsResponse<?>> handleIncidentComplaintByCRM(@RequestBody ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
+    public ResponseEntity<WsCrmResponse<?>> handleIncidentComplaintByCRM(@RequestBody ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
         log.debug("Handle incident/complaint CrmTicketNumber {}, smartIDTicketNumber {}", applicantComplaintVo.getCrmTicketNumber(), applicantComplaintVo.getSmartIDTicketNumber());
 
         if (applicantComplaintVo.getMainType().equals(ETicketMainTypeCRM.Complaint.getId())) {
@@ -1499,27 +1499,27 @@ public class IntegrationWsController {
 
             if (complaint != null && complaint.getStatusCode().equals(EComplaintStatus.UNDER_PROCESSING.name())) {
                 applicantComplaintService.updateByCrm(complaint.getId(), applicantComplaintVo);
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                        .body(StringUtils.EMPTY).build());
+                return ResponseEntity.ok(WsCrmResponse.builder().ResponseCode(WsCrmResponse.EWsResponseStatus.SUCCESS.getCode())
+                        .Message("ticket updated successfully").build());
             } else {
-                log.info("Finished Handle complaint CrmTicketNumber {}, Failure {}", applicantComplaintVo.getCrmTicketNumber(), "COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING");
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                        .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING").build()).build());
+                log.info("Finished Handle complaint CrmTicketNumber {}, Failure {}", applicantComplaintVo.getCrmTicketNumber(), "TICKET_NOT_FOUND_OR_RESOLVED");
+                return ResponseEntity.ok(WsCrmResponse.builder().ResponseCode(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                        .ErrorList(Arrays.asList(WsCrmResponse.ErrorCrm.builder().ErrorCode(String.valueOf(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode())).ErrorDesc("TICKET_NOT_FOUND_OR_RESOLVED").build())).build());
             }
         } else if (applicantComplaintVo.getMainType().equals(ETicketMainTypeCRM.Incident.getId())){
             ApplicantIncidentLiteDto incident = applicantIncidentLiteService.findByCrmTicketNumberOrSmartIDTicketNumber(applicantComplaintVo.getCrmTicketNumber(), applicantComplaintVo.getSmartIDTicketNumber());
             if (incident != null && incident.getStatusCode().equals(EComplaintStatus.UNDER_PROCESSING.name())) {
                 applicantIncidentService.updateByCrm(incident.getId(), applicantComplaintVo);
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
-                        .body(StringUtils.EMPTY).build());
+                return ResponseEntity.ok(WsCrmResponse.builder().ResponseCode(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                        .Message("ticket updated successfully").build());
             } else {
                 log.info("Finished Handle complaint CrmTicketNumber {}, Failure {}", applicantComplaintVo.getCrmTicketNumber(), "COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING");
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                        .body(WsError.builder().error(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode()).referenceNumber("COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING").build()).build());
+                return ResponseEntity.ok(WsCrmResponse.builder().ResponseCode(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                        .ErrorList(Arrays.asList(WsCrmResponse.ErrorCrm.builder().ErrorCode(String.valueOf(WsError.EWsError.COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING.getCode())).ErrorDesc("TICKET_NOT_FOUND_OR_RESOLVED").build())).build());
             }
         } else {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                    .body(StringUtils.EMPTY).build());
+            return ResponseEntity.ok(WsCrmResponse.builder().ResponseCode(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                    .ErrorList(Arrays.asList(WsCrmResponse.ErrorCrm.builder().ErrorCode("100").ErrorDesc("GENERAL_ERROR").build())).build());
         }
     }
 
@@ -1530,7 +1530,7 @@ public class IntegrationWsController {
      * @return WsResponse of  the saved complaint attachment
      */
     @GetMapping("/attachment/{mainType}/{attachmentId}")
-    public ResponseEntity<?> downloadAttachment(@PathVariable long attachmentId, @PathVariable int mainType) throws Exception {
+    public ResponseEntity<WsCrmResponse.WsCrmAttachmentResponse> downloadAttachment(@PathVariable long attachmentId, @PathVariable int mainType) throws Exception {
         log.info("Downloading incident/complaint attachment with id# {} ", attachmentId);
         String attachmentName = null;
         Resource attachment = null;
@@ -1549,13 +1549,13 @@ public class IntegrationWsController {
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"");
         } else {
             log.info("Finished Downloading complaint attachment #{}, Failure {}", attachmentId, "ATTACHMENT_NOT_FOUND");
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                    .body(WsError.builder().error(WsError.EWsError.ATTACHMENT_NOT_FOUND.getCode()).referenceNumber("ATTACHMENT_NOT_FOUND").build()).build());
+            return ResponseEntity.ok(WsCrmResponse.WsCrmAttachmentResponse.builder().ErrorList(Arrays.asList(WsCrmResponse.ErrorCrm.builder().ErrorCode(String.valueOf(WsError.EWsError.ATTACHMENT_NOT_FOUND.getCode())).ErrorDesc("ATTACHMENT_NOT_FOUND").build()))
+                    .build());
         }
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentName + "\"")
-                .body(attachment);
+                .body(WsCrmResponse.WsCrmAttachmentResponse.builder().AttachmentContent(attachment.getInputStream().readAllBytes()).build());
     }
 
     @GetMapping("/applicant/package-transportation/details/{applicantUin}")
@@ -1581,4 +1581,11 @@ public class IntegrationWsController {
         log.debug("Update Applicant pacckage transportation vehicl. {}", updateApplicantTransportationDto);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.updateApplicantTransportation(updateApplicantTransportationDto)).build());
     }
+
+    @GetMapping("/company/find-uid/{companyCode}")
+    public ResponseEntity<WsResponse<?>> findUidByCode(@PathVariable String companyCode) {
+        log.debug("find company uid for companyCode {}", companyCode);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyService.findUidByCode(companyCode)).build());
+    }
+
 }

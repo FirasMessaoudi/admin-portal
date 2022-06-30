@@ -122,13 +122,20 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @return the list of applicant cards
      */
     public Page<ApplicantCardDto> searchApplicantCards(ApplicantCardSearchCriteriaDto criteria, Pageable pageable) {
-        return mapPage(applicantCardRepository.findAll(withApplicantCardFilter(criteria), pageable));
+        Page<ApplicantCardDto> applicantCardDtos = mapPage(applicantCardRepository.findAll(withApplicantCardFilter(criteria), pageable));
+        applicantCardDtos.getContent().forEach(applicantCardDto -> {
+            ApplicantRitualDto applicantRitualDto = applicantRitualService.findApplicantRitualWithContactsAndRelatives(applicantCardDto.getApplicantRitual().getId());
+            ApplicantPackageDto applicantPackageDto = applicantRitualDto.getApplicantPackage();
+            applicantCardDto.getApplicantRitual().setTypeCode(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode());
+        });
+        return applicantCardDtos;
     }
 
     private Specification<JpaApplicantCard> withApplicantCardFilter(final ApplicantCardSearchCriteriaDto criteria) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.equal(root.join("applicantRitual").join("applicant").get("deleted"), Boolean.FALSE));
 
             if (criteria.getRitualSeason() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("applicantRitual").get("applicantPackage").get("ritualPackage").get("companyRitualSeason").get("ritualSeason").get("seasonYear"), criteria.getRitualSeason()));

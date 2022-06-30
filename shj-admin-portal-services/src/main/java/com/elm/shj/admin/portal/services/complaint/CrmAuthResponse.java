@@ -27,7 +27,7 @@ public class CrmAuthResponse {
             this.code = code;
         }
 
-        int getCode() {
+        public int getCode() {
             return code;
         }
     }

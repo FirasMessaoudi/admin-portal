@@ -47,7 +47,8 @@ public class CompanyStaffVO implements Serializable {
     private String cardReferenceNumber;
     private long cardId;
     private long id;
-    public CompanyStaffVO(String suin, String fullNameEn, String fullNameAr, String jobTitleCode, String photo, String referenceNumber, String cardStatusCode, String ritualTypeCode, int ritualSeason, String companyLabelEn, String companyLabelAr, String companyCode, String idNumber, String passport, String fullNameOrigin, Date dateOfBirthGregorian, Long dateOfBirthHijri, String gender, String nationalityCode, String cardReferenceNumber, long cardId) {
+    private String customJobTitle;
+    public CompanyStaffVO(String suin, String fullNameEn, String fullNameAr, String jobTitleCode, String photo, String referenceNumber, String cardStatusCode, String ritualTypeCode, int ritualSeason, String companyLabelEn, String companyLabelAr, String companyCode, String idNumber, String passport, String fullNameOrigin, Date dateOfBirthGregorian, Long dateOfBirthHijri, String gender, String nationalityCode, String cardReferenceNumber, long cardId, String customJobTitle) {
         this.suin = suin;
         this.fullNameEn = fullNameEn;
         this.fullNameAr = fullNameAr;
@@ -69,6 +70,7 @@ public class CompanyStaffVO implements Serializable {
         this.nationalityCode = nationalityCode;
         this.cardReferenceNumber = cardReferenceNumber;
         this.cardId = cardId;
+        this.customJobTitle= customJobTitle;
     }
 
     public CompanyStaffVO(long id,  String fullNameEn, String fullNameAr) {

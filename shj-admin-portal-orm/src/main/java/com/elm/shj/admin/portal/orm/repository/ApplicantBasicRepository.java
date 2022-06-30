@@ -20,7 +20,7 @@ import java.util.Optional;
  */
 public interface ApplicantBasicRepository extends JpaRepository<JpaApplicantBasic, Long> {
 
-    @Query("SELECT a FROM JpaApplicantBasic a LEFT JOIN JpaApplicantDigitalId ad on a.id = ad.applicantId WHERE a.packageReferenceNumber IS NOT NULL AND ad.id IS NULL")
+    @Query("SELECT a FROM JpaApplicantBasic a LEFT JOIN JpaApplicantDigitalId ad on a.id = ad.applicantId WHERE ad.id IS NULL")
     Page<JpaApplicantBasic> findAllApplicantsWithoutDigitalId(Pageable pageable);
 
     @Query("select a from JpaApplicantBasic a where " +
