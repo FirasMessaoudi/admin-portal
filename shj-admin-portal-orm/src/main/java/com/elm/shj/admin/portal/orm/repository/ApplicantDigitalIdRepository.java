@@ -29,7 +29,7 @@ public interface ApplicantDigitalIdRepository extends JpaRepository<JpaApplicant
     String findUinByApplicantIdAndStatusCode(@Param("applicantId") long applicantId, @Param("statusCode") String statusCode);
 
     @Modifying
-    @Query("UPDATE JpaApplicantDigitalId adi SET adi.statusCode = :status WHERE adi.uin = :uin")
+    @Query("UPDATE JpaApplicantDigitalId adi SET adi.statusCode = :statusCode WHERE adi.uin = :uin")
     void updateDigitalIdStatus(@Param("statusCode") String statusCode, @Param("uin") String uin);
 
 }
