@@ -11,6 +11,8 @@ import com.elm.shj.admin.portal.orm.repository.ComplaintAttachmentLiteRepository
 import com.elm.shj.admin.portal.orm.repository.ComplaintAttachmentRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.integration.CrmAuthResponse;
+import com.elm.shj.admin.portal.services.integration.IntegrationService;
 import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
 import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
@@ -33,9 +35,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -70,6 +70,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     private final ComplaintAttachmentLiteRepository complaintAttachmentLiteRepository;
     private final NotificationRequestService notificationRequestService;
     private final NotificationTemplateService notificationTemplateService;
+    private final IntegrationService integrationService;
     private static final String RESOLVE_INCIDENT_TEMPLATE_NAME = "RESOLVE_COMPLAINT";
     private static final String CLOSE_INCIDENT_TEMPLATE_NAME = "CLOSE_COMPLAINT";
 
@@ -180,9 +181,10 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
             applicantComplaintVoCRM.setSmartIDTicketNumber(complaint.getReferenceNumber());
             applicantComplaintVoCRM.setResolutionComment(applicantComplaintVo.getResolutionComment());
             try {
-                callCRM(crmUpdateComplaintUrl, HttpMethod.POST, applicantComplaintVoCRM,
+                integrationService.callCRM(crmUpdateComplaintUrl, HttpMethod.POST, applicantComplaintVoCRM, null,
                         new ParameterizedTypeReference<ComplaintUpdateCRMDto>() {
                         });
+                applicantComplaintRepository.updateCRMUpdateStatus(complaint.getId());
                 log.info("complaint successfully updated #{}", complaint.getId());
             } catch (Exception e){
                 log.error("Failed update the status on CRM of complaint #{}", complaint.getId());

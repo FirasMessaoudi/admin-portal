@@ -3,14 +3,13 @@
  */
 package com.elm.shj.admin.portal.services.incident;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
-import com.elm.shj.admin.portal.orm.entity.JpaIncidentAttachment;
+import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentRepository;
 import com.elm.shj.admin.portal.orm.repository.IncidentAttachmentRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.integration.IntegrationService;
 import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
 import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
@@ -18,10 +17,13 @@ import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,8 @@ import java.util.Optional;
 public class ApplicantIncidentService extends GenericService<JpaApplicantIncident, ApplicantIncidentDto, Long> {
 
     private final ApplicantIncidentRepository applicantIncidentRepository;
+    private final ApplicantIncidentLiteRepository applicantIncidentLiteRepository;
+    private final IntegrationService integrationService;
     private final SftpService sftpService;
     private final IncidentAttachmentRepository incidentAttachmentRepository;
     private final NotificationRequestService notificationRequestService;
@@ -59,6 +63,9 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
     private static final SimpleDateFormat REF_NUMBER_FORMAT = new SimpleDateFormat("SSS");
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
     private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
+
+    @Value("${crm.complaint.update.url}")
+    private String crmUpdateComplaintUrl;
 
     /**
      * Find all incidents.
@@ -174,6 +181,25 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         if (EIncidentResolutionType.MARK_AS_CLOSED.equals(applicantIncidentVo.getOperation())) {
             applicantIncidentRepository.update(incidentId, applicantIncidentVo.getResolutionComment(), EIncidentStatus.CLOSED.name());
             sendIncidentNotification(incidentId, CLOSE_INCIDENT_TEMPLATE_NAME);
+        }
+        JpaApplicantIncidentLite incident = applicantIncidentLiteRepository.findById(incidentId).orElse(null);
+        if (incident.getCrmTicketNumber() != null && !incident.getCrmTicketNumber().isEmpty()) {
+            //TODO: Update CRM Complaint status
+            ApplicantIncidentComplaintVoCRM applicantComplaintVoCRM = new ApplicantIncidentComplaintVoCRM();
+            applicantComplaintVoCRM.setCrmTicketNumber(incident.getCrmTicketNumber());
+            applicantComplaintVoCRM.setStatus(applicantIncidentVo.getOperation().getCrmCode());
+            applicantComplaintVoCRM.setSmartIDTicketNumber(incident.getReferenceNumber());
+            applicantComplaintVoCRM.setResolutionComment(applicantIncidentVo.getResolutionComment());
+            try {
+                integrationService.callCRM(crmUpdateComplaintUrl, HttpMethod.POST, applicantComplaintVoCRM, null,
+                        new ParameterizedTypeReference<ComplaintUpdateCRMDto>() {
+                        });
+                applicantIncidentLiteRepository.updateCRMUpdateStatus(incident.getId());
+                log.info("complaint successfully updated #{}", incidentId);
+            } catch (Exception e){
+                log.error("Failed update the status on CRM of complaint #{}", incidentId);
+
+            }
         }
     }
 
