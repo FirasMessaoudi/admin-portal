@@ -4,9 +4,9 @@
 package com.elm.shj.admin.portal.services.complaint;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo;
-import com.elm.shj.admin.portal.orm.repository.ApplicantComplaintLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantComplaintRepository;
 import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.integration.CrmAuthResponse;
 import com.elm.shj.admin.portal.services.integration.IntegrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,8 @@ import net.javacrumbs.shedlock.core.LockAssert;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +40,9 @@ public class ApplicantComplaintScheduler {
     private String schedulerActiveNodes;
     @Value("${complaint.period.minutes}")
     private Long complaintPeriodInMinutes;
+
+    @Value("${crm.complaint.update.url}")
+    private String crmUpdateComplaintUrl;
 
     private final IntegrationService integrationService;
 
@@ -85,6 +90,23 @@ public class ApplicantComplaintScheduler {
 
 
                 applicantComplaintRepository.updateCRMTicketNumber(complaint.getId(), updateCRMDto.getCrmTicketNumber());
+
+
+                if (complaint.getCrmTicketNumber() != null && !complaint.getStatusCode().equals(EIncidentStatus.UNDER_PROCESSING.name())  && complaint.getCrmStatusUpdated() == null && !complaint.getCrmStatusUpdated()){
+                    ApplicantIncidentComplaintVoCRM applicantComplaintVoCRM = new ApplicantIncidentComplaintVoCRM();
+                    applicantComplaintVoCRM.setCrmTicketNumber(complaint.getCrmTicketNumber());
+                    applicantComplaintVoCRM.setStatus(EIncidentResolutionType.valueOf(complaint.getStatusCode()).getCrmCode());
+                    applicantComplaintVoCRM.setSmartIDTicketNumber(complaint.getReferenceNumber());
+                    applicantComplaintVoCRM.setResolutionComment(complaint.getResolutionComment());
+
+                    integrationService.callCRM(crmUpdateComplaintUrl, HttpMethod.POST, applicantComplaintVoCRM, accessTokenWsResponse.getToken(),
+                            new ParameterizedTypeReference<ComplaintUpdateCRMDto>() {
+                            });
+
+                    applicantComplaintRepository.updateCRMUpdateStatus(complaint.getId());
+
+                }
+
                 log.info("complaint successfully created #{}", complaint.getId());
             } catch (Exception e) {
                 e.printStackTrace();

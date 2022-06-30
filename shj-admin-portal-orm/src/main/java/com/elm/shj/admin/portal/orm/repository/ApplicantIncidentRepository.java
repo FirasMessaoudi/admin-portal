@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
 import com.elm.shj.admin.portal.orm.entity.LocalizedCountVo;
 import com.elm.shj.admin.portal.orm.entity.LocationVo;
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -68,5 +70,10 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
             "JOIN rp.companyRitualSeason crs JOIN crs.ritualSeason rs " +
             "where rs.seasonYear= :seasonYear AND ai.areaCode IS NOT NULL")
     List<JpaApplicantIncident> findAllByCurrentSeason(@Param("seasonYear") int seasonYear);
+
+    @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.typeCode,c.statusCode, c.city,c.crmStatusUpdated, c.description,c.locationLat, c.locationLng,c.mobileNumber,c.creationDate, att.id,a.fullNameAr,a.fullNameEn,a.fullNameOrigin, a.idNumber, a.passportNumber,a.dateOfBirthHijri, a.dateOfBirthGregorian,a.gender,a.nationalityCode,ac.email,ac.localMobileNumber,ac.intlMobileNumber,ac.countryCode, di.uin) " +
+            "FROM JpaApplicantIncident c JOIN c.applicantRitual ar JOIN ar.applicant a JOIN  a.digitalIds di JOIN a.contacts ac LEFT JOIN c.incidentAttachments att " +
+            "WHERE (c.crmTicketNumber is null) OR (c.crmStatusUpdated = false AND c.statusCode <> :statusCode)")
+    List<ApplicantComplaintVo> findAllCrm(@Param("statusCode") String statusCode);
 
 }
