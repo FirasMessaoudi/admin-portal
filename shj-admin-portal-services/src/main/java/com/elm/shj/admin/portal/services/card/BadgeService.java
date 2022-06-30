@@ -657,7 +657,7 @@ public class BadgeService {
     }
 
     public String makeLabelFit(String label) {
-        if (label.length() > 28) {
+        if (label != null && label.length() > 28) {
             return label.substring(0, 23) + "...";
         }
         return label + " ";
