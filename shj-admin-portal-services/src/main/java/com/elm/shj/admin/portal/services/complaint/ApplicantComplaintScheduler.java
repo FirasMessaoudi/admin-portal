@@ -92,7 +92,7 @@ public class ApplicantComplaintScheduler {
                 applicantComplaintRepository.updateCRMTicketNumber(complaint.getId(), updateCRMDto.getCrmTicketNumber());
 
 
-                if (complaint.getCrmTicketNumber() != null && !complaint.getStatusCode().equals(EIncidentStatus.UNDER_PROCESSING.name()) && !complaint.getCrmStatusUpdated()){
+                if (complaint.getCrmTicketNumber() != null && !complaint.getStatusCode().equals(EIncidentStatus.UNDER_PROCESSING.name())  && complaint.getCrmStatusUpdated() == null && !complaint.getCrmStatusUpdated()){
                     ApplicantIncidentComplaintVoCRM applicantComplaintVoCRM = new ApplicantIncidentComplaintVoCRM();
                     applicantComplaintVoCRM.setCrmTicketNumber(complaint.getCrmTicketNumber());
                     applicantComplaintVoCRM.setStatus(EIncidentResolutionType.valueOf(complaint.getStatusCode()).getCrmCode());

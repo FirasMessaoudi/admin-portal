@@ -51,3 +51,11 @@ Update shc_portal.shc_notification_template_content SET title = 'Close incident'
 WHERE id = 6
 
 GO
+
+
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('generate.applicant.incident.scheduler.active.nodes', '127.0.0.1,localhost');
+INSERT INTO shc_portal.shc_config (conf_key, conf_value)
+VALUES ('scheduler.generate.applicant.incident.delay.milliseconds', '3600000');
+
+GO

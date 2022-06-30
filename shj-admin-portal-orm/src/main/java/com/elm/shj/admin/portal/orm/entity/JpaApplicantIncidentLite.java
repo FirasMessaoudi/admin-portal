@@ -84,7 +84,7 @@ public class JpaApplicantIncidentLite implements Serializable {
     private String mobileNumber;
 
     @Column(name = "crm_status_updated")
-    private boolean crmStatusUpdated;
+    private Boolean crmStatusUpdated;
 
     @PrePersist
     public void prePersist() {
