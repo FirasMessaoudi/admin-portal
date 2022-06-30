@@ -39,7 +39,7 @@ public class JpaApplicantHealthDisease implements Serializable {
     @Column(name = "label_ar")
     private String labelAr;
 
-    @Column(name = "label_en", nullable = false)
+    @Column(name = "label_en")
     private String labelEn;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
