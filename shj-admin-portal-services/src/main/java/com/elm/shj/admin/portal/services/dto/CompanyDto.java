@@ -36,6 +36,8 @@ public class CompanyDto {
             , message = "validation.data.constraints.msg.20003")
     private String code;
 
+    private String uid;
+
     @NotNull(message = "validation.data.constraints.msg.20001")
     //@OnlyCharacters(min = 10, max = 650, allowEmpty = false, allowNumbers = true, allowSpecialChars = false)
     private String labelAr;

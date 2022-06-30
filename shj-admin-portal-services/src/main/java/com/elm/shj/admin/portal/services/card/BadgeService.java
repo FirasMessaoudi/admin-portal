@@ -569,7 +569,7 @@ public class BadgeService {
         g2d.draw(verticalLine);
 
         if (applicantRitualCard != null) {
-            writeTable(g2d, rectWidth, rectX, rectY + 25, new String[]{makeLabelFit(applicantRitualCard.getEstablishmentNameAr()), makeLabelFit(applicantRitualCard.getCompanyNameAr())}, new String[]{makeLabelFit(applicantRitualCard.getEstablishmentNameEn()), makeLabelFit(applicantRitualCard.getCompanyName())});
+            writeTable(g2d, rectWidth, rectX, rectY + 25, new String[]{makeLabelFit(applicantRitualCard.getServiceNameEn()), makeLabelFit(applicantRitualCard.getEstablishmentNameEn())}, new String[]{makeLabelFit(applicantRitualCard.getServiceNameAr()), makeLabelFit(applicantRitualCard.getEstablishmentNameAr())});
         } else {
             writeTable(g2d, rectWidth, rectX, rectY, new String[]{makeLabelFit(staffData.getCompanyLabelEn()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "en"))}, new String[]{makeLabelFit(staffData.getCompanyLabelAr()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "ar"))});
             if (!isPrePrinted) {
@@ -596,7 +596,6 @@ public class BadgeService {
         String labelAr;
         String value;
 
-
         if (applicantRitualCard != null) {
             labelEn = applicantRitualCard.getIdNumber() != null ? "ID Number" : " Passport";
             labelAr = applicantRitualCard.getIdNumber() != null ? "رقم الهوية" : "جواز السفر";
@@ -606,7 +605,6 @@ public class BadgeService {
             labelAr = staffData.getIdNumber() != null ? "رقم الهوية" : "جواز السفر";
             value = staffData.getIdNumber() != null ? staffData.getIdNumber() : staffData.getPassport();
         }
-
         FontMetrics fm = g2d.getFontMetrics(font);
         FontRenderContext frc = g2d.getFontRenderContext();
         int xDif = (BADGE_WIDTH - fm.stringWidth(labelAr) - 80);
@@ -620,7 +618,6 @@ public class BadgeService {
         if (!isPrePrinted)
             layout.draw(g2d, xDif - 10, yDif);
 
-
         BufferedImage qrCode = makeRoundedCorner(generateQRcode(uin, applicantRitualCard != null ? applicantRitualCard.getCardId() + "" : staffData.getCardId() + "", false), 30);
 
         Image img = ImageUtils.resizeImage(qrCode, QR_CODE_MAX_HEIGHT, QR_CODE_MAX_HEIGHT);
@@ -633,7 +630,7 @@ public class BadgeService {
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
         layout = new TextLayout(value, font, frc);
-        layout.draw(g2d, xDif - 10, yDif);
+        layout.draw(g2d, xDif - 10, isPrePrinted ? yDif + 15 : yDif);
         font = font.deriveFont(
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_REGULAR));
@@ -656,7 +653,7 @@ public class BadgeService {
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
         layout = new TextLayout(uin, font, frc);
-        layout.draw(g2d, xDifLeft - 20, yDifLeft);
+        layout.draw(g2d, xDifLeft - 20, isPrePrinted ? yDifLeft + 15 : yDifLeft);
     }
 
     public String makeLabelFit(String label) {

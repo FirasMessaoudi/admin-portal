@@ -28,6 +28,7 @@ public class ApplicantHealthBasicService extends GenericService<JpaApplicantHeal
 
     @Transactional
     public ApplicantHealthBasicDto update(ApplicantHealthBasicDto applicantHealthDto) {
+        log.info("start update applicant health with id {} ", applicantHealthDto.getId());
         applicantHealthDto.setPackageReferenceNumber(applicantHealthLiteService.findPackageByHealth(applicantHealthDto.getId()));
         applicantHealthDto.getDiseases().forEach(applicantHealthDiseaseBasicDto -> {
             applicantHealthDiseaseBasicDto.setApplicantHealth(applicantHealthDto);
@@ -40,6 +41,8 @@ public class ApplicantHealthBasicService extends GenericService<JpaApplicantHeal
         });
         ApplicantHealthBasicDto updatedHealth = save(applicantHealthDto);
         applicantHealthService.updateApplicantHealthApplicantRitual(applicantHealthLiteService.findApplicantRitualIdByHealth(applicantHealthDto.getId()), applicantHealthDto.getApplicant().getId(), applicantHealthDto.getPackageReferenceNumber());
+        log.info("finish update applicant health with id {} ", applicantHealthDto.getId());
+
         return updatedHealth;
     }
 }

@@ -115,7 +115,7 @@ public class ValidationService {
                     saveApplicantsMainData((HuicApplicantMainData) items.get(i), errorResponses, i);
                 }
                 if (items.get(i).getClass().isAssignableFrom(HuicApplicantRitual.class)) {
-                    saveApplicantRitual((HuicApplicantRitual) items.get(i));
+                    saveApplicantRitual((HuicApplicantRitual) items.get(i), errorResponses, i);
                 }
                 if (items.get(i).getClass().isAssignableFrom(ApplicantHealthDto.class)) {
                     saveApplicantHealth((ApplicantHealthDto) items.get(i), errorResponses, i);
@@ -548,7 +548,7 @@ public class ValidationService {
 
         // if record exists already in DB we need to update it
         if (existingApplicantBasic != null) {
-            if (huicApplicantMainData.getStatus() != 2 && huicApplicantMainData.getStatus() != 3) { //invalid status value
+            if (!existingApplicantBasic.isDeleted() && huicApplicantMainData.getStatus() != 2 && huicApplicantMainData.getStatus() != 3) { //invalid status value
                 ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.setRowNumber(rowNumber + 1);
                 errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30001", "Please enter a valid value. Same value cannot be repeated within the previous registered records"));
@@ -566,14 +566,20 @@ public class ValidationService {
                 return;
             }
 
+            if (huicApplicantMainData.getStatus() == 1 && existingApplicantBasic.isDeleted()) { //mark as undeleted
+                applicant.setDeleted(false);
+                applicant.setRegistered(false);
+            }
+
+            if (huicApplicantMainData.getStatus() == 3) { //mark as deleted
+                applicant.setDeleted(true);
+                applicant.setRegistered(false);
+            }
+
             applicantContactDto.setId(existingApplicantBasic.getContacts().get(0).getId());
             applicant.setId(existingApplicantBasic.getId());
             applicant.setUpdateDate(new Date());
 
-            if (huicApplicantMainData.getStatus() == 3) { //delete
-                applicant.setDeleted(true);
-                applicant.setRegistered(false);
-            }
         } else { // status have to be 1 (add new) or return error
             if (huicApplicantMainData.getStatus() != 1) {
                 ErrorResponse errorResponse = new ErrorResponse();
@@ -610,17 +616,29 @@ public class ValidationService {
                 huicApplicantMainData.getIdNumber(), huicApplicantMainData.getPassportNo(), huicApplicantMainData.getNationality(), huicApplicantMainData.getPackageRefNumber(), huicApplicantMainData.getStatus());
     }
 
-    private void saveApplicantRitual(HuicApplicantRitual huicApplicantRitual) {
+    private void saveApplicantRitual(HuicApplicantRitual huicApplicantRitual, List<ErrorResponse> errorResponses, int rowNumber) {
         log.info("Start saveApplicantRitual for {} id number, {} passport number, {} nationality, {} package ref number.",
                 huicApplicantRitual.getIdNumber(), huicApplicantRitual.getPassportNo(), huicApplicantRitual.getNationality(), huicApplicantRitual.getPackageRefNumber());
         Long applicantId = applicantBasicService.findIdByBasicInfo(huicApplicantRitual.getIdNumber() != null ? huicApplicantRitual.getIdNumber().toString() : null, huicApplicantRitual.getPassportNo(), huicApplicantRitual.getNationality().toString());
         if (applicantId == null) {
+            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse.setRowNumber(rowNumber + 1);
+            errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30002", "No applicant found."));
+            errorResponses.add(errorResponse);
             return;
         }
 
         String packageReferenceNumber = huicApplicantRitual.getPackageRefNumber();
         if (packageReferenceNumber == null) {
             packageReferenceNumber = applicantBasicService.findPackageReferenceNumberById(applicantId);
+        }
+
+        if (packageReferenceNumber == null) {
+            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse.setRowNumber(rowNumber + 1);
+            errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30002", "No package reference number provided."));
+            errorResponses.add(errorResponse);
+            return;
         }
 
         //construct the applicant ritual
@@ -724,14 +742,24 @@ public class ValidationService {
         if (savedApplicantRitualId != null) {
             applicantRitualDto.setId(savedApplicantRitualId);
             applicantRitualDto.setUpdateDate(new Date());
-            Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(applicantUin);
-            applicantRitualDto.setApplicantPackage(ApplicantPackageDto.builder().id(applicantPackageId).build());
+            Long applicantPackageId = applicantPackageService.findIdByApplicantRitualId(applicantRitualDto.getId());
+            // create a new applicant package for the applicant ritual if digital id is exists
+            if (applicantPackageId == null && applicantUin != null && !applicantUin.isEmpty()) {
+                ApplicantPackageDto savedApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitualDto.getPackageReferenceNumber(), Long.parseLong(applicantUin), null, null);
+                if (savedApplicantPackage == null) {
+                    log.warn("no applicant package is created for {} uin and {} package reference number.", applicantUin, applicantRitualDto.getPackageReferenceNumber());
+                } else {
+                    applicantPackageId = savedApplicantPackage.getId();
+                }
+            }
+            if (applicantPackageId != null) {
+                applicantRitualDto.setApplicantPackage(ApplicantPackageDto.builder().id(applicantPackageId).build());
+            }
             //set applicant ritual id for applicant contacts, applicant health (if exist) and applicant relatives (if exist)
             applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitualDto.getId(), applicantId, applicantRitualDto.getPackageReferenceNumber());
             applicantRelativeService.updateApplicantRelativeApplicantRitual(applicantRitualDto.getId(), applicantId, applicantRitualDto.getPackageReferenceNumber());
         } else {
-            // applicant ritual not created yet, check if digital id is exists,
-            // if yes then create a new applicant package and link it with the applicant ritual
+            // applicant ritual not created yet, check if digital id is exists if yes (this is not the first applicant ritual) then create a new applicant package and link it with the applicant ritual
             if (applicantUin != null && !applicantUin.isEmpty()) {
                 ApplicantPackageDto createdApplicantPackage = applicantPackageService.createApplicantPackage(applicantRitualDto.getPackageReferenceNumber(), Long.parseLong(applicantUin), null, null);
                 applicantRitualDto.setApplicantPackage(createdApplicantPackage);

@@ -154,6 +154,14 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return Optional.empty();
     }
 
+    public Optional<CompanyStaffDto> findGroupLeaderByApplicantUin(String applicantUin) {
+        JpaCompanyStaff companyStaff = companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndTitleCode(applicantUin, ECompanyStaffTitle.GROUP_LEADER.name());
+        if (companyStaff != null) {
+            return Optional.of(getMapper().fromEntity(companyStaff, mappingContext));
+        }
+        return Optional.empty();
+    }
+
     public String findGroupLeaderMobileByApplicantUin(String applicantUin) {
         return companyStaffRepository.findGroupLeaderMobileNumberByApplicantUin(applicantUin);
     }
@@ -605,6 +613,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
     public List<DataValidationResult> isValidCompanyRitualSeason(CompanyStaffMainFullDataDto companyStaffMainFullData){
         String attributeName = "ritualTypeCode";
+        String idNumberAttribute = "idNumber";
         List<DataValidationResult> dataValidationResults = new ArrayList<>();
         // check company ritual season exist for the ritual type, seasson and company
         CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyStaffMainFullData.getCompanyCode(), companyStaffMainFullData.getRitualTypeCode(), seasonYear);
@@ -612,6 +621,16 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             dataValidationResults.add(DataValidationResult.builder().valid(false)
                     .errorMessages(Collections.singletonList(messageSource.getMessage(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage(), null, Locale.forLanguageTag("en")) + " \n " + messageSource.getMessage(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage(), null, Locale.forLanguageTag("ar"))))
                     .attributeName(attributeName).build());
+        }
+
+        CompanyStaffDto existingStaff = findByBasicInfo(companyStaffMainFullData.getIdNumber(), companyStaffMainFullData.getPassportNumber(), companyStaffMainFullData.getNationalityCode());
+
+        if(existingStaff != null){
+            if(applicantGroupBasicService.existsByGroupLeader(existingStaff.getId()) && !exitsStaffInCompany(existingStaff.getId(), companyRitualSeasonDto.getId())){
+                dataValidationResults.add(DataValidationResult.builder().valid(false)
+                        .errorMessages(Collections.singletonList(messageSource.getMessage(EExcelItemReaderErrorType.STAFF_ID_ALREADY_EXITS_IN_COMPANY.getMessage(), null, Locale.forLanguageTag("en")) + " \n " + messageSource.getMessage(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage(), null, Locale.forLanguageTag("ar"))))
+                        .attributeName(idNumberAttribute).build());
+            }
         }
         return dataValidationResults;
     }
@@ -631,9 +650,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         log.info("Start update digital id status by staff id. {}", staff.getId());
         companyStaffDigitalIdService.updateDigitalIdStatus(staffId);
 
-        CompanyStaffCardDto companyStaffCardDto = companyStaffCardService.findStaffCardByStaffId(staffId);
+        List<Long> staffCardIdList = companyStaffCardService.findStaffCardByStaffId(staffId);
+        if(staffCardIdList.isEmpty()) return false;
         // update staff car status Cancelled
-        companyStaffCardService.updateStaffCardStatusByStaffId(companyStaffCardDto.getId());
+        companyStaffCardService.updateStaffCardStatusByStaffId(staffCardIdList);
         log.info("Update staff successfully ..");
 
         return true;

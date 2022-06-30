@@ -490,7 +490,7 @@ public class IntegrationWsController {
     public ResponseEntity<WsResponse<?>> findOrganizerApplicantGroupLeader(@PathVariable String uin) {
         log.debug("Handler for {}", "Find company employee by uin and season ");
         ApplicantRitualPackageVo applicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(uin));
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin, applicantPackage.getCompanyRitualSeasonId())).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin)).build());
     }
 
     // End Organizer applicant main data, details, health and group leader
@@ -1581,4 +1581,11 @@ public class IntegrationWsController {
         log.debug("Update Applicant pacckage transportation vehicl. {}", updateApplicantTransportationDto);
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(applicantPackageTransportationService.updateApplicantTransportation(updateApplicantTransportationDto)).build());
     }
+
+    @GetMapping("/company/find-uid/{companyCode}")
+    public ResponseEntity<WsResponse<?>> findUidByCode(@PathVariable String companyCode) {
+        log.debug("find company uid for companyCode {}", companyCode);
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyService.findUidByCode(companyCode)).build());
+    }
+
 }
