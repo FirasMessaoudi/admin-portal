@@ -35,9 +35,9 @@ public class JpaIncidentAttachmentLite implements Serializable {
     @Column(name = "file_path")
     private String filePath;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "applicant_incident_id")
-    private JpaApplicantIncidentLite applicantIncidentLite;
+    private JpaApplicantIncidentLite applicantIncident;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;

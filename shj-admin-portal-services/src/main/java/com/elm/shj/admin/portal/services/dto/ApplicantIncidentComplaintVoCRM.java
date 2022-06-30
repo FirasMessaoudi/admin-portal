@@ -15,7 +15,6 @@ import java.io.Serializable;
  * @author othman alamoud
  * @since 1.2.6
  */
-@Getter
 @Setter
 public class ApplicantIncidentComplaintVoCRM implements Serializable {
 
@@ -33,4 +32,29 @@ public class ApplicantIncidentComplaintVoCRM implements Serializable {
 
     @JsonProperty("MainType")
     private Integer mainType;// 1: Incident, 2: Complaint
+
+
+    @JsonProperty("Status")
+    public Integer getStatus() {
+        return status;
+    }
+
+    @JsonProperty("Comments")
+    public String getResolutionComment() {
+        return resolutionComment;
+    }
+
+    @JsonProperty("CRMTicketNumber")
+    public String getCrmTicketNumber() {
+        return crmTicketNumber;
+    }
+
+    @JsonProperty("SmartIDTicketNumber")
+    public String getSmartIDTicketNumber() {
+        return smartIDTicketNumber;
+    }
+
+    public Integer getMainType() {
+        return mainType;
+    }
 }

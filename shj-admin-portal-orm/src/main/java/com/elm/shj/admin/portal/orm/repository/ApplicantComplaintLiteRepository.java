@@ -30,6 +30,8 @@ public interface ApplicantComplaintLiteRepository extends JpaRepository<JpaAppli
             "WHERE c.id = :id")
     ApplicantComplaintVo findOneLite(@Param("id") Long id);
 
+    List<JpaApplicantComplaintLite> findByApplicantRitualId(long applicantRitualId);
+
 
 
 
