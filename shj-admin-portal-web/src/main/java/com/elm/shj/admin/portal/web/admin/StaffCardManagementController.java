@@ -159,5 +159,28 @@ public class StaffCardManagementController {
         return true;
     }
 
+    @PostMapping("/generate-card")
+    public void generateCard(@RequestBody StaffCreateCardDto staffCreateCardDto,Authentication authentication)  {
+
+        CompanyStaffCardDto card = companyStaffCardService.findById(staffCreateCardDto.getCardId());
+        if (card == null) {
+            throw new CardDetailsNotFoundException("no card found with id : " + staffCreateCardDto.getCardId());
+        }
+        JwtToken loggedInUser = (JwtToken) authentication;
+        Optional<Long> userId = jwtTokenService.retrieveUserIdFromToken(loggedInUser.getToken());
+        card.setStatusCode(ECardStatus.CANCELLED.name());
+        companyStaffCardService.changeCardStatus(card,staffCreateCardDto.getActionCode(), userId);
+
+        companyStaffCardService.save(card
+                .builder()
+                .referenceNumber(card.getReferenceNumber())
+                .companyRitualSeason(card.getCompanyRitualSeason())
+                .companyStaffDigitalId(card.getCompanyStaffDigitalId())
+                .statusCode(ECardStatus.READY_TO_PRINT.name())
+                .build());
+    }
+
+
+
 
 }

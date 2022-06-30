@@ -17,6 +17,7 @@ import { CardStatusActions } from '@model/enum/card-status-actions.enum';
 import { ConfirmDialogService } from '@shared/components/confirm-dialog';
 import { CompanyStaffCard } from '@model/staff-card.model';
 import { GenerateCardInput } from '@model/generate-card-input.model';
+import { GenerateStaffCardInput } from '@model/generate-staff-card-input.model';
 
 @Component({
   selector: 'app-staff-card-details',
@@ -171,16 +172,16 @@ export class StaffCardDetailsComponent implements OnInit {
           if (confirm) {
 
             if(actionCode == this.actions.REPRINT_CARD)          
-            {
-                let generatCardInput:GenerateCardInput = {
-                    actionCode: this.actions.CANCEL_CARD,
-                    cardId: this.card.id,
-                    ritualId: this.card?.companyRitualSeason?.id
+            {            
+              let generatCardInput:GenerateStaffCardInput = {
+                actionCode: this.actions.CANCEL_CARD,
+                cardId: this.card.id                
                 };
-            // this.cardService.generateCard(generatCardInput).subscribe(result=>{           
-              this.router.navigate(['/card/print',this.card?.companyStaffDigitalId?.suin,'STAFF']);                
-             //});  
-               
+
+                this.cardService.generatStaffCard(generatCardInput).subscribe(result=>{           
+                  this.router.navigate(['/card/print',this.card?.companyStaffDigitalId?.suin,'STAFF']);                
+                 });
+                           
             }
             else 
             {
