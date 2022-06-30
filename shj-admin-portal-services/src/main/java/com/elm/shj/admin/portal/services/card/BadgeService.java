@@ -246,7 +246,6 @@ public class BadgeService {
             log.error("Cannot generate badge, no ritual details for the applicant with {} uin", uin);
             return null;
         }
-        String ritualType = ritualTypeLookupRepository.findLabelByCodeAndLanguage(applicantRitualCardLite.getRitualType(), "ar");
         // get the nationality
         List<NationalityLookupDto> mainLangCountryLookupList = nationalityLookupService.findAllByCode(applicantRitualCardLite.getNationalityCode());
         NationalityLookupDto arabicCountryLookup = mainLangCountryLookupList.stream().filter(countryLookup -> countryLookup.getLang().equals("ar")).findFirst().orElse(null);
@@ -486,7 +485,9 @@ public class BadgeService {
         TextLayout layout = new TextLayout(fullNameAr + "", font, frc);
         layout.draw(g2d, xDif, yDif);
 
-        g2d.setColor(new Color(86, 86, 86));
+
+        if (!isPrePrinted)
+            g2d.setColor(new Color(86, 86, 86));
         xDif = ((BADGE_WIDTH - fm.stringWidth(fullNameEn + "")) / 2);
         yDif += 44;
         layout = new TextLayout(fullNameEn + "", font, frc);
@@ -497,7 +498,11 @@ public class BadgeService {
         g2d.setColor(isPrePrinted ? Color.white : new Color(0xFFD3D3D3));
         g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2d.drawLine((int) (BADGE_WIDTH * 0.125), yDif, (int) (BADGE_WIDTH * 0.875), yDif);
-        g2d.setColor(new Color(86, 86, 86));
+
+        if (!isPrePrinted)
+            g2d.setColor(new Color(86, 86, 86));
+        else
+            g2d.setColor(Color.black);
         font = shaaerFont.deriveFont(22f);
         fm = g2d.getFontMetrics(font);
 
@@ -569,9 +574,9 @@ public class BadgeService {
         g2d.draw(verticalLine);
 
         if (applicantRitualCard != null) {
-            writeTable(g2d, rectWidth, rectX, rectY + 25, new String[]{makeLabelFit(applicantRitualCard.getServiceNameEn()), makeLabelFit(applicantRitualCard.getEstablishmentNameEn())}, new String[]{makeLabelFit(applicantRitualCard.getServiceNameAr()), makeLabelFit(applicantRitualCard.getEstablishmentNameAr())});
+            writeTable(g2d, rectWidth, rectX, rectY + 25, new String[]{makeLabelFit(applicantRitualCard.getServiceNameEn()), makeLabelFit(applicantRitualCard.getEstablishmentNameEn())}, new String[]{makeLabelFit(applicantRitualCard.getServiceNameAr()), makeLabelFit(applicantRitualCard.getEstablishmentNameAr())}, isPrePrinted);
         } else {
-            writeTable(g2d, rectWidth, rectX, rectY, new String[]{makeLabelFit(staffData.getCompanyLabelEn()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "en"))}, new String[]{makeLabelFit(staffData.getCompanyLabelAr()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "ar"))});
+            writeTable(g2d, rectWidth, rectX, isPrePrinted ? rectY + 35 : rectY, new String[]{makeLabelFit(staffData.getCompanyLabelEn()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "en"))}, new String[]{makeLabelFit(staffData.getCompanyLabelAr()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "ar"))}, isPrePrinted);
             if (!isPrePrinted) {
                 BufferedImage cardBackground = ImageUtils.loadFromClasspath(STAFF_CARD_RESOURCE_FILE_NAME);
                 if (cardBackground != null) {
@@ -630,7 +635,7 @@ public class BadgeService {
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
         layout = new TextLayout(value, font, frc);
-        layout.draw(g2d, xDif - 10, isPrePrinted ? yDif + 15 : yDif);
+        layout.draw(g2d, xDif - 10, isPrePrinted ? yDif + 40 : yDif);
         font = font.deriveFont(
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_REGULAR));
@@ -653,11 +658,11 @@ public class BadgeService {
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
         layout = new TextLayout(uin, font, frc);
-        layout.draw(g2d, xDifLeft - 20, isPrePrinted ? yDifLeft + 15 : yDifLeft);
+        layout.draw(g2d, xDifLeft - 20, isPrePrinted ? yDifLeft + 40 : yDifLeft);
     }
 
     public String makeLabelFit(String label) {
-        if (label.length() > 28) {
+        if (label != null && label.length() > 28) {
             return label.substring(0, 23) + "...";
         }
         return label + " ";
@@ -731,12 +736,12 @@ public class BadgeService {
         }
     }
 
-    private void writeTable(Graphics2D g2d, int rectWidth, int rectX, int rectY, String[] labelEn, String[] labelAr) {
+    private void writeTable(Graphics2D g2d, int rectWidth, int rectX, int rectY, String[] labelEn, String[] labelAr, boolean prePrinted) {
         FontRenderContext frc = g2d.getFontRenderContext();
         Font font;
         LineMetrics lm;
         TextLayout layout;
-        for (int i = 0; i< labelAr.length; i++) {
+        for (int i = 0; i < labelAr.length; i++) {
             font = shaaerFont.deriveFont(21f);
             /*font = font.deriveFont(
                     Collections.singletonMap(
@@ -751,7 +756,10 @@ public class BadgeService {
             //  g2d.setColor(new Color(86, 86, 86, 20));
             lm = font.getLineMetrics(labelEn[i], frc);
             layout = new TextLayout(labelEn[i], font, frc);
-            g2d.setColor(new Color(0xFF6e6d6b));
+            if (!prePrinted)
+                g2d.setColor(new Color(0xFF6e6d6b));
+            else
+                g2d.setColor(new Color(0xFF212121));
             layout.draw(g2d, rectX + (i * rectWidth / labelAr.length) + (int) (rectWidth / labelAr.length - font.getStringBounds(labelEn[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 66);
             // values
             /*font = shaaerFont.deriveFont(26f);

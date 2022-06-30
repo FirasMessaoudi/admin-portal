@@ -172,4 +172,14 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
     public String findApplicantUin(long applicantId) {
         return applicantDigitalIdRepository.findUinByApplicantIdAndStatusCode(applicantId, EDigitalIdStatus.VALID.name());
     }
+
+    @Transactional
+    public void validateDigitalId(String uin) {
+        applicantDigitalIdRepository.updateDigitalIdStatus(EDigitalIdStatus.VALID.name(), uin);
+    }
+
+    @Transactional
+    public void inValidateDigitalId(String uin) {
+        applicantDigitalIdRepository.updateDigitalIdStatus(EDigitalIdStatus.INVALID.name(), uin);
+    }
 }

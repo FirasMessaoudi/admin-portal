@@ -37,4 +37,6 @@ public class JpaApplicantCardBasic implements Serializable {
 
     @Column(name = "status_code")
     private String statusCode;
+
+    private boolean deleted;
 }

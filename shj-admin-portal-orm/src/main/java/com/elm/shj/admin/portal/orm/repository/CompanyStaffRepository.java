@@ -139,7 +139,8 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "join companyRitualSeason.company company " +
             "where digitalId.suin = :suin " +
             "and cards.statusCode <> 'REISSUED' " +
-            "and cards.statusCode <> 'EXPIRED'")
+            "and cards.statusCode <> 'EXPIRED'" +
+            "and cards.statusCode <> 'CANCELlED'")
     CompanyStaffVO findStaffMainData(@Param("suin") String suin);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO(" +

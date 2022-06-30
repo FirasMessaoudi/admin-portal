@@ -8,6 +8,7 @@ import com.elm.dcc.foundation.commons.core.mapper.IGenericMapper;
 import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.applicant.*;
+import com.elm.shj.admin.portal.services.card.ApplicantCardBasicService;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonBasicService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
@@ -57,7 +58,6 @@ import java.util.stream.Collectors;
 public class ValidationService {
     private final Validator validator;
     private final MessageSource messageSource;
-    private final ApplicantService applicantService;
     private final ApplicantRitualService applicantRitualService;
     private final ApplicantLiteService applicantLiteService;
     private final ApplicantBasicService applicantBasicService;
@@ -85,6 +85,7 @@ public class ValidationService {
     private final RitualPackageService ritualPackageService;
     private final RitualPackageBasicWithDetailsService ritualPackageBasicWithDetailsService;
     private final RitualSeasonService ritualSeasonService;
+    private final ApplicantCardBasicService applicantCardBasicService;
     private final ApplicantContactService applicantContactService;
     private static final String ARABIC_REGEX = "^[\\p{InArabic}\\s-_]+$";
     private static final String LATIN_REGEX = "^[\\p{IsLatin}\\s-_]+$";
@@ -566,19 +567,32 @@ public class ValidationService {
                 return;
             }
 
+            applicantContactDto.setId(existingApplicantBasic.getContacts().get(0).getId());
+            applicant.setId(existingApplicantBasic.getId());
+            if (existingApplicantBasic.getDigitalIds() != null && !existingApplicantBasic.getDigitalIds().isEmpty()) {
+                applicant.setDigitalIds(existingApplicantBasic.getDigitalIds());
+            }
+            applicant.setUpdateDate(new Date());
+
             if (huicApplicantMainData.getStatus() == 1 && existingApplicantBasic.isDeleted()) { //mark as undeleted
                 applicant.setDeleted(false);
                 applicant.setRegistered(false);
+                // validate the digital id and card
+                if (applicant.getDigitalIds() != null && !applicant.getDigitalIds().isEmpty()) {
+                    digitalIdService.validateDigitalId(applicant.getDigitalIds().get(0).getUin());
+                }
             }
 
             if (huicApplicantMainData.getStatus() == 3) { //mark as deleted
                 applicant.setDeleted(true);
                 applicant.setRegistered(false);
+                // invalidate the digital id and card
+                if (applicant.getDigitalIds() != null && !applicant.getDigitalIds().isEmpty()) {
+                    digitalIdService.inValidateDigitalId(applicant.getDigitalIds().get(0).getUin());
+                }
+                // mark all cards as deleted true and cancelled status
+                applicantCardBasicService.deleteAllApplicantCards(existingApplicantBasic.getId());
             }
-
-            applicantContactDto.setId(existingApplicantBasic.getContacts().get(0).getId());
-            applicant.setId(existingApplicantBasic.getId());
-            applicant.setUpdateDate(new Date());
 
         } else { // status have to be 1 (add new) or return error
             if (huicApplicantMainData.getStatus() != 1) {
