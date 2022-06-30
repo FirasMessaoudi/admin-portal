@@ -91,10 +91,10 @@ public class ApplicantIncidentScheduler {
                     applicantIncidentLiteRepository.updateCRMTicketNumber(incident.getId(), updateCRMDto.getCrmTicketNumber());
                     incident.setCrmTicketNumber(updateCRMDto.getCrmTicketNumber());
                 }
-                if (incident.getCrmTicketNumber() != null  && !incident.getStatusCode().equals(EIncidentStatus.UNDER_PROCESSING.name()) && incident.getCrmStatusUpdated() == null && !incident.getCrmStatusUpdated()){
+                if (incident.getCrmTicketNumber() != null  && !incident.getStatusCode().equals(EIncidentStatus.UNDER_PROCESSING.name()) && (incident.getCrmStatusUpdated() == null || !incident.getCrmStatusUpdated())){
                     ApplicantIncidentComplaintVoCRM applicantComplaintVoCRM = new ApplicantIncidentComplaintVoCRM();
                     applicantComplaintVoCRM.setCrmTicketNumber(incident.getCrmTicketNumber());
-                    applicantComplaintVoCRM.setStatus(EIncidentResolutionType.valueOf(incident.getStatusCode()).getCrmCode());
+                    applicantComplaintVoCRM.setStatus(EIncidentStatus.valueOf(incident.getStatusCode()).getCrmCode());
                     applicantComplaintVoCRM.setSmartIDTicketNumber(incident.getReferenceNumber());
                     applicantComplaintVoCRM.setResolutionComment(incident.getResolutionComment());
 

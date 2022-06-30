@@ -77,28 +77,10 @@ public class ApplicantComplaintVo implements Serializable {
         applicantRitual = new ApplicantRitualVo(fullNameAr,fullNameEn,uin,preferredLanguage);
     }
 
-    public ApplicantComplaintVo(Long id,String referenceNumber, String typeCode, String city, Boolean crmStatusUpdated, String description,Double locationLat, Double locationLng,String mobileNumber,Date creationDate, Long complaintAttachmentId, String fullNameAr, String fullNameEn,
-                                String fullNameOrigin, String idNumber, String passportNumber, Long dateOfBirthHijri,
-                                Date dateOfBirthGregorian, String gender, String nationalityCode,String email,
-                                String localMobileNumber, String intlMobileNumber,String countryCode, String uin)
-    {
-        this.id = id;
-        this.referenceNumber = referenceNumber;
-        this.creationDate = creationDate;
-        this.typeCode = typeCode;
-        this.description = description;
-        this.locationLat = locationLat;
-        this.locationLng = locationLng;
-        this.city = city;
-        this.crmStatusUpdated = crmStatusUpdated;
-        this.mobileNumber = mobileNumber;
-        if (complaintAttachmentId != null) {
-            this.complaintAttachment = new ComplaintAttachmentVo(complaintAttachmentId, null);
-        }
-        applicantRitual = new ApplicantRitualVo(fullNameAr,fullNameEn, fullNameOrigin, idNumber, passportNumber, dateOfBirthHijri, dateOfBirthGregorian, gender, nationalityCode, email, localMobileNumber, intlMobileNumber,countryCode,uin);
-    }
-
-    public ApplicantComplaintVo(Long id,String referenceNumber, String typeCode, String statusCode, String city, Boolean crmStatusUpdated, String description,Double locationLat, Double locationLng,String mobileNumber,Date creationDate, Long complaintAttachmentId, String fullNameAr, String fullNameEn,
+    public ApplicantComplaintVo(Long id,String referenceNumber, String typeCode, String statusCode, String city, String resolutionComment,
+                                Boolean crmStatusUpdated, String crmTicketNumber, String description,Double locationLat, Double locationLng,
+                                String mobileNumber,Date creationDate, Long complaintAttachmentId, String fullNameAr,
+                                String fullNameEn,
                                 String fullNameOrigin, String idNumber, String passportNumber, Long dateOfBirthHijri,
                                 Date dateOfBirthGregorian, String gender, String nationalityCode,String email,
                                 String localMobileNumber, String intlMobileNumber,String countryCode, String uin)
@@ -113,6 +95,8 @@ public class ApplicantComplaintVo implements Serializable {
         this.locationLng = locationLng;
         this.city = city;
         this.crmStatusUpdated = crmStatusUpdated;
+        this.crmTicketNumber = crmTicketNumber;
+        this.resolutionComment = resolutionComment;
         this.mobileNumber = mobileNumber;
         if (complaintAttachmentId != null) {
             this.complaintAttachment = new ComplaintAttachmentVo(complaintAttachmentId, null);

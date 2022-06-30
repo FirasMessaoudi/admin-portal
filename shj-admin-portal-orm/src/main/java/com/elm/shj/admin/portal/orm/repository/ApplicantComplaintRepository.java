@@ -62,10 +62,10 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
                                                             @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                                             @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
 
-    @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.typeCode, c.city,c.crmStatusUpdated, c.description,c.locationLat, c.locationLng,c.mobileNumber,c.creationDate, att.id,a.fullNameAr,a.fullNameEn,a.fullNameOrigin, a.idNumber, a.passportNumber,a.dateOfBirthHijri, a.dateOfBirthGregorian,a.gender,a.nationalityCode,ac.email,ac.localMobileNumber,ac.intlMobileNumber,ac.countryCode, di.uin) " +
+    @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.typeCode,c.statusCode, c.city,c.resolutionComment,c.crmStatusUpdated,c.crmTicketNumber, c.description,c.locationLat, c.locationLng,c.mobileNumber,c.creationDate, att.id,a.fullNameAr,a.fullNameEn,a.fullNameOrigin, a.idNumber, a.passportNumber,a.dateOfBirthHijri, a.dateOfBirthGregorian,a.gender,a.nationalityCode,ac.email,ac.localMobileNumber,ac.intlMobileNumber,ac.countryCode, di.uin) " +
             "FROM JpaApplicantComplaint c JOIN c.applicantRitual ar JOIN ar.applicant a JOIN  a.digitalIds di JOIN a.contacts ac LEFT JOIN c.complaintAttachment att " +
             "WHERE (c.statusCode = :statusCode and " +
-            "c.creationDate <= :creationDate AND c.crmTicketNumber is null) OR (c.crmStatusUpdated = false AND c.statusCode <> :statusCode)")
+            "c.creationDate <= :creationDate AND c.crmTicketNumber is null) OR ((c.crmStatusUpdated is null OR c.crmStatusUpdated = false) AND c.statusCode <> :statusCode AND c.crmTicketNumber is not null)")
     List<ApplicantComplaintVo> findByCreationDateLessThanEqualAndStatusCode(@Param("creationDate") Date creationDate, @Param("statusCode") String statusCode);
 
 
