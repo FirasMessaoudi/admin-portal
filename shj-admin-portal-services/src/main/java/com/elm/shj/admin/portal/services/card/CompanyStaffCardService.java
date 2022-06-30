@@ -94,6 +94,7 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
             predicates.add(criteriaBuilder.notEqual(root.get("statusCode"), ECardStatus.EXPIRED.name()));
             predicates.add(criteriaBuilder.notEqual(root.get("statusCode"), ECardStatus.REISSUED.name()));
 
+            predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("deleted"), false));
 
             if (criteria.getIdNumber() != null) {
                 predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("idNumber"), criteria.getIdNumber()));
