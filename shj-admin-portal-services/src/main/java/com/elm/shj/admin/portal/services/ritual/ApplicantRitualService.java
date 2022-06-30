@@ -36,18 +36,6 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
     private final ApplicantRitualRepository applicantRitualRepository;
 
     /**
-     * Find all applicants without digital IDs
-     *
-     * @return the list of applicants
-     */
-    public Page<ApplicantRitualDto> findAllWithoutCards() {
-        log.info("Start findAllWithoutCards");
-        Page<ApplicantRitualDto> applicantRitualsPage =  mapPage(applicantRitualRepository.findWithExistingDigitalIdAndWithoutCard(PageRequest.of(0, 300)));
-        log.info("Finish findAllWithoutCards with {} cards", applicantRitualsPage.getContent().size());
-        return applicantRitualsPage;
-    }
-
-    /**
      * finds an applicant ritual by its ID
      *
      * @param applicantRitualId the data request id to find
@@ -162,5 +150,14 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
             applicantRitualId = applicantRitual.getId();
         }
         return applicantRitualId;
+    }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public String findLatestPackageReferenceNumberByApplicantId(Long applicantId) {
+        List<String> packageReferenceNumberList = applicantRitualRepository.findPackageReferenceNumberByApplicantId(applicantId);
+        if (packageReferenceNumberList != null && !packageReferenceNumberList.isEmpty()) {
+            return packageReferenceNumberList.get(0);
+        }
+        return null;
     }
 }
