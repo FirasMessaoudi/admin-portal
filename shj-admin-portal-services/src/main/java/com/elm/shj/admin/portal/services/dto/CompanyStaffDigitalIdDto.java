@@ -32,7 +32,6 @@ public class CompanyStaffDigitalIdDto implements Serializable {
 
     private int seasonYear;
 
-    @JsonBackReference
     private CompanyStaffDto companyStaff;
 
     private Date creationDate;

@@ -177,7 +177,7 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
                 }
             });
         }
-        return false;
+        return true;
     }
 
     public ApplicantCampDetailDto findApplicantCampDetails(String applicantUin){

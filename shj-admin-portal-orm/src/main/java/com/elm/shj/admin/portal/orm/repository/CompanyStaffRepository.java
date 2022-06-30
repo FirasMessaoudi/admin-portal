@@ -110,6 +110,8 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
 
     JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(String applicantUin, long companyRitualSeason, String titleCode);
 
+    JpaCompanyStaff findByApplicantGroupsGroupApplicantListsApplicantUinAndTitleCode(String applicantUin, String titleCode);
+
     @Query("Select staff.mobileNumber from JpaApplicantGroup ag join ag.groupApplicantLists gal join ag.groupLeader staff WHERE gal.applicantUin = :applicantUin")
     String findGroupLeaderMobileNumberByApplicantUin(@Param("applicantUin") String applicantUin);
 

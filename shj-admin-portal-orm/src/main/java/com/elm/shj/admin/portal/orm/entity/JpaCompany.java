@@ -36,6 +36,9 @@ public class JpaCompany implements Serializable {
     @Column(name = "code", nullable = false)
     private String code;
 
+    @Column(name = "company_uid", nullable = false)
+    private String uid;
+
     @Column(name = "label_ar", nullable = false)
     private String labelAr;
 
