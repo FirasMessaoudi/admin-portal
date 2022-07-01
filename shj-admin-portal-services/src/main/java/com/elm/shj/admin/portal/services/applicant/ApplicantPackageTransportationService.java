@@ -3,7 +3,6 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageTransportation;
 import com.elm.shj.admin.portal.orm.repository.ApplicantPackageTransportationRepository;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -105,7 +104,7 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
     @Transactional
     public Boolean updateGroupApplicantTranportation(UpdateApplicantTransportationDto updateApplicantTransportationDto){
         log.info("groupId .. {}", updateApplicantTransportationDto.getGroupId());
-        List<Long> applicantIdlIst = applicantService.findApplicantByGroupId(updateApplicantTransportationDto.getGroupId());
+        List<Long> applicantIdlIst = applicantService.findApplicantIdByGroupId(updateApplicantTransportationDto.getGroupId());
         log.info("applicantIdlIst ... {}" + applicantIdlIst) ;
 
         if(applicantIdlIst.isEmpty()){
@@ -160,7 +159,7 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
 
     public String findGroupApplicantVebicleNumber(Long groupId){
         log.info("groupId .. {}", groupId);
-        List<Long> applicantIdlIst = applicantService.findApplicantByGroupId(groupId);
+        List<Long> applicantIdlIst = applicantService.findApplicantIdByGroupId(groupId);
         log.info("applicantIdlIst ... {}" + applicantIdlIst);
 
         List<ApplicantPackageTransportationDto> applicantPackageTransportationList = new ArrayList<>();

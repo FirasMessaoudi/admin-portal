@@ -19,6 +19,6 @@ public interface ApplicantCardBasicRepository extends JpaRepository<JpaApplicant
 
     @Modifying
     @Query("UPDATE JpaApplicantCardBasic ac SET ac.deleted = true, ac.statusCode = :statusCode WHERE ac.applicantRitual.applicant.id = :applicantId")
-    void deleteAllApplicantCards(@Param("applicantId") Long applicantId, @Param("status") String statusCode);
+    int deleteAllApplicantCards(@Param("applicantId") Long applicantId, @Param("statusCode") String statusCode);
 
 }
