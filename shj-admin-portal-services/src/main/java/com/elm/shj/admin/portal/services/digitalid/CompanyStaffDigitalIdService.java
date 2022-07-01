@@ -68,13 +68,15 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
         Assert.isTrue(Arrays.asList("M", "F").contains(staff.getGender().toUpperCase()), "Invalid Staff Gender!");
         Assert.notNull(seasonYear, "Invalid Staff  Season!");
         Assert.isTrue(seasonYear > 0, "Invalid Staff  Season!");
+        int ser = 000000;
+        long serial = ser + staff.getId(); //
 
         // generate gender digit
         String genderDigit = String.valueOf(GENDER_DIGITS.get(staff.getGender().toUpperCase()).get(ThreadLocalRandom.current().nextInt(0, "F".equalsIgnoreCase(staff.getGender()) ? 4 : 5)));
         String suinPrefix = genderDigit + seasonYear;
-        List<String> latestSerialList = companyStaffDigitalIdRepository.fetchSuinBySuinLike(suinPrefix);
-        long nextSequence = CollectionUtils.isEmpty(latestSerialList) ? 1 : Long.parseLong(latestSerialList.get(0)) + 1;
-        String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 6, "0");
+        //List<String> latestSerialList = companyStaffDigitalIdRepository.fetchSuinBySuinLike(suinPrefix);
+        //long nextSequence = CollectionUtils.isEmpty(latestSerialList) ? 1 : Long.parseLong(latestSerialList.get(0)) + 1;
+        String serialDigits = StringUtils.leftPad(String.valueOf(staff.getId()), 6, "0");
         // generate checksum digit
         String partialSmartId = suinPrefix + serialDigits;
         String checkDigit = calculateCheckDigit(partialSmartId);
