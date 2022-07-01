@@ -29,6 +29,8 @@ public class ApplicantCardBasicService extends GenericService<JpaApplicantCardBa
 
     @Transactional
     public void deleteAllApplicantCards(Long applicantId) {
-        applicantCardBasicRepository.deleteAllApplicantCards(applicantId, ECardStatus.CANCELLED.name());
+        log.info("Start deleteAllApplicantCards for {} applicant id.", applicantId);
+        int noCardsDeleted = applicantCardBasicRepository.deleteAllApplicantCards(applicantId, ECardStatus.CANCELLED.name());
+        log.info("Finish deleteAllApplicantCards for {} applicant id and impacted cards is {}.", applicantId, noCardsDeleted);
     }
 }
