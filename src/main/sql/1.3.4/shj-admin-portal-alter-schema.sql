@@ -11,3 +11,6 @@ GO
 
 ALTER TABLE shc_portal.shc_applicant_card ADD deleted bit default 0;
 GO
+
+ALTER TABLE shc_portal.shc_notification_template_categorizing ADD selected_group_id int
+GO

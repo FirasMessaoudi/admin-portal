@@ -59,6 +59,9 @@ public class JpaNotificationTemplateCategorizing implements Serializable {
     @Column(name = "selected_applicants")
     private String selectedApplicants;
 
+    @Column(name = "selected_group_id")
+    private Long selectedGroupId;
+
     @Column(name = "selected_staff")
     private String selectedStaff;
 
