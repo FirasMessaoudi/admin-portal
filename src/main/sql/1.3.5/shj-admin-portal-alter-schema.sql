@@ -1,0 +1,4 @@
+USE shc_portal
+GO
+ALTER TABLE shc_portal.shc_notification_template_categorizing ADD selected_group_id int
+GO

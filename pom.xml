@@ -12,7 +12,7 @@
     <packaging>pom</packaging>
     <name>shj-admin-portal</name>
     <description>Admin application based on Angular, Spring and Hibernate</description>
-    <version>1.3.4</version>
+    <version>1.3.5-SNAPSHOT</version>
 
     <modules>
         <module>shj-admin-portal-orm</module>
