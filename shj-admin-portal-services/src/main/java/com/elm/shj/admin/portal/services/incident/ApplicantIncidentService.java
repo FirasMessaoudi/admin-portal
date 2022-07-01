@@ -159,11 +159,11 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void update(long incidentId, ApplicantIncidentVo applicantIncidentVo) throws NotFoundException {
-        if (EIncidentResolutionType.MARK_AS_RESOLVED.equals(applicantIncidentVo.getOperation())) {
+        if (EIncidentResolutionType.MARK_AS_RESOLVED.name().equals(applicantIncidentVo.getOperation())) {
             applicantIncidentRepository.update(incidentId, applicantIncidentVo.getResolutionComment(), EIncidentStatus.RESOLVED.name());
             sendIncidentNotification(incidentId, RESOLVE_INCIDENT_TEMPLATE_NAME);
         }
-        if (EIncidentResolutionType.MARK_AS_CLOSED.equals(applicantIncidentVo.getOperation())) {
+        if (EIncidentResolutionType.MARK_AS_CLOSED.name().equals(applicantIncidentVo.getOperation())) {
             applicantIncidentRepository.update(incidentId, applicantIncidentVo.getResolutionComment(), EIncidentStatus.CLOSED.name());
             sendIncidentNotification(incidentId, CLOSE_INCIDENT_TEMPLATE_NAME);
         }
@@ -172,7 +172,7 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
             //TODO: Update CRM Complaint status
             ApplicantIncidentComplaintVoCRM applicantComplaintVoCRM = new ApplicantIncidentComplaintVoCRM();
             applicantComplaintVoCRM.setCrmTicketNumber(incident.getCrmTicketNumber());
-            applicantComplaintVoCRM.setStatus(applicantIncidentVo.getOperation().getCrmCode());
+            applicantComplaintVoCRM.setStatus(EIncidentResolutionType.valueOf(applicantIncidentVo.getOperation()).getCrmCode());
             applicantComplaintVoCRM.setSmartIDTicketNumber(incident.getReferenceNumber());
             applicantComplaintVoCRM.setResolutionComment(applicantIncidentVo.getResolutionComment());
             try {
