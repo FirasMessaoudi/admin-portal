@@ -54,6 +54,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import javax.ws.rs.QueryParam;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
