@@ -8,7 +8,6 @@ import com.elm.shj.admin.portal.orm.repository.*;
 import com.elm.shj.admin.portal.services.audit.MobileAuditLogService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
-import com.elm.shj.admin.portal.services.lookup.NationalityLookupService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.user.UserLocationService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.criteria.*;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -360,6 +358,14 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return numberOfAffectedRows;
     }
 
+    public List<ApplicantDto> findApplicantByGroupId(Long groupId) {
+        return mapList(applicantRepository.findAllApplicantByGroupId(groupId));
+    }
+
+    public List<ApplicantDto> findApplicantByCompanyCode(String companyCode) {
+        return mapList(applicantRepository.findApplicantByCompanyCode(companyCode));
+    }
+
     public Page<ApplicantDto> findOrganizerApplicants(ApplicantSearchCriteriaDto applicantSearchCriteriaDto, Long companyRefCode, String companyTypeCode, Pageable pageable) {
         log.info("Company Ref code ...{}", companyRefCode);
         log.info("Company type code ...{}", companyTypeCode);
@@ -552,8 +558,8 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         }
     }
 
-    public List<Long> findApplicantByGroupId(Long groupId){
-        return applicantRepository.findApplicantByGroupId(groupId);
+    public List<Long> findApplicantIdByGroupId(Long groupId){
+        return applicantRepository.findApplicantIdByGroupId(groupId);
     }
 
     public Boolean isValidApplicant(Long applicantId){

@@ -224,7 +224,7 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
 
     public GroupApplicantCampDto findGroupApplicantCampReferenceNumber(Long groupId) {
         log.info("groupId .. {}", groupId);
-        List<Long> applicantIdlIst = applicantService.findApplicantByGroupId(groupId);
+        List<Long> applicantIdlIst = applicantService.findApplicantIdByGroupId(groupId);
         log.info("applicantIdlIst ... {}" + applicantIdlIst) ;
 
         List<ApplicantPackageHousingDto> applicantPackageHousingMenaList = new ArrayList<>();
@@ -275,7 +275,7 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
     @Transactional
     public Boolean updateGroupApplicantHousingCamp(GroupApplicantCampDto groupApplicantCamp){
         log.info("groupId .. {}", groupApplicantCamp.getGroupId());
-        List<Long> applicantIdlIst = applicantService.findApplicantByGroupId(groupApplicantCamp.getGroupId());
+        List<Long> applicantIdlIst = applicantService.findApplicantIdByGroupId(groupApplicantCamp.getGroupId());
         log.info("applicantIdlIst ... {}" + applicantIdlIst) ;
 
         if(applicantIdlIst.isEmpty()){
