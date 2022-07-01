@@ -68,9 +68,6 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
         Assert.isTrue(Arrays.asList("M", "F").contains(staff.getGender().toUpperCase()), "Invalid Staff Gender!");
         Assert.notNull(seasonYear, "Invalid Staff  Season!");
         Assert.isTrue(seasonYear > 0, "Invalid Staff  Season!");
-        int ser = 000000;
-        long serial = ser + staff.getId(); //
-
         // generate gender digit
         String genderDigit = String.valueOf(GENDER_DIGITS.get(staff.getGender().toUpperCase()).get(ThreadLocalRandom.current().nextInt(0, "F".equalsIgnoreCase(staff.getGender()) ? 4 : 5)));
         String suinPrefix = genderDigit + seasonYear;
