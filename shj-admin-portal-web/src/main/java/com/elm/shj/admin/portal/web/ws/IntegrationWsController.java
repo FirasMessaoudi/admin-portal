@@ -19,6 +19,7 @@ import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentLiteService;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
+import com.elm.shj.admin.portal.services.incident.IncidentAttachmentLiteService;
 import com.elm.shj.admin.portal.services.lookup.*;
 import com.elm.shj.admin.portal.services.otp.OtpService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
@@ -145,6 +146,7 @@ public class IntegrationWsController {
     private final ApplicantComplaintLiteService applicantComplaintLiteService;
     private final ApplicantComplaintService applicantComplaintService;
     private final ApplicantHealthBasicService applicantHealthBasicService;
+    private final IncidentAttachmentLiteService incidentAttachmentLiteService;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
@@ -1538,7 +1540,7 @@ public class IntegrationWsController {
         if (mainType == ETicketMainTypeCRM.Complaint.getId()) {
             attachment = applicantComplaintService.downloadApplicantComplaintAttachment(attachmentId);
         } else if (mainType == ETicketMainTypeCRM.Incident.getId()) {
-            attachment = applicantIncidentService.downloadApplicantIncidentAttachment(attachmentId);
+            attachment = incidentAttachmentLiteService.downloadApplicantIncidentAttachment(attachmentId);
         }
 
         if (attachment != null) {

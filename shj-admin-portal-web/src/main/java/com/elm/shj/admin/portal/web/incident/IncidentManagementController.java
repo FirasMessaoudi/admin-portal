@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.web.incident;
 
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
+import com.elm.shj.admin.portal.services.incident.IncidentAttachmentLiteService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ import java.util.Objects;
 public class IncidentManagementController {
 
     private final ApplicantIncidentService applicantIncidentService;
+    private final IncidentAttachmentLiteService incidentAttachmentLiteService;
 
     /**
      * List all incidents.
@@ -89,7 +91,7 @@ public class IncidentManagementController {
     @GetMapping("/attachments/{attachmentId}")
     public ResponseEntity<Resource> downloadAttachment(@PathVariable long attachmentId) throws Exception {
         log.info("Downloading incident attachment with id# {} ", attachmentId);
-        Resource attachment = applicantIncidentService.downloadApplicantIncidentAttachment(attachmentId);
+        Resource attachment = incidentAttachmentLiteService.downloadApplicantIncidentAttachment(attachmentId);
         if (attachment != null) {
             String attachmentName = "img.jpg";
             if (Objects.requireNonNull(attachment.getDescription()).contains("[")) {

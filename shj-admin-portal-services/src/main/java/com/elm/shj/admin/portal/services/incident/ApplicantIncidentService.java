@@ -152,21 +152,6 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         return mapList(applicantIncidentRepository.findByApplicantRitualId(applicantRitualId));
     }
 
-
-    /**
-     * fetches the original file of the data request
-     *
-     * @param incidentAttachmentId applicant Incident Attachment Id
-     * @return the attachment of the applicant incident
-     */
-    public Resource downloadApplicantIncidentAttachment(long incidentAttachmentId) throws Exception {
-        Optional<JpaIncidentAttachment> incidentAttachment = incidentAttachmentRepository.findById(incidentAttachmentId);
-        if (!incidentAttachment.isPresent()) {
-            return null;
-        }
-        return sftpService.downloadFile(incidentAttachment.get().getFilePath(), APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
-    }
-
     /**
      * Updates applicant incident
      *
@@ -174,11 +159,11 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void update(long incidentId, ApplicantIncidentVo applicantIncidentVo) throws NotFoundException {
-        if (EIncidentResolutionType.MARK_AS_RESOLVED.equals(applicantIncidentVo.getOperation())) {
+        if (EIncidentResolutionType.MARK_AS_RESOLVED.name().equals(applicantIncidentVo.getOperation())) {
             applicantIncidentRepository.update(incidentId, applicantIncidentVo.getResolutionComment(), EIncidentStatus.RESOLVED.name());
             sendIncidentNotification(incidentId, RESOLVE_INCIDENT_TEMPLATE_NAME);
         }
-        if (EIncidentResolutionType.MARK_AS_CLOSED.equals(applicantIncidentVo.getOperation())) {
+        if (EIncidentResolutionType.MARK_AS_CLOSED.name().equals(applicantIncidentVo.getOperation())) {
             applicantIncidentRepository.update(incidentId, applicantIncidentVo.getResolutionComment(), EIncidentStatus.CLOSED.name());
             sendIncidentNotification(incidentId, CLOSE_INCIDENT_TEMPLATE_NAME);
         }
@@ -187,7 +172,7 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
             //TODO: Update CRM Complaint status
             ApplicantIncidentComplaintVoCRM applicantComplaintVoCRM = new ApplicantIncidentComplaintVoCRM();
             applicantComplaintVoCRM.setCrmTicketNumber(incident.getCrmTicketNumber());
-            applicantComplaintVoCRM.setStatus(applicantIncidentVo.getOperation().getCrmCode());
+            applicantComplaintVoCRM.setStatus(EIncidentResolutionType.valueOf(applicantIncidentVo.getOperation()).getCrmCode());
             applicantComplaintVoCRM.setSmartIDTicketNumber(incident.getReferenceNumber());
             applicantComplaintVoCRM.setResolutionComment(applicantIncidentVo.getResolutionComment());
             try {
@@ -228,8 +213,8 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
             throw new NotFoundException("no Template found for  " + closeIncidentTemplateName);
         }
 
-        ApplicantIncidentDto applicantIncident = findById(incidentId);
-        String uin = applicantIncident.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin();
+        com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo applicantIncident = applicantIncidentLiteRepository.findOneLite(incidentId);
+        String uin = applicantIncident.getApplicantRitual().getApplicant().getUin();
         String preferredLanguage = applicantIncident.getApplicantRitual().getApplicant().getPreferredLanguage();
         notificationRequestService.sendIncidentNotification(notificationTemplate.get(), uin, preferredLanguage);
     }
