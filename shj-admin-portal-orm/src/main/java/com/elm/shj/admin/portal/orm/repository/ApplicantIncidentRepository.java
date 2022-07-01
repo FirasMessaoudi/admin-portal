@@ -32,6 +32,11 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
             "incident.resolutionComment = :resolutionComment, incident.updateDate = current_timestamp where incident.id =:incidentId")
     void update(@Param("incidentId") long incidentId, @Param("resolutionComment") String resolutionComment, @Param("status") String status);
 
+    @Modifying
+    @Query("update JpaApplicantIncident incident set incident.statusCode = :status, " +
+            "incident.resolutionComment = :resolutionComment, incident.crmStatusUpdated = true, incident.updateDate = current_timestamp where incident.id =:incidentId")
+    void updateByCrm(@Param("incidentId") long incidentId, @Param("resolutionComment") String resolutionComment, @Param("status") String status);
+
 
     @Query("SELECT COUNT(ai) FROM JpaApplicantIncident ai JOIN ai.applicantRitual ar " +
             "JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
@@ -73,7 +78,7 @@ public interface ApplicantIncidentRepository extends JpaRepository<JpaApplicantI
 
     @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.typeCode,c.statusCode, c.city, c.resolutionComment,c.crmStatusUpdated,c.crmTicketNumber, c.description,c.locationLat, c.locationLng,c.mobileNumber,c.creationDate, att.id,a.fullNameAr,a.fullNameEn,a.fullNameOrigin, a.idNumber, a.passportNumber,a.dateOfBirthHijri, a.dateOfBirthGregorian,a.gender,a.nationalityCode,ac.email,ac.localMobileNumber,ac.intlMobileNumber,ac.countryCode, di.uin) " +
             "FROM JpaApplicantIncident c JOIN c.applicantRitual ar JOIN ar.applicant a JOIN  a.digitalIds di JOIN a.contacts ac LEFT JOIN c.incidentAttachments att " +
-            "WHERE (c.crmTicketNumber is null) OR ((c.crmStatusUpdated is null OR c.crmStatusUpdated = false) AND c.statusCode <> :statusCode AND c.crmTicketNumber is not null)")
+            "WHERE (c.crmTicketNumber is null) OR (c.crmStatusUpdated = false AND c.statusCode <> :statusCode)")
     List<ApplicantComplaintVo> findAllCrm(@Param("statusCode") String statusCode);
 
 }

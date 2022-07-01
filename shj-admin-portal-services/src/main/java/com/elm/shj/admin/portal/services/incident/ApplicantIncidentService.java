@@ -212,10 +212,10 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
     public void updateByCrm(long incidentId, ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
 
         if (EIncidentStatus.RESOLVED.getCrmCode().equals(applicantComplaintVo.getStatus())) {
-            applicantIncidentRepository.update(incidentId, applicantComplaintVo.getResolutionComment(), EIncidentStatus.RESOLVED.name());
+            applicantIncidentRepository.updateByCrm(incidentId, applicantComplaintVo.getResolutionComment(), EIncidentStatus.RESOLVED.name());
             sendIncidentNotification(incidentId, RESOLVE_INCIDENT_TEMPLATE_NAME);
         } else if (EIncidentStatus.CLOSED.getCrmCode().equals(applicantComplaintVo.getStatus())) {
-            applicantIncidentRepository.update(incidentId, applicantComplaintVo.getResolutionComment(), EIncidentStatus.CLOSED.name());
+            applicantIncidentRepository.updateByCrm(incidentId, applicantComplaintVo.getResolutionComment(), EIncidentStatus.CLOSED.name());
             sendIncidentNotification(incidentId, CLOSE_INCIDENT_TEMPLATE_NAME);
         }
 

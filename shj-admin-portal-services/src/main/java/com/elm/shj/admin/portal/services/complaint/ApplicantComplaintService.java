@@ -201,11 +201,11 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void updateByCrm(long complaintId, ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
 
-        if (EComplaintResolutionType.RESOLVED.getCrmCode() == applicantComplaintVo.getStatus()) {
-            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.name());
+        if (EComplaintResolutionType.RESOLVED.getCrmCode().equals(applicantComplaintVo.getStatus())) {
+            applicantComplaintRepository.updateByCrm(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.name());
             sendComplaintNotification(complaintId, RESOLVE_INCIDENT_TEMPLATE_NAME);
-        } else if (EComplaintResolutionType.CLOSED.getCrmCode() == applicantComplaintVo.getStatus()) {
-            applicantComplaintRepository.update(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.name());
+        } else if (EComplaintResolutionType.CLOSED.getCrmCode().equals(applicantComplaintVo.getStatus())) {
+            applicantComplaintRepository.updateByCrm(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.name());
             sendComplaintNotification(complaintId, CLOSE_INCIDENT_TEMPLATE_NAME);
         }
 
