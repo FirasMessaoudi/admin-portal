@@ -542,7 +542,7 @@ public class IntegrationWsController {
     @GetMapping("/find/company-employees/{uin}/{seasonId}")
     public ResponseEntity<WsResponse<?>> findCompanyEmployeesByUinAndSeasonId(@PathVariable String uin, @PathVariable long seasonId) {
         log.info("Start findCompanyEmployeesByUinAndSeasonId for {} uin and {} season id.", uin, seasonId);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin, seasonId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin)).build());
     }
 
     /**

@@ -642,6 +642,25 @@ public class ItemWriter {
                         }
 
                         companyStaffFullData.setPhoto(defaultAvatar);
+                    } else {
+                        // in case of staff gender is female always use default avatar
+                        if(companyStaffFullData.getGender().equals("F")) {
+                            BufferedImage defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_FEMALE);
+
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            final String defaultAvatar;
+
+                            try {
+                                ImageIO.write(defaultImage, "png", bos);
+                                byte[] bytes = bos.toByteArray();
+
+                                defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
+                            } catch (IOException e) {
+                                throw new RuntimeException();
+                            }
+
+                            companyStaffFullData.setPhoto(defaultAvatar);
+                        }
                     }
 
                     // check company ritual season exist for the ritual type, seasson and company
