@@ -71,8 +71,6 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
         // generate gender digit
         String genderDigit = String.valueOf(GENDER_DIGITS.get(staff.getGender().toUpperCase()).get(ThreadLocalRandom.current().nextInt(0, "F".equalsIgnoreCase(staff.getGender()) ? 4 : 5)));
         String suinPrefix = genderDigit + seasonYear;
-        //List<String> latestSerialList = companyStaffDigitalIdRepository.fetchSuinBySuinLike(suinPrefix);
-        //long nextSequence = CollectionUtils.isEmpty(latestSerialList) ? 1 : Long.parseLong(latestSerialList.get(0)) + 1;
         String serialDigits = StringUtils.leftPad(String.valueOf(staff.getId()), 6, "0");
         // generate checksum digit
         String partialSmartId = suinPrefix + serialDigits;
