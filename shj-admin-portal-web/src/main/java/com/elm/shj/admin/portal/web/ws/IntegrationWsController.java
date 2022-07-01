@@ -54,6 +54,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import javax.ws.rs.QueryParam;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1588,4 +1589,17 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyService.findUidByCode(companyCode)).build());
     }
 
+    @GetMapping("/applicants/find-by-ids")
+    public ResponseEntity<WsResponse<?>> findByIds(@RequestParam List<Long> ids, Pageable pageable) {
+        log.debug("Find applicants by ids...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body( applicantService.findByIds(ids, pageable)).build());
+    }
+    
+    @GetMapping("/group/all")
+    public ResponseEntity<WsResponse<?>> findOrganizationGroups(@QueryParam("companyRefCode") Long companyRefCode, @QueryParam("organizerTypeCode") String organizerTypeCode) {
+        log.info("find applicant groups by company");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(applicantGroupService.findAllGroupByCompanyCode(companyRefCode + "_" + organizerTypeCode)).build());
+    }
 }

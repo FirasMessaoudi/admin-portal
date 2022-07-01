@@ -80,6 +80,20 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
         return applicantGroups;
     }
 
+    public List<ApplicantGroupDto> findAllGroupByCompanyCode(String companyCode) {
+        log.info("Start findGroupsByCompanyCode companyCode:{}", companyCode);
+
+        List<ApplicantGroupDto> applicantGroups = mapList(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode));
+        applicantGroups.forEach(applicantGroupDto -> {
+            applicantGroupDto.setCountApplicants(groupApplicantListRepository.countByApplicantGroupId(applicantGroupDto.getId()));
+            UserLocationDto userLocationDto = userLocationService.findTopByUserIdAndUserTypeOrderByCreationDateDesc(applicantGroupDto.getGroupLeader().getDigitalIds().isEmpty() ? null : applicantGroupDto.getGroupLeader().getDigitalIds().get(0).getSuin(),
+                    EUserType.STAFF.name());
+            applicantGroupDto.getGroupLeader().setLatitude(userLocationDto == null ? null : userLocationDto.getLatitude());
+            applicantGroupDto.getGroupLeader().setLongitude(userLocationDto == null ? null : userLocationDto.getLongitude());
+        });
+        return applicantGroups;
+    }
+
     public List<GroupNameLookupDto> findGroupsNameLookupByCompanyCode(String companyCode) {
         log.info("Start findGroupsNameLookupByCompanyCode companyCode:{}", companyCode);
         List<GroupNameLookupDto> groupNameLookup = mapList(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode)).stream().map(applicantGroupDto -> mapGroupName(applicantGroupDto)).collect(Collectors.toList());
