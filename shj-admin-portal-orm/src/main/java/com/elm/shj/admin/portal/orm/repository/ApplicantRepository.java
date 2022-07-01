@@ -53,6 +53,8 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
 
     @Query("SELECT a FROM JpaApplicant a LEFT JOIN a.rituals ar JOIN ar.applicantPackage ap WHERE (:today >= ap.startDate AND :today <= ap.endDate AND a.registered = TRUE)")
     List<JpaApplicant> findAllApplicantsRegisteredAndHavingActiveRitual(@Param("today") Date today);
+    @Query("SELECT ap.applicantRitual.applicant from JpaApplicantPackage ap WHERE ap.applicantRitual.applicantPackage.ritualPackage.companyRitualSeason.company.code=:companyCode")
+    List<JpaApplicant> findApplicantByCompanyCode(@Param("companyCode") String companyCode);
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a LEFT JOIN a.rituals ar JOIN ar.applicantPackage ap WHERE (:today >= ap.startDate AND :today <= ap.endDate AND a.registered = TRUE)")
     long countHavingActiveRitual(@Param("today") Date today);
@@ -182,6 +184,9 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
                                           @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                           @Param("serviceGroupRefCode") long serviceGroupRefCode,  @Param("companyFullCode") String companyFullCode, Pageable pageable);
 
+    @Query("select a FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga WHERE ga.applicantGroup.id=:groupId")
+    List<JpaApplicant> findAllApplicantByGroupId(@Param("groupId") Long groupId);
+
     @Query("select a  " +
             "FROM JpaApplicant a JOIN a.digitalIds di where " +
             "a.deleted = FALSE and a.packageReferenceNumber is not null and "+
@@ -216,7 +221,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     List<String> findRitualTypeByApplicantId(@Param("applicantId") long applicantId);
 
     @Query("select a.id FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga ON di.uin = ga.applicantUin JOIN ga.applicantGroup ap where ap.id = :groupId")
-    List<Long> findApplicantByGroupId(@Param("groupId") Long groupId);
+    List<Long> findApplicantIdByGroupId(@Param("groupId") Long groupId);
 
     @Query(value = "SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
             "FROM JpaApplicant a WHERE " +
