@@ -103,7 +103,7 @@ public class IntegrationService {
                 });
     }
 
-    public ComplaintUpdateCRMDto callCRMCreateComplaint(ApplicantComplaintVo complaint, CrmAuthResponse accessTokenWsResponse) {
+    public ComplaintUpdateCRMDto callCRMCreateTicket(ApplicantComplaintVo complaint, Integer ticketMainType, CrmAuthResponse accessTokenWsResponse) {
         ApplicantCreateComplaintVoCRM newComplaint = new ApplicantCreateComplaintVoCRM();
         newComplaint.setDigitalID(complaint.getApplicantRitual().getApplicant().getUin());
         if (complaint.getApplicantRitual().getApplicant().getIdNumber() != null )
@@ -115,7 +115,7 @@ public class IntegrationService {
         else
             newComplaint.setPassportNumber(StringUtils.EMPTY);
         newComplaint.setNationalityCode(complaint.getApplicantRitual().getApplicant().getNationalityCode());
-        newComplaint.setMainType(ETicketMainTypeCRM.Complaint.getId());
+        newComplaint.setMainType(ticketMainType);
         newComplaint.setSmartIDTicketNumber(complaint.getReferenceNumber());
         newComplaint.setTicketDetails(complaint.getDescription());
         newComplaint.setTicketSubType(EComplaintType.valueOf(complaint.getTypeCode()).getCrmCode());

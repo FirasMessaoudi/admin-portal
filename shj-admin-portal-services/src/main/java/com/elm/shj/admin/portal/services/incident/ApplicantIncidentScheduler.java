@@ -85,7 +85,7 @@ public class ApplicantIncidentScheduler {
                 if (incident.getCrmTicketNumber() == null) {
                     integrationService.callCRMCreateProfile(incident.getApplicantRitual(), incident.getMobileNumber(), accessTokenWsResponse);
 
-                    ComplaintUpdateCRMDto updateCRMDto = integrationService.callCRMCreateComplaint(incident, accessTokenWsResponse);
+                    ComplaintUpdateCRMDto updateCRMDto = integrationService.callCRMCreateTicket(incident, ETicketMainTypeCRM.Incident.getId(), accessTokenWsResponse);
 
 
                     applicantIncidentLiteRepository.updateCRMTicketNumber(incident.getId(), updateCRMDto.getCrmTicketNumber());
