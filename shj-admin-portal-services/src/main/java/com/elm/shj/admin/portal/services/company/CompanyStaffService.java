@@ -316,7 +316,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             Join<JpaCompanyStaffDigitalId, JpaCompanyStaffCard> companyStaffCards = digitalId.join("companyStaffCards");
             Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = companyStaffCards.join("companyRitualSeason");
 
-           predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
+            predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
             predicates.add(criteriaBuilder.notEqual(companyStaffCards.get("statusCode"), ECardStatus.EXPIRED.name()));
             predicates.add(criteriaBuilder.notEqual(companyStaffCards.get("statusCode"), ECardStatus.REISSUED.name()));
 
@@ -450,37 +450,16 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         CompanyStaffDto staff = mapCompanyStaffDto(companyStaffMainFullData);
         CompanyStaffDto existingStaff = findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getNationalityCode());
 
-        BufferedImage defaultImage;
         // if record exists already in DB we need to update it
         if (existingStaff != null) {
-            // if existing staff does not change the avatar use the same avatar else use the updated avatar
             if(avatar == null){
                 staff.setPhoto(existingStaff.getPhoto());
             } else {
-                //in case of staff gender is female use the default avatar
-                if(companyStaffMainFullData.getGender().equals("F")) {
-                    defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_FEMALE);
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    final String defaultAvatar;
-
-                    try {
-                        ImageIO.write(defaultImage, "png", bos);
-                        byte[] bytes = bos.toByteArray();
-
-                        defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
-                    } catch (IOException e) {
-                        throw new RuntimeException();
-                    }
-
-                    staff.setPhoto(defaultAvatar);
-                } else {
-                    //use the selected avatar
-                    try {
-                        BufferedImage image = ImageIO.read(avatar.getInputStream());
-                        staff.setPhoto(ImageUtils.imgToBase64String(image));
-                    } catch (IOException e) {
-                        throw new RuntimeException();
-                    }
+                try {
+                    BufferedImage image = ImageIO.read(avatar.getInputStream());
+                    staff.setPhoto(ImageUtils.imgToBase64String(image));
+                } catch (IOException e) {
+                    throw new RuntimeException();
                 }
             }
             staff.setId(existingStaff.getId());
@@ -489,7 +468,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             companyStaffMainFullData.setId(staff.getId());
         } else {
             if(avatar == null){
-
+                BufferedImage defaultImage;
                 if(companyStaffMainFullData.getGender().equals("M")) {
                     defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_MALE);
                 } else {
@@ -510,30 +489,11 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
                 staff.setPhoto(defaultAvatar);
             } else {
-                //in case of staff gender is female use the default avatar
-                if(companyStaffMainFullData.getGender().equals("F")) {
-                    defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_FEMALE);
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    final String defaultAvatar;
-
-                    try {
-                        ImageIO.write(defaultImage, "png", bos);
-                        byte[] bytes = bos.toByteArray();
-
-                        defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
-                    } catch (IOException e) {
-                        throw new RuntimeException();
-                    }
-
-                    staff.setPhoto(defaultAvatar);
-                } else {
-                    //use the selected avatar
-                    try {
-                        BufferedImage image = ImageIO.read(avatar.getInputStream());
-                        staff.setPhoto(ImageUtils.imgToBase64String(image));
-                    } catch (IOException e) {
-                        throw new RuntimeException();
-                    }
+                try {
+                    BufferedImage image = ImageIO.read(avatar.getInputStream());
+                    staff.setPhoto(ImageUtils.imgToBase64String(image));
+                } catch (IOException e) {
+                    throw new RuntimeException();
                 }
             }
             staff = save(staff);

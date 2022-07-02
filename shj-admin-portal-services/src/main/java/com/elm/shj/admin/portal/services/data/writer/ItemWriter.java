@@ -412,14 +412,14 @@ public class ItemWriter {
                     List<CompanyRitualStepLookupDto> companyRitualStepLookupDtos = companyRitualStepLookupService.findAllWithLang();
                     companyRitualStepLookupDtos.forEach(companyRitualStepLookupDto -> {
                         CompanyRitualStepDto companyRitualStep = CompanyRitualStepDto.builder()
-                        .stepCode(companyRitualStepLookupDto.getCode())
-                        .stepIndex(companyRitualStepLookupDto.getStepIndex())
-                        .locationLat(companyRitualStepLookupDto.getLocationLat())
-                        .locationLng(companyRitualStepLookupDto.getLocationLng())
-                        .locationNameAr("")
-                        .locationNameEn("")
-                        .time(new Date())
-                        .applicantGroup((ApplicantGroupDto.builder().id(((JpaApplicantGroupBasic) savedItem).getId()).build())).build();
+                                .stepCode(companyRitualStepLookupDto.getCode())
+                                .stepIndex(companyRitualStepLookupDto.getStepIndex())
+                                .locationLat(companyRitualStepLookupDto.getLocationLat())
+                                .locationLng(companyRitualStepLookupDto.getLocationLng())
+                                .locationNameAr("")
+                                .locationNameEn("")
+                                .time(new Date())
+                                .applicantGroup((ApplicantGroupDto.builder().id(((JpaApplicantGroupBasic) savedItem).getId()).build())).build();
                         companyRitualStepService.save(companyRitualStep);
                     });
                 }
@@ -642,25 +642,6 @@ public class ItemWriter {
                         }
 
                         companyStaffFullData.setPhoto(defaultAvatar);
-                    } else {
-                        // in case of staff gender is female always use default avatar
-                        if(companyStaffFullData.getGender().equals("F")) {
-                            BufferedImage defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_FEMALE);
-
-                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                            final String defaultAvatar;
-
-                            try {
-                                ImageIO.write(defaultImage, "png", bos);
-                                byte[] bytes = bos.toByteArray();
-
-                                defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
-                            } catch (IOException e) {
-                                throw new RuntimeException();
-                            }
-
-                            companyStaffFullData.setPhoto(defaultAvatar);
-                        }
                     }
 
                     // check company ritual season exist for the ritual type, seasson and company
@@ -683,7 +664,7 @@ public class ItemWriter {
                     CompanyStaffDto staff = mapCompanyStaffDto(companyStaffFullData);
                     // copy properties from company staff full data to company staff
 
-                   // BeanUtils.copyProperties(staff, companyStaffFullData);
+                    // BeanUtils.copyProperties(staff, companyStaffFullData);
                     CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getNationalityCode());
 
                     if(existingStaff != null){
@@ -698,7 +679,7 @@ public class ItemWriter {
                         //companyStaffService.save(staff);
                         savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(staff, mappingContext));
                     } else {
-                       // companyStaffService.save(staff);
+                        // companyStaffService.save(staff);
                         savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(staff, mappingContext));
                     }
                     savedItems.add(savedItem);
