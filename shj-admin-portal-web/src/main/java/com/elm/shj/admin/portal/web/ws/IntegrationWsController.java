@@ -278,22 +278,32 @@ public class IntegrationWsController {
     @PostMapping("/verify")
     public ResponseEntity<WsResponse<?>> verify(@RequestBody @Validated ValidateApplicantCmd command) {
         Optional<ApplicantLiteDto> applicant = Optional.empty();
-        if (command.getType().equals(ELoginType.uin.name()))
+        if (command.getType().equals(ELoginType.uin.name())) {
             applicant = applicantLiteService.findByUin(command.getIdentifier());
-        if (command.getType().equals(ELoginType.passport.name()))
+        } else if (command.getType().equals(ELoginType.passport.name())) {
             applicant = applicantLiteService.findByPassportNumber(command.getIdentifier(), command.getNationalityCode());
-        if (command.getType().equals(ELoginType.id.name()))
+        } else if (command.getType().equals(ELoginType.id.name())) {
             applicant = applicantLiteService.findByIdNumber(command.getIdentifier());
+        }
+
 
         if (applicant.isPresent()) {
             boolean dateOfBirthMatched;
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
             // decide which date of birth to use
-            if (command.getDateOfBirthGregorian() != null) {
+            if (applicant.get().getDateOfBirthGregorian() != null) {
+                if(command.getDateOfBirthGregorian() == null){
+                    return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getIdentifier()).build()).build());
+                }
                 String applicantDateFormatted = sdf.format(applicant.get().getDateOfBirthGregorian());
                 String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
                 dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
             } else {
+                if(command.getDateOfBirthHijri() <= 0 ){
+                    return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getIdentifier()).build()).build());
+                }
                 dateOfBirthMatched = command.getDateOfBirthHijri() == applicant.get().getDateOfBirthHijri();
             }
             if (!dateOfBirthMatched) {
@@ -921,7 +931,11 @@ public class IntegrationWsController {
             boolean dateOfBirthMatched;
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
             // decide which date of birth to use
-            if (validateStaffCmd.getDateOfBirthGregorian() != null && !validateStaffCmd.getDateOfBirthGregorian().equals("")) {
+            if (staff.get().getDateOfBirthGregorian() != null) {
+                if(validateStaffCmd.getDateOfBirthGregorian() == null){
+                    return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getIdentifier()).build()).build());
+                }
                 try {
                     Date gregorianDate = sdf.parse(validateStaffCmd.getDateOfBirthGregorian());
                     String applicantDateFormatted = sdf.format(staff.get().getDateOfBirthGregorian());
@@ -933,6 +947,10 @@ public class IntegrationWsController {
                 }
 
             } else {
+                if(validateStaffCmd.getDateOfBirthHijri() <= 0 ){
+                    return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getIdentifier()).build()).build());
+                }
                 dateOfBirthMatched = validateStaffCmd.getDateOfBirthHijri() == staff.get().getDateOfBirthHijri();
             }
             if (!dateOfBirthMatched) {
