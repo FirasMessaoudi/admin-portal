@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Service handling applicant card
  *
@@ -30,7 +32,12 @@ public class ApplicantCardBasicService extends GenericService<JpaApplicantCardBa
     @Transactional
     public void deleteAllApplicantCards(Long applicantId) {
         log.info("Start deleteAllApplicantCards for {} applicant id.", applicantId);
-        int noCardsDeleted = applicantCardBasicRepository.deleteAllApplicantCards(applicantId, ECardStatus.CANCELLED.name());
+        List<Long> cardsIds = applicantCardBasicRepository.findIdsByApplicantId(applicantId);
+        if (cardsIds == null || cardsIds.isEmpty()) {
+            log.info("No cards found for {} applicant id.", applicantId);
+            return;
+        }
+        int noCardsDeleted = applicantCardBasicRepository.deleteAllApplicantCards(cardsIds, ECardStatus.CANCELLED.name());
         log.info("Finish deleteAllApplicantCards for {} applicant id and impacted cards is {}.", applicantId, noCardsDeleted);
     }
 }
