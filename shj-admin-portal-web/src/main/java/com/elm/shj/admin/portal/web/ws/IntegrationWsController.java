@@ -84,13 +84,13 @@ public class IntegrationWsController {
     private final OtpAuthenticationProvider authenticationProvider;
     private final JwtTokenService jwtTokenService;
 
-    private final OtpService otpService;
     private final ApplicantLiteService applicantLiteService;
     private final RitualTypeLookupService ritualTypeLookupService;
     private final CardStatusLookupService cardStatusLookupService;
     private final RelativeRelationshipLookupService relativeRelationshipLookupService;
     private final MaritalStatusLookupService maritalStatusLookupService;
     private final NationalityLookupService nationalityLookupService;
+    private final CountryLookupService countryLookupService;
     private final HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;
     private final ApplicantService applicantService;
     private final ApplicantHealthLiteService applicantHealthLiteService;
@@ -234,8 +234,16 @@ public class IntegrationWsController {
      */
     @GetMapping("/country/list")
     public ResponseEntity<WsResponse<?>> listCountries() {
+        //TODO: this should be list nationalities
         log.debug("list countries...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(nationalityLookupService.findAll()).build());
+    }
+
+    @GetMapping("/nationality/list")
+    public ResponseEntity<WsResponse<?>> listNationalities() {
+        //TODO: this should be list countries
+        log.debug("list nationalities...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(countryLookupService.findAll()).build());
     }
 
     /**
@@ -542,7 +550,7 @@ public class IntegrationWsController {
     @GetMapping("/find/company-employees/{uin}/{seasonId}")
     public ResponseEntity<WsResponse<?>> findCompanyEmployeesByUinAndSeasonId(@PathVariable String uin, @PathVariable long seasonId) {
         log.info("Start findCompanyEmployeesByUinAndSeasonId for {} uin and {} season id.", uin, seasonId);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin, seasonId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin)).build());
     }
 
     /**
