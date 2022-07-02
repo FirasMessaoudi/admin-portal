@@ -194,8 +194,12 @@ public class ValidationService {
         RitualPackageBasicWithDetailsDto existingRitualPackage = ritualPackageBasicWithDetailsService.findByReferenceAndRitualTypeAndSeason(plannedPackage.getPackageRefNumber().toString(), ERitualType.fromId(plannedPackage.getRitualTypeCode()).name(), plannedPackage.getSeasonYear());
         if (existingRitualPackage != null) {
             ritualPackageDto.setId(existingRitualPackage.getId());
-            ritualPackageDto.setPackageHousings(existingRitualPackage.getPackageHousings());
-            ritualPackageDto.setPackageTransportations(existingRitualPackage.getPackageTransportations());
+            if (existingRitualPackage.getPackageHousings() != null && !existingRitualPackage.getPackageHousings().isEmpty()) {
+                ritualPackageDto.setPackageHousings(existingRitualPackage.getPackageHousings());
+            }
+            if (existingRitualPackage.getPackageTransportations() != null && !existingRitualPackage.getPackageTransportations().isEmpty()) {
+                ritualPackageDto.setPackageTransportations(existingRitualPackage.getPackageTransportations());
+            }
         }
 
         //get the package transportation
