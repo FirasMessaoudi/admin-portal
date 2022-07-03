@@ -62,6 +62,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     private final static String DEFAULT_AVATAR_FEMALE = "avatar/applicant-staff-female.png";
 
     public Optional<CompanyStaffLiteDto> findBySuin(String suin) {
+        log.info("Start findBySuin with suin: {}", suin);
         CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findBySuin(suin, EDigitalIdStatus.VALID.name()), mappingContext);
         if (companyStaff != null) {
             CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
@@ -84,11 +85,16 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .mobileNumberIntl(companyStaff.getMobileNumberIntl())
                     .countryPhonePrefix(companyStaff.getCountryPhonePrefix())
                     .build();
+            log.info("Finish findBySuin with suin: {}", suin);
             return Optional.of(companyStaffLite);
-        } else return Optional.empty();
+        } else {
+            log.info("Finish findBySuin not found with suin: {}", suin);
+            return Optional.empty();
+        }
     }
 
     public Optional<CompanyStaffLiteDto> findByPassportNumber(String passportNumber, String nationalityCode) {
+        log.info("Start findByPassportNumber with passportNumber: {}", passportNumber);
         CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findByPassportAndNationalityCode(passportNumber, nationalityCode, EDigitalIdStatus.VALID.name()), mappingContext);
         if (companyStaff != null) {
             CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
@@ -111,11 +117,16 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .mobileNumberIntl(companyStaff.getMobileNumberIntl())
                     .countryPhonePrefix(companyStaff.getCountryPhonePrefix())
                     .build();
+            log.info("Finish findByPassportNumber with passportNumber: {}", passportNumber);
             return Optional.of(companyStaffLite);
-        } else return Optional.empty();
+        } else {
+            log.info("Finish findByPassportNumber not found with passportNumber: {}", passportNumber);
+            return Optional.empty();
+        }
     }
 
     public Optional<CompanyStaffLiteDto> findByIdNumber(String idNumber) {
+        log.info("Start findByIdNumber with idNumber: {}", idNumber);
         CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findByIdNumber(idNumber, EDigitalIdStatus.VALID.name()), mappingContext);
         if (companyStaff != null) {
             CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
@@ -138,32 +149,48 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .mobileNumberIntl(companyStaff.getMobileNumberIntl())
                     .countryPhonePrefix(companyStaff.getCountryPhonePrefix())
                     .build();
+            log.info("Finish findByIdNumber with idNumber: {}", idNumber);
             return Optional.of(companyStaffLite);
-        } else return Optional.empty();
+        } else {
+            log.info("Finish findByIdNumber not found with idNumber: {}", idNumber);
+            return Optional.empty();
+        }
     }
 
     public List<CompanyStaffDto> findRelatedEmployeesByApplicantUinAndSeasonId(String uin, long sid) {
-        return mapList(companyStaffRepository.findApplicantCompanyStaff(uin, sid));
+        log.info("Start findRelatedEmployeesByApplicantUinAndSeasonId with uin: {}, sid: {}", uin, sid);
+        List<CompanyStaffDto> companyStaffDtoList = mapList(companyStaffRepository.findApplicantCompanyStaff(uin, sid));
+        log.info("Finish findRelatedEmployeesByApplicantUinAndSeasonId with uin: {}, sid: {}", uin, sid);
+        return companyStaffDtoList;
     }
 
     public Optional<CompanyStaffDto> findGroupLeaderByApplicantUin(String applicantUin, long companyRitualSeasonId) {
+        log.info("Start findGroupLeaderByApplicantUin with applicantUin: {}", applicantUin);
         JpaCompanyStaff companyStaff = companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndApplicantGroupsCompanyRitualSeasonIdAndTitleCode(applicantUin, companyRitualSeasonId, ECompanyStaffTitle.GROUP_LEADER.name());
         if (companyStaff != null) {
+            log.info("Finish findGroupLeaderByApplicantUin with applicantUin: {}", applicantUin);
             return Optional.of(getMapper().fromEntity(companyStaff, mappingContext));
         }
+        log.info("Finish findGroupLeaderByApplicantUin not found with applicantUin: {}", applicantUin);
         return Optional.empty();
     }
 
     public Optional<CompanyStaffDto> findGroupLeaderByApplicantUin(String applicantUin) {
+        log.info("Start findGroupLeaderByApplicantUin with applicantUin: {}", applicantUin);
         JpaCompanyStaff companyStaff = companyStaffRepository.findByApplicantGroupsGroupApplicantListsApplicantUinAndTitleCode(applicantUin, ECompanyStaffTitle.GROUP_LEADER.name());
         if (companyStaff != null) {
+            log.info("Finish findGroupLeaderByApplicantUin with applicantUin: {}", applicantUin);
             return Optional.of(getMapper().fromEntity(companyStaff, mappingContext));
         }
+        log.info("Finish findGroupLeaderByApplicantUin not found with applicantUin: {}", applicantUin);
         return Optional.empty();
     }
 
     public String findGroupLeaderMobileByApplicantUin(String applicantUin) {
-        return companyStaffRepository.findGroupLeaderMobileNumberByApplicantUin(applicantUin);
+        log.info("Start findGroupLeaderMobileByApplicantUin with applicantUin: {}", applicantUin);
+        String groupLeaderMobileNumber = companyStaffRepository.findGroupLeaderMobileNumberByApplicantUin(applicantUin);
+        log.info("Finish findGroupLeaderMobileByApplicantUin with applicantUin: {}", applicantUin);
+        return groupLeaderMobileNumber;
     }
 
     /**
@@ -173,7 +200,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
      * @return
      */
     public boolean existsByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
-        return ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, passportNumber, nationalityCode);
+        log.info("Start existsByBasicInfo with idNumber: {}, passportNumber: {}, nationalityCode: {}", idNumber, passportNumber, nationalityCode);
+        boolean companyStaffExists= ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, passportNumber, nationalityCode);
+        log.info("Finish existsByBasicInfo with idNumber: {}, passportNumber: {}, nationalityCode: {}", idNumber, passportNumber, nationalityCode);
+        return companyStaffExists;
     }
 
     /**
@@ -184,7 +214,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
      * @return
      */
     public boolean existsByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
-        return ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg);
+        log.info("Start existsByBasicInfo with idNumber: {}, passportNumber: {}, dateGreg: {}, dateHijri: {}", idNumber, passportNumber, dateGreg, dateHijri);
+        boolean companyStaffExists = ((CompanyStaffRepository) getRepository()).existsByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg);
+        log.info("Finish existsByBasicInfo with idNumber: {}, passportNumber: {}, dateGreg: {}, dateHijri: {}", idNumber, passportNumber, dateGreg, dateHijri);
+        return companyStaffExists;
     }
 
     /**
@@ -195,11 +228,17 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
      * @return
      */
     public boolean existsByBasicInfoAndTitleIsGroupLeader(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
-        return ((CompanyStaffRepository) getRepository()).existsByBasicInfoAndTitleIsGroupLeader(idNumber, dateHijri, passportNumber, dateGreg, ECompanyStaffTitle.GROUP_LEADER.name());
+        log.info("Start existsByBasicInfoAndTitleIsGroupLeader with idNumber: {}, passportNumber: {}, dateGreg: {}, dateHijri: {}", idNumber, passportNumber, dateGreg, dateHijri);
+        boolean companyStaffExists = ((CompanyStaffRepository) getRepository()).existsByBasicInfoAndTitleIsGroupLeader(idNumber, dateHijri, passportNumber, dateGreg, ECompanyStaffTitle.GROUP_LEADER.name());
+        log.info("Finish existsByBasicInfoAndTitleIsGroupLeader with idNumber: {}, passportNumber: {}, dateGreg: {}, dateHijri: {}", idNumber, passportNumber, dateGreg, dateHijri);
+        return companyStaffExists;
     }
 
     public boolean existsByBasicInfoAndTitleIsGroupLeader(String idNumber, String passportNumber, String nationalityCode) {
-        return ((CompanyStaffRepository) getRepository()).existsByBasicInfoAndTitleIsGroupLeader(idNumber, passportNumber, nationalityCode, ECompanyStaffTitle.GROUP_LEADER.name());
+        log.info("Start existsByBasicInfoAndTitleIsGroupLeader with idNumber: {}, passportNumber: {}, nationalityCode: {}", idNumber, passportNumber, nationalityCode);
+        boolean companyStaffExists = ((CompanyStaffRepository) getRepository()).existsByBasicInfoAndTitleIsGroupLeader(idNumber, passportNumber, nationalityCode, ECompanyStaffTitle.GROUP_LEADER.name());
+        log.info("Finish existsByBasicInfoAndTitleIsGroupLeader with idNumber: {}, passportNumber: {}, nationalityCode: {}", idNumber, passportNumber, nationalityCode);
+        return companyStaffExists;
     }
 
     /**
@@ -210,7 +249,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
      * @return companyStaffDto
      */
     public CompanyStaffDto findByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
-        return getMapper().fromEntity(companyStaffRepository.findByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg), mappingContext);
+        log.info("Start findByBasicInfo with idNumber: {}, passportNumber: {}, dateGreg: {}, dateHijri: {}", idNumber, passportNumber, dateGreg, dateHijri);
+        CompanyStaffDto companyStaffDto = getMapper().fromEntity(companyStaffRepository.findByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg), mappingContext);
+        log.info("Finish findByBasicInfo with idNumber: {}, passportNumber: {}, dateGreg: {}, dateHijri: {}", idNumber, passportNumber, dateGreg, dateHijri);
+        return companyStaffDto;
     }
 
     /**
@@ -220,11 +262,17 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
      * @return CompanyStaffDto
      */
     public CompanyStaffDto findByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
-        return getMapper().fromEntity(companyStaffRepository.findByBasicInfo(idNumber, passportNumber, nationalityCode), mappingContext);
+        log.info("Start findByBasicInfo with idNumber: {}, passportNumber: {}, nationalityCode: {}", idNumber, passportNumber, nationalityCode);
+        CompanyStaffDto companyStaffDto = getMapper().fromEntity(companyStaffRepository.findByBasicInfo(idNumber, passportNumber, nationalityCode), mappingContext);
+        log.info("Finish findByBasicInfo with idNumber: {}, passportNumber: {}, nationalityCode: {}", idNumber, passportNumber, nationalityCode);
+        return companyStaffDto;
     }
 
     public Long findIdByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
-        return companyStaffRepository.findIdByBasicInfo(idNumber, passportNumber, nationalityCode);
+        log.info("Start findIdByBasicInfo with idNumber: {}, passportNumber: {}, nationalityCode: {}", idNumber, passportNumber, nationalityCode);
+        Long companyStaffId = companyStaffRepository.findIdByBasicInfo(idNumber, passportNumber, nationalityCode);
+        log.info("Finish findIdByBasicInfo with idNumber: {}, passportNumber: {}, nationalityCode: {}", idNumber, passportNumber, nationalityCode);
+        return companyStaffId;
     }
 
     /**
@@ -235,11 +283,15 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
      * @return companyStaffDto
      */
     public CompanyStaffDto findGroupLeaderByBasicInfo(String idNumber, String passportNumber, Date dateGreg, Long dateHijri) {
-        return getMapper().fromEntity(companyStaffRepository.findGroupLeaderByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg, ECompanyStaffTitle.GROUP_LEADER.name()), mappingContext);
+        log.info("Start findGroupLeaderByBasicInfo with idNumber: {}, passportNumber: {}, dateGreg: {}, dateHijri: {}", idNumber, passportNumber, dateGreg, dateHijri);
+        CompanyStaffDto companyStaffDto = getMapper().fromEntity(companyStaffRepository.findGroupLeaderByBasicInfo(idNumber, dateHijri, passportNumber, dateGreg, ECompanyStaffTitle.GROUP_LEADER.name()), mappingContext);
+        log.info("Start findGroupLeaderByBasicInfo with idNumber: {}, passportNumber: {}, dateGreg: {}, dateHijri: {}", idNumber, passportNumber, dateGreg, dateHijri);
+        return companyStaffDto;
     }
 
     @Transactional
     public int updateCompanyStaff(long staffId, UpdateStaffCmd command) {
+        log.info("Start updateCompanyStaff with staffId: {}", staffId);
         int updatedRowsCount = 0;
 
         if (command.getCountryPhonePrefix().matches(SAUDI_MOBILE_NUMBER_REGEX)) {
@@ -247,34 +299,43 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         } else {
             updatedRowsCount += companyStaffRepository.updateCompanyStaffIntlNumber(command.getEmail(), command.getCountryPhonePrefix(), command.getMobileNumber(), staffId);
         }
+        log.info("Finish updateCompanyStaff with staffId: {}", staffId);
         return updatedRowsCount;
     }
 
     public Optional<CompanyStaffVO> findStaffRitualBySuin(String suin) {
+        log.info("Start findStaffRitualBySuin with suin: {}", suin);
         CompanyStaffVO staffRitual = companyStaffRepository.findStaffMainData(suin);
+        log.info("Finish findStaffRitualBySuin with suin: {}", suin);
         return staffRitual == null? Optional.empty(): Optional.of(staffRitual);
     }
 
     public Optional<ApplicantStaffVO> findStaffByIdNumber(String idNumber) {
+        log.info("Start findStaffByIdNumber with idNumber: {}", idNumber);
         ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffByIdNumber(idNumber, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
+        log.info("Finish findStaffByIdNumber with idNumber: {}", idNumber);
         return staffByIdNumber == null? Optional.empty(): Optional.of(staffByIdNumber);
     }
 
     public Optional<ApplicantStaffVO> findStaffBySuin(String suin) {
+        log.info("Start findStaffBySuin with suin: {}", suin);
         ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffBySuin(suin, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
+        log.info("Finish findStaffBySuin with suin: {}", suin);
         return staffByIdNumber == null? Optional.empty(): Optional.of(staffByIdNumber);
     }
 
     public Optional<ApplicantStaffVO> findStaffBySuinAndCardId(String value) {
         String suin = value.substring(0,value.length()-1);
         long cardId = Long.parseLong(value.substring(value.length()-1));
+        log.info("Start findStaffBySuin with suin: {}, cardId: {}", suin, cardId);
         ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffBySuinAndCardId(suin,cardId);
+        log.info("Finish findStaffBySuin with suin: {}, cardId: {}", suin, cardId);
         return staffByIdNumber == null? Optional.empty(): Optional.of(staffByIdNumber);
     }
 
     @Transactional
     public Page<CompanyStaffLiteDto> searchStaff(CompanyStaffFilterDto companyStaffFilterDto, Pageable pageable) {
-
+        log.info("Start searchStaff with CompanyStaffFilterDto: {}", companyStaffFilterDto);
         Page<JpaCompanyStaff> companyStaffs = companyStaffRepository.findAll(withStaffFilter(companyStaffFilterDto), pageable);
         List<CompanyStaffLiteDto> companyStaffList = new ArrayList<>();
 
@@ -305,6 +366,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
         }
         Page<CompanyStaffLiteDto> companyStaff = new PageImpl<>(companyStaffList, pageable, companyStaffs.getTotalElements());
+        log.info("Finish searchStaff");
         return companyStaff;
     }
 
@@ -372,30 +434,42 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
     public Optional<CompanyStaffFullVO> searchStaffById(Long id) {
+        log.info("Start searchStaffById with id: {}", id);
         List<CompanyStaffFullVO> staff = companyStaffRepository.findOrganizerStaffById(id);
         CompanyStaffFullVO companyStaffFullVO = staff.get(staff.size() - 1);
         // split the company and set only company ref code
         if(companyStaffFullVO.getCompanyCode() != null && !companyStaffFullVO.getCompanyCode().equals(""))
             companyStaffFullVO.setCompanyCode(companyStaffFullVO.getCompanyCode().contains("_") ? companyStaffFullVO.getCompanyCode().substring(0, companyStaffFullVO.getCompanyCode().indexOf("_")) : companyStaffFullVO.getCompanyCode());
+
+        log.info("Finish searchStaffById with id: {}", id);
         return companyStaffFullVO == null? Optional.empty(): Optional.of(companyStaffFullVO);
     }
 
     @Transactional
     public UpdateStaffTitleCmd updateCompanyStaffTitle(UpdateStaffTitleCmd command) {
+        log.info("Start updateCompanyStaffTitle with UpdateStaffTitleCmd: {}", command);
         int updatedRowsCount = 0;
         updatedRowsCount += companyStaffRepository.updateCompanyStaffJobTitle(command.getJobTitle(), command.getCustomJobTitle(), command.getId());
         if(updatedRowsCount < 1){
+            log.info("Finish updateCompanyStaffTitle with updatedRowsCount less than 1");
             return new UpdateStaffTitleCmd();
         }
+        log.info("Finish updateCompanyStaffTitle");
         return command;
     }
 
     public List<CompanyStaffDto> findRegisteredStaff(){
-        return mapList(companyStaffRepository.findAllByRegisteredTrue());
+        log.info("Start findRegisteredStaff");
+        List<CompanyStaffDto> companyStaffDtoList = mapList(companyStaffRepository.findAllByRegisteredTrue());
+        log.info("Finish findRegisteredStaff");
+        return companyStaffDtoList;
     }
 
     public long countRegisteredStaff(){
-        return companyStaffRepository.countJpaCompanyStaffByRegisteredTrue();
+        log.info("Start countRegisteredStaff");
+        long companyStaffCount = companyStaffRepository.countJpaCompanyStaffByRegisteredTrue();
+        log.info("Finish countRegisteredStaff");
+        return companyStaffCount;
     }
 
     public List<CompanyStaffDto> findAllByIds(List<Long> selectedStaff) {
@@ -405,17 +479,25 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         return CompanyStaffDtos ;
     }
     public Page<CompanyStaffDto> findByIds(@RequestParam List<Long> selectedStaffs, Pageable pageable) {
-        return mapPage(companyStaffRepository.findByIds(selectedStaffs, pageable));
+        log.info("Start findByIds wth selectedStaffsIds: {}", selectedStaffs);
+        Page<CompanyStaffDto> companyStaffDtoPage = mapPage(companyStaffRepository.findByIds(selectedStaffs, pageable));
+        log.info("Finish findByIds wth selectedStaffsIds: {}", selectedStaffs);
+        return companyStaffDtoPage;
     }
 
     public List<CompanyStaffDto> findAllByCriteria(NotificationTemplateCategorizingDto applicantSearchCriteria, List<Long> excludedIds) {
+        log.info("Start findByIds wth NotificationTemplateCategorizingDto: {}", applicantSearchCriteria);
+        List<CompanyStaffDto> companyStaffDtoList = mapList(companyStaffRepository.findAll(withStaffFilter(applicantSearchCriteria ,excludedIds)));
+        log.info("finish findByIds with NotificationTemplateCategorizingDto");
+        return companyStaffDtoList;
 
-        return mapList(companyStaffRepository.findAll(withStaffFilter(applicantSearchCriteria ,excludedIds)));
     }
 
     public Page<CompanyStaffDto> findAllByCriteriaAndNotInExcludedIds(NotificationTemplateCategorizingDto applicantSearchCriteria, List<Long> excludedIds, Pageable pageable) {
-
-        return mapPage(companyStaffRepository.findAll(withStaffFilter(applicantSearchCriteria ,excludedIds), pageable));
+        log.info("Start findByIds wth NotificationTemplateCategorizingDto: {}", applicantSearchCriteria);
+        Page<CompanyStaffDto> companyStaffDtoPage = mapPage(companyStaffRepository.findAll(withStaffFilter(applicantSearchCriteria ,excludedIds), pageable));
+        log.info("finish findByIds wth NotificationTemplateCategorizingDto");
+        return companyStaffDtoPage;
     }
     private Specification<JpaCompanyStaff> withStaffFilter(final NotificationTemplateCategorizingDto criteria, List<Long> excludedIds) {
         return (root, criteriaQuery, criteriaBuilder) -> {
@@ -446,7 +528,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
 
     public CompanyStaffMainFullDataDto saveOrUpdateStaffFullMainData(CompanyStaffMainFullDataDto companyStaffMainFullData, MultipartFile avatar){
-
+        log.info("Start saveOrUpdateStaffFullMainData wth CompanyStaffMainFullDataDto: {}", companyStaffMainFullData);
         CompanyStaffDto staff = mapCompanyStaffDto(companyStaffMainFullData);
         CompanyStaffDto existingStaff = findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getNationalityCode());
 
@@ -503,11 +585,14 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         // start adding staff ritual data
         CompanyStaffRitualDto companyStaffRitual = mapCompanyStaffRitualDto(companyStaffMainFullData);
         saveStaffFullRitual(companyStaffRitual, staff.getId());
+        log.info("finish saveOrUpdateStaffFullMainData wth CompanyStaffMainFullDataDto");
 
         return companyStaffMainFullData;
     }
 
     private void saveStaffFullRitual(CompanyStaffRitualDto companyStaffRitual, long staffId) {
+        log.info("Start saveStaffFullRitual wth CompanyStaffRitualDto: {}", companyStaffRitual);
+
         CompanyStaffDto existingStaff = findOne(staffId);
         CompanyStaffDigitalIdBasicDto companyStaffDigitalId = companyStaffDigitalIdBasicService.findByBasicInfoWithoutDigitalIdStatus(existingStaff.getId(), companyStaffRitual.getSeason());
         if (companyStaffDigitalId != null) {
@@ -524,6 +609,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                 companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
                         .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
                 companyStaffCardService.save(companyStaffCardDto);
+                log.info("finish saveStaffFullRitual in case companyStaffCardDtos is empty");
                 return;
 
             }
@@ -541,6 +627,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                 companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
                         .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
                 companyStaffCardService.save(companyStaffCardDto);
+                log.info("finish saveStaffFullRitual for different company or different ritual");
                 return;
             }
 
@@ -553,6 +640,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                 companyStaffCardDto.setCompanyRitualSeason(CompanyRitualSeasonDto.builder()
                         .id(companyRitualSeasonService.getCompanyRitualSeasonId(companyStaffRitual.getCompanyCode(), companyStaffRitual.getTypeCode(), companyStaffRitual.getSeason())).build());
                 companyStaffCardService.save(companyStaffCardDto);
+                log.info("finish saveStaffFullRitual for for same company and same ritual");
                 return;
             }
 
@@ -612,6 +700,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
     public List<DataValidationResult> isValidCompanyRitualSeason(CompanyStaffMainFullDataDto companyStaffMainFullData){
+        log.info("Start isValidCompanyRitualSeason wth CompanyStaffMainFullDataDto: {}", companyStaffMainFullData);
         String attributeName = "ritualTypeCode";
         String idNumberAttribute = "idNumber";
         List<DataValidationResult> dataValidationResults = new ArrayList<>();
@@ -632,6 +721,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                         .attributeName(idNumberAttribute).build());
             }
         }
+        log.info("Finish isValidCompanyRitualSeason");
         return dataValidationResults;
     }
 
@@ -660,7 +750,10 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     }
 
     public Boolean exitsStaffInCompany(Long staffId, Long companyRitualSeasonId) {
-        return companyStaffRepository.exitsStaffInCompany(staffId, companyRitualSeasonId);
+        log.info("Start exitsStaffInCompany with staffId: {}", staffId);
+        boolean exitsStaffInCompany = companyStaffRepository.exitsStaffInCompany(staffId, companyRitualSeasonId);
+        log.info("Finish exitsStaffInCompany with staffId: {}", staffId);
+        return exitsStaffInCompany;
     }
 
 }

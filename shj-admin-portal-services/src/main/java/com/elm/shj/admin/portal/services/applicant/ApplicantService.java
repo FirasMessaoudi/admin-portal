@@ -188,15 +188,24 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     }
 
     public long countAllByCriteria(NotificationTemplateCategorizingDto applicantSearchCriteria, List<Long> excludedIds) {
-        return applicantRepository.count(withApplicantFilter(applicantSearchCriteria, excludedIds));
+        log.info("Start countAllByCriteria with NotificationTemplateCategorizingDto: {}", applicantSearchCriteria);
+        Long notificationsCount = applicantRepository.count(withApplicantFilter(applicantSearchCriteria, excludedIds));
+        log.info("Finish countAllByCriteria with NotificationTemplateCategorizingDto");
+        return notificationsCount;
     }
 
     public List<ApplicantDto> findAllByCriteria(NotificationTemplateCategorizingDto applicantSearchCriteria, List<Long> excludedIds) {
-        return mapList(applicantRepository.findAll(withApplicantFilter(applicantSearchCriteria, excludedIds)));
+        log.info("Start findAllByCriteria with NotificationTemplateCategorizingDto: {}", applicantSearchCriteria);
+        List<ApplicantDto> applicantDtoList = mapList(applicantRepository.findAll(withApplicantFilter(applicantSearchCriteria, excludedIds)));
+        log.info("Finish findAllByCriteria with NotificationTemplateCategorizingDto");
+        return applicantDtoList;
     }
 
     public Page<ApplicantDto> findAllByCriteriaAndNotInExcludedIds(NotificationTemplateCategorizingDto applicantSearchCriteria, List<Long> excludedIds, Pageable pageable) {
-        return mapPage(applicantRepository.findAll(withApplicantFilter(applicantSearchCriteria, excludedIds), pageable));
+        log.info("Start findAllByCriteriaAndNotInExcludedIds with NotificationTemplateCategorizingDto: {},  excludedIds: {}", applicantSearchCriteria, excludedIds);
+        Page<ApplicantDto> applicantDtoPage = mapPage(applicantRepository.findAll(withApplicantFilter(applicantSearchCriteria, excludedIds), pageable));
+        log.info("Finish findAllByCriteriaAndNotInExcludedIds");
+        return applicantDtoPage;
     }
 
     private Specification<JpaApplicant> withApplicantFilter(final NotificationTemplateCategorizingDto criteria, List<Long> excludedIds) {
@@ -354,19 +363,26 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     public int markAsRegistered(long applicantId, String channel) {
         log.info("ApplicantService ::: Start markAsRegistered applicantId: {},  channel: {}", applicantId, channel);
         int numberOfAffectedRows = applicantRepository.markAsRegistered(applicantId, channel);
-        log.info("ApplicantService ::: Start markAsRegistered numberOfAffectedRows: {}", numberOfAffectedRows);
+        log.info("ApplicantService ::: Finish markAsRegistered numberOfAffectedRows: {}", numberOfAffectedRows);
         return numberOfAffectedRows;
     }
 
     public List<ApplicantDto> findApplicantByGroupId(Long groupId) {
-        return mapList(applicantRepository.findAllApplicantByGroupId(groupId));
+        log.info("Start findApplicantByGroupId with groupId: {}", groupId);
+        List<ApplicantDto> applicantDtoList = mapList(applicantRepository.findAllApplicantByGroupId(groupId));
+        log.info("Finish findApplicantByGroupId with groupId: {}", groupId);
+        return applicantDtoList;
     }
 
     public List<ApplicantDto> findApplicantByCompanyCode(String companyCode) {
-        return mapList(applicantRepository.findApplicantByCompanyCode(companyCode));
+        log.info("Start findApplicantByCompanyCode with companyCode: {}", companyCode);
+        List<ApplicantDto> applicantDtoList = mapList(applicantRepository.findApplicantByCompanyCode(companyCode));
+        log.info("Finish findApplicantByCompanyCode with companyCode: {}", companyCode);
+        return applicantDtoList;
     }
 
     public Page<ApplicantDto> findOrganizerApplicants(ApplicantSearchCriteriaDto applicantSearchCriteriaDto, Long companyRefCode, String companyTypeCode, Pageable pageable) {
+        log.info("Start findOrganizerApplicants with companyTypeCode: {}, companyRefCode: {}", companyTypeCode, companyRefCode);
         log.info("Company Ref code ...{}", companyRefCode);
         log.info("Company type code ...{}", companyTypeCode);
         log.info("Applicant search criteria... {}", applicantSearchCriteriaDto);
@@ -404,6 +420,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
                 applicant.setLatitude(userLocationDto == null ? null : userLocationDto.getLatitude());
                 applicant.setLongitude(userLocationDto == null ? null : userLocationDto.getLongitude());
             });
+            log.info("Finish findOrganizerApplicants in case the group number is null");
             return applicants;
         } else {
             Page<ApplicantDto> applicants = mapPage(applicantRepository.findOrganizerApplicants(applicantSearchCriteriaDto.getIdNumber(), applicantSearchCriteriaDto.getPassportNumber(),
@@ -415,6 +432,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
                 applicant.setLatitude(userLocationDto == null ? null : userLocationDto.getLatitude());
                 applicant.setLongitude(userLocationDto == null ? null : userLocationDto.getLongitude());
             });
+            log.info("Finish findOrganizerApplicants in case the group number is not null");
             return applicants;
         }
     }
@@ -559,11 +577,17 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
     }
 
     public List<Long> findApplicantIdByGroupId(Long groupId){
-        return applicantRepository.findApplicantIdByGroupId(groupId);
+        log.info("Start findApplicantIdByGroupId with groupId: {}", groupId);
+        List<Long> applicantIdByGroupId = applicantRepository.findApplicantIdByGroupId(groupId);
+        log.info("Finish findApplicantIdByGroupId with groupId: {}", groupId);
+        return applicantIdByGroupId;
     }
 
     public Boolean isValidApplicant(Long applicantId){
-        return applicantRepository.isValidApplicant(applicantId);
+        log.info("Start isValidApplicant with applicantId: {}", applicantId);
+        Boolean isValidApplicant = applicantRepository.isValidApplicant(applicantId);
+        log.info("Finish isValidApplicant with applicantId: {}", applicantId);
+        return isValidApplicant;
     }
 
 }

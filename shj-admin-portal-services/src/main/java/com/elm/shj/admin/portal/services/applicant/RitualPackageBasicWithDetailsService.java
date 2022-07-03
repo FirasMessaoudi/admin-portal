@@ -25,7 +25,7 @@ public class RitualPackageBasicWithDetailsService extends GenericService<JpaRitu
         log.info("Start findByReferenceAndRitualTypeAndSeason for {} reference code, {} ritual type code and {} season year.", referenceCode, typeCode, year);
         Optional<JpaRitualPackageBasicWithDetails> ritualPackage = ritualPackageBasicWithDetailsRepository.findIdByReferenceNumberAndRitualTypeAndSeason(referenceCode, typeCode, year);
         if (ritualPackage.isPresent()) {
-            log.info("Found a ritual package with {} id.", ritualPackage.get().getId());
+            log.info("Finish findByReferenceAndRitualTypeAndSeason for {} reference code, {} ritual type code and {} season year.", referenceCode, typeCode, year);
             return getMapper().fromEntity(ritualPackage.get(), mappingContext);
         }
         log.info("Finish findByReferenceAndRitualTypeAndSeason for {} reference code, {} ritual type code and {} season year and no ritual package is found.", referenceCode, typeCode, year);

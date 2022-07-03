@@ -32,15 +32,19 @@ public class PackageTransportationService extends GenericService<JpaPackageTrans
 
     public List<PackageTransportationDto> findByRitualPackageId(long id) {
         log.info("Start findByRitualPackageId {} id", id);
-        return mapList(packageTransportationRepository.findByRitualPackageId(id));
+        List<PackageTransportationDto> packageTransportationDtoList= mapList(packageTransportationRepository.findByRitualPackageId(id));
+        log.info("Finish findByRitualPackageId {} id", id);
+        return packageTransportationDtoList;
     }
 
     public PackageTransportationDto findByRitualPackageIdAndTypeCode(long id, String typeCode) {
         log.info("PackageHousingService ::: Start findByRitualPackageIdAndTypeCode ::: ritualPackage: {}", id);
         Optional<JpaPackageTransportation> jpaPackageTransportation = packageTransportationRepository.findTopByRitualPackageIdAndTypeCode(id, typeCode);
         if (jpaPackageTransportation.isPresent()) {
+            log.info("PackageHousingService ::: Finish findByRitualPackageIdAndTypeCode ::: ritualPackage: {}", id);
             return getMapper().fromEntity(jpaPackageTransportation.get(), mappingContext);
         }
+        log.info("PackageHousingService ::: Finish findByRitualPackageIdAndTypeCode not found ::: ritualPackage: {}", id);
         return null;
 
     }
@@ -49,8 +53,10 @@ public class PackageTransportationService extends GenericService<JpaPackageTrans
         log.info("PackageHousingService ::: Start findAllByRitualPackageIdAndTypeCode ::: ritualPackage: {}", id);
         List<JpaPackageTransportation> jpaPackageTransportation = packageTransportationRepository.findAllByRitualPackageIdAndTypeCode(id, typeCode);
         if (!jpaPackageTransportation.isEmpty()) {
+            log.info("PackageHousingService ::: Finish findByRitualPackageIdAndTypeCode ::: ritualPackage: {}", id);
             return mapList(jpaPackageTransportation);
         }
+        log.info("PackageHousingService ::: Finish findByRitualPackageIdAndTypeCode not found ::: ritualPackage: {}", id);
         return Collections.emptyList();
 
     }

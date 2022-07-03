@@ -45,11 +45,14 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
     }
 
     public ApplicantGroupDto getApplicantGroupByReferenceNumberAndCompany(String referenceNumber, String companyCode) {
+        log.info("Start getApplicantGroupByReferenceNumberAndCompany ReferenceNumber:{}, companyCode:{}", referenceNumber, companyCode);
         Optional<JpaApplicantGroup> applicantGroupOptional = applicantGroupRepository.findTopByReferenceNumberAndCompanyRitualSeasonCompanyCodeOrderByCreationDateDesc(referenceNumber, companyCode);
         if (applicantGroupOptional.isPresent()) {
             ApplicantGroupDto applicantGroupDto = getMapper().fromEntity(applicantGroupOptional.get(), mappingContext);
+            log.info("Finish getApplicantGroupByReferenceNumberAndCompany with ReferenceNumber:{}, companyCode:{}", referenceNumber, companyCode);
             return applicantGroupDto;
         }
+        log.info("Finish getApplicantGroupByReferenceNumberAndCompany not found with ReferenceNumber:{}, companyCode:{}", referenceNumber, companyCode);
         return null;
     }
 
@@ -62,13 +65,11 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
             return applicantGroupDto;
         }
         log.info("Finish getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId not found with ReferenceNumber:{}, companyRitualSeasonId:{}", referenceNumber, companyRitualSeasonId);
-
         return null;
     }
 
     public Page<ApplicantGroupDto> findGroupsByCompanyCode(String companyCode, Pageable pageable) {
         log.info("Start findGroupsByCompanyCode companyCode:{}", companyCode);
-
         Page<ApplicantGroupDto> applicantGroups = mapPage(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode, pageable));
         applicantGroups.getContent().forEach(applicantGroupDto -> {
             applicantGroupDto.setCountApplicants(groupApplicantListRepository.countByApplicantGroupId(applicantGroupDto.getId()));
@@ -77,11 +78,12 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
             applicantGroupDto.getGroupLeader().setLatitude(userLocationDto == null ? null : userLocationDto.getLatitude());
             applicantGroupDto.getGroupLeader().setLongitude(userLocationDto == null ? null : userLocationDto.getLongitude());
         });
+        log.info("Finish findGroupsByCompanyCode companyCode:{}", companyCode);
         return applicantGroups;
     }
 
     public List<ApplicantGroupDto> findAllGroupByCompanyCode(String companyCode) {
-        log.info("Start findGroupsByCompanyCode companyCode:{}", companyCode);
+        log.info("Start findAllGroupByCompanyCode companyCode:{}", companyCode);
 
         List<ApplicantGroupDto> applicantGroups = mapList(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode));
         applicantGroups.forEach(applicantGroupDto -> {
@@ -91,26 +93,34 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
             applicantGroupDto.getGroupLeader().setLatitude(userLocationDto == null ? null : userLocationDto.getLatitude());
             applicantGroupDto.getGroupLeader().setLongitude(userLocationDto == null ? null : userLocationDto.getLongitude());
         });
+        log.info("Finish findAllGroupByCompanyCode companyCode:{}", companyCode);
         return applicantGroups;
     }
 
     public List<GroupNameLookupDto> findGroupsNameLookupByCompanyCode(String companyCode) {
         log.info("Start findGroupsNameLookupByCompanyCode companyCode:{}", companyCode);
         List<GroupNameLookupDto> groupNameLookup = mapList(applicantGroupRepository.findByCompanyRitualSeasonCompanyCode(companyCode)).stream().map(applicantGroupDto -> mapGroupName(applicantGroupDto)).collect(Collectors.toList());
+        log.info("Finish findGroupsNameLookupByCompanyCode companyCode:{}", companyCode);
         return groupNameLookup;
     }
 
     private GroupNameLookupDto mapGroupName(ApplicantGroupDto applicantGroupDto) {
+        log.info("Start mapGroupName");
         GroupNameLookupDto groupNameLookup = GroupNameLookupDto.builder()
                 .code(applicantGroupDto.getReferenceNumber())
                 .label(applicantGroupDto.getGroupName()).build();
+        log.info("Finish mapGroupName");
         return groupNameLookup;
     }
 
     public String findGroupNumber(String uin) {
         log.info("Start findGroupNumber uin:{}", uin);
         String groupNumber = applicantGroupRepository.findReferenceNumberByUin(uin);
-        if (groupNumber == null || groupNumber.equals("")) return "";
+        if (groupNumber == null || groupNumber.equals("")) {
+            log.info("Finish findGroupNumber not found with uin:{}", uin);
+            return "";
+        }
+        log.info("Finish findGroupNumber uin:{}", uin);
         return groupNumber;
     }
 
@@ -149,8 +159,10 @@ public class ApplicantGroupService extends GenericService<JpaApplicantGroup, App
     }
 
     public List<CompanyStaffVO> findGroupLeadersListByCompanyCode(String companyCode) {
-        return applicantGroupRepository.findGroupLeadersListByCompanyCode(companyCode);
-
+        log.info("Start findGroupLeadersListByCompanyCode  companyCode: {}", companyCode);
+        List<CompanyStaffVO> companyStaffVOList = applicantGroupRepository.findGroupLeadersListByCompanyCode(companyCode);
+        log.info("Finish findGroupLeadersListByCompanyCode  companyCode: {}", companyCode);
+        return companyStaffVOList;
     }
 
 

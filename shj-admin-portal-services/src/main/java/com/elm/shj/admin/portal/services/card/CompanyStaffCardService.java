@@ -43,7 +43,10 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public List<CompanyStaffCardDto> findByDigitalId(String suin) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffDigitalIdSuin(suin));
+        log.info("Start findByDigitalId with suin: {}", suin);
+        List<CompanyStaffCardDto> companyStaffCardDtoList= mapList(companyStaffCardRepository.findAllByCompanyStaffDigitalIdSuin(suin));
+        log.info("Finish findByDigitalId with suin: {}", suin);
+        return companyStaffCardDtoList;
     }
 
     /**
@@ -53,7 +56,10 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public CompanyStaffCardDto findByDigitalIdAndStatusCodeActive(String suin) {
-        return getMapper().fromEntity(companyStaffCardRepository.findByCompanyStaffDigitalIdSuinAndStatusCode(suin, ECardStatus.ACTIVE.name()), mappingContext);
+        log.info("Start findByDigitalIdAndStatusCodeActive with suin: {}", suin);
+        CompanyStaffCardDto companyStaffCardDto = getMapper().fromEntity(companyStaffCardRepository.findByCompanyStaffDigitalIdSuinAndStatusCode(suin, ECardStatus.ACTIVE.name()), mappingContext);
+        log.info("Finish findByDigitalIdAndStatusCodeActive with suin: {}", suin);
+        return companyStaffCardDto;
     }
 
     /**
@@ -65,7 +71,10 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public List<CompanyStaffCardDto> findByDigitalIdCompanyCodeRitualType(String suin, String companyCode, String ritualType) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndCompanyRitualSeasonCompanyCodeAndCompanyRitualSeasonRitualSeasonRitualTypeCode(suin, companyCode, ritualType, cardStatus));
+        log.info("Start findByDigitalIdCompanyCodeRitualType with suin: {}, companyCode: {}, ritualType: {} ", suin, companyCode, ritualType);
+        List<CompanyStaffCardDto> companyStaffCardDtoList = mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndCompanyRitualSeasonCompanyCodeAndCompanyRitualSeasonRitualSeasonRitualTypeCode(suin, companyCode, ritualType, cardStatus));
+        log.info("Finish findByDigitalIdCompanyCodeRitualType with suin: {}, companyCode: {}, ritualType: {} ", suin, companyCode, ritualType);
+        return companyStaffCardDtoList;
     }
 
     /**
@@ -75,12 +84,18 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
      * @return
      */
     public List<CompanyStaffCardDto> findByDigitalIdAndDifferentCompanyOrRitual(String suin, String companyCode, String ritualType) {
-        return mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(suin, companyCode, ritualType, cardStatus));
+        log.info("Start findByDigitalIdAndDifferentCompanyOrRitual with suin: {}, companyCode: {}, ritualType: {} ", suin, companyCode, ritualType);
+        List<CompanyStaffCardDto> companyStaffCardDtoList= mapList(companyStaffCardRepository.findAllByCompanyStaffSuinAndCompanyRitualSeasonCompanyCodeNotOrCompanyRitualSeasonRitualSeasonRitualTypeCodeNot(suin, companyCode, ritualType, cardStatus));
+        log.info("Finish findByDigitalIdAndDifferentCompanyOrRitual with suin: {}, companyCode: {}, ritualType: {} ", suin, companyCode, ritualType);
+        return companyStaffCardDtoList;
     }
 
     @Transactional
     public Page<CompanyStaffCardDto> searchStaffCards(CompanyStaffCardFilterDto companyStaffCardFilter, Pageable pageable) {
-        return mapPage(companyStaffCardRepository.findAll(withStaffCardFilter(companyStaffCardFilter), pageable));
+        log.info("Start searchStaffCards with CompanyStaffCardFilterDto: {} ", companyStaffCardFilter);
+        Page<CompanyStaffCardDto> companyStaffCardDtoPage = mapPage(companyStaffCardRepository.findAll(withStaffCardFilter(companyStaffCardFilter), pageable));
+        log.info("Finish searchStaffCards with CompanyStaffCardFilterDto");
+        return companyStaffCardDtoPage;
     }
 
     private Specification<JpaCompanyStaffCard> withStaffCardFilter(final CompanyStaffCardFilterDto criteria) {
@@ -145,21 +160,26 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
 
     public List<CompanyStaffCardDto> findAllPrintingCards(String uin,
                                                           String companyCode, String nationalityCode, int seasonYear, String ritualCode, List<Long> excludedCardsIds) {
-        log.debug("Find all printing cards...");
-        return mapList(companyStaffCardRepository.findAllPrintingCards(ECardStatus.READY_TO_PRINT.name(), EPrintRequestStatus.NEW.name(), uin, companyCode, nationalityCode, seasonYear, ritualCode,
+        log.info("CompanyStaffCardService:: Start findAllPrintingCards");
+        List<CompanyStaffCardDto> companyStaffCardDtoList = mapList(companyStaffCardRepository.findAllPrintingCards(ECardStatus.READY_TO_PRINT.name(), EPrintRequestStatus.NEW.name(), uin, companyCode, nationalityCode, seasonYear, ritualCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds));
+        log.info("CompanyStaffCardService:: Finish findAllPrintingCards");
+        return companyStaffCardDtoList;
     }
 
     public Page<CompanyStaffCardDto> findPrintingCards(String uin,
                                                        String companyCode, String nationalityCode, int seasonYear, String ritualCode, List<Long> excludedCardsIds, Pageable pageable) {
-        log.debug("search printing cards...");
-        return mapPage(companyStaffCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(), EPrintRequestStatus.NEW.name(), uin,
+        log.info("CompanyStaffCardService:: Start findPrintingCards");
+        Page<CompanyStaffCardDto> companyStaffCardDtoPage = mapPage(companyStaffCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(), EPrintRequestStatus.NEW.name(), uin,
                 companyCode, nationalityCode, seasonYear, ritualCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
+        log.info("CompanyStaffCardService:: Finish findPrintingCards");
+        return companyStaffCardDtoPage;
     }
 
     @Transactional
     public CompanyStaffCardDto changeCardStatus(CompanyStaffCardDto card, String actionCode, Optional<Long> userId) {
+        log.info("CompanyStaffCardService:: Start changeCardStatus");
         if (actionCode.equalsIgnoreCase(ECardStatusAction.CANCEL_CARD.name())) {
             card.setStatusCode(ECardStatus.CANCELLED.name());
         } else if (actionCode.equalsIgnoreCase(ECardStatusAction.ACTIVATE_CARD.name())) {
@@ -180,43 +200,60 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
                     .statusCode(ECardStatus.READY_TO_PRINT.name())
                     .build());
             //userCardStatusAuditService.saveUserCardStatusAudit(savedCard, userId);
+            log.info("CompanyStaffCardService:: Finish changeCardStatus");
             return savedCard;
         }
         //userCardStatusAuditService.saveUserCardStatusAudit(card, userId);
+        log.info("CompanyStaffCardService:: Start changeCardStatus");
         return save(card);
 
     }
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public CompanyStaffCardDto findById(long cardId) {
-        return findOne(cardId);
+        log.info("CompanyStaffCardService:: Start findById with id: {}", cardId );
+        CompanyStaffCardDto companyStaffCardDto = findOne(cardId);
+        log.info("CompanyStaffCardService:: Finish findById with id: {}", cardId );
+        return companyStaffCardDto;
     }
 
     public List<CompanyStaffCardDto> findStaffCards(List<Long> cardIds) {
-        log.debug("Find cards by ids  ...");
-        return mapList(companyStaffCardRepository.findStaffCards(cardIds));
+        log.info("Start findStaffCards with cardIds: {}", cardIds);
+        List<CompanyStaffCardDto> companyStaffCardDtoList = mapList(companyStaffCardRepository.findStaffCards(cardIds));
+        log.info("Finish findStaffCards with cardIds: {}", cardIds);
+        return companyStaffCardDtoList;
     }
 
     public List<CompanyStaffCardDto> findStaffCardsByPrintRequestBatchIdAndDigitalIds(long batchId, Set<String> digitalIdSet) {
-        return mapList(companyStaffCardRepository.findStaffCardsByPrintRequestBatchIdAndDigitalIds(digitalIdSet.stream().collect(Collectors.toList()), batchId));
+        log.info("Start findStaffCardsByPrintRequestBatchIdAndDigitalIds with batchId: {},  digitalIdSet: {}", batchId, digitalIdSet);
+        List<CompanyStaffCardDto> companyStaffCardDtoList = mapList(companyStaffCardRepository.findStaffCardsByPrintRequestBatchIdAndDigitalIds(digitalIdSet.stream().collect(Collectors.toList()), batchId));
+        log.info("Finish findStaffCardsByPrintRequestBatchIdAndDigitalIds with batchId: {},  digitalIdSet: {}", batchId, digitalIdSet);
+        return companyStaffCardDtoList;
     }
 
     public void updateCardStatus(List<Long> cardsIds){
+        log.info("CompanyStaffCardService :: Start updateCardStatus with cardsIds: {}",cardsIds);
         companyStaffCardRepository.updateCardStatus(cardsIds, ECardStatus.SENT_FOR_PRINT.name());
+        log.info("CompanyStaffCardService :: Finish updateCardStatus with cardsIds: {}",cardsIds);
     }
 
     public List<ApplicantBasicInfoVo> findStaffBasicInfoByDigitalIds(List<String> digitalIds) {
-        return  companyStaffCardRepository.findAllByStaffDigitalIds(digitalIds, Arrays.asList(ECardStatus.CANCELLED.name(),ECardStatus.EXPIRED.name(),ECardStatus.SUSPENDED.name()));
-
+        log.info("Start findStaffBasicInfoByDigitalIds with digitalIds: {}", digitalIds);
+        List<ApplicantBasicInfoVo> applicantBasicInfoVoList = companyStaffCardRepository.findAllByStaffDigitalIds(digitalIds, Arrays.asList(ECardStatus.CANCELLED.name(),ECardStatus.EXPIRED.name(),ECardStatus.SUSPENDED.name()));
+        log.info("Finish findStaffBasicInfoByDigitalIds with digitalIds: {}", digitalIds);
+        return applicantBasicInfoVoList;
     }
 
     public void updateStaffCardStatusByStaffId(List<Long> staffCardIdList){
+        log.info("Start updateStaffCardStatusByStaffId with staffCardIdList: {}", staffCardIdList);
         companyStaffCardRepository.updateCompanyStaffCardStatus(staffCardIdList);
+        log.info("Finish updateStaffCardStatusByStaffId with staffCardIdList: {}", staffCardIdList);
     }
 
     public List<Long> findStaffCardByStaffId(Long staffId){
+        log.info("Start findStaffCardByStaffId with staffId: {}", staffId);
         List<Long> staffCardIdList = companyStaffCardRepository.findStaffCard(staffId);
-
+        log.info("Finish findStaffCardByStaffId with staffId: {}", staffId);
         return staffCardIdList;
     }
 }
