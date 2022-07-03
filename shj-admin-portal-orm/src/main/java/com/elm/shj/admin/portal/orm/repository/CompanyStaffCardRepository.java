@@ -86,7 +86,7 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
             "and digitalId.suin in :digitalIdList ")
     List<ApplicantBasicInfoVo> findAllByStaffDigitalIds(@Param("digitalIdList") List<String> digitalIdList,@Param("cardStatusCodeList") List<String> cardStatusCodeList);
 
-    @Query("SELECT staffCard.id FROM JpaCompanyStaffCard staffCard join staffCard.companyStaffDigitalId csd join csd.companyStaff cs WHERE cs.id = :staffId and staffCard.statusCode <> 'EXPIRED' ")
+    @Query("SELECT staffCard.id FROM JpaCompanyStaffCard staffCard where staffCard.companyStaffDigitalId.companyStaff.id= :staffId ")
     List<Long> findStaffCard(@Param("staffId") Long staffId);
 
     @Modifying

@@ -737,7 +737,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         // update digital id status INVALID
         if(staff == null) return false;
 
-        log.info("Start update digital id status by staff id. {}", staff.getId());
+        log.info("Start update digital id status by staff id. {}", staffId);
         companyStaffDigitalIdService.updateDigitalIdStatus(staffId);
 
         List<Long> staffCardIdList = companyStaffCardService.findStaffCardByStaffId(staffId);

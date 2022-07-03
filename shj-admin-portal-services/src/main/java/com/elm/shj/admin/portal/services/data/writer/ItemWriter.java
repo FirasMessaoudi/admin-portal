@@ -657,7 +657,7 @@ public class ItemWriter {
 
         // saving staff full main data
         if (dataSegment.getId() == EDataSegment.STAFF_FULL_MAIN_DATA.getId()) {
-
+            log.info("Start data upload for Staff main data with data segment Id: {}", dataSegment.getId());
             // save all items and build data records
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
             List<S> savedItems = new ArrayList<>();
@@ -680,7 +680,7 @@ public class ItemWriter {
 
                     // set default avatar if the photo is null
                     if(companyStaffFullData.getPhoto() == null){
-
+                        log.info("Staff image not found set default image base on gender");
                         BufferedImage defaultImage;
 
                         if(companyStaffFullData.getGender().equals("M")) {
@@ -688,7 +688,7 @@ public class ItemWriter {
                         } else {
                             defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_FEMALE);
                         }
-
+                        log.info("Default Image path: {}", defaultImage);
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         final String defaultAvatar;
 
@@ -705,8 +705,10 @@ public class ItemWriter {
                     }
 
                     // check company ritual season exist for the ritual type, seasson and company
+                    log.info("Query for getCompanyRitualSeason with company code: {} and ritul type: {} and seasonyear: {}", companyRefCode[0], companyStaffFullData.getTypeCode(), seasonYear);
                     CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyRefCode[0], companyStaffFullData.getTypeCode(), seasonYear);
                     if(companyRitualSeasonDto == null){
+                        log.info("Company ritual season not for staff");
                         dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(ritualTypeCodeCellIndex)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage())).valid(false).build());
                         return;
                     }
@@ -725,13 +727,16 @@ public class ItemWriter {
                     // copy properties from company staff full data to company staff
 
                     // BeanUtils.copyProperties(staff, companyStaffFullData);
+                    log.info("Start check existing staff data with: {}", staff.getIdNumber(), staff.getPassportNumber(), staff.getNationalityCode());
                     CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getNationalityCode());
 
                     if(existingStaff != null){
+                        log.info("Validate start existing is group leader and belong to same company {}", existingStaff.getId());
                         if(applicantGroupBasicService.existsByGroupLeader(existingStaff.getId()) && !companyStaffService.exitsStaffInCompany(existingStaff.getId(), companyRitualSeasonDto.getId())){
                             dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.STAFF_ID_ALREADY_EXITS_IN_COMPANY.getMessage())).valid(false).build());
                             return;
                         }
+                        log.info("Validate end existing is group leader and belong to same company {}", existingStaff.getId());
                     }
                     // if record exists already in DB we need to update it
                     if (existingStaff != null) {
@@ -788,6 +793,7 @@ public class ItemWriter {
 
             // update saved items
             repository.saveAll(savedItems);
+            log.info("End data upload for Staff main data with data segment Id: {}", dataSegment.getId());
             return dataValidationResults;
         }
 

@@ -70,6 +70,7 @@ public class OtpService {
         log.info("start createOtp with username: {} and countryCode: {}, and mobileNumber: {}", principal, countryCode, mobileNumber);
         try {
             String generatedOtp = otpGenerator.generateOtp(principal);
+            log.info("Otp generated for username:{} and otp: {}", principal, generatedOtp);
             otpCache.put(principal, generatedOtp);
             String locale = principal.startsWith("1") ? "ar" : "en";
             String registerUserSms = messageSource.getMessage(OTP_SMS_NOTIFICATION_MSG, new String[]{generatedOtp}, Locale.forLanguageTag(locale));
@@ -89,10 +90,13 @@ public class OtpService {
      * @return result of verification
      */
     public boolean validateOtp(String principal, String otpToVerify) {
+        log.info("Start Verify otp for username:{} and otpToVerify: {}", principal, otpToVerify);
         if (mockEnabled || Objects.equals(otpCache.getIfPresent(principal), otpToVerify)) {
             otpCache.invalidate(principal);
+            log.info("End with verified otp for username:{} and otpToVerify: {}", principal, otpToVerify);
             return true;
         }
+        log.info("Otp not matched with OtpCache for username:{} and otpToVerify: {}", principal, otpToVerify);
         return false;
     }
 

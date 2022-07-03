@@ -226,8 +226,9 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
         // initial validation
         if (dataRequest != null && dataRequest.getOriginalSourcePath() != null) {
             // retrieve the original file to start processing
+            log.info("Start downloading original file with path: {}", dataRequest.getOriginalSourcePath());
             Resource originalFile = sftpService.downloadFile(dataRequest.getOriginalSourcePath(),DATA_UPLOAD_CONFIG_PROPERTIES);
-
+            log.info("end downloading original file with path: {}", dataRequest.getOriginalSourcePath());
             DataProcessorResult<T> parserResult;
             List<DataValidationResult> writerValidationResult;
             try {
