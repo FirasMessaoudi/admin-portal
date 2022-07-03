@@ -166,7 +166,14 @@ export class CardDetailsComponent implements OnInit {
                   ritualId: this.card?.applicantRitual?.id
               };
            this.cardService.generateCard(generatCardInput).subscribe(result=>{           
-            this.router.navigate(['/card/print',this.card?.applicantRitual?.applicant?.digitalIds[0]?.uin,'APPLICANT']);                
+            if(result && result == true)
+            {
+              this.router.navigate(['/card/print',this.card?.applicantRitual?.applicant?.digitalIds[0]?.uin,'APPLICANT']);                
+            }
+            else
+            {
+              this.toastr.error(this.translate.instant('card-management.user_not_authorized'), this.translate.instant('general.dialog_error_title'));
+            }
            });  
              
           }
