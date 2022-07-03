@@ -7,6 +7,7 @@ import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.BadgeService;
+import com.elm.shj.admin.portal.services.chatbot.ChatBotItemService;
 import com.elm.shj.admin.portal.services.company.*;
 import com.elm.shj.admin.portal.services.complaint.ApplicantComplaintLiteService;
 import com.elm.shj.admin.portal.services.complaint.ApplicantComplaintService;
@@ -21,7 +22,6 @@ import com.elm.shj.admin.portal.services.incident.ApplicantIncidentLiteService;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
 import com.elm.shj.admin.portal.services.incident.IncidentAttachmentLiteService;
 import com.elm.shj.admin.portal.services.lookup.*;
-import com.elm.shj.admin.portal.services.otp.OtpService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.user.UserLocationService;
@@ -35,7 +35,6 @@ import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
@@ -147,6 +146,7 @@ public class IntegrationWsController {
     private final ApplicantComplaintService applicantComplaintService;
     private final ApplicantHealthBasicService applicantHealthBasicService;
     private final IncidentAttachmentLiteService incidentAttachmentLiteService;
+    private final ChatBotItemService chatBotItemService;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
@@ -1629,5 +1629,12 @@ public class IntegrationWsController {
         log.info("find applicant groups by company");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(applicantGroupService.findAllGroupByCompanyCode(companyRefCode + "_" + organizerTypeCode)).build());
+    }
+
+    @GetMapping("/chatbot-items/list/{lang}")
+    public ResponseEntity<WsResponse<?>> findAllChatBotItems(@PathVariable String lang) {
+        log.info("find all chatbot items by lang");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(chatBotItemService.findAllByLang(lang)).build());
     }
 }
