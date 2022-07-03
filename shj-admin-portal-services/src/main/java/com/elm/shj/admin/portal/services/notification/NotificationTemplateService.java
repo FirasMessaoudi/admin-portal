@@ -16,15 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Parameter;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TemporalType;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -184,7 +179,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
     public List<NotificationTemplateDto> findUnprocessedUserDefinedNotifications(String typeCode, Date date, Boolean isProcessed, boolean enabled,int batchSize) {
 
         List<JpaNotificationTemplate> pendingNotificationTemplate = notificationTemplateRepository
-                .findByTypeCodeAndSendingDateAfterAndProcessedAndEnabled(typeCode,date,isProcessed,enabled, PageRequest.of(0,batchSize)).getContent();
+                .findByTypeCodeAndSendingDateBeforeAndProcessedAndEnabled(typeCode,date,isProcessed,enabled, PageRequest.of(0,batchSize)).getContent();
         return mapList(pendingNotificationTemplate);
     }
 
